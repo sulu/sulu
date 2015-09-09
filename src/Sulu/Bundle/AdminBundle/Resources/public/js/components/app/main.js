@@ -16,6 +16,7 @@ define(function() {
         constants = {
             suluNavigateAMark: '[data-sulu-navigate="true"]', //a tags which match this mark will use the sulu.navigate method
             fixedWidthClass: 'fixed',
+            navigationCollapsedClass: 'navigation-collapsed',
             smallFixedClass: 'small-fixed',
             initialLoaderClass: 'initial-loader',
             maxWidthClass: 'max',
@@ -23,15 +24,9 @@ define(function() {
             noLeftSpaceClass: 'no-left-space',
             noRightSpaceClass: 'no-right-space',
             noTopSpaceClass: 'no-top-space',
-            shrinkIcon: 'fa-chevron-left',
-            expandIcon: 'fa-chevron-right',
             noTransitionsClass: 'no-transitions',
             versionHistoryUrl: 'https://github.com/sulu-cmf/sulu-standard/releases',
             changeLanguageUrl: '/admin/security/profile/language'
-        },
-
-        templates = {
-            shrinkable: '<div class="sulu-app-shrink"><span class="fa-chevron-left"></span></div>'
         },
 
         eventNamespace = 'sulu.app.',
@@ -83,12 +78,12 @@ define(function() {
         },
 
         /**
-         * listens on and displays or hides the toggle icon
-         * @event sulu.app.toggle-shrinker
-         * @param {Boolean} true to display, false to hide the shrinker-button
+         * listens on and shrinks or expands the content-column
+         * @event sulu.app.toggle-column
+         * @param {Boolean} true to shrink, false to expand the content-column
          */
-        TOGGLE_SHRINKER = function() {
-            return createEventName('toggle-shrinker');
+        TOGGLE_COLUMN = function() {
+            return createEventName('toggle-column');
         },
 
         /**
@@ -106,10 +101,8 @@ define(function() {
          */
         initialize: function() {
             this.title = document.title;
-            this.$shrinker = null;
 
             this.initializeRouter();
-            this.render();
             this.bindCustomEvents();
             this.bindDomEvents();
 
@@ -209,16 +202,6 @@ define(function() {
         },
 
         /**
-         * Renderes dom events for the component
-         */
-        render: function() {
-            var $column = this.sandbox.dom.find(constants.columnSelector);
-            this.$shrinker = this.sandbox.dom.createElement(templates.shrinkable);
-            this.sandbox.dom.hide(this.$shrinker);
-            this.sandbox.dom.append($column, this.$shrinker);
-        },
-
-        /**
          * Bind DOM-related Events
          */
         bindDomEvents: function() {
@@ -243,8 +226,6 @@ define(function() {
                     this.emitNavigationEvent({action: event.currentTarget.attributes.href.value}, true);
                 }
             }.bind(this), 'a' + constants.suluNavigateAMark);
-
-            this.sandbox.dom.on(this.$shrinker, 'click', this.toggleShrinkColumn.bind(this));
         },
 
         /**
@@ -297,6 +278,14 @@ define(function() {
                 }
             }.bind(this));
 
+            this.sandbox.on('husky.navigation.collapsed', function() {
+                this.$find('.navigation-container').addClass(constants.navigationCollapsedClass);
+            }.bind(this));
+
+            this.sandbox.on('husky.navigation.uncollapsed', function() {
+                this.$find('.navigation-container').removeClass(constants.navigationCollapsedClass);
+            }.bind(this));
+
             this.sandbox.on('husky.navigation.header.clicked', function() {
                 this.navigate('', true, false, false);
             }.bind(this));
@@ -328,59 +317,35 @@ define(function() {
                 window.open(constants.versionHistoryUrl, '_blank');
             }.bind(this));
 
-            // change user locale
             this.sandbox.on('husky.navigation.user-locale.changed', this.changeUserLocale.bind(this));
 
-            // route to the form of the current user
             this.sandbox.on('husky.navigation.username.clicked', this.routeToUserForm.bind(this));
 
-            // change user locale
             this.sandbox.on(CHANGE_USER_LOCALE.call(this), this.changeUserLocale.bind(this));
 
-            // change the width-type of the content
             this.sandbox.on(CHANGE_WIDTH.call(this), this.changeWidth.bind(this));
 
-            // change the width-type of the content
             this.sandbox.on(CHANGE_SPACING.call(this), this.changeSpacing.bind(this));
 
-            // toggles the shrinker-button
-            this.sandbox.on(TOGGLE_SHRINKER.call(this), this.toggleShrinker.bind(this));
+            this.sandbox.on(TOGGLE_COLUMN.call(this), this.toggleColumn.bind(this));
         },
 
         /**
-         * Toggles the shrinker-button
-         * @param show {Boolean} if true gets displayed if false hidden
+         * Shrinks or expands the content-column depending on the passed parameter
+         * @param shrink {Boolean} if true shrinks, if false expands the content-column
          */
-        toggleShrinker: function(show) {
-            if (show === true) {
-                this.sandbox.dom.show(this.$shrinker);
-            } else {
-                this.sandbox.dom.hide(this.$shrinker);
-            }
-        },
-
-        /**
-         * Click-handler for the shrinker-button. Shrinks or expands the content-column
-         * and hides or shows the navigation
-         */
-        toggleShrinkColumn: function() {
+        toggleColumn: function(shrink) {
             var $column = this.sandbox.dom.find(constants.columnSelector);
             this.sandbox.dom.removeClass($column, constants.noTransitionsClass);
             this.sandbox.dom.on($column, 'transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd', function() {
                 this.sandbox.dom.trigger(this.sandbox.dom.window, 'resize');
             }.bind(this));
-            if (this.sandbox.dom.hasClass($column, constants.smallFixedClass)) {
-                // expand
-                this.sandbox.emit('husky.navigation.show');
-                this.sandbox.dom.removeClass($column, constants.smallFixedClass);
-                this.sandbox.dom.removeClass(this.sandbox.dom.find('span', this.$shrinker), constants.expandIcon);
-                this.sandbox.dom.addClass(this.sandbox.dom.find('span', this.$shrinker), constants.shrinkIcon);
-            } else {
-                // shrink
+            if (!!shrink) {
                 this.sandbox.emit('husky.navigation.hide');
                 this.sandbox.dom.addClass($column, constants.smallFixedClass);
-                this.sandbox.dom.removeClass(this.sandbox.dom.find('span', this.$shrinker), constants.shrinkIcon);
-                this.sandbox.dom.addClass(this.sandbox.dom.find('span', this.$shrinker), constants.expandIcon);
+            } else {
+                this.sandbox.emit('husky.navigation.show');
+                this.sandbox.dom.removeClass($column, constants.smallFixedClass);
             }
         },
 

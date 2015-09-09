@@ -38,8 +38,7 @@
              */
             app.sandbox.sulu.buttons.add = function(name, button) {
                 if (!!buttonsPool[name]) {
-                    this.sandbox.logger.warn('Sulu.buttons: Button with name "' + name + '" already exists!');
-                    return;
+                    throw new Error('Sulu.buttons: Button with name "' + name + '" already exists!');
                 }
                 buttonsPool[name] = button;
             };
@@ -61,8 +60,7 @@
              */
             app.sandbox.sulu.buttons.dropdownItems.add = function(name, dropdownItem) {
                 if (!!dropdownItemsPool[name]) {
-                    this.sandbox.logger.warn('Sulu.buttons: Dropdown-item with name "' + name + '" already exists!');
-                    return false;
+                    throw new Error('Sulu.buttons: Dropdown-item with name "' + name + '" already exists!');
                 }
                 dropdownItemsPool[name] = dropdownItem;
             };
@@ -193,6 +191,16 @@
                 },
                 {
                     name: 'edit',
+                    template: {
+                        title: 'public.edit',
+                        icon: 'pencil',
+                        callback: function() {
+                            app.sandbox.emit('sulu.toolbar.edit');
+                        }
+                    }
+                },
+                {
+                    name: 'editSelected',
                     template: {
                         icon: 'pencil',
                         title: 'public.edit-selected',

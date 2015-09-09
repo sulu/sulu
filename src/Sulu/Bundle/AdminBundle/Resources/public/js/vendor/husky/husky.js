@@ -42338,7 +42338,7 @@ define('__component__$label@husky',[],function() {
         description: null,
         hasClose: true,
         effectType: 'slide',
-        autoVanish: true,
+        autoVanish: false,
         vanishDelay: 0,
         vanishDuration: 250,
         showDuration: 250,

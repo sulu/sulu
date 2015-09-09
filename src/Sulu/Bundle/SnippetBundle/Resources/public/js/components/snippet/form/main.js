@@ -71,7 +71,7 @@ define([
                             }
                         }
                     },
-                    settings: {
+                    edit: {
                         options: {
                             dropdownItems: {
                                 delete: {

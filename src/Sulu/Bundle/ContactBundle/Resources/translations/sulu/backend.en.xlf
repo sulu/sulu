@@ -560,39 +560,39 @@
             </trans-unit>
             <trans-unit id="425b1473d76660a3essds2e9335a8d5d" resname="contact.accounts.document-added">
                 <source>contact.accounts.document-added</source>
-                <target>document added</target>
+                <target>Document added</target>
             </trans-unit>
             <trans-unit id="425b1432d76660a3e434s2e9335a8d5d" resname="contact.accounts.documents-removed">
                 <source>contact.accounts.documents-removed</source>
-                <target>documents removed</target>
+                <target>Documents removed</target>
             </trans-unit>
             <trans-unit id="435a1473d76660a3essds2e9335a8d5d" resname="contact.accounts.deleted">
                 <source>contact.accounts.deleted</source>
-                <target>organization deleted</target>
+                <target>Organization deleted</target>
             </trans-unit>
             <trans-unit id="435b1473d76660a3essds2e4335a8d5d" resname="contact.accounts.saved">
                 <source>contact.accounts.saved</source>
-                <target>organization saved</target>
+                <target>Organization saved</target>
             </trans-unit>
             <trans-unit id="435a1473d78660a3essds2e9135a8d5d" resname="contact.accounts.contacts-removed">
                 <source>contact.accounts.contacts-removed</source>
-                <target>removed person from organization</target>
+                <target>Removed person from organization</target>
             </trans-unit>
             <trans-unit id="435a1473d78660a3essds2e9135a8d5a" resname="contact.accounts.contact-saved">
                 <source>contact.accounts.contact-saved</source>
-                <target>added person to organization</target>
+                <target>Added person to organization</target>
             </trans-unit>
             <trans-unit id="435a1473d78660a3essds2e7135a8d5a" resname="contact.accounts.main-account-set">
                 <source>contact.accounts.main-account-set</source>
-                <target>main contact set</target>
+                <target>Main contact set</target>
             </trans-unit>
             <trans-unit id="425a1473d78660a3essds2e7134a8d5a" resname="contact.contacts.deleted">
                 <source>contact.contacts.deleted</source>
-                <target>person deleted</target>
+                <target>Contact deleted</target>
             </trans-unit>
             <trans-unit id="425a1473d78660c3essds2e7134a8d5a" resname="contact.contacts.saved">
                 <source>contact.contacts.saved</source>
-                <target>person saved</target>
+                <target>Contact saved</target>
             </trans-unit>
             <trans-unit id="425a1473d78660c3essds2e6134a8d5a" resname="contact.contacts.documents-removed">
                 <source>contact.contacts.documents-removed</source>
@@ -600,7 +600,7 @@
             </trans-unit>
             <trans-unit id="435b1472d76660a3essds2e9335a8d5d" resname="contact.contacts.document-added">
                 <source>contact.contacts.document-added</source>
-                <target>document added</target>
+                <target>Document added</target>
             </trans-unit>
             <trans-unit id="235b1473d76660a3essds2e9335a8d5d" resname="contact.address.countryCode">
                 <source>contact.address.countryCode</source>
@@ -608,19 +608,19 @@
             </trans-unit>
             <trans-unit id="235b1473d78922a3essds2e9335a8d5d" resname="contact.contacts.avatar.saved">
                 <source>contact.contacts.avatar.saved</source>
-                <target>avatar saved</target>
+                <target>Avatar saved</target>
             </trans-unit>
             <trans-unit id="235b1473d77593a3e44gs2e9335a8df4" resname="contact.accounts.logo.saved">
                 <source>contact.accounts.logo.saved</source>
-                <target>logo saved</target>
+                <target>Logo saved</target>
             </trans-unit>
             <trans-unit id="235b1473d77593a3e44gs2e9335a8d5d" resname="contact.contacts.avatar-dropzone-text">
                 <source>contact.contacts.avatar-dropzone-text</source>
-                <target>drop image or click to change avatar</target>
+                <target>Drop image or click to change avatar</target>
             </trans-unit>
             <trans-unit id="235b14f26g7593a3e44gs2e9335a8d5d" resname="contact.accounts.logo-dropzone-text">
                 <source>contact.accounts.logo-dropzone-text</source>
-                <target>drop image or click to change logo</target>
+                <target>Drop image or click to change logo</target>
             </trans-unit>
         </body>
     </file>

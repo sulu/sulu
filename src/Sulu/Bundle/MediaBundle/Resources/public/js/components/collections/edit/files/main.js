@@ -76,7 +76,7 @@ define(['services/sulumedia/media-manager',
             this.sandbox.on('husky.datagrid.number.selections', function(selectedItems) {
                 var string = (selectedItems > 0) ? 'enable' : 'disable';
                 this.sandbox.emit('husky.toolbar.' + this.options.instanceName + '.item.' + string, 'media-move', false);
-                this.sandbox.emit('husky.toolbar.' + this.options.instanceName + '.item.' + string, 'edit', false);
+                this.sandbox.emit('husky.toolbar.' + this.options.instanceName + '.item.' + string, 'editSelected', false);
                 this.sandbox.emit('husky.toolbar.' + this.options.instanceName + '.item.' + string, 'delete', false);
             }.bind(this));
         },
@@ -204,7 +204,7 @@ define(['services/sulumedia/media-manager',
                                 }.bind(this)
                             }
                         },
-                        edit: {
+                        editSelected: {
                             options: {
                                 callback: function() {
                                     this.sandbox.emit('sulu.list-toolbar.edit');

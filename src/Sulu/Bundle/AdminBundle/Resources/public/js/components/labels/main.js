@@ -129,22 +129,6 @@ define([], function() {
             this.sandbox.on(LABEL_REMOVE.call(this), function(id) {
                 this.removeLabelWithId(id);
             }.bind(this));
-
-            // if the navigation gets uncollapsed forcibly, the column stays the same size.
-            // Therfore the navigation labels container needs get the same size as the navigation
-            this.sandbox.on('husky.navigation.uncollapsed', function(width, forced) {
-                if (forced) {
-                    this.$navigationLabels.width(width);
-                }
-            }.bind(this));
-
-            this.sandbox.on('husky.navigation.collapsed', function() {
-                this.$navigationLabels.width('');
-            }.bind(this));
-
-            this.sandbox.on('husky.navigation.show', function() {
-                this.$navigationLabels.width('');
-            }.bind(this));
         },
 
         /**

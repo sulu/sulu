@@ -174,9 +174,6 @@ define(function() {
                 this.sandbox.emit('sulu.app.change-width', width, applyDefaults);
             }
             this.sandbox.emit('sulu.app.change-spacing', leftSpace, rightSpace, topSpace);
-            if (applyDefaults === true || typeof content.shrinkable !== 'undefined') {
-                this.sandbox.emit('sulu.app.toggle-shrinker', !!content.shrinkable);
-            }
         },
 
         /**
