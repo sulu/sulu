@@ -16,7 +16,7 @@ require.config({
         'type/iban-input': '../../sulucontact/js/validation/types/iban-input',
 
         'extensions/iban': '../../sulucontact/js/extensions/iban',
-        'vendor/iban-converter':'../../sulucontact/js/vendor/iban-converter/iban',
+        'vendor/iban-converter': '../../sulucontact/js/vendor/iban-converter/iban',
 
         'decorators/cards': '../../sulucontact/js/components/card-decorator/card-view',
 
@@ -45,14 +45,11 @@ define(['config', 'extensions/sulu-buttons-contactbundle', 'extensions/iban'], f
         name: "Sulu Contact Bundle",
 
         initialize: function(app) {
-
-            IbanExtension.initialize(app);
-
             var sandbox = app.sandbox;
 
-            sandbox.urlManager.setUrl('contact', 'contacts/contacts/edit:<%= id %>/details');
-            sandbox.urlManager.setUrl('account', 'contacts/accounts/edit:<%= id %>/details');
+            app.components.addSource('sulucontact', '/bundles/sulucontact/js/components');
 
+            IbanExtension.initialize(app);
             sandbox.sulu.buttons.push(ContactButtons.getButtons());
             sandbox.sulu.buttons.dropdownItems.push(ContactButtons.getDropdownItems());
 
@@ -100,30 +97,17 @@ define(['config', 'extensions/sulu-buttons-contactbundle', 'extensions/iban'], f
                 ]
             });
 
-            // breadcrumbs
-            Config.set('sulucontact.breadcrumb.account', [
-                {title: 'navigation.contacts'},
-                {title: 'contact.accounts.title', link: 'contacts/accounts'}
-            ]);
-
-            Config.set('sulucontact.breadcrumb.contact', [
-                {title: 'navigation.contacts'},
-                {title: 'contact.contacts.title', link: 'contacts/contacts'}
-            ]);
-
             // route to list
-            Config.set('sulucontact.routeToList.contact','contacts/contacts');
-            Config.set('sulucontact.routeToList.account','contacts/accounts');
+            Config.set('sulucontact.routeToList.contact', 'contacts/contacts');
+            Config.set('sulucontact.routeToList.account', 'contacts/accounts');
 
-            Config.set('suluresource.filters.type.accounts', {
+            Config.set('suluresource.filters.type.contacts', {
                 routeToList: Config.get('sulucontact.routeToList.contact')
             });
 
             Config.set('suluresource.filters.type.accounts', {
                 routeToList: Config.get('sulucontact.routeToList.account')
             });
-
-            app.components.addSource('sulucontact', '/bundles/sulucontact/js/components');
 
             // list all contacts
             sandbox.mvc.routes.push({
