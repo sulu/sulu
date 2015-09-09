@@ -56,7 +56,7 @@ define([
                 furtherChildren,
                 furtherContacts,
                 overlayType = 'show-warning',
-                title = 'sulu.overlay.be-careful',
+                title = util.capitalizeFirstLetter(translator.translate('public.delete')) + '?',
                 okCallbackWrapper = function() {
                     var deleteContacts = !!($('#overlay-checkbox').length && $('#overlay-checkbox').prop('checked'));
                     okCallback(deleteContacts);
@@ -99,7 +99,10 @@ define([
                 title,
                 content,
                 null,
-                okCallbackWrapper
+                okCallbackWrapper,
+                {
+                    okDefaultText: 'public.delete'
+                }
             );
         },
 
@@ -138,7 +141,10 @@ define([
                 title,
                 content,
                 null,
-                okCallbackWrapper
+                okCallbackWrapper,
+                {
+                    okDefaultText: 'public.ok'
+                }
             );
         };
 

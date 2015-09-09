@@ -252,18 +252,6 @@ define(['services/sulumedia/media-manager'], function(MediaManager) {
                 this.sandbox.emit('husky.overlay.media-edit.loading.close');
             }.bind(this));
 
-            this.sandbox.once('husky.dropzone.file-version.initialized', function() {
-                this.sandbox.emit('husky.overlay.media-edit.set-position');
-            }.bind(this));
-
-            this.sandbox.once('husky.auto-complete-list.media-info-' + this.media.id + '.initialized', function() {
-                this.sandbox.emit('husky.overlay.media-edit.set-position');
-            }.bind(this));
-
-            this.sandbox.on('husky.auto-complete-list.media-info-' + this.media.id + '.item-added', function() {
-                this.sandbox.emit('husky.overlay.media-edit.set-position');
-            }.bind(this));
-
             // change language (single-edit)
             this.sandbox.once('husky.overlay.media-edit.language-changed', this.languageChangedSingle.bind(this));
         },
@@ -425,7 +413,6 @@ define(['services/sulumedia/media-manager'], function(MediaManager) {
                         records: this.medias
                     }).then(function() {
                         this.sandbox.start(constants.multipleEditFormSelector);
-                        this.sandbox.emit('husky.overlay.media-multiple-edit.set-position');
                     }.bind(this));
                 }.bind(this));
             }.bind(this));
@@ -466,7 +453,6 @@ define(['services/sulumedia/media-manager'], function(MediaManager) {
             } else {
                 this.sandbox.dom.addClass($elements, 'hidden');
             }
-            this.sandbox.emit('husky.overlay.media-multiple-edit.set-position');
         },
 
         /**
@@ -482,7 +468,6 @@ define(['services/sulumedia/media-manager'], function(MediaManager) {
             } else {
                 this.sandbox.dom.addClass($elements, 'hidden');
             }
-            this.sandbox.emit('husky.overlay.media-multiple-edit.set-position');
         },
 
         /**

@@ -198,10 +198,11 @@ define([
          */
         removeContactFromAccount = function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                this.sandbox.emit('sulu.overlay.show-warning', 'sulu.overlay.be-careful', 'sulu.overlay.delete-desc', null,
-                    function() {
+                this.sandbox.sulu.showDeleteDialog(function(accepted) {
+                    if (accepted) {
                         AccountManager.removeAccountContacts(this.data.id, ids);
-                    }.bind(this));
+                    }
+                }.bind(this));
             }.bind(this));
         },
 

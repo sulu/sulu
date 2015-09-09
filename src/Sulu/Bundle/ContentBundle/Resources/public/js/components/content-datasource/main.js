@@ -50,7 +50,8 @@ define([], function() {
                     instanceName: 'smart-content.' + this.options.instanceName,
                     url: this.prepareUrl(this.options.url),
                     resultKey: this.options.resultKey,
-                    selected: this.options.selected
+                    selected: this.options.selected,
+                    responsive: false
                 });
 
             // start child components and bind events

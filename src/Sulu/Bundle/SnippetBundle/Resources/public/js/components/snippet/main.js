@@ -75,7 +75,7 @@ define([
         },
 
         del: function() {
-            this.confirmDeleteDialog(function(wasConfirmed) {
+            this.sandbox.sulu.showDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
                     this.destroySnippet(this.model, function () {
                         this.sandbox.emit('sulu.router.navigate', 'snippet/snippets');
@@ -213,29 +213,11 @@ define([
                 }
             }.bind(this);
 
-            this.confirmDeleteDialog(function(wasConfirmed) {
+            this.sandbox.sulu.showDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
                     deleteSnippetFromStack();
                 }
             }.bind(this));
-        },
-
-        /**
-         * @var ids - array of ids to delete
-         * @var callback - callback function returns true or false if data got deleted
-         */
-        confirmDeleteDialog: function(callbackFunction) {
-            // check if callback is a function
-            if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
-                throw 'callback is not a function';
-            }
-            // show dialog
-            this.sandbox.emit('sulu.overlay.show-warning',
-                'sulu.overlay.be-careful',
-                'sulu.overlay.delete-desc',
-                callbackFunction.bind(this, false),
-                callbackFunction.bind(this, true)
-            );
         },
 
         /**

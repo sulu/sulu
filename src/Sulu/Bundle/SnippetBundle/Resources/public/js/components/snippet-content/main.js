@@ -71,11 +71,6 @@ define([], function() {
                 'husky.overlay.snippet-content.' + this.options.instanceName + '.add.opened',
                 updateSnippetList.bind(this)
             );
-
-            // adjust position of overlay after column-navigation has initialized
-            this.sandbox.on('husky.datagrid.view.rendered', function() {
-                this.sandbox.emit('husky.overlay.snippet-content.' + this.options.instanceName + '.add.set-position');
-            }.bind(this));
         },
 
         /**
