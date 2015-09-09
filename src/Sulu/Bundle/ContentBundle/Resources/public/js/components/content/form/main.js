@@ -32,7 +32,6 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
 
         // content change detection
         saved: true,
-        contentChanged: false,
         animateTemplateDropdown: false,
 
         initialize: function() {
@@ -104,7 +103,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
 
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'template');
 
-            if (this.template !== '' && this.contentChanged) {
+            if (this.template !== '' && !this.saved) {
                 this.showRenderTemplateDialog(item);
             } else {
                 this.loadFormTemplate(item);
@@ -364,9 +363,6 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             this.sandbox.emit('sulu.content.contents.set-header-bar', saved);
 
             this.saved = saved;
-            if (this.saved) {
-                this.contentChanged = false;
-            }
         },
 
         setStateDropdown: function(data) {
@@ -414,7 +410,6 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
                     this.dfdListenForChange.resolve();
 
                     this.setHeaderBar(false);
-                    this.contentChanged = true;
                 }.bind(this));
             } else {
                 this.sandbox.dom.one(this.getDomElementsForTagName('sulu.rlp.part'), 'focusout', this.setResourceLocator.bind(this));
@@ -425,13 +420,11 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             this.dfdListenForChange.then(function() {
                 this.sandbox.dom.on(this.$el, 'keyup change', function() {
                     this.setHeaderBar(false);
-                    this.contentChanged = true;
                 }.bind(this), '.trigger-save-button');
             }.bind(this));
 
             this.sandbox.on('sulu.content.changed', function() {
                 this.setHeaderBar(false);
-                this.contentChanged = true;
             }.bind(this));
         },
 

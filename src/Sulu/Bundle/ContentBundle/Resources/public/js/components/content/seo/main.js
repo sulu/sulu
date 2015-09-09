@@ -159,7 +159,6 @@ define([], function() {
         listenForChange: function() {
             this.sandbox.dom.on(this.formId, 'keyup change', function() {
                 this.setHeaderBar(false);
-                this.contentChanged = true;
             }.bind(this), '.trigger-save-button');
         },
 

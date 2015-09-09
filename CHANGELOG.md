@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1638 [ContentBundle]   Removed unnecessary variable in content form
     * FEATURE     #1584 [ContentBundle]   Show UI elements in content management based on security
     * BUGFIX      #1625 [MediaBundle]     Fixed queries for PostgreSQL
     * ENHANCEMENT #1626 [AdminBundle]     Added require-css to load css dynamically with require
