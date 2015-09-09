@@ -133,73 +133,78 @@
   overflow: hidden;
 }
 /* line 26, ../scss/modules/media-selection.scss */
+.media-selection-overlay-container .slides {
+  margin: 0;
+  padding: 0;
+}
+/* line 31, ../scss/modules/media-selection.scss */
 .media-selection-overlay-container .overlay-header {
   display: none;
 }
-/* line 30, ../scss/modules/media-selection.scss */
+/* line 35, ../scss/modules/media-selection.scss */
 .media-selection-overlay-container .overlay-content {
-  height: 800px;
+  height: 500px;
   min-height: 400px;
   margin: 0;
   background-color: #f1f1f1;
 }
-/* line 37, ../scss/modules/media-selection.scss */
+/* line 42, ../scss/modules/media-selection.scss */
 .media-selection-overlay-container .overlay-footer {
   display: none;
 }
-/* line 41, ../scss/modules/media-selection.scss */
+/* line 46, ../scss/modules/media-selection.scss */
 .media-selection-overlay-container .data-navigation {
   padding-top: 0;
 }
-/* line 46, ../scss/modules/media-selection.scss */
+/* line 51, ../scss/modules/media-selection.scss */
 .media-selection-overlay-container .husky-thumbnails .item.large {
   margin-right: 24px;
 }
 @media (max-width: 1024px) {
-  /* line 51, ../scss/modules/media-selection.scss */
+  /* line 56, ../scss/modules/media-selection.scss */
   .media-selection-overlay-container .husky-thumbnails .item.large:nth-child(2n) {
     margin-right: 0;
   }
 }
 @media (min-width: 1024px) and (max-width: 1600px) {
-  /* line 57, ../scss/modules/media-selection.scss */
+  /* line 62, ../scss/modules/media-selection.scss */
   .media-selection-overlay-container .husky-thumbnails .item.large:nth-child(3n) {
     margin-right: 0;
   }
 }
 @media (min-width: 1600px) {
-  /* line 63, ../scss/modules/media-selection.scss */
+  /* line 68, ../scss/modules/media-selection.scss */
   .media-selection-overlay-container .husky-thumbnails .item.large:nth-child(5n) {
     margin-right: 0;
   }
 }
-/* line 69, ../scss/modules/media-selection.scss */
+/* line 74, ../scss/modules/media-selection.scss */
 .media-selection-overlay-container .fa-cloud-download {
   display: none !important;
 }
-/* line 73, ../scss/modules/media-selection.scss */
+/* line 78, ../scss/modules/media-selection.scss */
 .media-selection-overlay-container .selected-elements {
   display: none;
 }
 
-/* line 78, ../scss/modules/media-selection.scss */
+/* line 83, ../scss/modules/media-selection.scss */
 .media-selection-overlay {
   height: 100%;
 }
 
-/* line 82, ../scss/modules/media-selection.scss */
+/* line 87, ../scss/modules/media-selection.scss */
 .media-selection-overlay-navigation-container {
   width: 250px;
   height: 100%;
 }
 
-/* line 87, ../scss/modules/media-selection.scss */
+/* line 92, ../scss/modules/media-selection.scss */
 .media-selection-overlay-toolbar-container {
   display: inline-block;
   margin-bottom: 10px;
 }
 
-/* line 92, ../scss/modules/media-selection.scss */
+/* line 97, ../scss/modules/media-selection.scss */
 .media-selection-overlay-content {
   height: 100%;
   padding: 10px 0 10px 20px;
@@ -207,13 +212,13 @@
   position: relative;
 }
 
-/* line 99, ../scss/modules/media-selection.scss */
+/* line 104, ../scss/modules/media-selection.scss */
 .media-selection-overlay-content-area {
   overflow: auto;
   height: calc(100% - 55px);
 }
 
-/* line 104, ../scss/modules/media-selection.scss */
+/* line 109, ../scss/modules/media-selection.scss */
 .media-selection-overlay-close {
   position: absolute;
   top: 10px;
@@ -222,41 +227,47 @@
   cursor: pointer;
 }
 
-/* line 113, ../scss/modules/media-selection.scss */
+/* line 118, ../scss/modules/media-selection.scss */
 .media-selection-overlay-add .heading {
   width: 100%;
   border-bottom: 2px #ccc solid;
 }
-/* line 117, ../scss/modules/media-selection.scss */
+/* line 122, ../scss/modules/media-selection.scss */
 .media-selection-overlay-add h3 {
   font-size: 16px;
   margin-top: 20px;
   margin-bottom: 10px;
 }
-/* line 122, ../scss/modules/media-selection.scss */
+/* line 127, ../scss/modules/media-selection.scss */
 .media-selection-overlay-add .overlay-loader {
   margin: 20px 0;
 }
 
-/* line 127, ../scss/modules/media-selection.scss */
+/* line 132, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container {
   padding-right: 20px;
 }
-/* line 130, ../scss/modules/media-selection.scss */
+/* line 135, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container > .husky-dropzone {
   display: none;
   margin-top: 30px;
   margin-bottom: 20px;
 }
-/* line 135, ../scss/modules/media-selection.scss */
+/* line 140, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container > .husky-dropzone.dropped {
   display: block;
 }
-/* line 140, ../scss/modules/media-selection.scss */
+/* line 145, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container > div {
   width: 100% !important;
 }
-/* line 144, ../scss/modules/media-selection.scss */
+/* line 148, ../scss/modules/media-selection.scss */
+.media-selection-overlay-dropzone-container .husky-overlay-wrapper {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+/* line 153, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container .husky-overlay-container {
   position: absolute !important;
   top: 0 !important;
@@ -267,38 +278,43 @@
   height: 100%;
   background-color: rgba(255, 255, 255, 0.95);
 }
-/* line 154, ../scss/modules/media-selection.scss */
+/* line 163, ../scss/modules/media-selection.scss */
+.media-selection-overlay-dropzone-container .husky-overlay-container .slides {
+  margin: 0;
+  padding: 0;
+}
+/* line 168, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container .husky-overlay-container .slide {
   width: 100% !important;
 }
-/* line 159, ../scss/modules/media-selection.scss */
+/* line 173, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container .husky-overlay-backdrop {
   display: none !important;
 }
-/* line 163, ../scss/modules/media-selection.scss */
+/* line 177, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container .overlay-content {
   height: auto !important;
   background-color: transparent;
 }
 
-/* line 169, ../scss/modules/media-selection.scss */
+/* line 183, ../scss/modules/media-selection.scss */
 .media-selection-overlay-content-title {
   color: #999;
   padding-bottom: 10px;
 }
 
-/* line 174, ../scss/modules/media-selection.scss */
+/* line 188, ../scss/modules/media-selection.scss */
 .media-selection-overlay-datagrid-container {
   padding-right: 20px;
   padding-bottom: 20px;
 }
 
-/* line 179, ../scss/modules/media-selection.scss */
+/* line 193, ../scss/modules/media-selection.scss */
 .media-selection-overlay-header {
   white-space: nowrap;
 }
 
-/* line 183, ../scss/modules/media-selection.scss */
+/* line 197, ../scss/modules/media-selection.scss */
 .media-selection-overlay-selected-info {
   display: inline-block;
   vertical-align: top;
@@ -314,11 +330,9 @@
 }
 /* line 10, ../scss/modules/collection-select-overlay.scss */
 .collection-select .overlay-content {
-  margin-right: 0px;
-  margin-bottom: 1px;
-  margin-left: 0px;
+  margin: 0;
 }
-/* line 16, ../scss/modules/collection-select-overlay.scss */
+/* line 14, ../scss/modules/collection-select-overlay.scss */
 .collection-select .overlay-footer {
   margin-top: -2px;
 }

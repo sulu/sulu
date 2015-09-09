@@ -7,7 +7,11 @@
  * with this source code in the file LICENSE.
  */
 
-define(['services/husky/mediator'], function(mediator) {
+define([
+    'services/husky/util',
+    'services/husky/mediator',
+    'services/husky/translator'
+], function(util, mediator, translator) {
 
     'use strict';
     return {
@@ -30,10 +34,13 @@ define(['services/husky/mediator'], function(mediator) {
             // show warning dialog
             mediator.emit(
                 'sulu.overlay.show-warning',
-                'sulu.overlay.be-careful',
+                util.capitalizeFirstLetter(translator.translate('public.delete')) + '?',
                 'sulu.overlay.delete-desc',
                 null,
-                okCallback.bind(this, true)
+                okCallback.bind(this, true),
+                {
+                    okDefaultText: 'public.delete'
+                }
             );
         }
     };

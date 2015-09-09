@@ -904,6 +904,14 @@
                 <source>public.refresh</source>
                 <target>Neu laden</target>
             </trans-unit>
+            <trans-unit id="a329c52dae1354cc4132c0b4820e23cda" resname="public.cancel">
+                <source>public.cancel</source>
+                <target>Abbrechen</target>
+            </trans-unit>
+            <trans-unit id="b229c52dae1354cc4132c0b4820e23cda" resname="public.ok">
+                <source>public.ok</source>
+                <target>Ok</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

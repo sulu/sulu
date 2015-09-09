@@ -152,12 +152,12 @@ define(function() {
                                 buttons: [
                                     {
                                         type: 'cancel',
-                                        align: 'right'
+                                        align: 'left'
                                     },
                                     {
                                         type: 'ok',
                                         text: this.sandbox.translate('content.contents.settings.copy-locales.ok'),
-                                        align: 'left'
+                                        align: 'right'
                                     }
                                 ],
                                 okCallback: function() {

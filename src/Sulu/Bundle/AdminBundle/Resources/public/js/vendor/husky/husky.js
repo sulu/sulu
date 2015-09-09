@@ -27553,6 +27553,15 @@ define('services/husky/util',[],function() {
         });
     };
 
+    /**
+     * Makes the first letter uppercase
+     * @param string
+     * @returns {string}
+     */
+    Util.prototype.capitalizeFirstLetter = function(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    };
+
     Util.getInstance = function() {
         if (instance == null) {
             instance = new Util();
@@ -42329,7 +42338,7 @@ define('__component__$label@husky',[],function() {
         description: null,
         hasClose: true,
         effectType: 'slide',
-        autoVanish: false,
+        autoVanish: true,
         vanishDelay: 0,
         vanishDuration: 250,
         showDuration: 250,
@@ -50813,6 +50822,8 @@ define('husky_extensions/util',['services/husky/util'], function(Util) {
             app.core.util.arrayGetColumn = Util.arrayGetColumn;
 
             app.core.util.removeFromArray = Util.removeFromArray;
+
+            app.core.util.capitalizeFirstLetter = Util.capitalizeFirstLetter;
         }
     };
 });

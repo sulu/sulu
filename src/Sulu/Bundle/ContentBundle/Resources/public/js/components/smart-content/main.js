@@ -652,7 +652,6 @@ define([], function() {
                             }
                         ],
                         okCallback: function() {
-                            this.itemsVisible = this.options.visibleItems;
                             this.getOverlayData();
                         }.bind(this)
                     }
@@ -664,11 +663,12 @@ define([], function() {
                     data: '<div id="data-source-' + this.options.instanceName + '" class="data-source-content"/>',
                     cssClass: 'data-source-slide',
                     okInactive: true,
-                    cancelDefaultText: this.sandbox.translate(this.translations.chooseDataSourceCancel),
                     buttons: [
                         {
                             type: 'cancel',
                             inactive: false,
+                            classes: 'just-text',
+                            text: this.translations.chooseDataSourceCancel,
                             align: 'center'
                         }
                     ],

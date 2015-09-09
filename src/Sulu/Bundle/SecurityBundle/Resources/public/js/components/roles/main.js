@@ -122,7 +122,7 @@ define([
         del: function(id) {
             this.idDelete = id;
 
-            this.confirmDeleteDialog(function(wasConfirmed) {
+            this.sandbox.sulu.showDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
                     this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
                     if (typeof this.idDelete === 'number' || typeof this.idDelete === 'string') {
@@ -196,36 +196,6 @@ define([
             } else {
                 this.sandbox.start([component]);
             }
-        },
-
-        // dialog
-
-        /**
-         * @var ids - array of ids to delete
-         * @var callback - callback function returns true or false if data got deleted
-         */
-        confirmDeleteDialog: function(callbackFunction) {
-            // check if callback is a function
-            if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
-                throw 'callback is not a function';
-            }
-
-            // show warning dialog
-            this.sandbox.emit('sulu.overlay.show-warning',
-                'sulu.overlay.be-careful',
-                'sulu.overlay.delete-desc',
-
-                function() {
-                    // cancel callback
-                    callbackFunction(false);
-                }.bind(this),
-
-                function() {
-                    // ok callback
-                    callbackFunction(true);
-                }.bind(this)
-            );
         }
-
     };
 });
