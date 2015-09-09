@@ -9,9 +9,8 @@
 
 define([
     'services/sulucontact/contact-manager',
-    'services/sulucontact/contact-router',
-    'services/sulucontact/contact-delete-dialog'
-], function(ContactManager, ContactRouter, DeleteDialog) {
+    'services/sulucontact/contact-router'
+], function(ContactManager, ContactRouter) {
 
     'use strict';
 
@@ -90,10 +89,12 @@ define([
          * Show delete-confirm dialog and if confirmed, delete current contact
          */
         deleteContact: function() {
-            DeleteDialog.showDialog([this.options.id], function() {
-                ContactManager.delete(this.options.id).then(function() {
-                    ContactRouter.toList();
-                }.bind(this));
+            this.sandbox.sulu.showDeleteDialog(function(confirmed) {
+                if (!!confirmed) {
+                    ContactManager.delete(this.options.id).then(function() {
+                        ContactRouter.toList();
+                    }.bind(this));
+                }
             }.bind(this));
         },
 
@@ -112,7 +113,7 @@ define([
         saveTab: function() {
             var promise = $.Deferred();
             this.sandbox.once('sulu.tab.saved', function(savedData, updateData) {
-                if (!!updateData){
+                if (!!updateData) {
                     this.changeData(savedData);
                 }
                 promise.resolve(savedData);

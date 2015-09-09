@@ -134,18 +134,10 @@ define([
                         imageFormat: '100x100-inset',
                         fields: {
                             picture: 'logo',
-                            title: ['name'],
-                            firstInfoRow: ['city', 'countryCode'],
-                            secondInfoRow: ['mainEmail'],
-                        },
-                        separators: {
-                            title: ' ',
-                            infoRow: ', '
+                            title: ['name']
                         },
                         icons: {
-                            picture: 'fa-home',
-                            firstInfoRow: 'fa-map-marker',
-                            secondInfoRow: 'fa-envelope'
+                            picture: 'fa-home'
                         }
                     }
                 }

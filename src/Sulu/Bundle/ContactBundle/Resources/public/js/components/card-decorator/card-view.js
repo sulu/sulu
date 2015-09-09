@@ -33,9 +33,18 @@ define(function() {
             unselectOnBackgroundClick: true,
             imageFormat: '100x100',
             emptyListTranslation: 'public.empty-list',
-            fields: {},
-            separators: {},
-            icons: {}
+            fields: {
+                firstInfoRow: ['city', 'countryCode'],
+                secondInfoRow: ['mainEmail']
+            },
+            separators: {
+                title: ' ',
+                infoRow: ', '
+            },
+            icons: {
+                firstInfoRow: 'fa-map-marker',
+                secondInfoRow: 'fa-envelope'
+            }
         },
 
         constants = {

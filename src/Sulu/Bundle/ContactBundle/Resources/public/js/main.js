@@ -25,7 +25,6 @@ require.config({
         'services/sulucontact/account-router': '../../sulucontact/js/services/account-router',
         'services/sulucontact/contact-router': '../../sulucontact/js/services/contact-router',
         'services/sulucontact/account-delete-dialog': '../../sulucontact/js/services/account-delete-dialog',
-        'services/sulucontact/contact-delete-dialog': '../../sulucontact/js/services/contact-delete-dialog',
 
         'extensions/sulu-buttons-contactbundle': '../../sulucontact/js/extensions/sulu-buttons'
     },
