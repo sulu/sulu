@@ -185,7 +185,10 @@ class MediaManager implements MediaManagerInterface
             [],
             false,
             true,
-            'thumbnails'
+            'thumbnails',
+            '',
+            '',
+            false
         );
 
         $fieldDescriptors['name'] = new DoctrineFieldDescriptor(

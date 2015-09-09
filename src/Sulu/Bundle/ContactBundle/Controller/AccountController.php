@@ -1260,7 +1260,10 @@ class AccountController extends RestController implements ClassResourceInterface
             ],
             false,
             true,
-            'thumbnails'
+            'thumbnails',
+            '',
+            '',
+            false
         );
 
         $this->fieldDescriptors['number'] = new DoctrineFieldDescriptor(
