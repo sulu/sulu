@@ -33,14 +33,23 @@ define(function() {
             unselectOnBackgroundClick: true,
             imageFormat: '100x100',
             emptyListTranslation: 'public.empty-list',
-            fields: {},
-            separators: {},
-            icons: {}
+            fields: {
+                firstInfoRow: ['city', 'countryCode'],
+                secondInfoRow: ['mainEmail']
+            },
+            separators: {
+                title: ' ',
+                infoRow: ', '
+            },
+            icons: {
+                firstInfoRow: 'fa-map-marker',
+                secondInfoRow: 'fa-envelope'
+            }
         },
 
         constants = {
-            containerClass: 'contact-grid',
-            emptyListClass: 'empty-list',
+            cardGridClass: 'card-grid',
+            emptyIndicatorClass: 'empty-list',
             selectedClass: 'selected',
             actionNavigatorClass: 'action-navigator',
 
@@ -50,7 +59,7 @@ define(function() {
 
         templates = {
             item: [
-                '<div class="contact-item">',
+                '<div class="card-item">',
                 '   <div class="' + constants.itemHeadClass + '">',
                 '       <div class="head-container">',
                 '           <div class="head-image ' + constants.actionNavigatorClass + '">',
@@ -73,7 +82,7 @@ define(function() {
                 '</div>'
             ].join(''),
             emptyIndicator: [
-                '<div class="' + constants.emptyListClass + '">',
+                '<div class="' + constants.emptyIndicatorClass + '">',
                 '   <div class="fa-coffee icon"></div>',
                 '   <span><%= text %></span>',
                 '</div>'
@@ -98,6 +107,27 @@ define(function() {
                 });
                 return strings.join(separator);
             }
+        },
+
+        /**
+         * Apply datagrid-content-filters on the given record column by column
+         * datagrid-content-filters are used to format the raw database-values (for example size)
+         * @param record
+         * @returns {*}
+         */
+        processContentFilters = function(record) {
+            var item = this.sandbox.util.extend(false, {}, record);
+            this.datagrid.matchings.forEach(function(matching) {
+                var argument = (matching.type === this.datagrid.types.THUMBNAILS) ? this.options.imageFormat : '';
+                item[matching.attribute] = this.datagrid.processContentFilter.call(
+                    this.datagrid,
+                    matching.attribute,
+                    item[matching.attribute],
+                    matching.type,
+                    argument
+                );
+            }.bind(this));
+            return item;
         };
 
     return {
@@ -125,7 +155,6 @@ define(function() {
          */
         setVariables: function() {
             this.rendered = false;
-            this.data = null;
             this.$el = null;
 
             // global array to store the dom elements
@@ -138,17 +167,43 @@ define(function() {
          * @param $container dom-element to render datagrid in
          */
         render: function(data, $container) {
-            this.data = data;
-            this.$el = this.sandbox.dom.createElement('<div class="' + constants.containerClass + '"/>');
-            this.sandbox.dom.append($container, this.$el);
-
+            this.renderCardContainer($container);
             this.bindGeneralDomEvents();
-            if (this.data.total > 0) {
-                this.renderItems(this.data.embedded);
-            } else {
-                this.renderEmptyIndicator();
-            }
+
+            this.renderRecords(data.embedded);
             this.rendered = true;
+        },
+
+        /**
+         * Render the card-container into the given dom element
+         * The card-container contains the empty-list-indicator and the card-grid
+         * @param $container
+         */
+        renderCardContainer: function($container) {
+            this.$el = this.sandbox.dom.createElement('<div class="card-grid-container"/>');
+
+            // render empty indicator
+            var $empty = this.sandbox.util.template(templates.emptyIndicator, {
+                text: this.sandbox.translate(this.options.emptyListTranslation)
+            });
+            this.sandbox.dom.append(this.$el, $empty);
+
+            // render card-grid
+            var $grid = this.sandbox.dom.createElement('<div class="' + constants.cardGridClass + '"/>');
+            this.sandbox.dom.append(this.$el, $grid);
+
+            this.sandbox.dom.append($container, this.$el);
+        },
+
+        /**
+         * Show the empty-list-indicator if datagrid contains no data, else hide it
+         */
+        updateEmptyIndicatorVisibility: function() {
+            if (!!this.datagrid.data.embedded && this.datagrid.data.embedded.length > 0) {
+                this.sandbox.dom.hide('.' + constants.emptyIndicatorClass);
+            } else {
+                this.sandbox.dom.show('.' + constants.emptyIndicatorClass);
+            }
         },
 
         /**
@@ -156,8 +211,8 @@ define(function() {
          */
         bindGeneralDomEvents: function() {
             if (this.options.unselectOnBackgroundClick) {
-                this.sandbox.dom.on('.body', 'click.contact.list', function() {
-                    this.unselectAllItems();
+                this.sandbox.dom.on('body', 'click.cards', function() {
+                    this.deselectAllRecords();
                 }.bind(this));
             }
         },
@@ -166,18 +221,18 @@ define(function() {
          * Parses the data and passes it item by item to a render function
          * @param items {Array} array with items to render
          */
-        renderItems: function(items) {
-            this.removeEmptyIndicator();
+        renderRecords: function(items) {
+            this.updateEmptyIndicatorVisibility();
             this.sandbox.util.foreach(items, function(record) {
+                var item = processContentFilters.call(this, record);
                 var id, picture, title, firstInfoRow, secondInfoRow;
 
-                id = record.id;
-                picture = (!!record[this.options.fields.picture]) ?
-                    record[this.options.fields.picture][this.options.imageFormat] : '';
+                id = item.id;
+                picture = item[this.options.fields.picture].url || '';
 
-                title = concatRecordColumns(record, this.options.fields.title, this.options.separators.title);
-                firstInfoRow = concatRecordColumns(record, this.options.fields.firstInfoRow, this.options.separators.infoRow);
-                secondInfoRow = concatRecordColumns(record, this.options.fields.secondInfoRow, this.options.separators.infoRow);
+                title = concatRecordColumns(item, this.options.fields.title, this.options.separators.title);
+                firstInfoRow = concatRecordColumns(item, this.options.fields.firstInfoRow, this.options.separators.infoRow);
+                secondInfoRow = concatRecordColumns(item, this.options.fields.secondInfoRow, this.options.separators.infoRow);
 
                 // pass the found data to a render method
                 this.renderItem(id, picture, title, firstInfoRow, secondInfoRow);
@@ -185,29 +240,12 @@ define(function() {
         },
 
         /**
-         * Renders an item which indicates that the list is empty
-         */
-        renderEmptyIndicator: function() {
-            this.sandbox.dom.append(this.$el, this.sandbox.util.template(templates.emptyIndicator, {
-                text: this.sandbox.translate(this.options.emptyListTranslation)
-            }));
-        },
-
-        /**
-         * Removes the empty-indicator from the list
-         */
-        removeEmptyIndicator: function() {
-            this.$el.find('.' + constants.emptyListClass).remove();
-        },
-
-        /**
-         * Renders the actual contact item
-         * @param id {String|Number} the identifier of the data record
-         * @param imgSrc {String} the thumbnail src of the data record
-         * @param imgAlt {String} the thumbnail alt tag of the data record
-         * @param title {String} the title of the data record
-         * @param description {String} the thumbnail description to render
-         * @param record {Object} the original data record
+         * Renders a card-grid item with the given properties
+         * @param id
+         * @param picture
+         * @param title
+         * @param firstInfoRow
+         * @param secondInfoRow
          */
         renderItem: function(id, picture, title, firstInfoRow, secondInfoRow) {
             this.$items[id] = this.sandbox.dom.createElement(
@@ -231,10 +269,10 @@ define(function() {
             }
 
             if (this.datagrid.itemIsSelected.call(this.datagrid, id)) {
-                this.selectItem(id);
+                this.selectRecord(id);
             }
 
-            this.sandbox.dom.append(this.$el, this.$items[id]);
+            $('.' + constants.cardGridClass).append(this.$items[id]);
             this.bindItemDomEvents(id);
         },
 
@@ -259,15 +297,23 @@ define(function() {
         },
 
         /**
+         * Takes an object with options and extends the current ones
+         * @param options {Object} new options to merge to the current ones
+         */
+        extendOptions: function(options) {
+            this.options = this.sandbox.util.extend(true, {}, this.options, options);
+        },
+
+        /**
          * Destroys the view
          */
         destroy: function() {
-            this.sandbox.dom.off('.body', 'click.contact.list');
+            this.sandbox.dom.off('body', 'click.cards');
             this.sandbox.dom.remove(this.$el);
         },
 
         /**
-         * Binds Dom-Events for a thumbnail
+         * Binds Dom-Events for a card-item
          * @param id {Number|String} the identifier of the thumbnail to bind events on
          */
         bindItemDomEvents: function(id) {
@@ -288,9 +334,9 @@ define(function() {
          */
         toggleItemSelected: function(id) {
             if (this.datagrid.itemIsSelected.call(this.datagrid, id) === true) {
-                this.unselectItem(id);
+                this.deselectRecord(id);
             } else {
-                this.selectItem(id);
+                this.selectRecord(id);
             }
         },
 
@@ -298,7 +344,7 @@ define(function() {
          * Selects an item with a given id
          * @param id {Number|String} the id of the item
          */
-        selectItem: function(id) {
+        selectRecord: function(id) {
             this.sandbox.dom.addClass(this.$items[id], constants.selectedClass);
             if (!this.sandbox.dom.is(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), ':checked')) {
                 this.sandbox.dom.prop(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), 'checked', true);
@@ -310,7 +356,7 @@ define(function() {
          * Unselects an item with a given id
          * @param id {Number|String} the id of the item
          */
-        unselectItem: function(id) {
+        deselectRecord: function(id) {
             this.sandbox.dom.removeClass(this.$items[id], constants.selectedClass);
             if (this.sandbox.dom.is(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), ':checked')) {
                 this.sandbox.dom.prop(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), 'checked', false);
@@ -324,7 +370,7 @@ define(function() {
          * @public
          */
         addRecord: function(record) {
-            this.renderItems([record]);
+            this.renderRecords([record]);
         },
 
         /**
@@ -336,17 +382,18 @@ define(function() {
             if (!!this.$items[recordId]) {
                 this.sandbox.dom.remove(this.$items[recordId]);
                 this.datagrid.removeRecord.call(this.datagrid, recordId);
+                this.updateEmptyIndicatorVisibility();
                 return true;
             }
             return false;
         },
 
         /**
-         * Unselects all contact items
+         * Unselects all card items
          */
-        unselectAllItems: function() {
+        deselectAllRecords: function() {
             this.sandbox.util.each(this.$items, function(id) {
-                this.unselectItem(Number(id));
+                this.deselectRecord(Number(id));
             }.bind(this));
         }
     };

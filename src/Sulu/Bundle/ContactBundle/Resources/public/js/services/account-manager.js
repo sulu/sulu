@@ -48,6 +48,7 @@ define([
 
                 success: function() {
                     mediator.emit('sulu.contacts.account.deleted', accountId);
+                    mediator.emit('sulu.labels.success.show', 'contact.accounts.deleted');
                     promise.resolve();
                 }.bind(this),
                 error: function() {
@@ -103,6 +104,7 @@ define([
 
                 success: function() {
                     mediator.emit('sulu.contacts.account.document.removed', accountId, mediaId);
+                    mediator.emit('sulu.labels.success.show', 'contact.accounts.documents-removed');
                     promise.resolve();
                 }.bind(this)
             });
@@ -127,6 +129,7 @@ define([
             accountContact.destroy({
                 success: function() {
                     mediator.emit('sulu.contacts.account.contact.removed', accountId, contactId);
+                    mediator.emit('sulu.labels.success.show', 'contact.accounts.contacts-removed');
                     promise.resolve();
                 }.bind(this)
             });
@@ -188,7 +191,6 @@ define([
             }.bind(this));
 
             $.when.apply(null, requests).then(function() {
-                mediator.emit('sulu.labels.success.show', 'contact.accounts.deleted');
                 promise.resolve();
             }.bind(this));
 
@@ -253,7 +255,6 @@ define([
             }.bind(this));
 
             $.when.apply(null, requests).then(function() {
-                mediator.emit('sulu.labels.success.show', 'contact.accounts.contacts-removed');
                 promise.resolve();
             }.bind(this));
 
@@ -384,8 +385,6 @@ define([
             }.bind(this));
 
             $.when.apply(null, requests).then(function() {
-                mediator.emit('sulu.contacts.documents.removed', accountId, mediaIds);
-                mediator.emit('sulu.labels.success.show', 'contact.accounts.documents-removed');
                 promise.resolve();
             }.bind(this));
 

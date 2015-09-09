@@ -158,7 +158,6 @@ define(function() {
          */
         setVariables: function() {
             this.rendered = false;
-            this.data = null;
             this.$el = null;
 
             // global array to store the dom elements
@@ -171,12 +170,11 @@ define(function() {
          * @param $container dom-element to render datagrid in
          */
         render: function(data, $container) {
-            this.data = data;
             this.renderMasonryContainer($container);
             this.initializeMasonryGrid();
             this.bindGeneralDomEvents();
 
-            this.renderRecords(this.data.embedded);
+            this.renderRecords(data.embedded);
             this.rendered = true;
         },
 
@@ -347,7 +345,7 @@ define(function() {
          * Destroys the view
          */
         destroy: function() {
-            this.sandbox.dom.off('.body', 'click.masonry');
+            this.sandbox.dom.off('body', 'click.masonry');
             this.sandbox.masonry.destroy('#' + constants.masonryGridId);
             this.sandbox.dom.remove(this.$el);
         },

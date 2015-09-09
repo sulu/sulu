@@ -9,9 +9,8 @@
 
 define([
     'services/sulucontact/contact-manager',
-    'services/sulucontact/contact-router',
-    'services/sulucontact/contact-delete-dialog',
-], function(ContactManager, ContactRouter, DeleteDialog) {
+    'services/sulucontact/contact-router'
+], function(ContactManager, ContactRouter) {
 
     'use strict';
 
@@ -55,8 +54,10 @@ define([
         },
 
         deleteCallback = function(ids) {
-            DeleteDialog.showDialog(ids, function() {
-                ContactManager.delete(ids);
+            this.sandbox.sulu.showDeleteDialog(function(confirmed) {
+                if (!!confirmed) {
+                    ContactManager.delete(ids);
+                }
             }.bind(this));
         },
 
@@ -127,21 +128,16 @@ define([
                 actionCallback: actionCallback.bind(this),
                 view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'decorators/cards',
                 viewOptions: {
+                    table: {
+                        actionIconColumn: 'firstName'
+                    },
                     'decorators/cards': {
                         fields: {
                             picture: 'avatar',
-                            title: ['firstName', 'lastName'],
-                            firstInfoRow: ['city', 'countryCode'],
-                            secondInfoRow: ['mainEmail'],
-                        },
-                        separators: {
-                            title: ' ',
-                            infoRow: ', '
+                            title: ['firstName', 'lastName']
                         },
                         icons: {
-                            picture: 'fa-user',
-                            firstInfoRow: 'fa-map-marker',
-                            secondInfoRow: 'fa-envelope'
+                            picture: 'fa-user'
                         }
                     }
                 }

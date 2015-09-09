@@ -127,22 +127,17 @@ define([
                 actionCallback: actionCallback.bind(this),
                 view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'decorators/cards',
                 viewOptions: {
+                    table: {
+                        actionIconColumn: 'name'
+                    },
                     'decorators/cards': {
                         imageFormat: '100x100-inset',
                         fields: {
                             picture: 'logo',
-                            title: ['name'],
-                            firstInfoRow: ['city', 'countryCode'],
-                            secondInfoRow: ['mainEmail'],
-                        },
-                        separators: {
-                            title: ' ',
-                            infoRow: ', '
+                            title: ['name']
                         },
                         icons: {
-                            picture: 'fa-home',
-                            firstInfoRow: 'fa-map-marker',
-                            secondInfoRow: 'fa-envelope'
+                            picture: 'fa-home'
                         }
                     }
                 }

@@ -116,7 +116,10 @@ class ContactController extends RestController implements ClassResourceInterface
             ],
             false,
             true,
-            'thumbnails'
+            'thumbnails',
+            '',
+            '',
+            false
         );
 
         $this->fieldDescriptors['fullName'] = new DoctrineConcatenationFieldDescriptor(

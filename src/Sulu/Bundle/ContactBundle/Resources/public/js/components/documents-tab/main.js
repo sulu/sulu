@@ -9,9 +9,8 @@
 
 define([
     'services/sulucontact/account-manager',
-    'services/sulucontact/contact-manager',
-    'services/sulucontact/contact-delete-dialog'
-], function(AccountManager, ContactManager, DeleteDialog) {
+    'services/sulucontact/contact-manager'
+], function(AccountManager, ContactManager) {
 
     'use strict';
 
@@ -85,9 +84,11 @@ define([
          */
         removeSelected: function() {
             this.sandbox.emit('husky.datagrid.documents.items.get-selected', function(ids) {
-                DeleteDialog.showDialog(ids, function() {
-                    this.currentSelection = this.sandbox.util.removeFromArray(this.currentSelection, ids);
-                    this.manager.removeDocuments(this.data.id, ids);
+                this.sandbox.sulu.showDeleteDialog(function(confirmed) {
+                    if (!!confirmed) {
+                        this.currentSelection = this.sandbox.util.removeFromArray(this.currentSelection, ids);
+                        this.manager.removeDocuments(this.data.id, ids);
+                    }
                 }.bind(this));
             }.bind(this));
         },
