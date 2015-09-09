@@ -2,29 +2,15 @@
 // Smart Content
 // --------------------------------------------------
 
-.smart-content-overlay {
+.husky-overlay-container {
     .data-source-slide {
-        .overlay-header {
-            margin-bottom: 1px;
-        }
         .overlay-content {
             margin: 0px;
-
-            .data-source-content {
-                height: 100%;
-            }
         }
 
-        .overlay-footer {
-            margin: 0px;
+        .column-navigation-wrapper .column-navigation {
+            height: 381px;
         }
-    }
-
-    .overlay-header {
-        margin-bottom: 15px;
-    }
-    .overlay-footer {
-        margin-top: 5px;
     }
 }
 
@@ -55,7 +41,7 @@
     }
     .item-half {
         float: left;
-        width: 270px;
+        width: 260px;
     }
     .item {
         padding-right: 20px;

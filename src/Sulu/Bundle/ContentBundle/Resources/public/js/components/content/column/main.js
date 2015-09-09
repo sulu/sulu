@@ -251,11 +251,6 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
                 this.sandbox.off('husky.column-navigation.overlay.action', editCallback);
             }.bind(this));
 
-            // adjust position of overlay after column-navigation has initialized
-            this.sandbox.once('husky.column-navigation.overlay.initialized', function() {
-                this.sandbox.emit('husky.overlay.node.set-position');
-            }.bind(this));
-
             this.startOverlay('content.contents.settings.' + title + '.title', templates.columnNavigation(), false);
         },
 

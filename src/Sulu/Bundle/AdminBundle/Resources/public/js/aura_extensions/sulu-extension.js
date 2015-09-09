@@ -219,7 +219,9 @@
                 if (!!callback && typeof(callback) !== 'function') {
                     throw 'callback is not a function';
                 }
-                title = (typeof title === 'string') ? title : 'sulu.overlay.be-careful';
+                if (typeof title !== 'string') {
+                    title = app.sandbox.util.capitalizeFirstLetter(app.sandbox.translate('public.delete')) + '?';
+                }
                 description = (typeof description === 'string') ? description : 'sulu.overlay.delete-desc';
 
                 // show warning dialog
@@ -235,7 +237,11 @@
                     function() {
                         // ok callback
                         callback(true);
-                    }.bind(this)
+                    }.bind(this),
+
+                    {
+                        okDefaultText: 'public.delete'
+                    }
                 );
             };
 

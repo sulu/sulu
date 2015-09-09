@@ -410,7 +410,7 @@ define([
         },
 
         del: function(id) {
-            this.showConfirmSingleDeleteDialog(function(wasConfirmed) {
+            this.sandbox.sulu.showDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
                     this.sandbox.emit('sulu.header.toolbar.item.loading', 'settings');
                     if (!this.content || id !== this.content.get('id')) {
@@ -439,7 +439,7 @@ define([
                         });
                     }
                 }
-            }.bind(this), this.options.id);
+            }.bind(this));
         },
 
         delContents: function(ids) {
@@ -459,29 +459,6 @@ define([
                     }.bind(this));
                 }
             }.bind(this));
-        },
-
-        showConfirmSingleDeleteDialog: function(callbackFunction) {
-            // check if callback is a function
-            if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
-                throw 'callback is not a function';
-            }
-
-            // show warning dialog
-            this.sandbox.emit('sulu.overlay.show-warning',
-                'sulu.overlay.be-careful',
-                'sulu.overlay.delete-desc',
-
-                function() {
-                    // cancel callback
-                    callbackFunction(false);
-                }.bind(this),
-
-                function() {
-                    // ok callback
-                    callbackFunction(true);
-                }.bind(this)
-            );
         },
 
         changeState: function(state) {

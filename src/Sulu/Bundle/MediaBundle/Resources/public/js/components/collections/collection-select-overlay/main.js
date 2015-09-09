@@ -90,11 +90,6 @@ define(function() {
             // start column navigation when overlay is openend
             this.sandbox.once(createEventName.call(this, 'opened', 'husky.overlay.'), this.startOverlayColumnNavigation.bind(this));
 
-            // adjust position of overlay after column-navigation has initialized
-            this.sandbox.on(createEventName.call(this, 'initialized', 'husky.column-navigation.'), function() {
-                this.sandbox.emit(createEventName.call(this, 'set-position', 'husky.overlay.'));
-            }.bind(this));
-
             // wait for item select in column-navigation
             this.sandbox.on(createEventName.call(this, 'action', 'husky.column-navigation.'), function(item) {
                 this.sandbox.emit(SELECTED.call(this), item);

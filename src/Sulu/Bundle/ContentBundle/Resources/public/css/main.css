@@ -333,119 +333,103 @@
 }
 
 /* line 7, ../scss/modules/smart-content.scss */
-.smart-content-overlay .data-source-slide .overlay-header {
-  margin-bottom: 1px;
-}
-/* line 10, ../scss/modules/smart-content.scss */
-.smart-content-overlay .data-source-slide .overlay-content {
+.husky-overlay-container .data-source-slide .overlay-content {
   margin: 0px;
 }
-/* line 13, ../scss/modules/smart-content.scss */
-.smart-content-overlay .data-source-slide .overlay-content .data-source-content {
-  height: 100%;
-}
-/* line 18, ../scss/modules/smart-content.scss */
-.smart-content-overlay .data-source-slide .overlay-footer {
-  margin: 0px;
-}
-/* line 23, ../scss/modules/smart-content.scss */
-.smart-content-overlay .overlay-header {
-  margin-bottom: 15px;
-}
-/* line 26, ../scss/modules/smart-content.scss */
-.smart-content-overlay .overlay-footer {
-  margin-top: 5px;
+/* line 11, ../scss/modules/smart-content.scss */
+.husky-overlay-container .data-source-slide .column-navigation-wrapper .column-navigation {
+  height: 380px;
 }
 
-/* line 31, ../scss/modules/smart-content.scss */
+/* line 17, ../scss/modules/smart-content.scss */
 .smart-overlay-content {
   height: 100%;
   font-size: 12px;
 }
-/* line 35, ../scss/modules/smart-content.scss */
+/* line 21, ../scss/modules/smart-content.scss */
 .smart-overlay-content .form-element {
   margin: 0;
 }
-/* line 38, ../scss/modules/smart-content.scss */
+/* line 24, ../scss/modules/smart-content.scss */
 .smart-overlay-content .desc {
   font-size: 14px;
   color: #999;
   padding-bottom: 5px;
   display: block;
 }
-/* line 44, ../scss/modules/smart-content.scss */
+/* line 30, ../scss/modules/smart-content.scss */
 .smart-overlay-content .item, .smart-overlay-content .item-half {
   margin-bottom: 25px;
   min-height: 55px;
 }
-/* line 48, ../scss/modules/smart-content.scss */
+/* line 34, ../scss/modules/smart-content.scss */
 .smart-overlay-content label {
   color: #000;
   font-size: 12px;
 }
-/* line 52, ../scss/modules/smart-content.scss */
+/* line 38, ../scss/modules/smart-content.scss */
 .smart-overlay-content .sublabel {
   font-size: 10px;
   color: #999;
 }
-/* line 56, ../scss/modules/smart-content.scss */
+/* line 42, ../scss/modules/smart-content.scss */
 .smart-overlay-content .item-half {
   float: left;
-  width: 270px;
+  width: 260px;
 }
-/* line 60, ../scss/modules/smart-content.scss */
+/* line 46, ../scss/modules/smart-content.scss */
 .smart-overlay-content .item {
   padding-right: 20px;
 }
-/* line 63, ../scss/modules/smart-content.scss */
+/* line 49, ../scss/modules/smart-content.scss */
 .smart-overlay-content .left {
   margin-right: 20px;
 }
-/* line 66, ../scss/modules/smart-content.scss */
+/* line 52, ../scss/modules/smart-content.scss */
 .smart-overlay-content .full {
   padding-right: 0;
 }
-/* line 69, ../scss/modules/smart-content.scss */
+/* line 55, ../scss/modules/smart-content.scss */
 .smart-overlay-content .check {
   margin-top: 30px;
 }
-/* line 71, ../scss/modules/smart-content.scss */
+/* line 57, ../scss/modules/smart-content.scss */
 .smart-overlay-content .check .description {
   padding-left: 5px;
 }
-/* line 74, ../scss/modules/smart-content.scss */
+/* line 60, ../scss/modules/smart-content.scss */
 .smart-overlay-content .check.disabled {
   display: none;
 }
-/* line 78, ../scss/modules/smart-content.scss */
+/* line 64, ../scss/modules/smart-content.scss */
 .smart-overlay-content .sortMethod {
   margin-top: 25px;
 }
-/* line 81, ../scss/modules/smart-content.scss */
+/* line 67, ../scss/modules/smart-content.scss */
 .smart-overlay-content input.limit-to,
 .smart-overlay-content input.data-source {
   padding-left: 10px;
   border-radius: 0;
 }
-/* line 86, ../scss/modules/smart-content.scss */
+/* line 72, ../scss/modules/smart-content.scss */
 .smart-overlay-content .tags.disabled {
   display: none;
 }
-/* line 89, ../scss/modules/smart-content.scss */
+/* line 75, ../scss/modules/smart-content.scss */
 .smart-overlay-content .tag-list {
   border-radius: 3px 3px 0 0;
 }
-/* line 91, ../scss/modules/smart-content.scss */
+/* line 77, ../scss/modules/smart-content.scss */
 .smart-overlay-content .tag-list input {
   margin: 7px 0 0 0;
 }
 
-/* line 99, ../scss/modules/smart-content.scss */
+/* line 85, ../scss/modules/smart-content.scss */
 .smart-content-container.no-content .header .text {
   display: none;
 }
 
-/* line 107, ../scss/modules/smart-content.scss */
+/* line 93, ../scss/modules/smart-content.scss */
 .smart-content-container.is-loading .header .text {
   display: none;
 }

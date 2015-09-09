@@ -23,12 +23,17 @@
     }
   }
 
+  .slides {
+    margin: 0;
+    padding: 0;
+  }
+
   .overlay-header {
     display: none;
   }
 
   .overlay-content {
-    height: 800px;
+    height: 500px;
     min-height: 400px;
     margin: 0;
     background-color: $baseBackgroundColor;
@@ -140,7 +145,11 @@
   & > div {
     width: 100% !important;
   }
-
+  .husky-overlay-wrapper {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+  }
   .husky-overlay-container {
     position: absolute !important;
     top: 0 !important;
@@ -150,6 +159,11 @@
     padding: 110px 20px !important;
     height: 100%;
     background-color: rgba(255, 255, 255, .95);
+
+    .slides {
+      margin: 0;
+      padding: 0;
+    }
 
     .slide {
       width: 100% !important;

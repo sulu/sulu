@@ -293,22 +293,20 @@ define([
                 },
 
                 removeBlockHandler: function(event) {
-                    var action = function() {
-                        var $removeButton = $(event.target),
-                            $element = $removeButton.closest('.' + this.propertyName + '-element');
+                    Husky.sulu.showDeleteDialog(function(confirmed) {
+                            if (confirmed) {
+                                var $removeButton = $(event.target),
+                                    $element = $removeButton.closest('.' + this.propertyName + '-element');
 
-                        if (this.canRemove()) {
-                            this.form.removeFields($element);
-                            $element.remove();
+                                if (this.canRemove()) {
+                                    this.form.removeFields($element);
+                                    $element.remove();
 
-                            $(form.$el).trigger('form-remove', [this.propertyName]);
-                            this.checkFullAndEmpty();
-                        }
-                    }.bind(this);
-                    // show warning dialog
-                    Husky.emit(
-                        'sulu.overlay.show-warning', 'sulu.overlay.be-careful', 'sulu.overlay.delete-desc',
-                        null, action
+                                    $(form.$el).trigger('form-remove', [this.propertyName]);
+                                    this.checkFullAndEmpty();
+                                }
+                            }
+                        }.bind(this)
                     );
                 },
 
@@ -498,8 +496,7 @@ define([
                             if ($fields.size()) {
                                 $.each($fields, function(idx, field) {
                                     var $field = $(field),
-                                        property = $field.data('property') || {},
-                                        tags = property.tags || [];
+                                        property = $field.data('property') || {};
 
                                     (cb || $.noop)($field, $block);
                                 });
