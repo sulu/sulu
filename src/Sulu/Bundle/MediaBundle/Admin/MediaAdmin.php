@@ -43,7 +43,7 @@ class MediaAdmin extends Admin
             $collections->setDataResultKey('collections');
             $collections->setShowAddButton(true);
             $collections->setTitleTranslationKey('navigation.media.collections');
-            $collections->setNoDataTranslationKey('');
+            $collections->setNoDataTranslationKey('navigation.media.collections.empty');
             $collections->setAddButtonTranslationKey('navigation.media.collections.add');
             $collections->setSearchTranslationKey('navigation.media.collections.search');
         }

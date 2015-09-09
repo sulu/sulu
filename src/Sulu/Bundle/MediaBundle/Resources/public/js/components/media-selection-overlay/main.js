@@ -394,7 +394,7 @@ define(['sulumedia/collections/collections', 'sulumedia/models/collection'], fun
                             instanceName: this.options.instanceName,
                             globalEvents: false,
                             translates: {
-                                noData: '',
+                                noData: this.sandbox.translate('navigation.media.collections.empty'),
                                 title: this.sandbox.translate('navigation.media.collections'),
                                 addButton: '',
                                 search: this.sandbox.translate('navigation.media.collections.search')
