@@ -23,12 +23,12 @@ sandbox.mvc.routes.push({
 });
 ```
 
-### Header-toolbar and tabs
-The header got a complete redesign, the breadcrumb, title and bottom-content are not available anymore. Also the event `header.set-toolbar` got removed. A sulu-header can still be initialized via the header property when a view-component gets started.
+### Header
+The header got a complete redesign, the breadcrumb and bottom-content are not available anymore. Also the event `header.set-toolbar` got marked as deprecated. A sulu-header can still be initialized via the header property when a view-component gets started.
 
 Some properties in the header-hook have changed, some are new, some not supported anymore. For a complete overview on the current properties in the header-hook see the documentation: //TODO insert link to docu.
 
-The major work when upgrading to the new header is to change the button-templates to sulu-buttons. Before you had to pass a template like e.g. 'default' which initialized a set of buttons, now each button is passed explicitly which gives you more flexibility. Lets have a look at an example:
+The major work when upgrading to the new header is to change the button-templates to sulu-buttons. Before you had to pass a template like e.g. 'default', which initialized a set of buttons, now each button is passed explicitly which gives you more flexibility. Lets have a look at an example:
 
 **Before:**
 ```
@@ -63,7 +63,7 @@ header: {
 }
 ```
 
-If you are using the 'default' template in the header and now change to the sulu-buttons 'save' and 'delete' the emitted events are now 'sulu.toolbar.save' instead of 'sulu.header.toolbar.save' and 'sulu.toolbar.delete' instead of 'sulu.header.toolbar.delete'. 
+If you are using the 'default' template in the header and now change to the sulu-buttons 'save' and 'delete' the emitted events are now `sulu.toolbar.save` instead of `sulu.header.toolbar.save` and 'sulu.toolbar.delete' instead of `sulu.header.toolbar.delete`. 
 
 #### Tabs
 The tabs can be configured with the 'url', 'data' and 'container' option. The 'option' fullControll' got removed. You can get the same effect by passing data with no 'component'-property.
@@ -73,6 +73,9 @@ For a complete overview on the current properties in the header-hook see the doc
 The language-changer can be configured as it was. 'Template' and 'parentTemplate' in contrast are not supported anymore. Instead you pass an array of sulu-buttons.
 Moreover the format of the buttons itself changed: https://github.com/massiveart/husky/blob/f9b3abeb547553c9c031710f1f98d0288b08ca9c/UPGRADE.md
 Have a look at the documentation: //TODO insert link to docu
+
+#### Language changer
+The interface of the language-changer in the header hook stayed the same, however the emitted event changed from `sulu.header.toolbar.language-changed` to `sulu.header.language-changed`. A callback to this event recieves an object with an 'id'- and a 'title'-property.
 
 #### Sulu-buttons
 Buttons for toolbars get specified in an aura-extension (`sandbox.sulu.buttons` and `sandbox.sulu.buttons.dropdownItems`). Therfore each bundle can add their own buttons to the pool. The toolbar in the header fetches its buttons from this pool.
