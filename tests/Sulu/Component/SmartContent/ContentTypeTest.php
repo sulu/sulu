@@ -27,8 +27,7 @@ interface MyNodeInterface extends \PHPCR\NodeInterface, \Iterator
 /**
  * @group unit
  */
-class
-ContentTypeTest extends \PHPUnit_Framework_TestCase
+class ContentTypeTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var SmartContent
@@ -315,9 +314,11 @@ ContentTypeTest extends \PHPUnit_Framework_TestCase
         $property->expects($this->exactly(3))->method('getStructure')
             ->will($this->returnValue($structure));
 
-        $this->contentDataProvider->resolveFilters(
+        $this->contentDataProvider->resolveResourceItems(
             [
                 'tags' => [],
+                'websiteTags' => [],
+                'websiteTagOperator' => 'OR',
                 'dataSource' => 'some-uuid',
                 'page' => 1,
                 'hasNextPage' => true,
@@ -327,6 +328,7 @@ ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
+                'website_tag_operator' => new PropertyParameter('website_tag_operator', 'OR'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
                 'present_as' => new PropertyParameter('present_as', [], 'collection'),
                 'has' => [
@@ -412,12 +414,19 @@ ContentTypeTest extends \PHPUnit_Framework_TestCase
         $property->expects($this->exactly(3))->method('getStructure')
             ->will($this->returnValue($structure));
 
-        $this->contentDataProvider->resolveFilters(
-            ['tags' => [], 'dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
+        $this->contentDataProvider->resolveResourceItems(
+            [
+                'tags' => [],
+                'websiteTags' => [],
+                'websiteTagOperator' => 'OR',
+                'dataSource' => '123-123-123',
+                'excluded' => ['123-123-123'],
+            ],
             [
                 'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
+                'website_tag_operator' => new PropertyParameter('website_tag_operator', 'OR'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
                 'present_as' => new PropertyParameter('present_as', [], 'collection'),
                 'has' => [
@@ -491,6 +500,8 @@ ContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->contentDataProvider->resolveResourceItems(
             [
                 'tags' => [],
+                'websiteTags' => [],
+                'websiteTagOperator' => 'OR',
                 'limitResult' => $limitResult,
                 'dataSource' => $uuid,
                 'excluded' => [$uuid],
@@ -499,6 +510,7 @@ ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
+                'website_tag_operator' => new PropertyParameter('website_tag_operator', 'OR'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
                 'present_as' => new PropertyParameter('present_as', [], 'collection'),
                 'has' => [
@@ -564,6 +576,8 @@ ContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->contentDataProvider->resolveResourceItems(
             [
                 'tags' => [],
+                'websiteTags' => [],
+                'websiteTagOperator' => 'OR',
                 'limitResult' => $limitResult,
                 'dataSource' => $uuid,
                 'page' => $page,
@@ -574,6 +588,7 @@ ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
+                'website_tag_operator' => new PropertyParameter('website_tag_operator', 'OR'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
                 'present_as' => new PropertyParameter('present_as', [], 'collection'),
                 'has' => [
@@ -656,6 +671,8 @@ ContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->contentDataProvider->resolveResourceItems(
             [
                 'tags' => [],
+                'websiteTags' => [],
+                'websiteTagOperator' => 'OR',
                 'dataSource' => '123-123-123',
                 'excluded' => ['123-123-123'],
             ],
@@ -663,6 +680,7 @@ ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
+                'website_tag_operator' => new PropertyParameter('website_tag_operator', 'OR'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
                 'present_as' => new PropertyParameter('present_as', [], 'collection'),
                 'has' => [

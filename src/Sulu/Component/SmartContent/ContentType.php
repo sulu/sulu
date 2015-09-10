@@ -168,6 +168,7 @@ class ContentType extends ComplexContentType
             'provider' => new PropertyParameter('provider', 'content'),
             'page_parameter' => new PropertyParameter('page_parameter', 'p'),
             'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
+            'website_tag_operator' => new PropertyParameter('website_tag_operator', 'OR'),
             'sorting' => new PropertyParameter('sorting', $configuration->getSorting(), 'collection'),
             'present_as' => new PropertyParameter('present_as', [], 'collection'),
             'has' => [
@@ -231,14 +232,17 @@ class ContentType extends ComplexContentType
         }
 
         // extends selected filter with requested tags
-        $filters['tags'] = array_merge(
-            $this->tagRequestHandler->getTags($params['tags_parameter']->getValue()),
-            $filters['tags']
-        );
+        $filters['websiteTags'] = $this->tagRequestHandler->getTags($params['tags_parameter']->getValue());
+        $filters['websiteTagOperator'] = $params['website_tag_operator']->getValue();
 
         // resolve tags to id
-        if (!empty($filters['tags']) && count($filters['tags']) > 0) {
+        if (!empty($filters['tags'])) {
             $filters['tags'] = $this->tagManager->resolveTagNames($filters['tags']);
+        }
+
+        // resolve website tags to id
+        if (!empty($filters['websiteTags'])) {
+            $filters['websiteTags'] = $this->tagManager->resolveTagNames($filters['websiteTags']);
         }
 
         // get provider

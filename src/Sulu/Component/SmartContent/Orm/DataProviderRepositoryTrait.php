@@ -57,7 +57,19 @@ trait DataProviderRepositoryTrait
         if (isset($filters['tags']) && count($filters['tags']) > 0) {
             $parameter = array_merge(
                 $parameter,
-                $this->appendTags($queryBuilder, $filters['tags'], strtolower($filters['tagOperator']))
+                $this->appendTags($queryBuilder, $filters['tags'], strtolower($filters['tagOperator']), 'admin')
+            );
+        }
+
+        if (isset($filters['websiteTags']) && count($filters['websiteTags']) > 0) {
+            $parameter = array_merge(
+                $parameter,
+                $this->appendTags(
+                    $queryBuilder,
+                    $filters['websiteTags'],
+                    strtolower($filters['websiteTagOperator']),
+                    'website'
+                )
             );
         }
 
@@ -98,17 +110,18 @@ trait DataProviderRepositoryTrait
      * @param QueryBuilder $queryBuilder
      * @param int[] $tags
      * @param string $operator "and" or "or"
+     * @param string $alias
      *
      * @return array parameter for the query.
      */
-    private function appendTags(QueryBuilder $queryBuilder, $tags, $operator)
+    private function appendTags(QueryBuilder $queryBuilder, $tags, $operator, $alias)
     {
         switch ($operator) {
             case 'or':
-                return $this->appendTagsOr($queryBuilder, $tags);
+                return $this->appendTagsOr($queryBuilder, $tags, $alias);
                 break;
             case 'and':
-                return $this->appendTagsAnd($queryBuilder, $tags);
+                return $this->appendTagsAnd($queryBuilder, $tags, $alias);
                 break;
         }
 
@@ -120,15 +133,16 @@ trait DataProviderRepositoryTrait
      *
      * @param QueryBuilder $queryBuilder
      * @param int[] $tags
+     * @param string $alias
      *
      * @return array parameter for the query.
      */
-    private function appendTagsOr(QueryBuilder $queryBuilder, $tags)
+    private function appendTagsOr(QueryBuilder $queryBuilder, $tags, $alias)
     {
-        $queryBuilder->join('c.tags', 'tags')
-            ->where('tags.id IN (:tags)');
+        $queryBuilder->join('c.tags', $alias)
+            ->andWhere($alias . '.id IN (:' . $alias . ')');
 
-        return ['tags' => $tags];
+        return [$alias => $tags];
     }
 
     /**
@@ -136,21 +150,22 @@ trait DataProviderRepositoryTrait
      *
      * @param QueryBuilder $queryBuilder
      * @param int[] $tags
+     * @param string $alias
      *
      * @return array parameter for the query.
      */
-    private function appendTagsAnd(QueryBuilder $queryBuilder, $tags)
+    private function appendTagsAnd(QueryBuilder $queryBuilder, $tags, $alias)
     {
         $parameter = [];
         $expr = $queryBuilder->expr()->andX();
 
         $length = count($tags);
         for ($i = 0; $i < $length; ++$i) {
-            $queryBuilder->join('c.tags', 'tags' . $i);
+            $queryBuilder->join('c.tags', $alias . $i);
 
-            $expr->add($queryBuilder->expr()->eq('tags' . $i . '.id', ':tag' . $i));
+            $expr->add($queryBuilder->expr()->eq($alias . $i . '.id', ':' . $alias . $i));
 
-            $parameter['tag' . $i] = $tags[$i];
+            $parameter[$alias . $i] = $tags[$i];
         }
         $queryBuilder->andWhere($expr);
 

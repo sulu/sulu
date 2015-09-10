@@ -342,7 +342,10 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $t1 = 0;
         $t2 = 0;
         for ($i = 0; $i < $max; ++$i) {
-            if ($i % 2 === 1) {
+            if ($i % 3 === 2) {
+                $tags = [$this->tag1->getName()];
+                ++$t1;
+            } elseif ($i % 3 === 1) {
                 $tags = [$this->tag1->getName(), $this->tag2->getName()];
                 ++$t1t2;
             } else {
@@ -421,6 +424,136 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
         $this->assertEquals(0, count($result));
+    }
+
+    public function testWebsiteTags()
+    {
+        $root = $this->sessionManager->getContentNode('sulu_io');
+        list($nodes, $t1, $t2, $t1t2) = $this->tagsProvider();
+        $builder = new SmartContentQueryBuilder(
+            $this->structureManager,
+            $this->webspaceManager,
+            $this->sessionManager,
+            $this->languageNamespace
+        );
+
+        // tag 1 and 2
+        $builder->init(
+            [
+                'config' => [
+                    'dataSource' => $root->getIdentifier(),
+                    'websiteTags' => [$this->tag1->getId(), $this->tag2->getId()],
+                    'websiteTagOperator' => 'and',
+                ],
+            ]
+        );
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
+        $this->assertEquals($t1t2, count($result));
+
+        // tag 1 or 2
+        $builder->init(
+            [
+                'config' => [
+                    'dataSource' => $root->getIdentifier(),
+                    'websiteTags' => [$this->tag1->getId(), $this->tag2->getId()],
+                    'websiteTagOperator' => 'or',
+                ],
+            ]
+        );
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
+        $this->assertEquals($t1t2 + $t1 + $t2, count($result));
+
+        // tag 3 or 2
+        $builder->init(
+            [
+                'config' => [
+                    'dataSource' => $root->getIdentifier(),
+                    'websiteTags' => [$this->tag3->getId(), $this->tag2->getId()],
+                    'websiteTagOperator' => 'or',
+                ],
+            ]
+        );
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
+        $this->assertEquals($t2 + $t1t2, count($result)); // no t3 pages there
+
+        // tag 1
+        $builder->init(
+            [
+                'config' => [
+                    'dataSource' => $root->getIdentifier(),
+                    'websiteTags' => [$this->tag1->getId()],
+                    'websiteTagOperator' => 'and',
+                ],
+            ]
+        );
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
+        $this->assertEquals($t1t2 + $t1, count($result));
+
+        // tag 2
+        $builder->init(
+            [
+                'config' => [
+                    'dataSource' => $root->getIdentifier(),
+                    'websiteTags' => [$this->tag2->getId()],
+                    'websiteTagOperator' => 'and',
+                ],
+            ]
+        );
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
+        $this->assertEquals($t1t2 + $t2, count($result));
+
+        // tag 3
+        $builder->init(
+            [
+                'config' => [
+                    'dataSource' => $root->getIdentifier(),
+                    'websiteTags' => [$this->tag3->getId()],
+                    'websiteTagOperator' => 'and',
+                ],
+            ]
+        );
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
+        $this->assertEquals(0, count($result));
+    }
+
+    public function testTagsBoth()
+    {
+        $root = $this->sessionManager->getContentNode('sulu_io');
+        list($nodes, $t1, $t2, $t1t2) = $this->tagsProvider();
+        $builder = new SmartContentQueryBuilder(
+            $this->structureManager,
+            $this->webspaceManager,
+            $this->sessionManager,
+            $this->languageNamespace
+        );
+
+        $builder->init(
+            [
+                'config' => [
+                    'dataSource' => $root->getIdentifier(),
+                    'tags' => [$this->tag1->getId()],
+                    'tagOperator' => 'and',
+                    'websiteTags' => [$this->tag2->getId()],
+                    'websiteTagOperator' => 'and',
+                ],
+            ]
+        );
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
+        $this->assertEquals($t1t2, count($result));
+
+        $builder->init(
+            [
+                'config' => [
+                    'dataSource' => $root->getIdentifier(),
+                    'tags' => [$this->tag1->getId()],
+                    'tagOperator' => 'and',
+                    'websiteTags' => [$this->tag1->getId(), $this->tag2->getId()],
+                    'websiteTagOperator' => 'OR',
+                ],
+            ]
+        );
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
+        $this->assertEquals($t1t2 + $t2, count($result));
     }
 
     public function orderByProvider()
