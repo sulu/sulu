@@ -8,198 +8,199 @@
  */
 
 define([
-        'services/husky/util',
-        'services/husky/mediator',
-        'sulumedia/models/media'
-    ], function(util,
-                mediator,
-                Media) {
+    'services/husky/util',
+    'services/husky/mediator',
+    'sulumedia/models/media'
+], function(
+    Util,
+    Mediator,
+    Media
+) {
 
-        'use strict';
+    'use strict';
 
-        var instance = null,
+    var instance = null,
 
-            /**
-             * Delete media by given id
-             * @param mediaId media to delete
-             * @returns {*}
-             */
-            deleteMedia = function(mediaId) {
-                var promise = $.Deferred(),
-                    media = Media.findOrCreate({id: mediaId});
+        /**
+         * Delete media by given id
+         * @param mediaId media to delete
+         * @returns {*}
+         */
+        deleteMedia = function(mediaId) {
+            var promise = $.Deferred(),
+                media = Media.findOrCreate({id: mediaId});
 
-                media.destroy({
-                    success: function() {
-                        mediator.emit('sulu.medias.media.deleted', mediaId);
-                        mediator.emit('sulu.labels.success.show', 'labels.success.media-deleted-desc');
-                        promise.resolve();
-                    }.bind(this),
-                    error: function() {
-                        promise.fail();
-                    }.bind(this)
-                });
+            media.destroy({
+                success: function() {
+                    Mediator.emit('sulu.medias.media.deleted', mediaId);
+                    Mediator.emit('sulu.labels.success.show', 'labels.success.media-deleted-desc');
+                    promise.resolve();
+                }.bind(this),
+                error: function() {
+                    promise.fail();
+                }.bind(this)
+            });
 
-                return promise;
-            },
+            return promise;
+        },
 
-            /**
-             * Move media to collection
-             * @param mediaId media to move
-             * @param collectionId collection to move media to
-             * @returns {*}
-             */
-            moveMedia = function(mediaId, collectionId) {
-                var promise = $.Deferred();
+        /**
+         * Move media to collection
+         * @param mediaId media to move
+         * @param collectionId collection to move media to
+         * @returns {*}
+         */
+        moveMedia = function(mediaId, collectionId) {
+            var promise = $.Deferred();
 
-                util.save('/admin/api/media/' + mediaId + '?action=move&destination=' + collectionId, 'POST')
-                    .then(function() {
-                        mediator.emit('sulu.medias.media.moved', mediaId, collectionId);
-                        mediator.emit('sulu.labels.success.show', 'labels.success.media-move-desc');
-                        promise.resolve();
-                    }.bind(this))
-                    .fail(function() {
-                        promise.fail();
-                    }.bind(this));
+            Util.save('/admin/api/media/' + mediaId + '?action=move&destination=' + collectionId, 'POST')
+                .then(function() {
+                    Mediator.emit('sulu.medias.media.moved', mediaId, collectionId);
+                    Mediator.emit('sulu.labels.success.show', 'labels.success.media-move-desc');
+                    promise.resolve();
+                }.bind(this))
+                .fail(function() {
+                    promise.fail();
+                }.bind(this));
 
 
-                return promise;
-            },
+            return promise;
+        },
 
-            /**
-             * Save given media data
-             * @param data {Object} the media data to save
-             * @returns promise
-             */
-            saveMedia = function(data) {
-                var promise = $.Deferred();
-                var media = Media.findOrCreate({id: data.id});
-                media.set(data);
+        /**
+         * Save given media data
+         * @param data {Object} the media data to save
+         * @returns promise
+         */
+        saveMedia = function(data) {
+            var promise = $.Deferred();
+            var media = Media.findOrCreate({id: data.id});
+            media.set(data);
 
-                media.save(null, {
+            media.save(null, {
+                success: function(response) {
+                    promise.resolve(response.toJSON());
+                }.bind(this),
+                error: function() {
+                    promise.fail();
+                }.bind(this)
+            });
+
+            return promise;
+        };
+
+
+    /** @constructor **/
+    function MediaManager() {
+    }
+
+    MediaManager.prototype = {
+
+        /**
+         * Load media by given id
+         * @param mediaId
+         * @returns promise
+         */
+        loadOrNew: function(mediaId, locale) {
+            var promise = $.Deferred(),
+                media;
+            if (!mediaId) {
+                media = new Media();
+                Mediator.emit('sulu.medias.media.created');
+                promise.resolve(media.toJSON());
+            } else {
+                media = Media.findOrCreate({id: mediaId});
+                media.fetch({
+                    data: (!!locale) ? {locale: locale} : null,
                     success: function(response) {
+                        Mediator.emit('sulu.medias.media.loaded', mediaId);
                         promise.resolve(response.toJSON());
                     }.bind(this),
                     error: function() {
                         promise.fail();
                     }.bind(this)
                 });
+            }
 
-                return promise;
-            };
+            return promise;
+        },
 
+        /**
+         * Delete medias by given ids
+         * @param mediaIds (Array)
+         * @returns promise
+         */
+        delete: function(mediaIds) {
+            if (!$.isArray(mediaIds)) {
+                mediaIds = [mediaIds];
+            }
 
-        /** @constructor **/
-        function MediaManager() {
+            var requests = [],
+                promise = $.Deferred();
+
+            Util.each(mediaIds, function(index, id) {
+                requests.push(deleteMedia(id));
+            }.bind(this));
+
+            $.when.apply(null, requests).then(function() {
+                promise.resolve();
+            }.bind(this));
+
+            return promise;
+        },
+
+        /**
+         * Save given media data and display labels
+         * @param data {Object} the media data to save
+         * @returns promise
+         */
+        save: function(data) {
+            var promise = $.Deferred();
+
+            saveMedia(data).then(function(media) {
+                Mediator.emit('sulu.medias.media.saved', media.id, media);
+                Mediator.emit('sulu.labels.success.show', 'labels.success.media-save-desc');
+                promise.resolve(media);
+            }.bind(this)).fail(function() {
+                Mediator.emit('sulu.labels.error.show');
+                promise.fail();
+            }.bind(this));
+
+            return promise;
+        },
+
+        /**
+         * Move medias to a collection
+         * @param mediaIds
+         * @param collectionId
+         * @returns {*}
+         */
+        move: function(mediaIds, collectionId) {
+            if (!$.isArray(mediaIds)) {
+                mediaIds = [mediaIds];
+            }
+
+            var requests = [],
+                promise = $.Deferred();
+
+            Util.each(mediaIds, function(index, mediaId) {
+                requests.push(moveMedia(mediaId, collectionId));
+            }.bind(this));
+
+            $.when.apply(null, requests).then(function() {
+                promise.resolve();
+            }.bind(this));
+
+            return promise;
         }
+    };
 
-        MediaManager.prototype = {
+    MediaManager.getInstance = function() {
+        if (instance === null) {
+            instance = new MediaManager();
+        }
+        return instance;
+    };
 
-            /**
-             * Load media by given id
-             * @param mediaId
-             * @returns promise
-             */
-            loadOrNew: function(mediaId, locale) {
-                var promise = $.Deferred(),
-                    media;
-                if (!mediaId) {
-                    media = new Media();
-                    mediator.emit('sulu.medias.media.created');
-                    promise.resolve(media.toJSON());
-                } else {
-                    media = Media.findOrCreate({id: mediaId});
-                    media.fetch({
-                        data: (!!locale) ? {locale: locale} : null,
-                        success: function(response) {
-                            mediator.emit('sulu.medias.media.loaded', mediaId);
-                            promise.resolve(response.toJSON());
-                        }.bind(this),
-                        error: function() {
-                            promise.fail();
-                        }.bind(this)
-                    });
-                }
-
-                return promise;
-            },
-
-            /**
-             * Delete medias by given ids
-             * @param mediaIds (Array)
-             * @returns promise
-             */
-            delete: function(mediaIds) {
-                if (!$.isArray(mediaIds)) {
-                    mediaIds = [mediaIds];
-                }
-
-                var requests = [],
-                    promise = $.Deferred();
-
-                util.each(mediaIds, function(index, id) {
-                    requests.push(deleteMedia(id));
-                }.bind(this));
-
-                $.when.apply(null, requests).then(function() {
-                    promise.resolve();
-                }.bind(this));
-
-                return promise;
-            },
-
-            /**
-             * Save given media data and display labels
-             * @param data {Object} the media data to save
-             * @returns promise
-             */
-            save: function(data) {
-                var promise = $.Deferred();
-
-                saveMedia(data).then(function(media) {
-                    mediator.emit('sulu.medias.media.saved', media.id, media);
-                    mediator.emit('sulu.labels.success.show', 'labels.success.media-save-desc');
-                    promise.resolve(media);
-                }.bind(this)).fail(function() {
-                    mediator.emit('sulu.labels.error.show');
-                    promise.fail();
-                }.bind(this));
-
-                return promise;
-            },
-
-            /**
-             * Move medias to a collection
-             * @param mediaIds
-             * @param collectionId
-             * @returns {*}
-             */
-            move: function(mediaIds, collectionId) {
-                if (!$.isArray(mediaIds)) {
-                    mediaIds = [mediaIds];
-                }
-
-                var requests = [],
-                    promise = $.Deferred();
-
-                util.each(mediaIds, function(index, mediaId) {
-                    requests.push(moveMedia(mediaId, collectionId));
-                }.bind(this));
-
-                $.when.apply(null, requests).then(function() {
-                    promise.resolve();
-                }.bind(this));
-
-                return promise;
-            }
-        };
-
-        MediaManager.getInstance = function() {
-            if (instance === null) {
-                instance = new MediaManager();
-            }
-            return instance;
-        };
-
-        return MediaManager.getInstance();
-    }
-);
+    return MediaManager.getInstance();
+});
