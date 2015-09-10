@@ -2,10 +2,17 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * FEATURE     #1543 [MediaBundle]     new view for collection-list
-    * ENHANCEMENT #1543 [MediaBundle]     changed front-end bundle structure with the use of services
-    * FEATURE     #1481 [ContactBundle]   titles in JS-views
-    * FEATURE     #1481 [AdminBundle]     extension-hook for loading data in JS-files
+    * FEATURE     #1558 [AdminBundle]     Redesign of overlays
+    * FEATURE     #1557 [MediaBundle]     Redesign of data-navigation
+    * FEATURE     #1557 [AdminBundle]     Success-labels in navigation
+    * FEATURE     #1544 [ContentBundle]   Highlighted section in content-edit
+    * FEATURE     #1541 [ContentBundle]   Redesign of preview
+    * FEATURE     #1540 [ContentBundle]   Redesign of content-blocks
+    * FEATURE     #1530 [ContentBundle]   Redesign different content-types
+    * FEATURE     #1543 [MediaBundle]     New view for collection-list
+    * ENHANCEMENT #1543 [MediaBundle]     Changed front-end bundle structure with the use of services
+    * FEATURE     #1481 [ContactBundle]   Titles in JS-views
+    * FEATURE     #1481 [AdminBundle]     Extension-hook for loading data in JS-files
     * FEATURE     #1476 [ContactBundle]   Avatar upload via dropzone
     * FEATURE     #1478 [ContactBundle]   Rest-Api for media lists for contacts and accounts
     * FEATURE     #1467 [ContactBundle]   New view for contacts- and accounts-edit
