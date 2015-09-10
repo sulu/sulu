@@ -26,6 +26,12 @@ define(function() {
             return $element;
         },
 
+        /**
+         * Register overlay as opened and listen for close-event. This user to prevent
+         * opening multiple overlays at the same time.
+         * @param sandbox
+         * @param closeEvent
+         */
         registerOpenedOverlay = function(sandbox, closeEvent) {
             overlayOpened = true;
 
