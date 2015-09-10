@@ -39612,8 +39612,8 @@ define('__component__$password-fields@husky',[], function() {
  * @params {Array}  [options.data] array of data displayed in the settings dropdown
  * @params {String}  [options.data[].mode] if 'order' - column gets set in order mode if clicked
  * @params {Function}  [options.data[].enabler] Gets called each time the options change columns.
- *                                            Gets an object with a numberItems and a hasSelected property.
- *                                            If returns false the dropdown item will get disabled, enabled otherwise
+ *          Gets an object with a numberItems and a hasSelected property.
+ *          If returns false the dropdown item will get disabled, enabled otherwise
  * @params {String} [options.instanceName] name of current instance
  * @params {String} [options.hasSubName] name of hasSub-key
  * @params {String} [options.idName] name of id-key
@@ -40607,7 +40607,7 @@ define('__component__$column-navigation@husky',[], function() {
          * @param closeCallback - callback to execute if clicked on ok
          */
         confirmOrder: function(okCallback, closeCallback) {
-            this.sandbox.confirm.warning(this,
+            this.sandbox.confirm.alert(this,
                 this.options.orderConfirmTitle, this.options.orderConfirmMessage,
                 okCallback, closeCallback);
         },
@@ -46006,11 +46006,11 @@ define('husky_extensions/collection',[],function() {
                  * @param message - the message (or translation key) for the box
                  * @param okCallback - callback to execute after box was confirmed
                  * @param closeCallback - callback to execute on cancel
-                 * @param [type] - 'warning' or 'error' - default 'warning'
+                 * @param [type] default 'alert'
                  */
-                warning: function (that, title, message, okCallback, closeCallback, type) {
+                alert: function (that, title, message, okCallback, closeCallback, type) {
                     var $element = app.core.dom.createElement('<div/>'),
-                        type = type || 'warning';
+                        type = type || 'alert';
                     app.core.dom.append(that.$el, $element);
 
                     that.sandbox.start([

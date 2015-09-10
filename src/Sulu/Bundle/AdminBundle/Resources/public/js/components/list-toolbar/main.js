@@ -52,7 +52,7 @@ define([], function() {
             },
             defaultEditable: function() {
                 return templates.default.call(this).concat(this.sandbox.sulu.buttons.get({
-                        edit: {
+                        editSelected: {
                             options: {
                                 callback: function() {
                                     this.sandbox.emit('sulu.list-toolbar.edit');
@@ -94,7 +94,7 @@ define([], function() {
 
                 this.sandbox.on('sulu.list-toolbar.' + instanceName + 'edit.state-change', function(enable) {
                     postfix = !!enable ? 'enable' : 'disable';
-                    this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'edit', false);
+                    this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'editSelected', false);
                 }.bind(this));
             }
         },

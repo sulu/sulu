@@ -31,7 +31,7 @@ define(['config'], function(Config) {
                 toolbar: {
                     buttons: {
                         save: {},
-                        settings: {
+                        edit: {
                             options: {
                                 dropdownItems: {
                                     delete: {}

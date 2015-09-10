@@ -118,7 +118,7 @@ define([
          * @returns {Boolean} true iff a a image has been found immediatelly
          */
         setCollapsedImage = function($field, $block) {
-            if (!!$field.data('type') && $field.data('type') === 'mediaSelection') {
+            if (!!$field.data('type') && $field.data('type') === 'media-selection') {
                 if (!!$field.find('img').attr('src')) {
                     $block.find('.collapsed-container .image').html(
                         '<img src="' + $field.find('img').attr('src') + '"/>'

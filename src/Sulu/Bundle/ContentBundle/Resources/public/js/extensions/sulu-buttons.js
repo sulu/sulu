@@ -11,7 +11,7 @@
                     {
                         name: 'template',
                         template: {
-                            icon: 'pencil',
+                            icon: 'paint-brush',
                             title: '',
                             dropdownOptions: {
                                 titleAttribute: 'title',

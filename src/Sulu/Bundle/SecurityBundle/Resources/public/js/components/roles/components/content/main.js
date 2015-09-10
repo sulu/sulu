@@ -21,7 +21,7 @@ define(function() {
                     save: {
                         parent: 'saveWithOptions'
                     },
-                    settings: {
+                    edit: {
                         options: {
                             dropdownItems: {
                                 delete: {}

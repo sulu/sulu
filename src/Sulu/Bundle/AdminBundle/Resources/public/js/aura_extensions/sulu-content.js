@@ -174,9 +174,6 @@ define(function() {
                 this.sandbox.emit('sulu.app.change-width', width, applyDefaults);
             }
             this.sandbox.emit('sulu.app.change-spacing', leftSpace, rightSpace, topSpace);
-            if (applyDefaults === true || typeof content.shrinkable !== 'undefined') {
-                this.sandbox.emit('sulu.app.toggle-shrinker', !!content.shrinkable);
-            }
         },
 
         /**
@@ -284,6 +281,10 @@ define(function() {
             }
 
             getTabsData.call(this, header).then(function(tabsData) {
+                if (!!$('body').find('.sulu-header').length) {
+                    Husky.stop('.sulu-header');
+                    $('body').find('.sulu-header').remove();
+                }
                 var $container = this.sandbox.dom.createElement('<div class="sulu-header"/>');
                 this.sandbox.dom.prepend('.content-column', $container);
 

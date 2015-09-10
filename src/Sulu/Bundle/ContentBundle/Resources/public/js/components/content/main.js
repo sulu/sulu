@@ -25,7 +25,9 @@ define([
         TYPE_CONTENT = 1,
 
         constants = {
-            localizationUrl: '/admin/api/webspace/localizations'
+            localizationUrl: '/admin/api/webspace/localizations',
+            previewExpandIcon: 'fa-step-backward',
+            previewCollapseIcon: 'fa-step-forward'
         },
 
         states = {
@@ -38,6 +40,7 @@ define([
             preview: [
                 '<div class="sulu-content-preview auto">',
                 '   <div class="preview-toolbar">',
+                '       <div class="' + constants.previewExpandIcon + ' toggler"></div>',
                 '       <div class="toolbar"></div>',
                 '       <div class="fa-external-link new-window"></div>',
                 '   </div>',
@@ -74,6 +77,7 @@ define([
             this.saved = true;
             this.previewUrl = null;
             this.previewWindow = null;
+            this.previewExpanded = false;
             this.$preview = null;
             this.contentChanged = false;
 
@@ -604,7 +608,6 @@ define([
                 }.bind(this));
             } else {
                 this.sandbox.emit('sulu.sidebar.hide');
-                this.sandbox.emit('sulu.app.toggle-shrinker', false);
             }
 
             if (!!this.options.id) {
@@ -677,7 +680,6 @@ define([
          * @param data
          */
         renderPreview: function(data) {
-            this.sandbox.emit('sulu.app.toggle-shrinker', true);
             this.sandbox.emit('sulu.sidebar.change-width', 'max');
             if (this.$preview === null) {
                 this.previewUrl = this.sandbox.util.template(templates.previewUrl, {
@@ -719,6 +721,7 @@ define([
          */
         bindPreviewEvents: function() {
             this.$preview.find('.new-window').on('click', this.openPreviewInNewWindow.bind(this));
+            this.$preview.find('.toggler').on('click', this.togglePreview.bind(this));
 
             this.sandbox.on('sulu.toolbar.refresh', this.refreshPreview.bind(this));
             this.sandbox.on('sulu.toolbar.display-device', this.changePreviewStyle.bind(this));
@@ -762,10 +765,26 @@ define([
         },
 
         /**
+         * Shrinks or expands the content-column and therefore also the preview
+         */
+        togglePreview: function() {
+            if (this.previewExpanded) {
+                this.sandbox.emit('sulu.app.toggle-column', false);
+                this.sandbox.dom.removeClass(this.$preview.find('.toggler'), constants.previewCollapseIcon);
+                this.sandbox.dom.prependClass(this.$preview.find('.toggler'), constants.previewExpandIcon);
+                this.previewExpanded = false;
+            } else {
+                this.sandbox.emit('sulu.app.toggle-column', true);
+                this.previewExpanded = true;
+                this.sandbox.dom.removeClass(this.$preview.find('.toggler'), constants.previewExpandIcon);
+                this.sandbox.dom.prependClass(this.$preview.find('.toggler'), constants.previewCollapseIcon);
+            }
+        },
+
+        /**
          * Hides the sidebar and opens a new window with the preview in it
          */
         openPreviewInNewWindow: function() {
-            this.sandbox.emit('sulu.app.toggle-shrinker', false);
             this.sandbox.emit('sulu.app.change-width', 'fixed');
             this.sandbox.emit('husky.navigation.show');
             this.sandbox.emit('sulu.sidebar.hide');
@@ -775,7 +794,6 @@ define([
                     this.previewWindow = null;
 
                     this.sandbox.emit('sulu.sidebar.show');
-                    this.sandbox.emit('sulu.app.toggle-shrinker', true);
                     this.sandbox.emit('sulu.sidebar.change-width', 'max');
                 }.bind(this);
             }.bind(this);
@@ -1017,7 +1035,7 @@ define([
                                     }
                                 }
                             },
-                            settings: {
+                            edit: {
                                 options: {
                                     dropdownItems: {
                                         delete: {

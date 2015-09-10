@@ -25,7 +25,7 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
 
         bindCustomEvents = function() {
             this.sandbox.on('husky.matrix.changed', changePermission.bind(this));
-            this.sandbox.on('sulu.header.toolbar.save', save.bind(this));
+            this.sandbox.on('sulu.toolbar.save', save.bind(this));
 
             this.sandbox.on('sulu.permission-tab.saved', function() {
                 setHeaderBar.call(this, true);
@@ -145,7 +145,8 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
         },
 
         setHeaderBar = function(saved) {
-            this.sandbox.emit('sulu.header.toolbar.state.change', 'edit', saved, true);
+            var postfix = (!!saved) ? 'disable' : 'enable';
+            this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'save', false);
         },
 
         listenForChange = function() {

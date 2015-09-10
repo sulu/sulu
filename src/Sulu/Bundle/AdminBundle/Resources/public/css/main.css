@@ -707,7 +707,7 @@ input, select {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 250px;
   z-index: 500;
   max-height: 100px;
   overflow: hidden;
@@ -717,7 +717,20 @@ input, select {
   transition: width 500ms;
 }
 
-/* line 17, ../scss/modules/labels.scss */
+/* line 18, ../scss/modules/labels.scss */
+.navigation-collapsed .sulu-navigation-labels {
+  width: 50px;
+}
+/* line 21, ../scss/modules/labels.scss */
+.navigation-collapsed .sulu-navigation-labels .husky-label-success-icon::before {
+  margin-top: 30px;
+}
+/* line 24, ../scss/modules/labels.scss */
+.navigation-collapsed .sulu-navigation-labels .husky-label-success-icon .text {
+  opacity: 0;
+}
+
+/* line 30, ../scss/modules/labels.scss */
 .login #labels-container {
   z-index: 1000;
   position: absolute;

@@ -35,7 +35,7 @@ define([], function() {
 
         bindCustomEvents: function() {
             // content save
-            this.sandbox.on('sulu.header.toolbar.save', function() {
+            this.sandbox.on('sulu.toolbar.save', function() {
                 this.submit();
             }, this);
         },
