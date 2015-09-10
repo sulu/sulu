@@ -31,7 +31,7 @@ define([], function() {
             this.sandbox.on('sulu.permission-tab.save', save.bind(this));
         },
 
-        save = function(permissionData) {
+        save = function(permissionData, action) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
 
             this.sandbox.util.ajax(
@@ -40,7 +40,7 @@ define([], function() {
                     method: 'POST',
                     data: permissionData,
                     success: function() {
-                        this.sandbox.emit('sulu.permission-tab.saved', permissionData);
+                        this.sandbox.emit('sulu.permission-tab.saved', permissionData, action);
                     }.bind(this),
                     error: function() {
                         this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');

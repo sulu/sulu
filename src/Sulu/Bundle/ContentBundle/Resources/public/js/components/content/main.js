@@ -281,6 +281,10 @@ define([
             // change url of preview
             this.sandbox.on('sulu.content.preview.change-url', this.changePreviewUrl.bind(this));
 
+            this.sandbox.on('sulu.permission-tab.saved', function(data, action) {
+                this.afterSaveAction(action, false);
+            }.bind(this));
+
             // bind model data events
             this.bindModelEvents();
         },
@@ -516,22 +520,7 @@ define([
                         } else {
                             this.sandbox.sulu.viewStates.justSaved = true;
                         }
-                        if (action === 'back') {
-                            this.sandbox.emit('sulu.content.contents.list');
-                        } else if (action === 'new') {
-                            parent = ((!!this.options.id && model.breadcrumb.length > 1) ?
-                                model.breadcrumb[model.breadcrumb.length - 1].uuid : null) || this.options.parent;
-                            this.sandbox.emit('sulu.router.navigate',
-                                'content/contents/' + this.options.webspace + '/' +
-                                this.options.language + '/add' + ((!!parent) ? ':' + parent : '') + '/content',
-                                true, true
-                            );
-                        } else if (!this.options.id) {
-                            this.sandbox.emit('sulu.router.navigate',
-                                'content/contents/' + this.options.webspace + '/' +
-                                this.options.language + '/edit:' + model.id + '/content'
-                            );
-                        }
+                        this.afterSaveAction(action, !this.options.id);
                         def.resolve();
                     }.bind(this),
                     error: function() {
@@ -542,6 +531,31 @@ define([
                 });
 
             return def;
+        },
+
+        /**
+         * Routes either to the list, content-add or content-edit, depending on the passed parameter
+         * @param action {String} 'new', 'add' or 'edit'
+         * @param toEidt {Boolean} iff true and no action has been passed the method routes to 'edit'
+         */
+        afterSaveAction: function(action, toEdit) {
+            if (action === 'back') {
+                this.sandbox.emit('sulu.content.contents.list');
+            } else if (action === 'new') {
+                var parent, breadcrumb = this.content.get('breadcrumb');
+                parent = ((!!this.options.id && breadcrumb.length > 1) ?
+                    breadcrumb[breadcrumb.length - 1].uuid : null) || this.options.parent;
+                this.sandbox.emit('sulu.router.navigate',
+                    'content/contents/' + this.options.webspace + '/' +
+                    this.options.language + '/add' + ((!!parent) ? ':' + parent : '') + '/content',
+                    true, true
+                );
+            } else if (toEdit) {
+                this.sandbox.emit('sulu.router.navigate',
+                    'content/contents/' + this.options.webspace + '/' +
+                    this.options.language + '/edit:' + this.content.get('id') + '/content'
+                );
+            }
         },
 
         load: function(item, webspace, language, forceReload) {

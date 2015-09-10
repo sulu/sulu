@@ -140,8 +140,8 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
             permissionData.permissions[section][value] = activated;
         },
 
-        save = function() {
-            this.sandbox.emit('sulu.permission-tab.save', permissionData);
+        save = function(action) {
+            this.sandbox.emit('sulu.permission-tab.save', permissionData, action);
         },
 
         setHeaderBar = function(saved) {
