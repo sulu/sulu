@@ -25,7 +25,43 @@ sandbox.mvc.routes.push({
 
 ### Header-toolbar and tabs
 The header got a complete redesign, the breadcrumb, title and bottom-content are not available anymore. Also the event `header.set-toolbar` got removed. A sulu-header can still be initialized via the header property when a view-component gets started.
-Have a look at the documentation: //TODO insert link to docu
+
+Some properties in the header-hook have changed, some are new, some not supported anymore. For a complete overview on the current properties in the header-hook see the documentation: //TODO insert link to docu.
+
+The major work when upgrading to the new header is to change the button-templates to sulu-buttons. Before you had to pass a template like e.g. 'default' which initialized a set of buttons, now each button is passed explicitly which gives you more flexibility. Lets have a look at an example:
+
+**Before:**
+```
+header: {
+    tabs: {
+        url: '/admin/content-navigations?alias=category'
+    },
+    toolbar: {
+        template: 'default'
+    }
+}
+```
+
+**After:**
+```
+header: {
+    tabs: {
+        url: '/admin/content-navigations?alias=category'
+    },
+    toolbar: {
+        buttons: {
+            save: {},
+            settings: {
+                options: {
+                    dropdownItems: {
+                        delete: {}
+                    }
+                }
+            }
+        }
+    }
+};
+```
 
 #### Tabs
 The tabs can be configured with the 'url', 'data' and 'container' option. The 'option' fullControll' got removed. You can get the same effect by passing data with no 'component'-property.
