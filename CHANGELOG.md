@@ -2,7 +2,6 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-<<<<<<< HEAD
     * FEATURE     #1543 [MediaBundle]     new view for collection-list
     * ENHANCEMENT #1543 [MediaBundle]     changed front-end bundle structure with the use of services
     * FEATURE     #1481 [ContactBundle]   titles in JS-views
@@ -58,8 +57,6 @@ CHANGELOG for Sulu
     * BUGFIX      #1365 [ContactBundle]   Fixed bug caused by new instance name of datagrid
     * BUGFIX      #1136 [MediaBundle]     Fixed image scale forceRatio parameter for none squared image formats
 
-<<<<<<< HEAD
-=======
 * 1.0.8 (2015-08-31)
     * HOTFIX      #1539 [WebsiteBundle]  Fixed canonical tag for shadow pages
     * HOTFIX      #1537 [WebsiteBundle]  Fixed format of hreflang-tag locale
@@ -70,7 +67,6 @@ CHANGELOG for Sulu
 * 1.0.7 (2015-08-11)
     * HOTFIX      #1469 [ContentBundle]  fixed displayOptions in media selection
     * HOTFIX      #1468 [SnippetBundle]  Fixed default language for snippets in administration
->>>>>>> master
 
 * 1.0.6 (2015-08-05)
     * HOTFIX      #1448 [AdminBundle]    Fixed additional system languages
@@ -78,7 +74,6 @@ CHANGELOG for Sulu
 * 1.0.5 (2015-08-03)
     * HOTFIX      #--   [AdminBundle]    Fixed ckeditor overlay buttons for windows
 
->>>>>>> 2ba57d68fac0116e66a8575021ef807e54d3d630
 * 1.0.4 (2015-07-28)
     * HOTFIX      #1427 [ContentBundle]  Added external link migration
     * HOTFIX      #1419 [ContentBundle]  Fixed tags, categories and navigation context for shadow pages
