@@ -32,10 +32,10 @@ define(function() {
          * @param sandbox
          * @param closeEvent
          */
-        registerOpenedOverlay = function(sandbox, closeEvent) {
+        registerOpenedOverlay = function(closeEvent) {
             overlayOpened = true;
 
-            sandbox.once(closeEvent, function() {
+            this.sandbox.once(closeEvent, function() {
                 overlayOpened = false;
             }.bind(this));
         };
@@ -65,7 +65,7 @@ define(function() {
                     parent: parentId
                 }
             }]);
-            registerOpenedOverlay(this.sandbox, 'sulu.collection-add.closed');
+            registerOpenedOverlay.call(this, 'sulu.collection-add.closed');
         },
 
         /**
@@ -93,7 +93,7 @@ define(function() {
                     disableIds: disableIds
                 }
             }]);
-            registerOpenedOverlay(this.sandbox, 'sulu.collection-select.move-media.closed');
+            registerOpenedOverlay.call(this, 'sulu.collection-select.move-media.closed');
         },
 
         /**
@@ -123,7 +123,7 @@ define(function() {
                     locale: locale
                 }
             }]);
-            registerOpenedOverlay(this.sandbox, 'sulu.collection-select.move-collection.closed');
+            registerOpenedOverlay.call(this, 'sulu.collection-select.move-collection.closed');
         },
 
         /**
@@ -149,7 +149,7 @@ define(function() {
                     locale: locale
                 }
             }]);
-            registerOpenedOverlay(this.sandbox, 'sulu.media-edit.closed');
+            registerOpenedOverlay.call(this, 'sulu.media-edit.closed');
         },
 
         /**
@@ -172,7 +172,7 @@ define(function() {
                     locale: locale
                 }
             }]);
-            registerOpenedOverlay(this.sandbox, 'sulu.collection-edit.closed');
+            registerOpenedOverlay.call(this, 'sulu.collection-edit.closed');
         }
     };
 
