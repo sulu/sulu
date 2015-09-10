@@ -19,8 +19,8 @@ require.config({
         'services/sulumedia/media-manager': '../../sulumedia/js/services/media-manager',
         'services/sulumedia/user-settings-manager': '../../sulumedia/js/services/user-settings-manager',
 
-        "type/media-selection": '../../sulumedia/js/validation/types/media-selection',
-        'decorators/masonry': '../../sulumedia/js/components/collections/masonry-decorator/masonry-view'
+        'type/media-selection': '../../sulumedia/js/validation/types/media-selection',
+        'datagrid/decorators/masonry-view': '../../sulumedia/js/components/collections/masonry-decorator/masonry-view'
     }
 });
 

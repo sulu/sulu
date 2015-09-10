@@ -172,8 +172,8 @@ define(['services/sulumedia/media-manager',
 
             // change datagrid view to masonry
             this.sandbox.on('sulu.toolbar.change.masonry', function() {
-                UserSettingsManager.setMediaListView('decorators/masonry');
-                this.sandbox.emit('husky.datagrid.view.change', 'decorators/masonry');
+                UserSettingsManager.setMediaListView('datagrid/decorators/masonry-view');
+                this.sandbox.emit('husky.datagrid.view.change', 'datagrid/decorators/masonry-view');
             }.bind(this));
         },
 

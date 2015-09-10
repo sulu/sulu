@@ -49,8 +49,10 @@ define([
             }.bind(this));
 
             this.sandbox.on('sulu.toolbar.change.cards', function() {
-                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.view.change', 'decorators/cards');
-                this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'decorators/cards');
+                this.sandbox.emit(
+                    'husky.datagrid.' + constants.datagridInstanceName + '.view.change', 'datagrid/decorators/card-view'
+                );
+                this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'datagrid/decorators/card-view');
             }.bind(this));
         },
 
@@ -125,12 +127,12 @@ define([
                 resultKey: 'accounts',
                 instanceName: constants.datagridInstanceName,
                 actionCallback: actionCallback.bind(this),
-                view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'decorators/cards',
+                view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'datagrid/decorators/card-view',
                 viewOptions: {
                     table: {
                         actionIconColumn: 'name'
                     },
-                    'decorators/cards': {
+                    'datagrid/decorators/card-view': {
                         imageFormat: '100x100-inset',
                         fields: {
                             picture: 'logo',

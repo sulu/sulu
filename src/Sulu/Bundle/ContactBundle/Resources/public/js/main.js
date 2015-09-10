@@ -18,7 +18,7 @@ require.config({
         'extensions/iban': '../../sulucontact/js/extensions/iban',
         'vendor/iban-converter': '../../sulucontact/js/vendor/iban-converter/iban',
 
-        'decorators/cards': '../../sulucontact/js/components/card-decorator/card-view',
+        'datagrid/decorators/card-view': '../../sulucontact/js/components/card-decorator/card-view',
 
         'services/sulucontact/contact-manager': '../../sulucontact/js/services/contact-manager',
         'services/sulucontact/account-manager': '../../sulucontact/js/services/account-manager',
