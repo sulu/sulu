@@ -12,6 +12,7 @@ define(function() {
     'use strict';
 
     var instance = null,
+        overlayOpened = false,
 
         /**
          * Create div-container with given containerId and append it to the body
@@ -23,6 +24,14 @@ define(function() {
             $('body').append($element);
 
             return $element;
+        },
+
+        registerOpenedOverlay = function(sandbox, closeEvent) {
+            overlayOpened = true;
+
+            sandbox.once(closeEvent, function() {
+                overlayOpened = false;
+            }.bind(this));
         };
 
 
@@ -36,6 +45,10 @@ define(function() {
          * @param parentCollection of the created collection
          */
         startCreateCollectionOverlay: function(parentCollection) {
+            if (!!overlayOpened) {
+                return false;
+            }
+
             var parentId = (!!parentCollection && !!parentCollection.id) ? parentCollection.id : null,
                 $container = getOverlayContainer('create-collection-overlay');
 
@@ -46,6 +59,7 @@ define(function() {
                     parent: parentId
                 }
             }]);
+            registerOpenedOverlay(this.sandbox, 'sulu.collection-add.closed');
         },
 
         /**
@@ -54,6 +68,10 @@ define(function() {
          * @param locale to display collection titles
          */
         startMoveMediaOverlay: function(disableIds, locale) {
+            if (!!overlayOpened) {
+                return false;
+            }
+
             if (!$.isArray(disableIds)) {
                 disableIds = [disableIds];
             }
@@ -69,6 +87,7 @@ define(function() {
                     disableIds: disableIds
                 }
             }]);
+            registerOpenedOverlay(this.sandbox, 'sulu.collection-select.move-media.closed');
         },
 
         /**
@@ -77,6 +96,10 @@ define(function() {
          * @param locale to display collection titles
          */
         startMoveCollectionOverlay: function(disableIds, locale) {
+            if (!!overlayOpened) {
+                return false;
+            }
+
             if (!$.isArray(disableIds)) {
                 disableIds = [disableIds];
             }
@@ -94,6 +117,7 @@ define(function() {
                     locale: locale
                 }
             }]);
+            registerOpenedOverlay(this.sandbox, 'sulu.collection-select.move-collection.closed');
         },
 
         /**
@@ -102,21 +126,24 @@ define(function() {
          * @param locale medias are saved for given locale
          */
         startEditMediaOverlay: function(mediaIds, locale) {
+            if (!!overlayOpened) {
+                return false;
+            }
+
             if (!$.isArray(mediaIds)) {
                 mediaIds = [mediaIds];
             }
             var $container = getOverlayContainer('edit-media-overlay');
 
-            this.sandbox.start([
-                {
-                    name: 'collections/media-edit-overlay@sulumedia',
-                    options: {
-                        el: $container,
-                        mediaIds: mediaIds,
-                        locale: locale
-                    }
+            this.sandbox.start([{
+                name: 'collections/media-edit-overlay@sulumedia',
+                options: {
+                    el: $container,
+                    mediaIds: mediaIds,
+                    locale: locale
                 }
-            ]);
+            }]);
+            registerOpenedOverlay(this.sandbox, 'sulu.media-edit.closed');
         },
 
         /**
@@ -125,18 +152,21 @@ define(function() {
          * @param locale collection data is saved for the given locale
          */
         startEditCollectionOverlay: function(collectionId, locale) {
+            if (!!overlayOpened) {
+                return false;
+            }
+
             var $container = getOverlayContainer('edit-collection-overlay');
 
-            this.sandbox.start([
-                {
-                    name: 'collections/collection-edit-overlay@sulumedia',
-                    options: {
-                        el: $container,
-                        collectionId: collectionId,
-                        locale: locale
-                    }
+            this.sandbox.start([{
+                name: 'collections/collection-edit-overlay@sulumedia',
+                options: {
+                    el: $container,
+                    collectionId: collectionId,
+                    locale: locale
                 }
-            ]);
+            }]);
+            registerOpenedOverlay(this.sandbox, 'sulu.collection-edit.closed');
         }
     };
 
