@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['services/husky/mediator'], function(mediator) {
+define(['services/husky/mediator'], function(Mediator) {
 
     'use strict';
 
@@ -23,21 +23,21 @@ define(['services/husky/mediator'], function(mediator) {
          * @param id The id of the account to edit
          */
         toEdit: function(id) {
-            mediator.emit('sulu.router.navigate', 'contacts/accounts/edit:' + id + '/details');
+            Mediator.emit('sulu.router.navigate', 'contacts/accounts/edit:' + id + '/details');
         },
 
         /**
          * Navigates to the add-page of a new account
          */
         toAdd: function() {
-            mediator.emit('sulu.router.navigate', 'contacts/accounts/add', true, true);
+            Mediator.emit('sulu.router.navigate', 'contacts/accounts/add', true, true);
         },
 
         /**
          * Navigates to the accounts list
          */
         toList: function() {
-            mediator.emit('sulu.router.navigate', 'contacts/accounts');
+            Mediator.emit('sulu.router.navigate', 'contacts/accounts');
         }
     };
 

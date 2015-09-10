@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['services/husky/mediator'], function(mediator) {
+define(['services/husky/mediator'], function(Mediator) {
 
     'use strict';
 
@@ -25,18 +25,17 @@ define(['services/husky/mediator'], function(mediator) {
          */
         toCollection: function(collectionId) {
             if (!!collectionId) {
-                mediator.emit('sulu.router.navigate', 'media/collections/edit:' + collectionId + '/files', true, true);
+                Mediator.emit('sulu.router.navigate', 'media/collections/edit:' + collectionId + '/files', true, true);
             } else {
                 this.toRoot();
             }
-
         },
 
         /**
          * Navigates to the collection root view
          */
         toRoot: function() {
-            mediator.emit('sulu.router.navigate', 'media/collections/root', true, true);
+            Mediator.emit('sulu.router.navigate', 'media/collections/root', true, true);
         }
     };
 

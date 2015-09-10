@@ -12,7 +12,7 @@ define([
     'services/husky/util',
     'services/husky/mediator',
     'services/husky/translator'
-    ], function(AccountManager, util, mediator, translator) {
+    ], function(AccountManager, Util, Mediator, Translator) {
 
     'use strict';
 
@@ -43,11 +43,11 @@ define([
         template = {
             dependencyListContacts: function(contacts) {
                 var list = "<% _.each(contacts, function(contact) { %> <li><%= contact.firstName %> <%= contact.lastName %></li> <% }); %>";
-                return util.template(list, {contacts: contacts});
+                return Util.template(list, {contacts: contacts});
             },
             dependencyListAccounts: function(accounts) {
                 var list = "<% _.each(accounts, function(account) { %> <li><%= account.name %></li> <% }); %>";
-                return util.template(list, {accounts: accounts});
+                return Util.template(list, {accounts: accounts});
             }
         },
 
@@ -56,7 +56,7 @@ define([
                 furtherChildren,
                 furtherContacts,
                 overlayType = 'show-warning',
-                title = util.capitalizeFirstLetter(translator.translate('public.delete')) + '?',
+                title = Util.capitalizeFirstLetter(Translator.translate('public.delete')) + '?',
                 okCallbackWrapper = function() {
                     var deleteContacts = !!($('#overlay-checkbox').length && $('#overlay-checkbox').prop('checked'));
                     okCallback(deleteContacts);
@@ -70,12 +70,12 @@ define([
                 title = 'sulu.overlay.error';
                 okCallbackWrapper = undefined;
                 // parse sub-account template
-                content = util.template(templates.dialogEntityFoundTemplate, {
-                    foundMessage: translator.translate('contact.accounts.delete.sub-found'),
+                content = Util.template(templates.dialogEntityFoundTemplate, {
+                    foundMessage: Translator.translate('contact.accounts.delete.sub-found'),
                     list: template.dependencyListAccounts( deleteInfo.children),
                     numChildren: parseInt(deleteInfo.numChildren, 10),
-                    andMore: util.template(translator.translate('public.and-number-more'), {number: furtherChildren}),
-                    description: translator.translate('contact.accounts.delete.sub-found-desc')
+                    andMore: Util.template(Translator.translate('public.and-number-more'), {number: furtherChildren}),
+                    description: Translator.translate('contact.accounts.delete.sub-found-desc')
                 });
             }
 
@@ -84,18 +84,18 @@ define([
                 furtherContacts = deleteInfo.numContacts - deleteInfo.contacts.length;
 
                 // create message
-                content = util.template(templates.dialogEntityFoundTemplate, {
-                    foundMessage: translator.translate('contact.accounts.delete.contacts-found'),
+                content = Util.template(templates.dialogEntityFoundTemplate, {
+                    foundMessage: Translator.translate('contact.accounts.delete.contacts-found'),
                     list: template.dependencyListContacts(deleteInfo.contacts),
                     numChildren: parseInt(deleteInfo.numContacts, 10),
-                    andMore: util.template(translator.translate('public.and-number-more'), {number: furtherContacts}),
-                    description: translator.translate('contact.accounts.delete.contacts-question'),
-                    checkboxText: util.template(translator.translate('contact.accounts.delete.contacts-checkbox'), {number: parseInt(deleteInfo.numContacts, 10)})
+                    andMore: Util.template(Translator.translate('public.and-number-more'), {number: furtherContacts}),
+                    description: Translator.translate('contact.accounts.delete.contacts-question'),
+                    checkboxText: Util.template(Translator.translate('contact.accounts.delete.contacts-checkbox'), {number: parseInt(deleteInfo.numContacts, 10)})
                 });
             }
 
             // show dialog
-            mediator.emit('sulu.overlay.' + overlayType,
+            Mediator.emit('sulu.overlay.' + overlayType,
                 title,
                 content,
                 null,
@@ -120,24 +120,24 @@ define([
                 overlayType = 'show-error';
                 title = 'sulu.overlay.error';
                 okCallbackWrapper = undefined;
-                content = util.template(templates.dialogEntityFoundTemplate, {
-                    foundMessage: translator.translate('contact.accounts.delete.sub-found'),
-                    description: translator.translate('contact.accounts.delete.sub-found-desc')
+                content = Util.template(templates.dialogEntityFoundTemplate, {
+                    foundMessage: Translator.translate('contact.accounts.delete.sub-found'),
+                    description: Translator.translate('contact.accounts.delete.sub-found-desc')
                 });
             }
             // related contacts exist => show checkbox
             else if (parseInt(deleteInfo.numContacts, 10) > 0) {
                 // create message
-                content = util.template(templates.dialogEntityFoundTemplate, {
-                    foundMessage: translator.translate('contact.accounts.delete.contacts-found'),
+                content = Util.template(templates.dialogEntityFoundTemplate, {
+                    foundMessage: Translator.translate('contact.accounts.delete.contacts-found'),
                     numChildren: parseInt(deleteInfo.numContacts, 10),
-                    description: translator.translate('contact.accounts.delete.contacts-question'),
-                    checkboxText: util.template(translator.translate('contact.accounts.delete.contacts-checkbox'), {number: parseInt(deleteInfo.numContacts, 10)})
+                    description: Translator.translate('contact.accounts.delete.contacts-question'),
+                    checkboxText: Util.template(Translator.translate('contact.accounts.delete.contacts-checkbox'), {number: parseInt(deleteInfo.numContacts, 10)})
                 });
             }
 
             // show dialog
-            mediator.emit('sulu.overlay.' + overlayType,
+            Mediator.emit('sulu.overlay.' + overlayType,
                 title,
                 content,
                 null,
