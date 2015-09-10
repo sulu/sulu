@@ -63,9 +63,11 @@ header: {
 }
 ```
 
+If you are using the 'default' template in the header and now change to the sulu-buttons 'save' and 'delete' the emitted events are now 'sulu.toolbar.save' instead of 'sulu.header.toolbar.save' and 'sulu.toolbar.delete' instead of 'sulu.header.toolbar.delete'. 
+
 #### Tabs
 The tabs can be configured with the 'url', 'data' and 'container' option. The 'option' fullControll' got removed. You can get the same effect by passing data with no 'component'-property.
-Have a look at the documentation: //TODO insert link to docu
+For a complete overview on the current properties in the header-hook see the documentation: //TODO insert link to docu
 
 #### Toolbar
 The language-changer can be configured as it was. 'Template' and 'parentTemplate' in contrast are not supported anymore. Instead you pass an array of sulu-buttons.
