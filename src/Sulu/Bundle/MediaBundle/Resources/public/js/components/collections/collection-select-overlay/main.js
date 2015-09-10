@@ -121,16 +121,14 @@ define(function() {
                         instanceName: this.options.instanceName,
                         skin: 'wide',
                         propagateEvents: false,
-                        slides: [
-                            {
-                                title: this.sandbox.translate('sulu.media.move.overlay-title'),
-                                data: templates.columnNavigation(),
-                                buttons: buttons,
-                                cancelCallback: function() {
-                                    this.sandbox.stop();
-                                }.bind(this),
-                            }
-                        ]
+                        title: this.sandbox.translate('sulu.media.move.overlay-title'),
+                        data: templates.columnNavigation(),
+                        buttons: buttons,
+                        cancelCallback: function() {
+                            this.sandbox.stop();
+                        }.bind(this),
+
+
                     }
                 }
             ]);
