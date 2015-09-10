@@ -18,12 +18,14 @@ interface StructureInterface extends \ArrayAccess
 {
     /**
      * Return the named property.
+     * IF locale is null the locale of document will be used.
      *
      * @param string $name
+     * @param string $locale
      *
      * @return PropertyValue
      */
-    public function getProperty($name);
+    public function getProperty($name, $locale = null);
 
     /**
      * Return the named property as rendered by the content type

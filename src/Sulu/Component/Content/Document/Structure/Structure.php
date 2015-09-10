@@ -56,7 +56,7 @@ class Structure implements StructureInterface
     /**
      * {@inheritDoc}
      */
-    public function getProperty($name)
+    public function getProperty($name, $locale = null)
     {
         if (isset($this->properties[$name])) {
             return $this->properties[$name];

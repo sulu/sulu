@@ -57,7 +57,9 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
     {
         $document = $event->getDocument();
         $property = $this->getResourceSegmentProperty($document);
-        $segment = $document->getStructure()->getProperty($property->getName())->getValue();
+
+        $locale = $this->inspector->getOriginalLocale($document);
+        $segment = $document->getStructure()->getProperty($property->getName(), $locale)->getValue();
 
         $document->setResourceSegment($segment);
     }
