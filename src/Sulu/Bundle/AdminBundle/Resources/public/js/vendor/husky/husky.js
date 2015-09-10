@@ -34735,7 +34735,7 @@ define('__component__$search@husky',[], function() {
 
     var templates = {
             skeleton: [
-                '<a class="fa-search search-icon" href="#"></a>',
+                '<a class="fa-search fa-flip-horizontal search-icon" href="#"></a>',
                 '<a class="fa-times-circle remove-icon" href="#"></a>',
                 '<input id="search-input" type="text" class="form-element input-round search-input" placeholder="<%= placeholderText %>"/>'
             ].join('')
@@ -43863,7 +43863,8 @@ define('husky_components/data-navigation/list-view',[], function() {
                 '   <% } else if (!!data.children && data.children.length === 0) { %>',
                 '       <li class="not-selectable">',
                 '           <div class="data-navigation-info data-navigation-info-empty">',
-                '               <%=options.translates.noData%>',
+                '               <div class="fa-coffee icon"></div>',
+                '               <span><%=options.translates.noData%></span>',
                 '           </div>',
                 '       </li>',
                 '   <% } else { %>',
@@ -44033,7 +44034,7 @@ define('__component__$data-navigation@husky',[
                     '    <div class="icon-container"><span class="fa-chevron-left"/></div>',
                     '</div>',
                     '<div class="header-item data-navigation-search" style="display: none;">',
-                    '    <div class="icon-container"><span class="fa-search"/></div>',
+                    '    <div class="icon-container"><span class="fa-search fa-flip-horizontal"/></div>',
                     '    <div class="content-container">',
                     '        <div class="search-container"/>',
                     '    </div>',
@@ -44386,7 +44387,7 @@ define('__component__$data-navigation@husky',[
          */
         clearSearch: function() {
             $('.data-navigation-header').removeClass('header-search');
-            $('.data-navigation-search span').attr('class', 'fa-search');
+            $('.data-navigation-search span').attr('class', 'fa-search fa-flip-horizontal');
             this.sandbox.emit('husky.search.data-navigation.clear');
             if (!!this.searchTerm) {
                 this.sandbox.emit('husky.search.data-navigation.reset');
