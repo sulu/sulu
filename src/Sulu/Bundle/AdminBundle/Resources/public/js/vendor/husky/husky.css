@@ -6402,7 +6402,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   width: 80px;
   position: absolute;
   top: -60px;
-  right: 20px;
+  right: 0;
 }
 
 /* line 188, ../scss/modules/overlay.scss */
