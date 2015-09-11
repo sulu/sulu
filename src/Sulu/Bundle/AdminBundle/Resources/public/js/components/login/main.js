@@ -76,6 +76,7 @@ define([], function() {
             forgotPasswordSwitchClass: 'forgot-password-switch',
             loginSwitchClass: 'login-switch-span',
             loginButtonId: 'login-button',
+            loginSubmitButtonId: 'login-submit',
 
             requestResetMailButtonId: 'request-mail-button',
             resendResetMailButtonId: 'resend-mail-button',
@@ -117,7 +118,7 @@ define([], function() {
                 '       <div class="grid-row">',
                 '           <input class="form-element input-large husky-validate" type="password" name="password" id="password" placeholder="<%= password %>"/>',
                 '       </div>',
-                '       <input type="submit" id="submit" value="Submit"/>',
+                '       <input type="submit" id="' + constants.loginSubmitButtonId + '" value="Submit"/>',
                 '   </form>',
                 '   <div class="grid-row small box-frame-footer">',
                 '       <span class="navigator ' + constants.forgotPasswordSwitchClass + '"><%= forgotPasswordMessage %></span>',
@@ -460,7 +461,8 @@ define([], function() {
          * Handle click on login-button in login-frame
          */
         loginButtonClickHandler: function() {
-            this.sandbox.dom.submit(this.dom.$loginForm);
+            // click hidden submit-button to provide password-saving in internet-explorer
+            $('#' + constants.loginSubmitButtonId).click();
         },
 
         /**
