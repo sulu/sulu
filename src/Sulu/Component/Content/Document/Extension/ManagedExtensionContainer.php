@@ -122,6 +122,14 @@ class ManagedExtensionContainer extends ExtensionContainer
     /**
      * {@inheritDoc}
      */
+    public function offsetExists($extensionName)
+    {
+        return $this->extensionManager->hasExtension($this->structureType, $extensionName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function toArray()
     {
         $result = [];
