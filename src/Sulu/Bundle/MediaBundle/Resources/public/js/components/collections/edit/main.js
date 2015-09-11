@@ -104,7 +104,12 @@ define(['services/sulumedia/collection-manager',
             }.bind(this));
 
             this.sandbox.on('sulu.toolbar.permission-settings', function() {
-                // start permission overlay
+                OverlayManager.startPermissionSettingsOverlay.call(
+                    this,
+                    this.data.id,
+                    'Sulu\\Bundle\\MediaBundle\\Entity\\Collection', // todo: remove static string
+                    "sulu.media.collections" // todo: remove static string
+                );
             }.bind(this));
         },
 

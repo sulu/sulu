@@ -41,9 +41,11 @@ define([], function() {
                     data: permissionData,
                     success: function() {
                         this.sandbox.emit('sulu.permission-tab.saved', permissionData, action);
+                        this.sandbox.emit('sulu.labels.success.show', 'labels.success.permissions-saved'); //todo: add/use translation
                     }.bind(this),
                     error: function() {
                         this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
+                        this.sandbox.emit('sulu.labels.error.show');
                     }.bind(this)
                 }
             );

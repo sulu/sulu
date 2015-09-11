@@ -173,6 +173,30 @@ define(function() {
                 }
             }]);
             registerOpenedOverlay.call(this, 'sulu.collection-edit.closed');
+        },
+
+        /**
+         * Start collection-edit overlay for given collectionId
+         * @param collectionId collection to edit
+         * @param locale collection data is saved for the given locale
+         */
+        startPermissionSettingsOverlay: function(id, type, securityContext) {
+            if (!!overlayOpened) {
+                return false;
+            }
+
+            var $container = getOverlayContainer('permission-settings-overlay');
+
+            this.sandbox.start([{
+                name: 'collections/permission-settings-overlay@sulumedia',
+                options: {
+                    el: $container,
+                    id: id,
+                    type: type,
+                    securityContext: securityContext
+                }
+            }]);
+            registerOpenedOverlay.call(this, 'sulu.permission-settings.closed');
         }
     };
 
