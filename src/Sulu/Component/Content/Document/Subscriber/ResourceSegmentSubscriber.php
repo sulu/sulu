@@ -11,10 +11,11 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
-use Sulu\Component\DocumentManager\DocumentInspector;
+use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
@@ -39,7 +40,6 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
         return [
             // persist should happen before content is mapped
             Events::PERSIST => ['handlePersist', 10],
-
             // hydrate should happen afterwards
             Events::HYDRATE => ['handleHydrate', -10],
         ];
@@ -55,8 +55,12 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
      */
     public function doHydrate(AbstractMappingEvent $event)
     {
-        $node = $event->getNode();
         $document = $event->getDocument();
+        if ($document instanceof RedirectTypeBehavior && $document->getRedirectType() !== RedirectType::NONE) {
+            return;
+        }
+
+        $node = $event->getNode();
         $property = $this->getResourceSegmentProperty($document);
         $originalLocale = $this->inspector->getOriginalLocale($document);
         $segment = $node->getPropertyValueWithDefault(
@@ -89,12 +93,14 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
         $property = $structure->getPropertyByTagName('sulu.rlp');
 
         if (!$property) {
-            throw new \RuntimeException(sprintf(
-                'Structure "%s" does not have a "sulu.rlp" tag which is required for documents implementing the ' .
-                'ResourceSegmentBehavior. In "%s"',
-                $structure->name,
-                $structure->resource
-            ));
+            throw new \RuntimeException(
+                sprintf(
+                    'Structure "%s" does not have a "sulu.rlp" tag which is required for documents implementing the ' .
+                    'ResourceSegmentBehavior. In "%s"',
+                    $structure->name,
+                    $structure->resource
+                )
+            );
         }
 
         return $property;
