@@ -52,7 +52,7 @@ class ManagedStructure extends Structure
     /**
      * {@inheritDoc}
      */
-    public function getProperty($name, $locale = null)
+    public function getProperty($name)
     {
         $this->init();
 
@@ -69,10 +69,7 @@ class ManagedStructure extends Structure
         $contentTypeName = $structureProperty->getType();
 
         if ($structureProperty->isLocalized()) {
-            if (null === $locale) {
-                $locale = $this->inspector->getLocale($this->document);
-            }
-
+            $locale = $this->inspector->getLocale($this->document);
             $property = $this->legacyPropertyFactory->createTranslatedProperty($structureProperty, $locale);
         } else {
             $property = $this->legacyPropertyFactory->createProperty($structureProperty);

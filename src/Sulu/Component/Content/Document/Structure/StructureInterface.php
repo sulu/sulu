@@ -17,15 +17,13 @@ namespace Sulu\Component\Content\Document\Structure;
 interface StructureInterface extends \ArrayAccess
 {
     /**
-     * Return the named property in the given locale. If no locale is given then the locale
-     * of the document will be used.
+     * Return the named property.
      *
      * @param string $name
-     * @param string $locale
      *
      * @return PropertyValue
      */
-    public function getProperty($name, $locale = null);
+    public function getProperty($name);
 
     /**
      * Return the named property as rendered by the content type
