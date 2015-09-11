@@ -43,13 +43,9 @@ class ExtensionManager implements ExtensionManagerInterface
      */
     public function hasExtension($structureType, $name)
     {
-        if (!isset($this->extensions[$structureType])) {
-            return false;
-        }
-
         $extensions = $this->getExtensions($structureType);
 
-        return isset($extensions[$structureType]);
+        return isset($extensions[$name]);
     }
 
     /**
