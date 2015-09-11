@@ -63,6 +63,7 @@ class ExtensionSubscriberTest extends SubscriberTestCase
 
         $this->hydrateEvent->getDocument()->willReturn($document);
         $this->inspector->getWebspace($document)->willReturn('sulu_io');
+        $this->inspector->getLocale($document)->willReturn('de');
         $this->namespaceRegistry->getPrefix('extension_localized')->willReturn('ext_prefix');
         $this->extensionManager->getExtension('foobar', 'ext_1')->willReturn(
             $this->extension->reveal()
@@ -98,6 +99,7 @@ class ExtensionSubscriberTest extends SubscriberTestCase
 
         $this->persistEvent->getDocument()->willReturn($document);
         $this->inspector->getWebspace($document)->willReturn('sulu_io');
+        $this->inspector->getLocale($document)->willReturn('de');
         $this->namespaceRegistry->getPrefix('extension_localized')->willReturn('ext_prefix');
         $this->extensionManager->getExtensions('foobar')->willReturn([
             'ext_1' => $this->extension->reveal(),
