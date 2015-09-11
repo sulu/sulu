@@ -69,7 +69,7 @@ class ManagedStructure extends Structure
         $contentTypeName = $structureProperty->getType();
 
         if ($structureProperty->isLocalized()) {
-            if ($locale === null) {
+            if (null === $locale) {
                 $locale = $this->inspector->getLocale($this->document);
             }
 

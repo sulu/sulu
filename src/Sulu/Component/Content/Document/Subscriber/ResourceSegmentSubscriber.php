@@ -51,15 +51,21 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * @param HydrateEvent $event
+     * @param AbstractMappingEvent $event
      */
     public function doHydrate(AbstractMappingEvent $event)
     {
+        $node = $event->getNode();
         $document = $event->getDocument();
         $property = $this->getResourceSegmentProperty($document);
-
-        $locale = $this->inspector->getOriginalLocale($document);
-        $segment = $document->getStructure()->getProperty($property->getName(), $locale)->getValue();
+        $originalLocale = $this->inspector->getOriginalLocale($document);
+        $segment = $node->getPropertyValueWithDefault(
+            $this->encoder->localizedSystemName(
+                $property->getName(),
+                $originalLocale
+            ),
+            ''
+        );
 
         $document->setResourceSegment($segment);
     }
