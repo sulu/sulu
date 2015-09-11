@@ -1,0 +1,5 @@
+sulu_media.website.image.proxy:
+    path: /media/proxy
+
+sulu_media.website.media.download:
+    path: /media/download
