@@ -210,7 +210,7 @@ define([], function() {
         },
 
         getSelectUrl = function(url, data) {
-            return url.replace('{id=dataSource&}', (!!data ? 'id=' + data + '&' : ''));
+            return url.replace('{id=uuid&}', (!!data ? 'id=' + data + '&' : ''));
         },
 
         getSingleUrl = function(url, data) {
