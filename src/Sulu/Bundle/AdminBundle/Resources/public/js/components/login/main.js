@@ -117,6 +117,7 @@ define([], function() {
                 '       <div class="grid-row">',
                 '           <input class="form-element input-large husky-validate" type="password" name="password" id="password" placeholder="<%= password %>"/>',
                 '       </div>',
+                '       <input type="submit" id="submit" value="Submit"/>',
                 '   </form>',
                 '   <div class="grid-row small box-frame-footer">',
                 '       <span class="navigator ' + constants.forgotPasswordSwitchClass + '"><%= forgotPasswordMessage %></span>',
@@ -529,8 +530,8 @@ define([], function() {
             } else {
                 this.login(username, password);
             }
-            return false;
 
+            return false;
         },
 
         /**
