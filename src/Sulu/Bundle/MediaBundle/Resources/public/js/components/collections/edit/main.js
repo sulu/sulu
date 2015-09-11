@@ -28,7 +28,8 @@ define(['services/sulumedia/collection-manager',
                     buttons: {
                         editCollection: {},
                         moveCollection: {},
-                        deleteCollection: {}
+                        deleteCollection: {},
+                        permissionSettings: {}
                     },
                     languageChanger: {
                         url: '/admin/api/localizations',
@@ -100,6 +101,10 @@ define(['services/sulumedia/collection-manager',
 
             this.sandbox.on('sulu.toolbar.delete-collection', function() {
                 this.deleteCollection();
+            }.bind(this));
+
+            this.sandbox.on('sulu.toolbar.permission-settings', function() {
+                // start permission overlay
             }.bind(this));
         },
 
