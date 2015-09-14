@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,6 +16,7 @@ use Hateoas\Configuration\Exclusion;
 use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\ContactBundle\Contact\ContactManager;
+use Sulu\Bundle\ContactBundle\Util\SortByIdsTrait;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -34,6 +35,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ContactController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
+    use SortByIdsTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -571,27 +574,6 @@ class ContactController extends RestController implements ClassResourceInterface
         }
 
         return $this->handleView($view);
-    }
-
-    /**
-     * Sorts list-response by id array.
-     *
-     * @param array $ids
-     * @param array $listResponse
-     *
-     * @return array
-     */
-    private function sortByIds($ids, array $listResponse)
-    {
-        $result = [];
-        for ($i = 0; $i < count($listResponse); $i++) {
-            if (false !== ($index = array_search($listResponse[$i]['id'], $ids))) {
-                $result[$index] = $listResponse[$i];
-            }
-        }
-        ksort($result);
-
-        return $result;
     }
 
     /**

@@ -9,6 +9,7 @@
         <parameter key="sulu_contact.account_listener.class">Sulu\Bundle\ContactBundle\EventListener\AccountListener</parameter>
         <parameter key="sulu_contact.contact_manager.class">Sulu\Bundle\ContactBundle\Contact\ContactManager</parameter>
         <parameter key="sulu_contact.account_manager.class">Sulu\Bundle\ContactBundle\Contact\AccountManager</parameter>
+        <parameter key="sulu_contact.customer_manager.class">Sulu\Bundle\ContactBundle\Contact\CustomerManager</parameter>
         <parameter key="sulu_contact.twig.class">Sulu\Bundle\ContactBundle\Twig\ContactTwigExtension</parameter>
         <parameter key="sulu_contact.twig.cache.class">Doctrine\Common\Cache\ArrayCache</parameter>
         <parameter key="sulu_contact.account.entity">SuluContactBundle:Account</parameter>
@@ -68,6 +69,11 @@
             <argument type="service" id="sulu_contact.account_repository"/>
             <argument type="service" id="sulu_contact.contact_title_repository"/>
             <argument type="service" id="sulu.repository.contact"/>
+            <argument type="string">%sulu_contact.account.entity%</argument>
+        </service>
+        <service id="sulu_contact.customer_manager" class="%sulu_contact.customer_manager.class%">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="string">%sulu_contact.contact.entity%</argument>
             <argument type="string">%sulu_contact.account.entity%</argument>
         </service>
         <service id="sulu_contact.twig.cache" class="%sulu_contact.twig.cache.class%"/>
