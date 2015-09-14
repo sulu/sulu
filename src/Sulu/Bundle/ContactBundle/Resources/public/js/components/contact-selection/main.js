@@ -30,15 +30,15 @@ define([], function() {
         },
 
         templates = {
-            data: function(options) {
+            data: function(ids) {
                 return [
                     '<div class="grid">',
                     '   <div class="grid-row search-row">',
                     '       <div class="grid-col-8"/>',
-                    '       <div class="grid-col-4" id="', options.ids.search, '"/>',
+                    '       <div class="grid-col-4" id="', ids.search, '"/>',
                     '   </div>',
                     '   <div class="grid-row">',
-                    '       <div class="grid-col-12" id="', options.ids.list, '"/>',
+                    '       <div class="grid-col-12" id="', ids.list, '"/>',
                     '   </div>',
                     '</div>'
                 ].join('');
@@ -53,7 +53,7 @@ define([], function() {
          * returns id for given type
          */
         getId = function(type) {
-            return '#' + this.options.ids[type];
+            return '#' + this.ids[type];
         },
 
         /**
@@ -194,7 +194,7 @@ define([], function() {
                             {
                                 title: this.sandbox.translate(this.options.translations.addContact),
                                 cssClass: 'contact-content-overlay-add',
-                                data: templates.data(this.options),
+                                data: templates.data(this.ids),
                                 okCallback: getAddOverlayData.bind(this)
                             }
                         ]
@@ -217,7 +217,7 @@ define([], function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             // init ids
-            this.options.ids = {
+            this.ids = {
                 container: 'contact-selection-' + this.options.instanceName + '-container',
                 addButton: 'contact-selection-' + this.options.instanceName + '-add',
                 configButton: 'contact-selection-' + this.options.instanceName + '-config',
