@@ -1493,6 +1493,68 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Max Mustermann', $response->_embedded->contacts[0]->fullName);
     }
 
+    public function testGetListIds()
+    {
+        $contact1 = new Contact();
+        $contact1->setFirstName('Erika');
+        $contact1->setLastName('Mustermann');
+        $this->em->persist($contact1);
+
+        $contact2 = new Contact();
+        $contact2->setFirstName('Anne');
+        $contact2->setLastName('Mustermann');
+        $this->em->persist($contact2);
+
+        $contact3 = new Contact();
+        $contact3->setFirstName('Otto');
+        $contact3->setLastName('Mustermann');
+        $this->em->persist($contact3);
+        $this->em->flush();
+
+        $ids = sprintf('%s,%s,%s', $contact1->getId(), $contact2->getId(), $contact3->getId());
+
+        $client = $this->createTestClient();
+        $client->request('GET', '/api/contacts?flat=true&ids=' . $ids);
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(3, $response->total);
+
+        $this->assertEquals($contact1->getId(), $response->_embedded->contacts[0]->id);
+        $this->assertEquals($contact2->getId(), $response->_embedded->contacts[1]->id);
+        $this->assertEquals($contact3->getId(), $response->_embedded->contacts[2]->id);
+    }
+
+    public function testGetListIdsOrder()
+    {
+        $contact1 = new Contact();
+        $contact1->setFirstName('Erika');
+        $contact1->setLastName('Mustermann');
+        $this->em->persist($contact1);
+
+        $contact2 = new Contact();
+        $contact2->setFirstName('Anne');
+        $contact2->setLastName('Mustermann');
+        $this->em->persist($contact2);
+
+        $contact3 = new Contact();
+        $contact3->setFirstName('Otto');
+        $contact3->setLastName('Mustermann');
+        $this->em->persist($contact3);
+        $this->em->flush();
+
+        $ids = sprintf('%s,%s,%s', $contact3->getId(), $contact1->getId(), $contact2->getId());
+
+        $client = $this->createTestClient();
+        $client->request('GET', '/api/contacts?flat=true&ids=' . $ids);
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(3, $response->total);
+
+        $this->assertEquals($contact3->getId(), $response->_embedded->contacts[0]->id);
+        $this->assertEquals($contact1->getId(), $response->_embedded->contacts[1]->id);
+        $this->assertEquals($contact2->getId(), $response->_embedded->contacts[2]->id);
+    }
+
     public function testDelete()
     {
         $client = $this->createTestClient();
