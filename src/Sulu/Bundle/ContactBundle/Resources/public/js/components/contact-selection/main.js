@@ -86,6 +86,7 @@ define([], function() {
                 {
                     name: 'search@husky',
                     options: {
+                        appearance: 'white small',
                         instanceName: this.options.instanceName + '-search',
                         el: getId.call(this, 'search')
                     }
@@ -99,6 +100,7 @@ define([], function() {
                         sortable: false,
                         columnOptionsInstanceName: '',
                         el: getId.call(this, 'list'),
+                        selectedCounter: true,
                         searchInstanceName: this.options.instanceName + '-search',
                         searchFields: ['firstName', 'lastName'],
                         paginationOptions: {
