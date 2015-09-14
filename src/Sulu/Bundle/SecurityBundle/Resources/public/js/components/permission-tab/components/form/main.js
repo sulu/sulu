@@ -26,11 +26,7 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
 
         bindCustomEvents = function() {
             this.sandbox.on('husky.matrix.changed', changePermission.bind(this));
-            this.sandbox.on('sulu.toolbar.save', save.bind(this));
-
-            this.sandbox.on('sulu.permission-tab.saved', function() {
-                setHeaderBar.call(this, true);
-            }.bind(this));
+            this.sandbox.on('sulu.permission-tab.save', save.bind(this));
         },
 
         render = function() {
@@ -134,7 +130,7 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
                 }.bind(this)
             );
 
-            this.sandbox.emit('sulu.preview.initialize');
+            this.sandbox.emit('husky.permission-form.loaded');
         },
 
         changePermission = function(data) {
@@ -152,16 +148,13 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
         },
 
         save = function(action) {
-            this.sandbox.emit('sulu.permission-tab.save', permissionData, action);
-        },
-
-        setHeaderBar = function(saved) {
-            var postfix = (!!saved) ? 'disable' : 'enable';
-            this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'save', false);
+            this.sandbox.emit('sulu.permission-form.save', permissionData, action);
         },
 
         listenForChange = function() {
-            this.sandbox.on('husky.matrix.changed', setHeaderBar.bind(this, false));
+            this.sandbox.on('husky.matrix.changed', function() {
+                this.sandbox.emit('husky.permission-form.changed');
+            }.bind(this));
         },
 
         findContextPermissions = function(context, role) {
@@ -184,14 +177,20 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
         templates: ['/admin/security/template/permission-tab/form'],
 
         layout: function() {
-            return {
-                extendExisting: true,
-                content: {
-                    width: 'fixed',
-                    leftSpace: true,
-                    rightSpace: true
-                }
-            };
+            if (!this.options.inOverlay) {
+                return {
+                    extendExisting: true,
+                    content: {
+                        width: 'fixed',
+                        leftSpace: true,
+                        rightSpace: true
+                    }
+                };
+            } else {
+                return {
+                    extendExisting: true
+                };
+            }
         },
 
         initialize: function() {

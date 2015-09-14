@@ -107,7 +107,8 @@ define(function() {
                         el: '.' + constants.permissionContentClass,
                         id: this.options.id,
                         type: this.options.type,
-                        securityContext: this.options.securityContext
+                        securityContext: this.options.securityContext,
+                        inOverlay: true
                     }
                 }
             ]);
@@ -118,7 +119,7 @@ define(function() {
          * @returns {Boolean} returns false if form-data was not valid
          */
         savePermissionSettings: function() {
-            this.sandbox.emit('sulu.toolbar.save');
+            this.sandbox.emit('sulu.permission-tab.save');
 
             this.sandbox.once('sulu.permission-tab.saved', function() {
                 this.sandbox.stop();

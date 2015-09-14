@@ -18,22 +18,47 @@ define([], function() {
                         el: $form,
                         id: this.options.id,
                         type: this.options.type,
-                        securityContext: this.options.securityContext
+                        securityContext: this.options.securityContext,
+                        inOverlay: this.options.inOverlay
                     }
                 };
 
             this.html($form);
-
             this.sandbox.start([component]);
         },
 
         bindCustomEvents = function() {
-            this.sandbox.on('sulu.permission-tab.save', save.bind(this));
+            this.sandbox.on('sulu.permission-form.save', save.bind(this));
+        },
+
+        wrapTabEvents = function() {
+            this.sandbox.on('husky.permission-form.loaded', function() {
+                this.sandbox.emit('sulu.preview.initialize');
+            }.bind(this));
+
+            this.sandbox.on('husky.permission-form.changed', function() {
+                this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
+            }.bind(this));
+
+            this.sandbox.on('sulu.permission-form.save', function() {
+                this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
+            }.bind(this));
+
+            this.sandbox.on('sulu.permission-tab.error', function() {
+                this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
+            }.bind(this));
+
+            this.sandbox.on('sulu.permission-tab.saved', function() {
+                this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', false);
+            }.bind(this));
+
+            // forward toolbar save event
+            this.sandbox.on('sulu.toolbar.save', function() {
+                this.sandbox.emit('sulu.permission-tab.save');
+            }.bind(this));
         },
 
         save = function(permissionData, action) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
-
             this.sandbox.util.ajax(
                 '/admin/api/permissions',
                 {
@@ -44,8 +69,8 @@ define([], function() {
                         this.sandbox.emit('sulu.permission-tab.saved', permissionData, action);
                     }.bind(this),
                     error: function() {
-                        this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
                         this.sandbox.emit('sulu.labels.error.show');
+                        this.sandbox.emit('sulu.permission-tab.error');
                     }.bind(this)
                 }
             );
@@ -55,6 +80,9 @@ define([], function() {
         initialize: function() {
             renderForm.call(this);
             bindCustomEvents.call(this);
+            if (!this.options.inOverlay) {
+                wrapTabEvents.call(this);
+            }
         }
     };
 });
