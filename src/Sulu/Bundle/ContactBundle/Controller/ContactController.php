@@ -511,6 +511,10 @@ class ContactController extends RestController implements ClassResourceInterface
             $listBuilder = $factory->create($this->container->getParameter('sulu.model.contact.class'));
 
             $restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());
+            $ids = array_filter(explode(',', $request->get('ids', '')));
+            if (count($ids) > 0) {
+                $listBuilder->in($this->fieldDescriptors['id'], $ids);
+            }
 
             $listResponse = $listBuilder->execute();
             $listResponse = $this->addAvatars($listResponse, $locale);
