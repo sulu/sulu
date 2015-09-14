@@ -622,6 +622,14 @@
                 <source>contact.accounts.logo-dropzone-text</source>
                 <target>Drop image or click to change logo</target>
             </trans-unit>
+            <trans-unit id="235b14f26g712345e44gs2e9335a8d50" resname="contact-selection.no-contact-selected">
+                <source>contact-selection.no-contact-selected</source>
+                <target>No person selected</target>
+            </trans-unit>
+            <trans-unit id="235b14f26g712345e44gs2e9335a8d51" resname="contact-selection.add">
+                <source>contact-selection.add</source>
+                <target>Choose snippet</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
