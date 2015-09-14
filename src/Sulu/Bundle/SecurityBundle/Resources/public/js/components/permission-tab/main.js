@@ -65,7 +65,7 @@ define([], function() {
                     method: 'POST',
                     data: permissionData,
                     success: function() {
-                        this.sandbox.emit('sulu.labels.success.show', 'labels.success.permissions-saved'); //todo: add/use translation
+                        this.sandbox.emit('sulu.labels.success.show', 'labels.success.permission-save-desc');
                         this.sandbox.emit('sulu.permission-tab.saved', permissionData, action);
                     }.bind(this),
                     error: function() {

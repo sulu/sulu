@@ -34,10 +34,10 @@
                 };
 
                 var permissionSettings = Husky.sulu.buttons.getApiButton('permission');
-                permissionSettings.title = 'Collection Permissions'; // todo: add/use translation
+                permissionSettings.title = 'security.roles.permissions';
                 permissionSettings.icon = 'lock';
                 permissionSettings.callback = function() {
-                    Husky.emit('sulu.toolbar.permission-settings');
+                    Husky.emit('sulu.toolbar.collection-permissions');
                 };
 
                 return [

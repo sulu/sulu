@@ -103,7 +103,7 @@ define(['services/sulumedia/collection-manager',
                 this.deleteCollection();
             }.bind(this));
 
-            this.sandbox.on('sulu.toolbar.permission-settings', function() {
+            this.sandbox.on('sulu.toolbar.collection-permissions', function() {
                 OverlayManager.startPermissionSettingsOverlay.call(
                     this,
                     this.data.id,

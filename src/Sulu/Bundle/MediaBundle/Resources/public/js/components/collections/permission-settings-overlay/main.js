@@ -84,7 +84,7 @@ define(function() {
                     name: 'overlay@husky',
                     options: {
                         el: $container,
-                        title: this.sandbox.translate('Permissions'), // todo: add/use translation
+                        title: this.sandbox.translate('security.roles.permissions'),
                         instanceName: 'permission-settings',
                         data: '<div class="' + constants.permissionContentClass + '"/>',
                         okCallback: this.savePermissionSettings.bind(this),
