@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Document\Subscriber;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -47,7 +48,7 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
 
     public function supports($document)
     {
-        return $document instanceof ResourceSegmentBehavior;
+        return $document instanceof ResourceSegmentBehavior && $document instanceof StructureBehavior;
     }
 
     /**

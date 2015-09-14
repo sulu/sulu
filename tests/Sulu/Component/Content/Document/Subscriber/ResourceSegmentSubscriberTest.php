@@ -34,7 +34,8 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $inspector = $this->prophesize(DocumentInspector::class);
         $event = $this->prophesize(AbstractMappingEvent::class);
 
-        $document = $this->prophesize(ResourceSegmentSubscriberTestDocument::class);
+        $document = $this->prophesize(ResourceSegmentBehavior::class);
+        $document->willImplement(StructureBehavior::class);
         $event->getDocument()->willReturn($document->reveal());
 
         $node = $this->prophesize(NodeInterface::class);
@@ -70,7 +71,8 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $inspector = $this->prophesize(DocumentInspector::class);
         $event = $this->prophesize(PersistEvent::class);
 
-        $document = $this->prophesize(ResourceSegmentSubscriberTestDocument::class);
+        $document = $this->prophesize(ResourceSegmentBehavior::class);
+        $document->willImplement(StructureBehavior::class);
         $event->getDocument()->willReturn($document->reveal());
 
         $structureMetadata = $this->prophesize(StructureMetadata::class);
@@ -95,8 +97,4 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $subscriber = new ResourceSegmentSubscriber($encoder->reveal(), $inspector->reveal());
         $subscriber->doPersist($event->reveal());
     }
-}
-
-interface ResourceSegmentSubscriberTestDocument extends ResourceSegmentBehavior, StructureBehavior
-{
 }
