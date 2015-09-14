@@ -75,9 +75,11 @@ define([], function() {
             // adjust position of overlay after column-navigation has initialized
             this.sandbox.on('husky.datagrid.contact.view.rendered', function() {
                 this.sandbox.emit('husky.overlay.customer-selection.' + this.options.instanceName + '.add.set-position');
+                updateList.call(this);
             }.bind(this));
             this.sandbox.on('husky.datagrid.account.view.rendered', function() {
                 this.sandbox.emit('husky.overlay.customer-selection.' + this.options.instanceName + '.add.set-position');
+                updateList.call(this);
             }.bind(this));
         },
 
@@ -85,7 +87,7 @@ define([], function() {
          * initialize column navigation
          */
         initList = function() {
-            var data = this.getData();
+            var data = getParsedData.call(this);
 
             this.sandbox.start([
                 {
@@ -102,7 +104,7 @@ define([], function() {
                         el: getId.call(this, 'contactList'),
                         instanceName: 'contact',
                         url: this.options.contactUrl,
-                        preselected: data,
+                        preselected: data.contacts,
                         resultKey: this.options.contactResultKey,
                         sortable: false,
                         columnOptionsInstanceName: '',
@@ -148,7 +150,7 @@ define([], function() {
                         el: getId.call(this, 'accountList'),
                         instanceName: 'account',
                         url: this.options.accountUrl,
-                        preselected: data,
+                        preselected: data.accounts,
                         resultKey: this.options.accountResultKey,
                         sortable: false,
                         columnOptionsInstanceName: '',
@@ -180,9 +182,11 @@ define([], function() {
         },
 
         /**
-         * Updates the datagrid when opening the overlay again
+         * Split selected items into accounts and contacts.
+         *
+         * @returns {{accounts: Array, contacts: Array}}
          */
-        updateList = function() {
+        getParsedData = function() {
             var selectedItems = this.getData() || [],
                 accounts = [],
                 contacts = [];
@@ -196,8 +200,17 @@ define([], function() {
                 }
             });
 
-            this.sandbox.emit('husky.datagrid.contact.selected.update', contacts);
-            this.sandbox.emit('husky.datagrid.account.selected.update', accounts);
+            return {accounts: accounts, contacts: contacts};
+        },
+
+        /**
+         * Updates the datagrid when opening the overlay again
+         */
+        updateList = function() {
+            var data = getParsedData.call(this);
+
+            this.sandbox.emit('husky.datagrid.contact.selected.update', data.contacts);
+            this.sandbox.emit('husky.datagrid.account.selected.update', data.accounts);
         },
 
         /**
