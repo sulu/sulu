@@ -519,6 +519,10 @@ class ContactController extends RestController implements ClassResourceInterface
             $listResponse = $listBuilder->execute();
             $listResponse = $this->addAvatars($listResponse, $locale);
 
+            if (count($ids) > 0) {
+                $listResponse = $this->sortByIds($ids, $listResponse);
+            }
+
             $list = new ListRepresentation(
                 $listResponse,
                 self::$entityKey,
@@ -567,6 +571,27 @@ class ContactController extends RestController implements ClassResourceInterface
         }
 
         return $this->handleView($view);
+    }
+
+    /**
+     * Sorts list-response by id array.
+     *
+     * @param array $ids
+     * @param array $listResponse
+     *
+     * @return array
+     */
+    private function sortByIds($ids, array $listResponse)
+    {
+        $result = [];
+        for ($i = 0; $i < count($listResponse); $i++) {
+            if (false !== ($index = array_search($listResponse[$i]['id'], $ids))) {
+                $result[$index] = $listResponse[$i];
+            }
+        }
+        ksort($result);
+
+        return $result;
     }
 
     /**
