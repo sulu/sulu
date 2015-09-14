@@ -8,16 +8,16 @@
  */
 
 /**
- * Snippet content type
+ * Contact content type.
  *
- * Allows selection of multiple snippets
+ * Allows selection of multiple contacts.
  */
 define([], function() {
 
     'use strict';
 
     var defaults = {
-            eventNamespace: 'sulu.snippets',
+            eventNamespace: 'sulu.contact-selection',
             resultKey: 'contacts',
             dataAttribute: 'contact-selection',
             dataDefault: [],
@@ -67,7 +67,7 @@ define([], function() {
 
             this.sandbox.on(
                 'husky.overlay.contact-selection.' + this.options.instanceName + '.add.opened',
-                updateSnippetList.bind(this)
+                updateList.bind(this)
             );
 
             // adjust position of overlay after column-navigation has initialized
@@ -84,6 +84,13 @@ define([], function() {
 
             this.sandbox.start([
                 {
+                    name: 'search@husky',
+                    options: {
+                        instanceName: this.options.instanceName + '-search',
+                        el: getId.call(this, 'search')
+                    }
+                },
+                {
                     name: 'datagrid@husky',
                     options: {
                         url: this.options.url,
@@ -93,6 +100,12 @@ define([], function() {
                         columnOptionsInstanceName: '',
                         el: getId.call(this, 'list'),
                         searchInstanceName: this.options.instanceName + '-search',
+                        searchFields: ['firstName', 'lastName'],
+                        paginationOptions: {
+                            dropdown: {
+                                limit: 20
+                            }
+                        },
                         viewOptions: {
                             table: {
                                 selectItem: {
@@ -114,11 +127,11 @@ define([], function() {
                                 disabled: true
                             },
                             {
-                                content: 'firstName',
+                                content: 'contact.contacts.firstName',
                                 name: 'firstName'
                             },
                             {
-                                content: 'lastName',
+                                content: 'contact.contacts.lastName',
                                 name: 'lastName'
                             }
                         ]
@@ -130,7 +143,7 @@ define([], function() {
         /**
          * Updates the datagrid when opening the overlay again
          */
-        updateSnippetList = function() {
+        updateList = function() {
             var selectedItems = this.getData() || [];
 
             this.sandbox.emit(
@@ -169,7 +182,7 @@ define([], function() {
                     name: 'overlay@husky',
                     options: {
                         triggerEl: this.$addButton,
-                        cssClass: 'snippet-content-overlay',
+                        cssClass: 'contact-content-overlay',
                         el: $element,
                         removeOnClose: false,
                         container: this.$el,
@@ -178,7 +191,7 @@ define([], function() {
                         slides: [
                             {
                                 title: this.sandbox.translate(this.options.translations.addContact),
-                                cssClass: 'snippet-content-overlay-add',
+                                cssClass: 'contact-content-overlay-add',
                                 data: templates.data(this.options),
                                 okCallback: getAddOverlayData.bind(this)
                             }
