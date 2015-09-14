@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-master
     * HOTFIX      #1568 [ContentBundle]  Fixed copy extension data
     * HOTFIX      #1572 [ContentBundle]  Fixed select overlay for internal link node type
+    * HOTFIX      #1567 [Document]       Fixed localized property for url property
 
 * 1.0.8 (2015-08-31)
     * HOTFIX      #1539 [WebsiteBundle]  Fixed canonical tag for shadow pages
