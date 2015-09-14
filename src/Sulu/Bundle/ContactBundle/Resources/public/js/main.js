@@ -28,7 +28,8 @@ require.config({
 
         'extensions/sulu-buttons-contactbundle': '../../sulucontact/js/extensions/sulu-buttons',
 
-        'type/contactSelection': '../../sulucontact/js/validation/types/contactSelection'
+        'type/customer-selection': '../../sulucontact/js/validation/types/customer-selection',
+        'type/contact-selection': '../../sulucontact/js/validation/types/contact-selection'
     },
 
     shim: {

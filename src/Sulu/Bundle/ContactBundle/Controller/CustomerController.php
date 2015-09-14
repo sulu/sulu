@@ -20,6 +20,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CustomerController extends RestController implements ClassResourceInterface
 {
+    protected static $entityKey = 'customers';
+
     /**
      * Returns list of contacts and organizations.
      *

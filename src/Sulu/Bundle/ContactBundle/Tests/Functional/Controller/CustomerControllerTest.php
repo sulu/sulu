@@ -59,17 +59,6 @@ class CustomerControllerTest extends SuluTestCase
         return $account;
     }
 
-    private function createTestClient()
-    {
-        return $this->createClient(
-            [],
-            [
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            ]
-        );
-    }
-
     public function testCGet()
     {
         $ids = sprintf(
@@ -85,16 +74,16 @@ class CustomerControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals('c' . $this->contacts[0]->getId(), $response['_embedded']['items'][0]['id']);
-        $this->assertEquals($this->contacts[0]->getFullName(), $response['_embedded']['items'][0]['name']);
+        $this->assertEquals('c' . $this->contacts[0]->getId(), $response['_embedded']['customers'][0]['id']);
+        $this->assertEquals($this->contacts[0]->getFullName(), $response['_embedded']['customers'][0]['name']);
 
-        $this->assertEquals('a' . $this->accounts[0]->getId(), $response['_embedded']['items'][1]['id']);
-        $this->assertEquals($this->accounts[0]->getName(), $response['_embedded']['items'][1]['name']);
+        $this->assertEquals('a' . $this->accounts[0]->getId(), $response['_embedded']['customers'][1]['id']);
+        $this->assertEquals($this->accounts[0]->getName(), $response['_embedded']['customers'][1]['name']);
 
-        $this->assertEquals('c' . $this->contacts[1]->getId(), $response['_embedded']['items'][2]['id']);
-        $this->assertEquals($this->contacts[1]->getFullName(), $response['_embedded']['items'][2]['name']);
+        $this->assertEquals('c' . $this->contacts[1]->getId(), $response['_embedded']['customers'][2]['id']);
+        $this->assertEquals($this->contacts[1]->getFullName(), $response['_embedded']['customers'][2]['name']);
 
-        $this->assertEquals('a' . $this->accounts[1]->getId(), $response['_embedded']['items'][3]['id']);
-        $this->assertEquals($this->accounts[1]->getName(), $response['_embedded']['items'][3]['name']);
+        $this->assertEquals('a' . $this->accounts[1]->getId(), $response['_embedded']['customers'][3]['id']);
+        $this->assertEquals($this->accounts[1]->getName(), $response['_embedded']['customers'][3]['name']);
     }
 }

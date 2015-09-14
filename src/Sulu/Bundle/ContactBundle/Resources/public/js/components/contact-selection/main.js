@@ -53,7 +53,7 @@ define([], function() {
          * returns id for given type
          */
         getId = function(type) {
-            return '#' + this.ids[type];
+            return '#' + this.domIds[type];
         },
 
         /**
@@ -94,12 +94,15 @@ define([], function() {
                 {
                     name: 'datagrid@husky',
                     options: {
+                        el: getId.call(this, 'list'),
                         url: this.options.url,
                         preselected: data,
                         resultKey: this.options.resultKey,
                         sortable: false,
                         columnOptionsInstanceName: '',
-                        el: getId.call(this, 'list'),
+                        clickCallback: function(item) {
+                            this.sandbox.emit('husky.datagrid.select.item', item);
+                        }.bind(this),
                         selectedCounter: true,
                         searchInstanceName: this.options.instanceName + '-search',
                         searchFields: ['firstName', 'lastName'],
@@ -194,7 +197,7 @@ define([], function() {
                             {
                                 title: this.sandbox.translate(this.options.translations.addContact),
                                 cssClass: 'contact-content-overlay-add',
-                                data: templates.data(this.ids),
+                                data: templates.data(this.domIds),
                                 okCallback: getAddOverlayData.bind(this)
                             }
                         ]
@@ -217,7 +220,7 @@ define([], function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             // init ids
-            this.ids = {
+            this.domIds = {
                 container: 'contact-selection-' + this.options.instanceName + '-container',
                 addButton: 'contact-selection-' + this.options.instanceName + '-add',
                 configButton: 'contact-selection-' + this.options.instanceName + '-config',

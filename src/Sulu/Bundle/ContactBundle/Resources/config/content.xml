@@ -5,9 +5,15 @@
 
     <parameters>
         <parameter key="sulu_contact.content.contact.class">Sulu\Bundle\ContactBundle\Content\Types\ContactSelectionContentType</parameter>
+        <parameter key="sulu_contact.content.customer.class">Sulu\Bundle\ContactBundle\Content\Types\CustomerSelectionContentType</parameter>
     </parameters>
 
     <services>
+        <service id="sulu_contact.content.customer" class="%sulu_contact.content.customer.class%">
+            <argument>%sulu_contact.content-type.customer.template%</argument>
+
+            <tag name="sulu.content.type" alias="customer"/>
+        </service>
         <service id="sulu_contact.content.contact" class="%sulu_contact.content.contact.class%">
             <argument type="service" id="sulu_contact.contact_manager" />
             <argument>%sulu_contact.content-type.contact.template%</argument>

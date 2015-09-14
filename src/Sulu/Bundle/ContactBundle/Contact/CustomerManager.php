@@ -47,6 +47,10 @@ class CustomerManager implements CustomerManagerInterface
      */
     public function findByIds($ids)
     {
+        if (count($ids) === 0) {
+            return [];
+        }
+
         $parsed = $this->parseIds($ids);
 
         $accounts = $this->findAccountsByIds($parsed['accounts']);
@@ -64,6 +68,10 @@ class CustomerManager implements CustomerManagerInterface
      */
     private function findAccountsByIds($ids)
     {
+        if (count($ids) === 0) {
+            return [];
+        }
+
         $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('CONCAT(\'a\', a.id) AS id, a.name AS name')
             ->from($this->accountEntityClass, 'a')
@@ -84,6 +92,10 @@ class CustomerManager implements CustomerManagerInterface
      */
     private function findContactsByIds($ids)
     {
+        if (count($ids) === 0) {
+            return [];
+        }
+
         $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('CONCAT(\'c\', c.id) AS id, CONCAT(CONCAT(c.firstName, \' \'), c.lastName) AS name')
             ->from($this->contactEntityClass, 'c')
