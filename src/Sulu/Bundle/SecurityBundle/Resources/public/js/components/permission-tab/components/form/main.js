@@ -14,6 +14,7 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
     var permissionUrl = '/admin/api/permissions',
         permissions = Config.get('sulusecurity.permissions').slice(0, -1), // removes the security permission
         permissionTitles = Config.get('sulusecurity.permission_titles').slice(0, -1),
+        loaderSelector = '#permission-loader',
         matrixContainerSelector = '#matrix-container',
         matrixSelector = '#matrix',
         permissionData = {
@@ -34,11 +35,21 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
 
         render = function() {
             this.$el.html(this.renderTemplate('/admin/security/template/permission-tab/form'));
+
+            this.sandbox.start([
+                {
+                    name: 'loader@husky',
+                    options: {
+                        el: this.$find(loaderSelector),
+                        size: '100px',
+                        color: '#cccccc'
+                    }
+                }
+            ]);
         },
 
         initializeMatrix = function() {
-            var $matrix = this.sandbox.dom.createElement('<div id="matrix" class="loading"/>');
-
+            var $matrix = this.sandbox.dom.createElement('<div id="matrix"/>');
             this.sandbox.dom.append(matrixContainerSelector, $matrix);
 
             var roles = new Roles();
@@ -119,7 +130,7 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
                         }
                     ]);
 
-                    this.sandbox.dom.removeClass($matrix, 'loading');
+                    this.$find(loaderSelector).hide();
                 }.bind(this)
             );
 
