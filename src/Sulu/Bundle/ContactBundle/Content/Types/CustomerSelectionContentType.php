@@ -10,7 +10,12 @@
 
 namespace Sulu\Bundle\ContactBundle\Content\Types;
 
+use JMS\Serializer\Serializer;
 use PHPCR\NodeInterface;
+use Sulu\Bundle\ContactBundle\Api\Account;
+use Sulu\Bundle\ContactBundle\Api\Contact;
+use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
+use Sulu\Bundle\ContactBundle\Util\IdsHandlingTrait;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
@@ -20,14 +25,38 @@ use Sulu\Component\Content\ContentTypeInterface;
  */
 class CustomerSelectionContentType extends ComplexContentType
 {
+    use IdsHandlingTrait;
+
     /**
      * @var string
      */
     private $template;
 
-    public function __construct($template)
-    {
+    /**
+     * @var ContactManagerInterface
+     */
+    private $contactManager;
+
+    /**
+     * @var ContactManagerInterface
+     */
+    private $accountManager;
+
+    /**
+     * @var Serializer
+     */
+    private $serializer;
+
+    public function __construct(
+        $template,
+        ContactManagerInterface $contactManager,
+        ContactManagerInterface $accountManager,
+        Serializer $serializer
+    ) {
         $this->template = $template;
+        $this->contactManager = $contactManager;
+        $this->accountManager = $accountManager;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -48,7 +77,7 @@ class CustomerSelectionContentType extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        $values = array();
+        $values = [];
         if ($node->hasProperty($property->getName())) {
             $values = $node->getPropertyValue($property->getName());
         }
@@ -80,7 +109,7 @@ class CustomerSelectionContentType extends ComplexContentType
         $segmentKey
     ) {
         $value = $property->getValue();
-        $node->setProperty($property->getName(), ($value === null ? array() : $value));
+        $node->setProperty($property->getName(), ($value === null ? [] : $value));
     }
 
     /**
@@ -99,15 +128,41 @@ class CustomerSelectionContentType extends ComplexContentType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getContentData(PropertyInterface $property)
     {
-        return [];
+        $value = $property->getValue();
+        $locale = $property->getStructure()->getLanguageCode();
+
+        if ($value === null || !is_array($value) || count($value) === 0) {
+            return [];
+        }
+
+        $ids = $this->parseIds($value, ['a' => [], 'c' => []]);
+
+        $accounts = $this->accountManager->getByIds($ids['a'], $locale);
+        $contacts = $this->contactManager->getByIds($ids['c'], $locale);
+
+        $result = $this->sortEntitiesByIds(
+            $value,
+            array_merge($accounts, $contacts),
+            function ($entity) {
+                if ($entity instanceof Contact) {
+                    return 'c';
+                } elseif ($entity instanceof Account) {
+                    return 'a';
+                }
+
+                return '';
+            }
+        );
+
+        return $this->serializer->serialize($result, 'array');
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getDefaultValue()
     {
@@ -130,7 +185,7 @@ class CustomerSelectionContentType extends ComplexContentType
      */
     protected function setData($data, PropertyInterface $property)
     {
-        $refs = isset($data) ? $data : array();
+        $refs = isset($data) ? $data : [];
         $property->setValue($refs);
     }
 }

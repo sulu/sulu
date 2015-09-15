@@ -1524,6 +1524,15 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals($contact3->getId(), $response->_embedded->contacts[2]->id);
     }
 
+    public function testGetListIdsEmpty()
+    {
+        $client = $this->createTestClient();
+        $client->request('GET', '/api/contacts?flat=true&ids=');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertCount(0, $response->_embedded->contacts);
+    }
+
     public function testGetListIdsOrder()
     {
         $contact1 = new Contact();

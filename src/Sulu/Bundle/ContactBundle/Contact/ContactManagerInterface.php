@@ -109,4 +109,14 @@ interface ContactManagerInterface
      * @return mixed
      */
     public function getById($id, $locale);
+
+    /**
+     * Returns api entities.
+     *
+     * @param $ids
+     * @param $locale
+     *
+     * @return mixed
+     */
+    public function getByIds($ids, $locale);
 }

@@ -14,14 +14,15 @@ use Jackalope\Node;
 use JMS\Serializer\Serializer;
 use PHPCR\NodeInterface;
 use Prophecy\Argument;
+use Sulu\Bundle\ContactBundle\Api\Account;
 use Sulu\Bundle\ContactBundle\Api\Contact;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
-use Sulu\Bundle\ContactBundle\Content\Types\ContactSelectionContentType;
+use Sulu\Bundle\ContactBundle\Content\Types\CustomerSelectionContentType;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 
-class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
+class CustomerSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var string
@@ -54,6 +55,11 @@ class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
     private $contactManager;
 
     /**
+     * @var ContactManagerInterface
+     */
+    private $accountManager;
+
+    /**
      * @var NodeInterface
      */
     private $node;
@@ -78,6 +84,7 @@ class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
 
         $this->contactManager = $this->prophesize(ContactManagerInterface::class);
+        $this->accountManager = $this->prophesize(ContactManagerInterface::class);
         $this->node = $this->prophesize(Node::class);
         $this->property = $this->prophesize(PropertyInterface::class);
         $this->structure = $this->prophesize(StructureInterface::class);
@@ -92,9 +99,10 @@ class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testGetType()
     {
-        $type = new ContactSelectionContentType(
+        $type = new CustomerSelectionContentType(
             $this->template,
             $this->contactManager->reveal(),
+            $this->accountManager->reveal(),
             $this->serializer->reveal()
         );
 
@@ -103,9 +111,10 @@ class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testGetTemplate()
     {
-        $type = new ContactSelectionContentType(
+        $type = new CustomerSelectionContentType(
             $this->template,
             $this->contactManager->reveal(),
+            $this->accountManager->reveal(),
             $this->serializer->reveal()
         );
 
@@ -114,9 +123,10 @@ class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testRead()
     {
-        $type = new ContactSelectionContentType(
+        $type = new CustomerSelectionContentType(
             $this->template,
             $this->contactManager->reveal(),
+            $this->accountManager->reveal(),
             $this->serializer->reveal()
         );
 
@@ -136,9 +146,10 @@ class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testReadNull()
     {
-        $type = new ContactSelectionContentType(
+        $type = new CustomerSelectionContentType(
             $this->template,
             $this->contactManager->reveal(),
+            $this->accountManager->reveal(),
             $this->serializer->reveal()
         );
 
@@ -158,9 +169,10 @@ class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testReadPropertyNotExists()
     {
-        $type = new ContactSelectionContentType(
+        $type = new CustomerSelectionContentType(
             $this->template,
             $this->contactManager->reveal(),
+            $this->accountManager->reveal(),
             $this->serializer->reveal()
         );
 
@@ -180,9 +192,10 @@ class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testReadForPreview()
     {
-        $type = new ContactSelectionContentType(
+        $type = new CustomerSelectionContentType(
             $this->template,
             $this->contactManager->reveal(),
+            $this->accountManager->reveal(),
             $this->serializer->reveal()
         );
 
@@ -199,9 +212,10 @@ class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testReadForPreviewNull()
     {
-        $type = new ContactSelectionContentType(
+        $type = new CustomerSelectionContentType(
             $this->template,
             $this->contactManager->reveal(),
+            $this->accountManager->reveal(),
             $this->serializer->reveal()
         );
 
@@ -218,9 +232,10 @@ class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testWrite()
     {
-        $type = new ContactSelectionContentType(
+        $type = new CustomerSelectionContentType(
             $this->template,
             $this->contactManager->reveal(),
+            $this->accountManager->reveal(),
             $this->serializer->reveal()
         );
 
@@ -240,9 +255,10 @@ class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testWriteNull()
     {
-        $type = new ContactSelectionContentType(
+        $type = new CustomerSelectionContentType(
             $this->template,
             $this->contactManager->reveal(),
+            $this->accountManager->reveal(),
             $this->serializer->reveal()
         );
 
@@ -263,9 +279,10 @@ class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testRemove()
     {
-        $type = new ContactSelectionContentType(
+        $type = new CustomerSelectionContentType(
             $this->template,
             $this->contactManager->reveal(),
+            $this->accountManager->reveal(),
             $this->serializer->reveal()
         );
 
@@ -289,118 +306,12 @@ class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testGetContentData()
-    {
-        $type = new ContactSelectionContentType(
-            $this->template,
-            $this->contactManager->reveal(),
-            $this->serializer->reveal()
-        );
-
-        $contact1 = $this->prophesize(Contact::class);
-        $contact2 = $this->prophesize(Contact::class);
-        $contact3 = $this->prophesize(Contact::class);
-
-        $contact1->getId()->willReturn(1);
-        $contact2->getId()->willReturn(2);
-        $contact3->getId()->willReturn(3);
-
-        $data = [$contact1->reveal(), $contact2->reveal(), $contact3->reveal()];
-
-        $this->property->getValue()->willReturn([1, 2, 3]);
-        $this->contactManager->getByIds([1, 2, 3], $this->locale)->willReturn($data);
-        $this->serializer->serialize($data, 'array')->willReturn($data);
-        $contacts = $type->getContentData($this->property->reveal());
-
-        $this->assertCount(3, $contacts);
-        $this->assertEquals($contact1->reveal(), $contacts[0]);
-        $this->assertEquals($contact2->reveal(), $contacts[1]);
-        $this->assertEquals($contact3->reveal(), $contacts[2]);
-    }
-
-    public function testGetContentDataOrder()
-    {
-        $type = new ContactSelectionContentType(
-            $this->template,
-            $this->contactManager->reveal(),
-            $this->serializer->reveal()
-        );
-
-        $contact1 = $this->prophesize(Contact::class);
-        $contact2 = $this->prophesize(Contact::class);
-        $contact3 = $this->prophesize(Contact::class);
-
-        $contact1->getId()->willReturn(1);
-        $contact2->getId()->willReturn(2);
-        $contact3->getId()->willReturn(3);
-
-        $dataUnsorted = [$contact1->reveal(), $contact2->reveal(), $contact3->reveal()];
-        $data = [$contact2->reveal(), $contact1->reveal(), $contact3->reveal()];
-
-        $this->property->getValue()->willReturn([2, 1, 3]);
-        $this->contactManager->getByIds([2, 1, 3], $this->locale)->willReturn($dataUnsorted);
-        $this->serializer->serialize($data, 'array')->willReturn($data);
-        $contacts = $type->getContentData($this->property->reveal());
-
-        $this->assertCount(3, $contacts);
-        $this->assertEquals($contact2->reveal(), $contacts[0]);
-        $this->assertEquals($contact1->reveal(), $contacts[1]);
-        $this->assertEquals($contact3->reveal(), $contacts[2]);
-    }
-
-    public function testGetContentDataEmpty()
-    {
-        $type = new ContactSelectionContentType(
-            $this->template,
-            $this->contactManager->reveal(),
-            $this->serializer->reveal()
-        );
-
-        $this->property->getValue()->willReturn([]);
-        $this->contactManager->getById(Argument::any(), Argument::any())->shouldNotBeCalled();
-
-        $contacts = $type->getContentData($this->property->reveal());
-
-        $this->assertCount(0, $contacts);
-    }
-
-    public function testGetContentDataNull()
-    {
-        $type = new ContactSelectionContentType(
-            $this->template,
-            $this->contactManager->reveal(),
-            $this->serializer->reveal()
-        );
-
-        $this->property->getValue()->willReturn(null);
-        $this->contactManager->getById(Argument::any(), Argument::any())->shouldNotBeCalled();
-
-        $contacts = $type->getContentData($this->property->reveal());
-
-        $this->assertCount(0, $contacts);
-    }
-
-    public function testGetContentDataWrongType()
-    {
-        $type = new ContactSelectionContentType(
-            $this->template,
-            $this->contactManager->reveal(),
-            $this->serializer->reveal()
-        );
-
-        $this->property->getValue()->willReturn('blabla');
-        $this->contactManager->getById(Argument::any(), Argument::any())->shouldNotBeCalled();
-
-        $contacts = $type->getContentData($this->property->reveal());
-
-        $this->assertCount(0, $contacts);
-    }
-
     public function testGetViewData()
     {
-        $type = new ContactSelectionContentType(
+        $type = new CustomerSelectionContentType(
             $this->template,
             $this->contactManager->reveal(),
+            $this->accountManager->reveal(),
             $this->serializer->reveal()
         );
 
@@ -411,9 +322,10 @@ class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDefaultValue()
     {
-        $type = new ContactSelectionContentType(
+        $type = new CustomerSelectionContentType(
             $this->template,
             $this->contactManager->reveal(),
+            $this->accountManager->reveal(),
             $this->serializer->reveal()
         );
 
@@ -424,9 +336,10 @@ class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDefaultParams()
     {
-        $type = new ContactSelectionContentType(
+        $type = new CustomerSelectionContentType(
             $this->template,
             $this->contactManager->reveal(),
+            $this->accountManager->reveal(),
             $this->serializer->reveal()
         );
 
@@ -437,9 +350,10 @@ class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testHasValue()
     {
-        $type = new ContactSelectionContentType(
+        $type = new CustomerSelectionContentType(
             $this->template,
             $this->contactManager->reveal(),
+            $this->accountManager->reveal(),
             $this->serializer->reveal()
         );
 
@@ -455,5 +369,153 @@ class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
                 $this->segmentKey
             )
         );
+    }
+
+    public function testGetContentDataOnlyContact()
+    {
+        $type = new CustomerSelectionContentType(
+            $this->template,
+            $this->contactManager->reveal(),
+            $this->accountManager->reveal(),
+            $this->serializer->reveal()
+        );
+
+        $contact1 = $this->prophesize(Contact::class);
+        $contact2 = $this->prophesize(Contact::class);
+        $contact3 = $this->prophesize(Contact::class);
+
+        $contact1->getId()->willReturn(1);
+        $contact2->getId()->willReturn(2);
+        $contact3->getId()->willReturn(3);
+
+        $data = [$contact1->reveal(), $contact2->reveal(), $contact3->reveal()];
+
+        $this->property->getValue()->willReturn(['c1', 'c2', 'c3']);
+        $this->contactManager->getByIds([1, 2, 3], $this->locale)->willReturn($data);
+        $this->accountManager->getByIds([], $this->locale)->willReturn([]);
+        $this->serializer->serialize($data, 'array')->willReturn($data);
+        $result = $type->getContentData($this->property->reveal());
+
+        $this->assertCount(3, $result);
+        $this->assertEquals($contact1->reveal(), $result[0]);
+        $this->assertEquals($contact2->reveal(), $result[1]);
+        $this->assertEquals($contact3->reveal(), $result[2]);
+    }
+
+    public function testGetContentDataOnlyCombined()
+    {
+        $type = new CustomerSelectionContentType(
+            $this->template,
+            $this->contactManager->reveal(),
+            $this->accountManager->reveal(),
+            $this->serializer->reveal()
+        );
+
+        $entity1 = $this->prophesize(Account::class);
+        $entity2 = $this->prophesize(Contact::class);
+        $entity3 = $this->prophesize(Account::class);
+
+        $entity1->getId()->willReturn(1);
+        $entity2->getId()->willReturn(1);
+        $entity3->getId()->willReturn(3);
+
+        $data = [$entity1->reveal(), $entity2->reveal(), $entity3->reveal()];
+
+        $this->property->getValue()->willReturn(['a1', 'c1', 'a3']);
+        $this->contactManager->getByIds([1], $this->locale)->willReturn([$entity2]);
+        $this->accountManager->getByIds([1, 3], $this->locale)->willReturn([$entity1, $entity3]);
+        $this->serializer->serialize($data, 'array')->willReturn($data);
+        $result = $type->getContentData($this->property->reveal());
+
+        $this->assertCount(3, $result);
+        $this->assertEquals($entity1->reveal(), $result[0]);
+        $this->assertEquals($entity2->reveal(), $result[1]);
+        $this->assertEquals($entity3->reveal(), $result[2]);
+    }
+
+    public function testGetContentDataOrderOnlyContact()
+    {
+        $type = new CustomerSelectionContentType(
+            $this->template,
+            $this->contactManager->reveal(),
+            $this->accountManager->reveal(),
+            $this->serializer->reveal()
+        );
+
+        $contact1 = $this->prophesize(Contact::class);
+        $contact2 = $this->prophesize(Contact::class);
+        $contact3 = $this->prophesize(Contact::class);
+
+        $contact1->getId()->willReturn(1);
+        $contact2->getId()->willReturn(2);
+        $contact3->getId()->willReturn(3);
+
+        $dataUnsorted = [$contact1->reveal(), $contact2->reveal(), $contact3->reveal()];
+        $data = [$contact2->reveal(), $contact1->reveal(), $contact3->reveal()];
+
+        $this->property->getValue()->willReturn(['c2', 'c1', 'c3']);
+        $this->contactManager->getByIds([2, 1, 3], $this->locale)->willReturn($dataUnsorted);
+        $this->accountManager->getByIds([], $this->locale)->willReturn([]);
+        $this->serializer->serialize($data, 'array')->willReturn($data);
+        $contacts = $type->getContentData($this->property->reveal());
+
+        $this->assertCount(3, $contacts);
+        $this->assertEquals($contact2->reveal(), $contacts[0]);
+        $this->assertEquals($contact1->reveal(), $contacts[1]);
+        $this->assertEquals($contact3->reveal(), $contacts[2]);
+    }
+
+    public function testGetContentDataEmpty()
+    {
+        $type = new CustomerSelectionContentType(
+            $this->template,
+            $this->contactManager->reveal(),
+            $this->accountManager->reveal(),
+            $this->serializer->reveal()
+        );
+
+        $this->property->getValue()->willReturn([]);
+        $this->contactManager->getById(Argument::any(), Argument::any())->shouldNotBeCalled();
+        $this->accountManager->getById(Argument::any(), Argument::any())->shouldNotBeCalled();
+
+        $result = $type->getContentData($this->property->reveal());
+
+        $this->assertCount(0, $result);
+    }
+
+    public function testGetContentDataNull()
+    {
+        $type = new CustomerSelectionContentType(
+            $this->template,
+            $this->contactManager->reveal(),
+            $this->accountManager->reveal(),
+            $this->serializer->reveal()
+        );
+
+        $this->property->getValue()->willReturn(null);
+        $this->contactManager->getById(Argument::any(), Argument::any())->shouldNotBeCalled();
+        $this->accountManager->getById(Argument::any(), Argument::any())->shouldNotBeCalled();
+
+        $result = $type->getContentData($this->property->reveal());
+
+        $this->assertCount(0, $result);
+    }
+
+    public function testGetContentDataWrongType()
+    {
+        $type = new CustomerSelectionContentType(
+            $this->template,
+            $this->contactManager->reveal(),
+            $this->accountManager->reveal(),
+            $this->serializer->reveal()
+        );
+
+        $this->property->getValue()->willReturn('blabla');
+        $this->contactManager->getById(Argument::any(), Argument::any())->shouldNotBeCalled();
+        $this->accountManager->getById(Argument::any(), Argument::any())->shouldNotBeCalled();
+
+        $result = $type->getContentData($this->property->reveal());
+
+        $this->assertCount(0, $result);
     }
 }

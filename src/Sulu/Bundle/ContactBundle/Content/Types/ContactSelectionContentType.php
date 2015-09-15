@@ -10,8 +10,10 @@
 
 namespace Sulu\Bundle\ContactBundle\Content\Types;
 
+use JMS\Serializer\Serializer;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
+use Sulu\Bundle\ContactBundle\Util\IdsHandlingTrait;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
@@ -21,6 +23,8 @@ use Sulu\Component\Content\ContentTypeInterface;
  */
 class ContactSelectionContentType extends ComplexContentType
 {
+    use IdsHandlingTrait;
+
     /**
      * @var string
      */
@@ -32,15 +36,15 @@ class ContactSelectionContentType extends ComplexContentType
     private $contactManager;
 
     /**
-     * ContactSelectionContentType constructor.
-     *
-     * @param ContactManagerInterface $contactManager
-     * @param string $template
+     * @var Serializer
      */
-    public function __construct($contactManager, $template)
+    private $serializer;
+
+    public function __construct($template, $contactManager, $serializer)
     {
-        $this->contactManager = $contactManager;
         $this->template = $template;
+        $this->contactManager = $contactManager;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -61,7 +65,7 @@ class ContactSelectionContentType extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        $values = array();
+        $values = [];
         if ($node->hasProperty($property->getName())) {
             $values = $node->getPropertyValue($property->getName());
         }
@@ -93,7 +97,7 @@ class ContactSelectionContentType extends ComplexContentType
         $segmentKey
     ) {
         $value = $property->getValue();
-        $node->setProperty($property->getName(), ($value === null ? array() : $value));
+        $node->setProperty($property->getName(), ($value === null ? [] : $value));
     }
 
     /**
@@ -112,35 +116,29 @@ class ContactSelectionContentType extends ComplexContentType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getContentData(PropertyInterface $property)
     {
-        $locale = $property->getStructure()->getLanguageCode();
-
-        $contacts = array();
         $ids = $property->getValue();
 
-        if ($ids === null || !is_array($ids)) {
-            return array();
+        if ($ids === null || !is_array($ids) || count($ids) === 0) {
+            return [];
         }
 
-        foreach ($ids as $id) {
-            $contact = $this->contactManager->getById($id, $locale);
-            if ($contact !== null) {
-                $contacts[] = $contact;
-            }
-        }
+        $locale = $property->getStructure()->getLanguageCode();
+        $contacts = $this->contactManager->getByIds($ids, $locale);
+        $result = $this->sortByIds($ids, $contacts);
 
-        return $contacts;
+        return $this->serializer->serialize($result, 'array');
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getDefaultValue()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -159,7 +157,7 @@ class ContactSelectionContentType extends ComplexContentType
      */
     protected function setData($data, PropertyInterface $property)
     {
-        $refs = isset($data) ? $data : array();
+        $refs = isset($data) ? $data : [];
         $property->setValue($refs);
     }
 }

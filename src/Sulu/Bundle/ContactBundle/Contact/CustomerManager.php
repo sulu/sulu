@@ -11,14 +11,14 @@
 namespace Sulu\Bundle\ContactBundle\Contact;
 
 use Doctrine\ORM\EntityManager;
-use Sulu\Bundle\ContactBundle\Util\SortByIdsTrait;
+use Sulu\Bundle\ContactBundle\Util\IdsHandlingTrait;
 
 /**
  * Implements functionality for the manager of account and contact combination.
  */
 class CustomerManager implements CustomerManagerInterface
 {
-    use SortByIdsTrait;
+    use IdsHandlingTrait;
 
     /**
      * @var EntityManager
@@ -51,10 +51,10 @@ class CustomerManager implements CustomerManagerInterface
             return [];
         }
 
-        $parsed = $this->parseIds($ids);
+        $parsed = $this->parseIds($ids, ['a' => [], 'c' => []]);
 
-        $accounts = $this->findAccountsByIds($parsed['accounts']);
-        $contacts = $this->findContactsByIds($parsed['contacts']);
+        $accounts = $this->findAccountsByIds($parsed['a']);
+        $contacts = $this->findContactsByIds($parsed['c']);
 
         return $this->sortByIds($ids, array_merge($accounts, $contacts));
     }
@@ -105,29 +105,5 @@ class CustomerManager implements CustomerManagerInterface
         $query->setParameter('ids', $ids);
 
         return $query->getArrayResult();
-    }
-
-    /**
-     * Splits ids into contact and account ids.
-     *
-     * @param array $ids
-     *
-     * @return array
-     */
-    private function parseIds($ids)
-    {
-        $contacts = [];
-        $accounts = [];
-
-        foreach ($ids as $id) {
-            $type = substr($id, 0, 1);
-            if ($type === 'c') {
-                $contacts[] = substr($id, 1);
-            } elseif ($type === 'a') {
-                $accounts[] = substr($id, 1);
-            }
-        }
-
-        return ['contacts' => $contacts, 'accounts' => $accounts];
     }
 }

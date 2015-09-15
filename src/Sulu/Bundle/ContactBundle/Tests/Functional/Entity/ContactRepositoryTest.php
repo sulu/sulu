@@ -201,4 +201,38 @@ class ContactRepositoryTest extends SuluTestCase
             }
         }
     }
+
+    public function findByIdsProvider()
+    {
+        return [
+            [[0, 1, 2], array_slice($this->contactData, 0, 3)],
+            [[], []],
+            [[15, 99], []],
+        ];
+    }
+
+    /**
+     * @dataProvider findByIdsProvider
+     *
+     * @param array $ids
+     * @param array $expected
+     */
+    public function testFindByIds($ids, $expected)
+    {
+        for ($i = 0; $i < count($ids); ++$i) {
+            if (isset($this->contacts[$ids[$i]])) {
+                $ids[$i] = $this->contacts[$ids[$i]]->getId();
+            }
+        }
+
+        $repository = $this->em->getRepository(Contact::class);
+
+        $result = $repository->findByIds($ids);
+
+        for ($i = 0; $i < count($expected); ++$i) {
+            $this->assertEquals($ids[$i], $result[$i]->getId());
+            $this->assertEquals($expected[$i][0], $result[$i]->getFirstName());
+            $this->assertEquals($expected[$i][1], $result[$i]->getLastName());
+        }
+    }
 }

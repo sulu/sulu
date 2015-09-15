@@ -99,6 +99,79 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
     }
 
     /**
+     * find a contacts by ids.
+     *
+     * @param $ids
+     *
+     * @return mixed|null
+     */
+    public function findByIds($ids)
+    {
+        // create basic query
+        $qb = $this->createQueryBuilder('u')
+            ->leftJoin('u.accountContacts', 'accountContacts')
+            ->leftJoin('accountContacts.account', 'account')
+            ->leftJoin('account.mainContact', 'mainContact')
+            ->leftJoin('u.contactAddresses', 'contactAddresses')
+            ->leftJoin('contactAddresses.address', 'addresses')
+            ->leftJoin('addresses.country', 'country')
+            ->leftJoin('addresses.addressType', 'addressType')
+            ->leftJoin('u.locales', 'locales')
+            ->leftJoin('u.emails', 'emails')
+            ->leftJoin('emails.emailType', 'emailType')
+            ->leftJoin('u.faxes', 'faxes')
+            ->leftJoin('faxes.faxType', 'faxType')
+            ->leftJoin('u.notes', 'notes')
+            ->leftJoin('u.phones', 'phones')
+            ->leftJoin('phones.phoneType', 'phoneType')
+            ->leftJoin('u.tags', 'tags')
+            ->leftJoin('u.urls', 'urls')
+            ->leftJoin('urls.urlType', 'urlType')
+            ->leftJoin('u.title', 'title')
+            ->leftJoin('accountContacts.position', 'position')
+            ->leftJoin('u.medias', 'medias')
+            ->leftJoin('u.categories', 'categories')
+            ->leftJoin('categories.translations', 'categoryTranslations')
+            ->leftJoin('u.bankAccounts', 'bankAccounts')
+            ->addSelect('categoryTranslations')
+            ->addSelect('position')
+            ->addSelect('title')
+            ->addSelect('accountContacts')
+            ->addSelect('mainContact')
+            ->addSelect('account')
+            ->addSelect('urls')
+            ->addSelect('partial tags.{id,name}')
+            ->addSelect('locales')
+            ->addSelect('emails')
+            ->addSelect('emailType')
+            ->addSelect('faxes')
+            ->addSelect('faxType')
+            ->addSelect('phones')
+            ->addSelect('phoneType')
+            ->addSelect('addresses')
+            ->addSelect('contactAddresses')
+            ->addSelect('country')
+            ->addSelect('addressType')
+            ->addSelect('notes')
+            ->addSelect('urlType')
+            ->addSelect('medias')
+            ->addSelect('categories')
+            ->addSelect('bankAccounts')
+            ->where('u.id IN (:ids)');
+
+        $query = $qb->getQuery();
+        $query->setParameter('ids', $ids);
+
+        try {
+            $contact = $query->getResult();
+
+            return $contact;
+        } catch (NoResultException $nre) {
+            return [];
+        }
+    }
+
+    /**
      * find a contact by id and load additional infos to delete referenced entities.
      *
      * @param $id
