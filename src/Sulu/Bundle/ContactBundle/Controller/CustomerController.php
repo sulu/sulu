@@ -41,7 +41,7 @@ class CustomerController extends RestController implements ClassResourceInterfac
             'get_customers',
             $request->query->all(),
             1,
-            count($ids),
+            999,
             count($result)
         );
         $view = $this->view($list, 200);
