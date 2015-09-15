@@ -2,10 +2,10 @@
 
     'use strict';
 
-    define([], function() {
+    define(function() {
 
         var getButtons = function(app) {
-            var decoratorDropdown = Husky.sulu.buttons.getApiButton('layout');
+            var decoratorDropdown = app.sandbox.sulu.buttons.getApiButton('layout');
             decoratorDropdown.dropdownItems = {
                 masonry: {},
                 table: {}
@@ -58,7 +58,8 @@
                 {
                     name: 'permissionSettings',
                     template: permissionSettings
-                }];
+                }
+            ];
         },
 
         getDropdownItems = function(app) {
