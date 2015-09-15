@@ -129,6 +129,7 @@ define(['services/sulumedia/media-manager',
             this.sandbox.on('sulu.collection-select.move-collection.initialized', this.disableDropzone.bind(this));
             this.sandbox.on('sulu.collection-select.move-media.initialized', this.disableDropzone.bind(this));
             this.sandbox.on('sulu.media-edit.initialized', this.disableDropzone.bind(this));
+            this.sandbox.on('sulu.permission-settings.initialized', this.disableDropzone.bind(this));
 
             // enable dropzone popup on overlay close
             this.sandbox.on('sulu.collection-add.closed', this.enableDropzone.bind(this));
@@ -136,6 +137,7 @@ define(['services/sulumedia/media-manager',
             this.sandbox.on('sulu.collection-select.move-collection.closed', this.enableDropzone.bind(this));
             this.sandbox.on('sulu.collection-select.move-media.closed', this.enableDropzone.bind(this));
             this.sandbox.on('sulu.media-edit.closed', this.enableDropzone.bind(this));
+            this.sandbox.on('sulu.permission-settings.closed', this.enableDropzone.bind(this));
         },
 
         /**
@@ -309,14 +311,14 @@ define(['services/sulumedia/media-manager',
          * Disable dropzone-popup on drag-over
          */
         disableDropzone: function() {
-            this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.lock-popup');
+            this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.disable');
         },
 
         /**
          * Enable dropzone popup on drag-over
          */
         enableDropzone: function() {
-            this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.unlock-popup');
+            this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.enable');
         }
     };
 });

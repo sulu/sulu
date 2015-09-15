@@ -15,6 +15,8 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryTrait;
 
 /**
  * MediaRepository.
@@ -24,13 +26,15 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 class MediaRepository extends EntityRepository implements MediaRepositoryInterface
 {
+    use SecuredEntityRepositoryTrait;
+
     /**
      * {@inheritdoc}
      */
     public function findMediaById($id, $asArray = false)
     {
         try {
-            $qb = $this->createQueryBuilder('media')
+            $queryBuilder = $this->createQueryBuilder('media')
                 ->leftJoin('media.type', 'type')
                 ->leftJoin('media.collection', 'collection')
                 ->leftJoin('media.files', 'file')
@@ -59,7 +63,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 ->addSelect('changerContact')
                 ->where('media.id = :mediaId');
 
-            $query = $qb->getQuery();
+            $query = $queryBuilder->getQuery();
             $query->setParameter('mediaId', $id);
 
             if ($asArray) {
@@ -79,8 +83,13 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     /**
      * {@inheritdoc}
      */
-    public function findMedia($filter = [], $limit = null, $offset = null)
-    {
+    public function findMedia(
+        $filter = [],
+        $limit = null,
+        $offset = null,
+        UserInterface $user = null,
+        $permission = null
+    ) {
         try {
             list($collection, $types, $search, $orderBy, $orderSort, $ids) = $this->extractFilterVars($filter);
 
@@ -93,7 +102,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 $ids = $this->getIds($collection, $types, $search, $orderBy, $orderSort, $limit, $offset);
             }
 
-            $qb = $this->createQueryBuilder('media')
+            $queryBuilder = $this->createQueryBuilder('media')
                 ->leftJoin('media.type', 'type')
                 ->leftJoin('media.collection', 'collection')
                 ->innerJoin('media.files', 'file')
@@ -122,14 +131,18 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 ->addSelect('changerContact');
 
             if ($ids !== null) {
-                $qb->andWhere('media.id IN (:mediaIds)');
+                $queryBuilder->andWhere('media.id IN (:mediaIds)');
             }
 
             if ($orderBy !== null) {
-                $qb->addOrderBy($orderBy, $orderSort);
+                $queryBuilder->addOrderBy($orderBy, $orderSort);
             }
 
-            $query = $qb->getQuery();
+            if ($user !== null && $permission !== null) {
+                $this->addAccessControl($queryBuilder, $user, $permission, Collection::class, 'collection');
+            }
+
+            $query = $queryBuilder->getQuery();
             if ($ids !== null) {
                 $query->setParameter('mediaIds', $ids);
             }
@@ -177,13 +190,13 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
      * filename within a collection.
      *
      * @param String $filename
-     * @param int    $collectionId
+     * @param int $collectionId
      *
      * @return Media
      */
     public function findMediaWithFilenameInCollectionWithId($filename, $collectionId)
     {
-        $qb = $this->createQueryBuilder('media')
+        $queryBuilder = $this->createQueryBuilder('media')
             ->innerJoin('media.files', 'files')
             ->innerJoin('files.fileVersions', 'versions', 'WITH', 'versions.version = files.version')
             ->join('media.collection', 'collection')
@@ -193,7 +206,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             ->setMaxResults(1)
             ->setParameter('filename', $filename)
             ->setParameter('collectionId', $collectionId);
-        $result = $qb->getQuery()->getResult();
+        $result = $queryBuilder->getQuery()->getResult();
 
         if (count($result) > 0) {
             return $result[0];
@@ -211,14 +224,14 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
      */
     public function findMediaByCollectionId($collectionId, $limit, $offset)
     {
-        $qb = $this->createQueryBuilder('media')
+        $queryBuilder = $this->createQueryBuilder('media')
             ->select('count(media.id) as counter')
             ->join('media.collection', 'collection')
             ->where('collection.id = :collectionId')
             ->setParameter('collectionId', $collectionId);
-        $count = $qb->getQuery()->getSingleScalarResult();
+        $count = $queryBuilder->getQuery()->getSingleScalarResult();
 
-        $qb = $this->createQueryBuilder('media')
+        $queryBuilder = $this->createQueryBuilder('media')
             ->innerJoin('media.files', 'files')
             ->innerJoin('files.fileVersions', 'versions', 'WITH', 'versions.version = files.version')
             ->join('media.collection', 'collection')
@@ -227,7 +240,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             ->setMaxResults($limit)
             ->setParameter('collectionId', $collectionId);
 
-        $query = $qb->getQuery();
+        $query = $queryBuilder->getQuery();
         $paginator = new Paginator($query);
 
         return ['media' => $paginator, 'count' => $count];
@@ -237,12 +250,12 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
      * create a query for ids with given filter.
      *
      * @param string $collection
-     * @param array  $types
+     * @param array $types
      * @param string $search
      * @param string $orderBy
      * @param string $orderSort
-     * @param int    $limit
-     * @param int    $offset
+     * @param int $limit
+     * @param int $offset
      * @param string $select
      *
      * @return Query
@@ -269,9 +282,9 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         }
         if ($search !== null) {
             $subQueryBuilder
-            ->innerJoin('media.files', 'file')
-            ->innerJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version')
-            ->leftJoin('fileVersion.meta', 'fileVersionMeta');
+                ->innerJoin('media.files', 'file')
+                ->innerJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version')
+                ->leftJoin('fileVersion.meta', 'fileVersionMeta');
 
             $subQueryBuilder->andWhere('fileVersionMeta.title LIKE :search');
         }
@@ -304,12 +317,12 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
      * returns ids with given filters.
      *
      * @param string $collection
-     * @param array  $types
+     * @param array $types
      * @param string $search
      * @param string $orderBy
      * @param string $orderSort
-     * @param int    $limit
-     * @param int    $offset
+     * @param int $limit
+     * @param int $offset
      *
      * @return array
      */

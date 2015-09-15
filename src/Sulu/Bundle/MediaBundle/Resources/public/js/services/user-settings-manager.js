@@ -30,7 +30,7 @@ define(function() {
             },
 
             getMediaListView: function() {
-                return Husky.sulu.getUserSetting(mediaListViewKey) || 'decorators/masonry';
+                return Husky.sulu.getUserSetting(mediaListViewKey) || 'datagrid/decorators/masonry-view';
             },
 
             setMediaListView: function(viewId) {

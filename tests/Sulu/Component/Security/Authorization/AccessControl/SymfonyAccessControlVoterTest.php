@@ -21,10 +21,10 @@ use Symfony\Component\Security\Acl\Permission\PermissionMapInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class AccessControlVoterTest extends \PHPUnit_Framework_TestCase
+class SymfonyAccessControlVoterTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var AccessControlVoter
+     * @var SymfonyAccessControlVoter
      */
     private $accessControlVoter;
 
@@ -63,7 +63,7 @@ class AccessControlVoterTest extends \PHPUnit_Framework_TestCase
         $this->permissionMap = $this->prophesize(PermissionMapInterface::class);
         $this->token = $this->prophesize(TokenInterface::class);
 
-        $this->accessControlVoter = new AccessControlVoter(
+        $this->accessControlVoter = new SymfonyAccessControlVoter(
             $this->aclProvider->reveal(),
             $this->objectIdentityRetrievalStrategy->reveal(),
             $this->securityIdentityRetrievalStrategy->reveal(),

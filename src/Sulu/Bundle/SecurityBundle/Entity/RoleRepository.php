@@ -13,7 +13,6 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\NoResultException;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
-use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 
 /**
@@ -23,43 +22,34 @@ use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 class RoleRepository extends EntityRepository implements RoleRepositoryInterface
 {
     /**
-     * Finds a role with a specific id.
-     *
-     * @param int $id ID of the role
-     *
-     * @return RoleInterface
+     * {@inheritdoc}
      */
     public function findRoleById($id)
     {
         try {
-            $qb = $this->createQueryBuilder('role')
+            $queryBuilder = $this->createQueryBuilder('role')
                 ->leftJoin('role.permissions', 'permissions')
                 ->leftJoin('role.securityType', 'securityType')
                 ->addSelect('permissions')
                 ->addSelect('securityType')
                 ->where('role.id=:roleId');
 
-            $query = $qb->getQuery();
+            $query = $queryBuilder->getQuery();
             $query->setParameter('roleId', $id);
 
             return $query->getSingleResult();
-        } catch (NoResultException $ex) {
+        } catch (NoResultException $e) {
             return;
         }
     }
 
     /**
-     * Finds a role with a specific name.
-     *
-     * @param string $name
-     * @param string $system
-     *
-     * @return RoleInterface|null
+     * {@inheritdoc}
      */
     public function findRoleByNameAndSystem($name, $system)
     {
         try {
-            $qb = $this->createQueryBuilder('role')
+            $queryBuilder = $this->createQueryBuilder('role')
                 ->leftJoin('role.permissions', 'permissions')
                 ->leftJoin('role.securityType', 'securityType')
                 ->addSelect('permissions')
@@ -67,40 +57,36 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
                 ->where('role.name=:roleName')
                 ->andWhere('role.system=:roleSystem');
 
-            $query = $qb->getQuery();
+            $query = $queryBuilder->getQuery();
             $query->setParameter('roleName', $name);
             $query->setParameter('roleSystem', $system);
 
             return $query->getSingleResult();
-        } catch (NoResultException $ex) {
+        } catch (NoResultException $e) {
             return;
         }
     }
 
     /**
-     * Searches for all roles.
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function findAllRoles()
     {
         try {
-            $qb = $this->createQueryBuilder('role')
+            $queryBuilder = $this->createQueryBuilder('role')
                 ->leftJoin('role.permissions', 'permissions')
                 ->addSelect('permissions');
 
-            $query = $qb->getQuery();
+            $query = $queryBuilder->getQuery();
 
             return $query->getResult();
-        } catch (NoResultException $ex) {
+        } catch (NoResultException $e) {
             return;
         }
     }
 
     /**
-     * Return an array containing the names of all the roles.
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getRoleNames()
     {

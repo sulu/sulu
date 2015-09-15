@@ -13,7 +13,9 @@ namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
+use SensioLabs\Security\SecurityChecker;
 use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
@@ -33,8 +35,11 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Default implementation of media manager.
@@ -105,6 +110,21 @@ class MediaManager implements MediaManagerInterface
     private $tagManager;
 
     /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
+     * @var SecurityCheckerInterface
+     */
+    private $securityChecker;
+
+    /**
+     * @var array
+     */
+    private $permissions;
+
+    /**
      * @var DoctrineFieldDescriptor[]
      */
     private $fieldDescriptors = [];
@@ -129,6 +149,9 @@ class MediaManager implements MediaManagerInterface
      * @param FormatManagerInterface $formatManager
      * @param TagManagerInterface $tagManager
      * @param TypeManagerInterface $typeManager
+     * @param TokenStorageInterface $tokenStorage
+     * @param SecurityCheckerInterface $securityChecker
+     * @param array $permissions
      * @param string $downloadPath
      * @param string $maxFileSize
      */
@@ -142,20 +165,26 @@ class MediaManager implements MediaManagerInterface
         FormatManagerInterface $formatManager,
         TagManagerInterface $tagManager,
         TypeManagerInterface $typeManager,
+        TokenStorageInterface $tokenStorage = null,
+        SecurityCheckerInterface $securityChecker = null,
+        $permissions,
         $downloadPath,
         $maxFileSize
     ) {
         $this->mediaRepository = $mediaRepository;
         $this->collectionRepository = $collectionRepository;
-        $this->em = $em;
         $this->userRepository = $userRepository;
+        $this->em = $em;
         $this->storage = $storage;
         $this->validator = $validator;
         $this->formatManager = $formatManager;
+        $this->tagManager = $tagManager;
         $this->typeManager = $typeManager;
+        $this->tokenStorage = $tokenStorage;
+        $this->securityChecker = $securityChecker;
+        $this->permissions = $permissions;
         $this->downloadPath = $downloadPath;
         $this->maxFileSize = $maxFileSize;
-        $this->tagManager = $tagManager;
 
         $this->initializeFieldDescriptors();
     }
@@ -387,7 +416,13 @@ class MediaManager implements MediaManagerInterface
     public function get($locale, $filter = [], $limit = null, $offset = null)
     {
         $media = [];
-        $mediaEntities = $this->mediaRepository->findMedia($filter, $limit, $offset);
+        $mediaEntities = $this->mediaRepository->findMedia(
+            $filter,
+            $limit,
+            $offset,
+            $this->getCurrentUser(),
+            $this->permissions['view']
+        );
         $this->count = $this->mediaRepository->count($filter);
 
         foreach ($mediaEntities as $mediaEntity) {
@@ -721,9 +756,21 @@ class MediaManager implements MediaManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function delete($id)
+    public function delete($id, $checkSecurity = false)
     {
         $mediaEntity = $this->getEntityById($id);
+
+        if ($checkSecurity) {
+            $this->securityChecker->checkPermission(
+                new SecurityCondition(
+                    'sulu.media.collections',
+                    null,
+                    Collection::class,
+                    $mediaEntity->getCollection()->getId()
+                ),
+                'delete'
+            );
+        }
 
         /** @var File $file */
         foreach ($mediaEntity->getFiles() as $file) {
@@ -870,5 +917,10 @@ class MediaManager implements MediaManagerInterface
             ],
             $this->downloadPath
         ) . '?v=' . $version;
+    }
+
+    protected function getCurrentUser()
+    {
+        return $this->tokenStorage ? $this->tokenStorage->getToken()->getUser() : null;
     }
 }

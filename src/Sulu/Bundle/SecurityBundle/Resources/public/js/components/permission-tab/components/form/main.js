@@ -14,6 +14,7 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
     var permissionUrl = '/admin/api/permissions',
         permissions = Config.get('sulusecurity.permissions').slice(0, -1), // removes the security permission
         permissionTitles = Config.get('sulusecurity.permission_titles').slice(0, -1),
+        loaderSelector = '#permission-loader',
         matrixContainerSelector = '#matrix-container',
         matrixSelector = '#matrix',
         permissionData = {
@@ -25,20 +26,26 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
 
         bindCustomEvents = function() {
             this.sandbox.on('husky.matrix.changed', changePermission.bind(this));
-            this.sandbox.on('sulu.toolbar.save', save.bind(this));
-
-            this.sandbox.on('sulu.permission-tab.saved', function() {
-                setHeaderBar.call(this, true);
-            }.bind(this));
+            this.sandbox.on('sulu.permission-tab.save', save.bind(this));
         },
 
         render = function() {
             this.$el.html(this.renderTemplate('/admin/security/template/permission-tab/form'));
+
+            this.sandbox.start([
+                {
+                    name: 'loader@husky',
+                    options: {
+                        el: this.$find(loaderSelector),
+                        size: '100px',
+                        color: '#cccccc'
+                    }
+                }
+            ]);
         },
 
         initializeMatrix = function() {
-            var $matrix = this.sandbox.dom.createElement('<div id="matrix" class="loading"/>');
-
+            var $matrix = this.sandbox.dom.createElement('<div id="matrix"/>');
             this.sandbox.dom.append(matrixContainerSelector, $matrix);
 
             var roles = new Roles();
@@ -62,7 +69,7 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
 
                         // set the captions and values for the matrix
                         verticalCaptions.push(role.name);
-                        verticalValues.push(role.identifier);
+                        verticalValues.push(role.id);
 
                         // initialize the data
                         this.sandbox.util.each(permissions, function(index, permission) {
@@ -70,10 +77,10 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
                         }.bind(this));
 
                         // set the data from the permissions
-                        if (permissionResponseData.permissions.hasOwnProperty(role.identifier)) {
+                        if (permissionResponseData.permissions.hasOwnProperty(role.id)) {
                             // if object permissions already exists set from role data
                             this.sandbox.util.each(
-                                permissionResponseData.permissions[role.identifier],
+                                permissionResponseData.permissions[role.id],
                                 function(index, value) {
                                     data[index] = value;
                                     matrixRoleData.push(value);
@@ -93,7 +100,7 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
                             });
                         }
 
-                        permissionData.permissions[role.identifier] = data;
+                        permissionData.permissions[role.id] = data;
                         matrixData[index] = matrixRoleData;
                     }.bind(this));
 
@@ -119,11 +126,11 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
                         }
                     ]);
 
-                    this.sandbox.dom.removeClass($matrix, 'loading');
+                    this.$find(loaderSelector).hide();
                 }.bind(this)
             );
 
-            this.sandbox.emit('sulu.preview.initialize');
+            this.sandbox.emit('husky.permission-form.loaded');
         },
 
         changePermission = function(data) {
@@ -141,16 +148,13 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
         },
 
         save = function(action) {
-            this.sandbox.emit('sulu.permission-tab.save', permissionData, action);
-        },
-
-        setHeaderBar = function(saved) {
-            var postfix = (!!saved) ? 'disable' : 'enable';
-            this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'save', false);
+            this.sandbox.emit('sulu.permission-form.save', permissionData, action);
         },
 
         listenForChange = function() {
-            this.sandbox.on('husky.matrix.changed', setHeaderBar.bind(this, false));
+            this.sandbox.on('husky.matrix.changed', function() {
+                this.sandbox.emit('husky.permission-form.changed');
+            }.bind(this));
         },
 
         findContextPermissions = function(context, role) {
@@ -173,14 +177,20 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
         templates: ['/admin/security/template/permission-tab/form'],
 
         layout: function() {
-            return {
-                extendExisting: true,
-                content: {
-                    width: 'fixed',
-                    leftSpace: true,
-                    rightSpace: true
-                }
-            };
+            if (!this.options.inOverlay) {
+                return {
+                    extendExisting: true,
+                    content: {
+                        width: 'fixed',
+                        leftSpace: true,
+                        rightSpace: true
+                    }
+                };
+            } else {
+                return {
+                    extendExisting: true
+                };
+            }
         },
 
         initialize: function() {

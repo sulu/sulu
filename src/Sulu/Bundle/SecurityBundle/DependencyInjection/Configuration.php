@@ -77,6 +77,13 @@ class Configuration implements ConfigurationInterface
                                 ->scalarNode('repository')->defaultValue('Sulu\Bundle\SecurityBundle\Entity\RoleRepository')->end()
                             ->end()
                         ->end()
+                        ->arrayNode('access_control')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('model')->defaultValue('Sulu\Bundle\SecurityBundle\Entity\AccessControl')->end()
+                                ->scalarNode('repository')->defaultValue('Sulu\Bundle\SecurityBundle\Entity\AccessControlRepository')->end()
+                            ->end()
+                        ->end()
                     ->end()
                 ->end()
             ->end();

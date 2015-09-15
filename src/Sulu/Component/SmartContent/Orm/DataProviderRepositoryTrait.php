@@ -161,10 +161,11 @@ trait DataProviderRepositoryTrait
      * Creates a new QueryBuilder instance that is prepopulated for this entity name.
      *
      * @param string $alias
+     * @param string $indexBy
      *
      * @return QueryBuilder
      */
-    abstract public function createQueryBuilder($alias);
+    abstract public function createQueryBuilder($alias, $indexBy = null);
 
     /**
      * Append joins to query builder for "findByFilters" function.

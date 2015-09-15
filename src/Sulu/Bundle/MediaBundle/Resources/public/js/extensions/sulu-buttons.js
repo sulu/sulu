@@ -33,6 +33,13 @@
                     Husky.emit('sulu.toolbar.move-collection');
                 };
 
+                var permissionSettings = Husky.sulu.buttons.getApiButton('permission');
+                permissionSettings.title = 'security.roles.permissions';
+                permissionSettings.icon = 'lock';
+                permissionSettings.callback = function() {
+                    Husky.emit('sulu.toolbar.collection-permissions');
+                };
+
                 return [
                     {
                         name: 'mediaDecoratorDropdown',
@@ -49,6 +56,10 @@
                     {
                         name: 'moveCollection',
                         template: moveCollection
+                    },
+                    {
+                        name: 'permissionSettings',
+                        template: permissionSettings
                     }];
             },
 
