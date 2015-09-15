@@ -11,10 +11,12 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
-use Sulu\Component\DocumentManager\DocumentInspector;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
+use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
@@ -52,30 +54,41 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
         return [
             // persist should happen before content is mapped
             Events::PERSIST => ['handlePersist', 10],
-
             // hydrate should happen afterwards
-            Events::HYDRATE => ['handleHydrate', -10],
+            Events::HYDRATE => ['handleHydrate', -200],
         ];
     }
 
     public function supports($document)
     {
-        return;
+        return $document instanceof ResourceSegmentBehavior && $document instanceof StructureBehavior;
     }
 
     /**
-     * @param HydrateEvent $event
+     * @param AbstractMappingEvent $event
      */
     public function handleHydrate(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();
 
-        if (!$document instanceof ResourceSegmentBehavior) {
+        if (!$this->supports($document)) {
             return;
         }
 
+        if ($document instanceof RedirectTypeBehavior && $document->getRedirectType() !== RedirectType::NONE) {
+            return;
+        }
+
+        $node = $event->getNode();
         $property = $this->getResourceSegmentProperty($document);
-        $segment = $document->getStructure()->getProperty($property->getName())->getValue();
+        $originalLocale = $this->inspector->getOriginalLocale($document);
+        $segment = $node->getPropertyValueWithDefault(
+            $this->encoder->localizedSystemName(
+                $property->getName(),
+                $originalLocale
+            ),
+            ''
+        );
 
         $document->setResourceSegment($segment);
     }
@@ -87,7 +100,7 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
 
-        if (!$document instanceof ResourceSegmentBehavior) {
+        if (!$this->supports($document)) {
             return;
         }
 
@@ -104,12 +117,14 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
         $property = $structure->getPropertyByTagName('sulu.rlp');
 
         if (!$property) {
-            throw new \RuntimeException(sprintf(
-                'Structure "%s" does not have a "sulu.rlp" tag which is required for documents implementing the ' .
-                'ResourceSegmentBehavior. In "%s"',
-                $structure->name,
-                $structure->resource
-            ));
+            throw new \RuntimeException(
+                sprintf(
+                    'Structure "%s" does not have a "sulu.rlp" tag which is required for documents implementing the ' .
+                    'ResourceSegmentBehavior. In "%s"',
+                    $structure->name,
+                    $structure->resource
+                )
+            );
         }
 
         return $property;

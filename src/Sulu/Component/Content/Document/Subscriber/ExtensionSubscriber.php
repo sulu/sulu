@@ -15,7 +15,6 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Extension\ManagedExtensionContainer;
-use Sulu\Component\Content\Extension\ExtensionManager;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -56,7 +55,6 @@ class ExtensionSubscriber implements EventSubscriberInterface
         PropertyEncoder $encoder,
         ExtensionManagerInterface $extensionManager,
         DocumentInspector $inspector,
-
         // these two dependencies should absolutely not be necessary
         NamespaceRegistry $namespaceRegistry
     ) {
@@ -74,7 +72,6 @@ class ExtensionSubscriber implements EventSubscriberInterface
         return [
             // persist should happen before content is mapped
             Events::PERSIST => ['handlePersist', 10],
-
             // hydrate should happen afterwards
             Events::HYDRATE => ['handleHydrate', -10],
         ];
@@ -143,7 +140,7 @@ class ExtensionSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
         $node = $event->getNode();
-        $locale = $event->getLocale();
+        $locale = $this->inspector->getLocale($document);
         $webspaceName = $this->inspector->getWebspace($document);
         $structureType = $document->getStructureType();
 

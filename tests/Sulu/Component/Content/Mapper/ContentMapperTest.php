@@ -1846,6 +1846,7 @@ class ContentMapperTest extends SuluTestCase
         $dataEn = [
             'title' => 'Testname-EN',
             'blog' => 'English',
+            'url' => '/news/test',
         ];
         $structureEn = $this->mapper->save($dataEn, 'default', 'sulu_io', 'en', 1, true, $structureDe->getUuid())->toArray();
         $structureDe = $this->mapper->load($structureDe->getUuid(), 'sulu_io', 'de');

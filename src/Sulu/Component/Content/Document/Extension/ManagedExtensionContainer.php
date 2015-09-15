@@ -12,7 +12,6 @@
 namespace Sulu\Component\Content\Document\Extension;
 
 use PHPCR\NodeInterface;
-use Sulu\Component\Content\Extension\ExtensionManager;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 
 /**
@@ -121,6 +120,14 @@ class ManagedExtensionContainer extends ExtensionContainer
 
     /**
      * {@inheritdoc}
+     */
+    public function offsetExists($extensionName)
+    {
+        return $this->extensionManager->hasExtension($this->structureType, $extensionName);
+    }
+
+    /**
+     * {@inheritDoc}
      */
     public function toArray()
     {

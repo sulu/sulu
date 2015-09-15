@@ -38,19 +38,28 @@ class RedirectTypeSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $metadata->addFieldMapping('redirectType', [
-            'encoding' => 'system_localized',
-            'property' => self::REDIRECT_TYPE_FIELD,
-            'default' => RedirectType::NONE,
-        ]);
-        $metadata->addFieldMapping('redirectExternal', [
-            'encoding' => 'system_localized',
-            'property' => self::EXTERNAL_FIELD,
-        ]);
-        $metadata->addFieldMapping('redirectTarget', [
-            'encoding' => 'system_localized',
-            'property' => self::INTERNAL_FIELD,
-            'type' => 'reference',
-        ]);
+        $metadata->addFieldMapping(
+            'redirectType',
+            [
+                'encoding' => 'system_localized',
+                'property' => self::REDIRECT_TYPE_FIELD,
+                'default' => RedirectType::NONE,
+            ]
+        );
+        $metadata->addFieldMapping(
+            'redirectExternal',
+            [
+                'encoding' => 'system_localized',
+                'property' => self::EXTERNAL_FIELD,
+            ]
+        );
+        $metadata->addFieldMapping(
+            'redirectTarget',
+            [
+                'encoding' => 'system_localized',
+                'property' => self::INTERNAL_FIELD,
+                'type' => 'reference',
+            ]
+        );
     }
 }
