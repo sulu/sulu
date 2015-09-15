@@ -36,7 +36,7 @@ define([
                     promise.resolve(response.toJSON());
                 }.bind(this),
                 error: function() {
-                    promise.fail();
+                    promise.reject();
                 }.bind(this)
             });
 
@@ -59,7 +59,7 @@ define([
                     promise.resolve();
                 }.bind(this),
                 error: function() {
-                    promise.fail();
+                    promise.reject();
                 }.bind(this)
             });
 
@@ -94,7 +94,7 @@ define([
                         promise.resolve(response.toJSON());
                     }.bind(this),
                     error: function() {
-                        promise.fail();
+                        promise.reject();
                     }.bind(this)
                 });
             }
@@ -110,13 +110,13 @@ define([
         save: function(data) {
             var promise = $.Deferred();
 
-            saveCollection(data).then(function(collection) {
+            saveCollection(data).done(function(collection) {
                 Mediator.emit('sulu.medias.collection.saved', collection.id, collection);
                 Mediator.emit('sulu.labels.success.show', 'labels.success.collection-save-desc');
                 promise.resolve(collection);
             }.bind(this)).fail(function() {
                 Mediator.emit('sulu.labels.error.show');
-                promise.fail();
+                promise.reject();
             }.bind(this));
 
             return promise;
@@ -139,9 +139,11 @@ define([
                 requests.push(deleteCollection(id));
             }.bind(this));
 
-            $.when.apply(null, requests).then(function() {
+            $.when.apply(null, requests).done(function() {
                 promise.resolve();
-            }.bind(this));
+            }.bind(this)).fail(function() {
+                promise.reject();
+            });
 
             return promise;
         },
@@ -159,13 +161,12 @@ define([
             url = (!!parentCollectionId) ? url + '&destination=' + parentCollectionId : url;
 
             Util.save(url, 'POST')
-                .then(function() {
+                .done(function() {
                     Mediator.emit('sulu.medias.collection.moved', collectionId, parentCollectionId);
                     Mediator.emit('sulu.labels.success.show', 'labels.success.collection-move-desc');
                     promise.resolve();
-                }.bind(this))
-                .fail(function() {
-                    promise.fail();
+                }.bind(this)).fail(function() {
+                    promise.reject();
                 }.bind(this));
 
             return promise;

@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['services/sulumedia/collection-manager'], function(CollectionManager) {
+define(['services/sulumedia/collection-manager', 'services/husky/mediator'], function(CollectionManager, Mediator) {
 
     'use strict';
 
@@ -82,7 +82,7 @@ define(['services/sulumedia/collection-manager'], function(CollectionManager) {
                         title: this.sandbox.translate('sulu.media.add-collection'),
                         instanceName: 'add-collection',
                         data: this.renderTemplate('/admin/media/template/collection/new'),
-                        okCallback: this.addCollection.bind(this),
+                        okCallback: this.okCallback.bind(this),
                         cancelCallback: function() {
                             this.sandbox.stop();
                         }.bind(this),
@@ -95,25 +95,29 @@ define(['services/sulumedia/collection-manager'], function(CollectionManager) {
         },
 
         /**
+         * Validates the overlay form-data and saves collection if form-data is valid
+         * @returns {boolean} false if form-data is not valid
+         */
+        okCallback: function() {
+            if (this.sandbox.form.validate(constants.newFormSelector)) {
+                this.addCollection();
+                this.sandbox.stop();
+            } else {
+                return false;
+            }
+        },
+
+        /**
          * Creates a new Collections with the form-data of the overlay
          * @returns {Boolean} returns false if form-data was not valid
          */
         addCollection: function() {
-            if (this.sandbox.form.validate(constants.newFormSelector)) {
-                var collection = this.sandbox.form.getData(constants.newFormSelector);
-                collection.parent = this.options.parent;
+            var collection = this.sandbox.form.getData(constants.newFormSelector);
+            collection.parent = this.options.parent;
 
-                CollectionManager.save(collection).then(function(collection) {
-                    this.sandbox.emit('sulu.media.collection-create.created', collection)
-                    this.sandbox.stop();
-                }.bind(this)).fail(function() {
-                        this.sandbox.stop();
-                    }.bind(this)
-                );
-                return true;
-            } else {
-                return false;
-            }
+            CollectionManager.save(collection).done(function(collection) {
+                Mediator.emit('sulu.media.collection-create.created', collection);
+            }.bind(this));
         },
 
         /**
