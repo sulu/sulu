@@ -628,7 +628,15 @@
             </trans-unit>
             <trans-unit id="235b14f26g712345e44gs2e9335a8d51" resname="contact-selection.add">
                 <source>contact-selection.add</source>
-                <target>Choose snippet</target>
+                <target>Choose person</target>
+            </trans-unit>
+            <trans-unit id="235b14f26g712345e44gs2e9335a8d52" resname="customer-selection.no-customer-selected">
+                <source>customer-selection.no-customer-selected</source>
+                <target>No person or organization selected</target>
+            </trans-unit>
+            <trans-unit id="235b14f26g712345e44gs2e9335a8d53" resname="customer-selection.add">
+                <source>customer-selection.add</source>
+                <target>Choose person or organization</target>
             </trans-unit>
         </body>
     </file>
