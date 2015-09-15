@@ -10,6 +10,9 @@
 
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
+/**
+ * Marker interface for entities which can be protected by access control list.
+ */
 interface SecuredEntityInterface
 {
 }
