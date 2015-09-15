@@ -101,7 +101,7 @@ define([], function() {
                         sortable: false,
                         columnOptionsInstanceName: '',
                         clickCallback: function(item) {
-                            this.sandbox.emit('husky.datagrid.select.item', item);
+                            this.sandbox.emit('husky.datagrid.toggle.item', item);
                         }.bind(this),
                         selectedCounter: true,
                         searchInstanceName: this.options.instanceName + '-search',

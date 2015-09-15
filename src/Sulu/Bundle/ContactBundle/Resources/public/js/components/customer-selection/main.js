@@ -75,11 +75,9 @@ define([], function() {
             // adjust position of overlay after column-navigation has initialized
             this.sandbox.on('husky.datagrid.contact.view.rendered', function() {
                 this.sandbox.emit('husky.overlay.customer-selection.' + this.options.instanceName + '.add.set-position');
-                updateList.call(this);
             }.bind(this));
             this.sandbox.on('husky.datagrid.account.view.rendered', function() {
                 this.sandbox.emit('husky.overlay.customer-selection.' + this.options.instanceName + '.add.set-position');
-                updateList.call(this);
             }.bind(this));
         },
 
@@ -109,7 +107,7 @@ define([], function() {
                         sortable: false,
                         columnOptionsInstanceName: '',
                         clickCallback: function(item) {
-                            this.sandbox.emit('husky.datagrid.contact.select.item', item);
+                            this.sandbox.emit('husky.datagrid.contact.toggle.item', item);
                         }.bind(this),
                         selectedCounter: true,
                         searchInstanceName: this.options.instanceName + '-contact-search',
@@ -155,7 +153,7 @@ define([], function() {
                         sortable: false,
                         columnOptionsInstanceName: '',
                         clickCallback: function(item) {
-                            this.sandbox.emit('husky.datagrid.account.select.item', item);
+                            this.sandbox.emit('husky.datagrid.account.toggle.item', item);
                         }.bind(this),
                         selectedCounter: true,
                         searchInstanceName: this.options.instanceName + '-account-search',
@@ -192,11 +190,13 @@ define([], function() {
                 contacts = [];
 
             this.sandbox.util.foreach(selectedItems, function(element) {
-                var type = element.substr(0, 1);
+                var type = element.substr(0, 1),
+                    value = parseInt(element.substr(1));
+
                 if (type === 'c') {
-                    contacts.push(element.substr(1));
+                    contacts.push(value);
                 } else if (type === 'a') {
-                    accounts.push(element.substr(1));
+                    accounts.push(value);
                 }
             });
 
