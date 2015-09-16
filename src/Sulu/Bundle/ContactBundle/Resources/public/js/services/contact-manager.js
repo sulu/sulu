@@ -73,8 +73,8 @@ define([
                 success: function(response) {
                     promise.resolve(response.toJSON());
                 }.bind(this),
-                error: function() {
-                    promise.reject();
+                error: function(context, jqXHR) {
+                    promise.reject(jqXHR);
                 }.bind(this)
             });
 
@@ -180,8 +180,10 @@ define([
                 Mediator.emit('sulu.contacts.contact.saved', contact.id);
                 Mediator.emit('sulu.labels.success.show', 'contact.contacts.saved');
                 promise.resolve(contact);
-            }.bind(this)).fail(function() {
-                Mediator.emit('sulu.labels.error.show');
+            }.bind(this)).fail(function(xhr) {
+                if (!xhr.status || xhr.status !== 403) {
+                    Mediator.emit('sulu.labels.error.show');
+                }
                 promise.reject();
             }.bind(this));
 

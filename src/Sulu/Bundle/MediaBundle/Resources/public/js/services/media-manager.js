@@ -80,8 +80,8 @@ define([
                 success: function(response) {
                     promise.resolve(response.toJSON());
                 }.bind(this),
-                error: function() {
-                    promise.reject();
+                error: function(context, jqXHR) {
+                    promise.reject(jqXHR);
                 }.bind(this)
             });
 
@@ -162,8 +162,10 @@ define([
                 Mediator.emit('sulu.medias.media.saved', media.id, media);
                 Mediator.emit('sulu.labels.success.show', 'labels.success.media-save-desc');
                 promise.resolve(media);
-            }.bind(this)).fail(function() {
-                Mediator.emit('sulu.labels.error.show');
+            }.bind(this)).fail(function(xhr) {
+                if (!xhr.status || xhr.status !== 403) {
+                    Mediator.emit('sulu.labels.error.show');
+                }
                 promise.reject();
             }.bind(this));
 

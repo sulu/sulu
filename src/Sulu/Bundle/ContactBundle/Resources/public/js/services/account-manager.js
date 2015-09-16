@@ -77,8 +77,8 @@ define([
                 success: function(response) {
                     promise.resolve(response.toJSON());
                 }.bind(this),
-                error: function() {
-                    promise.reject();
+                error: function(context, jqXHR) {
+                    promise.reject(jqXHR);
                 }.bind(this)
             });
 
@@ -213,8 +213,10 @@ define([
                 Mediator.emit('sulu.contacts.account.saved', account.id);
                 Mediator.emit('sulu.labels.success.show', 'contact.accounts.saved');
                 promise.resolve(account);
-            }.bind(this)).fail(function() {
-                Mediator.emit('sulu.labels.error.show');
+            }.bind(this)).fail(function(xhr) {
+                if (!xhr.status || xhr.status !== 403) {
+                    Mediator.emit('sulu.labels.error.show');
+                }
                 promise.reject();
             }.bind(this));
 
@@ -233,8 +235,10 @@ define([
                 Mediator.emit('sulu.contacts.account.logo-saved', account.id);
                 Mediator.emit('sulu.labels.success.show', 'contact.accounts.logo.saved');
                 promise.resolve(account);
-            }.bind(this)).fail(function() {
-                Mediator.emit('sulu.labels.error.show');
+            }.bind(this)).fail(function(xhr) {
+                if (!xhr.status || xhr.status !== 403) {
+                    Mediator.emit('sulu.labels.error.show');
+                }
                 promise.reject();
             }.bind(this));
 
