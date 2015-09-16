@@ -72,7 +72,7 @@ class CategoryManager implements CategoryManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getFieldDescriptor($locale,$key)
+    public function getFieldDescriptor($locale, $key)
     {
         return $this->getFieldDescriptors($locale)[$key];
     }
