@@ -632,11 +632,11 @@
             </trans-unit>
             <trans-unit id="235b14f26g712345e44gs2e9335a8d52" resname="contact-selection.no-customer-selected">
                 <source>customer-selection.no-contact-selected</source>
-                <target>Keine Person oder Organisation ausgewählt</target>
+                <target>No contact selected</target>
             </trans-unit>
             <trans-unit id="235b14f26g712345e44gs2e9335a8d53" resname="contact-selection.add">
                 <source>contact-selection.add</source>
-                <target>Personen oder Organisation auswählen</target>
+                <target>Choose contact</target>
             </trans-unit>
         </body>
     </file>

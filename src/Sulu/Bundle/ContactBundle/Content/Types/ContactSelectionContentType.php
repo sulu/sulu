@@ -17,6 +17,7 @@ use Sulu\Bundle\ContactBundle\Api\Contact;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Util\IdsHandlingTrait;
 use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
 
@@ -175,6 +176,17 @@ class ContactSelectionContentType extends ComplexContentType
     public function getTemplate()
     {
         return $this->template;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultParams(PropertyInterface $property = null)
+    {
+        return [
+            'contact' => new PropertyParameter('contact', true),
+            'account' => new PropertyParameter('account', true),
+        ];
     }
 
     /**

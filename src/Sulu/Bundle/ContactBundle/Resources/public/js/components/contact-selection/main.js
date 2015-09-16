@@ -25,6 +25,10 @@ define([], function() {
             dataDefault: [],
             hidePositionElement: true,
             hideConfigButton: true,
+            contact: true,
+            contactUrl: null,
+            account: true,
+            accountUrl: null,
             translations: {
                 noContentSelected: 'contact-selection.no-contact-selected',
                 add: 'contact-selection.add'
@@ -81,13 +85,8 @@ define([], function() {
             }.bind(this));
         },
 
-        /**
-         * initialize column navigation
-         */
-        initList = function() {
-            var data = getParsedData.call(this);
-
-            this.sandbox.start([
+        getContactComponents = function(data) {
+            return [
                 {
                     name: 'search@husky',
                     options: {
@@ -102,7 +101,7 @@ define([], function() {
                         el: getId.call(this, 'contactList'),
                         instanceName: 'contact',
                         url: this.options.contactUrl,
-                        preselected: data.contacts,
+                        preselected: data,
                         resultKey: this.options.contactResultKey,
                         sortable: false,
                         columnOptionsInstanceName: '',
@@ -133,7 +132,12 @@ define([], function() {
                             }
                         ]
                     }
-                },
+                }
+            ];
+        },
+
+        getAccountComponents = function(data) {
+            return [
                 {
                     name: 'search@husky',
                     options: {
@@ -148,7 +152,7 @@ define([], function() {
                         el: getId.call(this, 'accountList'),
                         instanceName: 'account',
                         url: this.options.accountUrl,
-                        preselected: data.accounts,
+                        preselected: data,
                         resultKey: this.options.accountResultKey,
                         sortable: false,
                         columnOptionsInstanceName: '',
@@ -176,7 +180,25 @@ define([], function() {
                         ]
                     }
                 }
-            ]);
+            ];
+        },
+
+        /**
+         * initialize column navigation
+         */
+        initList = function() {
+            var data = getParsedData.call(this),
+                components = [];
+
+            if (!!this.options.contact) {
+                components = components.concat(getContactComponents.call(this, data.contacts));
+            }
+
+            if (!!this.options.account) {
+                components = components.concat(getAccountComponents.call(this, data.accounts));
+            }
+
+            this.sandbox.start(components);
         },
 
         /**
@@ -235,7 +257,40 @@ define([], function() {
          * starts the overlay component
          */
         startOverlay = function() {
-            var $element = this.sandbox.dom.createElement('<div/>');
+            var $element = this.sandbox.dom.createElement('<div/>'),
+                slide = {
+                    title: this.sandbox.translate(this.options.translations.add),
+                    tabs: [],
+                    okCallback: getAddOverlayData.bind(this)
+                };
+
+            if (!!this.options.contact) {
+                slide.tabs = slide.tabs.concat(
+                    [
+                        {
+                            title: this.sandbox.translate('contact.contacts.title'),
+                            data: templates.data(this.domIds.contactSearch, this.domIds.contactList)
+                        }
+                    ]
+                );
+            }
+
+            if (!!this.options.account) {
+                slide.tabs = slide.tabs.concat(
+                    [
+                        {
+                            title: this.sandbox.translate('contact.accounts.title'),
+                            data: templates.data(this.domIds.accountSearch, this.domIds.accountList)
+                        }
+                    ]
+                );
+            }
+
+            if (slide.tabs.length === 0) {
+                this.sandbox.logger.error('contact and account disabled');
+
+                return;
+            }
 
             this.sandbox.dom.append(this.$el, $element);
             this.sandbox.start([
@@ -249,22 +304,7 @@ define([], function() {
                         container: this.$el,
                         instanceName: 'contact-selection.' + this.options.instanceName + '.add',
                         skin: 'wide',
-                        slides: [
-                            {
-                                title: this.sandbox.translate(this.options.translations.add),
-                                tabs: [
-                                    {
-                                        title: this.sandbox.translate('contact.contacts.title'),
-                                        data: templates.data(this.domIds.contactSearch, this.domIds.contactList)
-                                    },
-                                    {
-                                        title: this.sandbox.translate('contact.accounts.title'),
-                                        data: templates.data(this.domIds.accountSearch, this.domIds.accountList)
-                                    }
-                                ],
-                                okCallback: getAddOverlayData.bind(this)
-                            }
-                        ]
+                        slides: [slide]
                     }
                 }
             ]);
