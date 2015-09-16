@@ -14,10 +14,12 @@ use Jackalope\Node;
 use JMS\Serializer\Serializer;
 use PHPCR\NodeInterface;
 use Prophecy\Argument;
+use Sulu\Bundle\ContactBundle\Api\Account;
 use Sulu\Bundle\ContactBundle\Api\Contact;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Content\Types\ContactSelectionContentType;
 use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 
@@ -344,7 +346,13 @@ class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $defaultParams = $type->getDefaultParams();
 
-        $this->assertEquals([], $defaultParams);
+        $this->assertEquals(
+            [
+                'contact' => new PropertyParameter('contact', true),
+                'account' => new PropertyParameter('account', true),
+            ],
+            $defaultParams
+        );
     }
 
     public function testHasValue()
