@@ -11,6 +11,8 @@
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use ReflectionClass;
+use ReflectionException;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
@@ -118,7 +120,12 @@ class DoctrineAccessControlProvider implements AccessControlProviderInterface
      */
     public function supports($type)
     {
-        $class = new \ReflectionClass($type);
+        try {
+            $class = new ReflectionClass($type);
+        } catch (ReflectionException $e) {
+            // in case the class does not exist there is no support
+            return false;
+        }
 
         return $class->implementsInterface(SecuredEntityInterface::class);
     }

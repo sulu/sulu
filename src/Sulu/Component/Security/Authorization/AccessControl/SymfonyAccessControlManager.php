@@ -11,7 +11,9 @@
 
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
@@ -130,5 +132,18 @@ class SymfonyAccessControlManager implements AccessControlManagerInterface
         }
 
         return $permissions;
+    }
+
+    /**
+     * Returns the permissions regarding an object and its security context for a given user.
+     *
+     * @param SecurityCondition $securityCondition The condition to check
+     * @param UserInterface $user The user for which the security is returned
+     *
+     * @return array
+     */
+    public function getUserPermissions(SecurityCondition $securityCondition, UserInterface $user)
+    {
+        // TODO: Implement getUserPermissions() method.
     }
 }

@@ -101,29 +101,6 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
         $this->userRole->setRole($this->role);
         $this->user->addUserRole($this->userRole);
 
-        $this->userGroup = new UserGroup();
-        $this->group = new Group();
-        $this->role = new Role();
-        $roleIdReflection->setValue($this->role, 2);
-        $this->role->setName('role2');
-        $this->permission = new Permission();
-        $this->permission->setPermissions(122);
-        $this->permission->setContext('sulu.security.groups');
-        $this->role->addPermission($this->permission);
-        $this->group->addRole($this->role);
-        $this->userGroup->setGroup($this->group);
-
-        $this->nestedGroup = new Group();
-        $this->role = new Role();
-        $roleIdReflection->setValue($this->role, 3);
-        $this->permission = new Permission();
-        $this->permission->setPermissions(122);
-        $this->permission->setContext('sulu.security.groups.nested');
-        $this->role->addPermission($this->permission);
-        $this->nestedGroup->addRole($this->role);
-        $this->group->addChildren($this->nestedGroup);
-        $this->user->addUserGroup($this->userGroup);
-
         $this->token = $this->prophesize(TokenInterface::class);
         $this->token->getUser()->willReturn($this->user);
 
@@ -134,9 +111,16 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
 
     public function testPositiveVote()
     {
+        $securityCondition = new SecurityCondition('sulu.security.roles');
+
+        $this->accessControlManager->getUserPermissions($securityCondition, $this->user)->willReturn([
+            'view' => true,
+            'edit' => false,
+        ]);
+
         $access = $this->voter->vote(
             $this->token->reveal(),
-            new SecurityCondition('sulu.security.roles'),
+            $securityCondition,
             ['view']
         );
 
@@ -145,110 +129,18 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
 
     public function testNegativeVote()
     {
+        $securityCondition = new SecurityCondition('sulu.security.roles');
+
+        $this->accessControlManager->getUserPermissions($securityCondition, $this->user)->willReturn([
+            'view' => true,
+            'edit' => false,
+            'security' => false,
+        ]);
+
         $access = $this->voter->vote(
             $this->token->reveal(),
-            new SecurityCondition('sulu.security.roles'),
+            $securityCondition,
             ['security']
-        );
-
-        $this->assertSame(VoterInterface::ACCESS_DENIED, $access);
-    }
-
-    public function testPositiveVoteWithoutGroup()
-    {
-        foreach ($this->user->getUserGroups() as $userGroup) {
-            $this->user->removeUserGroup($userGroup);
-        }
-
-        $access = $this->voter->vote(
-            $this->token->reveal(),
-            new SecurityCondition('sulu.security.roles'),
-            ['view']
-        );
-
-        $this->assertSame(VoterInterface::ACCESS_GRANTED, $access);
-    }
-
-    public function testNegativeVoteWithoutGroup()
-    {
-        foreach ($this->user->getUserGroups() as $userGroup) {
-            $this->user->removeUserGroup($userGroup);
-        }
-
-        $access = $this->voter->vote(
-            $this->token->reveal(),
-            new SecurityCondition('sulu.security.roles'),
-            ['security']
-        );
-
-        $this->assertSame(VoterInterface::ACCESS_DENIED, $access);
-    }
-
-    public function testPositiveGroupVote()
-    {
-        $access = $this->voter->vote(
-            $this->token->reveal(),
-            new SecurityCondition('sulu.security.groups'),
-            ['view']
-        );
-
-        $this->assertSame(VoterInterface::ACCESS_GRANTED, $access);
-    }
-
-    public function testNegativeGroupVote()
-    {
-        $access = $this->voter->vote(
-            $this->token->reveal(),
-            new SecurityCondition('sulu.security.groups'),
-            ['security']
-        );
-
-        $this->assertSame(VoterInterface::ACCESS_DENIED, $access);
-    }
-
-    public function testPositiveNestedGroupVote()
-    {
-        $access = $this->voter->vote(
-            $this->token->reveal(),
-            new SecurityCondition('sulu.security.groups.nested'),
-            ['view']
-        );
-
-        $this->assertSame(VoterInterface::ACCESS_GRANTED, $access);
-    }
-
-    public function testNegativeNestedGroupVote()
-    {
-        $access = $this->voter->vote(
-            $this->token->reveal(),
-            new SecurityCondition('sulu.security.groups.nested'),
-            ['security']
-        );
-
-        $this->assertSame(VoterInterface::ACCESS_DENIED, $access);
-    }
-
-    public function testPositiveLocaleVote()
-    {
-        $this->userRole->setLocale('["de"]');
-
-        $access = $this->voter->vote(
-            $this->token->reveal(),
-            new SecurityCondition('sulu.security.roles', 'de', 'Sulu\Bundle\Security\Entity\Group', '1'),
-            ['view']
-        );
-
-        $this->assertSame(VoterInterface::ACCESS_GRANTED, $access);
-    }
-
-    public function testNegativeLocaleExistsVote()
-    {
-        $this->userRole->setLocale('["en"]');
-
-        $access = $this->voter->vote(
-            $this->token->reveal(),
-            new SecurityCondition('sulu.security.roles', 'de', 'Sulu\Bundle\SecurityBundle\Group', '1'),
-            ['view']
         );
 
         $this->assertSame(VoterInterface::ACCESS_DENIED, $access);
@@ -256,9 +148,16 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
 
     public function testPositiveVoteWithMultipleAttributes()
     {
+        $securityCondition = new SecurityCondition('sulu.security.roles', null);
+
+        $this->accessControlManager->getUserPermissions($securityCondition, $this->user)->willReturn([
+            'view' => true,
+            'add' => true,
+        ]);
+
         $access = $this->voter->vote(
             $this->token->reveal(),
-            new SecurityCondition('sulu.security.roles', null),
+            $securityCondition,
             ['view', 'add']
         );
 
@@ -267,78 +166,18 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
 
     public function testNegativeVoteWithMultipleAttributes()
     {
+        $securityCondition = new SecurityCondition('sulu.security.roles', null);
+
+        $this->accessControlManager->getUserPermissions($securityCondition, $this->user)->willReturn([
+            'view' => true,
+            'add' => true,
+            'security' => false
+        ]);
+
         $access = $this->voter->vote(
             $this->token->reveal(),
-            new SecurityCondition('sulu.security.roles', null),
+            $securityCondition,
             ['view', 'security']
-        );
-
-        $this->assertSame(VoterInterface::ACCESS_DENIED, $access);
-    }
-
-    public function testPositiveObjectVote()
-    {
-        $this->accessControlManager->getPermissions('Sulu\Bundle\SecurityBundle\Group', '1')->willReturn(
-            [
-                1 => [
-                    'view' => true,
-                ],
-            ]
-        );
-
-        $access = $this->voter->vote(
-            $this->token->reveal(),
-            new SecurityCondition('sulu.security.groups', null, 'Sulu\Bundle\SecurityBundle\Group', '1'),
-            ['view']
-        );
-
-        $this->assertSame(VoterInterface::ACCESS_GRANTED, $access);
-    }
-
-    public function testPositiveObjectVoteWithNegativeSecurityContextVote()
-    {
-        $this->accessControlManager->getPermissions('Sulu\Bundle\SecurityBundle\Group', '1')->willReturn(
-            [
-                1 => [
-                    'security' => true,
-                ],
-            ]
-        );
-
-        $access = $this->voter->vote(
-            $this->token->reveal(),
-            new SecurityCondition('sulu.security.groups', null, 'Sulu\Bundle\SecurityBundle\Group', '1'),
-            ['security']
-        );
-
-        $this->assertSame(VoterInterface::ACCESS_GRANTED, $access);
-    }
-
-    public function testNegativeSecurityContextVoteWithEmptyObjectSecurity()
-    {
-        $access = $this->voter->vote(
-            $this->token->reveal(),
-            new SecurityCondition('sulu.security.groups', null, 'Sulu\Bundle\SecurityBundle\Group', '1'),
-            ['security']
-        );
-
-        $this->assertSame(VoterInterface::ACCESS_DENIED, $access);
-    }
-
-    public function testNegativeObjectVoteWithPositiveSecurityContextVote()
-    {
-        $this->accessControlManager->getPermissions('Sulu\Bundle\SecurityBundle\Group', '1')->willReturn(
-            [
-                1 => [
-                    'view' => false,
-                ],
-            ]
-        );
-
-        $access = $this->voter->vote(
-            $this->token->reveal(),
-            new SecurityCondition('sulu.security.groups', null, 'Sulu\Bundle\SecurityBundle\Group', '1'),
-            ['view']
         );
 
         $this->assertSame(VoterInterface::ACCESS_DENIED, $access);

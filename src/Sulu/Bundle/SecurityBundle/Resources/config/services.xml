@@ -89,7 +89,9 @@
             <tag name="security.voter"/>
         </service>
 
-        <service id="sulu_security.access_control_manager" class="%sulu_security.access_control_manager.class%"/>
+        <service id="sulu_security.access_control_manager" class="%sulu_security.access_control_manager.class%">
+            <argument type="service" id="sulu_security.mask_converter"/>
+        </service>
 
         <service id="sulu_security.phpcr_access_control_provider" class="%sulu_security.phpcr_access_control_provider.class%">
             <argument type="service" id="sulu_document_manager.document_manager"/>

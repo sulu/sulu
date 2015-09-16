@@ -11,6 +11,12 @@
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
 use Prophecy\Argument;
+use Sulu\Bundle\SecurityBundle\Entity\Permission;
+use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Sulu\Component\Security\Authorization\MaskConverterInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 
 class AccessControlManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,9 +25,15 @@ class AccessControlManagerTest extends \PHPUnit_Framework_TestCase
      */
     private $accessControlManager;
 
+    /**
+     * @var MaskConverterInterface
+     */
+    private $maskConverter;
+
     public function setUp()
     {
-        $this->accessControlManager = new AccessControlManager();
+        $this->maskConverter = $this->prophesize(MaskConverterInterface::class);
+        $this->accessControlManager = new AccessControlManager($this->maskConverter->reveal());
     }
 
     public function testSetPermissions()
@@ -64,6 +76,67 @@ class AccessControlManagerTest extends \PHPUnit_Framework_TestCase
         $this->accessControlManager->getPermissions(\stdClass::class, '1');
     }
 
+    /**
+     * @dataProvider provideUserPermission
+     */
+    public function testGetUserPermissions(
+        $rolePermissions,
+        $securityContextPermissions,
+        $userLocales,
+        $locale,
+        $result
+    ) {
+        $this->maskConverter->convertPermissionsToArray(0)->willReturn(['view' => false, 'edit' => false]);
+        $this->maskConverter->convertPermissionsToArray(64)->willReturn(['view' => true, 'edit' => false]);
+
+        /** @var AccessControlProviderInterface $accessControlProvider */
+        $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
+        $accessControlProvider->supports(\stdClass::class)->willReturn(true);
+        $accessControlProvider->getPermissions(\stdClass::class, '1')->willReturn($rolePermissions);
+        $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
+
+        // create role for given role permissions from data provider
+        /** @var Permission $permission1 */
+        $permission1 = $this->prophesize(Permission::class);
+        $permission1->getPermissions()->willReturn($securityContextPermissions);
+        $permission1->getContext()->willReturn('example');
+        /** @var Role $role1 */
+        $role1 = $this->prophesize(Role::class);
+        $role1->getPermissions()->willReturn([$permission1->reveal()]);
+        $role1->getId()->willReturn(1);
+        /** @var UserRole $userRole1 */
+        $userRole1 = $this->prophesize(UserRole::class);
+        $userRole1->getRole()->willReturn($role1->reveal());
+        $userRole1->getLocales()->willReturn($userLocales);
+
+        // add a role which should not influence the security context check
+        /** @var Permission $permission */
+        $permission2 = $this->prophesize(Permission::class);
+        $permission2->getPermissions()->willReturn(127);
+        $permission2->getContext()->willReturn('not-important');
+        /** @var Role $role */
+        $role2 = $this->prophesize(Role::class);
+        $role2->getPermissions()->willReturn([$permission2->reveal()]);
+        $role2->getId()->willReturn(2);
+        /** @var UserRole $userRole */
+        $userRole2 = $this->prophesize(UserRole::class);
+        $userRole2->getRole()->willReturn($role2->reveal());
+        $userRole2->getLocales()->willReturn($userLocales);
+
+        // return the user with the above definitions
+        /** @var User $user */
+        $user = $this->prophesize(User::class);
+        $user->getUserRoles()->willReturn([$userRole1->reveal(), $userRole2->reveal()]);
+        $user->getRoleObjects()->willReturn([$role1->reveal(), $role2->reveal()]);
+
+        $permissions = $this->accessControlManager->getUserPermissions(
+            new SecurityCondition('example', $locale, \stdClass::class, '1'),
+            $user->reveal()
+        );
+
+        $this->assertEquals($result, $permissions);
+    }
+
     public function testAddAccessControlProvider()
     {
         $accessControlProvider1 = $this->prophesize(AccessControlProviderInterface::class);
@@ -83,5 +156,89 @@ class AccessControlManagerTest extends \PHPUnit_Framework_TestCase
             'accessControlProviders',
             $this->accessControlManager
         );
+    }
+
+    public function provideUserPermission()
+    {
+        return [
+            [
+                [1 => ['view' => true, 'edit' => false]],
+                32,
+                ['de', 'en'],
+                'de',
+                ['view' => true, 'edit' => false],
+            ],
+            [
+                [1 => ['view' => false, 'edit' => false]],
+                96,
+                ['de', 'en'],
+                'de',
+                ['view' => false, 'edit' => false],
+            ],
+            [
+                [],
+                64,
+                ['de', 'en'],
+                'de',
+                ['view' => true, 'edit' => false],
+            ],
+            [
+                [1 => ['view' => true, 'edit' => true]],
+                0,
+                ['de', 'en'],
+                'de',
+                ['view' => true, 'edit' => true],
+            ],
+            [
+                [
+                    1 => ['view' => true, 'edit' => true],
+                    2 => ['view' => false, 'edit' => false],
+                ],
+                0,
+                ['de', 'en'],
+                'de',
+                ['view' => true, 'edit' => true],
+            ],
+            [
+                [
+                    1 => ['view' => false, 'edit' => false],
+                    2 => ['view' => false, 'edit' => false],
+                ],
+                0,
+                ['de', 'en'],
+                'de',
+                ['view' => false, 'edit' => false],
+            ],
+            [
+                [
+                    1 => ['view' => true, 'edit' => false],
+                    2 => ['view' => false, 'edit' => true],
+                ],
+                0,
+                ['de', 'en'],
+                'de',
+                ['view' => true, 'edit' => true],
+            ],
+            [
+                [
+                    1 => ['view' => true, 'edit' => false],
+                    2 => ['view' => false, 'edit' => true],
+                ],
+                0,
+                ['de', 'en'],
+                'fr',
+                ['view' => false, 'edit' => false],
+            ],
+            [
+                [
+                    1 => ['view' => true, 'edit' => true],
+                    2 => ['view' => false, 'edit' => false],
+                ],
+                0,
+                ['de', 'en'],
+                null,
+                ['view' => true, 'edit' => true],
+            ],
+        ];
     }
 }
