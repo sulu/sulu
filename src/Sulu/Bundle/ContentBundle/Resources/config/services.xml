@@ -41,6 +41,8 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu_content.smart_content.data_provider.content.query_builder"/>
             <argument type="service" id="sulu.content.query_executor"/>
+            <argument type="service" id="sulu_security.access_control_manager"/>
+            <argument type="service" id="security.token_storage" on-invalid="null"/>
             <argument type="service" id="logger"/>
         </service>
 

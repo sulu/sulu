@@ -42,26 +42,13 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
         ACTION_ICON_VIEW = 'fa-eye',
 
         getActionIcon = function(data) {
-            if (!data.hasOwnProperty('permissions')) {
-                return ACTION_ICON_EDIT;
-            }
-
             var actionIcon = '';
-            $.each(data.permissions, function(role, permission) {
-                if ($.inArray(role, this.sandbox.sulu.user.roles) === -1) {
-                    return true;
-                }
 
-                if ($.inArray('edit', permission) !== -1) {
-                    actionIcon = ACTION_ICON_EDIT;
-
-                    return false;
-                } else if ($.inArray('view', permission) !== -1) {
-                    actionIcon = ACTION_ICON_VIEW;
-
-                    return false;
-                }
-            }.bind(this));
+            if (!!data._permissions.edit) {
+                actionIcon = ACTION_ICON_EDIT;
+            } else if (!!data._permissions.view) {
+                actionIcon = ACTION_ICON_VIEW;
+            }
 
             return actionIcon;
         },
