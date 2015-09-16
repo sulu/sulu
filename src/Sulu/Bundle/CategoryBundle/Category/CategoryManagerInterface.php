@@ -113,16 +113,18 @@ interface CategoryManagerInterface
     /**
      * Returns the FieldDescriptors for the categories.
      *
+     * @param string $locale
      * @return DoctrineFieldDescriptor[]
      */
-    public function getFieldDescriptors();
+    public function getFieldDescriptors($locale);
 
     /**
      * Returns the FieldDescriptor for the given key.
      *
+     * @param string $locale
      * @param string $key The key of the FieldDescriptor to return
      *
      * @return DoctrineFieldDescriptor
      */
-    public function getFieldDescriptor($key);
+    public function getFieldDescriptor($locale, $key);
 }

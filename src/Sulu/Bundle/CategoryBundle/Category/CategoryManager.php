@@ -72,15 +72,15 @@ class CategoryManager implements CategoryManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getFieldDescriptor($key)
+    public function getFieldDescriptor($locale,$key)
     {
-        return $this->getFieldDescriptors()[$key];
+        return $this->getFieldDescriptors($locale)[$key];
     }
 
     /**
      * Initializes the field descriptors used by the list-helper.
      */
-    public function getFieldDescriptors()
+    public function getFieldDescriptors($locale)
     {
         if (null === $this->fieldDescriptors) {
             $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
@@ -107,8 +107,8 @@ class CategoryManager implements CategoryManagerInterface
                 [
                     self::$catTranslationEntityName => new DoctrineJoinDescriptor(
                             self::$catTranslationEntityName,
-                            self::$categoryEntityName .
-                            '.translations'
+                            self::$categoryEntityName . '.translations',
+                            sprintf(self::$catTranslationEntityName . '.locale = \'%s\'', $locale)
                         ),
                 ]
             );
