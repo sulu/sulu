@@ -15,12 +15,14 @@ define([
     'sulucontact/models/position',
     'sulucategory/model/category',
     'sulumedia/models/media'
-], function(Util,
-            Mediator,
-            Contact,
-            Title,
-            Position,
-            Category) {
+], function(
+    Util,
+    Mediator,
+    Contact,
+    Title,
+    Position,
+    Category
+) {
 
     'use strict';
 
