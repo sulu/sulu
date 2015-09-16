@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1586 [Webspace]        Fixed request format
     * BUGFIX      #1583 [ResourceBundle]  Fixed filter button in list-toolbar
     * FEATURE     #1558 [AdminBundle]     Redesign of overlays
     * FEATURE     #1557 [MediaBundle]     Redesign of data-navigation
