@@ -207,7 +207,7 @@ class ContentMapper implements ContentMapperInterface
             $document = $this->documentManager->find(
                 $uuid,
                 $locale,
-                array('type' => $documentAlias, 'load_ghost_content' => false)
+                ['type' => $documentAlias, 'load_ghost_content' => false]
             );
         } else {
             $document = $this->documentManager->create($documentAlias);

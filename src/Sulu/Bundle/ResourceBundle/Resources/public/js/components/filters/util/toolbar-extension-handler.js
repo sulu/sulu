@@ -223,7 +223,7 @@ define(['app-config', 'config'], function(AppConfig, Config) {
                 this.config = Config.get('sulu.resource.contexts');
                 // only if a contexts are defined at all bind events
                 if (!!this.config.contexts && this.sandbox.util.typeOf(this.config.contexts) === 'object') {
-                    this.sandbox.on('sulu.header.toolbar.extend', extendToolbar.bind(this));
+                    this.sandbox.on('sulu.list-toolbar.extend', extendToolbar.bind(this));
                     this.sandbox.on('sulu.router.navigate', resetOnNavigate.bind(this));
                     this.sandbox.on('sulu.list.preload', appendFilterToUrl.bind(this));
                 }
