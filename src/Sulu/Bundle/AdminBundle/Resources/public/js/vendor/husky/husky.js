@@ -30236,9 +30236,11 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Adds a row to the datagrid
          * @param record {Object} the new record to add
          */
-        addRecord: function(record) {
+        addRecord: function(record, appendAtBottom) {
+            var prepend = (!!appendAtBottom) ? false : this.options.addRowTop;
+
             this.removeEmptyIndicator();
-            this.renderBodyRow(record, this.options.addRowTop);
+            this.renderBodyRow(record, prepend);
             this.setAlternateClasses();
         },
 
@@ -31631,7 +31633,7 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
          * Parses the data and passes it to a render function
          * @param thumbnails {Array} array with thumbnails to render
          */
-        renderThumbnails: function(thumbnails) {
+        renderThumbnails: function(thumbnails, appendAtBottom) {
             var imgSrc, imgAlt, title, description, id, thumbnail;
 
             this.thumbnailFormat = (this.options.large === false) ? this.options.smallThumbnailFormat : this.options.largeThumbnailFormat;
@@ -31674,7 +31676,7 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
                 description = description.join(constants.descriptionDelimiter);
 
                 // pass the found data to a render method
-                this.renderThumbnail(id, imgSrc, imgAlt, title, description, record);
+                this.renderThumbnail(id, imgSrc, imgAlt, title, description, record, appendAtBottom);
             }.bind(this));
         },
 
@@ -31687,7 +31689,7 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
          * @param description {String} the thumbnail description to render
          * @param record {Object} the original data record
          */
-        renderThumbnail: function(id, imgSrc, imgAlt, title, description, record) {
+        renderThumbnail: function(id, imgSrc, imgAlt, title, description, record, appendAtBottom) {
             this.$thumbnails[id] = this.sandbox.dom.createElement(
                 this.sandbox.util.template(templates.item)({
                     imgSrc: imgSrc,
@@ -31704,7 +31706,11 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
             }
             this.sandbox.dom.data(this.$thumbnails[id], 'id', id);
             this.sandbox.dom.hide(this.$thumbnails[id]);
-            this.sandbox.dom.append(this.$el, this.$thumbnails[id]);
+            if (!!appendAtBottom) {
+                this.sandbox.dom.append(this.$el, this.$thumbnails[id]);
+            } else {
+                this.sandbox.dom.prepend(this.$el, this.$thumbnails[id]);
+            }
             this.sandbox.dom.fadeIn(this.$thumbnails[id], this.options.fadeInDuration);
 
             this.bindThumbnailDomEvents(id);
@@ -31819,8 +31825,8 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
          * @param record
          * @public
          */
-        addRecord: function(record) {
-            this.renderThumbnails([record]);
+        addRecord: function(record, appendAtBottom) {
+            this.renderThumbnails([record], appendAtBottom);
         },
 
         /**
@@ -32198,6 +32204,194 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
 });
 
 /**
+ * @class InfiniteScrollPagination (Datagrid Decorator)
+ * @constructor
+ *
+ * @param {Object} [paginationOptions] Configuration object
+ * @param {Number} [options.limit] Data records per page
+ * @param {Number} [options.scrollContainer] CSS selector of the element which holds the datagrid items and is scrollable
+ *
+ * @param {Function} [initialize] function which gets called once at the start of the view
+ * @param {Function} [render] function to render data
+ * @param {Function} [destroy] function to destroy the pagination and unbind events
+ * @param {Function} [getHeight] function which returns the height of the pagination
+ */
+define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],function() {
+
+    'use strict';
+
+    var defaults = {
+            scrollContainer: '.page',
+            limit: 20
+        },
+
+        constants = {
+            paginationClass: 'pagination-wrapper infinite-scroll',
+            paginationElementClass: 'pagination',
+            loaderClass: 'pagination-loader'
+        },
+
+        /**
+         * Templates used by this class
+         */
+        templates = {
+            paginationContainer: [
+                '<div class="' + constants.paginationClass + '">',
+                '   <div class="' + constants.loaderClass + '"/>',
+                '</div>'
+            ].join('')
+        };
+
+    return {
+
+        /**
+         * Initializes the pagination
+         * @param {Object} context The context of the datagrid
+         * @param {Object} options The options used by this pagination
+         */
+        initialize: function(context, options) {
+            // context of the datagrid-component
+            this.datagrid = context;
+
+            // make sandbox available in this-context
+            this.sandbox = this.datagrid.sandbox;
+
+            // merge defaults with pagination options
+            this.options = this.sandbox.util.extend(true, {}, defaults, options);
+
+            this.setVariables();
+        },
+
+        /**
+         * Sets the classes properties
+         */
+        setVariables: function() {
+            this.$el = null;
+            this.$paginationContainer = null;
+            this.$loader = null;
+            this.data = null;
+        },
+
+        /**
+         * Returns the total height of the pagination
+         * @returns {number}
+         */
+        getHeight: function() {
+            return this.sandbox.dom.outerHeight(this.$paginationContainer, true);
+        },
+
+        /**
+         * Renders the pagination
+         */
+        render: function(data, $container) {
+            this.$el = $container;
+            this.data = data;
+
+            this.$paginationContainer = this.sandbox.dom.createElement(templates.paginationContainer);
+            this.$loader = $(this.$paginationContainer).find('.' + constants.loaderClass);
+            this.sandbox.dom.append(this.$el, this.$paginationContainer);
+
+            this.startLoader();
+            this.bindInfiniteScroll();
+            this.fillScrollContainer();
+        },
+
+        /**
+         * Starts a small loader
+         */
+        startLoader: function() {
+            this.sandbox.start([
+                {
+                    name: 'loader@husky',
+                    options: {
+                        el: this.$loader,
+                        size: '40px',
+                        color: '#cccccc'
+                    }
+                }
+            ]);
+            this.$loader.css('opacity', '0');
+        },
+
+        /**
+         * Returns the pagination page size
+         * @returns {Number} current limit
+         */
+        getLimit: function() {
+            return this.options.limit;
+        },
+
+        /**
+         * Destroys the pagination
+         */
+        destroy: function() {
+            // stop components
+            this.sandbox.stop(this.sandbox.dom.find('*', this.$paginationContainer));
+            // unbind events
+            this.sandbox.dom.unbind(this.sandbox.dom.find('*', this.$paginationContainer));
+            this.sandbox.infiniteScroll.destroy(this.options.scrollContainer);
+            // remove container
+            this.sandbox.dom.remove(this.$paginationContainer);
+        },
+
+        /**
+         * Binds dom related events
+         */
+        bindInfiniteScroll: function() {
+            this.sandbox.infiniteScroll.initialize(this.options.scrollContainer, this.appendNextPage.bind(this));
+        },
+
+        fillScrollContainer: function() {
+            if ($(this.options.scrollContainer)[0].clientHeight >= $(this.options.scrollContainer)[0].scrollHeight){
+                this.appendNextPage().then(function(hasNextPage) {
+                    if (hasNextPage) {
+                        this.fillScrollContainer();
+                    }
+                }.bind(this));
+            }
+        },
+
+        appendNextPage: function() {
+            var promise = $.Deferred();
+
+            if (!!this.datagrid.data.links && !!this.datagrid.data.links.next) {
+                this.$loader.css('opacity', '1');
+
+                this.sandbox.util.load(this.datagrid.data.links.next.href).then(function(data) {
+                    this.updateDatagrid(data);
+                    this.$loader.css('opacity', '0');
+
+                    promise.resolve(true);
+                }.bind(this))
+            } else {
+                promise.resolve(false);
+            }
+
+            return promise;
+        },
+
+        updateDatagrid: function(data) {
+            this.datagrid.data.links = this.datagrid.parseLinks(data._links);
+            this.datagrid.data.total = data.total;
+            this.datagrid.data.page = data.page;
+            this.datagrid.data.pages = data.pages;
+            this.datagrid.data.limit = data.limit;
+
+            this.addRecordsToDatagrid(data._embedded[this.datagrid.options.resultKey]);
+        },
+
+        addRecordsToDatagrid: function(records) {
+            this.sandbox.util.foreach(records, function(record) {
+                if (!!record.id) {
+                    this.datagrid.data.embedded.push(record);
+                    this.datagrid.gridViews[this.datagrid.viewId].addRecord(record, true);
+                }
+            }.bind(this));
+        }
+    };
+});
+
+/**
  * @class DataGrid
  * @constructor
  *
@@ -32243,8 +32437,9 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
     define('__component__$datagrid@husky',[
         'husky_components/datagrid/decorators/table-view',
         'husky_components/datagrid/decorators/thumbnail-view',
-        'husky_components/datagrid/decorators/dropdown-pagination'
-    ], function(decoratorTableView, thumbnailView, decoratorDropdownPagination) {
+        'husky_components/datagrid/decorators/dropdown-pagination',
+        'husky_components/datagrid/decorators/infinite-scroll-pagination'
+    ], function(decoratorTableView, thumbnailView, decoratorDropdownPagination, infiniteScrollPagination) {
 
             /* Default values for options */
 
@@ -32256,7 +32451,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 },
                 pagination: 'dropdown',
                 paginationOptions: {
-                    dropdown: {}
+                    dropdown: {},
+                    'infinite-scroll': {}
                 },
 
                 contentFilters: null,
@@ -32299,7 +32495,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                     thumbnail: thumbnailView
                 },
                 paginations: {
-                    dropdown: decoratorDropdownPagination
+                    dropdown: decoratorDropdownPagination,
+                    'infinite-scroll': infiniteScrollPagination
                 }
             },
 
@@ -33589,7 +33786,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                     if (!!recordData.id) {
                         this.pushRecords([recordData]);
                     }
-                    this.gridViews[this.viewId].addRecord(recordData);
+                    this.gridViews[this.viewId].addRecord(recordData, false);
                     this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.getSelectedItemIds().length);
                 }
             },
@@ -33605,7 +33802,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                     this.sandbox.util.foreach(records, function(record) {
                         if (!!record.id) {
                             this.pushRecords([record]);
-                            this.gridViews[this.viewId].addRecord(record);
+                            this.gridViews[this.viewId].addRecord(record, false);
                         }
                     }.bind(this));
                     if (typeof callback === 'function') {
@@ -44189,6 +44386,7 @@ define('__component__$data-navigation@husky',[
          */
         remove: function() {
             this.cache.destroy();
+            this.sandbox.infiniteScroll.destroy('.iscroll');
         },
 
         /**
@@ -44250,7 +44448,7 @@ define('__component__$data-navigation@husky',[
          * @method startInfiniteScroll
          */
         startInfiniteScroll: function() {
-            this.sandbox.infiniteScroll('.iscroll', this.loadNextPage.bind(this), 10);
+            this.sandbox.infiniteScroll.initialize('.iscroll', this.loadNextPage.bind(this));
         },
 
         /**
@@ -49252,51 +49450,60 @@ define("datepicker-zh-TW", function(){});
 
     define('husky_extensions/infinite-scroll',[],function() {
 
-        var scrollHandler = function(event, sandbox, padding, callback) {
-            var $currentTarget = sandbox.dom.find(event.currentTarget),
-                $inner = sandbox.dom.first(
-                    sandbox.dom.find('div.iscroll-inner', $currentTarget)
-                ),
-                borderTopWidth = parseInt(sandbox.dom.css($currentTarget, 'borderTopWidth')),
-                borderTopWidthInt = isNaN(borderTopWidth) ? 0 : borderTopWidth,
-                iContainerTop = parseInt(sandbox.dom.css($currentTarget, 'paddingTop')) + borderTopWidthInt,
-                iTopHeight = sandbox.dom.offset($currentTarget).top,
-                innerTop = $inner.length ? sandbox.dom.offset($inner).top : 0,
-                iTotalHeight = Math.ceil(iTopHeight - innerTop + $currentTarget.height() + iContainerTop);
+        var scrollTimer = null,
 
-            if (
-                sandbox.dom.data($currentTarget, 'blocked') === 'on' &&
-                iTotalHeight + (isNaN(padding) ? 0 : padding) >= $inner.outerHeight()
-            ) {
-                sandbox.dom.data($currentTarget, 'blocked', 'off');
-                var result = callback();
-
-                if (!!result && !!result.then) {
-                    result.then(function() {
-                        sandbox.dom.data($currentTarget, 'blocked', 'on');
-                    });
-                } else {
-                    sandbox.dom.data($currentTarget, 'blocked', 'on');
+            scrollListener = function(selector, padding, callback) {
+                if (!$(selector).data('blocked')) {
+                    if (!!scrollTimer) {
+                        clearTimeout(scrollTimer);   // clear any previous pending timer
+                    }
+                    scrollTimer = setTimeout(scrollHandler.bind(this, selector, padding, callback), 50);
                 }
-            }
-        };
+            },
+
+            scrollHandler = function(selector, padding, callback) {
+                var scrollContainer = $(selector),
+                    containerHeight = scrollContainer[0].clientHeight,
+                    contentHeight = scrollContainer[0].scrollHeight,
+                    scrollTop = scrollContainer.scrollTop(),
+                    padding = (isNaN(padding)) ? 0 : padding;
+
+                if ((containerHeight + scrollTop + padding - contentHeight) >= 0) {
+                    scrollContainer.data('blocked', true);
+                    var result = callback();
+
+                    if (!!result && !!result.then) {
+                        result.then(function() {
+                            $(selector).removeData('blocked');
+                        });
+                    } else {
+                        $(selector).removeData('blocked');
+                    }
+                }
+            };
 
         return {
 
             name: 'infinite-scroll',
 
             initialize: function(app) {
-                app.sandbox.infiniteScroll = function(selector, callback, padding) {
-                    app.sandbox.dom.data(app.sandbox.dom.find(selector), 'blocked', 'on');
+                app.sandbox.infiniteScroll = {
 
-                    app.sandbox.dom.on(selector, 'scroll', function(event) {
-                        scrollHandler(event, app.sandbox, padding, callback);
-                    });
-                };
+                    initialize: function(selector, callback, padding) {
+                        app.sandbox.dom.on(selector, 'scroll.infinite', function() {
+                            scrollListener(selector, padding, callback);
+                        });
+                    },
+
+                    destroy: function(selector) {
+                        this.sandbox.dom.off(selector, 'scroll.infinite');
+                    }
+                }
             }
         };
     });
-})();
+})
+();
 
 /**
  * This file is part of Husky frontend development framework.
