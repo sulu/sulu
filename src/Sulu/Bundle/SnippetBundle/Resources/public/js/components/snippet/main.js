@@ -55,21 +55,27 @@ define([
             }, this);
 
             // load list view
-            this.sandbox.on('sulu.snippets.snippet.list', function() {
-                this.sandbox.emit('sulu.router.navigate', 'snippet/snippets');
+            this.sandbox.on('sulu.snippets.snippet.list', function(language) {
+                var route = 'snippet/snippets';
+
+                if (!!language) {
+                    route += '/' + language;
+                }
+
+                this.sandbox.emit('sulu.router.navigate', route);
             }, this);
 
             // change language
             this.sandbox.on('sulu.header.language-changed', function(item) {
-                this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.localization);
-                var data = this.model.toJSON();
+                this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.id);
 
                 if (this.type === 'edit') {
-                    this.sandbox.emit('sulu.snippets.snippet.load', data.id, item.localization);
+                    var data = this.model.toJSON();
+                    this.sandbox.emit('sulu.snippets.snippet.load', data.id, item.id);
                 } else if (this.type === 'add') {
-                    this.sandbox.emit('sulu.snippets.snippet.new', item.localization);
+                    this.sandbox.emit('sulu.snippets.snippet.new', item.id);
                 } else {
-                    this.sandbox.emit('sulu.snippets.snippet.list');
+                    this.sandbox.emit('sulu.snippets.snippet.list', item.id);
                 }
             }, this);
         },

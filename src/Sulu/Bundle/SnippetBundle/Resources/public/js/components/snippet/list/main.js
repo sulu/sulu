@@ -38,14 +38,21 @@ define([
         },
         sidebar: false
     };
-    SnippetList.prototype.header = {
-        noBack: true,
-        toolbar: {
-            buttons: {
-                add: {},
-                deleteSelected: {}
+
+    SnippetList.prototype.header = function() {
+        return {
+            noBack: true,
+            toolbar: {
+                buttons: {
+                    add: {},
+                    deleteSelected: {}
+                },
+                languageChanger: {
+                    url: '/admin/api/languages',
+                    preSelected: this.options.language
+                }
             }
-        }
+        };
     };
 
     SnippetList.prototype.initialize = function() {
