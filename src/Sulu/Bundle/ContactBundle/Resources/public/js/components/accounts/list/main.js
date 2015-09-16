@@ -130,7 +130,8 @@ define([
                 view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'datagrid/decorators/card-view',
                 viewOptions: {
                     table: {
-                        actionIconColumn: 'name'
+                        actionIconColumn: 'name',
+                        noImgIcon: 'fa-home'
                     },
                     'datagrid/decorators/card-view': {
                         imageFormat: '100x100-inset',

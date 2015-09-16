@@ -29975,6 +29975,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             highlightSelected: false,
             icons: [],
             removeIcon: 'trash-o',
+            emptyIcon: 'fa-coffee',
+            noImgIcon: 'fa-coffee',
             actionIcon: 'pencil',
             actionIconColumn: null,
             croppedMaxLength: 35,
@@ -30059,7 +30061,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             img: [
                 '<div class="' + constants.gridImageClass + '">',
                 '   <img alt="<%= alt %>" src="<%= src %>"/>',
-                '   <div class="fa-coffee empty"></div>',
+                '   <div class="<%= noImgIcon %> empty"></div>',
                 '</div>'
             ].join(''),
             childWrapper: '<div class="' + constants.childWrapperClass + '"></div>',
@@ -30089,7 +30091,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             ].join(''),
             empty: [
                 '<div class="' + constants.emptyListElementClass + '">',
-                '   <div class="fa-coffee icon"></div>',
+                '   <div class="<%= emptyIcon %> icon"></div>',
                 '   <span><%= text %></span>',
                 '</div>'
             ].join('')
@@ -30652,7 +30654,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 content = this.datagrid.manipulateContent(content, column.type, this.options.thumbnailFormat);
                 content = this.sandbox.util.template(templates.img)({
                     alt: content[constants.thumbAltKey],
-                    src: content[constants.thumbSrcKey]
+                    src: content[constants.thumbSrcKey],
+                    noImgIcon: this.options.noImgIcon
                 });
             } else {
                 content = this.datagrid.processContentFilter(
@@ -30800,7 +30803,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          */
         renderEmptyIndicator: function() {
             this.sandbox.dom.append(this.$el, this.sandbox.util.template(templates.empty)({
-                text: this.sandbox.translate(this.options.noItemsText)
+                text: this.sandbox.translate(this.options.noItemsText),
+                emptyIcon: this.options.emptyIcon
             }));
         },
 
