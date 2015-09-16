@@ -92,7 +92,7 @@ class ExtensionManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider hasProvider
      */
-    function testHas($extensions, $type, $name, $expected)
+    public function testHas($extensions, $type, $name, $expected)
     {
         $manager = new ExtensionManager();
 
@@ -132,7 +132,7 @@ class ExtensionManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getProvider
      */
-    function testGet($extensions, $type, $name, $expected)
+    public function testGet($extensions, $type, $name, $expected)
     {
         $manager = new ExtensionManager();
 
@@ -172,7 +172,7 @@ class ExtensionManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getExceptionProvider
      */
-    function testGetException($extensions, $type, $name, $exxceptionName)
+    public function testGetException($extensions, $type, $name, $exxceptionName)
     {
         $this->setExpectedException($exxceptionName);
 
