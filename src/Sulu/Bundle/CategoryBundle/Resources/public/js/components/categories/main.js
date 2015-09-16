@@ -12,7 +12,9 @@ define(['sulucategory/model/category',
 
     'use strict';
 
-    var constants = {
+    var CATEGORIES_LANGUAGE = 'categoryLocale',
+
+        constants = {
             listContainerId: 'categories-list-container',
             editContainerId: 'categories-edit-container'
         },
@@ -102,7 +104,7 @@ define(['sulucategory/model/category',
          */
         initialize: function() {
             this.categories = new Categories();
-            this.locale = this.sandbox.sulu.user.locale;
+            this.locale = this.options.locale;
 
             this.bindCustomEvents();
             this.render();
@@ -248,9 +250,17 @@ define(['sulucategory/model/category',
          */
         changeLanguage: function(language) {
             this.locale = language.id;
-            this.fetchCategory(this.locale, function(category) {
-                this.sandbox.emit(CATEGORY_CHANGED.call(this), category);
-            }.bind(this));
+            this.sandbox.sulu.saveUserSetting(CATEGORIES_LANGUAGE, this.locale);
+
+            if (this.options.display === 'list') {
+                this.sandbox.emit('husky.datagrid.url.update', {locale: this.locale});
+                this.sandbox.emit('sulu.router.navigate', 'settings/categories/' + this.locale, false, false);
+            } else {
+                this.fetchCategory(this.locale, function(category) {
+                    this.sandbox.emit('sulu.router.navigate', 'settings/categories/' + this.locale + '/edit:' + this.options.id + '/details', false, false);
+                    this.sandbox.emit(CATEGORY_CHANGED.call(this), category);
+                }.bind(this));
+            }
         },
 
         /**
@@ -263,7 +273,8 @@ define(['sulucategory/model/category',
                 {
                     name: 'categories/list@sulucategory',
                     options: {
-                        el: $list
+                        el: $list,
+                        locale: this.locale
                     }
                 }
             ]);
@@ -302,12 +313,13 @@ define(['sulucategory/model/category',
          * Renders the edit
          */
         renderEdit: function() {
-                var action = function(data) {
+            var action = function(data) {
                     this.sandbox.start([
                         {
                             name: 'categories/edit@sulucategory',
                             options: {
                                 el: $form,
+                                locale: this.locale,
                                 data: data,
                                 // TODO options parent is only set in case of 'add'. Parent should also be sent via the api
                                 parent: this.options.parent || null

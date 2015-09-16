@@ -31,7 +31,10 @@ define(function () {
                             }
                         }
                     },
-                    languageChanger: true
+                    languageChanger: {
+                        url: '/admin/api/languages',
+                        preSelected: this.options.locale
+                    }
                 }
             };
         }

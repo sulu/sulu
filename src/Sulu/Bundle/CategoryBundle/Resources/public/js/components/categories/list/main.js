@@ -32,6 +32,10 @@ define(function () {
                     buttons: {
                         add: {},
                         deleteSelected: {}
+                    },
+                    languageChanger: {
+                        url: '/admin/api/languages',
+                        preSelected: this.options.locale
                     }
                 }
             };
@@ -46,7 +50,7 @@ define(function () {
         },
 
         bindCustomEvents: function() {
-            this.sandbox.on('husky.datagrid.item.click', this.saveLastClickedCategory.bind(this))
+            this.sandbox.on('husky.datagrid.item.click', this.saveLastClickedCategory.bind(this));
             this.sandbox.on('sulu.toolbar.add', this.addNewCategory.bind(this));
             this.sandbox.on('sulu.toolbar.delete', this.deleteSelected.bind(this));
 
@@ -72,7 +76,7 @@ define(function () {
                 },
                 {
                     el: this.$find(constants.listSelector),
-                    url: '/admin/api/categories?flat=true&sortBy=depth&sortOrder=asc',
+                    url: '/admin/api/categories?flat=true&sortBy=depth&sortOrder=asc&locale=' + this.options.locale,
                     childrenPropertyName: 'hasChildren',
                     resultKey: 'categories',
                     searchFields: ['name'],
