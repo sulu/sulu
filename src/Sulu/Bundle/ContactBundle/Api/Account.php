@@ -42,6 +42,8 @@ use Sulu\Component\Rest\ApiWrapper;
  */
 class Account extends ApiWrapper
 {
+    const TYPE = 'account';
+
     /**
      * @var Media
      */
@@ -1116,5 +1118,17 @@ class Account extends ApiWrapper
         }
 
         return $entities;
+    }
+
+    /**
+     * Get type of api entity.
+     *
+     * @VirtualProperty
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return self::TYPE;
     }
 }
