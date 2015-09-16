@@ -5,21 +5,13 @@
 
     <parameters>
         <parameter key="sulu_contact.content.contact.class">Sulu\Bundle\ContactBundle\Content\Types\ContactSelectionContentType</parameter>
-        <parameter key="sulu_contact.content.customer.class">Sulu\Bundle\ContactBundle\Content\Types\CustomerSelectionContentType</parameter>
     </parameters>
 
     <services>
-        <service id="sulu_contact.content.customer" class="%sulu_contact.content.customer.class%">
-            <argument>%sulu_contact.content-type.customer.template%</argument>
-            <argument type="service" id="sulu_contact.contact_manager" />
-            <argument type="service" id="sulu_contact.account_manager" />
-            <argument type="service" id="serializer" />
-
-            <tag name="sulu.content.type" alias="customer"/>
-        </service>
         <service id="sulu_contact.content.contact" class="%sulu_contact.content.contact.class%">
             <argument>%sulu_contact.content-type.contact.template%</argument>
             <argument type="service" id="sulu_contact.contact_manager" />
+            <argument type="service" id="sulu_contact.account_manager" />
             <argument type="service" id="serializer" />
 
             <tag name="sulu.content.type" alias="contact"/>

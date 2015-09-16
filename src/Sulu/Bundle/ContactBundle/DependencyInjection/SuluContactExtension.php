@@ -60,10 +60,6 @@ class SuluContactExtension extends Extension
             'sulu_contact.content-type.contact.template',
             $config['types']['contact']['template']
         );
-        $container->setParameter(
-            'sulu_contact.content-type.customer.template',
-            $config['types']['customer']['template']
-        );
 
         $this->configurePersistence($config['objects'], $container);
     }

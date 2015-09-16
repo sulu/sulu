@@ -8,7 +8,7 @@
  */
 
 /**
- * Contact content type.
+ * Customer content type.
  *
  * Allows selection of multiple contacts.
  */
@@ -18,27 +18,29 @@ define([], function() {
 
     var defaults = {
             eventNamespace: 'sulu.contact-selection',
-            resultKey: 'contacts',
+            resultKey: 'customers',
+            contactResultKey: 'contacts',
+            accountResultKey: 'accounts',
             dataAttribute: 'contact-selection',
             dataDefault: [],
             hidePositionElement: true,
             hideConfigButton: true,
             translations: {
                 noContentSelected: 'contact-selection.no-contact-selected',
-                addContact: 'contact-selection.add'
+                add: 'contact-selection.add'
             }
         },
 
         templates = {
-            data: function(ids) {
+            data: function(searchId, listId) {
                 return [
                     '<div class="grid">',
                     '   <div class="grid-row search-row">',
                     '       <div class="grid-col-8"/>',
-                    '       <div class="grid-col-4" id="', ids.search, '"/>',
+                    '       <div class="grid-col-4" id="', searchId, '"/>',
                     '   </div>',
                     '   <div class="grid-row">',
-                    '       <div class="grid-col-12" id="', ids.list, '"/>',
+                    '       <div class="grid-col-12" id="', listId, '"/>',
                     '   </div>',
                     '</div>'
                 ].join('');
@@ -71,7 +73,10 @@ define([], function() {
             );
 
             // adjust position of overlay after column-navigation has initialized
-            this.sandbox.on('husky.datagrid.view.rendered', function() {
+            this.sandbox.on('husky.datagrid.contact.view.rendered', function() {
+                this.sandbox.emit('husky.overlay.contact-selection.' + this.options.instanceName + '.add.set-position');
+            }.bind(this));
+            this.sandbox.on('husky.datagrid.account.view.rendered', function() {
                 this.sandbox.emit('husky.overlay.contact-selection.' + this.options.instanceName + '.add.set-position');
             }.bind(this));
         },
@@ -80,49 +85,36 @@ define([], function() {
          * initialize column navigation
          */
         initList = function() {
-            var data = this.getData();
+            var data = getParsedData.call(this);
 
             this.sandbox.start([
                 {
                     name: 'search@husky',
                     options: {
                         appearance: 'white small',
-                        instanceName: this.options.instanceName + '-search',
-                        el: getId.call(this, 'search')
+                        instanceName: this.options.instanceName + '-contact-search',
+                        el: getId.call(this, 'contactSearch')
                     }
                 },
                 {
                     name: 'datagrid@husky',
                     options: {
-                        el: getId.call(this, 'list'),
-                        url: this.options.url,
-                        preselected: data,
-                        resultKey: this.options.resultKey,
+                        el: getId.call(this, 'contactList'),
+                        instanceName: 'contact',
+                        url: this.options.contactUrl,
+                        preselected: data.contacts,
+                        resultKey: this.options.contactResultKey,
                         sortable: false,
                         columnOptionsInstanceName: '',
                         clickCallback: function(item) {
-                            this.sandbox.emit('husky.datagrid.toggle.item', item);
+                            this.sandbox.emit('husky.datagrid.contact.toggle.item', item);
                         }.bind(this),
                         selectedCounter: true,
-                        searchInstanceName: this.options.instanceName + '-search',
+                        searchInstanceName: this.options.instanceName + '-contact-search',
                         searchFields: ['firstName', 'lastName'],
                         paginationOptions: {
                             dropdown: {
                                 limit: 20
-                            }
-                        },
-                        viewOptions: {
-                            table: {
-                                selectItem: {
-                                    type: 'checkbox'
-                                },
-                                removeRow: false,
-                                editable: false,
-                                validation: false,
-                                addRowTop: false,
-                                showHead: true,
-                                contentContainer: '#content',
-                                highlightSelected: true
                             }
                         },
                         matchings: [
@@ -141,20 +133,84 @@ define([], function() {
                             }
                         ]
                     }
+                },
+                {
+                    name: 'search@husky',
+                    options: {
+                        appearance: 'white small',
+                        instanceName: this.options.instanceName + '-account-search',
+                        el: getId.call(this, 'accountSearch')
+                    }
+                },
+                {
+                    name: 'datagrid@husky',
+                    options: {
+                        el: getId.call(this, 'accountList'),
+                        instanceName: 'account',
+                        url: this.options.accountUrl,
+                        preselected: data.accounts,
+                        resultKey: this.options.accountResultKey,
+                        sortable: false,
+                        columnOptionsInstanceName: '',
+                        clickCallback: function(item) {
+                            this.sandbox.emit('husky.datagrid.account.toggle.item', item);
+                        }.bind(this),
+                        selectedCounter: true,
+                        searchInstanceName: this.options.instanceName + '-account-search',
+                        searchFields: ['name'],
+                        paginationOptions: {
+                            dropdown: {
+                                limit: 20
+                            }
+                        },
+                        matchings: [
+                            {
+                                content: 'id',
+                                name: 'id',
+                                disabled: true
+                            },
+                            {
+                                content: 'contact.accounts.name',
+                                name: 'name'
+                            }
+                        ]
+                    }
                 }
             ]);
+        },
+
+        /**
+         * Split selected items into accounts and contacts.
+         *
+         * @returns {{accounts: Array, contacts: Array}}
+         */
+        getParsedData = function() {
+            var selectedItems = this.getData() || [],
+                accounts = [],
+                contacts = [];
+
+            this.sandbox.util.foreach(selectedItems, function(element) {
+                var type = element.substr(0, 1),
+                    value = parseInt(element.substr(1));
+
+                if (type === 'c') {
+                    contacts.push(value);
+                } else if (type === 'a') {
+                    accounts.push(value);
+                }
+            });
+
+            return {accounts: accounts, contacts: contacts};
         },
 
         /**
          * Updates the datagrid when opening the overlay again
          */
         updateList = function() {
-            var selectedItems = this.getData() || [];
+            var data = getParsedData.call(this);
 
-            this.sandbox.emit(
-                'husky.datagrid.selected.update',
-                selectedItems
-            );
+            this.sandbox.emit('husky.datagrid.contact.selected.update', data.contacts);
+            this.sandbox.emit('husky.datagrid.account.selected.update', data.accounts);
         },
 
         /**
@@ -178,7 +234,7 @@ define([], function() {
         /**
          * starts the overlay component
          */
-        startAddOverlay = function() {
+        startOverlay = function() {
             var $element = this.sandbox.dom.createElement('<div/>');
 
             this.sandbox.dom.append(this.$el, $element);
@@ -195,9 +251,17 @@ define([], function() {
                         skin: 'wide',
                         slides: [
                             {
-                                title: this.sandbox.translate(this.options.translations.addContact),
-                                cssClass: 'contact-content-overlay-add',
-                                data: templates.data(this.domIds),
+                                title: this.sandbox.translate(this.options.translations.add),
+                                tabs: [
+                                    {
+                                        title: this.sandbox.translate('contact.contacts.title'),
+                                        data: templates.data(this.domIds.contactSearch, this.domIds.contactList)
+                                    },
+                                    {
+                                        title: this.sandbox.translate('contact.accounts.title'),
+                                        data: templates.data(this.domIds.accountSearch, this.domIds.accountList)
+                                    }
+                                ],
                                 okCallback: getAddOverlayData.bind(this)
                             }
                         ]
@@ -207,8 +271,27 @@ define([], function() {
         },
 
         getAddOverlayData = function() {
-            this.sandbox.emit('husky.datagrid.items.get-selected', function(selected) {
-                this.setData(selected);
+            var accountDef = this.sandbox.data.deferred(),
+                contactDef = this.sandbox.data.deferred(),
+                data = [];
+
+            this.sandbox.emit('husky.datagrid.contact.items.get-selected', function(selected) {
+                this.sandbox.util.foreach(selected, function(item) {
+                    data.push('c' + item);
+                });
+
+                contactDef.resolve();
+            }.bind(this));
+            this.sandbox.emit('husky.datagrid.account.items.get-selected', function(selected) {
+                this.sandbox.util.foreach(selected, function(item) {
+                    data.push('a' + item);
+                });
+
+                accountDef.resolve();
+            }.bind(this));
+
+            this.sandbox.dom.when(accountDef, contactDef).then(function() {
+                this.setData(data);
             }.bind(this));
         };
 
@@ -225,8 +308,10 @@ define([], function() {
                 addButton: 'contact-selection-' + this.options.instanceName + '-add',
                 configButton: 'contact-selection-' + this.options.instanceName + '-config',
                 content: 'contact-selection-' + this.options.instanceName + '-content',
-                list: 'contact-selection-' + this.options.instanceName + '-column-navigation',
-                search: 'contact-selection-' + this.options.instanceName + '-search'
+                accountList: 'contact-selection-' + this.options.instanceName + '-account-column-navigation',
+                accountSearch: 'contact-selection-' + this.options.instanceName + '-account-search',
+                contactList: 'contact-selection-' + this.options.instanceName + '-contact-column-navigation',
+                contactSearch: 'contact-selection-' + this.options.instanceName + '-contact-search'
             };
 
             // sandbox event handling
@@ -235,7 +320,7 @@ define([], function() {
             this.render();
 
             // init overlays
-            startAddOverlay.call(this);
+            startOverlay.call(this);
 
             // handle dom events
             bindDomEvents.call(this);
@@ -250,7 +335,7 @@ define([], function() {
         },
 
         getItemContent: function(item) {
-            return templates.contentItem(item.firstName + ' ' + item.lastName);
+            return templates.contentItem(item.name);
         },
 
         sortHandler: function(ids) {

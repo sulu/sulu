@@ -107,6 +107,10 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
      */
     public function findByIds($ids)
     {
+        if (count($ids) === 0) {
+            return [];
+        }
+
         // create basic query
         $qb = $this->createQueryBuilder('u')
             ->leftJoin('u.accountContacts', 'accountContacts')
@@ -163,9 +167,7 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
         $query->setParameter('ids', $ids);
 
         try {
-            $contact = $query->getResult();
-
-            return $contact;
+            return $query->getResult();
         } catch (NoResultException $nre) {
             return [];
         }

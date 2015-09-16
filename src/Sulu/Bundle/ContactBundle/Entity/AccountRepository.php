@@ -143,53 +143,57 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
      */
     public function findByIds($ids)
     {
+        if (count($ids) === 0) {
+            return [];
+        }
+
+        $qb = $this->createQueryBuilder('account')
+            ->leftJoin('account.categories', 'categories')
+            ->leftJoin('categories.translations', 'categoryTranslations')
+            ->leftJoin('account.accountAddresses', 'accountAddresses')
+            ->leftJoin('accountAddresses.address', 'addresses')
+            ->leftJoin('addresses.country', 'country')
+            ->leftJoin('addresses.addressType', 'addressType')
+            ->leftJoin('account.parent', 'parent')
+            ->leftJoin('account.urls', 'urls')
+            ->leftJoin('urls.urlType', 'urlType')
+            ->leftJoin('account.phones', 'phones')
+            ->leftJoin('phones.phoneType', 'phoneType')
+            ->leftJoin('account.emails', 'emails')
+            ->leftJoin('emails.emailType', 'emailType')
+            ->leftJoin('account.notes', 'notes')
+            ->leftJoin('account.faxes', 'faxes')
+            ->leftJoin('faxes.faxType', 'faxType')
+            ->leftJoin('account.bankAccounts', 'bankAccounts')
+            ->leftJoin('account.tags', 'tags')
+            ->leftJoin('account.mainContact', 'mainContact')
+            ->leftJoin('account.medias', 'medias')
+            ->addSelect('mainContact')
+            ->addSelect('categories')
+            ->addSelect('categoryTranslations')
+            ->addSelect('partial tags.{id, name}')
+            ->addSelect('bankAccounts')
+            ->addSelect('accountAddresses')
+            ->addSelect('addresses')
+            ->addSelect('country')
+            ->addSelect('addressType')
+            ->addSelect('parent')
+            ->addSelect('urls')
+            ->addSelect('urlType')
+            ->addSelect('phones')
+            ->addSelect('phoneType')
+            ->addSelect('emails')
+            ->addSelect('emailType')
+            ->addSelect('faxes')
+            ->addSelect('faxType')
+            ->addSelect('notes')
+            ->addSelect('medias')
+            ->where('account.id IN (:accountIds)');
+
+        $query = $qb->getQuery();
+        $query->setParameter('accountIds', $ids);
+
         try {
-            $qb = $this->createQueryBuilder('account')
-                ->leftJoin('account.categories', 'categories')
-                ->leftJoin('categories.translations', 'categoryTranslations')
-                ->leftJoin('account.accountAddresses', 'accountAddresses')
-                ->leftJoin('accountAddresses.address', 'addresses')
-                ->leftJoin('addresses.country', 'country')
-                ->leftJoin('addresses.addressType', 'addressType')
-                ->leftJoin('account.parent', 'parent')
-                ->leftJoin('account.urls', 'urls')
-                ->leftJoin('urls.urlType', 'urlType')
-                ->leftJoin('account.phones', 'phones')
-                ->leftJoin('phones.phoneType', 'phoneType')
-                ->leftJoin('account.emails', 'emails')
-                ->leftJoin('emails.emailType', 'emailType')
-                ->leftJoin('account.notes', 'notes')
-                ->leftJoin('account.faxes', 'faxes')
-                ->leftJoin('faxes.faxType', 'faxType')
-                ->leftJoin('account.bankAccounts', 'bankAccounts')
-                ->leftJoin('account.tags', 'tags')
-                ->leftJoin('account.mainContact', 'mainContact')
-                ->leftJoin('account.medias', 'medias')
-                ->addSelect('mainContact')
-                ->addSelect('categories')
-                ->addSelect('categoryTranslations')
-                ->addSelect('partial tags.{id, name}')
-                ->addSelect('bankAccounts')
-                ->addSelect('accountAddresses')
-                ->addSelect('addresses')
-                ->addSelect('country')
-                ->addSelect('addressType')
-                ->addSelect('parent')
-                ->addSelect('urls')
-                ->addSelect('urlType')
-                ->addSelect('phones')
-                ->addSelect('phoneType')
-                ->addSelect('emails')
-                ->addSelect('emailType')
-                ->addSelect('faxes')
-                ->addSelect('faxType')
-                ->addSelect('notes')
-                ->addSelect('medias')
-                ->where('account.id IN (:accountIds)');
-
-            $query = $qb->getQuery();
-            $query->setParameter('accountIds', $ids);
-
             return $query->getResult();
         } catch (NoResultException $ex) {
             return [];

@@ -10,8 +10,10 @@
 
 namespace Sulu\Bundle\ContactBundle\Content\Types;
 
-use JMS\Serializer\Serializer;
+use JMS\Serializer\SerializerInterface;
 use PHPCR\NodeInterface;
+use Sulu\Bundle\ContactBundle\Api\Account;
+use Sulu\Bundle\ContactBundle\Api\Contact;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Util\IdsHandlingTrait;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -36,14 +38,24 @@ class ContactSelectionContentType extends ComplexContentType
     private $contactManager;
 
     /**
-     * @var Serializer
+     * @var ContactManagerInterface
+     */
+    private $accountManager;
+
+    /**
+     * @var SerializerInterface
      */
     private $serializer;
 
-    public function __construct($template, $contactManager, $serializer)
-    {
+    public function __construct(
+        $template,
+        ContactManagerInterface $contactManager,
+        ContactManagerInterface $accountManager,
+        SerializerInterface $serializer
+    ) {
         $this->template = $template;
         $this->contactManager = $contactManager;
+        $this->accountManager = $accountManager;
         $this->serializer = $serializer;
     }
 
@@ -120,15 +132,31 @@ class ContactSelectionContentType extends ComplexContentType
      */
     public function getContentData(PropertyInterface $property)
     {
-        $ids = $property->getValue();
+        $value = $property->getValue();
+        $locale = $property->getStructure()->getLanguageCode();
 
-        if ($ids === null || !is_array($ids) || count($ids) === 0) {
+        if ($value === null || !is_array($value) || count($value) === 0) {
             return [];
         }
 
-        $locale = $property->getStructure()->getLanguageCode();
-        $contacts = $this->contactManager->getByIds($ids, $locale);
-        $result = $this->sortByIds($ids, $contacts);
+        $ids = $this->parseIds($value, ['a' => [], 'c' => []]);
+
+        $accounts = $this->accountManager->getByIds($ids['a'], $locale);
+        $contacts = $this->contactManager->getByIds($ids['c'], $locale);
+
+        $result = $this->sortEntitiesByIds(
+            $value,
+            array_merge($accounts, $contacts),
+            function ($entity) {
+                if ($entity instanceof Contact) {
+                    return 'c';
+                } elseif ($entity instanceof Account) {
+                    return 'a';
+                }
+
+                return '';
+            }
+        );
 
         return $this->serializer->serialize($result, 'array');
     }
