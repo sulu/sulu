@@ -38,7 +38,7 @@
                      data-aura-user-name="{{ user.fullName }}"
                      data-aura-system-name="{{ name }}"
                      data-aura-system-version="{{ suluVersion }}"
-                     data-aura-user-locales='{{ locales | json_encode }}'
+                     data-aura-user-locales='{{ translated_locales|keys|json_encode }}'
                      data-aura-user-locale="{{ user.locale }}"
                      data-aura-logout-route="{{ path('logout') }}"
                      class="navigation-column">
