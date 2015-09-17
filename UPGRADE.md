@@ -2,6 +2,11 @@
 
 ## dev-develop
 
+### Infinite scroll
+The infinite-scroll-extension got refactored. To initialize infinite-scroll on an element, use
+"this.sandbox.infiniteScroll.initialize(selector, callback)" instead of "this.sandbox.infiniteScroll(selector, callback)" now.
+To unbind an infinite-scroll handler, use "this.sandbox.infiniteScroll.destroy(selector)"
+
 ### Registering JS-Routes
 When registering backbone-routes now - instead of directly starting the corresponding component via 'this.html' - make your callback returning the component.
 So for example the follwoing:
