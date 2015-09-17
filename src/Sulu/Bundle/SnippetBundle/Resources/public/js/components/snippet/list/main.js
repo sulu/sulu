@@ -48,7 +48,6 @@ define([
                     deleteSelected: {}
                 },
                 languageChanger: {
-                    url: '/admin/api/languages',
                     preSelected: this.options.language
                 }
             }

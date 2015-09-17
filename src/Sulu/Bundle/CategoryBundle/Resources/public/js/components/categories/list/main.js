@@ -34,7 +34,6 @@ define(function () {
                         deleteSelected: {}
                     },
                     languageChanger: {
-                        url: '/admin/api/languages',
                         preSelected: this.options.locale
                     }
                 }

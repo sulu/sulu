@@ -32,7 +32,6 @@ define(function () {
                         }
                     },
                     languageChanger: {
-                        url: '/admin/api/languages',
                         preSelected: this.options.locale
                     }
                 }

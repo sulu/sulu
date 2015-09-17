@@ -7,12 +7,15 @@
  * with this source code in the file LICENSE.
  */
 
-define(['sulucategory/model/category',
-    'sulucategory/collections/categories'], function(Category, Categories) {
+define([
+    'config',
+    'sulucategory/model/category',
+    'sulucategory/collections/categories'
+], function(Config, Category, Categories) {
 
     'use strict';
 
-    var CATEGORIES_LANGUAGE = 'categoryLocale',
+    var CATEGORIES_LOCALE = Config.get('sulu_category.user_settings.category_locale'),
 
         constants = {
             listContainerId: 'categories-list-container',
@@ -250,7 +253,7 @@ define(['sulucategory/model/category',
          */
         changeLanguage: function(language) {
             this.locale = language.id;
-            this.sandbox.sulu.saveUserSetting(CATEGORIES_LANGUAGE, this.locale);
+            this.sandbox.sulu.saveUserSetting(CATEGORIES_LOCALE, this.locale);
 
             if (this.options.display === 'list') {
                 this.sandbox.emit('husky.datagrid.url.update', {locale: this.locale});
