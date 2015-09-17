@@ -162,7 +162,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
                 [
                     'redirect' => null,
                     'resource_locator_prefix' => '/test',
-                    'resource_locator' => '/path/to/test.min.css',
+                    'resource_locator' => '/path/to/test',
                     'portal_url' => 'sulu.lo/test',
                     'format' => 'css',
                 ],
