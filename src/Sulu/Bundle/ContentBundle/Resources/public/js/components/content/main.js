@@ -1017,6 +1017,69 @@ define([
                     navigationUrl += '?' + navigationUrlParams.join('&');
                 }
 
+                var buttons = {}, editDropdown = {};
+
+                if (!!this.data._permissions.edit) {
+                    buttons.save = {
+                        parent: 'saveWithOptions'
+                    };
+
+                    buttons.template = {
+                        options: {
+                            dropdownOptions: {
+                                url: '/admin/content/template?webspace=' + this.options.webspace,
+                                callback: function(item) {
+                                    this.template = item.template;
+                                    this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
+                                }.bind(this)
+                            }
+                        }
+                    };
+                }
+
+                if (!!this.data._permissions.delete && !isHomeDocument(this.data)) {
+                    editDropdown.delete = {
+                        options: {
+                            callback: function() {
+                                this.sandbox.emit('sulu.content.content.delete', this.data.id);
+                            }.bind(this)
+                        }
+                    };
+                }
+
+                if (!!this.data._permissions.edit) {
+                    editDropdown.copyLocale = {
+                        options: {
+                            title: this.sandbox.translate('toolbar.copy-locale'),
+                            callback: function() {
+                                CopyLocale.startCopyLocalesOverlay.call(this).then(function() {
+                                    this.load(this.data, this.options.webspace, this.options.language, true);
+                                }.bind(this));
+                            }.bind(this)
+                        }
+                    };
+                }
+
+                if (!this.sandbox.util.isEmpty(editDropdown)) {
+                    buttons.edit = {
+                        options: {
+                            dropdownItems: editDropdown
+                        }
+                    };
+                }
+
+                if (!!this.data._permissions.edit) {
+                    buttons.state = {
+                        options: {
+                            disabled: isHomeDocument(this.data),
+                            dropdownItems: {
+                                statePublish: {},
+                                stateTest: {}
+                            }
+                        }
+                    };
+                }
+
                 header = {
                     noBack: isHomeDocument(this.data),
 
@@ -1034,55 +1097,7 @@ define([
                             preSelected: this.options.language
                         },
 
-                        buttons: {
-                            save: {
-                                parent: 'saveWithOptions'
-                            },
-                            template: {
-                                options: {
-                                    dropdownOptions: {
-                                        url: '/admin/content/template?webspace=' + this.options.webspace,
-                                        callback: function(item) {
-                                            this.template = item.template;
-                                            this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
-                                        }.bind(this)
-                                    }
-                                }
-                            },
-                            edit: {
-                                options: {
-                                    dropdownItems: {
-                                        delete: {
-                                            options: {
-                                                disabled: isHomeDocument(this.data),
-                                                callback: function() {
-                                                    this.sandbox.emit('sulu.content.content.delete', this.data.id);
-                                                }.bind(this)
-                                            }
-                                        },
-                                        copyLocale: {
-                                            options: {
-                                                title: this.sandbox.translate('toolbar.copy-locale'),
-                                                callback: function() {
-                                                    CopyLocale.startCopyLocalesOverlay.call(this).then(function() {
-                                                        this.load(this.data, this.options.webspace, this.options.language, true);
-                                                    }.bind(this));
-                                                }.bind(this)
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            state: {
-                                options: {
-                                    disabled: isHomeDocument(this.data),
-                                    dropdownItems: {
-                                        statePublish: {},
-                                        stateTest: {}
-                                    }
-                                }
-                            }
-                        }
+                        buttons: buttons
                     }
                 };
             }
