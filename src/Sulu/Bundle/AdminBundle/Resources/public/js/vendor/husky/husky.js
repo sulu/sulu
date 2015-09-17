@@ -32317,7 +32317,6 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                     }
                 }
             ]);
-            this.$loader.css('opacity', '0');
         },
 
         /**
@@ -32363,12 +32362,12 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
             var promise = $.Deferred();
 
             if (!!this.datagrid.data.links && !!this.datagrid.data.links.next) {
-                this.$loader.css('opacity', '1');
+                this.$paginationContainer.addClass('loading');
 
                 this.sandbox.util.load(this.datagrid.data.links.next.href).then(function(data) {
                     this.updateDatagrid(data);
                     this.$paginationContainer.data('showReachedEnd', true);
-                    this.$loader.css('opacity', '0');
+                    this.$paginationContainer.removeClass('loading');
 
                     promise.resolve();
                 }.bind(this))
@@ -32777,6 +32776,15 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
              */
             CHANGE_PAGINATION = function() {
                 return this.createEventName('pagination.change');
+            },
+
+            /**
+            * listens on and changes the current rendered page
+            * @event husky.datagrid.change.page
+            * @param {Integer} page page to render
+             */
+            CHANGE_PAGE = function() {
+                return this.createEventName('change.page');
             },
 
             /**
@@ -33703,6 +33711,11 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 }.bind(this));
                 this.sandbox.on(ITEMS_GET_SELECTED.call(this), function(callback) {
                     callback(this.getSelectedItemIds());
+                }.bind(this));
+                this.sandbox.on(CHANGE_PAGE.call(this), function(page) {
+                    if (!isNaN(page)) {
+                        this.changePage(null, page, null)
+                    }
                 }.bind(this));
 
                 this.startColumnOptionsListener();
