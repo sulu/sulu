@@ -50,8 +50,7 @@ define(['config', 'extensions/sulu-buttons-contactbundle', 'extensions/iban'], f
             app.components.addSource('sulucontact', '/bundles/sulucontact/js/components');
 
             IbanExtension.initialize(app);
-            sandbox.sulu.buttons.push(ContactButtons.getButtons());
-            sandbox.sulu.buttons.dropdownItems.push(ContactButtons.getDropdownItems());
+            ContactButtons.initialize(app);
 
             Config.set('sulucontact.components.autocomplete.default.contact', {
                 remoteUrl: '/admin/api/contacts?searchFields=id,fullName&flat=true&fields=id,fullName&limit=25',
