@@ -14,6 +14,7 @@ define(function() {
         var instance = null,
             mediaLanguageKey = 'mediaLanguage',
             mediaListViewKey = 'collectionEditListView',
+            mediaListPaginationKey = 'collectionEditListPagination',
             lastVisitedCollectionKey = 'last-visited-collection';
 
         /** @constructor **/
@@ -35,6 +36,14 @@ define(function() {
 
             setMediaListView: function(viewId) {
                 Husky.sulu.saveUserSetting(mediaListViewKey, viewId);
+            },
+
+            getMediaListPagination: function() {
+                return Husky.sulu.getUserSetting(mediaListPaginationKey) || 'datagrid/decorators/masonry-view';
+            },
+
+            setMediaListPagination: function(paginationId) {
+                Husky.sulu.saveUserSetting(mediaListPaginationKey, paginationId);
             },
 
             setLastVisitedCollection: function(collectionId) {

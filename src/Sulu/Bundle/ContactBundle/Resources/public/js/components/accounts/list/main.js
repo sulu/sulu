@@ -17,7 +17,8 @@ define([
 
     var constants = {
             datagridInstanceName: 'accounts',
-            listViewStorageKey: 'accountListView'
+            listViewStorageKey: 'accountListView',
+            listPaginationStorageKey: 'accountListPagination'
         },
 
         bindCustomEvents = function() {
@@ -44,15 +45,26 @@ define([
             }, this);
 
             this.sandbox.on('sulu.toolbar.change.table', function() {
-                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.view.change', 'table');
+                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.change.page', 1);
+
                 this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'table');
+                this.sandbox.sulu.saveUserSetting(constants.listPaginationStorageKey, 'dropdown');
+                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.view.change', 'table');
+                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.pagination.change', 'dropdown');
+
             }.bind(this));
 
             this.sandbox.on('sulu.toolbar.change.cards', function() {
+                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.change.page', 1);
+
+                this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'datagrid/decorators/card-view');
+                this.sandbox.sulu.saveUserSetting(constants.listPaginationStorageKey, 'infinite-scroll');
                 this.sandbox.emit(
                     'husky.datagrid.' + constants.datagridInstanceName + '.view.change', 'datagrid/decorators/card-view'
                 );
-                this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'datagrid/decorators/card-view');
+                this.sandbox.emit(
+                    'husky.datagrid.' + constants.datagridInstanceName + '.pagination.change', 'infinite-scroll'
+                );
             }.bind(this));
         },
 
@@ -130,7 +142,7 @@ define([
                 instanceName: constants.datagridInstanceName,
                 actionCallback: actionCallback.bind(this),
                 view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'datagrid/decorators/card-view',
-                pagination: 'infinite-scroll',
+                pagination: this.sandbox.sulu.getUserSetting(constants.listPaginationStorageKey) || 'infinite-scroll',
                 viewOptions: {
                     table: {
                         actionIconColumn: 'name',

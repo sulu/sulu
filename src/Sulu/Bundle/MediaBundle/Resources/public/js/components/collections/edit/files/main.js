@@ -170,14 +170,22 @@ define([
 
             // change datagrid view to table
             this.sandbox.on('sulu.toolbar.change.table', function() {
+                this.sandbox.emit('husky.datagrid.change.page', 1);
+
                 UserSettingsManager.setMediaListView('table');
+                UserSettingsManager.setMediaListPagination('dropdown');
                 this.sandbox.emit('husky.datagrid.view.change', 'table');
+                this.sandbox.emit('husky.datagrid.pagination.change', 'dropdown');
             }.bind(this));
 
             // change datagrid view to masonry
             this.sandbox.on('sulu.toolbar.change.masonry', function() {
+                this.sandbox.emit('husky.datagrid.change.page', 1);
+
                 UserSettingsManager.setMediaListView('datagrid/decorators/masonry-view');
+                UserSettingsManager.setMediaListPagination('infinite-scroll');
                 this.sandbox.emit('husky.datagrid.view.change', 'datagrid/decorators/masonry-view');
+                this.sandbox.emit('husky.datagrid.pagination.change', 'infinite-scroll');
             }.bind(this));
         },
 
@@ -264,7 +272,7 @@ define([
                     el: this.$find(constants.datagridSelector),
                     url: '/admin/api/media?orderBy=media.changed&orderSort=DESC&locale=' + UserSettingsManager.getMediaLocale() + '&collection=' + this.options.id,
                     view: UserSettingsManager.getMediaListView(),
-                    pagination: 'infinite-scroll',
+                    pagination: UserSettingsManager.getMediaListPagination(),
                     resultKey: 'media',
                     sortable: false,
                     actionCallback: function(clickedId) {
