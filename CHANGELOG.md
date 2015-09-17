@@ -66,6 +66,10 @@ CHANGELOG for Sulu
     * BUGFIX      #1365 [ContactBundle]   Fixed bug caused by new instance name of datagrid
     * BUGFIX      #1136 [MediaBundle]     Fixed image scale forceRatio parameter for none squared image formats
 
+* 1.0.10 (2015-09-17)
+    * HOTFIX      #1594 [Website] Fixed website request analyzer
+    * HOTFIX      #1594 [Website] Fixed trailing slash for homepage
+
 * 1.0.9 (2015-09-14)
     * HOTFIX      #1572 [ContentBundle]         Fixed select overlay for internal link node type
     * HOTFIX      #1567 [Document]              Fixed localized property for url property
