@@ -171,20 +171,20 @@ class SnippetRepository
     }
 
     /**
-     * Return snippets load query.
-     *
-     * If $type is given then only return the snippets of that type.
-     *
-     * @param string $languageCode
-     * @param string $type         Optional snippet type
-     * @param int    $offset       Optional offset
-     * @param int    $max          Optional max
-     * @param string $search
-     * @param string $sortBy
-     * @param string $sortOrder
-     *
-     * @return Query
-     */
+ * Return snippets load query.
+ *
+ * If $type is given then only return the snippets of that type.
+ *
+ * @param string $languageCode
+ * @param string $type         Optional snippet type
+ * @param int    $offset       Optional offset
+ * @param int    $max          Optional max
+ * @param string $search
+ * @param string $sortBy
+ * @param string $sortOrder
+ *
+ * @return Query
+ */
     private function getSnippetsQuery(
         $languageCode,
         $type = null,
