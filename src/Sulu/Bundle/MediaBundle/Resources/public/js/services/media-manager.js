@@ -37,7 +37,7 @@ define([
                     promise.resolve();
                 }.bind(this),
                 error: function() {
-                    promise.fail();
+                    promise.reject();
                 }.bind(this)
             });
 
@@ -54,13 +54,12 @@ define([
             var promise = $.Deferred();
 
             Util.save('/admin/api/media/' + mediaId + '?action=move&destination=' + collectionId, 'POST')
-                .then(function() {
+                .done(function() {
                     Mediator.emit('sulu.medias.media.moved', mediaId, collectionId);
                     Mediator.emit('sulu.labels.success.show', 'labels.success.media-move-desc');
                     promise.resolve();
-                }.bind(this))
-                .fail(function() {
-                    promise.fail();
+                }.bind(this)).fail(function() {
+                    promise.reject();
                 }.bind(this));
 
 
@@ -81,8 +80,8 @@ define([
                 success: function(response) {
                     promise.resolve(response.toJSON());
                 }.bind(this),
-                error: function() {
-                    promise.fail();
+                error: function(context, jqXHR) {
+                    promise.reject(jqXHR);
                 }.bind(this)
             });
 
@@ -117,7 +116,7 @@ define([
                         promise.resolve(response.toJSON());
                     }.bind(this),
                     error: function() {
-                        promise.fail();
+                        promise.reject();
                     }.bind(this)
                 });
             }
@@ -142,8 +141,10 @@ define([
                 requests.push(deleteMedia(id));
             }.bind(this));
 
-            $.when.apply(null, requests).then(function() {
+            $.when.apply(null, requests).done(function() {
                 promise.resolve();
+            }.bind(this)).fail(function() {
+                promise.reject();
             }.bind(this));
 
             return promise;
@@ -157,13 +158,15 @@ define([
         save: function(data) {
             var promise = $.Deferred();
 
-            saveMedia(data).then(function(media) {
+            saveMedia(data).done(function(media) {
                 Mediator.emit('sulu.medias.media.saved', media.id, media);
                 Mediator.emit('sulu.labels.success.show', 'labels.success.media-save-desc');
                 promise.resolve(media);
-            }.bind(this)).fail(function() {
-                Mediator.emit('sulu.labels.error.show');
-                promise.fail();
+            }.bind(this)).fail(function(xhr) {
+                if (!xhr.status || xhr.status !== 403) {
+                    Mediator.emit('sulu.labels.error.show');
+                }
+                promise.reject();
             }.bind(this));
 
             return promise;
@@ -187,8 +190,10 @@ define([
                 requests.push(moveMedia(mediaId, collectionId));
             }.bind(this));
 
-            $.when.apply(null, requests).then(function() {
+            $.when.apply(null, requests).done(function() {
                 promise.resolve();
+            }.bind(this)).fail(function() {
+                promise.reject();
             }.bind(this));
 
             return promise;

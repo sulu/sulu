@@ -98,7 +98,11 @@ class ContentRouteProvider implements RouteProviderInterface
                     $language
                 );
 
-                if ($this->hasTrailingSlash($resourceLocator)) {
+                if (
+                    preg_match('/\/$/', $resourceLocator)
+                    && $this->requestAnalyzer->getResourceLocatorPrefix()
+                    && $content->getNodeState() === StructureInterface::STATE_PUBLISHED
+                ) {
                     // redirect page to page without slash at the end
                     $collection->add(
                         'redirect_' . uniqid(),
@@ -273,15 +277,5 @@ class ContentRouteProvider implements RouteProviderInterface
             $this->requestAnalyzer->getResourceLocatorPrefix() . ($resourceLocator ? $resourceLocator : '/'),
             '/'
         );
-    }
-
-    /**
-     * @param $resourceLocator
-     *
-     * @return int
-     */
-    protected function hasTrailingSlash($resourceLocator)
-    {
-        return preg_match('/\/$/', $resourceLocator) && $resourceLocator != '/';
     }
 }

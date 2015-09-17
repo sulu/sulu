@@ -41,8 +41,7 @@ define(['services/sulumedia/media-router',
             app.components.addSource('sulumedia', '/bundles/sulumedia/js/components');
 
             MasonryExtension.initialize(app);
-            sandbox.sulu.buttons.push(MediaButtons.getButtons());
-            sandbox.sulu.buttons.dropdownItems.push(MediaButtons.getDropdownItems());
+            MediaButtons.initialize(app);
 
             // list all collections
             sandbox.mvc.routes.push({
