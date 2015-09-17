@@ -134,6 +134,7 @@ define(['services/sulumedia/media-manager',
                     el: this.$find(constants.datagridSelector),
                     url: '/admin/api/media?orderBy=media.changed&orderSort=desc&locale=' + UserSettingsManager.getMediaLocale(),
                     view: UserSettingsManager.getMediaListView(),
+                    pagination: 'infinite-scroll',
                     resultKey: 'media',
                     sortable: false,
                     actionCallback: this.actionCallback.bind(this),
@@ -144,6 +145,11 @@ define(['services/sulumedia/media-manager',
                         },
                         'datagrid/decorators/masonry-view': {
                             selectable: false
+                        }
+                    },
+                    paginationOptions: {
+                        'infinite-scroll': {
+                            reachedBottomMessage: 'public.reached-list-end'
                         }
                     }
                 });

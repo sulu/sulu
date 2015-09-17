@@ -243,6 +243,7 @@ define(['services/sulumedia/media-manager',
                     el: this.$find(constants.datagridSelector),
                     url: '/admin/api/media?orderBy=media.changed&orderSort=DESC&locale=' + UserSettingsManager.getMediaLocale() + '&collection=' + this.options.id,
                     view: UserSettingsManager.getMediaListView(),
+                    pagination: 'infinite-scroll',
                     resultKey: 'media',
                     sortable: false,
                     actionCallback: function(clickedId) {
@@ -252,6 +253,11 @@ define(['services/sulumedia/media-manager',
                     viewOptions: {
                         table: {
                             actionIconColumn: 'name'
+                        }
+                    },
+                    paginationOptions: {
+                        'infinite-scroll': {
+                            reachedBottomMessage: 'public.reached-list-end'
                         }
                     }
                 });

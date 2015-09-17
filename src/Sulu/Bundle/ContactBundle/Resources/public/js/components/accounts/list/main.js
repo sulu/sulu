@@ -128,6 +128,7 @@ define([
                 instanceName: constants.datagridInstanceName,
                 actionCallback: actionCallback.bind(this),
                 view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'datagrid/decorators/card-view',
+                pagination: 'infinite-scroll',
                 viewOptions: {
                     table: {
                         actionIconColumn: 'name'
@@ -141,6 +142,11 @@ define([
                         icons: {
                             picture: 'fa-home'
                         }
+                    }
+                },
+                paginationOptions: {
+                    'infinite-scroll': {
+                        reachedBottomMessage: 'public.reached-list-end'
                     }
                 }
             };
