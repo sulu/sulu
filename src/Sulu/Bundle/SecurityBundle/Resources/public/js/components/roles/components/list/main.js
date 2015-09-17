@@ -47,6 +47,10 @@ define(function() {
         header: function() {
             return {
                 noBack: true,
+
+                title: 'security.roles.title',
+                underline: false,
+
                 toolbar: {
                     buttons: {
                         add: {},

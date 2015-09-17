@@ -77,7 +77,9 @@ define([
 
         header: {
             noBack: true,
+
             title: 'contact.contacts.title',
+            underline: false,
 
             toolbar: {
                 buttons: {

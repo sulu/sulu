@@ -3,12 +3,15 @@
     <input id="id" type="hidden" value="<%= data.id %>"/>
     <% } %>
     <div class="grid-row small">
-        <div class="grid-col-6">
+        <div class="grid-col-12">
             <div class="form-group">
                 <label for="name" class="required"><%= translate('security.roles.name') %></label>
-                <input class="form-element" type="text" id="name" value="<%= data.name %>" data-validation-required="true"/>
+                <input class="form-element input-bold" type="text" id="name" value="<%= data.name %>"
+                       data-validation-required="true"/>
             </div>
         </div>
+    </div>
+    <div class="grid-row small">
         <div class="grid-col-6">
             <div class="form-group">
                 <label for="system" class="required"><%= translate('security.roles.system') %></label>
@@ -25,21 +28,7 @@
                      ></div>
             </div>
         </div>
-    </div>
 
-    <div class="grid-row">
-        <div class="grid-col-6">
-            <div class="form-group">
-                <span></span>
-                <div>
-                    <div class="custom-checkbox">
-                        <input class="form-element" type="checkbox" id="god" <% if(data.god) print('checked="checked"') %>/>
-                        <span class="icon"></span>
-                    </div>
-                    <label for="god" class="inline clickable"><%= translate('security.roles.godMode') %></label>
-                </div>
-            </div>
-        </div>
         {% if (security_types) %}
         <div class="grid-col-6">
             <div class="form-group">
@@ -60,6 +49,11 @@
 
     <div class="grid-row">
         <h2 class="divider"><%= translate('security.roles.permissions') %></h2>
+
+        <div id="select-all" class="btn fit m-bottom-20">
+            <%= translate('security.roles.all') %>
+        </div>
+
         <div id="matrix-container"></div>
     </div>
 </form>

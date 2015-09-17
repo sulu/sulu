@@ -880,58 +880,61 @@ h2 {
 }
 /* line 44, ../scss/typo.scss */
 h2.content-title {
-  border-bottom: 2px solid #ddd;
   margin-bottom: 30px;
 }
-/* line 49, ../scss/typo.scss */
+/* line 45, ../scss/typo.scss */
+h2.content-title.underlined {
+  border-bottom: 2px solid #ddd;
+}
+/* line 52, ../scss/typo.scss */
 h2.light {
   color: #ccc;
 }
 
-/* line 54, ../scss/typo.scss */
+/* line 57, ../scss/typo.scss */
 h3 {
   font-size: 20px;
   line-height: 25px;
 }
 
-/* line 59, ../scss/typo.scss */
+/* line 62, ../scss/typo.scss */
 h4 {
   font-size: 18px;
   line-height: 20px;
 }
 
-/* line 64, ../scss/typo.scss */
+/* line 67, ../scss/typo.scss */
 h5 {
   font-size: 14px;
   line-height: 15px;
 }
 
-/* line 69, ../scss/typo.scss */
+/* line 72, ../scss/typo.scss */
 h6 {
   font-size: 12px;
   line-height: 15px;
   margin: 0;
 }
 
-/* line 76, ../scss/typo.scss */
+/* line 79, ../scss/typo.scss */
 .compoundedHeadlines :first-child {
   color: #52B6CA;
   font-size: 14px;
   margin: 0;
   line-height: 20px;
 }
-/* line 82, ../scss/typo.scss */
+/* line 85, ../scss/typo.scss */
 .compoundedHeadlines :nth-child(2) {
   margin-top: 0;
 }
 
-/* line 89, ../scss/typo.scss */
+/* line 92, ../scss/typo.scss */
 h1, h2, h3, h4, h5 {
   position: relative;
   z-index: 1;
   overflow: hidden;
 }
-/* line 93, ../scss/typo.scss */
+/* line 96, ../scss/typo.scss */
 h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divider:after {
   position: absolute;
   top: 50%;
@@ -943,22 +946,22 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   background-color: #ccc;
 }
 
-/* line 108, ../scss/typo.scss */
+/* line 111, ../scss/typo.scss */
 .bold {
   font-family: Helvetica, Arial, sans-serif !important;
 }
 
-/* line 117, ../scss/typo.scss */
+/* line 120, ../scss/typo.scss */
 .small-font {
   font-size: 12px;
 }
 
-/* line 121, ../scss/typo.scss */
+/* line 124, ../scss/typo.scss */
 .smaller-font {
   font-size: 10px;
 }
 
-/* line 125, ../scss/typo.scss */
+/* line 128, ../scss/typo.scss */
 .grey-font {
   color: #999;
 }

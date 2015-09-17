@@ -76,7 +76,9 @@ define([
 
         header: {
             noBack: true,
+
             title: 'contact.accounts.title',
+            underline: false,
 
             toolbar: {
                 buttons: {

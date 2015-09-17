@@ -30,6 +30,12 @@ define([], function() {
 
         layout: {},
 
+        header: {
+            noBack: true,
+            title: 'sulu.website.cache.title',
+            underline: false
+        },
+
         initialize: function() {
             this.render();
             this.bindDomEvents();
@@ -45,7 +51,7 @@ define([], function() {
             var context = {translate: this.sandbox.translate},
                 template = this.sandbox.util.template(skeleton, context);
 
-            this.html(template);
+            this.$el.html(template);
         },
 
         clearCache: function() {

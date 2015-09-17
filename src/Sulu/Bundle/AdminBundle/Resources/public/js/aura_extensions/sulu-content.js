@@ -227,6 +227,7 @@ define(function() {
          * @param {Object|Boolean} [header.toolbar.languageChanger] Object with url and callback to pass to the header.
          *        If true the default language changer will be rendered. Default is true.
          * @param {String} [header.title] Title to inject inject into the tabs or (if tabs not exist) into the current component
+         * @param {String} [header.underline] Title underlined or not
          *
          * @example
          *
@@ -294,6 +295,7 @@ define(function() {
                         el: $container,
                         noBack: (typeof header.noBack !== 'undefined') ? header.noBack : false,
                         title: (!!header.title) ? header.title : false,
+                        underline: header.hasOwnProperty('underline') ? header.underline : true,
 
                         toolbarOptions: (!!header.toolbar && !!header.toolbar.options) ? header.toolbar.options : {},
                         toolbarLanguageChanger: (!!header.toolbar && !!header.toolbar.languageChanger) ?
