@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #1594 [Website]       Fixed website request analyzer
+
 * 1.0.9 (2015-09-14)
     * HOTFIX      #1572 [ContentBundle]         Fixed select overlay for internal link node type
     * HOTFIX      #1567 [Document]              Fixed localized property for url property
