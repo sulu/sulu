@@ -2,6 +2,11 @@
 
 ## dev-develop
 
+### Infinite scroll
+The infinite-scroll-extension got refactored. To initialize infinite-scroll on an element, use
+"this.sandbox.infiniteScroll.initialize(selector, callback)" instead of "this.sandbox.infiniteScroll(selector, callback)" now.
+To unbind an infinite-scroll handler, use "this.sandbox.infiniteScroll.destroy(selector)"
+
 ### XML-Templates
 Blocks now supports `minOccurs="0"` and `maxOccurs > 127`. For that the validation was improved and for both negative
 values wont be supported anymore.
