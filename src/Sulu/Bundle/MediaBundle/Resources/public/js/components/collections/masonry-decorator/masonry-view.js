@@ -238,7 +238,7 @@ define(function() {
          * Parses the data and passes it item by item to a render function
          * @param records {Array} array with records to render
          */
-        renderRecords: function(records) {
+        renderRecords: function(records, appendAtBottom) {
             this.updateEmptyIndicatorVisibility();
             this.sandbox.util.foreach(records, function(record) {
                 var item = processContentFilters.call(this, record);
@@ -250,7 +250,7 @@ define(function() {
                 description = concatRecordColumns(item, this.options.fields.description, this.options.separators.description);
 
                 // pass the found data to a render method
-                this.renderItem(id, image, title, description);
+                this.renderItem(id, image, title, description, appendAtBottom);
             }.bind(this));
         },
 
@@ -261,7 +261,7 @@ define(function() {
          * @param title
          * @param description
          */
-        renderItem: function(id, image, title, description) {
+        renderItem: function(id, image, title, description, appendAtBottom) {
             this.$items[id] = this.sandbox.dom.createElement(
                 this.sandbox.util.template(templates.item, {
                     image: image,
@@ -275,7 +275,11 @@ define(function() {
                 this.selectRecord(id);
             }
 
-            this.sandbox.dom.append(this.sandbox.dom.find('#' + constants.masonryGridId, this.$el), this.$items[id]);
+            if (!!appendAtBottom) {
+                this.sandbox.dom.append(this.sandbox.dom.find('#' + constants.masonryGridId, this.$el), this.$items[id]);
+            } else {
+                this.sandbox.dom.prepend(this.sandbox.dom.find('#' + constants.masonryGridId, this.$el), this.$items[id]);
+            }
             this.bindItemLoadingEvents(id);
             this.bindItemDomEvents(id);
         },
@@ -355,8 +359,8 @@ define(function() {
          * @param record
          * @public
          */
-        addRecord: function(record) {
-            this.renderRecords([record]);
+        addRecord: function(record, appendAtBottom) {
+            this.renderRecords([record], appendAtBottom);
         },
 
         /**
