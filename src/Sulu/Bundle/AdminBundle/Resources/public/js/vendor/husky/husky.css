@@ -8311,67 +8311,55 @@ a.btn-black, a.btn-highlight {
 }
 /* line 20, ../scss/modules/pagination.scss */
 .pagination-wrapper.infinite-scroll .pagination-loader {
-  opacity: 0;
-  -moz-transition: opacity 100ms;
-  -o-transition: opacity 100ms;
-  -webkit-transition: opacity 100ms;
-  transition: opacity 100ms;
+  display: none;
 }
-/* line 25, ../scss/modules/pagination.scss */
+/* line 24, ../scss/modules/pagination.scss */
 .pagination-wrapper.infinite-scroll .pagination-message {
   opacity: 0;
-  -moz-transition: opacity 100ms;
-  -o-transition: opacity 100ms;
-  -webkit-transition: opacity 100ms;
-  transition: opacity 100ms;
+  -moz-transition: opacity 200ms;
+  -o-transition: opacity 200ms;
+  -webkit-transition: opacity 200ms;
+  transition: opacity 200ms;
   color: #ccc;
   font-size: 12px;
   line-height: 40px;
   vertical-align: middle;
 }
-/* line 36, ../scss/modules/pagination.scss */
+/* line 35, ../scss/modules/pagination.scss */
 .pagination-wrapper.infinite-scroll.loading .pagination-loader {
-  opacity: 1;
+  display: block;
 }
-/* line 39, ../scss/modules/pagination.scss */
-.pagination-wrapper.infinite-scroll.loading .pagination-message {
-  display: none;
-}
-/* line 45, ../scss/modules/pagination.scss */
-.pagination-wrapper.infinite-scroll.reached-end .pagination-loader {
-  display: none;
-}
-/* line 48, ../scss/modules/pagination.scss */
+/* line 41, ../scss/modules/pagination.scss */
 .pagination-wrapper.infinite-scroll.reached-end .pagination-message {
   opacity: 1;
 }
-/* line 55, ../scss/modules/pagination.scss */
+/* line 48, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .pagination-loader {
   padding-top: 5px;
 }
-/* line 59, ../scss/modules/pagination.scss */
+/* line 52, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .show-elements {
   float: left;
 }
-/* line 62, ../scss/modules/pagination.scss */
+/* line 55, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .show-elements .text {
   padding-right: 5px;
 }
-/* line 65, ../scss/modules/pagination.scss */
+/* line 58, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .show-elements .dropdown-trigger {
   border: none;
   background: #fff;
 }
-/* line 69, ../scss/modules/pagination.scss */
+/* line 62, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .show-elements .dropdown-menu {
   width: 120px;
 }
-/* line 74, ../scss/modules/pagination.scss */
+/* line 67, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .pagination {
   height: 30px;
   float: right;
 }
-/* line 78, ../scss/modules/pagination.scss */
+/* line 71, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .pagination .pagination-main {
   margin: 0;
   display: inline-block;
@@ -8382,7 +8370,7 @@ a.btn-black, a.btn-highlight {
   height: 30px;
   margin: 0 2px;
 }
-/* line 88, ../scss/modules/pagination.scss */
+/* line 81, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .pagination .pagination-prev {
   padding: 0 13px 0 8px;
   border: 1px solid #ccc;
@@ -8391,13 +8379,13 @@ a.btn-black, a.btn-highlight {
   height: 30px;
   text-align: center;
 }
-/* line 96, ../scss/modules/pagination.scss */
+/* line 89, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .pagination .pagination-prev::after {
   content: "";
   display: inline-block;
   font-size: 16px;
 }
-/* line 103, ../scss/modules/pagination.scss */
+/* line 96, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .pagination .pagination-next {
   padding: 0 13px 0 8px;
   border: 1px solid #ccc;
@@ -8406,31 +8394,31 @@ a.btn-black, a.btn-highlight {
   height: 30px;
   text-align: center;
 }
-/* line 111, ../scss/modules/pagination.scss */
+/* line 104, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .pagination .pagination-next::after {
   content: "";
   display: inline-block;
   font-size: 16px;
 }
-/* line 118, ../scss/modules/pagination.scss */
+/* line 111, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .pagination .dropdown-menu {
   width: 200px;
 }
-/* line 124, ../scss/modules/pagination.scss */
+/* line 117, ../scss/modules/pagination.scss */
 .pagination-wrapper.showall {
   cursor: pointer;
   margin-top: 0;
   padding-left: 10px;
   display: inline-block;
 }
-/* line 130, ../scss/modules/pagination.scss */
+/* line 123, ../scss/modules/pagination.scss */
 .pagination-wrapper.showall .square {
   width: 50px;
   height: 50px;
   border: 1px dashed #ccc;
   float: left;
 }
-/* line 136, ../scss/modules/pagination.scss */
+/* line 129, ../scss/modules/pagination.scss */
 .pagination-wrapper.showall .text {
   display: inline-block;
   padding-left: 10px;
