@@ -636,10 +636,17 @@ define([], function() {
                         data: this.$overlayContent,
                         buttons: [
                             {
+                                type: 'cancel',
+                                text: 'public.cancel',
+                                classes: 'gray black-text',
+                                inactive: false,
+                                align: 'left'
+                            },
+                            {
                                 text: this.sandbox.translate(this.translations.clearButton),
                                 inactive: false,
-                                align: 'left',
-                                classes: 'gray black-text',
+                                align: 'center',
+                                classes: 'just-text',
                                 callback: function() {
                                     this.clear();
                                 }.bind(this)

@@ -54,13 +54,15 @@ define([
          * @param $block {Object} the jquery-dom-object
          */
         collapseBlock = function($block) {
-            prepareCollapsedData.call(this, $block);
+            if (!$block.hasClass('collapsed')) {
+                prepareCollapsedData.call(this, $block);
 
-            $block.addClass('collapsed');
-            // if all blocks are collapsed
-            if (this.$el.find('.' + this.propertyName + '-element:not(".collapsed")').length === 0) {
-                $('#expand-text-blocks-' + this.id).removeClass('hidden');
-                $('#collapse-text-blocks-' + this.id).addClass('hidden');
+                $block.addClass('collapsed');
+                // if all blocks are collapsed
+                if (this.$el.find('.' + this.propertyName + '-element:not(".collapsed")').length === 0) {
+                    $('#expand-text-blocks-' + this.id).removeClass('hidden');
+                    $('#collapse-text-blocks-' + this.id).addClass('hidden');
+                }
             }
         },
 

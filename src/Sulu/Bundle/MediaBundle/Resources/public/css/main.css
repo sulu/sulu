@@ -388,8 +388,3 @@
   width: 150px;
   height: 150px;
 }
-
-/* line 49, ../scss/modules/media-edit-overlay.scss */
-.multi-edit .language-changer {
-  right: 30px;
-}
