@@ -2,6 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #1598 [MediaBundle]     Added infinite-scroll pagination for masonry-view
+    * FEATURE     #1598 [ContactBundle]   Added infinite-scroll pagination for card-view
     * BUGFIX      #1583 [ResourceBundle]  Fixed filter button in list-toolbar
     * ENHANCEMENT #1581 [CategoryBundle]  Added locale handling in list and list api
     * ENHANCEMENT #1581 [SnippetBundle]   Added locale chooser in list
