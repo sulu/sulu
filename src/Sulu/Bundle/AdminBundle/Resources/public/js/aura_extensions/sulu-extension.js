@@ -422,7 +422,10 @@
                             paginationOptionsDefaults = {
                                 dropdown: {
                                     limit: limit
-                                }
+                                },
+                                'infinite-scroll': {
+                                    limit: limit
+                                },
                             },
                             gridOptions,
                             datagridEventNamespace = 'husky.datagrid.';
