@@ -31,10 +31,12 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     private $inspector;
     private $propertyFactory;
 
+    // TODO should be dynamic (config?)
     private $typeMap = [
         'page' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
         'home' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
         'snippet' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge',
+        'video_document' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge',
     ];
 
     /**
