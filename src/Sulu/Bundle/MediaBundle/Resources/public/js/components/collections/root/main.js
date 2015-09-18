@@ -74,22 +74,26 @@ define(['services/sulumedia/media-manager',
         bindCustomEvents: function() {
             // change datagrid view to table
             this.sandbox.on('sulu.toolbar.change.table', function() {
-                this.sandbox.emit('husky.datagrid.change.page', 1);
-
                 UserSettingsManager.setMediaListView('table');
                 UserSettingsManager.setMediaListPagination('dropdown');
+
+                // this isn't a perfect strategy because datagrid is rerendered on all three events
+                // todo: find a better strategy to change pagination and view-decorator and load first page
                 this.sandbox.emit('husky.datagrid.view.change', 'table');
                 this.sandbox.emit('husky.datagrid.pagination.change', 'dropdown');
+                this.sandbox.emit('husky.datagrid.change.page', 1);
             }.bind(this));
 
             // change datagrid view to masonry
             this.sandbox.on('sulu.toolbar.change.masonry', function() {
-                this.sandbox.emit('husky.datagrid.change.page', 1);
-
                 UserSettingsManager.setMediaListView('datagrid/decorators/masonry-view');
                 UserSettingsManager.setMediaListPagination('infinite-scroll');
+
+                // this isn't a perfect strategy because datagrid is rerendered on all three events
+                // todo: find a better strategy to change pagination and view-decorator and load first page
                 this.sandbox.emit('husky.datagrid.view.change', 'datagrid/decorators/masonry-view');
                 this.sandbox.emit('husky.datagrid.pagination.change', 'infinite-scroll');
+                this.sandbox.emit('husky.datagrid.change.page', 1);
             }.bind(this));
 
             // download media
