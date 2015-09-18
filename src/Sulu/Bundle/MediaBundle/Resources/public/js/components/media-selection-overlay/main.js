@@ -111,12 +111,12 @@ define([
                 '   <div class="media-selection-overlay-content">',
                 '       <div class="fa-times media-selection-overlay-close"></div>',
                 '       <div class="media-selection-overlay-dropzone-container"></div>',
-                '       <div class="media-selection-overlay-header" ondragstart="return false;">',
-                '           <div class="media-selection-overlay-toolbar-container"></div>',
-                '           <div id="selected-images-count" class="media-selection-overlay-selected-info"></div>',
-                '       </div>',
+                '       <h2 class="media-selection-overlay-content-title content-title"><%= title %></h2>',
                 '       <div class="media-selection-overlay-content-area" ondragstart="return false;">',
-                '           <div class="media-selection-overlay-content-title"><%= title %></div>',
+                '           <div class="media-selection-overlay-datagrid-header" ondragstart="return false;">',
+                '               <div class="media-selection-overlay-toolbar-container"></div>',
+                '               <div id="selected-images-count" class="media-selection-overlay-selected-info"></div>',
+                '           </div>',
                 '           <div class="media-selection-overlay-datagrid-container"></div>',
                 '       </div>',
                 '   </div>',
@@ -158,7 +158,7 @@ define([
          */
         dataNavigationSelectHandler = function(collection) {
             var collectionId,
-                collectionTitle = this.sandbox.translate('media-selection.overlay.all-images');
+                collectionTitle = this.sandbox.translate('media-selection.overlay.all-medias');
 
             if (collection) {
                 collectionId = collection.id;
@@ -353,7 +353,7 @@ define([
                         slides: [
                             {
                                 data: this.sandbox.util.template(templates.overlayContent, {
-                                    title: this.sandbox.translate('media-selection.overlay.all-images')
+                                    title: this.sandbox.translate('media-selection.overlay.all-medias')
                                 })
                             }
                         ]
