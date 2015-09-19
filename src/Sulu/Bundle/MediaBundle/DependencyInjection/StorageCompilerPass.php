@@ -16,7 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\Validator\Exception\MissingOptionsException;
 
 /**
  * Compiler pass for collecting services tagged with sulu_media.image.command
@@ -42,14 +41,8 @@ class StorageCompilerPass implements CompilerPassInterface
             $container,
             'flysystem',
             'League\Flysystem\MountManager',
-            'oneup_flysystem.mount_manager'
-        );
-
-        // Gaufrette
-        $this->addStorageAdapter($container,
-            'gaufrette',
-            'Knp\Bundle\GaufretteBundle\FilesystemMap',
-            'knp_gaufrette.filesystem_map'
+            'oneup_flysystem.mount_manager',
+            'Sulu\Bundle\MediaBundle\Media\Storage\Resolver\FlysystemResolver'
         );
 
         $storageManagerDefinition = $container->getDefinition('sulu_media.storage_manager');
@@ -149,19 +142,29 @@ class StorageCompilerPass implements CompilerPassInterface
      * @param string $key
      * @param string $managerClass
      * @param string $managerService
+     * @param string $resolverClass
      */
     protected function addStorageAdapter(
         ContainerBuilder $container,
         $key,
         $managerClass,
-        $managerService
+        $managerService,
+        $resolverClass
     ) {
         if (class_exists($managerClass)) {
-            $adapterClass = 'sulu_media.storage.adapter.' . $key . '.class';
-            $container->setParameter($adapterClass, 'Sulu\Bundle\MediaBundle\Media\Storage\\' . ucfirst($key) . 'Storage');
-            $storage = new Definition('%' . $adapterClass . '%');
+            $adapterClassParameter = 'sulu_media.storage.adapter.' . $key . '.class';
+            $container->setParameter($adapterClassParameter, 'Sulu\Bundle\MediaBundle\Media\Storage\\' . ucfirst($key) . 'Storage');
+
+            $resolverService = 'sulu_media.storage.adapter.resolver.'  . $key;
+            $adapterClassParameter = $resolverService . '.class';
+            $container->setParameter($adapterClassParameter, $resolverClass);
+            $resolver = new Definition('%' . $adapterClassParameter . '%');
+            $container->setDefinition($resolverService, $resolver);
+
+            $storage = new Definition('%' . $adapterClassParameter . '%');
             $storage->addArgument(''); // type
             $storage->addArgument(new Reference($managerService));
+            $storage->addArgument(new Reference($resolverService));
             $storage->addArgument(new Reference('logger'));
             $storage->setAbstract(true);
             $storage->setPublic(false);

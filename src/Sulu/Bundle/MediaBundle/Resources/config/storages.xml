@@ -21,6 +21,6 @@
             <tag name="sulu_media.storage_adapter" alias="local" />
         </service>
 
-        <!-- Flysystem / Gaufrette Storage are added in StorageCompilerPass -->
+        <!-- Flysystem Storage is added in StorageCompilerPass -->
     </services>
 </container>

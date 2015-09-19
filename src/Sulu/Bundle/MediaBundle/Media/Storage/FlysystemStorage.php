@@ -16,6 +16,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Sulu\Bundle\MediaBundle\Media\Exception\FilenameAlreadyExistsException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FilenameWriteException;
+use Sulu\Bundle\MediaBundle\Media\Storage\Resolver\FlysystemResolverInterface;
 
 /**
  * Class FlysystemStorage
@@ -24,12 +25,18 @@ use Sulu\Bundle\MediaBundle\Media\Exception\FilenameWriteException;
 class FlysystemStorage extends AbstractStorage
 {
     const STORAGE_OPTION_FILENAME = 'fileName';
+    const STORAGE_OPTION_URL = 'url';
     const STORAGE_TYPE = 'FlySystem';
 
     /**
      * @var string $fileSystem
      */
     protected $fileSystem;
+
+    /**
+     * @var FlysystemResolverInterface
+     */
+    protected $flysystemResolver;
 
     /**
      * @var NullLogger|LoggerInterface
@@ -39,15 +46,18 @@ class FlysystemStorage extends AbstractStorage
     /**
      * @param string $fileSystem
      * @param MountManager $mountManager
+     * @param FlysystemResolverInterface $flysystemResolver
      * @param LoggerInterface $logger
      */
     public function __construct(
         $fileSystem,
         MountManager $mountManager,
+        FlysystemResolverInterface $flysystemResolver,
         $logger = null
     ) {
         $this->fileSystem = $fileSystem;
         $this->mountManager = $mountManager;
+        $this->flysystemResolver = $flysystemResolver;
         $this->logger = $logger ?: new NullLogger();
     }
 
@@ -70,6 +80,10 @@ class FlysystemStorage extends AbstractStorage
         }
 
         $this->addStorageOption(self::STORAGE_OPTION_FILENAME, $fileName);
+        $this->addStorageOption(
+            self::STORAGE_OPTION_URL,
+            $this->flysystemResolver->getUrl($this->getFilesystem(), $fileName)
+        );
 
         return json_encode($this->storageOptions);
     }
@@ -109,9 +123,7 @@ class FlysystemStorage extends AbstractStorage
     {
         $this->storageOptions = json_decode($storageOptions);
 
-        // TODO
-
-        return null;
+        return $this->getStorageOption(self::STORAGE_OPTION_URL);
     }
 
     /**
