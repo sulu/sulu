@@ -40,9 +40,9 @@ abstract class AbstractMediaController extends RestController
     /**
      * Adds a relation between a media and the entity.
      *
-     * @param String $entityName
-     * @param String $id
-     * @param String $mediaId
+     * @param string $entityName
+     * @param string $id
+     * @param string $mediaId
      *
      * @return Media
      */
@@ -90,9 +90,9 @@ abstract class AbstractMediaController extends RestController
     /**
      * Removes a media from the relation with an entity.
      *
-     * @param String $entityName
-     * @param String $id
-     * @param String $mediaId
+     * @param string $entityName
+     * @param string $id
+     * @param string $mediaId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -138,11 +138,11 @@ abstract class AbstractMediaController extends RestController
     /**
      * Returns a view containing all media of an entity.
      *
-     * @param String $entityName
-     * @param String $routeName
+     * @param string $entityName
+     * @param string $routeName
      * @param AbstractContactManager $contactManager
-     * @param String $id
-     * @param Boolean $request
+     * @param string $id
+     * @param bool $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -441,7 +441,7 @@ abstract class AbstractMediaController extends RestController
      * the actual urls to the thumbnails.
      *
      * @param array $entities
-     * @param String $locale
+     * @param string $locale
      *
      * @return array
      */

@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1607 [ContactBundle]   Now passing savedData when calling save and create new account
     * BUGFIX      #1583 [ResourceBundle]  Fixed filter button in list-toolbar
     * ENHANCEMENT #1581 [CategoryBundle]  Added locale handling in list and list api
     * ENHANCEMENT #1581 [SnippetBundle]   Added locale chooser in list

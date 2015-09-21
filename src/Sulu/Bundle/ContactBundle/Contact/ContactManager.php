@@ -298,7 +298,7 @@ class ContactManager extends AbstractContactManager
      *
      * @param Contact $contact The entity to add the address to
      * @param Address $address The address to be added
-     * @param Bool $isMain Defines if the address is the main Address of the contact
+     * @param bool $isMain Defines if the address is the main Address of the contact
      *
      * @return ContactAddress
      *
@@ -492,7 +492,7 @@ class ContactManager extends AbstractContactManager
      * Takes a contact entity and a locale and returns the api object.
      *
      * @param Contact $contact
-     * @param String $locale
+     * @param string $locale
      *
      * @return ContactApi
      */

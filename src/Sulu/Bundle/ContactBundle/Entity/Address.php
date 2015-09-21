@@ -570,7 +570,7 @@ class Address
     /**
      * returns if address has at least one relation to another entity.
      *
-     * @return Bool
+     * @return bool
      */
     public function hasRelations()
     {

@@ -73,7 +73,7 @@ class AccountManager extends AbstractContactManager
      *
      * @param AccountApi    $account The entity to add the address to
      * @param AddressEntity $address The address to be added
-     * @param Bool          $isMain  Defines if the address is the main Address of the contact
+     * @param bool          $isMain  Defines if the address is the main Address of the contact
      *
      * @return AccountAddressEntity
      *
@@ -228,7 +228,7 @@ class AccountManager extends AbstractContactManager
      * TODO: handle logo adding differently and remove this method (or make it private).
      *
      * @param Account $account
-     * @param Integer $mediaId
+     * @param int $mediaId
      */
     public function setLogo($account, $mediaId)
     {
@@ -268,7 +268,7 @@ class AccountManager extends AbstractContactManager
      * Returns an api entity for an doctrine entity.
      *
      * @param Account $account
-     * @param String $locale
+     * @param string $locale
      *
      * @return null|AccountApi
      */
@@ -285,7 +285,7 @@ class AccountManager extends AbstractContactManager
      * Takes a account entity and a locale and returns the api object.
      *
      * @param Account $account
-     * @param String $locale
+     * @param string $locale
      *
      * @return AccountApi
      */

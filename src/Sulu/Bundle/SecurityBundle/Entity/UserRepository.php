@@ -327,7 +327,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
      *
      * @param string $class
      *
-     * @return Boolean
+     * @return bool
      */
     public function supportsClass($class)
     {

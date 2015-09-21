@@ -1207,7 +1207,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      *
      * @param Address $address The phone object to update
      * @param mixed   $entry   The entry with the new data
-     * @param Bool    $isMain  returns if address should be set to main
+     * @param bool    $isMain  returns if address should be set to main
      *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      *
