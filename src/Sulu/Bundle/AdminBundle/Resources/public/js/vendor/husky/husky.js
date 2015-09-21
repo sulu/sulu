@@ -27417,31 +27417,31 @@ define('services/husky/util',[],function() {
         substrLength = Math.floor((maxLength - delimiter.length) / 2);
 
         return text.slice(0, substrLength) + delimiter + text.slice(-substrLength);
-    },
+    };
 
-        Util.prototype.cropFront = function(text, maxLength, delimiter) {
-            if (!text || text.length <= maxLength || !text.slice) {
-                return text;
-            }
+    Util.prototype.cropFront = function(text, maxLength, delimiter) {
+        if (!text || text.length <= maxLength || !text.slice) {
+            return text;
+        }
 
-            delimiter = delimiter || '...';
+        delimiter = delimiter || '...';
 
-            return delimiter + text.slice(-(maxLength - delimiter.length));
-        },
+        return delimiter + text.slice(-(maxLength - delimiter.length));
+    };
 
-        Util.prototype.cropTail = function(text, maxLength, delimiter) {
-            if (!text || text.length <= maxLength || !text.slice) {
-                return text;
-            }
+    Util.prototype.cropTail = function(text, maxLength, delimiter) {
+        if (!text || text.length <= maxLength || !text.slice) {
+            return text;
+        }
 
-            delimiter = delimiter || '...';
+        delimiter = delimiter || '...';
 
-            return text.slice(0, (maxLength - delimiter.length)) + delimiter;
-        },
+        return text.slice(0, (maxLength - delimiter.length)) + delimiter;
+    };
 
-        Util.prototype.contains = function(list, value) {
-            return _.contains(list, value);
-        };
+    Util.prototype.contains = function(list, value) {
+        return _.contains(list, value);
+    };
 
     Util.prototype.isAlphaNumeric = function(str) {
         var code, i, len;
@@ -27541,6 +27541,14 @@ define('services/husky/util',[],function() {
     };
 
     Util.prototype.template = _.template;
+
+    Util.prototype.extend = $.extend;
+
+    Util.prototype.Deferred = $.Deferred;
+
+    Util.prototype.arrayMap = _.map;
+
+    Util.prototype.object = _.object;
 
     /**
      * Escapes special html character
@@ -33537,8 +33545,19 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 this.sandbox.on(ITEMS_DESELECT.call(this), function() {
                     this.gridViews[this.viewId].deselectAllRecords();
                 }.bind(this));
-                this.sandbox.on(ITEMS_GET_SELECTED.call(this), function(callback) {
-                    callback(this.getSelectedItemIds());
+                this.sandbox.on(ITEMS_GET_SELECTED.call(this), function (callback, returnItems) {
+                    if (!!returnItems) {
+                        var ids = this.getSelectedItemIds(),
+                            items = [];
+
+                        this.sandbox.util.foreach(ids, function (id) {
+                            items.push(this.getRecordById(id));
+                        }.bind(this));
+
+                        callback(ids, items);
+                    } else {
+                        callback(this.getSelectedItemIds());
+                    }
                 }.bind(this));
 
                 this.startColumnOptionsListener();
@@ -41838,6 +41857,15 @@ define('__component__$overlay@husky',[], function() {
             return createEventName.call(this, 'slide-right');
         },
 
+        /**
+         * slide to
+         * @param {Number} slide number
+         * @event husky.overlay.<instance-name>.slide-to
+         */
+        SLIDE_TO = function () {
+            return createEventName.call(this, 'slide-to');
+        },
+
         /** returns normalized event names */
         createEventName = function(postFix) {
             return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
@@ -42019,6 +42047,7 @@ define('__component__$overlay@husky',[], function() {
         bindCustomEvents: function() {
             this.sandbox.on(SLIDE_LEFT.call(this), this.slideLeft.bind(this));
             this.sandbox.on(SLIDE_RIGHT.call(this), this.slideRight.bind(this));
+            this.sandbox.on(SLIDE_TO.call(this), this.slideEvent.bind(this));
         },
 
         /**
@@ -42040,6 +42069,22 @@ define('__component__$overlay@husky',[], function() {
             if (this.activeSlide >= this.slides.length) {
                 this.activeSlide = 0;
             }
+            this.slideTo(this.activeSlide);
+        },
+
+        /**
+         * slide to given slide number
+         *
+         * @param {Number} slide
+         */
+        slideEvent: function (slide) {
+            if (slide < 0 || slide >= this.slides.length) {
+                this.sandbox.logger.error('Slide index out bounds');
+
+                return;
+            }
+
+            this.activeSlide = slide;
             this.slideTo(this.activeSlide);
         },
 

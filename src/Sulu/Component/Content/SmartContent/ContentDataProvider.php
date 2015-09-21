@@ -88,7 +88,7 @@ class ContentDataProvider implements DataProviderInterface
     {
         $this->configuration = new ProviderConfiguration();
         $this->configuration->setTags(true);
-        $this->configuration->setCategories(false);
+        $this->configuration->setCategories(true);
         $this->configuration->setLimit(true);
         $this->configuration->setPresentAs(true);
         $this->configuration->setPaginated(true);
