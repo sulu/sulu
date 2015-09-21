@@ -30,30 +30,27 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     private $extensionManager;
     private $inspector;
     private $propertyFactory;
-
-    // TODO should be dynamic (config?)
-    private $typeMap = [
-        'page' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
-        'home' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
-        'snippet' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge',
-        'video_document' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge',
-    ];
+    private $typeMap;
 
     /**
      * @param StructureMetadataFactory $structureFactory
-     * @param ExtensionManager         $extensionManager
-     * @param DocumentInspector        $inspector
+     * @param ExtensionManager $extensionManager
+     * @param DocumentInspector $inspector
+     * @param LegacyPropertyFactory $propertyFactory
+     * @param array $typeMap
      */
     public function __construct(
         StructureMetadataFactory $structureFactory,
         ExtensionManager $extensionManager,
         DocumentInspector $inspector,
-        LegacyPropertyFactory $propertyFactory
+        LegacyPropertyFactory $propertyFactory,
+        array $typeMap
     ) {
         $this->structureFactory = $structureFactory;
         $this->extensionManager = $extensionManager;
         $this->inspector = $inspector;
         $this->propertyFactory = $propertyFactory;
+        $this->typeMap = $typeMap;
     }
 
     /**
