@@ -921,6 +921,14 @@ class MediaManager implements MediaManagerInterface
 
     protected function getCurrentUser()
     {
-        return $this->tokenStorage ? $this->tokenStorage->getToken()->getUser() : null;
+        if (!$this->tokenStorage) {
+            return;
+        }
+
+        if (!$this->tokenStorage->getToken()) {
+            return;
+        }
+
+        return $this->tokenStorage->getToken()->getUser();
     }
 }

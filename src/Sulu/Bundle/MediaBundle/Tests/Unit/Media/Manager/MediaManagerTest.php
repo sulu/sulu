@@ -142,6 +142,15 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testGetWithoutToken()
+    {
+        $this->tokenStorage->getToken()->willReturn(null);
+        $this->mediaRepository->findMedia(Argument::cetera())->willReturn([])->shouldBeCalled();
+        $this->mediaRepository->count(Argument::cetera())->shouldBeCalled();
+
+        $this->mediaManager->get(1);
+    }
+
     public function testDeleteWithSecurity()
     {
         $collection = $this->prophesize(Collection::class);
