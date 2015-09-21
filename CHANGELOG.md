@@ -2,7 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * ENHANCEMENT #1583 [ContactBundle]   Now passing savedData when calling save and create new account
+    * ENHANCEMENT #1607 [ContactBundle]   Now passing savedData when calling save and create new account
     * BUGFIX      #1583 [ResourceBundle]  Fixed filter button in list-toolbar
     * FEATURE     #1558 [AdminBundle]     Redesign of overlays
     * FEATURE     #1557 [MediaBundle]     Redesign of data-navigation

@@ -189,7 +189,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
      * Returns the most recent version of a media for the specified
      * filename within a collection.
      *
-     * @param String $filename
+     * @param string $filename
      * @param int $collectionId
      *
      * @return Media
