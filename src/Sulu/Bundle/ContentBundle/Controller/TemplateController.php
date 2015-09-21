@@ -87,17 +87,16 @@ class TemplateController extends Controller
         $language = $request->get('language');
         $type = $request->get('type', 'page');
 
-        if ($key === null && $type === 'page') {
-            $webspaceManager = $this->container->get('sulu_core.webspace.webspace_manager');
-            $key = $webspaceManager->findWebspaceByKey($webspace)->getTheme()->getDefaultTemplate($type);
-            $fireEvent = true;
-        } elseif ($key === null /*&& $type === 'snippet'*/) {
-
-            $defaultTypes = $this->container->getParameter('sulu.content.structure.default_types');
-            $key = $defaultTypes[$type];
-
-//            $key = $this->container->getParameter('sulu.content.structure.default_type.snippet');
-            $fireEvent = true;
+        if ($key === null) {
+            if ($type === 'page') {
+                $webspaceManager = $this->container->get('sulu_core.webspace.webspace_manager');
+                $key = $webspaceManager->findWebspaceByKey($webspace)->getTheme()->getDefaultTemplate($type);
+                $fireEvent = true;
+            } else {
+                $defaultTypes = $this->container->getParameter('sulu.content.structure.default_types');
+                $key = $defaultTypes[$type];
+                $fireEvent = true;
+            }
         }
 
         /** @var UserInterface $user */
