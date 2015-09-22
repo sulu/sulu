@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1614 [ContentBundle]   Readded the reorder event to the OrderSubscriber
     * ENHANCEMENT #1607 [ContactBundle]   Now passing savedData when calling save and create new account
     * BUGFIX      #1609 [MediaBundle]     Added further null reference checks to MediaManager
     * BUGFIX      #1583 [ResourceBundle]  Fixed filter button in list-toolbar

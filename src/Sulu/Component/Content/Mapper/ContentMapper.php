@@ -673,7 +673,11 @@ class ContentMapper implements ContentMapperInterface
             $this->documentManager->reorder($document, $targetSibling->getPath());
         }
 
-        $this->documentManager->persist($document, $locale);
+        // this should not be necessary (see https://github.com/sulu-io/sulu-document-manager/issues/39)
+        foreach ($siblingDocuments as $siblingDocument) {
+            $this->documentManager->persist($siblingDocument, $locale);
+        }
+
         $this->documentManager->flush();
 
         return $this->documentToStructure($document);
