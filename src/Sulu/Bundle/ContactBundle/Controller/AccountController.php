@@ -930,7 +930,7 @@ class AccountController extends RestController implements ClassResourceInterface
      * the actual urls to the logo thumbnails.
      *
      * @param array $accounts
-     * @param String $locale
+     * @param string $locale
      *
      * @return array
      */

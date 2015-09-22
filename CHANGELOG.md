@@ -2,6 +2,11 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1607 [ContactBundle]   Now passing savedData when calling save and create new account
+    * BUGFIX      #1609 [MediaBundle]     Added further null reference checks to MediaManager
+    * BUGFIX      #1583 [ResourceBundle]  Fixed filter button in list-toolbar
+    * ENHANCEMENT #1581 [CategoryBundle]  Added locale handling in list and list api
+    * ENHANCEMENT #1581 [SnippetBundle]   Added locale chooser in list
     * FEATURE     #1558 [AdminBundle]     Redesign of overlays
     * FEATURE     #1557 [MediaBundle]     Redesign of data-navigation
     * FEATURE     #1557 [AdminBundle]     Success-labels in navigation
@@ -64,6 +69,10 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1342 [SecurityBundle]  Added creator and changer of contact to 'fullContact' serialization group
     * BUGFIX      #1365 [ContactBundle]   Fixed bug caused by new instance name of datagrid
     * BUGFIX      #1136 [MediaBundle]     Fixed image scale forceRatio parameter for none squared image formats
+
+* 1.0.10 (2015-09-17)
+    * HOTFIX      #1594 [Website] Fixed website request analyzer
+    * HOTFIX      #1594 [Website] Fixed trailing slash for homepage
 
 * 1.0.9 (2015-09-14)
     * HOTFIX      #1572 [ContentBundle]         Fixed select overlay for internal link node type

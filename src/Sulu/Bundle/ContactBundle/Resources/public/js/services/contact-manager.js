@@ -14,7 +14,7 @@ define([
     'sulucontact/models/title',
     'sulucontact/models/position',
     'sulucategory/model/category',
-    'sulumedia/models/media',
+    'sulumedia/models/media'
 ], function(
     Util,
     Mediator,
@@ -44,7 +44,7 @@ define([
                     promise.resolve();
                 }.bind(this),
                 error: function() {
-                    promise.fail();
+                    promise.reject();
                 }.bind(this)
             });
 
@@ -73,8 +73,8 @@ define([
                 success: function(response) {
                     promise.resolve(response.toJSON());
                 }.bind(this),
-                error: function() {
-                    promise.fail();
+                error: function(context, jqXHR) {
+                    promise.reject(jqXHR);
                 }.bind(this)
             });
 
@@ -98,6 +98,9 @@ define([
                     Mediator.emit('sulu.contacts.contact.document.removed', contactId, mediaId);
                     Mediator.emit('sulu.labels.success.show', 'contact.contacts.documents-removed');
                     promise.resolve();
+                }.bind(this),
+                error: function() {
+                    promise.reject();
                 }.bind(this)
             });
 
@@ -131,7 +134,7 @@ define([
                         promise.resolve(response.toJSON());
                     }.bind(this),
                     error: function() {
-                        promise.fail();
+                        promise.reject();
                     }.bind(this)
                 });
             }
@@ -156,8 +159,10 @@ define([
                 requests.push(deleteContact(id));
             }.bind(this));
 
-            $.when.apply(null, requests).then(function() {
+            $.when.apply(null, requests).done(function() {
                 promise.resolve();
+            }.bind(this)).fail(function() {
+                promise.reject();
             }.bind(this));
 
             return promise;
@@ -171,13 +176,15 @@ define([
         save: function(data) {
             var promise = $.Deferred();
 
-            saveContact(data).then(function(contact) {
+            saveContact(data).done(function(contact) {
                 Mediator.emit('sulu.contacts.contact.saved', contact.id);
                 Mediator.emit('sulu.labels.success.show', 'contact.contacts.saved');
                 promise.resolve(contact);
-            }.bind(this)).fail(function() {
-                Mediator.emit('sulu.labels.error.show');
-                promise.fail();
+            }.bind(this)).fail(function(xhr) {
+                if (!xhr.status || xhr.status !== 403) {
+                    Mediator.emit('sulu.labels.error.show');
+                }
+                promise.reject();
             }.bind(this));
 
             return promise;
@@ -191,13 +198,13 @@ define([
         saveAvatar: function(data) {
             var promise = $.Deferred();
 
-            saveContact(data).then(function(contact) {
+            saveContact(data).done(function(contact) {
                 Mediator.emit('sulu.contacts.contact.avatar-saved', contact.id);
                 Mediator.emit('sulu.labels.success.show', 'contact.contacts.avatar.saved');
                 promise.resolve(contact);
             }.bind(this)).fail(function() {
                 Mediator.emit('sulu.labels.error.show');
-                promise.fail();
+                promise.reject();
             }.bind(this));
 
             return promise;
@@ -214,6 +221,9 @@ define([
                 success: function() {
                     Mediator.emit('sulu.contacts.contacts.title.deleted', titleId);
                     deletePromise.resolve();
+                }.bind(this),
+                error: function() {
+                    deletePromise.reject();
                 }.bind(this)
             });
             return deletePromise;
@@ -225,10 +235,13 @@ define([
          */
         saveTitles: function(data) {
             var savePromise = $.Deferred();
-            Util.save('api/contact/titles', 'PATCH', data).then(function(response) {
+            Util.save('api/contact/titles', 'PATCH', data).done(function(response) {
                 Mediator.emit('sulu.contacts.contacts.titles.saved');
                 savePromise.resolve(response);
-            });
+            }.bind(this)).fail(function() {
+                savePromise.reject();
+            }.bind(this));
+
             return savePromise;
         },
 
@@ -243,6 +256,9 @@ define([
                 success: function() {
                     Mediator.emit('sulu.contacts.contacts.position.deleted', positionId);
                     deletePromise.resolve();
+                }.bind(this),
+                error: function() {
+                    deletePromise.reject();
                 }.bind(this)
             });
             return deletePromise;
@@ -254,9 +270,11 @@ define([
          */
         savePositions: function(data) {
             var savePromise = $.Deferred();
-            Util.save('api/contact/positions', 'PATCH', data).then(function(response) {
+            Util.save('api/contact/positions', 'PATCH', data).done(function(response) {
                 Mediator.emit('sulu.contacts.contacts.positions.saved');
                 savePromise.resolve(response);
+            }.bind(this)).fail(function() {
+                savePromise.reject();
             });
             return savePromise;
         },
@@ -278,8 +296,10 @@ define([
                 requests.push(removeDocument(contactId, id));
             }.bind(this));
 
-            $.when.apply(null, requests).then(function() {
+            $.when.apply(null, requests).done(function() {
                 promise.resolve();
+            }.bind(this)).fail(function() {
+                promise.reject();
             }.bind(this));
 
             return promise;
@@ -302,6 +322,9 @@ define([
                     Mediator.emit('sulu.contacts.contact.document.added', contactId, mediaId);
                     Mediator.emit('sulu.labels.success.show', 'contact.contacts.document-added');
                     promise.resolve();
+                }.bind(this),
+                error: function() {
+                    promise.reject();
                 }.bind(this)
             });
 

@@ -38,14 +38,20 @@ define([
         },
         sidebar: false
     };
-    SnippetList.prototype.header = {
-        noBack: true,
-        toolbar: {
-            buttons: {
-                add: {},
-                deleteSelected: {}
+
+    SnippetList.prototype.header = function() {
+        return {
+            noBack: true,
+            toolbar: {
+                buttons: {
+                    add: {},
+                    deleteSelected: {}
+                },
+                languageChanger: {
+                    preSelected: this.options.language
+                }
             }
-        }
+        };
     };
 
     SnippetList.prototype.initialize = function() {

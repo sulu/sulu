@@ -12,7 +12,7 @@
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.1442299543099.css">
+        <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.1442574810224.css">
 
         <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/css/main.css"/>
         <link rel="stylesheet" type="text/css" href="/bundles/sulucontact/css/main.css"/>
@@ -36,7 +36,7 @@
                      data-aura-user-name="{{ user.fullName }}"
                      data-aura-system-name="{{ name }}"
                      data-aura-system-version="{{ suluVersion }}"
-                     data-aura-user-locales='{{ locales | json_encode }}'
+                     data-aura-user-locales='{{ translated_locales|keys|json_encode }}'
                      data-aura-user-locale="{{ user.locale }}"
                      data-aura-logout-route="{{ path('logout') }}"
                      class="navigation-column">
@@ -76,6 +76,6 @@
             var CKEDITOR_BASEPATH = '/bundles/suluadmin/js/vendor/husky/vendor/ckeditor/';
         </script>
 
-        <script data-main="/bundles/suluadmin/dist/app.min.1442299543099" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
+        <script data-main="/bundles/suluadmin/dist/app.min.1442574810224" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
     </body>
 </html>

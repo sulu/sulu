@@ -124,6 +124,10 @@ define(function() {
             this.sandbox.once('sulu.permission-tab.saved', function() {
                 this.sandbox.stop();
             }.bind(this));
+
+            this.sandbox.once('sulu.permission-tab.error', function() {
+                this.sandbox.stop();
+            }.bind(this));
         },
 
         /**

@@ -31,7 +31,9 @@ define(function () {
                             }
                         }
                     },
-                    languageChanger: true
+                    languageChanger: {
+                        preSelected: this.options.locale
+                    }
                 }
             };
         }

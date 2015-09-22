@@ -167,7 +167,7 @@ define([
             if (action === 'back') {
                 AccountRouter.toList();
             } else if (action === 'new') {
-                AccountRouter.toAdd();
+                AccountRouter.toAdd(savedData);
             } else if (!this.options.id) {
                 AccountRouter.toEdit(savedData.id);
             }

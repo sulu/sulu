@@ -42080,9 +42080,9 @@ define('__component__$overlay@husky',[], function() {
          */
         setContent: function(slide) {
             if (!!this.slides[slide].data) {
-                this.sandbox.dom.html(this.overlay.slides[slide].$content, this.slides[slide].data);
+                this.sandbox.dom.append(this.overlay.slides[slide].$content, this.slides[slide].data);
             } else if (!!this.slides[slide].message) {
-                this.sandbox.dom.html(this.overlay.slides[slide].$content, this.sandbox.util.template(templates.message, {
+                this.sandbox.dom.append(this.overlay.slides[slide].$content, this.sandbox.util.template(templates.message, {
                     message: this.slides[slide].message
                 }));
 
