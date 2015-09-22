@@ -43,6 +43,7 @@ class OrderSubscriber implements EventSubscriberInterface
         return [
             Events::PERSIST => 'handlePersist',
             Events::METADATA_LOAD => 'handleMetadataLoad',
+            Events::REORDER => 'handleReorder',
         ];
     }
 
@@ -73,7 +74,6 @@ class OrderSubscriber implements EventSubscriberInterface
             return;
         }
 
-        // TODO: This does not seem quite right..
         if ($document->getSuluOrder()) {
             return;
         }
