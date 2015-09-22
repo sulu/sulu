@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Functional\Command;
+namespace Sulu\Bundle\ContentBundle\Tests\Functional\Command;
 
 use Sulu\Bundle\ContentBundle\Command\CleanupHistoryCommand;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;

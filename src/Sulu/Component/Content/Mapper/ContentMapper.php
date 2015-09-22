@@ -627,6 +627,8 @@ class ContentMapper implements ContentMapperInterface
 
         foreach ($destLocales as $destLocale) {
             $document->setLocale($destLocale);
+            $document->getStructure()->bind($document->getStructure()->toArray());
+            
             // TODO: This can be removed if RoutingAuto replaces the ResourceLocator code.
             if ($document instanceof ResourceSegmentBehavior) {
                 $parentResourceLocator = $resourceLocatorType->getResourceLocatorByUuid(
@@ -640,8 +642,6 @@ class ContentMapper implements ContentMapperInterface
                     $webspaceKey,
                     $destLocale
                 );
-
-                $document->getStructure()->bind($document->getStructure()->toArray());
 
                 $document->setResourceSegment($resourceLocator);
             }

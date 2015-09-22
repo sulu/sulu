@@ -551,12 +551,10 @@ class StructureBridge implements StructureInterface
      */
     public function getNodeName()
     {
-        if ($this->getDocument()->getRedirectType() == RedirectType::INTERNAL) {
+        if ($this->document instanceof RedirectTypeBehavior &&
+            $this->document->getRedirectType() == RedirectType::INTERNAL
+        ) {
             return $this->getDocument()->getRedirectTarget()->getTitle();
-        }
-
-        if ($this->getDocument()->getRedirectType() == RedirectType::EXTERNAL) {
-            return $this->getDocument()->getTitle();
         }
 
         return $this->getDocument()->getTitle();
