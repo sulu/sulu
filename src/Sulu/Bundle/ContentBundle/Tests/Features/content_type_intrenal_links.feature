@@ -35,7 +35,7 @@ Feature: Internal links content type
         When I click the column navigation item "sulu.io"
         And I expect the "husky.column-navigation.links.loaded" event
         And I double click the column navigation item "Articles"
-        And I click the tick button
+        And I click the ok button
         And I should see "Articles"
         And I click the save icon
         Then I expect a success notification to appear

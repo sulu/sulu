@@ -79,11 +79,11 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
     }
 
     /**
-     * @Given I click the tick button
+     * @Given I click the ok button
      */
-    public function iClickOnTheTickButton()
+    public function iClickOnTheOkButton()
     {
-        $this->clickSelector('.btn.tick');
+        $this->clickSelector('.btn.overlay-ok');
     }
 
     /**
