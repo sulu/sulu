@@ -7,8 +7,8 @@ php:
 
 env:
   - SULU_ORM=mysql SULU_PHPCR=jackrabbit
-  - SULU_ORM=mysql SULU_PHPCR=doctrine_dbal
-  - SULU_ORM=postgres SULU_PHPCR=jackrabbit
+#  - SULU_ORM=mysql SULU_PHPCR=doctrine_dbal
+#  - SULU_ORM=postgres SULU_PHPCR=jackrabbit
 
 before_script:
   - composer self-update
@@ -19,11 +19,6 @@ before_script:
 script: 
   - time ./bin/runtests.sh -i -a
   - phpunit
-
-matrix:
-  allow_failures:
-    - env: "SULU_ORM=mysql SULU_PHPCR=doctrine_dbal"
-    - env: "SULU_ORM=postgres SULU_PHPCR=jackrabbit"
 
 notifications:
   slack:
