@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContactBundle\Contact;
 
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\ContactBundle\Util\IdConverterInterface;
+use Sulu\Bundle\ContactBundle\Util\IndexComparatorInterface;
 
 /**
  * Implements functionality for the manager of account and contact combination.
@@ -29,6 +30,11 @@ class CustomerManager implements CustomerManagerInterface
     private $converter;
 
     /**
+     * @var IndexComparatorInterface
+     */
+    private $comparator;
+
+    /**
      * @var string
      */
     private $contactEntityClass;
@@ -41,11 +47,13 @@ class CustomerManager implements CustomerManagerInterface
     public function __construct(
         EntityManager $entityManager,
         IdConverterInterface $converter,
+        IndexComparatorInterface $comparator,
         $contactEntityClass,
         $accountEntityClass
     ) {
         $this->entityManager = $entityManager;
         $this->converter = $converter;
+        $this->comparator = $comparator;
         $this->contactEntityClass = $contactEntityClass;
         $this->accountEntityClass = $accountEntityClass;
     }
@@ -64,7 +72,15 @@ class CustomerManager implements CustomerManagerInterface
         $accounts = $this->findAccountsByIds($parsed['a']);
         $contacts = $this->findContactsByIds($parsed['c']);
 
-        return $this->sortByIds($ids, array_merge($accounts, $contacts));
+        $result = array_merge($accounts, $contacts);
+        usort(
+            $result,
+            function ($a, $b) use ($ids) {
+                return $this->comparator->compare($a['id'], $b['id'], $ids);
+            }
+        );
+
+        return $result;
     }
 
     /**

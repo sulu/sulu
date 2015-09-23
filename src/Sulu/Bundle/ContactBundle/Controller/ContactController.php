@@ -16,7 +16,6 @@ use Hateoas\Configuration\Exclusion;
 use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\ContactBundle\Contact\ContactManager;
-use Sulu\Bundle\ContactBundle\Util\IdsHandlingTrait;
 use Sulu\Bundle\ContactBundle\Util\IndexComparatorInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
@@ -37,8 +36,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ContactController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
-    use IdsHandlingTrait;
-
     /**
      * {@inheritdoc}
      */

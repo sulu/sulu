@@ -76,6 +76,7 @@
         <service id="sulu_contact.customer_manager" class="%sulu_contact.customer_manager.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_contact.util.id_converter"/>
+            <argument type="service" id="sulu_contact.util.index_comparator"/>
             <argument type="string">%sulu_contact.contact.entity%</argument>
             <argument type="string">%sulu_contact.account.entity%</argument>
         </service>

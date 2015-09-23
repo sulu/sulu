@@ -23,6 +23,8 @@ define([], function() {
             accountResultKey: 'accounts',
             dataAttribute: 'contact-selection',
             dataDefault: [],
+            hidePositionElement: true,
+            hideConfigButton: true,
             contact: true,
             contactUrl: null,
             account: true,

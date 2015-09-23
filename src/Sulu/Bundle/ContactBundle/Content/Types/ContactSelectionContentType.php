@@ -69,6 +69,7 @@ class ContactSelectionContentType extends ComplexContentType
         $this->accountManager = $accountManager;
         $this->serializer = $serializer;
         $this->converter = $converter;
+        $this->comparator = $comparator;
     }
 
     /**
