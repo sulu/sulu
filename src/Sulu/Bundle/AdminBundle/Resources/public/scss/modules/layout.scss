@@ -183,6 +183,7 @@
     overflow: hidden;
     z-index: 99;
     position: relative;
+    border-left: 1px solid $borderColor;
 
     &.fixed {
         width: $sidebarFixedWidth;
@@ -238,6 +239,7 @@
     .sidebar-column.max {
         width: 0;
         height: 0;
+        border-left: 0;
     }
 
     .has-visible-sidebar .content-column {
