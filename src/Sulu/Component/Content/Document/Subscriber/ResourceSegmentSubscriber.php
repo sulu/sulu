@@ -81,8 +81,11 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
     public function doPersist(PersistEvent $event)
     {
         $document = $event->getDocument();
-        $property = $this->getResourceSegmentProperty($document);
+        if ($document instanceof RedirectTypeBehavior && $document->getRedirectType() !== RedirectType::NONE) {
+            return;
+        }
 
+        $property = $this->getResourceSegmentProperty($document);
         $document->getStructure()->getProperty(
             $property->getName()
         )->setValue($document->getResourceSegment());

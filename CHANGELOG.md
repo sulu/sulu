@@ -2,7 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
-    * HOTFIX      #1596 [GeneratorBundle] fixed sulu bundle generator path generation
+    * HOTFIX      #1596 [GeneratorBundle] Fixed sulu bundle generator path generation
+    * HOTFIX      #1615 [Content]         Fixed resource segment subscriber for order internal link
 
 * 1.0.10 (2015-09-17)
     * HOTFIX      #1594 [Website] Fixed website request analyzer
