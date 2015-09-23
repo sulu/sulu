@@ -21,7 +21,7 @@ $contentFixedWidth: 920px;
 $maxContentMinWidth: 610px;
 $contentMinWidth: 510px;
 $contentFixedMediumWidth: 700px;
-$contentFixedSmallWidth: 510px;
+$contentFixedSmallWidth: 700px;
 
 $contentPaddingLeft: 50px;
 $contentPaddingLeftSmall: 10px;
@@ -36,7 +36,7 @@ $contentPaddingRightFullWidth: 0;
 // sidebar
 
 $sidebarFixedWidth: 450px;
-$sidebarMaxCollapseWidth: 340px; // if the max-sidebar is smaller than this width the content collapses to the medium width
+$sidebarMaxCollapseWidth: 300px; // if the max-sidebar is smaller than this width the content collapses to the medium width
 
 // shrink animation
 $shrinkAnimationDuration: 700ms;

@@ -224,30 +224,16 @@
     .has-visible-sidebar .content-column {
         &.fixed {
             #content, .sulu-title {
-                width: $contentFixedMediumWidth;
+                width: $contentFixedSmallWidth;
             }
         }
       .fixed-width {
-          width: $contentFixedMediumWidth;
+          width: $contentFixedSmallWidth;
       }
     }
 }
 
-// 2. collapses the content-column to small width
-@media only screen and (max-width: 50px + $contentFixedMediumWidth + $sidebarMaxCollapseWidth) {
-    .has-visible-sidebar .content-column {
-        &.fixed {
-            #content, .sulu-title {
-                width: $contentFixedSmallWidth;
-            }
-        }
-        .fixed-width {
-            width: $contentFixedSmallWidth;
-        }
-    }
-}
-
-// 3. hides the sidebar and brings the content-column to fit the screen
+// 2. hides the sidebar and brings the content-column to fit the screen
 @media only screen and (max-width: 50px + $contentFixedSmallWidth + $sidebarMaxCollapseWidth) {
     .sidebar-column.max {
         width: 0;
