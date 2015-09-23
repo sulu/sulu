@@ -30863,12 +30863,12 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                         if (cell.croppable === true) {
                             $contentContainer = this.sandbox.dom.find('.' + constants.textContainerClass, cell.$el);
                             if (crop === true) {
-                                content = this.sandbox.util.cropMiddle(cell.originalContent, this.options.croppedMaxLength);
-                                this.sandbox.dom.attr($contentContainer, 'title', cell.originalContent);
+                                content = this.sandbox.util.cropMiddle(cell.originalData, this.options.croppedMaxLength);
+                                this.sandbox.dom.attr($contentContainer, 'title', cell.originalData);
                                 this.tableCropped = true;
                                 this.cropBreakPoint = this.sandbox.dom.width(this.table.$container);
                             } else {
-                                content = cell.originalContent;
+                                content = cell.originalData;
                                 this.sandbox.dom.removeAttr($contentContainer, 'title');
                                 this.tableCropped = false;
                             }
@@ -44294,6 +44294,7 @@ define('__component__$data-navigation@husky',[
                 if (!$('.data-navigation-header').hasClass('header-search')){
                     $('.data-navigation-header').addClass('header-search');
                     $('.data-navigation-search span').attr('class', 'fa-times');
+                    $('.data-navigation-search input').select();
                 } else {
                     this.clearSearch();
                 }
