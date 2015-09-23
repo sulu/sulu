@@ -5,7 +5,7 @@ CHANGELOG for Sulu
     * HOTFIX      #1596 [GeneratorBundle] fixed sulu bundle generator path generation
 
 * 1.0.10 (2015-09-17)
-    * HOTFIX      #1594 [Website]Fixed website request analyzer
+    * HOTFIX      #1594 [Website] Fixed website request analyzer
     * HOTFIX      #1594 [Website] Fixed trailing slash for homepage
 
 * 1.0.9 (2015-09-14)
