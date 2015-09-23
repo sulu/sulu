@@ -2967,6 +2967,51 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('/page-1/page-1-4', $result[3]->getPath());
     }
 
+    public function testOrderAtInternalLink()
+    {
+        $this->tokenStorage->setToken($this->createUserTokenWithId(17));
+        $data = $this->prepareOrderAtData();
+
+        $this->documentManager->clear();
+
+        $testSiteData = [
+            'title' => 'Test',
+            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
+            'url' => '/test/123',
+            'internal_link' => $data[0]->getUuid(),
+        ];
+        $site = $this->mapper->save(
+            $testSiteData,
+            'internal_link_page',
+            'sulu_io',
+            'en',
+            1,
+            true,
+            null,
+            $data[0]->getUuid()
+        );
+
+        $this->documentManager->clear();
+
+        $result = $this->mapper->orderAt($site->getUuid(), 3, 17, 'sulu_io', 'en');
+        $this->assertEquals($site->getUuid(), $result->getUuid());
+        $this->assertEquals('/page-1/test', $result->getPath());
+        $this->assertEquals(17, $result->getChanger());
+
+        $this->documentManager->clear();
+
+        $result = $this->documentManager->find($site->getUuid(), 'en');
+        $this->assertEquals(30, $result->getSuluOrder());
+        $this->assertNull($result->getResourceSegment());
+
+        $result = $this->mapper->loadByParent($data[0]->getUuid(), 'sulu_io', 'en');
+        $this->assertEquals('/page-1/page-1-1', $result[0]->getPath());
+        $this->assertEquals('/page-1/page-1-2', $result[1]->getPath());
+        $this->assertEquals('/page-1/test', $result[2]->getPath());
+        $this->assertEquals('/page-1/page-1-3', $result[3]->getPath());
+        $this->assertEquals('/page-1/page-1-4', $result[4]->getPath());
+    }
+
     public function testOrderAtToLast()
     {
         $data = $this->prepareOrderAtData();
@@ -3207,7 +3252,7 @@ class ContentMapperTest extends SuluTestCase
             'title' => 'Test',
             'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
             'url' => '/test/123',
-            'the_internal_link' => $internalLink->getUuid(),
+            'internal_link' => $internalLink->getUuid(),
         ];
         $testSiteStructure = $this->mapper->save($testSiteData, 'internal_link_page', 'sulu_io', 'en', 1);
 

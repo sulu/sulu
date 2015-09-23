@@ -12,9 +12,12 @@
 namespace Sulu\Component\Content\Compat\Structure;
 
 use Prophecy\Argument;
+use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
+use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 
@@ -77,5 +80,48 @@ class StructureBridgeTest extends \PHPUnit_Framework_TestCase
         );
 
         $structure->copyFrom($copyFromStructure->reveal());
+    }
+
+    public function testGetNodeName()
+    {
+        $metadata = $this->prophesize(StructureMetadata::class);
+        $inspector = $this->prophesize(DocumentInspector::class);
+        $propertyFactory = $this->prophesize(LegacyPropertyFactory::class);
+
+        $document = $this->prophesize(SnippetDocument::class);
+        $document->getTitle()->willReturn('test');
+
+        $structure = new StructureBridge(
+            $metadata->reveal(),
+            $inspector->reveal(),
+            $propertyFactory->reveal(),
+            $document->reveal()
+        );
+
+        $this->assertEquals('test', $structure->getNodeName());
+    }
+
+    public function testGetNodeNameForInternalLink()
+    {
+        $metadata = $this->prophesize(StructureMetadata::class);
+        $inspector = $this->prophesize(DocumentInspector::class);
+        $propertyFactory = $this->prophesize(LegacyPropertyFactory::class);
+
+        $redirectDocument = $this->prophesize(BasePageDocument::class);
+        $redirectDocument->getTitle()->willReturn('test');
+
+        $document = $this->prophesize(BasePageDocument::class);
+        $document->getTitle()->shouldNotBeCalled();
+        $document->getRedirectType()->willReturn(RedirectType::INTERNAL);
+        $document->getRedirectTarget()->willReturn($redirectDocument->reveal());
+
+        $structure = new StructureBridge(
+            $metadata->reveal(),
+            $inspector->reveal(),
+            $propertyFactory->reveal(),
+            $document->reveal()
+        );
+
+        $this->assertEquals('test', $structure->getNodeName());
     }
 }
