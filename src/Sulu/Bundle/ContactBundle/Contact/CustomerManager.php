@@ -11,19 +11,22 @@
 namespace Sulu\Bundle\ContactBundle\Contact;
 
 use Doctrine\ORM\EntityManager;
-use Sulu\Bundle\ContactBundle\Util\IdsHandlingTrait;
+use Sulu\Bundle\ContactBundle\Util\IdConverterInterface;
 
 /**
  * Implements functionality for the manager of account and contact combination.
  */
 class CustomerManager implements CustomerManagerInterface
 {
-    use IdsHandlingTrait;
-
     /**
      * @var EntityManager
      */
     private $entityManager;
+
+    /**
+     * @var IdConverterInterface
+     */
+    private $converter;
 
     /**
      * @var string
@@ -35,9 +38,14 @@ class CustomerManager implements CustomerManagerInterface
      */
     private $accountEntityClass;
 
-    public function __construct(EntityManager $entityManager, $contactEntityClass, $accountEntityClass)
-    {
+    public function __construct(
+        EntityManager $entityManager,
+        IdConverterInterface $converter,
+        $contactEntityClass,
+        $accountEntityClass
+    ) {
         $this->entityManager = $entityManager;
+        $this->converter = $converter;
         $this->contactEntityClass = $contactEntityClass;
         $this->accountEntityClass = $accountEntityClass;
     }
@@ -51,7 +59,7 @@ class CustomerManager implements CustomerManagerInterface
             return [];
         }
 
-        $parsed = $this->parseIds($ids, ['a' => [], 'c' => []]);
+        $parsed = $this->converter->convertIdsToGroupedIds($ids, ['a' => [], 'c' => []]);
 
         $accounts = $this->findAccountsByIds($parsed['a']);
         $contacts = $this->findContactsByIds($parsed['c']);

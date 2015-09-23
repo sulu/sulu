@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Util;
 /**
  * Interface for id comparators.
  */
-interface IdComparatorInterface
+interface IndexComparatorInterface
 {
     /**
      * Compares given ids a and b with their index in ids array.

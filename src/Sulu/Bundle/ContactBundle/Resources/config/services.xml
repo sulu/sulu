@@ -21,6 +21,8 @@
         <parameter key="sulu_contact.contact_title_repository.class">Sulu\Bundle\ContactBundle\Entity\ContactTitleRepository</parameter>
         <parameter key="sulu_contact.smart_content.data_provider.contact.class">Sulu\Component\Contact\SmartContent\ContactDataProvider</parameter>
         <parameter key="sulu_contact.smart_content.data_provider.account.class">Sulu\Component\Contact\SmartContent\AccountDataProvider</parameter>
+        <parameter key="sulu_contact.util.index_comparator.class">Sulu\Bundle\ContactBundle\Util\IndexComparator</parameter>
+        <parameter key="sulu_contact.util.id_converter.class">Sulu\Bundle\ContactBundle\Util\CustomerIdConverter</parameter>
     </parameters>
     <services>
         <service id="sulu_contact.admin" class="%sulu_contact.admin.class%">
@@ -73,6 +75,7 @@
         </service>
         <service id="sulu_contact.customer_manager" class="%sulu_contact.customer_manager.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu_contact.util.id_converter"/>
             <argument type="string">%sulu_contact.contact.entity%</argument>
             <argument type="string">%sulu_contact.account.entity%</argument>
         </service>
@@ -95,6 +98,9 @@
 
             <tag name="sulu.smart_content.data_provider" alias="account"/>
         </service>
+
+        <service id="sulu_contact.util.index_comparator" class="%sulu_contact.util.index_comparator.class%" public="false"/>
+        <service id="sulu_contact.util.id_converter" class="%sulu_contact.util.id_converter.class%" public="false"/>
 
     </services>
 </container>

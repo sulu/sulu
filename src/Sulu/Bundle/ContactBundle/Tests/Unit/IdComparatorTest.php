@@ -35,7 +35,7 @@ class IdComparatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testUsortCallback($array, $ids, $expected)
     {
-        $comparator = new IdComparator();
+        $comparator = new IndexComparator();
         usort(
             $array,
             function ($a, $b) use ($ids, $comparator) {

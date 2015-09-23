@@ -12,10 +12,10 @@ namespace Sulu\Bundle\ContactBundle\Content\Types;
 
 use JMS\Serializer\SerializerInterface;
 use PHPCR\NodeInterface;
-use Sulu\Bundle\ContactBundle\Api\Account;
 use Sulu\Bundle\ContactBundle\Api\Contact;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
-use Sulu\Bundle\ContactBundle\Util\IdsHandlingTrait;
+use Sulu\Bundle\ContactBundle\Util\IdConverterInterface;
+use Sulu\Bundle\ContactBundle\Util\IndexComparatorInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
@@ -26,8 +26,6 @@ use Sulu\Component\Content\ContentTypeInterface;
  */
 class ContactSelectionContentType extends ComplexContentType
 {
-    use IdsHandlingTrait;
-
     /**
      * @var string
      */
@@ -48,16 +46,29 @@ class ContactSelectionContentType extends ComplexContentType
      */
     private $serializer;
 
+    /**
+     * @var IdConverterInterface
+     */
+    private $converter;
+
+    /**
+     * @var IndexComparatorInterface
+     */
+    private $comparator;
+
     public function __construct(
         $template,
         ContactManagerInterface $contactManager,
         ContactManagerInterface $accountManager,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        IdConverterInterface $converter,
+        IndexComparatorInterface $comparator
     ) {
         $this->template = $template;
         $this->contactManager = $contactManager;
         $this->accountManager = $accountManager;
         $this->serializer = $serializer;
+        $this->converter = $converter;
     }
 
     /**
@@ -140,22 +151,19 @@ class ContactSelectionContentType extends ComplexContentType
             return [];
         }
 
-        $ids = $this->parseIds($value, ['a' => [], 'c' => []]);
+        $ids = $this->converter->convertIdsToGroupedIds($value, ['a' => [], 'c' => []]);
 
         $accounts = $this->accountManager->getByIds($ids['a'], $locale);
         $contacts = $this->contactManager->getByIds($ids['c'], $locale);
 
-        $result = $this->sortEntitiesByIds(
-            $value,
-            array_merge($accounts, $contacts),
-            function ($entity) {
-                if ($entity instanceof Contact) {
-                    return 'c';
-                } elseif ($entity instanceof Account) {
-                    return 'a';
-                }
+        $result = array_merge($accounts, $contacts);
+        usort(
+            $result,
+            function ($a, $b) use ($value) {
+                $typeA = $a instanceof Contact ? 'c' : 'a';
+                $typeB = $a instanceof Contact ? 'c' : 'a';
 
-                return '';
+                return $this->comparator->compare($typeA . $a->getId(), $typeB . $b->getId(), $value);
             }
         );
 

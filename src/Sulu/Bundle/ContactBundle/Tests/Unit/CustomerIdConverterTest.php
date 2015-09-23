@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Util;
 
-class ContactIdConverterTest extends \PHPUnit_Framework_TestCase
+class CustomerIdConverterTest extends \PHPUnit_Framework_TestCase
 {
     public function convertIdsToGroupedIdsProvider()
     {

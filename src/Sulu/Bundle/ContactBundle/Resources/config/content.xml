@@ -13,6 +13,8 @@
             <argument type="service" id="sulu_contact.contact_manager" />
             <argument type="service" id="sulu_contact.account_manager" />
             <argument type="service" id="serializer" />
+            <argument type="service" id="sulu_contact.util.id_converter" />
+            <argument type="service" id="sulu_contact.util.index_comparator" />
 
             <tag name="sulu.content.type" alias="contact"/>
         </service>

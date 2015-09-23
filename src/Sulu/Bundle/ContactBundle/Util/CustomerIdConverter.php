@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Util;
 /**
  * Converts contact ids with format '<group><id>'.
  */
-class ContactIdConverter implements IdConverterInterface
+class CustomerIdConverter implements IdConverterInterface
 {
     /**
      * {@inheritdoc}

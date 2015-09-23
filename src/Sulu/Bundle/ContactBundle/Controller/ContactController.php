@@ -17,6 +17,7 @@ use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\ContactBundle\Contact\ContactManager;
 use Sulu\Bundle\ContactBundle\Util\IdsHandlingTrait;
+use Sulu\Bundle\ContactBundle\Util\IndexComparatorInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -605,7 +606,13 @@ class ContactController extends RestController implements ClassResourceInterface
         $listResponse = $this->addAvatars($listResponse, $locale);
 
         if ($idsParameter !== null) {
-            $listResponse = $this->sortByIds($ids, $listResponse);
+            $comparator = $this->getComparator();
+            usort(
+                $listResponse,
+                function ($a, $b) use ($comparator, $ids) {
+                    return $comparator->compare($a['id'], $b['id'], $ids);
+                }
+            );
         }
 
         return $listResponse;
@@ -805,5 +812,13 @@ class ContactController extends RestController implements ClassResourceInterface
         if ($request->get('formOfAddress') == null) {
             throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'contact');
         }
+    }
+
+    /**
+     * @return IndexComparatorInterface
+     */
+    private function getComparator()
+    {
+        return $this->get('sulu_contact.util.index_comparator');
     }
 }

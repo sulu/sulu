@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Util;
 /**
  * Compares two ids given.
  */
-class IdComparator
+class IndexComparator
 {
     public function compare($a, $b, array $ids)
     {
