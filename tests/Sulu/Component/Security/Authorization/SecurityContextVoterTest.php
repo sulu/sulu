@@ -171,7 +171,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
         $this->accessControlManager->getUserPermissions($securityCondition, $this->user)->willReturn([
             'view' => true,
             'add' => true,
-            'security' => false
+            'security' => false,
         ]);
 
         $access = $this->voter->vote(

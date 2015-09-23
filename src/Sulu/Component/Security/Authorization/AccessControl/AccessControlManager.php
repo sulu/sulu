@@ -166,8 +166,8 @@ class AccessControlManager implements AccessControlManagerInterface
 
             if ($checkPermissionType) {
                 $userPermission = $this->maskConverter->convertPermissionsToArray($permission->getPermissions());
-            } elseif($hasLocale) {
-                array_walk($userPermission, function(&$permission) {
+            } elseif ($hasLocale) {
+                array_walk($userPermission, function (&$permission) {
                     $permission = true;
                 });
             }
@@ -176,10 +176,10 @@ class AccessControlManager implements AccessControlManagerInterface
         return $userPermission;
     }
 
-
     /**
      * @param array $userPermission
      * @param array $permissions
+     *
      * @return array
      */
     private function mapPermissions(array $userPermission, array $permissions, callable $reduce)
@@ -194,6 +194,7 @@ class AccessControlManager implements AccessControlManagerInterface
 
         return $userPermission;
     }
+
     /**
      * Merges all the true values for the given permission arrays.
      *
@@ -204,14 +205,14 @@ class AccessControlManager implements AccessControlManagerInterface
      */
     private function cumulatePermissions(array $userPermission, array $permissions)
     {
-        return $this->mapPermissions($userPermission, $permissions, function($permission1, $permission2) {
+        return $this->mapPermissions($userPermission, $permissions, function ($permission1, $permission2) {
             return $permission1 || $permission2;
         });
     }
 
     private function restrictPermissions(array $userPermission, array $permissions)
     {
-        return $this->mapPermissions($userPermission, $permissions, function($permission1, $permission2) {
+        return $this->mapPermissions($userPermission, $permissions, function ($permission1, $permission2) {
             return $permission1 && $permission2;
         });
     }

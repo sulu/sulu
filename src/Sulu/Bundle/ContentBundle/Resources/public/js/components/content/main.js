@@ -1,5 +1,5 @@
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,8 +11,9 @@ define([
     'sulucontent/model/content',
     'sulucontent/components/content/preview/main',
     'sulucontent/components/copy-locale-overlay/main',
+    'sulusecurity/services/security-checker',
     'config'
-], function(Content, Preview, CopyLocale, Config) {
+], function(Content, Preview, CopyLocale, SecurityChecker, Config) {
 
     'use strict';
 
@@ -1019,7 +1020,7 @@ define([
 
                 var buttons = {}, editDropdown = {};
 
-                if (!!this.data._permissions.edit) {
+                if (SecurityChecker.hasPermission(this.data, 'edit')) {
                     buttons.save = {
                         parent: 'saveWithOptions'
                     };
@@ -1037,7 +1038,7 @@ define([
                     };
                 }
 
-                if (!!this.data._permissions.delete && !isHomeDocument(this.data)) {
+                if (SecurityChecker.hasPermission(this.data, 'delete') && !isHomeDocument(this.data)) {
                     editDropdown.delete = {
                         options: {
                             callback: function() {
@@ -1047,7 +1048,7 @@ define([
                     };
                 }
 
-                if (!!this.data._permissions.edit) {
+                if (SecurityChecker.hasPermission(this.data, 'edit')) {
                     editDropdown.copyLocale = {
                         options: {
                             title: this.sandbox.translate('toolbar.copy-locale'),
@@ -1068,7 +1069,7 @@ define([
                     };
                 }
 
-                if (!!this.data._permissions.edit) {
+                if (SecurityChecker.hasPermission(this.data, 'edit')) {
                     buttons.state = {
                         options: {
                             disabled: isHomeDocument(this.data),
