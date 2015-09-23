@@ -7063,7 +7063,7 @@ label.spacing-left {
   display: block;
   width: 15px;
   height: 15px;
-  border: 1px solid #999;
+  border: 1px solid #000;
   font-size: 15px;
   line-height: 13px;
   text-align: center;
@@ -10291,11 +10291,11 @@ a.btn-black, a.btn-highlight {
 }
 /* line 190, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .child-wrapper .toggle-icon {
-  margin-right: 9px;
+  margin-right: 10px;
 }
 /* line 193, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .child-wrapper .custom-checkbox {
-  margin-right: 16px;
+  margin-right: 10px;
 }
 /* line 198, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .row:hover .grid-icon {

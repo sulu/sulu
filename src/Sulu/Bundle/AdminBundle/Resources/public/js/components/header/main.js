@@ -596,6 +596,9 @@ define([], function() {
                     }
                 }.bind(this));
             } else {
+                // if no component is set render title
+                this.renderTitle();
+
                 this.sandbox.emit(TAB_CHANGED.call(this), tabItem);
             }
         },

@@ -194,9 +194,10 @@ define([], function() {
 
         /**
          * Change the width type of the column
-         * @param {String} the new width-type. 'fixed' or 'max'
+         * @param {String} width the new width-type. 'fixed' or 'max'
          */
         changeWidth: function(width) {
+            this.width = width;
             if (width === 'fixed') {
                 this.changeToFixedWidth();
             } else if (width === 'max') {
@@ -269,6 +270,8 @@ define([], function() {
         showColumn: function() {
             var $column = this.sandbox.dom.find(constants.columnSelector),
                 $parent = this.sandbox.dom.parent($column);
+
+            this.changeWidth(this.width);
 
             this.sandbox.dom.removeClass($parent, constants.noVisibleSidebarClass);
             this.sandbox.dom.addClass($parent, constants.visibleSidebarClass);

@@ -278,7 +278,7 @@
             </trans-unit>
             <trans-unit id="0501e263af3ba0f52ef7a4d3c0298d50" resname="contact.contacts.details">
                 <source>contact.contacts.details</source>
-                <target>Personendetails</target>
+                <target>Kontaktdetails</target>
             </trans-unit>
             <trans-unit id="79d68f4ec8392a1f07b99dddc6e48a22" resname="contacts.edit-address">
                 <source>contacts.edit-address</source>
