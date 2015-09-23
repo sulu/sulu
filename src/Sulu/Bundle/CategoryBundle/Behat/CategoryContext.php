@@ -27,7 +27,7 @@ class CategoryContext extends BaseContext implements SnippetAcceptingContext
     {
         $this->getCategoryManager()->save([
             'name' => $name,
-            'locale' => 'de',
+            'locale' => 'en',
             'key' => $name,
             'meta' => [
                 [

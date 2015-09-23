@@ -116,7 +116,7 @@ class ContactContext extends BaseContext implements SnippetAcceptingContext
         $this->waitForText($text);
         $script = <<<EOT
             var f = function () {
-                var cards = document.querySelectorAll(".contact-item .head-name");
+                var cards = document.querySelectorAll(".card-item .head-name");
 
                 for (var i = 0; i < cards.length; i++) {
                     if (cards[i].textContent == '%s') {
