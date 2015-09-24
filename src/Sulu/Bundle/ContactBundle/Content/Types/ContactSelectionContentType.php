@@ -162,7 +162,7 @@ class ContactSelectionContentType extends ComplexContentType
             $result,
             function ($a, $b) use ($value) {
                 $typeA = $a instanceof Contact ? 'c' : 'a';
-                $typeB = $a instanceof Contact ? 'c' : 'a';
+                $typeB = $b instanceof Contact ? 'c' : 'a';
 
                 return $this->comparator->compare($typeA . $a->getId(), $typeB . $b->getId(), $value);
             }
