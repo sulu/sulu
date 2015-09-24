@@ -604,7 +604,8 @@ class ContactController extends RestController implements ClassResourceInterface
 
         if ($idsParameter !== null) {
             $comparator = $this->getComparator();
-            usort(
+            // the @ is necessary in case of a PHP bug https://bugs.php.net/bug.php?id=50688
+            @usort(
                 $listResponse,
                 function ($a, $b) use ($comparator, $ids) {
                     return $comparator->compare($a['id'], $b['id'], $ids);

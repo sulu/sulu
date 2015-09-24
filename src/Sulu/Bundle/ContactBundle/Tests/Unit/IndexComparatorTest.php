@@ -36,7 +36,8 @@ class IndexComparatorTest extends \PHPUnit_Framework_TestCase
     public function testUsortCallback($array, $ids, $expected)
     {
         $comparator = new IndexComparator();
-        usort(
+        // the @ is necessary in case of a PHP bug https://bugs.php.net/bug.php?id=50688
+        @usort(
             $array,
             function ($a, $b) use ($ids, $comparator) {
                 return $comparator->compare($a, $b, $ids);

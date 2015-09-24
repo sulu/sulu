@@ -73,7 +73,8 @@ class CustomerManager implements CustomerManagerInterface
         $contacts = $this->findContactsByIds($parsed['c']);
 
         $result = array_merge($accounts, $contacts);
-        usort(
+        // the @ is necessary in case of a PHP bug https://bugs.php.net/bug.php?id=50688
+        @usort(
             $result,
             function ($a, $b) use ($ids) {
                 return $this->comparator->compare($a['id'], $b['id'], $ids);
