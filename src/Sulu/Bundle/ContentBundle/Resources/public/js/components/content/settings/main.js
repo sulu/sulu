@@ -27,7 +27,19 @@ define(['app-config', 'sulusecurity/components/users/models/user'], function(App
          * node type constant for external
          * @type {number}
          */
-        TYPE_EXTERNAL = 4;
+        TYPE_EXTERNAL = 4,
+
+        constants = {
+            validateErrorClass: 'husky-validate-error',
+            internalLink: {
+                titleContainer: '#internal-link-container .title',
+                linkContainer: '#internal-link-container .link'
+            },
+            externalLink: {
+                titleContainer: '#external-link-container .title',
+                linkContainer: '#external-link-container .link'
+            }
+        };
 
     return {
 
@@ -360,12 +372,66 @@ define(['app-config', 'sulusecurity/components/users/models/user'], function(App
                 data.shadowBaseLanguage = baseLanguages[0];
             }
 
+            if (!this.validate(data)) {
+                this.sandbox.emit('sulu.labels.warning.show', 'form.validation-warning', 'labels.warning');
+
+                return;
+            }
+
             this.data = this.sandbox.util.extend(true, {}, this.data, data);
 
             // nav contexts not extend
             this.data.navContexts = data.navContexts;
 
             this.sandbox.emit('sulu.content.contents.save', this.data);
+        },
+
+        validate: function(data) {
+            // remove validation classes
+            this.sandbox.dom.removeClass(constants.internalLink.titleContainer, constants.validateErrorClass);
+            this.sandbox.dom.removeClass(constants.internalLink.linkContainer, constants.validateErrorClass);
+            this.sandbox.dom.removeClass(constants.externalLink.titleContainer, constants.validateErrorClass);
+            this.sandbox.dom.removeClass(constants.externalLink.linkContainer, constants.validateErrorClass);
+
+            if (data.nodeType === TYPE_INTERNAL) {
+                return this.validateInternal(data);
+            } else if (data.nodeType === TYPE_EXTERNAL) {
+                return this.validateExternal(data);
+            }
+
+            return true;
+        },
+
+        validateInternal: function(data) {
+            var result = true;
+
+            if (!data.title) {
+                result = false;
+                this.sandbox.dom.addClass(constants.internalLink.titleContainer, constants.validateErrorClass);
+            }
+
+            if (!data.internal_link) {
+                result = false;
+                this.sandbox.dom.addClass(constants.internalLink.linkContainer, constants.validateErrorClass);
+            }
+
+            return result;
+        },
+
+        validateExternal: function(data) {
+            var result = true;
+
+            if (!data.title) {
+                result = false;
+                this.sandbox.dom.addClass(constants.externalLink.titleContainer, constants.validateErrorClass);
+            }
+
+            if (!data.external) {
+                result = false;
+                this.sandbox.dom.addClass(constants.externalLink.linkContainer, constants.validateErrorClass);
+            }
+
+            return result;
         }
     };
 });

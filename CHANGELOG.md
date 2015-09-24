@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #1624 [ContentBundle] Fixed nullable internal link and added server/clientside validation
+    
 * 1.0.11 (2015-09-23)
     * HOTFIX      #1596 [GeneratorBundle] Fixed sulu bundle generator path generation
     * HOTFIX      #1615 [Content]         Fixed resource segment subscriber for order internal link
