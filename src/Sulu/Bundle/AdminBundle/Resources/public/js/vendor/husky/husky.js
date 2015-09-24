@@ -39651,7 +39651,6 @@ define('__component__$password-fields@husky',[], function() {
  * @module husky/components/column-navigation
  */
 
-
 /**
  * @class ColumnNavigation
  * @constructor
@@ -39703,6 +39702,7 @@ define('__component__$column-navigation@husky',[], function() {
             instanceName: '',
             hasSubName: 'hasSub',
             actionIcon: 'fa-pencil',
+            addButton: true,
             idName: 'id',
             pathName: 'path',
             linkedName: 'linked',
@@ -39771,15 +39771,15 @@ define('__component__$column-navigation@husky',[], function() {
             optionsContainer: ['<div class="' + constants.optionsClass + ' grid-row"></div>'].join(''),
 
             optionsAdd: ['<div class="align-center add pointer">',
-                '<span class="fa-plus-circle"></span>',
+                '    <span class="fa-plus-circle"></span>',
                 '</div>'].join(''),
 
             optionsSettings: ['<div class="align-center settings pointer drop-down-trigger">',
-                '   <span class="fa-gear inline-block"></span><span class="dropdown-toggle inline-block"></span>',
+                '    <span class="fa-gear inline-block"></span><span class="dropdown-toggle inline-block"></span>',
                 '</div>'].join(''),
 
             optionsOk: ['<div class="align-center ok pointer">',
-                '   <span class="fa-check"></span>',
+                '    <span class="fa-check"></span>',
                 '</div>'].join(''),
 
             item: ['<li data-id="<%= id %>" class="' + constants.columnItemClass + '">',
@@ -39921,6 +39921,80 @@ define('__component__$column-navigation@husky',[], function() {
          */
         RESIZE = function() {
             return createEventName.call(this, 'resize');
+        },
+
+        createContext = function(column) {
+            if (column <= 0) {
+                return this.columns[column];
+            }
+
+            var context = {
+                numberItems: 0,
+                hasSelected: false,
+                selectedItem: null,
+                parent: null,
+                children: []
+            };
+
+            if (!!this.columns[column]) {
+                context.numberItems = Object.keys(this.columns[column]).length;
+                context.hasSelected = !!this.selected[column];
+                context.children = this.columns[column];
+
+                if (!!this.selected[column]) {
+                    context.selectedItem = this.selected[column];
+                }
+            }
+
+            if (column > 0) {
+                context.parent = createContext.call(this, column - 1);
+            }
+
+            return context;
+        },
+
+        /**
+         * Returns the action items for the given item data
+         * @param {Object} data
+         * @returns {string}
+         */
+        getActionIcon = function(data) {
+            var actionItem = this.options.actionIcon;
+
+            if (typeof(this.options.actionIcon) === 'function') {
+                actionItem = this.options.actionIcon(data);
+            }
+
+            return actionItem;
+        },
+
+        /**
+         * Returns whether the add button in the column should be shown or not (can also differ between columns)
+         * @returns {boolean}
+         */
+        getAddButton = function() {
+            if (typeof(this.options.addButton) === 'function') {
+                return this.options.addButton(createContext.call(this, this.lastHoveredColumn));
+            }
+
+            return this.options.addButton;
+        },
+
+        /**
+         * Sets the width for all visible option buttons
+         */
+        setOptionButtonWidths = function() {
+            var $optionButtons = this.$find('.' + constants.optionsClass + ' > :visible'),
+                width = 100 / $optionButtons.length;
+
+            $optionButtons.each(function(count, optionButton) {
+                $(optionButton).width(width + '%');
+            });
+
+            this.$find('.' + constants.optionsClass + ' > :visible').removeClass('first');
+            this.$find('.' + constants.optionsClass + ' > :visible').removeClass('last');
+            this.$find('.' + constants.optionsClass + ' > :visible:first').addClass('first');
+            this.$find('.' + constants.optionsClass + ' > :visible:last').addClass('last');
         },
 
         /** returns normalized event names */
@@ -40162,7 +40236,7 @@ define('__component__$column-navigation@husky',[], function() {
             // if there is nothing loaded yet, create a "root"-column
             if (columnNumber === 0) {
                 this.columns[0] = {};
-                this.columns[0][data[this.options.idName]] = data;
+                this.columns[0] = data;
             }
             var newColNumber = columnNumber + 1;
 
@@ -40313,7 +40387,7 @@ define('__component__$column-navigation@husky',[], function() {
          */
         renderRightInfo: function($item, data, disabled) {
             var $container = this.sandbox.dom.find('.' + constants.iconsRightClass, $item),
-                actionIcon = this.getActionIcon(data);
+                actionIcon = getActionIcon.call(this, data);
 
             if (this.options.showActionIcon === true && actionIcon && !disabled) {
                 this.sandbox.dom.append($container, '<span class="' + actionIcon + ' action col-icon"></span>');
@@ -40321,21 +40395,6 @@ define('__component__$column-navigation@husky',[], function() {
             if (!!data[this.options.hasSubName] && (!disabled || !this.options.disabledChildren)) {
                 this.sandbox.dom.append($container, '<span class="fa-chevron-right arrow inactive col-icon"></span>');
             }
-        },
-
-        /**
-         * Returns the action items for the given item data
-         * @param {Object} data
-         * @returns {string}
-         */
-        getActionIcon: function(data) {
-            var actionItem = this.options.actionIcon;
-
-            if (typeof(this.options.actionIcon) === 'function') {
-                actionItem = this.options.actionIcon(data);
-            }
-
-            return actionItem;
         },
 
         /**
@@ -40716,6 +40775,7 @@ define('__component__$column-navigation@husky',[], function() {
                 this.sandbox.dom.hide(this.dom.$settings);
                 this.sandbox.dom.hide(this.dom.$add);
                 this.sandbox.dom.show(this.dom.$ok);
+                setOptionButtonWidths.call(this);
                 this.setColumnTextWidth(column);
                 this.sandbox.emit(ORDER_START.call(this));
             }
@@ -40875,7 +40935,7 @@ define('__component__$column-navigation@husky',[], function() {
             // display the option only if the column is visible enough
             if (visibleRatio >= constants.minVisibleRatio) {
                 this.sandbox.dom.css(this.$optionsContainer, {'visibility': 'visible'});
-                this.updateOptionsMargin($activeColumn);
+                this.moveOptions($activeColumn);
                 this.toggleSettingDropdownItems(this.lastHoveredColumn);
             } else {
                 this.hideOptions();
@@ -40889,19 +40949,13 @@ define('__component__$column-navigation@husky',[], function() {
          */
         toggleSettingDropdownItems: function(column) {
             if (!!this.options.data && this.options.data.length > 0) {
-                var context = {
-                    numberItems: 0,
-                    hasSelected: false
-                };
-                if (!!this.columns[column]) {
-                    context.numberItems = Object.keys(this.columns[column]).length;
-                    context.hasSelected = !!this.selected[column];
-                }
+                var context = createContext.call(this, column);
                 this.sandbox.util.each(this.options.data, function(index, item) {
                     if (!!item.enabler && typeof item.enabler === 'function') {
                         this.sandbox.emit(
                             'husky.dropdown.' + this.options.instanceName + '.settings.dropdown.item.toggle',
-                            item.id, item.enabler(context)
+                            item.id,
+                            item.enabler(context)
                         );
                     }
                 }.bind(this));
@@ -40912,9 +40966,17 @@ define('__component__$column-navigation@husky',[], function() {
          * Updates the position of the options
          * @param $activeColumn {object} dom-object of active column
          */
-        updateOptionsMargin: function($activeColumn) {
+        moveOptions: function($activeColumn) {
             var marginLeft = this.sandbox.dom.position($activeColumn).left - 1;
-            this.sandbox.dom.css(this.$optionsContainer, 'margin-left', marginLeft + 'px');
+            $(this.$optionsContainer).css('margin-left', marginLeft + 'px');
+
+            if (getAddButton.call(this)) {
+                $(this.dom.$add).show();
+            } else {
+                $(this.dom.$add).hide();
+            }
+
+            setOptionButtonWidths.call(this);
         },
 
         /**

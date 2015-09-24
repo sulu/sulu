@@ -7,7 +7,10 @@
  * with this source code in the file LICENSE.
  */
 
-define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
+define([
+    'sulucontent/components/open-ghost-overlay/main',
+    'sulusecurity/services/security-checker'
+], function(OpenGhost, SecurityChecker) {
 
     'use strict';
 
@@ -67,6 +70,52 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
                     '<div id="wait-container" style="margin-top: 50px; margin-bottom: 200px; display: none;"></div>'
                 ].join('');
             }
+        },
+
+
+        /**
+         * Enabler for selected items
+         * @param column
+         * @returns {boolean}
+         */
+        hasSelectedEnabler = function(column) {
+            return !!column.hasSelected;
+        },
+
+        /**
+         * Enabler for DELETE
+         * @param column
+         * @returns {*|boolean}
+         */
+        deleteEnabler = function(column) {
+            return hasSelectedEnabler(column) && SecurityChecker.hasPermission(column.selectedItem, 'delete');
+        },
+
+        /**
+         * Enabler for MOVE
+         * @param column
+         * @return {boolean|*}
+         */
+        moveEnabler = function(column) {
+            return hasSelectedEnabler(column) && SecurityChecker.hasPermission(column.selectedItem, 'edit');
+        },
+
+        /**
+         * Enabler for COPY
+         * @param column
+         * @returns {boolean|*}
+         */
+        copyEnabler = function(column) {
+            return hasSelectedEnabler(column) && SecurityChecker.hasPermission(column.selectedItem, 'view');
+        },
+
+        /**
+         * Enaber for ORDER
+         * @param column
+         * @returns {boolean}
+         */
+        orderEnabler = function(column) {
+            return column.numberItems > 1;
         };
 
     return {
@@ -440,7 +489,7 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
                             {
                                 id: DELETE_BUTTON_ID,
                                 name: this.sandbox.translate('content.contents.settings.delete'),
-                                enabler: this.hasSelectedEnabler
+                                enabler: deleteEnabler.bind(this)
                             },
                             {
                                 id: 2,
@@ -449,41 +498,23 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
                             {
                                 id: MOVE_BUTTON_ID,
                                 name: this.sandbox.translate('content.contents.settings.move'),
-                                enabler: this.hasSelectedEnabler
+                                enabler: moveEnabler.bind(this)
                             },
                             {
                                 id: COPY_BUTTON_ID,
                                 name: this.sandbox.translate('content.contents.settings.copy'),
-                                enabler: this.hasSelectedEnabler
+                                enabler: copyEnabler.bind(this)
                             },
                             {
                                 id: ORDER_BUTTON_ID,
                                 name: this.sandbox.translate('content.contents.settings.order'),
                                 mode: 'order',
-                                enabler: this.orderEnabler
+                                enabler: orderEnabler.bind(this)
                             }
                         ]
                     }
                 }
             ]);
-        },
-
-        /**
-         * Enabler for MOVE, COPY and DELETE
-         * @param column
-         * @returns {boolean}
-         */
-        hasSelectedEnabler: function(column) {
-            return !!column.hasSelected;
-        },
-
-        /**
-         * Enaber for ORDER
-         * @param column
-         * @returns {boolean}
-         */
-        orderEnabler: function(column) {
-            return column.numberItems > 1;
         },
 
         /**
