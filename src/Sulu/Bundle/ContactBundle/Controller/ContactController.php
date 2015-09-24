@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,9 +16,11 @@ use Hateoas\Configuration\Exclusion;
 use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\ContactBundle\Contact\ContactManager;
+use Sulu\Bundle\ContactBundle\Util\IndexComparatorInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
@@ -502,28 +504,7 @@ class ContactController extends RestController implements ClassResourceInterface
         $locale = $this->getLocale($request);
 
         if ($request->get('flat') == 'true') {
-            /** @var RestHelperInterface $restHelper */
-            $restHelper = $this->getRestHelper();
-
-            /** @var DoctrineListBuilderFactory $factory */
-            $factory = $this->get('sulu_core.doctrine_list_builder_factory');
-
-            $listBuilder = $factory->create($this->container->getParameter('sulu.model.contact.class'));
-
-            $restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());
-
-            $listResponse = $listBuilder->execute();
-            $listResponse = $this->addAvatars($listResponse, $locale);
-
-            $list = new ListRepresentation(
-                $listResponse,
-                self::$entityKey,
-                'get_contacts',
-                $request->query->all(),
-                $listBuilder->getCurrentPage(),
-                $listBuilder->getLimit(),
-                $listBuilder->count()
-            );
+            $list = $this->getList($request, $locale);
         } else {
             if ($request->get('bySystem') == true) {
                 $contacts = $this->getContactsByUserSystem();
@@ -563,6 +544,76 @@ class ContactController extends RestController implements ClassResourceInterface
         }
 
         return $this->handleView($view);
+    }
+
+    /**
+     * Returns list for cget.
+     *
+     * @param Request $request
+     * @param string $locale
+     *
+     * @return ListRepresentation
+     */
+    private function getList(Request $request, $locale)
+    {
+        /** @var RestHelperInterface $restHelper */
+        $restHelper = $this->getRestHelper();
+
+        /** @var DoctrineListBuilderFactory $factory */
+        $factory = $this->get('sulu_core.doctrine_list_builder_factory');
+
+        $listBuilder = $factory->create($this->container->getParameter('sulu.model.contact.class'));
+        $restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());
+
+        $listResponse = $this->prepareListResponse($request, $listBuilder, $locale);
+
+        return new ListRepresentation(
+            $listResponse,
+            self::$entityKey,
+            'get_contacts',
+            $request->query->all(),
+            $listBuilder->getCurrentPage(),
+            $listBuilder->getLimit(),
+            $listBuilder->count()
+        );
+    }
+
+    /**
+     * Prepare list response.
+     *
+     * @param Request $request
+     * @param DoctrineListBuilder $listBuilder
+     * @param string $locale
+     *
+     * @return array
+     */
+    private function prepareListResponse(Request $request, DoctrineListBuilder $listBuilder, $locale)
+    {
+        $idsParameter = $request->get('ids');
+        $ids = array_filter(explode(',', $idsParameter));
+        if ($idsParameter !== null && count($ids) === 0) {
+            return [];
+        }
+
+        if ($idsParameter !== null) {
+            $listBuilder->in($this->fieldDescriptors['id'], $ids);
+        }
+
+        $listResponse = $listBuilder->execute();
+        $listResponse = $this->addAvatars($listResponse, $locale);
+
+        if ($idsParameter !== null) {
+            $comparator = $this->getComparator();
+            // the @ is necessary in case of a PHP bug https://bugs.php.net/bug.php?id=50688
+            @usort(
+                $listResponse,
+                function ($a, $b) use ($comparator, $ids) {
+                    return $comparator->compare($a['id'], $b['id'], $ids);
+                }
+            );
+        }
+
+        return $listResponse;
     }
 
     /**
@@ -759,5 +810,13 @@ class ContactController extends RestController implements ClassResourceInterface
         if ($request->get('formOfAddress') == null) {
             throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'contact');
         }
+    }
+
+    /**
+     * @return IndexComparatorInterface
+     */
+    private function getComparator()
+    {
+        return $this->get('sulu_contact.util.index_comparator');
     }
 }

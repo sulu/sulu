@@ -102,7 +102,7 @@ class AccountRepositoryTest extends SuluTestCase
         return $account;
     }
 
-    public function dataProvider()
+    public function findByProvider()
     {
         // when pagination is active the result count is pageSize + 1 to determine has next page
 
@@ -162,7 +162,7 @@ class AccountRepositoryTest extends SuluTestCase
     }
 
     /**
-     * @dataProvider dataProvider
+     * @dataProvider findByProvider
      *
      * @param array $filters
      * @param int $page
@@ -196,6 +196,39 @@ class AccountRepositoryTest extends SuluTestCase
             foreach ($tags as $tag) {
                 $this->assertTrue($result[$i]->getTags()->contains($this->tags[$tag]));
             }
+        }
+    }
+
+    public function findByIdsProvider()
+    {
+        return [
+            [[0, 1, 2], array_slice($this->accountData, 0, 3)],
+            [[], []],
+            [[15, 99], []],
+        ];
+    }
+
+    /**
+     * @dataProvider findByIdsProvider
+     *
+     * @param array $ids
+     * @param array $expected
+     */
+    public function testFindByIds($ids, $expected)
+    {
+        for ($i = 0; $i < count($ids); ++$i) {
+            if (isset($this->accounts[$ids[$i]])) {
+                $ids[$i] = $this->accounts[$ids[$i]]->getId();
+            }
+        }
+
+        $repository = $this->em->getRepository(Account::class);
+
+        $result = $repository->findByIds($ids);
+
+        for ($i = 0; $i < count($expected); ++$i) {
+            $this->assertEquals($ids[$i], $result[$i]->getId());
+            $this->assertEquals($expected[$i][0], $result[$i]->getName());
         }
     }
 }

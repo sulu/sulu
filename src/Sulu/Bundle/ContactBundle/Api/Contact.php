@@ -41,6 +41,8 @@ use Sulu\Component\Security\Authentication\UserInterface;
  */
 class Contact extends ApiWrapper
 {
+    const TYPE = 'contact';
+
     /**
      * @var Media
      */
@@ -1091,6 +1093,18 @@ class Contact extends ApiWrapper
         }
 
         return $entities;
+    }
+
+    /**
+     * Get type of api entity.
+     *
+     * @VirtualProperty
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return self::TYPE;
     }
 
     /**

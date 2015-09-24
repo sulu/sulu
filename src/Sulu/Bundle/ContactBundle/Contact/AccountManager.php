@@ -172,6 +172,30 @@ class AccountManager extends AbstractContactManager
     }
 
     /**
+     * Returns account entities by ids.
+     *
+     * @param $ids
+     * @param $locale
+     *
+     * @return array
+     */
+    public function getByIds($ids, $locale)
+    {
+        if (!is_array($ids) || count($ids) === 0) {
+            return [];
+        }
+
+        $accounts = $this->accountRepository->findByIds($ids);
+
+        return array_map(
+            function ($account) use ($locale) {
+                return $this->getApiObject($account, $locale);
+            },
+            $accounts
+        );
+    }
+
+    /**
      * Gets account by id - can include relations.
      *
      * @param $id

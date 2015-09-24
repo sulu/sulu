@@ -86,6 +86,30 @@ class ContactManager extends AbstractContactManager
     }
 
     /**
+     * Returns contact entities by ids.
+     *
+     * @param $ids
+     * @param $locale
+     *
+     * @return mixed
+     */
+    public function getByIds($ids, $locale)
+    {
+        if (!is_array($ids) || count($ids) === 0) {
+            return [];
+        }
+
+        $contacts = $this->contactRepository->findByIds($ids);
+
+        return array_map(
+            function ($contact) use ($locale) {
+                return $this->getApiObject($contact, $locale);
+            },
+            $contacts
+        );
+    }
+
+    /**
      * Deletes the contact for the given id.
      *
      * @return \Closure

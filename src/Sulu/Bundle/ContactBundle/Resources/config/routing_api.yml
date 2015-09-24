@@ -1,3 +1,7 @@
+sulu_contact.customer:
+    type: rest
+    resource: Sulu\Bundle\ContactBundle\Controller\CustomerController
+
 sulu_contact.contacts:
     type: rest
     resource: Sulu\Bundle\ContactBundle\Controller\ContactController

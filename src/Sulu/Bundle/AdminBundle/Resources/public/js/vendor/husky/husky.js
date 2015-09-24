@@ -30279,7 +30279,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.$el = null;
             this.table = {};
             this.data = null;
-            this.rowClicked = false;
+            this.rowClicked = {};
             this.isFocusoutHandlerEnabled = this.options.editable === true || this.options.editable === 'true';
             this.renderChildrenHidden = this.options.hideChildrenAtBeginning;
             this.tableCropped = false;
@@ -30863,12 +30863,12 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                         if (cell.croppable === true) {
                             $contentContainer = this.sandbox.dom.find('.' + constants.textContainerClass, cell.$el);
                             if (crop === true) {
-                                content = this.sandbox.util.cropMiddle(cell.originalData, this.options.croppedMaxLength);
-                                this.sandbox.dom.attr($contentContainer, 'title', cell.originalData);
+                                content = this.sandbox.util.cropMiddle(cell.originalContent, this.options.croppedMaxLength);
+                                this.sandbox.dom.attr($contentContainer, 'title', cell.originalContent);
                                 this.tableCropped = true;
                                 this.cropBreakPoint = this.sandbox.dom.width(this.table.$container);
                             } else {
-                                content = cell.originalData;
+                                content = cell.originalContent;
                                 this.sandbox.dom.removeAttr($contentContainer, 'title');
                                 this.tableCropped = false;
                             }
@@ -31170,14 +31170,15 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param event {Object} the original click event
          */
         rowClickCallback: function(event) {
-            if (this.rowClicked === false) {
-                this.rowClicked = true;
-                var recordId = this.sandbox.dom.data(event.currentTarget, 'id');
-                ;
+            var recordId = this.sandbox.dom.data(event.currentTarget, 'id');
+
+            if (!this.rowClicked[recordId]) {
+                this.rowClicked[recordId] = true;
+
                 this.datagrid.itemClicked.call(this.datagrid, recordId);
                 // delay to prevent multiple emits on double click
                 this.sandbox.util.delay(function() {
-                    this.rowClicked = false;
+                    this.rowClicked[recordId] = false;
                 }.bind(this), 500);
             }
         },
@@ -31267,11 +31268,19 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         },
 
         /**
-         * Selects or deselects a record with a given id
+         * Selects a record with a given id
          * @param recordId {Number|String} the id of the record to select or deselect
          */
         selectRecord: function(recordId) {
             this.toggleSelectRecord(recordId, true);
+        },
+
+        /**
+         * Deselects a record with a given id
+         * @param recordId {Number|String} the id of the record to select or deselect
+         */
+        deselectRecord: function(recordId) {
+            this.toggleSelectRecord(recordId, false);
         },
 
         /**
@@ -32686,11 +32695,29 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
 
             /**
              * selects an item with a given id
-             * @event husky.datagrid.items.deselect
+             * @event husky.datagrid.select.item
              * @param {String|Number} The id of the item to select
              */
             SELECT_ITEM = function() {
                 return this.createEventName('select.item');
+            },
+
+            /**
+             * deselects an item with a given id
+             * @event husky.datagrid.deselect.item
+             * @param {String|Number} The id of the item to deselect
+             */
+            DESELECT_ITEM = function() {
+                return this.createEventName('deselect.item');
+            },
+
+            /**
+             * toggle an item with a given id
+             * @event husky.datagrid.toggle.item
+             * @param {String|Number} The id of the item to toggle
+             */
+            TOGGLE_ITEM = function() {
+                return this.createEventName('toggle.item');
             },
 
             /**
@@ -33489,6 +33516,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 this.sandbox.on(MEDIUM_LOADER_HIDE.call(this), this.hideMediumLoader.bind(this));
                 this.sandbox.on(SELECTED_UPDATE.call(this), this.updateSelection.bind(this));
                 this.sandbox.on(SELECT_ITEM.call(this), this.selectItem.bind(this));
+                this.sandbox.on(DESELECT_ITEM.call(this), this.deselectItem.bind(this));
+                this.sandbox.on(TOGGLE_ITEM.call(this), this.toggleItem.bind(this));
                 this.sandbox.on(ITEMS_DESELECT.call(this), function() {
                     this.gridViews[this.viewId].deselectAllRecords();
                 }.bind(this));
@@ -33752,6 +33781,28 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              */
             selectItem: function(itemId) {
                 this.gridViews[this.viewId].selectRecord(itemId);
+            },
+
+            /**
+             * Deselects an item with a given id
+             * @param itemId {Number|String} the id of the item to select
+             */
+            deselectItem: function(itemId) {
+                if (!!this.gridViews[this.viewId].deselectRecord) {
+                    this.gridViews[this.viewId].deselectRecord(itemId);
+                }
+            },
+
+            /**
+             * Toogle an item with a given id
+             * @param itemId {Number|String} the id of the item to select
+             */
+            toggleItem: function(itemId) {
+                if (this.itemIsSelected(itemId)) {
+                    this.deselectItem(itemId);
+                } else {
+                    this.selectItem(itemId);
+                }
             },
 
             /**
@@ -42080,9 +42131,9 @@ define('__component__$overlay@husky',[], function() {
          */
         setContent: function(slide) {
             if (!!this.slides[slide].data) {
-                this.sandbox.dom.append(this.overlay.slides[slide].$content, this.slides[slide].data);
+                this.sandbox.dom.html(this.overlay.slides[slide].$content, this.slides[slide].data);
             } else if (!!this.slides[slide].message) {
-                this.sandbox.dom.append(this.overlay.slides[slide].$content, this.sandbox.util.template(templates.message, {
+                this.sandbox.dom.html(this.overlay.slides[slide].$content, this.sandbox.util.template(templates.message, {
                     message: this.slides[slide].message
                 }));
 
@@ -44294,7 +44345,6 @@ define('__component__$data-navigation@husky',[
                 if (!$('.data-navigation-header').hasClass('header-search')){
                     $('.data-navigation-header').addClass('header-search');
                     $('.data-navigation-search span').attr('class', 'fa-times');
-                    $('.data-navigation-search input').select();
                 } else {
                     this.clearSearch();
                 }
@@ -49628,7 +49678,7 @@ define('husky_extensions/itembox',[],function() {
                 // reset items visible when new content is loaded
                 this.viewAll = false;
 
-                if (!!data) {
+                if (!!data && data.length > 0) {
                     this.sandbox.util.load(this.getUrl(data))
                         .then(function(data) {
                             this.$container.removeClass(constants.isLoadingClass);
@@ -49638,6 +49688,7 @@ define('husky_extensions/itembox',[],function() {
                             this.sandbox.logger.error(error);
                         }.bind(this));
                 } else {
+                    this.$container.removeClass(constants.isLoadingClass);
                     this.sandbox.emit(this.DATA_RETRIEVED(), []);
                 }
             },
@@ -49663,6 +49714,9 @@ define('husky_extensions/itembox',[],function() {
                     this.updateSelectedCounter();
                     this.updateVisibility();
                 } else {
+                    // remove content
+                    this.$list.children().remove();
+
                     this.addNoContentClass();
                 }
             },
