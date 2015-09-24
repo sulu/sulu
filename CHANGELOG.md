@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * BUGFIX      #1625 [MediaBundle]     Fixed queries for PostgreSQL
+    * ENHANCEMENT #1626 [AdminBundle]     Added require-css to load css dynamically with require
     * BUGFIX      #1619 [CategoryBundle]  Fixed category view cropping responsive
     * BUGFIX      #1619 [AdminBundle]     Fixed responsive interface with sidebar
     * BUGFIX      #1614 [ContentBundle]   Readded the reorder event to the OrderSubscriber

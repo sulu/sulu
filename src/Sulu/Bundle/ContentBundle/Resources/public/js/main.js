@@ -10,6 +10,8 @@
 require.config({
     paths: {
         sulucontent: '../../sulucontent/js',
+        sulucontentcss: '../../sulucontent/css',
+
         "type/resourceLocator": '../../sulucontent/js/validation/types/resourceLocator',
         "type/textEditor": '../../sulucontent/js/validation/types/textEditor',
         "type/smartContent": '../../sulucontent/js/validation/types/smartContent',
@@ -20,7 +22,11 @@ require.config({
     }
 });
 
-define(['config', 'extensions/sulu-buttons-contentbundle'], function(Config, ContentButtons) {
+define([
+    'config',
+    'extensions/sulu-buttons-contentbundle',
+    'css!sulucontentcss/main'
+], function(Config, ContentButtons) {
     return {
 
         name: "Sulu Content Bundle",
