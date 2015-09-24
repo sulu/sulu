@@ -311,9 +311,7 @@ define([], function() {
         },
 
         getAddOverlayData = function() {
-            var accountDef = this.sandbox.data.deferred(),
-                contactDef = this.sandbox.data.deferred(),
-                data = [],
+            var data = [],
                 oldData = this.getData();
 
             this.sandbox.emit('husky.datagrid.contact.items.get-selected', function(selected) {
@@ -327,8 +325,6 @@ define([], function() {
                         data.push(value);
                     }
                 }.bind(this));
-
-                contactDef.resolve();
             }.bind(this));
             this.sandbox.emit('husky.datagrid.account.items.get-selected', function(selected) {
                 this.sandbox.util.foreach(selected, function(item) {
@@ -341,21 +337,17 @@ define([], function() {
                         data.push(value);
                     }
                 }.bind(this));
-
-                accountDef.resolve();
             }.bind(this));
 
-            this.sandbox.dom.when(accountDef, contactDef).then(function() {
-                var keys = Object.keys(data),
-                    result = [],
-                    i, len = keys.length;
+            var keys = Object.keys(data),
+                result = [],
+                i, len = keys.length;
 
-                for (i = 0; i < len; i++) {
-                    result.push(data[keys[i]]);
-                }
+            for (i = 0; i < len; i++) {
+                result.push(data[keys[i]]);
+            }
 
-                this.setData(result);
-            }.bind(this));
+            this.setData(result);
         };
 
     return {

@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\ContactBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -35,14 +35,9 @@ class CustomerController extends RestController implements ClassResourceInterfac
 
         $result = $this->getCustomerManager()->findByIds($ids);
 
-        $list = new ListRepresentation(
+        $list = new CollectionRepresentation(
             $result,
-            self::$entityKey,
-            'get_customers',
-            $request->query->all(),
-            1,
-            999,
-            count($result)
+            self::$entityKey
         );
         $view = $this->view($list, 200);
 
