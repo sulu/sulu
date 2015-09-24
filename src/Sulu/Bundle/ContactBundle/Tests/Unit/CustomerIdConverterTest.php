@@ -31,7 +31,7 @@ class CustomerIdConverterTest extends \PHPUnit_Framework_TestCase
      */
     public function testConvertIdsToGroupedIds($ids, $default, $expected)
     {
-        $converter = new ContactIdConverter();
+        $converter = new CustomerIdConverter();
         $result = $converter->convertIdsToGroupedIds($ids, $default);
 
         $this->assertEquals($expected, $result);
@@ -55,7 +55,7 @@ class CustomerIdConverterTest extends \PHPUnit_Framework_TestCase
      */
     public function testConvertGroupedIdsToIds($groupedIds, $expected)
     {
-        $converter = new ContactIdConverter();
+        $converter = new CustomerIdConverter();
         $result = $converter->convertGroupedIdsToIds($groupedIds);
 
         $this->assertEquals($expected, $result);

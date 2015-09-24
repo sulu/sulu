@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Util;
 
-class IdComparatorTest extends \PHPUnit_Framework_TestCase
+class IndexComparatorTest extends \PHPUnit_Framework_TestCase
 {
     public function usortProvider()
     {

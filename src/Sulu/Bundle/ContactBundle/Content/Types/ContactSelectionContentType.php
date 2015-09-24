@@ -158,7 +158,7 @@ class ContactSelectionContentType extends ComplexContentType
         $contacts = $this->contactManager->getByIds($ids['c'], $locale);
 
         $result = array_merge($accounts, $contacts);
-        usort(
+        @usort(
             $result,
             function ($a, $b) use ($value) {
                 $typeA = $a instanceof Contact ? 'c' : 'a';
