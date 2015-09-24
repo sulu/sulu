@@ -158,9 +158,9 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
      */
     public function count(array $filter)
     {
-        list($collection, $types, $search, $orderBy, $orderSort, $ids) = $this->extractFilterVars($filter);
+        list($collection, $types, $search) = $this->extractFilterVars($filter);
 
-        $query = $this->getIdsQuery($collection, $types, $search, $orderBy, $orderSort, null, null, 'COUNT(media)');
+        $query = $this->getIdsQuery($collection, $types, $search, null, null, null, null, 'COUNT(media)');
         $result = $query->getSingleResult()[1];
 
         return intval($result);

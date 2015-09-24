@@ -7,8 +7,9 @@ php:
 
 env:
   - SULU_ORM=mysql SULU_PHPCR=jackrabbit
-#  - SULU_ORM=mysql SULU_PHPCR=doctrine_dbal
 #  - SULU_ORM=postgres SULU_PHPCR=jackrabbit
+#  - SULU_ORM=mysql SULU_PHPCR=doctrine_dbal
+#  - SULU_ORM=postgres SULU_PHPCR=doctrine_dbal
 
 before_script:
   - composer self-update
