@@ -143,7 +143,7 @@ class RedirectTypeSubscriberTest extends \PHPUnit_Framework_TestCase
         $subscriber->doPersist($event->reveal());
     }
 
-    public function testPersistWithTypeNoneMissingLink()
+    public function testPersistWithTypeInternalMissingLink()
     {
         $this->setExpectedException(MandatoryPropertyException::class);
 
