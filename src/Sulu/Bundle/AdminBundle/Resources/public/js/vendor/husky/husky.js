@@ -30863,12 +30863,12 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                         if (cell.croppable === true) {
                             $contentContainer = this.sandbox.dom.find('.' + constants.textContainerClass, cell.$el);
                             if (crop === true) {
-                                content = this.sandbox.util.cropMiddle(cell.originalContent, this.options.croppedMaxLength);
-                                this.sandbox.dom.attr($contentContainer, 'title', cell.originalContent);
+                                content = this.sandbox.util.cropMiddle(cell.originalData, this.options.croppedMaxLength);
+                                this.sandbox.dom.attr($contentContainer, 'title', cell.originalData);
                                 this.tableCropped = true;
                                 this.cropBreakPoint = this.sandbox.dom.width(this.table.$container);
                             } else {
-                                content = cell.originalContent;
+                                content = cell.originalData;
                                 this.sandbox.dom.removeAttr($contentContainer, 'title');
                                 this.tableCropped = false;
                             }
@@ -42131,9 +42131,9 @@ define('__component__$overlay@husky',[], function() {
          */
         setContent: function(slide) {
             if (!!this.slides[slide].data) {
-                this.sandbox.dom.html(this.overlay.slides[slide].$content, this.slides[slide].data);
+                this.sandbox.dom.append(this.overlay.slides[slide].$content, this.slides[slide].data);
             } else if (!!this.slides[slide].message) {
-                this.sandbox.dom.html(this.overlay.slides[slide].$content, this.sandbox.util.template(templates.message, {
+                this.sandbox.dom.append(this.overlay.slides[slide].$content, this.sandbox.util.template(templates.message, {
                     message: this.slides[slide].message
                 }));
 
@@ -44345,6 +44345,7 @@ define('__component__$data-navigation@husky',[
                 if (!$('.data-navigation-header').hasClass('header-search')){
                     $('.data-navigation-header').addClass('header-search');
                     $('.data-navigation-search span').attr('class', 'fa-times');
+                    $('.data-navigation-search input').select();
                 } else {
                     this.clearSearch();
                 }
