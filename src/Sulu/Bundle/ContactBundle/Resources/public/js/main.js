@@ -10,6 +10,7 @@
 require.config({
     paths: {
         sulucontact: '../../sulucontact/js',
+        sulucontactcss: '../../sulucontact/css',
 
         'type/bic-input': '../../sulucontact/js/validation/types/bic-input',
         'type/vat-input': '../../sulucontact/js/validation/types/vat-input',
@@ -39,7 +40,12 @@ require.config({
     }
 });
 
-define(['config', 'extensions/sulu-buttons-contactbundle', 'extensions/iban'], function(Config, ContactButtons, IbanExtension) {
+define([
+    'config',
+    'extensions/sulu-buttons-contactbundle',
+    'extensions/iban',
+    'css!sulucontactcss/main'
+], function(Config, ContactButtons, IbanExtension) {
 
     'use strict';
 

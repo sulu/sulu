@@ -12,10 +12,11 @@
     "tests"
   ],
   "dependencies": {
-    "husky": "0.14.*",
     "backbone-relational": "0.8.*",
     "globalize": "0.1.*",
-    "jquery": "1.10.*"
+    "husky": "#develop",
+    "jquery": "1.10.*",
+    "require-css": "~0.1.8"
   },
   "resolutions": {
     "jquery": "1.10.*",
