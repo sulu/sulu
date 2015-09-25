@@ -18,6 +18,7 @@ use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
+use Sulu\Component\Content\Exception\MandatoryPropertyException;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -390,18 +391,22 @@ class NodeController extends RestController
 
         $data = $request->request->all();
 
-        $mapperRequest = ContentMapperRequest::create()
-            ->setType($type)
-            ->setTemplateKey($template)
-            ->setWebspaceKey($webspace)
-            ->setUserId($this->getUser()->getId())
-            ->setState($state)
-            ->setIsShadow($isShadow)
-            ->setShadowBaseLanguage($shadowBaseLanguage)
-            ->setLocale($language)
-            ->setUuid($uuid)
-            ->setData($data);
-        $result = $this->getRepository()->saveNodeRequest($mapperRequest);
+        try {
+            $mapperRequest = ContentMapperRequest::create()
+                ->setType($type)
+                ->setTemplateKey($template)
+                ->setWebspaceKey($webspace)
+                ->setUserId($this->getUser()->getId())
+                ->setState($state)
+                ->setIsShadow($isShadow)
+                ->setShadowBaseLanguage($shadowBaseLanguage)
+                ->setLocale($language)
+                ->setUuid($uuid)
+                ->setData($data);
+            $result = $this->getRepository()->saveNodeRequest($mapperRequest);
+        } catch (MandatoryPropertyException $ex) {
+            return $this->handleView($this->view($ex->getMessage(), 400));
+        }
 
         return $this->handleView(
             $this->view($result)
