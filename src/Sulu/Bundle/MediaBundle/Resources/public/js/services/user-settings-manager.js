@@ -13,6 +13,8 @@ define(function() {
 
         var instance = null,
             mediaLanguageKey = 'mediaLanguage',
+            dropdownPageSize = 'mediaDropdownPageSize',
+            infinityPageSize = 'mediaInfinitePageSize',
             mediaListViewKey = 'collectionEditListView',
             mediaListPaginationKey = 'collectionEditListPagination',
             lastVisitedCollectionKey = 'last-visited-collection';
@@ -48,6 +50,14 @@ define(function() {
 
             setLastVisitedCollection: function(collectionId) {
                 Husky.sulu.saveUserSetting(lastVisitedCollectionKey, collectionId);
+            },
+
+            getDropdownPageSize: function() {
+                return Husky.sulu.getUserSetting(dropdownPageSize) || 20;
+            },
+
+            getInfinityPageSize: function() {
+                return Husky.sulu.getUserSetting(infinityPageSize) || 50;
             }
         };
 

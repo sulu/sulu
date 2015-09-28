@@ -7,9 +7,11 @@
  * with this source code in the file LICENSE.
  */
 
-define(['services/sulumedia/media-manager',
+define([
+    'services/sulumedia/media-manager',
     'services/sulumedia/user-settings-manager',
-    'services/sulumedia/overlay-manager'], function(MediaManager, UserSettingsManager, OverlayManager) {
+    'services/sulumedia/overlay-manager'
+], function(MediaManager, UserSettingsManager, OverlayManager) {
 
     'use strict';
 
@@ -175,7 +177,7 @@ define(['services/sulumedia/media-manager',
                 // todo: find a better strategy to change pagination and view-decorator and load first page
                 this.sandbox.emit('husky.datagrid.view.change', 'table');
                 this.sandbox.emit('husky.datagrid.pagination.change', 'dropdown');
-                this.sandbox.emit('husky.datagrid.change.page', 1);
+                this.sandbox.emit('husky.datagrid.change.page', 1, UserSettingsManager.getDropdownPageSize());
             }.bind(this));
 
             // change datagrid view to masonry
@@ -187,7 +189,7 @@ define(['services/sulumedia/media-manager',
                 // todo: find a better strategy to change pagination and view-decorator and load first page
                 this.sandbox.emit('husky.datagrid.view.change', 'datagrid/decorators/masonry-view');
                 this.sandbox.emit('husky.datagrid.pagination.change', 'infinite-scroll');
-                this.sandbox.emit('husky.datagrid.change.page', 1);
+                this.sandbox.emit('husky.datagrid.change.page', 1, UserSettingsManager.getInfinityPageSize());
             }.bind(this));
         },
 
@@ -269,7 +271,8 @@ define(['services/sulumedia/media-manager',
                     },
                     paginationOptions: {
                         'infinite-scroll': {
-                            reachedBottomMessage: 'public.reached-list-end'
+                            reachedBottomMessage: 'public.reached-list-end',
+                            scrollOffset: 500
                         }
                     }
                 });
