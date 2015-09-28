@@ -98,7 +98,20 @@ class QueryBuilder extends ContentQueryBuilder
 
         // build where clause for tags
         if ($this->hasConfig('tags')) {
-            $sql2Where[] = $this->buildTagsWhere($locale);
+            $sql2Where[] = $this->buildTagsWhere(
+                $this->getConfig('tags', []),
+                $this->getConfig('tagOperator', 'OR'),
+                $locale
+            );
+        }
+
+        // build where clause for website tags
+        if ($this->hasConfig('websiteTags')) {
+            $sql2Where[] = $this->buildTagsWhere(
+                $this->getConfig('websiteTags', []),
+                $this->getConfig('websiteTagOperator', 'OR'),
+                $locale
+            );
         }
 
         if (count($this->ids) > 0) {
@@ -223,7 +236,8 @@ class QueryBuilder extends ContentQueryBuilder
     {
         $dataSource = $this->getConfig('dataSource');
         $includeSubFolders = $this->getConfig('includeSubFolders', false);
-        $sqlFunction = $includeSubFolders !== false && $includeSubFolders !== 'false' ? 'ISDESCENDANTNODE' : 'ISCHILDNODE';
+        $sqlFunction = $includeSubFolders !== false && $includeSubFolders !== 'false' ?
+            'ISDESCENDANTNODE' : 'ISCHILDNODE';
 
         if ($this->webspaceManager->findWebspaceByKey($dataSource) !== null) {
             $node = $this->sessionManager->getContentNode($dataSource);
@@ -237,25 +251,25 @@ class QueryBuilder extends ContentQueryBuilder
     /**
      * build tags where clauses.
      */
-    private function buildTagsWhere($languageCode)
+    private function buildTagsWhere($tags, $operator, $languageCode)
     {
         $structure = $this->structureManager->getStructure('excerpt');
 
         $sql2Where = [];
         if ($structure->hasProperty('tags')) {
-            $tagOperator = $this->getConfig('tagOperator', 'OR');
             $property = new TranslatedProperty(
                 $structure->getProperty('tags'),
                 $languageCode,
                 $this->languageNamespace,
                 'excerpt'
             );
-            foreach ($this->getConfig('tags', []) as $tag) {
+
+            foreach ($tags as $tag) {
                 $sql2Where[] = 'page.[' . $property->getName() . '] = ' . $tag;
             }
 
             if (count($sql2Where) > 0) {
-                return '(' . implode(' ' . strtoupper($tagOperator) . ' ', $sql2Where) . ')';
+                return '(' . implode(' ' . strtoupper($operator) . ' ', $sql2Where) . ')';
             }
         }
 

@@ -160,6 +160,59 @@ class ContactRepositoryTest extends SuluTestCase
                 array_slice($this->contactData, 6, 1),
                 [0],
             ],
+            // no pagination, website-tag 0
+            [
+                ['websiteTags' => [0], 'websiteTagOperator' => 'or'],
+                null,
+                0,
+                null,
+                array_slice($this->contactData, 0, 7),
+                [0],
+            ],
+            // no pagination, website-tag 0 or 1
+            [
+                ['websiteTags' => [0, 1], 'websiteTagOperator' => 'or'],
+                null,
+                0,
+                null,
+                array_slice($this->contactData, 0, 7),
+            ],
+            // no pagination, website-tag 0 and 1
+            [
+                ['websiteTags' => [0, 1], 'websiteTagOperator' => 'and'],
+                null,
+                0,
+                null,
+                array_slice($this->contactData, 0, 4),
+                [0, 1],
+            ],
+            // no pagination, website-tag 1, tags 3
+            [
+                ['websiteTags' => [1], 'websiteTagOperator' => 'or', 'tags' => [3], 'tagOperator' => 'or'],
+                null,
+                0,
+                null,
+                [$this->contactData[1]],
+                [0, 3],
+            ],
+            // no pagination, website-tag 2 or 3, tags 1
+            [
+                ['websiteTags' => [2, 3], 'websiteTagOperator' => 'or', 'tags' => [1], 'tagOperator' => 'or'],
+                null,
+                0,
+                null,
+                [$this->contactData[0], $this->contactData[1], $this->contactData[3]],
+                [0, 1],
+            ],
+            // no pagination, website-tag 1, tags 2 or 3
+            [
+                ['websiteTags' => [1], 'websiteTagOperator' => 'or', 'tags' => [2, 3], 'tagOperator' => 'or'],
+                null,
+                0,
+                null,
+                [$this->contactData[0], $this->contactData[1], $this->contactData[3]],
+                [0, 1],
+            ],
         ];
     }
 
@@ -184,6 +237,16 @@ class ContactRepositoryTest extends SuluTestCase
                     return $this->tags[$tag]->getId();
                 },
                 $filters['tags']
+            );
+        }
+
+        // if tags isset replace the array indexes with database id
+        if (array_key_exists('websiteTags', $filters)) {
+            $filters['websiteTags'] = array_map(
+                function ($tag) {
+                    return $this->tags[$tag]->getId();
+                },
+                $filters['websiteTags']
             );
         }
 

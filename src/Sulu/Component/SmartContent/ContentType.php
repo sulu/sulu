@@ -15,6 +15,7 @@ use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 use Sulu\Component\Util\ArrayableInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -51,22 +52,30 @@ class ContentType extends ComplexContentType
     private $cache = [];
 
     /**
+     * @var TagRequestHandlerInterface
+     */
+    private $tagRequestHandler;
+
+    /**
      * SmartContentType constructor.
      *
-     * @param string $template
-     * @param TagManagerInterface $tagManager
      * @param DataProviderPoolInterface $dataProviderPool
+     * @param TagManagerInterface $tagManager
      * @param RequestStack $requestStack
+     * @param TagRequestHandlerInterface $tagRequestHandler
+     * @param string $template
      */
     public function __construct(
         DataProviderPoolInterface $dataProviderPool,
         TagManagerInterface $tagManager,
         RequestStack $requestStack,
+        TagRequestHandlerInterface $tagRequestHandler,
         $template
     ) {
         $this->dataProviderPool = $dataProviderPool;
         $this->tagManager = $tagManager;
         $this->requestStack = $requestStack;
+        $this->tagRequestHandler = $tagRequestHandler;
         $this->template = $template;
     }
 
@@ -158,7 +167,8 @@ class ContentType extends ComplexContentType
         $defaults = [
             'provider' => new PropertyParameter('provider', 'content'),
             'page_parameter' => new PropertyParameter('page_parameter', 'p'),
-            'tag_parameter' => new PropertyParameter('tag_parameter', 'tag'),
+            'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
+            'website_tag_operator' => new PropertyParameter('website_tag_operator', 'OR'),
             'sorting' => new PropertyParameter('sorting', $configuration->getSorting(), 'collection'),
             'present_as' => new PropertyParameter('present_as', [], 'collection'),
             'has' => [
@@ -216,9 +226,23 @@ class ContentType extends ComplexContentType
         $filters = $property->getValue();
         $filters['excluded'] = [$property->getStructure()->getUuid()];
 
+        // default value of tags is an empty array
+        if (!array_key_exists('tags', $filters)) {
+            $filters['tags'] = [];
+        }
+
+        // extends selected filter with requested tags
+        $filters['websiteTags'] = $this->tagRequestHandler->getTags($params['tags_parameter']->getValue());
+        $filters['websiteTagOperator'] = $params['website_tag_operator']->getValue();
+
         // resolve tags to id
         if (!empty($filters['tags'])) {
             $filters['tags'] = $this->tagManager->resolveTagNames($filters['tags']);
+        }
+
+        // resolve website tags to id
+        if (!empty($filters['websiteTags'])) {
+            $filters['websiteTags'] = $this->tagManager->resolveTagNames($filters['websiteTags']);
         }
 
         // get provider
@@ -327,7 +351,7 @@ class ContentType extends ComplexContentType
     }
 
     /**
-     * determine current page from current request.
+     * Determine current page from current request.
      *
      * @param string $pageParameter
      *
