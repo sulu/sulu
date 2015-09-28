@@ -115,7 +115,16 @@ define([
          * @returns {boolean}
          */
         orderEnabler = function(column) {
-            return column.numberItems > 1;
+            var editChildrenPermission = true;
+
+            $.each(column.children, function(id, childItem) {
+                if (!SecurityChecker.hasPermission(childItem, 'edit')) {
+                    editChildrenPermission = false;
+                    return false;
+                }
+            });
+
+            return column.numberItems > 1 && editChildrenPermission && checkParentSecurity(column, 'edit');
         },
 
         /**
@@ -124,9 +133,19 @@ define([
          * @returns {boolean}
          */
         addButtonEnabler = function(column) {
+            return checkParentSecurity(column, 'add');
+        },
+
+        /**
+         * Checks if the selected item in the parent column has the given permission
+         * @param column
+         * @param permission
+         * @returns {boolean}
+         */
+        checkParentSecurity = function(column, permission) {
             if (column.parent) {
                 if (!!column.parent.hasOwnProperty('_permissions')) {
-                    return column.parent._permissions.add;
+                    return column.parent._permissions[permission];
                 }
 
                 if (!column.parent.selectedItem) {
@@ -134,7 +153,7 @@ define([
                 }
             }
 
-            return SecurityChecker.hasPermission(column.parent.selectedItem, 'add');
+            return SecurityChecker.hasPermission(column.parent.selectedItem, permission);
         };
 
     return {
