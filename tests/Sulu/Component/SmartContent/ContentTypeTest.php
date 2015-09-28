@@ -12,6 +12,7 @@
 namespace Sulu\Component\SmartContent;
 
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Component\Category\Request\CategoryRequestHandlerInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\SmartContent\Configuration\ProviderConfiguration;
 use Sulu\Component\SmartContent\ContentType as SmartContent;
@@ -55,6 +56,11 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
     private $tagRequestHandler;
 
     /**
+     * @var CategoryRequestHandlerInterface
+     */
+    private $categoryRequestHandler;
+
+    /**
      * @var DataProviderPoolInterface
      */
     private $dataProviderPool;
@@ -93,11 +99,15 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->tagRequestHandler = $this->prophesize(TagRequestHandlerInterface::class);
         $this->tagRequestHandler->getTags('tags')->willReturn([]);
 
+        $this->categoryRequestHandler = $this->prophesize(CategoryRequestHandlerInterface::class);
+        $this->categoryRequestHandler->getCategories('categories')->willReturn([]);
+
         $this->smartContent = new SmartContent(
             $this->dataProviderPool,
             $this->tagManager,
             $this->requestStack,
             $this->tagRequestHandler->reveal(),
+            $this->categoryRequestHandler->reveal(),
             'SuluContentBundle:Template:content-types/smart_content.html.twig'
         );
 
@@ -316,19 +326,24 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $this->contentDataProvider->resolveResourceItems(
             [
-                'tags' => [],
-                'websiteTags' => [],
-                'websiteTagOperator' => 'OR',
                 'dataSource' => 'some-uuid',
                 'page' => 1,
                 'hasNextPage' => true,
                 'excluded' => ['123-123-123'],
+                'tags' => [],
+                'categories' => [],
+                'websiteTags' => [],
+                'websiteTagOperator' => 'OR',
+                'websiteCategories' => [],
+                'websiteCategoryOperator' => 'OR',
             ],
             [
                 'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
+                'categories_parameter' => new PropertyParameter('categories_parameter', 'categories'),
                 'website_tag_operator' => new PropertyParameter('website_tag_operator', 'OR'),
+                'website_category_operator' => new PropertyParameter('website_category_operator', 'OR'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
                 'present_as' => new PropertyParameter('present_as', [], 'collection'),
                 'has' => [
@@ -417,8 +432,11 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->contentDataProvider->resolveResourceItems(
             [
                 'tags' => [],
+                'categories' => [],
                 'websiteTags' => [],
                 'websiteTagOperator' => 'OR',
+                'websiteCategories' => [],
+                'websiteCategoryOperator' => 'OR',
                 'dataSource' => '123-123-123',
                 'excluded' => ['123-123-123'],
             ],
@@ -426,7 +444,9 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
+                'categories_parameter' => new PropertyParameter('categories_parameter', 'categories'),
                 'website_tag_operator' => new PropertyParameter('website_tag_operator', 'OR'),
+                'website_category_operator' => new PropertyParameter('website_category_operator', 'OR'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
                 'present_as' => new PropertyParameter('present_as', [], 'collection'),
                 'has' => [
@@ -500,8 +520,11 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->contentDataProvider->resolveResourceItems(
             [
                 'tags' => [],
+                'categories' => [],
                 'websiteTags' => [],
+                'websiteCategories' => [],
                 'websiteTagOperator' => 'OR',
+                'websiteCategoryOperator' => 'OR',
                 'limitResult' => $limitResult,
                 'dataSource' => $uuid,
                 'excluded' => [$uuid],
@@ -510,7 +533,9 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
+                'categories_parameter' => new PropertyParameter('categories_parameter', 'categories'),
                 'website_tag_operator' => new PropertyParameter('website_tag_operator', 'OR'),
+                'website_category_operator' => new PropertyParameter('website_category_operator', 'OR'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
                 'present_as' => new PropertyParameter('present_as', [], 'collection'),
                 'has' => [
@@ -576,8 +601,11 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->contentDataProvider->resolveResourceItems(
             [
                 'tags' => [],
+                'categories' => [],
                 'websiteTags' => [],
                 'websiteTagOperator' => 'OR',
+                'websiteCategories' => [],
+                'websiteCategoryOperator' => 'OR',
                 'limitResult' => $limitResult,
                 'dataSource' => $uuid,
                 'page' => $page,
@@ -588,6 +616,8 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
+                'categories_parameter' => new PropertyParameter('categories_parameter', 'categories'),
+                'website_category_operator' => new PropertyParameter('website_category_operator', 'OR'),
                 'website_tag_operator' => new PropertyParameter('website_tag_operator', 'OR'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
                 'present_as' => new PropertyParameter('present_as', [], 'collection'),
@@ -671,8 +701,11 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->contentDataProvider->resolveResourceItems(
             [
                 'tags' => [],
+                'categories' => [],
                 'websiteTags' => [],
                 'websiteTagOperator' => 'OR',
+                'websiteCategories' => [],
+                'websiteCategoryOperator' => 'OR',
                 'dataSource' => '123-123-123',
                 'excluded' => ['123-123-123'],
             ],
@@ -680,7 +713,9 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'provider' => new PropertyParameter('provider', 'content'),
                 'page_parameter' => new PropertyParameter('page_parameter', 'p'),
                 'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
+                'categories_parameter' => new PropertyParameter('categories_parameter', 'categories'),
                 'website_tag_operator' => new PropertyParameter('website_tag_operator', 'OR'),
+                'website_category_operator' => new PropertyParameter('website_category_operator', 'OR'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
                 'present_as' => new PropertyParameter('present_as', [], 'collection'),
                 'has' => [

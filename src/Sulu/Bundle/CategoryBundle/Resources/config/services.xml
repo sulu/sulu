@@ -8,6 +8,8 @@
         <parameter key="sulu_category.category_repository.class">Sulu\Bundle\CategoryBundle\Entity\CategoryRepository</parameter>
         <parameter key="sulu_category.content_navigation_provider.class">Sulu\Bundle\CategoryBundle\Admin\CategoryContentNavigationProvider</parameter>
         <parameter key="sulu_category.content.type.category_list.class">Sulu\Bundle\CategoryBundle\Content\Types\CategoryList</parameter>
+        <parameter key="sulu_category.category_request_handler.class">Sulu\Component\Category\Request\CategoryRequestHandler</parameter>
+        <parameter key="sulu_category.twig_extension.class">Sulu\Bundle\CategoryBundle\Twig\CategoryTwigExtension</parameter>
         <parameter key="sulu_category.entity.category">SuluCategoryBundle:Category</parameter>
     </parameters>
     <services>
@@ -35,6 +37,18 @@
             <tag name="sulu.content.type" alias="category_list"/>
             <argument type="service" id="sulu_category.category_manager"/>
             <argument>%sulu_category.content.type.category_list.template%</argument>
+        </service>
+
+        <service id="sulu_category.category_request_handler" class="%sulu_category.category_request_handler.class%">
+            <argument type="service" id="request_stack"/>
+        </service>
+
+        <service id="sulu_category.twig_extension" class="%sulu_category.twig_extension.class%">
+            <argument type="service" id="sulu_category.category_manager"/>
+            <argument type="service" id="sulu_category.category_request_handler"/>
+            <argument type="service" id="serializer"/>
+
+            <tag name="twig.extension"/>
         </service>
     </services>
 </container>

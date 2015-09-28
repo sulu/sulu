@@ -116,7 +116,20 @@ class QueryBuilder extends ContentQueryBuilder
 
         // build where clause for categories
         if ($this->hasConfig('categories')) {
-            $sql2Where[] = $this->buildCategoriesWhere($locale);
+            $sql2Where[] = $this->buildCategoriesWhere(
+                $this->getConfig('categories', []),
+                $this->getConfig('categoryOperator', 'OR'),
+                $locale
+            );
+        }
+
+        // build where clause for website categories
+        if ($this->hasConfig('categories')) {
+            $sql2Where[] = $this->buildCategoriesWhere(
+                $this->getConfig('websiteCategories', []),
+                $this->getConfig('websiteCategoryOperator', 'OR'),
+                $locale
+            );
         }
 
         if (count($this->ids) > 0) {
@@ -284,25 +297,24 @@ class QueryBuilder extends ContentQueryBuilder
     /**
      * build categories where clauses.
      */
-    private function buildCategoriesWhere($languageCode)
+    private function buildCategoriesWhere($categories, $operator, $languageCode)
     {
         $structure = $this->structureManager->getStructure('excerpt');
 
         $sql2Where = [];
         if ($structure->hasProperty('categories')) {
-            $categoryOperator = $this->getConfig('categoryOperator', 'OR');
             $property = new TranslatedProperty(
                 $structure->getProperty('categories'),
                 $languageCode,
                 $this->languageNamespace,
                 'excerpt'
             );
-            foreach ($this->getConfig('categories', []) as $category) {
+            foreach ($categories as $category) {
                 $sql2Where[] = 'page.[' . $property->getName() . '] = ' . $category;
             }
 
             if (count($sql2Where) > 0) {
-                return '(' . implode(' ' . strtoupper($categoryOperator) . ' ', $sql2Where) . ')';
+                return '(' . implode(' ' . strtoupper($operator) . ' ', $sql2Where) . ')';
             }
         }
 
