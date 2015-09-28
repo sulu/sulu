@@ -606,6 +606,15 @@ class NodeRepository implements NodeRepositoryInterface
             ];
         }
 
+        if ($this->tokenStorage && ($token = $this->tokenStorage->getToken())) {
+            $result['_permissions'] = $this->accessControlManager->getUserPermissions(
+                new SecurityCondition(
+                    'sulu.webspaces.' . $webspaceKey
+                ),
+                $token->getUser()
+            );
+        }
+
         // add api links
         $result['_links'] = [
             'self' => [

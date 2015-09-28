@@ -85,7 +85,7 @@ define([
         /**
          * Enabler for DELETE
          * @param column
-         * @returns {*|boolean}
+         * @returns {boolean}
          */
         deleteEnabler = function(column) {
             return hasSelectedEnabler(column) && SecurityChecker.hasPermission(column.selectedItem, 'delete');
@@ -94,7 +94,7 @@ define([
         /**
          * Enabler for MOVE
          * @param column
-         * @return {boolean|*}
+         * @return {boolean}
          */
         moveEnabler = function(column) {
             return hasSelectedEnabler(column) && SecurityChecker.hasPermission(column.selectedItem, 'edit');
@@ -103,7 +103,7 @@ define([
         /**
          * Enabler for COPY
          * @param column
-         * @returns {boolean|*}
+         * @returns {boolean}
          */
         copyEnabler = function(column) {
             return hasSelectedEnabler(column) && SecurityChecker.hasPermission(column.selectedItem, 'view');
@@ -116,6 +116,25 @@ define([
          */
         orderEnabler = function(column) {
             return column.numberItems > 1;
+        },
+
+        /**
+         * Enables the add button if the parent allows
+         * @param column
+         * @returns {boolean}
+         */
+        addButtonEnabler = function(column) {
+            if (column.parent) {
+                if (!!column.parent.hasOwnProperty('_permissions')) {
+                    return column.parent._permissions.add;
+                }
+
+                if (!column.parent.selectedItem) {
+                    return true;
+                }
+            }
+
+            return SecurityChecker.hasPermission(column.parent.selectedItem, 'add');
         };
 
     return {
@@ -485,6 +504,7 @@ define([
                         resultKey: 'nodes',
                         url: this.getUrl(),
                         actionIcon: getActionIcon.bind(this),
+                        addButton: addButtonEnabler.bind(this),
                         data: [
                             {
                                 id: DELETE_BUTTON_ID,
