@@ -4,6 +4,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
+    <parameters>
+        <parameter key="sulu_document_manager.subscriber.alias.class">Sulu\Component\DocumentManager\Subscriber\Behavior\Path\AliasFilingSubscriber</parameter>
+        <parameter key="sulu_document_manager.subscriber.filing.class">Sulu\Component\Content\Document\Subscriber\StructureTypeFilingSubscriber</parameter>
+        <parameter key="sulu_document_manager.subscriber.behavior.reset.path.class">Sulu\Component\DocumentManager\Subscriber\Behavior\Path\ResetFilingPathSubscriber</parameter>
+    </parameters>
     <services>
 
         <!-- Behavior Subscribers !-->
@@ -59,6 +64,25 @@
 
         <service id="sulu_document_manager.subscriber.behavior.path" class="Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\PathSubscriber">
             <argument type="service" id="sulu_document_manager.document_inspector" />
+            <tag name="sulu_document_manager.event_subscriber" />
+        </service>
+
+        <service id="sulu_document_manager.subscriber.behavior.filing" class="%sulu_document_manager.subscriber.filing.class%">
+            <argument type="service" id="sulu_document_manager.node_manager" />
+            <argument>/%sulu.content.node_names.base%</argument>
+            <tag name="sulu_document_manager.event_subscriber" />
+        </service>
+
+        <service id="sulu_document_manager.subscriber.behavior.alias" class="%sulu_document_manager.subscriber.alias.class%">
+            <argument type="service" id="sulu_document_manager.node_manager" />
+            <argument type="service" id="sulu_document_manager.metadata_factory.base" />
+            <argument>/%sulu.content.node_names.base%</argument>
+            <tag name="sulu_document_manager.event_subscriber" />
+        </service>
+
+        <service id="sulu_document_manager.subscriber.behavior.reset.path" class="%sulu_document_manager.subscriber.behavior.reset.path.class%">
+            <argument type="service" id="sulu_document_manager.node_manager" />
+            <argument>/%sulu.content.node_names.base%</argument>
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 

@@ -21,7 +21,9 @@ use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
+use Sulu\Component\DocumentManager\Behavior\Path\AliasFilingBehavior;
 use Sulu\Component\DocumentManager\Behavior\Path\AutoNameBehavior;
+use Sulu\Component\DocumentManager\Behavior\Path\ResetFilingPathBehavior;
 
 /**
  * Snippet document.
@@ -31,6 +33,8 @@ class SnippetDocument implements
     TimestampBehavior,
     BlameBehavior,
     AutoNameBehavior,
+    ResetFilingPathBehavior,
+    AliasFilingBehavior,
     StructureTypeFilingBehavior,
     StructureBehavior,
     WorkflowStageBehavior,
