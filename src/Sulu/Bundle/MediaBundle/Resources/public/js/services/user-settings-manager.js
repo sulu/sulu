@@ -39,7 +39,7 @@ define(function() {
             },
 
             getMediaListPagination: function() {
-                return Husky.sulu.getUserSetting(mediaListPaginationKey) || 'datagrid/decorators/masonry-view';
+                return Husky.sulu.getUserSetting(mediaListPaginationKey) || 'infinite-scroll';
             },
 
             setMediaListPagination: function(paginationId) {

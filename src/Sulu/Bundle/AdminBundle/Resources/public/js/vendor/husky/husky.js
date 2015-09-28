@@ -30281,7 +30281,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.$el = null;
             this.table = {};
             this.data = null;
-            this.rowClicked = false;
+            this.rowClicked = {};
             this.isFocusoutHandlerEnabled = this.options.editable === true || this.options.editable === 'true';
             this.renderChildrenHidden = this.options.hideChildrenAtBeginning;
             this.tableCropped = false;
@@ -30865,12 +30865,12 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                         if (cell.croppable === true) {
                             $contentContainer = this.sandbox.dom.find('.' + constants.textContainerClass, cell.$el);
                             if (crop === true) {
-                                content = this.sandbox.util.cropMiddle(cell.originalContent, this.options.croppedMaxLength);
-                                this.sandbox.dom.attr($contentContainer, 'title', cell.originalContent);
+                                content = this.sandbox.util.cropMiddle(cell.originalData, this.options.croppedMaxLength);
+                                this.sandbox.dom.attr($contentContainer, 'title', cell.originalData);
                                 this.tableCropped = true;
                                 this.cropBreakPoint = this.sandbox.dom.width(this.table.$container);
                             } else {
-                                content = cell.originalContent;
+                                content = cell.originalData;
                                 this.sandbox.dom.removeAttr($contentContainer, 'title');
                                 this.tableCropped = false;
                             }
@@ -31172,14 +31172,15 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param event {Object} the original click event
          */
         rowClickCallback: function(event) {
-            if (this.rowClicked === false) {
-                this.rowClicked = true;
-                var recordId = this.sandbox.dom.data(event.currentTarget, 'id');
-                ;
+            var recordId = this.sandbox.dom.data(event.currentTarget, 'id');
+
+            if (!this.rowClicked[recordId]) {
+                this.rowClicked[recordId] = true;
+
                 this.datagrid.itemClicked.call(this.datagrid, recordId);
                 // delay to prevent multiple emits on double click
                 this.sandbox.util.delay(function() {
-                    this.rowClicked = false;
+                    this.rowClicked[recordId] = false;
                 }.bind(this), 500);
             }
         },
@@ -31269,11 +31270,19 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         },
 
         /**
-         * Selects or deselects a record with a given id
+         * Selects a record with a given id
          * @param recordId {Number|String} the id of the record to select or deselect
          */
         selectRecord: function(recordId) {
             this.toggleSelectRecord(recordId, true);
+        },
+
+        /**
+         * Deselects a record with a given id
+         * @param recordId {Number|String} the id of the record to select or deselect
+         */
+        deselectRecord: function(recordId) {
+            this.toggleSelectRecord(recordId, false);
         },
 
         /**
@@ -32363,7 +32372,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 // check if there are unrendered items
                 if (!!this.datagrid.data.links && !!this.datagrid.data.links.next) {
                     this.appendNextPage().then(function() {
-                            this.fillScrollContainer();
+                        this.fillScrollContainer();
                     }.bind(this));
                 }
             }
@@ -32477,9 +32486,9 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
         'husky_components/datagrid/decorators/infinite-scroll-pagination'
     ], function(decoratorTableView, thumbnailView, decoratorDropdownPagination, infiniteScrollPagination) {
 
-            /* Default values for options */
+        /* Default values for options */
 
-            var defaults = {
+        var defaults = {
                 view: 'table',
                 viewOptions: {
                     table: {},
@@ -32804,9 +32813,9 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
             },
 
             /**
-            * listens on and changes the current rendered page
-            * @event husky.datagrid.change.page
-            * @param {Integer} page page to render
+             * listens on and changes the current rendered page
+             * @event husky.datagrid.change.page
+             * @param {Integer} page page to render
              */
             CHANGE_PAGE = function() {
                 return this.createEventName('change.page');
@@ -32928,11 +32937,29 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
 
             /**
              * selects an item with a given id
-             * @event husky.datagrid.items.deselect
+             * @event husky.datagrid.select.item
              * @param {String|Number} The id of the item to select
              */
             SELECT_ITEM = function() {
                 return this.createEventName('select.item');
+            },
+
+            /**
+             * deselects an item with a given id
+             * @event husky.datagrid.deselect.item
+             * @param {String|Number} The id of the item to deselect
+             */
+            DESELECT_ITEM = function() {
+                return this.createEventName('deselect.item');
+            },
+
+            /**
+             * toggle an item with a given id
+             * @event husky.datagrid.toggle.item
+             * @param {String|Number} The id of the item to toggle
+             */
+            TOGGLE_ITEM = function() {
+                return this.createEventName('toggle.item');
             },
 
             /**
@@ -33477,7 +33504,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
             /**
              * Initialize the current set view decorator. Log an error message to console if the view is not valid
              */
-            initializeViewDecorator: function(){
+            initializeViewDecorator: function() {
                 if (this.isViewValid(this.gridViews[this.viewId])) {
                     // merge view options with passed ones
                     this.gridViews[this.viewId].initialize(this, this.options.viewOptions[this.viewId]);
@@ -33569,7 +33596,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
             changePagination: function(pagination) {
                 if (pagination !== this.paginationId) {
                     this.destroy();
-                    this.loadAndInitializePagination(pagination).then(function(){
+                    this.loadAndInitializePagination(pagination).then(function() {
                         this.render();
                     }.bind(this));
                 }
@@ -33731,6 +33758,8 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 this.sandbox.on(MEDIUM_LOADER_HIDE.call(this), this.hideMediumLoader.bind(this));
                 this.sandbox.on(SELECTED_UPDATE.call(this), this.updateSelection.bind(this));
                 this.sandbox.on(SELECT_ITEM.call(this), this.selectItem.bind(this));
+                this.sandbox.on(DESELECT_ITEM.call(this), this.deselectItem.bind(this));
+                this.sandbox.on(TOGGLE_ITEM.call(this), this.toggleItem.bind(this));
                 this.sandbox.on(ITEMS_DESELECT.call(this), function() {
                     this.gridViews[this.viewId].deselectAllRecords();
                 }.bind(this));
@@ -33999,6 +34028,28 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
              */
             selectItem: function(itemId) {
                 this.gridViews[this.viewId].selectRecord(itemId);
+            },
+
+            /**
+             * Deselects an item with a given id
+             * @param itemId {Number|String} the id of the item to select
+             */
+            deselectItem: function(itemId) {
+                if (!!this.gridViews[this.viewId].deselectRecord) {
+                    this.gridViews[this.viewId].deselectRecord(itemId);
+                }
+            },
+
+            /**
+             * Toogle an item with a given id
+             * @param itemId {Number|String} the id of the item to select
+             */
+            toggleItem: function(itemId) {
+                if (this.itemIsSelected(itemId)) {
+                    this.deselectItem(itemId);
+                } else {
+                    this.selectItem(itemId);
+                }
             },
 
             /**
@@ -44539,9 +44590,10 @@ define('__component__$data-navigation@husky',[
             this.$el.on('click', '.data-navigation-add', this.addHandler.bind(this));
 
             this.$el.on('click', '.data-navigation-search > .icon-container', function() {
-                if (!$('.data-navigation-header').hasClass('header-search')){
+                if (!$('.data-navigation-header').hasClass('header-search')) {
                     $('.data-navigation-header').addClass('header-search');
                     $('.data-navigation-search span').attr('class', 'fa-times');
+                    $('.data-navigation-search input').select();
                 } else {
                     this.clearSearch();
                 }
@@ -49564,8 +49616,7 @@ define("datepicker-zh-TW", function(){});
             }
         };
     });
-})
-();
+})();
 
 /**
  * This file is part of Husky frontend development framework.
@@ -49896,7 +49947,7 @@ define('husky_extensions/itembox',[],function() {
                 // reset items visible when new content is loaded
                 this.viewAll = false;
 
-                if (!!data) {
+                if (!!data && data.length > 0) {
                     this.sandbox.util.load(this.getUrl(data))
                         .then(function(data) {
                             this.$container.removeClass(constants.isLoadingClass);
@@ -49906,6 +49957,7 @@ define('husky_extensions/itembox',[],function() {
                             this.sandbox.logger.error(error);
                         }.bind(this));
                 } else {
+                    this.$container.removeClass(constants.isLoadingClass);
                     this.sandbox.emit(this.DATA_RETRIEVED(), []);
                 }
             },
@@ -49931,6 +49983,9 @@ define('husky_extensions/itembox',[],function() {
                     this.updateSelectedCounter();
                     this.updateVisibility();
                 } else {
+                    // remove content
+                    this.$list.children().remove();
+
                     this.addNoContentClass();
                 }
             },
