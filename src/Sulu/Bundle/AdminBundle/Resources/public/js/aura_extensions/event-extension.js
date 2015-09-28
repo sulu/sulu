@@ -84,15 +84,6 @@ define(['services/husky/util'], function(util) {
                 return;
             }
 
-            /**
-             * Returns eventName for given postfix
-             * @param {String} postFix
-             * @type {function}
-             */
-            this.getEventName = function(postFix) {
-                return createEventName.call(this, this.events.namespace, postFix, this.options.instanceName);
-            }.bind(this);
-
             this.events = util.object(
                 util.arrayMap(this.events.names, function(event, key) {
                     if (event.type === 'on') {

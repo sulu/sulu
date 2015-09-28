@@ -11,7 +11,7 @@
  * @class SmartContent/Categories
  * @constructor
  */
-define(function() {
+define(['services/husky/util'], function(util) {
 
     'use strict';
 
@@ -19,16 +19,13 @@ define(function() {
             options: {
                 instanceName: 'categories',
                 preselectedOperator: 'or',
-                preselectedCategories: [],
-                translations: {},
-                selectCallback: function(data) {
-                }
+                preselectedCategories: []
             },
             translations: {
                 operatorLabel: 'smart-content.categories.operator-label',
                 categoriesLabel: 'smart-content.categories.categories-label',
-                useAnyCategory: 'smart-content.use-any-category',
-                useAllCategories: 'smart-content.use-all-categories',
+                useAnyCategory: 'smart-content.categories.use-any-category',
+                useAllCategories: 'smart-content.categories.use-all-categories',
                 noCategoriesAvailable: 'sulu.category.no-categories-available'
             },
             templates: {
@@ -142,7 +139,7 @@ define(function() {
                             pagination: false,
                             childrenPropertyName: 'hasChildren',
                             resizeListener: false,
-                            selectedCounter: false,
+                            selectedCounter: true,
                             preselected: this.data.ids,
                             viewOptions: {
                                 table: {
@@ -206,6 +203,10 @@ define(function() {
          * @param {Object} item
          */
         add: function(id, item) {
+            if (this.data.ids.indexOf(id) > -1) {
+                return;
+            }
+
             this.data.ids.push(id);
             this.data.items.push(item);
         },
@@ -238,8 +239,8 @@ define(function() {
          * @param {Array} items
          */
         setSelected: function(ids, items) {
-            this.data.ids = ids;
-            this.data.items = items;
+            this.data.ids = util.deepCopy(ids);
+            this.data.items = util.deepCopy(items);
 
             this.events.initialized(this.data);
         },
@@ -248,7 +249,7 @@ define(function() {
          * Returns data to given select-callback.
          */
         getData: function() {
-            this.options.selectCallback(this.data);
+            return this.data;
         }
     };
 });
