@@ -18,7 +18,7 @@ define([
 
     var constants = {
             toolbarSelector: '.list-toolbar-container',
-            datagridSelector: '.datagrid-container',
+            datagridSelector: '.datagrid-container'
         },
 
         defaults = {};
@@ -171,7 +171,8 @@ define([
                     },
                     paginationOptions: {
                         'infinite-scroll': {
-                            reachedBottomMessage: 'public.reached-list-end'
+                            reachedBottomMessage: 'public.reached-list-end',
+                            scrollOffset: 500
                         }
                     }
                 }
