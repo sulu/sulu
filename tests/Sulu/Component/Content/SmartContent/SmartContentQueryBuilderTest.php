@@ -556,6 +556,154 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $this->assertEquals($t1t2 + $t2, count($result));
     }
 
+    public function categoriesProvider()
+    {
+        $data = [
+            [
+                'title' => 'News 1',
+                'url' => '/news-1',
+                'ext' => [
+                    'excerpt' => [
+                        'categories' => [1],
+                    ],
+                ],
+            ],
+            [
+                'title' => 'News 2',
+                'url' => '/news-2',
+                'ext' => [
+                    'excerpt' => [
+                        'categories' => [1, 2],
+                    ],
+                ],
+            ],
+            [
+                'title' => 'News 3',
+                'url' => '/news-3',
+                'ext' => [
+                    'excerpt' => [
+                        'categories' => [1, 3],
+                    ],
+                ],
+            ],
+            [
+                'title' => 'News 4',
+                'url' => '/news-4',
+                'ext' => [
+                    'excerpt' => [
+                        'categories' => [3],
+                    ],
+                ],
+            ],
+        ];
+
+        $template = 'simple';
+        $nodes = [];
+        foreach ($data as $item) {
+            $node = $this->mapper->save(
+                $item,
+                $template,
+                'sulu_io',
+                'en',
+                1,
+                true,
+                null,
+                null,
+                Structure::STATE_PUBLISHED
+            );
+            $nodes[$node->getUuid()] = $node;
+        }
+
+        return $nodes;
+    }
+
+    public function testCategories()
+    {
+        $root = $this->sessionManager->getContentNode('sulu_io');
+        $this->categoriesProvider();
+        $builder = new SmartContentQueryBuilder(
+            $this->structureManager,
+            $this->webspaceManager,
+            $this->sessionManager,
+            $this->languageNamespace
+        );
+
+        // category 1
+        $builder->init(
+            [
+                'config' => [
+                    'dataSource' => $root->getIdentifier(),
+                    'categories' => [1],
+                    'categoryOperator' => 'and',
+                ],
+            ]
+        );
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
+        $this->assertEquals(3, count($result));
+        $builder->init(
+            [
+                'config' => [
+                    'dataSource' => $root->getIdentifier(),
+                    'categories' => [1],
+                    'categoryOperator' => 'or',
+                ],
+            ]
+        );
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
+        $this->assertEquals(3, count($result));
+
+        // category 1 and 2
+        $builder->init(
+            [
+                'config' => [
+                    'dataSource' => $root->getIdentifier(),
+                    'categories' => [1, 2],
+                    'categoryOperator' => 'and',
+                ],
+            ]
+        );
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
+        $this->assertEquals(1, count($result));
+
+        // category 1 or 3
+        $builder->init(
+            [
+                'config' => [
+                    'dataSource' => $root->getIdentifier(),
+                    'categories' => [1, 3],
+                    'categoryOperator' => 'or',
+                ],
+            ]
+        );
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
+        $this->assertEquals(4, count($result));
+
+        // category 1 and 3
+        $builder->init(
+            [
+                'config' => [
+                    'dataSource' => $root->getIdentifier(),
+                    'categories' => [1, 3],
+                    'categoryOperator' => 'and',
+                ],
+            ]
+        );
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
+        $this->assertEquals(4, count($result));
+
+        $builder->init(
+            [
+                'config' => [
+                    'dataSource' => $root->getIdentifier(),
+                    'categories' => [],
+                    'categoryOperator' => 'or',
+                ],
+            ]
+        );
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
+        $this->assertEquals(4, count($result));
+    }
+
     public function orderByProvider()
     {
         $node = $this->mapper->save(

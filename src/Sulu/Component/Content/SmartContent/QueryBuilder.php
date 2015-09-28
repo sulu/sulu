@@ -114,6 +114,11 @@ class QueryBuilder extends ContentQueryBuilder
             );
         }
 
+        // build where clause for categories
+        if ($this->hasConfig('categories')) {
+            $sql2Where[] = $this->buildCategoriesWhere($locale);
+        }
+
         if (count($this->ids) > 0) {
             $sql2Where[] = $this->buildPageSelector();
         }
@@ -270,6 +275,34 @@ class QueryBuilder extends ContentQueryBuilder
 
             if (count($sql2Where) > 0) {
                 return '(' . implode(' ' . strtoupper($operator) . ' ', $sql2Where) . ')';
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * build categories where clauses.
+     */
+    private function buildCategoriesWhere($languageCode)
+    {
+        $structure = $this->structureManager->getStructure('excerpt');
+
+        $sql2Where = [];
+        if ($structure->hasProperty('categories')) {
+            $categoryOperator = $this->getConfig('categoryOperator', 'OR');
+            $property = new TranslatedProperty(
+                $structure->getProperty('categories'),
+                $languageCode,
+                $this->languageNamespace,
+                'excerpt'
+            );
+            foreach ($this->getConfig('categories', []) as $category) {
+                $sql2Where[] = 'page.[' . $property->getName() . '] = ' . $category;
+            }
+
+            if (count($sql2Where) > 0) {
+                return '(' . implode(' ' . strtoupper($categoryOperator) . ' ', $sql2Where) . ')';
             }
         }
 
