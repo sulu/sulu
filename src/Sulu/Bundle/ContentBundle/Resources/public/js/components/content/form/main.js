@@ -392,7 +392,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
 
                 if (value !== '') {
                     sequence = this.preview.getSequence(property.$el, this.sandbox);
-                    if(!!sequence) {
+                    if (!!sequence) {
                         parts[sequence] = value;
                     }
                 } else {

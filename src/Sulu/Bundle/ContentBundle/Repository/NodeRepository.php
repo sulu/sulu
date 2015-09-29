@@ -17,6 +17,7 @@ use Psr\Log\LoggerInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Exception\InvalidOrderPositionException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
@@ -25,8 +26,11 @@ use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * repository for node objects.
@@ -61,11 +65,6 @@ class NodeRepository implements NodeRepositoryInterface
     private $webspaceManager;
 
     /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
      * @var ContentQueryBuilderInterface
      */
     private $queryBuilder;
@@ -75,6 +74,21 @@ class NodeRepository implements NodeRepositoryInterface
      */
     private $queryExecutor;
 
+    /**
+     * @var AccessControlManagerInterface
+     */
+    private $accessControlManager;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     public function __construct(
         ContentMapperInterface $mapper,
         SessionManagerInterface $sessionManager,
@@ -82,6 +96,8 @@ class NodeRepository implements NodeRepositoryInterface
         WebspaceManagerInterface $webspaceManager,
         ContentQueryBuilderInterface $queryBuilder,
         ContentQueryExecutorInterface $queryExecutor,
+        AccessControlManagerInterface $accessControlManager,
+        TokenStorageInterface $tokenStorage = null,
         LoggerInterface $logger
     ) {
         $this->mapper = $mapper;
@@ -90,6 +106,8 @@ class NodeRepository implements NodeRepositoryInterface
         $this->webspaceManager = $webspaceManager;
         $this->queryBuilder = $queryBuilder;
         $this->queryExecutor = $queryExecutor;
+        $this->accessControlManager = $accessControlManager;
+        $this->tokenStorage = $tokenStorage;
         $this->logger = $logger;
     }
 
@@ -119,14 +137,16 @@ class NodeRepository implements NodeRepositoryInterface
      * returns finished Node (with _links and _embedded).
      *
      * @param StructureInterface $structure
-     * @param string             $webspaceKey
-     * @param string             $languageCode
-     * @param int                $depth
-     * @param bool               $complete
-     * @param bool               $excludeGhosts
-     * @param string|null        $extension
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param int $depth
+     * @param bool $complete
+     * @param bool $excludeGhosts
+     * @param string|null $extension
      *
      * @return array
+     *
+     * @deprecated This part should be split into a serialization handler and using the hateoas bundle
      */
     protected function prepareNode(
         StructureInterface $structure,
@@ -155,6 +175,18 @@ class NodeRepository implements NodeRepositoryInterface
                     ($excludeGhosts === true ? '&exclude-ghosts=true' : ''),
             ],
         ];
+
+        if ($this->tokenStorage && ($token = $this->tokenStorage->getToken())) {
+            $result['_permissions'] = $this->accessControlManager->getUserPermissions(
+                new SecurityCondition(
+                    'sulu.webspaces.' . $webspaceKey,
+                    $languageCode,
+                    SecurityBehavior::class,
+                    $structure->getUuid()
+                ),
+                $token->getUser()
+            );
+        }
 
         return $result;
     }
@@ -432,9 +464,9 @@ class NodeRepository implements NodeRepositoryInterface
     /**
      * if parent is null return home page else the page with given uuid.
      *
-     * @param string|null $parent       uuid of parent node
-     * @param string      $webspaceKey
-     * @param string      $languageCode
+     * @param string|null $parent uuid of parent node
+     * @param string $webspaceKey
+     * @param string $languageCode
      *
      * @return StructureInterface
      */
@@ -449,15 +481,22 @@ class NodeRepository implements NodeRepositoryInterface
 
     /**
      * @param StructureInterface[] $nodes
-     * @param string               $webspaceKey
-     * @param string               $languageCode
-     * @param bool                 $complete
-     * @param bool                 $excludeGhosts
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param bool $complete
+     * @param bool $excludeGhosts
      *
      * @return array
      */
-    private function prepareNodesTree($nodes, $webspaceKey, $languageCode, $complete = true, $excludeGhosts = false, $maxDepth = 1, $currentDepth = 0)
-    {
+    private function prepareNodesTree(
+        $nodes,
+        $webspaceKey,
+        $languageCode,
+        $complete = true,
+        $excludeGhosts = false,
+        $maxDepth = 1,
+        $currentDepth = 0
+    ) {
         ++$currentDepth;
 
         if ($maxDepth !== null && $currentDepth > $maxDepth) {
@@ -567,6 +606,15 @@ class NodeRepository implements NodeRepositoryInterface
             ];
         }
 
+        if ($this->tokenStorage && ($token = $this->tokenStorage->getToken())) {
+            $result['_permissions'] = $this->accessControlManager->getUserPermissions(
+                new SecurityCondition(
+                    'sulu.webspaces.' . $webspaceKey
+                ),
+                $token->getUser()
+            );
+        }
+
         // add api links
         $result['_links'] = [
             'self' => [
@@ -599,7 +647,14 @@ class NodeRepository implements NodeRepositoryInterface
                 if (!isset($childTiers[$descendant->getUuid()])) {
                     $childTiers[$descendant->getUuid()] = [];
                 }
-                $childTiers[$descendant->getUuid()][] = $this->prepareNode($child, $webspaceKey, $locale, 1, $complete, $excludeGhost);
+                $childTiers[$descendant->getUuid()][] = $this->prepareNode(
+                    $child,
+                    $webspaceKey,
+                    $locale,
+                    1,
+                    $complete,
+                    $excludeGhost
+                );
             }
         }
         $result = array_shift($childTiers);
@@ -635,10 +690,12 @@ class NodeRepository implements NodeRepositoryInterface
         }
 
         if (!$found) {
-            throw new \RuntimeException(sprintf(
-                'Could not find target node in with UUID "%s" in tier. This should not happen.',
-                $uuid
-            ));
+            throw new \RuntimeException(
+                sprintf(
+                    'Could not find target node in with UUID "%s" in tier. This should not happen.',
+                    $uuid
+                )
+            );
         }
 
         $this->iterateTiers($tiers, $node['_embedded']['nodes']);

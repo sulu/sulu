@@ -11,6 +11,7 @@
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
 use ReflectionClass;
+use ReflectionException;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
@@ -72,8 +73,7 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
 
         $allowedPermissions = $document->getPermissions();
 
-        foreach ($allowedPermissions as $rolePropertyName => $rolePermissions) {
-            $roleId = substr($rolePropertyName, 9);
+        foreach ($allowedPermissions as $roleId => $rolePermissions) {
             $permissions[$roleId] = [];
             foreach ($this->permissions as $permission => $value) {
                 $permissions[$roleId][$permission] = in_array($permission, $rolePermissions);
@@ -88,7 +88,12 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
      */
     public function supports($type)
     {
-        $class = new ReflectionClass($type);
+        try {
+            $class = new ReflectionClass($type);
+        } catch (ReflectionException $e) {
+            // in case the class does not exist there is no support
+            return false;
+        }
 
         return $class->implementsInterface(SecurityBehavior::class);
     }
