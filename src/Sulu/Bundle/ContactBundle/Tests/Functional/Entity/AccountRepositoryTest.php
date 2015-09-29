@@ -11,6 +11,7 @@
 namespace Functional\Entity;
 
 use Doctrine\ORM\EntityManager;
+use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -33,6 +34,11 @@ class AccountRepositoryTest extends SuluTestCase
     private $tags = [];
 
     /**
+     * @var Category[]
+     */
+    private $categories = [];
+
+    /**
      * @var array
      */
     private $tagData = [
@@ -45,15 +51,25 @@ class AccountRepositoryTest extends SuluTestCase
     /**
      * @var array
      */
+    private $categoryData = [
+        'Category-0',
+        'Category-1',
+        'Category-2',
+        'Category-3',
+    ];
+
+    /**
+     * @var array
+     */
     private $accountData = [
-        ['Apple', [0, 1, 2]],
-        ['Google', [0, 1, 3]],
-        ['Amazon', [0, 1]],
-        ['Massive Art', [0, 1, 2]],
-        ['Facebook', [0]],
-        ['Sulu', [0]],
-        ['Github', [0]],
-        ['SensioLabs', []],
+        ['Apple', [0, 1, 2], [0, 1, 2]],
+        ['Google', [0, 1, 3], [0, 1, 3]],
+        ['Amazon', [0, 1], [0, 1]],
+        ['Massive Art', [0, 1, 2], [0, 1, 2]],
+        ['Facebook', [0], [0]],
+        ['Sulu', [0], [0]],
+        ['Github', [0], [0]],
+        ['SensioLabs', [], []],
     ];
 
     public function setUp()
@@ -66,14 +82,19 @@ class AccountRepositoryTest extends SuluTestCase
     {
         $this->purgeDatabase();
 
-        foreach ($this->tagData as $data) {
-            $this->tags[] = $this->createTag($data);
+        foreach ($this->tagData as $name) {
+            $this->tags[] = $this->createTag($name);
         }
+        $this->em->flush();
+
+        foreach ($this->categoryData as $key) {
+            $this->categories[] = $this->createCategory($key);
+        }
+        $this->em->flush();
 
         foreach ($this->accountData as $data) {
-            $this->accounts[] = $this->createAccount($data[0], $data[1]);
+            $this->accounts[] = $this->createAccount($data[0], $data[1], $data[2]);
         }
-
         $this->em->flush();
     }
 
@@ -83,18 +104,31 @@ class AccountRepositoryTest extends SuluTestCase
         $tag->setName($name);
 
         $this->em->persist($tag);
-        $this->em->flush();
 
         return $tag;
     }
 
-    private function createAccount($name, $tags = [])
+    private function createCategory($key)
+    {
+        $category = new Category();
+        $category->setKey($key);
+
+        $this->em->persist($category);
+
+        return $category;
+    }
+
+    private function createAccount($name, $tags = [], $categories = [])
     {
         $account = new Account();
         $account->setName($name);
 
         foreach ($tags as $tag) {
             $account->addTag($this->tags[$tag]);
+        }
+
+        foreach ($categories as $category) {
+            $account->addCategory($this->categories[$category]);
         }
 
         $this->em->persist($account);
@@ -211,6 +245,167 @@ class AccountRepositoryTest extends SuluTestCase
                 [$this->accountData[0], $this->accountData[1], $this->accountData[3]],
                 [0, 1],
             ],
+            // no pagination, category 0
+            [
+                ['categories' => [0], 'categoryOperator' => 'or'],
+                null,
+                0,
+                null,
+                array_slice($this->accountData, 0, 7),
+                [0]
+            ],
+            // no pagination, category 0 or 1
+            [
+                ['categories' => [0, 1], 'categoryOperator' => 'or'],
+                null,
+                0,
+                null,
+                array_slice($this->accountData, 0, 7)
+            ],
+            // no pagination, category 0 and 1
+            [
+                ['categories' => [0, 1], 'categoryOperator' => 'and'],
+                null,
+                0,
+                null,
+                array_slice($this->accountData, 0, 4),
+                [0, 1]
+            ],
+            // no pagination, category 0 and 3
+            [
+                ['categories' => [0, 3], 'categoryOperator' => 'and'],
+                null,
+                0,
+                null,
+                [$this->accountData[1]],
+                [0, 3],
+                [0, 3]
+            ],
+            // page 1, no limit, category 0
+            [
+                ['categories' => [0], 'categoryOperator' => 'or'],
+                1,
+                3,
+                null,
+                array_slice($this->accountData, 0, 4),
+                [0],
+            ],
+            // page 2, no limit, category 0
+            [
+                ['categories' => [0], 'categoryOperator' => 'or'],
+                2,
+                3,
+                null,
+                array_slice($this->accountData, 3, 4),
+                [0],
+                [0],
+            ],
+            // page 3, no limit, category 0
+            [
+                ['categories' => [0], 'categoryOperator' => 'or'],
+                3,
+                3,
+                null,
+                array_slice($this->accountData, 6, 1),
+                [0],
+                [0],
+            ],
+            // no pagination, website-category 0
+            [
+                ['websiteCategories' => [0], 'websiteCategoryOperator' => 'or'],
+                null,
+                0,
+                null,
+                array_slice($this->accountData, 0, 7),
+                [0],
+            ],
+            // no pagination, website-category 0 or 1
+            [
+                ['websiteCategories' => [0, 1], 'websiteCategoryOperator' => 'or'],
+                null,
+                0,
+                null,
+                array_slice($this->accountData, 0, 7),
+            ],
+            // no pagination, website-category 0 and 1
+            [
+                ['websiteCategories' => [0, 1], 'websiteCategoryOperator' => 'and'],
+                null,
+                0,
+                null,
+                array_slice($this->accountData, 0, 4),
+                [0, 1],
+                [0, 1],
+            ],
+            // no pagination, website-category 1, category 3
+            [
+                [
+                    'websiteCategories' => [1],
+                    'websiteCategoryOperator' => 'or',
+                    'categories' => [3],
+                    'categoryOperator' => 'or'
+                ],
+                null,
+                0,
+                null,
+                [$this->accountData[1]],
+                [0, 3],
+                [0, 3],
+            ],
+            // no pagination, website-category 2 or 3, category 1
+            [
+                [
+                    'websiteCategories' => [2, 3],
+                    'websiteCategoryOperator' => 'or',
+                    'categories' => [1],
+                    'categoryOperator' => 'or'
+                ],
+                null,
+                0,
+                null,
+                [$this->accountData[0], $this->accountData[1], $this->accountData[3]],
+                [0, 1],
+                [0, 1],
+            ],
+            // no pagination, website-category 1, category 2 or 3
+            [
+                [
+                    'websiteCategories' => [1],
+                    'websiteCategoryOperator' => 'or',
+                    'categories' => [2, 3],
+                    'categoryOperator' => 'or'
+                ],
+                null,
+                0,
+                null,
+                [$this->accountData[0], $this->accountData[1], $this->accountData[3]],
+                [0, 1],
+                [0, 1],
+            ],
+            // no pagination, category 0 and tag 1
+            [
+                ['categories' => [0], 'categoryOperator' => 'or', 'tags' => [1], 'tagOperator' => 'or'],
+                null,
+                0,
+                null,
+                array_slice($this->accountData, 0, 4),
+                [0]
+            ],
+            // no pagination, website-category 0 and website-tag 1
+            [
+                [
+                    'websiteCategories' => [0],
+                    'websiteCategoryOperator' => 'or',
+                    'websiteTags' => [1],
+                    'websiteTagOperator' => 'or'
+                ],
+                null,
+                0,
+                null,
+                array_slice($this->accountData, 0, 4),
+                [0]
+            ],
+            // combination website/admin-category/tag
         ];
     }
 
@@ -223,8 +418,9 @@ class AccountRepositoryTest extends SuluTestCase
      * @param int $limit
      * @param array $expected
      * @param int[] $tags
+     * @param int[] $categories
      */
-    public function testFindBy($filters, $page, $pageSize, $limit, $expected, $tags = [])
+    public function testFindBy($filters, $page, $pageSize, $limit, $expected, $tags = [], $categories = [])
     {
         $repository = $this->em->getRepository(Account::class);
 
@@ -248,6 +444,26 @@ class AccountRepositoryTest extends SuluTestCase
             );
         }
 
+        // if tags isset replace the array indexes with database id
+        if (array_key_exists('categories', $filters)) {
+            $filters['categories'] = array_map(
+                function ($category) {
+                    return $this->categories[$category]->getId();
+                },
+                $filters['categories']
+            );
+        }
+
+        // if tags isset replace the array indexes with database id
+        if (array_key_exists('websiteCategories', $filters)) {
+            $filters['websiteCategories'] = array_map(
+                function ($category) {
+                    return $this->categories[$category]->getId();
+                },
+                $filters['websiteCategories']
+            );
+        }
+
         $result = $repository->findByFilters($filters, $page, $pageSize, $limit);
 
         $length = count($expected);
@@ -258,6 +474,9 @@ class AccountRepositoryTest extends SuluTestCase
 
             foreach ($tags as $tag) {
                 $this->assertTrue($result[$i]->getTags()->contains($this->tags[$tag]));
+            }
+            foreach ($categories as $category) {
+                $this->assertTrue($result[$i]->getCategories()->contains($this->categories[$category]));
             }
         }
     }

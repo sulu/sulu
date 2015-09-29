@@ -54,21 +54,54 @@ trait DataProviderRepositoryTrait
             ->select('c.id')
             ->orderBy('c.id', 'ASC');
 
-        if (isset($filters['tags']) && count($filters['tags']) > 0) {
+        if (isset($filters['tags']) && !empty($filters['tags'])) {
             $parameter = array_merge(
                 $parameter,
-                $this->appendTags($queryBuilder, $filters['tags'], strtolower($filters['tagOperator']), 'admin')
+                $this->appendRelation(
+                    $queryBuilder,
+                    'c.tags',
+                    $filters['tags'],
+                    strtolower($filters['tagOperator']),
+                    'adminTags'
+                )
             );
         }
 
-        if (isset($filters['websiteTags']) && count($filters['websiteTags']) > 0) {
+        if (isset($filters['categories']) && !empty($filters['categories'])) {
             $parameter = array_merge(
                 $parameter,
-                $this->appendTags(
+                $this->appendRelation(
                     $queryBuilder,
+                    'c.categories',
+                    $filters['categories'],
+                    strtolower($filters['categoryOperator']),
+                    'adminCategories'
+                )
+            );
+        }
+
+        if (isset($filters['websiteTags']) && !empty($filters['websiteTags'])) {
+            $parameter = array_merge(
+                $parameter,
+                $this->appendRelation(
+                    $queryBuilder,
+                    'c.tags',
                     $filters['websiteTags'],
                     strtolower($filters['websiteTagOperator']),
-                    'website'
+                    'websiteTags'
+                )
+            );
+        }
+
+        if (isset($filters['websiteCategories']) && !empty($filters['websiteCategories'])) {
+            $parameter = array_merge(
+                $parameter,
+                $this->appendRelation(
+                    $queryBuilder,
+                    'c.categories',
+                    $filters['websiteCategories'],
+                    strtolower($filters['websiteCategoryOperator']),
+                    'websiteCategories'
                 )
             );
         }
@@ -108,20 +141,21 @@ trait DataProviderRepositoryTrait
      * Append tags to query builder with given operator.
      *
      * @param QueryBuilder $queryBuilder
-     * @param int[] $tags
+     * @param string $relation
+     * @param int[] $values
      * @param string $operator "and" or "or"
      * @param string $alias
      *
      * @return array parameter for the query.
      */
-    private function appendTags(QueryBuilder $queryBuilder, $tags, $operator, $alias)
+    private function appendRelation(QueryBuilder $queryBuilder, $relation, $values, $operator, $alias)
     {
         switch ($operator) {
             case 'or':
-                return $this->appendTagsOr($queryBuilder, $tags, $alias);
+                return $this->appendRelationOr($queryBuilder, $relation, $values, $alias);
                 break;
             case 'and':
-                return $this->appendTagsAnd($queryBuilder, $tags, $alias);
+                return $this->appendRelationAnd($queryBuilder, $relation, $values, $alias);
                 break;
         }
 
@@ -132,40 +166,41 @@ trait DataProviderRepositoryTrait
      * Append tags to query builder with "or" operator.
      *
      * @param QueryBuilder $queryBuilder
-     * @param int[] $tags
+     * @param string $relation
+     * @param int[] $values
      * @param string $alias
-     *
      * @return array parameter for the query.
      */
-    private function appendTagsOr(QueryBuilder $queryBuilder, $tags, $alias)
+    private function appendRelationOr(QueryBuilder $queryBuilder, $relation, $values, $alias)
     {
-        $queryBuilder->join('c.tags', $alias)
+        $queryBuilder->join($relation, $alias)
             ->andWhere($alias . '.id IN (:' . $alias . ')');
 
-        return [$alias => $tags];
+        return [$alias => $values];
     }
 
     /**
      * Append tags to query builder with "and" operator.
      *
      * @param QueryBuilder $queryBuilder
-     * @param int[] $tags
+     * @param string $relation
+     * @param int[] $values
      * @param string $alias
      *
      * @return array parameter for the query.
      */
-    private function appendTagsAnd(QueryBuilder $queryBuilder, $tags, $alias)
+    private function appendRelationAnd(QueryBuilder $queryBuilder, $relation, $values, $alias)
     {
         $parameter = [];
         $expr = $queryBuilder->expr()->andX();
 
-        $length = count($tags);
+        $length = count($values);
         for ($i = 0; $i < $length; ++$i) {
-            $queryBuilder->join('c.tags', $alias . $i);
+            $queryBuilder->join($relation, $alias . $i);
 
             $expr->add($queryBuilder->expr()->eq($alias . $i . '.id', ':' . $alias . $i));
 
-            $parameter[$alias . $i] = $tags[$i];
+            $parameter[$alias . $i] = $values[$i];
         }
         $queryBuilder->andWhere($expr);
 

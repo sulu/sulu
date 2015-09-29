@@ -21,7 +21,7 @@ class AccountDataProvider extends BaseDataProvider
     {
         parent::__construct($repository);
 
-        $this->configuration = $this->initConfiguration(true, false, true, true, true, []);
+        $this->configuration = $this->initConfiguration(true, true, true, true, true, []);
     }
 
     /**
