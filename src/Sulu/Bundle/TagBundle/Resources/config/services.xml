@@ -40,6 +40,7 @@
         <service id="sulu_tag.twig_extension" class="%sulu_tag.twig_extension.class%">
             <argument type="service" id="sulu_tag.tag_manager"/>
             <argument type="service" id="sulu_tag.tag_request_handler"/>
+            <argument type="service" id="serializer"/>
 
             <tag name="twig.extension"/>
         </service>

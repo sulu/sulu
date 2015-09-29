@@ -10,7 +10,8 @@
 
 namespace Sulu\Bundle\TagBundle\Twig;
 
-use Sulu\Bundle\TagBundle\Entity\Tag;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 
@@ -26,10 +27,19 @@ class TagTwigExtension extends \Twig_Extension
      */
     private $tagRequestHandler;
 
-    public function __construct(TagManagerInterface $tagManager, TagRequestHandlerInterface $tagRequestHandler)
-    {
+    /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    public function __construct(
+        TagManagerInterface $tagManager,
+        TagRequestHandlerInterface $tagRequestHandler,
+        SerializerInterface $serializer
+    ) {
         $this->tagManager = $tagManager;
         $this->tagRequestHandler = $tagRequestHandler;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -46,22 +56,28 @@ class TagTwigExtension extends \Twig_Extension
     }
 
     /**
-     * @return Tag[]
+     * @return array
      */
     public function getTagsFunction()
     {
-        return $this->tagManager->findAll();
+        $tags = $this->tagManager->findAll();
+
+        $context = SerializationContext::create();
+        $context->setSerializeNull(true);
+        $context->setGroups(['partialTag']);
+
+        return $this->serializer->serialize($tags, 'array', $context);
     }
 
     /**
      * Extends current URL with given tag.
      *
-     * @param Tag $tag will be included in the URL.
+     * @param array $tag will be included in the URL.
      * @param string $tagsParameter GET parameter name.
      *
      * @return string
      */
-    public function appendTagUrlFunction(Tag $tag, $tagsParameter = 'tags')
+    public function appendTagUrlFunction($tag, $tagsParameter = 'tags')
     {
         return $this->tagRequestHandler->appendTagToUrl($tag, $tagsParameter);
     }
@@ -69,12 +85,12 @@ class TagTwigExtension extends \Twig_Extension
     /**
      * Set tag to current URL.
      *
-     * @param Tag $tag will be included in the URL.
+     * @param array $tag will be included in the URL.
      * @param string $tagsParameter GET parameter name.
      *
      * @return string
      */
-    public function setTagUrlFunction(Tag $tag, $tagsParameter = 'tags')
+    public function setTagUrlFunction($tag, $tagsParameter = 'tags')
     {
         return $this->tagRequestHandler->setTagToUrl($tag, $tagsParameter);
     }

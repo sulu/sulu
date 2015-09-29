@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\TagBundle\Entity;
 
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Persistence\Model\AuditableInterface;
@@ -22,6 +24,7 @@ class Tag extends ApiEntity implements AuditableInterface
 {
     /**
      * @var string
+     * @Expose
      * @Groups({"partialTag"})
      */
     private $name;

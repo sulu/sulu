@@ -65,8 +65,7 @@ class TagRequestHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testAppendTagToUrl($tagsParameter, $url, $tagsString, $expected)
     {
-        $tag = new Tag();
-        $tag->setName('Test');
+        $tag = ['name' => 'Test'];
 
         $requestStack = $this->prophesize(RequestStack::class);
         $request = $this->prophesize(Request::class);
@@ -100,8 +99,7 @@ class TagRequestHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetTagToUrl($tagsParameter, $url, $tagsString, $expected)
     {
-        $tag = new Tag();
-        $tag->setName('Test');
+        $tag = ['name' => 'Test'];
 
         $requestStack = $this->prophesize(RequestStack::class);
         $request = $this->prophesize(Request::class);
@@ -135,9 +133,6 @@ class TagRequestHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testRemoveTagsFromUrl($tagsParameter, $url, $tagsString)
     {
-        $tag = new Tag();
-        $tag->setName('Test');
-
         $requestStack = $this->prophesize(RequestStack::class);
         $request = $this->prophesize(Request::class);
 
