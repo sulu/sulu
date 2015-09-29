@@ -10,7 +10,9 @@
 require.config({
     paths: {
         sulumedia: '../../sulumedia/js',
-        'extensions/masonry':'../../sulumedia/js/extensions/masonry',
+        sulumediacss: '../../sulumedia/css',
+
+        'extensions/masonry': '../../sulumedia/js/extensions/masonry',
         'extensions/sulu-buttons-mediabundle': '../../sulumedia/js/extensions/sulu-buttons',
 
         'services/sulumedia/media-router': '../../sulumedia/js/services/media-router',
@@ -24,11 +26,13 @@ require.config({
     }
 });
 
-define(['services/sulumedia/media-router',
+define([
+    'services/sulumedia/media-router',
     'services/sulumedia/overlay-manager',
     'extensions/masonry',
-    'extensions/sulu-buttons-mediabundle'],
-    function(MediaRouter, OverlayManager, MasonryExtension, MediaButtons){
+    'extensions/sulu-buttons-mediabundle',
+    'css!sulumediacss/main'
+], function(MediaRouter, OverlayManager, MasonryExtension, MediaButtons) {
 
     'use strict';
 
@@ -71,7 +75,7 @@ define(['services/sulumedia/media-router',
             app.components.before('initialize', function() {
                 if (this.name !== 'Sulu App') {
                     return;
-                }
+                    }
 
                 this.sandbox.on('husky.data-navigation.collections.select', function(item) {
                     if (item === null) {

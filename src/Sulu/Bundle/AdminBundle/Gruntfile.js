@@ -74,6 +74,12 @@ module.exports = function(grunt) {
                         cwd: 'bower_components/iban',
                         src: ['iban.js'],
                         dest: 'Resources/public/js/vendor/iban-converter/'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'bower_components/require-css',
+                        src: ['css.js'],
+                        dest: 'Resources/public/js/vendor/require-css/'
                     }
                 ]
             }

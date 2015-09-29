@@ -596,6 +596,8 @@ class ContentMapper implements ContentMapperInterface
 
         foreach ($destLocales as $destLocale) {
             $document->setLocale($destLocale);
+            $document->getStructure()->bind($document->getStructure()->toArray());
+
             // TODO: This can be removed if RoutingAuto replaces the ResourceLocator code.
             if ($document instanceof ResourceSegmentBehavior) {
                 $parentResourceLocator = $resourceLocatorType->getResourceLocatorByUuid(
@@ -609,8 +611,6 @@ class ContentMapper implements ContentMapperInterface
                     $webspaceKey,
                     $destLocale
                 );
-
-                $document->getStructure()->bind($document->getStructure()->toArray());
 
                 $document->setResourceSegment($resourceLocator);
             }
@@ -673,7 +673,11 @@ class ContentMapper implements ContentMapperInterface
             $this->documentManager->reorder($document, $targetSibling->getPath());
         }
 
-        $this->documentManager->persist($document, $locale);
+        // this should not be necessary (see https://github.com/sulu-io/sulu-document-manager/issues/39)
+        foreach ($siblingDocuments as $siblingDocument) {
+            $this->documentManager->persist($siblingDocument, $locale);
+        }
+
         $this->documentManager->flush();
 
         return $this->documentToStructure($document);

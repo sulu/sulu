@@ -10,6 +10,7 @@
 require.config({
     paths: {
         sulucontact: '../../sulucontact/js',
+        sulucontactcss: '../../sulucontact/css',
 
         'type/bic-input': '../../sulucontact/js/validation/types/bic-input',
         'type/vat-input': '../../sulucontact/js/validation/types/vat-input',
@@ -26,7 +27,10 @@ require.config({
         'services/sulucontact/contact-router': '../../sulucontact/js/services/contact-router',
         'services/sulucontact/account-delete-dialog': '../../sulucontact/js/services/account-delete-dialog',
 
-        'extensions/sulu-buttons-contactbundle': '../../sulucontact/js/extensions/sulu-buttons'
+        'extensions/sulu-buttons-contactbundle': '../../sulucontact/js/extensions/sulu-buttons',
+
+        'type/customer-selection': '../../sulucontact/js/validation/types/customer-selection',
+        'type/contact-selection': '../../sulucontact/js/validation/types/contact-selection'
     },
 
     shim: {
@@ -36,7 +40,12 @@ require.config({
     }
 });
 
-define(['config', 'extensions/sulu-buttons-contactbundle', 'extensions/iban'], function(Config, ContactButtons, IbanExtension) {
+define([
+    'config',
+    'extensions/sulu-buttons-contactbundle',
+    'extensions/iban',
+    'css!sulucontactcss/main'
+], function(Config, ContactButtons, IbanExtension) {
 
     'use strict';
 

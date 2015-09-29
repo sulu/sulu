@@ -24,7 +24,7 @@ Feature: Media upload
          And I am editing the media collection "Foobar"
          And I wait to see "1" ".masonry-item" elements
          When I click on the element ".masonry-item:nth-child(1)"
-         And I click on the element ".toolbar-item[data-id='edit']"
+         And I click on the element ".toolbar-item[data-id='editSelected']"
          And I wait for an overlay to appear
          # FIXME: Currently not working with Saucelabs (https://github.com/instaclick/php-webdriver/issues/63)
          #And I wait to see "Click or drag and drop new version"

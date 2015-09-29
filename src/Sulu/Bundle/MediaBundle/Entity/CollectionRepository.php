@@ -83,7 +83,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 ->leftJoin('collection.parent', 'collectionParent')
                 ->leftJoin('collection.children', 'collectionChildren')
                 ->leftJoin('collectionParent.meta', 'parentMeta')
-                ->where('collection.depth <= :depth + :maxDepth OR collectionChildren.depth <= :maxDepth + 1');
+                ->where('collection.depth <= :depth1 OR collectionChildren.depth <= :depth2');
 
             if ($collection !== null) {
                 $queryBuilder->andWhere('collection.lft BETWEEN :lft AND :rgt AND collection.id != :id');
@@ -94,7 +94,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             }
 
             if (array_key_exists('locale', $filter)) {
-                $queryBuilder->andWhere('collectionMeta.locale = :locale OR defaultMeta != :locale');
+                $queryBuilder->andWhere('collectionMeta.locale = :locale OR defaultMeta.locale != :locale');
             }
 
             if ($sortBy !== null && is_array($sortBy) && count($sortBy) > 0) {
@@ -110,9 +110,11 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 $this->addAccessControl($queryBuilder, $user, $permission, Collection::class, 'collection');
             }
 
+            $collectionDepth = $collection !== null ? $collection->getDepth() : 0;
+
             $query = $queryBuilder->getQuery();
-            $query->setParameter('maxDepth', intval($depth));
-            $query->setParameter('depth', $collection !== null ? $collection->getDepth() : 0);
+            $query->setParameter('depth1', $collectionDepth + $depth);
+            $query->setParameter('depth2', $depth + 1);
 
             if ($collection !== null) {
                 $query->setParameter('lft', $collection->getLft());

@@ -10,12 +10,14 @@
 require.config({
     paths: {
         suluresource: '../../suluresource/js',
+        suluresourcecss: '../../suluresource/css',
+
         'type/conditionSelection': '../../suluresource/js/components/condition-selection/condition-selection-type',
         'filtersutil/toolbarExtensionHandler': '../../suluresource/js/components/filters/util/toolbar-extension-handler'
     }
 });
 
-define(['filtersutil/toolbarExtensionHandler'], function(toolbarExtensionHandler) {
+define(['filtersutil/toolbarExtensionHandler', 'css!suluresourcecss/main'], function(toolbarExtensionHandler) {
 
     'use strict';
 

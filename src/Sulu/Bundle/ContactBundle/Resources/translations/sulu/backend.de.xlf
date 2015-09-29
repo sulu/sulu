@@ -278,7 +278,7 @@
             </trans-unit>
             <trans-unit id="0501e263af3ba0f52ef7a4d3c0298d50" resname="contact.contacts.details">
                 <source>contact.contacts.details</source>
-                <target>Personendetails</target>
+                <target>Kontaktdetails</target>
             </trans-unit>
             <trans-unit id="79d68f4ec8392a1f07b99dddc6e48a22" resname="contacts.edit-address">
                 <source>contacts.edit-address</source>
@@ -623,6 +623,14 @@
             <trans-unit id="235b14f26g7593a3e44gs2e9335a8d5d" resname="contact.accounts.logo-dropzone-text">
                 <source>contact.accounts.logo-dropzone-text</source>
                 <target>Bild ablegen oder Klicken um das Logo zu ändern</target>
+            </trans-unit>
+            <trans-unit id="235b14f26g712345e44gs2e9335a8d50" resname="contact-selection.no-contact-selected">
+                <source>contact-selection.no-contact-selected</source>
+                <target>Keine Kontakt ausgewählt</target>
+            </trans-unit>
+            <trans-unit id="235b14f26g712345e44gs2e9335a8d51" resname="contact-selection.add">
+                <source>contact-selection.add</source>
+                <target>Kontakt auswählen</target>
             </trans-unit>
         </body>
     </file>

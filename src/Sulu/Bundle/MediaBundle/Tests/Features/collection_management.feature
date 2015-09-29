@@ -13,7 +13,7 @@ Feature: Collection management
         When I click the add icon
         And I expect an overlay to appear
         And I fill in husky field "title" with "Dornbirn"
-        And I click the tick button
+        And I click the ok button
         And I expect to see "Dornbirn"
         Then the media collection "Dornbirn" should exist
 

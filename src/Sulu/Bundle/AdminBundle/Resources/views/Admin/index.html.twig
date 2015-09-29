@@ -14,17 +14,8 @@
 
         <!-- build:css app.min.css -->
         <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/js/vendor/husky/husky.min.css"/>
-        <!-- endbuild -->
-
         <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/css/main.css"/>
-        <link rel="stylesheet" type="text/css" href="/bundles/sulucontact/css/main.css"/>
-        <link rel="stylesheet" type="text/css" href="/bundles/sulucontent/css/main.css"/>
-        <link rel="stylesheet" type="text/css" href="/bundles/sulumedia/css/main.css"/>
-        <link rel="stylesheet" type="text/css" href="/bundles/sululocation/css/main.css"/>
-        <link rel="stylesheet" type="text/css" href="/bundles/sulusnippet/css/main.css"/>
-        <link rel="stylesheet" type="text/css" href="/bundles/sulusearch/css/main.css"/>
-        <link rel="stylesheet" type="text/css" href="/bundles/suluresource/css/main.css"/>
-        <link rel="stylesheet" type="text/css" href="/bundles/sululocation/js/vendor/leaflet/leaflet.css"/>
+        <!-- endbuild -->
     </head>
     <body>
         <div class="spinner initial-loader">
@@ -41,6 +32,7 @@
                      data-aura-user-locales='{{ translated_locales|keys|json_encode }}'
                      data-aura-user-locale="{{ user.locale }}"
                      data-aura-logout-route="{{ path('logout') }}"
+                     data-aura-resize-width="1470"
                      class="navigation-column">
                 </div>
             </div>

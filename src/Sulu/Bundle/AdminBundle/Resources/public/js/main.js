@@ -34,6 +34,7 @@ require.config({
         '__component__$data-overlay@suluadmin': 'components/data-overlay/main'
     },
     include: [
+        'vendor/require-css/css',
         'app-config',
         'config',
         'aura_extensions/backbone-relational',
@@ -53,7 +54,12 @@ require.config({
     ],
     exclude: [
         'husky'
-    ]
+    ],
+    map: {
+        '*': {
+            'css': 'vendor/require-css/css'
+        }
+    }
 });
 
 define('underscore', function() {

@@ -44,6 +44,7 @@
             <argument type="service" id="sulu_content.smart_content.data_provider_pool"/>
             <argument type="service" id="sulu_tag.tag_manager"/>
             <argument type="service" id="request_stack"/>
+            <argument type="service" id="sulu_tag.tag_request_handler"/>
             <argument>%sulu.content.type.smart_content.template%</argument>
 
             <tag name="sulu.content.type" alias="smart_content"/>

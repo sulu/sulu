@@ -139,14 +139,6 @@ class NodeControllerTest extends SuluTestCase
                     'language' => 'en',
                 ],
             ],
-        //    array(
-        //        array(
-        //            'template' => 'hotel',
-        //            'webspace' => 'sulu_io',
-        //            'language' => 'en',
-        //            'type' => 'snippet',
-        //        ),
-        //    ),
         ];
     }
 
@@ -1233,6 +1225,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals('test2', $response['title']);
         $this->assertEquals('/test2', $response['path']);
         $this->assertEquals('/test2', $response['url']);
+        $this->assertEquals(30, $response['order']);
 
         $client->request(
             'POST',
@@ -1249,6 +1242,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals('test4', $response['title']);
         $this->assertEquals('/test4', $response['path']);
         $this->assertEquals('/test4', $response['url']);
+        $this->assertEquals(10, $response['order']);
 
         // get child nodes from root
         $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
@@ -1258,9 +1252,13 @@ class NodeControllerTest extends SuluTestCase
 
         $this->assertEquals(4, count($items));
         $this->assertEquals('test4', $items[0]['title']);
+        $this->assertEquals(10, $items[0]['order']);
         $this->assertEquals('test1', $items[1]['title']);
+        $this->assertEquals(20, $items[1]['order']);
         $this->assertEquals('test3', $items[2]['title']);
+        $this->assertEquals(30, $items[2]['order']);
         $this->assertEquals('test2', $items[3]['title']);
+        $this->assertEquals(40, $items[3]['order']);
     }
 
     public function testOrderNonExistingSource()

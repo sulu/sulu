@@ -16,8 +16,8 @@ use PHPCR\PropertyType;
 use PHPCR\Util\UUIDHelper;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\Compat\Structure\Page;
-use Sulu\Component\Content\Compat\Structure\Snippet;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
+use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
@@ -125,7 +125,7 @@ class SnippetContent extends ComplexContentType
         $values = is_array($values) ? $values : [];
 
         foreach ($values as $value) {
-            if ($value instanceof Snippet) {
+            if ($value instanceof SnippetBridge) {
                 $snippetReferences[] = $value->getUuid();
             } elseif (is_array($value) && array_key_exists('uuid', $value) && UUIDHelper::isUUID($value['uuid'])) {
                 $snippetReferences[] = $value['uuid'];
@@ -167,7 +167,7 @@ class SnippetContent extends ComplexContentType
      */
     public function getViewData(PropertyInterface $property)
     {
-        /** @var Page $page */
+        /** @var PageBridge $page */
         $page = $property->getStructure();
         $webspaceKey = $page->getWebspaceKey();
         $locale = $page->getLanguageCode();
@@ -194,7 +194,7 @@ class SnippetContent extends ComplexContentType
      */
     public function getContentData(PropertyInterface $property)
     {
-        /** @var Page $page */
+        /** @var PageBridge $page */
         $page = $property->getStructure();
         $webspaceKey = $page->getWebspaceKey();
         $locale = $page->getLanguageCode();

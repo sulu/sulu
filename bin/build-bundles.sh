@@ -9,6 +9,7 @@ function build_bundle {
         if [ OUT != 0 ];
         then
             npm install
+            rm -rf Resources/public/dist
             grunt build
         fi
     fi

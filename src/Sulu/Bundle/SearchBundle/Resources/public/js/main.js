@@ -9,54 +9,57 @@
 
 require.config({
     paths: {
-        sulusearch: '../../sulusearch/js'
+        sulusearch: '../../sulusearch/js',
+        sulusearchcss: '../../sulusearch/css'
     }
 });
 
-define({
+define(['css!sulusearchcss/main'], function() {
+    return {
 
-    name: 'Sulu Search Bundle',
+        name: 'Sulu Search Bundle',
 
-    initialize: function(app) {
+        initialize: function(app) {
 
-        'use strict';
+            'use strict';
 
-        var sandbox = app.sandbox,
-            dataOverlayStarted = false,
-            $element;
+            var sandbox = app.sandbox,
+                dataOverlayStarted = false,
+                $element;
 
-        app.components.addSource('sulusearch', '/bundles/sulusearch/js/components');
+            app.components.addSource('sulusearch', '/bundles/sulusearch/js/components');
 
-        app.components.before('initialize', function() {
-            if (this.name !== 'Sulu App') {
-                return;
-            }
-
-            this.sandbox.on('husky.navigation.item.select', function() {
-                this.sandbox.emit('sulu.data-overlay.hide');
-            }.bind(this));
-
-            this.sandbox.on('husky.navigation.item.event.search', function() {
-                if (!dataOverlayStarted) {
-                    $element = this.sandbox.dom.createElement('<div class="data-overlay-container"/>');
-
-                    App.dom.append('.content-container', $element);
-                    App.start([
-                        {
-                            name: 'data-overlay@suluadmin',
-                            options: {
-                                el: '.data-overlay-container',
-                                component: 'search-results@sulusearch'
-                            }
-                        }
-                    ]).then(function() {
-                        dataOverlayStarted = true;
-                        sandbox.emit('sulu.data-overlay.show');
-                    });
-                } else {
-                    this.sandbox.emit('sulu.data-overlay.show');
+            app.components.before('initialize', function() {
+                if (this.name !== 'Sulu App') {
+                    return;
                 }
-            }.bind(this));
-        });
-    }
+
+                this.sandbox.on('husky.navigation.item.select', function() {
+                    this.sandbox.emit('sulu.data-overlay.hide');
+                }.bind(this));
+
+                this.sandbox.on('husky.navigation.item.event.search', function() {
+                    if (!dataOverlayStarted) {
+                        $element = this.sandbox.dom.createElement('<div class="data-overlay-container"/>');
+
+                        App.dom.append('.content-container', $element);
+                        App.start([
+                            {
+                                name: 'data-overlay@suluadmin',
+                                options: {
+                                    el: '.data-overlay-container',
+                                    component: 'search-results@sulusearch'
+                                }
+                            }
+                        ]).then(function() {
+                            dataOverlayStarted = true;
+                            sandbox.emit('sulu.data-overlay.show');
+                        });
+                    } else {
+                        this.sandbox.emit('sulu.data-overlay.show');
+                    }
+                }.bind(this));
+            });
+        }
+    };
 });

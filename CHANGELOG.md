@@ -2,11 +2,17 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1625 [MediaBundle]     Fixed queries for PostgreSQL
+    * ENHANCEMENT #1626 [AdminBundle]     Added require-css to load css dynamically with require
+    * BUGFIX      #1619 [CategoryBundle]  Fixed category view cropping responsive
+    * BUGFIX      #1619 [AdminBundle]     Fixed responsive interface with sidebar
+    * BUGFIX      #1614 [ContentBundle]   Readded the reorder event to the OrderSubscriber
     * ENHANCEMENT #1607 [ContactBundle]   Now passing savedData when calling save and create new account
     * BUGFIX      #1609 [MediaBundle]     Added further null reference checks to MediaManager
     * BUGFIX      #1583 [ResourceBundle]  Fixed filter button in list-toolbar
     * ENHANCEMENT #1581 [CategoryBundle]  Added locale handling in list and list api
     * ENHANCEMENT #1581 [SnippetBundle]   Added locale chooser in list
+    * FEATURE     #1347 [ContactBundle]   Content type for contacts and accounts
     * FEATURE     #1558 [AdminBundle]     Redesign of overlays
     * FEATURE     #1557 [MediaBundle]     Redesign of data-navigation
     * FEATURE     #1557 [AdminBundle]     Success-labels in navigation
@@ -37,6 +43,8 @@ CHANGELOG for Sulu
     * FEATURE     #1529 [ContentBundle]   Added reset smart content button
     * FEATURE     #1517 [ContactBundle]   Added account DataProvider
     * FEATURE     #1513 [ContactBundle]   Added contact DataProvider
+    * FEATURE     #1512 [SmartContent]    Extended SmartContent to be able to add tags from website URL
+    * FEATURE     #1512 [TagBundle]       Added TwigExtension to handle tags in twig templates
     * FEATURE     #1369 [ContentBundle]   Show icons in column navigation based on the user's permission
     * FEATURE     #1415 [ContentBundle]   Refactored SmartContent to use DataProvider to load content
     * FEATURE     #1477 [MediaBundle]     Added object security in the media section
@@ -44,6 +52,8 @@ CHANGELOG for Sulu
     * BUGFIX      #1437 [SnippetBundle]   Fixed copy-locale overlay bug
     * FEATURE     #1424 [All]             Implemented and integrated expressions for the listbuilder
     * FEATURE     #1429 [ResourceBundle]  Updated husky and added preselect for filter dropdown
+    * BUGFIX      #1411 [All]             Only take inner-joins into account that are referenced to selected entity +
+                                          Added Tests
     * FEATURE     #1406 [ResourceBundle]  Integrated filters into user settings
     * FEATURE     #1406 [SecurityBundle]  Added api method to delete user settings
     * FEATURE     #1404 [AdminBundle]     Implemented new login design
@@ -69,6 +79,11 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1342 [SecurityBundle]  Added creator and changer of contact to 'fullContact' serialization group
     * BUGFIX      #1365 [ContactBundle]   Fixed bug caused by new instance name of datagrid
     * BUGFIX      #1136 [MediaBundle]     Fixed image scale forceRatio parameter for none squared image formats
+
+* 1.0.11 (2015-09-23)
+    * HOTFIX      #1596 [GeneratorBundle] Fixed sulu bundle generator path generation
+    * HOTFIX      #1615 [Content]         Fixed resource segment subscriber for order internal link
+    * HOTFIX      #1612 [Content]         Fixed non copy content of snippet
 
 * 1.0.10 (2015-09-17)
     * HOTFIX      #1594 [Website] Fixed website request analyzer
