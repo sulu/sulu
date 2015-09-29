@@ -39756,41 +39756,55 @@ define('__component__$column-navigation@husky',[], function() {
         },
 
         templates = {
-            wrapper: ['<div class="' + constants.wrapperClass + '"></div>'].join(''),
+            wrapper: ['<div class="', constants.wrapperClass, '"></div>'].join(''),
             container: ['<div class="column-navigation"></div>'].join(''),
 
-            column: ['<div data-column="<%= columnNumber %>" class="' + constants.columnClass + '" id="<%= id %>">',
+            column: [
+                '<div data-column="<%= columnNumber %>" class="', constants.columnClass, '" id="<%= id %>">',
                 '    <ul></ul>',
-                '</div>'].join(''),
+                '</div>'
+            ].join(''),
 
-            noPage: ['<div class="no-page">',
+            noPage: [
+                '<div class="no-page">',
                 '    <span class="fa-coffee icon"></span>',
                 '    <div class="text"><%= description %></div>',
-                '</div>'].join(''),
+                '</div>'
+            ].join(''),
 
-            optionsContainer: ['<div class="' + constants.optionsClass + ' grid-row"></div>'].join(''),
+            optionsContainer: ['<div class="', constants.optionsClass, ' grid-row"></div>'].join(''),
 
-            optionsAdd: ['<div class="align-center add pointer">',
+            optionsAdd: [
+                '<div class="align-center add pointer">',
                 '    <span class="fa-plus-circle"></span>',
-                '</div>'].join(''),
+                '</div>'
+            ].join(''),
 
-            optionsSettings: ['<div class="align-center settings pointer drop-down-trigger">',
+            optionsSettings: [
+                '<div class="align-center settings pointer drop-down-trigger">',
                 '    <span class="fa-gear inline-block"></span><span class="dropdown-toggle inline-block"></span>',
-                '</div>'].join(''),
+                '</div>'
+            ].join(''),
 
-            optionsOk: ['<div class="align-center ok pointer">',
+            optionsOk: [
+                '<div class="align-center ok pointer">',
                 '    <span class="fa-check"></span>',
-                '</div>'].join(''),
+                '</div>'
+            ].join(''),
 
-            item: ['<li data-id="<%= id %>" class="' + constants.columnItemClass + '">',
+            item: [
+                '<li data-id="<%= id %>" class="' + constants.columnItemClass + '">',
                 '    <span class="' + constants.iconsLeftClass + '"></span>',
                 '    <span title="<%= title %>" class="' + constants.itemTextClass + '"><%= title%></span>',
                 '    <span class="' + constants.iconsRightClass + '"></span>',
-                '</li>'].join(''),
+                '</li>'
+            ].join(''),
 
-            orderInput: ['<span class="' + constants.orderInputClass + '">',
-                '   <input type="text" class="form-element husky-validate" value="<%= value %>" />',
-                '</span>'].join('')
+            orderInput: [
+                '<span class="' + constants.orderInputClass + '">',
+                '    <input type="text" class="form-element husky-validate" value="<%= value %>" />',
+                '</span>'
+            ].join('')
         },
 
         /**
@@ -40235,7 +40249,6 @@ define('__component__$column-navigation@husky',[], function() {
         parseData: function(data, columnNumber) {
             // if there is nothing loaded yet, create a "root"-column
             if (columnNumber === 0) {
-                this.columns[0] = {};
                 this.columns[0] = data;
             }
             var newColNumber = columnNumber + 1;
@@ -40921,6 +40934,10 @@ define('__component__$column-navigation@husky',[], function() {
          * @param $activeColumn {object} column for which the options will be inserted
          */
         displayOptions: function($activeColumn) {
+            if (!!this.inOrderMode) {
+                return;
+            }
+
             var visibleRatio;
 
             this.lastHoveredColumn = this.sandbox.dom.data($activeColumn, 'column');

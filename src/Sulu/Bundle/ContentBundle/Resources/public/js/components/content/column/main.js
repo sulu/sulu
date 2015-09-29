@@ -143,7 +143,7 @@ define([
          * @returns {boolean}
          */
         checkParentSecurity = function(column, permission) {
-            if (column.parent) {
+            if (!!column.parent) {
                 if (!!column.parent.hasOwnProperty('_permissions')) {
                     return column.parent._permissions[permission];
                 }

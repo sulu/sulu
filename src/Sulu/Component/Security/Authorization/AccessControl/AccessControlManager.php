@@ -126,6 +126,16 @@ class AccessControlManager implements AccessControlManagerInterface
         return $userPermission;
     }
 
+    /**
+     * Returns the permissions for the given security context for the given user.
+     *
+     * @param SecurityCondition $securityCondition The security condition to check
+     * @param UserInterface $user The user for which the security is checked
+     * @param bool $checkPermissionType Flag to show if the permission type should also be checked. If set to false
+     *                                     it will only check if the user has access to the context in the given locale
+     *
+     * @return array
+     */
     private function getUserSecurityContextPermissions(
         SecurityCondition $securityCondition,
         UserInterface $user,
@@ -147,6 +157,15 @@ class AccessControlManager implements AccessControlManagerInterface
         return $userPermissions;
     }
 
+    /**
+     * Returns the permissions for the given security context for the given user role.
+     *
+     * @param SecurityCondition $securityCondition The security condition to check
+     * @param UserRole $userRole The user role for which the security is checked
+     * @param bool $checkPermissionType Flag to show if the permission type should also be checked
+     *
+     * @return array
+     */
     private function getUserRoleSecurityContextPermission(
         SecurityCondition $securityCondition,
         UserRole $userRole,
@@ -210,6 +229,14 @@ class AccessControlManager implements AccessControlManagerInterface
         });
     }
 
+    /**
+     * Merges all the values for the given permission arrays. Only returns true if all values are true.
+     *
+     * @param array $permissions The array of the additional permissions
+     * @param array $userPermission The array of the currently changing permissions
+     *
+     * @return mixed
+     */
     private function restrictPermissions(array $userPermission, array $permissions)
     {
         return $this->mapPermissions($userPermission, $permissions, function ($permission1, $permission2) {

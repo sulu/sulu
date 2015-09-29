@@ -144,6 +144,6 @@ class SymfonyAccessControlManager implements AccessControlManagerInterface
      */
     public function getUserPermissions(SecurityCondition $securityCondition, UserInterface $user)
     {
-        // TODO: Implement getUserPermissions() method.
+        // This class only exists for BC reasons, so new methods in the interface won't be implemented here
     }
 }

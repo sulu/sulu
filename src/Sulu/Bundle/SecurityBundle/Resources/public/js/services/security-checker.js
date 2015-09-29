@@ -8,6 +8,9 @@
  */
 
 define(function() {
+
+    'use strict';
+
     return {
         /**
          * Checks if the current data object grants the given permission for the current user.
