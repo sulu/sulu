@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * FEATURE     #1584 [ContentBundle]   Show UI elements in content management based on security
+    * BUGFIX      #1633 [Rest]            Do not add order by id by default
     * BUGFIX      #1625 [MediaBundle]     Fixed queries for PostgreSQL
     * ENHANCEMENT #1626 [AdminBundle]     Added require-css to load css dynamically with require
     * BUGFIX      #1619 [CategoryBundle]  Fixed category view cropping responsive
