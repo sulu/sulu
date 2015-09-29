@@ -305,7 +305,9 @@ class DoctrineListBuilder extends AbstractListBuilder
             } else {
                 // include inner joins
                 foreach ($field->getJoins() as $entityName => $join) {
-                    if ($join->getJoinMethod() !== DoctrineJoinDescriptor::JOIN_METHOD_INNER) {
+                    if ($join->getJoinMethod() !== DoctrineJoinDescriptor::JOIN_METHOD_INNER &&
+                        array_search($entityName, $necessaryEntityNames) === false
+                    ) {
                         break;
                     }
                     $addJoins = array_merge($addJoins, [$entityName => $join]);
