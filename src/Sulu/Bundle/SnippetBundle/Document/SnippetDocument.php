@@ -33,7 +33,6 @@ class SnippetDocument implements
     TimestampBehavior,
     BlameBehavior,
     AutoNameBehavior,
-    ResetFilingPathBehavior,
     AliasFilingBehavior,
     StructureTypeFilingBehavior,
     StructureBehavior,
