@@ -71,7 +71,9 @@ class CodeRepository extends EntityRepository
             ->addSelect('t')
             ->addSelect('c');
 
-        $qb = $this->addSorting($qb, $sorting, 'u');
+        if ($sorting) {
+            $qb = $this->addSorting($qb, $sorting, 'u');
+        }
         $qb = $this->addPagination($qb, $offset, $limit);
 
         // if needed add where statements

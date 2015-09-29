@@ -363,6 +363,15 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->doctrineListBuilder->execute();
     }
 
+    public function testSortWithRequest()
+    {
+        $this->doctrineListBuilder->sort(new DoctrineFieldDescriptor('desc', 'desc', self::$entityName));
+
+        $this->queryBuilder->expects($this->exactly(2))->method('addOrderBy')->with(self::$entityName . '.desc', 'ASC');
+
+        $this->doctrineListBuilder->execute();
+    }
+
     public function testLimit()
     {
         $this->doctrineListBuilder->limit(5);
