@@ -689,7 +689,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             ]
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $this->assertEquals(4, count($result));
+        $this->assertEquals(1, count($result));
 
         $builder->init(
             [

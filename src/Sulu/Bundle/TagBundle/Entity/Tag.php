@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\TagBundle\Entity;
 
-use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;

@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Tag\Request;
 
-use Sulu\Bundle\TagBundle\Entity\Tag;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;

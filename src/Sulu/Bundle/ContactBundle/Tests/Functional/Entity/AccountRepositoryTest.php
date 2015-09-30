@@ -252,7 +252,7 @@ class AccountRepositoryTest extends SuluTestCase
                 0,
                 null,
                 array_slice($this->accountData, 0, 7),
-                [0]
+                [0],
             ],
             // no pagination, category 0 or 1
             [
@@ -260,7 +260,7 @@ class AccountRepositoryTest extends SuluTestCase
                 null,
                 0,
                 null,
-                array_slice($this->accountData, 0, 7)
+                array_slice($this->accountData, 0, 7),
             ],
             // no pagination, category 0 and 1
             [
@@ -269,7 +269,7 @@ class AccountRepositoryTest extends SuluTestCase
                 0,
                 null,
                 array_slice($this->accountData, 0, 4),
-                [0, 1]
+                [0, 1],
             ],
             // no pagination, category 0 and 3
             [
@@ -279,7 +279,7 @@ class AccountRepositoryTest extends SuluTestCase
                 null,
                 [$this->accountData[1]],
                 [0, 3],
-                [0, 3]
+                [0, 3],
             ],
             // page 1, no limit, category 0
             [
@@ -343,7 +343,7 @@ class AccountRepositoryTest extends SuluTestCase
                     'websiteCategories' => [1],
                     'websiteCategoryOperator' => 'or',
                     'categories' => [3],
-                    'categoryOperator' => 'or'
+                    'categoryOperator' => 'or',
                 ],
                 null,
                 0,
@@ -358,7 +358,7 @@ class AccountRepositoryTest extends SuluTestCase
                     'websiteCategories' => [2, 3],
                     'websiteCategoryOperator' => 'or',
                     'categories' => [1],
-                    'categoryOperator' => 'or'
+                    'categoryOperator' => 'or',
                 ],
                 null,
                 0,
@@ -373,7 +373,7 @@ class AccountRepositoryTest extends SuluTestCase
                     'websiteCategories' => [1],
                     'websiteCategoryOperator' => 'or',
                     'categories' => [2, 3],
-                    'categoryOperator' => 'or'
+                    'categoryOperator' => 'or',
                 ],
                 null,
                 0,
@@ -389,7 +389,7 @@ class AccountRepositoryTest extends SuluTestCase
                 0,
                 null,
                 array_slice($this->accountData, 0, 4),
-                [0]
+                [0],
             ],
             // no pagination, website-category 0 and website-tag 1
             [
@@ -397,13 +397,13 @@ class AccountRepositoryTest extends SuluTestCase
                     'websiteCategories' => [0],
                     'websiteCategoryOperator' => 'or',
                     'websiteTags' => [1],
-                    'websiteTagOperator' => 'or'
+                    'websiteTagOperator' => 'or',
                 ],
                 null,
                 0,
                 null,
                 array_slice($this->accountData, 0, 4),
-                [0]
+                [0],
             ],
             // combination website/admin-category/tag
         ];

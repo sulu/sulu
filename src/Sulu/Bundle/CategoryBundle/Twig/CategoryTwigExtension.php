@@ -123,5 +123,4 @@ class CategoryTwigExtension extends \Twig_Extension
     {
         return 'sulu_category';
     }
-
 }

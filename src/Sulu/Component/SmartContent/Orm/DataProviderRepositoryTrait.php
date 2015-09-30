@@ -169,6 +169,7 @@ trait DataProviderRepositoryTrait
      * @param string $relation
      * @param int[] $values
      * @param string $alias
+     *
      * @return array parameter for the query.
      */
     private function appendRelationOr(QueryBuilder $queryBuilder, $relation, $values, $alias)

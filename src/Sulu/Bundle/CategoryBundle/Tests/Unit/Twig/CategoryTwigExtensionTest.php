@@ -60,7 +60,7 @@ class CategoryTwigExtensionTest extends \PHPUnit_Framework_TestCase
                 [['id' => 1, 'name' => 'sulu'], ['id' => 2, 'name' => 'core'], ['id' => 3, 'name' => 'massive']],
                 'de',
                 5,
-                1
+                1,
             ],
         ];
     }
