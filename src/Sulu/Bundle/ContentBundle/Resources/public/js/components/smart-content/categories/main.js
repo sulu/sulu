@@ -19,7 +19,8 @@ define(['services/husky/util'], function(util) {
             options: {
                 instanceName: 'categories',
                 preselectedOperator: 'or',
-                preselectedCategories: []
+                preselectedCategories: [],
+                root: null
             },
             translations: {
                 operatorLabel: 'smart-content.categories.operator-label',
@@ -134,7 +135,11 @@ define(['services/husky/util'], function(util) {
                         options: {
                             el: this.$find('.' + constants.categoriesClass),
                             instanceName: this.options.instanceName,
-                            url: '/admin/api/categories?flat=true&sortBy=depth&sortOrder=asc',
+                            url: [
+                                '/admin/api/categories',
+                                (!!this.options.root ? ('/' + this.options.root) + '/children' : ''),
+                                '?flat=true&sortBy=depth&sortOrder=asc'
+                            ].join(''),
                             resultKey: 'categories',
                             pagination: false,
                             childrenPropertyName: 'hasChildren',

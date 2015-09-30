@@ -182,6 +182,7 @@ class ContentType extends ComplexContentType
             'website_category_operator' => new PropertyParameter('website_category_operator', 'OR'),
             'sorting' => new PropertyParameter('sorting', $configuration->getSorting(), 'collection'),
             'present_as' => new PropertyParameter('present_as', [], 'collection'),
+            'category_root' => new PropertyParameter('category_root', null),
             'has' => [
                 'datasource' => $configuration->hasDatasource(),
                 'tags' => $configuration->hasTags(),
@@ -317,6 +318,12 @@ class ContentType extends ComplexContentType
      */
     public function getViewData(PropertyInterface $property)
     {
+        /** @var PropertyParameter[] $params */
+        $params = array_merge(
+            $this->getDefaultParams($property),
+            $property->getParams()
+        );
+
         $this->getContentData($property);
         $config = $property->getValue();
 
@@ -334,6 +341,7 @@ class ContentType extends ComplexContentType
                 'hasNextPage' => null,
                 'paginated' => false,
                 'referencedUuids' => [],
+                'categoryRoot' => $params['category_root']->getValue(),
             ],
             $config
         );

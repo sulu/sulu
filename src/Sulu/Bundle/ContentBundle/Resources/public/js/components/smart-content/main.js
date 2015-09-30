@@ -126,7 +126,8 @@ define(['services/husky/util'], function(util) {
             externalConfigs: false,
             has: {},
             title: 'Smart-Content',
-            datasource: null
+            datasource: null,
+            categoryRoot: null
         },
 
         sortMethods = {
@@ -856,7 +857,8 @@ define(['services/husky/util'], function(util) {
                             el: '#categories-' + this.options.instanceName,
                             instanceName: this.options.instanceName,
                             preselectedOperator: this.overlayData.categoryOperator,
-                            preselectedCategories: this.overlayData.categories
+                            preselectedCategories: this.overlayData.categories,
+                            root: this.options.categoryRoot
                         }
                     }
                 ]

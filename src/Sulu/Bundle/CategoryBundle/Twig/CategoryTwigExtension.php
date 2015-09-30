@@ -75,11 +75,15 @@ class CategoryTwigExtension extends \Twig_Extension
      *
      * @return array
      */
-    public function getCategoriesFunction($locale, $parent = null, $depth = null)
+    public function getCategoriesFunction($locale, $parent = null)
     {
         return $this->memoizeCache->memoize(
-            function ($locale, $parent = null, $depth = null) {
-                $entities = $this->categoryManager->find($parent, $depth);
+            function ($locale, $parent = null) {
+                if (null === $parent) {
+                    $entities = $this->categoryManager->find();
+                } else {
+                    $entities = $this->categoryManager->findChildren($parent);
+                }
                 $apiEntities = $this->categoryManager->getApiObjects($entities, $locale);
 
                 $context = SerializationContext::create();
