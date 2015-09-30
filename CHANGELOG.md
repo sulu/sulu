@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #1643 [ContactBundle]   Added title of address
     * FEATURE     #1584 [ContentBundle]   Show UI elements in content management based on security
     * BUGFIX      #1633 [Rest]            Listbuilder: fix for concat joins in where clause;
                                           Fix in sort (order by id as default)

@@ -1167,6 +1167,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
             if (isset($addressData['note'])) {
                 $address->setNote($addressData['note']);
             }
+            if (isset($addressData['title'])) {
+                $address->setTitle($addressData['title']);
+            }
             if (isset($addressData['primaryAddress'])) {
                 $isMain = $this->getBooleanValue($addressData['primaryAddress']);
             } else {
@@ -1241,6 +1244,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
                 if (isset($entry['note'])) {
                     $address->setNote($entry['note']);
+                }
+                if (isset($entry['title'])) {
+                    $address->setTitle($entry['title']);
                 }
 
                 if (isset($entry['primaryAddress'])) {
