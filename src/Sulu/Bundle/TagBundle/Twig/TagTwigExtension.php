@@ -13,6 +13,7 @@ namespace Sulu\Bundle\TagBundle\Twig;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Component\Cache\MemoizeInterface;
 use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 
 class TagTwigExtension extends \Twig_Extension
@@ -32,14 +33,21 @@ class TagTwigExtension extends \Twig_Extension
      */
     private $serializer;
 
+    /**
+     * @var MemoizeInterface
+     */
+    private $memoizeCache;
+
     public function __construct(
         TagManagerInterface $tagManager,
         TagRequestHandlerInterface $tagRequestHandler,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        MemoizeInterface $memoizeCache
     ) {
         $this->tagManager = $tagManager;
         $this->tagRequestHandler = $tagRequestHandler;
         $this->serializer = $serializer;
+        $this->memoizeCache = $memoizeCache;
     }
 
     /**
@@ -60,13 +68,17 @@ class TagTwigExtension extends \Twig_Extension
      */
     public function getTagsFunction()
     {
-        $tags = $this->tagManager->findAll();
+        return $this->memoizeCache->memoize(
+            function () {
+                $tags = $this->tagManager->findAll();
 
-        $context = SerializationContext::create();
-        $context->setSerializeNull(true);
-        $context->setGroups(['partialTag']);
+                $context = SerializationContext::create();
+                $context->setSerializeNull(true);
+                $context->setGroups(['partialTag']);
 
-        return $this->serializer->serialize($tags, 'array', $context);
+                return $this->serializer->serialize($tags, 'array', $context);
+            }
+        );
     }
 
     /**

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\CategoryBundle\Twig;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
+use Sulu\Component\Cache\MemoizeInterface;
 use Sulu\Component\Category\Request\CategoryRequestHandlerInterface;
 
 /**
@@ -35,14 +36,21 @@ class CategoryTwigExtension extends \Twig_Extension
      */
     private $serializer;
 
+    /**
+     * @var MemoizeInterface
+     */
+    private $memoizeCache;
+
     public function __construct(
         CategoryManagerInterface $categoryManager,
         CategoryRequestHandlerInterface $categoryRequestHandler,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        MemoizeInterface $memoizeCache
     ) {
         $this->categoryManager = $categoryManager;
         $this->categoryRequestHandler = $categoryRequestHandler;
         $this->serializer = $serializer;
+        $this->memoizeCache = $memoizeCache;
     }
 
     /**
@@ -69,13 +77,17 @@ class CategoryTwigExtension extends \Twig_Extension
      */
     public function getCategoriesFunction($locale, $parent = null, $depth = null)
     {
-        $entities = $this->categoryManager->find($parent, $depth);
-        $apiEntities = $this->categoryManager->getApiObjects($entities, $locale);
+        return $this->memoizeCache->memoize(
+            function ($locale, $parent = null, $depth = null) {
+                $entities = $this->categoryManager->find($parent, $depth);
+                $apiEntities = $this->categoryManager->getApiObjects($entities, $locale);
 
-        $context = SerializationContext::create();
-        $context->setSerializeNull(true);
+                $context = SerializationContext::create();
+                $context->setSerializeNull(true);
 
-        return $this->serializer->serialize($apiEntities, 'array', $context);
+                return $this->serializer->serialize($apiEntities, 'array', $context);
+            }
+        );
     }
 
     /**

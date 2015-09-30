@@ -47,6 +47,7 @@
             <argument type="service" id="sulu_category.category_manager"/>
             <argument type="service" id="sulu_category.category_request_handler"/>
             <argument type="service" id="serializer"/>
+            <argument type="service" id="sulu_core.cache.memoize"/>
 
             <tag name="twig.extension"/>
         </service>
