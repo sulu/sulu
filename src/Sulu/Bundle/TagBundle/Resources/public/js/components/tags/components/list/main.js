@@ -82,6 +82,10 @@ define(function() {
 
         header: {
             noBack: true,
+
+            title: 'tag.tags.title',
+            underline: false,
+
             toolbar: {
                 buttons: {
                     add: {},

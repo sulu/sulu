@@ -11,6 +11,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1607 [ContactBundle]   Now passing savedData when calling save and create new account
     * BUGFIX      #1609 [MediaBundle]     Added further null reference checks to MediaManager
     * ENHANCEMENT #1593 [ResourceBundle]  Added configurable avatar collection for contact and account form
+    * ENHANCEMENT #1583 [ContactBundle]   Added no image icon to table view
     * BUGFIX      #1583 [ResourceBundle]  Fixed filter button in list-toolbar
     * ENHANCEMENT #1581 [CategoryBundle]  Added locale handling in list and list api
     * ENHANCEMENT #1581 [SnippetBundle]   Added locale chooser in list

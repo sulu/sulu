@@ -28,6 +28,10 @@ define(function () {
         header: function () {
             return {
                 noBack: true,
+
+                title: 'category.categories.title',
+                underline: false,
+
                 toolbar: {
                     buttons: {
                         add: {},

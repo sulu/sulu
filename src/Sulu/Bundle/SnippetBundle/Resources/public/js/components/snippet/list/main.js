@@ -42,6 +42,10 @@ define([
     SnippetList.prototype.header = function() {
         return {
             noBack: true,
+
+            title: 'snippets.snippet.title',
+            underline: false,
+
             toolbar: {
                 buttons: {
                     add: {},

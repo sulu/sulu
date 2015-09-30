@@ -103,7 +103,7 @@ define([], function() {
             ].join(''),
             titleElement: [
                 '<div class="' + constants.contentTitleClass + '">',
-                '   <h2 class="content-title"><%= title %></h2>',
+                '   <h2 class="content-title <% if(!!underline){ %>underlined<% } %>"><%= title %></h2>',
                 '</div>'
             ].join('')
         },
@@ -353,18 +353,22 @@ define([], function() {
          * Renders the title into the main-view or (if tabs exist) injects the title into the current tab
          */
         renderTitle: function() {
-            var title = (typeof this.options.title === 'function') ? this.options.title() : this.options.title;
+            var title = (typeof this.options.title === 'function') ? this.options.title() : this.options.title,
+                underline = this.options.underline;
+
             this.removeTitle();
+
             if (!!title) {
-                $('.page').prepend(this.sandbox.dom.createElement(this.sandbox.util.template(templates.titleElement)({
-                    title: this.sandbox.translate(title)
+                $('.page').prepend(this.sandbox.dom.createElement(this.sandbox.util.template(templates.titleElement, {
+                    title: this.sandbox.translate(title),
+                    underline: underline
                 })));
             }
         },
 
         /**
          * Sets a new title
-         * @param title {Stirng} the new title to set
+         * @param title {String} the new title to set
          */
         setTitle: function(title) {
             this.options.title = title;
