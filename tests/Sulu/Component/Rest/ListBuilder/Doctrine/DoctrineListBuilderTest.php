@@ -363,11 +363,10 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testSortWithRequest()
+    public function testSortWithoutDefault()
     {
-        $this->doctrineListBuilder->sort(new DoctrineFieldDescriptor('desc', 'desc', self::$entityName));
-
-        $this->queryBuilder->expects($this->exactly(2))->method('addOrderBy')->with(self::$entityName . '.desc', 'ASC');
+        // when no sort is applied, results should be orderd by id by default
+        $this->queryBuilder->expects($this->exactly(2))->method('addOrderBy')->with(self::$entityName . '.id', 'ASC');
 
         $this->doctrineListBuilder->execute();
     }
