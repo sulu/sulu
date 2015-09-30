@@ -363,6 +363,14 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->doctrineListBuilder->execute();
     }
 
+    public function testSortWithoutDefault()
+    {
+        // when no sort is applied, results should be orderd by id by default
+        $this->queryBuilder->expects($this->exactly(2))->method('addOrderBy')->with(self::$entityName . '.id', 'ASC');
+
+        $this->doctrineListBuilder->execute();
+    }
+
     public function testLimit()
     {
         $this->doctrineListBuilder->limit(5);
