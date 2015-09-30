@@ -27443,7 +27443,7 @@ define('services/husky/util',[],function() {
             return _.contains(list, value);
         };
 
-        Util.prototype.isAlphaNumeric = function(str) {
+    Util.prototype.isAlphaNumeric = function(str) {
         var code, i, len;
 
         for (i = 0, len = str.length; i < len; i++) {
