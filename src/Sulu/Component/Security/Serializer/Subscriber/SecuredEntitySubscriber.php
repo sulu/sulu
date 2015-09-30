@@ -11,22 +11,67 @@
 namespace Sulu\Component\Security\Serializer\Subscriber;
 
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
-use JMS\Serializer\EventDispatcher\PreSerializeEvent;
+use JMS\Serializer\EventDispatcher\ObjectEvent;
+use Sulu\Component\Rest\ApiWrapper;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
+use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
+/**
+ * This subscriber adds the security information for the current user to the serialization representation of entites
+ * implementing the SecuredEntityInterface.
+ */
 class SecuredEntitySubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var AccessControlManagerInterface
+     */
+    private $accessControlManager;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    public function __construct(
+        AccessControlManagerInterface $accessControlManagerInterface,
+        TokenStorageInterface $tokenStorage
+    ) {
+        $this->accessControlManager = $accessControlManagerInterface;
+        $this->tokenStorage = $tokenStorage;
+    }
+
     /**
      * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
         return [
-            ['event' => 'serializer.pre_serialize', 'method' => 'onPreSerialize'],
+            ['event' => 'serializer.post_serialize', 'method' => 'onPostSerialize'],
         ];
     }
 
-    public function onPreSerialize(PreSerializeEvent $event)
+    public function onPostSerialize(ObjectEvent $event)
     {
-        $event->getObject();
+        $object = $event->getObject();
+
+        // FIXME This should be removed, once all entities are restructured not using the ApiWrapper, possible BC break
+        if ($object instanceof ApiWrapper) {
+            $object = $object->getEntity();
+        }
+
+        if (!$object instanceof SecuredEntityInterface) {
+            return;
+        }
+
+        $event->getVisitor()->addData(
+            '_permissions',
+            $this->accessControlManager->getUserPermissions(
+                // TODO how to get locale
+                new SecurityCondition($object->getSecurityContext(), null, get_class($object), $object->getId()),
+                $this->tokenStorage->getToken()->getUser()
+            )
+        );
     }
 }
