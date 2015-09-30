@@ -98,7 +98,8 @@ define(function () {
                                     icon: 'plus-circle',
                                     callback: this.addNewCategory.bind(this)
                                 }
-                            ]
+                            ],
+                            cropContents: false
                         }
                     }
                 }
