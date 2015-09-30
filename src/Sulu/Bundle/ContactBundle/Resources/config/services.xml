@@ -103,5 +103,13 @@
         <service id="sulu_contact.util.index_comparator" class="%sulu_contact.util.index_comparator.class%" public="false"/>
         <service id="sulu_contact.util.id_converter" class="%sulu_contact.util.id_converter.class%" public="false"/>
 
+        <service id="sulu_contact.js_config" class="%sulu_contact.js_config.class%">
+            <tag name="sulu.js_config"/>
+            <argument>sulu.contact.form</argument>
+            <argument type="collection">
+                <argument key="avatarCollection">%sulu_contact.form.avatar_collection%</argument>
+            </argument>
+        </service>
+
     </services>
 </container>

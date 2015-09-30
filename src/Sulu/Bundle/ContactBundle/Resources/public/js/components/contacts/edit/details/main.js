@@ -66,6 +66,7 @@ define([
 
         initialize: function() {
             this.data = this.options.data();
+            this.formOptions = Config.get('sulu.contact.form');
 
             this.autoCompleteInstanceName = 'accounts-';
             this.dfdAllFieldsInitialized = this.sandbox.data.deferred();
@@ -149,12 +150,14 @@ define([
                 var curMediaId = this.sandbox.dom.data(constants.avatarImageId, 'mediaId');
                 var url = (!!curMediaId) ?
                     '/admin/api/media/' + curMediaId + '?action=new-version' :
-                    '/admin/api/media?collection=1'; //todo: use system collection
+                    '/admin/api/media?collection=' + this.formOptions.avatarCollection; //todo: use system collection
+
                 // if possible, change the title of the avatar to the name of the contact
                 if (!!data.fullName) {
                     url = url + '&title=' + encodeURIComponent(data.fullName);
                     url = url + '&locale=' + encodeURIComponent(this.sandbox.sulu.user.locale);
                 }
+
                 return url;
             }.bind(this);
 
