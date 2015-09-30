@@ -768,16 +768,20 @@ define(['services/husky/util'], function(util) {
          * datasource events
          */
         bindDatasourceEvents: function() {
-            // init datasource navigation after initialize of overlay
-            this.sandbox.on(
-                'husky.overlay.smart-content.' + this.options.instanceName + '.initialized',
-                this.initDatasource.bind(this)
-            );
-            // init categories after initialize of overlay
-            this.sandbox.on(
-                'husky.overlay.smart-content.' + this.options.instanceName + '.initialized',
-                this.initCategories.bind(this)
-            );
+            if (!!this.options.has.datasource) {
+                // init datasource navigation after initialize of overlay
+                this.sandbox.on(
+                    'husky.overlay.smart-content.' + this.options.instanceName + '.initialized',
+                    this.initDatasource.bind(this)
+                );
+            }
+            if (!!this.options.has.categories) {
+                // init categories after initialize of overlay
+                this.sandbox.on(
+                    'husky.overlay.smart-content.' + this.options.instanceName + '.initialized',
+                    this.initCategories.bind(this)
+                );
+            }
 
             // adopt height of datasource once
             this.sandbox.once('husky.overlay.smart-content.' + this.options.instanceName + '.opened', function() {
