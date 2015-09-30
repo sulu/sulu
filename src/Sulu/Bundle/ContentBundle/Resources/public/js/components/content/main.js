@@ -80,7 +80,6 @@ define([
             this.previewWindow = null;
             this.previewExpanded = false;
             this.$preview = null;
-            this.contentChanged = false;
 
             this.previewMode = Config.get('sulu.content.preview').mode;
 
@@ -862,9 +861,6 @@ define([
                 this.sandbox.emit('sulu.preview.state.change', saved);
             }
             this.saved = saved;
-            if (this.saved) {
-                this.contentChanged = false;
-            }
         },
 
         getPreviewDocument: function() {
