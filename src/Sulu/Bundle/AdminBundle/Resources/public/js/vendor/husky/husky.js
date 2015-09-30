@@ -49772,7 +49772,7 @@ define('husky_extensions/itembox',[],function() {
                 // reset items visible when new content is loaded
                 this.viewAll = false;
 
-                if (!!data && data.length > 0) {
+                if (!!data && (!data.length || data.length > 0)) {
                     this.sandbox.util.load(this.getUrl(data))
                         .then(function(data) {
                             this.$container.removeClass(constants.isLoadingClass);

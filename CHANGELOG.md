@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * BUGFIX      #1642 [AdminBundle]     Fixed cropping issue in table-view of datagrid
+    * BUGFIX      #1641 [MediaBundle]     Fixed types in media-selection
     * FEATURE     #1584 [ContentBundle]   Show UI elements in content management based on security
     * BUGFIX      #1633 [Rest]            Listbuilder: fix for concat joins in where clause;
                                           Fix in sort (order by id as default)
