@@ -7,10 +7,13 @@
  * with this source code in the file LICENSE.
  */
 
-define(['services/sulumedia/collection-manager',
+define([
+    'services/sulumedia/collection-manager',
     'services/sulumedia/user-settings-manager',
     'services/sulumedia/media-router',
-    'services/sulumedia/overlay-manager'], function(CollectionManager, UserSettingsManager, MediaRouter, OverlayManager) {
+    'services/sulumedia/overlay-manager',
+    'sulusecurity/services/security-checker'
+], function(CollectionManager, UserSettingsManager, MediaRouter, OverlayManager, SecurityChecker) {
 
     'use strict';
 
@@ -18,6 +21,21 @@ define(['services/sulumedia/collection-manager',
 
     return {
         header: function() {
+            var buttons = {};
+
+            if (SecurityChecker.hasPermission(this.data, 'edit')) {
+                buttons.editCollection = {};
+                buttons.moveCollection = {};
+            }
+
+            if (SecurityChecker.hasPermission(this.data, 'delete')) {
+                buttons.deleteCollection = {};
+            }
+
+            if (SecurityChecker.hasPermission(this.data, 'security')) {
+                buttons.permissionSettings = {};
+            }
+
             return {
                 noBack: true,
                 title: this.data.title,
@@ -25,12 +43,7 @@ define(['services/sulumedia/collection-manager',
                     url: '/admin/content-navigations?alias=media'
                 },
                 toolbar: {
-                    buttons: {
-                        editCollection: {},
-                        moveCollection: {},
-                        deleteCollection: {},
-                        permissionSettings: {}
-                    },
+                    buttons: buttons,
                     languageChanger: {
                         url: '/admin/api/localizations',
                         resultKey: 'localizations',
@@ -99,9 +112,7 @@ define(['services/sulumedia/collection-manager',
                 );
             }.bind(this));
 
-            this.sandbox.on('sulu.toolbar.delete-collection', function() {
-                this.deleteCollection();
-            }.bind(this));
+            this.sandbox.on('sulu.toolbar.delete-collection', this.deleteCollection.bind(this));
 
             this.sandbox.on('sulu.toolbar.collection-permissions', function() {
                 OverlayManager.startPermissionSettingsOverlay.call(
@@ -110,6 +121,11 @@ define(['services/sulumedia/collection-manager',
                     'Sulu\\Bundle\\MediaBundle\\Entity\\Collection', // todo: remove static string
                     "sulu.media.collections" // todo: remove static string
                 );
+            }.bind(this));
+
+            this.sandbox.on('sulu.medias.collection.get-data', function(callback) {
+                // deep copy of object
+                callback(this.sandbox.util.deepCopy(this.data));
             }.bind(this));
         },
 
