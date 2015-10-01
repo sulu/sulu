@@ -269,10 +269,10 @@ abstract class AbstractContactManager implements ContactManagerInterface
      *
      * @return mixed
      */
-    public function getPosition($id)
+    public function getPosition($data)
     {
-        if ($id) {
-            return $this->em->getRepository(self::$positionEntityName)->find($id);
+        if (is_array($data) && array_key_exists('id', $data)) {
+            return $this->em->getRepository(self::$positionEntityName)->find($data['id']);
         }
 
         return;
