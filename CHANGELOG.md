@@ -2,7 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
-    * HOTFIX      #1624 [ContentBundle] Fixed nullable internal link and added server/clientside validation
+    * HOTFIX      #1634 [SecurityBundle] Allow attribute overrides for user email field
+    * HOTFIX      #1624 [ContentBundle]  Fixed nullable internal link and added server/clientside validation
     
 * 1.0.11 (2015-09-23)
     * HOTFIX      #1596 [GeneratorBundle] Fixed sulu bundle generator path generation
