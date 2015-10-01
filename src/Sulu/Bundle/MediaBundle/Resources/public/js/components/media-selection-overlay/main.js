@@ -20,7 +20,8 @@ define(['sulumedia/collections/collections', 'sulumedia/models/collection'], fun
     var defaults = {
             eventNamespace: 'sulu.media-selection-overlay',
             preselectedIds: [],
-            instanceName: null
+            instanceName: null,
+            types: null
         },
 
         listViews = {
@@ -499,7 +500,7 @@ define(['sulumedia/collections/collections', 'sulumedia/models/collection'], fun
                     },
                     {
                         el: this.$el.find('.media-selection-overlay-datagrid-container'),
-                        url: '/admin/api/media?orderBy=media.changed&orderSort=DESC',
+                        url: '/admin/api/media?orderBy=media.changed&orderSort=DESC' + (!!this.options.types ? '&types=' + this.options.types : ''),
                         view: listViews[this.listView].name,
                         resultKey: 'media',
                         instanceName: 'media-selection-overlay.' + this.options.instanceName,

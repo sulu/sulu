@@ -2,6 +2,12 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1642 [AdminBundle]     Fixed cropping issue in table-view of datagrid
+    * BUGFIX      #1641 [MediaBundle]     Fixed types in media-selection
+    * ENHANCEMENT #1638 [ContentBundle]   Removed unnecessary variable in content form
+    * FEATURE     #1584 [ContentBundle]   Show UI elements in content management based on security
+    * BUGFIX      #1633 [Rest]            Listbuilder: fix for concat joins in where clause;
+                                          Fix in sort (order by id as default)
     * BUGFIX      #1625 [MediaBundle]     Fixed queries for PostgreSQL
     * ENHANCEMENT #1626 [AdminBundle]     Added require-css to load css dynamically with require
     * BUGFIX      #1619 [CategoryBundle]  Fixed category view cropping responsive
@@ -9,6 +15,8 @@ CHANGELOG for Sulu
     * BUGFIX      #1614 [ContentBundle]   Readded the reorder event to the OrderSubscriber
     * ENHANCEMENT #1607 [ContactBundle]   Now passing savedData when calling save and create new account
     * BUGFIX      #1609 [MediaBundle]     Added further null reference checks to MediaManager
+    * ENHANCEMENT #1593 [ResourceBundle]  Added configurable avatar collection for contact and account form
+    * ENHANCEMENT #1583 [ContactBundle]   Added no image icon to table view
     * BUGFIX      #1583 [ResourceBundle]  Fixed filter button in list-toolbar
     * ENHANCEMENT #1581 [CategoryBundle]  Added locale handling in list and list api
     * ENHANCEMENT #1581 [SnippetBundle]   Added locale chooser in list

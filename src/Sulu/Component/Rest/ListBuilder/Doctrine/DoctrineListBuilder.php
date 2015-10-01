@@ -182,6 +182,11 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function assignSortFields($queryBuilder)
     {
+        // if no sort has been assigned add order by id ASC as default
+        if (count($this->sortFields) === 0) {
+            $queryBuilder->addOrderBy($this->entityName . '.id', 'ASC');
+        }
+
         foreach ($this->sortFields as $index => $sortField) {
             $queryBuilder->addOrderBy($sortField->getSelect(), $this->sortOrders[$index]);
         }
@@ -300,7 +305,9 @@ class DoctrineListBuilder extends AbstractListBuilder
             } else {
                 // include inner joins
                 foreach ($field->getJoins() as $entityName => $join) {
-                    if ($join->getJoinMethod() !== DoctrineJoinDescriptor::JOIN_METHOD_INNER) {
+                    if ($join->getJoinMethod() !== DoctrineJoinDescriptor::JOIN_METHOD_INNER &&
+                        array_search($entityName, $necessaryEntityNames) === false
+                    ) {
                         break;
                     }
                     $addJoins = array_merge($addJoins, [$entityName => $join]);

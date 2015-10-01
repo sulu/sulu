@@ -28,6 +28,10 @@ define(function () {
         header: function () {
             return {
                 noBack: true,
+
+                title: 'category.categories.title',
+                underline: false,
+
                 toolbar: {
                     buttons: {
                         add: {},
@@ -94,7 +98,8 @@ define(function () {
                                     icon: 'plus-circle',
                                     callback: this.addNewCategory.bind(this)
                                 }
-                            ]
+                            ],
+                            cropContents: false
                         }
                     }
                 }

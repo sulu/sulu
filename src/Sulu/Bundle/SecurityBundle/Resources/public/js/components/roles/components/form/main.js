@@ -47,7 +47,9 @@ define(['config'], function(Config) {
         },
 
         bindDOMEvents: function() {
-            this.sandbox.dom.on(this.$el, 'change', this.setGod.bind(this), '#god');
+            this.sandbox.dom.on('#select-all', 'click', function() {
+                this.sandbox.emit('husky.matrix.set-all');
+            }.bind(this));
         },
 
         bindCustomEvents: function() {
@@ -154,14 +156,6 @@ define(['config'], function(Config) {
                     }
                 }
             }.bind(this));
-        },
-
-        setGod: function() {
-            if (!!this.sandbox.dom.is('#god', ':checked')) {
-                this.sandbox.emit('husky.matrix.set-all');
-            } else {
-                this.sandbox.emit('husky.matrix.unset-all');
-            }
         },
 
         changePermission: function(data) {

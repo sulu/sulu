@@ -77,7 +77,9 @@ define([
 
         header: {
             noBack: true,
+
             title: 'contact.contacts.title',
+            underline: false,
 
             toolbar: {
                 buttons: {
@@ -131,7 +133,8 @@ define([
                 view: this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'datagrid/decorators/card-view',
                 viewOptions: {
                     table: {
-                        actionIconColumn: 'firstName'
+                        actionIconColumn: 'firstName',
+                        noImgIcon: 'fa-user'
                     },
                     'datagrid/decorators/card-view': {
                         fields: {

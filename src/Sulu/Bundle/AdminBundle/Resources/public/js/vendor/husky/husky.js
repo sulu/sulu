@@ -27405,7 +27405,7 @@ define('services/husky/util',[],function() {
         var substrLength;
 
         // return text if it doesn't need to be cropped
-        if (!text || text.length <= maxLength) {
+        if (!text || text.length <= maxLength || !text.slice) {
             return text;
         }
 
@@ -27420,7 +27420,7 @@ define('services/husky/util',[],function() {
     },
 
         Util.prototype.cropFront = function(text, maxLength, delimiter) {
-            if (!text || text.length <= maxLength) {
+            if (!text || text.length <= maxLength || !text.slice) {
                 return text;
             }
 
@@ -27430,7 +27430,7 @@ define('services/husky/util',[],function() {
         },
 
         Util.prototype.cropTail = function(text, maxLength, delimiter) {
-            if (!text || text.length <= maxLength) {
+            if (!text || text.length <= maxLength || !text.slice) {
                 return text;
             }
 
@@ -27559,6 +27559,10 @@ define('services/husky/util',[],function() {
      * @returns {string}
      */
     Util.prototype.capitalizeFirstLetter = function(string) {
+        if (!string.slice) {
+            return string;
+        }
+
         return string.charAt(0).toUpperCase() + string.slice(1);
     };
 
@@ -29945,13 +29949,13 @@ define('__component__$column-options@husky',[],function() {
  * @param {Boolean} [options.openPathToSelectedChildren] true to show path to selected children
  * @param {String} [options.actionIcon] the icon which gets shown in the action click button
  * @param {String|Number} [options.actionIconColumn] the column to add the action icon to. Null for firs column
- *
  * @param {Boolean} [rendered] property used by the datagrid-main class
  * @param {Function} [initialize] function which gets called once at the start of the view
  * @param {Function} [render] function to render data
  * @param {Function} [destroy] function to destroy the view and unbind events
  * @param {Function} [onResize] function which gets automatically executed on window resize
  * @param {Function} [unbindCustomEvents] function to unbind the custom events of this object
+ * @param {Boolean} [cropContents] Define if cell contents should be cropped, when options.croppedMaxSize is exceeded
  */
 define('husky_components/datagrid/decorators/table-view',[],function() {
 
@@ -29975,10 +29979,13 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             highlightSelected: false,
             icons: [],
             removeIcon: 'trash-o',
+            emptyIcon: 'fa-coffee',
+            noImgIcon: 'fa-coffee',
             actionIcon: 'pencil',
             actionIconColumn: null,
             croppedMaxLength: 35,
-            openPathToSelectedChildren: false
+            openPathToSelectedChildren: false,
+            cropContents: true
         },
 
         constants = {
@@ -30059,7 +30066,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             img: [
                 '<div class="' + constants.gridImageClass + '">',
                 '   <img alt="<%= alt %>" src="<%= src %>"/>',
-                '   <div class="fa-coffee empty"></div>',
+                '   <div class="<%= noImgIcon %> empty"></div>',
                 '</div>'
             ].join(''),
             childWrapper: '<div class="' + constants.childWrapperClass + '"></div>',
@@ -30089,7 +30096,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             ].join(''),
             empty: [
                 '<div class="' + constants.emptyListElementClass + '">',
-                '   <div class="fa-coffee icon"></div>',
+                '   <div class="<%= emptyIcon %> icon"></div>',
                 '   <span><%= text %></span>',
                 '</div>'
             ].join('')
@@ -30652,7 +30659,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 content = this.datagrid.manipulateContent(content, column.type, this.options.thumbnailFormat);
                 content = this.sandbox.util.template(templates.img)({
                     alt: content[constants.thumbAltKey],
-                    src: content[constants.thumbSrcKey]
+                    src: content[constants.thumbSrcKey],
+                    noImgIcon: this.options.noImgIcon
                 });
             } else {
                 content = this.datagrid.processContentFilter(
@@ -30800,7 +30808,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          */
         renderEmptyIndicator: function() {
             this.sandbox.dom.append(this.$el, this.sandbox.util.template(templates.empty)({
-                text: this.sandbox.translate(this.options.noItemsText)
+                text: this.sandbox.translate(this.options.noItemsText),
+                emptyIcon: this.options.emptyIcon
             }));
         },
 
@@ -30830,7 +30839,10 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Gets executed when the table width is bigger than its container width
          */
         overflowHandler: function() {
-            this.toggleCropTable(true);
+            if (!!this.options.cropContents) {
+                this.toggleCropTable(true);
+            }
+
             // if still overflown add a css class
             if (this.containerIsOverflown() === true) {
                 this.sandbox.dom.addClass(this.$el, constants.overflowClass);
@@ -30842,7 +30854,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          */
         underflowHandler: function() {
             if (this.tableCropped === true) {
-                if (this.sandbox.dom.width(this.table.$container) > this.cropBreakPoint) {
+                if (!!this.options.cropContents && this.sandbox.dom.width(this.table.$container) > this.cropBreakPoint) {
                     this.toggleCropTable(false);
                 }
                 if (this.containerIsOverflown() === false) {
@@ -30863,12 +30875,12 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                         if (cell.croppable === true) {
                             $contentContainer = this.sandbox.dom.find('.' + constants.textContainerClass, cell.$el);
                             if (crop === true) {
-                                content = this.sandbox.util.cropMiddle(cell.originalData, this.options.croppedMaxLength);
-                                this.sandbox.dom.attr($contentContainer, 'title', cell.originalData);
+                                content = this.sandbox.util.cropMiddle(cell.originalContent, this.options.croppedMaxLength);
+                                this.sandbox.dom.attr($contentContainer, 'title', cell.originalContent);
                                 this.tableCropped = true;
                                 this.cropBreakPoint = this.sandbox.dom.width(this.table.$container);
                             } else {
-                                content = cell.originalData;
+                                content = cell.originalContent;
                                 this.sandbox.dom.removeAttr($contentContainer, 'title');
                                 this.tableCropped = false;
                             }
@@ -38279,6 +38291,7 @@ define('__component__$dependent-select@husky',[],function() {
  * @param {String} [options.url] url to load data from
  * @param {Boolean} [options.isNative] should use native select
  * @param {Boolean} [options.showToolTip] Show tool-tip on hover - only works for single-selects
+ * @param {Array} [options.defaultValue] Array of default items that should be selected if no item has been preselected
  */
 
 define('__component__$select@husky',[], function() {
@@ -38314,7 +38327,8 @@ define('__component__$select@husky',[], function() {
             resultKey: '',
             showToolTip: false,
             translations: translations,
-            isNative: false
+            isNative: false,
+            defaultValue: null
         },
 
         constants = {
@@ -38498,12 +38512,11 @@ define('__component__$select@husky',[], function() {
         };
 
     return {
-
         initialize: function() {
             var selectedIds;
 
             this.sandbox.logger.log('initialize', this);
-            this.options = this.sandbox.util.extend({}, defaults, this.options);
+            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             // if deselectfield is set to true, set it to default value
             if (!!this.options.deselectField && this.options.deselectField.toString() === 'true') {
@@ -38518,16 +38531,17 @@ define('__component__$select@husky',[], function() {
             // Used as a fallback to revert to the last committed data
             this.mergedData = null;
 
-            // when preselected elements is not set via options look in data-attribute
+            // if no data was preselected search for data array
             if (!this.options.preSelectedElements || this.options.preSelectedElements.length === 0) {
                 selectedIds = this.sandbox.dom.data(this.$el, 'selection');
-
                 if (typeof selectedIds === 'string') {
                     this.options.preSelectedElements = selectedIds.split(',');
                 } else if (Array.isArray(selectedIds)) {
                     this.options.preSelectedElements = selectedIds.map(String);
                 } else if (typeof selectedIds === 'number') {
                     this.options.preSelectedElements.push(selectedIds.toString());
+                } else if (!!this.options.defaultValue) {
+                    this.options.preSelectedElements = this.options.defaultValue;
                 }
             }
 
@@ -39651,7 +39665,6 @@ define('__component__$password-fields@husky',[], function() {
  * @module husky/components/column-navigation
  */
 
-
 /**
  * @class ColumnNavigation
  * @constructor
@@ -39703,6 +39716,7 @@ define('__component__$column-navigation@husky',[], function() {
             instanceName: '',
             hasSubName: 'hasSub',
             actionIcon: 'fa-pencil',
+            addButton: true,
             idName: 'id',
             pathName: 'path',
             linkedName: 'linked',
@@ -39756,41 +39770,55 @@ define('__component__$column-navigation@husky',[], function() {
         },
 
         templates = {
-            wrapper: ['<div class="' + constants.wrapperClass + '"></div>'].join(''),
+            wrapper: ['<div class="', constants.wrapperClass, '"></div>'].join(''),
             container: ['<div class="column-navigation"></div>'].join(''),
 
-            column: ['<div data-column="<%= columnNumber %>" class="' + constants.columnClass + '" id="<%= id %>">',
+            column: [
+                '<div data-column="<%= columnNumber %>" class="', constants.columnClass, '" id="<%= id %>">',
                 '    <ul></ul>',
-                '</div>'].join(''),
+                '</div>'
+            ].join(''),
 
-            noPage: ['<div class="no-page">',
+            noPage: [
+                '<div class="no-page">',
                 '    <span class="fa-coffee icon"></span>',
                 '    <div class="text"><%= description %></div>',
-                '</div>'].join(''),
+                '</div>'
+            ].join(''),
 
-            optionsContainer: ['<div class="' + constants.optionsClass + ' grid-row"></div>'].join(''),
+            optionsContainer: ['<div class="', constants.optionsClass, ' grid-row"></div>'].join(''),
 
-            optionsAdd: ['<div class="align-center add pointer">',
-                '<span class="fa-plus-circle"></span>',
-                '</div>'].join(''),
+            optionsAdd: [
+                '<div class="align-center add pointer">',
+                '    <span class="fa-plus-circle"></span>',
+                '</div>'
+            ].join(''),
 
-            optionsSettings: ['<div class="align-center settings pointer drop-down-trigger">',
-                '   <span class="fa-gear inline-block"></span><span class="dropdown-toggle inline-block"></span>',
-                '</div>'].join(''),
+            optionsSettings: [
+                '<div class="align-center settings pointer drop-down-trigger">',
+                '    <span class="fa-gear inline-block"></span><span class="dropdown-toggle inline-block"></span>',
+                '</div>'
+            ].join(''),
 
-            optionsOk: ['<div class="align-center ok pointer">',
-                '   <span class="fa-check"></span>',
-                '</div>'].join(''),
+            optionsOk: [
+                '<div class="align-center ok pointer">',
+                '    <span class="fa-check"></span>',
+                '</div>'
+            ].join(''),
 
-            item: ['<li data-id="<%= id %>" class="' + constants.columnItemClass + '">',
+            item: [
+                '<li data-id="<%= id %>" class="' + constants.columnItemClass + '">',
                 '    <span class="' + constants.iconsLeftClass + '"></span>',
                 '    <span title="<%= title %>" class="' + constants.itemTextClass + '"><%= title%></span>',
                 '    <span class="' + constants.iconsRightClass + '"></span>',
-                '</li>'].join(''),
+                '</li>'
+            ].join(''),
 
-            orderInput: ['<span class="' + constants.orderInputClass + '">',
-                '   <input type="text" class="form-element husky-validate" value="<%= value %>" />',
-                '</span>'].join('')
+            orderInput: [
+                '<span class="' + constants.orderInputClass + '">',
+                '    <input type="text" class="form-element husky-validate" value="<%= value %>" />',
+                '</span>'
+            ].join('')
         },
 
         /**
@@ -39921,6 +39949,80 @@ define('__component__$column-navigation@husky',[], function() {
          */
         RESIZE = function() {
             return createEventName.call(this, 'resize');
+        },
+
+        createContext = function(column) {
+            if (column <= 0) {
+                return this.columns[column];
+            }
+
+            var context = {
+                numberItems: 0,
+                hasSelected: false,
+                selectedItem: null,
+                parent: null,
+                children: []
+            };
+
+            if (!!this.columns[column]) {
+                context.numberItems = Object.keys(this.columns[column]).length;
+                context.hasSelected = !!this.selected[column];
+                context.children = this.columns[column];
+
+                if (!!this.selected[column]) {
+                    context.selectedItem = this.selected[column];
+                }
+            }
+
+            if (column > 0) {
+                context.parent = createContext.call(this, column - 1);
+            }
+
+            return context;
+        },
+
+        /**
+         * Returns the action items for the given item data
+         * @param {Object} data
+         * @returns {string}
+         */
+        getActionIcon = function(data) {
+            var actionItem = this.options.actionIcon;
+
+            if (typeof(this.options.actionIcon) === 'function') {
+                actionItem = this.options.actionIcon(data);
+            }
+
+            return actionItem;
+        },
+
+        /**
+         * Returns whether the add button in the column should be shown or not (can also differ between columns)
+         * @returns {boolean}
+         */
+        getAddButton = function() {
+            if (typeof(this.options.addButton) === 'function') {
+                return this.options.addButton(createContext.call(this, this.lastHoveredColumn));
+            }
+
+            return this.options.addButton;
+        },
+
+        /**
+         * Sets the width for all visible option buttons
+         */
+        setOptionButtonWidths = function() {
+            var $optionButtons = this.$find('.' + constants.optionsClass + ' > :visible'),
+                width = 100 / $optionButtons.length;
+
+            $optionButtons.each(function(count, optionButton) {
+                $(optionButton).width(width + '%');
+            });
+
+            this.$find('.' + constants.optionsClass + ' > :visible').removeClass('first');
+            this.$find('.' + constants.optionsClass + ' > :visible').removeClass('last');
+            this.$find('.' + constants.optionsClass + ' > :visible:first').addClass('first');
+            this.$find('.' + constants.optionsClass + ' > :visible:last').addClass('last');
         },
 
         /** returns normalized event names */
@@ -40161,8 +40263,7 @@ define('__component__$column-navigation@husky',[], function() {
         parseData: function(data, columnNumber) {
             // if there is nothing loaded yet, create a "root"-column
             if (columnNumber === 0) {
-                this.columns[0] = {};
-                this.columns[0][data[this.options.idName]] = data;
+                this.columns[0] = data;
             }
             var newColNumber = columnNumber + 1;
 
@@ -40313,7 +40414,7 @@ define('__component__$column-navigation@husky',[], function() {
          */
         renderRightInfo: function($item, data, disabled) {
             var $container = this.sandbox.dom.find('.' + constants.iconsRightClass, $item),
-                actionIcon = this.getActionIcon(data);
+                actionIcon = getActionIcon.call(this, data);
 
             if (this.options.showActionIcon === true && actionIcon && !disabled) {
                 this.sandbox.dom.append($container, '<span class="' + actionIcon + ' action col-icon"></span>');
@@ -40321,21 +40422,6 @@ define('__component__$column-navigation@husky',[], function() {
             if (!!data[this.options.hasSubName] && (!disabled || !this.options.disabledChildren)) {
                 this.sandbox.dom.append($container, '<span class="fa-chevron-right arrow inactive col-icon"></span>');
             }
-        },
-
-        /**
-         * Returns the action items for the given item data
-         * @param {Object} data
-         * @returns {string}
-         */
-        getActionIcon: function(data) {
-            var actionItem = this.options.actionIcon;
-
-            if (typeof(this.options.actionIcon) === 'function') {
-                actionItem = this.options.actionIcon(data);
-            }
-
-            return actionItem;
         },
 
         /**
@@ -40716,6 +40802,7 @@ define('__component__$column-navigation@husky',[], function() {
                 this.sandbox.dom.hide(this.dom.$settings);
                 this.sandbox.dom.hide(this.dom.$add);
                 this.sandbox.dom.show(this.dom.$ok);
+                setOptionButtonWidths.call(this);
                 this.setColumnTextWidth(column);
                 this.sandbox.emit(ORDER_START.call(this));
             }
@@ -40861,6 +40948,10 @@ define('__component__$column-navigation@husky',[], function() {
          * @param $activeColumn {object} column for which the options will be inserted
          */
         displayOptions: function($activeColumn) {
+            if (!!this.inOrderMode) {
+                return;
+            }
+
             var visibleRatio;
 
             this.lastHoveredColumn = this.sandbox.dom.data($activeColumn, 'column');
@@ -40875,7 +40966,7 @@ define('__component__$column-navigation@husky',[], function() {
             // display the option only if the column is visible enough
             if (visibleRatio >= constants.minVisibleRatio) {
                 this.sandbox.dom.css(this.$optionsContainer, {'visibility': 'visible'});
-                this.updateOptionsMargin($activeColumn);
+                this.moveOptions($activeColumn);
                 this.toggleSettingDropdownItems(this.lastHoveredColumn);
             } else {
                 this.hideOptions();
@@ -40889,19 +40980,13 @@ define('__component__$column-navigation@husky',[], function() {
          */
         toggleSettingDropdownItems: function(column) {
             if (!!this.options.data && this.options.data.length > 0) {
-                var context = {
-                    numberItems: 0,
-                    hasSelected: false
-                };
-                if (!!this.columns[column]) {
-                    context.numberItems = Object.keys(this.columns[column]).length;
-                    context.hasSelected = !!this.selected[column];
-                }
+                var context = createContext.call(this, column);
                 this.sandbox.util.each(this.options.data, function(index, item) {
                     if (!!item.enabler && typeof item.enabler === 'function') {
                         this.sandbox.emit(
                             'husky.dropdown.' + this.options.instanceName + '.settings.dropdown.item.toggle',
-                            item.id, item.enabler(context)
+                            item.id,
+                            item.enabler(context)
                         );
                     }
                 }.bind(this));
@@ -40912,9 +40997,17 @@ define('__component__$column-navigation@husky',[], function() {
          * Updates the position of the options
          * @param $activeColumn {object} dom-object of active column
          */
-        updateOptionsMargin: function($activeColumn) {
+        moveOptions: function($activeColumn) {
             var marginLeft = this.sandbox.dom.position($activeColumn).left - 1;
-            this.sandbox.dom.css(this.$optionsContainer, 'margin-left', marginLeft + 'px');
+            $(this.$optionsContainer).css('margin-left', marginLeft + 'px');
+
+            if (getAddButton.call(this)) {
+                $(this.dom.$add).show();
+            } else {
+                $(this.dom.$add).hide();
+            }
+
+            setOptionButtonWidths.call(this);
         },
 
         /**
@@ -49679,7 +49772,7 @@ define('husky_extensions/itembox',[],function() {
                 // reset items visible when new content is loaded
                 this.viewAll = false;
 
-                if (!!data && data.length > 0) {
+                if (!!data && (!data.length || data.length > 0)) {
                     this.sandbox.util.load(this.getUrl(data))
                         .then(function(data) {
                             this.$container.removeClass(constants.isLoadingClass);

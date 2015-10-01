@@ -27,6 +27,6 @@
         <property name="children" exclude="true" type="Sulu\Component\DocumentManager\Collection\ChildrenCollection" />
         <property name="parent" exclude="true" />
         <property name="suluOrder" type="integer" />
-        <property name="permissions" type="array" />
+        <property name="permissions" exclude="true" />
     </class>
 </serializer>

@@ -24,6 +24,7 @@ define(function() {
             resultKey: 'media',
             dataAttribute: 'media-selection',
             actionIcon: 'fa-file-image-o',
+            types: null,
             dataDefault: {
                 displayOption: 'top',
                 ids: []
@@ -135,7 +136,8 @@ define(function() {
                 options: {
                     el: $container,
                     instanceName: this.options.instanceName,
-                    preSelectedIds: this.getData().ids
+                    preSelectedIds: this.getData().ids,
+                    types: this.options.types
                 }
             }]);
         },

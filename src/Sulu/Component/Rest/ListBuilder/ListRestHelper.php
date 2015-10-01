@@ -56,7 +56,7 @@ class ListRestHelper implements ListRestHelperInterface
      */
     public function getSortColumn()
     {
-        return $this->getRequest()->get('sortBy', 'id');
+        return $this->getRequest()->get('sortBy', null);
     }
 
     /**

@@ -9,7 +9,7 @@
 
 define([
     'config',
-    'services/sulucontact/account-manager',
+    'services/sulucontact/account-manager'
 ], function(Config, AccountManager) {
 
     'use strict';
@@ -67,6 +67,7 @@ define([
 
         initialize: function() {
             this.data = this.options.data();
+            this.formOptions = Config.get('sulu.contact.form');
 
             this.autoCompleteInstanceName = 'contacts-';
             this.dfdListenForChange = this.sandbox.data.deferred();
@@ -158,12 +159,14 @@ define([
                 var curMediaId = this.sandbox.dom.data(constants.logoImageId, 'mediaId');
                 var url = (!!curMediaId) ?
                 '/admin/api/media/' + curMediaId + '?action=new-version' :
-                    '/admin/api/media?collection=1'; //todo: use system collection
+                    '/admin/api/media?collection=' + this.formOptions.avatarCollection; //todo: use system collection
+
                 // if possible, change the title of the logo to the name of the account
                 if (!!data.name) {
                     url = url + '&title=' + encodeURIComponent(data.name);
                     url = url + '&locale=' + encodeURIComponent(this.sandbox.sulu.user.locale);
                 }
+
                 return url;
             }.bind(this);
 

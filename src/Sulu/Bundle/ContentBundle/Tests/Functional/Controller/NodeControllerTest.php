@@ -14,13 +14,6 @@ namespace Sulu\Bundle\ContentBundle\Tests\Controller;
 use Doctrine\ORM\EntityManager;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\Email;
-use Sulu\Bundle\ContactBundle\Entity\EmailType;
-use Sulu\Bundle\SecurityBundle\Entity\Permission;
-use Sulu\Bundle\SecurityBundle\Entity\Role;
-use Sulu\Bundle\SecurityBundle\Entity\User;
-use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\RedirectType;
@@ -61,52 +54,6 @@ class NodeControllerTest extends SuluTestCase
     protected function initOrm()
     {
         $this->purgeDatabase();
-
-        $contact = new Contact();
-        $contact->setFirstName('Max');
-        $contact->setLastName('Mustermann');
-        $this->em->persist($contact);
-        $this->em->flush();
-
-        $emailType = new EmailType();
-        $emailType->setName('Private');
-        $this->em->persist($emailType);
-        $this->em->flush();
-
-        $email = new Email();
-        $email->setEmail('max.mustermann@muster.at');
-        $email->setEmailType($emailType);
-        $this->em->persist($email);
-        $this->em->flush();
-
-        $role1 = new Role();
-        $role1->setName('Role1');
-        $role1->setSystem('Sulu');
-        $this->em->persist($role1);
-        $this->em->flush();
-
-        $user = new User();
-        $user->setUsername('admin');
-        $user->setPassword('securepassword');
-        $user->setSalt('salt');
-        $user->setLocale('de');
-        $user->setContact($contact);
-        $this->em->persist($user);
-        $this->em->flush();
-
-        $userRole1 = new UserRole();
-        $userRole1->setRole($role1);
-        $userRole1->setUser($user);
-        $userRole1->setLocale(json_encode(['de', 'en']));
-        $this->em->persist($userRole1);
-        $this->em->flush();
-
-        $permission1 = new Permission();
-        $permission1->setPermissions(122);
-        $permission1->setRole($role1);
-        $permission1->setContext('Context 1');
-        $this->em->persist($permission1);
-        $this->em->flush();
 
         $tag1 = new Tag();
         $tag1->setName('tag1');
@@ -643,7 +590,8 @@ class NodeControllerTest extends SuluTestCase
         $data = $this->buildTree();
 
         $client->request(
-            'GET', '/api/nodes?id=' . $data[2]['id'] . '&tree=true&webspace=sulu_io&language=en&exclude-ghosts=false'
+            'GET',
+            '/api/nodes?id=' . $data[2]['id'] . '&tree=true&webspace=sulu_io&language=en&exclude-ghosts=false'
         );
 
         $response = $client->getResponse()->getContent();
@@ -1423,29 +1371,30 @@ class NodeControllerTest extends SuluTestCase
 
     public function testGetWithPermissions()
     {
-        $permissions = ['ROLE_SULU_USER' => ['view', 'edit']];
-
         // create secured page
         $securedPage = $this->documentManager->create('page');
         $securedPage->setTitle('secured');
         $securedPage->setResourceSegment('/secured');
         $securedPage->setStructureType('default');
-        $securedPage->setPermissions($permissions);
         $this->documentManager->persist($securedPage, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
         $this->documentManager->flush();
+        $this->documentManager->clear();
 
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/nodes?id=' . $securedPage->getUuid() . '&tree=true&webspace=sulu_io&language=en');
+        $client->request(
+            'GET',
+            '/api/nodes?uuid=' . $securedPage->getUuid() . '&tree=true&webspace=sulu_io&language=en'
+        );
 
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals($permissions, $response['_embedded']['nodes'][0]['permissions']);
+        $this->assertArrayHasKey('_permissions', $response['_embedded']['nodes'][0]['_embedded'][0]);
 
         $client->request('GET', '/api/nodes/' . $securedPage->getUuid() . '?language=en&webspace=sulu_io');
 
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals($permissions, $response['permissions']);
+        $this->assertArrayHasKey('_permissions', $response);
     }
 
     private function setUpContent($data)

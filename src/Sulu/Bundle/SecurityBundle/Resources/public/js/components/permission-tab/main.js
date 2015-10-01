@@ -67,6 +67,8 @@ define([], function() {
                     success: function() {
                         this.sandbox.emit('sulu.labels.success.show', 'labels.success.permission-save-desc');
                         this.sandbox.emit('sulu.permission-tab.saved', permissionData, action);
+                        // TODO would be better to only update the toolbar, instead of reloading the page
+                        this.sandbox.emit('sulu.router.navigate', this.sandbox.mvc.history.fragment, true, true);
                     }.bind(this),
                     error: function() {
                         this.sandbox.emit('sulu.labels.error.show');
