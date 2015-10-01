@@ -346,6 +346,18 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'website_category_operator' => new PropertyParameter('website_category_operator', 'OR'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
                 'present_as' => new PropertyParameter('present_as', [], 'collection'),
+                'category_root' => new PropertyParameter('category_root', null),
+                'display_options' => new PropertyParameter(
+                    'display_options',
+                    [
+                        'tags' => new PropertyParameter('tags', true),
+                        'categories' => new PropertyParameter('categories', true),
+                        'sorting' => new PropertyParameter('sorting', true),
+                        'limit' => new PropertyParameter('limit', true),
+                        'presentAs' => new PropertyParameter('presentAs', true),
+                    ],
+                    'collection'
+                ),
                 'has' => [
                     'datasource' => false,
                     'tags' => true,
@@ -449,6 +461,18 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'website_category_operator' => new PropertyParameter('website_category_operator', 'OR'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
                 'present_as' => new PropertyParameter('present_as', [], 'collection'),
+                'category_root' => new PropertyParameter('category_root', null),
+                'display_options' => new PropertyParameter(
+                    'display_options',
+                    [
+                        'tags' => new PropertyParameter('tags', true),
+                        'categories' => new PropertyParameter('categories', true),
+                        'sorting' => new PropertyParameter('sorting', true),
+                        'limit' => new PropertyParameter('limit', true),
+                        'presentAs' => new PropertyParameter('presentAs', true),
+                    ],
+                    'collection'
+                ),
                 'has' => [
                     'datasource' => false,
                     'tags' => true,
@@ -538,6 +562,18 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'website_category_operator' => new PropertyParameter('website_category_operator', 'OR'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
                 'present_as' => new PropertyParameter('present_as', [], 'collection'),
+                'category_root' => new PropertyParameter('category_root', null),
+                'display_options' => new PropertyParameter(
+                    'display_options',
+                    [
+                        'tags' => new PropertyParameter('tags', true),
+                        'categories' => new PropertyParameter('categories', true),
+                        'sorting' => new PropertyParameter('sorting', true),
+                        'limit' => new PropertyParameter('limit', true),
+                        'presentAs' => new PropertyParameter('presentAs', true),
+                    ],
+                    'collection'
+                ),
                 'has' => [
                     'datasource' => false,
                     'tags' => true,
@@ -621,6 +657,18 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'website_tag_operator' => new PropertyParameter('website_tag_operator', 'OR'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
                 'present_as' => new PropertyParameter('present_as', [], 'collection'),
+                'category_root' => new PropertyParameter('category_root', null),
+                'display_options' => new PropertyParameter(
+                    'display_options',
+                    [
+                        'tags' => new PropertyParameter('tags', true),
+                        'categories' => new PropertyParameter('categories', true),
+                        'sorting' => new PropertyParameter('sorting', true),
+                        'limit' => new PropertyParameter('limit', true),
+                        'presentAs' => new PropertyParameter('presentAs', true),
+                    ],
+                    'collection'
+                ),
                 'has' => [
                     'datasource' => false,
                     'tags' => true,
@@ -666,6 +714,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                     'hasNextPage' => null,
                     'paginated' => false,
                     'referencedUuids' => [],
+                    'categoryRoot' => null,
                 ],
                 $config,
                 ['page' => $page, 'hasNextPage' => $hasNextPage]
@@ -718,6 +767,18 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 'website_category_operator' => new PropertyParameter('website_category_operator', 'OR'),
                 'sorting' => new PropertyParameter('sorting', [], 'collection'),
                 'present_as' => new PropertyParameter('present_as', [], 'collection'),
+                'category_root' => new PropertyParameter('category_root', null),
+                'display_options' => new PropertyParameter(
+                    'display_options',
+                    [
+                        'tags' => new PropertyParameter('tags', true),
+                        'categories' => new PropertyParameter('categories', true),
+                        'sorting' => new PropertyParameter('sorting', true),
+                        'limit' => new PropertyParameter('limit', true),
+                        'presentAs' => new PropertyParameter('presentAs', true),
+                    ],
+                    'collection'
+                ),
                 'has' => [
                     'datasource' => false,
                     'tags' => true,

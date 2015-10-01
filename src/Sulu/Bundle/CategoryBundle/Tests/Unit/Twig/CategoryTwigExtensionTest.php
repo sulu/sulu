@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\CategoryBundle\Tests\Unit\Twig;
 
+use Doctrine\Common\Cache\ArrayCache;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Prophecy\Argument;
@@ -17,6 +18,8 @@ use Sulu\Bundle\CategoryBundle\Api\Category as ApiCategory;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\Category as EntityCategory;
 use Sulu\Bundle\CategoryBundle\Twig\CategoryTwigExtension;
+use Sulu\Component\Cache\Memoize;
+use Sulu\Component\Cache\MemoizeInterface;
 use Sulu\Component\Category\Request\CategoryRequestHandler;
 use Sulu\Component\Category\Request\CategoryRequestHandlerInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -25,7 +28,24 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class CategoryTwigExtensionTest extends \PHPUnit_Framework_TestCase
 {
-    private function createCategoryEntity($data)
+    /**
+     * Returns memoize cache instance.
+     *
+     * @return MemoizeInterface
+     */
+    private function getMemoizeCache()
+    {
+        return new Memoize(new ArrayCache(), 0);
+    }
+
+    /**
+     * Returns ApiCategory with given Data (id, name).
+     *
+     * @param array $data
+     *
+     * @return ApiCategory
+     */
+    private function createCategoryEntity(array $data)
     {
         $category = $this->prophesize(ApiCategory::class);
         $category->getid()->willReturn($data['id']);
@@ -87,7 +107,10 @@ class CategoryTwigExtensionTest extends \PHPUnit_Framework_TestCase
 
         $requestHandler = $this->prophesize(CategoryRequestHandlerInterface::class);
         $extension = new CategoryTwigExtension(
-            $manager->reveal(), $requestHandler->reveal(), $serializer->reveal()
+            $manager->reveal(),
+            $requestHandler->reveal(),
+            $serializer->reveal(),
+            $this->getMemoizeCache()
         );
 
         $this->assertEquals($categoryData, $extension->getCategoriesFunction($locale, $parent, $depth));
@@ -126,7 +149,12 @@ class CategoryTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $serializer = $this->prophesize(SerializerInterface::class);
         $requestHandler = new CategoryRequestHandler($requestStack->reveal());
 
-        $extension = new CategoryTwigExtension($manager->reveal(), $requestHandler, $serializer->reveal());
+        $extension = new CategoryTwigExtension(
+            $manager->reveal(),
+            $requestHandler,
+            $serializer->reveal(),
+            $this->getMemoizeCache()
+        );
         $result = $extension->appendCategoryUrlFunction($category, $parameter);
 
         $this->assertEquals($url . '?' . $parameter . '=' . urlencode($expected), $result);
@@ -166,7 +194,12 @@ class CategoryTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $serializer = $this->prophesize(SerializerInterface::class);
         $requestHandler = new CategoryRequestHandler($requestStack->reveal());
 
-        $extension = new CategoryTwigExtension($manager->reveal(), $requestHandler, $serializer->reveal());
+        $extension = new CategoryTwigExtension(
+            $manager->reveal(),
+            $requestHandler,
+            $serializer->reveal(),
+            $this->getMemoizeCache()
+        );
         $result = $extension->setCategoryUrlFunction($category, $parameter);
 
         $this->assertEquals($url . '?' . $parameter . '=' . urlencode($expected), $result);
@@ -202,7 +235,12 @@ class CategoryTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $serializer = $this->prophesize(SerializerInterface::class);
         $requestHandler = new CategoryRequestHandler($requestStack->reveal());
 
-        $tagExtension = new CategoryTwigExtension($manager->reveal(), $requestHandler, $serializer->reveal());
+        $tagExtension = new CategoryTwigExtension(
+            $manager->reveal(),
+            $requestHandler,
+            $serializer->reveal(),
+            $this->getMemoizeCache()
+        );
         $result = $tagExtension->clearCategoryUrlFunction($parameter);
 
         $this->assertEquals($url, $result);
