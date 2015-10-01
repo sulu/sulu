@@ -127,7 +127,16 @@ define(['services/husky/util'], function(util) {
             has: {},
             title: 'Smart-Content',
             datasource: null,
-            categoryRoot: null
+            categoryRoot: null,
+            displayOptions: {}
+        },
+
+        displayOptionsDefaults = {
+            tags: true,
+            categories: true,
+            sorting: true,
+            limit: true,
+            presentAs: true
         },
 
         sortMethods = {
@@ -353,6 +362,11 @@ define(['services/husky/util'], function(util) {
 
             //merge options with defaults
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+
+            //merge displayOptions with defaults
+            this.options.displayOptions = this.sandbox.util.extend(
+                true, {}, displayOptionsDefaults, this.options.displayOptions
+            );
 
             //if externalConfigs is true wait for configs to to get in otherwise start the component right ahead
             if (this.options.externalConfigs === true) {
@@ -644,12 +658,15 @@ define(['services/husky/util'], function(util) {
          * Starts the overlay component
          */
         startOverlay: function() {
+            var hasDatasource = !!this.options.has.datasource,
+                hasCategories = !!this.options.has.categories && !!this.options.displayOptions.categories;
+
             this.initOverlayContent();
 
             // init slide indexes for slide to
             this.mainSlide = 0;
-            this.datasourceSlide = (!!this.options.has.datasource) ? 1 : null;
-            this.categoriesSlide = (!!this.options.has.datasource) ? 2 : (!!this.options.has.categories ? 1 : null);
+            this.datasourceSlide = (!!hasDatasource) ? 1 : null;
+            this.categoriesSlide = (!!hasDatasource) ? 2 : (!!hasCategories ? 1 : null);
 
             var $element = this.sandbox.dom.createElement('<div/>'),
                 slides = [
@@ -689,7 +706,7 @@ define(['services/husky/util'], function(util) {
                     }
                 ];
 
-            if (!!this.options.has.datasource) {
+            if (!!hasDatasource) {
                 slides.push({
                     title: this.sandbox.translate(this.translations.chooseDataSource),
                     data: '<div id="data-source-' + this.options.instanceName + '" class="data-source-content"/>',
@@ -711,7 +728,7 @@ define(['services/husky/util'], function(util) {
                 });
             }
 
-            if (!!this.options.has.categories) {
+            if (!!hasCategories) {
                 slides.push({
                     title: this.sandbox.translate(this.translations.chooseCategories),
                     data: '<div id="categories-' + this.options.instanceName + '" class="categories-content"/>',
@@ -776,7 +793,7 @@ define(['services/husky/util'], function(util) {
                     this.initDatasource.bind(this)
                 );
             }
-            if (!!this.options.has.categories) {
+            if (!!this.options.has.categories && !!this.options.displayOptions.categories) {
                 // init categories after initialize of overlay
                 this.sandbox.on(
                     'husky.overlay.smart-content.' + this.options.instanceName + '.initialized',
@@ -932,14 +949,14 @@ define(['services/husky/util'], function(util) {
                 }));
                 $container.append('<div class="clear"></div>');
             }
-            if (!!this.options.has.categories) {
+            if (!!this.options.has.categories && !!this.options.displayOptions.categories) {
                 $container.append(_.template(templates.overlayContent.categories)({
                     categoriesLabelStr: this.sandbox.translate(this.translations.categoryLabel),
                     categoriesStr: this.sandbox.translate(this.translations.categories),
                     categoriesButtonStr: this.sandbox.translate(this.translations.categoryButton)
                 }));
             }
-            if (!!this.options.has.tags) {
+            if (!!this.options.has.tags && !!this.options.displayOptions.tags) {
                 $container.append(_.template(templates.overlayContent.tagList)({
                     filterByTagsStr: this.sandbox.translate(this.translations.filterByTags),
                     disabled: (this.overlayDisabled.tags) ? ' disabled' : ''
@@ -949,7 +966,7 @@ define(['services/husky/util'], function(util) {
                 }));
                 $container.append('<div class="clear"></div>');
             }
-            if (!!this.options.has.sorting) {
+            if (!!this.options.has.sorting && !!this.options.displayOptions.sorting) {
                 $container.append(_.template(templates.overlayContent.sortBy)({
                     sortByStr: this.sandbox.translate(this.translations.sortBy)
                 }));
@@ -957,12 +974,13 @@ define(['services/husky/util'], function(util) {
 
                 $container.append('<div class="clear"></div>');
             }
-            if (!!this.options.has.presentAs && !!this.options.presentAs && this.options.presentAs.length > 0) {
+            if (!!this.options.has.presentAs && !!this.options.displayOptions.presentAs && !!this.options.presentAs && this.options.presentAs.length > 0
+            ) {
                 $container.append(_.template(templates.overlayContent.presentAs)({
                     presentAsStr: this.sandbox.translate(this.translations.presentAs)
                 }));
             }
-            if (!!this.options.has.limit) {
+            if (!!this.options.has.limit && !!this.options.displayOptions.limit) {
                 $container.append(_.template(templates.overlayContent.limitResult)({
                     limitResultToStr: this.sandbox.translate(this.translations.limitResultTo),
                     limitResult: (data.limitResult > 0) ? data.limitResult : '',

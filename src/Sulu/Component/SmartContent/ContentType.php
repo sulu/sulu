@@ -183,6 +183,17 @@ class ContentType extends ComplexContentType
             'sorting' => new PropertyParameter('sorting', $configuration->getSorting(), 'collection'),
             'present_as' => new PropertyParameter('present_as', [], 'collection'),
             'category_root' => new PropertyParameter('category_root', null),
+            'display_options' => new PropertyParameter(
+                'display_options',
+                [
+                    'tags' => new PropertyParameter('tags', true),
+                    'categories' => new PropertyParameter('categories', true),
+                    'sorting' => new PropertyParameter('sorting', true),
+                    'limit' => new PropertyParameter('limit', true),
+                    'presentAs' => new PropertyParameter('presentAs', true),
+                ],
+                'collection'
+            ),
             'has' => [
                 'datasource' => $configuration->hasDatasource(),
                 'tags' => $configuration->hasTags(),

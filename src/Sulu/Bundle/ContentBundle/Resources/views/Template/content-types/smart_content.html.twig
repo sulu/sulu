@@ -10,6 +10,7 @@
      data-aura-webspace="{{ webspaceKey }}"
      data-aura-locale="{{ languageCode }}"
      data-aura-has='{{ params.has | json_encode }}'
+     data-aura-display-options='{{ sulu_parameter_to_key_value(params.display_options.value) | json_encode }}'
      {% if params.has.datasource %}
      data-aura-datasource='{{ params.datasource | json_encode }}'
      {% endif %}
