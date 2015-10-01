@@ -186,6 +186,8 @@ class BlockContentType extends ComplexContentType
                     }
                 }
             }
+
+            $property->setValue($data);
         } else {
             throw new UnexpectedPropertyType($property, $this);
         }
