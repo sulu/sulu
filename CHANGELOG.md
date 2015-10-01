@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1649 [ContentBundle]   Fixed floating of block type select
     * BUGFIX      #1646 [ContactBundle]   Fixed upload of contact-avatar when a position is applied to the contact
     * BUGFIX      #1642 [AdminBundle]     Fixed cropping issue in table-view of datagrid
     * BUGFIX      #1641 [MediaBundle]     Fixed types in media-selection

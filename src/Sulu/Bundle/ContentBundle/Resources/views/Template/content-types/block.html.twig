@@ -45,10 +45,12 @@
                                      class="fa-times options-remove mapper-remove-{{ type.name }}"></div>
                                 <div class="clear"></div>
                             </div>
-                            <div class="block block-{{ property.name }} grid-row small">
+                            <div class="grid-row small">
                                 <div class="grid-col-3 m-top-10 floating form-group hidden">
                                     <div class="type-select"></div>
                                 </div>
+                            </div>
+                            <div class="block block-{{ property.name }} grid-row small">
                                 {% for child in type.childProperties %}
 
                                     {# get Type for property #}
