@@ -88,6 +88,12 @@ define([
             var url = '/admin/api/collections/' + this.data.id + '?depth=1&sortBy=title';
             this.sandbox.emit('husky.data-navigation.collections.set-url', url);
             this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
+
+            if (SecurityChecker.hasPermission(this.data, 'add')) {
+                this.sandbox.emit('husky.data-navigation.collections.add-button.show');
+            } else {
+                this.sandbox.emit('husky.data-navigation.collections.add-button.hide');
+            }
         },
 
         /**
