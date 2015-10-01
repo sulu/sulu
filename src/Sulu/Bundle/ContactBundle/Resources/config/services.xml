@@ -90,12 +90,14 @@
         <service id="sulu_contact.account_factory" class="%sulu_contact.account_factory.class%"/>
 
         <service id="sulu_contact.smart_content.data_provider.contact" class="%sulu_contact.smart_content.data_provider.contact.class%">
-            <argument type="service" id="sulu_contact.contact_repository"/>
+            <argument type="service" id="sulu_contact.contact_manager"/>
+            <argument type="service" id="serializer"/>
 
             <tag name="sulu.smart_content.data_provider" alias="contact"/>
         </service>
         <service id="sulu_contact.smart_content.data_provider.account" class="%sulu_contact.smart_content.data_provider.account.class%">
-            <argument type="service" id="sulu_contact.account_repository"/>
+            <argument type="service" id="sulu_contact.account_manager"/>
+            <argument type="service" id="serializer"/>
 
             <tag name="sulu.smart_content.data_provider" alias="account"/>
         </service>

@@ -21,7 +21,7 @@ trait DataProviderRepositoryTrait
     /**
      * @see DataProviderRepositoryInterface::findByFilters
      */
-    public function findByFilters($filters, $page, $pageSize, $limit)
+    public function findByFilters($filters, $page, $pageSize, $limit, $locale)
     {
         $queryBuilder = $this->createQueryBuilder('entity')
             ->addSelect('entity')
