@@ -304,7 +304,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $listBuilder->addSelectField($fieldDescriptors['parent']);
         $listBuilder->addSelectField($fieldDescriptors['hasChildren']);
 
-        $listBuilder->addGroupBy($fieldDescriptors['id']);
+//        $listBuilder->addGroupBy($fieldDescriptors['id']);
 
         if ($parentKey !== null) {
             $this->addParentSelector($parentKey, $listBuilder);
