@@ -12,6 +12,9 @@
 namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Doctrine\Common\Cache\Cache;
+use FOS\RestBundle\Tests\DependencyInjection\Compiler\SerializerConfigurationPassTest;
+use JMS\Serializer\DeserializationContext;
+use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\StructureInterface;
@@ -137,19 +140,21 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
     {
         $id = $this->getId($userId, $contentUuid, $locale);
         $classId = $this->getId($userId, $contentUuid, $locale, 'class');
+        $context = DeserializationContext::create();
+        $context->setSerializeNull(true);
 
         if ($this->contains($userId, $contentUuid, $webspaceKey, $locale)) {
             $class = $this->dataCache->fetch($classId);
             $data = $this->dataCache->fetch($id);
 
             try {
-                return $this->serializer->deserialize($data, $class, $this->serializeType);
+                return $this->serializer->deserialize($data, $class, $this->serializeType, $context);
             } catch (\ReflectionException $e) {
                 // load all cache classes
                 $this->structureManager->getStructures();
 
                 // try again
-                return $this->serializer->deserialize($data, $class, $this->serializeType);
+                return $this->serializer->deserialize($data, $class, $this->serializeType, $context);
             }
         } else {
             return false;
@@ -161,7 +166,10 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
      */
     public function saveStructure(StructureInterface $content, $userId, $contentUuid, $webspaceKey, $locale)
     {
-        $data = $this->serializer->serialize($content, $this->serializeType);
+        $context = SerializationContext::create();
+        $context->setSerializeNull(true);
+
+        $data = $this->serializer->serialize($content, $this->serializeType, $context);
 
         $id = $this->getId($userId, $contentUuid, $locale);
         $classId = $this->getId($userId, $contentUuid, $locale, 'class');
