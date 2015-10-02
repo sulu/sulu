@@ -24,6 +24,7 @@ use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManager;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
+use Sulu\Component\PHPCR\SessionManager\SessionManager;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -2124,7 +2125,9 @@ class ContentMapperTest extends SuluTestCase
 
         $result = $this->mapper->loadNodeAndAncestors($child->getUuid(), 'en', 'sulu_io', true);
 
-        $this->assertCount(0, $result);
+        // at least homepage will be found
+        $this->assertCount(1, $result);
+        $this->assertEquals('/', $result[0]->getPropertyValue('url'));
     }
 
     public function testSection()

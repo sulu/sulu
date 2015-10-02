@@ -16,7 +16,6 @@ use PHPCR\RepositoryException;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Exception\InvalidOrderPositionException;

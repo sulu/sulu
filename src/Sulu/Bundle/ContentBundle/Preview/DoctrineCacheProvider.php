@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Doctrine\Common\Cache\Cache;
-use FOS\RestBundle\Tests\DependencyInjection\Compiler\SerializerConfigurationPassTest;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
