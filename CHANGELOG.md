@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * BUGFIX      #1649 [ContentBundle]   Fixed floating of block type select
+    * BUGFIX      #1650 [LocationBundle]  Fixed configure overlay open multiple times 
     * BUGFIX      #1650 [ContentBundle]   Fixed serialization of null values
     * BUGFIX      #1650 [ContentBundle]   Fixed show ghost and shadow toggler in content column view
     * BUGFIX      #1646 [ContactBundle]   Fixed upload of contact-avatar when a position is applied to the contact
