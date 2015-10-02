@@ -16,6 +16,7 @@ use PHPCR\RepositoryException;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Exception\InvalidOrderPositionException;
@@ -635,15 +636,28 @@ class NodeRepository implements NodeRepositoryInterface
      * @param mixed $locale
      * @param mixed $excludeGhost
      * @param mixed $complete
+     *
+     * @return array
      */
     private function loadNodeAndAncestors($uuid, $webspaceKey, $locale, $excludeGhost, $complete)
     {
-        $descendants = $this->getMapper()->loadNodeAndAncestors($uuid, $locale, $webspaceKey, $excludeGhost);
+        $descendants = $this->getMapper()->loadNodeAndAncestors(
+            $uuid,
+            $locale,
+            $webspaceKey,
+            $excludeGhost,
+            $excludeGhost
+        );
         $descendants = array_reverse($descendants);
 
         $childTiers = [];
         foreach ($descendants as $descendant) {
             foreach ($descendant->getChildren() as $child) {
+                $type = $child->getType();
+                if ($excludeGhost && $type !== null) {
+                    continue;
+                }
+
                 if (!isset($childTiers[$descendant->getUuid()])) {
                     $childTiers[$descendant->getUuid()] = [];
                 }
@@ -677,11 +691,13 @@ class NodeRepository implements NodeRepositoryInterface
         $tier = array_shift($tiers);
 
         $found = false;
-        foreach ($result as &$node) {
-            if ($node['id'] === $uuid) {
-                $node['_embedded']['nodes'] = $tier;
-                $found = true;
-                break;
+        if (is_array($result)) {
+            foreach ($result as &$node) {
+                if ($node['id'] === $uuid) {
+                    $node['_embedded']['nodes'] = $tier;
+                    $found = true;
+                    break;
+                }
             }
         }
 

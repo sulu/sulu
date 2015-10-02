@@ -19,6 +19,8 @@ define([
 
     var CONTENT_LANGUAGE = 'contentLanguage',
 
+        SHOW_GHOST_PAGES_KEY = 'column-navigation-show-ghost-pages',
+
         /**
          * node type constant for content
          * @type {number}
@@ -961,16 +963,20 @@ define([
                 header, dropdownLocalizations = [], navigationUrl, navigationUrlParams = [];
 
             if (this.options.display === 'column') {
+                var showGhostPages = this.sandbox.sulu.getUserSetting(SHOW_GHOST_PAGES_KEY),
+                    toggler = (!!JSON.parse(showGhostPages) ? 'toggler-on' : 'toggler'),
+                    columnButtons = {};
+
+                columnButtons[toggler] = {
+                    options: {
+                        title: 'content.contents.show-ghost-pages'
+                    }
+                };
+
                 header = {
                     noBack: true,
                     toolbar: {
-                        buttons: {
-                            toggler: {
-                                options: {
-                                    title: 'content.contents.show-ghost-pages'
-                                }
-                            }
-                        },
+                        buttons: columnButtons,
                         languageChanger: {
                             data: this.localizations,
                             preSelected: this.options.language
