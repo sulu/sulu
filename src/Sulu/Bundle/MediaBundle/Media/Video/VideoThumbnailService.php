@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Video;
 
-class VideoThumbnailService
+class VideoThumbnailService implements VideoThumbnailServiceInterface
 {
     /** @var string */
     protected $ffmpeg;
@@ -46,7 +46,7 @@ class VideoThumbnailService
             }
 
             $command = sprintf(
-                '%s -i %s %s -ss "%s" -vframes 1 -y %s',
+                '%s -i "%s" %s -ss "%s" -vframes 1 -y %s',
                 $this->ffmpeg,
                 $file,
                 $size,

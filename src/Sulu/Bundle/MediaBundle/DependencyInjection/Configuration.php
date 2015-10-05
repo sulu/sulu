@@ -81,13 +81,8 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->arrayNode('mime_types')
                         ->prototype('scalar')->end()->defaultValue([
-                            'image/jpeg',
-                            'image/jpg',
-                            'image/gif',
-                            'image/png',
-                            'image/bmp',
-                            'image/svg+xml',
-                            'image/vnd.adobe.photoshop',
+                            'image/*',
+                            'video/*',
                             'application/pdf',
                         ])
                     ->end()

@@ -108,6 +108,7 @@
             <argument type="service" id="sulu_media.storage" />
             <argument type="service" id="sulu_media.format_cache" />
             <argument type="service" id="sulu_media.image.converter" />
+            <argument type="service" id="sulu_media.video_thumbnail_generator"/>
             <argument type="string">%sulu_media.ghost_script.path%</argument>
             <argument type="string">%sulu_media.format_cache.save_image%</argument>
             <argument type="string">%sulu_media.format_manager.mime_types%</argument>
