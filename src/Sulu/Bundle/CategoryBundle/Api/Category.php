@@ -18,6 +18,7 @@ use Sulu\Bundle\CategoryBundle\Entity\Category as Entity;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntityWrapper;
+use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 
 class Category extends ApiEntityWrapper
 {
@@ -60,13 +61,17 @@ class Category extends ApiEntityWrapper
      *
      * @VirtualProperty
      * @SerializedName("name")
+     * @Groups({"fullCategory","partialCategory"})
      *
      * @return string
-     * @Groups({"fullCategory","partialCategory"})
      */
     public function getName()
     {
-        return $this->getTranslation()->getTranslation();
+        if (($translation = $this->getTranslation()) === null) {
+            return;
+        }
+
+        return $translation->getTranslation();
     }
 
     /**
@@ -144,9 +149,9 @@ class Category extends ApiEntityWrapper
      *
      * @VirtualProperty
      * @SerializedName("created")
+     * @Groups({"fullCategory"})
      *
      * @return string
-     * @Groups({"fullCategory"})
      */
     public function getCreated()
     {
@@ -158,9 +163,9 @@ class Category extends ApiEntityWrapper
      *
      * @VirtualProperty
      * @SerializedName("created")
+     * @Groups({"fullCategory"})
      *
      * @return string
-     * @Groups({"fullCategory"})
      */
     public function getChanged()
     {
@@ -172,9 +177,9 @@ class Category extends ApiEntityWrapper
      *
      * @VirtualProperty
      * @SerializedName("children")
-     *
-     * @return List
      * @Groups({"fullCategory"})
+     *
+     * @return Category[]
      */
     public function getChildren()
     {
@@ -193,11 +198,16 @@ class Category extends ApiEntityWrapper
      *
      * @param string $name
      *
-     * @return Sulu\Bundle\CategoryBundle\Api\Category
+     * @return Category
      */
     public function setName($name)
     {
-        $this->getTranslation()->setTranslation($name);
+        $translation = $this->getTranslation();
+        if ($translation === null) {
+            $translation = $this->createTranslation();
+        }
+
+        $translation->setTranslation($name);
 
         return $this;
     }
@@ -207,7 +217,7 @@ class Category extends ApiEntityWrapper
      *
      * @param array $meta
      *
-     * @return Sulu\Bundle\CategoryBundle\Api\Category
+     * @return Category
      */
     public function setMeta($meta)
     {
@@ -254,7 +264,7 @@ class Category extends ApiEntityWrapper
      *
      * @param Entity $parent
      *
-     * @return Sulu\Bundle\CategoryBundle\Api\Category
+     * @return Category
      */
     public function setParent($parent)
     {
@@ -268,7 +278,7 @@ class Category extends ApiEntityWrapper
      *
      * @param string $key
      *
-     * @return Sulu\Bundle\CategoryBundle\Api\Category
+     * @return Category
      */
     public function setKey($key)
     {
@@ -337,17 +347,26 @@ class Category extends ApiEntityWrapper
     /**
      * Returns the translation with the given locale.
      *
-     * @param string $locale The locale to return
-     *
-     * @return MappingAttributeTranslation
+     * @return CategoryTranslation
      */
-    public function getTranslation()
+    private function getTranslation()
     {
         foreach ($this->entity->getTranslations() as $translation) {
             if ($translation->getLocale() == $this->locale) {
                 return $translation;
             }
         }
+
+        return;
+    }
+
+    /**
+     * Creates a new Translation for category.
+     *
+     * @return CategoryTranslation
+     */
+    private function createTranslation()
+    {
         $translation = new CategoryTranslation();
         $translation->setLocale($this->locale);
         $translation->setCategory($this->entity);

@@ -349,7 +349,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'account' => [
                     'id' => null,
                 ],
@@ -496,7 +499,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'avatar' => [
                     'id' => $this->avatar->getId(),
                 ],
@@ -689,7 +695,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'disabled' => 0,
                 'salutation' => 'Sehr geehrte Frau Dr Mustermann',
                 'formOfAddress' => [
@@ -724,7 +733,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'salutation' => 'Sehr geehrte Frau Mustermann',
                 'formOfAddress' => [
                     'id' => 0,
@@ -752,7 +764,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'salutation' => 'Sehr geehrte Frau Mustermann',
                 'disabled' => 0,
             ]
@@ -775,7 +790,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'emails' => [],
                 'phones' => [],
                 'notes' => [],
@@ -843,7 +861,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'avatar' => [
                     'id' => $this->avatar->getId(),
                 ],
@@ -1051,7 +1072,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'emails' => [
                     [
                         'email' => 'john.doe@muster.de',
@@ -1186,7 +1210,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'emails' => [],
                 'phones' => [
                     [
@@ -1283,7 +1310,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'emails' => [],
                 'phones' => [
                     [
@@ -1366,7 +1396,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'account' => [
                     'id' => $this->account1->getId(),
                 ],
@@ -1601,7 +1634,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'account' => [
                     'id' => $this->account1->getId(),
                 ],
@@ -1711,7 +1747,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'account' => [
                     'id' => null,
                 ],
@@ -1847,7 +1886,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
                 'title' => 'MSc',
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'account' => [
                     'id' => $this->account1->getId(),
                 ],
@@ -1977,7 +2019,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'emails' => [
                     [
                         'id' => $this->email->getId(),

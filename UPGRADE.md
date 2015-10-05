@@ -2,9 +2,13 @@
 
 ## dev-develop
 
+### ApiCategory
+The function `getTranslation` was removed.  This avoid a INSERT SQL Exception when a serialization of categories
+(without translation) is called in the same request.
+
 ### Registering JS-Routes
 When registering backbone-routes now - instead of directly starting the corresponding component via 'this.html' - make your callback returning the component.
-So for example the follwoing:
+So for example the following:
 ```
 sandbox.mvc.routes.push({
     route: 'contacts/accounts/edit::id/:content',

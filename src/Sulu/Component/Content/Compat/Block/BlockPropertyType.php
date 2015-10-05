@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\Compat\Block;
 
+use JMS\Serializer\Annotation\Type;
 use Sulu\Component\Content\Compat\Metadata;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;

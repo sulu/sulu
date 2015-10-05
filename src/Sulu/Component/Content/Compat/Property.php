@@ -212,9 +212,6 @@ class Property implements PropertyInterface, \JsonSerializable
     /**
      * returns tags defined in xml.
      *
-     * @return \Sulu\Component\Content\PropertyTag[]
-     =======
-     * returns tags defined in xml
      * @return \Sulu\Component\Content\Compat\PropertyTag[]
      */
     public function getTags()
@@ -238,6 +235,8 @@ class Property implements PropertyInterface, \JsonSerializable
      * add a property tag.
      *
      * @param PropertyTag $tag
+     *
+     * @return PropertyTag
      */
     public function addTag(PropertyTag $tag)
     {
