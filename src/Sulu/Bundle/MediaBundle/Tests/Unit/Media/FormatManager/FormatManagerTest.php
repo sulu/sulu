@@ -31,6 +31,7 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
         $originalStorage = $this->prophesize('Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface');
         $formatCache = $this->prophesize('Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface');
         $converter = $this->prophesize('Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface');
+        $videoThumbnailService = $this->prophesize('Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailServiceInterface');
 
         $ghostScriptPath = '';
         $saveImage = true;
@@ -98,6 +99,7 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
             $originalStorage->reveal(),
             $formatCache->reveal(),
             $converter->reveal(),
+            $videoThumbnailService->reveal(),
             $ghostScriptPath,
             $saveImage,
             $previewMimeTypes,
@@ -117,6 +119,7 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
         $originalStorage = $this->prophesize('Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface');
         $formatCache = $this->prophesize('Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface');
         $converter = $this->prophesize('Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface');
+        $videoThumbnailService = $this->prophesize('Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailServiceInterface');
 
         $ghostScriptPath = '';
         $saveImage = true;
@@ -148,6 +151,7 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
             $originalStorage->reveal(),
             $formatCache->reveal(),
             $converter->reveal(),
+            $videoThumbnailService->reveal(),
             $ghostScriptPath,
             $saveImage,
             $previewMimeTypes,
@@ -172,6 +176,7 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
         $originalStorage = $this->prophesize('Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface');
         $formatCache = $this->prophesize('Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface');
         $converter = $this->prophesize('Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface');
+        $videoThumbnailService = $this->prophesize('Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailServiceInterface');
 
         $ghostScriptPath = '';
         $saveImage = true;
@@ -203,6 +208,7 @@ class FormatManagerTest extends \PHPUnit_Framework_TestCase
             $originalStorage->reveal(),
             $formatCache->reveal(),
             $converter->reveal(),
+            $videoThumbnailService->reveal(),
             $ghostScriptPath,
             $saveImage,
             $previewMimeTypes,
