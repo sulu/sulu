@@ -10,18 +10,23 @@
 
 namespace Sulu\Component\Contact\SmartContent;
 
-use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\SerializerInterface;
+use Prophecy\Argument;
+use Sulu\Bundle\ContactBundle\Api\Contact;
 use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
+use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 
 class ContactDataProviderTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetConfiguration()
     {
+        $serializer = $this->prophesize(SerializerInterface::class);
         $provider = new ContactDataProvider(
-            $this->getContactRepository()
+            $this->getRepository(),
+            $serializer->reveal()
         );
 
         $configuration = $provider->getConfiguration();
@@ -31,8 +36,10 @@ class ContactDataProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDefaultParameter()
     {
+        $serializer = $this->prophesize(SerializerInterface::class);
         $provider = new ContactDataProvider(
-            $this->getContactRepository()
+            $this->getRepository(),
+            $serializer->reveal()
         );
 
         $parameter = $provider->getDefaultPropertyParameter();
@@ -43,9 +50,9 @@ class ContactDataProviderTest extends \PHPUnit_Framework_TestCase
     public function dataItemsDataProvider()
     {
         $contacts = [
-            $this->createContact('Max', 'Mustermann'),
-            $this->createContact('Erika', 'Mustermann'),
-            $this->createContact('Leon', 'Mustermann'),
+            $this->createContact(1, 'Max', 'Mustermann')->reveal(),
+            $this->createContact(2, 'Erika', 'Mustermann')->reveal(),
+            $this->createContact(3, 'Leon', 'Mustermann')->reveal(),
         ];
 
         $dataItems = [];
@@ -66,8 +73,10 @@ class ContactDataProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testResolveDataItems($filters, $limit, $page, $pageSize, $repositoryResult, $hasNextPage, $items)
     {
+        $serializer = $this->prophesize(SerializerInterface::class);
         $provider = new ContactDataProvider(
-            $this->getContactRepository($filters, $page, $pageSize, $limit, $repositoryResult)
+            $this->getRepository($filters, $page, $pageSize, $limit, $repositoryResult),
+            $serializer->reveal()
         );
 
         $result = $provider->resolveDataItems(
@@ -89,9 +98,9 @@ class ContactDataProviderTest extends \PHPUnit_Framework_TestCase
     public function resourceItemsDataProvider()
     {
         $contacts = [
-            $this->createContact('Max', 'Mustermann'),
-            $this->createContact('Erika', 'Mustermann'),
-            $this->createContact('Leon', 'Mustermann'),
+            $this->createContact(1, 'Max', 'Mustermann')->reveal(),
+            $this->createContact(2, 'Erika', 'Mustermann')->reveal(),
+            $this->createContact(3, 'Leon', 'Mustermann')->reveal(),
         ];
 
         $dataItems = [];
@@ -119,8 +128,21 @@ class ContactDataProviderTest extends \PHPUnit_Framework_TestCase
         $hasNextPage,
         $items
     ) {
+        $serializeCallback = function (Contact $contact) {
+            return $this->serialize($contact);
+        };
+
+        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer->serialize(Argument::type(Contact::class), 'array', Argument::type(SerializationContext::class))
+            ->will(
+                function ($args) use ($serializeCallback) {
+                    return $serializeCallback($args[0]);
+                }
+            );
+
         $provider = new ContactDataProvider(
-            $this->getContactRepository($filters, $page, $pageSize, $limit, $repositoryResult)
+            $this->getRepository($filters, $page, $pageSize, $limit, $repositoryResult),
+            $serializer->reveal()
         );
 
         $result = $provider->resolveResourceItems(
@@ -141,30 +163,43 @@ class ContactDataProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testResolveDataSource()
     {
+        $serializer = $this->prophesize(SerializerInterface::class);
         $provider = new ContactDataProvider(
-            $this->getContactRepository()
+            $this->getRepository(),
+            $serializer->reveal()
         );
 
         $this->assertNull($provider->resolveDatasource('', [], []));
     }
 
     /**
-     * @return ContactRepository
+     * @return DataProviderRepositoryInterface
      */
-    private function getContactRepository($filters = [], $page = null, $pageSize = 0, $limit = null, $result = [])
+    private function getRepository($filters = [], $page = null, $pageSize = 0, $limit = null, $result = [])
     {
-        $mock = $this->prophesize(ContactRepository::class);
+        $mock = $this->prophesize(DataProviderRepositoryInterface::class);
 
-        $mock->findByFilters($filters, $page, $pageSize, $limit)->willReturn($result);
+        $mock->findByFilters($filters, $page, $pageSize, $limit, 'en')->willReturn($result);
 
         return $mock->reveal();
     }
 
-    private function createContact($firstName, $lastName)
+    private function createContact($id, $firstName, $lastName, $tags = [])
     {
-        $contact = new Contact();
-        $contact->setFirstName($firstName);
-        $contact->setLastName($lastName);
+        $contact = $this->prophesize(Contact::class);
+        $contact->getId()->willReturn($id);
+        $contact->getFirstName()->willReturn($firstName);
+        $contact->getLastName()->willReturn($lastName);
+        $contact->getFullName()->willReturn($firstName . ' ' . $lastName);
+        $contact->getTags()->willReturn($tags);
+        $contact->getFormOfAddress()->willReturn('');
+        $contact->getTitle()->willReturn('');
+        $contact->getSalutation()->willReturn('');
+        $contact->getMiddleName()->willReturn('');
+        $contact->getBirthday()->willReturn(new \DateTime());
+        $contact->getCreated()->willReturn(new \DateTime());
+        $contact->getChanged()->willReturn(new \DateTime());
+        $contact->getMedias()->willReturn([]);
 
         return $contact;
     }
@@ -176,35 +211,34 @@ class ContactDataProviderTest extends \PHPUnit_Framework_TestCase
 
     private function createResourceItem(Contact $contact)
     {
+        return new ArrayAccessItem($contact->getId(), $this->serialize($contact), $contact);
+    }
+
+    private function serialize(Contact $contact)
+    {
         $tags = [];
         foreach ($contact->getTags() as $tag) {
             $tags[] = $tag->getName();
         }
 
-        return new ArrayAccessItem(
-            $contact->getId(),
-            [
-                'formOfAddress' => $contact->getFormOfAddress(),
-                'title' => $contact->getTitle(),
-                'salutation' => $contact->getSalutation(),
-                'fullName' => $contact->getFullName(),
-                'firstName' => $contact->getFirstName(),
-                'lastName' => $contact->getLastName(),
-                'middleName' => $contact->getMiddleName(),
-                'birthday' => $contact->getBirthday(),
-                'created' => $contact->getCreated(),
-                'creator' => $contact->getCreator(),
-                'changed' => $contact->getChanged(),
-                'changer' => $contact->getChanger(),
-                'medias' => $contact->getMedias(),
-                'emails' => [],
-                'phones' => [],
-                'faxes' => [],
-                'urls' => [],
-                'tags' => $tags,
-                'categories' => [],
-            ],
-            $contact
-        );
+        return [
+            'formOfAddress' => $contact->getFormOfAddress(),
+            'title' => $contact->getTitle(),
+            'salutation' => $contact->getSalutation(),
+            'fullName' => $contact->getFullName(),
+            'firstName' => $contact->getFirstName(),
+            'lastName' => $contact->getLastName(),
+            'middleName' => $contact->getMiddleName(),
+            'birthday' => $contact->getBirthday(),
+            'created' => $contact->getCreated(),
+            'changed' => $contact->getChanged(),
+            'medias' => $contact->getMedias(),
+            'emails' => [],
+            'phones' => [],
+            'faxes' => [],
+            'urls' => [],
+            'tags' => $tags,
+            'categories' => [],
+        ];
     }
 }

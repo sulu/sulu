@@ -406,6 +406,24 @@ class AccountRepositoryTest extends SuluTestCase
                 [0],
             ],
             // combination website/admin-category/tag
+            [
+                [
+                    'categories' => [0],
+                    'categoryOperator' => 'or',
+                    'websiteCategories' => [1],
+                    'websiteCategoryOperator' => 'or',
+                    'tags' => [0],
+                    'tagOperator' => 'or',
+                    'websiteTags' => [1],
+                    'websiteTagOperator' => 'or',
+                ],
+                null,
+                0,
+                null,
+                array_slice($this->accountData, 0, 4),
+                [0, 1],
+                [0, 1],
+            ],
         ];
     }
 
@@ -464,7 +482,7 @@ class AccountRepositoryTest extends SuluTestCase
             );
         }
 
-        $result = $repository->findByFilters($filters, $page, $pageSize, $limit);
+        $result = $repository->findByFilters($filters, $page, $pageSize, $limit, 'de');
 
         $length = count($expected);
         $this->assertCount($length, $result);
