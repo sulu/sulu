@@ -41,7 +41,7 @@ class VideoThumbnailService
             if ($width !== -1 || $height !== -1) {
                 $size = sprintf('-vf "scale=%s:%s"', $width, $height);
                 if (!$allowUpscaling) {
-                   $size = sprintf('-vf "scale=min(iw\,%s):min(iw\,%s)"', $width, $height);
+                    $size = sprintf('-vf "scale=min(iw\,%s):min(iw\,%s)"', $width, $height);
                 }
             }
 
