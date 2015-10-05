@@ -72,8 +72,15 @@ class RdfaCrawler
         if ($nodes->count() > 0) {
             // create an array of changes
             return $nodes->each(
-                function (Crawler $node) {
-                    return $node->html();
+                function (Crawler $crawlerNode) {
+                    $node = $crawlerNode->getNode(0);
+                    $attributes = [];
+                    foreach ($node->attributes as $name => $value) {
+                        $attributes[$name] = $value->nodeValue;
+                    }
+                    $attributes['html'] = $crawlerNode->html();
+
+                    return $attributes;
                 }
             );
         }

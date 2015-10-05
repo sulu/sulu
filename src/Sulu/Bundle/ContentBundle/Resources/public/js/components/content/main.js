@@ -948,12 +948,16 @@ define([
                     return;
                 }
 
-                // set content and highlight class
-                if (typeof content[i] !== 'undefined') {
-                    element.innerHTML = content[i];
-                } else {
-                    element.innerHTML = '';
-                }
+                $.each(content[i], function(key, value) {
+                    if (key !== 'html') {
+                        $(element).attr(key, value);
+
+                        return;
+                    }
+
+                    element.innerHTML = value;
+                });
+
                 // FIXME jump to element: element.scrollIntoView();
                 i++;
             });
