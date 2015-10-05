@@ -89,6 +89,13 @@ define([
             this.sandbox.emit('husky.data-navigation.collections.set-url', url);
             this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
 
+            this.updateDataNavigationAddButton();
+        },
+
+        /**
+         * Updates the state of the add button in the data navigation based on the security of the current collection.
+         */
+        updateDataNavigationAddButton: function() {
             if (SecurityChecker.hasPermission(this.data, 'add')) {
                 this.sandbox.emit('husky.data-navigation.collections.add-button.show');
             } else {
@@ -100,6 +107,11 @@ define([
          * Bind header-toolbar related events
          */
         bindCustomEvents: function() {
+            this.sandbox.on(
+                'husky.data-navigation.collections.initialized',
+                this.updateDataNavigationAddButton.bind(this)
+            );
+
             // change the editing language
             this.sandbox.on('sulu.header.language-changed', function(locale) {
                 UserSettingsManager.setMediaLocale(locale.id);
