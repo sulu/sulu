@@ -57,6 +57,7 @@ class SuluMediaExtension extends Extension
 
         // converter
         $container->setParameter('sulu_media.ghost_script.path', $config['ghost_script']['path']);
+        $container->setParameter('sulu_media.ffmpeg.path', $config['ffmpeg']['path']);
 
         // storage
         $container->setParameter('sulu_media.media.max_file_size', '16MB');
