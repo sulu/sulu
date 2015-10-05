@@ -51,7 +51,7 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
             $allowedPermissions[$roleId] = $this->getAllowedPermissions($rolePermissions);
         }
 
-        $document = $this->documentManager->find($identifier);
+        $document = $this->documentManager->find($identifier, null, ['rehydrate' => false]);
         $document->setPermissions($allowedPermissions);
 
         $this->documentManager->persist($document);
@@ -66,7 +66,7 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
         $permissions = [];
 
         try {
-            $document = $this->documentManager->find($identifier);
+            $document = $this->documentManager->find($identifier, null, ['rehydrate' => false]);
         } catch (DocumentNotFoundException $e) {
             return $permissions;
         }
