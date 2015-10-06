@@ -67,11 +67,6 @@ class Media extends ApiWrapper
     protected $formats = [];
 
     /**
-     * @var array
-     */
-    protected $properties = [];
-
-    /**
      * @var string
      */
     protected $locale;
@@ -722,7 +717,7 @@ class Media extends ApiWrapper
      */
     public function setProperties($properties)
     {
-        $this->properties = $properties;
+        $this->getFileVersion()->setProperties($properties);
 
         return $this;
     }
@@ -735,7 +730,7 @@ class Media extends ApiWrapper
      */
     public function getProperties()
     {
-        return $this->properties;
+        return $this->getFileVersion()->getProperties();
     }
 
     /**

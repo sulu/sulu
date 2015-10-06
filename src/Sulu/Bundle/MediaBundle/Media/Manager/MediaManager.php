@@ -30,6 +30,7 @@ use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\Video\FFMPEGToolBox;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
@@ -134,6 +135,9 @@ class MediaManager implements MediaManagerInterface
      */
     private $downloadPath;
 
+    /** @var FFMPEGToolBox */
+    private $ffmpegToolBox;
+
     /**
      * @var int
      */
@@ -151,6 +155,7 @@ class MediaManager implements MediaManagerInterface
      * @param TypeManagerInterface $typeManager
      * @param TokenStorageInterface $tokenStorage
      * @param SecurityCheckerInterface $securityChecker
+     * @param FFMPEGToolBox $ffmpegToolBox
      * @param array $permissions
      * @param string $downloadPath
      * @param string $maxFileSize
@@ -167,6 +172,7 @@ class MediaManager implements MediaManagerInterface
         TypeManagerInterface $typeManager,
         TokenStorageInterface $tokenStorage = null,
         SecurityCheckerInterface $securityChecker = null,
+        FFMPEGToolBox $ffmpegToolBox,
         $permissions,
         $downloadPath,
         $maxFileSize
@@ -182,6 +188,7 @@ class MediaManager implements MediaManagerInterface
         $this->typeManager = $typeManager;
         $this->tokenStorage = $tokenStorage;
         $this->securityChecker = $securityChecker;
+        $this->ffmpegToolBox = $ffmpegToolBox;
         $this->permissions = $permissions;
         $this->downloadPath = $downloadPath;
         $this->maxFileSize = $maxFileSize;
@@ -455,6 +462,26 @@ class MediaManager implements MediaManagerInterface
     }
 
     /**
+     * @param UploadedFile $uploadedFile
+     *
+     * @return array
+     */
+    private function getProperties(UploadedFile $uploadedFile)
+    {
+        $mimeType = $uploadedFile->getMimeType();
+        $properties = [];
+
+        // if the file is a video we add the duration
+        if (fnmatch('video/*', $mimeType)) {
+            $duration = $this->ffmpegToolBox->getVideoDuration($uploadedFile->getPathname());
+
+            $properties['duration'] = $duration;
+        }
+
+        return $properties;
+    }
+
+    /**
      * Modifies an existing media.
      *
      * @param UploadedFile $uploadedFile
@@ -514,6 +541,7 @@ class MediaManager implements MediaManagerInterface
             $data['name'] = $uploadedFile->getClientOriginalName();
             $data['size'] = intval($uploadedFile->getSize());
             $data['mimeType'] = $uploadedFile->getMimeType();
+            $data['properties'] = $this->getProperties($uploadedFile);
             $data['type'] = [
                 'id' => $this->typeManager->getMediaType($uploadedFile->getMimeType()),
             ];
@@ -589,9 +617,11 @@ class MediaManager implements MediaManagerInterface
             $uploadedFile->getClientOriginalName(),
             1
         );
+
         $data['name'] = $uploadedFile->getClientOriginalName();
         $data['size'] = $uploadedFile->getSize();
         $data['mimeType'] = $uploadedFile->getMimeType();
+        $data['properties'] = $this->getProperties($uploadedFile);
         $data['type'] = [
             'id' => $this->typeManager->getMediaType($uploadedFile->getMimeType()),
         ];
@@ -874,6 +904,12 @@ class MediaManager implements MediaManagerInterface
         }
 
         $media->setAdditionalVersionData($versionData);
+
+        // set properties
+        $properties = $media->getFileVersion()->getProperties();
+        if ($properties !== null) {
+            $media->setProperties($properties);
+        }
 
         // Set Current Url
         if (isset($versionData[$media->getVersion()])
