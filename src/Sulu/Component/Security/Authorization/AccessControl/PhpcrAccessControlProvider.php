@@ -73,10 +73,12 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
 
         $allowedPermissions = $document->getPermissions();
 
-        foreach ($allowedPermissions as $roleId => $rolePermissions) {
-            $permissions[$roleId] = [];
-            foreach ($this->permissions as $permission => $value) {
-                $permissions[$roleId][$permission] = in_array($permission, $rolePermissions);
+        if (is_array($allowedPermissions)) {
+            foreach ($allowedPermissions as $roleId => $rolePermissions) {
+                $permissions[$roleId] = [];
+                foreach ($this->permissions as $permission => $value) {
+                    $permissions[$roleId][$permission] = in_array($permission, $rolePermissions);
+                }
             }
         }
 
