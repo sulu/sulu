@@ -23,9 +23,9 @@ class RdfaCrawler
     /**
      * returns html value of rdfa property.
      *
-     * @param string             $html     content to crawl
+     * @param string $html content to crawl
      * @param StructureInterface $content
-     * @param string             $property could be a property sequence like (block,1,title,0)
+     * @param string $property could be a property sequence like (block,1,title,0)
      *
      * @return bool
      */
@@ -57,7 +57,7 @@ class RdfaCrawler
                     // check if one parent is property exclude it
                     $parents->each(
                         function ($node) use (&$count) {
-                            if ($node->attr('property')) {
+                            if (null !== $node->attr('property') && $node->attr('typeof') === 'collection') {
                                 ++$count;
                             }
                         }
@@ -92,7 +92,7 @@ class RdfaCrawler
      * extracts sequence information from property name.
      *
      * @param StructureInterface $content
-     * @param string             $property sequence like (block,1,title,0)
+     * @param string $property sequence like (block,1,title,0)
      *
      * @return array|bool
      */

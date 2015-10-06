@@ -926,12 +926,12 @@ define([
             this.handle(content, filter, function(element) {
                 // check all parents if they has not the attribute property
                 // thats currently not supported by the api
-                var cur = element.parentNode;
-                while (null !== cur.parentNode) {
-                    if (cur.hasAttribute('property')) {
+                var currentNode = element.parentNode;
+                while (null !== currentNode.parentNode) {
+                    if (currentNode.hasAttribute('property') && currentNode.getAttribute('typeof') === 'collection') {
                         return false;
                     }
-                    cur = cur.parentNode;
+                    currentNode = currentNode.parentNode;
                 }
 
                 return true;
