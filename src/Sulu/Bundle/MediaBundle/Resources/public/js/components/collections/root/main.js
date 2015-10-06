@@ -7,9 +7,12 @@
  * with this source code in the file LICENSE.
  */
 
-define(['services/sulumedia/media-manager',
+define([
+    'services/sulumedia/media-manager',
     'services/sulumedia/user-settings-manager',
-    'services/sulumedia/media-router'], function(MediaManager, UserSettingsManager, MediaRouter) {
+    'services/sulumedia/media-router',
+    'config'
+], function(MediaManager, UserSettingsManager, MediaRouter, Config) {
 
     'use strict';
 
@@ -63,9 +66,16 @@ define(['services/sulumedia/media-manager',
          * Set the data-navigation url
          */
         updateDataNavigation: function() {
-            var url = '/admin/api/collections?sortBy=title';
+            var url = '/admin/api/collections?sortBy=title',
+                permissions = Config.get('sulu-media').permissions;
             this.sandbox.emit('husky.data-navigation.collections.set-url', url);
             this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
+
+            if (!!permissions.add) {
+                this.sandbox.emit('husky.data-navigation.collections.add-button.show');
+            } else {
+                this.sandbox.emit('husky.data-navigation.collections.add-button.hide');
+            }
         },
 
         /**
@@ -146,7 +156,8 @@ define(['services/sulumedia/media-manager',
                             selectable: false
                         }
                     }
-                });
+                }
+            );
         }
     };
 });
