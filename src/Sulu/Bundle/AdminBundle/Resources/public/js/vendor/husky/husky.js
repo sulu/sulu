@@ -31502,6 +31502,19 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 this.sandbox.dom.filter($rows, ':visible:odd'),
                 constants.oddClass
             );
+        },
+
+        showSelected: function(show) {
+            // TODO this is a really basic implementation
+            // - here should all selected be loaded
+            // - currently only current page will be filtered
+            var $items = this.datagrid.$find('tbody .row:not(.selected)');
+
+            if (!!show) {
+                $items.hide();
+            } else {
+                $items.show();
+            }
         }
     };
 });
@@ -32520,6 +32533,8 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 resultKey: 'items',
                 selectedCounter: false,
                 selectedCounterText: 'public.elements-selected',
+                selectedCounterShowSelectedText: 'public.show-selected',
+                selectedCounterShowAllText: 'public.show-all',
                 viewSpacingBottom: 110,
                 clickCallback: null,
                 actionCallback: null,
@@ -32648,7 +32663,13 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                     '</div>'
                 ].join(''),
                 selectedCounter: [
-                    '<span class="selected-elements invisible smaller-font grey-font"><span class="number">0</span> <%= text %></span>'
+                    '<span class="selected-elements invisible smaller-font grey-font">',
+                    '    <span class="number">0</span>',
+                    '    &nbsp;<%= text %>',
+                    '    <span class="show-selected-container" <% if (!showSelectedLink) { %>style="display: none;"<% } %>>',
+                    '        &nbsp;(<span class="show-selected"><%= showText %></span>)',
+                    '    </span>',
+                    '</span>'
                 ].join('')
             },
 
@@ -33067,11 +33088,11 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 this.bindCustomEvents(); // Should only be be called once
                 this.bindDOMEvents();
                 this.renderMediumLoader();
-                if (this.options.selectedCounter === true) {
-                    this.renderSelectedCounter();
-                }
 
                 this.loadAndInitializeDecorators().then(function() {
+                    if (this.options.selectedCounter === true) {
+                        this.renderSelectedCounter();
+                    }
                     this.loadAndEvaluateMatchings().then(function() {
                         this.loadAndRenderData();
                         this.sandbox.emit(INITIALIZED.call(this));
@@ -33234,9 +33255,15 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
              * Renderes the counter which shows how many elements have been selected
              */
             renderSelectedCounter: function() {
-                this.sandbox.dom.append(this.$element, this.sandbox.util.template(templates.selectedCounter)({
-                    text: this.sandbox.translate(this.options.selectedCounterText)
-                }));
+                this.sandbox.dom.append(
+                    this.$element,
+                    this.sandbox.util.template(templates.selectedCounter, {
+                            text: this.sandbox.translate(this.options.selectedCounterText),
+                            showText: this.sandbox.translate(this.options.selectedCounterShowSelectedText),
+                            showSelectedLink: !!this.gridViews[this.viewId].showSelected
+                        }
+                    )
+                );
                 this.updateSelectedCounter();
             },
 
@@ -33732,6 +33759,24 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                         this.dataGridWindowResize
                     );
                 }
+
+                if (this.options.selectedCounter) {
+                    this.sandbox.dom.on(this.$el,
+                        'click',
+                        function(event) {
+                            this.sandbox.dom.stopPropagation(event);
+                            if (!this.gridViews[this.viewId].showSelected) {
+                                return;
+                            }
+
+                            this.show = !this.show;
+                            this.gridViews[this.viewId].showSelected(this.show);
+
+                            this.updateSelectedCounter();
+                        }.bind(this),
+                        '.selected-elements .show-selected'
+                    );
+                }
             },
 
             unbindWindowResize: function() {
@@ -33978,6 +34023,32 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                     } else {
                         this.sandbox.dom.removeClass(this.$find('.selected-elements'), 'invisible');
                     }
+
+                    if (!!this.gridViews[this.viewId] && !!this.gridViews[this.viewId].showSelected &&
+                        this.getSelectedItemIds().length === 0
+                    ) {
+                        this.gridViews[this.viewId].showSelected(false);
+                        this.show = false;
+                    }
+
+                    if (!!this.show) {
+                        this.sandbox.dom.text(
+                            this.$find('.show-selected'),
+                            this.sandbox.translate(this.options.selectedCounterShowAllText)
+                        );
+                    } else {
+                        this.sandbox.dom.text(
+                            this.$find('.show-selected'),
+                            this.sandbox.translate(this.options.selectedCounterShowSelectedText)
+                        );
+                    }
+
+                    if (!!this.gridViews[this.viewId].showSelected) {
+                        this.sandbox.dom.show(this.$find('.show-selected-container'));
+                    } else {
+                        this.sandbox.dom.hide(this.$find('.show-selected-container'));
+                    }
+
                 }
             },
 
@@ -34246,6 +34317,9 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
              */
             changePage: function(uri, page, limit) {
                 if (!!this.data.links.pagination || !!uri) {
+                    this.show = false;
+                    this.updateSelectedCounter();
+
                     var url, uriTemplate;
 
                     // if a url is passed load the data from this url
