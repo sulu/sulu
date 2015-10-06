@@ -158,7 +158,7 @@ class NodeController extends RestController
      * This functionality is required for preloading the content navigation.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param string                                    $uuid
+     * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -167,7 +167,7 @@ class NodeController extends RestController
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request, false);
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
-
+        $excludeShadows = $this->getBooleanRequestParameter($request, 'exclude-shadows', false, false);
         $appendWebspaceNode = $this->getBooleanRequestParameter($request, 'webspace-node', false, false);
 
         try {
@@ -177,6 +177,7 @@ class NodeController extends RestController
                     $webspace,
                     $language,
                     $excludeGhosts,
+                    $excludeShadows,
                     $appendWebspaceNode
                 );
             } elseif ($webspace !== null) {

@@ -570,9 +570,10 @@ class NodeRepository implements NodeRepositoryInterface
         $webspaceKey,
         $languageCode,
         $excludeGhosts = false,
+        $excludeShadows = false,
         $appendWebspaceNode = false
     ) {
-        $nodes = $this->loadNodeAndAncestors($uuid, $webspaceKey, $languageCode, $excludeGhosts, true);
+        $nodes = $this->loadNodeAndAncestors($uuid, $webspaceKey, $languageCode, $excludeGhosts, $excludeShadows, true);
 
         if ($appendWebspaceNode) {
             $webspace = $this->webspaceManager->getWebspaceCollection()->getWebspace($webspaceKey);
@@ -630,22 +631,23 @@ class NodeRepository implements NodeRepositoryInterface
     /**
      * Load the node and its ancestors and convert them into a HATEOAS representation.
      *
-     * @param mixed $uuid
-     * @param mixed $webspaceKey
-     * @param mixed $locale
-     * @param mixed $excludeGhost
-     * @param mixed $complete
+     * @param string $uuid
+     * @param string $webspaceKey
+     * @param string $locale
+     * @param bool $excludeGhosts
+     * @param bool $excludeShadows
+     * @param bool $complete
      *
      * @return array
      */
-    private function loadNodeAndAncestors($uuid, $webspaceKey, $locale, $excludeGhost, $complete)
+    private function loadNodeAndAncestors($uuid, $webspaceKey, $locale, $excludeGhosts, $excludeShadows, $complete)
     {
         $descendants = $this->getMapper()->loadNodeAndAncestors(
             $uuid,
             $locale,
             $webspaceKey,
-            $excludeGhost,
-            $excludeGhost
+            $excludeGhosts,
+            $excludeShadows
         );
         $descendants = array_reverse($descendants);
 
@@ -653,7 +655,12 @@ class NodeRepository implements NodeRepositoryInterface
         foreach ($descendants as $descendant) {
             foreach ($descendant->getChildren() as $child) {
                 $type = $child->getType();
-                if ($excludeGhost && $type !== null) {
+
+                if ($excludeShadows && $type !== null && $type->getName() === 'shadow') {
+                    continue;
+                }
+
+                if ($excludeGhosts && $type !== null && $type->getName() === 'ghost') {
                     continue;
                 }
 
@@ -666,7 +673,7 @@ class NodeRepository implements NodeRepositoryInterface
                     $locale,
                     1,
                     $complete,
-                    $excludeGhost
+                    $excludeGhosts
                 );
             }
         }
