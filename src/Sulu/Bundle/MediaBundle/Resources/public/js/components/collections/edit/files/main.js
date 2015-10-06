@@ -8,10 +8,11 @@
  */
 
 define([
+    'services/sulumedia/collection-manager',
     'services/sulumedia/media-manager',
     'services/sulumedia/user-settings-manager',
     'services/sulumedia/overlay-manager'
-], function(MediaManager, UserSettingsManager, OverlayManager) {
+], function(CollectionManager, MediaManager, UserSettingsManager, OverlayManager) {
 
     'use strict';
 
@@ -20,6 +21,9 @@ define([
         },
 
         constants = {
+            scrollContainerSelector: '.content-column > .wrapper .page',
+            hideToolbarClass: 'toolbar-hidden',
+            fixedClass: 'fixed',
             dropzoneSelector: '.dropzone-container',
             toolbarSelector: '.list-toolbar-container',
             datagridSelector: '.datagrid-container'
@@ -178,6 +182,8 @@ define([
                 this.sandbox.emit('husky.datagrid.view.change', 'table');
                 this.sandbox.emit('husky.datagrid.pagination.change', 'dropdown');
                 this.sandbox.emit('husky.datagrid.change.page', 1, UserSettingsManager.getDropdownPageSize());
+
+                this.$el.removeClass(constants.fixedClass);
             }.bind(this));
 
             // change datagrid view to masonry
@@ -190,14 +196,22 @@ define([
                 this.sandbox.emit('husky.datagrid.view.change', 'datagrid/decorators/masonry-view');
                 this.sandbox.emit('husky.datagrid.pagination.change', 'infinite-scroll');
                 this.sandbox.emit('husky.datagrid.change.page', 1, UserSettingsManager.getInfinityPageSize());
+
+                // reset scroll handler
+                this.$el.removeClass(constants.fixedClass);
             }.bind(this));
+
+            this.sandbox.dom.on(constants.scrollContainerSelector, 'scroll', this.scrollHandler.bind(this));
         },
 
         /**
          * Renders the files component
          */
         render: function() {
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/collection/files'));
+            this.sandbox.dom.html(
+                this.$el,
+                this.renderTemplate('/admin/media/template/collection/files', {title: this.data.title})
+            );
             this.startDropzone();
             this.startDatagrid();
         },
@@ -206,6 +220,8 @@ define([
          * Start the list toolbar and the datagrid
          */
         startDatagrid: function() {
+            var view = UserSettingsManager.getMediaListView();
+
             // init list-toolbar and datagrid
             this.sandbox.sulu.initListToolbarAndList.call(this, 'media', '/admin/api/media/fields',
                 {
@@ -256,7 +272,7 @@ define([
                 {
                     el: this.$find(constants.datagridSelector),
                     url: '/admin/api/media?orderBy=media.changed&orderSort=DESC&locale=' + UserSettingsManager.getMediaLocale() + '&collection=' + this.options.id,
-                    view: UserSettingsManager.getMediaListView(),
+                    view: view,
                     pagination: UserSettingsManager.getMediaListPagination(),
                     resultKey: 'media',
                     sortable: false,
@@ -346,6 +362,34 @@ define([
          */
         enableDropzone: function() {
             this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.enable');
+        },
+
+        /**
+         * loads the collection-data into this.data. is automatically executed before component initialization
+         * @returns {*}
+         */
+        loadComponentData: function() {
+            var promise = this.sandbox.data.deferred();
+            CollectionManager.loadOrNew(this.options.id, UserSettingsManager.getMediaLocale()).then(function(data) {
+                promise.resolve(data);
+            });
+            return promise;
+        },
+
+        /**
+         * Handles the scroll event to hide or show the tabs
+         */
+        scrollHandler: function() {
+            if (UserSettingsManager.getMediaListView() !== 'datagrid/decorators/masonry-view') {
+                return;
+            }
+
+            var scrollTop = this.sandbox.dom.scrollTop(constants.scrollContainerSelector);
+            if (scrollTop > 90) {
+                this.$el.addClass(constants.fixedClass);
+            } else {
+                this.$el.removeClass(constants.fixedClass);
+            }
         }
     };
 });

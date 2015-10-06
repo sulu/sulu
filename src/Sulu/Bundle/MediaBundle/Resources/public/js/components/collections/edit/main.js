@@ -7,10 +7,12 @@
  * with this source code in the file LICENSE.
  */
 
-define(['services/sulumedia/collection-manager',
+define([
+    'services/sulumedia/collection-manager',
     'services/sulumedia/user-settings-manager',
     'services/sulumedia/media-router',
-    'services/sulumedia/overlay-manager'], function(CollectionManager, UserSettingsManager, MediaRouter, OverlayManager) {
+    'services/sulumedia/overlay-manager'
+], function(CollectionManager, UserSettingsManager, MediaRouter, OverlayManager) {
 
     'use strict';
 
@@ -20,7 +22,7 @@ define(['services/sulumedia/collection-manager',
         header: function() {
             return {
                 noBack: true,
-                title: this.data.title,
+                //title: this.data.title,
                 tabs: {
                     url: '/admin/content-navigations?alias=media'
                 },
