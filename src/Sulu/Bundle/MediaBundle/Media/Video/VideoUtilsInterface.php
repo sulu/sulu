@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Video;
 
-interface FFMPEGToolBoxInterface
+interface VideoUtilsInterface
 {
     /**
      * returns the duration of a video.

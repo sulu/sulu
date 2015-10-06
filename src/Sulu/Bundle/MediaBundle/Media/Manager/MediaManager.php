@@ -29,7 +29,7 @@ use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
-use Sulu\Bundle\MediaBundle\Media\Video\FFMPEGToolBoxInterface;
+use Sulu\Bundle\MediaBundle\Media\Video\VideoUtilsInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
@@ -134,8 +134,8 @@ class MediaManager implements MediaManagerInterface
      */
     private $downloadPath;
 
-    /** @var FFMPEGToolBoxInterface */
-    private $ffmpegToolBox;
+    /** @var VideoUtilsInterface */
+    private $videoUtils;
 
     /**
      * @var int
@@ -154,7 +154,7 @@ class MediaManager implements MediaManagerInterface
      * @param TypeManagerInterface $typeManager
      * @param TokenStorageInterface $tokenStorage
      * @param SecurityCheckerInterface $securityChecker
-     * @param FFMPEGToolBoxInterface $ffmpegToolBox
+     * @param VideoUtilsInterface $videoUtils
      * @param array $permissions
      * @param string $downloadPath
      * @param string $maxFileSize
@@ -171,7 +171,7 @@ class MediaManager implements MediaManagerInterface
         TypeManagerInterface $typeManager,
         TokenStorageInterface $tokenStorage = null,
         SecurityCheckerInterface $securityChecker = null,
-        FFMPEGToolBoxInterface $ffmpegToolBox,
+        VideoUtilsInterface $videoUtils,
         $permissions,
         $downloadPath,
         $maxFileSize
@@ -187,7 +187,7 @@ class MediaManager implements MediaManagerInterface
         $this->typeManager = $typeManager;
         $this->tokenStorage = $tokenStorage;
         $this->securityChecker = $securityChecker;
-        $this->ffmpegToolBox = $ffmpegToolBox;
+        $this->videoUtils = $videoUtils;
         $this->permissions = $permissions;
         $this->downloadPath = $downloadPath;
         $this->maxFileSize = $maxFileSize;
@@ -472,7 +472,7 @@ class MediaManager implements MediaManagerInterface
 
         // if the file is a video we add the duration
         if (fnmatch('video/*', $mimeType)) {
-            $duration = $this->ffmpegToolBox->getVideoDuration($uploadedFile->getPathname());
+            $duration = $this->videoUtils->getVideoDuration($uploadedFile->getPathname());
 
             $properties['duration'] = $duration;
         }

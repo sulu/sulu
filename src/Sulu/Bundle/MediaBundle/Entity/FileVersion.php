@@ -653,7 +653,7 @@ class FileVersion implements AuditableInterface
      */
     public function getProperties()
     {
-        return json_decode($this->properties, JSON_OBJECT_AS_ARRAY);
+        return json_decode($this->properties, true);
     }
 
     /**

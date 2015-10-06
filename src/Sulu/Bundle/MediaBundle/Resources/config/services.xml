@@ -25,7 +25,7 @@
         <parameter key="sulu_media.twig_extension.media.class">Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension</parameter>
         <parameter key="tmp">Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension</parameter>
         <parameter key="sulu_media.video_thumbnail_generator.class">Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailService</parameter>
-        <parameter key="sulu_media.ffmpeg_toolbox.class">Sulu\Bundle\MediaBundle\Media\Video\FFMPEGToolBox</parameter>
+        <parameter key="sulu_media.videoutils.class">Sulu\Bundle\MediaBundle\Media\Video\VideoUtils</parameter>
     </parameters>
 
     <services>
@@ -93,7 +93,7 @@
             <argument type="service" id="sulu_media.type_manager" />
             <argument type="service" id="security.token_storage" on-invalid="null" />
             <argument type="service" id="sulu_security.security_checker" on-invalid="null" />
-            <argument type="service" id="sulu_media.ffmpeg_toolbox" />
+            <argument type="service" id="sulu_media.videoutils" />
             <argument>%sulu_security.permissions%</argument>
             <argument type="string">%sulu_media.media_manager.media_download_path%</argument>
             <argument>%sulu_media.media.max_file_size%</argument>
@@ -153,7 +153,7 @@
             <argument>%sulu_media.ffmpeg.path%</argument>
         </service>
 
-        <service id="sulu_media.ffmpeg_toolbox" class="%sulu_media.ffmpeg_toolbox.class%">
+        <service id="sulu_media.videoutils" class="%sulu_media.videoutils.class%">
             <argument>%sulu_media.ffmpeg.path%</argument>
         </service>
 
