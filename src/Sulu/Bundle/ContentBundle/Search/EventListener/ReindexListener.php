@@ -83,7 +83,6 @@ class ReindexListener
             $phpcrType = $type['phpcr_type'];
 
             if ($phpcrType !== 'sulu:home' && $phpcrType !== 'sulu:path') {
-
                 if (!empty($condition)) {
                     $condition .= ' or ';
                 }
