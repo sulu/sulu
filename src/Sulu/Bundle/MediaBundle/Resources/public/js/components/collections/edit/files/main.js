@@ -159,7 +159,7 @@ define([
             this.sandbox.on('sulu.list-toolbar.delete', this.deleteMedia.bind(this));
 
             // edit media
-            this.sandbox.on('sulu.list-toolbar.edit', this.editMedia.bind(this));
+            this.sandbox.on('sulu.list-toolbar.edit', this.editMedias.bind(this));
 
             // start collection-select overlay on move-click
             this.sandbox.on('sulu.list-toolbar.media-move', function() {
@@ -280,8 +280,7 @@ define([
                     resultKey: 'media',
                     sortable: false,
                     actionCallback: function(clickedId) {
-                        this.sandbox.emit('husky.datagrid.select.item', clickedId);
-                        this.editMedia();
+                        this.editMedia(clickedId);
                     }.bind(this),
                     viewOptions: {
                         table: {
@@ -328,10 +327,17 @@ define([
         /**
          * Edits all selected medias
          */
-        editMedia: function() {
+        editMedias: function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(mediaIds) {
                 OverlayManager.startEditMediaOverlay.call(this, mediaIds, UserSettingsManager.getMediaLocale());
             }.bind(this));
+        },
+
+        /**
+         * Edit given media
+         */
+        editMedia: function(mediaId) {
+            OverlayManager.startEditMediaOverlay.call(this, [mediaId], UserSettingsManager.getMediaLocale());
         },
 
         /**

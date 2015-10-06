@@ -292,12 +292,12 @@ define(function() {
             this.sandbox.dom.on(this.$items[id], 'click', function(event) {
                 this.sandbox.dom.stopPropagation(event);
                 this.datagrid.itemAction.call(this.datagrid, id);
-            }.bind(this), "." + constants.actionNavigatorClass);
+            }.bind(this), '.' + constants.actionNavigatorClass);
 
             this.sandbox.dom.on(this.$items[id], 'click', function(event) {
                 this.sandbox.dom.stopPropagation(event);
                 this.sandbox.emit(DOWNLOAD_CLICKED.call(this), id);
-            }.bind(this), "." + constants.downloadNavigatorClass);
+            }.bind(this), '.' + constants.downloadNavigatorClass);
 
             if (!!this.options.selectable) {
                 this.sandbox.dom.on(this.$items[id], 'click', function(event) {
