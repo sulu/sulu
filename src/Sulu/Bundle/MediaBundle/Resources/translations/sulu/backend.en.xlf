@@ -132,7 +132,7 @@
             </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22250" resname="navigation.media.collections.add">
                 <source>navigation.media.collections.add</source>
-                <target>Add collection</target>
+                <target>Add</target>
             </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22260" resname="sulu.collection.move.overlay-title">
                 <source>sulu.collection.move.overlay-title</source>

@@ -7,9 +7,12 @@
  * with this source code in the file LICENSE.
  */
 
-define(['services/sulumedia/media-manager',
+define([
+    'services/sulumedia/media-manager',
     'services/sulumedia/user-settings-manager',
-    'services/sulumedia/overlay-manager'], function(MediaManager, UserSettingsManager, OverlayManager) {
+    'services/sulumedia/overlay-manager',
+    'sulusecurity/services/security-checker',
+], function(MediaManager, UserSettingsManager, OverlayManager, SecurityChecker) {
 
     'use strict';
 
@@ -20,7 +23,7 @@ define(['services/sulumedia/media-manager',
         constants = {
             dropzoneSelector: '.dropzone-container',
             toolbarSelector: '.list-toolbar-container',
-            datagridSelector: '.datagrid-container',
+            datagridSelector: '.datagrid-container'
         };
 
     return {
@@ -51,7 +54,10 @@ define(['services/sulumedia/media-manager',
             this.bindManagerEvents();
             this.bindListToolbarEvents();
 
-            this.render();
+            this.sandbox.emit('sulu.medias.collection.get-data', function(data) {
+                this.data = data;
+                this.render();
+            }.bind(this));
 
             // start edit if media was clicked in root-component
             if (!!this.sandbox.sulu.viewStates['media-file-edit-id']) {
@@ -150,14 +156,10 @@ define(['services/sulumedia/media-manager',
             }.bind(this));
 
             // delete a media
-            this.sandbox.on('sulu.list-toolbar.delete', function() {
-                this.deleteMedia();
-            }.bind(this));
+            this.sandbox.on('sulu.list-toolbar.delete', this.deleteMedia.bind(this));
 
             // edit media
-            this.sandbox.on('sulu.list-toolbar.edit', function() {
-                this.editMedia();
-            }.bind(this));
+            this.sandbox.on('sulu.list-toolbar.edit', this.editMedia.bind(this));
 
             // start collection-select overlay on move-click
             this.sandbox.on('sulu.list-toolbar.media-move', function() {
@@ -184,7 +186,11 @@ define(['services/sulumedia/media-manager',
          */
         render: function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/collection/files'));
-            this.startDropzone();
+
+            if (SecurityChecker.hasPermission(this.data, 'add')) {
+                this.startDropzone();
+            }
+
             this.startDatagrid();
         },
 
@@ -193,51 +199,66 @@ define(['services/sulumedia/media-manager',
          */
         startDatagrid: function() {
             // init list-toolbar and datagrid
+            var settingsDropdown = [], buttons = {};
+
+            if (SecurityChecker.hasPermission(this.data, 'add')) {
+                buttons.add = {
+                    options: {
+                        class: null,
+                        callback: function() {
+                            this.sandbox.emit('sulu.list-toolbar.add');
+                        }.bind(this)
+                    }
+                };
+            }
+
+            if (SecurityChecker.hasPermission(this.data, 'edit')) {
+                buttons.editSelected = {
+                    options: {
+                        callback: function() {
+                            this.sandbox.emit('sulu.list-toolbar.edit');
+                        }.bind(this)
+                    }
+                };
+            }
+
+            if (SecurityChecker.hasPermission(this.data, 'delete')) {
+                buttons.deleteSelected = {
+                    options: {
+                        callback: function() {
+                            this.sandbox.emit('sulu.list-toolbar.delete');
+                        }.bind(this)
+                    }
+                };
+            }
+
+            if (SecurityChecker.hasPermission(this.data, 'edit')) {
+                settingsDropdown.push({
+                    id: 'media-move',
+                    title: this.sandbox.translate('sulu.media.move'),
+                    callback: function() {
+                        this.sandbox.emit('sulu.list-toolbar.media-move');
+                    }.bind(this)
+                });
+            }
+
+            settingsDropdown.push({
+                type: 'columnOptions'
+            });
+
+            buttons.settings = {
+                options: {
+                    dropdownItems: settingsDropdown
+                }
+            };
+
+            buttons.mediaDecoratorDropdown = {};
+
             this.sandbox.sulu.initListToolbarAndList.call(this, 'media', '/admin/api/media/fields',
                 {
                     el: this.$find(constants.toolbarSelector),
                     instanceName: this.options.instanceName,
-                    template: this.sandbox.sulu.buttons.get({
-                        add: {
-                            options: {
-                                class: null,
-                                callback: function() {
-                                    this.sandbox.emit('sulu.list-toolbar.add');
-                                }.bind(this)
-                            }
-                        },
-                        editSelected: {
-                            options: {
-                                callback: function() {
-                                    this.sandbox.emit('sulu.list-toolbar.edit');
-                                }.bind(this)
-                            }
-                        },
-                        deleteSelected: {
-                            options: {
-                                callback: function() {
-                                    this.sandbox.emit('sulu.list-toolbar.delete');
-                                }.bind(this)
-                            }
-                        },
-                        settings: {
-                            options: {
-                                dropdownItems: [
-                                    {
-                                        id: 'media-move',
-                                        title: this.sandbox.translate('sulu.media.move'),
-                                        callback: function() {
-                                            this.sandbox.emit('sulu.list-toolbar.media-move');
-                                        }.bind(this)
-                                    },
-                                    {
-                                        type: 'columnOptions'
-                                    }
-                                ]
-                            }
-                        },
-                        mediaDecoratorDropdown: {}
-                    })
+                    template: this.sandbox.sulu.buttons.get(buttons)
                 },
                 {
                     el: this.$find(constants.datagridSelector),

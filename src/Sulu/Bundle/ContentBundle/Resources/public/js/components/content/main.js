@@ -184,7 +184,7 @@ define([
             // getter for content data
             this.sandbox.on('sulu.content.contents.get-data', function(callback) {
                 // deep copy of object
-                callback(JSON.parse(JSON.stringify(this.data)));
+                callback(this.sandbox.util.deepCopy(this.data));
             }.bind(this));
 
             // setter for header bar buttons
