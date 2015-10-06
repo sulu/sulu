@@ -24,6 +24,7 @@ use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\Video\FFMPEGToolBoxInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -92,6 +93,11 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
      */
     private $securityChecker;
 
+    /**
+     * @var FFMPEGToolBoxInterface
+     */
+    private $ffmpegToolBox;
+
     public function setUp()
     {
         parent::setUp();
@@ -107,6 +113,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $this->typeManager = $this->prophesize(TypeManagerInterface::class);
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $this->securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+        $this->ffmpegToolBox = $this->prophesize(FFMPEGToolBoxInterface::class);
 
         $this->mediaManager = new MediaManager(
             $this->mediaRepository->reveal(),
@@ -120,6 +127,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
             $this->typeManager->reveal(),
             $this->tokenStorage->reveal(),
             $this->securityChecker->reveal(),
+            $this->ffmpegToolBox->reveal(),
             [
                 'view' => 64,
             ],

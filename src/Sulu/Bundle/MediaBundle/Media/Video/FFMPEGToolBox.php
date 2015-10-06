@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\Video;
 
 
-class FFMPEGToolBox
+class FFMPEGToolBox implements FFMPEGToolBoxInterface
 {
     /** @var string */
     protected $ffmpeg;

@@ -13,7 +13,6 @@ namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
-use SensioLabs\Security\SecurityChecker;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
@@ -30,7 +29,7 @@ use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
-use Sulu\Bundle\MediaBundle\Media\Video\FFMPEGToolBox;
+use Sulu\Bundle\MediaBundle\Media\Video\FFMPEGToolBoxInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
@@ -135,7 +134,7 @@ class MediaManager implements MediaManagerInterface
      */
     private $downloadPath;
 
-    /** @var FFMPEGToolBox */
+    /** @var FFMPEGToolBoxInterface */
     private $ffmpegToolBox;
 
     /**
@@ -155,7 +154,7 @@ class MediaManager implements MediaManagerInterface
      * @param TypeManagerInterface $typeManager
      * @param TokenStorageInterface $tokenStorage
      * @param SecurityCheckerInterface $securityChecker
-     * @param FFMPEGToolBox $ffmpegToolBox
+     * @param FFMPEGToolBoxInterface $ffmpegToolBox
      * @param array $permissions
      * @param string $downloadPath
      * @param string $maxFileSize
@@ -172,7 +171,7 @@ class MediaManager implements MediaManagerInterface
         TypeManagerInterface $typeManager,
         TokenStorageInterface $tokenStorage = null,
         SecurityCheckerInterface $securityChecker = null,
-        FFMPEGToolBox $ffmpegToolBox,
+        FFMPEGToolBoxInterface $ffmpegToolBox,
         $permissions,
         $downloadPath,
         $maxFileSize
