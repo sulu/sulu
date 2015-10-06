@@ -723,7 +723,7 @@ class ContactController extends RestController implements ClassResourceInterface
      * the actual urls to the avatars thumbnail.
      *
      * @param array $contacts
-     * @param String $locale
+     * @param string $locale
      *
      * @return array
      */

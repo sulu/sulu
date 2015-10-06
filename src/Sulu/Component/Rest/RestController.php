@@ -312,7 +312,7 @@ abstract class RestController extends FOSRestController
      * route /contacts/list.
      *
      * @param array    $where
-     * @param String   $entityName
+     * @param string   $entityName
      * @param Function $entityFilter   function for filtering entities
      * @param array    $joinConditions to specify join conditions
      *

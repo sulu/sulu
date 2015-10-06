@@ -37,7 +37,7 @@ class KernelManipulator extends Manipulator
      *
      * @param string $bundle The bundle class name
      *
-     * @return Boolean true if it worked, false otherwise
+     * @return bool true if it worked, false otherwise
      *
      * @throws \RuntimeException If bundle is already defined
      */

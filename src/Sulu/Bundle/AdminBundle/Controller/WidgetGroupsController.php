@@ -27,7 +27,7 @@ class WidgetGroupsController extends Controller
     /**
      * renders a widget group.
      *
-     * @param String  $groupAlias
+     * @param string  $groupAlias
      * @param Request $request
      *
      * @return Response
