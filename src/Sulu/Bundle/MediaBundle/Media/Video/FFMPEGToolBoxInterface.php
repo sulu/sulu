@@ -14,7 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Media\Video;
 interface FFMPEGToolBoxInterface
 {
     /**
-     * returns the duration of a video
+     * returns the duration of a video.
      *
      * @param $video
      *

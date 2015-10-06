@@ -23,7 +23,7 @@ class FFMPEGToolBox implements FFMPEGToolBoxInterface
     }
 
     /**
-     * returns the duration of a video
+     * returns the duration of a video.
      *
      * @param $video
      *
@@ -44,6 +44,6 @@ class FFMPEGToolBox implements FFMPEGToolBoxInterface
             return $duration;
         }
 
-        return null;
+        return;
     }
 }
