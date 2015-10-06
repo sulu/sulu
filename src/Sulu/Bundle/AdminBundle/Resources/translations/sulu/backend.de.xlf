@@ -358,18 +358,6 @@
                 <source>labels.warning</source>
                 <target>Warnung</target>
             </trans-unit>
-            <trans-unit id="2647c238cae0fa45d7fbad336e43750f" resname="labels.success.content-deleted-desc">
-                <source>labels.success.content-deleted-desc</source>
-                <target>Seite erfolgreich gelöscht.</target>
-            </trans-unit>
-            <trans-unit id="487f946d51783a9899fa59d31dcfc3e8" resname="labels.success.content-save-desc">
-                <source>labels.success.content-save-desc</source>
-                <target>Node erfolgreich gespeichert.</target>
-            </trans-unit>
-            <trans-unit id="75435af307a7ae8f965923968a0e0f94" resname="labels.error.content-save-desc">
-                <source>labels.error.content-save-desc</source>
-                <target>Seite konnte nicht gespeichert werden.</target>
-            </trans-unit>
             <trans-unit id="58b06d6f4d02d93226d543aa6df546cc" resname="sulu.matcher.unmatched-column">
                 <source>sulu.matcher.unmatched-column</source>
                 <target>Nicht zugeordnete Spalte</target>

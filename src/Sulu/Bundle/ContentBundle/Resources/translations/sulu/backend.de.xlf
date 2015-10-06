@@ -495,6 +495,22 @@
                 <source>search-overlay.placeholder.page</source>
                 <target>Seiten durchsuchen...</target>
             </trans-unit>
+            <trans-unit id="75435af307a7ae8f965923968a0e0f94" resname="labels.error.content-save-desc">
+                <source>labels.error.content-save-desc</source>
+                <target>Seite konnte nicht gespeichert werden.</target>
+            </trans-unit>
+            <trans-unit id="75435af3a7a7a38f968923968a0e0f94" resname="labels.error.content-save-resource-locator">
+                <source>labels.error.content-save-resource-locator</source>
+                <target>Die angegebene Adresse ist nicht gültig.</target>
+            </trans-unit>
+            <trans-unit id="2647c238cae0fa45d7fbad336e43750f" resname="labels.success.content-deleted-desc">
+                <source>labels.success.content-deleted-desc</source>
+                <target>Seite erfolgreich gelöscht.</target>
+            </trans-unit>
+            <trans-unit id="487f946d51783a9899fa59d31dcfc3e8" resname="labels.success.content-save-desc">
+                <source>labels.success.content-save-desc</source>
+                <target>Node erfolgreich gespeichert.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

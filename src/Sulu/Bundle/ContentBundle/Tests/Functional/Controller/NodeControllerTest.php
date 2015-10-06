@@ -191,6 +191,27 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($uuid, $content->getParent()->getIdentifier());
     }
 
+    public function testPostWithExistingResourceLocator()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $data = [
+            'title' => 'news',
+            'tags' => [
+                'tag1',
+                'tag2',
+            ],
+            'url' => '/test',
+            'article' => 'Test',
+        ];
+
+        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
+        $this->assertequals(409, $client->getResponse()->getStatusCode());
+    }
+
     public function testGet()
     {
         $client = $this->createAuthenticatedClient();
