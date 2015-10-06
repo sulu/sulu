@@ -109,6 +109,24 @@
   cursor: pointer;
 }
 
+/* line 110, ../scss/modules/collection.scss */
+.fixed .collection-header-container {
+  width: 92.75%;
+  position: absolute;
+  background: #f1f1f1;
+  z-index: 98;
+  top: 0;
+}
+/* line 118, ../scss/modules/collection.scss */
+.fixed .datagrid-container {
+  margin-top: 150px;
+}
+
+/* line 124, ../scss/modules/collection.scss */
+.toolbar-hidden .collection-header-container {
+  top: -60px;
+}
+
 /* line 5, ../scss/modules/media-selection.scss */
 .media-selection-overlay-container,
 .media-selection-overlay {
