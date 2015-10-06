@@ -113,7 +113,7 @@ class FileVersion implements AuditableInterface
     /**
      * @var string
      */
-    private $properties = '';
+    private $properties = '{}';
 
     /**
      * Constructor.
