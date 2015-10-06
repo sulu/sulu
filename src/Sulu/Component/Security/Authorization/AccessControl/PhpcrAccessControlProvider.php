@@ -51,7 +51,7 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
             $allowedPermissions[$roleId] = $this->getAllowedPermissions($rolePermissions);
         }
 
-        $document = $this->documentManager->find($identifier);
+        $document = $this->documentManager->find($identifier, null, ['rehydrate' => false]);
         $document->setPermissions($allowedPermissions);
 
         $this->documentManager->persist($document);
@@ -66,17 +66,19 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
         $permissions = [];
 
         try {
-            $document = $this->documentManager->find($identifier);
+            $document = $this->documentManager->find($identifier, null, ['rehydrate' => false]);
         } catch (DocumentNotFoundException $e) {
             return $permissions;
         }
 
         $allowedPermissions = $document->getPermissions();
 
-        foreach ($allowedPermissions as $roleId => $rolePermissions) {
-            $permissions[$roleId] = [];
-            foreach ($this->permissions as $permission => $value) {
-                $permissions[$roleId][$permission] = in_array($permission, $rolePermissions);
+        if (is_array($allowedPermissions)) {
+            foreach ($allowedPermissions as $roleId => $rolePermissions) {
+                $permissions[$roleId] = [];
+                foreach ($this->permissions as $permission => $value) {
+                    $permissions[$roleId][$permission] = in_array($permission, $rolePermissions);
+                }
             }
         }
 

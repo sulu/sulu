@@ -11,8 +11,21 @@
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
 /**
- * Marker interface for entities which can be protected by access control list.
+ * Interface for entities which can be protected by access control list.
  */
 interface SecuredEntityInterface
 {
+    /**
+     * Returns the unique id of the entity.
+     *
+     * @return int
+     */
+    public function getId();
+
+    /**
+     * Returns the security context, to which this class of entity is attached.
+     *
+     * @return mixed
+     */
+    public function getSecurityContext();
 }

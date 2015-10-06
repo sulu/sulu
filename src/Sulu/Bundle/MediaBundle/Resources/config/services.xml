@@ -156,5 +156,24 @@
         <service id="sulu_media.ffmpeg_toolbox" class="%sulu_media.ffmpeg_toolbox.class%">
             <argument>%sulu_media.ffmpeg.path%</argument>
         </service>
+
+        <service id="sulu_media.js_config" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">
+            <argument>sulu-media</argument>
+            <argument type="collection">
+                <argument key="permissions" type="expression">
+                    service('sulu_security.access_control_manager').getUserPermissions(
+                        service('sulu_media.security_context'),
+                        service('security.token_storage').getToken().getUser()
+                    )
+                </argument>
+            </argument>
+
+            <tag name="sulu.js_config"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_media.security_context" class="Sulu\Component\Security\Authorization\SecurityCondition">
+            <argument>sulu.media.collections</argument>
+        </service>
     </services>
 </container>
