@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Video;
 
-
 class FFMPEGToolBox implements FFMPEGToolBoxInterface
 {
     /** @var string */
