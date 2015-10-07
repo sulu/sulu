@@ -38,4 +38,12 @@ class ContactDataProvider extends BaseDataProvider
             $data
         );
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getSerializationContext()
+    {
+        return parent::getSerializationContext()->setGroups(['fullContact', 'partialAccount']);
+    }
 }
