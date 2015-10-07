@@ -84,8 +84,8 @@ class ManagedStructure extends Structure
         $contentType->read(
             $this->node,
             $property,
-            null,
-            null,
+            $bridge->getWebspaceKey(),
+            $bridge->getLanguageCode(),
             null
         );
 

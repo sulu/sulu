@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
@@ -149,6 +150,9 @@ class NodeController extends RestController
                 }
             }
         );
+
+        // preview needs also null value to work correctly
+        $view->setSerializationContext(SerializationContext::create()->setSerializeNull(true));
 
         return $this->handleView($view);
     }
