@@ -340,7 +340,7 @@ define([
             this.sandbox.on('sulu.content.contents.order', this.order, this);
 
             // get resource locator
-            this.sandbox.once('sulu.content.contents.get-rl', function(title, callback) {
+            this.sandbox.on('sulu.content.contents.get-rl', function(title, callback) {
                 this.getResourceLocator(title, this.template, callback);
             }, this);
 
