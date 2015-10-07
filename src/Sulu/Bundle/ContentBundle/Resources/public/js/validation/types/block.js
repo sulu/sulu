@@ -228,6 +228,10 @@ define([
                     this.bindDomEvents();
                     this.checkSortable();
                     this.setValue([]);
+
+                    $('#collapse-text-blocks-' + this.id).addClass('hidden');
+                    $('#expand-text-blocks-' + this.id).addClass('hidden');
+                    this.checkFullAndEmpty();
                 },
 
                 getChildren: function() {
@@ -334,7 +338,6 @@ define([
                  * Collapses all text-blocks
                  */
                 collapseAll: function() {
-
                     this.getChildren().each(function(i, block) {
                         collapseBlock.call(this, $(block));
                     }.bind(this));
@@ -407,6 +410,8 @@ define([
                             form.mapper.setData(data, $template).then(function() {
                                 if (!keepExpanded) {
                                     collapseBlock.call(this, $template);
+                                } else {
+                                    expandBlock.call(this, $template);
                                 }
                                 dfd.resolve();
                                 if (!!fireEvent) {
