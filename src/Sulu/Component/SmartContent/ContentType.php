@@ -353,6 +353,8 @@ class ContentType extends ComplexContentType
                 'paginated' => false,
                 'referencedUuids' => [],
                 'categoryRoot' => $params['category_root']->getValue(),
+                'categoriesParameter' => $params['categories_parameter']->getValue(),
+                'tagsParameter' => $params['tags_parameter']->getValue(),
             ],
             $config
         );

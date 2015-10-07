@@ -715,6 +715,8 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                     'paginated' => false,
                     'referencedUuids' => [],
                     'categoryRoot' => null,
+                    'categoriesParameter' => 'categories',
+                    'tagsParameter' => 'tags',
                 ],
                 $config,
                 ['page' => $page, 'hasNextPage' => $hasNextPage]
