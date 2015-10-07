@@ -453,7 +453,7 @@ class ContactRepositoryTest extends SuluTestCase
             );
         }
 
-        // if tags isset replace the array indexes with database id
+        // if website tags isset replace the array indexes with database id
         if (array_key_exists('websiteTags', $filters)) {
             $filters['websiteTags'] = array_map(
                 function ($tag) {
@@ -463,7 +463,7 @@ class ContactRepositoryTest extends SuluTestCase
             );
         }
 
-        // if tags isset replace the array indexes with database id
+        // if categories isset replace the array indexes with database id
         if (array_key_exists('categories', $filters)) {
             $filters['categories'] = array_map(
                 function ($category) {
@@ -473,7 +473,7 @@ class ContactRepositoryTest extends SuluTestCase
             );
         }
 
-        // if tags isset replace the array indexes with database id
+        // if website categories isset replace the array indexes with database id
         if (array_key_exists('websiteCategories', $filters)) {
             $filters['websiteCategories'] = array_map(
                 function ($category) {

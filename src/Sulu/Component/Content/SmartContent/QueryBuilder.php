@@ -124,7 +124,7 @@ class QueryBuilder extends ContentQueryBuilder
         }
 
         // build where clause for website categories
-        if ($this->hasConfig('categories')) {
+        if ($this->hasConfig('websiteCategories')) {
             $sql2Where[] = $this->buildCategoriesWhere(
                 $this->getConfig('websiteCategories', []),
                 $this->getConfig('websiteCategoryOperator', 'OR'),

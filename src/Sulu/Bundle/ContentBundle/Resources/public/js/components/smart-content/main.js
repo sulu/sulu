@@ -158,9 +158,9 @@ define(['services/husky/util'], function(util) {
             includeSubSelector: '.includeSubCheck',
             tagListClass: 'tag-list',
             tagOperatorClass: 'tag-list-operator-dropdown',
-            sortByDDClass: 'sort-by-dropdown',
-            sortMethodDDClass: 'sort-method-dropdown',
-            presentAsDDClass: 'present-as-dropdown',
+            sortByDropdownClass: 'sort-by-dropdown',
+            sortMethodDropdownClass: 'sort-method-dropdown',
+            presentAsDropdownClass: 'present-as-dropdown',
             limitToSelector: '.limit-to',
             dataSourceSelector: '.data-source',
             contentListClass: 'items-list',
@@ -174,27 +174,27 @@ define(['services/husky/util'], function(util) {
             skeleton: [
                 '<div class="white-box smart-content-container form-element">',
                 '<div class="header">',
-                '   <span class="selected-counter">',
-                '       <span class="num">0</span>',
-                '       <span><%= selectedCounterStr %></span>',
-                '   </span>',
-                '   <span class="no-content-message"><%= noContentStr %></span>',
+                '    <span class="selected-counter">',
+                '        <span class="num">0</span>',
+                '        <span><%= selectedCounterStr %></span>',
+                '    </span>',
+                '    <span class="no-content-message"><%= noContentStr %></span>',
                 '</div>',
                 '<div class="content"></div>',
                 '</div>'
             ].join(''),
             source: [
                 '<span class="text">',
-                '   <span class="source">',
-                '       <span class="desc"><%= desc %></span>',
-                '       <span class="val"><%= val %></span>',
-                '   </span>',
+                '    <span class="source">',
+                '        <span class="desc"><%= desc %></span>',
+                '        <span class="val"><%= val %></span>',
+                '    </span>',
                 '</span>'
             ].join(''),
             contentItem: [
                 '<li data-id="<%= dataId %>">',
-                '   <span class="num"><%= num %></span>',
-                '   <span class="value"><%= value %></span>',
+                '    <span class="num"><%= num %></span>',
+                '    <span class="value"><%= value %></span>',
                 '</li>'
             ].join(''),
             categoryItem: [
@@ -208,76 +208,76 @@ define(['services/husky/util'], function(util) {
 
                 dataSource: [
                     '<div class="item-half left">',
-                    '   <span class="desc"><%= dataSourceLabelStr %></span>',
-                    '   <div class="btn action fit" id="select-data-source-action"><%= dataSourceButtonStr %></div>',
-                    '   <div><span class="sublabel"><%= dataSourceLabelStr %>:</span> <span class="sublabel data-source"><%= dataSourceValStr %></span></div>',
+                    '    <span class="desc"><%= dataSourceLabelStr %></span>',
+                    '    <div class="btn action fit" id="select-data-source-action"><%= dataSourceButtonStr %></div>',
+                    '    <div><span class="sublabel"><%= dataSourceLabelStr %>:</span> <span class="sublabel data-source"><%= dataSourceValStr %></span></div>',
                     '</div>'
                 ].join(''),
 
                 categories: [
                     '<div class="item">',
-                    '   <div class="categories-loader"></div>',
-                    '   <div class="categories-container" style="display: none;">',
-                    '       <span class="desc"><%= categoriesLabelStr %></span>',
-                    '       <div class="btn action fit select-categories-btn" id="select-categories-action"><%= categoriesButtonStr %></div>',
-                    '       <div class="sublabel"><span><%= categoriesStr %> (<span class="amount-selected-categories"></span>):</span> <span class="selected-categories"></span></div>',
-                    '   </div>',
+                    '    <div class="categories-loader"></div>',
+                    '    <div class="categories-container" style="display: none;">',
+                    '        <span class="desc"><%= categoriesLabelStr %></span>',
+                    '        <div class="btn action fit select-categories-btn" id="select-categories-action"><%= categoriesButtonStr %></div>',
+                    '        <div class="sublabel"><span><%= categoriesStr %> (<span class="amount-selected-categories"></span>):</span> <span class="selected-categories"></span></div>',
+                    '    </div>',
                     '</div>'
                 ].join(''),
 
                 subFolders: [
                     '<div class="item-half">',
-                    '   <div class="check<%= disabled %>">',
-                    '       <label>',
-                    '           <div class="custom-checkbox">',
-                    '               <input type="checkbox" class="includeSubCheck form-element"<%= includeSubCheckedStr %>/>',
-                    '               <span class="icon"></span>',
-                    '           </div>',
-                    '           <span class="description"><%= includeSubStr %></span>',
-                    '       </label>',
-                    '   </div>',
+                    '    <div class="check<%= disabled %>">',
+                    '        <label>',
+                    '            <div class="custom-checkbox">',
+                    '                <input type="checkbox" class="includeSubCheck form-element"<%= includeSubCheckedStr %>/>',
+                    '                <span class="icon"></span>',
+                    '            </div>',
+                    '            <span class="description"><%= includeSubStr %></span>',
+                    '        </label>',
+                    '    </div>',
                     '</div>'
                 ].join(''),
 
                 tagList: [
                     '<div class="item-half left tags<%= disabled %>">',
-                    '   <span class="desc"><%= filterByTagsStr %></span>',
-                    '   <div class="' + constants.tagListClass + '"></div>',
+                    '    <span class="desc"><%= filterByTagsStr %></span>',
+                    '    <div class="' + constants.tagListClass + '"></div>',
                     '</div>'
                 ].join(''),
 
                 tagOperator: [
                     '<div class="item-half<%= disabled %>">',
-                    '   <span class="desc">&nbsp;</span>',
-                    '   <div class="' + constants.tagOperatorClass + '"></div>',
+                    '    <span class="desc">&nbsp;</span>',
+                    '    <div class="' + constants.tagOperatorClass + '"></div>',
                     '</div>'
                 ].join(''),
 
                 sortBy: [
                     '<div class="item-half left">',
-                    '   <span class="desc"><%= sortByStr %></span>',
-                    '   <div class="' + constants.sortByDDClass + '"></div>',
+                    '    <span class="desc"><%= sortByStr %></span>',
+                    '    <div class="' + constants.sortByDropdownClass + '"></div>',
                     '</div>'
                 ].join(''),
 
                 sortMethod: [
                     '<div class="item-half">',
-                    '   <span class="desc">&nbsp;</span>',
-                    '   <div class="' + constants.sortMethodDDClass + '"></div>',
+                    '    <span class="desc">&nbsp;</span>',
+                    '    <div class="' + constants.sortMethodDropdownClass + '"></div>',
                     '</div>'
                 ].join(''),
 
                 presentAs: [
                     '<div class="item-half left">',
-                    '   <span class="desc"><%= presentAsStr %></span>',
-                    '   <div class="' + constants.presentAsDDClass + '"></div>',
+                    '    <span class="desc"><%= presentAsStr %></span>',
+                    '    <div class="' + constants.presentAsDropdownClass + '"></div>',
                     '</div>'
                 ].join(''),
 
                 limitResult: [
                     '<div class="item-half">',
-                    '   <span class="desc"><%= limitResultToStr %></span>',
-                    '   <input type="text" value="<%= limitResult %>" class="limit-to form-element"<%= disabled %>/>',
+                    '    <span class="desc"><%= limitResultToStr %></span>',
+                    '    <input type="text" value="<%= limitResult %>" class="limit-to form-element"<%= disabled %>/>',
                     '</div>'
                 ].join('')
             }
@@ -1026,8 +1026,8 @@ define(['services/husky/util'], function(util) {
                 {
                     name: 'select@husky',
                     options: {
-                        el: this.sandbox.dom.find('.' + constants.sortByDDClass, this.$overlayContent),
-                        instanceName: this.options.instanceName + constants.sortByDDClass,
+                        el: this.sandbox.dom.find('.' + constants.sortByDropdownClass, this.$overlayContent),
+                        instanceName: this.options.instanceName + constants.sortByDropdownClass,
                         value: 'name',
                         data: this.options.sortBy,
                         preSelectedElements: [this.options.preSelectedSortBy],
@@ -1039,8 +1039,8 @@ define(['services/husky/util'], function(util) {
                 {
                     name: 'select@husky',
                     options: {
-                        el: this.sandbox.dom.find('.' + constants.sortMethodDDClass, this.$overlayContent),
-                        instanceName: this.options.instanceName + constants.sortMethodDDClass,
+                        el: this.sandbox.dom.find('.' + constants.sortMethodDropdownClass, this.$overlayContent),
+                        instanceName: this.options.instanceName + constants.sortMethodDropdownClass,
                         value: 'name',
                         data: [
                             {id: sortMethods.asc, name: this.sandbox.translate(this.translations.ascending)},
@@ -1053,8 +1053,8 @@ define(['services/husky/util'], function(util) {
                 {
                     name: 'select@husky',
                     options: {
-                        el: this.sandbox.dom.find('.' + constants.presentAsDDClass, this.$overlayContent),
-                        instanceName: this.options.instanceName + constants.presentAsDDClass,
+                        el: this.sandbox.dom.find('.' + constants.presentAsDropdownClass, this.$overlayContent),
+                        instanceName: this.options.instanceName + constants.presentAsDropdownClass,
                         defaultLabel: this.sandbox.translate(this.translations.choosePresentAs),
                         value: 'name',
                         data: this.options.presentAs,
@@ -1189,21 +1189,21 @@ define(['services/husky/util'], function(util) {
                 }.bind(this));
 
             //sort by
-            this.sandbox.emit('husky.select.' + this.options.instanceName + constants.sortByDDClass + '.get-checked',
+            this.sandbox.emit('husky.select.' + this.options.instanceName + constants.sortByDropdownClass + '.get-checked',
                 function(sortBy) {
                     this.overlayData.sortBy = sortBy;
                     sortByDef.resolve();
                 }.bind(this));
 
             //sort method
-            this.sandbox.emit('husky.select.' + this.options.instanceName + constants.sortMethodDDClass + '.get-checked',
+            this.sandbox.emit('husky.select.' + this.options.instanceName + constants.sortMethodDropdownClass + '.get-checked',
                 function(sortMethod) {
                     this.overlayData.sortMethod = (sortMethod[0] === sortMethods.asc) ? 'asc' : 'desc';
                     sortMethodDef.resolve();
                 }.bind(this));
 
             //present as
-            this.sandbox.emit('husky.select.' + this.options.instanceName + constants.presentAsDDClass + '.get-checked',
+            this.sandbox.emit('husky.select.' + this.options.instanceName + constants.presentAsDropdownClass + '.get-checked',
                 function(presentAs) {
                     if (presentAs.length === 1) {
                         this.overlayData.presentAs = presentAs[0];

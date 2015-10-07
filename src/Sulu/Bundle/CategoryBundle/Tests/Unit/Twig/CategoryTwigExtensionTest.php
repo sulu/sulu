@@ -48,7 +48,7 @@ class CategoryTwigExtensionTest extends \PHPUnit_Framework_TestCase
     private function createCategoryEntity(array $data)
     {
         $category = $this->prophesize(ApiCategory::class);
-        $category->getid()->willReturn($data['id']);
+        $category->getId()->willReturn($data['id']);
         $category->getName()->willReturn($data['name']);
 
         return $category->reveal();
@@ -57,7 +57,7 @@ class CategoryTwigExtensionTest extends \PHPUnit_Framework_TestCase
     private function createCategoryApi($data)
     {
         $category = $this->prophesize(EntityCategory::class);
-        $category->getid()->willReturn($data['id']);
+        $category->getId()->willReturn($data['id']);
 
         return $category->reveal();
     }

@@ -11,15 +11,14 @@ define(['services/husky/util'], function(util) {
 
     'use strict';
 
-    var
-        /**
-         * Create event name with namespace and postfix.
-         * @param {String} eventNamespace
-         * @param {String} postFix
-         * @param {String} instanceName
-         * @returns {string}
-         */
-        createEventName = function(eventNamespace, postFix, instanceName) {
+    /**
+     * Create event name with namespace and postfix.
+     * @param {String} eventNamespace
+     * @param {String} postFix
+     * @param {String} instanceName
+     * @returns {string}
+     */
+    var createEventName = function(eventNamespace, postFix, instanceName) {
             return eventNamespace + (!!instanceName ? instanceName + '.' : '') + postFix;
         },
 

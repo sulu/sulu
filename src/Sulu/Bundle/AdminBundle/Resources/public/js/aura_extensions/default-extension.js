@@ -14,7 +14,7 @@ define(['services/husky/util', 'services/husky/translator'], function(util, tran
     return function(app) {
         /**
          * Gets executed every time BEFORE a component gets initialized.
-         * Loads data if needed and start executing component handlers
+         * Loads data if needed and start executing component handlers.
          */
         app.components.before('initialize', function() {
             if (!this.defaults) {
