@@ -58,11 +58,9 @@ define([
          * @returns {*}
          */
         loadComponentData: function() {
-            var promise = this.sandbox.data.deferred();
-            CollectionManager.loadOrNew(this.options.id, UserSettingsManager.getMediaLocale()).then(function(data) {
+            return CollectionManager.loadOrNew(this.options.id, UserSettingsManager.getMediaLocale()).then(function(data) {
                 promise.resolve(data);
             });
-            return promise;
         },
 
         /**
