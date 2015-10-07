@@ -20,7 +20,28 @@ class PathCleanupTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->cleaner = new PathCleanup();
+        $this->cleaner = new PathCleanup(
+            [
+                'default' => [
+                    ' ' => '-',
+                    '+' => '-',
+                    '.' => '-',
+                ],
+                'de' => [
+                    'ä' => 'ae',
+                    'ö' => 'oe',
+                    'ü' => 'ue',
+                    'Ä' => 'ae',
+                    'Ö' => 'oe',
+                    'Ü' => 'ue',
+                    'ß' => 'ss',
+                    '&' => 'und',
+                ],
+                'en' => [
+                    '&' => 'and',
+                ],
+            ]
+        );
     }
 
     public function testCleanup()
