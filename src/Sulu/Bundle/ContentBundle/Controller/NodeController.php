@@ -18,6 +18,7 @@ use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
+use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -414,37 +415,41 @@ class NodeController extends RestController
      */
     public function postAction(Request $request)
     {
-        $language = $this->getLanguage($request);
-        $webspace = $this->getWebspace($request);
-        $template = $this->getRequestParameter($request, 'template', true);
-        $isShadow = $this->getRequestParameter($request, 'isShadow', false);
-        $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
-        $parent = $this->getRequestParameter($request, 'parent');
-        $state = $this->getRequestParameter($request, 'state');
-        if ($state !== null) {
-            $state = intval($state);
+        try {
+            $language = $this->getLanguage($request);
+            $webspace = $this->getWebspace($request);
+            $template = $this->getRequestParameter($request, 'template', true);
+            $isShadow = $this->getRequestParameter($request, 'isShadow', false);
+            $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
+            $parent = $this->getRequestParameter($request, 'parent');
+            $state = $this->getRequestParameter($request, 'state');
+            if ($state !== null) {
+                $state = intval($state);
+            }
+            $type = $request->query->get('type', Structure::TYPE_PAGE);
+
+            $data = $request->request->all();
+
+            $mapperRequest = ContentMapperRequest::create()
+                ->setType($type)
+                ->setTemplateKey($template)
+                ->setWebspaceKey($webspace)
+                ->setUserId($this->getUser()->getId())
+                ->setState($state)
+                ->setIsShadow($isShadow)
+                ->setShadowBaseLanguage($shadowBaseLanguage)
+                ->setLocale($language)
+                ->setParentUuid($parent)
+                ->setData($data);
+
+            $result = $this->getRepository()->saveNodeRequest($mapperRequest);
+
+            return $this->handleView($this->view($result));
+        } catch (ResourceLocatorNotValidException $e) {
+            $restException = new RestException('The chosen ResourceLocator is not valid');
+
+            return $this->handleView($this->view($restException->toArray(), 409));
         }
-        $type = $request->query->get('type', Structure::TYPE_PAGE);
-
-        $data = $request->request->all();
-
-        $mapperRequest = ContentMapperRequest::create()
-            ->setType($type)
-            ->setTemplateKey($template)
-            ->setWebspaceKey($webspace)
-            ->setUserId($this->getUser()->getId())
-            ->setState($state)
-            ->setIsShadow($isShadow)
-            ->setShadowBaseLanguage($shadowBaseLanguage)
-            ->setLocale($language)
-            ->setParentUuid($parent)
-            ->setData($data);
-
-        $result = $this->getRepository()->saveNodeRequest($mapperRequest);
-
-        return $this->handleView(
-            $this->view($result)
-        );
     }
 
     /**

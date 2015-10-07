@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1660 [ContentBundle]   Added separate error message for occupied resource locator
     * BUGFIX      #1655 [ContentBundle]   Fixed ghost pages and phpcr access control provider
     * BUGFIX      #1649 [ContentBundle]   Fixed floating of block type select
     * BUGFIX      #1646 [ContactBundle]   Fixed upload of contact-avatar when a position is applied to the contact
