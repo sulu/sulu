@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * BUGFIX      #1665 [ContentBundle]   Fixed creation of new url after template change
+    * BUGFIX      #1666 [ContentBundle]   Fixed min occurs 0 for blocks
     * BUGFIX      #1660 [ContentBundle]   Added separate error message for occupied resource locator
     * BUGFIX      #1655 [ContentBundle]   Fixed ghost pages and phpcr access control provider
     * FEATURE     #1606 [SmartContent]    Added filter by categories to SmartContent Component

@@ -2,6 +2,10 @@
 
 ## dev-develop
 
+### XML-Templates
+Blocks now supports `minOccurs="0"` and `maxOccurs > 127`. For that the validation was improved and for both negative
+values wont be supported anymore.
+
 ### ApiCategory
 The function `getTranslation` was removed.  This avoid a INSERT SQL Exception when a serialization of categories
 (without translation) is called in the same request.
