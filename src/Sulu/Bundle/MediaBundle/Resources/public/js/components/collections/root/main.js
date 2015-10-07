@@ -79,9 +79,11 @@ define(['services/sulumedia/media-manager',
 
                 // this isn't a perfect strategy because datagrid is rerendered on all three events
                 // todo: find a better strategy to change pagination and view-decorator and load first page
-                this.sandbox.emit('husky.datagrid.view.change', 'table');
-                this.sandbox.emit('husky.datagrid.pagination.change', 'dropdown');
-                this.sandbox.emit('husky.datagrid.change.page', 1);
+                this.sandbox.emit('husky.datagrid.change.page', 1, UserSettingsManager.getDropdownPageSize());
+                this.sandbox.once('husky.datagrid.updated', function() {
+                    this.sandbox.emit('husky.datagrid.view.change', 'table');
+                    this.sandbox.emit('husky.datagrid.pagination.change', 'dropdown');
+                }.bind(this));
             }.bind(this));
 
             // change datagrid view to masonry
@@ -91,9 +93,11 @@ define(['services/sulumedia/media-manager',
 
                 // this isn't a perfect strategy because datagrid is rerendered on all three events
                 // todo: find a better strategy to change pagination and view-decorator and load first page
-                this.sandbox.emit('husky.datagrid.view.change', 'datagrid/decorators/masonry-view');
-                this.sandbox.emit('husky.datagrid.pagination.change', 'infinite-scroll');
-                this.sandbox.emit('husky.datagrid.change.page', 1);
+                this.sandbox.emit('husky.datagrid.change.page', 1, UserSettingsManager.getInfinityPageSize());
+                this.sandbox.once('husky.datagrid.updated', function() {
+                    this.sandbox.emit('husky.datagrid.view.change', 'datagrid/decorators/masonry-view');
+                    this.sandbox.emit('husky.datagrid.pagination.change', 'infinite-scroll');
+                }.bind(this));
             }.bind(this));
 
             // download media
@@ -114,7 +118,13 @@ define(['services/sulumedia/media-manager',
          * Render the component
          */
         render: function() {
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/collection/files'));
+            this.sandbox.dom.html(
+                this.$el,
+                this.renderTemplate(
+                    '/admin/media/template/collection/files',
+                    {title: this.sandbox.translate('sulu.media.all')}
+                )
+            );
             this.startDatagrid();
         },
 

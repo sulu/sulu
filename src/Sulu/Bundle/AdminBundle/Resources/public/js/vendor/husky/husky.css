@@ -10457,20 +10457,25 @@ a.btn-black, a.btn-highlight {
   visibility: visible;
   height: 0px;
 }
-/* line 319, ../scss/modules/datagrid.scss */
+/* line 318, ../scss/modules/datagrid.scss */
+.husky-datagrid .selected-elements .show-selected {
+  color: #000;
+  cursor: pointer;
+}
+/* line 324, ../scss/modules/datagrid.scss */
 .husky-datagrid .medium-loader {
   overflow: hidden;
   height: 0px;
   transition: all 200ms;
   margin-top: 0px;
 }
-/* line 325, ../scss/modules/datagrid.scss */
+/* line 330, ../scss/modules/datagrid.scss */
 .husky-datagrid .medium-loader.show {
   height: 70px;
   margin-top: 10px;
 }
 
-/* line 334, ../scss/modules/datagrid.scss */
+/* line 339, ../scss/modules/datagrid.scss */
 .editable .husky-validate-error .husky-input input {
   height: 30px;
   margin-top: -30px;
