@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1664 [SearchBundle]    Fixed search-results deep links
     * BUGFIX      #1660 [ContentBundle]   Added separate error message for occupied resource locator
     * BUGFIX      #1655 [ContentBundle]   Fixed ghost pages and phpcr access control provider
     * FEATURE     #1606 [SmartContent]    Added filter by categories to SmartContent Component
