@@ -70,7 +70,7 @@ class ReindexListener
 
         // TODO: We cannot select all contents via. the parent type, see: https://github.com/jackalope/jackalope-doctrine-dbal/issues/217
         $query = $this->documentManager->createQuery(
-            'SELECT * FROM [nt:unstructured] AS a WHERE [jcr:mixinTypes] = "sulu:page" or [jcr:mixinTypes] = "sulu:snippet"'
+            'SELECT * FROM [nt:unstructured] AS a WHERE [jcr:mixinTypes] = "sulu:page" or [jcr:mixinTypes] = "sulu:home" or [jcr:mixinTypes] = "sulu:snippet"'
         );
 
         $count = [];
