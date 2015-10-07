@@ -5,6 +5,9 @@ CHANGELOG for Sulu
     * BUGFIX      #1660 [ContentBundle]   Added separate error message for occupied resource locator
     * BUGFIX      #1655 [ContentBundle]   Fixed ghost pages and phpcr access control provider
     * BUGFIX      #1649 [ContentBundle]   Fixed floating of block type select
+    * BUGFIX      #1650 [LocationBundle]  Fixed configure overlay open multiple times 
+    * BUGFIX      #1650 [ContentBundle]   Fixed serialization of null values
+    * BUGFIX      #1650 [ContentBundle]   Fixed show ghost and shadow toggler in content column view
     * BUGFIX      #1646 [ContactBundle]   Fixed upload of contact-avatar when a position is applied to the contact
     * BUGFIX      #1645 [CategoryBundle]  Removed automatic category translation
     * FEATURE     #1644 [MediaBundle]     Show collection UI elements based on security

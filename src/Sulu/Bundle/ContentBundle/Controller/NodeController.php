@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
@@ -151,6 +152,9 @@ class NodeController extends RestController
             }
         );
 
+        // preview needs also null value to work correctly
+        $view->setSerializationContext(SerializationContext::create()->setSerializeNull(true));
+
         return $this->handleView($view);
     }
 
@@ -159,7 +163,7 @@ class NodeController extends RestController
      * This functionality is required for preloading the content navigation.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param string                                    $uuid
+     * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -168,7 +172,7 @@ class NodeController extends RestController
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request, false);
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
-
+        $excludeShadows = $this->getBooleanRequestParameter($request, 'exclude-shadows', false, false);
         $appendWebspaceNode = $this->getBooleanRequestParameter($request, 'webspace-node', false, false);
 
         try {
@@ -178,6 +182,7 @@ class NodeController extends RestController
                     $webspace,
                     $language,
                     $excludeGhosts,
+                    $excludeShadows,
                     $appendWebspaceNode
                 );
             } elseif ($webspace !== null) {

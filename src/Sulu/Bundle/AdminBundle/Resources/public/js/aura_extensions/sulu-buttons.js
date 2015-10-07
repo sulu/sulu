@@ -256,6 +256,16 @@
                     }
                 },
                 {
+                    name: 'toggler-on',
+                    template: {
+                        title: '',
+                        content: '<div ' +
+                        'data-aura-component="toggler@husky" ' +
+                        'data-aura-checked="true" ' +
+                        'data-aura-instance-name="sulu-toolbar"></div>'
+                    }
+                },
+                {
                     name: 'saveWithOptions',
                     template: {
                         icon: 'floppy-o',
