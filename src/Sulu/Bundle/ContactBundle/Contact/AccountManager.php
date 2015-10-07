@@ -23,11 +23,12 @@ use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 
 /**
  * This Manager handles Account functionality.
  */
-class AccountManager extends AbstractContactManager
+class AccountManager extends AbstractContactManager implements DataProviderRepositoryInterface
 {
     protected $addressEntity = 'SuluContactBundle:Address';
 
@@ -47,12 +48,12 @@ class AccountManager extends AbstractContactManager
     private $contactRepository;
 
     /**
-     * @param ObjectManager         $em
-     * @param TagManagerInterface   $tagManager
+     * @param ObjectManager $em
+     * @param TagManagerInterface $tagManager
      * @param MediaManagerInterface $mediaManager
-     * @param AccountFactory        $accountFactory
-     * @param AccountRepository     $accountRepository
-     * @param ContactRepository     $contactRepository
+     * @param AccountFactory $accountFactory
+     * @param AccountRepository $accountRepository
+     * @param ContactRepository $contactRepository
      */
     public function __construct(
         ObjectManager $em,
@@ -71,9 +72,9 @@ class AccountManager extends AbstractContactManager
     /**
      * adds an address to the entity.
      *
-     * @param AccountApi    $account The entity to add the address to
+     * @param AccountApi $account The entity to add the address to
      * @param AddressEntity $address The address to be added
-     * @param bool          $isMain  Defines if the address is the main Address of the contact
+     * @param bool $isMain Defines if the address is the main Address of the contact
      *
      * @return AccountAddressEntity
      *
@@ -101,7 +102,7 @@ class AccountManager extends AbstractContactManager
     /**
      * removes the address relation from a contact and also deletes the address if it has no more relations.
      *
-     * @param AccountInterface     $account
+     * @param AccountInterface $account
      * @param AccountAddressEntity $accountAddress
      *
      * @return mixed|void
@@ -345,5 +346,20 @@ class AccountManager extends AbstractContactManager
         if ($entity->getBankAccounts()) {
             $this->deleteAllEntitiesOfCollection($entity->getBankAccounts());
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findByFilters($filters, $page, $pageSize, $limit, $locale)
+    {
+        $entities = $this->accountRepository->findByFilters($filters, $page, $pageSize, $limit, $locale);
+
+        return array_map(
+            function ($contact) use ($locale) {
+                return $this->getApiObject($contact, $locale);
+            },
+            $entities
+        );
     }
 }

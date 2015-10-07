@@ -4,6 +4,8 @@ CHANGELOG for Sulu
 * dev-develop
     * BUGFIX      #1660 [ContentBundle]   Added separate error message for occupied resource locator
     * BUGFIX      #1655 [ContentBundle]   Fixed ghost pages and phpcr access control provider
+    * FEATURE     #1606 [SmartContent]    Added filter by categories to SmartContent Component
+    * FEATURE     #1606 [CategoryBundle]  Added TwigExtension to handle categories in twig templates
     * BUGFIX      #1649 [ContentBundle]   Fixed floating of block type select
     * BUGFIX      #1650 [LocationBundle]  Fixed configure overlay open multiple times 
     * BUGFIX      #1650 [ContentBundle]   Fixed serialization of null values

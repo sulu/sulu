@@ -1120,6 +1120,8 @@ class NodeControllerTest extends SuluTestCase
         unset($data[0]['changed']);
         unset($data[0]['changed']);
         unset($response['changed']);
+        unset($data[0]['linked']);
+        unset($response['linked']);
 
         $this->assertEquals($data[0], $response);
     }

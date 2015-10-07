@@ -36,7 +36,7 @@
                         name: 'displayDevices',
                         template: {
                             title: 'sulu.preview.auto',
-                            icon: 'mobile',
+                            icon: 'expand',
                             dropdownOptions: {
                                 markSelected: true,
                                 changeButton: true
@@ -113,7 +113,7 @@
                         template: {
                             id: 'display-auto',
                             title: 'sulu.preview.auto',
-                            icon: 'mobile',
+                            icon: 'expand',
                             marked: true,
                             callback: function() {
                                 this.sandbox.emit('sulu.toolbar.display-device', 'auto');

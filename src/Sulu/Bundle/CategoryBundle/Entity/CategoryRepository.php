@@ -117,7 +117,7 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
             $queryBuilder = $this->getCategoryQuery()
                 ->from('SuluCategoryBundle:Category', 'parent')
                 ->andWhere('parent.key = :key')
-                ->andWhere('category.lft = parent.lft + 1');
+                ->andWhere('category.parent = parent');
 
             if ($sortBy) {
                 $sortOrder = ($sortOrder) ? $sortOrder : 'asc';

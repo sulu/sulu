@@ -28,8 +28,9 @@ use Sulu\Bundle\ContentBundle\Content\Types\Phone;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 
-class ContactManager extends AbstractContactManager
+class ContactManager extends AbstractContactManager implements DataProviderRepositoryInterface
 {
     /**
      * @var AccountRepository
@@ -573,5 +574,20 @@ class ContactManager extends AbstractContactManager
     public function getContactEntityName()
     {
         return $this->contactRepository->getClassName();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findByFilters($filters, $page, $pageSize, $limit, $locale)
+    {
+        $entities = $this->contactRepository->findByFilters($filters, $page, $pageSize, $limit, $locale);
+
+        return array_map(
+            function ($contact) use ($locale) {
+                return $this->getApiObject($contact, $locale);
+            },
+            $entities
+        );
     }
 }

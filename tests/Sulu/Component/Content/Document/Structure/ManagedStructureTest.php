@@ -105,11 +105,14 @@ class ManagedStructureTest extends \PHPUnit_Framework_TestCase
             $this->propertyFactory->createProperty($this->structureMetadataProperty->reveal(), $locale)->willReturn($this->legacyProperty->reveal());
         }
 
+        $this->inspector->getWebspace($this->document->reveal())->willReturn('sulu_io');
+        $this->inspector->getOriginalLocale($this->document->reveal())->willReturn($locale);
+
         $this->contentType->read(
             $this->node->reveal(),
             $this->legacyProperty->reveal(),
-            null,
-            null,
+            'sulu_io',
+            $locale,
             null
         )->shouldBeCalledTimes(1);
 

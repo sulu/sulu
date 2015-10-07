@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Tag\Request;
 
-use Sulu\Bundle\TagBundle\Entity\Tag;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -50,13 +49,17 @@ class TagRequestHandler implements TagRequestHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function appendTagToUrl(Tag $tag, $tagsParameter = 'tags')
+    public function appendTagToUrl($tag, $tagsParameter = 'tags')
     {
         $request = $this->requestStack->getCurrentRequest();
 
+        if (is_array($tag) && !array_key_exists('name', $tag)) {
+            return;
+        }
+
         // extend comma separated list
         $tags = $request->get($tagsParameter, '');
-        $tagsArray = array_filter(array_merge(explode(',', $tags), [$tag->getName()]));
+        $tagsArray = array_filter(array_merge(explode(',', $tags), [$tag['name']]));
         $tags = implode(',', array_unique($tagsArray));
 
         // get all parameter and extend with new tags string
@@ -71,13 +74,17 @@ class TagRequestHandler implements TagRequestHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function setTagToUrl(Tag $tag, $tagsParameter = 'tags')
+    public function setTagToUrl($tag, $tagsParameter = 'tags')
     {
         $request = $this->requestStack->getCurrentRequest();
 
+        if (is_array($tag) && !array_key_exists('name', $tag)) {
+            return;
+        }
+
         // get all parameter and extend with new tags string
         $query = $request->query->all();
-        $query = array_merge($query, [$tagsParameter => $tag->getName()]);
+        $query = array_merge($query, [$tagsParameter => $tag['name']]);
 
         $queryString = http_build_query($query);
 
