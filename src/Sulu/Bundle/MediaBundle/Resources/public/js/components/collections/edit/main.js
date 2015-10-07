@@ -47,9 +47,7 @@ define([
          * @returns {*}
          */
         loadComponentData: function() {
-            return CollectionManager.loadOrNew(this.options.id, UserSettingsManager.getMediaLocale()).then(function(data) {
-                promise.resolve(data);
-            });
+            return CollectionManager.loadOrNew(this.options.id, UserSettingsManager.getMediaLocale());
         },
 
         /**
