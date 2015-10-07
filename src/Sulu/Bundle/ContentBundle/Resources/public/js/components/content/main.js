@@ -340,7 +340,7 @@ define([
             this.sandbox.on('sulu.content.contents.order', this.order, this);
 
             // get resource locator
-            this.sandbox.on('sulu.content.contents.get-rl', function(title, callback) {
+            this.sandbox.once('sulu.content.contents.get-rl', function(title, callback) {
                 this.getResourceLocator(title, this.template, callback);
             }, this);
 
@@ -353,7 +353,6 @@ define([
                 this.sandbox.emit('sulu.router.navigate', route);
             }, this);
         },
-
 
         getResourceLocator: function(parts, template, callback) {
             var url = '/admin/api/nodes/resourcelocators/generates?' +
