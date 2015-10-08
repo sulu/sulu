@@ -114,6 +114,24 @@ class QueryBuilder extends ContentQueryBuilder
             );
         }
 
+        // build where clause for categories
+        if ($this->hasConfig('categories')) {
+            $sql2Where[] = $this->buildCategoriesWhere(
+                $this->getConfig('categories', []),
+                $this->getConfig('categoryOperator', 'OR'),
+                $locale
+            );
+        }
+
+        // build where clause for website categories
+        if ($this->hasConfig('websiteCategories')) {
+            $sql2Where[] = $this->buildCategoriesWhere(
+                $this->getConfig('websiteCategories', []),
+                $this->getConfig('websiteCategoryOperator', 'OR'),
+                $locale
+            );
+        }
+
         if (count($this->ids) > 0) {
             $sql2Where[] = $this->buildPageSelector();
         }
@@ -266,6 +284,33 @@ class QueryBuilder extends ContentQueryBuilder
 
             foreach ($tags as $tag) {
                 $sql2Where[] = 'page.[' . $property->getName() . '] = ' . $tag;
+            }
+
+            if (count($sql2Where) > 0) {
+                return '(' . implode(' ' . strtoupper($operator) . ' ', $sql2Where) . ')';
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * build categories where clauses.
+     */
+    private function buildCategoriesWhere($categories, $operator, $languageCode)
+    {
+        $structure = $this->structureManager->getStructure('excerpt');
+
+        $sql2Where = [];
+        if ($structure->hasProperty('categories')) {
+            $property = new TranslatedProperty(
+                $structure->getProperty('categories'),
+                $languageCode,
+                $this->languageNamespace,
+                'excerpt'
+            );
+            foreach ($categories as $category) {
+                $sql2Where[] = 'page.[' . $property->getName() . '] = ' . $category;
             }
 
             if (count($sql2Where) > 0) {

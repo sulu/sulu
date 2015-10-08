@@ -15,7 +15,7 @@
         <property name="redirectExternal" type="string" />
         <property name="workflowStage" type="integer" />
         <property name="shadowLocaleEnabled" type="boolean" />
-        <property name="shadowLoacle" type="string" />
+        <property name="shadowLocale" type="string" />
         <property name="uuid" type="string" />
         <property name="structureType" type="string" />
         <property name="locale" type="string" />

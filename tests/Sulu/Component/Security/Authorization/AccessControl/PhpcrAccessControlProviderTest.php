@@ -42,7 +42,7 @@ class PhpcrAccessControlProviderTest extends \PHPUnit_Framework_TestCase
         $document = $this->prophesize(WebspaceBehavior::class);
         $document->willImplement(SecurityBehavior::class);
 
-        $this->documentManager->find('1')->willReturn($document);
+        $this->documentManager->find('1', null, ['rehydrate' => false])->willReturn($document);
         $document->setPermissions(['role' => ['view']])->shouldBeCalled();
         $this->documentManager->persist($document)->shouldBeCalled();
         $this->documentManager->flush()->shouldBeCalled();
@@ -59,7 +59,7 @@ class PhpcrAccessControlProviderTest extends \PHPUnit_Framework_TestCase
         $document = $this->prophesize(WebspaceBehavior::class);
         $document->willImplement(SecurityBehavior::class);
 
-        $this->documentManager->find('1')->willReturn($document);
+        $this->documentManager->find('1', null, ['rehydrate' => false])->willReturn($document);
         $document->getPermissions()->willReturn(['1' => ['view', 'edit']]);
 
         $this->assertEquals(
@@ -70,7 +70,7 @@ class PhpcrAccessControlProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testGetPermissionsForNotExistingDocument()
     {
-        $this->documentManager->find('1')->willThrow(DocumentNotFoundException::class);
+        $this->documentManager->find('1', null, ['rehydrate' => false])->willThrow(DocumentNotFoundException::class);
 
         $this->assertEquals([], $this->phpcrAccessControlProvider->getPermissions('Acme\Document', '1'));
     }

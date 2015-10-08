@@ -12,7 +12,7 @@ namespace Sulu\Component\Contact\SmartContent;
 
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\VirtualProperty;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Api\Contact;
 use Sulu\Component\SmartContent\ItemInterface;
 
 /**

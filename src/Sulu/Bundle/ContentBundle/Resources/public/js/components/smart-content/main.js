@@ -29,7 +29,8 @@
  * @params {String} [options.url] url for requesting the items
  * @params {String} [options.dataSourceParameter] parameter for the source id
  * @params {String} [options.includeSubFoldersParameter] parameter for the include-sub-folders-value
- * @params {String} [options.categoryParameter] parameter for the category id
+ * @params {String} [options.categoriesParameter] parameter for the category ids
+ * @params {String} [options.categoryOperatorParameter] parameter for the category ids
  * @params {String} [options.tagsParameter] parameter for the tags
  * @params {String} [options.tagOperatorParameter] parameter for the tag operator
  * @params {String} [options.sortByParameter] parameter for the sort-possibility id
@@ -54,9 +55,11 @@
  * @params {String} [options.translations.of] translation key
  * @params {String} [options.translations.configureSmartContent] translation key
  * @params {String} [options.translations.dataSourceLabel] translation key
+ * @params {String} [options.translations.categoryButton] translation key
+ * @params {String} [options.translations.categoryLabel] translation key
+ * @params {String} [options.translations.categories] translation key
  * @params {String} [options.translations.dataSourceButton] translation key
  * @params {String} [options.translations.includeSubFolders] translation key
- * @params {String} [options.translations.filterByCategory] translation key
  * @params {String} [options.translations.filterByTags] translation key
  * @params {String} [options.translations.useAnyTag] translation key
  * @params {String} [options.translations.useAllTags] translation key
@@ -75,8 +78,11 @@
  * @params {String} [options.translations.chooseDataSource] translation key
  * @params {String} [options.translations.chooseDataSourceOk] translation key
  * @params {String} [options.translations.chooseDataSourceCancel] translation key
+ * @params {String} [options.translations.chooseCategoriesSource] translation key
+ * @params {String} [options.translations.chooseCategoriesOk] translation key
+ * @params {String} [options.translations.chooseCategoriesCancel] translation key
  */
-define([], function() {
+define(['services/husky/util'], function(util) {
 
     'use strict';
 
@@ -84,12 +90,12 @@ define([], function() {
             dataSource: '',
             subFoldersDisabled: false,
             categories: [],
-            preSelectedCategory: null,
             tags: [],
             tagsDisabled: false,
             tagsAutoCompleteUrl: '',
             tagsGetParameter: 'search',
             preSelectedTagOperator: 'or',
+            preSelectedCategoryOperator: 'or',
             sortBy: [],
             preSelectedSortBy: null,
             preSelectedSortMethod: 'asc',
@@ -100,7 +106,8 @@ define([], function() {
             dataSourceParameter: 'dataSource',
             includeSubFolders: false,
             includeSubFoldersParameter: 'includeSubFolders',
-            categoryParameter: 'category',
+            categoriesParameter: 'categories',
+            categoryOperatorParameter: 'categoryOperator',
             tagsParameter: 'tags',
             tagOperatorParameter: 'tagOperator',
             sortByParameter: 'sortBy',
@@ -119,7 +126,17 @@ define([], function() {
             externalConfigs: false,
             has: {},
             title: 'Smart-Content',
-            datasource: null
+            datasource: null,
+            categoryRoot: null,
+            displayOptions: {}
+        },
+
+        displayOptionsDefaults = {
+            tags: true,
+            categories: true,
+            sorting: true,
+            limit: true,
+            presentAs: true
         },
 
         sortMethods = {
@@ -139,12 +156,11 @@ define([], function() {
             sourceSelector: '.source',
             buttonIcon: 'fa-filter',
             includeSubSelector: '.includeSubCheck',
-            categoryDDClass: 'category-dropdown',
             tagListClass: 'tag-list',
             tagOperatorClass: 'tag-list-operator-dropdown',
-            sortByDDClass: 'sort-by-dropdown',
-            sortMethodDDClass: 'sort-method-dropdown',
-            presentAsDDClass: 'present-as-dropdown',
+            sortByDropdownClass: 'sort-by-dropdown',
+            sortMethodDropdownClass: 'sort-method-dropdown',
+            presentAsDropdownClass: 'present-as-dropdown',
             limitToSelector: '.limit-to',
             dataSourceSelector: '.data-source',
             contentListClass: 'items-list',
@@ -158,28 +174,31 @@ define([], function() {
             skeleton: [
                 '<div class="white-box smart-content-container form-element">',
                 '<div class="header">',
-                '   <span class="selected-counter">',
-                '       <span class="num">0</span>',
-                '       <span><%= selectedCounterStr %></span>',
-                '   </span>',
-                '   <span class="no-content-message"><%= noContentStr %></span>',
+                '    <span class="selected-counter">',
+                '        <span class="num">0</span>',
+                '        <span><%= selectedCounterStr %></span>',
+                '    </span>',
+                '    <span class="no-content-message"><%= noContentStr %></span>',
                 '</div>',
                 '<div class="content"></div>',
                 '</div>'
             ].join(''),
             source: [
                 '<span class="text">',
-                '<span class="source">',
-                '<span class="desc"><%= desc %></span>',
-                '<span class="val"><%= val %></span>',
-                '</span>',
+                '    <span class="source">',
+                '        <span class="desc"><%= desc %></span>',
+                '        <span class="val"><%= val %></span>',
+                '    </span>',
                 '</span>'
             ].join(''),
             contentItem: [
                 '<li data-id="<%= dataId %>">',
-                '<span class="num"><%= num %></span>',
-                '<span class="value"><%= value %></span>',
+                '    <span class="num"><%= num %></span>',
+                '    <span class="value"><%= value %></span>',
                 '</li>'
+            ].join(''),
+            categoryItem: [
+                '<span><%=item.name%></span>'
             ].join(''),
             overlayContent: {
                 main: [
@@ -189,72 +208,76 @@ define([], function() {
 
                 dataSource: [
                     '<div class="item-half left">',
-                    '<span class="desc"><%= dataSourceLabelStr %></span>',
-                    '<div class="btn action fit" id="select-data-source-action"><%= dataSourceButtonStr %></div>',
-                    '<div><span class="sublabel"><%= dataSourceLabelStr %>:</span> <span class="sublabel data-source"><%= dataSourceValStr %></span></div>',
+                    '    <span class="desc"><%= dataSourceLabelStr %></span>',
+                    '    <div class="btn action fit" id="select-data-source-action"><%= dataSourceButtonStr %></div>',
+                    '    <div><span class="sublabel"><%= dataSourceLabelStr %>:</span> <span class="sublabel data-source"><%= dataSourceValStr %></span></div>',
+                    '</div>'
+                ].join(''),
+
+                categories: [
+                    '<div class="item">',
+                    '    <div class="categories-loader"></div>',
+                    '    <div class="categories-container" style="display: none;">',
+                    '        <span class="desc"><%= categoriesLabelStr %></span>',
+                    '        <div class="btn action fit select-categories-btn" id="select-categories-action"><%= categoriesButtonStr %></div>',
+                    '        <div class="sublabel"><span><%= categoriesStr %> (<span class="amount-selected-categories"></span>):</span> <span class="selected-categories"></span></div>',
+                    '    </div>',
                     '</div>'
                 ].join(''),
 
                 subFolders: [
                     '<div class="item-half">',
-                    '<div class="check<%= disabled %>">',
-                    '<label>',
-                    '<div class="custom-checkbox">',
-                    '<input type="checkbox" class="includeSubCheck form-element"<%= includeSubCheckedStr %>/>',
-                    '<span class="icon"></span>',
-                    '</div>',
-                    '<span class="description"><%= includeSubStr %></span>',
-                    '</label>',
-                    '</div>',
-                    '</div>'
-                ].join(''),
-
-                categories: [
-                    '<div class="item full">',
-                    '<span class="desc"><%= filterByCatStr %></span>',
-                    '<div class="' + constants.categoryDDClass + '"></div>',
+                    '    <div class="check<%= disabled %>">',
+                    '        <label>',
+                    '            <div class="custom-checkbox">',
+                    '                <input type="checkbox" class="includeSubCheck form-element"<%= includeSubCheckedStr %>/>',
+                    '                <span class="icon"></span>',
+                    '            </div>',
+                    '            <span class="description"><%= includeSubStr %></span>',
+                    '        </label>',
+                    '    </div>',
                     '</div>'
                 ].join(''),
 
                 tagList: [
                     '<div class="item-half left tags<%= disabled %>">',
-                    '<span class="desc"><%= filterByTagsStr %></span>',
-                    '<div class="' + constants.tagListClass + '"></div>',
+                    '    <span class="desc"><%= filterByTagsStr %></span>',
+                    '    <div class="' + constants.tagListClass + '"></div>',
                     '</div>'
                 ].join(''),
 
                 tagOperator: [
                     '<div class="item-half<%= disabled %>">',
-                    '<span class="desc">&nbsp;</span>',
-                    '<div class="' + constants.tagOperatorClass + '"></div>',
+                    '    <span class="desc">&nbsp;</span>',
+                    '    <div class="' + constants.tagOperatorClass + '"></div>',
                     '</div>'
                 ].join(''),
 
                 sortBy: [
                     '<div class="item-half left">',
-                    '<span class="desc"><%= sortByStr %></span>',
-                    '<div class="' + constants.sortByDDClass + '"></div>',
+                    '    <span class="desc"><%= sortByStr %></span>',
+                    '    <div class="' + constants.sortByDropdownClass + '"></div>',
                     '</div>'
                 ].join(''),
 
                 sortMethod: [
                     '<div class="item-half">',
-                    '<span class="desc">&nbsp;</span>',
-                    '<div class="' + constants.sortMethodDDClass + '"></div>',
+                    '    <span class="desc">&nbsp;</span>',
+                    '    <div class="' + constants.sortMethodDropdownClass + '"></div>',
                     '</div>'
                 ].join(''),
 
                 presentAs: [
                     '<div class="item-half left">',
-                    '<span class="desc"><%= presentAsStr %></span>',
-                    '<div class="' + constants.presentAsDDClass + '"></div>',
+                    '    <span class="desc"><%= presentAsStr %></span>',
+                    '    <div class="' + constants.presentAsDropdownClass + '"></div>',
                     '</div>'
                 ].join(''),
 
                 limitResult: [
                     '<div class="item-half">',
-                    '<span class="desc"><%= limitResultToStr %></span>',
-                    '<input type="text" value="<%= limitResult %>" class="limit-to form-element"<%= disabled %>/>',
+                    '    <span class="desc"><%= limitResultToStr %></span>',
+                    '    <input type="text" value="<%= limitResult %>" class="limit-to form-element"<%= disabled %>/>',
                     '</div>'
                 ].join('')
             }
@@ -340,6 +363,11 @@ define([], function() {
             //merge options with defaults
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
+            //merge displayOptions with defaults
+            this.options.displayOptions = this.sandbox.util.extend(
+                true, {}, displayOptionsDefaults, this.options.displayOptions
+            );
+
             //if externalConfigs is true wait for configs to to get in otherwise start the component right ahead
             if (this.options.externalConfigs === true) {
                 this.sandbox.on(EXTERNAL_CONFIGS.call(this), function(configs) {
@@ -399,8 +427,10 @@ define([], function() {
                 configureSmartContent: 'smart-content.configure-smart-content',
                 dataSourceLabel: 'smart-content.data-source.label',
                 dataSourceButton: 'smart-content.data-source.button',
+                categoryLabel: 'smart-content.categories.label',
+                categoryButton: 'smart-content.categories.button',
+                categories: 'smart-content.categories',
                 includeSubFolders: 'smart-content.include-sub-folders',
-                filterByCategory: 'smart-content.filter-by-category',
                 filterByTags: 'smart-content.filter-by-tags',
                 useAnyTag: 'smart-content.use-any-tag',
                 useAllTags: 'smart-content.use-all-tags',
@@ -419,6 +449,9 @@ define([], function() {
                 chooseDataSource: 'smart-content.choose-data-source',
                 chooseDataSourceOk: 'smart-content.choose-data-source.ok',
                 chooseDataSourceCancel: 'smart-content.choose-data-source.cancel',
+                chooseCategories: 'smart-content.choose-categories',
+                chooseCategoriesOk: 'smart-content.choose-categories.ok',
+                chooseCategoriesCancel: 'smart-content.choose-categories.cancel',
                 clearButton: 'smart-content.clear',
                 saveButton: 'smart-content.save'
             };
@@ -434,7 +467,8 @@ define([], function() {
             this.overlayData = {
                 dataSource: this.options.dataSource,
                 includeSubFolders: this.options.includeSubFolders,
-                category: this.options.preSelectedCategory || [],
+                categories: this.options.categories || [],
+                categoryOperator: this.options.preSelectedCategoryOperator || [],
                 tags: this.options.tags || [],
                 tagOperator: this.options.preSelectedTagOperator,
                 sortBy: this.options.preSelectedSortBy,
@@ -624,7 +658,15 @@ define([], function() {
          * Starts the overlay component
          */
         startOverlay: function() {
+            var hasDatasource = !!this.options.has.datasource,
+                hasCategories = !!this.options.has.categories && !!this.options.displayOptions.categories;
+
             this.initOverlayContent();
+
+            // init slide indexes for slide to
+            this.mainSlide = 0;
+            this.datasourceSlide = (!!hasDatasource) ? 1 : null;
+            this.categoriesSlide = (!!hasDatasource) ? 2 : (!!hasCategories ? 1 : null);
 
             var $element = this.sandbox.dom.createElement('<div/>'),
                 slides = [
@@ -664,7 +706,7 @@ define([], function() {
                     }
                 ];
 
-            if (!!this.options.has.datasource) {
+            if (!!hasDatasource) {
                 slides.push({
                     title: this.sandbox.translate(this.translations.chooseDataSource),
                     data: '<div id="data-source-' + this.options.instanceName + '" class="data-source-content"/>',
@@ -680,7 +722,42 @@ define([], function() {
                         }
                     ],
                     cancelCallback: function() {
-                        this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-left');
+                        this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-to', this.mainSlide);
+                        return false;
+                    }.bind(this)
+                });
+            }
+
+            if (!!hasCategories) {
+                slides.push({
+                    title: this.sandbox.translate(this.translations.chooseCategories),
+                    data: '<div id="categories-' + this.options.instanceName + '" class="categories-content"/>',
+                    cssClass: 'categories-slide',
+                    buttons: [
+                        {
+                            type: 'cancel',
+                            inactive: false,
+                            text: this.translations.chooseCategoriesCancel,
+                            align: 'left'
+                        },
+                        {
+                            type: 'ok',
+                            inactive: false,
+                            text: this.translations.chooseCategoriesOk,
+                            align: 'right'
+                        }
+                    ],
+                    cancelCallback: function() {
+                        this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-to', this.mainSlide);
+                        return false;
+                    }.bind(this),
+                    okCallback: function() {
+                        this.sandbox.emit(
+                            'smart-content.categories.' + this.options.instanceName + '.get-data',
+                            this.selectCategories.bind(this)
+                        );
+
+                        this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-to', this.mainSlide);
                         return false;
                     }.bind(this)
                 });
@@ -709,11 +786,20 @@ define([], function() {
          * datasource events
          */
         bindDatasourceEvents: function() {
-            // init datasource navigation after initialize of overlay
-            this.sandbox.on(
-                'husky.overlay.smart-content.' + this.options.instanceName + '.initialized',
-                this.initDatasource.bind(this)
-            );
+            if (!!this.options.has.datasource) {
+                // init datasource navigation after initialize of overlay
+                this.sandbox.on(
+                    'husky.overlay.smart-content.' + this.options.instanceName + '.initialized',
+                    this.initDatasource.bind(this)
+                );
+            }
+            if (!!this.options.has.categories && !!this.options.displayOptions.categories) {
+                // init categories after initialize of overlay
+                this.sandbox.on(
+                    'husky.overlay.smart-content.' + this.options.instanceName + '.initialized',
+                    this.initCategories.bind(this)
+                );
+            }
 
             // adopt height of datasource once
             this.sandbox.once('husky.overlay.smart-content.' + this.options.instanceName + '.opened', function() {
@@ -724,8 +810,13 @@ define([], function() {
 
             // slide to datasource by click on the action button
             this.sandbox.dom.on(this.$el, 'click', function() {
-                this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-right');
+                this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-to', this.datasourceSlide);
             }.bind(this), '#select-data-source-action');
+
+            // slide to categories by click on the action button
+            this.sandbox.dom.on(this.$el, 'click', function() {
+                this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-to', this.categoriesSlide);
+            }.bind(this), '#select-categories-action');
         },
 
         /**
@@ -739,7 +830,7 @@ define([], function() {
                     locale: this.options.locale,
                     instanceName: this.options.instanceName,
                     selectCallback: function(id, fullQualifiedTitle) {
-                        this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-left');
+                        this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-to', this.mainSlide);
 
                         var $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent);
                         this.overlayData.dataSource = id;
@@ -757,6 +848,83 @@ define([], function() {
                     }
                 ]
             );
+        },
+
+        /**
+         * initialize categories slide
+         */
+        initCategories: function() {
+            // wait for items and render them
+            this.sandbox.once(
+                'smart-content.categories.' + this.options.instanceName + '.initialized',
+                this.handleCategoriesInitialized.bind(this)
+            );
+
+            this.sandbox.start(
+                [
+                    {
+                        name: 'loader@husky',
+                        options: {
+                            el: this.sandbox.dom.find('.categories-loader', this.$overlayContent)
+                        }
+                    },
+                    {
+                        name: 'smart-content/categories@sulucontent',
+                        options: {
+                            el: '#categories-' + this.options.instanceName,
+                            instanceName: this.options.instanceName,
+                            preselectedOperator: this.overlayData.categoryOperator,
+                            preselectedCategories: this.overlayData.categories,
+                            root: this.options.categoryRoot
+                        }
+                    }
+                ]
+            );
+        },
+
+        /**
+         * handles initialized event of categories subcomponent.
+         * @param {Object} data
+         */
+        handleCategoriesInitialized: function(data) {
+            this.selectCategories(data);
+
+            this.sandbox.stop(this.sandbox.dom.find('.categories-loader', this.$overlayContent));
+            this.sandbox.dom.find('.categories-container', this.$overlayContent).show();
+        },
+
+        /**
+         * saves selected categories.
+         * @param {Object} data
+         */
+        selectCategories: function(data) {
+            this.overlayData.categories = data.ids;
+            this.overlayData.categoryOperator = data.operator;
+            this.renderCategories(data.items);
+        },
+
+        /**
+         * render selected categories.
+         */
+        renderCategories: function(items) {
+            var html = [],
+                length = items.length > 3 ? 3 : items.length,
+                i;
+
+            for (i = 0; i < length; i++) {
+                html.push(util.template(templates.categoryItem, {item: items[i]}));
+
+                if (i < length - 1) {
+                    html.push(', ');
+                }
+            }
+
+            if (length < items.length) {
+                html.push(' ...');
+            }
+
+            this.sandbox.dom.html(this.sandbox.dom.find('.selected-categories', this.$overlayContent), html.join(''));
+            this.sandbox.dom.html(this.sandbox.dom.find('.amount-selected-categories', this.$overlayContent), items.length);
         },
 
         /**
@@ -781,12 +949,14 @@ define([], function() {
                 }));
                 $container.append('<div class="clear"></div>');
             }
-            if (!!this.options.has.categories) {
+            if (!!this.options.has.categories && !!this.options.displayOptions.categories) {
                 $container.append(_.template(templates.overlayContent.categories)({
-                    filterByCatStr: this.sandbox.translate(this.translations.filterByCategory)
+                    categoriesLabelStr: this.sandbox.translate(this.translations.categoryLabel),
+                    categoriesStr: this.sandbox.translate(this.translations.categories),
+                    categoriesButtonStr: this.sandbox.translate(this.translations.categoryButton)
                 }));
             }
-            if (!!this.options.has.tags) {
+            if (!!this.options.has.tags && !!this.options.displayOptions.tags) {
                 $container.append(_.template(templates.overlayContent.tagList)({
                     filterByTagsStr: this.sandbox.translate(this.translations.filterByTags),
                     disabled: (this.overlayDisabled.tags) ? ' disabled' : ''
@@ -796,7 +966,7 @@ define([], function() {
                 }));
                 $container.append('<div class="clear"></div>');
             }
-            if (!!this.options.has.sorting) {
+            if (!!this.options.has.sorting && !!this.options.displayOptions.sorting) {
                 $container.append(_.template(templates.overlayContent.sortBy)({
                     sortByStr: this.sandbox.translate(this.translations.sortBy)
                 }));
@@ -804,12 +974,13 @@ define([], function() {
 
                 $container.append('<div class="clear"></div>');
             }
-            if (!!this.options.has.presentAs && !!this.options.presentAs && this.options.presentAs.length > 0) {
+            if (!!this.options.has.presentAs && !!this.options.displayOptions.presentAs && !!this.options.presentAs && this.options.presentAs.length > 0
+            ) {
                 $container.append(_.template(templates.overlayContent.presentAs)({
                     presentAsStr: this.sandbox.translate(this.translations.presentAs)
                 }));
             }
-            if (!!this.options.has.limit) {
+            if (!!this.options.has.limit && !!this.options.displayOptions.limit) {
                 $container.append(_.template(templates.overlayContent.limitResult)({
                     limitResultToStr: this.sandbox.translate(this.translations.limitResultTo),
                     limitResult: (data.limitResult > 0) ? data.limitResult : '',
@@ -824,18 +995,6 @@ define([], function() {
          */
         startOverlayComponents: function() {
             this.sandbox.start([
-                {
-                    name: 'select@husky',
-                    options: {
-                        el: this.sandbox.dom.find('.' + constants.categoryDDClass, this.$overlayContent),
-                        instanceName: this.options.instanceName + constants.categoryDDClass,
-                        defaultLabel: this.sandbox.translate(this.translations.noCategory),
-                        value: 'name',
-                        data: this.options.categories,
-                        preSelectedElements: [this.options.preSelectedCategory],
-                        disabled: this.overlayDisabled.categories
-                    }
-                },
                 {
                     name: 'auto-complete-list@husky',
                     options: {
@@ -867,8 +1026,8 @@ define([], function() {
                 {
                     name: 'select@husky',
                     options: {
-                        el: this.sandbox.dom.find('.' + constants.sortByDDClass, this.$overlayContent),
-                        instanceName: this.options.instanceName + constants.sortByDDClass,
+                        el: this.sandbox.dom.find('.' + constants.sortByDropdownClass, this.$overlayContent),
+                        instanceName: this.options.instanceName + constants.sortByDropdownClass,
                         value: 'name',
                         data: this.options.sortBy,
                         preSelectedElements: [this.options.preSelectedSortBy],
@@ -880,8 +1039,8 @@ define([], function() {
                 {
                     name: 'select@husky',
                     options: {
-                        el: this.sandbox.dom.find('.' + constants.sortMethodDDClass, this.$overlayContent),
-                        instanceName: this.options.instanceName + constants.sortMethodDDClass,
+                        el: this.sandbox.dom.find('.' + constants.sortMethodDropdownClass, this.$overlayContent),
+                        instanceName: this.options.instanceName + constants.sortMethodDropdownClass,
                         value: 'name',
                         data: [
                             {id: sortMethods.asc, name: this.sandbox.translate(this.translations.ascending)},
@@ -894,8 +1053,8 @@ define([], function() {
                 {
                     name: 'select@husky',
                     options: {
-                        el: this.sandbox.dom.find('.' + constants.presentAsDDClass, this.$overlayContent),
-                        instanceName: this.options.instanceName + constants.presentAsDDClass,
+                        el: this.sandbox.dom.find('.' + constants.presentAsDropdownClass, this.$overlayContent),
+                        instanceName: this.options.instanceName + constants.presentAsDropdownClass,
                         defaultLabel: this.sandbox.translate(this.translations.choosePresentAs),
                         value: 'name',
                         data: this.options.presentAs,
@@ -914,7 +1073,6 @@ define([], function() {
 
             data[this.options.dataSourceParameter] = this.overlayData.dataSource;
             data[this.options.includeSubFoldersParameter] = this.overlayData.includeSubFolders;
-            data[this.options.categoryParameter] = this.overlayData.category;
             data[this.options.tagsParameter] = this.overlayData.tags;
             data[this.options.tagOperatorParameter] = this.overlayData.tagOperator;
             data[this.options.sortByParameter] = this.overlayData.sortBy;
@@ -922,6 +1080,9 @@ define([], function() {
             data[this.options.presentAsParameter] = this.overlayData.presentAs;
             data[this.options.limitResultParameter] = this.overlayData.limitResult !== '' ?
                 this.overlayData.limitResult : null;
+            data[this.options.categoriesParameter] = this.overlayData.categories || [];
+            data[this.options.categoryOperatorParameter] = this.overlayData.categoryOperator ||
+                this.options.preSelectedCategoryOperator;
 
             // min source must be selected
             if (JSON.stringify(data) !== JSON.stringify(this.URI.data)) {
@@ -994,8 +1155,8 @@ define([], function() {
          * event is emitted on which the associated component responses
          */
         getOverlayData: function() {
-            var categoryDef, tagsDef, tagOperatorDef, sortByDef, sortMethodDef, presentAsDef, temp;
-            categoryDef = tagsDef = tagOperatorDef = sortByDef = sortMethodDef = presentAsDef = this.sandbox.data.deferred();
+            var tagsDef, tagOperatorDef, sortByDef, sortMethodDef, presentAsDef, temp;
+            tagsDef = tagOperatorDef = sortByDef = sortMethodDef = presentAsDef = this.sandbox.data.deferred();
 
             //include sub folders
             this.overlayData.includeSubFolders = this.sandbox.dom.prop(
@@ -1013,13 +1174,6 @@ define([], function() {
                 this.overlayData.dataSource = temp;
             }
 
-            //category
-            this.sandbox.emit('husky.select.' + this.options.instanceName + constants.categoryDDClass + '.get-checked',
-                function(category) {
-                    this.overlayData.category = category;
-                    categoryDef.resolve();
-                }.bind(this));
-
             //tags
             this.sandbox.emit('husky.auto-complete-list.' + this.options.instanceName + constants.tagListClass + '.get-tags',
                 function(tags) {
@@ -1035,21 +1189,21 @@ define([], function() {
                 }.bind(this));
 
             //sort by
-            this.sandbox.emit('husky.select.' + this.options.instanceName + constants.sortByDDClass + '.get-checked',
+            this.sandbox.emit('husky.select.' + this.options.instanceName + constants.sortByDropdownClass + '.get-checked',
                 function(sortBy) {
                     this.overlayData.sortBy = sortBy;
                     sortByDef.resolve();
                 }.bind(this));
 
             //sort method
-            this.sandbox.emit('husky.select.' + this.options.instanceName + constants.sortMethodDDClass + '.get-checked',
+            this.sandbox.emit('husky.select.' + this.options.instanceName + constants.sortMethodDropdownClass + '.get-checked',
                 function(sortMethod) {
                     this.overlayData.sortMethod = (sortMethod[0] === sortMethods.asc) ? 'asc' : 'desc';
                     sortMethodDef.resolve();
                 }.bind(this));
 
             //present as
-            this.sandbox.emit('husky.select.' + this.options.instanceName + constants.presentAsDDClass + '.get-checked',
+            this.sandbox.emit('husky.select.' + this.options.instanceName + constants.presentAsDropdownClass + '.get-checked',
                 function(presentAs) {
                     if (presentAs.length === 1) {
                         this.overlayData.presentAs = presentAs[0];
@@ -1059,7 +1213,7 @@ define([], function() {
                     presentAsDef.resolve();
                 }.bind(this));
 
-            this.sandbox.dom.when(categoryDef.promise(), tagsDef.promise(), tagOperatorDef.promise(), sortByDef.promise(), sortMethodDef.promise(), presentAsDef.promise()).then(function() {
+            this.sandbox.dom.when(tagsDef.promise(), tagOperatorDef.promise(), sortByDef.promise(), sortMethodDef.promise(), presentAsDef.promise()).then(function() {
                 this.setElementData(this.overlayData);
                 this.sandbox.emit(INPUT_RETRIEVED.call(this));
             }.bind(this));
@@ -1085,7 +1239,8 @@ define([], function() {
                 presentAs: null,
                 sortBy: [],
                 sortMethod: 'asc',
-                category: [],
+                categoryOperator: 'or',
+                categories: [],
                 tags: [],
                 tagOperator: 'or'
             };

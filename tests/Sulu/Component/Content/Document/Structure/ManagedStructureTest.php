@@ -12,10 +12,12 @@
 namespace Sulu\Component\Content\Document\Property;
 
 use PHPCR\NodeInterface;
+use Prophecy\Argument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
+use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
@@ -27,6 +29,61 @@ use Sulu\Component\Content\Metadata\StructureMetadata;
 
 class ManagedStructureTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var ContentTypeManagerInterface
+     */
+    private $contentTypeManager;
+
+    /**
+     * @var NodeInterface
+     */
+    private $node;
+
+    /**
+     * @var StructureMetadata
+     */
+    private $structureMetadata;
+
+    /**
+     * @var StructureBehavior
+     */
+    private $document;
+
+    /**
+     * @var ContentTypeInterface
+     */
+    private $contentType;
+
+    /**
+     * @var PropertyEncoder
+     */
+    private $encoder;
+
+    /**
+     * @var PropertyMetadata
+     */
+    private $propertyMetadata;
+
+    /**
+     * @var LegacyPropertyFactory
+     */
+    private $propertyFactory;
+
+    /**
+     * @var DocumentInspector
+     */
+    private $inspector;
+
+    /**
+     * @var PropertyInterface
+     */
+    private $legacyProperty;
+
+    /**
+     * @var ManagedStructure
+     */
+    private $structure;
+
     public function setUp()
     {
         $this->contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);
@@ -35,7 +92,7 @@ class ManagedStructureTest extends \PHPUnit_Framework_TestCase
         $this->document = $this->prophesize(StructureBehavior::class);
         $this->contentType = $this->prophesize(ContentTypeInterface::class);
         $this->encoder = $this->prophesize(PropertyEncoder::class);
-        $this->structureMetadataProperty = $this->prophesize(PropertyMetadata::class);
+        $this->propertyMetadata = $this->prophesize(PropertyMetadata::class);
         $this->propertyFactory = $this->prophesize(LegacyPropertyFactory::class);
         $this->inspector = $this->prophesize(DocumentInspector::class);
         $this->legacyProperty = $this->prophesize(PropertyInterface::class);
@@ -48,7 +105,9 @@ class ManagedStructureTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->inspector->getNode($this->document->reveal())->willReturn($this->node->reveal());
-        $this->inspector->getStructureMetadata($this->document->reveal())->willReturn($this->structureMetadata->reveal());
+        $this->inspector->getStructureMetadata($this->document->reveal())->willReturn(
+            $this->structureMetadata->reveal()
+        );
     }
 
     /**
@@ -61,7 +120,7 @@ class ManagedStructureTest extends \PHPUnit_Framework_TestCase
         $locale = 'fr';
 
         $this->inspector->getLocale($this->document->reveal())->willReturn($locale);
-        $this->structureMetadataProperty->isLocalized()->willReturn(true);
+        $this->propertyMetadata->isLocalized()->willReturn(true);
         $this->doGetProperty($name, $contentTypeName, $locale);
     }
 
@@ -74,7 +133,7 @@ class ManagedStructureTest extends \PHPUnit_Framework_TestCase
         $contentTypeName = 'hello';
 
         $this->document->getLocale()->shouldNotBeCalled();
-        $this->structureMetadataProperty->isLocalized()->willReturn(false);
+        $this->propertyMetadata->isLocalized()->willReturn(false);
 
         $this->doGetProperty($name, $contentTypeName, null);
     }
@@ -88,28 +147,37 @@ class ManagedStructureTest extends \PHPUnit_Framework_TestCase
         $contentTypeName = 'hello';
 
         $this->document->getLocale()->shouldNotBeCalled();
-        $this->structureMetadataProperty->isLocalized()->willReturn(false);
+        $this->propertyMetadata->isLocalized()->willReturn(false);
 
         $this->doGetProperty($name, $contentTypeName, null);
     }
 
     private function doGetProperty($name, $contentTypeName, $locale)
     {
-        $this->structureMetadataProperty->getType()->willReturn($contentTypeName);
-        $this->structureMetadata->getProperty($name)->willReturn($this->structureMetadataProperty);
+        $this->propertyMetadata->getType()->willReturn($contentTypeName);
+        $this->structureMetadata->getProperty($name)->willReturn($this->propertyMetadata);
         $this->contentTypeManager->get($contentTypeName)->willReturn($this->contentType->reveal());
 
         if ($locale) {
-            $this->propertyFactory->createTranslatedProperty($this->structureMetadataProperty->reveal(), $locale)->willReturn($this->legacyProperty->reveal());
+            $this->propertyFactory->createTranslatedProperty(
+                $this->propertyMetadata->reveal(),
+                $locale,
+                Argument::type(StructureBridge::class)
+            )->willReturn($this->legacyProperty->reveal());
         } else {
-            $this->propertyFactory->createProperty($this->structureMetadataProperty->reveal(), $locale)->willReturn($this->legacyProperty->reveal());
+            $this->propertyFactory->createProperty($this->propertyMetadata->reveal(), $locale)->willReturn(
+                $this->legacyProperty->reveal()
+            );
         }
+
+        $this->inspector->getWebspace($this->document->reveal())->willReturn('sulu_io');
+        $this->inspector->getOriginalLocale($this->document->reveal())->willReturn($locale);
 
         $this->contentType->read(
             $this->node->reveal(),
             $this->legacyProperty->reveal(),
-            null,
-            null,
+            'sulu_io',
+            $locale,
             null
         )->shouldBeCalledTimes(1);
 

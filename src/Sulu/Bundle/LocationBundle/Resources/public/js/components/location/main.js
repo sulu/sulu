@@ -489,6 +489,7 @@ define([], function() {
                     options: {
                         triggerEl: this.sandbox.dom.find('.' + this.constants.configureButtonClass, this.$el),
                         el: $element,
+                        removeOnClose: false,
                         container: this.$el,
                         instanceName: 'location-content.' + this.options.instanceName,
                         skin: 'wide',

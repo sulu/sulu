@@ -10,9 +10,15 @@
 
 namespace Sulu\Bundle\TagBundle\Tests\Unit\Twig;
 
+use Doctrine\Common\Cache\ArrayCache;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\SerializerInterface;
+use Prophecy\Argument;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\TagBundle\Twig\TagTwigExtension;
+use Sulu\Component\Cache\Memoize;
+use Sulu\Component\Cache\MemoizeInterface;
 use Sulu\Component\Tag\Request\TagRequestHandler;
 use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -21,25 +27,35 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class TagTwigExtensionTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * Returns memoize cache instance.
+     *
+     * @return MemoizeInterface
+     */
+    private function getMemoizeCache()
+    {
+        return new Memoize(new ArrayCache(), 0);
+    }
+
     public function getProvider()
     {
         return [
             [[]],
-            [['sulu']],
-            [['sulu', 'core']],
-            [['sulu', 'core', 'massive art']],
+            [[['name' => 'sulu']]],
+            [[['name' => 'sulu'], ['name' => 'core']]],
+            [[['name' => 'sulu'], ['name' => 'core'], ['name' => 'massive art']]],
         ];
     }
 
     /**
      * @dataProvider getProvider
      */
-    public function testGetTags($tagNames)
+    public function testGetTags($tagData)
     {
         $tags = [];
-        foreach ($tagNames as $tagName) {
+        foreach ($tagData as $tagItem) {
             $tag = new Tag();
-            $tag->setName($tagName);
+            $tag->setName($tagItem['name']);
 
             $tags[] = $tag;
         }
@@ -47,10 +63,18 @@ class TagTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $tagManager = $this->prophesize(TagManagerInterface::class);
         $tagManager->findAll()->shouldBeCalled()->willReturn($tags);
 
+        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer->serialize($tags, 'array', Argument::type(SerializationContext::class))
+            ->shouldBeCalled()->willReturn($tagData);
         $tagRequestHandler = $this->prophesize(TagRequestHandlerInterface::class);
 
-        $tagExtension = new TagTwigExtension($tagManager->reveal(), $tagRequestHandler->reveal());
-        $this->assertEquals($tags, $tagExtension->getTagsFunction());
+        $tagExtension = new TagTwigExtension(
+            $tagManager->reveal(),
+            $tagRequestHandler->reveal(),
+            $serializer->reveal(),
+            $this->getMemoizeCache()
+        );
+        $this->assertEquals($tagData, $tagExtension->getTagsFunction());
     }
 
     public function appendProvider()
@@ -70,8 +94,7 @@ class TagTwigExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function testAppendTagUrl($tagsParameter, $url, $tagsString, $expected)
     {
-        $tag = new Tag();
-        $tag->setName('Test');
+        $tag = ['name' => 'Test'];
 
         $tagManager = $this->prophesize(TagManagerInterface::class);
         $requestStack = $this->prophesize(RequestStack::class);
@@ -83,9 +106,15 @@ class TagTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $request->get($tagsParameter, '')->willReturn($tagsString);
         $request->getPathInfo()->willReturn($url);
 
+        $serializer = $this->prophesize(SerializerInterface::class);
         $tagRequestHandler = new TagRequestHandler($requestStack->reveal());
 
-        $tagExtension = new TagTwigExtension($tagManager->reveal(), $tagRequestHandler);
+        $tagExtension = new TagTwigExtension(
+            $tagManager->reveal(),
+            $tagRequestHandler,
+            $serializer->reveal(),
+            $this->getMemoizeCache()
+        );
         $result = $tagExtension->appendTagUrlFunction($tag, $tagsParameter);
 
         $this->assertEquals($url . '?' . $tagsParameter . '=' . urlencode($expected), $result);
@@ -108,8 +137,7 @@ class TagTwigExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetTagUrl($tagsParameter, $url, $tagsString, $expected)
     {
-        $tag = new Tag();
-        $tag->setName('Test');
+        $tag = ['name' => 'Test'];
 
         $tagManager = $this->prophesize(TagManagerInterface::class);
         $requestStack = $this->prophesize(RequestStack::class);
@@ -121,9 +149,15 @@ class TagTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $request->get($tagsParameter, '')->willReturn($tagsString);
         $request->getPathInfo()->willReturn($url);
 
+        $serializer = $this->prophesize(SerializerInterface::class);
         $tagRequestHandler = new TagRequestHandler($requestStack->reveal());
 
-        $tagExtension = new TagTwigExtension($tagManager->reveal(), $tagRequestHandler);
+        $tagExtension = new TagTwigExtension(
+            $tagManager->reveal(),
+            $tagRequestHandler,
+            $serializer->reveal(),
+            $this->getMemoizeCache()
+        );
         $result = $tagExtension->setTagUrlFunction($tag, $tagsParameter);
 
         $this->assertEquals($url . '?' . $tagsParameter . '=' . urlencode($expected), $result);
@@ -146,9 +180,6 @@ class TagTwigExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function testClearTagUrl($tagsParameter, $url, $tagsString)
     {
-        $tag = new Tag();
-        $tag->setName('Test');
-
         $tagManager = $this->prophesize(TagManagerInterface::class);
         $requestStack = $this->prophesize(RequestStack::class);
         $request = $this->prophesize(Request::class);
@@ -159,9 +190,15 @@ class TagTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $request->get($tagsParameter, '')->willReturn($tagsString);
         $request->getPathInfo()->willReturn($url);
 
+        $serializer = $this->prophesize(SerializerInterface::class);
         $tagRequestHandler = new TagRequestHandler($requestStack->reveal());
 
-        $tagExtension = new TagTwigExtension($tagManager->reveal(), $tagRequestHandler);
+        $tagExtension = new TagTwigExtension(
+            $tagManager->reveal(),
+            $tagRequestHandler,
+            $serializer->reveal(),
+            $this->getMemoizeCache()
+        );
         $result = $tagExtension->clearTagUrlFunction($tagsParameter);
 
         $this->assertEquals($url, $result);

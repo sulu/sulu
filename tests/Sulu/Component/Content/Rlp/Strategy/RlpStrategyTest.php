@@ -24,6 +24,30 @@ interface NodeInterface extends \PHPCR\NodeInterface, \Iterator
 class RlpStrategyTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @var array
+     */
+    private $replacers = [
+            'default' => [
+                ' ' => '-',
+                '+' => '-',
+                '.' => '-',
+            ],
+            'de' => [
+                'ä' => 'ae',
+                'ö' => 'oe',
+                'ü' => 'ue',
+                'Ä' => 'ae',
+                'Ö' => 'oe',
+                'Ü' => 'ue',
+                'ß' => 'ss',
+                '&' => 'und',
+            ],
+            'en' => [
+                '&' => 'and',
+            ],
+        ];
+
+    /**
      * @var RlpMapperInterface
      */
     private $mapper;
@@ -90,7 +114,7 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
             [
                 'test-strategy',
                 $this->mapper,
-                new PathCleanup(),
+                new PathCleanup($this->replacers),
                 $structureManager,
                 $contentTypeManager,
                 $nodeHelper,

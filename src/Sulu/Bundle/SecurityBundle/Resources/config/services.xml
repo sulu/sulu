@@ -149,5 +149,12 @@
         <service id="sulu_security.build.user" class="%sulu_security.build.user.class%">
             <tag name="massive_build.builder" />
         </service>
+
+        <service id="sulu_security.serializer.handler.secured_entity" class="Sulu\Component\Security\Serializer\Subscriber\SecuredEntitySubscriber">
+            <argument type="service" id="sulu_security.access_control_manager"/>
+            <argument type="service" id="security.token_storage"/>
+            <tag name="jms_serializer.event_subscriber" />
+            <tag name="sulu.context" context="admin"/>
+        </service>
     </services>
 </container>

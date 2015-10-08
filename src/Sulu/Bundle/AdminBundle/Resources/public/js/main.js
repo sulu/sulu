@@ -98,6 +98,8 @@ require(['husky', 'app-config'], function(Husky, AppConfig) {
         app.use('aura_extensions/sulu-content');
         app.use('aura_extensions/sulu-extension');
         app.use('aura_extensions/sulu-buttons');
+        app.use('aura_extensions/default-extension');
+        app.use('aura_extensions/event-extension');
 
         bundles.forEach(function(bundle) {
             app.use('/bundles/' + bundle + '/js/main.js');

@@ -13,3 +13,8 @@
 .location-map, .location-overlay-map {
   height: 230px;
 }
+
+/* line 17, ../scss/modules/location.scss */
+.content.location-content {
+  overflow: hidden;
+}

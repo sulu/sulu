@@ -209,4 +209,12 @@ class Collection extends BaseCollection
     {
         return $this->defaultMeta;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSecurityContext()
+    {
+        return 'sulu.media.collections';
+    }
 }

@@ -47,6 +47,13 @@ define([
             MasonryExtension.initialize(app);
             MediaButtons.initialize(app);
 
+            sandbox.urlManager.setUrl('media', 'media/collections/edit:<%= collectionId %>/files/edit:<%= mediaId %>', function(data) {
+                return {
+                    mediaId: data.properties.media_id,
+                    collectionId: data.properties.collection_id
+                };
+            });
+
             // list all collections
             sandbox.mvc.routes.push({
                 route: 'media/collections/root',

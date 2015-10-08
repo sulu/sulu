@@ -10,6 +10,8 @@
 
 namespace Sulu\Component\SmartContent\Orm;
 
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\SerializerInterface;
 use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\ProviderConfiguration;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
@@ -31,9 +33,15 @@ abstract class BaseDataProvider implements DataProviderInterface
      */
     protected $configuration;
 
-    public function __construct(DataProviderRepositoryInterface $repository)
+    /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    public function __construct(DataProviderRepositoryInterface $repository, SerializerInterface $serializer)
     {
         $this->repository = $repository;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -71,7 +79,7 @@ abstract class BaseDataProvider implements DataProviderInterface
         $page = 1,
         $pageSize = null
     ) {
-        list($result, $hasNextPage) = $this->resolveFilters($filters, $limit, $page, $pageSize);
+        list($result, $hasNextPage) = $this->resolveFilters($filters, $options['locale'], $limit, $page, $pageSize);
 
         return new DataProviderResult($this->decorateDataItems($result), $hasNextPage);
     }
@@ -87,7 +95,7 @@ abstract class BaseDataProvider implements DataProviderInterface
         $page = 1,
         $pageSize = null
     ) {
-        list($result, $hasNextPage) = $this->resolveFilters($filters, $limit, $page, $pageSize);
+        list($result, $hasNextPage) = $this->resolveFilters($filters, $options['locale'], $limit, $page, $pageSize);
 
         return new DataProviderResult($this->decorateResourceItems($result, $options['locale']), $hasNextPage);
     }
@@ -97,11 +105,12 @@ abstract class BaseDataProvider implements DataProviderInterface
      */
     private function resolveFilters(
         array $filters,
+        $locale,
         $limit = null,
         $page = 1,
         $pageSize = null
     ) {
-        $result = $this->repository->findByFilters($filters, $page, $pageSize, $limit);
+        $result = $this->repository->findByFilters($filters, $page, $pageSize, $limit, $locale);
 
         $hasNextPage = false;
         if ($pageSize !== null && count($result) > $pageSize) {
@@ -142,12 +151,22 @@ abstract class BaseDataProvider implements DataProviderInterface
     {
         return array_map(
             function ($item) use ($locale) {
-                $itemData = $this->convertToArray($item, $locale);
+                $itemData = $this->serializer->serialize($item, 'array', $this->getSerializationContext());
 
                 return new ArrayAccessItem($item->getId(), $itemData, $item);
             },
             $data
         );
+    }
+
+    /**
+     * Creates serialization context. Can be used to add own groups.
+     *
+     * @return SerializationContext
+     */
+    protected function getSerializationContext()
+    {
+        return SerializationContext::create();
     }
 
     /**
@@ -158,14 +177,4 @@ abstract class BaseDataProvider implements DataProviderInterface
      * @return array
      */
     abstract protected function decorateDataItems(array $data);
-
-    /**
-     * Converts entity to array.
-     *
-     * @param object $entity
-     * @param string $locale
-     *
-     * @return array
-     */
-    abstract protected function convertToArray($entity, $locale);
 }

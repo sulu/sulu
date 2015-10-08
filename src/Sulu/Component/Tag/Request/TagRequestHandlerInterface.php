@@ -10,8 +10,6 @@
 
 namespace Sulu\Component\Tag\Request;
 
-use Sulu\Bundle\TagBundle\Entity\Tag;
-
 /**
  * Handles tags in current request.
  */
@@ -29,22 +27,22 @@ interface TagRequestHandlerInterface
     /**
      * Extends current URL with given tag.
      *
-     * @param Tag $tag will be included in the URL.
+     * @param array $tag will be included in the URL.
      * @param string $tagsParameter GET parameter name.
      *
      * @return string
      */
-    public function appendTagToUrl(Tag $tag, $tagsParameter = 'tags');
+    public function appendTagToUrl($tag, $tagsParameter = 'tags');
 
     /**
      * Set tag to current URL.
      *
-     * @param Tag $tag will be included in the URL.
+     * @param array $tag will be included in the URL.
      * @param string $tagsParameter GET parameter name.
      *
      * @return string
      */
-    public function setTagToUrl(Tag $tag, $tagsParameter = 'tags');
+    public function setTagToUrl($tag, $tagsParameter = 'tags');
 
     /**
      * Remove tag from current URL.
