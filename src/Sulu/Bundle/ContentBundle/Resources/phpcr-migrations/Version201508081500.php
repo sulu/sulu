@@ -28,10 +28,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Version201508081500 implements VersionInterface, ContainerAwareInterface
 {
-
-    /**
-     * @var SessionInterface
-     */
+    /** @var SessionInterface $session */
     private $session;
 
     /**
@@ -73,7 +70,6 @@ class Version201508081500 implements VersionInterface, ContainerAwareInterface
         $this->webspaceManager = $this->container->get('sulu_core.webspace.webspace_manager');
         $this->propertyEncoder = $this->container->get('sulu_document_manager.property_encoder');
         $this->structureMetadataFactory = $this->container->get('sulu_content.structure.factory');
-
     }
 
     public function up(SessionInterface $session)
@@ -85,7 +81,7 @@ class Version201508081500 implements VersionInterface, ContainerAwareInterface
 
     public function down(SessionInterface $session)
     {
-        $this->iterateWebspaces([$this, 'downgrageNode']);
+        $this->iterateWebspaces([$this, 'downgradeNode']);
 
         $this->session->save();
     }
