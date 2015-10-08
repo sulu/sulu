@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * BUGFIX      #1667 [ContactBundle]   Removed the restriction of start dates from the datepicker
     * BUGFIX      #1671 [ContentBundle]   Fixed block sorting for blocks with only one type
+    * BUGFIX      #1668 [ContentBundle]   Fixed smart content for usage with block property
     * BUGFIX      #1665 [ContentBundle]   Fixed creation of new url after template change
     * BUGFIX      #1666 [ContentBundle]   Fixed min occurs 0 for blocks
     * BUGFIX      #1664 [SearchBundle]    Fixed search-results deep links

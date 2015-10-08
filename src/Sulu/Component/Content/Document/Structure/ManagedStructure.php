@@ -11,10 +11,13 @@
 
 namespace Sulu\Component\Content\Document\Structure;
 
+use PHPCR\NodeInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 
 /**
@@ -22,20 +25,51 @@ use Sulu\Component\Content\Metadata\StructureMetadata;
  */
 class ManagedStructure extends Structure
 {
+    /**
+     * @var ContentTypeManagerInterface
+     */
     private $contentTypeManager;
+
+    /**
+     * @var StructureBehavior
+     */
     private $document;
+
+    /**
+     * @var LegacyPropertyFactory
+     */
     private $legacyPropertyFactory;
+
+    /**
+     * @var DocumentInspector
+     */
     private $inspector;
-    private $structure;
+
+    /**
+     * @var StructureMetadata
+     */
+    private $structureMetadata;
+
+    /**
+     * @var NodeInterface
+     */
     private $node;
+
+    /**
+     * @var PropertyInterface[]
+     */
     private $legacyProperties = [];
-    private $contentViewProperties = [];
+
+    /**
+     * @var PropertyValue[]
+     */
+    private $propertyValues = [];
 
     /**
      * @param ContentTypeManagerInterface $contentTypeManager
-     * @param LegacyPropertyFactory       $legacyPropertyFactory
-     * @param DocumentInspector           $inspector
-     * @param object                      $document
+     * @param LegacyPropertyFactory $legacyPropertyFactory
+     * @param DocumentInspector $inspector
+     * @param object $document
      */
     public function __construct(
         ContentTypeManagerInterface $contentTypeManager,
@@ -64,20 +98,26 @@ class ManagedStructure extends Structure
             $this->node = $this->inspector->getNode($this->document);
         }
 
-        $structureProperty = $this->structure->getProperty($name);
+        $structureProperty = $this->structureMetadata->getProperty($name);
 
         $contentTypeName = $structureProperty->getType();
 
+        $bridge = new StructureBridge(
+            $this->structureMetadata,
+            $this->inspector,
+            $this->legacyPropertyFactory,
+            $this->document
+        );
+
         if ($structureProperty->isLocalized()) {
             $locale = $this->inspector->getLocale($this->document);
-            $property = $this->legacyPropertyFactory->createTranslatedProperty($structureProperty, $locale);
+            $property = $this->legacyPropertyFactory->createTranslatedProperty($structureProperty, $locale, $bridge);
         } else {
             $property = $this->legacyPropertyFactory->createProperty($structureProperty);
         }
 
         $this->legacyProperties[$name] = $property;
 
-        $bridge = new StructureBridge($this->structure, $this->inspector, $this->legacyPropertyFactory, $this->document);
         $property->setStructure($bridge);
 
         $contentType = $this->contentTypeManager->get($contentTypeName);
@@ -100,22 +140,22 @@ class ManagedStructure extends Structure
      */
     public function getContentViewProperty($name)
     {
-        if (isset($this->contentViewProperties[$name])) {
-            return $this->contentViewProperties[$name];
+        if (isset($this->propertyValues[$name])) {
+            return $this->propertyValues[$name];
         }
 
         // initialize the legacy property
         $this->getProperty($name);
         $legacyProperty = $this->legacyProperties[$name];
 
-        $structureProperty = $this->structure->getProperty($name);
+        $structureProperty = $this->structureMetadata->getProperty($name);
         $contentTypeName = $structureProperty->getType();
         $contentType = $this->contentTypeManager->get($contentTypeName);
         $propertyValue = new PropertyValue(
             $name,
             $contentType->getContentData($legacyProperty)
         );
-        $this->contentViewProperties[$name] = $propertyValue;
+        $this->propertyValues[$name] = $propertyValue;
 
         return $propertyValue;
     }
@@ -127,7 +167,7 @@ class ManagedStructure extends Structure
      */
     public function setStructureMetadata(StructureMetadata $structure)
     {
-        $this->structure = $structure;
+        $this->structureMetadata = $structure;
     }
 
     /**
@@ -139,7 +179,7 @@ class ManagedStructure extends Structure
     {
         $this->init();
         $values = [];
-        foreach (array_keys($this->structure->getProperties()) as $childName) {
+        foreach (array_keys($this->structureMetadata->getProperties()) as $childName) {
             $values[$childName] = $this->normalize($this->getProperty($childName)->getValue());
         }
 
@@ -153,12 +193,12 @@ class ManagedStructure extends Structure
     {
         $this->init();
 
-        return $this->structure->hasProperty($offset);
+        return $this->structureMetadata->hasProperty($offset);
     }
 
     public function bind($data, $clearMissing = true)
     {
-        foreach ($this->structure->getProperties() as $childName => $child) {
+        foreach ($this->structureMetadata->getProperties() as $childName => $child) {
             if (false === $clearMissing && !isset($data[$childName])) {
                 continue;
             }
@@ -172,8 +212,8 @@ class ManagedStructure extends Structure
 
     private function init()
     {
-        if (!$this->structure) {
-            $this->structure = $this->inspector->getStructureMetadata($this->document);
+        if (!$this->structureMetadata) {
+            $this->structureMetadata = $this->inspector->getStructureMetadata($this->document);
         }
     }
 }
