@@ -144,7 +144,7 @@ define(['app-config', 'sulusecurity/components/users/models/user'], function(App
                 this.sandbox.dom.hide('#content-type-container .sub-form');
                 this.sandbox.dom.show($form);
 
-                if (parseInt(type) === TYPE_CONTENT) {
+                if (parseInt(type) === TYPE_CONTENT || !!this.data.shadowOn) {
                     this.sandbox.dom.show('#shadow-container');
                 } else {
                     this.sandbox.dom.hide('#shadow-container');
