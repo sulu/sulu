@@ -358,7 +358,7 @@ define(['app-config', 'sulusecurity/components/users/models/user'], function(App
                 data.internal_link = this.sandbox.dom.data('#internal-link', 'singleInternalLink');
             } else if (data.nodeType === TYPE_EXTERNAL) {
                 data.title = this.sandbox.dom.val('#external-title');
-                data.external = this.sandbox.dom.val(this.sandbox.dom.find('input', '#external'));
+                data.external = this.sandbox.dom.data('#external', 'url-data').url;
             }
 
             if (!!baseLanguages && baseLanguages.length > 0) {
