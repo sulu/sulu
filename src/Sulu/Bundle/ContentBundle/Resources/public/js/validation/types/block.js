@@ -226,7 +226,7 @@ define([
                     }
 
                     this.bindDomEvents();
-                    this.checkSortable();
+                    this.setSortable();
                     this.setValue([]);
 
                     $('#collapse-text-blocks-' + this.id).addClass('hidden');
@@ -350,15 +350,6 @@ define([
                     this.getChildren().each(function(i, block) {
                         expandBlock.call(this, $(block));
                     }.bind(this));
-                },
-
-                checkSortable: function() {
-                    // check for dragable
-                    if (this.getChildren().length <= 1) {
-                        this.setSortable(false);
-                    } else {
-                        this.setSortable(true);
-                    }
                 },
 
                 validate: function() {
@@ -512,12 +503,9 @@ define([
                     }
                 },
 
-                setSortable: function(state) {
-                    if (!state) {
-                        Husky.dom.removeClass(this.$el, 'sortable');
-                        Husky.dom.sortable(this.$el, 'destroy');
-                    } else if (!Husky.dom.hasClass(this.$el, 'sortable')) {
-                        Husky.dom.addClass(this.$el, 'sortable');
+                setSortable: function() {
+                    if (this.getMaxOccurs() > 1) {
+                        this.$el.addClass('sortable');
                     }
 
                     $(form.$el).trigger('init-sortable');
