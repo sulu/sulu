@@ -35,10 +35,10 @@ define([
                 },
 
                 setValue: function(value) {
-                    var config;
-                    if (!!value.config) {
+                    var config = {};
+                    if (!!value && !!value.config) {
                         config = value.config;
-                    } else {
+                    } else if (!!value) {
                         config = value;
                     }
 
