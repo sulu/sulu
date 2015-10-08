@@ -114,7 +114,8 @@ class WebspaceManager implements WebspaceManagerInterface
         foreach ($portals as $url => $portalInformation) {
             $sameLocalization = $portalInformation->getLocalization()->getLocalization() === $languageCode;
             $sameWebspace = $webspaceKey === null || $portalInformation->getWebspace()->getKey() === $webspaceKey;
-            $url = rtrim($url . $resourceLocator, '/');
+            // TODO protocol
+            $url = rtrim('http://' . $url . $resourceLocator, '/');
             if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {
                 $urls[] = $url;
             }
