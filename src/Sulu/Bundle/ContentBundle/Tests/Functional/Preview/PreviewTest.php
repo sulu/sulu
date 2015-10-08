@@ -191,7 +191,10 @@ class PreviewTest extends SuluTestCase
         $content = $this->preview->getChanges(1, $data[0]->getUuid(), 'sulu_io', 'en');
 
         // check result
-        $this->assertEquals(['aaaa', 'PREF: aaaa'], $content['title']);
+        $this->assertEquals(
+            [['property' => 'title', 'html' => 'aaaa'], ['property' => 'title', 'html' => 'PREF: aaaa']],
+            $content['title']
+        );
 
         // check cache
         $this->assertTrue($this->previewCache->contains(1, $data[0]->getUuid(), 'sulu_io', 'en'));
@@ -247,20 +250,28 @@ class PreviewTest extends SuluTestCase
         // check result
         $this->assertEquals(1, count($changes['block,0']));
         $this->assertEquals(
-            "\n<h1 property=\"title\">New-Block-Title-1</h1>\n" .
-            "<ul>\n" .
-            "<li property=\"article\">New-Block-Article-1-1</li>\n" .
-            "<li property=\"article\">New-Block-Article-1-2</li>\n" .
-            '</ul>',
+            [
+                'rel' => 'block',
+                'typeof' => 'block',
+                'html' => "\n<h1 property=\"title\">New-Block-Title-1</h1>\n" .
+                    "<ul>\n" .
+                    "<li property=\"article\">New-Block-Article-1-1</li>\n" .
+                    "<li property=\"article\">New-Block-Article-1-2</li>\n" .
+                    '</ul>',
+            ],
             $changes['block,0'][0]
         );
         $this->assertEquals(1, count($changes['block,1']));
         $this->assertEquals(
-            "\n<h1 property=\"title\">New-Block-Title-2</h1>\n" .
-            "<ul>\n" .
-            "<li property=\"article\">Block-Article-2-1</li>\n" .
-            "<li property=\"article\">Block-Article-2-2</li>\n" .
-            '</ul>',
+            [
+                'rel' => 'block',
+                'typeof' => 'block',
+                'html' => "\n<h1 property=\"title\">New-Block-Title-2</h1>\n" .
+                    "<ul>\n" .
+                    "<li property=\"article\">Block-Article-2-1</li>\n" .
+                    "<li property=\"article\">Block-Article-2-2</li>\n" .
+                    '</ul>',
+            ],
             $changes['block,1'][0]
         );
 
@@ -370,8 +381,11 @@ class PreviewTest extends SuluTestCase
         // update PREVIEW
         $changes = $this->preview->getChanges(1, $data[0]->getUuid(), 'sulu_io', 'en');
         $this->assertEquals(2, count($changes));
-        $this->assertEquals(['New Title', 'PREF: New Title'], $changes['title']);
-        $this->assertEquals(['asdf'], $changes['article']);
+        $this->assertEquals(
+            [['property' => 'title', 'html' => 'New Title'], ['property' => 'title', 'html' => 'PREF: New Title']],
+            $changes['title']
+        );
+        $this->assertEquals([['property' => 'article', 'html' => 'asdf']], $changes['article']);
 
         // update PREVIEW
         $changes = $this->preview->getChanges(1, $data[0]->getUuid(), 'sulu_io', 'en');
