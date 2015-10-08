@@ -7,7 +7,11 @@
  * with this source code in the file LICENSE.
  */
 
-define(['app-config', 'sulusecurity/components/users/models/user'], function(AppConfig, User) {
+define([
+    'app-config',
+    'sulusecurity/components/users/models/user',
+    'services/husky/url-validator'
+], function(AppConfig, User, urlValidator) {
 
     'use strict';
 
@@ -307,7 +311,7 @@ define(['app-config', 'sulusecurity/components/users/models/user'], function(App
                 this.sandbox.dom.data('#internal-link', 'singleInternalLink', data.internal_link);
             }
             if (!!data.external) {
-                this.sandbox.dom.data('#external', 'value', data.external);
+                this.sandbox.dom.data('#external', 'url-data', urlValidator.match(data.external));
             }
 
             // updated after init
