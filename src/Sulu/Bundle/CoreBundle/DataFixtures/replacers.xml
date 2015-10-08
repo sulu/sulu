@@ -2,7 +2,7 @@
 <replacers>
     <item>
         <column name="locale">default</column>
-        <column name="from"></column>
+        <column name="from"> </column>
         <column name="to">-</column>
     </item>
     <item>

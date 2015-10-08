@@ -43,4 +43,43 @@ class ReplacerXmlLoaderTest extends \PHPUnit_Framework_TestCase
             $result
         );
     }
+
+    public function examplesDataProvider()
+    {
+        return [
+            ['default', ' ', '-'],
+            ['default', '.', '-'],
+            ['default', '+', '-'],
+            ['default', '~', '-'],
+            ['default', '^', '-'],
+            ['default', 'ä', 'ae'],
+            ['default', 'ö', 'oe'],
+            ['default', 'ü', 'ue'],
+            ['default', 'Ä', 'Ae'],
+            ['default', 'Ö', 'Oe'],
+            ['default', 'Ü', 'Ue'],
+            ['en', '&', 'and'],
+            ['de', '&', 'und'],
+            ['fr', '&', 'et'],
+            ['it', '&', 'e'],
+            ['nl', '&', 'en'],
+            ['es', '&', 'y'],
+        ];
+    }
+
+    /**
+     * @dataProvider examplesDataProvider
+     */
+    public function testRealFile($locale, $from, $to)
+    {
+        $filename = 'replacers.xml';
+
+        $locator = $this->prophesize(FileLocatorInterface::class);
+        $locator->locate($filename)->willReturn(__DIR__ . '/../../DataFixtures/' . $filename);
+
+        $loader = new ReplacerXmlLoader($locator->reveal());
+        $result = $loader->load($filename);
+
+        $this->assertEquals($to, $result[$locale][$from]);
+    }
 }
