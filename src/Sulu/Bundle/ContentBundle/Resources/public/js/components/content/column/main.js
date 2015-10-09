@@ -595,7 +595,8 @@ define([
             if (this.getLastSelected() !== null) {
                 return '/admin/api/nodes?id=' + this.getLastSelected() + '&tree=true&webspace=' + this.options.webspace +
                     '&language=' + this.options.language +
-                    '&exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false');
+                    '&exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false') +
+                    '&exclude-shadows=' + (!this.showGhostPages ? 'true' : 'false');
             } else {
                 return '/admin/api/nodes?depth=1&webspace=' + this.options.webspace +
                     '&language=' + this.options.language +

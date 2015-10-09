@@ -54,6 +54,12 @@ define([
                     if (typeof(config.tagOperator) !== 'undefined' && !!config.tagOperator) {
                         App.dom.data($el, 'auraPreSelectedTagOperator', config.tagOperator);
                     }
+                    if (typeof(config.categories) !== 'undefined' && !!config.categories) {
+                        App.dom.data($el, 'auraCategories', config.categories);
+                    }
+                    if (typeof(config.categoryOperator) !== 'undefined' && !!config.categoryOperator) {
+                        App.dom.data($el, 'auraPreSelectedCategoryOperator', config.categoryOperator);
+                    }
                     if (typeof(config.sortMethod) !== 'undefined' && !!config.sortMethod) {
                         App.dom.data($el, 'auraPreSelectedSortMethod', config.sortMethod);
                     }

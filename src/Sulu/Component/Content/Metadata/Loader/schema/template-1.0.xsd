@@ -82,8 +82,8 @@
         <xs:attribute type="xs:string" name="type" use="required"/>
         <xs:attribute type="xs:string" name="mandatory" use="optional"/>
         <xs:attribute type="xs:string" name="multilingual" use="optional"/>
-        <xs:attribute type="xs:byte" name="minOccurs" use="optional"/>
-        <xs:attribute type="xs:byte" name="maxOccurs" use="optional"/>
+        <xs:attribute type="xs:nonNegativeInteger" name="minOccurs" use="optional"/>
+        <xs:attribute type="xs:positiveInteger" name="maxOccurs" use="optional"/>
         <xs:attribute type="xs:string" name="cssClass" use="optional"/>
         <xs:attribute type="xs:integer" name="colspan" use="optional"/>
     </xs:complexType>
@@ -99,8 +99,8 @@
         <xs:attribute type="xs:string" name="default-type" use="required"/>
         <xs:attribute type="xs:string" name="mandatory" use="optional"/>
         <xs:attribute type="xs:string" name="multilingual" use="optional"/>
-        <xs:attribute type="xs:byte" name="minOccurs" use="optional"/>
-        <xs:attribute type="xs:byte" name="maxOccurs" use="optional"/>
+        <xs:attribute type="xs:nonNegativeInteger" name="minOccurs" use="optional"/>
+        <xs:attribute type="xs:positiveInteger" name="maxOccurs" use="optional"/>
         <xs:attribute type="xs:string" name="cssClass" use="optional"/>
         <xs:attribute type="xs:integer" name="colspan" use="optional"/>
     </xs:complexType>

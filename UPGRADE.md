@@ -2,6 +2,37 @@
 
 ## dev-develop
 
+### XML-Templates
+Blocks now supports `minOccurs="0"` and `maxOccurs > 127`. For that the validation was improved and for both negative
+values wont be supported anymore.
+
+### Preview
+The preview can now handle attributes and nested properties. To differentiate blocks and nested properties, it is now
+necessary to add the property `typeof="collection"` to the root of a block `<div>` and 
+`typeof="block" rel="name of block property"` to each child - see example.
+
+__block:__
+
+```twig
+<div class="row" property="block" typeof="collection">
+    {% for block in content.block %}
+        <div rel="block" typeof="block">
+            <h1 property="title">{{ block.title }}</h1>
+        </div>
+    {% endfor %}
+</div>
+```
+
+__nested properties:__
+
+```twig
+<div property="is_winter">
+    {% if content.is_winter %}
+        <div property="article">{{ content.winter_article }}</div>
+    {% endif %}
+</div>
+```
+
 ### ApiCategory
 The function `getTranslation` was removed.  This avoid a INSERT SQL Exception when a serialization of categories
 (without translation) is called in the same request.

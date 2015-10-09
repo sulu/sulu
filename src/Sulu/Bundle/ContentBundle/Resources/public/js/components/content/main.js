@@ -19,6 +19,8 @@ define([
 
     var CONTENT_LANGUAGE = 'contentLanguage',
 
+        SHOW_GHOST_PAGES_KEY = 'column-navigation-show-ghost-pages',
+
         /**
          * node type constant for content
          * @type {number}
@@ -240,8 +242,16 @@ define([
             }, this);
 
             // content save-error
-            this.sandbox.on('sulu.content.contents.save-error', function() {
-                this.sandbox.emit('sulu.labels.error.show', 'labels.error.content-save-desc', 'labels.error');
+            this.sandbox.on('sulu.content.contents.save-error', function(status) {
+                if (status === 409) {
+                    this.sandbox.emit(
+                        'sulu.labels.error.show',
+                        'labels.error.content-save-resource-locator',
+                        'labels.error'
+                    );
+                } else {
+                    this.sandbox.emit('sulu.labels.error.show', 'labels.error.content-save-desc', 'labels.error');
+                }
                 this.setHeaderBar(false);
             }, this);
 
@@ -330,7 +340,7 @@ define([
             this.sandbox.on('sulu.content.contents.order', this.order, this);
 
             // get resource locator
-            this.sandbox.once('sulu.content.contents.get-rl', function(title, callback) {
+            this.sandbox.on('sulu.content.contents.get-rl', function(title, callback) {
                 this.getResourceLocator(title, this.template, callback);
             }, this);
 
@@ -514,7 +524,7 @@ define([
                 null, {
                     // on success save contents id
                     success: function(response) {
-                        var model = response.toJSON(), parent;
+                        var model = response.toJSON();
                         if (!!this.options.id) {
                             this.sandbox.emit('sulu.content.contents.saved', model.id, model);
                         } else {
@@ -523,10 +533,10 @@ define([
                         this.afterSaveAction(action, !this.options.id);
                         def.resolve();
                     }.bind(this),
-                    error: function() {
+                    error: function(model, response) {
                         this.sandbox.logger.log("error while saving profile");
                         this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
-                        this.sandbox.emit('sulu.content.contents.save-error');
+                        this.sandbox.emit('sulu.content.contents.save-error', response.status);
                     }.bind(this)
                 });
 
@@ -544,7 +554,7 @@ define([
             } else if (action === 'new') {
                 var parent, breadcrumb = this.content.get('breadcrumb');
                 parent = ((!!this.options.id && breadcrumb.length > 1) ?
-                    breadcrumb[breadcrumb.length - 1].uuid : null) || this.options.parent;
+                        breadcrumb[breadcrumb.length - 1].uuid : null) || this.options.parent;
                 this.sandbox.emit('sulu.router.navigate',
                     'content/contents/' + this.options.webspace + '/' +
                     this.options.language + '/add' + ((!!parent) ? ':' + parent : '') + '/content',
@@ -916,12 +926,12 @@ define([
             this.handle(content, filter, function(element) {
                 // check all parents if they has not the attribute property
                 // thats currently not supported by the api
-                var cur = element.parentNode;
-                while (null !== cur.parentNode) {
-                    if (cur.hasAttribute('property')) {
+                var currentNode = element.parentNode;
+                while (null !== currentNode.parentNode) {
+                    if (currentNode.hasAttribute('property') && currentNode.getAttribute('typeof') === 'collection') {
                         return false;
                     }
-                    cur = cur.parentNode;
+                    currentNode = currentNode.parentNode;
                 }
 
                 return true;
@@ -938,12 +948,16 @@ define([
                     return;
                 }
 
-                // set content and highlight class
-                if (typeof content[i] !== 'undefined') {
-                    element.innerHTML = content[i];
-                } else {
-                    element.innerHTML = '';
-                }
+                $.each(content[i], function(key, value) {
+                    if (key !== 'html') {
+                        $(element).attr(key, value);
+
+                        return;
+                    }
+
+                    element.innerHTML = value;
+                });
+
                 // FIXME jump to element: element.scrollIntoView();
                 i++;
             });
@@ -961,16 +975,20 @@ define([
                 header, dropdownLocalizations = [], navigationUrl, navigationUrlParams = [];
 
             if (this.options.display === 'column') {
+                var showGhostPages = this.sandbox.sulu.getUserSetting(SHOW_GHOST_PAGES_KEY),
+                    toggler = (!!JSON.parse(showGhostPages) ? 'toggler-on' : 'toggler'),
+                    columnButtons = {};
+
+                columnButtons[toggler] = {
+                    options: {
+                        title: 'content.contents.show-ghost-pages'
+                    }
+                };
+
                 header = {
                     noBack: true,
                     toolbar: {
-                        buttons: {
-                            toggler: {
-                                options: {
-                                    title: 'content.contents.show-ghost-pages'
-                                }
-                            }
-                        },
+                        buttons: columnButtons,
                         languageChanger: {
                             data: this.localizations,
                             preSelected: this.options.language

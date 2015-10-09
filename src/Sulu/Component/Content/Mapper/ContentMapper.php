@@ -26,7 +26,6 @@ use Sulu\Component\Content\Compat\Property as LegacyProperty;
 use Sulu\Component\Content\Compat\Structure as LegacyStructure;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
-use Sulu\Component\Content\Compat\StructureType;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
@@ -439,19 +438,28 @@ class ContentMapper implements ContentMapperInterface
         $uuid,
         $locale,
         $webspaceKey = null,
-        $excludeGhost = true
+        $excludeGhost = true,
+        $excludeShadow = true
     ) {
-        $document = $this->loadDocument($uuid, $locale, $options = [
-            'load_ghost_content' => true,
-            'exclude_ghost' => $excludeGhost,
-            'exclude_shadow' => false,
-        ]);
+        $document = $this->loadDocument(
+            $uuid,
+            $locale,
+            $options = [
+                'load_ghost_content' => true,
+                'exclude_ghost' => $excludeGhost,
+                'exclude_shadow' => $excludeShadow,
+            ],
+            false
+        );
 
         if (null === $document) {
             return [];
         }
 
-        $documents = [$document];
+        $documents = [];
+        if (!$this->optionsShouldExcludeDocument($document, $options)) {
+            $documents[] = $document;
+        }
 
         if ($document instanceof HomeDocument) {
             return $this->documentsToStructureCollection($documents, $options);
@@ -1100,13 +1108,13 @@ class ContentMapper implements ContentMapperInterface
         $this->sessionManager->getSession()->save();
     }
 
-    private function loadDocument($pathOrUuid, $locale, $options)
+    private function loadDocument($pathOrUuid, $locale, $options, $shouldExclude = true)
     {
         $document = $this->documentManager->find($pathOrUuid, $locale, [
             'load_ghost_content' => isset($options['load_ghost_content']) ? $options['load_ghost_content'] : true,
         ]);
 
-        if ($this->optionsShouldExcludeDocument($document, $options)) {
+        if ($shouldExclude && $this->optionsShouldExcludeDocument($document, $options)) {
             return;
         }
 

@@ -10,6 +10,8 @@
 
 namespace Sulu\Component\Contact\SmartContent;
 
+use JMS\Serializer\SerializerInterface;
+use Sulu\Component\SmartContent\Orm\BaseDataProvider;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 
 /**
@@ -17,11 +19,11 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
  */
 class AccountDataProvider extends BaseDataProvider
 {
-    public function __construct(DataProviderRepositoryInterface $repository)
+    public function __construct(DataProviderRepositoryInterface $repository, SerializerInterface $serializer)
     {
-        parent::__construct($repository);
+        parent::__construct($repository, $serializer);
 
-        $this->configuration = $this->initConfiguration(true, false, true, true, true, []);
+        $this->configuration = $this->initConfiguration(true, true, true, true, true, []);
     }
 
     /**
@@ -40,26 +42,8 @@ class AccountDataProvider extends BaseDataProvider
     /**
      * {@inheritdoc}
      */
-    protected function convertToArray($entity, $locale)
+    protected function getSerializationContext()
     {
-        return [
-            'number' => $entity->getNumber(),
-            'name' => $entity->getName(),
-            'registerNumber' => $entity->getRegisterNumber(),
-            'placeOfJurisdiction' => $entity->getPlaceOfJurisdiction(),
-            'uid' => $entity->getUid(),
-            'corporation' => $entity->getCorporation(),
-            'created' => $entity->getCreated(),
-            'creator' => $entity->getCreator(),
-            'changed' => $entity->getChanged(),
-            'changer' => $entity->getChanger(),
-            'medias' => $entity->getMedias(),
-            'emails' => $this->getEmails($entity),
-            'phones' => $this->getPhones($entity),
-            'faxes' => $this->getFaxes($entity),
-            'urls' => $this->getUrls($entity),
-            'tags' => $this->getTags($entity),
-            'categories' => $this->getCategories($entity, $locale),
-        ];
+        return parent::getSerializationContext()->setGroups(['fullAccount', 'partialContact']);
     }
 }

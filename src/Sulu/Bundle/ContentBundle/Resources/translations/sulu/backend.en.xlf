@@ -184,7 +184,7 @@
             </trans-unit>
             <trans-unit id="cc88fcd370c8ff1d96f0b0f99bdb8317" resname="smart-content.clear">
                 <source>smart-content.clear</source>
-                <target>Clear</target>
+                <target>Reset fields</target>
             </trans-unit>
             <trans-unit id="ad64f69edc5ce6dae6033001f5d01b6e" resname="content.template.dialog.titile">
                 <source>content.template.dialog.titile</source>
@@ -486,6 +486,62 @@
             <trans-unit id="e4b14069a8a085ede2092hf5acb2dh4b" resname="search-overlay.placeholder.page">
                 <source>search-overlay.placeholder.page</source>
                 <target>Search pages...</target>
+            </trans-unit>
+            <trans-unit id="75435af307a7ae8f965923968a0e0f94" resname="labels.error.content-save-desc">
+                <source>labels.error.content-save-desc</source>
+                <target>Node could not be saved.</target>
+            </trans-unit>
+            <trans-unit id="75435af3a7a7a38f968923968a0e0f94" resname="labels.error.content-save-resource-locator">
+                <source>labels.error.content-save-resource-locator</source>
+                <target>The given Resource Locator is not valid.</target>
+            </trans-unit>
+            <trans-unit id="2647c238cae0fa45d7fbad336e43750f" resname="labels.success.content-deleted-desc">
+                <source>labels.success.content-deleted-desc</source>
+                <target>Node successfully deleted.</target>
+            </trans-unit>
+            <trans-unit id="487f946d51783a9899fa59d31dcfc3e8" resname="labels.success.content-save-desc">
+                <source>labels.success.content-save-desc</source>
+                <target>Node sucessfully saved</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh40" resname="smart-content.categories.label">
+                <source>smart-content.categories.label</source>
+                <target>Filter by categories</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh41" resname="smart-content.categories.button">
+                <source>smart-content.categories.button</source>
+                <target>Choose categories</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh42" resname="smart-content.categories">
+                <source>smart-content.categories</source>
+                <target>Categories</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh43" resname="smart-content.choose-categories">
+                <source>smart-content.choose-categories</source>
+                <target>Choose categories</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh44" resname="smart-content.categories.operator-label">
+                <source>smart-content.categories.operator-label</source>
+                <target>Condition</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh45" resname="smart-content.categories.use-any-category">
+                <source>smart-content.categories.use-any-category</source>
+                <target>Use pages that use ANY tag</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh46" resname="smart-content.categories.use-all-categories">
+                <source>smart-content.categories.use-all-categories</source>
+                <target>Use pages that use ALL categories</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh47" resname="smart-content.categories.categories-label">
+                <source>smart-content.categories.categories-label</source>
+                <target>Choose categories</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh48" resname="smart-content.choose-categories.cancel">
+                <source>smart-content.choose-categories.cancel</source>
+                <target>Back</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh49" resname="smart-content.choose-categories.ok">
+                <source>smart-content.choose-categories.ok</source>
+                <target>Apply Categories</target>
             </trans-unit>
         </body>
     </file>

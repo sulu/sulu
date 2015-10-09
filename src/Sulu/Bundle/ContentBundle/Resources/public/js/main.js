@@ -45,7 +45,8 @@ define([
                 image: false
             });
             
-            sandbox.urlManager.setUrl('page', 
+            sandbox.urlManager.setUrl(
+                'page',
                 function(data) {
                     return 'content/contents/<%= webspace %>/<%= locale %>/edit:<%= id %>/content';
                 },
