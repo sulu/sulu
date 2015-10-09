@@ -38330,7 +38330,8 @@ define('__component__$dependent-select@husky',[],function() {
  * @param {Array} [options.preSelectedElements] allows preselection of fields by defining the id attributes or strings
  * @param {Function} [options.selectCallback] callbackfunction, when element is selected
  * @param {String} [options.valueName] name of property which should be used
- * @param {String} [options.style] "normal", "small", "big", "action" for different appearance
+ * @param {String} [options.style] "normal", "small", "big", "action" for different appearance. Multiple assignments
+ *                  are done by separating styles with a space (e.g. 'action big')
  * @param {String} [options.skin] style class to set to the elements component (e.g 'white')
  * @param {Boolean} [options.emitValues] If true the value is emited with events instead of the id
  * @param {Boolean} [options.fixedLabel] If true the label never gets changed
@@ -38562,6 +38563,23 @@ define('__component__$select@husky',[], function() {
         },
         getCaret = function() {
             return this.$find(constants.toggleClass);
+        },
+
+        /**
+         * Process styles of options and apply to select.
+         *
+         * @param {Object} $button
+         */
+        processStyles = function($button) {
+            var allowedStyles = ['small', 'big', 'action'];
+            if (!!this.options.style) {
+                var styles = this.options.style.split(' ');
+                this.sandbox.util.foreach(styles, function(style) {
+                    if (allowedStyles.indexOf(style) > -1) {
+                        this.sandbox.dom.addClass($button, style);
+                    }
+                }.bind(this));
+            }
         };
 
     return {
@@ -38647,13 +38665,7 @@ define('__component__$select@husky',[], function() {
                 );
             this.sandbox.dom.append($originalElement, button);
 
-            if (this.options.style === 'small') {
-                this.sandbox.dom.addClass(button, 'small');
-            } else if (this.options.style === 'big') {
-                this.sandbox.dom.addClass(button, 'big');
-            } else if (this.options.style === 'action') {
-                this.sandbox.dom.addClass(button, 'action');
-            }
+            processStyles.call(this, button);
 
             // add skin style
             this.sandbox.dom.addClass(button, this.options.skin);
@@ -41596,6 +41608,7 @@ define('__component__$ckeditor@husky',[], function() {
  * @params {Boolean} [options.removeOnClose] if overlay component gets removed on close
  * @params {String} [options.skin] set an overlay skin to manipulate overlay's appearance. Possible skins: '', 'dropzone'
  * @params {Boolean} [options.backdropClose] if true overlay closes with click on backdrop
+ * @params {Boolean} [options.displayHeader] Defines if overlay Header with title should be shown
  * @params {String} [options.type] The type of the overlay ('normal', 'error' or 'warning')
  * @params {Array} [options.buttonsDefaultAlign] the align of the buttons in the footer ('center', 'left' or 'right'). Can be overriden by each button individually
  * @params {Array} [options.supportKeyInput] if true pressing enter will submit the overlay and esc will close it
@@ -41643,6 +41656,7 @@ define('__component__$overlay@husky',[], function() {
             backdropClose: true,
             skin: '',
             supportKeyInput: true,
+            displayHeader: true,
             propagateEvents: true,
             type: 'normal',
             cssClass: '',
@@ -41742,10 +41756,12 @@ define('__component__$overlay@husky',[], function() {
             ].join(''),
             slideSkeleton: [
                 '<div class="slide slide-<%= index %> <%= cssClass %>">',
-                '   <div class="overlay-header<% if(subTitle) { %> with-sub-title<% } %>">',
-                '       <span class="title"><%= title %></span>',
-                '       <% if(subTitle) { %><div class="sub-title"><%= subTitle %></div><% } %>',
-                '   </div>',
+                '   <% if(displayHeader) { %>',
+                '      <div class="overlay-header<% if(subTitle) { %> with-sub-title<% } %>">',
+                '           <span class="title"><%= title %></span>',
+                '           <% if(subTitle) { %><div class="sub-title"><%= subTitle %></div><% } %>',
+                '       </div>',
+                '   <% } %>',
                 '   <div class="overlay-content"></div>',
                 '   <div class="overlay-footer">',
                 '   </div>',
@@ -42088,7 +42104,7 @@ define('__component__$overlay@husky',[], function() {
             if (slide < 0) {
                 slide = this.slides.length - 1;
             }
-            
+
             this.slideTo(slide);
         },
 
@@ -42210,7 +42226,8 @@ define('__component__$overlay@husky',[], function() {
                     title: this.sandbox.util.cropMiddle(this.slides[slide].title, 58),
                     subTitle: !!this.slides[slide].subTitle ? this.slides[slide].subTitle : null,
                     index: this.slides[slide].index,
-                    cssClass: this.slides[slide].cssClass
+                    cssClass: this.slides[slide].cssClass,
+                    displayHeader: this.options.displayHeader
                 })
             );
             this.overlay.slides[slide].$footer = this.sandbox.dom.find(constants.footerSelector, this.overlay.slides[slide].$el);
