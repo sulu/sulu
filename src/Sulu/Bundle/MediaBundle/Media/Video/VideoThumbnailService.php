@@ -55,7 +55,7 @@ class VideoThumbnailService implements VideoThumbnailServiceInterface
             );
             exec($command, $rValue, $rError);
 
-            return $rError == 0;
+            return $rError == 0 && file_exists($destination);
         }
 
         return false;

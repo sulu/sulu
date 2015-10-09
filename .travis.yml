@@ -11,6 +11,9 @@ env:
 #  - SULU_ORM=mysql SULU_PHPCR=doctrine_dbal
 #  - SULU_ORM=postgres SULU_PHPCR=doctrine_dbal
 
+before_install:
+  - sudo apt-get install -y ffmpeg
+
 before_script:
   - composer self-update
   - composer install
