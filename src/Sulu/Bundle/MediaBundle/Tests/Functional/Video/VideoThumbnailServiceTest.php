@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Video;
 
-
 use Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailService;
 
 class VideoThumbnailServiceTest extends \PHPUnit_Framework_TestCase
@@ -92,7 +91,7 @@ class VideoThumbnailServiceTest extends \PHPUnit_Framework_TestCase
 
         foreach ($times as $time) {
             $file = $this->basePath . str_replace(':', '.', $time) . '.jpg';
-            $this->files[] =  $file;
+            $this->files[] = $file;
         }
 
         foreach ($this->files as $file) {
