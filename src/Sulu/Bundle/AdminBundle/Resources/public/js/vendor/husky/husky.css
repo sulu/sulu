@@ -9365,15 +9365,16 @@ a.btn-black, a.btn-highlight {
 
 /* line 440, ../scss/modules/toolbar.scss */
 .husky-toolbar-responsive {
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
-/* line 443, ../scss/modules/toolbar.scss */
+/* line 444, ../scss/modules/toolbar.scss */
 .husky-toolbar-responsive.overflown {
   -moz-box-shadow: inset -8px 0px 8px -3px rgba(0, 0, 0, 0.08), inset 8px 0px 8px -3px rgba(0, 0, 0, 0.08);
   -webkit-box-shadow: inset -8px 0px 8px -3px rgba(0, 0, 0, 0.08), inset 8px 0px 8px -3px rgba(0, 0, 0, 0.08);
   box-shadow: inset -8px 0px 8px -3px rgba(0, 0, 0, 0.08), inset 8px 0px 8px -3px rgba(0, 0, 0, 0.08);
 }
-/* line 445, ../scss/modules/toolbar.scss */
+/* line 446, ../scss/modules/toolbar.scss */
 .husky-toolbar-responsive.overflown .toolbar-dropdown-menu {
   margin-top: 0;
 }

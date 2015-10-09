@@ -106,8 +106,6 @@ class Contact extends ApiWrapper
      * @param string $middleName
      *
      * @return Contact
-     *
-     * @Groups({"fullContact","partialContact"})
      */
     public function setMiddleName($middleName)
     {

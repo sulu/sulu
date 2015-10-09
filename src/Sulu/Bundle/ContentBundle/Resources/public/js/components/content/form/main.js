@@ -39,7 +39,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
 
             this.preview = new Preview();
 
-            this.dfdListenForChange = this.sandbox.data.deferred();
+            this.dfdListenForResourceLocator = $.Deferred();
             this.load();
         },
 
@@ -68,7 +68,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             if (this.startListening) {
                 this.sandbox.dom.one(this.getDomElementsForTagName('sulu.rlp.part'), 'focusout', this.setResourceLocator.bind(this));
             } else {
-                this.dfdListenForChange.resolve();
+                this.dfdListenForResourceLocator.resolve();
             }
         },
 
@@ -374,7 +374,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
         },
 
         setResourceLocator: function() {
-            if (this.dfdListenForChange.state() !== 'pending') {
+            if (this.dfdListenForResourceLocator.state() !== 'pending') {
                 return;
             }
 
@@ -407,7 +407,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
                         }
                     }.bind(this));
 
-                    this.dfdListenForChange.resolve();
+                    this.dfdListenForResourceLocator.resolve();
 
                     this.setHeaderBar(false);
                 }.bind(this));
@@ -417,7 +417,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
         },
 
         listenForChange: function() {
-            this.dfdListenForChange.then(function() {
+            this.dfdListenForResourceLocator.then(function() {
                 this.sandbox.dom.on(this.$el, 'keyup change', function() {
                     this.setHeaderBar(false);
                 }.bind(this), '.trigger-save-button');
@@ -434,6 +434,8 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             }
             this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', this.animateTemplateDropdown);
             this.animateTemplateDropdown = false;
+
+            this.dfdListenForResourceLocator = $.Deferred();
         },
 
         submit: function(action) {

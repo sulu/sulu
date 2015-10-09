@@ -226,8 +226,12 @@ define([
                     }
 
                     this.bindDomEvents();
-                    this.checkSortable();
+                    this.setSortable();
                     this.setValue([]);
+
+                    $('#collapse-text-blocks-' + this.id).addClass('hidden');
+                    $('#expand-text-blocks-' + this.id).addClass('hidden');
+                    this.checkFullAndEmpty();
                 },
 
                 getChildren: function() {
@@ -334,7 +338,6 @@ define([
                  * Collapses all text-blocks
                  */
                 collapseAll: function() {
-
                     this.getChildren().each(function(i, block) {
                         collapseBlock.call(this, $(block));
                     }.bind(this));
@@ -347,15 +350,6 @@ define([
                     this.getChildren().each(function(i, block) {
                         expandBlock.call(this, $(block));
                     }.bind(this));
-                },
-
-                checkSortable: function() {
-                    // check for dragable
-                    if (this.getChildren().length <= 1) {
-                        this.setSortable(false);
-                    } else {
-                        this.setSortable(true);
-                    }
                 },
 
                 validate: function() {
@@ -407,6 +401,8 @@ define([
                             form.mapper.setData(data, $template).then(function() {
                                 if (!keepExpanded) {
                                     collapseBlock.call(this, $template);
+                                } else {
+                                    expandBlock.call(this, $template);
                                 }
                                 dfd.resolve();
                                 if (!!fireEvent) {
@@ -507,12 +503,9 @@ define([
                     }
                 },
 
-                setSortable: function(state) {
-                    if (!state) {
-                        Husky.dom.removeClass(this.$el, 'sortable');
-                        Husky.dom.sortable(this.$el, 'destroy');
-                    } else if (!Husky.dom.hasClass(this.$el, 'sortable')) {
-                        Husky.dom.addClass(this.$el, 'sortable');
+                setSortable: function() {
+                    if (this.getMaxOccurs() > 1) {
+                        this.$el.addClass('sortable');
                     }
 
                     $(form.$el).trigger('init-sortable');

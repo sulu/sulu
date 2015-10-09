@@ -21,28 +21,7 @@ class PathCleanup implements PathCleanupInterface
      *
      * @var array
      */
-    protected $replacers = [
-        'default' => [
-            ' ' => '-',
-            '+' => '-',
-            '.' => '-',
-            'ä' => 'ae',
-            'ö' => 'oe',
-            'ü' => 'ue',
-            // because strtolower ignores Ä,Ö,Ü
-            'Ä' => 'ae',
-            'Ö' => 'oe',
-            'Ü' => 'ue',
-            'ß' => 'ss',
-            // TODO should be filled
-        ],
-        'de' => [
-            '&' => 'und',
-        ],
-        'en' => [
-            '&' => 'and',
-        ],
-    ];
+    protected $replacers = [];
 
     /**
      * valid pattern for path
@@ -57,17 +36,25 @@ class PathCleanup implements PathCleanupInterface
     private $pattern = '/^(\/[a-z0-9-_]+)+$/i';
 
     /**
+     * PathCleanup constructor.
+     *
+     * @param array $replacers
+     */
+    public function __construct(array $replacers)
+    {
+        $this->replacers = $replacers;
+    }
+
+    /**
      * returns a clean string.
      *
-     * @param string $dirty        dirty string to cleanup
+     * @param string $dirty dirty string to cleanup
      * @param string $languageCode
      *
      * @return string clean string
      */
     public function cleanup($dirty, $languageCode)
     {
-        $clean = strtolower($dirty);
-
         $replacers = array_merge(
             $this->replacers['default'],
             (isset($this->replacers[$languageCode]) ? $this->replacers[$languageCode] : [])
@@ -75,9 +62,11 @@ class PathCleanup implements PathCleanupInterface
 
         if (count($replacers) > 0) {
             foreach ($replacers as $key => $value) {
-                $clean = str_replace($key, $value, $clean);
+                $dirty = str_replace($key, $value, $dirty);
             }
         }
+
+        $clean = strtolower($dirty);
 
         // Inspired by ZOOLU
         // delete problematic characters

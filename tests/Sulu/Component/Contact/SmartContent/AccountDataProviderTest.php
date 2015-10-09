@@ -10,18 +10,23 @@
 
 namespace Sulu\Component\Contact\SmartContent;
 
-use Sulu\Bundle\ContactBundle\Entity\Account;
-use Sulu\Bundle\ContactBundle\Entity\AccountRepository;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\SerializerInterface;
+use Prophecy\Argument;
+use Sulu\Bundle\ContactBundle\Api\Account;
 use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
+use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 
 class AccountDataProviderTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetConfiguration()
     {
+        $serializer = $this->prophesize(SerializerInterface::class);
         $provider = new AccountDataProvider(
-            $this->getAccountRepository()
+            $this->getRepository(),
+            $serializer->reveal()
         );
 
         $configuration = $provider->getConfiguration();
@@ -31,8 +36,10 @@ class AccountDataProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDefaultParameter()
     {
+        $serializer = $this->prophesize(SerializerInterface::class);
         $provider = new AccountDataProvider(
-            $this->getAccountRepository()
+            $this->getRepository(),
+            $serializer->reveal()
         );
 
         $parameter = $provider->getDefaultPropertyParameter();
@@ -43,9 +50,9 @@ class AccountDataProviderTest extends \PHPUnit_Framework_TestCase
     public function dataItemsDataProvider()
     {
         $accounts = [
-            $this->createAccount('Massive Art'),
-            $this->createAccount('Sulu'),
-            $this->createAccount('Apple'),
+            $this->createAccount(1, 'Massive Art')->reveal(),
+            $this->createAccount(2, 'Sulu')->reveal(),
+            $this->createAccount(3, 'Apple')->reveal(),
         ];
 
         $dataItems = [];
@@ -66,8 +73,10 @@ class AccountDataProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testResolveDataItems($filters, $limit, $page, $pageSize, $repositoryResult, $hasNextPage, $items)
     {
+        $serializer = $this->prophesize(SerializerInterface::class);
         $provider = new AccountDataProvider(
-            $this->getAccountRepository($filters, $page, $pageSize, $limit, $repositoryResult)
+            $this->getRepository($filters, $page, $pageSize, $limit, $repositoryResult),
+            $serializer->reveal()
         );
 
         $result = $provider->resolveDataItems(
@@ -89,9 +98,9 @@ class AccountDataProviderTest extends \PHPUnit_Framework_TestCase
     public function resourceItemsDataProvider()
     {
         $accounts = [
-            $this->createAccount('Max', 'Mustermann'),
-            $this->createAccount('Erika', 'Mustermann'),
-            $this->createAccount('Leon', 'Mustermann'),
+            $this->createAccount(1, 'Massive Art')->reveal(),
+            $this->createAccount(2, 'Sulu')->reveal(),
+            $this->createAccount(3, 'Apple')->reveal(),
         ];
 
         $dataItems = [];
@@ -119,8 +128,21 @@ class AccountDataProviderTest extends \PHPUnit_Framework_TestCase
         $hasNextPage,
         $items
     ) {
+        $serializeCallback = function (Account $account) {
+            return $this->serialize($account);
+        };
+
+        $serializer = $this->prophesize(SerializerInterface::class);
+        $serializer->serialize(Argument::type(Account::class), 'array', Argument::type(SerializationContext::class))
+            ->will(
+                function ($args) use ($serializeCallback) {
+                    return $serializeCallback($args[0]);
+                }
+            );
+
         $provider = new AccountDataProvider(
-            $this->getAccountRepository($filters, $page, $pageSize, $limit, $repositoryResult)
+            $this->getRepository($filters, $page, $pageSize, $limit, $repositoryResult),
+            $serializer->reveal()
         );
 
         $result = $provider->resolveResourceItems(
@@ -141,29 +163,40 @@ class AccountDataProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testResolveDataSource()
     {
+        $serializer = $this->prophesize(SerializerInterface::class);
         $provider = new AccountDataProvider(
-            $this->getAccountRepository()
+            $this->getRepository(),
+            $serializer->reveal()
         );
 
         $this->assertNull($provider->resolveDatasource('', [], []));
     }
 
     /**
-     * @return AccountRepository
+     * @return DataProviderRepositoryInterface
      */
-    private function getAccountRepository($filters = [], $page = null, $pageSize = 0, $limit = null, $result = [])
+    private function getRepository($filters = [], $page = null, $pageSize = 0, $limit = null, $result = [])
     {
-        $mock = $this->prophesize(AccountRepository::class);
+        $mock = $this->prophesize(DataProviderRepositoryInterface::class);
 
-        $mock->findByFilters($filters, $page, $pageSize, $limit)->willReturn($result);
+        $mock->findByFilters($filters, $page, $pageSize, $limit, 'en')->willReturn($result);
 
         return $mock->reveal();
     }
 
-    private function createAccount($name)
+    private function createAccount($id, $name, $tags = [])
     {
-        $account = new Account();
-        $account->setName($name);
+        $account = $this->prophesize(Account::class);
+        $account->getId()->willReturn($id);
+        $account->getNumber()->willReturn($id);
+        $account->getName()->willReturn($name);
+        $account->getTags()->willReturn($tags);
+        $account->getPlaceOfJurisdiction()->willReturn('');
+        $account->getUid()->willReturn('');
+        $account->getCorporation()->willReturn('');
+        $account->getCreated()->willReturn(new \DateTime());
+        $account->getChanged()->willReturn(new \DateTime());
+        $account->getMedias()->willReturn([]);
 
         return $account;
     }
@@ -175,33 +208,32 @@ class AccountDataProviderTest extends \PHPUnit_Framework_TestCase
 
     private function createResourceItem(Account $account)
     {
+        return new ArrayAccessItem($account->getId(), $this->serialize($account), $account);
+    }
+
+    private function serialize(Account $account)
+    {
         $tags = [];
         foreach ($account->getTags() as $tag) {
             $tags[] = $tag->getName();
         }
 
-        return new ArrayAccessItem(
-            $account->getId(),
-            [
-                'number' => $account->getNumber(),
-                'name' => $account->getName(),
-                'registerNumber' => $account->getNumber(),
-                'placeOfJurisdiction' => $account->getPlaceOfJurisdiction(),
-                'uid' => $account->getUid(),
-                'corporation' => $account->getCorporation(),
-                'created' => $account->getCreated(),
-                'creator' => $account->getCreator(),
-                'changed' => $account->getChanged(),
-                'changer' => $account->getChanger(),
-                'medias' => $account->getMedias(),
-                'emails' => [],
-                'phones' => [],
-                'faxes' => [],
-                'urls' => [],
-                'tags' => $tags,
-                'categories' => [],
-            ],
-            $account
-        );
+        return [
+            'number' => $account->getNumber(),
+            'name' => $account->getName(),
+            'registerNumber' => $account->getNumber(),
+            'placeOfJurisdiction' => $account->getPlaceOfJurisdiction(),
+            'uid' => $account->getUid(),
+            'corporation' => $account->getCorporation(),
+            'created' => $account->getCreated(),
+            'changed' => $account->getChanged(),
+            'medias' => $account->getMedias(),
+            'emails' => [],
+            'phones' => [],
+            'faxes' => [],
+            'urls' => [],
+            'tags' => $tags,
+            'categories' => [],
+        ];
     }
 }

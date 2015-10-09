@@ -12,6 +12,7 @@ namespace Sulu\Component\SmartContent;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Component\Category\Request\CategoryRequestHandlerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
@@ -57,12 +58,18 @@ class ContentType extends ComplexContentType
     private $tagRequestHandler;
 
     /**
+     * @var CategoryRequestHandlerInterface
+     */
+    private $categoryRequestHandler;
+
+    /**
      * SmartContentType constructor.
      *
      * @param DataProviderPoolInterface $dataProviderPool
      * @param TagManagerInterface $tagManager
      * @param RequestStack $requestStack
      * @param TagRequestHandlerInterface $tagRequestHandler
+     * @param CategoryRequestHandlerInterface $categoryRequestHandler
      * @param string $template
      */
     public function __construct(
@@ -70,12 +77,14 @@ class ContentType extends ComplexContentType
         TagManagerInterface $tagManager,
         RequestStack $requestStack,
         TagRequestHandlerInterface $tagRequestHandler,
+        CategoryRequestHandlerInterface $categoryRequestHandler,
         $template
     ) {
         $this->dataProviderPool = $dataProviderPool;
         $this->tagManager = $tagManager;
         $this->requestStack = $requestStack;
         $this->tagRequestHandler = $tagRequestHandler;
+        $this->categoryRequestHandler = $categoryRequestHandler;
         $this->template = $template;
     }
 
@@ -168,9 +177,23 @@ class ContentType extends ComplexContentType
             'provider' => new PropertyParameter('provider', 'content'),
             'page_parameter' => new PropertyParameter('page_parameter', 'p'),
             'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
+            'categories_parameter' => new PropertyParameter('categories_parameter', 'categories'),
             'website_tag_operator' => new PropertyParameter('website_tag_operator', 'OR'),
+            'website_category_operator' => new PropertyParameter('website_category_operator', 'OR'),
             'sorting' => new PropertyParameter('sorting', $configuration->getSorting(), 'collection'),
             'present_as' => new PropertyParameter('present_as', [], 'collection'),
+            'category_root' => new PropertyParameter('category_root', null),
+            'display_options' => new PropertyParameter(
+                'display_options',
+                [
+                    'tags' => new PropertyParameter('tags', true),
+                    'categories' => new PropertyParameter('categories', true),
+                    'sorting' => new PropertyParameter('sorting', true),
+                    'limit' => new PropertyParameter('limit', true),
+                    'presentAs' => new PropertyParameter('presentAs', true),
+                ],
+                'collection'
+            ),
             'has' => [
                 'datasource' => $configuration->hasDatasource(),
                 'tags' => $configuration->hasTags(),
@@ -226,14 +249,23 @@ class ContentType extends ComplexContentType
         $filters = $property->getValue();
         $filters['excluded'] = [$property->getStructure()->getUuid()];
 
-        // default value of tags is an empty array
+        // default value of tags/category is an empty array
         if (!array_key_exists('tags', $filters)) {
             $filters['tags'] = [];
+        }
+        if (!array_key_exists('categories', $filters)) {
+            $filters['categories'] = [];
         }
 
         // extends selected filter with requested tags
         $filters['websiteTags'] = $this->tagRequestHandler->getTags($params['tags_parameter']->getValue());
         $filters['websiteTagOperator'] = $params['website_tag_operator']->getValue();
+
+        // extends selected filter with requested categories
+        $filters['websiteCategories'] = $this->categoryRequestHandler->getCategories(
+            $params['categories_parameter']->getValue()
+        );
+        $filters['websiteCategoryOperator'] = $params['website_category_operator']->getValue();
 
         // resolve tags to id
         if (!empty($filters['tags'])) {
@@ -273,7 +305,12 @@ class ContentType extends ComplexContentType
                 $pageSize
             );
         } else {
-            $data = $provider->resolveResourceItems($filters, $params, $options, (!empty($limit) ? intval($limit) : null));
+            $data = $provider->resolveResourceItems(
+                $filters,
+                $params,
+                $options,
+                (!empty($limit) ? intval($limit) : null)
+            );
         }
 
         // append view data
@@ -292,6 +329,12 @@ class ContentType extends ComplexContentType
      */
     public function getViewData(PropertyInterface $property)
     {
+        /** @var PropertyParameter[] $params */
+        $params = array_merge(
+            $this->getDefaultParams($property),
+            $property->getParams()
+        );
+
         $this->getContentData($property);
         $config = $property->getValue();
 
@@ -309,6 +352,9 @@ class ContentType extends ComplexContentType
                 'hasNextPage' => null,
                 'paginated' => false,
                 'referencedUuids' => [],
+                'categoryRoot' => $params['category_root']->getValue(),
+                'categoriesParameter' => $params['categories_parameter']->getValue(),
+                'tagsParameter' => $params['tags_parameter']->getValue(),
             ],
             $config
         );

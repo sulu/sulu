@@ -2,8 +2,23 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1667 [ContactBundle]   Removed the restriction of start dates from the datepicker
+    * BUGFIX      #1671 [ContentBundle]   Fixed block sorting for blocks with only one type
+    * BUGFIX      #1668 [ContentBundle]   Fixed smart content for usage with block property
+    * BUGFIX      #1665 [ContentBundle]   Fixed creation of new url after template change
+    * BUGFIX      #1666 [ContentBundle]   Fixed min occurs 0 for blocks
+    * BUGFIX      #1664 [SearchBundle]    Fixed search-results deep links
+    * BUGFIX      #1660 [ContentBundle]   Added separate error message for occupied resource locator
     * BUGFIX      #1655 [ContentBundle]   Fixed ghost pages and phpcr access control provider
+    * FEATURE     #1606 [SmartContent]    Added filter by categories to SmartContent Component
+    * FEATURE     #1606 [CategoryBundle]  Added TwigExtension to handle categories in twig templates
+    * BUGFIX      #1654 [ContentBundle]   Added more path replacers
+    * BUGFIX      #1656 [ContentBundle]   Fixed preview nested properties
+    * BUGFIX      #1656 [ContentBundle]   Fixed preview property attributes
     * BUGFIX      #1649 [ContentBundle]   Fixed floating of block type select
+    * BUGFIX      #1650 [LocationBundle]  Fixed configure overlay open multiple times 
+    * BUGFIX      #1650 [ContentBundle]   Fixed serialization of null values
+    * BUGFIX      #1650 [ContentBundle]   Fixed show ghost and shadow toggler in content column view
     * BUGFIX      #1646 [ContactBundle]   Fixed upload of contact-avatar when a position is applied to the contact
     * BUGFIX      #1645 [CategoryBundle]  Removed automatic category translation
     * FEATURE     #1644 [MediaBundle]     Show collection UI elements based on security

@@ -12,6 +12,7 @@
 namespace Sulu\Component\Rest;
 
 use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\View\View;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -548,7 +549,7 @@ abstract class RestController extends FOSRestController
      * @param $id
      * @param callback $findCallback
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return View
      */
     protected function responseGetById($id, $findCallback)
     {
