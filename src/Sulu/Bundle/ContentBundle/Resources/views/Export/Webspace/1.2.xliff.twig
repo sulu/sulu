@@ -1,0 +1,41 @@
+{% set counter = 0 %}
+{%- block xml -%}
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+{{ block('files') }}
+</xliff>
+{%- endblock xml -%}
+
+{% if false %} {# avoid direct output of block elements #}
+    {# Output Pages #}
+    {%- block files -%}
+        {% set file = { uuid: 'test'} %}
+    {{ block('file') }}
+    {%- endblock files -%}
+
+    {# Output Single #}
+    {%- block file -%}
+    <file source-language="{{ locale }}" datatype="plaintext" original="{{ file.uuid }}">
+        <body>
+{{ block('translates') }}
+        </body>
+    </file>
+    {%- endblock file -%}
+
+    {# Output Fields #}
+    {%- block translates -%}
+{{- block('translate') -}}
+    {%- endblock translates -%}
+
+    {# Output Field #}
+    {%- block translate -%}
+        {% spaceless %}
+        {% set counter = counter + 0 %}
+        {% set translate = {source: 'source', resname: 'resname', target: 'target' } %}
+        {% endspaceless %}
+            <trans-unit id="{{ counter }}" resname="{{ translate.resname }}">
+                <source>{{ translate.source }}</source>
+                <target>{{ translate.target }}</target>
+            </trans-unit>
+    {%- endblock translate -%}
+{% endif %}
