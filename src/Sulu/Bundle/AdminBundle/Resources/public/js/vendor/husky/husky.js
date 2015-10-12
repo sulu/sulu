@@ -32828,6 +32828,19 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
             },
 
             /**
+             * listens on and changes the view, pagination, page and limit of the datagrid
+             * @event husky.datagrid.change
+             * @param {Number} page The page
+             * @param {Number} limit The limit
+             * @param {String} viewId The identifier of the view
+             * @param {Object} Options to merge with the current view options
+             * @param {String} paginationId The identifier of the pagination
+             */
+            CHANGE = function() {
+                return this.createEventName('change');
+            },
+
+            /**
              * listens on and changes the pagination of the datagrid
              * @event husky.datagrid.pagination.change
              * @param {String} paginationId The identifier of the pagination
@@ -33633,6 +33646,23 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
             },
 
             /**
+             * Changes style and page of datagrid
+             * @param {Number} page The page
+             * @param {Number} limit The limit
+             * @param {String} viewId The identifier of the view
+             * @param {Object} options to merge with the current view options
+             * @param {String} paginationId The identifier of the pagination
+             */
+            change: function(page, limit, viewId, options, paginationId) {
+                this.showMediumLoader();
+                this.changePage(null, page, limit).then(function() {
+                    this.changeView(viewId, options);
+                    this.changePagination(paginationId);
+                    this.hideMediumLoader();
+                }.bind(this));
+            },
+
+            /**
              * Takes an object with options and passes them to the view,
              * so the view can extend its current ones with them
              * @param options {Object} mew options
@@ -33796,6 +33826,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 this.sandbox.on(DATA_SEARCH.call(this), this.searchGrid.bind(this));
                 this.sandbox.on(URL_UPDATE.call(this), this.updateUrl.bind(this));
                 this.sandbox.on(CHANGE_VIEW.call(this), this.changeView.bind(this));
+                this.sandbox.on(CHANGE.call(this), this.change.bind(this));
                 this.sandbox.on(CHANGE_PAGINATION.call(this), this.changePagination.bind(this));
                 this.sandbox.on(RECORD_ADD.call(this), this.addRecordHandler.bind(this));
                 this.sandbox.on(RECORDS_ADD.call(this), this.addRecordsHandler.bind(this));
@@ -34317,6 +34348,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
              */
             changePage: function(uri, page, limit) {
                 if (!!this.data.links.pagination || !!uri) {
+                    var def = this.sandbox.data.deferred();
                     this.show = false;
                     this.updateSelectedCounter();
 
@@ -34349,9 +34381,12 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                     this.load({
                         url: url,
                         success: function() {
+                            def.resolve();
                             this.sandbox.emit(UPDATED.call(this), 'changed page');
                         }.bind(this)
                     });
+
+                    return def;
                 }
             },
 
