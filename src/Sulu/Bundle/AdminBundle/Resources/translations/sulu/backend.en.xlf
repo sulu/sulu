@@ -11,8 +11,12 @@
                 <target>Key</target>
             </trans-unit>
             <trans-unit id="fbf5558377419fbed4c73a4ba3fdf007" resname="public.empty-list">
-                <source>public.key</source>
+                <source>public.empty-list</source>
                 <target>This list is empty</target>
+            </trans-unit>
+            <trans-unit id="fbf5558377419fbed4c723f096fdf007" resname="public.reached-list-end">
+                <source>public.reached-list-end</source>
+                <target>You reached the end of the list</target>
             </trans-unit>
             <trans-unit id="e4b14069a8a085ede200b7f5acb2d39e" resname="public.edit">
                 <source>public.edit</source>
@@ -907,6 +911,14 @@
             <trans-unit id="b229c52dae1354cc4132c0b4820e23cda" resname="public.ok">
                 <source>public.ok</source>
                 <target>Ok</target>
+            </trans-unit>
+            <trans-unit id="b229c52dae1354cc4123c0b4820e23cda" resname="public.show-selected">
+                <source>public.show-selected</source>
+                <target>Show selected anzeigen</target>
+            </trans-unit>
+            <trans-unit id="b229c52dae1354cc4123c0b4820e23cdb" resname="public.show-all">
+                <source>public.show-all</source>
+                <target>Show all</target>
             </trans-unit>
         </body>
     </file>

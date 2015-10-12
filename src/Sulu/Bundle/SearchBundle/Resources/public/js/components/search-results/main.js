@@ -160,7 +160,7 @@ define([
          */
         startInfiniteScroll: function() {
             var $iscroll = this.$el.find('.iscroll');
-            this.sandbox.infiniteScroll($iscroll, this.loadNextPage.bind(this), 50);
+            this.sandbox.infiniteScroll.initialize($iscroll, this.loadNextPage.bind(this), 50);
         },
 
         /**
