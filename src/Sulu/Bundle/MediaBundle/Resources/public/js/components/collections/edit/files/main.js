@@ -177,14 +177,15 @@ define([
                 UserSettingsManager.setMediaListView('table');
                 UserSettingsManager.setMediaListPagination('dropdown');
 
-                // this isn't a perfect strategy because datagrid is rerendered on all three events
-                // todo: find a better strategy to change pagination and view-decorator and load first page
-                this.sandbox.emit('husky.datagrid.change.page', 1, UserSettingsManager.getDropdownPageSize());
-                this.sandbox.once('husky.datagrid.updated', function() {
-                    this.sandbox.emit('husky.datagrid.view.change', 'table');
-                    this.sandbox.emit('husky.datagrid.pagination.change', 'dropdown');
-                }.bind(this));
+                this.sandbox.emit('husky.datagrid.change',
+                    1,
+                    UserSettingsManager.getDropdownPageSize(),
+                    'table',
+                    [],
+                    'dropdown'
+                );
 
+                // reset scroll handler
                 this.$el.removeClass(constants.fixedClass);
             }.bind(this));
 
@@ -193,13 +194,14 @@ define([
                 UserSettingsManager.setMediaListView('datagrid/decorators/masonry-view');
                 UserSettingsManager.setMediaListPagination('infinite-scroll');
 
-                // this isn't a perfect strategy because datagrid is rerendered on all three events
-                // todo: find a better strategy to change pagination and view-decorator and load first page
-                this.sandbox.emit('husky.datagrid.change.page', 1, UserSettingsManager.getInfinityPageSize());
-                this.sandbox.once('husky.datagrid.updated', function() {
-                    this.sandbox.emit('husky.datagrid.view.change', 'datagrid/decorators/masonry-view');
-                    this.sandbox.emit('husky.datagrid.pagination.change', 'infinite-scroll');
-                }.bind(this));
+                this.sandbox.emit(
+                    'husky.datagrid.change',
+                    1,
+                    UserSettingsManager.getInfinityPageSize(),
+                    'datagrid/decorators/masonry-view',
+                    null,
+                    'infinite-scroll'
+                );
 
                 // reset scroll handler
                 this.$el.removeClass(constants.fixedClass);
