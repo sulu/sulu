@@ -7,6 +7,20 @@ The infinite-scroll-extension got refactored. To initialize infinite-scroll on a
 "this.sandbox.infiniteScroll.initialize(selector, callback)" instead of "this.sandbox.infiniteScroll(selector, callback)" now.
 To unbind an infinite-scroll handler, use "this.sandbox.infiniteScroll.destroy(selector)"
 
+### URL-ContentType
+The URL-ContentType can now handle schemas like http or https. For that you have to add the default scheme to the
+database records by executing following SQL statement:
+
+```sql
+UPDATE co_urls AS url SET url.url = CONCAT('http://', url.url) WHERE url.url NOT LIKE 'http://%';
+```
+
+To updated you content pages and snippets simply run:
+
+```bash
+app/console doctrine:phpcr:migrator:migrate
+```
+
 ### XML-Templates
 Blocks now supports `minOccurs="0"` and `maxOccurs > 127`. For that the validation was improved and for both negative
 values wont be supported anymore.
