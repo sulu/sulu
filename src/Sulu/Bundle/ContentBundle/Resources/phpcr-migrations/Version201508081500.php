@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the Sulu.
  *
@@ -26,6 +25,9 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * This migration appends the default url scheme (http) to the properties of type URL.
+ */
 class Version201508081500 implements VersionInterface, ContainerAwareInterface
 {
     /** @var SessionInterface $session */
@@ -161,7 +163,7 @@ EOT;
      * @param string $locale
      * @param callable $callback
      */
-    private function iterateExternalLink($locale, $callback)
+    private function iterateExternalLink($locale, callable $callback)
     {
         $sql = <<<EOT
 SELECT * FROM [nt:unstructured] WHERE [%s] = "%s"
