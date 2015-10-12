@@ -121,8 +121,16 @@
 .fixed .datagrid-container {
   margin-top: 150px;
 }
+/* line 122, ../scss/modules/collection.scss */
+.fixed .list-toolbar-container {
+  margin-top: 10px;
+}
+/* line 126, ../scss/modules/collection.scss */
+.fixed .list-toolbar {
+  padding-bottom: 10px;
+}
 
-/* line 124, ../scss/modules/collection.scss */
+/* line 132, ../scss/modules/collection.scss */
 .toolbar-hidden .collection-header-container {
   top: -60px;
 }
