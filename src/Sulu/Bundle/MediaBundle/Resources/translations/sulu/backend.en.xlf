@@ -218,6 +218,14 @@
                 <source>sulu.dropzone.error.message</source>
                 <target>Unknown error occurs</target>
             </trans-unit>
+            <trans-unit id="243d88cf2f646526337ls55369f22123" resname="sulu.media.copyright">
+                <source>sulu.media.copyright</source>
+                <target>Copyright</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f646526337ls55369f22124" resname="sulu.media.copyright-information">
+                <source>sulu.media.copyright</source>
+                <target>Copyright information</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
