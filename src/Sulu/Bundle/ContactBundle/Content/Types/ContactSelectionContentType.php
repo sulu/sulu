@@ -173,14 +173,14 @@ class ContactSelectionContentType extends ComplexContentType
         return array_map(
             function ($entity) {
                 $groups = ['fullContact', 'partialAccount'];
-                if($entity instanceof Account){
-                    $groups = ['partialContact', 'fullAccount'];
+                if ($entity instanceof Account) {
+                    $groups = ['fullAccount', 'partialContact'];
                 }
 
                 return $this->serializer->serialize(
                     $entity,
                     'array',
-                    SerializationContext::create()->setGroups($groups)
+                    SerializationContext::create()->setGroups($groups)->setSerializeNull(true)
                 );
             },
             $result

@@ -433,7 +433,15 @@ class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->property->getValue()->willReturn(['c1', 'c2', 'c3']);
         $this->contactManager->getByIds([1, 2, 3], $this->locale)->willReturn($data);
         $this->accountManager->getByIds([], $this->locale)->willReturn([]);
-        $this->serializer->serialize($data, 'array', Argument::type(SerializationContext::class))->willReturn($data);
+        $this->serializer->serialize($data[0], 'array', Argument::type(SerializationContext::class))->willReturn(
+            $data[0]
+        );
+        $this->serializer->serialize($data[1], 'array', Argument::type(SerializationContext::class))->willReturn(
+            $data[1]
+        );
+        $this->serializer->serialize($data[2], 'array', Argument::type(SerializationContext::class))->willReturn(
+            $data[2]
+        );
         $result = $type->getContentData($this->property->reveal());
 
         $this->assertCount(3, $result);
@@ -466,7 +474,15 @@ class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->property->getValue()->willReturn(['a1', 'c1', 'a3']);
         $this->contactManager->getByIds([1], $this->locale)->willReturn([$entity2]);
         $this->accountManager->getByIds([1, 3], $this->locale)->willReturn([$entity1, $entity3]);
-        $this->serializer->serialize($data, 'array', Argument::type(SerializationContext::class))->willReturn($data);
+        $this->serializer->serialize($data[0], 'array', Argument::type(SerializationContext::class))->willReturn(
+            $data[0]
+        );
+        $this->serializer->serialize($data[1], 'array', Argument::type(SerializationContext::class))->willReturn(
+            $data[1]
+        );
+        $this->serializer->serialize($data[2], 'array', Argument::type(SerializationContext::class))->willReturn(
+            $data[2]
+        );
         $result = $type->getContentData($this->property->reveal());
 
         $this->assertCount(3, $result);
@@ -500,7 +516,15 @@ class ContactSelectionContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->property->getValue()->willReturn(['c2', 'c1', 'c3']);
         $this->contactManager->getByIds([2, 1, 3], $this->locale)->willReturn($dataUnsorted);
         $this->accountManager->getByIds([], $this->locale)->willReturn([]);
-        $this->serializer->serialize($data, 'array', Argument::type(SerializationContext::class))->willReturn($data);
+        $this->serializer->serialize($data[0], 'array', Argument::type(SerializationContext::class))->willReturn(
+            $data[0]
+        );
+        $this->serializer->serialize($data[1], 'array', Argument::type(SerializationContext::class))->willReturn(
+            $data[1]
+        );
+        $this->serializer->serialize($data[2], 'array', Argument::type(SerializationContext::class))->willReturn(
+            $data[2]
+        );
         $contacts = $type->getContentData($this->property->reveal());
 
         $this->assertCount(3, $contacts);
