@@ -36,6 +36,13 @@ To updated you content pages and snippets simply run:
 app/console doctrine:phpcr:migrator:migrate
 ```
 
+### Media Metadata
+Copyright field is now available in the metadata of medias. Therefor you have to update you database:
+
+```bash
+app/console doctrine:schema:update --force
+```
+
 ### XML-Templates
 Blocks now supports `minOccurs="0"` and `maxOccurs > 127`. For that the validation was improved and for both negative
 values wont be supported anymore.

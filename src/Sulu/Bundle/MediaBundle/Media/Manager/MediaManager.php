@@ -697,6 +697,9 @@ class MediaManager implements MediaManagerInterface
                     case 'description':
                         $media->setDescription($value);
                         break;
+                    case 'copyright':
+                        $media->setCopyright($value);
+                        break;
                     case 'version':
                         $media->setVersion($value);
                         break;
