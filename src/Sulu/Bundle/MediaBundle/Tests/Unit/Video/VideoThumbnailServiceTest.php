@@ -70,7 +70,7 @@ class VideoThumbnailServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testBatchGenerate()
     {
-      $times = ['00:00:00:01', '00:00:00:11', '00:00:00:21'];
+        $times = ['00:00:00:01', '00:00:00:11', '00:00:00:21'];
 
         foreach ($times as $time) {
             $timecode = TimeCode::fromString($time);

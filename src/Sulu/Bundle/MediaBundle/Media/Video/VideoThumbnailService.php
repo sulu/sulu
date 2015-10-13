@@ -44,7 +44,6 @@ class VideoThumbnailService implements VideoThumbnailServiceInterface
             $frame = $video->frame($timecode);
             $frame->save($destination);
         } catch (\Exception $e) {
-
         }
 
         return file_exists($destination);
