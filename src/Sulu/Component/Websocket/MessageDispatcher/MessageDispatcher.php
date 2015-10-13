@@ -62,4 +62,16 @@ class MessageDispatcher implements MessageDispatcherInterface
             'error' => $error,
         ];
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function onClose(
+        ConnectionInterface $conn,
+        ConnectionContextInterface $context
+    ) {
+        foreach ($this->handler as $handler) {
+            $handler->onClose($conn, $context);
+        }
+    }
 }
