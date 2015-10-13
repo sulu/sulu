@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['services/husky/util', 'services/husky/translator'], function(util, translator) {
+define(function() {
 
     'use strict';
 
@@ -23,26 +23,26 @@ define(['services/husky/util', 'services/husky/translator'], function(util, tran
 
             // merge options
             if (!!this.defaults.options) {
-                this.options = util.extend(true, {}, this.defaults.options, this.options);
+                this.options = this.sandbox.util.extend(true, {}, this.defaults.options, this.options);
             }
 
             // merge translations and translate the values
             if (!!this.defaults.translations) {
-                var translations = util.extend(true, {}, this.defaults.translations, this.options.translations || {});
-                this.translations = util.object(
-                    util.arrayMap(translations, function(item, key) {
-                        return [key, translator.translate(item)];
-                    })
+                var translations = this.sandbox.util.extend(true, {}, this.defaults.translations, this.options.translations || {});
+                this.translations = this.sandbox.util.object(
+                    this.sandbox.util.arrayMap(translations, function(item, key) {
+                        return [key, this.sandbox.translate(item)];
+                    }.bind(this))
                 );
             }
 
             // merge templates and prepare template functions
             if (!!this.defaults.templates) {
-                var templates = util.extend(true, {}, this.defaults.templates, this.options.templates || {});
-                this.templates = util.object(
-                    util.arrayMap(templates, function(template, key) {
-                        return [key, util.template(template)];
-                    })
+                var templates = this.sandbox.util.extend(true, {}, this.defaults.templates, this.options.templates || {});
+                this.templates = this.sandbox.util.object(
+                    this.sandbox.util.arrayMap(templates, function(template, key) {
+                        return [key, this.sandbox.util.template(template)];
+                    }.bind(this))
                 );
             }
         });
