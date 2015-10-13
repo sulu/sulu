@@ -42501,7 +42501,7 @@ define('__component__$overlay@husky',[], function() {
                 return;
             }
 
-            this.slideTo(this.activeSlide);
+            this.slideTo(slide);
         },
 
         /**
