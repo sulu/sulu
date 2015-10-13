@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\ORM\EntityManager;
+use FFMpeg\FFProbe;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -24,7 +25,6 @@ use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
-use Sulu\Bundle\MediaBundle\Media\Video\VideoUtilsInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -94,9 +94,9 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
     private $securityChecker;
 
     /**
-     * @var VideoUtilsInterface
+     * @var FFProbe
      */
-    private $videoUtils;
+    private $ffprobe;
 
     public function setUp()
     {
@@ -113,7 +113,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $this->typeManager = $this->prophesize(TypeManagerInterface::class);
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $this->securityChecker = $this->prophesize(SecurityCheckerInterface::class);
-        $this->videoUtils = $this->prophesize(VideoUtilsInterface::class);
+        $this->ffprobe = $this->prophesize(FFProbe::class);
 
         $this->mediaManager = new MediaManager(
             $this->mediaRepository->reveal(),
@@ -127,7 +127,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
             $this->typeManager->reveal(),
             $this->tokenStorage->reveal(),
             $this->securityChecker->reveal(),
-            $this->videoUtils->reveal(),
+            $this->ffprobe->reveal(),
             [
                 'view' => 64,
             ],
