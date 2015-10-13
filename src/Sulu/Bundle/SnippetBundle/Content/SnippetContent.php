@@ -20,12 +20,13 @@ use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 
 /**
  * ContentType for Snippets.
  */
-class SnippetContent extends ComplexContentType
+class SnippetContent extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
      * @var SnippetResolverInterface
@@ -235,5 +236,13 @@ class SnippetContent extends ComplexContentType
         }
 
         return $parameter[$name]->getValue();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exportData($propertyValue)
+    {
+        return json_encode($this->getUuids($propertyValue));
     }
 }

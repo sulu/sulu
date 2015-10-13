@@ -17,6 +17,7 @@ use Sulu\Component\Content\Compat\Block\BlockPropertyWrapper;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Exception\UnexpectedPropertyType;
@@ -24,7 +25,7 @@ use Sulu\Component\Content\Exception\UnexpectedPropertyType;
 /**
  * content type for block.
  */
-class BlockContentType extends ComplexContentType
+class BlockContentType extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
      * @var ContentTypeManagerInterface
@@ -350,4 +351,13 @@ class BlockContentType extends ComplexContentType
 
         return $data;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exportData($propertyValue)
+    {
+        // TODO: Implement exportData() method.
+    }
+
 }

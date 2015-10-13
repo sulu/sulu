@@ -21,12 +21,13 @@ use Sulu\Bundle\ContactBundle\Util\IndexComparatorInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 
 /**
  * ContentType for Contact.
  */
-class ContactSelectionContentType extends ComplexContentType
+class ContactSelectionContentType extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
      * @var string
@@ -201,5 +202,29 @@ class ContactSelectionContentType extends ComplexContentType
             'contact' => new PropertyParameter('contact', true),
             'account' => new PropertyParameter('account', true),
         ];
+    }
+
+    /**
+     * Set data to given property.
+     *
+     * @param array $data
+     * @param PropertyInterface $property
+     */
+    protected function setData($data, PropertyInterface $property)
+    {
+        $refs = isset($data) ? $data : [];
+        $property->setValue($refs);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exportData($propertyValue)
+    {
+        if (is_array($propertyValue)) {
+            return json_encode($propertyValue);
+        }
+
+        return null;
     }
 }

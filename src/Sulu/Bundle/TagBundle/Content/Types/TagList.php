@@ -15,12 +15,13 @@ use PHPCR\NodeInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 
 /**
  * Content Type for the TagList, uses the TagManager-Service and the AutoCompleteList from Husky.
  */
-class TagList extends ComplexContentType
+class TagList extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
      * Responsible for saving the tags in the database.
@@ -102,4 +103,17 @@ class TagList extends ComplexContentType
     {
         return $this->template;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exportData($propertyValue)
+    {
+        if (is_array($propertyValue)) {
+            return json_encode($propertyValue);
+        }
+
+        return null;
+    }
+
 }

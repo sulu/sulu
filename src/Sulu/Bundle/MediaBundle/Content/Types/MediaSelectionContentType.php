@@ -17,12 +17,13 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
  * content type for image selection.
  */
-class MediaSelectionContentType extends ComplexContentType
+class MediaSelectionContentType extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
      * @var MediaManagerInterface
@@ -175,5 +176,17 @@ class MediaSelectionContentType extends ComplexContentType
     public function getViewData(PropertyInterface $property)
     {
         return $property->getValue();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exportData($propertyValue)
+    {
+        if (is_string($propertyValue)) {
+            return $propertyValue;
+        }
+
+        return null;
     }
 }
