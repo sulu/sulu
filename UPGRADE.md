@@ -2,6 +2,11 @@
 
 ## dev-develop
 
+### Infinite scroll
+The infinite-scroll-extension got refactored. To initialize infinite-scroll on an element, use
+"this.sandbox.infiniteScroll.initialize(selector, callback)" instead of "this.sandbox.infiniteScroll(selector, callback)" now.
+To unbind an infinite-scroll handler, use "this.sandbox.infiniteScroll.destroy(selector)"
+
 ### XML-Templates
 Blocks now supports `minOccurs="0"` and `maxOccurs > 127`. For that the validation was improved and for both negative
 values wont be supported anymore.
@@ -61,7 +66,7 @@ sandbox.mvc.routes.push({
 ### Header
 The header got a complete redesign, the breadcrumb and bottom-content are not available anymore. Also the event `header.set-toolbar` got marked as deprecated. The recommended way to start a sulu-header is via the header-hook of a view-component.
 
-Some properties in the header-hook have changed, some are new, some not supported anymore. For a complete overview on the current properties in the header-hook see the documentation: //TODO insert link to docu.
+Some properties in the header-hook have changed, some are new, some not supported anymore. For a complete overview on the current properties in the header-hook see the documentation: http://docs.sulu.io/en/latest/bundles/admin/javascript-hooks/index.html
 
 The major work when upgrading to the new header is to change the button-templates to sulu-buttons. Before you had to pass a template like e.g. 'default', which initialized a set of buttons, now each button is passed explicitly which gives you more flexibility. Lets have a look at an example:
 
@@ -102,19 +107,19 @@ If you are using the 'default' template in the header and now change to the sulu
 
 #### Tabs
 The tabs can be configured with the 'url', 'data' and 'container' option. The option 'fullControll' got removed. You can get the same effect by passing data with no 'component'-property.
-For a complete overview on the current properties in the header-hook see the documentation: //TODO insert link to docu
+For a complete overview on the current properties in the header-hook see the documentation: http://docs.sulu.io/en/latest/bundles/admin/javascript-hooks/index.html
 
 #### Toolbar
 The language-changer can be configured as it was. 'Template' and 'parentTemplate' in contrast are not supported anymore. Instead you pass an array of sulu-buttons.
 Moreover the format of the buttons itself changed: https://github.com/massiveart/husky/blob/f9b3abeb547553c9c031710f1f98d0288b08ca9c/UPGRADE.md
-Have a look at the documentation: //TODO insert link to docu
+Have a look at the documentation: http://docs.sulu.io/en/latest/bundles/admin/javascript-hooks/header.html
 
 #### Language changer
 The interface of the language-changer in the header hook stayed the same, however the emitted event changed from `sulu.header.toolbar.language-changed` to `sulu.header.language-changed`. A callback to this event recieves an object with an 'id'- and a 'title'-property.
 
 #### Sulu-buttons
 Buttons for toolbars get specified in an aura-extension (`sandbox.sulu.buttons` and `sandbox.sulu.buttons.dropdownItems`). Therfore each bundle can add their own buttons to the pool. The toolbar in the header fetches its buttons from this pool.
-Have a look at the documentation: //TODO insert link to docu
+Have a look at the documentation: http://docs.sulu.io/en/latest/bundles/admin/sulu-buttons.html
 
 #### List-toolbar
 The 'inHeader' option got removed and is not supported anymore. `Sulu.buttons` are used internally and can be passed via the template which is recommended instead of using string templates.

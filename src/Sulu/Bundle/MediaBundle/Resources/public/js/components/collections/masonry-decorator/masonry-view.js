@@ -219,7 +219,8 @@ define(function() {
                 direction: 'left',
                 itemWidth: 190,
                 offset: 30,
-                verticalOffset: 20
+                verticalOffset: 20,
+                possibleFilters: [constants.selectedClass]
             });
         },
 
@@ -238,7 +239,7 @@ define(function() {
          * Parses the data and passes it item by item to a render function
          * @param records {Array} array with records to render
          */
-        renderRecords: function(records) {
+        renderRecords: function(records, appendAtBottom) {
             this.updateEmptyIndicatorVisibility();
             this.sandbox.util.foreach(records, function(record) {
                 var item = processContentFilters.call(this, record);
@@ -250,7 +251,7 @@ define(function() {
                 description = concatRecordColumns(item, this.options.fields.description, this.options.separators.description);
 
                 // pass the found data to a render method
-                this.renderItem(id, image, title, description);
+                this.renderItem(id, image, title, description, appendAtBottom);
             }.bind(this));
         },
 
@@ -261,7 +262,7 @@ define(function() {
          * @param title
          * @param description
          */
-        renderItem: function(id, image, title, description) {
+        renderItem: function(id, image, title, description, appendAtBottom) {
             this.$items[id] = this.sandbox.dom.createElement(
                 this.sandbox.util.template(templates.item, {
                     image: image,
@@ -275,7 +276,11 @@ define(function() {
                 this.selectRecord(id);
             }
 
-            this.sandbox.dom.append(this.sandbox.dom.find('#' + constants.masonryGridId, this.$el), this.$items[id]);
+            if (!!appendAtBottom) {
+                this.sandbox.dom.append(this.sandbox.dom.find('#' + constants.masonryGridId, this.$el), this.$items[id]);
+            } else {
+                this.sandbox.dom.prepend(this.sandbox.dom.find('#' + constants.masonryGridId, this.$el), this.$items[id]);
+            }
             this.bindItemLoadingEvents(id);
             this.bindItemDomEvents(id);
         },
@@ -288,12 +293,12 @@ define(function() {
             this.sandbox.dom.on(this.$items[id], 'click', function(event) {
                 this.sandbox.dom.stopPropagation(event);
                 this.datagrid.itemAction.call(this.datagrid, id);
-            }.bind(this), "." + constants.actionNavigatorClass);
+            }.bind(this), '.' + constants.actionNavigatorClass);
 
             this.sandbox.dom.on(this.$items[id], 'click', function(event) {
                 this.sandbox.dom.stopPropagation(event);
                 this.sandbox.emit(DOWNLOAD_CLICKED.call(this), id);
-            }.bind(this), "." + constants.downloadNavigatorClass);
+            }.bind(this), '.' + constants.downloadNavigatorClass);
 
             if (!!this.options.selectable) {
                 this.sandbox.dom.on(this.$items[id], 'click', function(event) {
@@ -355,8 +360,8 @@ define(function() {
          * @param record
          * @public
          */
-        addRecord: function(record) {
-            this.renderRecords([record]);
+        addRecord: function(record, appendAtBottom) {
+            this.renderRecords([record], appendAtBottom);
         },
 
         /**
@@ -382,6 +387,7 @@ define(function() {
          */
         selectRecord: function(id) {
             this.sandbox.dom.addClass(this.$items[id], constants.selectedClass);
+            $(this.$items[id]).attr('data-filter-class', JSON.stringify([constants.selectedClass]));
             if (!this.sandbox.dom.is(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), ':checked')) {
                 this.sandbox.dom.prop(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), 'checked', true);
             }
@@ -394,6 +400,7 @@ define(function() {
          */
         deselectRecord: function(id) {
             this.sandbox.dom.removeClass(this.$items[id], constants.selectedClass);
+            $(this.$items[id]).attr('data-filter-class', JSON.stringify([]));
             if (this.sandbox.dom.is(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), ':checked')) {
                 this.sandbox.dom.prop(this.sandbox.dom.find('input[type="checkbox"]', this.$items[id]), 'checked', false);
             }
@@ -407,6 +414,21 @@ define(function() {
             this.sandbox.util.each(this.$items, function(id) {
                 this.deselectRecord(Number(id));
             }.bind(this));
+        },
+
+        showSelected: function(show) {
+            var filter = [],
+                $items = $('.masonry-item:not(.selected)');
+
+            if (!!show) {
+                filter.push(constants.selectedClass);
+                $items.hide();
+            } else {
+                $items.show();
+            }
+
+            this.sandbox.masonry.updateFilterClasses('#' + constants.masonryGridId);
+            this.sandbox.masonry.filter('#' + constants.masonryGridId, filter);
         }
     };
 });
