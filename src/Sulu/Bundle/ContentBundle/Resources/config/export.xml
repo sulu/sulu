@@ -4,15 +4,28 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
         <parameter key="sulu_content.export.webspace.class">Sulu\Component\Content\Export\Webspace</parameter>
+        <parameter key="sulu_content.export.manager.class">Sulu\Component\Content\Export\ContentExportManager</parameter>
+        <parameter key="sulu_content.export_twig_extension.class">Sulu\Bundle\ContentBundle\Twig\ExportTwigExtension</parameter>
+        <parameter key="sulu_content.export.webspace.formats" type="collection">
+            <parameter key="1.2.xliff">SuluContentBundle:Export:Webspace/1.2.xliff.twig</parameter>
+        </parameter>
     </parameters>
 
     <services>
+        <service id="sulu_content.export.manager" class="%sulu_content.export.manager.class%">
+            <argument type="service" id="sulu.content.type_manager" />
+        </service>
+
         <service id="sulu_content.export.webspace" class="%sulu_content.export.webspace.class%">
             <argument type="service" id="templating" />
-            <argument type="collection">
-                <argument key="1.2.xliff">SuluContentBundle:Export:Webspace/1.2.xliff.twig</argument>
-            </argument>
-            <!-- <argument type="service" id="sulu_content.structure.loader.xml" /> -->
+            <argument type="service" id="sulu_document_manager.document_manager" />
+            <argument type="service" id="sulu_document_manager.document_inspector" />
+            <argument>%sulu_content.export.webspace.formats%</argument>
+        </service>
+
+        <service id="sulu_content.export_twig_extension" class="%sulu_content.export_twig_extension.class%">
+            <tag name="twig.extension"/>
+            <argument type="service" id="sulu_content.export.manager"/>
         </service>
     </services>
 </container>
