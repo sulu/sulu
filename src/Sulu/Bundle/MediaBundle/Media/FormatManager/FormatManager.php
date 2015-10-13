@@ -440,7 +440,7 @@ class FormatManager implements FormatManagerInterface
     {
         if (fnmatch('video/*', $mimeType)) {
             $tempFile = tempnam(sys_get_temp_dir(), 'media_original') . '.jpg';
-            $this->videoThumbnailService->generate($uri, '0:01', $tempFile);
+            $this->videoThumbnailService->generate($uri, '00:00:00:02', $tempFile);
             $uri = $tempFile;
         }
 

@@ -36,10 +36,16 @@ class VideoThumbnailService implements VideoThumbnailServiceInterface
     {
         $destination = $this->normalizeFilename($destination);
 
-        $video = $this->ffmpeg->open($file);
+        try {
+            $video = $this->ffmpeg->open($file);
 
-        $frame = $video->frame(TimeCode::fromString($time));
-        $frame->save($destination);
+            $timecode = TimeCode::fromString($time);
+
+            $frame = $video->frame($timecode);
+            $frame->save($destination);
+        } catch (\Exception $e) {
+
+        }
 
         return file_exists($destination);
     }
