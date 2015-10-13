@@ -16,6 +16,7 @@ use Sulu\Component\Category\Request\CategoryRequestHandlerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 use Sulu\Component\Util\ArrayableInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -23,7 +24,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Content type for smart selection.
  */
-class ContentType extends ComplexContentType
+class ContentType extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
      * @var string
@@ -412,5 +413,17 @@ class ContentType extends ComplexContentType
         }
 
         return intval($page);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exportData($propertyValue)
+    {
+        if (is_string($propertyValue)) {
+            return $propertyValue;
+        }
+
+        return null;
     }
 }

@@ -17,11 +17,12 @@ use Sulu\Bundle\LocationBundle\Map\MapManager;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeExportInterface;
 
 /**
  * ContentType for TextEditor.
  */
-class LocationContentType extends ComplexContentType
+class LocationContentType extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
      * @var NodeRepositoryInterface
@@ -161,5 +162,17 @@ class LocationContentType extends ComplexContentType
         if ($node->hasProperty($property->getName())) {
             $node->getProperty($property->getName())->remove();
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exportData($propertyValue)
+    {
+        if (is_string($propertyValue)) {
+            return $propertyValue;
+        }
+
+        return null;
     }
 }
