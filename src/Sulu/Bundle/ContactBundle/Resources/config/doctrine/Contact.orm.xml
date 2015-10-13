@@ -36,7 +36,7 @@
 
         <many-to-one field="avatar" target-entity="Sulu\Bundle\MediaBundle\Entity\Media">
             <join-columns>
-                <join-column name="avatar" referenced-column-name="id" nullable="true"/>
+                <join-column name="avatar" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
             </join-columns>
         </many-to-one>
 
