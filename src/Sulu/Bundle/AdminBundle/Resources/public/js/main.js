@@ -24,6 +24,8 @@ require.config({
         'aura_extensions/sulu-extension': 'aura_extensions/sulu-extension',
         'aura_extensions/sulu-buttons': 'aura_extensions/sulu-buttons',
         'aura_extensions/url-manager': 'aura_extensions/url-manager',
+        'aura_extensions/default-extension': 'aura_extensions/default-extension',
+        'aura_extensions/event-extension': 'aura_extensions/event-extension',
 
         '__component__$app@suluadmin': 'components/app/main',
         '__component__$overlay@suluadmin': 'components/overlay/main',
@@ -42,6 +44,8 @@ require.config({
         'aura_extensions/sulu-extension',
         'aura_extensions/sulu-buttons',
         'aura_extensions/url-manager',
+        'aura_extensions/default-extension',
+        'aura_extensions/event-extension',
         'widget-groups',
 
         '__component__$app@suluadmin',
