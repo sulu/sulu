@@ -26,6 +26,7 @@ define([
             editFormSelector: '#contact-edit-form',
             avatarImageId: '#image-content',
             avatarDropzoneSelector: '#image-dropzone',
+            avatarDeleteSelector: '#image-delete',
             imageFormat: '400x400'
         },
 
@@ -173,10 +174,20 @@ define([
                         skin: 'overlay',
                         method: 'POST',
                         paramName: 'fileVersion',
-                        showOverlay: false, maxFiles: 1
+                        showOverlay: false,
+                        maxFiles: 1
                     }
                 }
             ]);
+
+            this.sandbox.dom.on(constants.avatarDeleteSelector, 'click', function() {
+                var curMediaId = this.sandbox.dom.data(constants.avatarImageId, 'mediaId');
+
+                this.sandbox.util.save('/admin/api/media/' + curMediaId, 'DELETE').done(function() {
+                    this.clearAvatarContainer();
+                    this.sandbox.emit('sulu.labels.success.show', 'contact.contacts.avatar.saved');
+                }.bind(this));
+            }.bind(this));
         },
 
         /**
@@ -189,6 +200,16 @@ define([
             this.sandbox.dom.data($imageContent, 'mediaId', mediaId);
             this.sandbox.dom.css($imageContent, 'background-image', 'url(' + url + ')');
             this.sandbox.dom.addClass($imageContent.parent(), 'no-default');
+        },
+
+        /**
+         * Remove picture in avatar container.
+         */
+        clearAvatarContainer: function() {
+            var $imageContent = this.sandbox.dom.find(constants.avatarImageId);
+            $imageContent.removeData('mediaId');
+            this.sandbox.dom.css($imageContent, 'background-image', '');
+            this.sandbox.dom.removeClass($imageContent.parent(), 'no-default');
         },
 
         /**
