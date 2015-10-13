@@ -1,8 +1,9 @@
 doctrine:
     dbal:
         driver:   pdo_pgsql
-        host:     localhost
+        host:     "%database_host_pgsql%"
+        port:     "%database_port_pgsql%"
         dbname:   sulu_test
-        user:     postgres
-        password:
+        user:     "%database_user_pgsql%"
+        password: "%database_password_pgsql%"
         charset:  UTF8
