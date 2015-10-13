@@ -27,6 +27,7 @@ define([
             formContactFields: '#contact-fields',
             logoImageId: '#image-content',
             logoDropzoneSelector: '#image-dropzone',
+            logoDeleteSelector: '#image-delete',
             logoThumbnailFormat: '400x400-inset'
         },
 
@@ -182,10 +183,20 @@ define([
                         skin: 'overlay',
                         method: 'POST',
                         paramName: 'fileVersion',
-                        showOverlay: false, maxFiles: 1,
+                        showOverlay: false,
+                        maxFiles: 1
                     }
                 }
             ]);
+
+            this.sandbox.dom.on(constants.logoDeleteSelector, 'click', function() {
+                var curMediaId = this.sandbox.dom.data(constants.logoImageId, 'mediaId');
+
+                this.sandbox.util.save('/admin/api/media/' + curMediaId, 'DELETE').done(function() {
+                    this.clearLogoContainer();
+                    this.sandbox.emit('sulu.labels.success.show', 'contact.accounts.logo.saved');
+                }.bind(this));
+            }.bind(this));
         },
 
         /**
@@ -198,6 +209,16 @@ define([
             this.sandbox.dom.data($imageContent, 'mediaId', mediaId);
             this.sandbox.dom.css($imageContent, 'background-image', 'url(' + url + ')');
             this.sandbox.dom.addClass($imageContent.parent(), 'no-default');
+        },
+
+        /**
+         * Remove picture in logo container.
+         */
+        clearLogoContainer: function() {
+            var $imageContent = this.sandbox.dom.find(constants.logoImageId);
+            $imageContent.removeData('mediaId');
+            this.sandbox.dom.css($imageContent, 'background-image', '');
+            this.sandbox.dom.removeClass($imageContent.parent(), 'no-default');
         },
 
         /**

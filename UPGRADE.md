@@ -2,6 +2,13 @@
 
 ## dev-develop
 
+### Logo/Avatar in Contact-Section
+Can now be deleted from collection view. For that the database has to be updated.
+
+```bash
+app/console doctrine:schema:update --force
+```
+
 ### Infinite scroll
 The infinite-scroll-extension got refactored. To initialize infinite-scroll on an element, use
 "this.sandbox.infiniteScroll.initialize(selector, callback)" instead of "this.sandbox.infiniteScroll(selector, callback)" now.
