@@ -48,29 +48,19 @@ define([
     BaseSnippet.prototype = {
         bindModelEvents: function() {
             // delete current
-            this.sandbox.on('sulu.snippets.snippet.delete', function() {
-                this.del();
-            }, this);
+            this.sandbox.on('sulu.snippets.snippet.delete', this.del, this);
 
             // save the current
-            this.sandbox.on('sulu.snippets.snippet.save', function(data, action) {
-                this.save(data, action);
-            }, this);
+            this.sandbox.on('sulu.snippets.snippet.save', this.save, this);
 
             // wait for navigation events
-            this.sandbox.on('sulu.snippets.snippet.load', function(id, language) {
-                this.load(id, language);
-            }, this);
+            this.sandbox.on('sulu.snippets.snippet.load', this.load, this);
 
             // add new
-            this.sandbox.on('sulu.snippets.snippet.new', function(language) {
-                this.add(language);
-            }, this);
+            this.sandbox.on('sulu.snippets.snippet.new', this.add, this);
 
             // delete selected
-            this.sandbox.on('sulu.snippets.snippets.delete', function(ids) {
-                this.delSnippets(ids);
-            }, this);
+            this.sandbox.on('sulu.snippets.snippets.delete', this.delSnippets, this);
 
             // load list view
             this.sandbox.on('sulu.snippets.snippet.list', function(language) {
@@ -138,16 +128,17 @@ define([
                     name: 'overlay@husky',
                     options: {
                         el: $element,
+                        openOnStart: true,
                         title: this.sandbox.translate(translationKeys.deleteConfirmTitle),
                         message: templates.referentialIntegrityMessage.call(this, pageTitles),
                         okDefaultText: this.sandbox.translate(translationKeys.deleteDoIt),
-                        type: 'warning',
+                        type: 'alert',
                         closeCallback: function() {
                         },
-                        okCallback: function(data) {
+                        okCallback: function() {
                             snippet.destroy({
                                 headers: {
-                                    SuluForceRemove: true,
+                                    SuluForceRemove: true
                                 },
                                 success: function() {
                                     successCallback()
