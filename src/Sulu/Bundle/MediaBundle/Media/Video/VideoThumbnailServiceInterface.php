@@ -17,30 +17,21 @@ interface VideoThumbnailServiceInterface
      * @param string $file
      * @param string $time
      * @param string $destination
-     * @param int $width
-     * @param int $height
-     * @param bool $allowUpscaling
      *
      * @return bool
      */
-    public function generate($file, $time, $destination, $width = -1, $height = -1, $allowUpscaling = true);
+    public function generate($file, $time, $destination);
 
     /**
      * @param string $video
      * @param array $times
      * @param string $destinationPath
-     * @param int $width
-     * @param int $height
-     * @param bool $allowUpscaling
      *
      * @return array|bool
      */
     public function batchGenerate(
         $video,
         array $times,
-        $destinationPath,
-        $width = -1,
-        $height = -1,
-        $allowUpscaling = true
+        $destinationPath
     );
 }

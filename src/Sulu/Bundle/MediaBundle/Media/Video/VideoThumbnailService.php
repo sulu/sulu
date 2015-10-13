@@ -11,13 +11,16 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Video;
 
+use FFMpeg\Coordinate\TimeCode;
+use FFMpeg\FFMpeg;
+
 class VideoThumbnailService implements VideoThumbnailServiceInterface
 {
-    /** @var string */
+    /** @var FFMpeg */
     protected $ffmpeg;
 
     public function __construct(
-        $ffmpeg
+        FFMpeg $ffmpeg
     ) {
         $this->ffmpeg = $ffmpeg;
     }
@@ -26,64 +29,38 @@ class VideoThumbnailService implements VideoThumbnailServiceInterface
      * @param string $file
      * @param string $time
      * @param string $destination
-     * @param int $width
-     * @param int $height
-     * @param bool $allowUpscaling
      *
      * @return bool
      */
-    public function generate($file, $time, $destination, $width = -1, $height = -1, $allowUpscaling = true)
+    public function generate($file, $time, $destination)
     {
-        if ($this->ffmpeg !== null) {
-            $destination = $this->normalizeFilename($destination);
+        $destination = $this->normalizeFilename($destination);
 
-            $size = '';
-            if ($width !== -1 || $height !== -1) {
-                $size = sprintf('-vf "scale=%s:%s"', $width, $height);
-                if (!$allowUpscaling) {
-                    $size = sprintf('-vf "scale=min(iw\,%s):min(iw\,%s)"', $width, $height);
-                }
-            }
+        $video = $this->ffmpeg->open($file);
 
-            $command = sprintf(
-                '%s -i "%s" %s -ss "%s" -vframes 1 -y %s',
-                $this->ffmpeg,
-                $file,
-                $size,
-                $time,
-                $destination
-            );
-            exec($command, $rValue, $rError);
+        $frame = $video->frame(TimeCode::fromString($time));
+        $frame->save($destination);
 
-            return $rError == 0 && file_exists($destination);
-        }
-
-        return false;
+        return file_exists($destination);
     }
 
     /**
      * @param string $video
      * @param array $times
      * @param string $destinationPath
-     * @param int $width
-     * @param int $height
-     * @param bool $allowUpscaling
      *
      * @return array|bool
      */
     public function batchGenerate(
         $video,
         array $times,
-        $destinationPath,
-        $width = -1,
-        $height = -1,
-        $allowUpscaling = true
+        $destinationPath
     ) {
         if ($this->ffmpeg !== null) {
             $failed = [];
             foreach ($times as $time) {
                 $filename = $destinationPath . DIRECTORY_SEPARATOR . $time . '.jpg';
-                $success = $this->generate($video, $time, $filename, $width, $height, $allowUpscaling);
+                $success = $this->generate($video, $time, $filename);
 
                 if (!$success) {
                     $failed[] = $filename;

@@ -13,6 +13,8 @@ namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
+use FFMpeg\FFMpeg;
+use FFMpeg\FFProbe;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
@@ -134,8 +136,8 @@ class MediaManager implements MediaManagerInterface
      */
     private $downloadPath;
 
-    /** @var VideoUtilsInterface */
-    private $videoUtils;
+    /** @var FFProbe */
+    private $ffprobe;
 
     /**
      * @var int
@@ -154,7 +156,7 @@ class MediaManager implements MediaManagerInterface
      * @param TypeManagerInterface $typeManager
      * @param TokenStorageInterface $tokenStorage
      * @param SecurityCheckerInterface $securityChecker
-     * @param VideoUtilsInterface $videoUtils
+     * @param FFProbe $ffprobe
      * @param array $permissions
      * @param string $downloadPath
      * @param string $maxFileSize
@@ -171,7 +173,7 @@ class MediaManager implements MediaManagerInterface
         TypeManagerInterface $typeManager,
         TokenStorageInterface $tokenStorage = null,
         SecurityCheckerInterface $securityChecker = null,
-        VideoUtilsInterface $videoUtils,
+        FFProbe $ffprobe,
         $permissions,
         $downloadPath,
         $maxFileSize
@@ -187,7 +189,7 @@ class MediaManager implements MediaManagerInterface
         $this->typeManager = $typeManager;
         $this->tokenStorage = $tokenStorage;
         $this->securityChecker = $securityChecker;
-        $this->videoUtils = $videoUtils;
+        $this->ffprobe = $ffprobe;
         $this->permissions = $permissions;
         $this->downloadPath = $downloadPath;
         $this->maxFileSize = $maxFileSize;
@@ -472,9 +474,7 @@ class MediaManager implements MediaManagerInterface
 
         // if the file is a video we add the duration
         if (fnmatch('video/*', $mimeType)) {
-            $duration = $this->videoUtils->getVideoDuration($uploadedFile->getPathname());
-
-            $properties['duration'] = $duration;
+            $properties['duration'] = $this->ffprobe->format($uploadedFile->getPathname())->get('duration');
         }
 
         return $properties;
