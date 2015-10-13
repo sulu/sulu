@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * FEATURE     #1598 [MediaBundle]     Added infinite-scroll pagination for masonry-view
     * FEATURE     #1598 [ContactBundle]   Added infinite-scroll pagination for card-view
     * BUGFIX      #1673 [ContentBundle]   Fixed settings tag for shadows on external links
+    * BUGFIX      #1678 [ContactBundle]   Fixed contact-selection serialization
     * BUGFIX      #1667 [ContactBundle]   Removed the restriction of start dates from the datepicker
     * BUGFIX      #1671 [ContentBundle]   Fixed block sorting for blocks with only one type
     * BUGFIX      #1668 [ContentBundle]   Fixed smart content for usage with block property

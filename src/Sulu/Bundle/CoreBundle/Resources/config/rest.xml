@@ -8,6 +8,7 @@
         <parameter key="sulu_core.doctrine_rest_helper.class">Sulu\Component\Rest\DoctrineRestHelper</parameter>
         <parameter key="sulu_core.list_rest_helper.class">Sulu\Component\Rest\ListBuilder\ListRestHelper</parameter>
         <parameter key="sulu_core.doctrine_list_builder_factory.class">Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory</parameter>
+        <parameter key="sulu_core.rest.datetime_handler.class">Sulu\Component\Rest\Handler\DateHandler</parameter>
     </parameters>
 
     <services>
@@ -26,6 +27,10 @@
         <service id="sulu_core.doctrine_list_builder_factory" class="%sulu_core.doctrine_list_builder_factory.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="event_dispatcher"/>
+        </service>
+
+        <service id="sulu_core.rest.datetime_handler" class="%sulu_core.rest.datetime_handler.class%">
+            <tag name="jms_serializer.subscribing_handler" />
         </service>
     </services>
 </container>
