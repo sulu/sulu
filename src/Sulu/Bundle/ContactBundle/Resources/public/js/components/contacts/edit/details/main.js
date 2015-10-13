@@ -552,7 +552,7 @@ define([
 
                 this.sandbox.dom.on(formSelector, 'change keyup', function() {
                     this.sandbox.emit('sulu.tab.dirty');
-                }.bind(this), 'select, input, textarea');
+                }.bind(this), 'select, input, textarea, .trigger-save-button');
 
                 this.sandbox.on('sulu.contact-form.changed', function() {
                     this.sandbox.emit('sulu.tab.dirty');
