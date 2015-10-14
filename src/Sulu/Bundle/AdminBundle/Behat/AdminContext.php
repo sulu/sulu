@@ -410,7 +410,7 @@ EOT;
      */
     public function iSetValue($name, $value)
     {
-        $this->getSession()->evaluateScript("$('#$name').data('element').setValue(" . json_encode($value) . ")");
+        $this->getSession()->evaluateScript("$('#$name').data('element').setValue(" . json_encode($value) . ')');
     }
 
     /**
