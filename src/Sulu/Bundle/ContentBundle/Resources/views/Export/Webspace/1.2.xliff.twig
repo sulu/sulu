@@ -35,6 +35,19 @@
         {%- endif -%}
     {%- endblock model -%}
 
+    {# Create Extension Model for Render #}
+    {%- block extensionModel -%}
+        {% set resname = propertyName %}
+        {% set options = propertyOptions %}
+        {% set source = propertyValue %}
+        {% set translate = options.translate %}
+        {% set target = source %}
+        {% if translate %}
+            {% set target = '' %}
+        {% endif %}
+        {{- block('view') -}}
+    {%- endblock extensionModel -%}
+
     {# Trans Unit Output #}
     {%- block view -%}
         {% spaceless %}{% set counter = counter + 1 %}

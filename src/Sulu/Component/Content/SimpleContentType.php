@@ -169,12 +169,26 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
      */
     public function exportData($propertyValue)
     {
+        if (is_bool($propertyValue)) {
+            if ($propertyValue) {
+                return '1';
+            }
+            return '0';
+        }
+
         if (is_string($propertyValue)) {
             return $propertyValue;
         }
 
         if (is_string($this->defaultValue)) {
             return $this->defaultValue;
+        }
+
+        if (is_bool($this->defaultValue)) {
+            if ($this->defaultValue) {
+                return '1';
+            }
+            return '0';
         }
 
         return null;
