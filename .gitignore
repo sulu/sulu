@@ -25,9 +25,6 @@ phpunit.xml
 /bin/jackrabbit-standalone*
 /bin/jackrabbit/*
 
-# Downloads
-/src/Sulu/Bundle/MediaBundle/bin/downloads/*
-
 # phpunit
 /phpunit.xml
 

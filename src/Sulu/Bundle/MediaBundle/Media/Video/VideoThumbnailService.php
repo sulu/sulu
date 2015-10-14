@@ -13,10 +13,16 @@ namespace Sulu\Bundle\MediaBundle\Media\Video;
 
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
+use FFMpeg\Exception\InvalidArgumentException;
 
+/**
+ * Service to generate thumbnails from videos
+ */
 class VideoThumbnailService implements VideoThumbnailServiceInterface
 {
-    /** @var FFMpeg */
+    /**
+     * @var FFMpeg
+     */
     protected $ffmpeg;
 
     public function __construct(
@@ -26,11 +32,7 @@ class VideoThumbnailService implements VideoThumbnailServiceInterface
     }
 
     /**
-     * @param string $file
-     * @param string $time
-     * @param string $destination
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public function generate($file, $time, $destination)
     {
@@ -43,18 +45,15 @@ class VideoThumbnailService implements VideoThumbnailServiceInterface
 
             $frame = $video->frame($timecode);
             $frame->save($destination);
-        } catch (\Exception $e) {
+        } catch (InvalidArgumentException $e) {
+            // there will be no image file - so nothing to do here
         }
 
         return file_exists($destination);
     }
 
     /**
-     * @param string $video
-     * @param array $times
-     * @param string $destinationPath
-     *
-     * @return array|bool
+     * {@inheritdoc}
      */
     public function batchGenerate(
         $video,

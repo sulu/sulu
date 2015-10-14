@@ -11,9 +11,14 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Video;
 
+/**
+ * Interface for implementing a Service, which generates thumbnails for videos
+ */
 interface VideoThumbnailServiceInterface
 {
     /**
+     * Generates an image from a video frame at given time.
+     *
      * @param string $file
      * @param string $time
      * @param string $destination
@@ -23,6 +28,8 @@ interface VideoThumbnailServiceInterface
     public function generate($file, $time, $destination);
 
     /**
+     * Generates images from video frames at given times.
+     *
      * @param string $video
      * @param array $times
      * @param string $destinationPath

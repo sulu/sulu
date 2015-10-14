@@ -134,7 +134,9 @@ class MediaManager implements MediaManagerInterface
      */
     private $downloadPath;
 
-    /** @var FFProbe */
+    /**
+     * @var FFProbe
+     */
     private $ffprobe;
 
     /**

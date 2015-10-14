@@ -93,7 +93,9 @@ class FormatManager implements FormatManagerInterface
      */
     private $formats;
 
-    /** @var VideoThumbnailServiceInterface */
+    /**
+     * @var VideoThumbnailServiceInterface
+     */
     private $videoThumbnailService;
 
     /**
@@ -550,14 +552,12 @@ class FormatManager implements FormatManagerInterface
      */
     private function checkPreviewSupported($mimeType)
     {
-        $validMimetype = false;
         foreach ($this->previewMimeTypes as $type) {
             if (fnmatch($type, $mimeType)) {
-                $validMimetype = true;
-                break;
+                return true;
             }
         }
 
-        return $validMimetype;
+        return false;
     }
 }

@@ -20,11 +20,6 @@ use Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailService;
 class VideoThumbnailServiceTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var string
-     */
-    protected $basePath;
-
-    /**
      * @var Video
      */
     protected $video;
@@ -47,8 +42,6 @@ class VideoThumbnailServiceTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-
-        $this->basePath = __DIR__ . '/../../../bin/downloads/';
 
         $this->ffmpeg = $this->prophesize(FFMpeg::class);
         $this->video = $this->prophesize(Video::class);
