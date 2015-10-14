@@ -20,6 +20,7 @@ use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -120,16 +121,7 @@ class MediaStreamController extends Controller
 
         $path = $this->getStorage()->load($fileName, $version, $storageOptions);
 
-        $response = new StreamedResponse(function () use ($path) {
-            flush(); // send headers
-            $handle = fopen($path, 'r');
-            while (!feof($handle)) {
-                $buffer = fread($handle, 1024);
-                echo $buffer;
-                flush(); // buffered output
-            }
-            fclose($handle);
-        });
+        $response = new BinaryFileResponse($path);
 
         $pathInfo = pathinfo($fileName);
 
