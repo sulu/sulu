@@ -161,6 +161,7 @@
                         service('security.token_storage').getToken().getUser()
                     )
                 </argument>
+                <argument key="maxFilesize" type="string">%sulu_media.upload.max_filesize%</argument>
             </argument>
 
             <tag name="sulu.js_config"/>

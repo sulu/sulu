@@ -175,6 +175,7 @@ define([
                     name: 'dropzone@husky',
                     options: {
                         el: constants.logoDropzoneSelector,
+                        maxFilesize: Config.get('sulu-media').maxFilesize,
                         instanceName: 'account-logo',
                         titleKey: '',
                         descriptionKey: 'contact.accounts.logo-dropzone-text',
@@ -182,7 +183,8 @@ define([
                         skin: 'overlay',
                         method: 'POST',
                         paramName: 'fileVersion',
-                        showOverlay: false, maxFiles: 1,
+                        showOverlay: false,
+                        maxFiles: 1
                     }
                 }
             ]);
