@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\Video;
 
 /**
- * Interface for implementing a Service, which generates thumbnails for videos
+ * Interface for implementing a Service, which generates thumbnails for videos.
  */
 interface VideoThumbnailServiceInterface
 {

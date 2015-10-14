@@ -12,11 +12,11 @@
 namespace Sulu\Bundle\MediaBundle\Media\Video;
 
 use FFMpeg\Coordinate\TimeCode;
-use FFMpeg\FFMpeg;
 use FFMpeg\Exception\InvalidArgumentException;
+use FFMpeg\FFMpeg;
 
 /**
- * Service to generate thumbnails from videos
+ * Service to generate thumbnails from videos.
  */
 class VideoThumbnailService implements VideoThumbnailServiceInterface
 {
