@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1675 [ContactBundle]   Fixed null value for smart content
     * FEATURE     #1653 [MediaBundle]     Added generation of thumbnails for videos
     * BUGFIX      #1688 [ContentBundle]   Fixed doctrine cache size for preview with delete on navigate
+    * BUGFIX      #1687 [MediaBundle]     Fixed media-selection overlay responsive and datagrid styles
     * FEATURE     #1598 [MediaBundle]     Added infinite-scroll pagination for masonry-view
     * FEATURE     #1598 [ContactBundle]   Added infinite-scroll pagination for card-view
     * BUGFIX      #1670 [ContentBundle]   Fixed missing url-scheme in content type

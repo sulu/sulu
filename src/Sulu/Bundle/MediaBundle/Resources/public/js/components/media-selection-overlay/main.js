@@ -13,7 +13,11 @@
  * @class MediaSelection
  * @constructor
  */
-define(['sulumedia/collections/collections', 'sulumedia/models/collection'], function(Collections, Collection) {
+define([
+    'sulumedia/collections/collections',
+    'sulumedia/models/collection',
+    'services/sulumedia/user-settings-manager'
+], function(Collections, Collection, UserSettingsManager) {
 
     'use strict';
 
@@ -250,55 +254,6 @@ define(['sulumedia/collections/collections', 'sulumedia/models/collection'], fun
                 dataNavigationSelectHandler.bind(this)
             );
 
-            // change datagrid to table
-            this.sandbox.on(
-                'sulu.toolbar.media-selection-overlay.' + this.options.instanceName + '.change.table',
-                function() {
-                    this.sandbox.emit(
-                        'husky.datagrid.media-selection-overlay.' + this.options.instanceName + '.view.change',
-                        'table'
-                    );
-                    this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'table');
-                }.bind(this)
-            );
-
-            // change datagrid to thumbnail small
-            this.sandbox.on(
-                'sulu.toolbar.media-selection-overlay.' + this.options.instanceName + '.change.thumbnail-small',
-                function() {
-                    this.sandbox.emit(
-                        'husky.datagrid.media-selection-overlay.' + this.options.instanceName + '.view.change',
-                        'thumbnail',
-                        {large: false}
-                    );
-                    this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'thumbnailSmall');
-                }.bind(this)
-            );
-
-            // change datagrid to thumbnail large
-            this.sandbox.on(
-                'sulu.toolbar.media-selection-overlay.' + this.options.instanceName + '.change.thumbnail-large',
-                function() {
-                    this.sandbox.emit(
-                        'husky.datagrid.media-selection-overlay.' + this.options.instanceName + '.view.change',
-                        'thumbnail',
-                        {large: true}
-                    );
-                    this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'thumbnailLarge');
-                }.bind(this)
-            );
-
-            // premark the current view in the toolbar
-            this.sandbox.on(
-                'husky.toolbar.media-selection-overlay.' + this.options.instanceName + '.initialized',
-                function() {
-                    this.sandbox.emit(
-                        'husky.toolbar.media-selection-overlay.' + this.options.instanceName + '.item.mark',
-                        listViews[this.listView].itemId
-                    );
-                }.bind(this)
-            );
-
             // if files got uploaded to the server add them to the datagrid
             this.sandbox.on(
                 'husky.dropzone.media-selection-overlay.' + this.options.instanceName + '.files-added',
@@ -331,6 +286,36 @@ define(['sulumedia/collections/collections', 'sulumedia/models/collection'], fun
                     this.$el.find('.media-selection-overlay-container').removeClass('dropzone-overlay-opened');
                 }.bind(this)
             );
+
+            // change datagrid view to table
+            this.sandbox.on('sulu.toolbar.change.table', function() {
+                UserSettingsManager.setMediaListView('table');
+                UserSettingsManager.setMediaListPagination('dropdown');
+
+                this.sandbox.emit(
+                    'husky.datagrid.media-selection-overlay.' + this.options.instanceName + '.change',
+                    1,
+                    UserSettingsManager.getDropdownPageSize(),
+                    'table',
+                    [],
+                    'dropdown'
+                );
+            }.bind(this));
+
+            // change datagrid view to masonry
+            this.sandbox.on('sulu.toolbar.change.masonry', function() {
+                UserSettingsManager.setMediaListView('datagrid/decorators/masonry-view');
+                UserSettingsManager.setMediaListPagination('infinite-scroll');
+
+                this.sandbox.emit(
+                    'husky.datagrid.media-selection-overlay.' + this.options.instanceName + '.change',
+                    1,
+                    UserSettingsManager.getInfinityPageSize(),
+                    'datagrid/decorators/masonry-view',
+                    null,
+                    'infinite-scroll'
+                );
+            }.bind(this));
         },
 
         /**
@@ -404,6 +389,30 @@ define(['sulumedia/collections/collections', 'sulumedia/models/collection'], fun
                     }
                 ]);
 
+                var buttons = this.sandbox.sulu.buttons.get({
+                    add: {
+                        options: {
+                            id: 'add',
+                            title: this.sandbox.translate('media-selection.list-toolbar.upload-info'),
+                            hidden: true,
+                            callback: function() {
+                                this.sandbox.emit(
+                                    'husky.dropzone.media-selection-overlay.' +
+                                    this.options.instanceName + '.open-data-source'
+                                );
+                            }.bind(this)
+                        }
+                    },
+                    mediaDecoratorDropdown: {
+                        options: {
+                            id: 'change',
+                            dropdownOptions: {
+                                markSelected: true
+                            }
+                        }
+                    }
+                });
+
                 this.sandbox.sulu.initListToolbarAndList.call(
                     this,
                     'mediaOverlay',
@@ -444,75 +453,28 @@ define(['sulumedia/collections/collections', 'sulumedia/models/collection'], fun
                         el: this.$el.find('.media-selection-overlay-toolbar-container'),
                         instanceName: 'media-selection-overlay.' + this.options.instanceName,
                         showTitleAsTooltip: false,
-                        template: [ // TODO: use sulu-buttons
-                            {
-                                id: 'add',
-                                icon: 'plus-circle',
-                                title: this.sandbox.translate('media-selection.list-toolbar.upload-info'),
-                                hidden: true,
-                                callback: function() {
-                                    this.sandbox.emit(
-                                        'husky.dropzone.media-selection-overlay.' +
-                                        this.options.instanceName + '.open-data-source'
-                                    );
-                                }.bind(this)
-                            },
-                            {
-                                id: 'change',
-                                icon: 'th-large',
-                                dropdownOptions: {
-                                    markSelected: true
-                                },
-                                dropdownItems: [
-                                    {
-                                        id: 'small-thumbnails',
-                                        title: this.sandbox.translate('sulu.toolbar.small-thumbnails'),
-                                        callback: function() {
-                                            this.sandbox.emit(
-                                                'sulu.toolbar.media-selection-overlay.' +
-                                                this.options.instanceName + '.change.thumbnail-small'
-                                            );
-                                        }.bind(this)
-                                    },
-                                    {
-                                        id: 'big-thumbnails',
-                                        title: this.sandbox.translate('sulu.toolbar.big-thumbnails'),
-                                        callback: function() {
-                                            this.sandbox.emit(
-                                                'sulu.toolbar.media-selection-overlay.' +
-                                                this.options.instanceName + '.change.thumbnail-large'
-                                            );
-                                        }.bind(this)
-                                    },
-                                    {
-                                        id: 'table',
-                                        title: this.sandbox.translate('sulu.toolbar.table'),
-                                        callback: function() {
-                                            this.sandbox.emit(
-                                                'sulu.toolbar.media-selection-overlay.' +
-                                                this.options.instanceName + '.change.table'
-                                            );
-                                        }.bind(this)
-                                    }
-                                ]
-                            }
-                        ]
+                        template: buttons
                     },
                     {
                         el: this.$el.find('.media-selection-overlay-datagrid-container'),
                         url: '/admin/api/media?orderBy=media.changed&orderSort=DESC' + (!!this.options.types ? '&types=' + this.options.types : ''),
-                        view: listViews[this.listView].name,
+                        view: UserSettingsManager.getMediaListView(),
+                        pagination: UserSettingsManager.getMediaListPagination(),
                         resultKey: 'media',
                         instanceName: 'media-selection-overlay.' + this.options.instanceName,
                         preselected: this.options.preselectedIds,
                         sortable: false,
                         viewSpacingBottom: 180,
                         viewOptions: {
-                            thumbnail: listViews[this.listView].thViewOptions || {}
+                            table: {
+                                actionIconColumn: 'name'
+                            }
                         },
                         paginationOptions: {
-                            dropdown: {
-                                verticalAlignment: 'top'
+                            'infinite-scroll': {
+                                reachedBottomMessage: 'public.reached-list-end',
+                                scrollContainer: '.media-selection-overlay-content-area',
+                                scrollOffset: 500
                             }
                         }
                     }
