@@ -12,6 +12,7 @@ namespace Sulu\Bundle\SnippetBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use PHPCR\NodeInterface;
@@ -34,7 +35,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 /**
  * handles snippets.
  */
-class SnippetController implements SecuredControllerInterface
+class SnippetController implements ClassResourceInterface, SecuredControllerInterface
 {
     use RequestParametersTrait;
 
@@ -99,7 +100,7 @@ class SnippetController implements SecuredControllerInterface
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getSnippetsAction(Request $request)
+    public function cgetAction(Request $request)
     {
         $this->initEnv($request);
 
@@ -163,7 +164,7 @@ class SnippetController implements SecuredControllerInterface
      *
      * @Get(defaults={"uuid" = ""})
      */
-    public function getSnippetAction(Request $request, $uuid = null)
+    public function getAction(Request $request, $uuid = null)
     {
         $this->initEnv($request);
 
@@ -181,7 +182,7 @@ class SnippetController implements SecuredControllerInterface
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postSnippetAction(Request $request)
+    public function postAction(Request $request)
     {
         $this->initEnv($request);
         $data = $request->request->all();
@@ -208,7 +209,7 @@ class SnippetController implements SecuredControllerInterface
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function putSnippetAction(Request $request, $uuid)
+    public function putAction(Request $request, $uuid)
     {
         $this->initEnv($request);
         $data = $request->request->all();
@@ -236,7 +237,7 @@ class SnippetController implements SecuredControllerInterface
      *
      * @return JsonResponse
      */
-    public function deleteSnippetAction(Request $request, $uuid)
+    public function deleteAction(Request $request, $uuid)
     {
         $webspaceKey = $request->query->get('webspace', null);
 
@@ -308,7 +309,7 @@ class SnippetController implements SecuredControllerInterface
      *
      * @return JsonResponse
      */
-    public function getSnippetFieldsAction()
+    public function getFieldsAction()
     {
         return new JsonResponse(
             [

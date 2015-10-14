@@ -36,7 +36,8 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
         DocumentManager $documentManager,
         DocumentInspector $inspector,
         MetadataFactoryInterface $metadataFactory
-    ) {
+    )
+    {
         $this->documentManager = $documentManager;
         $this->inspector = $inspector;
         $this->metadataFactory = $metadataFactory;
@@ -51,8 +52,10 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
 
     public function handleRemove(RemoveEvent $event)
     {
-        $document = $event->getDocument();
-        $this->removeDocument($document);
+        if ($event->getOption('dereference')) {
+            $document = $event->getDocument();
+            $this->removeDocument($document);
+        }
     }
 
     public function removeDocument($document)
@@ -107,7 +110,7 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
      * Remove the given property, or the value which references the node (when
      * multi-valued).
      *
-     * @param NodeInterface     $node
+     * @param NodeInterface $node
      * @param PropertyInterface $property
      */
     private function dereferenceProperty(NodeInterface $node, PropertyInterface $property)

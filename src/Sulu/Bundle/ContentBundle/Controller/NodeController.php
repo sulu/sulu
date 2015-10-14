@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use JMS\Serializer\SerializationContext;
+use PHPCR\ReferentialIntegrityException;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
@@ -62,7 +63,7 @@ class NodeController extends RestController
      * returns webspace key from request.
      *
      * @param Request $request
-     * @param bool    $force
+     * @param bool $force
      *
      * @return string
      */
@@ -109,7 +110,7 @@ class NodeController extends RestController
      * returns a content item with given UUID as JSON String.
      *
      * @param Request $request
-     * @param string  $uuid
+     * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -122,7 +123,7 @@ class NodeController extends RestController
 
     /**
      * @param Request $request
-     * @param string  $uuid
+     * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -215,7 +216,7 @@ class NodeController extends RestController
      * Returns nodes by given ids.
      *
      * @param Request $request
-     * @param array   $idString
+     * @param array $idString
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -372,7 +373,7 @@ class NodeController extends RestController
      * saves node with given uuid and data.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param string                                    $uuid
+     * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -461,27 +462,32 @@ class NodeController extends RestController
      * deletes node with given uuid.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param string                                    $uuid
+     * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction(Request $request, $uuid)
     {
-        $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
 
-        $view = $this->responseDelete(
-            $uuid,
-            function ($id) use ($language, $webspace) {
-                try {
-                    $this->getRepository()->deleteNode($id, $webspace, $language);
-                } catch (DocumentNotFoundException $ex) {
-                    throw new EntityNotFoundException('Content', $id);
+        try {
+            $view = $this->responseDelete(
+                $uuid,
+                function ($id) use ($webspace) {
+                    try {
+                        $this->getRepository()->deleteNode($id, $webspace);
+                    } catch (DocumentNotFoundException $ex) {
+                        throw new EntityNotFoundException('Content', $id);
+                    }
                 }
-            }
-        );
+            );
 
-        return $this->handleView($view);
+            return $this->handleView($view);
+        } catch (ReferentialIntegrityException $e) {
+            $restException = new RestException('The node cannot be deleted because it is still referenced', 0, $e);
+
+            return $this->handleView($this->view($restException->toArray(), 409));
+        }
     }
 
     /**
@@ -493,7 +499,7 @@ class NodeController extends RestController
      *
      * @Post("/nodes/{uuid}")
      *
-     * @param string  $uuid
+     * @param string $uuid
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -527,7 +533,7 @@ class NodeController extends RestController
                     $data = $repository->copyNode($uuid, $srcLocale, $webspace, $language, $userId);
                     break;
                 case 'order':
-                    $position = (int) $this->getRequestParameter($request, 'position', true);
+                    $position = (int)$this->getRequestParameter($request, 'position', true);
                     $language = $this->getLanguage($request);
 
                     // call repository method
