@@ -12,6 +12,7 @@ namespace Sulu\Component\Content\Export;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Extension\ExportExtensionInterface;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Symfony\Component\Templating\EngineInterface;
 
@@ -104,12 +105,27 @@ class Webspace implements WebspaceInterface
         $metaDataList = [];
         /** @var \Sulu\Bundle\ContentBundle\Document\PageDocument[] $loadedDocuments */
         $loadedDocuments = array();
+        $extensionDataList = array();
+
         foreach ($documents as $key => $document) {
-            $loadedDocuments[$key] = $this->documentManager->find($document->getUuid(), $locale);
+            $loadedDocument = $this->documentManager->find($document->getUuid(), $locale);
+            $loadedDocuments[$key] = $loadedDocument;
             /** @var \Sulu\Component\Content\Metadata\StructureMetadata $metaData */
             $metaData = $this->documentInspector->getStructureMetadata($document);
-
             $metaDataList[] = $metaData;
+
+            $extensionExportData = array();
+
+            foreach ($document->getExtensionsData()->toArray() as $extensionName => $extensionData) {
+                /** @var \Sulu\Bundle\ContentBundle\Content\Structure\ExcerptStructureExtension $extension */
+                $extension = $this->structureManager->getExtension($document->getStructureType(), $extensionName);
+
+                if ($extension instanceof ExportExtensionInterface) {
+                    $extensionExportData[$extensionName] = $extension->export($extensionData, $format);
+                }
+            }
+
+            $extensionDataList[] = $extensionExportData;
         }
 
         return array(
@@ -117,6 +133,7 @@ class Webspace implements WebspaceInterface
             'locale' => $locale,
             'format' => $format,
             'documents' => $loadedDocuments,
+            'extensionDataList' => $extensionDataList,
             'metaDataList' => $metaDataList,
         );
     }
@@ -149,11 +166,11 @@ class Webspace implements WebspaceInterface
         $where = [];
 
         // only pages
-        $where[] = '[jcr:mixinTypes] = "sulu:page"';
+        $where[] = '([jcr:mixinTypes] = "sulu:page" OR [jcr:mixinTypes] = "sulu:home")';
 
         // filter by webspace key
         $where[] = sprintf(
-            'ISDESCENDANTNODE("/cmf/%s/contents")',
+            'ISDESCENDANTNODE("/cmf/%s")',
             $webspaceKey
         );
 
