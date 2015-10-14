@@ -11,9 +11,8 @@
  * @class MediaEdit
  * Class which shows overlays for editing media models
  * @constructor
- *
- **/
-define(['services/sulumedia/media-manager'], function(MediaManager) {
+ */
+define(['config', 'services/sulumedia/media-manager'], function(Config, MediaManager) {
 
     'use strict';
 
