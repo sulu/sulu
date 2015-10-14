@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\ORM\EntityManager;
+use FFMpeg\FFProbe;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -92,6 +93,11 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
      */
     private $securityChecker;
 
+    /**
+     * @var FFProbe
+     */
+    private $ffprobe;
+
     public function setUp()
     {
         parent::setUp();
@@ -107,6 +113,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $this->typeManager = $this->prophesize(TypeManagerInterface::class);
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $this->securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+        $this->ffprobe = $this->prophesize(FFProbe::class);
 
         $this->mediaManager = new MediaManager(
             $this->mediaRepository->reveal(),
@@ -120,6 +127,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
             $this->typeManager->reveal(),
             $this->tokenStorage->reveal(),
             $this->securityChecker->reveal(),
+            $this->ffprobe->reveal(),
             [
                 'view' => 64,
             ],

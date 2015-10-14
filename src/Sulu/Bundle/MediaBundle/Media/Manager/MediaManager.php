@@ -13,7 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
-use SensioLabs\Security\SecurityChecker;
+use FFMpeg\FFProbe;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
@@ -135,6 +135,11 @@ class MediaManager implements MediaManagerInterface
     private $downloadPath;
 
     /**
+     * @var FFProbe
+     */
+    private $ffprobe;
+
+    /**
      * @var int
      */
     public $count;
@@ -151,6 +156,7 @@ class MediaManager implements MediaManagerInterface
      * @param TypeManagerInterface $typeManager
      * @param TokenStorageInterface $tokenStorage
      * @param SecurityCheckerInterface $securityChecker
+     * @param FFProbe $ffprobe
      * @param array $permissions
      * @param string $downloadPath
      * @param string $maxFileSize
@@ -167,6 +173,7 @@ class MediaManager implements MediaManagerInterface
         TypeManagerInterface $typeManager,
         TokenStorageInterface $tokenStorage = null,
         SecurityCheckerInterface $securityChecker = null,
+        FFProbe $ffprobe,
         $permissions,
         $downloadPath,
         $maxFileSize
@@ -182,6 +189,7 @@ class MediaManager implements MediaManagerInterface
         $this->typeManager = $typeManager;
         $this->tokenStorage = $tokenStorage;
         $this->securityChecker = $securityChecker;
+        $this->ffprobe = $ffprobe;
         $this->permissions = $permissions;
         $this->downloadPath = $downloadPath;
         $this->maxFileSize = $maxFileSize;
@@ -455,6 +463,24 @@ class MediaManager implements MediaManagerInterface
     }
 
     /**
+     * @param UploadedFile $uploadedFile
+     *
+     * @return array
+     */
+    private function getProperties(UploadedFile $uploadedFile)
+    {
+        $mimeType = $uploadedFile->getMimeType();
+        $properties = [];
+
+        // if the file is a video we add the duration
+        if (fnmatch('video/*', $mimeType)) {
+            $properties['duration'] = $this->ffprobe->format($uploadedFile->getPathname())->get('duration');
+        }
+
+        return $properties;
+    }
+
+    /**
      * Modifies an existing media.
      *
      * @param UploadedFile $uploadedFile
@@ -514,6 +540,7 @@ class MediaManager implements MediaManagerInterface
             $data['name'] = $uploadedFile->getClientOriginalName();
             $data['size'] = intval($uploadedFile->getSize());
             $data['mimeType'] = $uploadedFile->getMimeType();
+            $data['properties'] = $this->getProperties($uploadedFile);
             $data['type'] = [
                 'id' => $this->typeManager->getMediaType($uploadedFile->getMimeType()),
             ];
@@ -589,9 +616,11 @@ class MediaManager implements MediaManagerInterface
             $uploadedFile->getClientOriginalName(),
             1
         );
+
         $data['name'] = $uploadedFile->getClientOriginalName();
         $data['size'] = $uploadedFile->getSize();
         $data['mimeType'] = $uploadedFile->getMimeType();
+        $data['properties'] = $this->getProperties($uploadedFile);
         $data['type'] = [
             'id' => $this->typeManager->getMediaType($uploadedFile->getMimeType()),
         ];
@@ -874,6 +903,12 @@ class MediaManager implements MediaManagerInterface
         }
 
         $media->setAdditionalVersionData($versionData);
+
+        // set properties
+        $properties = $media->getFileVersion()->getProperties();
+        if ($properties !== null) {
+            $media->setProperties($properties);
+        }
 
         // Set Current Url
         if (isset($versionData[$media->getVersion()])
