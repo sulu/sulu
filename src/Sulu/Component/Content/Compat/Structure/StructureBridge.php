@@ -642,7 +642,7 @@ class StructureBridge implements StructureInterface
     {
         $document = $this->getDocument();
         if ($document->getRedirectType() == RedirectType::EXTERNAL) {
-            return 'http://' . $document->getRedirectExternal();
+            return $document->getRedirectExternal();
         }
 
         if ($document->getRedirectType() === RedirectType::INTERNAL) {

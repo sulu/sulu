@@ -45,6 +45,22 @@
                         }
                     },
 
+                    updateFilterClasses: function(selector) {
+                        var wookmark = $(selector).data(dataKey);
+
+                        if (!!wookmark) {
+                            wookmark.updateFilterClasses();
+                        }
+                    },
+
+                    filter: function(selector, filter, operator) {
+                        var wookmark = $(selector).data(dataKey);
+
+                        if (!!wookmark) {
+                            wookmark.filter(filter, operator || 'or');
+                        }
+                    },
+
                     destroy: function(selector) {
                         var wookmark = $(selector).data(dataKey);
 

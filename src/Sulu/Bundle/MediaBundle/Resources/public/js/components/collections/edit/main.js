@@ -38,7 +38,6 @@ define([
 
             return {
                 noBack: true,
-                title: this.data.title,
                 tabs: {
                     url: '/admin/content-navigations?alias=media'
                 },
@@ -59,11 +58,7 @@ define([
          * @returns {*}
          */
         loadComponentData: function() {
-            var promise = this.sandbox.data.deferred();
-            CollectionManager.loadOrNew(this.options.id, UserSettingsManager.getMediaLocale()).then(function(data) {
-                promise.resolve(data);
-            });
-            return promise;
+            return CollectionManager.loadOrNew(this.options.id, UserSettingsManager.getMediaLocale());
         },
 
         /**

@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['services/husky/util'], function(util) {
+define(function() {
 
     'use strict';
 
@@ -83,11 +83,11 @@ define(['services/husky/util'], function(util) {
                 return;
             }
 
-            this.events = util.object(
-                util.arrayMap(this.events.names, function(event, key) {
+            this.events = this.sandbox.util.object(
+                this.sandbox.util.arrayMap(this.events.names, function(event, key) {
                     if (event.type === 'on') {
                         return [key, onEventFactory.call(this, this.events.namespace, event.postFix, event.callback)];
-                    }else if (event.type === 'once') {
+                    } else if (event.type === 'once') {
                         return [key, onceEventFactory.call(this, this.events.namespace, event.postFix, event.callback)];
                     }
 

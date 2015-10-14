@@ -111,6 +111,11 @@ class FileVersion implements AuditableInterface
     private $defaultMeta;
 
     /**
+     * @var string
+     */
+    private $properties = '{}';
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -641,5 +646,25 @@ class FileVersion implements AuditableInterface
     public function getStorageType()
     {
         return $this->storageType;
+    }
+
+    /**
+     * @return array
+     */
+    public function getProperties()
+    {
+        return json_decode($this->properties, true);
+    }
+
+    /**
+     * @param array $properties
+     *
+     * @return self
+     */
+    public function setProperties(array $properties)
+    {
+        $this->properties = json_encode($properties);
+
+        return $this;
     }
 }

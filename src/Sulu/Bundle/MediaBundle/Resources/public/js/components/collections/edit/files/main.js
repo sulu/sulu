@@ -8,11 +8,12 @@
  */
 
 define([
+    'services/sulumedia/collection-manager',
     'services/sulumedia/media-manager',
     'services/sulumedia/user-settings-manager',
     'services/sulumedia/overlay-manager',
-    'sulusecurity/services/security-checker',
-], function(MediaManager, UserSettingsManager, OverlayManager, SecurityChecker) {
+    'sulusecurity/services/security-checker'
+], function(CollectionManager, MediaManager, UserSettingsManager, OverlayManager, SecurityChecker) {
 
     'use strict';
 
@@ -21,6 +22,9 @@ define([
         },
 
         constants = {
+            scrollContainerSelector: '.content-column > .wrapper .page',
+            hideToolbarClass: 'toolbar-hidden',
+            fixedClass: 'fixed',
             dropzoneSelector: '.dropzone-container',
             toolbarSelector: '.list-toolbar-container',
             datagridSelector: '.datagrid-container'
@@ -159,7 +163,7 @@ define([
             this.sandbox.on('sulu.list-toolbar.delete', this.deleteMedia.bind(this));
 
             // edit media
-            this.sandbox.on('sulu.list-toolbar.edit', this.editMedia.bind(this));
+            this.sandbox.on('sulu.list-toolbar.edit', this.editMedias.bind(this));
 
             // start collection-select overlay on move-click
             this.sandbox.on('sulu.list-toolbar.media-move', function() {
@@ -171,21 +175,49 @@ define([
             // change datagrid view to table
             this.sandbox.on('sulu.toolbar.change.table', function() {
                 UserSettingsManager.setMediaListView('table');
-                this.sandbox.emit('husky.datagrid.view.change', 'table');
+                UserSettingsManager.setMediaListPagination('dropdown');
+
+                this.sandbox.emit('husky.datagrid.change',
+                    1,
+                    UserSettingsManager.getDropdownPageSize(),
+                    'table',
+                    [],
+                    'dropdown'
+                );
+
+                // reset scroll handler
+                this.$el.removeClass(constants.fixedClass);
             }.bind(this));
 
             // change datagrid view to masonry
             this.sandbox.on('sulu.toolbar.change.masonry', function() {
                 UserSettingsManager.setMediaListView('datagrid/decorators/masonry-view');
-                this.sandbox.emit('husky.datagrid.view.change', 'datagrid/decorators/masonry-view');
+                UserSettingsManager.setMediaListPagination('infinite-scroll');
+
+                this.sandbox.emit(
+                    'husky.datagrid.change',
+                    1,
+                    UserSettingsManager.getInfinityPageSize(),
+                    'datagrid/decorators/masonry-view',
+                    null,
+                    'infinite-scroll'
+                );
+
+                // reset scroll handler
+                this.$el.removeClass(constants.fixedClass);
             }.bind(this));
+
+            this.sandbox.dom.on(constants.scrollContainerSelector, 'scroll', this.scrollHandler.bind(this));
         },
 
         /**
          * Renders the files component
          */
         render: function() {
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/collection/files'));
+            this.sandbox.dom.html(
+                this.$el,
+                this.renderTemplate('/admin/media/template/collection/files', {title: this.data.title})
+            );
 
             if (SecurityChecker.hasPermission(this.data, 'add')) {
                 this.startDropzone();
@@ -198,6 +230,8 @@ define([
          * Start the list toolbar and the datagrid
          */
         startDatagrid: function() {
+            var view = UserSettingsManager.getMediaListView();
+
             // init list-toolbar and datagrid
             var settingsDropdown = [], buttons = {};
 
@@ -263,16 +297,22 @@ define([
                 {
                     el: this.$find(constants.datagridSelector),
                     url: '/admin/api/media?orderBy=media.changed&orderSort=DESC&locale=' + UserSettingsManager.getMediaLocale() + '&collection=' + this.options.id,
-                    view: UserSettingsManager.getMediaListView(),
+                    view: view,
+                    pagination: UserSettingsManager.getMediaListPagination(),
                     resultKey: 'media',
                     sortable: false,
                     actionCallback: function(clickedId) {
-                        this.sandbox.emit('husky.datagrid.select.item', clickedId);
-                        this.editMedia();
+                        this.editMedia(clickedId);
                     }.bind(this),
                     viewOptions: {
                         table: {
                             actionIconColumn: 'name'
+                        }
+                    },
+                    paginationOptions: {
+                        'infinite-scroll': {
+                            reachedBottomMessage: 'public.reached-list-end',
+                            scrollOffset: 500
                         }
                     }
                 });
@@ -309,10 +349,17 @@ define([
         /**
          * Edits all selected medias
          */
-        editMedia: function() {
+        editMedias: function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(mediaIds) {
                 OverlayManager.startEditMediaOverlay.call(this, mediaIds, UserSettingsManager.getMediaLocale());
             }.bind(this));
+        },
+
+        /**
+         * Edit given media
+         */
+        editMedia: function(mediaId) {
+            OverlayManager.startEditMediaOverlay.call(this, [mediaId], UserSettingsManager.getMediaLocale());
         },
 
         /**
@@ -340,6 +387,30 @@ define([
          */
         enableDropzone: function() {
             this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.enable');
+        },
+
+        /**
+         * loads the collection-data into this.data. is automatically executed before component initialization
+         * @returns {*}
+         */
+        loadComponentData: function() {
+            return CollectionManager.loadOrNew(this.options.id, UserSettingsManager.getMediaLocale());
+        },
+
+        /**
+         * Handles the scroll event to hide or show the tabs
+         */
+        scrollHandler: function() {
+            if (UserSettingsManager.getMediaListView() !== 'datagrid/decorators/masonry-view') {
+                return;
+            }
+
+            var scrollTop = this.sandbox.dom.scrollTop(constants.scrollContainerSelector);
+            if (scrollTop > 90) {
+                this.$el.addClass(constants.fixedClass);
+            } else {
+                this.$el.removeClass(constants.fixedClass);
+            }
         }
     };
 });
