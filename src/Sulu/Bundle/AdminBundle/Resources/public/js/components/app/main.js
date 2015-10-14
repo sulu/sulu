@@ -40,6 +40,14 @@ define(function() {
         },
 
         /**
+         * raised before
+         * @event sulu.app.before-navigate
+         */
+        BEFORE_NAVIGATE = function() {
+            return createEventName('before-navigate');
+        },
+
+        /**
          * listens on and returns true
          * @event sulu.app.content.has-started
          * @param {function} callback The callback to pass true on
@@ -235,6 +243,8 @@ define(function() {
          * @param forceReload {Boolean} force page to reload
          */
         navigate: function(route, trigger, forceReload) {
+            this.sandbox.emit(BEFORE_NAVIGATE.call(this));
+
             // if trigger is not define make it always true to actually route to
             trigger = (typeof trigger !== 'undefined') ? trigger : true;
 

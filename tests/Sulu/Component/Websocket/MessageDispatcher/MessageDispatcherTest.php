@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Websocket\MessageDispatcher;
 
+use Ratchet\ConnectionInterface;
+
 class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
@@ -165,5 +167,23 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
         $result = $dispatcher->dispatch($conn->reveal(), 'test-2', $message, ['id' => 'test'], $context->reveal());
 
         $this->assertEquals(null, $result);
+    }
+
+    public function testOnClose()
+    {
+        $context = $this->prophesize(MessageHandlerContext::class);
+        $conn = $this->prophesize(ConnectionInterface::class);
+
+        $handler1 = $this->prophesize(MessageHandlerInterface::class);
+        $handler1->onClose($conn->reveal(), $context->reveal())->shouldBeCalled();
+
+        $handler2 = $this->prophesize(MessageHandlerInterface::class);
+        $handler2->onClose($conn->reveal(), $context->reveal())->shouldBeCalled();
+
+        $dispatcher = new MessageDispatcher();
+        $dispatcher->add('test-1', $handler1->reveal());
+        $dispatcher->add('test-2', $handler2->reveal());
+
+        $dispatcher->onClose($conn->reveal(), $context->reveal());
     }
 }
