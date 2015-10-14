@@ -113,6 +113,16 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
     }
 
     /**
+     * @Given I leave the selector :selector
+     */
+    public function iLeaveTheSelector($selector)
+    {
+        $this->waitForSelector($selector);
+        $this->getSession()->evaluateScript("$('$selector').trigger('change')");
+        $this->getSession()->evaluateScript("$('$selector').trigger('focusout')");
+    }
+
+    /**
      * @Given I clear and fill in :field with :value
      */
     public function clearAndFill($field, $value)

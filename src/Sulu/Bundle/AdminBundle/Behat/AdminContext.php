@@ -406,6 +406,14 @@ EOT;
     }
 
     /**
+     * @Then I set the value of the property ":name" to ":value"
+     */
+    public function iSetValue($name, $value)
+    {
+        $this->getSession()->evaluateScript("$('#$name').data('element').setValue(" . json_encode($value) . ")");
+    }
+
+    /**
      * Fill in the named husky field. Husky fields may not use standard HTML
      * inputs, so they need some special handling.
      *
