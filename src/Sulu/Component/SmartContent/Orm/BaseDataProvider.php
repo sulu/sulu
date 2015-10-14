@@ -166,7 +166,7 @@ abstract class BaseDataProvider implements DataProviderInterface
      */
     protected function getSerializationContext()
     {
-        return SerializationContext::create();
+        return SerializationContext::create()->setSerializeNull(true);
     }
 
     /**

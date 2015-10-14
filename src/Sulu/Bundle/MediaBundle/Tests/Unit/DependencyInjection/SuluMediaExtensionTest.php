@@ -44,13 +44,8 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasParameter('sulu_media.media.blocked_file_types', ['file/exe']);
         $this->assertContainerBuilderHasParameter('sulu_media.ghost_script.path', 'gs');
         $this->assertContainerBuilderHasParameter('sulu_media.format_manager.mime_types', [
-            'image/jpeg',
-            'image/jpg',
-            'image/gif',
-            'image/png',
-            'image/bmp',
-            'image/svg+xml',
-            'image/vnd.adobe.photoshop',
+            'image/*',
+            'video/*',
             'application/pdf',
         ]);
         $this->assertContainerBuilderHasParameter('sulu_media.media.types', [

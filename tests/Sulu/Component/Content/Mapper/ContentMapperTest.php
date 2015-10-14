@@ -2547,7 +2547,7 @@ class ContentMapperTest extends SuluTestCase
         $data3 = [
             'title' => 'Test',
             'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
-            'external' => 'www.google.at',
+            'external' => 'http://www.google.at',
         ];
         $structure3 = $this->mapper->save($data3, 'external-link', 'sulu_io', 'en', 1);
 
@@ -3035,7 +3035,7 @@ class ContentMapperTest extends SuluTestCase
     {
         $data = [
             'title' => 'Page-1',
-            'external' => 'www.google.at',
+            'external' => 'http://www.google.at',
             'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
             'url' => '/url',
         ];
@@ -3046,13 +3046,13 @@ class ContentMapperTest extends SuluTestCase
         // check save result
         $this->assertEquals('Page-1', $saveResult->title);
         $this->assertEquals('Page-1', $saveResult->getNodeName());
-        $this->assertEquals('www.google.at', $saveResult->external);
+        $this->assertEquals('http://www.google.at', $saveResult->external);
         $this->assertEquals('http://www.google.at', $saveResult->getResourceLocator());
 
         // check load result
         $this->assertEquals('Page-1', $loadResult->title);
         $this->assertEquals('Page-1', $loadResult->getNodeName());
-        $this->assertEquals('www.google.at', $loadResult->external);
+        $this->assertEquals('http://www.google.at', $loadResult->external);
         $this->assertEquals('http://www.google.at', $loadResult->getResourceLocator());
     }
 
@@ -3068,7 +3068,7 @@ class ContentMapperTest extends SuluTestCase
         // turn it into a external link
         $data = [
             'title' => 'External',
-            'external' => 'www.google.at',
+            'external' => 'http://www.google.at',
             'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
         ];
         $saveResult = $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1, true, $result->getUuid());
@@ -3077,14 +3077,14 @@ class ContentMapperTest extends SuluTestCase
         // check save result
         $this->assertEquals('External', $saveResult->title);
         $this->assertEquals('External', $saveResult->getNodeName());
-        $this->assertEquals('www.google.at', $saveResult->external);
+        $this->assertEquals('http://www.google.at', $saveResult->external);
         $this->assertEquals('http://www.google.at', $saveResult->getResourceLocator());
         $this->assertEquals('overview', $saveResult->getOriginTemplate());
 
         // check load result
         $this->assertEquals('External', $loadResult->title);
         $this->assertEquals('External', $loadResult->getNodeName());
-        $this->assertEquals('www.google.at', $loadResult->external);
+        $this->assertEquals('http://www.google.at', $loadResult->external);
         $this->assertEquals('http://www.google.at', $loadResult->getResourceLocator());
         $this->assertEquals('overview', $loadResult->getOriginTemplate());
 

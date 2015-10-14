@@ -18,7 +18,7 @@ define([
 
     var constants = {
             toolbarSelector: '.list-toolbar-container',
-            datagridSelector: '.datagrid-container',
+            datagridSelector: '.datagrid-container'
         },
 
         defaults = {};
@@ -85,13 +85,29 @@ define([
             // change datagrid view to table
             this.sandbox.on('sulu.toolbar.change.table', function() {
                 UserSettingsManager.setMediaListView('table');
-                this.sandbox.emit('husky.datagrid.view.change', 'table');
+                UserSettingsManager.setMediaListPagination('dropdown');
+
+                // this isn't a perfect strategy because datagrid is rerendered on all three events
+                // todo: find a better strategy to change pagination and view-decorator and load first page
+                this.sandbox.emit('husky.datagrid.change.page', 1, UserSettingsManager.getDropdownPageSize());
+                this.sandbox.once('husky.datagrid.updated', function() {
+                    this.sandbox.emit('husky.datagrid.view.change', 'table');
+                    this.sandbox.emit('husky.datagrid.pagination.change', 'dropdown');
+                }.bind(this));
             }.bind(this));
 
             // change datagrid view to masonry
             this.sandbox.on('sulu.toolbar.change.masonry', function() {
                 UserSettingsManager.setMediaListView('datagrid/decorators/masonry-view');
-                this.sandbox.emit('husky.datagrid.view.change', 'datagrid/decorators/masonry-view');
+                UserSettingsManager.setMediaListPagination('infinite-scroll');
+
+                // this isn't a perfect strategy because datagrid is rerendered on all three events
+                // todo: find a better strategy to change pagination and view-decorator and load first page
+                this.sandbox.emit('husky.datagrid.change.page', 1, UserSettingsManager.getInfinityPageSize());
+                this.sandbox.once('husky.datagrid.updated', function() {
+                    this.sandbox.emit('husky.datagrid.view.change', 'datagrid/decorators/masonry-view');
+                    this.sandbox.emit('husky.datagrid.pagination.change', 'infinite-scroll');
+                }.bind(this));
             }.bind(this));
 
             // download media
@@ -112,7 +128,13 @@ define([
          * Render the component
          */
         render: function() {
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/collection/files'));
+            this.sandbox.dom.html(
+                this.$el,
+                this.renderTemplate(
+                    '/admin/media/template/collection/files',
+                    {title: this.sandbox.translate('sulu.media.all')}
+                )
+            );
             this.startDatagrid();
         },
 
@@ -144,6 +166,7 @@ define([
                     el: this.$find(constants.datagridSelector),
                     url: '/admin/api/media?orderBy=media.changed&orderSort=desc&locale=' + UserSettingsManager.getMediaLocale(),
                     view: UserSettingsManager.getMediaListView(),
+                    pagination: UserSettingsManager.getMediaListPagination(),
                     resultKey: 'media',
                     sortable: false,
                     actionCallback: this.actionCallback.bind(this),
@@ -154,6 +177,12 @@ define([
                         },
                         'datagrid/decorators/masonry-view': {
                             selectable: false
+                        }
+                    },
+                    paginationOptions: {
+                        'infinite-scroll': {
+                            reachedBottomMessage: 'public.reached-list-end',
+                            scrollOffset: 500
                         }
                     }
                 }

@@ -905,7 +905,7 @@ class ContentMapper implements ContentMapperInterface
         }
 
         if ($redirectType === RedirectType::EXTERNAL) {
-            $url = 'http://' . $document->getRedirectExternal();
+            $url = $document->getRedirectExternal();
         }
 
         $originLocale = $locale;

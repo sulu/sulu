@@ -13,7 +13,10 @@ define(function() {
 
         var instance = null,
             mediaLanguageKey = 'mediaLanguage',
+            dropdownPageSize = 'mediaDropdownPageSize',
+            infinityPageSize = 'mediaInfinitePageSize',
             mediaListViewKey = 'collectionEditListView',
+            mediaListPaginationKey = 'collectionEditListPagination',
             lastVisitedCollectionKey = 'last-visited-collection';
 
         /** @constructor **/
@@ -37,8 +40,24 @@ define(function() {
                 Husky.sulu.saveUserSetting(mediaListViewKey, viewId);
             },
 
+            getMediaListPagination: function() {
+                return Husky.sulu.getUserSetting(mediaListPaginationKey) || 'infinite-scroll';
+            },
+
+            setMediaListPagination: function(paginationId) {
+                Husky.sulu.saveUserSetting(mediaListPaginationKey, paginationId);
+            },
+
             setLastVisitedCollection: function(collectionId) {
                 Husky.sulu.saveUserSetting(lastVisitedCollectionKey, collectionId);
+            },
+
+            getDropdownPageSize: function() {
+                return Husky.sulu.getUserSetting(dropdownPageSize) || 20;
+            },
+
+            getInfinityPageSize: function() {
+                return Husky.sulu.getUserSetting(infinityPageSize) || 50;
             }
         };
 

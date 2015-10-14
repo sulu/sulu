@@ -26,8 +26,8 @@ class DefaultController extends WebsiteController
      * the appropriate cache headers.
      *
      * @param \Sulu\Component\Content\Compat\StructureInterface $structure
-     * @param bool                                              $preview
-     * @param bool                                              $partial
+     * @param bool $preview
+     * @param bool $partial
      *
      * @return Response
      */
@@ -67,9 +67,8 @@ class DefaultController extends WebsiteController
     /**
      * Resolve the redirect URL, appending any additional path data.
      *
-     * @param string $url         Original webspace URI
      * @param string $redirectUrl Redirect webspace URI
-     * @param string $requestUri  The actual incoming request URI
+     * @param string $requestUri The actual incoming request URI
      *
      * @return string URL to redirect to
      */
@@ -94,7 +93,8 @@ class DefaultController extends WebsiteController
                 // if requested url not starting with redirectUrl it need to be added
                 !isset($requestInfo['path'])
                 || strpos($requestInfo['path'], $redirectInfo['path'] . '/') !== 0
-        )) {
+            )
+        ) {
             $url .= $redirectInfo['path'];
         }
 

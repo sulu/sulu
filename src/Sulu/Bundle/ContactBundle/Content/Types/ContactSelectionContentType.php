@@ -10,8 +10,10 @@
 
 namespace Sulu\Bundle\ContactBundle\Content\Types;
 
+use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use PHPCR\NodeInterface;
+use Sulu\Bundle\ContactBundle\Api\Account;
 use Sulu\Bundle\ContactBundle\Api\Contact;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Util\IdConverterInterface;
@@ -168,7 +170,21 @@ class ContactSelectionContentType extends ComplexContentType
             }
         );
 
-        return $this->serializer->serialize($result, 'array');
+        return array_map(
+            function ($entity) {
+                $groups = ['fullContact', 'partialAccount'];
+                if ($entity instanceof Account) {
+                    $groups = ['fullAccount', 'partialContact'];
+                }
+
+                return $this->serializer->serialize(
+                    $entity,
+                    'array',
+                    SerializationContext::create()->setGroups($groups)->setSerializeNull(true)
+                );
+            },
+            $result
+        );
     }
 
     /**

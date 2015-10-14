@@ -21,7 +21,7 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 
 /**
- * provides a cache for preview with phpcr.
+ * Provides a cache for preview with filesystem and serialization.
  */
 class DoctrineCacheProvider implements PreviewCacheProviderInterface
 {

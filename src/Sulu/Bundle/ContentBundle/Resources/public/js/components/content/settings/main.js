@@ -7,7 +7,11 @@
  * with this source code in the file LICENSE.
  */
 
-define(['app-config', 'sulusecurity/components/users/models/user'], function(AppConfig, User) {
+define([
+    'app-config',
+    'sulusecurity/components/users/models/user',
+    'services/husky/url-validator'
+], function(AppConfig, User, urlValidator) {
 
     'use strict';
 
@@ -144,7 +148,7 @@ define(['app-config', 'sulusecurity/components/users/models/user'], function(App
                 this.sandbox.dom.hide('#content-type-container .sub-form');
                 this.sandbox.dom.show($form);
 
-                if (parseInt(type) === TYPE_CONTENT) {
+                if (parseInt(type) === TYPE_CONTENT || !!this.data.shadowOn) {
                     this.sandbox.dom.show('#shadow-container');
                 } else {
                     this.sandbox.dom.hide('#shadow-container');
@@ -307,7 +311,7 @@ define(['app-config', 'sulusecurity/components/users/models/user'], function(App
                 this.sandbox.dom.data('#internal-link', 'singleInternalLink', data.internal_link);
             }
             if (!!data.external) {
-                this.sandbox.dom.data('#external', 'value', data.external);
+                this.sandbox.dom.data('#external', 'url-data', urlValidator.match(data.external));
             }
 
             // updated after init
@@ -358,7 +362,7 @@ define(['app-config', 'sulusecurity/components/users/models/user'], function(App
                 data.internal_link = this.sandbox.dom.data('#internal-link', 'singleInternalLink');
             } else if (data.nodeType === TYPE_EXTERNAL) {
                 data.title = this.sandbox.dom.val('#external-title');
-                data.external = this.sandbox.dom.val(this.sandbox.dom.find('input', '#external'));
+                data.external = this.sandbox.dom.data('#external', 'url-data').url;
             }
 
             if (!!baseLanguages && baseLanguages.length > 0) {
