@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content\Export;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Symfony\Component\Templating\EngineInterface;
 
@@ -32,6 +33,11 @@ class Webspace implements WebspaceInterface
     protected $documentInspector;
 
     /**
+     * @var StructureManagerInterface
+     */
+    protected $structureManager;
+
+    /**
      * @var string[]
      */
     protected $formatFilePaths;
@@ -40,17 +46,20 @@ class Webspace implements WebspaceInterface
      * @param EngineInterface $templating
      * @param DocumentManager $documentManager
      * @param DocumentInspector $documentInspector
+     * @param StructureManagerInterface $structureManager
      * @param array $formatFilePaths
      */
     public function __construct(
         EngineInterface $templating,
         DocumentManager $documentManager,
         DocumentInspector $documentInspector,
+        StructureManagerInterface $structureManager,
         array $formatFilePaths
     ) {
         $this->templating = $templating;
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
+        $this->structureManager = $structureManager;
         $this->formatFilePaths = $formatFilePaths;
     }
 

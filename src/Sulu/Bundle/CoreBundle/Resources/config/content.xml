@@ -126,6 +126,7 @@
             <argument>%sulu.content.type.block.template%</argument>
             <argument>%sulu.content.language.namespace%</argument>
             <tag name="sulu.content.type" alias="block"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
 
         <!-- content query -->
