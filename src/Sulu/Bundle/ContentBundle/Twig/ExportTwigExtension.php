@@ -43,7 +43,23 @@ class ExportTwigExtension extends \Twig_Extension
             new \Twig_SimpleFunction('sulu_content_type_export', [$this->contentExportManager, 'export']),
             new \Twig_SimpleFunction('sulu_content_type_has_export', [$this->contentExportManager, 'hasExport']),
             new \Twig_SimpleFunction('sulu_content_type_export_options', [$this->contentExportManager, 'getOptions']),
+            new \Twig_SimpleFunction('sulu_content_type_export_escape', [$this, 'escapeXmlContent']),
+            new \Twig_SimpleFunction('xml_dump', 'var_dump'),
         ];
+    }
+
+    /**
+     * @param $content
+     *
+     * @return string
+     */
+    public function escapeXmlContent($content)
+    {
+        if (preg_match('/[<>&]/', $content)) {
+            $content = '<![CDATA[' . $content . ']]>';
+        }
+
+        return $content;
     }
 
     /**

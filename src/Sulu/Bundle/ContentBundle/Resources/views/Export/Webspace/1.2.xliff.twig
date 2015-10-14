@@ -1,72 +1,55 @@
+{% extends "SuluContentBundle:Export:Webspace/base.export.twig" %}
+
+{% block content %}
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
     <!-- WebspaceKey: {{ webspaceKey }} -->
 {% set counter = 0 %}
-{% for document in documents %}
-{% set metaData = metaDataList[loop.index0] %}
-    <file source-language="{{ document.locale }}" datatype="plaintext" original="{{ document.uuid }}">
-        <body>
-            {% set properties = metaData.properties %}
-{{ block('properties') }}
-        </body>
-    </file>
-{% endfor %}
+{{- block('pages') -}}
 </xliff>
+{% endblock content %}
 
 {% if false %} {# avoid output of block directly #}
-    {# Iterate over properties #}
-    {%- block properties -%}
-        {%- for key, property in properties -%}
-            {{- block('property') -}}
-        {%- endfor -%}
-    {%- endblock properties -%}
+    {# Output page #}
+    {% block page %}
+    <file source-language="{{ document.locale }}" datatype="plaintext" original="{{ document.uuid }}">
+        <body>
+        {{ block('properties') }}
+        </body>
+    </file>
+    {% endblock page %}
 
-    {# Analyze Property and call right block #}
-    {%- block property -%}
-        {%- if property.type in ['block'] -%}
-            {{- block('block') -}}
-        {%- else -%}
-            {{- block('simple') -}}
-        {%- endif -%}
-    {%- endblock property -%}
-
-    {# Block Content Type #}
-    {% block block %}
-        {# TODO FIXME #}
-
-        TODO: {{ key }}: {{ property.type }}
-    {% endblock %}
-
-    {# Simple Content Type #}
-    {%- block simple -%}
-        {%- if sulu_content_type_has_export(property.type, format) -%}
+    {# Create Model for Render #}
+    {%- block model -%}
+        {%- if sulu_content_type_has_export(propertyType, format) -%}
         {% spaceless %}
-            {% set resname = property.name %}
-            {% set options = sulu_content_type_export_options(property.type, format) %}
-            {% set source = sulu_content_type_export(property.type, document.structure.getProperty(property.name).value) %}
+            {% set resname = propertyName %}
+            {% set options = sulu_content_type_export_options(propertyType, format) %}
+            {% set source = sulu_content_type_export(propertyType, propertyValue) %}
             {% set translate = options.translate %}
             {% set target = source %}
             {% if translate %}
                 {% set target = '' %}
             {% endif %}
-        {% endspaceless %}{{- block('trans') -}}
+        {% endspaceless %}{{- block('view') -}}
         {%- endif -%}
-    {%- endblock simple -%}
+    {%- endblock model -%}
 
     {# Trans Unit Output #}
-    {%- block trans -%}
+    {%- block view -%}
         {% spaceless %}{% set counter = counter + 1 %}
         {% set attributes = '' %}
         {%- if not translate -%}
             {% set attributes = attributes  ~ ' translate="false"' %}
         {%- endif -%}
         {% endspaceless %}
+            {% autoescape false %}
 
-
-            <!-- {{ property.name }}: {{ property.type }} -->
-            <trans-unit id="{{ counter }}" resname="{{ resname }}"{% autoescape false %}{{ attributes }}{% endautoescape %}>
-                <source>{% if source is not empty %}<![CDATA[{% autoescape false %}{{ source }}{% endautoescape %}]]>{% endif %}</source>
-                <target>{% if target is not empty %}<![CDATA[{% autoescape false %}{{ target }}{% endautoescape %}]]>{% endif %}</target>
+            <!-- {{ propertyName }}: {{ propertyType }} -->
+            <trans-unit id="{{ counter }}" resname="{{ resname }}"{{ attributes }}>
+                <source>{{ sulu_content_type_export_escape(source) }}</source>
+                <target>{{ sulu_content_type_export_escape(target) }}</target>
             </trans-unit>
-    {%- endblock trans -%}
+            {% endautoescape %}
+    {%- endblock view -%}
 {% endif %}
