@@ -319,6 +319,7 @@ define(['services/sulumedia/media-manager'], function(MediaManager) {
                     name: 'dropzone@husky',
                     options: {
                         el: constants.dropzoneSelector,
+                        maxFilesize: Config.get('sulu-media').maxFilesize,
                         url: '/admin/api/media/' + this.media.id + '?action=new-version',
                         method: 'POST',
                         paramName: 'fileVersion',

@@ -43672,6 +43672,8 @@ define('__component__$toggler@husky',[], function() {
  * @params {Boolean} [options.keepFilesAfterSuccess] True to not slide the files away after uploading them successfully
  * @params {Boolean} [options.dropzoneEnabled] Should the dropzone be enabled initially
  * @params {Boolean} [options.cancelUploadOnOverlayClick] Cancel the upload process when the user clicks on the overlay background
+ * @params {Number} [options.maxFilesize] Maximum file size in mb
+ * @params {String} [options.fileTooBigKey] Translation key for a file which is to big
  */
 define('__component__$dropzone@husky',[], function() {
 
@@ -43703,7 +43705,9 @@ define('__component__$dropzone@husky',[], function() {
             keepFilesAfterSuccess: false,
             skin: '',
             dropzoneEnabled: true,
-            cancelUploadOnOverlayClick: false
+            cancelUploadOnOverlayClick: false,
+            maxFilesize: 256, // mb
+            fileTooBigKey: 'husky.upload.error.file-to-big' // can handle {{filesize}}, {{maxFilesize}}, {{filename}
         },
 
         constants = {
@@ -43779,6 +43783,22 @@ define('__component__$dropzone@husky',[], function() {
         },
 
         /**
+         * raised when an error occurs because of a to big file
+         * @event husky.dropzone.<instance-name>.error
+         */
+        ERROR_FILE_TO_BIG = function() {
+            return createEventName.call(this, 'error.file-to-big', true);
+        },
+
+        /**
+         * raised when an error occurs
+         * @event husky.dropzone.<instance-name>.error
+         */
+        ERROR = function() {
+            return createEventName.call(this, 'error', true);
+        },
+
+        /**
          * listens on and opens the data-source folder-overlay
          * @event husky.dropzone.<instance-name>.open-data-source
          */
@@ -43845,8 +43865,12 @@ define('__component__$dropzone@husky',[], function() {
         },
 
         /** returns normalized event names */
-        createEventName = function(postFix) {
-            return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
+        createEventName = function(postFix, global) {
+            return [
+                eventNamespace,
+                ((!global && this.options.instanceName) ? this.options.instanceName + '.' : ''),
+                postFix
+            ].join('');
         },
 
         createJQueryEventName = function(event) {
@@ -44017,6 +44041,8 @@ define('__component__$dropzone@husky',[], function() {
                     paramName: this.options.paramName,
                     uploadMultiple: this.options.uploadMultiple,
                     maxFiles: this.options.maxFiles,
+                    maxFilesize: this.options.maxFilesize,
+                    dictFileTooBig: this.sandbox.translate(this.options.fileTooBigKey),
                     headers: this.options.headers,
                     autoProcessQueue: !this.options.afterDropCallback,
                     previewTemplate: this.sandbox.util.template(templates.uploadItem)({
@@ -44100,12 +44126,39 @@ define('__component__$dropzone@husky',[], function() {
                         this.on('processing', function() {
                             this.options.url = that.url;
                         });
+
+                        // enables external error handling
+                        this.on('error', function(file, message) {
+                            this.removeFile(file);
+
+                            if (file.size / 1024 > that.options.maxFilesize || file.xhr.status === 413) {
+                                that.sandbox.emit(
+                                    ERROR_FILE_TO_BIG.call(this),
+                                    that.getMessage.call(that, that.options.fileTooBigKey, file),
+                                    file
+                                );
+                            } else {
+                                that.sandbox.emit(ERROR.call(this), message, file);
+                            }
+                        });
                     }
                 };
 
             // merge the default plugin options with with passed ones
             options = this.sandbox.util.extend(true, {}, options, this.options.pluginOptions);
             this.sandbox.dropzone.initialize(this.$dropzone, options);
+        },
+
+        /**
+         * Prepares message with placeholders.
+         * @param {String} message
+         * @param {{size, name}} file
+         * @returns {String}
+         */
+        getMessage: function(message, file) {
+            return this.sandbox.translate(message).replace('{{filesize}}', Math.round((file.size / 1048576) * 100) / 100)
+                .replace('{{maxFilesize}}', this.options.maxFilesize)
+                .replace('{{filename}}', this.sandbox.util.cropMiddle(file.name, 20));
         },
 
         /**

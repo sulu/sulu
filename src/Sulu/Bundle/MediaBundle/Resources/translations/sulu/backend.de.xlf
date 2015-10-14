@@ -202,6 +202,22 @@
                 <source>sulu.header.delete-collection</source>
                 <target>Kollektion löschen</target>
             </trans-unit>
+            <trans-unit id="243d88cf2f646526337ls55369f22417" resname="husky.upload.error.file-to-big">
+                <source>husky.upload.error.file-to-big</source>
+                <target>Maximale Dateigröße ({{filesize}}mb) überschritten</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f646526337ls55369f22427" resname="sulu.dropzone.error.file-to-big.title">
+                <source>sulu.dropzone.error.file-to-big.title</source>
+                <target>Datei {{filename}}</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f646526337ls55369f22437" resname="sulu.dropzone.error.title">
+                <source>sulu.dropzone.error.title</source>
+                <target>Datei {{filename}}</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f646526337ls55369f12437" resname="sulu.dropzone.error.message">
+                <source>sulu.dropzone.error.message</source>
+                <target>Unbekannter Fehler aufgetreten</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

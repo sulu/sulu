@@ -523,6 +523,7 @@ define(['sulumedia/collections/collections', 'sulumedia/models/collection'], fun
                         name: 'dropzone@husky',
                         options: {
                             el: this.$el.find('.media-selection-overlay-dropzone-container'),
+                            maxFilesize: Config.get('sulu-media').maxFilesize,
                             url: '/admin/api/media',
                             method: 'POST',
                             paramName: 'fileVersion',

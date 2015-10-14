@@ -8,12 +8,13 @@
  */
 
 define([
+    'config',
     'services/sulumedia/collection-manager',
     'services/sulumedia/media-manager',
     'services/sulumedia/user-settings-manager',
     'services/sulumedia/overlay-manager',
     'sulusecurity/services/security-checker'
-], function(CollectionManager, MediaManager, UserSettingsManager, OverlayManager, SecurityChecker) {
+], function(Config, CollectionManager, MediaManager, UserSettingsManager, OverlayManager, SecurityChecker) {
 
     'use strict';
 
@@ -327,6 +328,7 @@ define([
                     name: 'dropzone@husky',
                     options: {
                         el: this.$find(constants.dropzoneSelector),
+                        maxFilesize: Config.get('sulu-media').maxFilesize,
                         url: '/admin/api/media?collection=' + this.options.id,
                         method: 'POST',
                         paramName: 'fileVersion',
