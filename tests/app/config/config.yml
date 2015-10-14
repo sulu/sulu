@@ -1,6 +1,3 @@
-imports:
-    - { resource: parameters.yml }
-
 sulu_core:
     content:
         structure:

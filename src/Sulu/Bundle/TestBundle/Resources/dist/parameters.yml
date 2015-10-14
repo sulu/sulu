@@ -1,12 +1,13 @@
 parameters:
-    database_host_mysql:     localhost
-    database_host_pgsql:     localhost
-    database_port_mysql:     ~
-    database_port_pgsql:     ~
-    database_user_mysql:     root
-    database_user_pgsql:     postgres
-    database_password_mysql: ~
-    database_password_pgsql: ~
+    database_mysql_host:     localhost
+    database_mysql_user:     root
+    database_mysql_password: ~
+    database_mysql_port:     ~
+
+    database_pgsql_host:     localhost
+    database_pgsql_user:     root
+    database_pgsql_password: ~
+    database_pgsql_port:     ~
 
     phpcr_backend_url: http://localhost:8080/server/
     phpcr_username:    admin

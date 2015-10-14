@@ -33,7 +33,8 @@ class AppKernel extends SuluTestKernel
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(SuluTestBundle::getConfigDir() . '/config.php');
+        parent::registerContainerConfiguration($loader);
+
         if (class_exists('Sulu\Bundle\SearchBundle\SuluSearchBundle')) {
             $loader->load(__DIR__ . '/config/search.yml');
         }
