@@ -12,7 +12,7 @@
  * Class which shows overlays for editing media models
  * @constructor
  */
-define(['config', 'services/sulumedia/media-manager'], function(Config, MediaManager) {
+define(['config', 'services/sulumedia/media-manager'], function(config, mediaManager) {
 
     'use strict';
 
@@ -143,7 +143,7 @@ define(['config', 'services/sulumedia/media-manager'], function(Config, MediaMan
                 medias = [];
 
             mediaIds.forEach(function(mediaId) {
-                var request = MediaManager.loadOrNew(mediaId, locale);
+                var request = mediaManager.loadOrNew(mediaId, locale);
                 requests.push(request);
 
                 request.then(function(media) {
@@ -294,7 +294,7 @@ define(['config', 'services/sulumedia/media-manager'], function(Config, MediaMan
 
                 // check if form-data is different to source-media
                 if (JSON.stringify(this.media) !== JSON.stringify(mediaData)) {
-                    MediaManager.save(mediaData).then(function() {
+                    mediaManager.save(mediaData).then(function() {
                         promise.resolve();
                     });
                 }
@@ -318,7 +318,7 @@ define(['config', 'services/sulumedia/media-manager'], function(Config, MediaMan
                     name: 'dropzone@husky',
                     options: {
                         el: constants.dropzoneSelector,
-                        maxFilesize: Config.get('sulu-media').maxFilesize,
+                        maxFilesize: config.get('sulu-media').maxFilesize,
                         url: '/admin/api/media/' + this.media.id + '?action=new-version',
                         method: 'POST',
                         paramName: 'fileVersion',
@@ -487,7 +487,7 @@ define(['config', 'services/sulumedia/media-manager'], function(Config, MediaMan
                     var newMedia = this.sandbox.util.extend(false, {}, currentMedia, formData.records[index]);
                     // check if form-data is different to source-media
                     if (JSON.stringify(currentMedia) !== JSON.stringify(newMedia)) {
-                        requests.push(MediaManager.save(newMedia));
+                        requests.push(mediaManager.save(newMedia));
                     }
                 }.bind(this));
 
