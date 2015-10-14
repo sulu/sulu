@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1675 [ContactBundle]   Fixed null value for smart content
     * FEATURE     #1653 [MediaBundle]     Added generation of thumbnails for videos
     * FEATURE     #1598 [MediaBundle]     Added infinite-scroll pagination for masonry-view
     * FEATURE     #1598 [ContactBundle]   Added infinite-scroll pagination for card-view
