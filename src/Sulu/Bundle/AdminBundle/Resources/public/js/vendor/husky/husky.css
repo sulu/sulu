@@ -8449,7 +8449,7 @@ a.btn-black, a.btn-highlight {
   font-size: 12px;
 }
 
-/* line 64, ../scss/modules/input.scss */
+/* line 69, ../scss/modules/input.scss */
 .husky-input {
   background: #fff;
   position: relative;
@@ -8519,22 +8519,27 @@ a.btn-black, a.btn-highlight {
 .husky-input .text {
   font-size: 14px;
 }
-/* line 75, ../scss/modules/input.scss */
+/* line 63, ../scss/modules/input.scss */
+.husky-input .text-link {
+  color: #000;
+  cursor: pointer !important;
+}
+/* line 80, ../scss/modules/input.scss */
 .husky-input.colorpicker .input {
   overflow: visible;
 }
-/* line 79, ../scss/modules/input.scss */
+/* line 84, ../scss/modules/input.scss */
 .husky-input.colorpicker .front {
   color: #000;
   cursor: pointer;
 }
-/* line 86, ../scss/modules/input.scss */
+/* line 91, ../scss/modules/input.scss */
 .husky-input.pickdate .front {
   color: #000;
   cursor: pointer;
 }
 
-/* line 95, ../scss/modules/input.scss */
+/* line 100, ../scss/modules/input.scss */
 .husky-validate-error .husky-input input {
   height: 26px;
 }
@@ -8633,6 +8638,11 @@ a.btn-black, a.btn-highlight {
 /* line 59, ../scss/modules/input.scss */
 .husky-auto-complete .text {
   font-size: 14px;
+}
+/* line 63, ../scss/modules/input.scss */
+.husky-auto-complete .text-link {
+  color: #000;
+  cursor: pointer !important;
 }
 /* line 40, ../scss/modules/auto-complete.scss */
 .husky-auto-complete input[type="text"] {
@@ -11487,7 +11497,7 @@ a.btn-black, a.btn-highlight {
   opacity: 0;
 }
 
-/* line 64, ../scss/modules/input.scss */
+/* line 69, ../scss/modules/input.scss */
 .husky-input {
   background: #fff;
   position: relative;
@@ -11557,22 +11567,27 @@ a.btn-black, a.btn-highlight {
 .husky-input .text {
   font-size: 14px;
 }
-/* line 75, ../scss/modules/input.scss */
+/* line 63, ../scss/modules/input.scss */
+.husky-input .text-link {
+  color: #000;
+  cursor: pointer !important;
+}
+/* line 80, ../scss/modules/input.scss */
 .husky-input.colorpicker .input {
   overflow: visible;
 }
-/* line 79, ../scss/modules/input.scss */
+/* line 84, ../scss/modules/input.scss */
 .husky-input.colorpicker .front {
   color: #000;
   cursor: pointer;
 }
-/* line 86, ../scss/modules/input.scss */
+/* line 91, ../scss/modules/input.scss */
 .husky-input.pickdate .front {
   color: #000;
   cursor: pointer;
 }
 
-/* line 95, ../scss/modules/input.scss */
+/* line 100, ../scss/modules/input.scss */
 .husky-validate-error .husky-input input {
   height: 26px;
 }

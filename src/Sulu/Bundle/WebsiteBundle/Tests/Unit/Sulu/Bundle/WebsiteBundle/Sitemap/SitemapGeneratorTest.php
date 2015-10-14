@@ -172,14 +172,14 @@ class SitemapGeneratorTest extends SuluTestCase
             'products/products-2' => [
                 'title' => 'Products-2 ' . $locale,
                 'url' => '/products/product-2',
-                'external' => 'www.asdf.at',
+                'external' => 'http://www.asdf.at',
                 'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
                 'navContexts' => ['main'],
             ],
             'products/products-3' => [
                 'title' => 'Products-3 ' . $locale,
                 'url' => '/products/product-3',
-                'external' => 'www.asdf.at',
+                'external' => 'http://www.asdf.at',
                 'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
                 'navContexts' => ['main'],
             ],

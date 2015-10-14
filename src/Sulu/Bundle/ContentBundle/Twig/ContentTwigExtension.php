@@ -44,6 +44,7 @@ class ContentTwigExtension extends \Twig_Extension
             new \Twig_SimpleFunction('sulu_get_params', [$this, 'getParamsFunction']),
             new \Twig_SimpleFunction('sulu_parameter_to_select', [$this, 'convertParameterToSelect']),
             new \Twig_SimpleFunction('sulu_parameter_to_key_value', [$this, 'convertParameterToKeyValue']),
+            new \Twig_SimpleFunction('sulu_parameter_to_names_array', [$this, 'convertParameterToNamesArrays']),
         ];
     }
 
@@ -173,6 +174,26 @@ class ContentTwigExtension extends \Twig_Extension
         if (is_array($parameters)) {
             foreach ($parameters as $parameter) {
                 $result[$parameter->getName()] = $parameter->getValue();
+            }
+        } else {
+            return $parameters;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param PropertyParameter[] $parameters
+     *
+     * @return array
+     */
+    public function convertParameterToNamesArrays($parameters)
+    {
+        $result = [];
+
+        if (is_array($parameters)) {
+            foreach ($parameters as $parameter) {
+                $result[] = $parameter->getName();
             }
         } else {
             return $parameters;

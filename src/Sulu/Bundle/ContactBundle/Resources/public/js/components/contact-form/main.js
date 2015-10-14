@@ -352,7 +352,7 @@ define([
                 if (url.id === "") {
                     delete url.id;
                 }
-                return url.url !== "";
+                return !!url.url;
             });
 
             this.sandbox.form.addCollectionFilter(this.form, 'faxes', function(fax) {
