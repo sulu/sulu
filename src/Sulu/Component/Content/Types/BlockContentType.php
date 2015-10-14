@@ -402,7 +402,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
      */
     public function exportData($propertyValue)
     {
-        // TODO: Implement exportData() method.
+        return $propertyValue;
     }
 
 }
