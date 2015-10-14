@@ -473,8 +473,6 @@ class BasePageDocument implements
      */
     public function getExtensionsData()
     {
-        var_dump($this->extensions->toArray());
-        exit;
         return $this->extensions;
     }
 

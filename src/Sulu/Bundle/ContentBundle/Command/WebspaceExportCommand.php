@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Creates default routes in PHPCR for webspaces.
+ * Export a webspace in a specific format
  */
 class WebspaceExportCommand extends ContainerAwareCommand
 {
@@ -54,8 +54,6 @@ class WebspaceExportCommand extends ContainerAwareCommand
             $format,
             $uuid
         );
-
-        echo $file;exit;
 
         file_put_contents($target, $file);
 

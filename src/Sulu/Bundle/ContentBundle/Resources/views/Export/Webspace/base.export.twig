@@ -9,6 +9,7 @@
         {%- for document in documents -%}
             {% spaceless %}
             {% set metaData = metaDataList[loop.index0] %}
+            {% set extensions = extensionDataList[loop.index0] %}
             {% set properties = metaData.properties %}
             {% endspaceless %}{{ block('page') }}
         {%- endfor -%}
@@ -19,12 +20,26 @@
         {{ block('properties') }}
     {%- endblock page -%}
 
-    {# Iterate over properties #}
+    {# Iterate over properties and extensionProperties #}
     {%- block properties -%}
         {%- for key, property in properties -%}
             {{- block('property') -}}
         {%- endfor -%}
+        {%- for extensionKey, extension in extensions -%}
+            {%- for extensionProperty in extension -%}
+                {{- block('extensionProperty') -}}
+            {%- endfor -%}
+        {%- endfor -%}
     {%- endblock properties -%}
+
+    {# Analyze Property and call right block #}
+    {%- block extensionProperty -%}
+        {% set propertyName = extensionProperty.name %}
+        {% set propertyValue = extensionProperty.value %}
+        {% set propertyOptions = extensionProperty.options %}
+        {% set propertyType = extensionKey ~ '-extension' %}
+        {{- block('extensionModel') -}}
+    {%- endblock extensionProperty -%}
 
     {# Analyze Property and call right block #}
     {%- block property -%}
@@ -69,6 +84,11 @@
             {{- block('view') -}}
         {%- endif -%}
     {%- endblock model -%}
+
+    {# Create Extension Model for Render #}
+    {%- block extensionModel -%}
+        {{- block('view') -}}
+    {%- endblock extensionModel -%}
 
     {# Trans Unit Output #}
     {%- block view -%}{%- endblock view -%}

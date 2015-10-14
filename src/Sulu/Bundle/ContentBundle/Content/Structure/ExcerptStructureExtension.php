@@ -15,14 +15,17 @@ use PHPCR\NodeInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Export\ContentExportManager;
 use Sulu\Component\Content\Extension\AbstractExtension;
+use Sulu\Component\Content\Extension\ExportExtensionInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 
 /**
  * extends structure with seo content.
  */
-class ExcerptStructureExtension extends AbstractExtension
+class ExcerptStructureExtension extends AbstractExtension implements ExportExtensionInterface
 {
     /**
      * name of structure extension.
@@ -61,6 +64,11 @@ class ExcerptStructureExtension extends AbstractExtension
     protected $structureManager;
 
     /**
+     * @var ContentExportManager
+     */
+    protected $contentExportManager;
+
+    /**
      * @var string
      */
     private $languageNamespace;
@@ -72,10 +80,12 @@ class ExcerptStructureExtension extends AbstractExtension
 
     public function __construct(
         StructureManagerInterface $structureManager,
-        ContentTypeManagerInterface $contentTypeManager
+        ContentTypeManagerInterface $contentTypeManager,
+        ContentExportManager $contentExportManager
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
+        $this->contentExportManager = $contentExportManager;
     }
 
     /**
@@ -193,4 +203,32 @@ class ExcerptStructureExtension extends AbstractExtension
             $this->properties[] = $property->getName();
         }
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function export($properties, $format = null)
+    {
+        $container = new ExcerptValueContainer($properties);
+
+        $data = [];
+        foreach ($this->getExcerptStructure()->getProperties() as $property) {
+            if ($container->__isset($property->getName())) {
+                $property->setValue($container->__get($property->getName()));
+                $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+                if ($this->contentExportManager->hasExport($property->getContentTypeName(), $format)) {
+                    $options = $this->contentExportManager->getOptions($property->getContentTypeName(), $format);
+
+                    $data[$property->getName()] = [
+                        'name' => self::EXCERPT_EXTENSION_NAME . '-' . $property->getName(),
+                        'value' => $contentType->exportData($property->getValue()),
+                        'options' =>$options,
+                    ];
+                }
+            }
+        }
+
+        return $data;
+    }
+
 }

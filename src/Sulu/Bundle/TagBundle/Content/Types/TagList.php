@@ -129,6 +129,15 @@ class TagList extends ComplexContentType implements ContentTypeExportInterface
     public function exportData($propertyValue)
     {
         if (is_array($propertyValue)) {
+            foreach ($propertyValue as &$propertyValueItem) {
+                if (is_string($propertyValueItem)) {
+                    $tag = $this->tagManager->findByName($propertyValueItem);
+                    if ($tag) {
+                        $propertyValueItem = $tag->getId();
+                    }
+                }
+            }
+
             return json_encode($propertyValue);
         }
 

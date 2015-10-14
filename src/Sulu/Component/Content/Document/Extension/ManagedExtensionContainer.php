@@ -98,6 +98,7 @@ class ManagedExtensionContainer extends ExtensionContainer
      */
     public function offsetGet($extensionName)
     {
+
         if (isset($this->data[$extensionName])) {
             return $this->data[$extensionName];
         }
