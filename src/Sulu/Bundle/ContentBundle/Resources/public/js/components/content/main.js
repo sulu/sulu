@@ -734,10 +734,24 @@ define([
                     responsive: true,
                     buttons: this.sandbox.sulu.buttons.get({
                         displayDevices: {},
-                        refresh: {}
+                        refresh: {},
+                        cache: {
+                            options: {
+                                icon: 'recycle',
+                                title: 'sulu.website.cache.remove',
+                                callback: this.cacheClear.bind(this)
+                            }
+                        }
                     })
                 }
             }]);
+        },
+
+        /**
+         * Clear website cache.
+         */
+        cacheClear: function() {
+            this.sandbox.website.cacheClear();
         },
 
         /**
