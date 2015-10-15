@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1701 [ContentBundle]   Added website cache clear button in preview toolbar
     * BUGFIX      #1696 [MediaBundle]     Fixed dropzone for uploading new versions of media
     * BUGFIX      #1675 [ContactBundle]   Fixed null value for smart content
     * FEATURE     #1653 [MediaBundle]     Added generation of thumbnails for videos

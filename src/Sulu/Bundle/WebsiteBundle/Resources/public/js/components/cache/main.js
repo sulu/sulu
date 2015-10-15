@@ -17,7 +17,7 @@ define([], function() {
         '   <div class="grid-row">',
         '       <div class="grid-col-5">',
         '           <div class="btn large action">',
-        '               <span class="fa-trash-o"></span>',
+        '               <span class="fa-recycle"></span>',
         '               <span class="text"><%=translate("sulu.website.cache.remove")%></span>',
         '           </div>',
         '       </div>',
@@ -57,13 +57,7 @@ define([], function() {
         clearCache: function() {
             this.sandbox.logger.log('CACHE CLEAR');
 
-            this.sandbox.util.load('/admin/website/cache/clear')
-                .then(function() {
-                    this.sandbox.emit('sulu.labels.success.show', 'sulu.website.cache.remove.success.description', 'sulu.website.cache.remove.success.title', 'cache-success');
-                }.bind(this))
-                .fail(function() {
-                    this.sandbox.emit('sulu.labels.error.show', 'sulu.website.cache.remove.error.description', 'sulu.website.cache.remove.error.title', 'cache-error');
-                }.bind(this));
+            this.sandbox.website.cacheClear();
         }
     };
 });
