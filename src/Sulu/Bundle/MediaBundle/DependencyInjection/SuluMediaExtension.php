@@ -91,6 +91,12 @@ class SuluMediaExtension extends Extension
             $config['disposition_type']['mime_types_attachment']
         );
 
+        // dropzone
+        $container->setParameter(
+            'sulu_media.upload.max_filesize',
+            $config['upload']['max_filesize']
+        );
+
         // load services
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');

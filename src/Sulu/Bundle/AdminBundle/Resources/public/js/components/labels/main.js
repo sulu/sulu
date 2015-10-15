@@ -185,8 +185,8 @@ define([], function() {
          * @param type
          * @param description
          * @param title
-         * @oaram id
-         * @oaram inNavigation
+         * @param id
+         * @param inNavigation
          */
         showLabel: function(type, description, title, id, inNavigation) {
             id = id || ++this.labelId;
