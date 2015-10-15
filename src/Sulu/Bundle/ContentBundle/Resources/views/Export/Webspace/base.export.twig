@@ -1,95 +1,81 @@
-{% block content %}
-    {% set counter = 0 %}
-{{- block('pages') -}}
-{% endblock content %}
+{% block main %}
+{{ block('pages') }}
+{% endblock main %}
 
 {% if false %} {# avoid output of block directly #}
     {# Iterate over the pages #}
     {%- block pages -%}
         {%- for document in documents -%}
             {% spaceless %}
-            {% set metaData = metaDataList[loop.index0] %}
-            {% set extensions = extensionDataList[loop.index0] %}
-            {% set properties = metaData.properties %}
+                {% set content = document.content %}
+                {% set extensions = document.extensions %}
+                {% set prefix = '' %}
             {% endspaceless %}{{ block('page') }}
         {%- endfor -%}
     {%- endblock pages -%}
 
     {# Output page #}
-    {%- block page -%}
-        {{ block('properties') }}
-    {%- endblock page -%}
+    {% block page %}
+        {{- block('template_model') -}}
+        {{- block('content') -}}
+        {{- block('extensions') -}}
+    {% endblock page %}
 
-    {# Iterate over properties and extensionProperties #}
-    {%- block properties -%}
-        {%- for key, property in properties -%}
-            {{- block('property') -}}
+    {# Output content #}
+    {%- block content -%}
+        {% set properties = content %}
+        {{- block('properties') -}}
+    {%- endblock content -%}
+
+    {# Output extensions #}
+    {%- block extensions -%}
+        {%- for key, extension in extensions -%}
+            {% set prefixBefore = prefix %}
+            {% set prefix = prefix ~ key ~ '-' %}
+            {% set properties = extension %}
+            {{- block('properties') -}}
+            {% set prefix = prefixBefore %}
         {%- endfor -%}
-        {%- for extensionKey, extension in extensions -%}
-            {%- for extensionProperty in extension -%}
-                {{- block('extensionProperty') -}}
-            {%- endfor -%}
+    {%- endblock extensions -%}
+
+    {# Output properties #}
+    {%- block properties -%}
+        {%- for property in properties -%}
+            {% if property.value is defined %}
+                {{- block('model') -}}
+            {% endif %}
+            {%- if property.children is defined -%}
+                {%- for key, child in property.children -%}
+                    {% set prefixBefore = prefix %}
+                    {% set prefix = prefix ~ property.name ~ '#' ~ key ~ '-' %}
+                    {% set properties = child %}
+                    {{- block('properties') -}}
+                    {% set prefix = prefixBefore %}
+                {%- endfor -%}
+            {%- endif -%}
         {%- endfor -%}
     {%- endblock properties -%}
 
-    {# Analyze Property and call right block #}
-    {%- block extensionProperty -%}
-        {% set propertyName = extensionProperty.name %}
-        {% set propertyValue = extensionProperty.value %}
-        {% set propertyOptions = extensionProperty.options %}
-        {% set propertyType = extensionKey ~ '-extension' %}
-        {{- block('extensionModel') -}}
-    {%- endblock extensionProperty -%}
+    {# Output template #}
+    {%- block template_model -%}
+        {% spaceless %}
+            {% set name = 'template' %}
+            {% set options = {translate: false} %}
+            {% set value = document.structureType %}
+            {% set type = '' %}
+        {% endspaceless %}{{- block('view') -}}
+    {%- endblock template_model -%}
 
-    {# Analyze Property and call right block #}
-    {%- block property -%}
-        {%- if property.type in ['block'] -%}
-            {{- block('nested') -}}
-        {%- else -%}
-            {{- block('flat') -}}
-        {%- endif -%}
-    {%- endblock property -%}
-
-    {# Block Content Type #}
-    {%- block nested -%}
-        {% set blockData = sulu_content_type_export(property.type, document.structure.getProperty(property.name).value) %}
-        {% for item in blockData %}
-            {% set prefix = key ~ '#' ~ loop.index0 ~ '-' %}
-
-            {% set propertyName = prefix ~ 'type' %}
-            {% set propertyValue = item.type %}
-            {% set propertyType = 'block' %}
-            {{- block('model') -}}
-
-            {% for blockProperty in property.getComponentByName(item.type).children %}
-                {% set propertyName = prefix ~ blockProperty.name %}
-                {% set propertyValue = item[blockProperty.name] %}
-                {% set propertyType = blockProperty.type %}
-                {{- block('model') -}}
-            {% endfor %}
-        {% endfor %}
-    {%- endblock nested -%}
-
-    {# None Nested Content Types #}
-    {%- block flat -%}
-        {% set propertyName = property.name %}
-        {% set propertyType = property.type %}
-        {% set propertyValue = document.structure.getProperty(property.name).value %}
-        {{- block('model') -}}
-    {%- endblock flat -%}
-
-    {# Create Model for Render #}
+    {# Output model #}
     {%- block model -%}
-        {%- if sulu_content_type_has_export(propertyType, format) -%}
-            {{- block('view') -}}
-        {%- endif -%}
+        {% spaceless %}
+            {% set name = prefix ~ property.name %}
+            {% set options = property.options|default('') %}
+            {% set value = property.value %}
+            {% set type = property.type|default('') %}
+        {% endspaceless %}{{- block('view') -}}
     {%- endblock model -%}
 
-    {# Create Extension Model for Render #}
-    {%- block extensionModel -%}
-        {{- block('view') -}}
-    {%- endblock extensionModel -%}
-
-    {# Trans Unit Output #}
+    {# View #}
     {%- block view -%}{%- endblock view -%}
 {% endif %}
