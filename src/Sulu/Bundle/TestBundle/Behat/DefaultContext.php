@@ -118,7 +118,6 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
     public function iLeaveTheSelector($selector)
     {
         $this->waitForSelector($selector);
-        $this->getSession()->evaluateScript("$('$selector').trigger('change')");
         $this->getSession()->evaluateScript("$('$selector').trigger('focusout')");
     }
 
