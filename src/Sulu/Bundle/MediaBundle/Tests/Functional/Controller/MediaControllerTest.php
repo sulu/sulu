@@ -562,6 +562,7 @@ class MediaControllerTest extends SuluTestCase
                 'locale' => 'en-gb',
                 'title' => 'New Image Title',
                 'description' => 'New Image Description',
+                'copyright' => 'My copyright',
                 'contentLanguages' => [
                     'en-gb',
                 ],
@@ -589,6 +590,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('photo.jpeg', $response->name);
         $this->assertEquals('New Image Title', $response->title);
         $this->assertEquals('New Image Description', $response->description);
+        $this->assertEquals('My copyright', $response->copyright);
         $this->assertNotEmpty($response->url);
         $this->assertNotEmpty($response->thumbnails);
 
@@ -695,6 +697,7 @@ class MediaControllerTest extends SuluTestCase
                 'locale' => 'en-gb',
                 'title' => 'New Image Title',
                 'description' => 'New Image Description',
+                'copyright' => 'My copyright',
                 'contentLanguages' => [
                     'en-gb',
                 ],
@@ -723,6 +726,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('en-gb', $response->locale);
         $this->assertEquals('New Image Title', $response->title);
         $this->assertEquals('New Image Description', $response->description);
+        $this->assertEquals('My copyright', $response->copyright);
         $this->assertEquals([
             'en-gb',
         ], $response->contentLanguages);
@@ -751,6 +755,7 @@ class MediaControllerTest extends SuluTestCase
                 'locale' => 'en-gb',
                 'title' => 'Update Title',
                 'description' => 'Update Description',
+                'copyright' => 'My copyright',
                 'contentLanguages' => [
                     'en-gb',
                 ],
@@ -773,6 +778,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('en-gb', $response->locale);
         $this->assertEquals('Update Title', $response->title);
         $this->assertEquals('Update Description', $response->description);
+        $this->assertEquals('My copyright', $response->copyright);
         $this->assertNotEmpty($response->url);
         $this->assertNotEmpty($response->thumbnails);
         $this->assertEquals([

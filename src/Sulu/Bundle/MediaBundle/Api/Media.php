@@ -260,6 +260,42 @@ class Media extends ApiWrapper
     }
 
     /**
+     * @param string $copyright
+     *
+     * @return $this
+     */
+    public function setCopyright($copyright)
+    {
+        $this->getMeta(true)->setCopyright($copyright);
+
+        return $this;
+    }
+
+    /**
+     * Returns copyright for media.
+     *
+     * @VirtualProperty
+     * @SerializedName("copyright")
+     *
+     * @return string
+     *
+     * @throws FileVersionNotFoundException
+     */
+    public function getCopyright()
+    {
+        $copyright = null;
+        /** @var FileVersionMeta $meta */
+        foreach ($this->getFileVersion()->getMeta() as $key => $meta) {
+            // get description of the meta in locale, when not exists return description of the first meta
+            if ($meta->getLocale() == $this->locale || $key == 0) {
+                $copyright = $meta->getCopyright();
+            }
+        }
+
+        return $copyright;
+    }
+
+    /**
      * @param int $version
      *
      * @return $this
