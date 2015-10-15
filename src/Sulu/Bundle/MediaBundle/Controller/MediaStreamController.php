@@ -23,7 +23,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class MediaStreamController extends Controller
 {
@@ -68,7 +67,7 @@ class MediaStreamController extends Controller
      * @param Request $request
      * @param int $id
      *
-     * @return StreamedResponse
+     * @return BinaryFileResponse
      */
     public function downloadAction(Request $request, $id)
     {
@@ -104,7 +103,7 @@ class MediaStreamController extends Controller
      * @param string $locale
      * @param string $dispositionType
      *
-     * @return StreamedResponse
+     * @return BinaryFileResponse
      */
     protected function getFileResponse(
         $fileVersion,
