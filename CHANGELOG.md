@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #1697 [MediaBundle]     Replaced StreamedResponse with BinaryFileResponse
     * BUGFIX      #1696 [MediaBundle]     Fixed dropzone for uploading new versions of media
     * BUGFIX      #1675 [ContactBundle]   Fixed null value for smart content
     * FEATURE     #1653 [MediaBundle]     Added generation of thumbnails for videos
