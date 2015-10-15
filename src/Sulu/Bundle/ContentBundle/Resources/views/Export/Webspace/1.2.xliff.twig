@@ -4,7 +4,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
     <!-- WebspaceKey: {{ webspaceKey }} -->
-{% set counter = 0 %}
 {{- block('pages') -}}
 </xliff>
 {% endblock content %}
@@ -50,10 +49,10 @@
 
     {# Trans Unit Output #}
     {%- block view -%}
-        {% spaceless %}{% set counter = counter + 1 %}
+        {% spaceless %}{% set counter = sulu_content_type_export_counter() %}
         {% set attributes = '' %}
         {%- if not translate -%}
-            {% set attributes = attributes  ~ ' translate="false"' %}
+            {% set attributes = attributes  ~ ' translate="no"' %}
         {%- endif -%}
         {% endspaceless %}
             {% autoescape false %}

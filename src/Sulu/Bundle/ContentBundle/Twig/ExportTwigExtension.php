@@ -24,6 +24,11 @@ class ExportTwigExtension extends \Twig_Extension
     private $contentExportManager;
 
     /**
+     * @var int
+     */
+    private $counter = 0;
+
+    /**
      * @param ContentExportManagerInterface $contentExportManager
      */
     public function __construct(
@@ -44,8 +49,17 @@ class ExportTwigExtension extends \Twig_Extension
             new \Twig_SimpleFunction('sulu_content_type_has_export', [$this->contentExportManager, 'hasExport']),
             new \Twig_SimpleFunction('sulu_content_type_export_options', [$this->contentExportManager, 'getOptions']),
             new \Twig_SimpleFunction('sulu_content_type_export_escape', [$this, 'escapeXmlContent']),
+            new \Twig_SimpleFunction('sulu_content_type_export_counter', [$this, 'counter']),
             new \Twig_SimpleFunction('xml_dump', 'var_dump'),
         ];
+    }
+
+    /**
+     * @return int
+     */
+    public function counter()
+    {
+        return $this->counter++;
     }
 
     /**
