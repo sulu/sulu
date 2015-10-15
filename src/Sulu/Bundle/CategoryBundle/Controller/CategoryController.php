@@ -83,6 +83,8 @@ class CategoryController extends RestController implements ClassResourceInterfac
                             'depth' => false,
                             'parent' => false,
                             'hasChildren' => false,
+                            'locale' => false,
+                            'defaultLocale' => false,
                         ]
                     )
                 ),
@@ -303,6 +305,8 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $listBuilder->addSelectField($fieldDescriptors['depth']);
         $listBuilder->addSelectField($fieldDescriptors['parent']);
         $listBuilder->addSelectField($fieldDescriptors['hasChildren']);
+        $listBuilder->addSelectField($fieldDescriptors['locale']);
+        $listBuilder->addSelectField($fieldDescriptors['defaultLocale']);
 
         $listBuilder->addGroupBy($fieldDescriptors['id']);
 

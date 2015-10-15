@@ -11,6 +11,7 @@
         </id>
 
         <field name="key" column="category_key" type="string" length="45" nullable="true" unique="true"/>
+        <field name="defaultLocale" column="default_locale" type="string" length="5" nullable="false"/>
 
         <field name="lft" type="integer" column="lft">
             <gedmo:tree-left/>

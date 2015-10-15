@@ -11,7 +11,10 @@
 
 namespace Sulu\Bundle\CategoryBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Sulu\Component\Persistence\Model\AuditableInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * Category.
@@ -54,6 +57,11 @@ class Category implements AuditableInterface
     private $key;
 
     /**
+     * @var string
+     */
+    private $defaultLocale;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $meta;
@@ -88,9 +96,9 @@ class Category implements AuditableInterface
      */
     public function __construct()
     {
-        $this->meta = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->translations = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->meta = new ArrayCollection();
+        $this->translations = new ArrayCollection();
+        $this->children = new ArrayCollection();
     }
 
     /**
@@ -214,6 +222,30 @@ class Category implements AuditableInterface
     }
 
     /**
+     * Set defaultLocale
+     *
+     * @param string $defaultLocale
+     *
+     * @return Category
+     */
+    public function setDefaultLocale($defaultLocale)
+    {
+        $this->defaultLocale = $defaultLocale;
+
+        return $this;
+    }
+
+    /**
+     * Get defaultLocale
+     *
+     * @return string
+     */
+    public function getDefaultLocale()
+    {
+        return $this->defaultLocale;
+    }
+
+    /**
      * Get changed.
      *
      * @return \DateTime
@@ -236,11 +268,11 @@ class Category implements AuditableInterface
     /**
      * Add meta.
      *
-     * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryMeta $meta
+     * @param CategoryMeta $meta
      *
      * @return Category
      */
-    public function addMeta(\Sulu\Bundle\CategoryBundle\Entity\CategoryMeta $meta)
+    public function addMeta(CategoryMeta $meta)
     {
         $this->meta[] = $meta;
 
@@ -250,9 +282,9 @@ class Category implements AuditableInterface
     /**
      * Remove meta.
      *
-     * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryMeta $meta
+     * @param CategoryMeta $meta
      */
-    public function removeMeta(\Sulu\Bundle\CategoryBundle\Entity\CategoryMeta $meta)
+    public function removeMeta(CategoryMeta $meta)
     {
         $this->meta->removeElement($meta);
     }
@@ -260,7 +292,7 @@ class Category implements AuditableInterface
     /**
      * Get meta.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getMeta()
     {
@@ -270,11 +302,11 @@ class Category implements AuditableInterface
     /**
      * Add translations.
      *
-     * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation $translations
+     * @param CategoryTranslation $translations
      *
      * @return Category
      */
-    public function addTranslation(\Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation $translations)
+    public function addTranslation(CategoryTranslation $translations)
     {
         $this->translations[] = $translations;
 
@@ -284,9 +316,9 @@ class Category implements AuditableInterface
     /**
      * Remove translations.
      *
-     * @param \Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation $translations
+     * @param CategoryTranslation $translations
      */
-    public function removeTranslation(\Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation $translations)
+    public function removeTranslation(CategoryTranslation $translations)
     {
         $this->translations->removeElement($translations);
     }
@@ -294,7 +326,7 @@ class Category implements AuditableInterface
     /**
      * Get translations.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTranslations()
     {
@@ -302,33 +334,53 @@ class Category implements AuditableInterface
     }
 
     /**
+     * {@see Category::addChild}
+     *
+     * @deprecated use Category::addChild instead
+     */
+    public function addChildren(Category $child)
+    {
+        $this->addChild($child);
+    }
+
+    /**
      * Add children.
      *
-     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $children
+     * @param Category $child
      *
      * @return Category
      */
-    public function addChildren(\Sulu\Bundle\CategoryBundle\Entity\Category $children)
+    public function addChild(Category $child)
     {
-        $this->children[] = $children;
+        $this->children[] = $child;
 
         return $this;
     }
 
     /**
+     * {@see Category::removeChild}
+     *
+     * @deprecated use Category::addChild instead
+     */
+    public function removeChildren(Category $child)
+    {
+        $this->removeChild($child);
+    }
+
+    /**
      * Remove children.
      *
-     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $children
+     * @param Category $child
      */
-    public function removeChildren(\Sulu\Bundle\CategoryBundle\Entity\Category $children)
+    public function removeChild(Category $child)
     {
-        $this->children->removeElement($children);
+        $this->children->removeElement($child);
     }
 
     /**
      * Get children.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getChildren()
     {
@@ -338,11 +390,11 @@ class Category implements AuditableInterface
     /**
      * Set parent.
      *
-     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $parent
+     * @param Category $parent
      *
      * @return Category
      */
-    public function setParent(\Sulu\Bundle\CategoryBundle\Entity\Category $parent = null)
+    public function setParent(Category $parent = null)
     {
         $this->parent = $parent;
 
@@ -352,7 +404,7 @@ class Category implements AuditableInterface
     /**
      * Get parent.
      *
-     * @return \Sulu\Bundle\CategoryBundle\Entity\Category
+     * @return Category
      */
     public function getParent()
     {
@@ -362,11 +414,11 @@ class Category implements AuditableInterface
     /**
      * Set creator.
      *
-     * @param \Sulu\Component\Security\Authentication\UserInterface $creator
+     * @param UserInterface $creator
      *
      * @return Category
      */
-    public function setCreator(\Sulu\Component\Security\Authentication\UserInterface $creator = null)
+    public function setCreator(UserInterface $creator = null)
     {
         $this->creator = $creator;
 
@@ -376,7 +428,7 @@ class Category implements AuditableInterface
     /**
      * Get creator.
      *
-     * @return \Sulu\Component\Security\Authentication\UserInterface
+     * @return UserInterface
      */
     public function getCreator()
     {
@@ -386,11 +438,11 @@ class Category implements AuditableInterface
     /**
      * Set changer.
      *
-     * @param \Sulu\Component\Security\Authentication\UserInterface $changer
+     * @param UserInterface $changer
      *
      * @return Category
      */
-    public function setChanger(\Sulu\Component\Security\Authentication\UserInterface $changer = null)
+    public function setChanger(UserInterface $changer = null)
     {
         $this->changer = $changer;
 
@@ -400,7 +452,7 @@ class Category implements AuditableInterface
     /**
      * Get changer.
      *
-     * @return \Sulu\Component\Security\Authentication\UserInterface
+     * @return UserInterface
      */
     public function getChanger()
     {
