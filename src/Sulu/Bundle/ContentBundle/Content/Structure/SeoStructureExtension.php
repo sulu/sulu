@@ -91,11 +91,11 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
                 $value = (int) $value;
             }
 
-            $data[$key]= [
+            $data[$key] = [
                 'name' => $key,
                 'value' => $value,
                 'type' => '', // TODO content type
-                'options' => $this->getExportOption($key, $format)
+                'options' => $this->getExportOption($key, $format),
             ];
         }
 
@@ -105,7 +105,8 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
     /**
      * @param $key
      * @param $format
-     * @return null
+     *
+     * @return array
      */
     protected function getExportOption($key, $format)
     {

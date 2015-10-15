@@ -11,7 +11,7 @@
 namespace Sulu\Component\Content;
 
 /**
- * Interface ContentTypeExportInterface
+ * Interface for exportable Content Types.
  */
 interface ContentTypeExportInterface
 {

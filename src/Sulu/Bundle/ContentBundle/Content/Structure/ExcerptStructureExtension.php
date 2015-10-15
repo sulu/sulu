@@ -230,5 +230,4 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
 
         return $data;
     }
-
 }
