@@ -94,6 +94,7 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
             $data[$key]= array(
                 'name' => $key,
                 'value' => $value,
+                'type' => '', // TODO content type
                 'options' => $this->getExportOption($key, $format)
             );
         }

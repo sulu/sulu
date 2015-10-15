@@ -213,10 +213,10 @@ class InternalLinks extends ComplexContentType implements ContentTypeExportInter
      */
     public function exportData($propertyValue)
     {
-        if (is_array($propertyValue)) {
+        if (is_array($propertyValue) && !empty($propertyValue)) {
             return json_encode($propertyValue);
         }
 
-        return null;
+        return '';
     }
 }

@@ -262,6 +262,12 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
      */
     public function exportData($propertyValue)
     {
-        return json_encode($this->getUuids($propertyValue));
+        $uuids = $this->getUuids($propertyValue);
+
+        if (!empty($uuids)) {
+            return json_encode($this->getUuids($propertyValue));
+        }
+
+        return '';
     }
 }

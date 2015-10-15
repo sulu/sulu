@@ -233,6 +233,6 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
             return $propertyValue;
         }
 
-        return null;
+        return '';
     }
 }

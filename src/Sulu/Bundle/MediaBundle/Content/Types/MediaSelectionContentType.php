@@ -215,9 +215,11 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
             return $propertyValue;
         }
         if (is_array($propertyValue)) {
-            return json_encode($propertyValue);
+            if (!empty($propertyValue)) {
+                return json_encode($propertyValue);
+            }
         }
 
-        return null;
+        return '';
     }
 }

@@ -172,6 +172,6 @@ class CategoryList extends ComplexContentType implements ContentTypeExportInterf
             return json_encode($propertyValue);
         }
 
-        return null;
+        return '';
     }
 }

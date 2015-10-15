@@ -11,7 +11,6 @@
 namespace Sulu\Component\Content\Export;
 
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
-use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
@@ -99,7 +98,7 @@ class Webspace implements WebspaceInterface
 
         return $this->templating->render(
             $this->getTemplate($format),
-            $this->getParameters($webspaceKey, $locale, $format, $uuid)
+            $this->getExportData($webspaceKey, $locale, $format, $uuid)
         );
     }
 
@@ -111,8 +110,12 @@ class Webspace implements WebspaceInterface
      *
      * @return array
      */
-    protected function getParameters($webspaceKey, $locale, $format = '1.2.xliff', $uuid = null)
-    {
+    public function getExportData(
+        $webspaceKey,
+        $locale,
+        $format = '1.2.xliff',
+        $uuid = null
+    ) {
         /** @var \Sulu\Bundle\ContentBundle\Document\PageDocument[] $documents */
         $documents = $this->getDocuments($webspaceKey, $locale, $uuid);
         /** @var \Sulu\Bundle\ContentBundle\Document\PageDocument[] $loadedDocuments */
@@ -230,11 +233,11 @@ class Webspace implements WebspaceInterface
                 $format
             );
 
-            $block[] = [
+            $block['type'] = [
                 'name' => 'type',
                 'value' => $blockType,
                 'type' => $property->getType() . '_type',
-                'options' => $this->contentExportManager->export($property->getType(), $propertyValue),
+                'options' => $this->contentExportManager->getOptions($property->getType(), $format),
             ];
 
 
@@ -244,7 +247,8 @@ class Webspace implements WebspaceInterface
         return array(
             'name' => $property->getName(),
             'type' => $property->getType(),
-            'children' => $children
+            'children' => $children,
+            'options' => $this->contentExportManager->getOptions($property->getType(), $format),
         );
     }
 
