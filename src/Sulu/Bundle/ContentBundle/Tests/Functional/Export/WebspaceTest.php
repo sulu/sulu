@@ -74,7 +74,6 @@ class WebspaceTest extends SuluTestCase
         $data = $this->getDataArray();
         $extensionDataList = $this->getExtensionDataArray();
 
-
         $data[0] = $this->mapper->save($data[0], 'overview', 'sulu_io', 'en', 1);
         $data[1] = $this->mapper->save($data[1], 'overview', 'sulu_io', 'en', 1);
 
