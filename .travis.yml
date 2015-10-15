@@ -14,7 +14,6 @@ env:
 before_script:
   - composer self-update
   - composer install
-  - cp tests/app/config/parameters.yml.dist tests/app/config/parameters.yml
   - ./bin/jackrabbit.sh
   - php bin/jackrabbit.php
 
