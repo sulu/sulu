@@ -18,7 +18,7 @@ class ContentExportManager implements ContentExportManagerInterface
     /**
      * @var array
      */
-    protected $contentTypeOptions = array();
+    protected $contentTypeOptions = [];
 
     /**
      * @var ContentTypeManagerInterface
@@ -37,7 +37,7 @@ class ContentExportManager implements ContentExportManagerInterface
     public function add($contentTypeName, $format, $options)
     {
         if (!isset($this->contentTypeOptions[$contentTypeName])) {
-            $this->contentTypeOptions[$contentTypeName] = array();
+            $this->contentTypeOptions[$contentTypeName] = [];
         }
 
         $this->contentTypeOptions[$contentTypeName][$format] = $options;
@@ -54,7 +54,7 @@ class ContentExportManager implements ContentExportManagerInterface
             return $contentType->exportData($propertyValue);
         }
 
-        return null;
+        return '';
     }
 
     /**

@@ -13,7 +13,6 @@ namespace Sulu\Component\Content\Types;
 
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
-use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\SimpleContentType;
 
 /**

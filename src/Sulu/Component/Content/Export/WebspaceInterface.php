@@ -11,7 +11,7 @@
 namespace Sulu\Component\Content\Export;
 
 /**
- * Interface for Webspace export
+ * Interface for Webspace export.
  */
 interface WebspaceInterface
 {

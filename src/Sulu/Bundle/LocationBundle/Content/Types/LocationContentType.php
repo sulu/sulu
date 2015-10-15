@@ -171,6 +171,6 @@ class LocationContentType extends ComplexContentType implements ContentTypeExpor
             return $propertyValue;
         }
 
-        return null;
+        return '';
     }
 }

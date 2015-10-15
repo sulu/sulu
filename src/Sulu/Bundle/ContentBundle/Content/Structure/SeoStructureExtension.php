@@ -83,7 +83,7 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
      */
     public function export($properties, $format = null)
     {
-        $data = array();
+        $data = [];
 
         foreach ($properties as $key => $property) {
             $value = $property;
@@ -91,12 +91,12 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
                 $value = (int) $value;
             }
 
-            $data[$key]= array(
+            $data[$key]= [
                 'name' => $key,
                 'value' => $value,
                 'type' => '', // TODO content type
                 'options' => $this->getExportOption($key, $format)
-            );
+            ];
         }
 
         return $data;
@@ -114,21 +114,21 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
 
             if (in_array(
                 $key,
-                array(
+                [
                     'hideInSitemap',
                     'noIndex',
                     'noFollow',
                     'canonicalUrl',
-                )
+                ]
             )) {
                 $translate = false;
             }
 
-            return array(
+            return [
                 'translate' => $translate,
-            );
+            ];
         }
 
-        return null;
+        return;
     }
 }

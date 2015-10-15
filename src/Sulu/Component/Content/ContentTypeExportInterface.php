@@ -12,12 +12,12 @@ namespace Sulu\Component\Content;
 
 /**
  * Interface ContentTypeExportInterface
- * @package Sulu\Component\Content
  */
 interface ContentTypeExportInterface
 {
     /**
      * @param mixed $propertyValue
+     *
      * @return string
      */
     public function exportData($propertyValue);
