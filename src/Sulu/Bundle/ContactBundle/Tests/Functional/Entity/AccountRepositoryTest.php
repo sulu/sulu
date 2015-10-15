@@ -112,6 +112,7 @@ class AccountRepositoryTest extends SuluTestCase
     {
         $category = new Category();
         $category->setKey($key);
+        $category->setDefaultLocale('en');
 
         $this->em->persist($category);
 
