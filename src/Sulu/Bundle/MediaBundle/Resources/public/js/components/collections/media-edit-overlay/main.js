@@ -18,7 +18,7 @@ define([
     'text!./info.html',
     'text!./copyright.html',
     'text!./versions.html'
-], function(config, MediaManager, InfoTemplate, CopyrightTemplate, VersionsTemplate) {
+], function(config, mediaManager, infoTemplate, copyrightTemplate, versionsTemplate) {
 
     'use strict';
 
@@ -180,15 +180,15 @@ define([
          */
         editSingleMedia: function(media) {
             this.media = media;
-            var $info = this.sandbox.dom.createElement(_.template(InfoTemplate, {
+            var $info = this.sandbox.dom.createElement(_.template(infoTemplate, {
                 media: this.media,
                 translate: this.sandbox.translate
             }));
-            var $copyright = this.sandbox.dom.createElement(_.template(CopyrightTemplate, {
+            var $copyright = this.sandbox.dom.createElement(_.template(copyrightTemplate, {
                 media: this.media,
                 translate: this.sandbox.translate
             }));
-            var $versions = this.sandbox.dom.createElement(_.template(VersionsTemplate, {
+            var $versions = this.sandbox.dom.createElement(_.template(versionsTemplate, {
                 media: this.media,
                 translate: this.sandbox.translate
             }));

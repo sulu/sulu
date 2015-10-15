@@ -223,7 +223,7 @@
                 <target>Urheberrecht</target>
             </trans-unit>
             <trans-unit id="243d88cf2f646526337ls55369f22124" resname="sulu.media.copyright-information">
-                <source>sulu.media.copyright</source>
+                <source>sulu.media.copyright-information</source>
                 <target>Urheberrechtsinformationen</target>
             </trans-unit>
         </body>

@@ -57,20 +57,6 @@ class FileVersionMeta
     }
 
     /**
-     * Set id.
-     *
-     * @param int
-     *
-     * @return int
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
      * Set title.
      *
      * @param string $title
@@ -196,7 +182,7 @@ class FileVersionMeta
     public function __clone()
     {
         if ($this->id) {
-            $this->setId(null);
+            $this->id = null;
         }
     }
 }

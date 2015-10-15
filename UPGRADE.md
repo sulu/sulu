@@ -37,7 +37,7 @@ app/console doctrine:phpcr:migrator:migrate
 ```
 
 ### Media Metadata
-Copyright field is now available in the metadata of medias. Therefor you have to update you database:
+Copyright field is now available in the metadata of medias. Therefore you have to update you database:
 
 ```bash
 app/console doctrine:schema:update --force
