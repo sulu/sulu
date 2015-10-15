@@ -222,7 +222,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Set defaultLocale
+     * Set defaultLocale.
      *
      * @param string $defaultLocale
      *
@@ -236,7 +236,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * Get defaultLocale
+     * Get defaultLocale.
      *
      * @return string
      */
@@ -334,7 +334,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * {@see Category::addChild}
+     * {@see Category::addChild}.
      *
      * @deprecated use Category::addChild instead
      */
@@ -358,7 +358,7 @@ class Category implements AuditableInterface
     }
 
     /**
-     * {@see Category::removeChild}
+     * {@see Category::removeChild}.
      *
      * @deprecated use Category::addChild instead
      */

@@ -19,6 +19,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1685 [ContactBundle]   Fixed delete logo/avatar from collection and form
     * FEATURE     #1697 [MediaBundle]     Replaced StreamedResponse with BinaryFileResponse
     * BUGFIX      #1701 [ContentBundle]   Added website cache clear button in preview toolbar
+    * ENHANCEMENT #1700 [CategoryBundle]  Added category translate fallbacks
     * BUGFIX      #1696 [MediaBundle]     Fixed dropzone for uploading new versions of media
     * BUGFIX      #1693 [All]             Fixed behat tests
     * BUGFIX      #1675 [ContactBundle]   Fixed null value for smart content

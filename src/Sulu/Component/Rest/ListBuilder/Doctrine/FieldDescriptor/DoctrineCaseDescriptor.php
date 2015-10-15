@@ -30,7 +30,7 @@ class DoctrineCaseDescriptor
      */
     public $joins;
 
-    public function __construct($entityName, $fieldName, array $joins)
+    public function __construct($entityName, $fieldName, array $joins = [])
     {
         $this->entityName = $entityName;
         $this->fieldName = $fieldName;
