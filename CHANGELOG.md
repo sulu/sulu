@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1702 [MediaBundle]     Fixed selected handling in media selection overlay
     * BUGFIX      #1685 [ContactBundle]   Fixed delete logo/avatar from collection and form
     * FEATURE     #1697 [MediaBundle]     Replaced StreamedResponse with BinaryFileResponse
     * BUGFIX      #1701 [ContentBundle]   Added website cache clear button in preview toolbar

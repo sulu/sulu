@@ -468,6 +468,9 @@ define([
                         viewOptions: {
                             table: {
                                 actionIconColumn: 'name'
+                            },
+                            'datagrid/decorators/masonry-view': {
+                                unselectOnBackgroundClick: false
                             }
                         },
                         paginationOptions: {
