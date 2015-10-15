@@ -18,7 +18,7 @@ use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 
 /**
- * Class WebspaceTest
+ * Tests for the Webspace Export class.
  */
 class WebspaceTest extends SuluTestCase
 {
@@ -370,9 +370,9 @@ class WebspaceTest extends SuluTestCase
         $children = null
     ) {
         if (is_bool($options)) {
-            $options = array(
-                'translate' => $options
-            );
+            $options = [
+                'translate' => $options,
+            ];
         }
 
         $data = [

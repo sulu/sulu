@@ -240,7 +240,6 @@ class Webspace implements WebspaceInterface
                 'options' => $this->contentExportManager->getOptions($property->getType(), $format),
             ];
 
-
             $children[] = $block;
         }
 
