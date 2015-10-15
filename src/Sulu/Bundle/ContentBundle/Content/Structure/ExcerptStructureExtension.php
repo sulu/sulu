@@ -253,9 +253,10 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
                     $options = $this->contentExportManager->getOptions($property->getContentTypeName(), $format);
 
                     $data[$property->getName()] = [
-                        'name' => self::EXCERPT_EXTENSION_NAME . '-' . $property->getName(),
+                        'name' => $property->getName(),
                         'value' => $contentType->exportData($property->getValue()),
-                        'options' =>$options,
+                        'type' => $property->getContentTypeName(),
+                        'options' => $options,
                     ];
                 }
             }
