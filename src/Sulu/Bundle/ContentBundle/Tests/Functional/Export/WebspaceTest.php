@@ -16,12 +16,9 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Export\WebspaceInterface;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\DocumentManager\DocumentInspector;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 /**
  * Class WebspaceTest
- * @package Sulu\Bundle\ContentBundle\Tests\Functional\Export
  */
 class WebspaceTest extends SuluTestCase
 {
@@ -51,7 +48,7 @@ class WebspaceTest extends SuluTestCase
             'webspaceKey' => 'sulu_io',
             'locale' => 'en',
             'format' => '1.2.xliff',
-            'documents' => $this->getExportResultData()
+            'documents' => $this->getExportResultData(),
         ];
 
         // FIXME ignore home site for testcase
@@ -225,11 +222,11 @@ class WebspaceTest extends SuluTestCase
                 break;
         }
 
-        $options = array(
+        $options = [
             'translate' => $translate,
-        );
+        ];
 
-        return array($type, $options);
+        return [$type, $options];
     }
 
     /**
@@ -378,7 +375,7 @@ class WebspaceTest extends SuluTestCase
             );
         }
 
-        $data =  [
+        $data = [
             'name' => $name,
             'type' => $type,
             'options' => $options,

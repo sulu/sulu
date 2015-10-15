@@ -119,27 +119,27 @@ class Webspace implements WebspaceInterface
         /** @var \Sulu\Bundle\ContentBundle\Document\PageDocument[] $documents */
         $documents = $this->getDocuments($webspaceKey, $locale, $uuid);
         /** @var \Sulu\Bundle\ContentBundle\Document\PageDocument[] $loadedDocuments */
-        $documentData = array();
+        $documentData = [];
 
         foreach ($documents as $key => $document) {
             $contentData = $this->getContentData($document, $locale, $format);
             $extensionData = $this->getExtensionData($document, $format);
 
-            $documentData[] = array(
+            $documentData[] = [
                 'uuid' => $document->getUuid(),
                 'locale' => $document->getLocale(),
                 'structureType' => $document->getStructureType(),
                 'content' => $contentData,
                 'extensions' => $extensionData,
-            );
+            ];
         }
 
-        return array(
+        return [
             'webspaceKey' => $webspaceKey,
             'locale' => $locale,
             'format' => $format,
             'documents' => $documentData,
-        );
+        ];
     }
 
     /**
@@ -174,7 +174,7 @@ class Webspace implements WebspaceInterface
      */
     protected function getPropertiesContentData($properties, $propertyValues, $format)
     {
-        $contentData = array();
+        $contentData = [];
 
         foreach ($properties as $property) {
             if (
@@ -220,7 +220,7 @@ class Webspace implements WebspaceInterface
      */
     protected function getBlockPropertyData(BlockMetadata $property, $propertyValue, $format)
     {
-        $children = array();
+        $children = [];
 
         $blockDataList = $this->contentExportManager->export($property->getType(), $propertyValue);
 
@@ -244,12 +244,12 @@ class Webspace implements WebspaceInterface
             $children[] = $block;
         }
 
-        return array(
+        return [
             'name' => $property->getName(),
             'type' => $property->getType(),
             'children' => $children,
             'options' => $this->contentExportManager->getOptions($property->getType(), $format),
-        );
+        ];
     }
 
     /**
@@ -260,7 +260,7 @@ class Webspace implements WebspaceInterface
      */
     protected function getExtensionData(BasePageDocument $document, $format)
     {
-        $extensionData = array();
+        $extensionData = [];
 
         foreach ($document->getExtensionsData()->toArray() as $extensionName => $extensionProperties) {
             /** @var \Sulu\Bundle\ContentBundle\Content\Structure\ExcerptStructureExtension $extension */

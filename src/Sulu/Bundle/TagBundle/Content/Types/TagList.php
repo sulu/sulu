@@ -145,5 +145,4 @@ class TagList extends ComplexContentType implements ContentTypeExportInterface
 
         return '';
     }
-
 }

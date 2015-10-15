@@ -15,7 +15,6 @@ use Sulu\Bundle\SearchBundle\Search\Factory;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
-use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Export\ContentExportManager;
 use Sulu\Component\Content\Extension\AbstractExtension;

@@ -14,7 +14,6 @@ use Sulu\Component\Content\Export\ContentExportManagerInterface;
 
 /**
  * Class ExportTwigExtension
- * @package Sulu\Bundle\ContentBundle\Twig
  */
 class ExportTwigExtension extends \Twig_Extension
 {
