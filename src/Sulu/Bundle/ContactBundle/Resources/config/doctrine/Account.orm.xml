@@ -33,7 +33,7 @@
 
         <many-to-one field="logo" target-entity="Sulu\Bundle\MediaBundle\Entity\Media">
             <join-columns>
-                <join-column name="logo" referenced-column-name="id" nullable="true"/>
+                <join-column name="logo" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
             </join-columns>
         </many-to-one>
 

@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1685 [ContactBundle]   Fixed delete logo/avatar from collection and form
     * FEATURE     #1697 [MediaBundle]     Replaced StreamedResponse with BinaryFileResponse
     * BUGFIX      #1696 [MediaBundle]     Fixed dropzone for uploading new versions of media
     * BUGFIX      #1675 [ContactBundle]   Fixed null value for smart content
