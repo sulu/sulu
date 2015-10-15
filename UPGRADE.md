@@ -10,6 +10,12 @@ Interface                                                             | Method  
 Sulu/Component/Websocket/MessageDispatcher/MessageHandlerInterface    | onClose(ConnectionInterface $conn, MessageHandlerContext $context)      | will be called when a connection is closed or lost.
 Sulu/Component/Websocket/MessageDispatcher/MessageDispatcherInterface | onClose(ConnectionInterface $conn, ConnectionContextInterface $context) | will be called when a connection is closed or lost.
 
+### Logo/Avatar in Contact-Section
+Can now be deleted from collection view. For that the database has to be updated.
+
+```bash
+app/console doctrine:schema:update --force
+```
 
 ### Infinite scroll
 The infinite-scroll-extension got refactored. To initialize infinite-scroll on an element, use
