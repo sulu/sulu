@@ -92,7 +92,7 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
             }
 
             $data[$key]= array(
-                'name' => self::SEO_EXTENSION_NAME . '-' . $key,
+                'name' => $key,
                 'value' => $value,
                 'options' => $this->getExportOption($key, $format)
             );

@@ -46,12 +46,12 @@ class ContentExportManager implements ContentExportManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function export($contentTypeName, $property)
+    public function export($contentTypeName, $propertyValue)
     {
         $contentType = $this->contentTypeManager->get($contentTypeName);
 
         if ($contentType instanceof ContentTypeExportInterface) {
-            return $contentType->exportData($property);
+            return $contentType->exportData($propertyValue);
         }
 
         return null;

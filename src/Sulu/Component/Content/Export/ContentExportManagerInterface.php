@@ -20,9 +20,9 @@ interface ContentExportManagerInterface
 
     /**
      * @param $contentTypeName
-     * @param $property
+     * @param $propertyValue
      */
-    public function export($contentTypeName, $property);
+    public function export($contentTypeName, $propertyValue);
 
     /**
      * @param $contentTypeName

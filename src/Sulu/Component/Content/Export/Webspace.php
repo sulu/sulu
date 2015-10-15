@@ -10,9 +10,14 @@
 
 namespace Sulu\Component\Content\Export;
 
+use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Extension\ExportExtensionInterface;
+use Sulu\Component\Content\Metadata\BlockMetadata;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Symfony\Component\Templating\EngineInterface;
 
@@ -39,6 +44,11 @@ class Webspace implements WebspaceInterface
     protected $structureManager;
 
     /**
+     * @var ContentExportManagerInterface
+     */
+    protected $contentExportManager;
+
+    /**
      * @var string[]
      */
     protected $formatFilePaths;
@@ -48,6 +58,7 @@ class Webspace implements WebspaceInterface
      * @param DocumentManager $documentManager
      * @param DocumentInspector $documentInspector
      * @param StructureManagerInterface $structureManager
+     * @param ContentExportManagerInterface $contentExportManager
      * @param array $formatFilePaths
      */
     public function __construct(
@@ -55,12 +66,14 @@ class Webspace implements WebspaceInterface
         DocumentManager $documentManager,
         DocumentInspector $documentInspector,
         StructureManagerInterface $structureManager,
+        ContentExportManagerInterface $contentExportManager,
         array $formatFilePaths
     ) {
         $this->templating = $templating;
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
         $this->structureManager = $structureManager;
+        $this->contentExportManager = $contentExportManager;
         $this->formatFilePaths = $formatFilePaths;
     }
 
@@ -102,40 +115,159 @@ class Webspace implements WebspaceInterface
     {
         /** @var \Sulu\Bundle\ContentBundle\Document\PageDocument[] $documents */
         $documents = $this->getDocuments($webspaceKey, $locale, $uuid);
-        $metaDataList = [];
         /** @var \Sulu\Bundle\ContentBundle\Document\PageDocument[] $loadedDocuments */
-        $loadedDocuments = array();
-        $extensionDataList = array();
+        $documentData = array();
 
         foreach ($documents as $key => $document) {
-            $loadedDocument = $this->documentManager->find($document->getUuid(), $locale);
-            $loadedDocuments[$key] = $loadedDocument;
-            /** @var \Sulu\Component\Content\Metadata\StructureMetadata $metaData */
-            $metaData = $this->documentInspector->getStructureMetadata($document);
-            $metaDataList[] = $metaData;
+            $contentData = $this->getContentData($document, $locale, $format);
+            $extensionData = $this->getExtensionData($document, $format);
 
-            $extensionExportData = array();
-
-            foreach ($document->getExtensionsData()->toArray() as $extensionName => $extensionData) {
-                /** @var \Sulu\Bundle\ContentBundle\Content\Structure\ExcerptStructureExtension $extension */
-                $extension = $this->structureManager->getExtension($document->getStructureType(), $extensionName);
-
-                if ($extension instanceof ExportExtensionInterface) {
-                    $extensionExportData[$extensionName] = $extension->export($extensionData, $format);
-                }
-            }
-
-            $extensionDataList[] = $extensionExportData;
+            $documentData[] = array(
+                'uuid' => $document->getUuid(),
+                'locale' => $document->getLocale(),
+                'structureType' => $document->getStructureType(),
+                'content' => $contentData,
+                'extensions' => $extensionData,
+            );
         }
 
         return array(
             'webspaceKey' => $webspaceKey,
             'locale' => $locale,
             'format' => $format,
-            'documents' => $loadedDocuments,
-            'extensionDataList' => $extensionDataList,
-            'metaDataList' => $metaDataList,
+            'documents' => $documentData,
         );
+    }
+
+    /**
+     * @param BasePageDocument $document
+     * @param $locale
+     * @param $format
+     *
+     * @return array
+     */
+    protected function getContentData(BasePageDocument $document, $locale, $format)
+    {
+        /** @var BasePageDocument $loadedDocument */
+        $loadedDocument = $this->documentManager->find($document->getUuid(), $locale);
+
+        /** @var \Sulu\Component\Content\Metadata\StructureMetadata $metaData */
+        $metaData = $this->documentInspector->getStructureMetadata($document);
+
+        $propertyValues = $loadedDocument->getStructure()->toArray();
+        $properties = $metaData->getProperties();
+
+        $contentData = $this->getPropertiesContentData($properties, $propertyValues, $format);
+
+        return $contentData;
+    }
+
+    /**
+     * @param PropertyMetadata[] $properties
+     * @param $propertyValues
+     * @param $format
+     *
+     * @return array
+     */
+    protected function getPropertiesContentData($properties, $propertyValues, $format)
+    {
+        $contentData = array();
+
+        foreach ($properties as $property) {
+            if (
+                $this->contentExportManager->hasExport($property->getType(), $format)
+                && $propertyValue = $propertyValues[$property->getName()]
+            ) {
+                if ($property instanceof BlockMetadata) {
+                    $data = $this->getBlockPropertyData($property, $propertyValue, $format);
+                } else {
+                    $data = $this->getPropertyData($property, $propertyValue, $format);
+                }
+
+                $contentData[$property->getName()] = $data;
+            }
+        }
+
+        return $contentData;
+    }
+
+    /**
+     * @param PropertyMetadata $property
+     * @param PropertyValue $propertyValue
+     * @param string $format
+     *
+     * @return array
+     */
+    protected function getPropertyData(PropertyMetadata $property, $propertyValue, $format)
+    {
+        return [
+            'name' => $property->getName(),
+            'value' => $this->contentExportManager->export($property->getType(), $propertyValue),
+            'type' => $property->getType(),
+            'options' => $this->contentExportManager->getOptions($property->getType(), $format),
+        ];
+    }
+
+    /**
+     * @param BlockMetadata $property
+     * @param PropertyValue $propertyValue
+     * @param $format
+     *
+     * @return array
+     */
+    protected function getBlockPropertyData(BlockMetadata $property, $propertyValue, $format)
+    {
+        $children = array();
+
+        $blockDataList = $this->contentExportManager->export($property->getType(), $propertyValue);
+
+        foreach ($blockDataList as $blockData) {
+            $blockType = $blockData['type'];
+
+            $block = $this->getPropertiesContentData(
+                $property->getComponentByName($blockType)->getChildren(),
+                $blockData,
+                $format
+            );
+
+            $block[] = [
+                'name' => 'type',
+                'value' => $blockType,
+                'type' => $property->getType() . '_type',
+                'options' => $this->contentExportManager->export($property->getType(), $propertyValue),
+            ];
+
+
+            $children[] = $block;
+        }
+
+        return array(
+            'name' => $property->getName(),
+            'type' => $property->getType(),
+            'children' => $children
+        );
+    }
+
+    /**
+     * @param BasePageDocument $document
+     * @param string $format
+     *
+     * @return array
+     */
+    protected function getExtensionData(BasePageDocument $document, $format)
+    {
+        $extensionData = array();
+
+        foreach ($document->getExtensionsData()->toArray() as $extensionName => $extensionProperties) {
+            /** @var \Sulu\Bundle\ContentBundle\Content\Structure\ExcerptStructureExtension $extension */
+            $extension = $this->structureManager->getExtension($document->getStructureType(), $extensionName);
+
+            if ($extension instanceof ExportExtensionInterface) {
+                $extensionData[$extensionName] = $extension->export($extensionProperties, $format);
+            }
+        }
+
+        return $extensionData;
     }
 
     /**
