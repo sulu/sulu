@@ -12,7 +12,7 @@
 {% if false %} {# avoid output of block directly #}
     {# Output page #}
     {% block page %}
-    <file source-language="{{ document.locale }}" datatype="plaintext" original="{{ document.uuid }}">
+    <file source-language="{{ document.locale }}" datatype="plaintext" original="{{ document.uuid }}::{{ document.structureType }}">
         <body>
         {{ block('properties') }}
         </body>
