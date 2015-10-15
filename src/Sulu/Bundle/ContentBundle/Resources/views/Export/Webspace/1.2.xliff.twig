@@ -52,7 +52,7 @@
         {% spaceless %}{% set counter = sulu_content_type_export_counter() %}
         {% set attributes = '' %}
         {%- if not translate -%}
-            {% set attributes = attributes  ~ ' translate="false"' %}
+            {% set attributes = attributes  ~ ' translate="no"' %}
         {%- endif -%}
         {% endspaceless %}
             {% autoescape false %}
