@@ -97,6 +97,20 @@ define([
                 this.sandbox.on('sulu.media.collection-create.created', function(collection) {
                     MediaRouter.toCollection(collection.id);
                 }.bind(this));
+
+                this.sandbox.on('husky.dropzone.error', function() {
+                    var title = this.sandbox.translate('sulu.dropzone.error.title');
+                    title = title.replace('{{filename}}', this.sandbox.util.cropMiddle(file.name, 20));
+
+                    this.sandbox.emit('sulu.labels.error.show', 'sulu.dropzone.error.message', title);
+                }.bind(this));
+
+                this.sandbox.on('husky.dropzone.error.file-to-big', function(message, file) {
+                    var title = this.sandbox.translate('sulu.dropzone.error.file-to-big.title');
+                    title = title.replace('{{filename}}', this.sandbox.util.cropMiddle(file.name, 20));
+
+                    this.sandbox.emit('sulu.labels.error.show', message, title);
+                }.bind(this));
             });
         }
     };

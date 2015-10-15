@@ -166,6 +166,7 @@ define([
                     name: 'dropzone@husky',
                     options: {
                         el: constants.avatarDropzoneSelector,
+                        maxFilesize: Config.get('sulu-media').maxFilesize,
                         instanceName: 'contact-avatar',
                         titleKey: '',
                         descriptionKey: 'contact.contacts.avatar-dropzone-text',
@@ -173,7 +174,8 @@ define([
                         skin: 'overlay',
                         method: 'POST',
                         paramName: 'fileVersion',
-                        showOverlay: false, maxFiles: 1
+                        showOverlay: false,
+                        maxFiles: 1
                     }
                 }
             ]);
