@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Export a webspace in a specific format
+ * Export a webspace in a specific format.
  */
 class WebspaceExportCommand extends ContainerAwareCommand
 {

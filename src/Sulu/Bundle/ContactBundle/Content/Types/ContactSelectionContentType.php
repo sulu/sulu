@@ -225,6 +225,6 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
             return json_encode($propertyValue);
         }
 
-        return null;
+        return '';
     }
 }

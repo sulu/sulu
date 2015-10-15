@@ -173,6 +173,7 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
             if ($propertyValue) {
                 return '1';
             }
+
             return '0';
         }
 
@@ -188,9 +189,10 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
             if ($this->defaultValue) {
                 return '1';
             }
+
             return '0';
         }
 
-        return null;
+        return '';
     }
 }

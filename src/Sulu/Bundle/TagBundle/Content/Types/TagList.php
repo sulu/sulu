@@ -119,10 +119,11 @@ class TagList extends ComplexContentType implements ContentTypeExportInterface
                 }
             }
 
-            return json_encode($propertyValue);
+            if (!empty($propertyValue)) {
+                return json_encode($propertyValue);
+            }
         }
 
-        return null;
+        return '';
     }
-
 }

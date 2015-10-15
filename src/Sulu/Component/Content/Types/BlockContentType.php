@@ -359,5 +359,4 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
     {
         return $propertyValue;
     }
-
 }

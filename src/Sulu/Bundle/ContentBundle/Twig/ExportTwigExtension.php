@@ -13,8 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Twig;
 use Sulu\Component\Content\Export\ContentExportManagerInterface;
 
 /**
- * Class ExportTwigExtension
- * @package Sulu\Bundle\ContentBundle\Twig
+ * Twig extensions for the Webspace export.
  */
 class ExportTwigExtension extends \Twig_Extension
 {

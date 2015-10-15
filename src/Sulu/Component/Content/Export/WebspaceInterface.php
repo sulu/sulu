@@ -11,7 +11,7 @@
 namespace Sulu\Component\Content\Export;
 
 /**
- * Interface for Webspace export
+ * Interface for Webspace export.
  */
 interface WebspaceInterface
 {
@@ -24,6 +24,21 @@ interface WebspaceInterface
      * @return string
      */
     public function export(
+        $webspaceKey,
+        $locale,
+        $format = '1.2.xliff',
+        $uuid = null
+    );
+
+    /**
+     * @param string $webspaceKey
+     * @param string $locale
+     * @param string $format
+     * @param string $uuid
+     *
+     * @return string
+     */
+    public function getExportData(
         $webspaceKey,
         $locale,
         $format = '1.2.xliff',

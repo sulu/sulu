@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Collects all export able content types
+ * Collects all export able content types.
  */
 class ContentExportCompilerPass implements CompilerPassInterface
 {

@@ -11,7 +11,6 @@
 namespace Sulu\Component\Content\Export;
 
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
-use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
@@ -29,7 +28,7 @@ class Webspace implements WebspaceInterface
     protected $templating;
 
     /**
-     * @var EngineInterface
+     * @var DocumentManager
      */
     protected $documentManager;
 
@@ -99,7 +98,7 @@ class Webspace implements WebspaceInterface
 
         return $this->templating->render(
             $this->getTemplate($format),
-            $this->getParameters($webspaceKey, $locale, $format, $uuid)
+            $this->getExportData($webspaceKey, $locale, $format, $uuid)
         );
     }
 
@@ -111,32 +110,36 @@ class Webspace implements WebspaceInterface
      *
      * @return array
      */
-    protected function getParameters($webspaceKey, $locale, $format = '1.2.xliff', $uuid = null)
-    {
+    public function getExportData(
+        $webspaceKey,
+        $locale,
+        $format = '1.2.xliff',
+        $uuid = null
+    ) {
         /** @var \Sulu\Bundle\ContentBundle\Document\PageDocument[] $documents */
         $documents = $this->getDocuments($webspaceKey, $locale, $uuid);
         /** @var \Sulu\Bundle\ContentBundle\Document\PageDocument[] $loadedDocuments */
-        $documentData = array();
+        $documentData = [];
 
         foreach ($documents as $key => $document) {
             $contentData = $this->getContentData($document, $locale, $format);
             $extensionData = $this->getExtensionData($document, $format);
 
-            $documentData[] = array(
+            $documentData[] = [
                 'uuid' => $document->getUuid(),
                 'locale' => $document->getLocale(),
                 'structureType' => $document->getStructureType(),
                 'content' => $contentData,
                 'extensions' => $extensionData,
-            );
+            ];
         }
 
-        return array(
+        return [
             'webspaceKey' => $webspaceKey,
             'locale' => $locale,
             'format' => $format,
             'documents' => $documentData,
-        );
+        ];
     }
 
     /**
@@ -171,7 +174,7 @@ class Webspace implements WebspaceInterface
      */
     protected function getPropertiesContentData($properties, $propertyValues, $format)
     {
-        $contentData = array();
+        $contentData = [];
 
         foreach ($properties as $property) {
             if (
@@ -217,7 +220,7 @@ class Webspace implements WebspaceInterface
      */
     protected function getBlockPropertyData(BlockMetadata $property, $propertyValue, $format)
     {
-        $children = array();
+        $children = [];
 
         $blockDataList = $this->contentExportManager->export($property->getType(), $propertyValue);
 
@@ -230,22 +233,22 @@ class Webspace implements WebspaceInterface
                 $format
             );
 
-            $block[] = [
+            $block['type'] = [
                 'name' => 'type',
                 'value' => $blockType,
                 'type' => $property->getType() . '_type',
-                'options' => $this->contentExportManager->export($property->getType(), $propertyValue),
+                'options' => $this->contentExportManager->getOptions($property->getType(), $format),
             ];
-
 
             $children[] = $block;
         }
 
-        return array(
+        return [
             'name' => $property->getName(),
             'type' => $property->getType(),
-            'children' => $children
-        );
+            'children' => $children,
+            'options' => $this->contentExportManager->getOptions($property->getType(), $format),
+        ];
     }
 
     /**
@@ -256,7 +259,7 @@ class Webspace implements WebspaceInterface
      */
     protected function getExtensionData(BasePageDocument $document, $format)
     {
-        $extensionData = array();
+        $extensionData = [];
 
         foreach ($document->getExtensionsData()->toArray() as $extensionName => $extensionProperties) {
             /** @var \Sulu\Bundle\ContentBundle\Content\Structure\ExcerptStructureExtension $extension */

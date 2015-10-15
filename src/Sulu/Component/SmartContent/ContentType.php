@@ -408,6 +408,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
             return $propertyValue;
         }
 
-        return null;
+        return '';
     }
 }
