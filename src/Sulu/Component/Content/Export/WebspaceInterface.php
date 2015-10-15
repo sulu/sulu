@@ -29,4 +29,19 @@ interface WebspaceInterface
         $format = '1.2.xliff',
         $uuid = null
     );
+
+    /**
+     * @param string $webspaceKey
+     * @param string $locale
+     * @param string $format
+     * @param string $uuid
+     *
+     * @return string
+     */
+    public function getExportData(
+        $webspaceKey,
+        $locale,
+        $format = '1.2.xliff',
+        $uuid = null
+    );
 }

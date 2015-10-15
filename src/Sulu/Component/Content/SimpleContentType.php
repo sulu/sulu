@@ -199,6 +199,6 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
             return '0';
         }
 
-        return null;
+        return '';
     }
 }
