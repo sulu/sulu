@@ -7,6 +7,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1706 [MediaBundle]     Changed download link in media section to real link
     * BUGFIX      #1714 [ContentBundle]   Fixed migration for url scheme
     * BUGFIX      #1713 [MediaBundle]     Fixed drag and drop behavior in collection view
+    * ENHANCEMENT #1704 [AdminBundle]     Protected login from CSRF attacks
     * BUGFIX      #1702 [MediaBundle]     Fixed selected handling in media selection overlay
     * BUGFIX      #1685 [ContactBundle]   Fixed delete logo/avatar from collection and form
     * FEATURE     #1697 [MediaBundle]     Replaced StreamedResponse with BinaryFileResponse

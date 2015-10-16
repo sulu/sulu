@@ -26,6 +26,7 @@
              data-aura-reset-mail-url="{{ path('sulu_security.reset_password.email') }}"
              data-aura-resend-url="{{ path('sulu_security.reset_password.email.resend') }}"
              data-aura-login-url="{{ path('sulu_admin.login') }}"
+             data-aura-csrf-token="{{ csrf_token('authenticate') }}"
              {% if token is defined %}
                 data-aura-reset-token="{{ token }}"
                 data-aura-reset-mode="true"
