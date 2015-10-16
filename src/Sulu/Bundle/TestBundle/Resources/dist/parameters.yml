@@ -5,7 +5,7 @@ parameters:
     database_mysql_port:     ~
 
     database_pgsql_host:     localhost
-    database_pgsql_user:     root
+    database_pgsql_user:     postgres
     database_pgsql_password: ~
     database_pgsql_port:     ~
 
