@@ -1,4 +1,4 @@
-module.exports = function (grunt) {
+module.exports = function(grunt) {
     var min = {},
         path = require('path'),
         srcpath = 'Resources/public/js',
@@ -21,6 +21,11 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         copy: {
+            templates: {
+                files: [
+                    {expand: true, cwd: srcpath, src: ['**/*.html'], dest: destpath}
+                ]
+            },
             bower: {
                 files: [
                     {
@@ -33,7 +38,7 @@ module.exports = function (grunt) {
             }
         },
         clean: {
-            options: { force: true },
+            options: {force: true},
             bower_after: {
                 files: {
                     src: [
@@ -110,9 +115,10 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('build', [
-        'compass:dev',
         'uglify',
-        'replace:build'
+        'replace:build',
+        'copy:templates',
+        'compass:dev'
     ]);
 
     grunt.registerTask('update', [

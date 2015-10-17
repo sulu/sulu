@@ -1,0 +1,20 @@
+<form id="media-versions">
+    <div class="grid">
+        <div class="grid-row">
+            <div class="media-edit-versions-links">
+                <% _.each(_.keys(media.versions).reverse(), function(versionNumber) { %>
+                <% versionData = media.versions[versionNumber] %>
+                <a class="media-edit-versions-link <% if (versionNumber == media.version) { %>active<% } %>" href="<%= versionData.url %>&inline=1" target="_blank">
+                        <span class="media-edit-versions-title">
+                            <%= translate('sulu.media.version') %> <%= versionNumber %>
+                            <% if (versionNumber == media.version) { %>
+                                (<%= translate('sulu.media.version.active') %>)
+                            <% } %>
+                        </span>
+                    <span class="media-edit-versions-created"><%= app.sandbox.date.format(versionData.created, true) %></span>
+                </a>
+                <% }); %>
+            </div>
+        </div>
+    </div>
+</form>
