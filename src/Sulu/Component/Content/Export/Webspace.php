@@ -28,7 +28,7 @@ class Webspace implements WebspaceInterface
     protected $templating;
 
     /**
-     * @var EngineInterface
+     * @var DocumentManager
      */
     protected $documentManager;
 
