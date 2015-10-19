@@ -51270,6 +51270,15 @@ define('husky_extensions/itemgrid',[],function() {
             },
 
             /**
+             * Callback action for item click
+             * @param id
+             * @param item
+             */
+            editItem: function(id, item) {
+                throw new Error('"editItem" not implemented');
+            },
+
+            /**
              * Returns the selector for the given id
              * @param type {string} The type of the element, for which the id should be returned
              * @returns {string} The id of the element
@@ -51304,7 +51313,10 @@ define('husky_extensions/itemgrid',[],function() {
                                 table: {
                                     noItemsText: 'public.empty-list'
                                 }
-                            }
+                            },
+                            actionCallback: function (id, item) {
+                                this.editItem.call(this, id, item);
+                            }.bind(this)
                         }
                     }
                 ]);
