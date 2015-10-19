@@ -35,8 +35,8 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
                     'typeMap' => [
                         'page' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
                         'home' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
-                        'snippet' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge'
-                    ]
+                        'snippet' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge',
+                    ],
                 ],
             ],
             'locales' => ['en' => 'English', 'de' => 'Deutsch'],
@@ -65,8 +65,8 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
                     'typeMap' => [
                         'page' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
                         'home' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
-                        'snippet' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge'
-                    ]
+                        'snippet' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge',
+                    ],
                 ],
             ],
             'locales' => ['en' => 'English', 'de' => 'Deutsch'],
@@ -93,8 +93,8 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
                         'typeMap' => [
                             'page' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
                             'home' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
-                            'snippet' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge'
-                        ]
+                            'snippet' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge',
+                        ],
                     ],
                 ],
                 'locales' => ['en' => 'English', 'de' => 'Deutsch', 'fr' => 'France'],
