@@ -367,6 +367,37 @@ class NodeControllerTest extends SuluTestCase
         $linkData = $this->setupContent($linkData);
 
         $client->request('DELETE', '/api/nodes/' . $deleteData[0]['id'] . '?webspace=sulu_io&language=en');
+        $this->assertEquals(409, $client->getResponse()->getStatusCode());
+    }
+
+    public function testDeleteReferencedNodeWithForce()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $deleteData = [
+            [
+                'template' => 'simple',
+                'title' => 'test1',
+                'url' => '/test1',
+            ],
+        ];
+
+        $deleteData = $this->setUpContent($deleteData);
+
+        $linkData = [
+            [
+                'template' => 'internallinks',
+                'title' => 'test2',
+                'url' => '/test2',
+                'internalLinks' => [
+                    $deleteData[0]['id'],
+                ],
+            ],
+        ];
+
+        $linkData = $this->setupContent($linkData);
+
+        $client->request('DELETE', '/api/nodes/' . $deleteData[0]['id'] . '?webspace=sulu_io&language=en&force=true');
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
 
         $client->request('GET', '/api/nodes/' . $deleteData[0]['id'] . '?webspace=sulu_io&language=en');

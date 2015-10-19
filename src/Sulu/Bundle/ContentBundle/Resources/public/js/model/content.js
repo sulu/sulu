@@ -44,8 +44,18 @@ define([
             return this.fetch.call(this, options);
         },
 
-        fullDestroy: function(webspace, language, options) {
-            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?webspace=' + webspace + '&language=' + language});
+        fullDestroy: function(webspace, language, force, options) {
+            options = _.defaults(
+                (options || {}),
+                {
+                    url: this.urlRoot
+                        + (this.get('id') !== undefined ? '/'
+                        + this.get('id') : '')
+                        + '?webspace=' + webspace
+                        + '&language=' + language
+                        + '&force=' + force
+                }
+            );
 
             return this.destroy.call(this, options);
         },

@@ -543,6 +543,22 @@
                 <source>smart-content.choose-categories.ok</source>
                 <target>Apply Categories</target>
             </trans-unit>
+            <trans-unit id="9" resname="content.delete-referenced-by-following">
+                <source>content.delete-referenced-by-following</source>
+                <target>This page is referenced by the following pages:</target>
+            </trans-unit>
+            <trans-unit id="10" resname="content.delete-confirm-text">
+                <source>content.delete-confirm-text</source>
+                <target>Are you sure you want to remove it?</target>
+            </trans-unit>
+            <trans-unit id="11" resname="content.delete-confirm-title">
+                <source>content.delete-confirm-title</source>
+                <target>Confirm delete</target>
+            </trans-unit>
+            <trans-unit id="12" resname="content.delete-do-it">
+                <source>content.delete-do-it</source>
+                <target>Yes, I am sure</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
