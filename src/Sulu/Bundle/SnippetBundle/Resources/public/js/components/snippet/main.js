@@ -116,7 +116,7 @@ define([
         referentialIntegrityDialog: function(snippet, data, successCallback) {
             var pageTitles = [];
 
-            this.sandbox.util.foreach(data.structures, function(structure) {
+            this.sandbox.util.foreach(data.references, function(structure) {
                 pageTitles.push(structure.title);
             });
 

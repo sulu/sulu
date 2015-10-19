@@ -45,6 +45,11 @@ class SubscriberTestCase extends \PHPUnit_Framework_TestCase
     protected $node;
 
     /**
+     * @var NodeInterface
+     */
+    protected $parentNode;
+
+    /**
      * @var DocumentAccessor
      */
     protected $accessor;

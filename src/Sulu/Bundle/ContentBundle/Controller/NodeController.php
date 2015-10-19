@@ -14,7 +14,6 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use JMS\Serializer\SerializationContext;
-use PHPCR\ReferentialIntegrityException;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
@@ -23,7 +22,9 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
+use Sulu\Component\DocumentManager\Exception\DocumentReferencedException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\EntityReferencedException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
@@ -468,14 +469,14 @@ class NodeController extends RestController
      */
     public function deleteAction(Request $request, $uuid)
     {
-        $webspace = $this->getWebspace($request);
+        $webspaceKey = $this->getWebspace($request);
 
         try {
             $view = $this->responseDelete(
                 $uuid,
-                function ($id) use ($webspace) {
+                function ($id) use ($webspaceKey) {
                     try {
-                        $this->getRepository()->deleteNode($id, $webspace);
+                        $this->getRepository()->deleteNode($id, $webspaceKey);
                     } catch (DocumentNotFoundException $ex) {
                         throw new EntityNotFoundException('Content', $id);
                     }
@@ -483,10 +484,40 @@ class NodeController extends RestController
             );
 
             return $this->handleView($view);
-        } catch (ReferentialIntegrityException $e) {
-            $restException = new RestException('The node cannot be deleted because it is still referenced', 0, $e);
+        } catch (DocumentReferencedException $e) {
+            $references = [];
+            $nodeReferences = $e->getReferences();
 
-            return $this->handleView($this->view($restException->toArray(), 409));
+            foreach ($nodeReferences as $reference) {
+                $node = $reference->getParent();
+
+                if (!$node->isNodeType('sulu:page')) {
+                    continue;
+                }
+
+                $references[] = $this->get('sulu_document_manager.document_manager')->find(
+                    $node->getIdentifier(),
+                    $this->getLocale($this->getRequest())
+                );
+            }
+
+            // TODO introduce EntityReferencedException instead of building class on my own
+            $document = $e->getDocument();
+
+            return $this->handleView(
+                $this->view(
+                    [
+                        'message' => sprintf(
+                            'The document with the id "%s" cannot be deleted because it is still referenced.',
+                            $document->getUuid()
+                        ),
+                        'code' => 0,
+                        'document' => $document,
+                        'references' => $references,
+                    ],
+                    409
+                )
+            );
         }
     }
 
@@ -533,7 +564,7 @@ class NodeController extends RestController
                     $data = $repository->copyNode($uuid, $srcLocale, $webspace, $language, $userId);
                     break;
                 case 'order':
-                    $position = (int)$this->getRequestParameter($request, 'position', true);
+                    $position = (int) $this->getRequestParameter($request, 'position', true);
                     $language = $this->getLanguage($request);
 
                     // call repository method

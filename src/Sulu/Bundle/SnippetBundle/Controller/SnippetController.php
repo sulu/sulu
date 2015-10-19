@@ -15,12 +15,15 @@ use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
-use PHPCR\NodeInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
+use Sulu\Component\DocumentManager\Exception\DocumentReferencedException;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
@@ -28,7 +31,6 @@ use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 
@@ -60,6 +62,11 @@ class SnippetController implements ClassResourceInterface, SecuredControllerInte
     protected $snippetRepository;
 
     /**
+     * @var DocumentManagerInterface
+     */
+    protected $documentManager;
+
+    /**
      * @var SecurityContext
      */
     protected $securityContext;
@@ -82,6 +89,7 @@ class SnippetController implements ClassResourceInterface, SecuredControllerInte
         ContentMapper $contentMapper,
         StructureManagerInterface $structureManager,
         SnippetRepository $snippetRepository,
+        DocumentManagerInterface $documentManager,
         SecurityContext $securityContext,
         UrlGeneratorInterface $urlGenerator
     ) {
@@ -89,6 +97,7 @@ class SnippetController implements ClassResourceInterface, SecuredControllerInte
         $this->contentMapper = $contentMapper;
         $this->structureManager = $structureManager;
         $this->snippetRepository = $snippetRepository;
+        $this->documentManager = $documentManager;
         $this->securityContext = $securityContext;
         $this->urlGenerator = $urlGenerator;
     }
@@ -241,20 +250,47 @@ class SnippetController implements ClassResourceInterface, SecuredControllerInte
     {
         $webspaceKey = $request->query->get('webspace', null);
 
-        $references = $this->snippetRepository->getReferences($uuid);
+        try {
+            $this->contentMapper->delete($uuid, $webspaceKey, $request->get('force', false) == 'true');
+            $view = View::create(null, 204);
+        } catch (DocumentNotFoundException $e) {
+            $restException = new EntityNotFoundException('Snippet', $uuid);
+            $view = View::create($restException->toArray(), 404);
+        } catch (DocumentReferencedException $e) {
+            $references = [];
+            $nodeReferences = $e->getReferences();
 
-        if (count($references) > 0) {
-            $force = $request->headers->get('SuluForceRemove', false);
-            if ($force) {
-                $this->contentMapper->delete($uuid, $webspaceKey, true);
-            } else {
-                return $this->getReferentialIntegrityResponse($webspaceKey, $references);
+            foreach ($nodeReferences as $reference) {
+                $node = $reference->getParent();
+
+                if (!$node->isNodeType('sulu:page')) {
+                    continue;
+                }
+
+                $references[] = $this->documentManager->find(
+                    $node->getIdentifier(),
+                    $this->getLocale($request)
+                );
             }
-        } else {
-            $this->contentMapper->delete($uuid, $webspaceKey);
+
+            // TODO introduce EntityReferencedException instead of building array on my own
+            $document = $e->getDocument();
+
+            $view = View::create(
+                [
+                    'message' => sprintf(
+                        'The document with the id "%s" cannot be deleted because it is still referenced.',
+                        $document->getUuid()
+                    ),
+                    'code' => 0,
+                    'document' => $document,
+                    'references' => $references,
+                ],
+                409
+            );
         }
 
-        return new JsonResponse();
+        return $this->viewHandler->handle($view);
     }
 
     /**
@@ -373,18 +409,18 @@ class SnippetController implements ClassResourceInterface, SecuredControllerInte
     }
 
     /**
-    * Returns user.
-    */
-   private function getUser()
-   {
-       $token = $this->securityContext->getToken();
+     * Returns user.
+     */
+    private function getUser()
+    {
+        $token = $this->securityContext->getToken();
 
-       if (null === $token) {
-           throw new \InvalidArgumentException('No user is set');
-       }
+        if (null === $token) {
+            throw new \InvalidArgumentException('No user is set');
+        }
 
-       return $token->getUser();
-   }
+        return $token->getUser();
+    }
 
     /**
      * Initiates the environment.
@@ -455,41 +491,6 @@ class SnippetController implements ClassResourceInterface, SecuredControllerInte
                 ],
             ]
         );
-    }
-
-    /**
-     * Return a response for the case where there is an referential integrity violation.
-     *
-     * It will return a 409 (Conflict) response with an array of structures which reference
-     * the node and an array of "other" nodes (i.e. non-structures) which reference the node.
-     *
-     * @param string $webspace
-     * @param NodeInterface[] $references
-     *
-     * @return Response
-     */
-    private function getReferentialIntegrityResponse($webspace, $references)
-    {
-        $data = [
-            'structures' => [],
-            'other' => [],
-        ];
-
-        foreach ($references as $reference) {
-            if ($reference->getParent()->isNodeType('sulu:page')) {
-                $content = $this->contentMapper->load(
-                    $reference->getParent()->getIdentifier(),
-                    $webspace,
-                    $this->languageCode,
-                    true
-                );
-                $data['structures'][] = $content->toArray();
-            } else {
-                $data['other'] = $reference->getPath();
-            }
-        }
-
-        return new JsonResponse($data, 409);
     }
 
     /**

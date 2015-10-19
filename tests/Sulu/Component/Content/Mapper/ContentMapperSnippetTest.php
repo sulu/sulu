@@ -11,13 +11,15 @@
 
 namespace Sulu\Component\Content\Mapper;
 
-use Behat\Behat\Snippet\Snippet;
+use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
 use PHPCR\Util\UUIDHelper;
+use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 class ContentMapperSnippetTest extends SuluTestCase
 {
@@ -32,19 +34,34 @@ class ContentMapperSnippetTest extends SuluTestCase
     private $session;
 
     /**
-     * @var Snippet
+     * @var SnippetDocument
      */
     private $snippet1;
 
     /**
-     * @var Snippet
+     * @var SnippetDocument
      */
     private $snippet2;
+
+    /**
+     * @var NodeInterface
+     */
+    private $snippet1Node;
 
     /**
      * @var string
      */
     private $snippet1OriginalPath;
+
+    /**
+     * @var DocumentManagerInterface
+     */
+    private $documentManager;
+
+    /**
+     * @var object
+     */
+    private $parent;
 
     public function setUp()
     {
@@ -157,7 +174,7 @@ class ContentMapperSnippetTest extends SuluTestCase
 
     public function testRemoveSnippet()
     {
-        $this->contentMapper->delete($this->snippet1->getUuid(), 'sulu_io');
+        $this->contentMapper->delete($this->snippet1->getUuid(), 'sulu_io', true);
 
         try {
             $this->session->getNode($this->snippet1OriginalPath);
@@ -297,9 +314,11 @@ class ContentMapperSnippetTest extends SuluTestCase
     /**
      * Return the position of the node within the set of its siblings.
      *
+     * @param NodeInterface $node
+     *
      * @return int
      */
-    private function getNodePosition($node)
+    private function getNodePosition(NodeInterface $node)
     {
         $path = $node->getPath();
         $position = null;
