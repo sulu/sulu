@@ -12,7 +12,13 @@
  * Class which shows overlays for editing media models
  * @constructor
  */
-define(['config', 'services/sulumedia/media-manager'], function(config, mediaManager) {
+define([
+    'config',
+    'services/sulumedia/media-manager',
+    'text!./info.html',
+    'text!./copyright.html',
+    'text!./versions.html'
+], function(config, mediaManager, infoTemplate, copyrightTemplate, versionsTemplate) {
 
     'use strict';
 
@@ -24,7 +30,7 @@ define(['config', 'services/sulumedia/media-manager'], function(config, mediaMan
         },
 
         constants = {
-            infoFormSelector: '#media-info',
+            formSelector: '#media-form',
             multipleEditFormSelector: '#media-multiple-edit',
             dropzoneSelector: '#file-version-change',
             multipleEditDescSelector: '.media-description',
@@ -61,8 +67,6 @@ define(['config', 'services/sulumedia/media-manager'], function(config, mediaMan
     return {
 
         templates: [
-            '/admin/media/template/media/info',
-            '/admin/media/template/media/versions',
             '/admin/media/template/media/multiple-edit'
         ],
 
@@ -173,24 +177,29 @@ define(['config', 'services/sulumedia/media-manager'], function(config, mediaMan
         /**
          * Edits a single media
          * @param media {Object} the id of the media to edit
-         * @param {Array} locales
          */
         editSingleMedia: function(media) {
             this.media = media;
-            var $info = this.sandbox.dom.createElement(this.renderTemplate('/admin/media/template/media/info', {
-                media: this.media
+            var $info = this.sandbox.dom.createElement(_.template(infoTemplate, {
+                media: this.media,
+                translate: this.sandbox.translate
             }));
-            var $versions = this.sandbox.dom.createElement(this.renderTemplate('/admin/media/template/media/versions', {
-                media: this.media
+            var $copyright = this.sandbox.dom.createElement(_.template(copyrightTemplate, {
+                media: this.media,
+                translate: this.sandbox.translate
             }));
-            this.startSingleOverlay($info, $versions);
+            var $versions = this.sandbox.dom.createElement(_.template(versionsTemplate, {
+                media: this.media,
+                translate: this.sandbox.translate
+            }));
+            this.startSingleOverlay($info, $copyright, $versions);
         },
 
         /**
          * Starts the actual overlay for single-edit
          */
-        startSingleOverlay: function($info, $versions) {
-            var $container = this.sandbox.dom.createElement('<div class="' + constants.singleEditClass + '"/>');
+        startSingleOverlay: function($info, $copyright, $versions) {
+            var $container = this.sandbox.dom.createElement('<div class="' + constants.singleEditClass + '" id="media-form"/>');
             this.sandbox.dom.append(this.$el, $container);
             this.bindSingleOverlayEvents();
             this.sandbox.start([
@@ -201,6 +210,7 @@ define(['config', 'services/sulumedia/media-manager'], function(config, mediaMan
                         title: this.media.title,
                         tabs: [
                             {title: this.sandbox.translate('public.info'), data: $info},
+                            {title: this.sandbox.translate('sulu.media.copyright'), data: $copyright},
                             {title: this.sandbox.translate('sulu.media.history'), data: $versions}
                         ],
                         languageChanger: {
@@ -226,7 +236,7 @@ define(['config', 'services/sulumedia/media-manager'], function(config, mediaMan
          * @returns {boolean} false if form-data is not valid
          */
         singleOkCallback: function() {
-            if (this.sandbox.form.validate(constants.infoFormSelector)) {
+            if (this.sandbox.form.validate(constants.formSelector)) {
                 this.saveSingleMedia();
                 this.sandbox.stop();
             } else {
@@ -239,9 +249,9 @@ define(['config', 'services/sulumedia/media-manager'], function(config, mediaMan
          */
         bindSingleOverlayEvents: function() {
             this.sandbox.once('husky.overlay.media-edit.opened', function() {
-                this.sandbox.form.create(constants.infoFormSelector).initialized.then(function() {
-                    this.sandbox.form.setData(constants.infoFormSelector, this.media).then(function() {
-                        this.sandbox.start(constants.infoFormSelector);
+                this.sandbox.form.create(constants.formSelector).initialized.then(function() {
+                    this.sandbox.form.setData(constants.formSelector, this.media).then(function() {
+                        this.sandbox.start(constants.formSelector);
                         this.startSingleDropzone();
                     }.bind(this));
                 }.bind(this));
@@ -288,8 +298,8 @@ define(['config', 'services/sulumedia/media-manager'], function(config, mediaMan
         saveSingleMedia: function() {
             var promise = $.Deferred();
             // validate form data
-            if (this.sandbox.form.validate(constants.infoFormSelector)) {
-                var formData = this.sandbox.form.getData(constants.infoFormSelector),
+            if (this.sandbox.form.validate(constants.formSelector)) {
+                var formData = this.sandbox.form.getData(constants.formSelector),
                     mediaData = this.sandbox.util.extend(false, {}, this.media, formData);
 
                 // check if form-data is different to source-media

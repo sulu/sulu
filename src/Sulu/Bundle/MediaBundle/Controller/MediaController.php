@@ -333,6 +333,7 @@ class MediaController extends RestController
             'name' => $request->get('name'),
             'title' => $request->get('title', $fallback ? $this->getTitleFromUpload($request, 'fileVersion') : null),
             'description' => $request->get('description'),
+            'copyright' => $request->get('copyright'),
             'changer' => $request->get('changer'),
             'creator' => $request->get('creator'),
             'changed' => $request->get('changed'),

@@ -2,8 +2,10 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1702 [MediaBundle]     Fixed selected handling in media selection overlay
     * BUGFIX      #1685 [ContactBundle]   Fixed delete logo/avatar from collection and form
     * FEATURE     #1697 [MediaBundle]     Replaced StreamedResponse with BinaryFileResponse
+    * BUGFIX      #1701 [ContentBundle]   Added website cache clear button in preview toolbar
     * BUGFIX      #1696 [MediaBundle]     Fixed dropzone for uploading new versions of media
     * BUGFIX      #1675 [ContactBundle]   Fixed null value for smart content
     * FEATURE     #1653 [MediaBundle]     Added generation of thumbnails for videos
@@ -13,6 +15,7 @@ CHANGELOG for Sulu
     * FEATURE     #1598 [MediaBundle]     Added infinite-scroll pagination for masonry-view
     * FEATURE     #1598 [ContactBundle]   Added infinite-scroll pagination for card-view
     * BUGFIX      #1670 [ContentBundle]   Fixed missing url-scheme in content type
+    * FEATURE     #1683 [MediaBundle]     Added copyright to media metadata
     * BUGFIX      #1673 [ContentBundle]   Fixed settings tag for shadows on external links
     * BUGFIX      #1678 [ContactBundle]   Fixed contact-selection serialization
     * BUGFIX      #1667 [ContactBundle]   Removed the restriction of start dates from the datepicker
