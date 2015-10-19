@@ -17,7 +17,8 @@ use Sulu\Bundle\ContentBundle\Document\RouteDocument;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;
 use Sulu\Component\DocumentManager\DocumentInspector;
-use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
@@ -28,12 +29,23 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class StructureRemoveSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var DocumentInspector
+     */
     private $inspector;
+
+    /**
+     * @var DocumentManagerInterface
+     */
     private $documentManager;
+
+    /**
+     * @var MetadataFactoryInterface
+     */
     private $metadataFactory;
 
     public function __construct(
-        DocumentManager $documentManager,
+        DocumentManagerInterface $documentManager,
         DocumentInspector $inspector,
         MetadataFactoryInterface $metadataFactory
     ) {
@@ -42,20 +54,49 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
         $this->metadataFactory = $metadataFactory;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public static function getSubscribedEvents()
     {
         return [
+            Events::CONFIGURE_OPTIONS => ['configureOptions', 0],
             Events::REMOVE => ['handleRemove', 550],
         ];
     }
 
-    public function handleRemove(RemoveEvent $event)
+    /**
+     * Adds the options for this subscriber to the OptionsResolver.
+     *
+     * @param ConfigureOptionsEvent $event
+     */
+    public function configureOptions(ConfigureOptionsEvent $event)
     {
-        $document = $event->getDocument();
-        $this->removeDocument($document);
+        $options = $event->getOptions();
+
+        $options->setDefault('dereference', false);
+        $options->addAllowedTypes('dereference', 'bool');
     }
 
-    public function removeDocument($document)
+    /**
+     * Removes the references to the given node, if the dereference option is set.
+     *
+     * @param RemoveEvent $event
+     */
+    public function handleRemove(RemoveEvent $event)
+    {
+        if ($event->getOption('dereference')) {
+            $document = $event->getDocument();
+            $this->removeReferencesToDocument($document);
+        }
+    }
+
+    /**
+     * Removes the references from the given document.
+     *
+     * @param object $document
+     */
+    private function removeReferencesToDocument($document)
     {
         // TODO: This is not a good indicator. There should be a RoutableBehavior here.
         if (!$document instanceof StructureBehavior) {
@@ -64,7 +105,7 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
 
         if ($document instanceof ChildrenBehavior) {
             foreach ($document->getChildren() as $child) {
-                $this->removeDocument($child);
+                $this->removeReferencesToDocument($child);
             }
         }
 
@@ -72,6 +113,11 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
         $this->recursivelyRemoveRoutes($document);
     }
 
+    /**
+     * Removes all routes from the given Document.
+     *
+     * @param object $document
+     */
     private function recursivelyRemoveRoutes($document)
     {
         $referrers = $this->inspector->getReferrers($document);
@@ -85,6 +131,11 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
         }
     }
 
+    /**
+     * Removes all the references to the given document.
+     *
+     * @param object $document
+     */
     private function removeReferences($document)
     {
         $node = $this->inspector->getNode($document);
@@ -107,7 +158,7 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
      * Remove the given property, or the value which references the node (when
      * multi-valued).
      *
-     * @param NodeInterface     $node
+     * @param NodeInterface $node
      * @param PropertyInterface $property
      */
     private function dereferenceProperty(NodeInterface $node, PropertyInterface $property)

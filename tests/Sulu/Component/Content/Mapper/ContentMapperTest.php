@@ -1212,7 +1212,7 @@ class ContentMapperTest extends SuluTestCase
         $subChild = $this->mapper->save($data[3], 'overview', 'sulu_io', 'de', 1, true, null, $child->getUuid());
 
         // delete /news/test-2/test-1
-        $this->mapper->delete($child->getUuid(), 'sulu_io');
+        $this->mapper->delete($child->getUuid(), 'sulu_io', true);
 
         // check
         try {
@@ -3311,7 +3311,7 @@ class ContentMapperTest extends SuluTestCase
         $this->mapper->move($data[1]->getUuid(), $data[3]->getUuid(), 1, 'sulu_io', 'de');
 
         // delete /a/d
-        $this->mapper->delete($data[3]->getUuid(), 'sulu_io');
+        $this->mapper->delete($data[3]->getUuid(), 'sulu_io', true);
 
         // check
         try {

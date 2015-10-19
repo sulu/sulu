@@ -14,45 +14,53 @@ define([
 
     'use strict';
 
-    var CONTENT_LANGUAGE = 'contentLanguage';
+    var CONTENT_LANGUAGE = 'contentLanguage',
 
-    var BaseSnippet = function() {
-    };
+        BaseSnippet = function() {
+        },
 
-    var translationKeys = {
-        deleteReferencedByFollowing: 'snippet.delete-referenced-by-following',
-        deleteConfirmText: 'snippet.delete-confirm-text',
-        deleteConfirmTitle: 'snippet.delete-confirm-title',
-        deleteDoIt: 'snippet.delete-do-it',
-        deleteNoSnippetsSelected: 'snippet.delete-no-snippets-selected'
-    };
+        translationKeys = {
+            deleteReferencedByFollowing: 'snippet.delete-referenced-by-following',
+            deleteConfirmText: 'snippet.delete-confirm-text',
+            deleteConfirmTitle: 'snippet.delete-confirm-title',
+            deleteDoIt: 'snippet.delete-do-it',
+            deleteNoSnippetsSelected: 'snippet.delete-no-snippets-selected'
+        },
+
+        templates = {
+            referentialIntegrityMessage: function(pageTitles) {
+                var message = [];
+
+                message.push('<p>', this.sandbox.translate(translationKeys.deleteReferencedByFollowing), '</p>');
+                message.push('<ul>');
+
+                this.sandbox.util.foreach(pageTitles, function(pageTitle) {
+                    message.push('<li>', pageTitle, '</li>');
+                });
+
+                message.push('</ul>');
+                message.push('<p>', this.sandbox.translate(translationKeys.deleteConfirmText), '</p>');
+
+                return message.join('');
+            }
+        };
 
     BaseSnippet.prototype = {
         bindModelEvents: function() {
             // delete current
-            this.sandbox.on('sulu.snippets.snippet.delete', function() {
-                this.del();
-            }, this);
+            this.sandbox.on('sulu.snippets.snippet.delete', this.del, this);
 
             // save the current
-            this.sandbox.on('sulu.snippets.snippet.save', function(data, action) {
-                this.save(data, action);
-            }, this);
+            this.sandbox.on('sulu.snippets.snippet.save', this.save, this);
 
             // wait for navigation events
-            this.sandbox.on('sulu.snippets.snippet.load', function(id, language) {
-                this.load(id, language);
-            }, this);
+            this.sandbox.on('sulu.snippets.snippet.load', this.load, this);
 
             // add new
-            this.sandbox.on('sulu.snippets.snippet.new', function(language) {
-                this.add(language);
-            }, this);
+            this.sandbox.on('sulu.snippets.snippet.new', this.add, this);
 
             // delete selected
-            this.sandbox.on('sulu.snippets.snippets.delete', function(ids) {
-                this.delSnippets(ids);
-            }, this);
+            this.sandbox.on('sulu.snippets.snippets.delete', this.delSnippets, this);
 
             // load list view
             this.sandbox.on('sulu.snippets.snippet.list', function(language) {
@@ -83,7 +91,7 @@ define([
         del: function() {
             this.sandbox.sulu.showDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
-                    this.destroySnippet(this.model, function () {
+                    this.destroySnippet(this.model, function() {
                         this.sandbox.emit('sulu.router.navigate', 'snippet/snippets');
                     }.bind(this));
 
@@ -92,12 +100,12 @@ define([
             }.bind(this));
         },
 
-        destroySnippet: function (snippet, successCallback) {
+        destroySnippet: function(snippet, successCallback) {
             snippet.destroy({
                 success: function() {
                     successCallback();
                 }.bind(this),
-                error: function (model, response) {
+                error: function(model, response) {
                     if (response.status == 409) {
                         this.referentialIntegrityDialog(snippet, response.responseJSON, successCallback);
                     }
@@ -105,17 +113,12 @@ define([
             });
         },
 
-        referentialIntegrityDialog: function (snippet, data, successCallback) {
-            var message = [];
-            message.push(this.sandbox.translate(translationKeys.deleteReferencedByFollowing));
-            message.push('');
+        referentialIntegrityDialog: function(snippet, data, successCallback) {
+            var pageTitles = [];
 
-            this.sandbox.util.foreach(data.structures, function (structure) {
-                message.push(' - ' + structure.title);
+            this.sandbox.util.foreach(data.references, function(structure) {
+                pageTitles.push(structure.title);
             });
-
-            message.push('');
-            message.push(this.sandbox.translate(translationKeys.deleteConfirmText));
 
             var $element = $('<div/>');
             $('body').append($element);
@@ -125,16 +128,17 @@ define([
                     name: 'overlay@husky',
                     options: {
                         el: $element,
+                        openOnStart: true,
                         title: this.sandbox.translate(translationKeys.deleteConfirmTitle),
-                        message: message.join('<br/>'),
+                        message: templates.referentialIntegrityMessage.call(this, pageTitles),
                         okDefaultText: this.sandbox.translate(translationKeys.deleteDoIt),
-                        type: 'warning',
+                        type: 'alert',
                         closeCallback: function() {
                         },
-                        okCallback: function(data) {
+                        okCallback: function() {
                             snippet.destroy({
                                 headers: {
-                                    SuluForceRemove: true,
+                                    SuluForceRemove: true
                                 },
                                 success: function() {
                                     successCallback()
@@ -208,11 +212,11 @@ define([
                 return;
             }
 
-            var deleteSnippetFromStack = function () {
+            var deleteSnippetFromStack = function() {
                 var id = ids.shift();
                 if (id !== undefined) {
                     var snippet = new Snippet({id: id});
-                    this.destroySnippet(snippet, function () {
+                    this.destroySnippet(snippet, function() {
                         this.sandbox.emit('husky.datagrid.record.remove', id);
                         deleteSnippetFromStack();
                     }.bind(this));

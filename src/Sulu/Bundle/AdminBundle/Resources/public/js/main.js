@@ -23,6 +23,7 @@ require.config({
         'aura_extensions/sulu-content': 'aura_extensions/sulu-content',
         'aura_extensions/sulu-extension': 'aura_extensions/sulu-extension',
         'aura_extensions/sulu-buttons': 'aura_extensions/sulu-buttons',
+        'aura_extensions/default-extension': 'aura_extensions/default-extension',
         'aura_extensions/url-manager': 'aura_extensions/url-manager',
         'aura_extensions/default-extension': 'aura_extensions/default-extension',
         'aura_extensions/event-extension': 'aura_extensions/event-extension',

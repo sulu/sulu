@@ -22,7 +22,9 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
+use Sulu\Component\DocumentManager\Exception\DocumentReferencedException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\EntityReferencedException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
@@ -62,7 +64,7 @@ class NodeController extends RestController
      * returns webspace key from request.
      *
      * @param Request $request
-     * @param bool    $force
+     * @param bool $force
      *
      * @return string
      */
@@ -109,7 +111,7 @@ class NodeController extends RestController
      * returns a content item with given UUID as JSON String.
      *
      * @param Request $request
-     * @param string  $uuid
+     * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -122,7 +124,7 @@ class NodeController extends RestController
 
     /**
      * @param Request $request
-     * @param string  $uuid
+     * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -215,7 +217,7 @@ class NodeController extends RestController
      * Returns nodes by given ids.
      *
      * @param Request $request
-     * @param array   $idString
+     * @param array $idString
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -372,7 +374,7 @@ class NodeController extends RestController
      * saves node with given uuid and data.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param string                                    $uuid
+     * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -461,27 +463,62 @@ class NodeController extends RestController
      * deletes node with given uuid.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param string                                    $uuid
+     * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction(Request $request, $uuid)
     {
-        $language = $this->getLanguage($request);
-        $webspace = $this->getWebspace($request);
+        $webspaceKey = $this->getWebspace($request);
 
-        $view = $this->responseDelete(
-            $uuid,
-            function ($id) use ($language, $webspace) {
-                try {
-                    $this->getRepository()->deleteNode($id, $webspace, $language);
-                } catch (DocumentNotFoundException $ex) {
-                    throw new EntityNotFoundException('Content', $id);
+        try {
+            $view = $this->responseDelete(
+                $uuid,
+                function ($id) use ($webspaceKey) {
+                    try {
+                        $this->getRepository()->deleteNode($id, $webspaceKey);
+                    } catch (DocumentNotFoundException $ex) {
+                        throw new EntityNotFoundException('Content', $id);
+                    }
                 }
-            }
-        );
+            );
 
-        return $this->handleView($view);
+            return $this->handleView($view);
+        } catch (DocumentReferencedException $e) {
+            $references = [];
+            $nodeReferences = $e->getReferences();
+
+            foreach ($nodeReferences as $reference) {
+                $node = $reference->getParent();
+
+                if (!$node->isNodeType('sulu:page')) {
+                    continue;
+                }
+
+                $references[] = $this->get('sulu_document_manager.document_manager')->find(
+                    $node->getIdentifier(),
+                    $this->getLocale($this->getRequest())
+                );
+            }
+
+            // TODO introduce EntityReferencedException instead of building class on my own
+            $document = $e->getDocument();
+
+            return $this->handleView(
+                $this->view(
+                    [
+                        'message' => sprintf(
+                            'The document with the id "%s" cannot be deleted because it is still referenced.',
+                            $document->getUuid()
+                        ),
+                        'code' => 0,
+                        'document' => $document,
+                        'references' => $references,
+                    ],
+                    409
+                )
+            );
+        }
     }
 
     /**
@@ -493,7 +530,7 @@ class NodeController extends RestController
      *
      * @Post("/nodes/{uuid}")
      *
-     * @param string  $uuid
+     * @param string $uuid
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
