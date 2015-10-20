@@ -7,6 +7,8 @@
             <generator strategy="AUTO"/>
         </id>
 
+        <field name="title" type="string" column="title" length="250" nullable="true"/>
+
         <field name="primaryAddress" type="boolean" column="primaryAddress" nullable="true"/>
         <field name="deliveryAddress" type="boolean" column="deliveryAddress" nullable="true"/>
         <field name="billingAddress" type="boolean" column="billingAddress" nullable="true"/>

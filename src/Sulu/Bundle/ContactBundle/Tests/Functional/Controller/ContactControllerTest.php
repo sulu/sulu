@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
+use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
@@ -39,9 +40,100 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class ContactControllerTest extends SuluTestCase
 {
+    /**
+     * @var Position
+     */
     private $contactPosition = null;
+
+    /**
+     * @var ContactTitle
+     */
     private $contactTitle = null;
+
+    /**
+     * @var Media
+     */
     private $avatar = null;
+
+    /**
+     * @var EntityManager
+     */
+    private $em;
+
+    /**
+     * @var Contact
+     */
+    private $contact;
+
+    /**
+     * @var Account
+     */
+    private $account;
+
+    /**
+     * @var Account
+     */
+    private $account1;
+
+    /**
+     * @var PhoneType
+     */
+    private $phoneType;
+
+    /**
+     * @var Phone
+     */
+    private $phone;
+
+    /**
+     * @var EmailType
+     */
+    private $emailType;
+
+    /**
+     * @var Email
+     */
+    private $email;
+
+    /**
+     * @var FaxType
+     */
+    private $faxType;
+
+    /**
+     * @var Fax
+     */
+    private $fax;
+
+    /**
+     * @var Country
+     */
+    private $country;
+
+    /**
+     * @var Country
+     */
+    private $country2;
+
+    /**
+     * @var AddressType
+     */
+    private $addressType;
+
+    /**
+     * @var Address
+     */
+    private $address;
+
+    /**
+     * @var ContactAddress
+     */
+    private $contactAddress;
+
+    /**
+     * @var Note
+     */
+    private $note;
 
     public function setUp()
     {
@@ -559,6 +651,7 @@ class ContactControllerTest extends SuluTestCase
                 ],
                 'addresses' => [
                     [
+                        'title' => 'Home',
                         'street' => 'Musterstraße',
                         'number' => '1',
                         'zip' => '0000',
@@ -624,6 +717,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Note 2', $response->notes[1]->value);
         $this->assertEquals('note', $response->addresses[0]->note);
 
+        $this->assertEquals('Home', $response->addresses[0]->title);
         $this->assertEquals(true, $response->addresses[0]->billingAddress);
         $this->assertEquals(true, $response->addresses[0]->primaryAddress);
         $this->assertEquals(false, $response->addresses[0]->deliveryAddress);
@@ -665,6 +759,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Note 1', $response->notes[0]->value);
         $this->assertEquals('Note 2', $response->notes[1]->value);
 
+        $this->assertEquals('Home', $response->addresses[0]->title);
         $this->assertEquals(true, $response->addresses[0]->billingAddress);
         $this->assertEquals(true, $response->addresses[0]->primaryAddress);
         $this->assertEquals(false, $response->addresses[0]->deliveryAddress);
@@ -936,6 +1031,7 @@ class ContactControllerTest extends SuluTestCase
                 'addresses' => [
                     [
                         'id' => $this->address->getId(),
+                        'title' => 'work',
                         'street' => 'Street',
                         'number' => '2',
                         'zip' => '9999',
@@ -1042,6 +1138,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Note 1_1', $response->notes[0]->value);
         $this->assertEquals(1, count($response->notes));
 
+        $this->assertEquals('work', $response->addresses[0]->title);
         $this->assertEquals(true, $response->addresses[0]->billingAddress);
         $this->assertEquals(true, $response->addresses[0]->primaryAddress);
         $this->assertEquals(false, $response->addresses[0]->deliveryAddress);
