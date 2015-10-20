@@ -21,6 +21,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
+use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
@@ -37,6 +38,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
+use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -44,7 +46,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 /**
  * Default implementation of media manager.
  */
-class MediaManager implements MediaManagerInterface
+class MediaManager implements MediaManagerInterface, DataProviderRepositoryInterface
 {
     const ENTITY_NAME_MEDIA = 'SuluMediaBundle:Media';
     const ENTITY_NAME_COLLECTION = 'SuluMediaBundle:Collection';
@@ -162,7 +164,7 @@ class MediaManager implements MediaManagerInterface
      * @param string $maxFileSize
      */
     public function __construct(
-        MediaRepositoryInterface $mediaRepository,
+        MediaRepository $mediaRepository,
         CollectionRepositoryInterface $collectionRepository,
         UserRepositoryInterface $userRepository,
         EntityManager $em,
@@ -970,5 +972,21 @@ class MediaManager implements MediaManagerInterface
         }
 
         return $this->tokenStorage->getToken()->getUser();
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findByFilters($filters, $page, $pageSize, $limit, $locale)
+    {
+        $entities = $this->mediaRepository->findByFilters($filters, $page, $pageSize, $limit, $locale);
+
+        return array_map(
+            function ($media) use ($locale) {
+                return $this->addFormatsAndUrl(new Media($media, $locale), $locale);
+            },
+            $entities
+        );
     }
 }

@@ -423,7 +423,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get meta.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return FileVersionMeta
      */
     public function getMeta()
     {

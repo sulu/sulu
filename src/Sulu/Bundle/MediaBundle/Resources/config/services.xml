@@ -203,5 +203,12 @@
         <service id="sulu_media.system_collections.builder" class="Sulu\Component\Media\SystemCollections\SystemCollectionBuilder">
             <tag name="massive_build.builder" />
         </service>
+
+        <service id="sulu_media.smart_content.data_provider.media" class="Sulu\Component\Media\SmartContent\MediaDataProvider">
+            <argument type="service" id="sulu_media.media_manager"/>
+            <argument type="service" id="serializer"/>
+
+            <tag name="sulu.smart_content.data_provider" alias="media"/>
+        </service>
     </services>
 </container>
