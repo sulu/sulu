@@ -320,8 +320,6 @@ class Webspace implements WebspaceInterface
         $nodes = null,
         $ignoredNodes = null
     ) {
-        $uuidPaths = [];
-
         $where = [];
 
         // only pages
@@ -329,7 +327,8 @@ class Webspace implements WebspaceInterface
 
         // filter by webspace key
         $where[] = sprintf(
-            'ISDESCENDANTNODE("/cmf/%s")',
+            '(ISDESCENDANTNODE("/cmf/%s/contents") OR ISSAMENODE("/cmf/%s/contents"))',
+            $webspaceKey,
             $webspaceKey
         );
 

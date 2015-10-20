@@ -424,6 +424,10 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
             return $propertyValue;
         }
 
+        if (is_array($propertyValue)) {
+            return json_encode($propertyValue);
+        }
+
         return '';
     }
 }
