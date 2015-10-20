@@ -20,6 +20,8 @@ interface WebspaceInterface
      * @param string $locale
      * @param string $format
      * @param string $uuid
+     * @param array $nodes
+     * @param array $ignoredNodes
      *
      * @return string
      */
@@ -27,7 +29,9 @@ interface WebspaceInterface
         $webspaceKey,
         $locale,
         $format = '1.2.xliff',
-        $uuid = null
+        $uuid = null,
+        $nodes = null,
+        $ignoredNodes = null
     );
 
     /**
@@ -35,6 +39,8 @@ interface WebspaceInterface
      * @param string $locale
      * @param string $format
      * @param string $uuid
+     * @param array $nodes
+     * @param array $ignoredNodes
      *
      * @return string
      */
@@ -42,6 +48,8 @@ interface WebspaceInterface
         $webspaceKey,
         $locale,
         $format = '1.2.xliff',
-        $uuid = null
+        $uuid = null,
+        $nodes = null,
+        $ignoredNodes = null
     );
 }
