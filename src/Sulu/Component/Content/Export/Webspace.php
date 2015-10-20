@@ -81,6 +81,8 @@ class Webspace implements WebspaceInterface
      * @param string $locale
      * @param string $format
      * @param string $uuid
+     * @param array $nodes
+     * @param array $ignoredNodes
      *
      * @return string
      *
@@ -90,7 +92,9 @@ class Webspace implements WebspaceInterface
         $webspaceKey,
         $locale,
         $format = '1.2.xliff',
-        $uuid = null
+        $uuid = null,
+        $nodes = null,
+        $ignoredNodes = null
     ) {
         if (!$webspaceKey || !$locale) {
             throw new \Exception(sprintf('Invalid parameters for export "%s (%s)"', $webspaceKey, $locale));
@@ -98,7 +102,7 @@ class Webspace implements WebspaceInterface
 
         return $this->templating->render(
             $this->getTemplate($format),
-            $this->getExportData($webspaceKey, $locale, $format, $uuid)
+            $this->getExportData($webspaceKey, $locale, $format, $uuid, $nodes, $ignoredNodes)
         );
     }
 
@@ -107,6 +111,8 @@ class Webspace implements WebspaceInterface
      * @param string $locale
      * @param string $format
      * @param string $uuid
+     * @param array $nodes
+     * @param array $ignoredNodes
      *
      * @return array
      */
@@ -114,10 +120,12 @@ class Webspace implements WebspaceInterface
         $webspaceKey,
         $locale,
         $format = '1.2.xliff',
-        $uuid = null
+        $uuid = null,
+        $nodes = null,
+        $ignoredNodes = null
     ) {
         /** @var \Sulu\Bundle\ContentBundle\Document\PageDocument[] $documents */
-        $documents = $this->getDocuments($webspaceKey, $locale, $uuid);
+        $documents = $this->getDocuments($webspaceKey, $locale, $uuid, $nodes, $ignoredNodes);
         /** @var \Sulu\Bundle\ContentBundle\Document\PageDocument[] $loadedDocuments */
         $documentData = [];
 
@@ -277,12 +285,19 @@ class Webspace implements WebspaceInterface
      * @param string $webspaceKey
      * @param string $locale
      * @param string $uuid
+     * @param array $nodes
+     * @param array $ignoredNodes
      *
      * @return array
      */
-    protected function getDocuments($webspaceKey, $locale, $uuid = null)
-    {
-        $queryString = $this->getDocumentsQueryString($webspaceKey, $locale, $uuid);
+    protected function getDocuments(
+        $webspaceKey,
+        $locale,
+        $uuid = null,
+        $nodes = null,
+        $ignoredNodes = null
+    ) {
+        $queryString = $this->getDocumentsQueryString($webspaceKey, $locale, $uuid, $nodes, $ignoredNodes);
 
         $query = $this->documentManager->createQuery($queryString);
 
@@ -293,11 +308,20 @@ class Webspace implements WebspaceInterface
      * @param $webspaceKey
      * @param $locale
      * @param string $uuid
+     * @param array $nodes
+     * @param array $ignoredNodes
      *
      * @return string
      */
-    protected function getDocumentsQueryString($webspaceKey, $locale, $uuid = null)
-    {
+    protected function getDocumentsQueryString(
+        $webspaceKey,
+        $locale,
+        $uuid = null,
+        $nodes = null,
+        $ignoredNodes = null
+    ) {
+        $uuidPaths = [];
+
         $where = [];
 
         // only pages
@@ -320,9 +344,71 @@ class Webspace implements WebspaceInterface
             $where[] = sprintf('[jcr:uuid] = "%s"', $uuid);
         }
 
+        $nodeWhere = $this->buildNodeUuidToPathWhere($nodes, false);
+        if ($nodeWhere) {
+            $where[] = $nodeWhere;
+        }
+
+        $ignoreWhere = $this->buildNodeUuidToPathWhere($ignoredNodes, true);
+        if ($ignoreWhere) {
+            $where[] = $ignoreWhere;
+        }
+
         $queryString = 'SELECT * FROM [nt:unstructured] AS a WHERE ' . implode(' AND ', $where);
 
         return $queryString;
+    }
+
+    /**
+     * @param $nodes
+     * @param bool|false $not
+     *
+     * @return string
+     */
+    protected function buildNodeUuidToPathWhere($nodes, $not = false)
+    {
+        if ($nodes) {
+            $paths = $this->getPathsByUuids($nodes);
+
+            $wheres = [];
+            foreach ($nodes as $key => $uuid) {
+                if (isset($paths[$uuid])) {
+                    $wheres[] = sprintf('ISDESCENDANTNODE("%s")', $paths[$uuid]);
+                }
+            }
+
+            if (!empty($wheres)) {
+                return ($not ? 'NOT ' : '') .  '(' . implode(' OR ' , $wheres) . ')';
+            }
+        }
+    }
+
+    /**
+     * @param $uuids
+     *
+     * @return string[]
+     */
+    protected function getPathsByUuids($uuids)
+    {
+        $paths = [];
+
+        $where = [];
+        foreach ($uuids as $uuid) {
+            $where[] = sprintf('[jcr:uuid] = "%s"', $uuid);
+        }
+
+        $queryString = 'SELECT * FROM [nt:unstructured] AS a WHERE ' . implode(' OR ', $where);
+
+        $query = $this->documentManager->createQuery($queryString);
+
+        $result = $query->execute();
+
+        /** @var BasePageDocument $page */
+        foreach ($result as $page) {
+            $paths[$page->getUuid()] = $page->getPath();
+        }
+
+        return $paths;
     }
 
     /**
