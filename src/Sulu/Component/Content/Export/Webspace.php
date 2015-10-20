@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -187,8 +188,8 @@ class Webspace implements WebspaceInterface
         foreach ($properties as $property) {
             if (
                 $this->contentExportManager->hasExport($property->getType(), $format)
-                && $propertyValue = $propertyValues[$property->getName()]
             ) {
+                $propertyValue = $propertyValues[$property->getName()];
                 if ($property instanceof BlockMetadata) {
                     $data = $this->getBlockPropertyData($property, $propertyValue, $format);
                 } else {
@@ -377,7 +378,7 @@ class Webspace implements WebspaceInterface
             }
 
             if (!empty($wheres)) {
-                return ($not ? 'NOT ' : '') .  '(' . implode(' OR ' , $wheres) . ')';
+                return ($not ? 'NOT ' : '') .  '(' . implode(' OR ', $wheres) . ')';
             }
         }
     }
