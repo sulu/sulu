@@ -182,7 +182,7 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
                 return '1';
             }
 
-            return '0';
+            return '';
         }
 
         if (is_string($propertyValue)) {
@@ -198,7 +198,7 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
                 return '1';
             }
 
-            return '0';
+            return '';
         }
 
         return '';
