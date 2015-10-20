@@ -3,6 +3,18 @@
         <div class="addresses-item m-bottom-10">
 
             <div class="grid-row small">
+                <div class="grid-col-12">
+                    <div class="form-group-vertical">
+                        <label for="title"><%=translate('public.title')%></label>
+                        <input id="title" type="text" class="form-element title-value"
+                               data-mapper-property="title"/>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="dark-divider"/>
+
+            <div class="grid-row small">
                 <div class="grid-col-6">
 
                     <select id="addressType" class="addressType-value form-element" data-mapper-property="addressType"
