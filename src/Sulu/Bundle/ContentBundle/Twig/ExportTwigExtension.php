@@ -64,7 +64,7 @@ class ExportTwigExtension extends \Twig_Extension
      */
     public function escapeXmlContent($content)
     {
-        if (preg_match('/[<>{}&]/', $content)) {
+        if (preg_match('/[<>{}"&]/', $content)) {
             $content = '<![CDATA[' . $content . ']]>';
         }
 
