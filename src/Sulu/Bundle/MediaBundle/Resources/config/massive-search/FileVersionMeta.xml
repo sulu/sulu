@@ -2,7 +2,8 @@
 <massive-search-mapping xmlns="http://massiveart.io/schema/dic/massive-search-mapping">
 
     <mapping class="Sulu\Bundle\MediaBundle\Entity\FileVersionMeta">
-        <id property="id" />
+        <reindex repository-method="findLatest"/>
+        <id expr="object.getFileVersion().getFile().getId()" />
         <title property="title" />
         <description property="description" />
         <index name="file_version_meta" />
