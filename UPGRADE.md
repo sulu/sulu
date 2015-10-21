@@ -36,6 +36,9 @@ To updated you content pages and snippets simply run:
 app/console doctrine:phpcr:migrator:migrate
 ```
 
+Consider that the URL is now stored including the scheme (http://, ftp://, and so on), and therefore must not be
+appended in the Twig template anymore.
+
 ### Media Metadata
 Copyright field is now available in the metadata of medias. Therefore you have to update you database:
 
