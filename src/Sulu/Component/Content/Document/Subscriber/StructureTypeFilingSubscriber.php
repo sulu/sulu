@@ -38,7 +38,7 @@ class StructureTypeFilingSubscriber extends AbstractFilingSubscriber
     {
         $document = $event->getDocument();
 
-        $currentPath = $this->basePath;
+        $currentPath = '';
         if ($event->hasParentNode()) {
             $currentPath = $event->getParentNode()->getPath();
         }

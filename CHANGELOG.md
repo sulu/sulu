@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #1611 [All]             Improved PHPCR content handling to allow custom PHPCR content
     * BUGFIX      #1702 [MediaBundle]     Fixed selected handling in media selection overlay
     * BUGFIX      #1685 [ContactBundle]   Fixed delete logo/avatar from collection and form
     * FEATURE     #1697 [MediaBundle]     Replaced StreamedResponse with BinaryFileResponse

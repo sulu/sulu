@@ -78,18 +78,16 @@ class ReindexListener
 
         $typeMap = $this->baseMetadataFactory->getPhpcrTypeMap();
 
-        $condition = '';
+        $phpcrTypes = [];
         foreach ($typeMap as $type) {
             $phpcrType = $type['phpcr_type'];
 
             if ($phpcrType !== 'sulu:home' && $phpcrType !== 'sulu:path') {
-                if (!empty($condition)) {
-                    $condition .= ' or ';
-                }
-
-                $condition .= sprintf('[jcr:mixinTypes] = "%s"', $phpcrType);
+                $phpcrTypes[] = sprintf('[jcr:mixinTypes] = "%s"', $phpcrType);
             }
         }
+
+        $condition = implode(' or ', $phpcrTypes);
 
         // TODO: We cannot select all contents via. the parent type, see: https://github.com/jackalope/jackalope-doctrine-dbal/issues/217
         $query = $this->documentManager->createQuery(
