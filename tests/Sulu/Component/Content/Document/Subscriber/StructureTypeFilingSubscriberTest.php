@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureTypeFilingBehavior;
 use Sulu\Component\DocumentManager\Behavior\Path\ResetFilingPathBehavior;
 use Sulu\Component\DocumentManager\DocumentManager;
@@ -77,6 +78,7 @@ class StructureTypeFilingSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->persistEvent = $this->prophesize(PersistEvent::class);
         $this->notImplementing = new \stdClass();
         $this->document = $this->prophesize(StructureTypeFilingBehavior::class);
+        $this->document->willImplement(StructureBehavior::class);
         $this->parentDocument = new \stdClass();
         $this->nodeManager = $this->prophesize(NodeManager::class);
         $this->documentManager = $this->prophesize(DocumentManager::class);

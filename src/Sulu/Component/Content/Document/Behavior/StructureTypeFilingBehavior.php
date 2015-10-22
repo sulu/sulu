@@ -19,8 +19,4 @@ use Sulu\Component\DocumentManager\Behavior\Path\ResetFilingPathBehavior;
  */
 interface StructureTypeFilingBehavior extends ResetFilingPathBehavior
 {
-    /**
-     * @return string
-     */
-    public function getStructureType();
 }
