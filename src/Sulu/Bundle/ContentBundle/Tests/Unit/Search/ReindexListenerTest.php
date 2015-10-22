@@ -11,10 +11,10 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Search;
 
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Bundle\ContentBundle\Search\EventListener\ReindexListener;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\DocumentManager;
@@ -55,7 +55,7 @@ class ReindexListenerTest extends \PHPUnit_Framework_TestCase
     private $reindexListener;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function setUp()
     {
