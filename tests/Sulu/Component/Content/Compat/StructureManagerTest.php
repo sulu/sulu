@@ -63,7 +63,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
         $typemap = [
             'page' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
             'home' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
-            'snippet' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge'
+            'snippet' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge',
         ];
 
         $this->structureManager = new StructureManager(
