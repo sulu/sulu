@@ -27,6 +27,8 @@ sulu_core:
     cache_dir: %kernel.root_dir%/cache/sulu
     content:
         structure:
+             default_type:
+                snippet: "default"
              paths:
                  pages:
                      path: %kernel.root_dir%/Resources/pages
@@ -43,6 +45,11 @@ sulu_core:
                  sulu_1:
                      path: "%kernel.root_dir%/../../../CoreBundle/Content/templates"
                      type: "page"
+
+             typeMap:
+                 page: "\\Sulu\\Component\\Content\\Compat\\Structure\\PageBridge"
+                 home: "\\Sulu\\Component\\Content\\Compat\\Structure\\PageBridge"
+                 snippet: "\\Sulu\\Component\\Content\\Compat\\Structure\\SnippetBridge"
     webspace: ~
     locales:
         de: Deutsch

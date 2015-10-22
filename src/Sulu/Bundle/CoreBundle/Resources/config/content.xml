@@ -68,6 +68,7 @@
             <argument type="service" id="sulu_content.extension.manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_content.compat.structure.legacy_property_factory" />
+            <argument>%sulu.content.structure.typeMap%</argument>
         </service>
 
         <service id="sulu.content.webspace_structure_provider.cache" class="%sulu.content.webspace_structure_provider.cache.class%">
