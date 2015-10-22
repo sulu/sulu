@@ -14,7 +14,7 @@ namespace Sulu\Component\Content\Document\Subscriber;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureTypeFilingBehavior;
-use Sulu\Component\DocumentManager\Behavior\Path\ResetFilingPathBehavior;
+use Sulu\Component\DocumentManager\Behavior\Path\BasePathBehavior;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Metadata;
@@ -34,7 +34,7 @@ class StructureTypeFilingSubscriberTest extends \PHPUnit_Framework_TestCase
     private $notImplementing;
 
     /**
-     * @var ResetFilingPathBehavior
+     * @var BasePathBehavior
      */
     private $document;
 

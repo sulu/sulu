@@ -11,12 +11,12 @@
 
 namespace Sulu\Component\Content\Document\Behavior;
 
-use Sulu\Component\DocumentManager\Behavior\Path\ResetFilingPathBehavior;
+use Sulu\Component\DocumentManager\Behavior\Path\BasePathBehavior;
 
 /**
  * Documents implementing this behavior can have extensions applied to their
  * content.
  */
-interface StructureTypeFilingBehavior extends ResetFilingPathBehavior
+interface StructureTypeFilingBehavior extends BasePathBehavior
 {
 }

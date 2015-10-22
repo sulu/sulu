@@ -72,7 +72,7 @@
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
-        <service id="sulu_document_manager.subscriber.behavior.reset.path" class="Sulu\Component\DocumentManager\Subscriber\Behavior\Path\ResetFilingPathSubscriber">
+        <service id="sulu_document_manager.subscriber.behavior.base_path" class="Sulu\Component\DocumentManager\Subscriber\Behavior\Path\BasePathSubscriber">
             <argument type="service" id="sulu_document_manager.node_manager" />
             <argument>/%sulu.content.node_names.base%</argument>
             <tag name="sulu_document_manager.event_subscriber" />
