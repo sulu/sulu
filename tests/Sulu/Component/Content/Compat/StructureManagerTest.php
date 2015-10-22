@@ -21,6 +21,36 @@ use Sulu\Component\Content\Metadata\StructureMetadata;
 
 class StructureManagerTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var StructureMetadataFactory
+     */
+    private $factory;
+
+    /**
+     * @var ExtensionManager
+     */
+    private $extensionManager;
+
+    /**
+     * @var DocumentInspector
+     */
+    private $inspector;
+
+    /**
+     * @var StructureMetadata
+     */
+    private $structure;
+
+    /**
+     * @var ExtensionInterface
+     */
+    private $extension;
+
+    /**
+     * @var LegacyPropertyFactory
+     */
+    private $propertyFactory;
+
     public function setUp()
     {
         $this->factory = $this->prophesize(StructureMetadataFactory::class);
@@ -30,11 +60,18 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
         $this->extension = $this->prophesize(ExtensionInterface::class);
         $this->propertyFactory = $this->prophesize(LegacyPropertyFactory::class);
 
+        $typemap = [
+            'page' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
+            'home' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
+            'snippet' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge'
+        ];
+
         $this->structureManager = new StructureManager(
             $this->factory->reveal(),
             $this->extensionManager->reveal(),
             $this->inspector->reveal(),
-            $this->propertyFactory->reveal()
+            $this->propertyFactory->reveal(),
+            $typemap
         );
     }
 

@@ -47,9 +47,9 @@ sulu_core:
                      type: "page"
 
              typeMap:
-                 page: "\Sulu\Component\Content\Compat\Structure\PageBridge"
-                 home: "\Sulu\Component\Content\Compat\Structure\PageBridge"
-                 snippet: "\Sulu\Component\Content\Compat\Structure\SnippetBridge"
+                 page: "\\Sulu\\Component\\Content\\Compat\\Structure\\PageBridge"
+                 home: "\\Sulu\\Component\\Content\\Compat\\Structure\\PageBridge"
+                 snippet: "\\Sulu\\Component\\Content\\Compat\\Structure\\SnippetBridge"
     webspace: ~
     locales:
         de: Deutsch
