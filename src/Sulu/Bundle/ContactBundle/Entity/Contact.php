@@ -250,6 +250,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         $this->categories = new ArrayCollection();
         $this->accountContacts = new ArrayCollection();
         $this->contactAddresses = new ArrayCollection();
+        $this->medias = new ArrayCollection();
     }
 
     /**

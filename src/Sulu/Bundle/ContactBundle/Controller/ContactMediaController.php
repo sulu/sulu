@@ -88,6 +88,6 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
 
     private function getContactEntityName()
     {
-        return $this->container->getParameter('sulu_contact.contact.entity');
+        return $this->container->getParameter('sulu.model.contact.class');
     }
 }
