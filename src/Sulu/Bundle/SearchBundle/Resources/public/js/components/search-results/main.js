@@ -23,7 +23,7 @@ define([
     var defaults = {
             instanceName: '',
             searchUrl: '/admin/search',
-            enabledCategoriesUrl: '/admin/search/categories',
+            enabledIndexesUrl: '/admin/search/indexes',
             pageLimit: 100,
             displayLogo: false
         },
@@ -49,20 +49,20 @@ define([
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.mainTemplate = this.sandbox.util.template(mainTemplate);
             this.searchResultsTemplate = this.sandbox.util.template(searchResultsTemplate);
-            this.enabledCategories = [];
-            this.categories = {};
-            this.categoriesStore = {};
+            this.enabledIndexes = [];
+            this.indexes = {};
+            this.indexesStore = {};
             this.totals = {};
             this.state = {
                 page: 1,
                 pages: 1,
                 loading: false,
                 hasNextPage: true,
-                category: 'all',
+                index: 'all',
                 query: ''
             };
 
-            this.loadCategories().then(function() {
+            this.loadIndexes().then(function() {
                 this.render();
                 this.startInfiniteScroll();
                 this.bindEvents();
@@ -141,18 +141,18 @@ define([
         },
 
         /**
-         * @method addCategory
-         * @param {String} category
+         * @method addIndex
+         * @param {String} index
          */
-        addCategory: function(category) {
-            var categoryEntry = {
-                'id': category,
-                'name': this.sandbox.translate('search-overlay.category.' + category + '.title'),
-                'placeholder': this.sandbox.translate('search-overlay.placeholder.' + category)
+        addIndex: function(index) {
+            var indexEntry = {
+                'id': index,
+                'name': this.sandbox.translate('search-overlay.index.' + index + '.title'),
+                'placeholder': this.sandbox.translate('search-overlay.placeholder.' + index)
             };
 
-            this.categories[category] = categoryEntry;
-            this.enabledCategories.push(categoryEntry);
+            this.indexes[index] = indexEntry;
+            this.enabledIndexes.push(indexEntry);
         },
 
         /**
@@ -164,13 +164,13 @@ define([
         },
 
         /**
-         * @method loadCategories
+         * @method loadIndexes
          */
-        loadCategories: function() {
-            return this.sandbox.util.load(this.options.enabledCategoriesUrl)
+        loadIndexes: function() {
+            return this.sandbox.util.load(this.options.enabledIndexesUrl)
                 .then(function(data) {
-                    this.addCategory('all');
-                    data.forEach(this.addCategory.bind(this));
+                    this.addIndex('all');
+                    data.forEach(this.addIndex.bind(this));
                 }.bind(this));
         },
 
@@ -186,7 +186,7 @@ define([
                     el: this.$el.find('.search-results-bar'),
                     instanceName: this.dropDownInputInstance,
                     preSelectedElement: 'all',
-                    data: this.enabledCategories,
+                    data: this.enabledIndexes,
                     focused: true
                 }
             }]);
@@ -199,7 +199,7 @@ define([
                 options: {
                     el: this.$el.find('.search-totals'),
                     instanceName: this.searchTotalsInstanceName,
-                    categories: this.categories
+                    indexes: this.indexes
                 }
             }]);
         },
@@ -216,11 +216,11 @@ define([
                 },
 
                 url = this.options.searchUrl + '/query?' + $.param(params),
-                category = this.state.category;
+                index = this.state.index;
 
-            // if category is 'all' search for everything
-            if (category && category !== 'all') {
-                url += '&category=' + category;
+            // if index is 'all' search for everything
+            if (index && index !== 'all') {
+                url += '&index=' + index;
             }
 
             return this.sandbox.util.load(url)
@@ -255,7 +255,7 @@ define([
         parse: function(response) {
             var data = response._embedded.result || [],
                 preparedData = {},
-                category,
+                index,
                 deepUrl;
 
             this.state.page = response.page;
@@ -267,21 +267,21 @@ define([
             data.forEach(function(entry) {
                 var options;
 
-                category = entry.document.category;
-                deepUrl = this.getEntryDeepUrl(category, entry.document);
+                index = entry.document.index;
+                deepUrl = this.getEntryDeepUrl(index, entry.document);
                 entry.document.deepUrl = deepUrl;
-                options = Config.get('sulusearch.' + category + '.options') || {};
+                options = Config.get('sulusearch.' + index + '.options') || {};
 
-                if (!preparedData[category]) {
-                    preparedData[category] = {
-                        category: category,
+                if (!preparedData[index]) {
+                    preparedData[index] = {
+                        index: index,
                         results: [entry.document],
                         options: this.sandbox.util.extend(true, {}, {
                             image: true
                         }, options)
                     };
                 } else {
-                    preparedData[category].results.push(entry.document);
+                    preparedData[index].results.push(entry.document);
                 }
 
             }.bind(this));
@@ -296,15 +296,15 @@ define([
         mergeResults: function(data) {
             if (data) {
                 Object.keys(data).forEach(function(key) {
-                    if (!this.categoriesStore[key]) {
-                        this.categoriesStore[key] = data[key];
+                    if (!this.indexesStore[key]) {
+                        this.indexesStore[key] = data[key];
                     } else {
-                        this.categoriesStore[key].results = this.categoriesStore[key].results.concat(data[key].results);
+                        this.indexesStore[key].results = this.indexesStore[key].results.concat(data[key].results);
                     }
                 }.bind(this));
             }
 
-            return this.categoriesStore;
+            return this.indexesStore;
         },
 
         /**
@@ -313,15 +313,15 @@ define([
         dropDownInputActionHandler: function(data) {
             if (!!data.value) {
                 this.state.query = data.value;
-                this.state.category = data.selectedElement;
+                this.state.index = data.selectedElement;
                 this.state.page = 1;
-                this.categoriesStore = {};
+                this.indexesStore = {};
 
                 this.hideLogo();
                 this.startLoader();
                 this.updateResults();
                 this.load().then(function(data) {
-                    this.categoriesStore = data;
+                    this.indexesStore = data;
                     this.updateResults(data);
                     this.updateTotals(data);
                 }.bind(this));
@@ -341,19 +341,17 @@ define([
 
         /**
          * @method getEntryDeepUrl
-         * @param {String} category
+         * @param {String} index
          * @param {Object} data
          */
-        getEntryDeepUrl: function(category, data) {
-            var deepUrl = this.sandbox.urlManager.getUrl(category, data);
-
-            return deepUrl;
+        getEntryDeepUrl: function(index, data) {
+            return this.sandbox.urlManager.getUrl(index, data);
         },
 
         /**
          * @type {Object}
          */
-        categoryIconMapping: {
+        indexIconMapping: {
             'contact': 'fa-user',
             'page': 'fa-file-o',
             'snippet': 'fa-file',
@@ -377,9 +375,9 @@ define([
 
             return this.searchResultsTemplate({
                 sections: sections,
-                categories: this.categories,
+                indexes: this.indexes,
                 totals: this.totals,
-                categoryIconMapping: this.categoryIconMapping,
+                indexIconMapping: this.indexIconMapping,
                 translate: this.sandbox.translate
             });
         },
@@ -394,11 +392,11 @@ define([
             this.$el.find('.search-results').html(template);
         },
 
-        updateTotals: function(data) {
+        updateTotals: function() {
             this.sandbox.emit(
                 'sulu.search-totals.' + this.searchTotalsInstanceName + '.update',
                 this.totals,
-                this.state.category
+                this.state.index
             );
         },
 

@@ -71,7 +71,6 @@ class ReindexListener
     public function onIndexRebuild(IndexRebuildEvent $event)
     {
         $output = $event->getOutput();
-        $purge = $event->getPurge();
         $filter = $event->getFilter();
 
         $output->writeln('<info>Rebuilding content index</info>');
@@ -95,10 +94,6 @@ class ReindexListener
         );
 
         $count = [];
-
-        if ($purge) {
-            $this->purgeContentIndexes($output);
-        }
 
         $documents = $query->execute();
         $progress = new ProgressHelper();
@@ -146,15 +141,6 @@ class ReindexListener
                 $className,
                 $count
             ));
-        }
-    }
-
-    private function purgeContentIndexes($output)
-    {
-        foreach ($this->mapping as $structureMapping) {
-            $structureIndexName = $structureMapping['index'];
-            $output->writeln('<comment>Purging index</comment>: ' . $structureIndexName);
-            $this->searchManager->purge($structureIndexName);
         }
     }
 }

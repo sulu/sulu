@@ -1,9 +1,9 @@
 <% if (!!sections && sections.length) { %>
 
     <% _.each(sections, function(section) { %>
-    <div class="search-results-section is-<%= section.category %>">
+    <div class="search-results-section is-<%= section.index %>">
         <div class="search-results-section-header">
-            <%= translate(categories[section.category].name) %> (<%= totals[section.category] %>)
+            <%= translate(indexes[section.index].name) %> (<%= totals[section.index] %>)
         </div>
         <ul class="search-results-section-content">
             <% _.each(section.results, function(result) { %>
@@ -12,7 +12,7 @@
                     <% if (section.options.image && result.imageUrl) { %>
                     <img class="search-results-thumb-image" src="<%= result.imageUrl %>" />
                     <% } else { %>
-                    <div class="<%= categoryIconMapping[section.category] %>"></div>
+                    <div class="<%= indexIconMapping[section.index] %>"></div>
                     <% } %>
                 </div>
                 <div class="search-results-description">

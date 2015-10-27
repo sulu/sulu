@@ -1,12 +1,11 @@
 <?xml version="1.0" ?>
 <massive-search-mapping xmlns="http://massiveart.io/schema/dic/massive-search-mapping">
-
     <mapping class="Sulu\Bundle\MediaBundle\Entity\FileVersionMeta">
         <reindex repository-method="findLatest"/>
         <id expr="object.getFileVersion().getFile().getId()" />
         <title property="title" />
         <description property="description" />
-        <index name="file_version_meta" />
+        <index value="file_version_meta" />
         <category name="media" />
         <locale property="locale" />
 
@@ -15,6 +14,8 @@
             <field name="description" type="string" />
         </fields>
 
+        <options>
+            <option name="security_context">sulu.media.collections</option>
+        </options>
     </mapping>
-
 </massive-search-mapping>
