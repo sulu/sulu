@@ -45,12 +45,16 @@ define([
         },
 
         fullDestroy: function(webspace, language, force, options) {
+            var id = this.get('id');
+
+            if (!id) {
+                throw new Error('The model cannot be destroyed without an ID');
+            }
+
             options = _.defaults(
                 (options || {}),
                 {
-                    url: this.urlRoot
-                        + (this.get('id') !== undefined ? '/'
-                        + this.get('id') : '')
+                    url: this.urlRoot + '/' + id
                         + '?webspace=' + webspace
                         + '&language=' + language
                         + '&force=' + force

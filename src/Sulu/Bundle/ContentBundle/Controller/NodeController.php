@@ -472,30 +472,32 @@ class NodeController extends RestController
         $webspace = $this->getWebspace($request);
         $force = $this->getBooleanRequestParameter($request, 'force', false, false);
 
-        $references = array_filter(
-            $this->getRepository()->getReferences($uuid),
-            function (PropertyInterface $reference) {
-                return $reference->getParent()->isNodeType('sulu:page');
+        if (!$force) {
+            $references = array_filter(
+                $this->getRepository()->getReferences($uuid),
+                function (PropertyInterface $reference) {
+                    return $reference->getParent()->isNodeType('sulu:page');
+                }
+            );
+
+            if (count($references) > 0) {
+                $data = [
+                    'structures' => [],
+                    'other' => [],
+                ];
+
+                foreach ($references as $reference) {
+                    $content = $this->get('sulu.content.mapper')->load(
+                        $reference->getParent()->getIdentifier(),
+                        $webspace,
+                        $language,
+                        true
+                    );
+                    $data['structures'][] = $content->toArray();
+                }
+
+                return $this->handleView($this->view($data, 409));
             }
-        );
-
-        if (count($references) > 0 && !$force) {
-            $data = [
-                'structures' => [],
-                'other' => [],
-            ];
-
-            foreach ($references as $reference) {
-                $content = $this->get('sulu.content.mapper')->load(
-                    $reference->getParent()->getIdentifier(),
-                    $webspace,
-                    $language,
-                    true
-                );
-                $data['structures'][] = $content->toArray();
-            }
-
-            return $this->handleView($this->view($data, 409));
         }
 
         $view = $this->responseDelete(
