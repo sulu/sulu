@@ -196,7 +196,7 @@ interface ContentMapperInterface
      * @param string $uuid        UUID of content
      * @param string $webspaceKey Key of webspace
      */
-    public function delete($uuid, $webspaceKey, $dereference = false);
+    public function delete($uuid, $webspaceKey);
 
     /**
      * moves given node to a new parent node.
