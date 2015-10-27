@@ -78,7 +78,7 @@ define(function() {
                 '       <% if (!!selectable) { %>',
                 '       <div class="footer-checkbox custom-checkbox"><input type="checkbox"><span class="icon"></span></div>',
                 '       <% } %>',
-                '       <span class="fa-cloud-download footer-download ' + constants.downloadNavigatorClass + '"></span>',
+                '       <a href= "<%= downloadUrl %>" class="fa-cloud-download footer-download ' + constants.downloadNavigatorClass + '"></a>',
                 '   </div>',
                 '</div>'
             ].join('')
@@ -122,15 +122,8 @@ define(function() {
                     argument
                 );
             }.bind(this));
-            return item;
-        },
 
-        /**
-         * triggered when a when the download icon gets clicked
-         * @event husky.datagrid.download-clicked
-         */
-        DOWNLOAD_CLICKED = function() {
-            return this.datagrid.createEventName.call(this.datagrid, 'download-clicked');
+            return item;
         };
 
     return {
@@ -238,20 +231,24 @@ define(function() {
         /**
          * Parses the data and passes it item by item to a render function
          * @param records {Array} array with records to render
+         * @param appendAtBottom
          */
         renderRecords: function(records, appendAtBottom) {
             this.updateEmptyIndicatorVisibility();
             this.sandbox.util.foreach(records, function(record) {
                 var item = processContentFilters.call(this, record);
-                var id, image, title, description;
-
-                id = item.id;
-                image = item[this.options.fields.image].url || '';
-                title = concatRecordColumns(item, this.options.fields.title, this.options.separators.title);
-                description = concatRecordColumns(item, this.options.fields.description, this.options.separators.description);
+                var id = item.id,
+                    image = item[this.options.fields.image].url || '',
+                    downloadUrl = item.url,
+                    title = concatRecordColumns(item, this.options.fields.title,this.options.separators.title),
+                    description = concatRecordColumns(
+                        item,
+                        this.options.fields.description,
+                        this.options.separators.description
+                    );
 
                 // pass the found data to a render method
-                this.renderItem(id, image, title, description, appendAtBottom);
+                this.renderItem(id, image, downloadUrl, title, description, appendAtBottom);
             }.bind(this));
         },
 
@@ -259,13 +256,16 @@ define(function() {
          * Renders an masonry-grid item with the given properties
          * @param id
          * @param image
+         * @param downloadUrl
          * @param title
          * @param description
+         * @param appendAtBottom
          */
-        renderItem: function(id, image, title, description, appendAtBottom) {
+        renderItem: function(id, image, downloadUrl, title, description, appendAtBottom) {
             this.$items[id] = this.sandbox.dom.createElement(
                 this.sandbox.util.template(templates.item, {
                     image: image,
+                    downloadUrl: downloadUrl,
                     title: this.sandbox.util.cropMiddle(String(title), 24),
                     description: this.sandbox.util.cropMiddle(String(description), 32),
                     selectable: this.options.selectable
@@ -294,11 +294,6 @@ define(function() {
                 this.sandbox.dom.stopPropagation(event);
                 this.datagrid.itemAction.call(this.datagrid, id);
             }.bind(this), '.' + constants.actionNavigatorClass);
-
-            this.sandbox.dom.on(this.$items[id], 'click', function(event) {
-                this.sandbox.dom.stopPropagation(event);
-                this.sandbox.emit(DOWNLOAD_CLICKED.call(this), id);
-            }.bind(this), '.' + constants.downloadNavigatorClass);
 
             if (!!this.options.selectable) {
                 this.sandbox.dom.on(this.$items[id], 'click', function(event) {
@@ -358,6 +353,7 @@ define(function() {
         /**
          * Adds a record to the view
          * @param record
+         * @param appendAtBottom
          * @public
          */
         addRecord: function(record, appendAtBottom) {
