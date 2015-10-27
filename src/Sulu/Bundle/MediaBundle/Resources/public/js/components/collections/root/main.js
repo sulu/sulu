@@ -110,13 +110,6 @@ define([
                 }.bind(this));
             }.bind(this));
 
-            // download media
-            this.sandbox.on('husky.datagrid.download-clicked', function(id) {
-                MediaManager.loadOrNew(id).then(function(media) {
-                    this.sandbox.dom.window.location.href = media.versions[media.version].url;
-                }.bind(this));
-            }.bind(this));
-
             // language change
             this.sandbox.on('sulu.header.language-changed', function(locale) {
                 UserSettingsManager.setMediaLocale(locale.id);

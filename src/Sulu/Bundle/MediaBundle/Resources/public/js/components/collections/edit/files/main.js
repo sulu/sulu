@@ -76,13 +76,6 @@ define([
          * Bind datagrid related events
          */
         bindDatagridEvents: function() {
-            // download media
-            this.sandbox.on('husky.datagrid.download-clicked', function(id) {
-                MediaManager.loadOrNew(id).then(function(media) {
-                    this.sandbox.dom.window.location.href = media.versions[media.version].url;
-                }.bind(this));
-            }.bind(this));
-
             // toggle item buttons
             this.sandbox.on('husky.datagrid.number.selections', function(selectedItems) {
                 var string = (selectedItems > 0) ? 'enable' : 'disable';
