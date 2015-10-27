@@ -11,7 +11,7 @@ env:
     - SYMFONY_DEPRECATIONS_HELPER=weak
   matrix:
     - SULU_ORM=mysql SULU_PHPCR=jackrabbit
-#    - SULU_ORM=postgres SULU_PHPCR=jackrabbit
+    - SULU_ORM=postgres SULU_PHPCR=jackrabbit
 #    - SULU_ORM=mysql SULU_PHPCR=doctrine_dbal
 #    - SULU_ORM=postgres SULU_PHPCR=doctrine_dbal
 
