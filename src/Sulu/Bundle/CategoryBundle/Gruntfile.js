@@ -1,4 +1,4 @@
-module.exports = function (grunt) {
+module.exports = function(grunt) {
     var min = {},
         path = require('path'),
         srcpath = 'Resources/public/js',
@@ -20,10 +20,9 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        copy: {
-        },
+        copy: {},
         clean: {
-            options: { force: true }
+            options: {force: true}
         },
         watch: {
             options: {
@@ -31,11 +30,11 @@ module.exports = function (grunt) {
             },
             compass: {
                 files: ['Resources/public/scss/{,*/}*.{scss,sass}'],
-                tasks: ['compass:dev']
+                tasks: ['build:css']
             },
             scripts: {
                 files: ['Resources/public/**'],
-                tasks: ['publish']
+                tasks: ['build']
             }
         },
         jshint: {
@@ -47,7 +46,7 @@ module.exports = function (grunt) {
             // TODO: options: { banner: '<%= meta.banner %>' },
             compress: {
                 files: {
-                    'dist/main.min.css': ['Resources/public/css/']
+                    'Resources/public/css/main.min.css': ['Resources/public/css/main.css']
                 }
             }
         },
@@ -78,8 +77,18 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('build', [
+        'build:css',
+        'build:js'
+    ]);
+
+    grunt.registerTask('build:js', [
         'uglify',
         'replace:build'
+    ]);
+
+    grunt.registerTask('build:css', [
+        'compass:dev',
+        'cssmin'
     ]);
 
     grunt.registerTask('default', [

@@ -10,11 +10,13 @@
 require.config({
     paths: {
         sulucategory: '../../sulucategory/js',
+        sulucategorycss: '../../sulucategory/css',
+
         "type/categoryList": '../../sulucategory/js/validation/types/categoryList'
     }
 });
 
-define(['config'], function(Config) {
+define(['config', 'css!sulucategorycss/main'], function(Config) {
     return {
 
         name: "SuluCategoryBundle",
