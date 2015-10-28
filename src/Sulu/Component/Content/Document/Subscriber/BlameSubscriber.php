@@ -11,15 +11,11 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use PHPCR\NodeInterface;
-use PHPCR\PropertyType;
 use Sulu\Component\Content\Document\Behavior\BlameBehavior;
-use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
+use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
-use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
-use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
@@ -34,22 +30,15 @@ class BlameSubscriber implements EventSubscriberInterface
     const CHANGER = 'changer';
 
     /**
-     * @var PropertyEncoder
-     */
-    private $encoder;
-
-    /**
      * @var TokenStorage
      */
     private $tokenStorage;
 
     /**
-     * @param PropertyEncoder $encoder
      * @param TokenStorage $tokenStorage
      */
-    public function __construct(PropertyEncoder $encoder, TokenStorage $tokenStorage = null)
+    public function __construct(TokenStorage $tokenStorage = null)
     {
-        $this->encoder = $encoder;
         $this->tokenStorage = $tokenStorage;
     }
 
@@ -59,9 +48,9 @@ class BlameSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            Events::PERSIST => 'handlePersist',
-            Events::HYDRATE => 'handleHydrate',
             Events::CONFIGURE_OPTIONS => 'configureOptions',
+            Events::PERSIST => 'handlePersist',
+            Events::METADATA_LOAD => 'handleMetadataLoad',
         ];
     }
 
@@ -72,6 +61,24 @@ class BlameSubscriber implements EventSubscriberInterface
     {
         $event->getOptions()->setDefaults([
             'user' => null,
+        ]);
+    }
+
+    public function handleMetadataLoad(MetadataLoadEvent $event)
+    {
+        $metadata = $event->getMetadata();
+
+        if (!$metadata->getReflectionClass()->isSubclassOf(BlameBehavior::class)) {
+            return;
+        }
+
+        $metadata->addFieldMapping('creator', [
+            'encoding' => 'system_localized',
+            'type' => 'date',
+        ]);
+        $metadata->addFieldMapping('changer', [
+            'encoding' => 'system_localized',
+            'type' => 'date',
         ]);
     }
 
@@ -86,34 +93,31 @@ class BlameSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if (null === $this->tokenStorage) {
-            return;
-        }
-
         $userId = $this->getUserId($event->getOptions());
 
         if (null === $userId) {
             return;
         }
 
-        $node = $event->getNode();
-        $locale = $event->getLocale();
-
-        if (!$this->getCreator($node, $locale)) {
-            $name = $this->encoder->localizedSystemName(self::CREATOR, $locale);
-            $node->setProperty($name, $userId, PropertyType::LONG);
+        if (!$event->getLocale()) {
+            return;
         }
 
-        $name = $this->encoder->localizedSystemName(self::CHANGER, $locale);
-        $node->setProperty($name, $userId, PropertyType::LONG);
+        if (!$document->getCreator()) {
+            $event->getAccessor()->set(self::CREATOR, $userId);
+        }
 
-        $this->handleHydrate($event);
+        $event->getAccessor()->set(self::CHANGER, $userId);
     }
 
-    private function getUserId(array $options)
+    private function getUserId($options)
     {
         if ($options['user']) {
             return $options['user'];
+        }
+
+        if (null === $this->tokenStorage) {
+            return;
         }
 
         $token = $this->tokenStorage->getToken();
@@ -132,48 +136,5 @@ class BlameSubscriber implements EventSubscriberInterface
         }
 
         return $user->getId();
-    }
-
-    /**
-     * @param AbstractMappingEvent $event
-     *
-     * @throws DocumentManagerException
-     */
-    public function handleHydrate(AbstractMappingEvent $event)
-    {
-        $document = $event->getDocument();
-
-        if (!$document instanceof BlameBehavior) {
-            return;
-        }
-
-        if (null === $this->tokenStorage) {
-            return;
-        }
-
-        $node = $event->getNode();
-        $locale = $event->getLocale();
-        $accessor = $event->getAccessor();
-
-        $accessor->set(
-            self::CREATOR,
-            $this->getCreator($node, $locale)
-        );
-
-        $accessor->set(
-            self::CHANGER,
-            $node->getPropertyValueWithDefault(
-                $this->encoder->localizedSystemName(self::CHANGER, $locale),
-                null
-            )
-        );
-    }
-
-    private function getCreator(NodeInterface $node, $locale)
-    {
-        return $node->getPropertyValueWithDefault(
-            $this->encoder->localizedSystemName(self::CREATOR, $locale),
-            null
-        );
     }
 }

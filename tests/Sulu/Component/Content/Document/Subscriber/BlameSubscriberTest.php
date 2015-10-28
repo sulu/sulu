@@ -12,12 +12,10 @@
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use PHPCR\NodeInterface;
-use PHPCR\PropertyType;
 use Sulu\Component\Content\Document\Behavior\BlameBehavior;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
-use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -30,7 +28,6 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->persistEvent = $this->prophesize(PersistEvent::class);
         $this->hydrateEvent = $this->prophesize(HydrateEvent::class);
         $this->notImplementing = new \stdClass();
-        $this->encoder = $this->prophesize(PropertyEncoder::class);
         $this->node = $this->prophesize(NodeInterface::class);
         $this->accessor = $this->prophesize(DocumentAccessor::class);
         $this->user = $this->prophesize(UserInterface::class);
@@ -41,7 +38,6 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->document = new BlameTestDocument();
 
         $this->subscriber = new BlameSubscriber(
-            $this->encoder->reveal(),
             $this->tokenStorage->reveal()
         );
 
@@ -113,12 +109,8 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->token->getUser()->willReturn($this->user->reveal());
         $this->user->getId()->willReturn(2);
 
-        $this->encoder->localizedSystemName('creator', $locale)->willReturn('prop:creator');
-        $this->encoder->localizedSystemName('changer', $locale)->willReturn('prop:changer');
-        $this->node->setProperty('prop:creator', 2, PropertyType::LONG)->shouldBeCalled();
-        $this->node->setProperty('prop:changer', 2, PropertyType::LONG)->shouldBeCalled();
-        $this->node->getPropertyValueWithDefault('prop:creator', null)->willReturn(null);
-        $this->node->getPropertyValueWithDefault('prop:changer', null)->willReturn(null);
+        $this->accessor->set('creator', 2)->shouldBeCalled();
+        $this->accessor->set('changer', 2)->shouldBeCalled();
 
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
@@ -139,59 +131,10 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->persistEvent->getLocale()->willReturn($locale);
         $this->persistEvent->getAccessor()->willReturn($this->accessor);
         $this->persistEvent->getDocument()->willReturn($document);
-        $this->encoder->localizedSystemName('changer', $locale)->willReturn('prop:changer');
-        $this->encoder->localizedSystemName('creator', $locale)->willReturn('prop:creator');
-        $this->node->setProperty('prop:changer', 2, PropertyType::LONG)->shouldBeCalled();
-        $this->node->setProperty('prop:creator', 2, PropertyType::LONG)->shouldBeCalled();
-        $this->node->getPropertyValueWithDefault('prop:creator', null)->willReturn(null);
-        $this->node->getPropertyValueWithDefault('prop:changer', null)->willReturn(null);
+
+        $this->accessor->set('changer', 2)->shouldBeCalled();
 
         $this->subscriber->handlePersist($this->persistEvent->reveal());
-    }
-
-    /**
-     * It should return early when not implementing.
-     */
-    public function testHydrateNotImplementing()
-    {
-        $this->hydrateEvent->getDocument()->willReturn($this->notImplementing);
-        $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
-    }
-
-    /**
-     * It should set the creator and updated fields on the document.
-     */
-    public function testHydrate()
-    {
-        $locale = 'fr';
-        $document = new BlameTestDocument($this->user->reveal());
-
-        $this->hydrateEvent->getLocale()->willReturn($locale);
-        $this->hydrateEvent->getDocument()->willReturn($document);
-        $this->hydrateEvent->getAccessor()->willReturn($this->accessor);
-        $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
-        $this->encoder->localizedSystemName('creator', $locale)->willReturn('prop:creator');
-        $this->encoder->localizedSystemName('changer', $locale)->willReturn('prop:changer');
-        $this->node->getPropertyValueWithDefault('prop:creator', null)->willReturn(1);
-        $this->node->getPropertyValueWithDefault('prop:changer', null)->willReturn(2);
-
-        $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
-
-        $this->accessor->set('creator', 1);
-        $this->accessor->set('changer', 2);
-    }
-
-    /**
-     * It can be instantiated without a token provider.
-     */
-    public function testHydateWithoutTokenProvider()
-    {
-        $this->hydrateEvent->getDocument()->willReturn($this->notImplementing);
-        $subscriber = new BlameSubscriber(
-            $this->encoder->reveal(),
-            null
-        );
-        $subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 }
 
