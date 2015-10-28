@@ -6,6 +6,8 @@ CHANGELOG for Sulu
     * BUGFIX      #1716 [ContactBundle]   Fixed wrong contact entity identifier
     * FEATURE     #1611 [All]             Improved PHPCR content handling to allow custom PHPCR content
     * ENHANCEMENT #1706 [MediaBundle]     Changed download link in media section to real link
+    * BUGFIX      #1714 [ContentBundle]   Fixed migration for url scheme
+    * BUGFIX      #1713 [MediaBundle]     Fixed drag and drop behavior in collection view
     * BUGFIX      #1702 [MediaBundle]     Fixed selected handling in media selection overlay
     * BUGFIX      #1685 [ContactBundle]   Fixed delete logo/avatar from collection and form
     * FEATURE     #1697 [MediaBundle]     Replaced StreamedResponse with BinaryFileResponse

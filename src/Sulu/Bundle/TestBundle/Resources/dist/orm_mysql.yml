@@ -1,8 +1,9 @@
 doctrine:
     dbal:
         driver:   pdo_mysql
-        host:     localhost
+        host:     "%database_mysql_host%"
+        port:     "%database_mysql_port%"
         dbname:   sulu_test
-        user:     root
-        password:
+        user:     "%database_mysql_user%"
+        password: "%database_mysql_password%"
         charset:  UTF8

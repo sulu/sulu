@@ -68,7 +68,7 @@ define(function() {
                 '<div class="masonry-item ' + constants.loadingClass + '">',
                 '   <div class="masonry-head ' + constants.actionNavigatorClass + '">',
                 '       <div class="fa-coffee ' + constants.headIconClass + '"></div>',
-                '       <img class="' + constants.headImageClass + '" src="<%= image %>"/>',
+                '       <img ondragstart="return false;" class="' + constants.headImageClass + '" src="<%= image %>"/>',
                 '   </div>',
                 '   <div class="masonry-info">',
                 '       <span class="title ' + constants.actionNavigatorClass + '"><%= title %></span><br/>',

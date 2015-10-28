@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use JMS\Serializer\SerializationContext;
+use PHPCR\PropertyInterface;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
@@ -469,12 +470,41 @@ class NodeController extends RestController
     {
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
+        $force = $this->getBooleanRequestParameter($request, 'force', false, false);
+
+        if (!$force) {
+            $references = array_filter(
+                $this->getRepository()->getReferences($uuid),
+                function (PropertyInterface $reference) {
+                    return $reference->getParent()->isNodeType('sulu:page');
+                }
+            );
+
+            if (count($references) > 0) {
+                $data = [
+                    'structures' => [],
+                    'other' => [],
+                ];
+
+                foreach ($references as $reference) {
+                    $content = $this->get('sulu.content.mapper')->load(
+                        $reference->getParent()->getIdentifier(),
+                        $webspace,
+                        $language,
+                        true
+                    );
+                    $data['structures'][] = $content->toArray();
+                }
+
+                return $this->handleView($this->view($data, 409));
+            }
+        }
 
         $view = $this->responseDelete(
             $uuid,
-            function ($id) use ($language, $webspace) {
+            function ($id) use ($webspace) {
                 try {
-                    $this->getRepository()->deleteNode($id, $webspace, $language);
+                    $this->getRepository()->deleteNode($id, $webspace);
                 } catch (DocumentNotFoundException $ex) {
                     throw new EntityNotFoundException('Content', $id);
                 }

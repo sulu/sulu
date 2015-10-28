@@ -15,13 +15,11 @@ fos_rest:
     routing_loader:
         default_format: json
 
+# Monolog is needed for the webspace bundle
 monolog:
     handlers:
-
         main:
-            type:  stream
-            path:  %kernel.logs_dir%/%kernel.environment%.log
-            level: debug
+            type:  "null"
 
 sulu_core:
     cache_dir: %kernel.root_dir%/cache/sulu

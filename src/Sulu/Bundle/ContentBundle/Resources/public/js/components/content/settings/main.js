@@ -361,8 +361,9 @@ define([
                 data.title = this.sandbox.dom.val('#internal-title');
                 data.internal_link = this.sandbox.dom.data('#internal-link', 'singleInternalLink');
             } else if (data.nodeType === TYPE_EXTERNAL) {
+                var urlData = this.sandbox.dom.data('#external', 'url-data');
                 data.title = this.sandbox.dom.val('#external-title');
-                data.external = this.sandbox.dom.data('#external', 'url-data').url;
+                data.external = urlData.scheme + urlData.specificPart;
             }
 
             if (!!baseLanguages && baseLanguages.length > 0) {

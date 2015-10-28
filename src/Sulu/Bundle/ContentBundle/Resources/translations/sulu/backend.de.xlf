@@ -551,6 +551,22 @@
                 <source>smart-content.choose-categories.ok</source>
                 <target>Kategorien übernehmen</target>
             </trans-unit>
+            <trans-unit id="9" resname="content.delete-referenced-by-following">
+                <source>content.delete-referenced-by-following</source>
+                <target>Diese Seite wird von folgenden anderen Seiten referenziert:</target>
+            </trans-unit>
+            <trans-unit id="10" resname="content.delete-confirm-text">
+                <source>content.delete-confirm-text</source>
+                <target>Sind Sie sicher, dass Sie diese Seite löschen wollen?</target>
+            </trans-unit>
+            <trans-unit id="11" resname="content.delete-confirm-title">
+                <source>content.delete-confirm-title</source>
+                <target>Löschen bestätigen</target>
+            </trans-unit>
+            <trans-unit id="12" resname="content.delete-do-it">
+                <source>content.delete-do-it</source>
+                <target>Ja, ich bin sicher</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

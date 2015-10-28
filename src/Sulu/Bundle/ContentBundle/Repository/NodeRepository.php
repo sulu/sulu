@@ -248,6 +248,17 @@ class NodeRepository implements NodeRepositoryInterface
     /**
      * {@inheritdoc}
      */
+    public function getReferences($uuid)
+    {
+        $session = $this->sessionManager->getSession();
+        $node = $session->getNodeByIdentifier($uuid);
+
+        return iterator_to_array($node->getReferences());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getNodes(
         $parent,
         $webspaceKey,

@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Content\Metadata\Factory;
 
-use Sulu\Component\Content\Document\Structure\StructureInterface;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 
 interface StructureMetadataFactoryInterface
 {
@@ -24,7 +24,7 @@ interface StructureMetadataFactoryInterface
      * @throws Exception\StructureTypeNotFoundException If the structure was not found
      * @throws Exception\DocumentTypeNotFoundException  If the document type was not mapped
      *
-     * @return StructureInterface
+     * @return StructureMetadata[]
      */
     public function getStructureMetadata($type, $structureType);
 
@@ -33,7 +33,7 @@ interface StructureMetadataFactoryInterface
      *
      * @param string
      *
-     * @return StructureInterface[]
+     * @return StructureMetadata[]
      */
     public function getStructures($type);
 
