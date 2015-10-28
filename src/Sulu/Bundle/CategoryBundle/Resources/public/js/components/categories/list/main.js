@@ -100,6 +100,8 @@ define(function () {
                     viewOptions: {
                         table: {
                             openChildId: this.sandbox.sulu.getUserSetting(constants.lastClickedCategorySettingsKey),
+                            hideChildrenAtBeginning: false,
+                            cropContents: false,
                             selectItem: {
                                 type: 'checkbox',
                                 inFirstCell: true
@@ -126,14 +128,13 @@ define(function () {
                             cssClasses: [
                                 {
                                     column: 'name',
-                                    callback: function(item, badge) {
+                                    callback: function(item) {
                                         if (item.defaultLocale === item.locale && item.locale !== this.locale) {
                                             return 'row-gray';
                                         }
                                     }.bind(this)
                                 }
-                            ],
-                            cropContents: false
+                            ]
                         }
                     }
                 }
