@@ -138,9 +138,9 @@
                 <source>sulu.collection.move.overlay-title</source>
                 <target>Move collection</target>
             </trans-unit>
-            <trans-unit id="243d99ff2f64652633a5ca2169f22345" resname="media-selection.overlay.all-images">
-                <source>media-selection.overlay.all-images</source>
-                <target>All Images</target>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22345" resname="media-selection.overlay.all-medias">
+                <source>media-selection.overlay.all-medias</source>
+                <target>All Medias</target>
             </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22261" resname="sulu.media.all">
                 <source>sulu.media.all</source>

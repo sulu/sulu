@@ -105,12 +105,11 @@
 
 .media-selection-overlay-toolbar-container {
     display: inline-block;
-    margin-bottom: 10px;
 }
 
 .media-selection-overlay-content {
     height: 100%;
-    padding: 10px 0 10px 20px;
+    padding: 15px 0 10px 20px;
     overflow: hidden;
     position: relative;
 }
@@ -195,8 +194,8 @@
 }
 
 .media-selection-overlay-content-title {
-    color: $grayLight;
-    padding-bottom: 10px;
+    margin-bottom: 20px !important;
+    border-bottom: none !important;
 }
 
 .media-selection-overlay-datagrid-container {
@@ -204,7 +203,7 @@
     padding-bottom: 20px;
 }
 
-.media-selection-overlay-header {
+.media-selection-overlay-datagrid-header {
     white-space: nowrap;
 }
 

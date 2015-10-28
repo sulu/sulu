@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1605 [MediaBundle]     Adjust media-selection-overlay title
     * BUGFIX      #1716 [ContactBundle]   Fixed wrong contact entity identifier
     * FEATURE     #1611 [All]             Improved PHPCR content handling to allow custom PHPCR content
     * ENHANCEMENT #1706 [MediaBundle]     Changed download link in media section to real link
