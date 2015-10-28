@@ -2,6 +2,13 @@
 
 ## dev-develop
 
+### BlameSubscriber
+
+The BlameBehavior has been moved from the DocumentManager component to the
+Sulu Content component. Documents which implemented
+`Sulu\Component\DocumentManager\Behavior\Audit\BlameBehavior` should now
+implement `Sulu\Component\Content\Document\Behavior\BlameBehavior` instead.
+
 ### Websocket Component
 The following Interfaces has new methods
 
