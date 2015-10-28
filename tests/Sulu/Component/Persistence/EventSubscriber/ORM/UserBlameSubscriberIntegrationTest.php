@@ -12,9 +12,11 @@
 namespace Sulu\Component\Persistence\EventSubscriber\ORM;
 
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\User\User as SymfonyUser;
 
 class UserBlameSubscriberIntegrationTest extends SuluTestCase
 {
@@ -56,5 +58,46 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
 
         $this->assertSame($changer, $user);
         $this->assertSame($creator, $user);
+    }
+
+    public function testExternalUserBlame()
+    {
+        $this->createExternalUser();
+
+        $contact = new Contact();
+        $contact->setFirstName('Max');
+        $contact->setLastName('Mustermann');
+        $contact->setPosition('CEO');
+        $contact->setSalutation('Sehr geehrter Herr Dr Mustermann');
+
+        $this->setExpectedExceptionRegExp(
+            'RuntimeException',
+            '/Expected user object to be an instance of \(Sulu\) UserInterface\./'
+        );
+
+        $this->db('ORM')->getOm()->persist($contact);
+        $this->db('ORM')->getOm()->flush();
+    }
+
+    public function testExternalUserNoBlame()
+    {
+        $this->createExternalUser();
+
+        $permission = new Permission();
+        $permission->setContext('sulu.contact.people');
+        $permission->setPermissions(127);
+        $this->db('ORM')->getOm()->persist($permission);
+        $this->db('ORM')->getOm()->flush();
+
+        $this->assertInternalType('int', $permission->getId());
+    }
+
+    private function createExternalUser()
+    {
+        $context = $this->getContainer()->get('security.context');
+        $token = new UsernamePasswordToken('test', 'test', 'test_provider', []);
+        $user = new SymfonyUser('test', 'test');
+        $token->setUser($user);
+        $context->setToken($token);
     }
 }
