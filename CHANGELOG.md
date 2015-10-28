@@ -13,6 +13,7 @@ CHANGELOG for Sulu
     * FEATURE     #1697 [MediaBundle]     Replaced StreamedResponse with BinaryFileResponse
     * BUGFIX      #1701 [ContentBundle]   Added website cache clear button in preview toolbar
     * BUGFIX      #1696 [MediaBundle]     Fixed dropzone for uploading new versions of media
+    * BUGFIX      #1693 [All]             Fixed behat tests
     * BUGFIX      #1675 [ContactBundle]   Fixed null value for smart content
     * FEATURE     #1653 [MediaBundle]     Added generation of thumbnails for videos
     * BUGFIX      #1688 [ContentBundle]   Fixed doctrine cache size for preview with delete on navigate

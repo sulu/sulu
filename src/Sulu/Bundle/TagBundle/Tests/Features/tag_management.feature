@@ -11,12 +11,11 @@ Feature: Manage tags
         And I expect the "husky.datagrid.view.rendered" event
         When I click the add icon
         And I fill in the selector "table input" with "Tag One"
-        And I press enter on "input.editable-input"
+        And I leave the selector "table input"
         And I expect the "husky.datagrid.updated" event
         And I click the add icon
         And I fill in the selector "table input" with "Tag Two"
-        And I wait a second
-        And I press enter on "input.editable-input"
+        And I leave the selector "table input"
         And I expect the "husky.datagrid.updated" event
         Then I expect to see "Tag One"
         And I should see "Tag Two"
