@@ -123,6 +123,16 @@ define(function () {
                                     }.bind(this)
                                 }
                             ],
+                            cssClasses: [
+                                {
+                                    column: 'name',
+                                    callback: function(item, badge) {
+                                        if (item.defaultLocale === item.locale && item.locale !== this.locale) {
+                                            return 'row-gray';
+                                        }
+                                    }.bind(this)
+                                }
+                            ],
                             cropContents: false
                         }
                     }

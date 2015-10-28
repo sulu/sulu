@@ -1,5 +1,5 @@
 /*----------------------------------------*/
 /* line 1, ../scss/modules/table-view.scss */
-.husky-table tbody td .gray {
-  color: #666;
+.husky-table tbody td .row-gray .cell-content {
+  color: #666 !important;
 }
