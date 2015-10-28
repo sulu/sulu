@@ -4,6 +4,8 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
+        <parameter key="sulu.content.path_cleaner.replacer_loader.file_locator.class">Symfony\Component\Config\FileLocator</parameter>
+        <parameter key="sulu.content.path_cleaner.replacer_loader.class">Sulu\Bundle\CoreBundle\DataFixtures\ReplacerXmlLoader</parameter>
         <parameter key="sulu.content.path_cleaner.class">Sulu\Component\PHPCR\PathCleanup</parameter>
         <parameter key="sulu.content.template_resolver.class">Sulu\Component\Content\Template\TemplateResolver</parameter>
 
@@ -30,6 +32,11 @@
     </parameters>
 
     <services>
+        <service id="sulu.content.path_cleaner.replacer_loader.file_locator" class="%sulu.content.path_cleaner.replacer_loader.file_locator.class%" synthetic="false">
+        </service>
+        <service id="sulu.content.path_cleaner.replacer_loader" class="%sulu.content.path_cleaner.replacer_loader.class%" synthetic="false">
+            <argument type="service" id="sulu.content.path_cleaner.replacer_loader.file_locator"/>
+        </service>
         <service id="sulu.content.path_cleaner" class="%sulu.content.path_cleaner.class%"/>
         <service id="sulu.content.template_resolver" public="false" class="%sulu.content.template_resolver.class%"/>
 
@@ -61,6 +68,7 @@
             <argument type="service" id="sulu_content.extension.manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_content.compat.structure.legacy_property_factory" />
+            <argument>%sulu.content.structure.typeMap%</argument>
         </service>
 
         <service id="sulu.content.webspace_structure_provider.cache" class="%sulu.content.webspace_structure_provider.cache.class%">

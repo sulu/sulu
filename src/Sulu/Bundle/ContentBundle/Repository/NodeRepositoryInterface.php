@@ -148,35 +148,22 @@ interface NodeRepositoryInterface
     );
 
     /**
-     * save start page of given portal.
-     *
-     * @param array  $data
-     * @param string $templateKey
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param int    $userId
-     * @param bool   $isShadow
-     * @param string $shadowBaseLanguage
-     *
-     * @return array
-     */
-    public function saveIndexNode(
-        $data,
-        $templateKey,
-        $webspaceKey,
-        $languageCode,
-        $userId,
-        $isShadow = false,
-        $shadowBaseLanguage = null
-    );
-
-    /**
      * removes given node.
      *
      * @param string $uuid
      * @param string $webspaceKey
      */
     public function deleteNode($uuid, $webspaceKey);
+
+    /**
+     * Return the nodes which refer to the structure with the
+     * given UUID.
+     *
+     * @param string $uuid
+     *
+     * @return \PHPCR\NodeInterface[]
+     */
+    public function getReferences($uuid);
 
     /**
      * returns tree to content node given by uuid.

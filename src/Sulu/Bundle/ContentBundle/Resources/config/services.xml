@@ -10,7 +10,6 @@
         <parameter key="sulu_content.extension.seo.class">Sulu\Bundle\ContentBundle\Content\Structure\SeoStructureExtension</parameter>
         <parameter key="sulu_content.extension.excerpt.class">Sulu\Bundle\ContentBundle\Content\Structure\ExcerptStructureExtension</parameter>
         <parameter key="sulu_content.jsconfig.class">Sulu\Bundle\AdminBundle\Admin\JsConfig</parameter>
-        <parameter key="sulu_content.permission_update_listener.class">Sulu\Component\Content\Security\Listener\PermissionUpdateListener</parameter>
     </parameters>
     <services>
         <!-- admin class -->
@@ -19,6 +18,7 @@
             <tag name="sulu.context" context="admin"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu_security.security_checker"/>
+            <argument type="service" id="sulu.phpcr.session"/>
             <argument>%sulu_admin.name%</argument>
         </service>
 
@@ -39,8 +39,10 @@
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="sulu_security.user_manager"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument type="service" id="sulu.content.type.smart_content.query_builder"/>
+            <argument type="service" id="sulu_content.smart_content.data_provider.content.query_builder"/>
             <argument type="service" id="sulu.content.query_executor"/>
+            <argument type="service" id="sulu_security.access_control_manager"/>
+            <argument type="service" id="security.token_storage" on-invalid="null"/>
             <argument type="service" id="logger"/>
         </service>
 
@@ -68,16 +70,10 @@
         <service id="sulu_content.jsconfig" class="%sulu_content.jsconfig.class%">
             <argument type="string">sulu-content</argument>
             <argument type="collection">
-                <argument key="showInSortModeTag" type="string">sulu.content.sortmode.show</argument>
                 <argument key="locales" type="expression">service('sulu_core.webspace.webspace_manager').getAllLocalizations()</argument>
             </argument>
 
             <tag name="sulu.js_config"/>
-        </service>
-
-        <service id="sulu_content.permission_update_listener" class="%sulu_content.permission_update_listener.class%">
-            <argument type="service" id="sulu_document_manager.document_manager"/>
-            <tag name="kernel.event_listener" event="sulu.security.permission.update" method="onPermissionUpdate"/>
         </service>
     </services>
 </container>

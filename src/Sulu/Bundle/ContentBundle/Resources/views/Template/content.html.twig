@@ -1,24 +1,83 @@
 <form id="content-form" class="grid">
-    {% for property in template.properties %}
 
-        {# get params for property #}
-        {% set params = sulu_get_params(property) %}
-
-        {% if property.contentTypeName == 'section' %}
-            {% include 'SuluContentBundle:Template:macros/section.html.twig' with {'property': property, 'params': params, 'id': property.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
-        {% else %}
-            {# get type for property #}
-            {% set type = sulu_get_type(property.contentTypeName) %}
-
-            {% if property.contentTypeName == 'block' %}
-                {% include type.template with {'property': property, 'params': params, 'type': type, 'id': property.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
-            {% elseif property is multiple %}
-                {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': property, 'params': params, 'type': type, 'id': property.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
-            {% else %}
-                {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': property, 'params': params, 'type': type, 'id': property.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
-            {% endif %}
+    {# if first property is a section render it as the highlighted section#}
+    {% set firstSection = null %}
+    {% if template.properties|length > 0 %}
+        {% set firstProperty = template.properties|first %}
+        {% if firstProperty.contentTypeName == 'section' %}
+            {% set firstSection = template.properties|first %}
+            <div class="highlight-section">
+                <div class="fixed-width">
+                    <div class="content">
+                        {% include 'SuluContentBundle:Template:macros/section.html.twig' with {
+                        'property': firstProperty,
+                        'params': sulu_get_params(firstProperty),
+                        'id': firstProperty.name,
+                        'webspaceKey': webspaceKey,
+                        'languageCode': languageCode,
+                        'userLocale': userLocale,
+                        'title': false
+                        } only %}
+                    </div>
+                </div>
+            </div>
         {% endif %}
-    {% endfor %}
+    {% endif %}
+
+    <div class="fixed-width">
+        {% for property in template.properties if property != firstSection %}
+
+            {# get params for property #}
+            {% set params = sulu_get_params(property) %}
+
+            {% if property.contentTypeName == 'section' %}
+                {% include 'SuluContentBundle:Template:macros/section.html.twig' with {
+                'property': property,
+                'params': params,
+                'id': property.name,
+                'webspaceKey': webspaceKey,
+                'languageCode': languageCode,
+                'userLocale': userLocale,
+                'title': true
+                } only %}
+            {% else %}
+                {# get type for property #}
+                {% set type = sulu_get_type(property.contentTypeName) %}
+
+                {% if property.contentTypeName == 'block' %}
+                    {% include type.template with {
+                    'property': property,
+                    'params': params,
+                    'type': type,
+                    'id': property.name,
+                    'webspaceKey': webspaceKey,
+                    'languageCode': languageCode,
+                    'userLocale': userLocale
+                    } only %}
+                {% elseif property is multiple %}
+                    {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {
+                    'property': property,
+                    'params': params,
+                    'type': type,
+                    'id': property.name,
+                    'webspaceKey': webspaceKey,
+                    'languageCode': languageCode,
+                    'userLocale': userLocale
+                    } only %}
+                {% else %}
+                    {% include 'SuluContentBundle:Template:macros/single.html.twig' with {
+                    'property': property,
+                    'params': params,
+                    'type': type,
+                    'id': property.name,
+                    'webspaceKey': webspaceKey,
+                    'languageCode': languageCode,
+                    'userLocale': userLocale
+                    } only %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </div>
 </form>
 
 <script type="text/javascript">

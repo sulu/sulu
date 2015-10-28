@@ -54,6 +54,15 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end()
+            ->arrayNode('upload')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->integerNode('max_filesize')
+                        ->defaultValue(256)
+                        ->min(0)
+                    ->end()
+                ->end()
+            ->end()
             ->arrayNode('format_manager')
                 ->addDefaultsIfNotSet()
                 ->children()
@@ -75,13 +84,8 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->arrayNode('mime_types')
                         ->prototype('scalar')->end()->defaultValue([
-                            'image/jpeg',
-                            'image/jpg',
-                            'image/gif',
-                            'image/png',
-                            'image/bmp',
-                            'image/svg+xml',
-                            'image/vnd.adobe.photoshop',
+                            'image/*',
+                            'video/*',
                             'application/pdf',
                         ])
                     ->end()

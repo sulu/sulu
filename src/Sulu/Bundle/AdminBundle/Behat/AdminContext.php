@@ -26,7 +26,7 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
      */
     public function iExpectASuccessNotificationToAppear()
     {
-        $this->waitForSelectorAndAssert('.husky-label-success', BaseContext::LONG_WAIT_TIME);
+        $this->waitForSelectorAndAssert('.husky-label-success-icon', BaseContext::LONG_WAIT_TIME);
     }
 
     /**
@@ -35,7 +35,7 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
      */
     public function iExpectADataGridToAppear()
     {
-        $this->waitForSelectorAndAssert('.husky-datagrid .row');
+        $this->waitForSelectorAndAssert('.husky-datagrid');
     }
 
     /**
@@ -79,11 +79,11 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
     }
 
     /**
-     * @Given I click the tick button
+     * @Given I click the ok button
      */
-    public function iClickOnTheTickButton()
+    public function iClickOnTheOkButton()
     {
-        $this->clickSelector('.btn.tick');
+        $this->clickSelector('.btn.overlay-ok');
     }
 
     /**
@@ -109,6 +109,14 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
     public function iClickOnTheAddIcon()
     {
         $this->clickSelector('.fa-plus-circle');
+    }
+
+    /**
+     * @Then I click the action icon
+     */
+    public function iClickOnTheActionIcon()
+    {
+        $this->clickSelector('.action');
     }
 
     /**
@@ -143,21 +151,21 @@ EOT;
     {
         $this->waitForText($text);
         $script = <<<EOT
-var f = function () {
-    var items = document.querySelectorAll("td span.cell-content");
+            var f = function () {
+                var items = document.querySelectorAll("td span.cell-content");
 
-    for (var i = 0; i < items.length; i++) {
-        if (items[i].textContent == '%s') {
-            var elements = items[i].parentNode.parentNode.getElementsByClassName('fa-pencil');
-            for (var i = 0; i <= elements.length; i++) {
-                elements[i].click();
-                return;
+                for (var i = 0; i < items.length; i++) {
+                    if (items[i].textContent == '%s') {
+                        var elements = items[i].parentNode.parentNode.getElementsByClassName('fa-pencil');
+                        for (var i = 0; i <= elements.length; i++) {
+                            elements[i].click();
+                            return;
+                        }
+                    }
+                };
             }
-        }
-    };
-}
 
-f();
+            f();
 EOT;
 
         $script = sprintf($script, $text);
@@ -177,7 +185,7 @@ EOT;
      */
     public function iClickDelete()
     {
-        $script = "$(\"li[data-id='delete-button']\")";
+        $script = "$(\"li[data-id='delete']\")";
 
         $this->waitForAuraEvents(
             [
@@ -287,6 +295,14 @@ EOT;
     }
 
     /**
+     * @Then I click the toolbar button :itemTitle
+     */
+    public function iClickTheToolbarButton($itemTitle)
+    {
+        $this->clickByTitle('li.toolbar-item', $itemTitle);
+    }
+
+    /**
      * @Then I wait for the column navigation column :index
      */
     public function iWaitForTheColumnNavigationColumn($index)
@@ -387,6 +403,14 @@ EOT;
             )
         );
         $this->assertAtLeastOneSelectors([$selector1, $selector2]);
+    }
+
+    /**
+     * @Then I set the value of the property ":name" to ":value"
+     */
+    public function iSetValue($name, $value)
+    {
+        $this->getSession()->evaluateScript("$('#$name').data('element').setValue(" . json_encode($value) . ')');
     }
 
     /**

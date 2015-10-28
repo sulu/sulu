@@ -44,20 +44,23 @@ class ContentTwigExtension extends \Twig_Extension
             new \Twig_SimpleFunction('sulu_get_params', [$this, 'getParamsFunction']),
             new \Twig_SimpleFunction('sulu_parameter_to_select', [$this, 'convertParameterToSelect']),
             new \Twig_SimpleFunction('sulu_parameter_to_key_value', [$this, 'convertParameterToKeyValue']),
+            new \Twig_SimpleFunction('sulu_parameter_to_names_array', [$this, 'convertParameterToNamesArrays']),
         ];
     }
 
     /**
+     * Returns parameters for given property merged wit default parameters.
+     *
      * @param PropertyInterface $property
      *
      * @return array
      */
-    public function getParamsFunction($property)
+    public function getParamsFunction(PropertyInterface $property)
     {
         $typeParams = [];
         if ($this->contentTypeManager->has($property->getContentTypeName())) {
             $type = $this->getTypeFunction($property->getContentTypeName());
-            $typeParams = $type->getDefaultParams();
+            $typeParams = $type->getDefaultParams($property);
         }
 
         return $this->mergeRecursive($typeParams, $property->getParams());
@@ -140,7 +143,7 @@ class ContentTwigExtension extends \Twig_Extension
 
     /**
      * @param PropertyParameter[] $parameters
-     * @param string              $locale
+     * @param string $locale
      *
      * @return array
      */
@@ -149,9 +152,10 @@ class ContentTwigExtension extends \Twig_Extension
         $result = [];
 
         foreach ($parameters as $parameter) {
+            $name = $parameter->hasTitle($locale) ? $parameter->getTitle($locale) : $parameter->getValue();
             $result[] = [
                 'id' => $parameter->getName(),
-                'name' => $parameter->getTitle($locale),
+                'name' => $name,
             ];
         }
 
@@ -170,6 +174,26 @@ class ContentTwigExtension extends \Twig_Extension
         if (is_array($parameters)) {
             foreach ($parameters as $parameter) {
                 $result[$parameter->getName()] = $parameter->getValue();
+            }
+        } else {
+            return $parameters;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param PropertyParameter[] $parameters
+     *
+     * @return array
+     */
+    public function convertParameterToNamesArrays($parameters)
+    {
+        $result = [];
+
+        if (is_array($parameters)) {
+            foreach ($parameters as $parameter) {
+                $result[] = $parameter->getName();
             }
         } else {
             return $parameters;

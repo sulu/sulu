@@ -9,13 +9,15 @@
 
 define([
     'mvc/collection',
-    'sulucontact/model/contact'
+    'sulucontact/models/contact'
 ], function (Collection, Contact) {
     'use strict';
 
     return new Collection({
 
         model: Contact,
+
+        flatResponse: false,
 
         accountId: null,
 
@@ -36,7 +38,9 @@ define([
         },
 
         url: function () {
-            return '/admin/api/accounts/' + this.accountId + '/contacts';
+            return '/admin/api/accounts/' + this.accountId
+                + '/contacts'
+                + '?flat=' + this.flatResponse;
         }
     });
 });

@@ -49,7 +49,6 @@ define([
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.mainTemplate = this.sandbox.util.template(mainTemplate);
             this.searchResultsTemplate = this.sandbox.util.template(searchResultsTemplate);
-            this.dropDownEntries = [];
             this.enabledCategories = [];
             this.categories = {};
             this.categoriesStore = {};
@@ -78,9 +77,18 @@ define([
          */
         bindEvents: function() {
             this.sandbox.on('sulu.data-overlay.show', this.focusInput.bind(this));
-            this.sandbox.on('sulu.dropdown-input.' + this.dropDownInputInstance + '.action', this.dropDownInputActionHandler.bind(this));
-            this.sandbox.on('sulu.dropdown-input.' + this.dropDownInputInstance + '.clear', this.dropDownInputClearHandler.bind(this));
-            this.sandbox.on('sulu.dropdown-input.' + this.dropDownInputInstance + '.change', this.dropDownInputActionHandler.bind(this));
+            this.sandbox.on(
+                'sulu.dropdown-input.' + this.dropDownInputInstance + '.action',
+                this.dropDownInputActionHandler.bind(this)
+            );
+            this.sandbox.on(
+                'sulu.dropdown-input.' + this.dropDownInputInstance + '.clear',
+                this.dropDownInputClearHandler.bind(this)
+            );
+            this.sandbox.on(
+                'sulu.dropdown-input.' + this.dropDownInputInstance + '.change',
+                this.dropDownInputActionHandler.bind(this)
+            );
         },
 
         /**
@@ -152,7 +160,7 @@ define([
          */
         startInfiniteScroll: function() {
             var $iscroll = this.$el.find('.iscroll');
-            this.sandbox.infiniteScroll($iscroll, this.loadNextPage.bind(this), 50);
+            this.sandbox.infiniteScroll.initialize($iscroll, this.loadNextPage.bind(this), 50);
         },
 
         /**
@@ -387,7 +395,11 @@ define([
         },
 
         updateTotals: function(data) {
-            this.sandbox.emit('sulu.search-totals.' + this.searchTotalsInstanceName + '.update', this.totals, this.state.category);
+            this.sandbox.emit(
+                'sulu.search-totals.' + this.searchTotalsInstanceName + '.update',
+                this.totals,
+                this.state.category
+            );
         },
 
         /**

@@ -10,6 +10,8 @@
 require.config({
     paths: {
         sululocation: '../../sululocation/js',
+        sululocationcss: '../../sululocation/css',
+
         "type/location": '../../sululocation/js/validation/types/location',
         "map/leaflet": '../../sululocation/js/map/leaflet',
         "map/google": '../../sululocation/js/map/google',
@@ -18,23 +20,18 @@ require.config({
     }
 });
 
-define({
+define(['css!sululocationcss/main', 'css!sululocation/vendor/leaflet/leaflet.css'], function() {
+    return {
 
-    name: "SuluLocationBundle",
+        name: "SuluLocationBundle",
 
-    initialize: function(app) {
+        initialize: function(app) {
 
-        'use strict';
+            'use strict';
 
-        var sandbox = app.sandbox;
+            var sandbox = app.sandbox;
 
-        app.components.addSource('sululocation', '/bundles/sululocation/js/components');
-        // Example: list all contacts
-        // sandbox.mvc.routes.push({
-        //     route: 'contacts/contacts',
-        //    callback: function(){
-        //         this.html('<div data-aura-component="contacts@sulucontact" data-aura-display="list"/>');
-        //     }
-        // });
-    }
+            app.components.addSource('sululocation', '/bundles/sululocation/js/components');
+        }
+    };
 });

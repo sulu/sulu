@@ -30,6 +30,21 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->arrayNode('types')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('contact')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('template')
+                                    ->defaultValue(
+                                        'SuluContactBundle:Template:content-types/contact-selection.html.twig'
+                                    )
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
                 ->arrayNode('defaults')
                     ->addDefaultsIfNotSet()
                     ->children()
@@ -46,6 +61,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('form')
                     ->addDefaultsIfNotSet()
                     ->children()
+                        ->scalarNode('avatar_collection')->defaultValue(1)->end()
                         ->arrayNode('contact')
                             ->addDefaultsIfNotSet()
                             ->children()

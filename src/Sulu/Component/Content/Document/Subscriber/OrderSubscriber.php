@@ -11,13 +11,13 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use PHPCR\PropertyType;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
-use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\DocumentManager\DocumentAccessor;
+use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\ReorderEvent;
 use Sulu\Component\DocumentManager\Events;
-use Sulu\Component\DocumentManager\PropertyEncoder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -28,26 +28,11 @@ class OrderSubscriber implements EventSubscriberInterface
 {
     const FIELD = 'order';
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $encoder;
+    private $inspector;
 
-    public function __construct(PropertyEncoder $encoder)
+    public function __construct(DocumentInspector $inspector)
     {
-        $this->encoder = $encoder;
-    }
-
-    /**
-     * Checks if the given document is supported by this subscriber.
-     *
-     * @param $document
-     *
-     * @return bool
-     */
-    public function supports($document)
-    {
-        return $document instanceof OrderBehavior;
+        $this->inspector = $inspector;
     }
 
     /**
@@ -57,9 +42,23 @@ class OrderSubscriber implements EventSubscriberInterface
     {
         return [
             Events::PERSIST => 'handlePersist',
-            Events::HYDRATE => 'handleHydrate',
+            Events::METADATA_LOAD => 'handleMetadataLoad',
             Events::REORDER => 'handleReorder',
         ];
+    }
+
+    public function handleMetadataLoad(MetadataLoadEvent $event)
+    {
+        $metadata = $event->getMetadata();
+
+        if (false === $metadata->getReflectionClass()->isSubclassOf(OrderBehavior::class)) {
+            return;
+        }
+
+        $metadata->addFieldMapping('suluOrder', [
+            'encoding' => 'system',
+            'property' => self::FIELD,
+        ]);
     }
 
     /**
@@ -69,25 +68,22 @@ class OrderSubscriber implements EventSubscriberInterface
      */
     public function handlePersist(PersistEvent $event)
     {
-        $node = $event->getNode();
         $document = $event->getDocument();
 
-        if (false == $this->supports($document)) {
+        if (false == $document instanceof OrderBehavior) {
             return;
         }
 
-        $propertyName = $this->encoder->systemName(self::FIELD);
-
-        if ($node->hasProperty($propertyName)) {
+        if ($document->getSuluOrder()) {
             return;
         }
 
+        $node = $event->getNode();
         $parent = $node->getParent();
         $nodeCount = count($parent->getNodes());
         $order = ($nodeCount + 1) * 10;
 
-        $node->setProperty($propertyName, $order, PropertyType::LONG);
-        $this->handleHydrate($event);
+        $event->getAccessor()->set('suluOrder', $order);
     }
 
     /**
@@ -97,43 +93,28 @@ class OrderSubscriber implements EventSubscriberInterface
      */
     public function handleReorder(ReorderEvent $event)
     {
-        $node = $event->getNode();
         $document = $event->getDocument();
 
-        if (false == $this->supports($document)) {
+        if (!$document instanceof OrderBehavior) {
             return;
         }
 
-        $propertyName = $this->encoder->systemName(self::FIELD);
+        $parentDocument = $this->inspector->getParent($document);
 
-        $parent = $node->getParent();
+        if (null === $parentDocument) {
+            return;
+        }
+
         $count = 0;
-        foreach ($parent->getNodes() as $childNode) {
-            $childNode->setProperty($propertyName, ($count + 1) * 10, PropertyType::LONG);
+        foreach ($this->inspector->getChildren($parentDocument) as $childDocument) {
+            if (!$childDocument instanceof OrderBehavior) {
+                continue;
+            }
+
+            $accessor = new DocumentAccessor($childDocument);
+            $order = ($count + 1) * 10;
+            $accessor->set('suluOrder', $order);
             ++$count;
         }
-
-        $this->handleHydrate($event);
-    }
-
-    /**
-     * Adds the order to the document.
-     *
-     * @param AbstractMappingEvent $event
-     */
-    public function handleHydrate(AbstractMappingEvent $event)
-    {
-        if (false == $this->supports($event->getDocument())) {
-            return;
-        }
-
-        $node = $event->getNode();
-
-        $order = $node->getPropertyValueWithDefault(
-            $this->encoder->systemName(self::FIELD),
-            null
-        );
-
-        $event->getAccessor()->set('suluOrder', $order);
     }
 }

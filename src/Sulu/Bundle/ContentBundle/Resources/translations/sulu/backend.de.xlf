@@ -116,7 +116,7 @@
             </trans-unit>
             <trans-unit id="831eaac1fa8a279d10e452f59e716b35" resname="smart-content.no-sorting">
                 <source>smart-content.no-sorting</source>
-                <target>Standard Sortierung</target>
+                <target>Admin-Reihenfolge</target>
             </trans-unit>
             <trans-unit id="fc27db8368ee8e93b0432c6f929eb22c" resname="smart-content.ascending">
                 <source>smart-content.ascending</source>
@@ -164,7 +164,35 @@
             </trans-unit>
             <trans-unit id="cc88fcd370c8ff1d96f0b9f99adb8317" resname="smart-content.title">
                 <source>smart-content.title</source>
-                <target>Titel</target>
+                <target>Titel (Alphabet)</target>
+            </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f99adb8327" resname="smart-content.published">
+                <source>smart-content.published</source>
+                <target>Veröffentlicht am (Datum)</target>
+            </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f99ad18337" resname="smart-content.created">
+                <source>smart-content.created</source>
+                <target>Erstellt am (Datum)</target>
+            </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f99ad28337" resname="smart-content.changed">
+                <source>smart-content.changed</source>
+                <target>Geändert am (Datum)</target>
+            </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f991db8317" resname="smart-content.save">
+                <source>smart-content.save</source>
+                <target>Save</target>
+            </trans-unit>
+            <trans-unit id="cc881cd370c8ff1d96f0b0f99bdb8317" resname="smart-content.clear">
+                <source>smart-content.clear</source>
+                <target>Clear</target>
+            </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f992db8317" resname="smart-content.save">
+                <source>smart-content.save</source>
+                <target>Speichern</target>
+            </trans-unit>
+            <trans-unit id="cc882cd370c8ff1d96f0b0f99bdb8317" resname="smart-content.clear">
+                <source>smart-content.clear</source>
+                <target>Felder zurücksetzen</target>
             </trans-unit>
             <trans-unit id="ad64f69edc5ce6dae6033001f5d01b6e" resname="content.template.dialog.titile">
                 <source>content.template.dialog.titile</source>
@@ -224,7 +252,7 @@
             </trans-unit>
             <trans-unit id="90a3276459ba0f52ef7a4d320298d5d" resname="smart-content.choose-data-source.cancel">
                 <source>smart-content.choose-data-source.cancel</source>
-                <target>Abbrechen</target>
+                <target>Verwerfen</target>
             </trans-unit>
             <trans-unit id="443d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.title">
                 <source>sulu.content.seo.title</source>
@@ -342,13 +370,13 @@
                 <source>sulu.content.form.settings.type.external-link.url</source>
                 <target>URL</target>
             </trans-unit>
-            <trans-unit id="abaaaaa382139fbed4a73a4123dfdf013" resname="sulu.content.sort.blocks">
-                <source>sulu.content.sort.blocks</source>
-                <target>Textblöcke sortieren</target>
+            <trans-unit id="abaaaaa382139fbed4a73a4123dfdf013" resname="sulu.content.collapse.blocks">
+                <source>sulu.content.collapse.blocks</source>
+                <target>Alle Blöcke zuklappen</target>
             </trans-unit>
-            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf113" resname="sulu.content.edit.blocks">
-                <source>sulu.content.edit.blocks</source>
-                <target>Textblöcke editieren</target>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf113" resname="sulu.content.expand.blocks">
+                <source>sulu.content.expand.blocks</source>
+                <target>Alle Blöcke aufklappen</target>
             </trans-unit>
             <trans-unit id="abaaaaa382148fbed4a73a4123dfdf013" resname="content.contents.settings.copy-locales.title">
                 <source>content.contents.settings.copy-locales.title</source>
@@ -466,6 +494,78 @@
             <trans-unit id="e4b14069a8a085ede2092hf5acb2dh4b" resname="search-overlay.placeholder.page">
                 <source>search-overlay.placeholder.page</source>
                 <target>Seiten durchsuchen...</target>
+            </trans-unit>
+            <trans-unit id="75435af307a7ae8f965923968a0e0f94" resname="labels.error.content-save-desc">
+                <source>labels.error.content-save-desc</source>
+                <target>Seite konnte nicht gespeichert werden.</target>
+            </trans-unit>
+            <trans-unit id="75435af3a7a7a38f968923968a0e0f94" resname="labels.error.content-save-resource-locator">
+                <source>labels.error.content-save-resource-locator</source>
+                <target>Die angegebene Adresse ist nicht gültig.</target>
+            </trans-unit>
+            <trans-unit id="2647c238cae0fa45d7fbad336e43750f" resname="labels.success.content-deleted-desc">
+                <source>labels.success.content-deleted-desc</source>
+                <target>Seite erfolgreich gelöscht.</target>
+            </trans-unit>
+            <trans-unit id="487f946d51783a9899fa59d31dcfc3e8" resname="labels.success.content-save-desc">
+                <source>labels.success.content-save-desc</source>
+                <target>Node erfolgreich gespeichert.</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh40" resname="smart-content.categories.label">
+                <source>smart-content.categories.label</source>
+                <target>Nach Kategorien filtern</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh41" resname="smart-content.categories.button">
+                <source>smart-content.categories.button</source>
+                <target>Kategorien auswählen</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh42" resname="smart-content.categories">
+                <source>smart-content.categories</source>
+                <target>Kategorien</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh43" resname="smart-content.choose-categories">
+                <source>smart-content.choose-categories</source>
+                <target>Kategorien auswählen</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh44" resname="smart-content.categories.operator-label">
+                <source>smart-content.categories.operator-label</source>
+                <target>Bedingung</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh45" resname="smart-content.categories.use-any-category">
+                <source>smart-content.categories.use-any-category</source>
+                <target>Übereinstimmung mit mind. einer Kategorie</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh46" resname="smart-content.categories.use-all-categories">
+                <source>smart-content.categories.use-all-categories</source>
+                <target>Übereinstimmung mit allen Kategorien</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh47" resname="smart-content.categories.categories-label">
+                <source>smart-content.categories.categories-label</source>
+                <target>Kategorien auswählen</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh48" resname="smart-content.choose-categories.cancel">
+                <source>smart-content.choose-categories.cancel</source>
+                <target>Zurück</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh49" resname="smart-content.choose-categories.ok">
+                <source>smart-content.choose-categories.ok</source>
+                <target>Kategorien übernehmen</target>
+            </trans-unit>
+            <trans-unit id="9" resname="content.delete-referenced-by-following">
+                <source>content.delete-referenced-by-following</source>
+                <target>Diese Seite wird von folgenden anderen Seiten referenziert:</target>
+            </trans-unit>
+            <trans-unit id="10" resname="content.delete-confirm-text">
+                <source>content.delete-confirm-text</source>
+                <target>Sind Sie sicher, dass Sie diese Seite löschen wollen?</target>
+            </trans-unit>
+            <trans-unit id="11" resname="content.delete-confirm-title">
+                <source>content.delete-confirm-title</source>
+                <target>Löschen bestätigen</target>
+            </trans-unit>
+            <trans-unit id="12" resname="content.delete-do-it">
+                <source>content.delete-do-it</source>
+                <target>Ja, ich bin sicher</target>
             </trans-unit>
         </body>
     </file>

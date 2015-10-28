@@ -141,7 +141,7 @@ abstract class ItemMetadata
     /**
      * Return the children of this item.
      *
-     * @return Item[]
+     * @return ItemMetadata[]
      */
     public function getChildren()
     {

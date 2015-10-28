@@ -12,11 +12,12 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use Sulu\Component\Persistence\Model\AuditableInterface;
+use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 
 /**
  * CollectionInterface.
  */
-interface CollectionInterface extends AuditableInterface
+interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
 {
     /**
      * Get id.

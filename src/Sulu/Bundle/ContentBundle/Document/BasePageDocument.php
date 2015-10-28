@@ -307,6 +307,7 @@ class BasePageDocument implements
     {
         return $this->redirectType;
     }
+
     /**
      * {@inheritdoc}
      */

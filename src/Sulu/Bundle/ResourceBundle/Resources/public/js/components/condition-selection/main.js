@@ -143,7 +143,7 @@ define([], function() {
         },
 
         /**
-         * Stops the grid-group loader
+         * Stops the loader
          */
         stopLoader = function() {
             this.sandbox.stop('#' + this.options.ids.loader);
@@ -461,7 +461,7 @@ define([], function() {
                     name: 'input@husky',
                     options: {
                         el: $datepicker,
-                        datepickerOptions: {"startDate": "1900-01-01", "endDate": new Date()},
+                        datepickerOptions: {"endDate": new Date()},
                         skin: 'date',
                         value: value,
                         instanceName: instance

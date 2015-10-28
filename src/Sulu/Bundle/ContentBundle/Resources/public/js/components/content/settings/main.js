@@ -7,7 +7,11 @@
  * with this source code in the file LICENSE.
  */
 
-define(['app-config', 'sulusecurity/components/users/models/user'], function(AppConfig, User) {
+define([
+    'app-config',
+    'sulusecurity/components/users/models/user',
+    'services/husky/url-validator'
+], function(AppConfig, User, urlValidator) {
 
     'use strict';
 
@@ -31,10 +35,15 @@ define(['app-config', 'sulusecurity/components/users/models/user'], function(App
 
     return {
 
-        view: true,
-
-        layout: {
-            changeNothing: true
+        layout: function() {
+            return {
+                extendExisting: true,
+                content: {
+                    width: 'fixed',
+                    leftSpace: true,
+                    rightSpace: true
+                }
+            };
         },
 
         initialize: function() {
@@ -111,8 +120,8 @@ define(['app-config', 'sulusecurity/components/users/models/user'], function(App
 
         bindCustomEvents: function() {
             // content save
-            this.sandbox.on('sulu.header.toolbar.save', function() {
-                this.submit();
+            this.sandbox.on('sulu.toolbar.save', function(action) {
+                this.submit(action);
             }, this);
 
             // set header bar unsaved
@@ -139,7 +148,7 @@ define(['app-config', 'sulusecurity/components/users/models/user'], function(App
                 this.sandbox.dom.hide('#content-type-container .sub-form');
                 this.sandbox.dom.show($form);
 
-                if (parseInt(type) === TYPE_CONTENT) {
+                if (parseInt(type) === TYPE_CONTENT || !!this.data.shadowOn) {
                     this.sandbox.dom.show('#shadow-container');
                 } else {
                     this.sandbox.dom.hide('#shadow-container');
@@ -302,7 +311,7 @@ define(['app-config', 'sulusecurity/components/users/models/user'], function(App
                 this.sandbox.dom.data('#internal-link', 'singleInternalLink', data.internal_link);
             }
             if (!!data.external) {
-                this.sandbox.dom.data('#external', 'value', data.external);
+                this.sandbox.dom.data('#external', 'url-data', urlValidator.match(data.external));
             }
 
             // updated after init
@@ -338,7 +347,7 @@ define(['app-config', 'sulusecurity/components/users/models/user'], function(App
             this.sandbox.emit('sulu.content.contents.set-header-bar', saved);
         },
 
-        submit: function() {
+        submit: function(action) {
             this.sandbox.logger.log('save Model');
 
             var data = {},
@@ -352,8 +361,9 @@ define(['app-config', 'sulusecurity/components/users/models/user'], function(App
                 data.title = this.sandbox.dom.val('#internal-title');
                 data.internal_link = this.sandbox.dom.data('#internal-link', 'singleInternalLink');
             } else if (data.nodeType === TYPE_EXTERNAL) {
+                var urlData = this.sandbox.dom.data('#external', 'url-data');
                 data.title = this.sandbox.dom.val('#external-title');
-                data.external = this.sandbox.dom.val(this.sandbox.dom.find('input', '#external'));
+                data.external = urlData.scheme + urlData.specificPart;
             }
 
             if (!!baseLanguages && baseLanguages.length > 0) {
@@ -365,7 +375,7 @@ define(['app-config', 'sulusecurity/components/users/models/user'], function(App
             // nav contexts not extend
             this.data.navContexts = data.navContexts;
 
-            this.sandbox.emit('sulu.content.contents.save', this.data);
+            this.sandbox.emit('sulu.content.contents.save', this.data, action);
         }
     };
 });

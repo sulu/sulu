@@ -1,18 +1,36 @@
 #labels-container {
     z-index: 1000;
+    width: 100%;
+}
+
+.sulu-navigation-labels {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    padding: 0 $contentPaddingRight 0 $contentPaddingLeft;
+    width: 250px;
+    z-index: 500;
+    max-height: 100px;
+    overflow: hidden;
+    @include transition(width 500ms);
 }
 
+.navigation-collapsed {
+    .sulu-navigation-labels {
+        width: 50px;
+        .husky-label-success-icon {
+            &::before {
+                margin-top: 30px;
+            }
+            .text {
+                opacity: 0;
+            }
+        }
+    }
+}
 .login #labels-container {
     z-index: 1000;
     position: absolute;
     top: 0;
     left: 50%;
-    margin-left: -200px;
-    width: 400px;
-    padding: 0;
+    width: 50%;
 }

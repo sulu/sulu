@@ -25,6 +25,7 @@ define([], function() {
             hideConfigButton: true,
             hidePositionElement: true,
             dataAttribute: 'internal-links',
+            actionIcon: 'fa-link',
             dataDefault: [],
             translations: {
                 noContentSelected: 'internal-links.nolinks-selected',
@@ -60,11 +61,6 @@ define([], function() {
             this.sandbox.on('husky.overlay.internal-links.' + this.options.instanceName + '.add.initialized', initColumnNavigation.bind(this));
 
             this.sandbox.on('husky.column-navigation.' + this.options.instanceName + '.action', selectLink.bind(this));
-
-            // adjust position of overlay after column-navigation has initialized
-            this.sandbox.on('husky.column-navigation.' + this.options.instanceName + '.initialized', function() {
-                this.sandbox.emit('husky.overlay.internal-links.' + this.options.instanceName + '.add.set-position');
-            }.bind(this));
         },
 
         /**

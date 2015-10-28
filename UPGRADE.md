@@ -2,6 +2,175 @@
 
 ## dev-develop
 
+### Websocket Component
+The following Interfaces has new methods
+
+Interface                                                             | Method                                                                  | Description
+----------------------------------------------------------------------|-------------------------------------------------------------------------|---------------------------------------------------
+Sulu/Component/Websocket/MessageDispatcher/MessageHandlerInterface    | onClose(ConnectionInterface $conn, MessageHandlerContext $context)      | will be called when a connection is closed or lost.
+Sulu/Component/Websocket/MessageDispatcher/MessageDispatcherInterface | onClose(ConnectionInterface $conn, ConnectionContextInterface $context) | will be called when a connection is closed or lost.
+
+### Logo/Avatar in Contact-Section
+Can now be deleted from collection view. For that the database has to be updated.
+
+```bash
+app/console doctrine:schema:update --force
+```
+
+### Infinite scroll
+The infinite-scroll-extension got refactored. To initialize infinite-scroll on an element, use
+"this.sandbox.infiniteScroll.initialize(selector, callback)" instead of "this.sandbox.infiniteScroll(selector, callback)"
+now. To unbind an infinite-scroll handler, use "this.sandbox.infiniteScroll.destroy(selector)"
+
+### URL-ContentType
+The URL-ContentType can now handle schemas like http or https. For that you have to add the default scheme to the
+database records by executing following SQL statement:
+
+```sql
+UPDATE co_urls AS url SET url.url = CONCAT('http://', url.url) WHERE url.url NOT LIKE 'http://%';
+```
+
+To updated you content pages and snippets simply run:
+
+```bash
+app/console doctrine:phpcr:migrator:migrate
+```
+
+Consider that the URL is now stored including the scheme (http://, ftp://, and so on), and therefore must not be
+appended in the Twig template anymore.
+
+### Media Metadata
+Copyright field is now available in the metadata of medias. Therefore you have to update you database:
+
+```bash
+app/console doctrine:schema:update --force
+```
+
+### XML-Templates
+Blocks now supports `minOccurs="0"` and `maxOccurs > 127`. For that the validation was improved and for both negative
+values wont be supported anymore.
+
+### Preview
+The preview can now handle attributes and nested properties. To differentiate blocks and nested properties, it is now
+necessary to add the property `typeof="collection"` to the root of a block `<div>` and 
+`typeof="block" rel="name of block property"` to each child - see example.
+
+__block:__
+
+```twig
+<div class="row" property="block" typeof="collection">
+    {% for block in content.block %}
+        <div rel="block" typeof="block">
+            <h1 property="title">{{ block.title }}</h1>
+        </div>
+    {% endfor %}
+</div>
+```
+
+__nested properties:__
+
+```twig
+<div property="is_winter">
+    {% if content.is_winter %}
+        <div property="article">{{ content.winter_article }}</div>
+    {% endif %}
+</div>
+```
+
+### ApiCategory
+The function `getTranslation` was removed.  This avoid a INSERT SQL Exception when a serialization of categories
+(without translation) is called in the same request.
+
+### Registering JS-Routes
+When registering backbone-routes now - instead of directly starting the corresponding component via 'this.html' - make your callback returning the component.
+So for example the following:
+```
+sandbox.mvc.routes.push({
+    route: 'contacts/accounts/edit::id/:content',
+    callback: function(id) {
+        this.html('<div data-aura-component="accounts/edit@sulucontact" data-aura-id="' + id + '"/>');
+    }
+});
+```
+becomes:
+```
+sandbox.mvc.routes.push({
+    route: 'contacts/accounts/edit::id/:content',
+    callback: function(id) {
+        return '<div data-aura-component="accounts/edit@sulucontact" data-aura-id="' + id + '"/>';
+    }
+});
+```
+
+### Header
+The header got a complete redesign, the breadcrumb and bottom-content are not available anymore. Also the event `header.set-toolbar` got marked as deprecated. The recommended way to start a sulu-header is via the header-hook of a view-component.
+
+Some properties in the header-hook have changed, some are new, some not supported anymore. For a complete overview on the current properties in the header-hook see the documentation: http://docs.sulu.io/en/latest/bundles/admin/javascript-hooks/index.html
+
+The major work when upgrading to the new header is to change the button-templates to sulu-buttons. Before you had to pass a template like e.g. 'default', which initialized a set of buttons, now each button is passed explicitly which gives you more flexibility. Lets have a look at an example:
+
+**Before:**
+```
+header: {
+    tabs: {
+        url: '/admin/content-navigations?alias=category'
+    },
+    toolbar: {
+        template: 'default'
+    }
+}
+```
+
+**After:**
+```
+header: {
+    tabs: {
+        url: '/admin/content-navigations?alias=category'
+    },
+    toolbar: {
+        buttons: {
+            save: {},
+            settings: {
+                options: {
+                    dropdownItems: {
+                        delete: {}
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+If you are using the 'default' template in the header and now change to the sulu-buttons 'save' and 'delete' the emitted events are now `sulu.toolbar.save` instead of `sulu.header.toolbar.save` and 'sulu.toolbar.delete' instead of `sulu.header.toolbar.delete`. 
+
+#### Tabs
+The tabs can be configured with the 'url', 'data' and 'container' option. The option 'fullControll' got removed. You can get the same effect by passing data with no 'component'-property.
+For a complete overview on the current properties in the header-hook see the documentation: http://docs.sulu.io/en/latest/bundles/admin/javascript-hooks/index.html
+
+#### Toolbar
+The language-changer can be configured as it was. 'Template' and 'parentTemplate' in contrast are not supported anymore. Instead you pass an array of sulu-buttons.
+Moreover the format of the buttons itself changed: https://github.com/massiveart/husky/blob/f9b3abeb547553c9c031710f1f98d0288b08ca9c/UPGRADE.md
+Have a look at the documentation: http://docs.sulu.io/en/latest/bundles/admin/javascript-hooks/header.html
+
+#### Language changer
+The interface of the language-changer in the header hook stayed the same, however the emitted event changed from `sulu.header.toolbar.language-changed` to `sulu.header.language-changed`. A callback to this event recieves an object with an 'id'- and a 'title'-property.
+
+#### Sulu-buttons
+Buttons for toolbars get specified in an aura-extension (`sandbox.sulu.buttons` and `sandbox.sulu.buttons.dropdownItems`). Therfore each bundle can add their own buttons to the pool. The toolbar in the header fetches its buttons from this pool.
+Have a look at the documentation: http://docs.sulu.io/en/latest/bundles/admin/sulu-buttons.html
+
+#### List-toolbar
+The 'inHeader' option got removed and is not supported anymore. `Sulu.buttons` are used internally and can be passed via the template which is recommended instead of using string templates.
+
+#### Content-Types
+
+Interface of Method has changed.
+
+Old                                | New
+-----------------------------------|---------------------------------------------------------------------
+public function getDefaultParams() | public function getDefaultParams(PropertyInterface $property = null)
+
 ### Modified listbuilder to work with expressions
 
 The listbuilder uses now expressions to build the query. In course of these changes some default values have been
@@ -42,6 +211,12 @@ purpose of overriding its previous sort field.
 ```bash
 app/console doctrine:schema:update --force
 ```
+
+## 1.0.8
+
+The `sulu_meta_seo` twig method does not render the canonical tag for shadow pages. Therefore this method is deprecated
+and will be removed with Sulu 1.2. Use the new `sulu_seo` method instead. This method will also render the title, so
+there is no need for the title block as it has been in the Sulu standard edition anymore.
 
 ## 1.0.6
 

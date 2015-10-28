@@ -31,6 +31,12 @@
             <gedmo:tree-parent/>
         </many-to-one>
 
+        <many-to-one field="logo" target-entity="Sulu\Bundle\MediaBundle\Entity\Media">
+            <join-columns>
+                <join-column name="logo" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
+            </join-columns>
+        </many-to-one>
+
         <many-to-many field="categories" target-entity="Sulu\Bundle\CategoryBundle\Entity\Category">
             <join-table name="co_account_categories">
                 <join-columns>

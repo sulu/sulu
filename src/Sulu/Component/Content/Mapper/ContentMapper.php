@@ -26,7 +26,6 @@ use Sulu\Component\Content\Compat\Property as LegacyProperty;
 use Sulu\Component\Content\Compat\Structure as LegacyStructure;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
-use Sulu\Component\Content\Compat\StructureType;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
@@ -204,7 +203,11 @@ class ContentMapper implements ContentMapperInterface
         }
 
         if ($uuid) {
-            $document = $this->documentManager->find($uuid, $locale, ['type' => $documentAlias]);
+            $document = $this->documentManager->find(
+                $uuid,
+                $locale,
+                ['type' => $documentAlias, 'load_ghost_content' => false]
+            );
         } else {
             $document = $this->documentManager->create($documentAlias);
         }
@@ -300,37 +303,6 @@ class ContentMapper implements ContentMapperInterface
         $this->eventDispatcher->dispatch(ContentEvents::NODE_POST_SAVE, $event);
 
         return $structure;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function saveStartPage(
-        $data,
-        $templateKey,
-        $webspaceKey,
-        $locale,
-        $userId,
-        $partialUpdate = true,
-        $isShadow = null,
-        $shadowBaseLanguage = null
-    ) {
-        $uuid = $this->inspector->getUuid($this->getContentDocument($webspaceKey, $locale));
-
-        return $this->save(
-            $data,
-            $templateKey,
-            $webspaceKey,
-            $locale,
-            $userId,
-            $partialUpdate,
-            $uuid,
-            null,
-            WorkflowStage::PUBLISHED,
-            $isShadow,
-            $shadowBaseLanguage,
-            'home'
-        );
     }
 
     public function loadByParent(
@@ -466,19 +438,28 @@ class ContentMapper implements ContentMapperInterface
         $uuid,
         $locale,
         $webspaceKey = null,
-        $excludeGhost = true
+        $excludeGhost = true,
+        $excludeShadow = true
     ) {
-        $document = $this->loadDocument($uuid, $locale, $options = [
-            'load_ghost_content' => true,
-            'exclude_ghost' => $excludeGhost,
-            'exclude_shadow' => false,
-        ]);
+        $document = $this->loadDocument(
+            $uuid,
+            $locale,
+            $options = [
+                'load_ghost_content' => true,
+                'exclude_ghost' => $excludeGhost,
+                'exclude_shadow' => $excludeShadow,
+            ],
+            false
+        );
 
         if (null === $document) {
             return [];
         }
 
-        $documents = [$document];
+        $documents = [];
+        if (!$this->optionsShouldExcludeDocument($document, $options)) {
+            $documents[] = $document;
+        }
 
         if ($document instanceof HomeDocument) {
             return $this->documentsToStructureCollection($documents, $options);
@@ -578,10 +559,10 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function delete($uuid, $webspaceKey, $dereference = false)
+    public function delete($uuid, $webspaceKey)
     {
         $document = $this->documentManager->find($uuid);
-        $this->documentManager->remove($document, $dereference);
+        $this->documentManager->remove($document);
         $this->documentManager->flush();
     }
 
@@ -623,6 +604,8 @@ class ContentMapper implements ContentMapperInterface
 
         foreach ($destLocales as $destLocale) {
             $document->setLocale($destLocale);
+            $document->getStructure()->bind($document->getStructure()->toArray());
+
             // TODO: This can be removed if RoutingAuto replaces the ResourceLocator code.
             if ($document instanceof ResourceSegmentBehavior) {
                 $parentResourceLocator = $resourceLocatorType->getResourceLocatorByUuid(
@@ -636,8 +619,6 @@ class ContentMapper implements ContentMapperInterface
                     $webspaceKey,
                     $destLocale
                 );
-
-                $document->getStructure()->bind($document->getStructure()->toArray());
 
                 $document->setResourceSegment($resourceLocator);
             }
@@ -700,7 +681,11 @@ class ContentMapper implements ContentMapperInterface
             $this->documentManager->reorder($document, $targetSibling->getPath());
         }
 
-        $this->documentManager->persist($document, $locale);
+        // this should not be necessary (see https://github.com/sulu-io/sulu-document-manager/issues/39)
+        foreach ($siblingDocuments as $siblingDocument) {
+            $this->documentManager->persist($siblingDocument, $locale);
+        }
+
         $this->documentManager->flush();
 
         return $this->documentToStructure($document);
@@ -920,7 +905,7 @@ class ContentMapper implements ContentMapperInterface
         }
 
         if ($redirectType === RedirectType::EXTERNAL) {
-            $url = 'http://' . $document->getRedirectExternal();
+            $url = $document->getRedirectExternal();
         }
 
         $originLocale = $locale;
@@ -1123,31 +1108,17 @@ class ContentMapper implements ContentMapperInterface
         $this->sessionManager->getSession()->save();
     }
 
-    private function loadDocument($pathOrUuid, $locale, $options)
+    private function loadDocument($pathOrUuid, $locale, $options, $shouldExclude = true)
     {
         $document = $this->documentManager->find($pathOrUuid, $locale, [
             'load_ghost_content' => isset($options['load_ghost_content']) ? $options['load_ghost_content'] : true,
         ]);
 
-        if ($this->optionsShouldExcludeDocument($document, $options)) {
+        if ($shouldExclude && $this->optionsShouldExcludeDocument($document, $options)) {
             return;
         }
 
         return $document;
-    }
-
-    private function filterDocuments($documents, $options)
-    {
-        $collection = [];
-        foreach ($documents as $document) {
-            if ($this->optionsShouldExcludeDocument($document, $options)) {
-                continue;
-            }
-
-            $collection[] = $document;
-        }
-
-        return $collection;
     }
 
     private function optionsShouldExcludeDocument($document, array $options = null)

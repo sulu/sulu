@@ -31,6 +31,7 @@ define([], function() {
             resendUrl: '',
             resetUrl: '',
             resetToken: '',
+            csrfToken: '',
             resetMode: false,
             translations: {
                 resetPassword: 'sulu.login.reset-password',
@@ -76,6 +77,7 @@ define([], function() {
             forgotPasswordSwitchClass: 'forgot-password-switch',
             loginSwitchClass: 'login-switch-span',
             loginButtonId: 'login-button',
+            loginSubmitButtonId: 'login-submit',
 
             requestResetMailButtonId: 'request-mail-button',
             resendResetMailButtonId: 'resend-mail-button',
@@ -104,25 +106,31 @@ define([], function() {
                 '       <span class="navigator ' + constants.websiteSwitchClass + '"><%= backWebsiteMessage %></span>',
                 '   </div>',
                 '   <div class="' + constants.successOverlayClass + '">',
-                '       <span class="fa-check success-icon"></span>', //testing
+                '       <div class="success-icon"></div>',
                 '   </div>',
                 '</div>'].join(''),
 
-            loginFrame: ['<div class="' + constants.frameClass + ' login">',
-                '   <form class="grid inputs">',
-                '       <span class="' + constants.errorMessageClass + '"><%= errorMessage %></span>',
-                '       <div class="grid-row">',
-                '           <input class="form-element input-large husky-validate" type="text" name="username" id="username" placeholder="<%= emailUser %>"/>',
-                '       </div>',
-                '       <div class="grid-row">',
-                '           <input class="form-element input-large husky-validate" type="password" name="password" id="password" placeholder="<%= password %>"/>',
-                '       </div>',
-                '   </form>',
-                '   <div class="grid-row small box-frame-footer">',
-                '       <span class="navigator ' + constants.forgotPasswordSwitchClass + '"><%= forgotPasswordMessage %></span>',
-                '       <div id="' + constants.loginButtonId + '" class="btn action large fit"><%= login %></div>',
-                '   </div>',
-                '</div>'].join(''),
+            loginFrame: function() {
+                return [
+                    '<div class="' + constants.frameClass + ' login">',
+                    '   <form class="grid inputs">',
+                    '       <span class="' + constants.errorMessageClass + '"><%= errorMessage %></span>',
+                    '       <div class="grid-row">',
+                    '           <input class="form-element input-large husky-validate" type="text" name="username" id="username" placeholder="<%= emailUser %>"/>',
+                    '       </div>',
+                    '       <div class="grid-row">',
+                    '           <input class="form-element input-large husky-validate" type="password" name="password" id="password" placeholder="<%= password %>"/>',
+                    '       </div>',
+                    '       <input type="hidden" name="_csrf_token" id="_csrf_token" value="', this.options.csrfToken, '"/>',
+                    '       <input type="submit" id="' + constants.loginSubmitButtonId + '" value="Submit"/>',
+                    '   </form>',
+                    '   <div class="grid-row small box-frame-footer">',
+                    '       <span class="navigator ' + constants.forgotPasswordSwitchClass + '"><%= forgotPasswordMessage %></span>',
+                    '       <div id="' + constants.loginButtonId + '" class="btn action large fit"><%= login %></div>',
+                    '   </div>',
+                    '</div>'
+                ].join('');
+            },
             forgotPasswordFrame: ['<div class="' + constants.frameClass + ' forgot-password">',
                 '   <div class="grid inputs">',
                 '       <span class="' + constants.errorMessageClass + '"></span>',
@@ -286,13 +294,14 @@ define([], function() {
          * Render frame with login functionality
          */
         renderLoginFrame: function() {
-            this.dom.$loginFrame = this.sandbox.dom.createElement(this.sandbox.util.template(templates.loginFrame)({
-                emailUser: this.sandbox.translate(this.options.translations.emailUser),
-                password: this.sandbox.translate(this.options.translations.password),
-                forgotPasswordMessage: this.sandbox.translate(this.options.translations.forgotPassword),
-                errorMessage: this.sandbox.translate(this.options.translations.errorMessage),
-                login: this.sandbox.translate(this.options.translations.login)
-            }));
+            this.dom.$loginFrame = this.sandbox.dom.createElement(
+                this.sandbox.util.template(templates.loginFrame.call(this))({
+                    emailUser: this.sandbox.translate(this.options.translations.emailUser),
+                    password: this.sandbox.translate(this.options.translations.password),
+                    forgotPasswordMessage: this.sandbox.translate(this.options.translations.forgotPassword),
+                    errorMessage: this.sandbox.translate(this.options.translations.errorMessage),
+                    login: this.sandbox.translate(this.options.translations.login)
+                }));
 
             this.dom.$forgotPasswordSwitch =
                 this.sandbox.dom.find('.' + constants.forgotPasswordSwitchClass, this.dom.$loginFrame);
@@ -459,7 +468,8 @@ define([], function() {
          * Handle click on login-button in login-frame
          */
         loginButtonClickHandler: function() {
-            this.sandbox.dom.submit(this.dom.$loginForm);
+            // click hidden submit-button to provide password-saving in internet-explorer
+            $('#' + constants.loginSubmitButtonId).click();
         },
 
         /**
@@ -523,14 +533,15 @@ define([], function() {
          */
         loginFormSubmitHandler: function() {
             var username = this.sandbox.dom.val(this.sandbox.dom.find('#username', this.dom.$loginForm)),
-                password = this.sandbox.dom.val(this.sandbox.dom.find('#password', this.dom.$loginForm));
+                password = this.sandbox.dom.val(this.sandbox.dom.find('#password', this.dom.$loginForm)),
+                csrfToken = $('#_csrf_token').val();
             if (username.length === 0 || password.length === 0) {
                 this.displayLoginError();
             } else {
-                this.login(username, password);
+                this.login(username, password, csrfToken);
             }
-            return false;
 
+            return false;
         },
 
         /**
@@ -549,12 +560,14 @@ define([], function() {
          * Send the username and password to the server
          * @param username
          * @param password
+         * @param csrfToken
          */
-        login: function(username, password) {
+        login: function(username, password, csrfToken) {
             this.showLoader(this.dom.$loginFrame);
             this.sandbox.util.save(this.options.loginCheck, 'POST', {
                 '_username': username,
-                '_password': password
+                '_password': password,
+                '_csrf_token': csrfToken
             }).then(function(data) {
                 this.displaySuccessAndRedirect(data.url + this.sandbox.dom.window.location.hash);
             }.bind(this)).fail(function() {

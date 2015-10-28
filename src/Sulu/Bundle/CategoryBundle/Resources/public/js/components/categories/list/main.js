@@ -19,8 +19,6 @@ define(function () {
 
     return {
 
-        view: true,
-
         layout: {
             content: {
                 width: 'max'
@@ -29,13 +27,20 @@ define(function () {
 
         header: function () {
             return {
-                title: 'category.categories.title',
                 noBack: true,
 
-                breadcrumb: [
-                    {title: 'navigation.settings'},
-                    {title: 'category.categories.title'}
-                ]
+                title: 'category.categories.title',
+                underline: false,
+
+                toolbar: {
+                    buttons: {
+                        add: {},
+                        deleteSelected: {}
+                    },
+                    languageChanger: {
+                        preSelected: this.options.locale
+                    }
+                }
             };
         },
 
@@ -48,9 +53,15 @@ define(function () {
         },
 
         bindCustomEvents: function() {
-            this.sandbox.on('husky.datagrid.item.click', this.saveLastClickedCategory.bind(this))
-            this.sandbox.on('sulu.list-toolbar.add', this.addNewCategory.bind(this));
-            this.sandbox.on('sulu.list-toolbar.delete', this.deleteSelected.bind(this));
+            this.sandbox.on('husky.datagrid.item.click', this.saveLastClickedCategory.bind(this));
+            this.sandbox.on('sulu.toolbar.add', this.addNewCategory.bind(this));
+            this.sandbox.on('sulu.toolbar.delete', this.deleteSelected.bind(this));
+
+            // checkbox clicked
+            this.sandbox.on('husky.datagrid.number.selections', function(number) {
+                var postfix = number > 0 ? 'enable' : 'disable';
+                this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'deleteSelected', false);
+            }.bind(this));
         },
 
         /**
@@ -64,12 +75,11 @@ define(function () {
                 {
                     el: this.$find(constants.toolbarSelector),
                     template: 'default',
-                    instanceName: this.instanceName,
-                    inHeader: true
+                    instanceName: this.instanceName
                 },
                 {
                     el: this.$find(constants.listSelector),
-                    url: '/admin/api/categories?flat=true&sortBy=depth&sortOrder=asc',
+                    url: '/admin/api/categories?flat=true&sortBy=depth&sortOrder=asc&locale=' + this.options.locale,
                     childrenPropertyName: 'hasChildren',
                     resultKey: 'categories',
                     searchFields: ['name'],
@@ -88,7 +98,8 @@ define(function () {
                                     icon: 'plus-circle',
                                     callback: this.addNewCategory.bind(this)
                                 }
-                            ]
+                            ],
+                            cropContents: false
                         }
                     }
                 }

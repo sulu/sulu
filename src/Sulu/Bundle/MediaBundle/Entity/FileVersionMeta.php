@@ -17,6 +17,11 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 class FileVersionMeta
 {
     /**
+     * @var int
+     */
+    private $id;
+
+    /**
      * @var string
      */
     private $title;
@@ -29,17 +34,27 @@ class FileVersionMeta
     /**
      * @var string
      */
+    private $copyright;
+
+    /**
+     * @var string
+     */
     private $locale;
 
     /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @var \Sulu\Bundle\MediaBundle\Entity\FileVersion
+     * @var FileVersion
      */
     private $fileVersion;
+
+    /**
+     * Get id.
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * Set title.
@@ -90,6 +105,30 @@ class FileVersionMeta
     }
 
     /**
+     * Set copyright.
+     *
+     * @param string $copyright
+     *
+     * @return FileVersionMeta
+     */
+    public function setCopyright($copyright)
+    {
+        $this->copyright = $copyright;
+
+        return $this;
+    }
+
+    /**
+     * Get copyright.
+     *
+     * @return string
+     */
+    public function getCopyright()
+    {
+        return $this->copyright;
+    }
+
+    /**
      * Set locale.
      *
      * @param string $locale
@@ -114,37 +153,13 @@ class FileVersionMeta
     }
 
     /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set id.
-     *
-     * @param int
-     *
-     * @return int
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
      * Set fileVersion.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersion
+     * @param FileVersion $fileVersion
      *
      * @return FileVersionMeta
      */
-    public function setFileVersion(\Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersion)
+    public function setFileVersion(FileVersion $fileVersion)
     {
         $this->fileVersion = $fileVersion;
 
@@ -154,7 +169,7 @@ class FileVersionMeta
     /**
      * Get fileVersion.
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\FileVersion
+     * @return FileVersion
      */
     public function getFileVersion()
     {
@@ -167,7 +182,7 @@ class FileVersionMeta
     public function __clone()
     {
         if ($this->id) {
-            $this->setId(null);
+            $this->id = null;
         }
     }
 }

@@ -29,7 +29,7 @@ define([
                 },
 
                 needsValidation: function() {
-                    return this.$el.data('auraContentId') !== 'index';
+                    return this.$el.find('input').length > 0;
                 },
 
                 validate: function() {

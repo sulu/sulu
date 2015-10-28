@@ -2,6 +2,6 @@ sulu_core:
     content:
         structure:
              paths:
-                 intrenal:
+                 internal:
                      path: "%kernel.root_dir%/../../src/Sulu/Bundle/CoreBundle/Content/templates"
                      type: "page"

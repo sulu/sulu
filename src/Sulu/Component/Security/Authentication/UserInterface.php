@@ -11,10 +11,12 @@
 
 namespace Sulu\Component\Security\Authentication;
 
+use Symfony\Component\Security\Core\User\UserInterface as BaseUserInterface;
+
 /**
  * The UserInterface for Sulu, extends the Symfony UserInterface with an ID.
  */
-interface UserInterface extends \Symfony\Component\Security\Core\User\UserInterface
+interface UserInterface extends BaseUserInterface
 {
     /**
      * Returns the ID of the User.
@@ -29,4 +31,11 @@ interface UserInterface extends \Symfony\Component\Security\Core\User\UserInterf
      * @return string Users locale
      */
     public function getLocale();
+
+    /**
+     * Returns all the roles the user has assigned.
+     *
+     * @return RoleInterface[]
+     */
+    public function getRoleObjects();
 }

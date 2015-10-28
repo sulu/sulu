@@ -137,11 +137,6 @@ define([], function() {
 
                 this.sandbox.emit('husky.overlay.single-internal-link.' + this.options.instanceName + '.close');
             }.bind(this));
-
-            // adjust position of overlay after column-navigation has initialized
-            this.sandbox.on('husky.column-navigation.'+ this.options.instanceName +'.initialized', function() {
-                this.sandbox.emit('husky.overlay.single-internal-link.' + this.options.instanceName + '.set-position');
-            }.bind(this));
         },
 
         initOverlay = function() {
@@ -179,7 +174,7 @@ define([], function() {
          * initialize column navigation
          */
         initColumnNavigation = function() {
-            var url = getUrl(this.options.columnNavigationUrl, this.data);
+            var url = getSelectUrl(this.options.columnNavigationUrl, this.data);
 
             this.sandbox.start(
                 [
@@ -204,12 +199,16 @@ define([], function() {
         },
 
         loadSelectedNode = function() {
-            this.sandbox.util.load(getUrl(this.options.url, this.data)).then(function(data) {
+            this.sandbox.util.load(getSingleUrl(this.options.url, this.data)).then(function(data) {
                 this.$input.val((data.title || this.sandbox.translate(this.options.translations.noTitle)) + ' (' + (data.path || '/') + ')');
             }.bind(this));
         },
 
-        getUrl = function(url, data) {
+        getSelectUrl = function(url, data) {
+            return url.replace('{id=uuid&}', (!!data ? 'id=' + data + '&' : ''));
+        },
+
+        getSingleUrl = function(url, data) {
             return url.replace('{/uuid}', (!!data ? '/' + data : ''));
         };
 

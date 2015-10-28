@@ -19,7 +19,6 @@ use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
-use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
@@ -63,10 +62,10 @@ class StructureBridge implements StructureInterface
     private $locale;
 
     /**
-     * @param StructureMetadata     $structure
-     * @param DocumentInspector     $inspector
+     * @param StructureMetadata $structure
+     * @param DocumentInspector $inspector
      * @param LegacyPropertyFactory $propertyFactory
-     * @param object                $document
+     * @param object $document
      */
     public function __construct(
         StructureMetadata $structure,
@@ -451,23 +450,29 @@ class StructureBridge implements StructureInterface
 
         if ($complete) {
             if ($document instanceof ShadowLocaleBehavior) {
-                $result = array_merge($result, [
-                    'enabledShadowLanguages' => $this->inspector->getShadowLocales($document),
-                    'shadowOn' => $document->isShadowLocaleEnabled(),
-                    'shadowBaseLanguage' => $document->getShadowLocale() ?: false,
-                ]);
+                $result = array_merge(
+                    $result,
+                    [
+                        'enabledShadowLanguages' => $this->inspector->getShadowLocales($document),
+                        'shadowOn' => $document->isShadowLocaleEnabled(),
+                        'shadowBaseLanguage' => $document->getShadowLocale() ?: false,
+                    ]
+                );
             }
 
-            $result = array_merge($result, [
-                'template' => $this->structure->getName(),
-                'originTemplate' => $this->structure->getName(),
-                'creator' => $document->getCreator(),
-                'changer' => $document->getChanger(),
-                'created' => $document->getCreated(),
-                'changed' => $document->getChanged(),
-                'title' => $document->getTitle(),
-                'url' => null,
-            ]);
+            $result = array_merge(
+                $result,
+                [
+                    'template' => $this->structure->getName(),
+                    'originTemplate' => $this->structure->getName(),
+                    'creator' => $document->getCreator(),
+                    'changer' => $document->getChanger(),
+                    'created' => $document->getCreated(),
+                    'changed' => $document->getChanged(),
+                    'title' => $document->getTitle(),
+                    'url' => null,
+                ]
+            );
 
             if ($document instanceof ResourceSegmentBehavior) {
                 $result['url'] = $document->getResourceSegment();
@@ -475,10 +480,6 @@ class StructureBridge implements StructureInterface
 
             if ($document instanceof ExtensionBehavior) {
                 $result['ext'] = $document->getExtensionsData();
-            }
-
-            if ($document instanceof SecurityBehavior && !empty($document->getPermissions())) {
-                $result['permissions'] = $document->getPermissions();
             }
 
             $result = array_merge($this->getDocument()->getStructure()->toArray(), $result);
@@ -550,14 +551,10 @@ class StructureBridge implements StructureInterface
      */
     public function getNodeName()
     {
-        if ($this->getDocument() instanceof RedirectTypeBehavior) {
-            if ($this->getDocument()->getRedirectType() == RedirectType::INTERNAL) {
-                return $this->getDocument()->getRedirectTarget()->getTitle();
-            }
-
-            if ($this->getDocument()->getRedirectType() == RedirectType::EXTERNAL) {
-                return $this->getDocument()->getTitle();
-            }
+        if ($this->document instanceof RedirectTypeBehavior &&
+            $this->document->getRedirectType() == RedirectType::INTERNAL
+        ) {
+            return $this->getDocument()->getRedirectTarget()->getTitle();
         }
 
         return $this->getDocument()->getTitle();
@@ -645,7 +642,7 @@ class StructureBridge implements StructureInterface
     {
         $document = $this->getDocument();
         if ($document->getRedirectType() == RedirectType::EXTERNAL) {
-            return 'http://' . $document->getRedirectExternal();
+            return $document->getRedirectExternal();
         }
 
         if ($document->getRedirectType() === RedirectType::INTERNAL) {
@@ -663,10 +660,12 @@ class StructureBridge implements StructureInterface
 
     protected function readOnlyException($method)
     {
-        throw new \BadMethodCallException(sprintf(
-            'Compatibility layer StructureBridge instances are readonly. Tried to call "%s"',
-            $method
-        ));
+        throw new \BadMethodCallException(
+            sprintf(
+                'Compatibility layer StructureBridge instances are readonly. Tried to call "%s"',
+                $method
+            )
+        );
     }
 
     protected function getDocument()
@@ -682,17 +681,25 @@ class StructureBridge implements StructureInterface
 
     protected function documentToStructure(StructureBehavior $document)
     {
-        return new $this($this->inspector->getStructureMetadata($document), $this->inspector, $this->propertyFactory, $document);
+        return new $this(
+            $this->inspector->getStructureMetadata($document),
+            $this->inspector,
+            $this->propertyFactory,
+            $document
+        );
     }
 
     private function getWorkflowDocument($method)
     {
         $document = $this->getDocument();
         if (!$document instanceof WorkflowStageBehavior) {
-            throw new \BadMethodCallException(sprintf(
-                'Cannot call "%s" on Document which does not implement PageInterface. Is "%s"',
-                $method, get_class($document)
-            ));
+            throw new \BadMethodCallException(
+                sprintf(
+                    'Cannot call "%s" on Document which does not implement PageInterface. Is "%s"',
+                    $method,
+                    get_class($document)
+                )
+            );
         }
 
         return $document;
@@ -700,9 +707,12 @@ class StructureBridge implements StructureInterface
 
     private function notImplemented($method)
     {
-        throw new \InvalidArgumentException(sprintf(
-            'Method "%s" is not yet implemented', $method
-        ));
+        throw new \InvalidArgumentException(
+            sprintf(
+                'Method "%s" is not yet implemented',
+                $method
+            )
+        );
     }
 
     private function normalizeData(array $data = null)

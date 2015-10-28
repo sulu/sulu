@@ -1,1 +1,5 @@
-@import 'modules/utility.scss';
+@import '../../../../AdminBundle/Resources/public/scss/variables',
+        '../../../../AdminBundle/Resources/public/scss/mixins',
+        'modules/utility.scss',
+        'modules/card-grid.scss',
+        'modules/edit-detail.scss';

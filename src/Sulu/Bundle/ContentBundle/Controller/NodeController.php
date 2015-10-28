@@ -13,15 +13,17 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use JMS\Serializer\SerializationContext;
+use PHPCR\PropertyInterface;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
+use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
-use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
@@ -151,6 +153,9 @@ class NodeController extends RestController
             }
         );
 
+        // preview needs also null value to work correctly
+        $view->setSerializationContext(SerializationContext::create()->setSerializeNull(true));
+
         return $this->handleView($view);
     }
 
@@ -159,7 +164,7 @@ class NodeController extends RestController
      * This functionality is required for preloading the content navigation.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param string                                    $uuid
+     * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -168,7 +173,7 @@ class NodeController extends RestController
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request, false);
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
-
+        $excludeShadows = $this->getBooleanRequestParameter($request, 'exclude-shadows', false, false);
         $appendWebspaceNode = $this->getBooleanRequestParameter($request, 'webspace-node', false, false);
 
         try {
@@ -178,6 +183,7 @@ class NodeController extends RestController
                     $webspace,
                     $language,
                     $excludeGhosts,
+                    $excludeShadows,
                     $appendWebspaceNode
                 );
             } elseif ($webspace !== null) {
@@ -295,6 +301,8 @@ class NodeController extends RestController
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @deprecated will be removed with version 1.2
      */
     public function filterAction(Request $request)
     {
@@ -371,10 +379,6 @@ class NodeController extends RestController
      */
     public function putAction(Request $request, $uuid)
     {
-        if ($uuid === 'index') {
-            return $this->putIndex($request);
-        }
-
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
         $template = $this->getRequestParameter($request, 'template', true);
@@ -409,48 +413,6 @@ class NodeController extends RestController
     }
 
     /**
-     * put index page.
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    private function putIndex(Request $request)
-    {
-        $language = $this->getLanguage($request);
-        $webspace = $this->getWebspace($request);
-        $template = $this->getRequestParameter($request, 'template', true);
-        $isShadow = $this->getRequestParameter($request, 'shadowOn', false);
-        $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
-
-        $data = $request->request->all();
-
-        try {
-            if (isset($data['url']) && $data['url'] != '/') {
-                throw new InvalidArgumentException('Content', 'url', 'url of index page can not be changed');
-            }
-
-            $result = $this->getRepository()->saveIndexNode(
-                $data,
-                $template,
-                $webspace,
-                $language,
-                $this->getUser()->getId(),
-                $isShadow,
-                $shadowBaseLanguage
-            );
-            $view = $this->view($result);
-        } catch (RestException $ex) {
-            $view = $this->view(
-                $ex->toArray(),
-                400
-            );
-        }
-
-        return $this->handleView($view);
-    }
-
-    /**
      * Updates a content item and returns result as JSON String.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
@@ -459,37 +421,41 @@ class NodeController extends RestController
      */
     public function postAction(Request $request)
     {
-        $language = $this->getLanguage($request);
-        $webspace = $this->getWebspace($request);
-        $template = $this->getRequestParameter($request, 'template', true);
-        $isShadow = $this->getRequestParameter($request, 'isShadow', false);
-        $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
-        $parent = $this->getRequestParameter($request, 'parent');
-        $state = $this->getRequestParameter($request, 'state');
-        if ($state !== null) {
-            $state = intval($state);
+        try {
+            $language = $this->getLanguage($request);
+            $webspace = $this->getWebspace($request);
+            $template = $this->getRequestParameter($request, 'template', true);
+            $isShadow = $this->getRequestParameter($request, 'isShadow', false);
+            $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
+            $parent = $this->getRequestParameter($request, 'parent');
+            $state = $this->getRequestParameter($request, 'state');
+            if ($state !== null) {
+                $state = intval($state);
+            }
+            $type = $request->query->get('type', Structure::TYPE_PAGE);
+
+            $data = $request->request->all();
+
+            $mapperRequest = ContentMapperRequest::create()
+                ->setType($type)
+                ->setTemplateKey($template)
+                ->setWebspaceKey($webspace)
+                ->setUserId($this->getUser()->getId())
+                ->setState($state)
+                ->setIsShadow($isShadow)
+                ->setShadowBaseLanguage($shadowBaseLanguage)
+                ->setLocale($language)
+                ->setParentUuid($parent)
+                ->setData($data);
+
+            $result = $this->getRepository()->saveNodeRequest($mapperRequest);
+
+            return $this->handleView($this->view($result));
+        } catch (ResourceLocatorNotValidException $e) {
+            $restException = new RestException('The chosen ResourceLocator is not valid');
+
+            return $this->handleView($this->view($restException->toArray(), 409));
         }
-        $type = $request->query->get('type', Structure::TYPE_PAGE);
-
-        $data = $request->request->all();
-
-        $mapperRequest = ContentMapperRequest::create()
-            ->setType($type)
-            ->setTemplateKey($template)
-            ->setWebspaceKey($webspace)
-            ->setUserId($this->getUser()->getId())
-            ->setState($state)
-            ->setIsShadow($isShadow)
-            ->setShadowBaseLanguage($shadowBaseLanguage)
-            ->setLocale($language)
-            ->setParentUuid($parent)
-            ->setData($data);
-
-        $result = $this->getRepository()->saveNodeRequest($mapperRequest);
-
-        return $this->handleView(
-            $this->view($result)
-        );
     }
 
     /**
@@ -504,12 +470,41 @@ class NodeController extends RestController
     {
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
+        $force = $this->getBooleanRequestParameter($request, 'force', false, false);
+
+        if (!$force) {
+            $references = array_filter(
+                $this->getRepository()->getReferences($uuid),
+                function (PropertyInterface $reference) {
+                    return $reference->getParent()->isNodeType('sulu:page');
+                }
+            );
+
+            if (count($references) > 0) {
+                $data = [
+                    'structures' => [],
+                    'other' => [],
+                ];
+
+                foreach ($references as $reference) {
+                    $content = $this->get('sulu.content.mapper')->load(
+                        $reference->getParent()->getIdentifier(),
+                        $webspace,
+                        $language,
+                        true
+                    );
+                    $data['structures'][] = $content->toArray();
+                }
+
+                return $this->handleView($this->view($data, 409));
+            }
+        }
 
         $view = $this->responseDelete(
             $uuid,
-            function ($id) use ($language, $webspace) {
+            function ($id) use ($webspace) {
                 try {
-                    $this->getRepository()->deleteNode($id, $webspace, $language);
+                    $this->getRepository()->deleteNode($id, $webspace);
                 } catch (DocumentNotFoundException $ex) {
                     throw new EntityNotFoundException('Content', $id);
                 }
@@ -614,7 +609,7 @@ class NodeController extends RestController
      */
     public function getSecuredClass()
     {
-        return WebspaceBehavior::class;
+        return SecurityBehavior::class;
     }
 
     /**
@@ -622,6 +617,16 @@ class NodeController extends RestController
      */
     public function getSecuredObjectId(Request $request)
     {
-        return $request->get('uuid') ?: $request->get('parent');
+        $id = null;
+
+        if (null !== ($uuid = $request->get('uuid'))) {
+            $id = $uuid;
+        } elseif (null !== ($parent = $request->get('parent')) && $request->getMethod() !== Request::METHOD_GET) {
+            // the user is always allowed to get the children of a node
+            // so the security check only applies for requests not being GETs
+            $id = $parent;
+        }
+
+        return $id;
     }
 }

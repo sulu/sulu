@@ -20,10 +20,10 @@ define([
         },
 
         SnippetForm = function() {
-        BaseSnippet.call(this);
+            BaseSnippet.call(this);
 
-        return this;
-    };
+            return this;
+        };
 
     SnippetForm.prototype = Object.create(BaseSnippet.prototype);
     SnippetForm.prototype.constructor = BaseSnippet;
@@ -44,8 +44,6 @@ define([
 
     SnippetForm.prototype.header = function() {
         return {
-            breadcrumb: this.breadcrumb,
-
             tabs: {
                 url: '/admin/content-navigations?alias=snippet'
             },
@@ -55,76 +53,54 @@ define([
                     url: '/admin/api/languages',
                     preSelected: this.options.language
                 },
-
-                template: [
-                    {
-                        id: 'save-button',
-                        icon: 'floppy-o',
-                        iconSize: 'large',
-                        class: 'highlight',
-                        position: 1,
-                        group: 'left',
-                        disabled: true,
-                        callback: function() {
-                            this.sandbox.emit('sulu.header.toolbar.save');
-                        }.bind(this)
+                buttons: {
+                    save: {
+                        parent: 'saveWithOptions'
                     },
-                    {
-                        id: 'template',
-                        icon: 'pencil',
-                        iconSize: 'large',
-                        group: 'left',
-                        position: 10,
-                        type: 'select',
-                        title: '',
-                        hidden: false,
-                        itemsOption: {
-                            url: '/admin/api/snippet/types',
-                            titleAttribute: 'title',
-                            idAttribute: 'template',
-                            translate: false,
-                            markable: true,
-                            callback: function(item) {
-                                if (!!this.template) {
-                                    this.setHeaderBar(false);
-                                }
-                                this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
-                                this.template = item.template;
-                            }.bind(this)
-                        }
-                    },
-                    {
-                        icon: 'gear',
-                        iconSize: 'large',
-                        group: 'left',
-                        id: 'options-button',
-                        position: 30,
-                        items: [
-                            {
-                                title: this.sandbox.translate('toolbar.delete'),
-                                callback: function() {
-                                    this.sandbox.emit('sulu.snippets.snippet.delete', this.data.id);
-                                }.bind(this)
-                            },
-                            {
-                                title: this.sandbox.translate('toolbar.copy-locale'),
-                                callback: function() {
-                                    CopyLocale.startCopyLocalesOverlay.call(this).then(function() {
-                                        this.load(this.data.id, this.options.language, true);
-                                    }.bind(this));
+                    template: {
+                        options: {
+                            dropdownOptions: {
+                                url: '/admin/api/snippet/types',
+                                callback: function(item) {
+                                    if (!!this.template) {
+                                        this.setHeaderBar(false);
+                                    }
+                                    this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
+                                    this.template = item.template;
                                 }.bind(this)
                             }
-                        ]
+                        }
+                    },
+                    edit: {
+                        options: {
+                            dropdownItems: {
+                                delete: {
+                                    options: {
+                                        callback: function() {
+                                            this.sandbox.emit('sulu.snippets.snippet.delete', this.data.id);
+                                        }.bind(this)
+                                    }
+                                },
+                                copyLocale: {
+                                    options: {
+                                        title: this.sandbox.translate('toolbar.copy-locale'),
+                                        callback: function() {
+                                            CopyLocale.startCopyLocalesOverlay.call(this).then(function() {
+                                                this.load(this.data.id, this.options.language, true);
+                                            }.bind(this));
+                                        }.bind(this)
+                                    }
+                                }
+                            }
+                        }
                     }
-                ]
+                }
             }
         };
     };
 
     SnippetForm.prototype.initialize = function() {
         this.type = (!!this.options.id ? 'edit' : 'add');
-
-        this.headerDef = this.sandbox.data.deferred();
         this.dataDef = this.sandbox.data.deferred();
 
         this.bindModelEvents();
@@ -153,11 +129,6 @@ define([
             this.sandbox.emit('sulu.snippets.snippet.list');
         }.bind(this));
 
-        // header initialize to set-title
-        this.sandbox.on('husky.toolbar.header.initialized', function() {
-            this.headerDef.resolve();
-        }.bind(this));
-
         // get content data
         this.sandbox.on('sulu.snippets.snippet.get-data', function(callback) {
             this.dataDef.then(function() {
@@ -174,8 +145,6 @@ define([
         this.sandbox.on('sulu.snippets.snippet.saved', function(data) {
             this.data = data;
             this.setHeaderBar(true);
-            this.setTitle(this.data.title);
-
             this.sandbox.emit('sulu.labels.success.show', 'labels.success.content-save-desc', 'labels.success');
         }, this);
 
@@ -192,8 +161,11 @@ define([
      */
     SnippetForm.prototype.setHeaderBar = function(saved) {
         if (saved !== this.saved) {
-            var type = (!!this.data && !!this.data.id) ? 'edit' : 'add';
-            this.sandbox.emit('sulu.header.toolbar.state.change', type, saved, this.highlightSaveButton);
+            if (saved === true) {
+                this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
+            } else {
+                this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
+            }
             this.sandbox.emit('sulu.preview.state.change', saved);
         }
         this.saved = saved;
@@ -226,32 +198,8 @@ define([
     SnippetForm.prototype.render = function(data) {
         this.data = data;
         this.template = data.template;
-
-        this.headerDef.then(function() {
-            this.setTitle(data.title);
-        }.bind(this));
-    };
-
-    /**
-     * Sets the title of the page and if in edit mode calls a method to set the breadcrumb
-     * @param {Object} title
-     */
-    SnippetForm.prototype.setTitle = function(title) {
-        var breadcrumb = [
-            {title: 'navigation.snippets'}
-        ];
-
-        if (!!this.options.id && title !== '') {
-            this.sandbox.emit('sulu.header.set-title', this.sandbox.util.cropMiddle(title, 40));
-
-            // breadcrumb
-            breadcrumb.push({title: title});
-            this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
-        } else {
-            this.sandbox.emit('sulu.header.set-title', this.sandbox.translate('snippets.snippet.title'));
-            this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
-        }
     };
 
     return new SnippetForm();
-});
+})
+;

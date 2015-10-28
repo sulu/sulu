@@ -1,4 +1,4 @@
-module.exports = function (grunt) {
+module.exports = function(grunt) {
     var min = {},
         path = require('path'),
         srcpath = 'Resources/public/js',
@@ -21,9 +21,51 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         copy: {
+            templates: {
+                files: [
+                    {expand: true, cwd: srcpath, src: ['**/*.html'], dest: destpath}
+                ]
+            },
+            bower: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'bower_components/wookmark-jquery',
+                        src: ['wookmark.js'],
+                        dest: 'Resources/public/js/vendor/wookmark/'
+                    }
+                ]
+            }
         },
         clean: {
-            options: { force: true }
+            options: {force: true},
+            bower_after: {
+                files: {
+                    src: [
+                        'bower_components'
+                    ]
+                }
+            },
+            bower_before: {
+                files: {
+                    src: [
+                        'Resources/public/js/vendor'
+                    ]
+                }
+            }
+        },
+        replace: {
+            build: {
+                options: {
+                    variables: {
+                        'sulumedia/js': 'sulumedia/dist'
+                    },
+                    prefix: ''
+                },
+                files: [
+                    {src: [destpath + '/main.js'], dest: destpath + '/main.js'}
+                ]
+            }
         },
         watch: {
             options: {
@@ -58,25 +100,32 @@ module.exports = function (grunt) {
                 }
             }
         },
-        replace: {
-            build: {
+        bower: {
+            install: {
                 options: {
-                    variables: {
-                        'sulumedia/js': 'sulumedia/dist'
-                    },
-                    prefix: ''
-                },
-                files: [
-                    {src: [destpath + '/main.js'], dest: destpath + '/main.js'}
-                ]
+                    copy: false,
+                    layout: 'byComponent',
+                    install: true,
+                    verbose: false,
+                    cleanTargetDir: false,
+                    cleanBowerDir: false
+                }
             }
         }
     });
 
     grunt.registerTask('build', [
-        'compass:dev',
         'uglify',
-        'replace:build'
+        'replace:build',
+        'copy:templates',
+        'compass:dev'
+    ]);
+
+    grunt.registerTask('update', [
+        'clean:bower_before',
+        'bower:install',
+        'copy:bower',
+        'clean:bower_after'
     ]);
 
     grunt.registerTask('default', [

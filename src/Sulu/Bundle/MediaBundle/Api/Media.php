@@ -67,11 +67,6 @@ class Media extends ApiWrapper
     protected $formats = [];
 
     /**
-     * @var array
-     */
-    protected $properties = [];
-
-    /**
      * @var string
      */
     protected $locale;
@@ -262,6 +257,42 @@ class Media extends ApiWrapper
         }
 
         return $description;
+    }
+
+    /**
+     * @param string $copyright
+     *
+     * @return $this
+     */
+    public function setCopyright($copyright)
+    {
+        $this->getMeta(true)->setCopyright($copyright);
+
+        return $this;
+    }
+
+    /**
+     * Returns copyright for media.
+     *
+     * @VirtualProperty
+     * @SerializedName("copyright")
+     *
+     * @return string
+     *
+     * @throws FileVersionNotFoundException
+     */
+    public function getCopyright()
+    {
+        $copyright = null;
+        /** @var FileVersionMeta $meta */
+        foreach ($this->getFileVersion()->getMeta() as $key => $meta) {
+            // get description of the meta in locale, when not exists return description of the first meta
+            if ($meta->getLocale() == $this->locale || $key == 0) {
+                $copyright = $meta->getCopyright();
+            }
+        }
+
+        return $copyright;
     }
 
     /**
@@ -722,7 +753,7 @@ class Media extends ApiWrapper
      */
     public function setProperties($properties)
     {
-        $this->properties = $properties;
+        $this->getFileVersion()->setProperties($properties);
 
         return $this;
     }
@@ -735,7 +766,7 @@ class Media extends ApiWrapper
      */
     public function getProperties()
     {
-        return $this->properties;
+        return $this->getFileVersion()->getProperties();
     }
 
     /**

@@ -109,8 +109,6 @@ class NavigationTest extends SuluTestCase
             ],
         ];
 
-        $this->mapper->saveStartPage(['title' => 'Startpage', 'url' => '/'], 'simple', 'sulu_io', 'en', 1);
-
         $data['news'] = $this->mapper->save(
             $data['news'],
             'simple',
@@ -355,7 +353,7 @@ class NavigationTest extends SuluTestCase
         $this->assertEquals(3, count($breadcrumb));
 
         // startpage has no title
-        $this->assertEquals('Startpage', $breadcrumb[0]->getTitle());
+        $this->assertEquals('Homepage', $breadcrumb[0]->getTitle());
         $this->assertEquals('/', $breadcrumb[0]->getUrl());
         $this->assertEquals('News', $breadcrumb[1]->getTitle());
         $this->assertEquals('/news', $breadcrumb[1]->getUrl());

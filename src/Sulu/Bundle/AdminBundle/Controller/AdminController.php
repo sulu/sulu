@@ -15,6 +15,7 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\JsConfigPool;
+use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -95,6 +96,11 @@ class AdminController
      */
     private $fallbackLocale;
 
+    /**
+     * @var LocalizationManagerInterface
+     */
+    private $localizationManager;
+
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker,
         UrlGeneratorInterface $urlGenerator,
@@ -103,6 +109,7 @@ class AdminController
         JsConfigPool $jsConfigPool,
         SerializerInterface $serializer,
         EngineInterface $engine,
+        LocalizationManagerInterface $localizationManager,
         $environment,
         $adminName,
         array $locales,
@@ -125,6 +132,7 @@ class AdminController
         $this->translatedLocales = $translatedLocales;
         $this->translations = $translations;
         $this->fallbackLocale = $fallbackLocale;
+        $this->localizationManager = $localizationManager;
     }
 
     /**
@@ -154,7 +162,7 @@ class AdminController
             $template,
             [
                 'name' => $this->adminName,
-                'locales' => $this->locales,
+                'locales' => array_keys($this->localizationManager->getLocalizations()),
                 'translated_locales' => $this->translatedLocales,
                 'translations' => $this->translations,
                 'fallback_locale' => $this->fallbackLocale,

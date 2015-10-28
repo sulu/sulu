@@ -36,6 +36,7 @@ class MediaTwigExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(MediaApi::class, $result);
     }
+
     public function testResolveApiMedia()
     {
         $apiEntity = $this->prophesize(MediaApi::class);

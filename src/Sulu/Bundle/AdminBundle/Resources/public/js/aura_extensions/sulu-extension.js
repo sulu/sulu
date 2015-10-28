@@ -219,7 +219,9 @@
                 if (!!callback && typeof(callback) !== 'function') {
                     throw 'callback is not a function';
                 }
-                title = (typeof title === 'string') ? title : 'sulu.overlay.be-careful';
+                if (typeof title !== 'string') {
+                    title = app.sandbox.util.capitalizeFirstLetter(app.sandbox.translate('public.delete')) + '?';
+                }
                 description = (typeof description === 'string') ? description : 'sulu.overlay.delete-desc';
 
                 // show warning dialog
@@ -235,7 +237,11 @@
                     function() {
                         // ok callback
                         callback(true);
-                    }.bind(this)
+                    }.bind(this),
+
+                    {
+                        okDefaultText: 'public.delete'
+                    }
                 );
             };
 
@@ -260,7 +266,7 @@
                  * @param order
                  */
                 insertOrderParamsInUrl = function(url, order) {
-                    if (!!order) {
+                    if (!!order && !!order.length) {
                         var idxBy = url.indexOf('sortBy'),
                             idxOrder = url.indexOf('sortOrder'),
                             divider = '&';
@@ -387,8 +393,10 @@
             ) {
                 var orderKey = key + 'Order',
                     fieldsKey = key + 'Fields',
-                    pageSizeKey = key + 'PageSize',
-                    limit = this.sandbox.sulu.getUserSetting(pageSizeKey),
+                    dropdownPageSizeKey = key + 'DropdownPageSize',
+                    infinitePageSizeKey = key + 'InfinitePageSize',
+                    dropdownLimit = this.sandbox.sulu.getUserSetting(dropdownPageSizeKey),
+                    infiniteLimit = this.sandbox.sulu.getUserSetting(infinitePageSizeKey),
                     order = this.sandbox.sulu.getUserSetting(orderKey),
                     url = (typeof fields === 'string') ? fields : null,
                     callback = function(data) {
@@ -399,13 +407,13 @@
                                     url: url
                                 },
                                 instanceName: 'content',
-                                inHeader: false,
                                 context: context
                             },
                             toolbarOptions = this.sandbox.util.extend(true, {}, toolbarDefaults, listToolbarOptions),
                             gridDefaults = {
                                 view: 'table',
                                 pagination: 'dropdown',
+                                paginationOptions: {},
                                 matchings: data,
                                 selectedCounter: true,
                                 viewOptions: {
@@ -416,14 +424,20 @@
                             },
                             paginationOptionsDefaults = {
                                 dropdown: {
-                                    limit: limit
+                                    limit: dropdownLimit
+                                },
+                                'infinite-scroll': {
+                                    limit: infiniteLimit
                                 }
                             },
                             gridOptions,
                             datagridEventNamespace = 'husky.datagrid.';
 
-                        if (!!limit) {
-                            gridDefaults.paginationOptions = paginationOptionsDefaults;
+                        if (!!dropdownLimit) {
+                            gridDefaults.paginationOptions.dropdown = paginationOptionsDefaults.dropdown;
+                        }
+                        if (!!infiniteLimit) {
+                            gridDefaults.paginationOptions.dropdown = paginationOptionsDefaults['infinite-scroll'];
                         }
 
                         gridOptions = this.sandbox.util.extend(true, {}, gridDefaults, datagridOptions);
@@ -452,13 +466,18 @@
                             }
                         ]);
 
-                        if(!!gridOptions.instanceName) {
-                            datagridEventNamespace += gridOptions.instanceName + '.'
+                        if (!!gridOptions.instanceName) {
+                            datagridEventNamespace += gridOptions.instanceName + '.';
                         }
 
                         // save page size when changed
-                        this.sandbox.on(datagridEventNamespace + 'page-size.changed', function(size) {
-                            this.sandbox.sulu.saveUserSetting(pageSizeKey, size);
+                        this.sandbox.on(datagridEventNamespace + 'page-size.changed', function(size, paginationId) {
+                            var key = dropdownPageSizeKey;
+                            if (paginationId === 'infinite-scroll') {
+                                key = infinitePageSizeKey;
+                            }
+
+                            this.sandbox.sulu.saveUserSetting(key, size);
                         }.bind(this));
 
                         // save sorting when changed

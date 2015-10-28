@@ -2,7 +2,7 @@ sulu_core:
     phpcr:
         backend:
             type: jackrabbit
-            url: http://localhost:8080/server/
+            url:  "%phpcr_backend_url%"
         workspace: test
-        username: admin
-        password: admin
+        username: "%phpcr_username%"
+        password: "%phpcr_password%"

@@ -41,9 +41,16 @@ use Sulu\Component\Security\Authentication\UserInterface;
  */
 class Contact extends ApiWrapper
 {
+    const TYPE = 'contact';
+
+    /**
+     * @var Media
+     */
+    private $avatar = null;
+
     /**
      * @param ContactEntity $contact
-     * @param string        $locale  The locale of this product
+     * @param string $locale The locale of this product
      */
     public function __construct(ContactEntity $contact, $locale)
     {
@@ -55,6 +62,7 @@ class Contact extends ApiWrapper
      * Get id.
      *
      * @return int
+     *
      * @VirtualProperty
      * @SerializedName("id")
      * @Groups({"fullContact","partialContact","select"})
@@ -82,6 +90,7 @@ class Contact extends ApiWrapper
      * Get first name.
      *
      * @return string
+     *
      * @VirtualProperty
      * @SerializedName("firstName")
      * @Groups({"fullContact","partialContact"})
@@ -97,7 +106,6 @@ class Contact extends ApiWrapper
      * @param string $middleName
      *
      * @return Contact
-     * @Groups({"fullContact","partialContact"})
      */
     public function setMiddleName($middleName)
     {
@@ -110,6 +118,7 @@ class Contact extends ApiWrapper
      * Get middle name.
      *
      * @return string
+     *
      * @VirtualProperty
      * @SerializedName("middleName")
      * @Groups({"fullContact","partialContact"})
@@ -137,6 +146,7 @@ class Contact extends ApiWrapper
      * Get last name.
      *
      * @return string
+     *
      * @VirtualProperty
      * @SerializedName("lastName")
      * @Groups({"fullContact","partialContact"})
@@ -147,10 +157,10 @@ class Contact extends ApiWrapper
     }
 
     /**
+     * @return string
+     *
      * @VirtualProperty
      * @SerializedName("fullName")
-     *
-     * @return string
      * @Groups({"fullContact","partialContact","select"})
      */
     public function getFullName()
@@ -176,6 +186,7 @@ class Contact extends ApiWrapper
      * Get title.
      *
      * @return string
+     *
      * @VirtualProperty
      * @SerializedName("title")
      * @Groups({"fullContact", "partialContact"})
@@ -213,6 +224,7 @@ class Contact extends ApiWrapper
      * Get position.
      *
      * @return string
+     *
      * @VirtualProperty
      * @SerializedName("position")
      * @Groups({"fullContact","partialContact"})
@@ -240,6 +252,7 @@ class Contact extends ApiWrapper
      * Get birthday.
      *
      * @return \DateTime
+     *
      * @VirtualProperty
      * @SerializedName("birthday")
      * @Groups({"fullContact"})
@@ -253,6 +266,7 @@ class Contact extends ApiWrapper
      * Get created.
      *
      * @return \DateTime
+     *
      * @VirtualProperty
      * @SerializedName("created")
      * @Groups({"fullContact"})
@@ -266,6 +280,7 @@ class Contact extends ApiWrapper
      * Get changed.
      *
      * @return \DateTime
+     *
      * @VirtualProperty
      * @SerializedName("changed")
      * @Groups({"fullContact"})
@@ -307,6 +322,7 @@ class Contact extends ApiWrapper
      * Get locales.
      *
      * @return array
+     *
      * @VirtualProperty
      * @SerializedName("locales")
      * @Groups({"fullContact"})
@@ -383,6 +399,7 @@ class Contact extends ApiWrapper
      * Get notes.
      *
      * @return array
+     *
      * @VirtualProperty
      * @SerializedName("notes")
      * @Groups({"fullContact"})
@@ -427,6 +444,7 @@ class Contact extends ApiWrapper
      * Get emails.
      *
      * @return array
+     *
      * @VirtualProperty
      * @SerializedName("emails")
      * @Groups({"fullContact"})
@@ -471,6 +489,7 @@ class Contact extends ApiWrapper
      * Get phones.
      *
      * @return array
+     *
      * @VirtualProperty
      * @SerializedName("phones")
      * @Groups({"fullContact"})
@@ -515,6 +534,7 @@ class Contact extends ApiWrapper
      * Get faxes.
      *
      * @return array
+     *
      * @VirtualProperty
      * @SerializedName("faxes")
      * @Groups({"fullContact"})
@@ -559,6 +579,7 @@ class Contact extends ApiWrapper
      * Get urls.
      *
      * @return array
+     *
      * @VirtualProperty
      * @SerializedName("urls")
      * @Groups({"fullContact"})
@@ -593,6 +614,7 @@ class Contact extends ApiWrapper
      * Get form of address.
      *
      * @return int
+     *
      * @VirtualProperty
      * @SerializedName("formOfAddress")
      * @Groups({"fullContact"})
@@ -620,6 +642,7 @@ class Contact extends ApiWrapper
      * Get salutation.
      *
      * @return string
+     *
      * @VirtualProperty
      * @SerializedName("salutation")
      * @Groups({"fullContact"})
@@ -647,6 +670,7 @@ class Contact extends ApiWrapper
      * Get disabled.
      *
      * @return int
+     *
      * @VirtualProperty
      * @SerializedName("disabled")
      * @Groups({"fullContact","partialContact"})
@@ -654,6 +678,37 @@ class Contact extends ApiWrapper
     public function getDisabled()
     {
         return $this->entity->getDisabled();
+    }
+
+    /**
+     * Sets the avatar (media-api object).
+     *
+     * @param Media $avatar
+     */
+    public function setAvatar(Media $avatar)
+    {
+        $this->avatar = $avatar;
+    }
+
+    /**
+     * Get the contacts avatar and return the array of different formats.
+     *
+     * @return Media
+     *
+     * @VirtualProperty
+     * @SerializedName("avatar")
+     * @Groups({"fullContact","partialContact"})
+     */
+    public function getAvatar()
+    {
+        if ($this->avatar) {
+            return [
+                'id' => $this->avatar->getId(),
+                'thumbnails' => $this->avatar->getFormats(),
+            ];
+        }
+
+        return;
     }
 
     /**
@@ -684,6 +739,7 @@ class Contact extends ApiWrapper
      * Get tags.
      *
      * @return array
+     *
      * @VirtualProperty
      * @SerializedName("tags")
      * @Groups({"fullContact"})
@@ -697,6 +753,7 @@ class Contact extends ApiWrapper
      * Get bank accounts.
      *
      * @return array
+     *
      * @VirtualProperty
      * @SerializedName("bankAccounts")
      * @Groups({"fullContact"})
@@ -732,6 +789,7 @@ class Contact extends ApiWrapper
      * Get newsletter.
      *
      * @return bool
+     *
      * @VirtualProperty
      * @SerializedName("newsletter")
      * @Groups({"fullContact"})
@@ -759,6 +817,7 @@ class Contact extends ApiWrapper
      * Get gender.
      *
      * @return string
+     *
      * @VirtualProperty
      * @SerializedName("gender")
      * @Groups({"fullContact"})
@@ -827,6 +886,7 @@ class Contact extends ApiWrapper
      * Get main email.
      *
      * @return string
+     *
      * @VirtualProperty
      * @SerializedName("mainEmail")
      * @Groups({"fullContact","partialContact"})
@@ -854,6 +914,7 @@ class Contact extends ApiWrapper
      * Get main phone.
      *
      * @return string
+     *
      * @VirtualProperty
      * @SerializedName("mainPhone")
      * @Groups({"fullContact","partialContact"})
@@ -881,6 +942,7 @@ class Contact extends ApiWrapper
      * Get main fax.
      *
      * @return string
+     *
      * @VirtualProperty
      * @SerializedName("mainFax")
      * @Groups({"fullContact","partialContact"})
@@ -908,6 +970,7 @@ class Contact extends ApiWrapper
      * Get main url.
      *
      * @return string
+     *
      * @VirtualProperty
      * @SerializedName("mainUrl")
      * @Groups({"fullContact","partialContact"})
@@ -921,6 +984,7 @@ class Contact extends ApiWrapper
      * Returns the main address.
      *
      * @return mixed
+     *
      * @VirtualProperty
      * @SerializedName("mainAddress")
      * @Groups({"fullContact","partialContact"})
@@ -967,6 +1031,7 @@ class Contact extends ApiWrapper
      * Get medias.
      *
      * @return Media[]
+     *
      * @VirtualProperty
      * @SerializedName("medias")
      * @Groups({"fullContact"})
@@ -1011,6 +1076,7 @@ class Contact extends ApiWrapper
      * Get categories.
      *
      * @return Category[]
+     *
      * @VirtualProperty
      * @SerializedName("categories")
      * @Groups({"fullContact"})
@@ -1025,6 +1091,18 @@ class Contact extends ApiWrapper
         }
 
         return $entities;
+    }
+
+    /**
+     * Get type of api entity.
+     *
+     * @VirtualProperty
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return self::TYPE;
     }
 
     /**

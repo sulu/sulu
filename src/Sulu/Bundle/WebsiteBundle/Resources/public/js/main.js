@@ -23,13 +23,28 @@ define({
 
         var sandbox = app.sandbox;
 
+        app.sandbox.website = {
+            /**
+             * Clear the cache for the website.
+             */
+            cacheClear: function() {
+                app.sandbox.util.load('/admin/website/cache/clear')
+                    .then(function() {
+                        app.sandbox.emit('sulu.labels.success.show', 'sulu.website.cache.remove.success.description', 'sulu.website.cache.remove.success.title', 'cache-success');
+                    }.bind(this))
+                    .fail(function() {
+                        app.sandbox.emit('sulu.labels.error.show', 'sulu.website.cache.remove.error.description', 'sulu.website.cache.remove.error.title', 'cache-error');
+                    }.bind(this));
+            }
+        };
+
         app.components.addSource('suluwebsite', '/bundles/suluwebsite/js/components');
 
         // cache clear button
         sandbox.mvc.routes.push({
             route: 'settings/cache',
             callback: function() {
-                this.html('<div data-aura-component="cache@suluwebsite"/>');
+                return '<div data-aura-component="cache@suluwebsite"/>';
             }
         });
     }

@@ -100,7 +100,6 @@ class User extends BaseUser
      * {@inheritdoc}
      *
      * @VirtualProperty
-     * @Groups({"frontend"})
      */
     public function getRoles()
     {
@@ -109,6 +108,19 @@ class User extends BaseUser
         foreach ($this->getUserRoles() as $userRole) {
             /* @var UserRole $userRole */
             $roles[] = $userRole->getRole()->getIdentifier();
+        }
+
+        return $roles;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRoleObjects()
+    {
+        $roles = [];
+        foreach ($this->getUserRoles() as $userRole) {
+            $roles[] = $userRole->getRole();
         }
 
         return $roles;
@@ -190,7 +202,7 @@ class User extends BaseUser
     {
         $userSettingValues = [];
         foreach ($this->userSettings as $userSetting) {
-            $userSettingValues[$userSetting->getKey()] = json_decode($userSetting->getValue());
+            $userSettingValues[$userSetting->getKey()] = json_decode($userSetting->getValue(), true);
         }
 
         return $userSettingValues;

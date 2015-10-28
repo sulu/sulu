@@ -37,6 +37,7 @@ abstract class SuluKernel extends Kernel
     public function __construct($environment, $debug, $suluContext = self::CONTEXT_ADMIN)
     {
         $this->setContext($suluContext);
+
         parent::__construct($environment, $debug);
     }
 

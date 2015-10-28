@@ -24,6 +24,7 @@ use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManager;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
+use Sulu\Component\PHPCR\SessionManager\SessionManager;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -59,6 +60,11 @@ class ContentMapperTest extends SuluTestCase
     private $session;
 
     /**
+     * @var SessionManager
+     */
+    private $sessionManager;
+
+    /**
      * @var ExtensionManager
      */
     private $extensionManager;
@@ -80,6 +86,7 @@ class ContentMapperTest extends SuluTestCase
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->session = $this->getContainer()->get('doctrine_phpcr.default_session');
+        $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->extensionManager = $this->getContainer()->get('sulu_content.extension.manager');
         $this->contentTypeManager = $this->getContainer()->get('sulu.content.type_manager');
 
@@ -126,11 +133,10 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('sulu_io', $result->getPropertyValue('article'));
         $this->assertEmpty($result->getNavContexts());
 
-        $root = $this->session->getRootNode();
         $route = $this->documentManager->find('/cmf/sulu_io/routes/de/news/test', 'de');
-
         $page = $route->getTargetDocument();
 
+        $this->assertNotNull($page);
         $this->assertEquals('Testname', $page->getTitle());
         $this->assertEquals('sulu_io', $page->getStructure()->getProperty('article')->getValue());
         $this->assertEquals(['tag1', 'tag2'], $page->getStructure()->getProperty('tags')->getValue());
@@ -1005,7 +1011,13 @@ class ContentMapperTest extends SuluTestCase
             ],
         ];
 
-        $this->mapper->saveStartPage(['title' => 'Start Page'], 'overview', 'sulu_io', 'de', 1);
+        $this->saveStartPage(
+            ['title' => 'Start Page'],
+            'overview',
+            'sulu_io',
+            'de',
+            1
+        );
 
         // save root content
         $result['root'] = $this->mapper->save($data[0], 'overview', 'sulu_io', 'de', 1);
@@ -1148,58 +1160,6 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals(1, count($children));
         $this->assertEquals('Testnews-2-1', $children[0]->title);
         $this->assertEquals('/news/testnews-2/testnews-2-1', $children[0]->getPath());
-    }
-
-    public function testStartPage()
-    {
-        $data = [
-            'title' => 'startpage',
-            'tags' => [
-                'tag1',
-                'tag2',
-            ],
-            'url' => '/',
-            'article' => 'article',
-        ];
-
-        $this->mapper->saveStartPage($data, 'overview', 'sulu_io', 'en', 1, false);
-
-        $startPage = $this->mapper->loadStartPage('sulu_io', 'en');
-        $this->assertEquals('startpage', $startPage->title);
-        $this->assertEquals('/', $startPage->url);
-
-        $data['title'] = 'new-startpage';
-
-        $this->mapper->saveStartPage($data, 'overview', 'sulu_io', 'en', 1, false);
-
-        $startPage = $this->mapper->loadStartPage('sulu_io', 'en');
-        $this->assertEquals('new-startpage', $startPage->title);
-        $this->assertEquals('/', $startPage->url);
-
-        $startPage = $this->mapper->loadByResourceLocator('/', 'sulu_io', 'en');
-        $this->assertEquals('new-startpage', $startPage->title);
-        $this->assertEquals('/', $startPage->url);
-    }
-
-    public function testShadowStartPage()
-    {
-        $data = [
-            'title' => 'startpage',
-            'tags' => [
-                'tag1',
-                'tag2',
-            ],
-            'url' => '/',
-            'article' => 'article',
-        ];
-
-        $this->mapper->saveStartPage($data, 'overview', 'sulu_io', 'en', 1, false);
-
-        $this->mapper->saveStartPage(['title' => 'Startseite'], 'overview', 'sulu_io', 'de', 1, false, true, 'en');
-
-        $startPage = $this->mapper->loadStartPage('sulu_io', 'de');
-        $this->assertEquals('startpage', $startPage->title);
-        $this->assertEquals('/', $startPage->url);
     }
 
     public function testDelete()
@@ -1484,7 +1444,13 @@ class ContentMapperTest extends SuluTestCase
             ],
         ];
 
-        $this->mapper->saveStartPage(['title' => 'Start Page'], 'overview', 'sulu_io', 'de', 1);
+        $this->saveStartPage(
+            ['title' => 'Start Page'],
+            'overview',
+            'sulu_io',
+            'de',
+            1
+        );
 
         // save root content
         $result['news-en'] = $this->mapper->save($data[0], 'overview', 'sulu_io', 'en', 1);
@@ -1881,6 +1847,7 @@ class ContentMapperTest extends SuluTestCase
         $dataEn = [
             'title' => 'Testname-EN',
             'blog' => 'English',
+            'url' => '/news/test',
         ];
         $structureEn = $this->mapper->save($dataEn, 'default', 'sulu_io', 'en', 1, true, $structureDe->getUuid())->toArray();
         $structureDe = $this->mapper->load($structureDe->getUuid(), 'sulu_io', 'de');
@@ -2100,8 +2067,8 @@ class ContentMapperTest extends SuluTestCase
 
     private function prepareCopyLanguageTree()
     {
-        $this->mapper->saveStartPage(['title' => 'Start Page'], 'overview', 'sulu_io', 'de', 1);
-        $this->mapper->saveStartPage(['title' => 'Start Page'], 'overview', 'sulu_io', 'en', 1);
+        $this->saveStartPage(['title' => 'Start Page'], 'overview', 'sulu_io', 'de', 1);
+        $this->saveStartPage(['title' => 'Start Page'], 'overview', 'sulu_io', 'en', 1);
 
         $data = [
             [
@@ -2158,7 +2125,9 @@ class ContentMapperTest extends SuluTestCase
 
         $result = $this->mapper->loadNodeAndAncestors($child->getUuid(), 'en', 'sulu_io', true);
 
-        $this->assertCount(0, $result);
+        // at least homepage will be found
+        $this->assertCount(1, $result);
+        $this->assertEquals('/', $result[0]->getPropertyValue('url'));
     }
 
     public function testSection()
@@ -2563,7 +2532,7 @@ class ContentMapperTest extends SuluTestCase
         $structure1 = $this->mapper->save($data1, 'default', 'sulu_io', 'en', 1);
 
         $data2 = [
-            'title' => 'Test',
+            'title' => 'Test 1',
             'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
             'internal_link' => $structure1->getUuid(),
         ];
@@ -2578,7 +2547,7 @@ class ContentMapperTest extends SuluTestCase
         $data3 = [
             'title' => 'Test',
             'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
-            'external' => 'www.google.at',
+            'external' => 'http://www.google.at',
         ];
         $structure3 = $this->mapper->save($data3, 'external-link', 'sulu_io', 'en', 1);
 
@@ -2590,8 +2559,8 @@ class ContentMapperTest extends SuluTestCase
 
     private function prepareSinglePageTestData()
     {
-        $this->mapper->saveStartPage(['title' => 'Start Page'], 'overview', 'sulu_io', 'de', 1);
-        $this->mapper->saveStartPage(['title' => 'Start Page'], 'overview', 'sulu_io', 'en', 1);
+        $this->saveStartPage(['title' => 'Start Page'], 'overview', 'sulu_io', 'de', 1);
+        $this->saveStartPage(['title' => 'Start Page'], 'overview', 'sulu_io', 'en', 1);
 
         $data = [
             'title' => 'Page-1',
@@ -2655,7 +2624,7 @@ class ContentMapperTest extends SuluTestCase
             ],
         ];
 
-        $this->mapper->saveStartPage(['title' => 'Start Page'], 'overview', 'sulu_io', 'de', 1);
+        $this->saveStartPage(['title' => 'Start Page'], 'overview', 'sulu_io', 'de', 1);
 
         // save content
         $data[0] = $this->mapper->save($data[0], 'overview', 'sulu_io', 'de', 1);
@@ -2701,7 +2670,7 @@ class ContentMapperTest extends SuluTestCase
             ],
         ];
 
-        $this->mapper->saveStartPage(['title' => 'Start Page'], 'overview', 'sulu_io', 'en', 1);
+        $this->saveStartPage(['title' => 'Start Page'], 'overview', 'sulu_io', 'en', 1);
 
         $data[0] = $this->mapper->save($data[0], 'overview', 'sulu_io', 'en', 1);
         $data[1] = $this->mapper->save($data[1], 'overview', 'sulu_io', 'en', 1, true, null, $data[0]->getUuid());
@@ -3001,6 +2970,51 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('/page-1/page-1-4', $result[3]->getPath());
     }
 
+    public function testOrderAtInternalLink()
+    {
+        $this->tokenStorage->setToken($this->createUserTokenWithId(17));
+        $data = $this->prepareOrderAtData();
+
+        $this->documentManager->clear();
+
+        $testSiteData = [
+            'title' => 'Test',
+            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
+            'url' => '/test/123',
+            'internal_link' => $data[0]->getUuid(),
+        ];
+        $site = $this->mapper->save(
+            $testSiteData,
+            'internal_link_page',
+            'sulu_io',
+            'en',
+            1,
+            true,
+            null,
+            $data[0]->getUuid()
+        );
+
+        $this->documentManager->clear();
+
+        $result = $this->mapper->orderAt($site->getUuid(), 3, 17, 'sulu_io', 'en');
+        $this->assertEquals($site->getUuid(), $result->getUuid());
+        $this->assertEquals('/page-1/test', $result->getPath());
+        $this->assertEquals(17, $result->getChanger());
+
+        $this->documentManager->clear();
+
+        $result = $this->documentManager->find($site->getUuid(), 'en');
+        $this->assertEquals(30, $result->getSuluOrder());
+        $this->assertNull($result->getResourceSegment());
+
+        $result = $this->mapper->loadByParent($data[0]->getUuid(), 'sulu_io', 'en');
+        $this->assertEquals('/page-1/page-1-1', $result[0]->getPath());
+        $this->assertEquals('/page-1/page-1-2', $result[1]->getPath());
+        $this->assertEquals('/page-1/test', $result[2]->getPath());
+        $this->assertEquals('/page-1/page-1-3', $result[3]->getPath());
+        $this->assertEquals('/page-1/page-1-4', $result[4]->getPath());
+    }
+
     public function testOrderAtToLast()
     {
         $data = $this->prepareOrderAtData();
@@ -3021,7 +3035,7 @@ class ContentMapperTest extends SuluTestCase
     {
         $data = [
             'title' => 'Page-1',
-            'external' => 'www.google.at',
+            'external' => 'http://www.google.at',
             'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
             'url' => '/url',
         ];
@@ -3032,13 +3046,13 @@ class ContentMapperTest extends SuluTestCase
         // check save result
         $this->assertEquals('Page-1', $saveResult->title);
         $this->assertEquals('Page-1', $saveResult->getNodeName());
-        $this->assertEquals('www.google.at', $saveResult->external);
+        $this->assertEquals('http://www.google.at', $saveResult->external);
         $this->assertEquals('http://www.google.at', $saveResult->getResourceLocator());
 
         // check load result
         $this->assertEquals('Page-1', $loadResult->title);
         $this->assertEquals('Page-1', $loadResult->getNodeName());
-        $this->assertEquals('www.google.at', $loadResult->external);
+        $this->assertEquals('http://www.google.at', $loadResult->external);
         $this->assertEquals('http://www.google.at', $loadResult->getResourceLocator());
     }
 
@@ -3054,7 +3068,7 @@ class ContentMapperTest extends SuluTestCase
         // turn it into a external link
         $data = [
             'title' => 'External',
-            'external' => 'www.google.at',
+            'external' => 'http://www.google.at',
             'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
         ];
         $saveResult = $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1, true, $result->getUuid());
@@ -3063,14 +3077,14 @@ class ContentMapperTest extends SuluTestCase
         // check save result
         $this->assertEquals('External', $saveResult->title);
         $this->assertEquals('External', $saveResult->getNodeName());
-        $this->assertEquals('www.google.at', $saveResult->external);
+        $this->assertEquals('http://www.google.at', $saveResult->external);
         $this->assertEquals('http://www.google.at', $saveResult->getResourceLocator());
         $this->assertEquals('overview', $saveResult->getOriginTemplate());
 
         // check load result
         $this->assertEquals('External', $loadResult->title);
         $this->assertEquals('External', $loadResult->getNodeName());
-        $this->assertEquals('www.google.at', $loadResult->external);
+        $this->assertEquals('http://www.google.at', $loadResult->external);
         $this->assertEquals('http://www.google.at', $loadResult->getResourceLocator());
         $this->assertEquals('overview', $loadResult->getOriginTemplate());
 
@@ -3241,7 +3255,7 @@ class ContentMapperTest extends SuluTestCase
             'title' => 'Test',
             'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
             'url' => '/test/123',
-            'the_internal_link' => $internalLink->getUuid(),
+            'internal_link' => $internalLink->getUuid(),
         ];
         $testSiteStructure = $this->mapper->save($testSiteData, 'internal_link_page', 'sulu_io', 'en', 1);
 
@@ -3391,6 +3405,32 @@ class ContentMapperTest extends SuluTestCase
         $userToken->setUser($user->reveal());
 
         return $userToken;
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getHomeUuid()
+    {
+        return $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
+    }
+
+    private function saveStartPage($data, $templateKey, $webspaceKey, $locale, $userId)
+    {
+        $this->mapper->save(
+            $data,
+            $templateKey,
+            $webspaceKey,
+            $locale,
+            $userId,
+            true,
+            $this->getHomeUuid(),
+            null,
+            WorkflowStage::PUBLISHED,
+            null,
+            null,
+            'home'
+        );
     }
 }
 

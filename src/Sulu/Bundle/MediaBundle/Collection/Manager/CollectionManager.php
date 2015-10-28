@@ -27,7 +27,9 @@ use Sulu\Bundle\MediaBundle\Media\Exception\CollectionTypeNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Default implementation of collection manager.
@@ -66,6 +68,11 @@ class CollectionManager implements CollectionManagerInterface
     protected $em;
 
     /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
      * @var DoctrineFieldDescriptor[]
      */
     private $fieldDescriptors;
@@ -80,20 +87,29 @@ class CollectionManager implements CollectionManagerInterface
      */
     private $collectionPreviewFormat;
 
+    /**
+     * @var array
+     */
+    private $permissions;
+
     public function __construct(
         CollectionRepositoryInterface $collectionRepository,
         MediaRepositoryInterface $mediaRepository,
         FormatManagerInterface $formatManager,
         UserRepositoryInterface $userRepository,
         EntityManager $em,
-        $collectionPreviewFormat
+        TokenStorageInterface $tokenStorage,
+        $collectionPreviewFormat,
+        $permissions
     ) {
-        $this->em = $em;
-        $this->userRepository = $userRepository;
         $this->collectionRepository = $collectionRepository;
         $this->mediaRepository = $mediaRepository;
         $this->formatManager = $formatManager;
+        $this->userRepository = $userRepository;
+        $this->em = $em;
+        $this->tokenStorage = $tokenStorage;
         $this->collectionPreviewFormat = $collectionPreviewFormat;
+        $this->permissions = $permissions;
     }
 
     /**
@@ -110,7 +126,9 @@ class CollectionManager implements CollectionManagerInterface
             $depth,
             $filter,
             $collectionEntity,
-            $sortBy
+            $sortBy,
+            $this->getCurrentUser(),
+            $this->permissions['view']
         );
 
         $breadcrumbEntities = null;
@@ -148,7 +166,9 @@ class CollectionManager implements CollectionManagerInterface
             $depth,
             ['offset' => $offset, 'limit' => $limit, 'search' => $search, 'locale' => $locale],
             null,
-            $sortBy
+            $sortBy,
+            $this->getCurrentUser(),
+            $this->permissions['view']
         );
 
         $collections = [];
@@ -625,5 +645,15 @@ class CollectionManager implements CollectionManagerInterface
         }
 
         return $this->addPreview($apiEntity);
+    }
+
+    /**
+     * Returns the current user from the token storage.
+     *
+     * @return UserInterface|null
+     */
+    protected function getCurrentUser()
+    {
+        return $this->tokenStorage ? $this->tokenStorage->getToken()->getUser() : null;
     }
 }

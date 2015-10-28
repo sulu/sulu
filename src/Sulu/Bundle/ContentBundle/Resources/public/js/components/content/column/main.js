@@ -7,7 +7,10 @@
  * with this source code in the file LICENSE.
  */
 
-define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
+define([
+    'sulucontent/components/open-ghost-overlay/main',
+    'sulusecurity/services/security-checker'
+], function(OpenGhost, SecurityChecker) {
 
     'use strict';
 
@@ -42,36 +45,18 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
         ACTION_ICON_VIEW = 'fa-eye',
 
         getActionIcon = function(data) {
-            if (!data.hasOwnProperty('permissions')) {
-                return ACTION_ICON_EDIT;
-            }
-
             var actionIcon = '';
-            $.each(data.permissions, function(role, permission) {
-                if ($.inArray(role, this.sandbox.sulu.user.roles) === -1) {
-                    return true;
-                }
 
-                if ($.inArray('edit', permission) !== -1) {
-                    actionIcon = ACTION_ICON_EDIT;
-
-                    return false;
-                } else if ($.inArray('view', permission) !== -1) {
-                    actionIcon = ACTION_ICON_VIEW;
-
-                    return false;
-                }
-            }.bind(this));
+            if (!!data._permissions.edit) {
+                actionIcon = ACTION_ICON_EDIT;
+            } else if (!!data._permissions.view) {
+                actionIcon = ACTION_ICON_VIEW;
+            }
 
             return actionIcon;
         },
 
         templates = {
-            toggler: [
-                '<div id="show-ghost-pages"></div>',
-                '<label class="inline spacing-left" for="show-ghost-pages"><%= label %></label>'
-            ].join(''),
-
             columnNavigation: function() {
                 return [
                     '<div id="child-column-navigation"/>',
@@ -85,14 +70,101 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
                     '<div id="wait-container" style="margin-top: 50px; margin-bottom: 200px; display: none;"></div>'
                 ].join('');
             }
+        },
+
+
+        /**
+         * Enabler for selected items
+         * @param column
+         * @returns {boolean}
+         */
+        hasSelectedEnabler = function(column) {
+            return !!column.hasSelected;
+        },
+
+        /**
+         * Enabler for DELETE
+         * @param column
+         * @returns {boolean}
+         */
+        deleteEnabler = function(column) {
+            return hasSelectedEnabler(column) && SecurityChecker.hasPermission(column.selectedItem, 'delete');
+        },
+
+        /**
+         * Enabler for MOVE
+         * @param column
+         * @return {boolean}
+         */
+        moveEnabler = function(column) {
+            return hasSelectedEnabler(column) && SecurityChecker.hasPermission(column.selectedItem, 'edit');
+        },
+
+        /**
+         * Enabler for COPY
+         * @param column
+         * @returns {boolean}
+         */
+        copyEnabler = function(column) {
+            return hasSelectedEnabler(column) && SecurityChecker.hasPermission(column.selectedItem, 'view');
+        },
+
+        /**
+         * Enaber for ORDER
+         * @param column
+         * @returns {boolean}
+         */
+        orderEnabler = function(column) {
+            var editChildrenPermission = true;
+
+            $.each(column.children, function(id, childItem) {
+                if (!SecurityChecker.hasPermission(childItem, 'edit')) {
+                    editChildrenPermission = false;
+                    return false;
+                }
+            });
+
+            return column.numberItems > 1 && editChildrenPermission && checkParentSecurity(column, 'edit');
+        },
+
+        /**
+         * Enables the add button if the parent allows
+         * @param column
+         * @returns {boolean}
+         */
+        addButtonEnabler = function(column) {
+            return checkParentSecurity(column, 'add');
+        },
+
+        /**
+         * Checks if the selected item in the parent column has the given permission
+         * @param column
+         * @param permission
+         * @returns {boolean}
+         */
+        checkParentSecurity = function(column, permission) {
+            if (!!column.parent) {
+                if (!!column.parent.hasOwnProperty('_permissions')) {
+                    return column.parent._permissions[permission];
+                }
+
+                if (!column.parent.selectedItem) {
+                    return true;
+                }
+            }
+
+            return SecurityChecker.hasPermission(column.parent.selectedItem, permission);
         };
 
     return {
 
-        view: true,
-
         layout: {
-            changeNothing: true
+            content: {
+                width: 'max',
+                leftSpace: false,
+                rightSpace: false,
+                topSpace: false
+            }
         },
 
         initialize: function() {
@@ -158,13 +230,13 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
                 this.localizations = localizations;
             }, this);
 
-            this.sandbox.on('husky.toggler.show-ghost-pages.changed', function(checked) {
+            this.sandbox.on('husky.toggler.sulu-toolbar.changed', function(checked) {
                 this.showGhostPages = checked;
                 this.sandbox.sulu.saveUserSetting(SHOW_GHOST_PAGES_KEY, this.showGhostPages);
                 this.startColumnNavigation();
             }, this);
 
-            this.sandbox.on('husky.column-navigation.node.settings', function(dropdownItem, selectedItem, columnItems) {
+            this.sandbox.on('husky.column-navigation.node.settings', function(dropdownItem, selectedItem) {
                 if (dropdownItem.id === MOVE_BUTTON_ID) {
                     this.moveSelected(selectedItem);
                 } else if (dropdownItem.id === COPY_BUTTON_ID) {
@@ -251,11 +323,6 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
             // wait for closing overlay to unbind events
             this.sandbox.once('husky.overlay.node.closed', function() {
                 this.sandbox.off('husky.column-navigation.overlay.action', editCallback);
-            }.bind(this));
-
-            // adjust position of overlay after column-navigation has initialized
-            this.sandbox.once('husky.column-navigation.overlay.initialized', function() {
-                this.sandbox.emit('husky.overlay.node.set-position');
             }.bind(this));
 
             this.startOverlay('content.contents.settings.' + title + '.title', templates.columnNavigation(), false);
@@ -456,11 +523,12 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
                         resultKey: 'nodes',
                         url: this.getUrl(),
                         actionIcon: getActionIcon.bind(this),
+                        addButton: addButtonEnabler.bind(this),
                         data: [
                             {
                                 id: DELETE_BUTTON_ID,
                                 name: this.sandbox.translate('content.contents.settings.delete'),
-                                enabler: this.hasSelectedEnabler
+                                enabler: deleteEnabler.bind(this)
                             },
                             {
                                 id: 2,
@@ -469,41 +537,23 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
                             {
                                 id: MOVE_BUTTON_ID,
                                 name: this.sandbox.translate('content.contents.settings.move'),
-                                enabler: this.hasSelectedEnabler
+                                enabler: moveEnabler.bind(this)
                             },
                             {
                                 id: COPY_BUTTON_ID,
                                 name: this.sandbox.translate('content.contents.settings.copy'),
-                                enabler: this.hasSelectedEnabler
+                                enabler: copyEnabler.bind(this)
                             },
                             {
                                 id: ORDER_BUTTON_ID,
                                 name: this.sandbox.translate('content.contents.settings.order'),
                                 mode: 'order',
-                                enabler: this.orderEnabler
+                                enabler: orderEnabler.bind(this)
                             }
                         ]
                     }
                 }
             ]);
-        },
-
-        /**
-         * Enabler for MOVE, COPY and DELETE
-         * @param column
-         * @returns {boolean}
-         */
-        hasSelectedEnabler: function(column) {
-            return !!column.hasSelected;
-        },
-
-        /**
-         * Enaber for ORDER
-         * @param column
-         * @returns {boolean}
-         */
-        orderEnabler: function(column) {
-            return column.numberItems > 1;
         },
 
         /**
@@ -545,7 +595,8 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
             if (this.getLastSelected() !== null) {
                 return '/admin/api/nodes?id=' + this.getLastSelected() + '&tree=true&webspace=' + this.options.webspace +
                     '&language=' + this.options.language +
-                    '&exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false');
+                    '&exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false') +
+                    '&exclude-shadows=' + (!this.showGhostPages ? 'true' : 'false');
             } else {
                 return '/admin/api/nodes?depth=1&webspace=' + this.options.webspace +
                     '&language=' + this.options.language +
@@ -570,31 +621,37 @@ define(['sulucontent/components/open-ghost-overlay/main'], function(OpenGhost) {
 
                 this.sandbox.dom.html(this.$el, tpl);
 
-                this.addToggler();
-
                 // start column-navigation
                 this.startColumnNavigation();
             }.bind(this));
         },
 
-        /**
-         * Generates the toggler and adds it to the header
-         */
-        addToggler: function() {
-            this.sandbox.emit('sulu.header.set-bottom-content', this.sandbox.util.template(templates.toggler)({
-                label: this.sandbox.translate('content.contents.show-ghost-pages')
-            }));
+        openGhost: function(item) {
+            this.startOverlay(
+                'content.contents.settings.copy-locale.title',
+                templates.openGhost.call(this), true, 'copy-locale-overlay',
+                function() {
+                    var copy = this.sandbox.dom.prop('#copy-locale-copy', 'checked'),
+                        src = this.sandbox.dom.data('#copy-locale-overlay-select', 'selectionValues'),
+                        dest = this.options.language;
 
-            this.sandbox.start([
-                {
-                    name: 'toggler@husky',
-                    options: {
-                        el: '#show-ghost-pages',
-                        checked: this.showGhostPages,
-                        outline: true
+                    if (!!copy) {
+                        if (!src || src.length === 0) {
+                            return false;
+                        }
+
+                        this.sandbox.emit('sulu.content.contents.copy-locale', item.id, src[0], [dest], function() {
+                            this.sandbox.emit('sulu.content.contents.load', item);
+                        }.bind(this));
+                    } else {
+                        this.sandbox.emit('sulu.content.contents.load', item);
                     }
-                }
-            ]);
+                }.bind(this)
+            );
+
+            this.sandbox.once('husky.select.copy-locale-to.selected.item', function() {
+                this.sandbox.dom.prop('#copy-locale-copy', 'checked', true);
+            }.bind(this));
         }
     };
 });

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\NoResultException;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
+use Sulu\Component\Persistence\Repository\ORM\OrderByTrait;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\Security\Core\Exception\DisabledException;
@@ -27,6 +28,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class UserRepository extends EntityRepository implements UserRepositoryInterface
 {
+    use OrderByTrait;
+
     /**
      * @var RequestAnalyzerInterface
      */
@@ -48,7 +51,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
-    public function findUsersByAccount($accountId)
+    public function findUsersByAccount($accountId, $sortBy = [])
     {
         try {
             $qb = $this->createQueryBuilder('user')
@@ -69,6 +72,8 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
                 ->addSelect('contact')
                 ->addSelect('emails')
                 ->where('account.id=:accountId');
+
+            $this->addOrderBy($qb, 'user', $sortBy);
 
             $query = $qb->getQuery();
             $query->setParameter('accountId', $accountId);
@@ -322,7 +327,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
      *
      * @param string $class
      *
-     * @return Boolean
+     * @return bool
      */
     public function supportsClass($class)
     {

@@ -56,7 +56,7 @@
                                  data-aura-instance-name="internal-link"
                                  data-aura-result-key="nodes"
                                  data-aura-url="/admin/api/nodes{/uuid}?depth=1&webspace={{ webspaceKey }}&language={{ languageCode }}&webspace-node=true"
-                                 data-aura-column-navigation-url="/admin/api/nodes{/uuid}?tree=true&webspace={{ webspaceKey }}&language={{ languageCode }}&webspace-node=true">
+                                 data-aura-column-navigation-url="/admin/api/nodes?{id=uuid&}tree=true&webspace={{ webspaceKey }}&language={{ languageCode }}&webspace-node=true">
                             </div>
                         </div>
                     </div>
@@ -84,8 +84,7 @@
                             <label class="pointer"><%=translate('sulu.content.form.settings.type.external-link.url')%></label>
 
                             <div id="external"
-                                 data-aura-component="input@husky"
-                                 data-aura-skin="url"
+                                 data-aura-component="url-input@husky"
                                  data-aura-instance-name="external"
                                  data-aura-input-id="external"
                                  class="trigger-save-button"></div>
@@ -103,7 +102,7 @@
 
         <div class="grid">
             <div class="grid-row">
-                <label for="content-node-type">
+                <label for="shadow_on_checkbox">
                     <div class="custom-checkbox">
                         <input id="shadow_on_checkbox" class="trigger-save-button form-element" type="checkbox"/>
                         <span class="icon"></span>

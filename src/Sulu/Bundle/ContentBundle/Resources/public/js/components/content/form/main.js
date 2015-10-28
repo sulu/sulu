@@ -13,17 +13,25 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
 
     return {
 
-        view: true,
+        tabOptions: {
+            noTitle: true
+        },
 
-        layout: {
-            changeNothing: true
+        layout: function() {
+            return {
+                extendExisting: true,
+                content: {
+                    width: (!!this.options.preview) ? 'fixed' : 'max',
+                    rightSpace: false,
+                    leftSpace: false
+                }
+            };
         },
 
         template: '',
 
         // content change detection
         saved: true,
-        contentChanged: false,
         animateTemplateDropdown: false,
 
         initialize: function() {
@@ -31,7 +39,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
 
             this.preview = new Preview();
 
-            this.dfdListenForChange = this.sandbox.data.deferred();
+            this.dfdListenForResourceLocator = $.Deferred();
             this.load();
         },
 
@@ -43,8 +51,8 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             }, this);
 
             // content save
-            this.sandbox.on('sulu.header.toolbar.save', function() {
-                this.submit();
+            this.sandbox.on('sulu.toolbar.save', function(action) {
+                this.submit(action);
             }, this);
         },
 
@@ -60,7 +68,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             if (this.startListening) {
                 this.sandbox.dom.one(this.getDomElementsForTagName('sulu.rlp.part'), 'focusout', this.setResourceLocator.bind(this));
             } else {
-                this.dfdListenForChange.resolve();
+                this.dfdListenForResourceLocator.resolve();
             }
         },
 
@@ -95,7 +103,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
 
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'template');
 
-            if (this.template !== '' && this.contentChanged) {
+            if (this.template !== '' && !this.saved) {
                 this.showRenderTemplateDialog(item);
             } else {
                 this.loadFormTemplate(item);
@@ -317,9 +325,6 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
                     }.bind(this));
             }
 
-            if (this.options.id === 'index') {
-                this.sandbox.dom.remove('#show-in-navigation-container');
-            }
             this.sandbox.dom.attr('#show-in-navigation', 'checked', data.navigation);
 
             return initialize;
@@ -358,9 +363,6 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             this.sandbox.emit('sulu.content.contents.set-header-bar', saved);
 
             this.saved = saved;
-            if (this.saved) {
-                this.contentChanged = false;
-            }
         },
 
         setStateDropdown: function(data) {
@@ -372,7 +374,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
         },
 
         setResourceLocator: function() {
-            if (this.dfdListenForChange.state() !== 'pending') {
+            if (this.dfdListenForResourceLocator.state() !== 'pending') {
                 return;
             }
 
@@ -386,7 +388,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
 
                 if (value !== '') {
                     sequence = this.preview.getSequence(property.$el, this.sandbox);
-                    if(!!sequence) {
+                    if (!!sequence) {
                         parts[sequence] = value;
                     }
                 } else {
@@ -405,10 +407,9 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
                         }
                     }.bind(this));
 
-                    this.dfdListenForChange.resolve();
+                    this.dfdListenForResourceLocator.resolve();
 
                     this.setHeaderBar(false);
-                    this.contentChanged = true;
                 }.bind(this));
             } else {
                 this.sandbox.dom.one(this.getDomElementsForTagName('sulu.rlp.part'), 'focusout', this.setResourceLocator.bind(this));
@@ -416,16 +417,14 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
         },
 
         listenForChange: function() {
-            this.dfdListenForChange.then(function() {
+            this.dfdListenForResourceLocator.then(function() {
                 this.sandbox.dom.on(this.$el, 'keyup change', function() {
                     this.setHeaderBar(false);
-                    this.contentChanged = true;
                 }.bind(this), '.trigger-save-button');
             }.bind(this));
 
             this.sandbox.on('sulu.content.changed', function() {
                 this.setHeaderBar(false);
-                this.contentChanged = true;
             }.bind(this));
         },
 
@@ -435,25 +434,22 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             }
             this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', this.animateTemplateDropdown);
             this.animateTemplateDropdown = false;
+
+            this.dfdListenForResourceLocator = $.Deferred();
         },
 
-        submit: function() {
-            this.sandbox.logger.log('save Model');
+        submit: function(action) {
             var data;
 
             if (this.sandbox.form.validate(this.formId)) {
                 data = this.sandbox.form.getData(this.formId);
 
-                if (this.options.id === 'index') {
-                    data.navigation = true;
-                } else if (!!this.sandbox.dom.find('#show-in-navigation', this.$el).length) {
-                    data.navigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
-                }
+                data.navigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
 
                 this.sandbox.logger.log('data', data);
 
                 this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
-                this.sandbox.emit('sulu.content.contents.save', data);
+                this.sandbox.emit('sulu.content.contents.save', data, action);
             }
         }
     };

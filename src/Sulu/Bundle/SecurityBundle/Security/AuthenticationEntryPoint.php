@@ -33,6 +33,7 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
     {
         $this->urlGenerator = $urlGenerator;
     }
+
     /**
      * {@inheritdoc}
      */

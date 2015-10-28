@@ -13,21 +13,32 @@ namespace Sulu\Bundle\MediaBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class MediaContentNavigationProvider implements ContentNavigationProviderInterface
 {
+    /**
+     * @var SecurityCheckerInterface
+     */
+    private $securityChecker;
+
+    /**
+     * @param SecurityCheckerInterface $securityChecker
+     */
+    public function __construct(SecurityCheckerInterface $securityChecker)
+    {
+        $this->securityChecker = $securityChecker;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getNavigationItems(array $options = [])
     {
         $files = new ContentNavigationItem('content-navigation.media.files');
         $files->setAction('files');
-        $files->setComponent('collections@sulumedia');
-        $files->setComponentOptions(['display' => 'files']);
+        $files->setComponent('collections/edit/files@sulumedia');
 
-        $settings = new ContentNavigationItem('content-navigation.media.settings');
-        $settings->setAction('settings');
-        $settings->setComponent('collections@sulumedia');
-        $settings->setComponentOptions(['display' => 'settings']);
-
-        return [$files, $settings];
+        return [$files];
     }
 }

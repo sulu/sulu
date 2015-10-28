@@ -25,10 +25,12 @@ use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContentBundle\Content\Types\Email;
 use Sulu\Bundle\ContentBundle\Content\Types\Phone;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 
-class ContactManager extends AbstractContactManager
+class ContactManager extends AbstractContactManager implements DataProviderRepositoryInterface
 {
     /**
      * @var AccountRepository
@@ -46,20 +48,22 @@ class ContactManager extends AbstractContactManager
     private $contactRepository;
 
     /**
-     * @param ObjectManager          $em
-     * @param TagManagerInterface    $tagManager
-     * @param AccountRepository      $accountRepository
+     * @param ObjectManager $em
+     * @param TagManagerInterface $tagManager
+     * @param MediaManagerInterface $mediaManager
+     * @param AccountRepository $accountRepository
      * @param ContactTitleRepository $contactTitleRepository
-     * @param ContactRepository      $contactRepository
+     * @param ContactRepository $contactRepository
      */
     public function __construct(
         ObjectManager $em,
         TagManagerInterface $tagManager,
+        MediaManagerInterface $mediaManager,
         AccountRepository $accountRepository,
         ContactTitleRepository $contactTitleRepository,
         ContactRepository $contactRepository
     ) {
-        parent::__construct($em, $tagManager);
+        parent::__construct($em, $tagManager, $mediaManager);
         $this->accountRepository = $accountRepository;
         $this->contactTitleRepository = $contactTitleRepository;
         $this->contactRepository = $contactRepository;
@@ -80,6 +84,30 @@ class ContactManager extends AbstractContactManager
         }
 
         return $contact;
+    }
+
+    /**
+     * Returns contact entities by ids.
+     *
+     * @param $ids
+     * @param $locale
+     *
+     * @return mixed
+     */
+    public function getByIds($ids, $locale)
+    {
+        if (!is_array($ids) || count($ids) === 0) {
+            return [];
+        }
+
+        $contacts = $this->contactRepository->findByIds($ids);
+
+        return array_map(
+            function ($contact) use ($locale) {
+                return $this->getApiObject($contact, $locale);
+            },
+            $contacts
+        );
     }
 
     /**
@@ -152,10 +180,10 @@ class ContactManager extends AbstractContactManager
     /**
      * Creates a new contact for the given data.
      *
-     * @param array    $data
+     * @param array $data
      * @param int|null $id
-     * @param bool     $patch
-     * @param bool     $flush
+     * @param bool $patch
+     * @param bool $flush
      *
      * @return Contact
      *
@@ -175,6 +203,7 @@ class ContactManager extends AbstractContactManager
          */
         $firstName = $this->getProperty($data, 'firstName');
         $lastName = $this->getProperty($data, 'lastName');
+        $avatar = $this->getProperty($data, 'avatar');
 
         if ($id) {
             /** @var Contact $contact */
@@ -223,6 +252,9 @@ class ContactManager extends AbstractContactManager
         if (!$patch || $lastName !== null) {
             $contact->setLastName($lastName);
         }
+        if (!$patch || $avatar !== null) {
+            $this->setAvatar($contact, $avatar);
+        }
 
         // Set title relation on contact
         $this->setTitleOnContact($contact, $this->getProperty($data, 'title'));
@@ -257,7 +289,7 @@ class ContactManager extends AbstractContactManager
                 $parent = $this->accountRepository->findAccountById($parentData['id']);
                 if (!$parent) {
                     throw new EntityNotFoundException(
-                        $this->getAccountEntityName(),
+                        self::$accountContactEntityName,
                         $parentData['id']
                     );
                 }
@@ -291,7 +323,7 @@ class ContactManager extends AbstractContactManager
      *
      * @param Contact $contact The entity to add the address to
      * @param Address $address The address to be added
-     * @param Bool    $isMain  Defines if the address is the main Address of the contact
+     * @param bool $isMain Defines if the address is the main Address of the contact
      *
      * @return ContactAddress
      *
@@ -319,7 +351,7 @@ class ContactManager extends AbstractContactManager
     /**
      * removes the address relation from a contact and also deletes the address if it has no more relations.
      *
-     * @param Contact        $contact
+     * @param Contact $contact
      * @param ContactAddress $contactAddress
      *
      * @return mixed|void
@@ -382,10 +414,10 @@ class ContactManager extends AbstractContactManager
     {
         $contact = $this->contactRepository->find($id);
         if (!$contact) {
-            return;
+            throw new EntityNotFoundException($this->contactRepository->getClassName(), $id);
         }
 
-        return new ContactApi($contact, $locale, $this->tagManager);
+        return $this->getApiObject($contact, $locale);
     }
 
     /**
@@ -399,7 +431,7 @@ class ContactManager extends AbstractContactManager
     public function getContact($contact, $locale)
     {
         if ($contact) {
-            return new ContactApi($contact, $locale, $this->tagManager);
+            return $this->getApiObject($contact, $locale);
         } else {
             return;
         }
@@ -467,9 +499,43 @@ class ContactManager extends AbstractContactManager
     }
 
     /**
+     * Sets a media with a given id as the avatar of a given contact.
+     *
+     * @param Contact $contact
+     * @param array $avatar with id property
+     */
+    private function setAvatar(Contact $contact, $avatar)
+    {
+        $mediaEntity = null;
+        if (is_array($avatar) && $this->getProperty($avatar, 'id')) {
+            $mediaEntity = $this->mediaManager->getEntityById($this->getProperty($avatar, 'id'));
+        }
+        $contact->setAvatar($mediaEntity);
+    }
+
+    /**
+     * Takes a contact entity and a locale and returns the api object.
+     *
+     * @param Contact $contact
+     * @param string $locale
+     *
+     * @return ContactApi
+     */
+    protected function getApiObject($contact, $locale)
+    {
+        $apiObject = new ContactApi($contact, $locale);
+        if ($contact->getAvatar()) {
+            $apiAvatar = $this->mediaManager->getById($contact->getAvatar()->getId(), $locale);
+            $apiObject->setAvatar($apiAvatar);
+        }
+
+        return $apiObject;
+    }
+
+    /**
      * Return property for key or given default value.
      *
-     * @param array  $data
+     * @param array $data
      * @param string $key
      * @param string $default
      *
@@ -508,5 +574,20 @@ class ContactManager extends AbstractContactManager
     public function getContactEntityName()
     {
         return $this->contactRepository->getClassName();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findByFilters($filters, $page, $pageSize, $limit, $locale)
+    {
+        $entities = $this->contactRepository->findByFilters($filters, $page, $pageSize, $limit, $locale);
+
+        return array_map(
+            function ($contact) use ($locale) {
+                return $this->getApiObject($contact, $locale);
+            },
+            $entities
+        );
     }
 }

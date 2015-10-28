@@ -17,6 +17,7 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
+use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -25,6 +26,7 @@ use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
+use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,7 +34,8 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Makes collections available through a REST API.
  */
-class CollectionController extends RestController implements ClassResourceInterface, SecuredControllerInterface
+class CollectionController extends RestController
+    implements ClassResourceInterface, SecuredControllerInterface, SecuredObjectControllerInterface
 {
     use RequestParametersTrait;
 
@@ -203,7 +206,7 @@ class CollectionController extends RestController implements ClassResourceInterf
     /**
      * Edits the existing collection with the given id.
      *
-     * @param int     $id      The id of the collection to update
+     * @param int $id The id of the collection to update
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -245,7 +248,7 @@ class CollectionController extends RestController implements ClassResourceInterf
      *
      * @Post("collections/{id}")
      *
-     * @param int     $id
+     * @param int $id
      * @param Request $request
      *
      * @return Response
@@ -272,7 +275,7 @@ class CollectionController extends RestController implements ClassResourceInterf
     /**
      * Moves an entity into another one.
      *
-     * @param int     $id
+     * @param int $id
      * @param Request $request
      *
      * @return Response
@@ -346,5 +349,21 @@ class CollectionController extends RestController implements ClassResourceInterf
     public function getSecurityContext()
     {
         return 'sulu.media.collections';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSecuredClass()
+    {
+        return CollectionEntity::class;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSecuredObjectId(Request $request)
+    {
+        return $request->get('id') ?: $request->get('parent');
     }
 }

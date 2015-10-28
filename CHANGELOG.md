@@ -3,14 +3,110 @@ CHANGELOG for Sulu
 
 * dev-develop
     * BUGFIX      #1510 [Persistence]     Fetch user only if an entity with UserBlameInterface is detected
+    * BUGFIX      #1716 [ContactBundle]   Fixed wrong contact entity identifier
+    * FEATURE     #1611 [All]             Improved PHPCR content handling to allow custom PHPCR content
+    * ENHANCEMENT #1706 [MediaBundle]     Changed download link in media section to real link
+    * BUGFIX      #1714 [ContentBundle]   Fixed migration for url scheme
+    * BUGFIX      #1713 [MediaBundle]     Fixed drag and drop behavior in collection view
+    * ENHANCEMENT #1704 [AdminBundle]     Protected login from CSRF attacks
+    * BUGFIX      #1702 [MediaBundle]     Fixed selected handling in media selection overlay
+    * BUGFIX      #1685 [ContactBundle]   Fixed delete logo/avatar from collection and form
+    * FEATURE     #1697 [MediaBundle]     Replaced StreamedResponse with BinaryFileResponse
+    * BUGFIX      #1701 [ContentBundle]   Added website cache clear button in preview toolbar
+    * BUGFIX      #1696 [MediaBundle]     Fixed dropzone for uploading new versions of media
+    * BUGFIX      #1693 [All]             Fixed behat tests
+    * BUGFIX      #1675 [ContactBundle]   Fixed null value for smart content
+    * FEATURE     #1653 [MediaBundle]     Added generation of thumbnails for videos
+    * BUGFIX      #1688 [ContentBundle]   Fixed doctrine cache size for preview with delete on navigate
+    * BUGFIX      #1687 [MediaBundle]     Fixed media-selection overlay responsive and datagrid styles
+    * BUGFIX      #1692 [MediaBundle]     Fixed maximum file size of dropzone
+    * FEATURE     #1598 [MediaBundle]     Added infinite-scroll pagination for masonry-view
+    * FEATURE     #1598 [ContactBundle]   Added infinite-scroll pagination for card-view
+    * BUGFIX      #1670 [ContentBundle]   Fixed missing url-scheme in content type
+    * FEATURE     #1683 [MediaBundle]     Added copyright to media metadata
+    * BUGFIX      #1673 [ContentBundle]   Fixed settings tag for shadows on external links
+    * BUGFIX      #1678 [ContactBundle]   Fixed contact-selection serialization
+    * BUGFIX      #1667 [ContactBundle]   Removed the restriction of start dates from the datepicker
+    * BUGFIX      #1671 [ContentBundle]   Fixed block sorting for blocks with only one type
+    * BUGFIX      #1668 [ContentBundle]   Fixed smart content for usage with block property
+    * BUGFIX      #1665 [ContentBundle]   Fixed creation of new url after template change
+    * BUGFIX      #1666 [ContentBundle]   Fixed min occurs 0 for blocks
+    * BUGFIX      #1664 [SearchBundle]    Fixed search-results deep links
+    * BUGFIX      #1660 [ContentBundle]   Added separate error message for occupied resource locator
+    * BUGFIX      #1655 [ContentBundle]   Fixed ghost pages and phpcr access control provider
+    * FEATURE     #1606 [SmartContent]    Added filter by categories to SmartContent Component
+    * FEATURE     #1606 [CategoryBundle]  Added TwigExtension to handle categories in twig templates
+    * BUGFIX      #1654 [ContentBundle]   Added more path replacers
+    * BUGFIX      #1656 [ContentBundle]   Fixed preview nested properties
+    * BUGFIX      #1656 [ContentBundle]   Fixed preview property attributes
+    * BUGFIX      #1649 [ContentBundle]   Fixed floating of block type select
+    * BUGFIX      #1650 [LocationBundle]  Fixed configure overlay open multiple times 
+    * BUGFIX      #1650 [ContentBundle]   Fixed serialization of null values
+    * BUGFIX      #1650 [ContentBundle]   Fixed show ghost and shadow toggler in content column view
+    * BUGFIX      #1646 [ContactBundle]   Fixed upload of contact-avatar when a position is applied to the contact
+    * BUGFIX      #1645 [CategoryBundle]  Removed automatic category translation
+    * FEATURE     #1644 [MediaBundle]     Show collection UI elements based on security
+    * BUGFIX      #1642 [AdminBundle]     Fixed cropping issue in table-view of datagrid
+    * BUGFIX      #1641 [MediaBundle]     Fixed types in media-selection
+    * ENHANCEMENT #1638 [ContentBundle]   Removed unnecessary variable in content form
+    * FEATURE     #1643 [ContactBundle]   Added title of address
+    * FEATURE     #1584 [ContentBundle]   Show UI elements in content management based on security
+    * BUGFIX      #1633 [Rest]            Listbuilder: fix for concat joins in where clause;
+                                          Fix in sort (order by id as default)
+    * BUGFIX      #1625 [MediaBundle]     Fixed queries for PostgreSQL
+    * ENHANCEMENT #1626 [AdminBundle]     Added require-css to load css dynamically with require
+    * BUGFIX      #1619 [CategoryBundle]  Fixed category view cropping responsive
+    * BUGFIX      #1619 [AdminBundle]     Fixed responsive interface with sidebar
+    * BUGFIX      #1614 [ContentBundle]   Readded the reorder event to the OrderSubscriber
+    * ENHANCEMENT #1607 [ContactBundle]   Now passing savedData when calling save and create new account
+    * BUGFIX      #1609 [MediaBundle]     Added further null reference checks to MediaManager
+    * ENHANCEMENT #1593 [ResourceBundle]  Added configurable avatar collection for contact and account form
+    * ENHANCEMENT #1583 [ContactBundle]   Added no image icon to table view
+    * BUGFIX      #1583 [ResourceBundle]  Fixed filter button in list-toolbar
+    * ENHANCEMENT #1581 [CategoryBundle]  Added locale handling in list and list api
+    * ENHANCEMENT #1581 [SnippetBundle]   Added locale chooser in list
+    * FEATURE     #1347 [ContactBundle]   Content type for contacts and accounts
+    * FEATURE     #1558 [AdminBundle]     Redesign of overlays
+    * FEATURE     #1557 [MediaBundle]     Redesign of data-navigation
+    * FEATURE     #1557 [AdminBundle]     Success-labels in navigation
+    * FEATURE     #1544 [ContentBundle]   Highlighted section in content-edit
+    * FEATURE     #1541 [ContentBundle]   Redesign of preview
+    * FEATURE     #1540 [ContentBundle]   Redesign of content-blocks
+    * FEATURE     #1530 [ContentBundle]   Redesign different content-types
+    * FEATURE     #1543 [MediaBundle]     New view for collection-list
+    * ENHANCEMENT #1543 [MediaBundle]     Changed front-end bundle structure with the use of services
+    * FEATURE     #1481 [ContactBundle]   Titles in JS-views
+    * FEATURE     #1481 [AdminBundle]     Extension-hook for loading data in JS-files
+    * FEATURE     #1476 [ContactBundle]   Avatar upload via dropzone
+    * FEATURE     #1478 [ContactBundle]   Rest-Api for media lists for contacts and accounts
+    * FEATURE     #1467 [ContactBundle]   New view for contacts- and accounts-edit
+    * FEATURE     #1431 [ContactBundle]   New view for contacts-list
+    * ENHANCEMENT #1444 [ContactBundle]   changed front-end bundle structure with the use of services
+    * ENHANCEMENT #1421 [AdminBundle]     New button-api for header and tabs
+    * ENHANCEMENT #1417 [AdminBundle]     Style upgrade for header and tabs
+    * FEATURE     #1472 [ContactBundle]   Rest-Api support for contact-avatars
+    * FEAETURE    #1503 [All]             Updated to doctrine 2.5
+    * ENHANCEMENT #1550 [ContactBundle]   Added flat response option to accountContact collection in js
+    * ENHANCEMENT #1523 [ContactBundle]   Refactored config to make it reusable by other bundles
+    * FEATURE     #1522 [SecurityBundle]  Created OrderByTrait for Repositories to sort by given array data
+    * ENHANCEMENT #1522 [SecurityBundle]  Added sorting option for findUserByAccount in UserRepository
+    * BUGFIX      #1508 [AdminBundle]     Fixed bug with serializing user settings
     * FEATURE     #1505 [All]             Added 'fullContact' serialization-groups in contact entity to all relations
-    * FEATURE     #1503 [All]             Updated to doctrine 2.5
     * BUGFIX      #1501 [ContentBundle]   Fixed caching when ttl is 0
+    * FEATURE     #1529 [ContentBundle]   Added reset smart content button
+    * FEATURE     #1517 [ContactBundle]   Added account DataProvider
+    * FEATURE     #1513 [ContactBundle]   Added contact DataProvider
+    * FEATURE     #1512 [SmartContent]    Extended SmartContent to be able to add tags from website URL
+    * FEATURE     #1512 [TagBundle]       Added TwigExtension to handle tags in twig templates
     * FEATURE     #1369 [ContentBundle]   Show icons in column navigation based on the user's permission
+    * FEATURE     #1415 [ContentBundle]   Refactored SmartContent to use DataProvider to load content
+    * FEATURE     #1477 [MediaBundle]     Added object security in the media section
     * BUGFIX      #1462 [Rest]            Fixed type of returned value for the Doctrine list builder count method
     * BUGFIX      #1437 [SnippetBundle]   Fixed copy-locale overlay bug
     * FEATURE     #1424 [All]             Implemented and integrated expressions for the listbuilder
     * FEATURE     #1429 [ResourceBundle]  Updated husky and added preselect for filter dropdown
+    * BUGFIX      #1411 [All]             Only take inner-joins into account that are referenced to selected entity +
+                                          Added Tests
     * FEATURE     #1406 [ResourceBundle]  Integrated filters into user settings
     * FEATURE     #1406 [SecurityBundle]  Added api method to delete user settings
     * FEATURE     #1404 [AdminBundle]     Implemented new login design
@@ -36,6 +132,32 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1342 [SecurityBundle]  Added creator and changer of contact to 'fullContact' serialization group
     * BUGFIX      #1365 [ContactBundle]   Fixed bug caused by new instance name of datagrid
     * BUGFIX      #1136 [MediaBundle]     Fixed image scale forceRatio parameter for none squared image formats
+
+* 1.0.11 (2015-09-23)
+    * HOTFIX      #1596 [GeneratorBundle] Fixed sulu bundle generator path generation
+    * HOTFIX      #1615 [Content]         Fixed resource segment subscriber for order internal link
+    * HOTFIX      #1612 [Content]         Fixed non copy content of snippet
+
+* 1.0.10 (2015-09-17)
+    * HOTFIX      #1594 [Website] Fixed website request analyzer
+    * HOTFIX      #1594 [Website] Fixed trailing slash for homepage
+
+* 1.0.9 (2015-09-14)
+    * HOTFIX      #1572 [ContentBundle]         Fixed select overlay for internal link node type
+    * HOTFIX      #1567 [Document]              Fixed localized property for url property
+    * HOTFIX      #1568 [ContentBundle]         Fixed copy extension data
+    * HOTFIX      #1577 [DocumentManagerBundle] Made caching directory for DocumentManager configureable
+
+* 1.0.8 (2015-08-31)
+    * HOTFIX      #1539 [WebsiteBundle]  Fixed canonical tag for shadow pages
+    * HOTFIX      #1537 [WebsiteBundle]  Fixed format of hreflang-tag locale
+    * HOTFIX      #1532 [WebsiteBundle]  Fixed redirect to external pages
+    * HOTFIX      #1511 [ContentBundle]  Fixed single-internal-link overlay URL
+    * HOTFIX      #1521 [MediaBundle]    Fixed media-selection events for preview update
+
+* 1.0.7 (2015-08-11)
+    * HOTFIX      #1469 [ContentBundle]  fixed displayOptions in media selection
+    * HOTFIX      #1468 [SnippetBundle]  Fixed default language for snippets in administration
 
 * 1.0.6 (2015-08-05)
     * HOTFIX      #1448 [AdminBundle]    Fixed additional system languages
@@ -87,7 +209,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1260 [All]            Removed or renamed all old update commands
     * ENHANCEMENT #1090 [All]            Introduced DocumentManager
     * BUGFIX      #1295 [ContentBundle]  Fixed call of changed event from MassiveSearchBundle
-    * ENHANCEMENT #1230 [ContactBundle]  Introduced the new `PersistenceBundle` which makes entities easy replaceable. 
+    * ENHANCEMENT #1230 [ContactBundle]  Introduced the new `PersistenceBundle` which makes entities easy replaceable.
                                          Added this functionality for the contact entity.
     * BUGFIX      #1276 [ContentBundle]  Fixed smart-content datasource-select by change request url
     * FEATURE     #1264 [MediaBundle]    Added link to original image in media edit-overlay
@@ -95,7 +217,7 @@ CHANGELOG for Sulu
 * 1.0.0-RC2 (2015-06-17)
     * BUGFIX      #1264 [ContentBundle]  Fixed save of changed block type
     * BUGFIX      #1259 [ContentBundle]  Fixed internal link assignment delete
-    * BUGFIX      #1244 [WebsiteBundle]  Updated LiipThemeBundle to get assetic bugfix
+    * BUGFIX      #1244 [WebsiteBundle]  Updated LiipThemeBundle to get assetic bugfix
     * BUGFIX      #1254 [SnippetBundle]  Fixed snippet assigment delete
     * BUGFIX      #1250 [ContactBundle]  Fixed document assigment delete in contact area
     * ENHANCEMENT #1251 [SecurityBundle] Refactored PasswordResetting controller for better reusability
@@ -137,7 +259,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1088 [ContactBundle]  Moved initialization of field-descriptors before init of list-builder in
                                          accounts cget action
     * ENHANCEMENT #1053 [Util]           Remove unused UuidUtils class
-    * ENHANCEMENT #1038 [MediaBundle]    Added counter for selected images; Disabled drag event for links and 
+    * ENHANCEMENT #1038 [MediaBundle]    Added counter for selected images; Disabled drag event for links and
                                          images inside the overlay; Store media assignement display options in user settings
     * BUGFIX      #1051 [Website]        Throw NoValidWebspaceException if no valid webspaces are found
     * BUGFIX      #1089 [Media/Search]   Do not set image URL for non-images in the search results
@@ -161,7 +283,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1065 [AdminBundle]    Second try: Fixed 1Password css bug on login screen
     * BUGFIX      #--   [AdminBundle]    Fixed login for IE see [commit](https://github.com/sulu-io/sulu/commit/a50e48aa83d360b93b5db0a63300c2799d3bc8ab)
     * BUGFIX      #1045 [MediaBundle]    Fixed upload new media version
-    * FEATURE     #496  [ContentBundle]  SmartContent: change default tag filter to OR operation and user can decide to use OR or AND    
+    * FEATURE     #496  [ContentBundle]  SmartContent: change default tag filter to OR operation and user can decide to use OR or AND
     * ENHANCEMENT #1039 [ContactBundle]  Auto select new title or positions in contact form
     * ENHANCEMENT #--   [MediaBundle]    Added function to get base media types
     * ENHANCEMENT #1031 [MediaBundle]    Fixed success label for collection delete
@@ -170,7 +292,7 @@ CHANGELOG for Sulu
     * BUGFIX      #945  [WebsiteBundle]  Fix Redirect url with query string correctly and trailing slash
     * ENHANCEMENT #1029 [All]            Removed prefixes from content navigation providers and admins
     * FEATURE     #1014 [MediaBundle]    Added media preview in edit overlay
-    * BUGFIX      #1026 [MediaBundle]    Fixed collection and category behat tests 
+    * BUGFIX      #1026 [MediaBundle]    Fixed collection and category behat tests
     * BUGFIX      #1030 [WebsiteBundle]  Fixed exception-controller to resolve parameters like website-controller
     * FEATURE     #1030 [WebsiteBundle]  Added configuration for error templates to webspace-config
     * BUGFIX      #1044 [ContentBundle]  Update CKEditor parameters to snake_case and allow dynamic override of ckeditor config
@@ -338,7 +460,7 @@ CHANGELOG for Sulu
 
 * 0.13.2 (2014-12-12)
     * HOTFIX      #--- [AdminBundle]    Fixed globalize loading issue
-    * HOTFIX      #--- [AdminBundle]    Fixed datagrid destroy method (remove window resize listener) 
+    * HOTFIX      #--- [AdminBundle]    Fixed datagrid destroy method (remove window resize listener)
 
 * 0.13.1 (2014-12-11)
     * HOTFIX      #--- [AdminBundle]    Added missing frontend (css/js) build

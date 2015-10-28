@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -25,11 +25,12 @@ interface CollectionManagerInterface
     /**
      * Returns a collection with a given id.
      *
-     * @param int   $id         the id of the collection
-     * @param int   $locale     the locale which the collection should be return
-     * @param int   $depth      if depth > 1 children will returned also
-     * @param bool  $breadcrumb if true breadcrumb will be appended
-     * @param array $filter     array of cafeteria's
+     * @param int $id the id of the collection
+     * @param int $locale the locale which the collection should be return
+     * @param int $depth if depth > 1 children will returned also
+     * @param bool $breadcrumb if true breadcrumb will be appended
+     * @param array $filter array of criteria
+     * @param array $sortBy fields to sort by
      *
      * @return Collection
      */

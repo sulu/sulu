@@ -32,13 +32,13 @@ class SecuritySubscriberTest extends SubscriberTestCase
         /** @var SecurityBehavior $document */
         $document = $this->prophesize(SecurityBehavior::class);
         $document->getPermissions()->willReturn(
-            ['ROLE_SULU_USER' => ['view', 'add', 'edit']]
+            [1 => ['view', 'add', 'edit']]
         );
 
         $this->persistEvent->getDocument()->willReturn($document);
 
         $this->subscriber->handlePersist($this->persistEvent->reveal());
 
-        $this->node->setProperty('sec:sulu-user', ['view', 'add', 'edit'])->shouldBeCalled();
+        $this->node->setProperty('sec:role-1', ['view', 'add', 'edit'])->shouldBeCalled();
     }
 }

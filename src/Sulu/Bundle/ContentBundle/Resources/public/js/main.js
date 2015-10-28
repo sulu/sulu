@@ -10,16 +10,23 @@
 require.config({
     paths: {
         sulucontent: '../../sulucontent/js',
+        sulucontentcss: '../../sulucontent/css',
+
         "type/resourceLocator": '../../sulucontent/js/validation/types/resourceLocator',
         "type/textEditor": '../../sulucontent/js/validation/types/textEditor',
         "type/smartContent": '../../sulucontent/js/validation/types/smartContent',
         "type/internalLinks": '../../sulucontent/js/validation/types/internalLinks',
         "type/singleInternalLink": '../../sulucontent/js/validation/types/singleInternalLink',
-        "type/block": '../../sulucontent/js/validation/types/block'
+        "type/block": '../../sulucontent/js/validation/types/block',
+        "extensions/sulu-buttons-contentbundle": '../../sulucontent/js/extensions/sulu-buttons'
     }
 });
 
-define(['config'], function(Config) {
+define([
+    'config',
+    'extensions/sulu-buttons-contentbundle',
+    'css!sulucontentcss/main'
+], function(Config, ContentButtons) {
     return {
 
         name: "Sulu Content Bundle",
@@ -29,6 +36,8 @@ define(['config'], function(Config) {
             'use strict';
 
             var sandbox = app.sandbox;
+            sandbox.sulu.buttons.push(ContentButtons.getButtons());
+            sandbox.sulu.buttons.dropdownItems.push(ContentButtons.getDropdownItems());
 
             app.components.addSource('sulucontent', '/bundles/sulucontent/js/components');
 
@@ -36,14 +45,10 @@ define(['config'], function(Config) {
                 image: false
             });
             
-            sandbox.urlManager.setUrl('page', 
+            sandbox.urlManager.setUrl(
+                'page',
                 function(data) {
-                    if (data.url === '/') {
-                        // startpage
-                        return 'content/contents/<%= webspace %>/<%= locale %>/edit:index/details';
-                    } else {
-                        return 'content/contents/<%= webspace %>/<%= locale %>/edit:<%= id %>/content';
-                    }
+                    return 'content/contents/<%= webspace %>/<%= locale %>/edit:<%= id %>/content';
                 },
                 function(data) {
                     return {
@@ -72,7 +77,7 @@ define(['config'], function(Config) {
             sandbox.mvc.routes.push({
                 route: 'content/contents/:webspace/:language',
                 callback: function(webspace, language) {
-                    this.html('<div data-aura-component="content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-display="column" data-aura-preview="false"/>');
+                    return '<div data-aura-component="content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-display="column" data-aura-preview="false"/>';
                 }
             });
 
@@ -80,9 +85,7 @@ define(['config'], function(Config) {
             sandbox.mvc.routes.push({
                 route: 'content/contents/:webspace/:language/add::id/:content',
                 callback: function(webspace, language, id, content) {
-                    this.html(
-                        '<div data-aura-component="content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '" data-aura-parent="' + id + '"/>'
-                    );
+                    return '<div data-aura-component="content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '" data-aura-parent="' + id + '"/>';
                 }
             });
 
@@ -90,9 +93,7 @@ define(['config'], function(Config) {
             sandbox.mvc.routes.push({
                 route: 'content/contents/:webspace/:language/add/:content',
                 callback: function(webspace, language, content) {
-                    this.html(
-                        '<div data-aura-component="content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '"/>'
-                    );
+                    return '<div data-aura-component="content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '"/>';
                 }
             });
 
@@ -109,9 +110,7 @@ define(['config'], function(Config) {
             sandbox.mvc.routes.push({
                 route: 'content/contents/:webspace/:language/edit::id/:content',
                 callback: function(webspace, language, id, content) {
-                    this.html(
-                        '<div data-aura-component="content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '" data-aura-id="' + id + '" data-aura-preview="true"/>'
-                    );
+                    return '<div data-aura-component="content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '" data-aura-id="' + id + '" data-aura-preview="true"/>';
                 }
             });
         }

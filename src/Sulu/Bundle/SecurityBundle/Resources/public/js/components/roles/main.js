@@ -45,8 +45,8 @@ define([
                 this.load(id);
             }.bind(this));
 
-            this.sandbox.on('sulu.roles.save', function(data) {
-                this.save(data);
+            this.sandbox.on('sulu.roles.save', function(data, action) {
+                this.save(data, action);
             }.bind(this));
 
             this.sandbox.on('sulu.role.delete', function(id) {
@@ -75,24 +75,27 @@ define([
         },
 
         // saves the data, which is thrown together with a sulu.roles.save event
-        save: function(data) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+        save: function(data, action) {
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
             this.role.set(data);
             this.role.save(null, {
                 success: function(data) {
-
-                    if(!this.options.id){
-                        this.sandbox.emit('sulu.router.navigate', 'settings/roles/edit:' + data.id + '/details');
-                    } else {
+                    if (!!this.options.id) {
                         this.sandbox.emit('sulu.role.saved', data.id);
                     }
-
+                    if (action === 'back') {
+                        this.sandbox.emit('sulu.roles.list');
+                    } else if (action === 'new') {
+                        this.sandbox.emit('sulu.router.navigate', 'settings/roles/new', true, true);
+                    } else if (!this.options.id) {
+                        this.sandbox.emit('sulu.router.navigate', 'settings/roles/edit:' + data.id + '/details');
+                    }
                 }.bind(this),
                 error: function(model, response) {
                     this.showErrorLabel(response.responseJSON.code);
                     this.sandbox.logger.log('An error occured while saving a role');
 
-                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save-button');
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
                 }.bind(this)
             });
         },
@@ -119,7 +122,7 @@ define([
         del: function(id) {
             this.idDelete = id;
 
-            this.confirmDeleteDialog(function(wasConfirmed) {
+            this.sandbox.sulu.showDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
                     this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
                     if (typeof this.idDelete === 'number' || typeof this.idDelete === 'string') {
@@ -193,36 +196,6 @@ define([
             } else {
                 this.sandbox.start([component]);
             }
-        },
-
-        // dialog
-
-        /**
-         * @var ids - array of ids to delete
-         * @var callback - callback function returns true or false if data got deleted
-         */
-        confirmDeleteDialog: function(callbackFunction) {
-            // check if callback is a function
-            if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
-                throw 'callback is not a function';
-            }
-
-            // show warning dialog
-            this.sandbox.emit('sulu.overlay.show-warning',
-                'sulu.overlay.be-careful',
-                'sulu.overlay.delete-desc',
-
-                function() {
-                    // cancel callback
-                    callbackFunction(false);
-                }.bind(this),
-
-                function() {
-                    // ok callback
-                    callbackFunction(true);
-                }.bind(this)
-            );
         }
-
     };
 });

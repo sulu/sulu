@@ -21,8 +21,6 @@ use Symfony\Component\Config\Loader\LoaderResolverInterface;
 
 /**
  * Load structure structure from an XML file.
- *
- * @author Daniel Leech <daniel@dantleech.com>
  */
 class XmlLoader extends XmlLegacyLoader
 {
@@ -127,8 +125,8 @@ class XmlLoader extends XmlLegacyLoader
         $property->colSpan = $data['colspan'];
         $property->cssClass = $data['cssClass'];
         $property->tags = $data['tags'];
-        $property->minOccurs = $data['minOccurs'] ?: 1;
-        $property->maxOccurs = $data['maxOccurs'] ?: 999;
+        $property->minOccurs = $data['minOccurs'] !== null ? intval($data['minOccurs']) : 1;
+        $property->maxOccurs = $data['maxOccurs'] ? intval($data['maxOccurs']) : 999;
         $property->parameters = $data['params'];
         $this->mapMeta($property, $data['meta']);
     }

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
+use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
@@ -29,13 +30,110 @@ use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
 use Sulu\Bundle\ContactBundle\Entity\Position;
+use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\File;
+use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class ContactControllerTest extends SuluTestCase
 {
+    /**
+     * @var Position
+     */
     private $contactPosition = null;
+
+    /**
+     * @var ContactTitle
+     */
     private $contactTitle = null;
+
+    /**
+     * @var Media
+     */
+    private $avatar = null;
+
+    /**
+     * @var EntityManager
+     */
+    private $em;
+
+    /**
+     * @var Contact
+     */
+    private $contact;
+
+    /**
+     * @var Account
+     */
+    private $account;
+
+    /**
+     * @var Account
+     */
+    private $account1;
+
+    /**
+     * @var PhoneType
+     */
+    private $phoneType;
+
+    /**
+     * @var Phone
+     */
+    private $phone;
+
+    /**
+     * @var EmailType
+     */
+    private $emailType;
+
+    /**
+     * @var Email
+     */
+    private $email;
+
+    /**
+     * @var FaxType
+     */
+    private $faxType;
+
+    /**
+     * @var Fax
+     */
+    private $fax;
+
+    /**
+     * @var Country
+     */
+    private $country;
+
+    /**
+     * @var Country
+     */
+    private $country2;
+
+    /**
+     * @var AddressType
+     */
+    private $addressType;
+
+    /**
+     * @var Address
+     */
+    private $address;
+
+    /**
+     * @var ContactAddress
+     */
+    private $contactAddress;
+
+    /**
+     * @var Note
+     */
+    private $note;
 
     public function setUp()
     {
@@ -232,10 +330,52 @@ class ContactControllerTest extends SuluTestCase
 
         $this->em->persist($category2);
 
+        $this->initAvatar();
+        $contact->setAvatar($this->avatar);
+
         $this->em->flush();
 
         $this->contactTitle = $title;
         $this->contactPosition = $position;
+    }
+
+    public function initAvatar()
+    {
+        $collectionType = new CollectionType();
+        $collectionType->setName('My collection type');
+        $this->em->persist($collectionType);
+
+        $collection = new Collection();
+        $collection->setType($collectionType);
+        $this->em->persist($collection);
+
+        $imageType = new MediaType();
+        $imageType->setName('image');
+        $imageType->setDescription('This is an image');
+        $this->em->persist($imageType);
+
+        $file = new File();
+        $file->setVersion(1);
+
+        $fileVersion = new FileVersion();
+        $fileVersion->setVersion(1);
+        $fileVersion->setName('avatar.jpeg');
+        $fileVersion->setMimeType('image/jpg');
+        $fileVersion->setFile($file);
+        $fileVersion->setSize(1124214);
+        $fileVersion->setDownloadCounter(2);
+        $fileVersion->setChanged(new \DateTime('1937-04-20'));
+        $fileVersion->setCreated(new \DateTime('1937-04-20'));
+        $file->addFileVersion($fileVersion);
+        $this->em->persist($fileVersion);
+
+        $this->avatar = new Media();
+        $this->avatar->setType($imageType);
+        $this->avatar->setCollection($collection);
+        $this->avatar->addFile($file);
+        $file->setMedia($this->avatar);
+        $this->em->persist($this->avatar);
+        $this->em->persist($file);
     }
 
     public function testGetById()
@@ -269,6 +409,11 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
         $this->assertEquals($this->addressType->getId(), $response->addresses[0]->addressType->id);
 
+        $this->assertObjectHasAttribute('avatar', $response);
+        $this->assertObjectHasAttribute('thumbnails', $response->avatar);
+        $this->assertObjectHasAttribute('100x100', $response->avatar->thumbnails);
+        $this->assertTrue(is_string($response->avatar->thumbnails->{'100x100'}));
+
         $this->assertEquals(1, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter Herr Dr Mustermann', $response->salutation);
         $this->assertEquals(0, $response->disabled);
@@ -296,7 +441,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'account' => [
                     'id' => null,
                 ],
@@ -443,7 +591,13 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
+                'avatar' => [
+                    'id' => $this->avatar->getId(),
+                ],
                 'account' => [
                     'id' => $this->account1->getId(),
                 ],
@@ -497,6 +651,7 @@ class ContactControllerTest extends SuluTestCase
                 ],
                 'addresses' => [
                     [
+                        'title' => 'Home',
                         'street' => 'Musterstraße',
                         'number' => '1',
                         'zip' => '0000',
@@ -562,6 +717,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Note 2', $response->notes[1]->value);
         $this->assertEquals('note', $response->addresses[0]->note);
 
+        $this->assertEquals('Home', $response->addresses[0]->title);
         $this->assertEquals(true, $response->addresses[0]->billingAddress);
         $this->assertEquals(true, $response->addresses[0]->primaryAddress);
         $this->assertEquals(false, $response->addresses[0]->deliveryAddress);
@@ -572,6 +728,11 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
         $this->assertEquals(0, $response->disabled);
+
+        $this->assertObjectHasAttribute('avatar', $response);
+        $this->assertObjectHasAttribute('thumbnails', $response->avatar);
+        $this->assertObjectHasAttribute('100x100', $response->avatar->thumbnails);
+        $this->assertTrue(is_string($response->avatar->thumbnails->{'100x100'}));
 
         $this->assertEquals(2, count($response->categories));
 
@@ -598,12 +759,18 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Note 1', $response->notes[0]->value);
         $this->assertEquals('Note 2', $response->notes[1]->value);
 
+        $this->assertEquals('Home', $response->addresses[0]->title);
         $this->assertEquals(true, $response->addresses[0]->billingAddress);
         $this->assertEquals(true, $response->addresses[0]->primaryAddress);
         $this->assertEquals(false, $response->addresses[0]->deliveryAddress);
         $this->assertEquals('Dornbirn', $response->addresses[0]->postboxCity);
         $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
         $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
+
+        $this->assertObjectHasAttribute('avatar', $response);
+        $this->assertObjectHasAttribute('thumbnails', $response->avatar);
+        $this->assertObjectHasAttribute('100x100', $response->avatar->thumbnails);
+        $this->assertTrue(is_string($response->avatar->thumbnails->{'100x100'}));
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
@@ -623,7 +790,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'disabled' => 0,
                 'salutation' => 'Sehr geehrte Frau Dr Mustermann',
                 'formOfAddress' => [
@@ -658,7 +828,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'salutation' => 'Sehr geehrte Frau Mustermann',
                 'formOfAddress' => [
                     'id' => 0,
@@ -686,7 +859,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'salutation' => 'Sehr geehrte Frau Mustermann',
                 'disabled' => 0,
             ]
@@ -709,7 +885,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'emails' => [],
                 'phones' => [],
                 'notes' => [],
@@ -777,7 +956,13 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
+                'avatar' => [
+                    'id' => $this->avatar->getId(),
+                ],
                 'emails' => [
                     [
                         'id' => $this->email->getId(),
@@ -846,6 +1031,7 @@ class ContactControllerTest extends SuluTestCase
                 'addresses' => [
                     [
                         'id' => $this->address->getId(),
+                        'title' => 'work',
                         'street' => 'Street',
                         'number' => '2',
                         'zip' => '9999',
@@ -923,6 +1109,11 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Sehr geehrter John', $response->salutation);
         $this->assertEquals(0, $response->disabled);
 
+        $this->assertObjectHasAttribute('avatar', $response);
+        $this->assertObjectHasAttribute('thumbnails', $response->avatar);
+        $this->assertObjectHasAttribute('100x100', $response->avatar->thumbnails);
+        $this->assertTrue(is_string($response->avatar->thumbnails->{'100x100'}));
+
         $this->assertEquals(2, count($response->categories));
 
         $client->request('GET', '/api/contacts/' . $response->id);
@@ -947,6 +1138,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Note 1_1', $response->notes[0]->value);
         $this->assertEquals(1, count($response->notes));
 
+        $this->assertEquals('work', $response->addresses[0]->title);
         $this->assertEquals(true, $response->addresses[0]->billingAddress);
         $this->assertEquals(true, $response->addresses[0]->primaryAddress);
         $this->assertEquals(false, $response->addresses[0]->deliveryAddress);
@@ -957,6 +1149,11 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
         $this->assertEquals(0, $response->disabled);
+
+        $this->assertObjectHasAttribute('avatar', $response);
+        $this->assertObjectHasAttribute('thumbnails', $response->avatar);
+        $this->assertObjectHasAttribute('100x100', $response->avatar->thumbnails);
+        $this->assertTrue(is_string($response->avatar->thumbnails->{'100x100'}));
 
         $this->assertEquals(2, count($response->categories));
     }
@@ -972,7 +1169,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'emails' => [
                     [
                         'email' => 'john.doe@muster.de',
@@ -1107,7 +1307,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'emails' => [],
                 'phones' => [
                     [
@@ -1204,7 +1407,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'emails' => [],
                 'phones' => [
                     [
@@ -1287,7 +1493,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'account' => [
                     'id' => $this->account1->getId(),
                 ],
@@ -1414,6 +1623,77 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Max Mustermann', $response->_embedded->contacts[0]->fullName);
     }
 
+    public function testGetListIds()
+    {
+        $contact1 = new Contact();
+        $contact1->setFirstName('Erika');
+        $contact1->setLastName('Mustermann');
+        $this->em->persist($contact1);
+
+        $contact2 = new Contact();
+        $contact2->setFirstName('Anne');
+        $contact2->setLastName('Mustermann');
+        $this->em->persist($contact2);
+
+        $contact3 = new Contact();
+        $contact3->setFirstName('Otto');
+        $contact3->setLastName('Mustermann');
+        $this->em->persist($contact3);
+        $this->em->flush();
+
+        $ids = sprintf('%s,%s,%s', $contact1->getId(), $contact2->getId(), $contact3->getId());
+
+        $client = $this->createTestClient();
+        $client->request('GET', '/api/contacts?flat=true&ids=' . $ids);
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(3, $response->total);
+
+        $this->assertEquals($contact1->getId(), $response->_embedded->contacts[0]->id);
+        $this->assertEquals($contact2->getId(), $response->_embedded->contacts[1]->id);
+        $this->assertEquals($contact3->getId(), $response->_embedded->contacts[2]->id);
+    }
+
+    public function testGetListIdsEmpty()
+    {
+        $client = $this->createTestClient();
+        $client->request('GET', '/api/contacts?flat=true&ids=');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertCount(0, $response->_embedded->contacts);
+    }
+
+    public function testGetListIdsOrder()
+    {
+        $contact1 = new Contact();
+        $contact1->setFirstName('Erika');
+        $contact1->setLastName('Mustermann');
+        $this->em->persist($contact1);
+
+        $contact2 = new Contact();
+        $contact2->setFirstName('Anne');
+        $contact2->setLastName('Mustermann');
+        $this->em->persist($contact2);
+
+        $contact3 = new Contact();
+        $contact3->setFirstName('Otto');
+        $contact3->setLastName('Mustermann');
+        $this->em->persist($contact3);
+        $this->em->flush();
+
+        $ids = sprintf('%s,%s,%s', $contact3->getId(), $contact1->getId(), $contact2->getId());
+
+        $client = $this->createTestClient();
+        $client->request('GET', '/api/contacts?flat=true&ids=' . $ids);
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(3, $response->total);
+
+        $this->assertEquals($contact3->getId(), $response->_embedded->contacts[0]->id);
+        $this->assertEquals($contact1->getId(), $response->_embedded->contacts[1]->id);
+        $this->assertEquals($contact2->getId(), $response->_embedded->contacts[2]->id);
+    }
+
     public function testDelete()
     {
         $client = $this->createTestClient();
@@ -1451,7 +1731,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'account' => [
                     'id' => $this->account1->getId(),
                 ],
@@ -1561,7 +1844,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'account' => [
                     'id' => null,
                 ],
@@ -1697,7 +1983,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'Erika',
                 'lastName' => 'Mustermann',
                 'title' => 'MSc',
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'account' => [
                     'id' => $this->account1->getId(),
                 ],
@@ -1827,7 +2116,10 @@ class ContactControllerTest extends SuluTestCase
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $this->contactTitle->getId(),
-                'position' => $this->contactPosition->getId(),
+                'position' => [
+                    'id' => $this->contactPosition->getId(),
+                    'position' => $this->contactPosition->getPosition(),
+                ],
                 'emails' => [
                     [
                         'id' => $this->email->getId(),

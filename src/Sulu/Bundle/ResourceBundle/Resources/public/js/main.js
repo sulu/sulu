@@ -10,13 +10,14 @@
 require.config({
     paths: {
         suluresource: '../../suluresource/js',
-        'filtersutil/header': '../../suluresource/js/components/filters/util/header',
+        suluresourcecss: '../../suluresource/css',
+
         'type/conditionSelection': '../../suluresource/js/components/condition-selection/condition-selection-type',
         'filtersutil/toolbarExtensionHandler': '../../suluresource/js/components/filters/util/toolbar-extension-handler'
     }
 });
 
-define(['filtersutil/toolbarExtensionHandler'], function(toolbarExtensionHandler) {
+define(['filtersutil/toolbarExtensionHandler', 'css!suluresourcecss/main'], function(toolbarExtensionHandler) {
 
     'use strict';
 
@@ -37,7 +38,7 @@ define(['filtersutil/toolbarExtensionHandler'], function(toolbarExtensionHandler
             sandbox.mvc.routes.push({
                 route: 'resource/filters/:type',
                 callback: function(type) {
-                    this.html('<div data-aura-component="filters@suluresource" data-aura-display="list" data-aura-type="' + type + '"/>');
+                    return '<div data-aura-component="filters@suluresource" data-aura-display="list" data-aura-type="' + type + '"/>';
                 }
             });
 
@@ -45,7 +46,7 @@ define(['filtersutil/toolbarExtensionHandler'], function(toolbarExtensionHandler
             sandbox.mvc.routes.push({
                 route: 'resource/filters/:type/:locale/add',
                 callback: function(type, locale) {
-                    this.html('<div data-aura-component="filters@suluresource" data-aura-display="form" data-aura-type="' + type + '" data-aura-locale="' + locale + '"/>');
+                    return '<div data-aura-component="filters@suluresource" data-aura-display="form" data-aura-type="' + type + '" data-aura-locale="' + locale + '"/>';
                 }
             });
 
@@ -53,7 +54,7 @@ define(['filtersutil/toolbarExtensionHandler'], function(toolbarExtensionHandler
             sandbox.mvc.routes.push({
                 route: 'resource/filters/:type/:locale/edit::id/:details',
                 callback: function(type, locale, id) {
-                    this.html('<div data-aura-component="filters@suluresource" data-aura-display="form" data-aura-type="' + type + '" data-aura-locale="' + locale + '" data-aura-id="' + id + '"/>');
+                    return '<div data-aura-component="filters@suluresource" data-aura-display="form" data-aura-type="' + type + '" data-aura-locale="' + locale + '" data-aura-id="' + id + '"/>';
                 }
             });
 

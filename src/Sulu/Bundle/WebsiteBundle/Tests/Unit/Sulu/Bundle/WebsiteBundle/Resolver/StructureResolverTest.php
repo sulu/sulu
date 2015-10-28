@@ -80,6 +80,7 @@ class StructureResolverTest extends \PHPUnit_Framework_TestCase
         $structure->getPublished()->willReturn('date');
         $structure->getPath()->willReturn('test-path');
         $structure->getUrls()->willReturn(['en' => '/description', 'de' => '/beschreibung', 'es' => null]);
+        $structure->getShadowBaseLanguage()->willReturn('en');
 
         $expected = [
             'extension' => [
@@ -100,6 +101,7 @@ class StructureResolverTest extends \PHPUnit_Framework_TestCase
             'template' => 'test',
             'urls' => ['en' => '/description', 'de' => '/beschreibung', 'es' => null],
             'path' => 'test-path',
+            'shadowBaseLocale' => 'en',
         ];
 
         $this->assertEquals($expected, $this->structureResolver->resolve($structure->reveal()));

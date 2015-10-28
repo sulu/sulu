@@ -11,23 +11,38 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
-use Sulu\Component\DocumentManager\DocumentInspector;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
+use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ResourceSegmentSubscriber extends AbstractMappingSubscriber
+/**
+ * TODO: This could be made into a pure metadata subscriber if we make
+ *       the resource locator a system property.
+ */
+class ResourceSegmentSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var DocumentInspector
+     */
     private $inspector;
+
+    /**
+     * @var PropertyEncoder
+     */
+    private $encoder;
 
     public function __construct(
         PropertyEncoder $encoder,
         DocumentInspector $inspector
     ) {
-        parent::__construct($encoder);
+        $this->encoder = $encoder;
         $this->inspector = $inspector;
     }
 
@@ -39,25 +54,41 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
         return [
             // persist should happen before content is mapped
             Events::PERSIST => ['handlePersist', 10],
-
             // hydrate should happen afterwards
-            Events::HYDRATE => ['handleHydrate', -10],
+            Events::HYDRATE => ['handleHydrate', -200],
         ];
     }
 
     public function supports($document)
     {
-        return $document instanceof ResourceSegmentBehavior;
+        return $document instanceof ResourceSegmentBehavior && $document instanceof StructureBehavior;
     }
 
     /**
-     * @param HydrateEvent $event
+     * @param AbstractMappingEvent $event
      */
-    public function doHydrate(AbstractMappingEvent $event)
+    public function handleHydrate(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();
+
+        if (!$this->supports($document)) {
+            return;
+        }
+
+        if ($document instanceof RedirectTypeBehavior && $document->getRedirectType() !== RedirectType::NONE) {
+            return;
+        }
+
+        $node = $event->getNode();
         $property = $this->getResourceSegmentProperty($document);
-        $segment = $document->getStructure()->getProperty($property->getName())->getValue();
+        $originalLocale = $this->inspector->getOriginalLocale($document);
+        $segment = $node->getPropertyValueWithDefault(
+            $this->encoder->localizedSystemName(
+                $property->getName(),
+                $originalLocale
+            ),
+            ''
+        );
 
         $document->setResourceSegment($segment);
     }
@@ -65,11 +96,19 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
     /**
      * @param PersistEvent $event
      */
-    public function doPersist(PersistEvent $event)
+    public function handlePersist(PersistEvent $event)
     {
         $document = $event->getDocument();
-        $property = $this->getResourceSegmentProperty($document);
 
+        if (!$this->supports($document)) {
+            return;
+        }
+
+        if ($document instanceof RedirectTypeBehavior && $document->getRedirectType() !== RedirectType::NONE) {
+            return;
+        }
+
+        $property = $this->getResourceSegmentProperty($document);
         $document->getStructure()->getProperty(
             $property->getName()
         )->setValue($document->getResourceSegment());
@@ -81,12 +120,14 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
         $property = $structure->getPropertyByTagName('sulu.rlp');
 
         if (!$property) {
-            throw new \RuntimeException(sprintf(
-                'Structure "%s" does not have a "sulu.rlp" tag which is required for documents implementing the ' .
-                'ResourceSegmentBehavior. In "%s"',
-                $structure->name,
-                $structure->resource
-            ));
+            throw new \RuntimeException(
+                sprintf(
+                    'Structure "%s" does not have a "sulu.rlp" tag which is required for documents implementing the ' .
+                    'ResourceSegmentBehavior. In "%s"',
+                    $structure->name,
+                    $structure->resource
+                )
+            );
         }
 
         return $property;

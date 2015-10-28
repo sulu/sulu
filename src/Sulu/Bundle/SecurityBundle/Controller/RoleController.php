@@ -49,12 +49,13 @@ class RoleController extends RestController implements ClassResourceInterface, S
     protected $bundlePrefix = 'security.roles.';
 
     /**
-     * @var Array - Holds the field descriptors for the list response
-     *            TODO: Create a Manager and move the field descriptors to the manager
+     * @var array - Holds the field descriptors for the list response
+     * TODO: Create a Manager and move the field descriptors to the manager
      */
     protected $fieldDescriptors = [];
 
     // TODO: move field descriptors to a manager
+
     protected function getFieldDescriptors()
     {
         if (empty($this->fieldDescriptors)) {

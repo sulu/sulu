@@ -182,6 +182,11 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function assignSortFields($queryBuilder)
     {
+        // if no sort has been assigned add order by id ASC as default
+        if (count($this->sortFields) === 0) {
+            $queryBuilder->addOrderBy($this->entityName . '.id', 'ASC');
+        }
+
         foreach ($this->sortFields as $index => $sortField) {
             $queryBuilder->addOrderBy($sortField->getSelect(), $this->sortOrders[$index]);
         }
@@ -230,6 +235,28 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
+     * Returns all FieldDescriptors that were passed to list builder.
+     *
+     * @param bool $onlyReturnFilterFields Define if only filtering FieldDescriptors should be returned
+     *
+     * @return AbstractDoctrineFieldDescriptor[]
+     */
+    protected function getAllFields($onlyReturnFilterFields = false)
+    {
+        $fields = array_merge(
+            $this->searchFields,
+            $this->sortFields,
+            $this->getUniqueExpressionFieldDescriptors($this->expressions)
+        );
+
+        if ($onlyReturnFilterFields !== true) {
+            $fields = array_merge($fields, $this->selectFields);
+        }
+
+        return $fields;
+    }
+
+    /**
      * Creates a query-builder for sub-selecting ID's.
      *
      * @param null|string $select
@@ -242,29 +269,53 @@ class DoctrineListBuilder extends AbstractListBuilder
             $select = $this->entityName . '.id';
         }
 
-        $filterFields = array_merge(
-            $this->sortFields,
-            $this->expressionFields,
-            $this->searchFields
-        );
+        // get all filter-fields
+        $filterFields = $this->getAllFields(true);
 
         // get entity names
-        $filterFields = $this->getEntityNamesOfFieldDescriptors($filterFields);
+        $entityNames = $this->getEntityNamesOfFieldDescriptors($filterFields);
 
-        // use fields that have filter functionality or have an inner join
+        // get necessary joins to achieve filtering
+        $addJoins = $this->getNecessaryJoins($entityNames);
+
+        // create querybuilder and add select
+        return $this->createQueryBuilder($addJoins)
+            ->select($select);
+    }
+
+    /**
+     * Function returns all necessary joins for filtering result.
+     *
+     * @param string[] $necessaryEntityNames
+     *
+     * @return AbstractDoctrineFieldDescriptor[]
+     */
+    protected function getNecessaryJoins($necessaryEntityNames)
+    {
         $addJoins = [];
-        foreach ($this->getJoins() as $entity => $join) {
-            if (array_search($entity, $filterFields) !== false
-                || $join->getJoinMethod() == DoctrineJoinDescriptor::JOIN_METHOD_INNER
+
+        // iterate through all field descriptors to find necessary joins
+        foreach ($this->getAllFields() as $key => $field) {
+            // if field is in any conditional clause -> add join
+            if (($field instanceof DoctrineFieldDescriptor || $field instanceof DoctrineJoinDescriptor) &&
+                array_search($field->getEntityName(), $necessaryEntityNames) !== false
+                && $field->getEntityName() !== $this->entityName
             ) {
-                $addJoins[$entity] = $join;
+                $addJoins = array_merge($addJoins, $field->getJoins());
+            } else {
+                // include inner joins
+                foreach ($field->getJoins() as $entityName => $join) {
+                    if ($join->getJoinMethod() !== DoctrineJoinDescriptor::JOIN_METHOD_INNER &&
+                        array_search($entityName, $necessaryEntityNames) === false
+                    ) {
+                        break;
+                    }
+                    $addJoins = array_merge($addJoins, [$entityName => $join]);
+                }
             }
         }
 
-        $queryBuilder = $this->createQueryBuilder($addJoins)
-            ->select($select);
-
-        return $queryBuilder;
+        return $addJoins;
     }
 
     /**
@@ -290,16 +341,17 @@ class DoctrineListBuilder extends AbstractListBuilder
             }
         }
 
-        // get entity names
-        $fields = array_map(
-            function ($field) {
-                return $field->getEntityName();
-            },
-            $fields
-        );
+        $fieldEntityNames = [];
+        foreach ($fields as $key => $field) {
+            // special treatment for join descriptors
+            if ($field instanceof DoctrineJoinDescriptor) {
+                $fieldEntityNames[] = $key;
+            }
+            $fieldEntityNames[] = $field->getEntityName();
+        }
 
         // unify result
-        return array_unique($fields);
+        return array_unique($fieldEntityNames);
     }
 
     /**
@@ -418,13 +470,19 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function getUniqueExpressionFieldDescriptors(array $expressions)
     {
-        $descriptors = [];
-        $uniqueNames = array_unique($this->getAllFieldNames($expressions));
-        foreach ($uniqueNames as $uniqueName) {
-            $descriptors[] = $this->fieldDescriptors[$uniqueName];
+        if (count($this->expressionFields) === 0) {
+            $descriptors = [];
+            $uniqueNames = array_unique($this->getAllFieldNames($expressions));
+            foreach ($uniqueNames as $uniqueName) {
+                $descriptors[] = $this->fieldDescriptors[$uniqueName];
+            }
+
+            $this->expressionFields = $descriptors;
+
+            return $descriptors;
         }
 
-        return $descriptors;
+        return $this->expressionFields;
     }
 
     /**

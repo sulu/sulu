@@ -37,13 +37,14 @@ class GroupController extends RestController implements ClassResourceInterface, 
 
     // TODO: Create a Manager and move the field descriptors to the manager
     /**
-     * @var Array - Holds the field descriptors for the list response
+     * @var array - Holds the field descriptors for the list response
      */
     protected $fieldDescriptors;
 
     const ENTITY_NAME_ROLE = 'SuluSecurityBundle:Role';
 
     // TODO: move the field descriptors to a manager
+
     public function __construct()
     {
         $this->fieldDescriptors = [];

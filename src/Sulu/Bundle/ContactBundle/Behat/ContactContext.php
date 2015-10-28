@@ -107,4 +107,28 @@ class ContactContext extends BaseContext implements SnippetAcceptingContext
     {
         return $this->getService('sulu_contact.contact_manager');
     }
+
+    /**
+     * @Given I click the card containing ":text"
+     */
+    public function iClickOnTheEditIconInTheRowContaining($text)
+    {
+        $this->waitForText($text);
+        $script = <<<EOT
+            var f = function () {
+                var cards = document.querySelectorAll(".card-item .head-name");
+
+                for (var i = 0; i < cards.length; i++) {
+                    if (cards[i].textContent == '%s') {
+                        cards[i].click();
+                    }
+                };
+            }
+
+            f();
+EOT;
+
+        $script = sprintf($script, $text);
+        $this->getSession()->executeScript($script);
+    }
 }

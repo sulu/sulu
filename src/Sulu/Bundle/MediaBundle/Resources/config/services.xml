@@ -24,7 +24,9 @@
         <parameter key="sulu_media.twig_extension.disposition_type.class">Sulu\Bundle\MediaBundle\Twig\DispositionTypeTwigExtension</parameter>
         <parameter key="sulu_media.twig_extension.media.class">Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension</parameter>
         <parameter key="tmp">Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension</parameter>
+        <parameter key="sulu_media.video_thumbnail_generator.class">Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailService</parameter>
     </parameters>
+
     <services>
         <service id="sulu_media.admin" class="%sulu_media.admin.class%">
             <tag name="sulu.admin"/>
@@ -33,6 +35,7 @@
             <argument>%sulu_admin.name%</argument>
         </service>
         <service id="sulu_media.admin.content_navigation_provider" class="%sulu_media.admin.content_navigation_provider.class%">
+            <argument type="service" id="sulu_security.security_checker"/>
             <tag name="sulu_admin.content_navigation" alias="media"/>
             <tag name="sulu.context" context="admin"/>
         </service>
@@ -87,6 +90,10 @@
             <argument type="service" id="sulu_media.format_manager" />
             <argument type="service" id="sulu_tag.tag_manager" />
             <argument type="service" id="sulu_media.type_manager" />
+            <argument type="service" id="security.token_storage" on-invalid="null" />
+            <argument type="service" id="sulu_security.security_checker" on-invalid="null" />
+            <argument type="service" id="dubture_ffmpeg.ffprobe" />
+            <argument>%sulu_security.permissions%</argument>
             <argument type="string">%sulu_media.media_manager.media_download_path%</argument>
             <argument>%sulu_media.media.max_file_size%</argument>
         </service>
@@ -102,6 +109,7 @@
             <argument type="service" id="sulu_media.storage" />
             <argument type="service" id="sulu_media.format_cache" />
             <argument type="service" id="sulu_media.image.converter" />
+            <argument type="service" id="sulu_media.video_thumbnail_generator"/>
             <argument type="string">%sulu_media.ghost_script.path%</argument>
             <argument type="string">%sulu_media.format_cache.save_image%</argument>
             <argument type="string">%sulu_media.format_manager.mime_types%</argument>
@@ -121,7 +129,9 @@
             <argument type="service" id="sulu_media.format_manager" />
             <argument type="service" id="sulu.repository.user" />
             <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="security.token_storage" on-invalid="null"/>
             <argument type="string">%sulu_media.collection.previews.format%</argument>
+            <argument>%sulu_security.permissions%</argument>
         </service>
 
         <service id="sulu_media.twig_extension.disposition_type" class="%sulu_media.twig_extension.disposition_type.class%">
@@ -136,6 +146,30 @@
             <argument type="service" id="sulu_media.media_manager"/>
 
             <tag name="twig.extension"/>
+        </service>
+
+        <service id="sulu_media.video_thumbnail_generator" class="%sulu_media.video_thumbnail_generator.class%">
+            <argument type="service" id="dubture_ffmpeg.ffmpeg"/>
+        </service>
+
+        <service id="sulu_media.js_config" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">
+            <argument>sulu-media</argument>
+            <argument type="collection">
+                <argument key="permissions" type="expression">
+                    service('sulu_security.access_control_manager').getUserPermissions(
+                        service('sulu_media.security_context'),
+                        service('security.token_storage').getToken().getUser()
+                    )
+                </argument>
+                <argument key="maxFilesize" type="string">%sulu_media.upload.max_filesize%</argument>
+            </argument>
+
+            <tag name="sulu.js_config"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_media.security_context" class="Sulu\Component\Security\Authorization\SecurityCondition">
+            <argument>sulu.media.collections</argument>
         </service>
     </services>
 </container>
