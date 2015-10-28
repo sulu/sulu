@@ -54,15 +54,15 @@ class BlameSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             Events::PERSIST => 'handlePersist',
             Events::HYDRATE => 'handleHydrate',
             Events::CONFIGURE_OPTIONS => 'configureOptions',
-        );
+        ];
     }
 
     /**
@@ -70,9 +70,9 @@ class BlameSubscriber implements EventSubscriberInterface
      */
     public function configureOptions(ConfigureOptionsEvent $event)
     {
-        $event->getOptions()->setDefaults(array(
+        $event->getOptions()->setDefaults([
             'user' => null,
-        ));
+        ]);
     }
 
     /**

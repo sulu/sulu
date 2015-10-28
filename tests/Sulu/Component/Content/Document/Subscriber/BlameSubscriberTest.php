@@ -12,17 +12,16 @@
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use PHPCR\NodeInterface;
+use PHPCR\PropertyType;
 use Sulu\Component\Content\Document\Behavior\BlameBehavior;
-use Sulu\Component\Content\Document\Subscriber\BlameSubscriber;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Sulu\Component\Security\Authentication\UserInterface;
-use PHPCR\PropertyType;
 
 class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
 {
@@ -63,7 +62,7 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     public function testPersistTokenIsNull()
     {
-        $this->persistEvent->getOptions()->willReturn(array('user' => null));
+        $this->persistEvent->getOptions()->willReturn(['user' => null]);
         $this->persistEvent->getDocument()->willReturn($this->document);
         $this->tokenStorage->getToken()->willReturn(null);
 
@@ -75,7 +74,7 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     public function testPersistTokenIsAnonymous()
     {
-        $this->persistEvent->getOptions()->willReturn(array('user' => null));
+        $this->persistEvent->getOptions()->willReturn(['user' => null]);
         $this->persistEvent->getDocument()->willReturn($this->document);
         $this->tokenStorage->getToken()->willReturn($this->anonymousToken->reveal());
 
@@ -89,7 +88,7 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     public function testPersistUserNotSuluUser()
     {
-        $this->persistEvent->getOptions()->willReturn(array('user' => null));
+        $this->persistEvent->getOptions()->willReturn(['user' => null]);
         $this->persistEvent->getDocument()->willReturn($this->document);
         $this->tokenStorage->getToken()->willReturn($this->token->reveal());
         $this->token->getUser()->willReturn($this->notUser);
@@ -105,7 +104,7 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
         $locale = 'fr';
         $document = new BlameTestDocument();
 
-        $this->persistEvent->getOptions()->willReturn(array('user' => null));
+        $this->persistEvent->getOptions()->willReturn(['user' => null]);
         $this->persistEvent->getLocale()->willReturn($locale);
         $this->persistEvent->getDocument()->willReturn($document);
         $this->persistEvent->getAccessor()->willReturn($this->accessor);
@@ -132,7 +131,7 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
         $locale = 'fr';
         $document = new BlameTestDocument($this->user->reveal());
 
-        $this->persistEvent->getOptions()->willReturn(array('user' => null));
+        $this->persistEvent->getOptions()->willReturn(['user' => null]);
         $this->tokenStorage->getToken()->willReturn($this->token->reveal());
         $this->token->getUser()->willReturn($this->user->reveal());
         $this->user->getId()->willReturn(2);
@@ -183,7 +182,7 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It can be instantiated without a token provider
+     * It can be instantiated without a token provider.
      */
     public function testHydateWithoutTokenProvider()
     {
