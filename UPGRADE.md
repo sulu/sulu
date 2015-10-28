@@ -26,6 +26,14 @@ url.
 UPDATE me_media SET idCollections={new-system-collection-id} WHERE idCollections={old-avatar-collection};
 ```
 
+### Category
+Category has now a default locale this has to set before use. You can use this sql statement after update your schema
+(`app/console doctrine:schema:update --force`):
+
+```sql
+UPDATE ca_categories AS c SET default_locale = (SELECT locale FROM ca_category_translations WHERE idCategories = c.id LIMIT 1) WHERE default_locale = "";
+```
+
 ### Websocket Component
 The following Interfaces has new methods
 
