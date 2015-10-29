@@ -50,8 +50,8 @@
                 <source>snippet.delete-no-snippets-selected</source>
                 <target>Keine Schnipsel ausgewählt</target>
             </trans-unit>
-            <trans-unit id="e4b1428ja8a085edecd67tf5acb2d39e" resname="search-overlay.category.snippet.title">
-                <source>search-overlay.category.snippet.title</source>
+            <trans-unit id="e4b1428ja8a085edecd67tf5acb2d39e" resname="search-overlay.index.snippet.title">
+                <source>search-overlay.index.snippet.title</source>
                 <target>Snippets</target>
             </trans-unit>
             <trans-unit id="e4b1428ja8a085e2kt4sdws5acb2d39e" resname="search-overlay.placeholder.snippet">
