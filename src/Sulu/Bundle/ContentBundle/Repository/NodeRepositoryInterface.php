@@ -156,6 +156,16 @@ interface NodeRepositoryInterface
     public function deleteNode($uuid, $webspaceKey);
 
     /**
+     * Return the nodes which refer to the structure with the
+     * given UUID.
+     *
+     * @param string $uuid
+     *
+     * @return \PHPCR\NodeInterface[]
+     */
+    public function getReferences($uuid);
+
+    /**
      * returns tree to content node given by uuid.
      *
      * @param string $uuid

@@ -6397,10 +6397,12 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 }
 /* line 174, ../scss/modules/overlay.scss */
 .overlay-content .message ul {
-  list-style-type: none;
-  padding: 0;
+  border: 1px solid #ddd;
+  list-style-position: inside;
+  text-align: left;
+  padding: 10px;
 }
-/* line 180, ../scss/modules/overlay.scss */
+/* line 182, ../scss/modules/overlay.scss */
 .overlay-content .language-changer {
   width: 80px;
   position: absolute;
@@ -6408,7 +6410,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   right: 0;
 }
 
-/* line 188, ../scss/modules/overlay.scss */
+/* line 190, ../scss/modules/overlay.scss */
 .husky-overlay-wrapper {
   width: 100%;
   height: 100%;
@@ -6422,7 +6424,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   background: rgba(0, 0, 0, 0.5);
   -webkit-transform: translate3d(0, 0, 0);
 }
-/* line 200, ../scss/modules/overlay.scss */
+/* line 202, ../scss/modules/overlay.scss */
 .husky-overlay-wrapper::before {
   content: '';
   display: inline-block;
@@ -10358,7 +10360,7 @@ a.btn-black, a.btn-highlight {
   display: inline-block;
   background: #52B6CA;
   padding: 0px 2px;
-  margin-right: 10px;
+  margin-right: 8px;
   margin-top: -3px;
   color: #fff;
   border-radius: 3px;

@@ -13,7 +13,7 @@
 
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-    <link rel="stylesheet" href="/bundles/suluadmin/dist/login.min.1444912279342.css">
+    <link rel="stylesheet" href="/bundles/suluadmin/dist/login.min.1444986338199.css">
 
     <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/css/main.css"/>
 </head>
@@ -24,6 +24,7 @@
              data-aura-reset-mail-url="{{ path('sulu_security.reset_password.email') }}"
              data-aura-resend-url="{{ path('sulu_security.reset_password.email.resend') }}"
              data-aura-login-url="{{ path('sulu_admin.login') }}"
+             data-aura-csrf-token="{{ csrf_token('authenticate') }}"
              {% if token is defined %}
                 data-aura-reset-token="{{ token }}"
                 data-aura-reset-mode="true"
@@ -41,6 +42,6 @@
         {% endautoescape %}
     </script>
 
-    <script data-main="/bundles/suluadmin/dist/login.min.1444912279342" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
+    <script data-main="/bundles/suluadmin/dist/login.min.1444986338199" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
 </body>
 </html>

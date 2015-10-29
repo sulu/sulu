@@ -33,6 +33,13 @@ define([
             previewCollapseIcon: 'fa-step-forward'
         },
 
+        translationKeys = {
+            deleteReferencedByFollowing: 'content.delete-referenced-by-following',
+            deleteConfirmText: 'content.delete-confirm-text',
+            deleteConfirmTitle: 'content.delete-confirm-title',
+            deleteDoIt: 'content.delete-do-it',
+        },
+
         states = {
             0: 'stateTest',
             1: 'stateTest',
@@ -66,7 +73,23 @@ define([
                 '</div>'
             ].join(''),
 
-            previewUrl: '<%= url %><%= uuid %>/render?webspace=<%= webspace %>&language=<%= language %>'
+            previewUrl: '<%= url %><%= uuid %>/render?webspace=<%= webspace %>&language=<%= language %>',
+
+            referentialIntegrityMessage: function(pageTitles) {
+                var message = [];
+
+                message.push('<p>', this.sandbox.translate(translationKeys.deleteReferencedByFollowing), '</p>');
+                message.push('<ul>');
+
+                this.sandbox.util.foreach(pageTitles, function(pageTitle) {
+                    message.push('<li>', pageTitle, '</li>');
+                });
+
+                message.push('</ul>');
+                message.push('<p>', this.sandbox.translate(translationKeys.deleteConfirmText), '</p>');
+
+                return message.join('');
+            }
         },
 
         isHomeDocument = function(data) {
@@ -433,25 +456,24 @@ define([
                     this.sandbox.emit('sulu.header.toolbar.item.loading', 'settings');
                     if (!this.content || id !== this.content.get('id')) {
                         var content = new Content({id: id});
-                        content.fullDestroy(this.options.webspace, this.options.language, {
+                        content.fullDestroy(this.options.webspace, this.options.language, false, {
                             processData: true,
-
-                            success: function() {
-                                var route = 'content/contents/' + this.options.webspace + '/' + this.options.language;
-                                this.sandbox.emit('sulu.router.navigate', route);
+                            success: this.deleteSuccessCallback,
+                            error: function(model, response) {
+                                this.displayReferentialIntegrityDialog(model, response.responseJSON);
                                 this.sandbox.emit('sulu.preview.deleted', id);
                             }.bind(this)
                         });
                     } else {
-                        this.content.fullDestroy(this.options.webspace, this.options.language, {
+                        this.content.fullDestroy(this.options.webspace, this.options.language, false, {
                             processData: true,
-
                             success: function() {
-                                var route = 'content/contents/' + this.options.webspace + '/' + this.options.language;
                                 this.sandbox.emit('sulu.app.ui.reset', {navigation: 'auto', content: 'auto'});
-
                                 this.sandbox.sulu.unlockDeleteSuccessLabel();
-                                this.sandbox.emit('sulu.router.navigate', route);
+                                this.deleteSuccessCallback();
+                            }.bind(this),
+                            error: function(model, response) {
+                                this.displayReferentialIntegrityDialog(model, response.responseJSON);
                                 this.sandbox.emit('sulu.preview.deleted', id);
                             }.bind(this)
                         });
@@ -466,7 +488,7 @@ define([
                     // TODO: show loading icon
                     ids.forEach(function(id) {
                         var content = new Content({id: id});
-                        content.fullDestroy(this.options.webspace, this.options.language, {
+                        content.fullDestroy(this.options.webspace, this.options.language, false, {
                             success: function() {
                                 this.sandbox.emit('husky.datagrid.record.remove', id);
                             }.bind(this),
@@ -477,6 +499,44 @@ define([
                     }.bind(this));
                 }
             }.bind(this));
+        },
+
+        displayReferentialIntegrityDialog: function(content, data) {
+            var pageTitles = [];
+
+            this.sandbox.util.foreach(data.structures, function(structure) {
+                pageTitles.push(structure.title);
+            });
+
+            var $element = $('<div/>');
+            $('body').append($element);
+
+            this.sandbox.start([
+                {
+                    name: 'overlay@husky',
+                    options: {
+                        el: $element,
+                        openOnStart: true,
+                        title: this.sandbox.translate(translationKeys.deleteConfirmTitle),
+                        message: templates.referentialIntegrityMessage.call(this, pageTitles),
+                        okDefaultText: this.sandbox.translate(translationKeys.deleteDoIt),
+                        type: 'alert',
+                        closeCallback: function() {
+                        },
+                        okCallback: function() {
+                            content.fullDestroy(this.options.webspace, this.options.language, true, {
+                                processData: true,
+                                success: this.deleteSuccessCallback.bind(this)
+                            });
+                        }.bind(this)
+                    }
+                }
+            ]);
+        },
+
+        deleteSuccessCallback: function() {
+            var route = 'content/contents/' + this.options.webspace + '/' + this.options.language;
+            this.sandbox.emit('sulu.router.navigate', route);
         },
 
         changeState: function(state) {

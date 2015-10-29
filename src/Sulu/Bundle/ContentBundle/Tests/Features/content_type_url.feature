@@ -14,15 +14,23 @@ Feature: Url content type
         """
         And I am logged in as an administrator
 
-    Scenario: Enter a valid url
+    Scenario Outline: Enter a valid url
         Given I am editing a page of type "url_page"
-        When I fill in "husky-input-this_url" with "foobar.com/asd"
+        When I set the value of the property "this_url" to "<url>"
+        Then I expect to see "<scheme>"
         And I click the save icon
         Then I expect a success notification to appear
+        Examples:
+        | url | scheme |
+        | http://foobar.com | http:// |
+        | https://foobar.com | https:// |
+        | ftp://foobar.com | ftp:// |
+        | ftps://foobar.com | ftps:// |
 
     Scenario Outline: Enter a invalid url
         Given I am editing a page of type "url_page"
-        When I fill in "husky-input-this_url" with "<url>"
+        When I fill in the selector "#this_url .specific-part-input" with "<url>"
+        And I leave the selector "#this_url .specific-part-input"
         And I click the save icon
         Then there should be 1 form errors
         Examples:

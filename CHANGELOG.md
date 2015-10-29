@@ -2,14 +2,19 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1605 [MediaBundle]     Adjust media-selection-overlay title
     * BUGFIX      #1716 [ContactBundle]   Fixed wrong contact entity identifier
     * FEATURE     #1611 [All]             Improved PHPCR content handling to allow custom PHPCR content
     * ENHANCEMENT #1706 [MediaBundle]     Changed download link in media section to real link
+    * BUGFIX      #1714 [ContentBundle]   Fixed migration for url scheme
+    * BUGFIX      #1713 [MediaBundle]     Fixed drag and drop behavior in collection view
+    * ENHANCEMENT #1704 [AdminBundle]     Protected login from CSRF attacks
     * BUGFIX      #1702 [MediaBundle]     Fixed selected handling in media selection overlay
     * BUGFIX      #1685 [ContactBundle]   Fixed delete logo/avatar from collection and form
     * FEATURE     #1697 [MediaBundle]     Replaced StreamedResponse with BinaryFileResponse
     * BUGFIX      #1701 [ContentBundle]   Added website cache clear button in preview toolbar
     * BUGFIX      #1696 [MediaBundle]     Fixed dropzone for uploading new versions of media
+    * BUGFIX      #1693 [All]             Fixed behat tests
     * BUGFIX      #1675 [ContactBundle]   Fixed null value for smart content
     * FEATURE     #1653 [MediaBundle]     Added generation of thumbnails for videos
     * BUGFIX      #1688 [ContentBundle]   Fixed doctrine cache size for preview with delete on navigate

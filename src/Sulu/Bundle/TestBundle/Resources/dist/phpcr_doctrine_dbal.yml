@@ -3,5 +3,5 @@ sulu_core:
         backend:
             type: doctrinedbal
         workspace: default
-        username: admin
-        password: admin
+        username: "%phpcr_username%"
+        password: "%phpcr_password%"

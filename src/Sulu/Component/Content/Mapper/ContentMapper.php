@@ -559,10 +559,10 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function delete($uuid, $webspaceKey, $dereference = false)
+    public function delete($uuid, $webspaceKey)
     {
         $document = $this->documentManager->find($uuid);
-        $this->documentManager->remove($document, $dereference);
+        $this->documentManager->remove($document);
         $this->documentManager->flush();
     }
 

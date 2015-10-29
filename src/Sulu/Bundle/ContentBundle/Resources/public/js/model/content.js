@@ -44,8 +44,22 @@ define([
             return this.fetch.call(this, options);
         },
 
-        fullDestroy: function(webspace, language, options) {
-            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?webspace=' + webspace + '&language=' + language});
+        fullDestroy: function(webspace, language, force, options) {
+            var id = this.get('id');
+
+            if (!id) {
+                throw new Error('The model cannot be destroyed without an ID');
+            }
+
+            options = _.defaults(
+                (options || {}),
+                {
+                    url: this.urlRoot + '/' + id
+                        + '?webspace=' + webspace
+                        + '&language=' + language
+                        + '&force=' + force
+                }
+            );
 
             return this.destroy.call(this, options);
         },
