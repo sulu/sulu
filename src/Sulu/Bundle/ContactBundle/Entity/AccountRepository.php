@@ -189,7 +189,7 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
             ->addSelect('notes')
             ->addSelect('medias')
             ->where('account.id IN (:accountIds)')
-            ->orderBy('account.id', 'ASC');;
+            ->orderBy('account.id', 'ASC');
 
         $query = $qb->getQuery();
         $query->setParameter('accountIds', $ids);
