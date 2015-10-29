@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX             #1725 [ContactBundle]  Specify findByIds ordering for PostgeSQL
     * ENHANCEMENT #1605 [MediaBundle]     Adjust media-selection-overlay title
     * BUGFIX      #1716 [ContactBundle]   Fixed wrong contact entity identifier
     * FEATURE     #1611 [All]             Improved PHPCR content handling to allow custom PHPCR content
@@ -40,7 +41,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1656 [ContentBundle]   Fixed preview nested properties
     * BUGFIX      #1656 [ContentBundle]   Fixed preview property attributes
     * BUGFIX      #1649 [ContentBundle]   Fixed floating of block type select
-    * BUGFIX      #1650 [LocationBundle]  Fixed configure overlay open multiple times 
+    * BUGFIX      #1650 [LocationBundle]  Fixed configure overlay open multiple times
     * BUGFIX      #1650 [ContentBundle]   Fixed serialization of null values
     * BUGFIX      #1650 [ContentBundle]   Fixed show ghost and shadow toggler in content column view
     * BUGFIX      #1646 [ContactBundle]   Fixed upload of contact-avatar when a position is applied to the contact
