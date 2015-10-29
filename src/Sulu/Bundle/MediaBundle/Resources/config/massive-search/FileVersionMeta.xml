@@ -5,7 +5,7 @@
         <id expr="object.getFileVersion().getFile().getId()" />
         <title property="title" />
         <description property="description" />
-        <index value="file_version_meta" />
+        <index value="media" />
         <category name="media" />
         <locale property="locale" />
 
@@ -13,9 +13,5 @@
             <field name="title" type="string" />
             <field name="description" type="string" />
         </fields>
-
-        <options>
-            <option name="security_context">sulu.media.collections</option>
-        </options>
     </mapping>
 </massive-search-mapping>
