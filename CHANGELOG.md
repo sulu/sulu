@@ -2,7 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * BUGFIX             #1726 [TagBundle]   Check for Doctrine Error rather than DB specific error code
+    * BUGFIX      #1726 [TagBundle]       Check for Doctrine Error rather than DB specific error code
     * ENHANCEMENT #1605 [MediaBundle]     Adjust media-selection-overlay title
     * BUGFIX      #1716 [ContactBundle]   Fixed wrong contact entity identifier
     * FEATURE     #1611 [All]             Improved PHPCR content handling to allow custom PHPCR content
