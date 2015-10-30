@@ -17,6 +17,7 @@
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="fos_rest.view_handler"/>
             <argument type="service" id="sulu_core.list_rest_helper"/>
+            <argument>%sulu_search.indexes%</argument>
         </service>
 
         <!-- Custom factory -->

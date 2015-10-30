@@ -27,9 +27,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
 {
     public function prepend(ContainerBuilder $container)
     {
-        $extensions = $container->getExtensions();
-
-        if (isset($extensions['sulu_core'])) {
+        if ($container->hasExtension('sulu_core')) {
             $prepend = [
                 'content' => [
                     'structure' => [
