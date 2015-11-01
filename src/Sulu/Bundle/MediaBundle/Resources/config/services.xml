@@ -100,6 +100,7 @@
             <argument type="service" id="security.token_storage" on-invalid="null" />
             <argument type="service" id="sulu_security.security_checker" on-invalid="null" />
             <argument type="service" id="dubture_ffmpeg.ffprobe" />
+            <argument type="service" id="logger" />
             <argument>%sulu_security.permissions%</argument>
             <argument type="string">%sulu_media.media_manager.media_download_path%</argument>
             <argument>%sulu_media.media.max_file_size%</argument>

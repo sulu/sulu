@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManager;
 use FFMpeg\FFProbe;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Log\LoggerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
@@ -104,6 +105,11 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
     private $securityChecker;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @var FFProbe
      */
     private $ffprobe;
@@ -125,6 +131,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $this->securityChecker = $this->prophesize(SecurityCheckerInterface::class);
         $this->ffprobe = $this->prophesize(FFProbe::class);
+        $this->logger = $this->prophesize(LoggerInterface::class);
 
         $this->mediaManager = new MediaManager(
             $this->mediaRepository->reveal(),
@@ -140,6 +147,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
             $this->tokenStorage->reveal(),
             $this->securityChecker->reveal(),
             $this->ffprobe->reveal(),
+            $this->logger->reveal(),
             [
                 'view' => 64,
             ],
