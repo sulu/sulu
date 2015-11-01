@@ -12,9 +12,16 @@ namespace Sulu\Bundle\MediaBundle\Media\Storage\Resolver;
 
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\FilesystemInterface;
+use Sulu\Bundle\MediaBundle\Media\Storage\Resolver\Flysystem\ResolverInterface;
 
 interface FlysystemResolverInterface
 {
+    /**
+     * @param string $class
+     * @param ResolverInterface $resolver
+     */
+    public function add(ResolverInterface $resolver, $class);
+
     /**
      * @param FilesystemInterface $fileSystem
      * @param string $fileName

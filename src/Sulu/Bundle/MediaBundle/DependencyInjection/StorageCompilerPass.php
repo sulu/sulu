@@ -42,21 +42,31 @@ class StorageCompilerPass implements CompilerPassInterface
             'flysystem',
             'League\Flysystem\MountManager',
             'oneup_flysystem.mount_manager',
-            'Sulu\Bundle\MediaBundle\Media\Storage\Resolver\FlysystemResolver'
+            'Sulu\Bundle\MediaBundle\Media\Storage\Resolver\FlysystemResolver',
+            [
+                's3' => [
+                    'class' => 'Sulu\Bundle\MediaBundle\Media\Storage\Resolver\Flysystem\AwsS3Resolver',
+                    'tag' => 'League\Flysystem\AwsS3v3\AwsS3Adapter',
+                ],
+                'dropbox' => [
+                    'class' => 'Sulu\Bundle\MediaBundle\Media\Storage\Resolver\Flysystem\DropBoxResolver',
+                    'tag' => 'League\Flysystem\AwsS3v3\DropboxAdapter',
+                ]
+            ]
         );
 
-        $storageManagerDefinition = $container->getDefinition('sulu_media.storage_manager');
+        // get all available adapters
         $taggedServices = $container->findTaggedServiceIds('sulu_media.storage_adapter');
-
-        $storageAdapters = $container->getParameter('sulu_media.storage.adapters');
-
-        $this->adapters = array();
+        $this->adapters = [];
         foreach ($taggedServices as $id => $tags) {
             foreach ($tags as $attributes) {
                 $this->adapters[$attributes['alias']] = $id;
             }
         }
 
+        // use only configured adapters
+        $storageAdapters = $container->getParameter('sulu_media.storage.adapters');
+        $storageManagerDefinition = $container->getDefinition('sulu_media.storage_manager');
         foreach ($storageAdapters as $alias => $config) {
             // create new storage definition
             $id = $this->getStorageDefinition($container, $alias, $config);
@@ -92,7 +102,6 @@ class StorageCompilerPass implements CompilerPassInterface
 
         // create definition by abstract adapters
         $storageDefinition = $container->setDefinition($id, new DefinitionDecorator($adapterName));
-
 
         // get adapter classname
         $className = $container->getParameterBag()->resolveValue(
@@ -143,24 +152,52 @@ class StorageCompilerPass implements CompilerPassInterface
      * @param string $managerClass
      * @param string $managerService
      * @param string $resolverClass
+     * @param array $resolverHelpers
      */
     protected function addStorageAdapter(
         ContainerBuilder $container,
         $key,
         $managerClass,
         $managerService,
-        $resolverClass
+        $resolverClass,
+        $resolverHelpers = array()
     ) {
+        // This will create the services only when they exists
         if (class_exists($managerClass)) {
             $adapterClassParameter = 'sulu_media.storage.adapter.' . $key . '.class';
             $container->setParameter($adapterClassParameter, 'Sulu\Bundle\MediaBundle\Media\Storage\\' . ucfirst($key) . 'Storage');
 
+            // create resolver
             $resolverService = 'sulu_media.storage.adapter.resolver.'  . $key;
-            $adapterClassParameter = $resolverService . '.class';
-            $container->setParameter($adapterClassParameter, $resolverClass);
-            $resolver = new Definition('%' . $adapterClassParameter . '%');
+            $resolverClassParameter = $resolverService . '.class';
+            $container->setParameter($resolverClassParameter, $resolverClass);
+            $resolver = new Definition('%' . $resolverClassParameter . '%');
             $container->setDefinition($resolverService, $resolver);
 
+            // create resolver helper classes
+            foreach ($resolverHelpers as $resolverKey => $resolverData) {
+                $resolverHelperClass = $resolverData['class'];
+                $tag = $resolverData['tag'];
+                $resolverHelperService = 'sulu_media.storage.adapter.resolver.'  . $key . '.' . $resolverKey;
+                $resolverClassParameter = $resolverHelperService . '.class';
+                $container->setParameter($resolverClassParameter, $resolverHelperClass);
+                $resolverHelper = new Definition('%' . $resolverClassParameter . '%');
+                $resolverHelper->addTag('sulu_media.storage.resolver.'  . $key, array('alias' => $tag));
+                $container->setDefinition($resolverHelperService, $resolverHelper);
+            }
+
+            $resolverDefinition = $container->getDefinition($resolverService);
+            $taggedServices = $container->findTaggedServiceIds('sulu_media.storage.resolver.'  . $key);
+            foreach ($taggedServices as $id => $tags) {
+                foreach ($tags as $attributes) {
+                    $resolverDefinition->addMethodCall(
+                        'add',
+                        array(new Reference($id), $attributes['alias'])
+                    );
+                }
+            }
+
+            // create storage
             $storage = new Definition('%' . $adapterClassParameter . '%');
             $storage->addArgument(''); // type
             $storage->addArgument(new Reference($managerService));
@@ -168,7 +205,7 @@ class StorageCompilerPass implements CompilerPassInterface
             $storage->addArgument(new Reference('logger'));
             $storage->setAbstract(true);
             $storage->setPublic(false);
-            $storage->addTag('sulu_media.storage_adapter', array('alias' => 'flysystem'));
+            $storage->addTag('sulu_media.storage_adapter', array('alias' => $key));
 
             $container->setDefinition('sulu_media.storage.adapter.' . $key, $storage);
         }

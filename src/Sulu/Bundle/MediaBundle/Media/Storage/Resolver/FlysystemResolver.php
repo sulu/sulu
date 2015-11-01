@@ -10,15 +10,26 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Storage\Resolver;
 
-
 use League\Flysystem\AdapterInterface;
-use League\Flysystem\AwsS3v3\AwsS3Adapter;
-use League\Flysystem\Dropbox\DropboxAdapter;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
+use Sulu\Bundle\MediaBundle\Media\Storage\Resolver\Flysystem\ResolverInterface;
 
 class FlysystemResolver implements FlysystemResolverInterface
 {
+    /**
+     * @var ResolverInterface[]
+     */
+    protected $resolvers = array();
+
+    /**
+     * {@inheritdoc}
+     */
+    public function add(ResolverInterface $resolver, $class)
+    {
+        $this->resolvers[$class] = $resolver;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -36,45 +47,12 @@ class FlysystemResolver implements FlysystemResolverInterface
      */
     public function getUrlFromAdapter(AdapterInterface $adapter, $fileName)
     {
-        if ($adapter instanceof DropboxAdapter) {
-            return $this->getDropBoxUrl($adapter, $fileName);
-        } elseif ($adapter instanceof AwsS3Adapter) {
-            return $this->getAwsS3Url($adapter, $fileName);
+        $class = get_class($adapter);
+
+        if (isset($this->resolvers[$class])) {
+            return $this->resolvers[$class]->getUrl($adapter, $fileName);
         }
 
         return null;
-    }
-
-    /**
-     * @param $adapter
-     * @param $fileName
-     *
-     * @return null|string
-     */
-    protected function getAwsS3Url(AwsS3Adapter $adapter, $fileName)
-    {
-        $bucket = $adapter->getBucket();
-        $key = $adapter->applyPathPrefix($fileName);
-
-        return $adapter->getClient()->getObjectUrl($bucket, $key);
-    }
-
-    /**
-     * @param DropboxAdapter $adapter
-     * @param string $fileName
-     *
-     * @return null|string
-     */
-    protected function getDropBoxUrl(DropboxAdapter $adapter, $fileName)
-    {
-        $path = $adapter->applyPathPrefix($fileName);
-
-        try {
-            return $adapter->getClient()->createShareableLink(
-                $path
-            );
-        } catch (\Exception $e) {
-            return null;
-        }
     }
 }
