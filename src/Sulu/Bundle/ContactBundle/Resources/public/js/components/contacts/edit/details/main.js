@@ -184,9 +184,13 @@ define([
             this.sandbox.dom.on(constants.avatarDeleteSelector, 'click', function() {
                 var curMediaId = this.sandbox.dom.data(constants.avatarImageId, 'mediaId');
 
-                this.sandbox.util.save('/admin/api/media/' + curMediaId, 'DELETE').done(function() {
-                    this.clearAvatarContainer();
-                    this.sandbox.emit('sulu.labels.success.show', 'contact.contacts.avatar.saved');
+                this.sandbox.sulu.showDeleteDialog(function(confirmed) {
+                    if (!!confirmed) {
+                        this.sandbox.util.save('/admin/api/media/' + curMediaId, 'DELETE').done(function() {
+                            this.clearAvatarContainer();
+                            this.sandbox.emit('sulu.labels.success.show', 'contact.contacts.avatar.saved');
+                        }.bind(this));
+                    }
                 }.bind(this));
             }.bind(this));
         },
@@ -217,8 +221,8 @@ define([
          * Assign uploaded avatar to contact by saving contact with given media id
          * @param mediaResponse media upload response
          */
-        saveAvatarData: function(mediaResponse){
-            if (!!this.sandbox.dom.data(constants.avatarImageId, 'mediaId')){
+        saveAvatarData: function(mediaResponse) {
+            if (!!this.sandbox.dom.data(constants.avatarImageId, 'mediaId')) {
                 // avatar was uploaded as new version of existing avatar
                 this.sandbox.emit('sulu.labels.success.show', 'contact.contacts.avatar.saved');
             } else if (!!this.data.id) {

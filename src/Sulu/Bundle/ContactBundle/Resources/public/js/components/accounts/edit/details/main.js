@@ -159,7 +159,7 @@ define([
             var getPostUrl = function() {
                 var curMediaId = this.sandbox.dom.data(constants.logoImageId, 'mediaId');
                 var url = (!!curMediaId) ?
-                '/admin/api/media/' + curMediaId + '?action=new-version' :
+                    '/admin/api/media/' + curMediaId + '?action=new-version' :
                     '/admin/api/media?collection=' + this.formOptions.avatarCollection; //todo: use system collection
 
                 // if possible, change the title of the logo to the name of the account
@@ -193,9 +193,13 @@ define([
             this.sandbox.dom.on(constants.logoDeleteSelector, 'click', function() {
                 var curMediaId = this.sandbox.dom.data(constants.logoImageId, 'mediaId');
 
-                this.sandbox.util.save('/admin/api/media/' + curMediaId, 'DELETE').done(function() {
-                    this.clearLogoContainer();
-                    this.sandbox.emit('sulu.labels.success.show', 'contact.accounts.logo.saved');
+                this.sandbox.sulu.showDeleteDialog(function(confirmed) {
+                    if (!!confirmed) {
+                        this.sandbox.util.save('/admin/api/media/' + curMediaId, 'DELETE').done(function() {
+                            this.clearLogoContainer();
+                            this.sandbox.emit('sulu.labels.success.show', 'contact.accounts.logo.saved');
+                        }.bind(this));
+                    }
                 }.bind(this));
             }.bind(this));
         },
@@ -226,8 +230,8 @@ define([
          * Assign uploaded logo to account by saving account with given media id
          * @param mediaResponse media upload response
          */
-        saveLogoData: function(mediaResponse){
-            if (!!this.sandbox.dom.data(constants.logoImageId, 'mediaId')){
+        saveLogoData: function(mediaResponse) {
+            if (!!this.sandbox.dom.data(constants.logoImageId, 'mediaId')) {
                 // logo was uploaded as new version of existing logo
                 this.sandbox.emit('sulu.labels.success.show', 'contact.accounts.logo.saved');
             } else if (!!this.data.id) {
