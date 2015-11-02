@@ -57,6 +57,10 @@ define([
         },
 
         addItem: function(id, item) {
+            if (!!this.ignoreUpdates) {
+                return;
+            }
+
             if (this.currentSelection.indexOf(id) === -1) {
                 this.manager.addDocument(this.data.id, id).then(function() {
                     this.sandbox.emit('husky.datagrid.documents.record.add', item);
@@ -66,6 +70,10 @@ define([
         },
 
         removeItem: function(itemId) {
+            if (!!this.ignoreUpdates) {
+                return;
+            }
+
             this.manager.removeDocuments(this.data.id, itemId).then(function() {
                 this.currentSelection = this.sandbox.util.removeFromArray(this.currentSelection, [itemId]);
             }.bind(this));
@@ -75,8 +83,17 @@ define([
          * Opens
          */
         showAddOverlay: function() {
-            this.sandbox.emit('sulu.media-selection-overlay.documents.set-selected', this.currentSelection);
+            this.updateOverlaySelected();
             this.sandbox.emit('sulu.media-selection-overlay.documents.open');
+        },
+
+        /**
+         * Updates selected items in overlay
+         */
+        updateOverlaySelected: function() {
+            this.ignoreUpdates = true;
+            this.sandbox.emit('sulu.media-selection-overlay.documents.set-selected', this.currentSelection);
+            this.ignoreUpdates = false;
         },
 
         /**

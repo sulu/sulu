@@ -14,10 +14,11 @@
  * @constructor
  */
 define([
+    'config',
     'sulumedia/collections/collections',
     'sulumedia/models/collection',
     'services/sulumedia/user-settings-manager'
-], function(Collections, Collection, UserSettingsManager) {
+], function(Config, Collections, Collection, UserSettingsManager) {
 
     'use strict';
 
