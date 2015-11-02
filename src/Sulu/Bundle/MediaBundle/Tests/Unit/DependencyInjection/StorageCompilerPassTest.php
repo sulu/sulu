@@ -15,7 +15,6 @@ use Sulu\Bundle\MediaBundle\DependencyInjection\StorageCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
-use Sulu\Bundle\MediaBundle\Media\Storage\LocalStorage;
 
 /**
  * Test the image command compiler pass.

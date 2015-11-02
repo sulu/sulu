@@ -33,7 +33,7 @@ interface StorageManagerInterface
     /**
      * Give back the path to the document.
      *
-     * @param integer $storageOptions
+     * @param int $storageOptions
      * @param string $storageName
      *
      * @return resource

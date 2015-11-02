@@ -39,7 +39,7 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
                 'type' => 'local',
                 'segments' => '10',
                 'uploadPath' => '%kernel.root_dir%/../uploads/media',
-            ]
+            ],
         ]);
         $this->assertContainerBuilderHasParameter('sulu_media.collection.type.default', [
             'id' => 1,
