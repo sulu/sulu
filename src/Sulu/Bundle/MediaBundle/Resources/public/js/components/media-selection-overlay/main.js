@@ -471,6 +471,8 @@ define([
                                 actionIconColumn: 'name'
                             },
                             'datagrid/decorators/masonry-view': {
+                                selectable: true,
+                                selectOnAction: true,
                                 unselectOnBackgroundClick: false
                             }
                         },
