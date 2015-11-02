@@ -300,6 +300,11 @@ define(function() {
                 }
             }.bind(this), '.' + constants.actionNavigatorClass);
 
+            this.sandbox.dom.on(this.$items[id], 'click', function(event) {
+                this.sandbox.dom.stopPropagation(event);
+                window.location.href = $(event.currentTarget).attr('href');
+            }.bind(this), '.' + constants.downloadNavigatorClass);
+
             if (!!this.options.selectable) {
                 this.sandbox.dom.on(this.$items[id], 'click', function(event) {
                     this.sandbox.dom.stopPropagation(event);
