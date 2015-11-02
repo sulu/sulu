@@ -1049,6 +1049,7 @@ class Account extends ApiWrapper
         if ($this->logo) {
             return [
                 'id' => $this->logo->getId(),
+                'url' => $this->logo->getUrl(),
                 'thumbnails' => $this->logo->getFormats(),
             ];
         }

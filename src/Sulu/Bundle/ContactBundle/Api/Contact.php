@@ -704,6 +704,7 @@ class Contact extends ApiWrapper
         if ($this->avatar) {
             return [
                 'id' => $this->avatar->getId(),
+                'url' => $this->avatar->getUrl(),
                 'thumbnails' => $this->avatar->getFormats(),
             ];
         }

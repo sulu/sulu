@@ -316,14 +316,37 @@
   background-color: #52B6CA;
   padding: 0 10px;
   height: 20px;
-  line-height: 18px;
+  line-height: 20px;
   vertical-align: middle;
   cursor: pointer;
 }
 
-/* line 70, ../scss/modules/edit-detail.scss */
+/* line 69, ../scss/modules/edit-detail.scss */
+#image-download {
+  z-index: 100;
+  width: 30px;
+  position: relative;
+  display: none;
+  border-radius: 3px;
+  font-size: 12px;
+  color: white;
+  background-color: #52B6CA;
+  padding: 0 10px;
+  height: 20px;
+  line-height: 20px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+/* line 88, ../scss/modules/edit-detail.scss */
 .no-default #image-delete {
-  display: block;
-  left: 270px;
+  display: inline-block;
+  left: 150px;
+  top: 240px;
+}
+/* line 93, ../scss/modules/edit-detail.scss */
+.no-default #image-download {
+  display: inline-block;
+  left: 80px;
   top: 240px;
 }

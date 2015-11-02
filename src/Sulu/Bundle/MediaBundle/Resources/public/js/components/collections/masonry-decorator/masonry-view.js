@@ -28,6 +28,7 @@ define(function() {
     var defaults = {
             unselectOnBackgroundClick: true,
             selectable: true,
+            selectOnAction: false,
             imageFormat: '190x',
             emptyListTranslation: 'public.empty-list',
             fields: {
@@ -293,7 +294,16 @@ define(function() {
             this.sandbox.dom.on(this.$items[id], 'click', function(event) {
                 this.sandbox.dom.stopPropagation(event);
                 this.datagrid.itemAction.call(this.datagrid, id);
+
+                if (this.options.selectOnAction) {
+                    this.toggleItemSelected(id);
+                }
             }.bind(this), '.' + constants.actionNavigatorClass);
+
+            this.sandbox.dom.on(this.$items[id], 'click', function(event) {
+                this.sandbox.dom.stopPropagation(event);
+                window.location.href = $(event.currentTarget).attr('href');
+            }.bind(this), '.' + constants.downloadNavigatorClass);
 
             if (!!this.options.selectable) {
                 this.sandbox.dom.on(this.$items[id], 'click', function(event) {

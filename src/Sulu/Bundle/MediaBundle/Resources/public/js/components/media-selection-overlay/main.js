@@ -14,10 +14,11 @@
  * @constructor
  */
 define([
+    'config',
     'sulumedia/collections/collections',
     'sulumedia/models/collection',
     'services/sulumedia/user-settings-manager'
-], function(Collections, Collection, UserSettingsManager) {
+], function(Config, Collections, Collection, UserSettingsManager) {
 
     'use strict';
 
@@ -470,6 +471,8 @@ define([
                                 actionIconColumn: 'name'
                             },
                             'datagrid/decorators/masonry-view': {
+                                selectable: true,
+                                selectOnAction: true,
                                 unselectOnBackgroundClick: false
                             }
                         },

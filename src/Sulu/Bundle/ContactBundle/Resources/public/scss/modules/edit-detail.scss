@@ -61,15 +61,38 @@
     background-color: $highlightColor;
     padding: 0 10px;
     height: 20px;
-    line-height: 18px;
+    line-height: 20px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+#image-download {
+    z-index: 100;
+    width: 30px;
+    position: relative;
+
+    display: none;
+
+    border-radius: $borderRadius;
+    font-size: 12px;
+    color: white;
+    background-color: $highlightColor;
+    padding: 0 10px;
+    height: 20px;
+    line-height: 20px;
     vertical-align: middle;
     cursor: pointer;
 }
 
 .no-default {
     #image-delete {
-        display: block;
-        left: 270px;
+        display: inline-block;
+        left: 150px;
+        top: 240px;
+    }
+    #image-download {
+        display: inline-block;
+        left: 80px;
         top: 240px;
     }
 }
