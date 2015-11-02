@@ -27,6 +27,6 @@ class AwsS3Resolver implements ResolverInterface
             return $adapter->getClient()->getObjectUrl($bucket, $key);
         }
 
-        return null;
+        return;
     }
 }

@@ -29,7 +29,7 @@ class FlysystemStorage extends AbstractStorage
     const STORAGE_TYPE = 'FlySystem';
 
     /**
-     * @var string $fileSystem
+     * @var string
      */
     protected $fileSystem;
 
@@ -70,13 +70,13 @@ class FlysystemStorage extends AbstractStorage
         $fileName = $this->getUniqueFileName('', $fileName);
 
         if ($this->exists($fileName)) {
-            throw new FilenameAlreadyExistsException(self::STORAGE_TYPE . ':' . $this->fileSystem .':' . $fileName);
+            throw new FilenameAlreadyExistsException(self::STORAGE_TYPE . ':' . $this->fileSystem . ':' . $fileName);
         }
 
         $stream = fopen($tempPath, 'r+');
         $result = $this->getFilesystem()->writeStream($fileName, $stream);
         if (!$result) {
-            throw new FilenameWriteException(self::STORAGE_TYPE . ':' . $this->fileSystem .':' . $fileName);
+            throw new FilenameWriteException(self::STORAGE_TYPE . ':' . $this->fileSystem . ':' . $fileName);
         }
 
         $this->addStorageOption(self::STORAGE_OPTION_FILENAME, $fileName);

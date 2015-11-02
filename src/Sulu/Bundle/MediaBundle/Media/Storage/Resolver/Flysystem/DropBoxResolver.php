@@ -28,11 +28,11 @@ class DropBoxResolver implements ResolverInterface
                     $path
                 );
             } catch (\Exception $e) {
-                return null;
+                return;
             }
         }
 
-        return null;
+        return;
     }
 
 }

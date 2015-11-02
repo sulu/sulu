@@ -71,13 +71,13 @@ class Configuration implements ConfigurationInterface
                         ->prototype('array')
                             ->prototype('scalar')->end()
                         ->end()->defaultValue(
-                            array(
-                                'local' => array(
+                            [
+                                'local' => [
                                     'type' => 'local',
                                     'segments' => '10',
                                     'uploadPath' => '%kernel.root_dir%/../uploads/media',
-                                )
-                            ))
+                                ],
+                            ])
                     ->end()
                 ->end()
             ->end()

@@ -20,7 +20,7 @@ class FlysystemResolver implements FlysystemResolverInterface
     /**
      * @var ResolverInterface[]
      */
-    protected $resolvers = array();
+    protected $resolvers = [];
 
     /**
      * {@inheritdoc}
@@ -39,7 +39,7 @@ class FlysystemResolver implements FlysystemResolverInterface
             return $this->getUrlFromAdapter($fileSystem->getAdapter(), $fileName);
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -53,6 +53,6 @@ class FlysystemResolver implements FlysystemResolverInterface
             return $this->resolvers[$class]->getUrl($adapter, $fileName);
         }
 
-        return null;
+        return;
     }
 }

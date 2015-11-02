@@ -157,7 +157,7 @@ abstract class BaseCollection implements CollectionInterface
     }
 
     /**
-     * Set defaultStorageName
+     * Set defaultStorageName.
      *
      * @param string $defaultStorageName
      * @return Collection
@@ -170,7 +170,7 @@ abstract class BaseCollection implements CollectionInterface
     }
 
     /**
-     * Get defaultStorageName
+     * Get defaultStorageName.
      *
      * @return string
      */

@@ -10,21 +10,21 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\StorageManager;
 
-use Sulu\Bundle\MediaBundle\Media\Exception\StorageNotFoundException;
-use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Sulu\Bundle\MediaBundle\Media\Exception\StorageNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 
 /**
  * Class StorageManager
- * Manage the Media Storages
+ * Manage the Media Storages.
  */
 class StorageManager implements StorageManagerInterface
 {
     /**
      * @var StorageInterface[]
      */
-    protected $storages = array();
+    protected $storages = [];
 
     /**
      * @var string

@@ -109,7 +109,7 @@ class LocalStorage extends AbstractStorage
      */
     public function getDownloadUrl($storageOptions)
     {
-        return null;
+        return;
     }
 
     /**

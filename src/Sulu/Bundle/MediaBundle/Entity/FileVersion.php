@@ -625,7 +625,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Set storageName
+     * Set storageName.
      *
      * @param string $storageName
      *
@@ -639,7 +639,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Get storageName
+     * Get storageName.
      *
      * @return string
      */

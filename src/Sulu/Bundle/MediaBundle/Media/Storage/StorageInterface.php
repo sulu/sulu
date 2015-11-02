@@ -48,7 +48,7 @@ interface StorageInterface
 
     /**
      * Give back the url where the file can be downloaded
-     * Null when the storage have no specific url
+     * Null when the storage have no specific url.
      *
      * @param $storageOptions
      *

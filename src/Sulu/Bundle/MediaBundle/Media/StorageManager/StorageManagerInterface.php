@@ -26,7 +26,7 @@ interface StorageManagerInterface
      * @param string $preferredStorageOptions
      * @param string $storageName
      *
-     * @return boolean
+     * @return bool
      */
     public function save($tempPath, $fileName, $preferredStorageOptions = null, $storageName = null);
 
@@ -46,12 +46,12 @@ interface StorageManagerInterface
      * @param string $storageOptions
      * @param string $storageName
      *
-     * @return boolean
+     * @return bool
      */
     public function remove($storageOptions, $storageName = null);
 
     /**
-     * Give back the public download url for a file
+     * Give back the public download url for a file.
      *
      * @param $storageOptions
      * @param string $storageName
@@ -61,21 +61,21 @@ interface StorageManagerInterface
     public function getDownloadUrl($storageOptions, $storageName = null);
 
     /**
-     * Give back the default storage name
+     * Give back the default storage name.
      *
      * @return string
      */
     public function getDefaultName();
 
     /**
-     * Give back a list of available storage services
+     * Give back a list of available storage services.
      *
      * @return array
      */
     public function getNames();
 
     /**
-     * Adds a new Storage to the managers
+     * Adds a new Storage to the managers.
      *
      * @param StorageInterface $command
      * @param $name
@@ -85,7 +85,7 @@ interface StorageManagerInterface
     public function add(StorageInterface $command, $name);
 
     /**
-     * Give back Storage by a name
+     * Give back Storage by a name.
      *
      * @param $name
      *

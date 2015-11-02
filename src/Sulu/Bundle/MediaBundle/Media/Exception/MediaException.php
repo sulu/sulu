@@ -166,14 +166,14 @@ class MediaException extends Exception
     const EXCEPTION_CODE_FILE_NOT_FOUND = 5021;
 
     /**
-     * Storage was not found or configured
+     * Storage was not found or configured.
      *
      * @var int
      */
     const EXCEPTION_CODE_STORAGE_NOT_FOUND = 5022;
 
     /**
-     * Storage adapter was not found or configured
+     * Storage adapter was not found or configured.
      *
      * @var int
      */

@@ -11,8 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\Storage;
 
 /**
- * Class AbstractStorage
- * @package Sulu\Bundle\MediaBundle\Media\Storage
+ * Abstract class with basic Storage functions.
  */
 abstract class AbstractStorage implements StorageInterface
 {
@@ -22,7 +21,7 @@ abstract class AbstractStorage implements StorageInterface
     protected $storageOptions;
 
     /**
-     * Add a value to the current storageOptions
+     * Add a value to the current storageOptions.
      *
      * @param $key
      * @param $value
@@ -33,7 +32,7 @@ abstract class AbstractStorage implements StorageInterface
     }
 
     /**
-     * Returns the a value from the current storageOption
+     * Returns the a value from the current storageOption.
      *
      * @param $key
      *
@@ -74,12 +73,12 @@ abstract class AbstractStorage implements StorageInterface
     }
 
     /**
-     * Return if a file exists in the storage
+     * Return if a file exists in the storage.
      *
      * @param $filePath
      * @return bool
      */
-    protected abstract function exists($filePath);
+    abstract protected function exists($filePath);
 
     /**
      * @param $folder

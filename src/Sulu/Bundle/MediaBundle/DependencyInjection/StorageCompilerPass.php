@@ -18,14 +18,14 @@ use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Compiler pass for collecting services tagged with sulu_media.image.command
+ * Compiler pass for collecting services tagged with sulu_media.image.command.
  */
 class StorageCompilerPass implements CompilerPassInterface
 {
     /**
      * @var array
      */
-    protected $adapters = array();
+    protected $adapters = [];
 
     /**
      * {@inheritdoc}
@@ -51,7 +51,7 @@ class StorageCompilerPass implements CompilerPassInterface
                 'dropbox' => [
                     'class' => 'Sulu\Bundle\MediaBundle\Media\Storage\Resolver\Flysystem\DropBoxResolver',
                     'tag' => 'League\Flysystem\AwsS3v3\DropboxAdapter',
-                ]
+                ],
             ]
         );
 
@@ -74,7 +74,7 @@ class StorageCompilerPass implements CompilerPassInterface
             // add storage to manager
             $storageManagerDefinition->addMethodCall(
                 'add',
-                array(new Reference($id), $alias)
+                [new Reference($id), $alias]
             );
         }
     }
@@ -83,7 +83,9 @@ class StorageCompilerPass implements CompilerPassInterface
      * @param ContainerBuilder $container
      * @param $alias
      * @param $config
+     *
      * @return string
+     *
      * @throws StorageAdapterNotFoundException
      */
     protected function getStorageDefinition(
@@ -160,7 +162,7 @@ class StorageCompilerPass implements CompilerPassInterface
         $managerClass,
         $managerService,
         $resolverClass,
-        $resolverHelpers = array()
+        $resolverHelpers = []
     ) {
         // This will create the services only when they exists
         if (class_exists($managerClass)) {
@@ -182,7 +184,7 @@ class StorageCompilerPass implements CompilerPassInterface
                 $resolverClassParameter = $resolverHelperService . '.class';
                 $container->setParameter($resolverClassParameter, $resolverHelperClass);
                 $resolverHelper = new Definition('%' . $resolverClassParameter . '%');
-                $resolverHelper->addTag('sulu_media.storage.resolver.'  . $key, array('alias' => $tag));
+                $resolverHelper->addTag('sulu_media.storage.resolver.'  . $key, ['alias' => $tag]);
                 $container->setDefinition($resolverHelperService, $resolverHelper);
             }
 
@@ -192,7 +194,7 @@ class StorageCompilerPass implements CompilerPassInterface
                 foreach ($tags as $attributes) {
                     $resolverDefinition->addMethodCall(
                         'add',
-                        array(new Reference($id), $attributes['alias'])
+                        [new Reference($id), $attributes['alias']]
                     );
                 }
             }
@@ -205,7 +207,7 @@ class StorageCompilerPass implements CompilerPassInterface
             $storage->addArgument(new Reference('logger'));
             $storage->setAbstract(true);
             $storage->setPublic(false);
-            $storage->addTag('sulu_media.storage_adapter', array('alias' => $key));
+            $storage->addTag('sulu_media.storage_adapter', ['alias' => $key]);
 
             $container->setDefinition('sulu_media.storage.adapter.' . $key, $storage);
         }

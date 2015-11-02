@@ -428,6 +428,7 @@ class FormatManager implements FormatManagerInterface
 
     /**
      * @param $fileName
+     *
      * @return string
      */
     protected function getRealFileExtension($fileName)
@@ -485,7 +486,7 @@ class FormatManager implements FormatManagerInterface
     protected function createTmpFile($resource)
     {
         $tempFile = tempnam(null, 'media_original');
-        if (is_resource ($resource)) {
+        if (is_resource($resource)) {
             $handle = fopen($tempFile, 'w');
             stream_copy_to_stream($resource, $handle);
         } else {
@@ -544,7 +545,7 @@ class FormatManager implements FormatManagerInterface
             throw new ImageProxyMediaNotFoundException('Media file version was not found');
         }
 
-        return array($fileName, $version, $storageOptions, $mimeType, $storageName);
+        return [$fileName, $version, $storageOptions, $mimeType, $storageName];
     }
 
     /**

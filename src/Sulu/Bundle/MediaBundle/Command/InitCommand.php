@@ -50,9 +50,6 @@ class InitCommand extends ContainerAwareCommand
             }
         }
 
-
-
-
         $mediaCacheDir = $this->getContainer()->getParameter('sulu_media.format_cache.path');
 
         $output->writeln('Create Media Cache dir in ' . $mediaCacheDir);
