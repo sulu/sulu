@@ -34,5 +34,4 @@ class DropBoxResolver implements ResolverInterface
 
         return;
     }
-
 }

@@ -20,8 +20,7 @@ class StorageNotFoundException extends MediaException
     public function __construct($type)
     {
         parent::__construct(
-            'The storage "' . $type . '" was not found or configured.'
-            , self::EXCEPTION_CODE_STORAGE_NOT_FOUND
+            'The storage "' . $type . '" was not found or configured.', self::EXCEPTION_CODE_STORAGE_NOT_FOUND
         );
     }
 }

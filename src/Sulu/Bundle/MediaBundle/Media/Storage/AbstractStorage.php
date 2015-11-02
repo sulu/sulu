@@ -76,6 +76,7 @@ abstract class AbstractStorage implements StorageInterface
      * Return if a file exists in the storage.
      *
      * @param $filePath
+     *
      * @return bool
      */
     abstract protected function exists($filePath);

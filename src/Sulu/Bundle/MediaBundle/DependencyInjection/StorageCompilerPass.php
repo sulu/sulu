@@ -136,7 +136,9 @@ class StorageCompilerPass implements CompilerPassInterface
 
     /**
      * @param $type
+     *
      * @return string
+     *
      * @throws StorageAdapterNotFoundException
      */
     protected function getAdapter($type)

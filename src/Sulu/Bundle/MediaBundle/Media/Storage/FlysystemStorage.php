@@ -19,8 +19,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\FilenameWriteException;
 use Sulu\Bundle\MediaBundle\Media\Storage\Resolver\FlysystemResolverInterface;
 
 /**
- * Class FlysystemStorage
- * @package Sulu\Bundle\MediaBundle\Media\Storage
+ * Used Flysystem to store media files.
  */
 class FlysystemStorage extends AbstractStorage
 {
