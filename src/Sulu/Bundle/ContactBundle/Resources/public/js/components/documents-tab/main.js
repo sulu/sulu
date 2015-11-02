@@ -129,6 +129,9 @@ define([
                     instanceName: 'documents',
                     resultKey: 'media',
                     searchFields: ['name', 'title', 'description'],
+                    clickCallback: function(id, item) {
+                        window.location.href = item.url;
+                    },
                     viewOptions: {
                         table: {
                             selectItem: {
