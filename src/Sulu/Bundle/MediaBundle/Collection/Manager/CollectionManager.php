@@ -163,7 +163,7 @@ class CollectionManager implements CollectionManagerInterface
         $collection = $this->collectionRepository->findCollectionByKey($key);
 
         if (!$collection) {
-            return null;
+            return;
         }
 
         return $this->getApiEntity($collection, $locale);
@@ -671,6 +671,6 @@ class CollectionManager implements CollectionManagerInterface
             return $this->tokenStorage ? $token->getUser() : null;
         }
 
-        return null;
+        return;
     }
 }

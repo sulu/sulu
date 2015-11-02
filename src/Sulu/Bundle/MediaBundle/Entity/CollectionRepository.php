@@ -251,7 +251,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         try {
             return $query->getSingleResult();
         } catch (UnexpectedResultException $ex) {
-            return null;
+            return;
         }
     }
 }

@@ -5,7 +5,7 @@
         <parameter key="sulu_contact.admin.class">Sulu\Bundle\ContactBundle\Admin\ContactAdmin</parameter>
         <parameter key="sulu_contact.contact_content_navigation_provider.class">Sulu\Bundle\ContactBundle\Admin\ContactContentNavigationProvider</parameter>
         <parameter key="sulu_contact.account_content_navigation_provider.class">Sulu\Bundle\ContactBundle\Admin\AccountContentNavigationProvider</parameter>
-        <parameter key="sulu_contact.js_config.class">Sulu\Bundle\AdminBundle\Admin\JsConfig</parameter>
+        <parameter key="sulu_contact.js_config.class">Sulu\Bundle\ContactBundle\Admin\JsConfigAvatarCollection</parameter>
         <parameter key="sulu_contact.account_listener.class">Sulu\Bundle\ContactBundle\EventListener\AccountListener</parameter>
         <parameter key="sulu_contact.contact_manager.class">Sulu\Bundle\ContactBundle\Contact\ContactManager</parameter>
         <parameter key="sulu_contact.account_manager.class">Sulu\Bundle\ContactBundle\Contact\AccountManager</parameter>
@@ -106,11 +106,9 @@
         <service id="sulu_contact.util.id_converter" class="%sulu_contact.util.id_converter.class%" public="false"/>
 
         <service id="sulu_contact.js_config" class="%sulu_contact.js_config.class%">
+            <argument type="service" id="sulu_media.system_collections.manager"/>
+
             <tag name="sulu.js_config"/>
-            <argument>sulu.contact.form</argument>
-            <argument type="collection">
-                <argument key="avatarCollection">%sulu_contact.system_collections.contact%</argument>
-            </argument>
         </service>
 
     </services>

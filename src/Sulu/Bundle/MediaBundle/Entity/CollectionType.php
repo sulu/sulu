@@ -164,7 +164,7 @@ class CollectionType
     }
 
     /**
-     * Set key
+     * Set key.
      *
      * @param string $key
      *
@@ -178,7 +178,7 @@ class CollectionType
     }
 
     /**
-     * Get key
+     * Get key.
      *
      * @return string
      */

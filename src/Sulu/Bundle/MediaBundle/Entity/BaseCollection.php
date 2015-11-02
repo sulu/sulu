@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Component\Security\Authentication\UserInterface;
 
