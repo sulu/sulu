@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1736 [AdminBundle]     Fixed layout for content form
     * BUGFIX      #1750 [SecurityBundle]  Added seraialization groups for user
     * ENHANCEMENT #1754 [MediaBundle]     Moved collection key functions to base collection
     * BUGFIX      #1751 [Persistence]     Fixed UserBlameSubscriber for new DoctrineBundle

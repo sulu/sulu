@@ -245,14 +245,13 @@
     .has-visible-sidebar .content-column {
         &.fixed {
             float: none;
+            width: 100%;
             #content, .sulu-title {
-                max-width: $contentFixedWidth;
-                width: auto;
+                width: 100%;
             }
         }
         .fixed-width {
-            max-width: $contentFixedWidth;
-            width: auto;
+            width: 100%;
         }
     }
 
@@ -272,12 +271,10 @@
         &.fixed {
             float: none;
             #content, .sulu-title {
-                max-width: $contentFixedWidth;
                 width: auto;
             }
         }
         .fixed-width {
-            max-width: $contentFixedWidth;
             width: auto;
         }
     }

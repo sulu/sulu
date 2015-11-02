@@ -355,50 +355,47 @@ input, select {
   /* line 246, ../scss/modules/layout.scss */
   .has-visible-sidebar .content-column.fixed {
     float: none;
+    width: 100%;
   }
-  /* line 248, ../scss/modules/layout.scss */
+  /* line 249, ../scss/modules/layout.scss */
   .has-visible-sidebar .content-column.fixed #content, .has-visible-sidebar .content-column.fixed .sulu-title {
-    max-width: 920px;
-    width: auto;
+    width: 100%;
   }
   /* line 253, ../scss/modules/layout.scss */
   .has-visible-sidebar .content-column .fixed-width {
-    max-width: 920px;
-    width: auto;
+    width: 100%;
   }
 
-  /* line 259, ../scss/modules/layout.scss */
+  /* line 258, ../scss/modules/layout.scss */
   .sulu-app-shrink {
     display: none;
   }
 }
 @media only screen and (max-width: 970px) {
-  /* line 272, ../scss/modules/layout.scss */
+  /* line 271, ../scss/modules/layout.scss */
   .has-no-visible-sidebar .content-column.fixed {
     float: none;
   }
-  /* line 274, ../scss/modules/layout.scss */
+  /* line 273, ../scss/modules/layout.scss */
   .has-no-visible-sidebar .content-column.fixed #content, .has-no-visible-sidebar .content-column.fixed .sulu-title {
-    max-width: 920px;
     width: auto;
   }
-  /* line 279, ../scss/modules/layout.scss */
+  /* line 277, ../scss/modules/layout.scss */
   .has-no-visible-sidebar .content-column .fixed-width {
-    max-width: 920px;
     width: auto;
   }
 }
 @media only screen and (max-width: 1620px) {
-  /* line 294, ../scss/modules/layout.scss */
+  /* line 291, ../scss/modules/layout.scss */
   .has-visible-sidebar .sidebar-column.fixed + .content-column.fixed {
     float: none;
   }
-  /* line 296, ../scss/modules/layout.scss */
+  /* line 293, ../scss/modules/layout.scss */
   .has-visible-sidebar .sidebar-column.fixed + .content-column.fixed #content, .has-visible-sidebar .sidebar-column.fixed + .content-column.fixed .sulu-title {
     max-width: 920px;
     width: auto;
   }
-  /* line 301, ../scss/modules/layout.scss */
+  /* line 298, ../scss/modules/layout.scss */
   .has-visible-sidebar .sidebar-column.fixed + .content-column .fixed-width {
     max-width: 920px;
     width: auto;
