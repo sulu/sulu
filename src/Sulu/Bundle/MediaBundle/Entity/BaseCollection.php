@@ -11,7 +11,9 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * BaseCollection.
@@ -57,18 +59,18 @@ abstract class BaseCollection implements CollectionInterface
     protected $id;
 
     /**
-     * @var \Sulu\Bundle\MediaBundle\Entity\CollectionType
+     * @var CollectionType
      */
     protected $type;
 
     /**
-     * @var \Sulu\Component\Security\Authentication\UserInterface
+     * @var UserInterface
      * @Exclude
      */
     protected $changer;
 
     /**
-     * @var \Sulu\Component\Security\Authentication\UserInterface
+     * @var UserInterface
      * @Exclude
      */
     protected $creator;
@@ -76,11 +78,11 @@ abstract class BaseCollection implements CollectionInterface
     /**
      * Set changer.
      *
-     * @param \Sulu\Component\Security\Authentication\UserInterface $changer
+     * @param UserInterface $changer
      *
      * @return CollectionInterface
      */
-    public function setChanger(\Sulu\Component\Security\Authentication\UserInterface $changer = null)
+    public function setChanger(UserInterface $changer = null)
     {
         $this->changer = $changer;
 
@@ -90,7 +92,7 @@ abstract class BaseCollection implements CollectionInterface
     /**
      * Get changer.
      *
-     * @return \Sulu\Component\Security\Authentication\UserInterface
+     * @return UserInterface
      */
     public function getChanger()
     {
@@ -100,11 +102,11 @@ abstract class BaseCollection implements CollectionInterface
     /**
      * Set creator.
      *
-     * @param \Sulu\Component\Security\Authentication\UserInterface $creator
+     * @param UserInterface $creator
      *
      * @return CollectionInterface
      */
-    public function setCreator(\Sulu\Component\Security\Authentication\UserInterface $creator = null)
+    public function setCreator(UserInterface $creator = null)
     {
         $this->creator = $creator;
 
@@ -114,21 +116,11 @@ abstract class BaseCollection implements CollectionInterface
     /**
      * Get creator.
      *
-     * @return \Sulu\Component\Security\Authentication\UserInterface
+     * @return UserInterface
      */
     public function getCreator()
     {
         return $this->creator;
-    }
-
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        $this->meta = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->media = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -260,11 +252,11 @@ abstract class BaseCollection implements CollectionInterface
     /**
      * Set type.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\CollectionType $type
+     * @param CollectionType $type
      *
      * @return CollectionInterface
      */
-    public function setType(\Sulu\Bundle\MediaBundle\Entity\CollectionType $type)
+    public function setType(CollectionType $type)
     {
         $this->type = $type;
 
@@ -274,7 +266,7 @@ abstract class BaseCollection implements CollectionInterface
     /**
      * Get type.
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\CollectionType
+     * @return CollectionType
      */
     public function getType()
     {

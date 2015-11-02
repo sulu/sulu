@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\Exclude;
 
 /**
@@ -35,27 +36,32 @@ class Collection extends BaseCollection
     private $children;
 
     /**
-     * @var \Sulu\Bundle\MediaBundle\Entity\CollectionInterface
+     * @var CollectionInterface
      */
     private $parent;
 
     /**
-     * @var \Sulu\Bundle\MediaBundle\Entity\CollectionMeta
+     * @var CollectionMeta
      */
     private $defaultMeta;
+
+    /**
+     * @var string
+     */
+    private $key;
 
     /**
      * Constructor.
      */
     public function __construct()
     {
-        $this->meta = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->media = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->meta = new ArrayCollection();
+        $this->media = new ArrayCollection();
+        $this->children = new ArrayCollection();
     }
 
     /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getChildren()
     {
@@ -63,7 +69,7 @@ class Collection extends BaseCollection
     }
 
     /**
-     * @param \Doctrine\Common\Collections\ArrayCollection $children
+     * @param \Doctrine\Common\Collections\Collection $children
      */
     public function setChildren($children)
     {
@@ -73,11 +79,11 @@ class Collection extends BaseCollection
     /**
      * Set parent.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\CollectionInterface $parent
+     * @param CollectionInterface $parent
      *
      * @return CollectionInterface
      */
-    public function setParent(\Sulu\Bundle\MediaBundle\Entity\CollectionInterface $parent = null)
+    public function setParent(CollectionInterface $parent = null)
     {
         $this->parent = $parent;
 
@@ -87,7 +93,7 @@ class Collection extends BaseCollection
     /**
      * Get parent.
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\CollectionInterface
+     * @return CollectionInterface
      */
     public function getParent()
     {
@@ -97,11 +103,11 @@ class Collection extends BaseCollection
     /**
      * Add meta.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\CollectionMeta $meta
+     * @param CollectionMeta $meta
      *
      * @return Collection
      */
-    public function addMeta(\Sulu\Bundle\MediaBundle\Entity\CollectionMeta $meta)
+    public function addMeta(CollectionMeta $meta)
     {
         $this->meta[] = $meta;
 
@@ -111,9 +117,9 @@ class Collection extends BaseCollection
     /**
      * Remove meta.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\CollectionMeta $meta
+     * @param CollectionMeta $meta
      */
-    public function removeMeta(\Sulu\Bundle\MediaBundle\Entity\CollectionMeta $meta)
+    public function removeMeta(CollectionMeta $meta)
     {
         $this->meta->removeElement($meta);
     }
@@ -131,11 +137,11 @@ class Collection extends BaseCollection
     /**
      * Add media.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\Media $media
+     * @param Media $media
      *
      * @return Collection
      */
-    public function addMedia(\Sulu\Bundle\MediaBundle\Entity\Media $media)
+    public function addMedia(Media $media)
     {
         $this->media[] = $media;
 
@@ -145,9 +151,9 @@ class Collection extends BaseCollection
     /**
      * Remove media.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\Media $media
+     * @param Media $media
      */
-    public function removeMedia(\Sulu\Bundle\MediaBundle\Entity\Media $media)
+    public function removeMedia(Media $media)
     {
         $this->media->removeElement($media);
     }
@@ -155,7 +161,7 @@ class Collection extends BaseCollection
     /**
      * Get media.
      *
-     * @return \Doctrine\Common\Collections\CollectionInterface
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getMedia()
     {
@@ -165,11 +171,11 @@ class Collection extends BaseCollection
     /**
      * Add children.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\CollectionInterface $children
+     * @param CollectionInterface $children
      *
      * @return Collection
      */
-    public function addChildren(\Sulu\Bundle\MediaBundle\Entity\CollectionInterface $children)
+    public function addChildren(CollectionInterface $children)
     {
         $this->children[] = $children;
 
@@ -179,9 +185,9 @@ class Collection extends BaseCollection
     /**
      * Remove children.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\CollectionInterface $children
+     * @param CollectionInterface $children
      */
-    public function removeChildren(\Sulu\Bundle\MediaBundle\Entity\CollectionInterface $children)
+    public function removeChildren(CollectionInterface $children)
     {
         $this->children->removeElement($children);
     }
@@ -189,7 +195,7 @@ class Collection extends BaseCollection
     /**
      * Set defaultMeta.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\CollectionMeta $defaultMeta
+     * @param CollectionMeta $defaultMeta
      *
      * @return Collection
      */
@@ -203,11 +209,27 @@ class Collection extends BaseCollection
     /**
      * Get defaultMeta.
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\CollectionMeta
+     * @return CollectionMeta
      */
     public function getDefaultMeta()
     {
         return $this->defaultMeta;
+    }
+
+    /**
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
+     * @param string $key
+     */
+    public function setKey($key)
+    {
+        $this->key = $key;
     }
 
     /**

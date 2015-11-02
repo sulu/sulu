@@ -40,10 +40,10 @@ interface CollectionManagerInterface
      * Returns collections with a given parent and/or a given depth-level
      * if no arguments passed returns all collection.
      *
-     * @param int   $locale the locale which the collection should be return
+     * @param int $locale the locale which the collection should be return
      * @param array $filter for parent or depth
-     * @param int   $limit  limit the output
-     * @param int   $offset offset the output
+     * @param int $limit limit the output
+     * @param int $offset offset the output
      * @param array $sortBy sort by e.g. array('title' => 'ASC')
      *
      * @return Paginator
@@ -51,14 +51,24 @@ interface CollectionManagerInterface
     public function get($locale, $filter = [], $limit = null, $offset = null, $sortBy = []);
 
     /**
+     * Returns collection by key.
+     *
+     * @param string $key
+     * @param string $locale
+     *
+     * @return Collection
+     */
+    public function getByKey($key, $locale);
+
+    /**
      * Returns collections from root with given depth.
      *
      * @param string $locale the locale which the collection should be return
-     * @param int    $offset
-     * @param int    $limit
+     * @param int $offset
+     * @param int $limit
      * @param string $search
-     * @param int    $depth  maximum depth for query
-     * @param array  $sortBy
+     * @param int $depth maximum depth for query
+     * @param array $sortBy
      *
      * @return \Sulu\Bundle\MediaBundle\Api\Collection[]
      */
@@ -74,8 +84,8 @@ interface CollectionManagerInterface
     /**
      * Creates a new collection or overrides an existing one.
      *
-     * @param array $data   The data of the category to save
-     * @param int   $userId The id of the user, who is doing this change
+     * @param array $data The data of the category to save
+     * @param int $userId The id of the user, who is doing this change
      *
      * @return Collection
      */
@@ -92,8 +102,8 @@ interface CollectionManagerInterface
      * Moves a collection into another collection
      * If you pass parentId = null i moves to the root.
      *
-     * @param int      $id            the id of the category to move
-     * @param string   $locale        the locale which the collection should be return
+     * @param int $id the id of the category to move
+     * @param string $locale the locale which the collection should be return
      * @param int|null $destinationId the parent where the collection should be placed
      *
      * @return Collection

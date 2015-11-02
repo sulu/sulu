@@ -31,6 +31,9 @@ class SuluMediaExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        // system collections
+        $container->setParameter('sulu_media.system_collections', $config['system_collections']);
+
         // routing paths
         $container->setParameter('sulu_media.format_cache.media_proxy_path', $config['routing']['media_proxy_path']);
         $container->setParameter(

@@ -109,7 +109,7 @@
             <tag name="sulu.js_config"/>
             <argument>sulu.contact.form</argument>
             <argument type="collection">
-                <argument key="avatarCollection">%sulu_contact.form.avatar_collection%</argument>
+                <argument key="avatarCollection">%sulu_contact.system_collections.contact%</argument>
             </argument>
         </service>
 

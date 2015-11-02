@@ -68,4 +68,13 @@ interface CollectionRepositoryInterface
      * @return Collection[]
      */
     public function findCollectionBreadcrumbById($id);
+
+    /**
+     * Finds collection by key.
+     *
+     * @param string $key
+     *
+     * @return Collection
+     */
+    public function findCollectionByKey($key);
 }

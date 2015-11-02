@@ -34,7 +34,8 @@
         "pagerfanta/pagerfanta": "~1.0",
         "sulu/document-manager": "dev-develop",
         "evenement/evenement": "2.0.0 as 1.0.0",
-        "pulse00/ffmpeg-bundle": "^0.5.2"
+        "pulse00/ffmpeg-bundle": "^0.5.2",
+        "coduo/php-humanizer": "^1.0"
     },
     "require-dev": {
         "phpcr/phpcr-shell": "~1.0.0@alpha",

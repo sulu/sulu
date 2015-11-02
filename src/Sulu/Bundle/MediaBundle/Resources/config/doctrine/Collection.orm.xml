@@ -5,7 +5,11 @@
                   xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
 
     <entity name="Sulu\Bundle\MediaBundle\Entity\Collection" table="me_collections" repository-class="Sulu\Bundle\MediaBundle\Entity\CollectionRepository">
+        <indexes>
+            <index name="key_idx" columns="collection_key" />
+        </indexes>
 
+        <field name="key" type="string" column="collection_key" length="255" unique="true"/>
         <one-to-one field="defaultMeta" target-entity="Sulu\Bundle\MediaBundle\Entity\CollectionMeta">
             <cascade>
                 <cascade-all />

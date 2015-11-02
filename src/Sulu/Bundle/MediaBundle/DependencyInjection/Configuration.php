@@ -29,6 +29,18 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('sulu_media');
         $rootNode->children()
+            ->arrayNode('system_collections')
+                ->useAttributeAsKey('key')
+                ->prototype('array')
+                    ->children()
+                        ->scalarNode('namespace')->end()
+                        ->scalarNode('parameter')->end()
+                        ->arrayNode('meta_title')
+                            ->prototype('scalar')->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
             ->arrayNode('search')
                 ->addDefaultsIfNotSet()
                 ->children()

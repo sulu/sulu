@@ -21,17 +21,36 @@ class LoadCollectionTypes extends AbstractFixture implements OrderedFixtureInter
      */
     public function load(ObjectManager $manager)
     {
-        $collectionType = new CollectionType();
-        $collectionType->setId(1);
-
         // force id = 1
-        $metadata = $manager->getClassMetaData(get_class($collectionType));
+        $metadata = $manager->getClassMetaData(CollectionType::class);
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
 
-        $collectionType->setName('collection.default');
-        $manager->persist($collectionType);
+        $defaultCollectionType = $this->createCollectionType(1, 'collection.default', 'Default');
+        $manager->persist($defaultCollectionType);
+
+        $systemCollectionType = $this->createCollectionType(2, 'collection.system', 'System Collections');
+        $manager->persist($systemCollectionType);
 
         $manager->flush();
+    }
+
+    /**
+     * Create a collection type with given parameter.
+     *
+     * @param int $id
+     * @param string $key
+     * @param string $name
+     *
+     * @return CollectionType
+     */
+    private function createCollectionType($id, $key, $name)
+    {
+        $collectionType = new CollectionType();
+        $collectionType->setId($id);
+        $collectionType->setKey($key);
+        $collectionType->setName($name);
+
+        return $collectionType;
     }
 
     /**
