@@ -88,7 +88,6 @@ class ReindexListenerTest extends \PHPUnit_Framework_TestCase
 
         $output = $this->prophesize(OutputInterface::class);
         $event->getOutput()->willReturn($output);
-        $event->getPurge()->shouldBeCalled();
         $event->getFilter()->shouldBeCalled();
 
         $this->baseMetadataFactory->getPhpcrTypeMap()->shouldBeCalled()->willReturn($typemap);

@@ -18,6 +18,7 @@
             <argument type="service" id="fos_rest.view_handler"/>
             <argument type="service" id="sulu_core.list_rest_helper"/>
             <argument>%sulu_search.indexes%</argument>
+            <tag name="sulu.context" context="admin"/>
         </service>
 
         <!-- Custom factory -->

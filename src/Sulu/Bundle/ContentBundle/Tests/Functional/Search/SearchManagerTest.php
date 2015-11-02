@@ -27,7 +27,7 @@ class SearchManagerTest extends BaseTestCase
                 $this->documentManager->persist($document, 'de');
             }
 
-            $res = $this->getSearchManager()->createSearch('Document')->locale('de')->index('page')->execute();
+            $res = $this->getSearchManager()->createSearch('Document')->locale('de')->index('page_')->execute();
 
             $this->assertCount($nbResults, $res);
         }
@@ -37,12 +37,12 @@ class SearchManagerTest extends BaseTestCase
     {
         $this->generateDocumentIndex(4, '/test-');
         $this->generateDocumentIndex(2, '/test-1');
-        $result = $this->getSearchManager()->createSearch('Document')->locale('de')->index('page')->execute();
+        $result = $this->getSearchManager()->createSearch('Document')->locale('de')->index('page_')->execute();
         $this->assertCount(6, $result);
 
         $firstHit = reset($result);
         $document = $firstHit->getDocument();
-        $this->assertEquals('page', $document->getCategory());
+        $this->assertEquals('page_', $document->getIndex());
 
         if (!$this->getContainer()->get('massive_search.adapter') instanceof \Massive\Bundle\SearchBundle\Search\Adapter\ZendLuceneAdapter) {
             $this->markTestSkipped('Skipping zend lucene specific test');

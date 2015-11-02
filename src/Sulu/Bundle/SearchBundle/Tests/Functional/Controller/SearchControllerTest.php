@@ -57,11 +57,7 @@ class SearchControllerTest extends SuluTestCase
                         ],
                     ],
                     'totals' => [
-                        'page' => 0,
-                        'account' => 0,
-                        'contact' => 0,
-                        'media' => 0,
-                        'test' => 0,
+                        'product' => 0,
                     ],
                     'total' => 0,
                 ],
@@ -87,7 +83,7 @@ class SearchControllerTest extends SuluTestCase
                                     'url' => '/foobar',
                                     'locale' => 'fr',
                                     'imageUrl' => null,
-                                    'category' => 'test',
+                                    'index' => 'product',
                                     'created' => '2015-04-10T00:00:00+00:00',
                                     'changed' => '2015-04-12T00:00:00+00:00',
                                     'creatorName' => 'dantleech',
@@ -102,11 +98,7 @@ class SearchControllerTest extends SuluTestCase
                         ],
                     ],
                     'totals' => [
-                        'test' => 1,
-                        'account' => 0,
-                        'contact' => 0,
-                        'media' => 0,
-                        'page' => 0,
+                        'product' => 1,
                     ],
                     'total' => 1,
                 ],
@@ -132,7 +124,7 @@ class SearchControllerTest extends SuluTestCase
                                     'url' => '/foobar',
                                     'locale' => 'fr',
                                     'imageUrl' => null,
-                                    'category' => 'test',
+                                    'index' => 'product',
                                     'created' => '2015-04-10T00:00:00+00:00',
                                     'changed' => '2015-04-12T00:00:00+00:00',
                                     'creatorName' => 'dantleech',
@@ -147,11 +139,7 @@ class SearchControllerTest extends SuluTestCase
                         ],
                     ],
                     'totals' => [
-                        'test' => 2,
-                        'account' => 0,
-                        'contact' => 0,
-                        'media' => 0,
-                        'page' => 0,
+                        'product' => 2,
                     ],
                     'total' => 2,
                 ],
@@ -184,13 +172,13 @@ class SearchControllerTest extends SuluTestCase
 
     public function testGetCategories()
     {
-        $this->client->request('GET', '/search/categories');
+        $this->client->request('GET', '/search/indexes');
 
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
         $result = json_decode($response->getContent(), true);
 
-        $this->assertContains('test', $result);
+        $this->assertContains('product', $result);
     }
 
     public function setUp()

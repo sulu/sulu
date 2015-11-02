@@ -56,6 +56,11 @@ class SearchController
     private $listRestHelper;
 
     /**
+     * @var array
+     */
+    private $indexConfig;
+
+    /**
      * @param SearchManagerInterface $searchManager
      * @param ProviderInterface $metadataProvider
      * @param SecurityCheckerInterface $securityChecker
@@ -67,13 +72,15 @@ class SearchController
         ProviderInterface $metadataProvider,
         SecurityCheckerInterface $securityChecker,
         ViewHandler $viewHandler,
-        ListRestHelper $listRestHelper
+        ListRestHelper $listRestHelper,
+        array $indexConfiguration
     ) {
         $this->searchManager = $searchManager;
         $this->metadataProvider = $metadataProvider;
         $this->securityChecker = $securityChecker;
         $this->viewHandler = $viewHandler;
         $this->listRestHelper = $listRestHelper;
+        $this->indexConfig = $indexConfiguration;
     }
 
     /**
@@ -94,7 +101,7 @@ class SearchController
         $aggregateHits = [];
         $startTime = microtime(true);
 
-        $indexes = $index ? [$index] : $this->searchManager->getIndexNames();
+        $indexes = $index ? [$index] : $this->getAllowedIndexes();
 
         $query = $this->searchManager->createSearch($queryString);
 
@@ -151,14 +158,14 @@ class SearchController
     public function indexesAction()
     {
         return $this->viewHandler->handle(
-            View::create(array_values($this->searchManager->getIndexNames()))
+            View::create($this->getAllowedIndexes())
         );
     }
 
     /**
      * Return the category totals for the search results.
      *
-     * @param Hit[]
+     * @param Hit []
      *
      * @return array
      */
@@ -175,5 +182,27 @@ class SearchController
         }
 
         return $indexCount;
+    }
+
+    /**
+     * @return array
+     */
+    private function getAllowedIndexes()
+    {
+        $allowedIndexNames = [];
+        $indexNames = $this->searchManager->getIndexNames();
+
+        foreach ($indexNames as $indexName) {
+            if (!(isset($this->indexConfig[$indexName]) && isset($this->indexConfig[$indexName]['security_context']))) {
+                $allowedIndexNames[] = $indexName;
+                continue;
+            }
+
+            if ($this->securityChecker->hasPermission($this->indexConfig[$indexName]['security_context'], 'view')) {
+                $allowedIndexNames[] = $indexName;
+            }
+        }
+
+        return $allowedIndexNames;
     }
 }
