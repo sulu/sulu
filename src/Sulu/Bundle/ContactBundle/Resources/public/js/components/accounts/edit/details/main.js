@@ -28,6 +28,7 @@ define([
             logoImageId: '#image-content',
             logoDropzoneSelector: '#image-dropzone',
             logoDeleteSelector: '#image-delete',
+            avatarDownloadSelector: '#image-download',
             logoThumbnailFormat: '400x400-inset'
         },
 
@@ -148,7 +149,7 @@ define([
          */
         initLogoContainer: function(data) {
             if (!!data.logo) {
-                this.updateLogoContainer(data.logo.id, data.logo.thumbnails[constants.logoThumbnailFormat]);
+                this.updateLogoContainer(data.logo.id, data.logo.thumbnails[constants.logoThumbnailFormat], data.logo.url);
             }
 
             /**
@@ -208,12 +209,14 @@ define([
          * Display given picture in logo container. Set logo-div data to media id which is read on saving.
          * @param mediaId
          * @param url
+         * @param fullUrl
          */
-        updateLogoContainer: function(mediaId, url) {
+        updateLogoContainer: function(mediaId, url, fullUrl) {
             var $imageContent = this.sandbox.dom.find(constants.logoImageId);
             this.sandbox.dom.data($imageContent, 'mediaId', mediaId);
             this.sandbox.dom.css($imageContent, 'background-image', 'url(' + url + ')');
             this.sandbox.dom.addClass($imageContent.parent(), 'no-default');
+            this.sandbox.dom.attr(constants.avatarDownloadSelector, 'href', fullUrl);
         },
 
         /**
@@ -444,7 +447,7 @@ define([
 
             this.sandbox.on('husky.dropzone.account-logo.success', function(file, response) {
                 this.saveLogoData(response);
-                this.updateLogoContainer(response.id, response.thumbnails[constants.logoThumbnailFormat]);
+                this.updateLogoContainer(response.id, response.thumbnails[constants.logoThumbnailFormat], response.url);
             }, this);
         },
 

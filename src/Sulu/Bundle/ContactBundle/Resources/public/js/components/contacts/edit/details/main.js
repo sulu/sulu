@@ -27,6 +27,7 @@ define([
             avatarImageId: '#image-content',
             avatarDropzoneSelector: '#image-dropzone',
             avatarDeleteSelector: '#image-delete',
+            avatarDownloadSelector: '#image-download',
             imageFormat: '400x400'
         },
 
@@ -139,7 +140,7 @@ define([
          */
         initAvatarContainer: function(data) {
             if (!!data.avatar) {
-                this.updateAvatarContainer(data.avatar.id, data.avatar.thumbnails[constants.imageFormat]);
+                this.updateAvatarContainer(data.avatar.id, data.avatar.thumbnails[constants.imageFormat], data.avatar.url);
             }
 
             /**
@@ -199,12 +200,14 @@ define([
          * Display given picture in avatar container. Set avatar-div data to media id which is read on saving.
          * @param mediaId
          * @param url
+         * @param fullUrl
          */
-        updateAvatarContainer: function(mediaId, url) {
+        updateAvatarContainer: function(mediaId, url, fullUrl) {
             var $imageContent = this.sandbox.dom.find(constants.avatarImageId);
             this.sandbox.dom.data($imageContent, 'mediaId', mediaId);
             this.sandbox.dom.css($imageContent, 'background-image', 'url(' + url + ')');
             this.sandbox.dom.addClass($imageContent.parent(), 'no-default');
+            this.sandbox.dom.attr(constants.avatarDownloadSelector, 'href', fullUrl);
         },
 
         /**
@@ -386,7 +389,7 @@ define([
 
             this.sandbox.on('husky.dropzone.contact-avatar.success', function(file, response) {
                 this.saveAvatarData(response);
-                this.updateAvatarContainer(response.id, response.thumbnails[constants.imageFormat]);
+                this.updateAvatarContainer(response.id, response.thumbnails[constants.imageFormat], response.url);
             }, this);
         },
 
