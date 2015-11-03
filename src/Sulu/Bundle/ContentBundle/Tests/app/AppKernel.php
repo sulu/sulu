@@ -23,8 +23,6 @@ class AppKernel extends SuluTestKernel
         return array_merge(
             parent::registerBundles(),
             [
-                new \Massive\Bundle\SearchBundle\MassiveSearchBundle(),
-                new \Sulu\Bundle\SearchBundle\SuluSearchBundle(),
                 new \Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\TestBundle(),
             ]
         );

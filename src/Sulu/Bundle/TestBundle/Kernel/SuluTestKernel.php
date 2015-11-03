@@ -38,6 +38,7 @@ class SuluTestKernel extends SuluKernel
             new \Massive\Bundle\SearchBundle\MassiveSearchBundle(),
 
             // Sulu
+            new \Sulu\Bundle\SearchBundle\SuluSearchBundle(),
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
             new \Sulu\Bundle\PersistenceBundle\SuluPersistenceBundle(),
             new \Sulu\Bundle\AdminBundle\SuluAdminBundle(),

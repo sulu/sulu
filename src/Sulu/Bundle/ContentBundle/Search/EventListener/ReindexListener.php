@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContentBundle\Search\EventListener;
 use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Metadata\BaseMetadataFactory;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -97,9 +98,15 @@ class ReindexListener
         $count = [];
 
         $documents = $query->execute();
-        $progress = new ProgressBar($output, count($documents));
+        $progress = new ProgressHelper();
+        $progress->start($output, count($documents));
 
         foreach ($documents as $document) {
+            if ($document instanceof SecurityBehavior && !empty($document->getPermissions())) {
+                $progress->advance();
+                continue;
+            }
+
             $locales = $this->inspector->getLocales($document);
 
             foreach ($locales as $locale) {
