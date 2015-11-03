@@ -17,8 +17,12 @@
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="fos_rest.view_handler"/>
             <argument type="service" id="sulu_core.list_rest_helper"/>
-            <argument>%sulu_search.indexes%</argument>
+            <argument type="service" id="sulu_search.index_configuration_provider"/>
             <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_search.index_configuration_provider" class="Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfigurationProvider">
+            <argument>%sulu_search.indexes%</argument>
         </service>
 
         <!-- Custom factory -->

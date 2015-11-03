@@ -20,6 +20,7 @@ use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 use Sulu\Bundle\SearchBundle\Rest\SearchResultRepresentation;
+use Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfigurationProviderInterface;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,9 +57,9 @@ class SearchController
     private $listRestHelper;
 
     /**
-     * @var array
+     * @var IndexConfigurationProviderInterface
      */
-    private $indexConfig;
+    private $indexConfigurationProvider;
 
     /**
      * @param SearchManagerInterface $searchManager
@@ -66,6 +67,7 @@ class SearchController
      * @param SecurityCheckerInterface $securityChecker
      * @param ViewHandler $viewHandler
      * @param ListRestHelper $listRestHelper
+     * @param IndexConfigurationProviderInterface $indexConfigurationProvider
      */
     public function __construct(
         SearchManagerInterface $searchManager,
@@ -73,14 +75,14 @@ class SearchController
         SecurityCheckerInterface $securityChecker,
         ViewHandler $viewHandler,
         ListRestHelper $listRestHelper,
-        array $indexConfiguration
+        IndexConfigurationProviderInterface $indexConfigurationProvider
     ) {
         $this->searchManager = $searchManager;
         $this->metadataProvider = $metadataProvider;
         $this->securityChecker = $securityChecker;
         $this->viewHandler = $viewHandler;
         $this->listRestHelper = $listRestHelper;
-        $this->indexConfig = $indexConfiguration;
+        $this->indexConfigurationProvider = $indexConfigurationProvider;
     }
 
     /**
@@ -98,7 +100,6 @@ class SearchController
 
         $page = $this->listRestHelper->getPage();
         $limit = $this->listRestHelper->getLimit();
-        $aggregateHits = [];
         $startTime = microtime(true);
 
         $indexes = $index ? [$index] : $this->getAllowedIndexes();
@@ -111,13 +112,9 @@ class SearchController
 
         $query->indexes($indexes);
 
-        foreach ($query->execute() as $hit) {
-            $aggregateHits[] = $hit;
-        }
-
         $time = microtime(true) - $startTime;
 
-        $adapter = new ArrayAdapter($aggregateHits);
+        $adapter = new ArrayAdapter($query->execute());
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage($limit);
         $pager->setCurrentPage($page);
@@ -136,8 +133,8 @@ class SearchController
             'page',
             'limit',
             false,
-            count($aggregateHits),
-            $this->getIndexTotals($aggregateHits),
+            $adapter->getNbResults(),
+            $this->getIndexTotals($adapter->getArray()),
             number_format($time, 8)
         );
 
@@ -193,12 +190,13 @@ class SearchController
         $indexNames = $this->searchManager->getIndexNames();
 
         foreach ($indexNames as $indexName) {
-            if (!(isset($this->indexConfig[$indexName]) && isset($this->indexConfig[$indexName]['security_context']))) {
+            $indexConfiguration = $this->indexConfigurationProvider->getIndexConfiguration($indexName);
+            if (!$indexConfiguration) {
                 $allowedIndexNames[] = $indexName;
                 continue;
             }
 
-            if ($this->securityChecker->hasPermission($this->indexConfig[$indexName]['security_context'], 'view')) {
+            if ($this->securityChecker->hasPermission($indexConfiguration->getSecurityContext(), 'view')) {
                 $allowedIndexNames[] = $indexName;
             }
         }

@@ -170,7 +170,7 @@ class SearchControllerTest extends SuluTestCase
         $this->assertEquals($expectedResult, $result);
     }
 
-    public function testGetCategories()
+    public function testGetIndexes()
     {
         $this->client->request('GET', '/search/indexes');
 
