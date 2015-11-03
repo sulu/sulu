@@ -687,6 +687,8 @@ class CollectionControllerTest extends SuluTestCase
         $style->type = 'circle';
         $style->color = '#00ccff';
 
+        $id = $response->id;
+
         $this->assertEquals($style, $response->style);
         $this->assertEquals($this->collection1->getId(), $response->id);
         $this->assertNotNull($response->type->id);

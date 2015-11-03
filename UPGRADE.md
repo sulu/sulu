@@ -3,6 +3,10 @@
 ## dev-develop
 
 ### System Collections
+Remove the config `sulu_contact.form.avatar_collection` and use it in the sql bellow as `{old-avatar-collection}`.
+if you have not configured that the value for the placeholder is `1`. The value of `{new-system-collection-id}` you will
+get over the URL in the backend.
+
 Update the database schema and then update the data-fixtures by running following sql statement.
 
 ```bash
@@ -12,6 +16,7 @@ app/console doctrine:schema:update --force
 ```sql
 UPDATE me_collection_types SET collection_type_key='collection.default', name='Default' WHERE id=1;
 INSERT INTO me_collection_types (id, name, collection_type_key) VALUES ('2', 'System Collections', 'collection.system');
+UPDATE me_media SET idCollections={new-system-collection-id} WHERE idCollections={old-avatar-collection};
 ```
 
 ### Websocket Component

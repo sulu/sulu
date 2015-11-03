@@ -133,7 +133,7 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
     private function getUserId()
     {
         if (!$this->tokenProvider || ($token = $this->tokenProvider->getToken()) === null) {
-            return 1; // FIXME which id default?
+            return;
         }
 
         return $token->getUser()->getId();
