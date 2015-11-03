@@ -308,8 +308,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $listBuilder->addSelectField($fieldDescriptors['locale']);
         $listBuilder->addSelectField($fieldDescriptors['defaultLocale']);
 
-        $listBuilder->addGroupBy($fieldDescriptors['id']);
-
         if ($parentKey !== null) {
             $this->addParentSelector($parentKey, $listBuilder);
         }
