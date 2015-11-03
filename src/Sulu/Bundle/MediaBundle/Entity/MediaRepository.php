@@ -138,6 +138,8 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
 
             if ($orderBy !== null) {
                 $queryBuilder->addOrderBy($orderBy, $orderSort);
+            } else {
+                $queryBuilder->addOrderBy('media.id', 'ASC');
             }
 
             if ($user !== null && $permission !== null) {
