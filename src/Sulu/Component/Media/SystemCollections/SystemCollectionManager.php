@@ -10,11 +10,10 @@
 
 namespace Sulu\Component\Media\SystemCollections;
 
-use Coduo\PHPHumanizer\String;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
-use Symfony\Component\Config\ConfigCache;
+use Sulu\Component\Cache\ConfigCache;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -48,14 +47,9 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
     private $locale;
 
     /**
-     * @var string
+     * @var ConfigCache
      */
-    private $cachePath;
-
-    /**
-     * @var bool
-     */
-    private $debug;
+    private $cache;
 
     /**
      * @var array
@@ -67,17 +61,15 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
         CollectionManagerInterface $collectionManager,
         EntityManagerInterface $entityManager,
         TokenStorageInterface $tokenProvider = null,
-        $locale,
-        $cachePath,
-        $debug
+        ConfigCache $cache,
+        $locale
     ) {
         $this->config = $config;
         $this->collectionManager = $collectionManager;
         $this->entityManager = $entityManager;
         $this->tokenProvider = $tokenProvider;
+        $this->cache = $cache;
         $this->locale = $locale;
-        $this->cachePath = $cachePath;
-        $this->debug = $debug;
     }
 
     /**
@@ -95,6 +87,10 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
     {
         $systemCollections = $this->getSystemCollections();
 
+        if (!array_key_exists($key, $systemCollections)) {
+            throw new UnrecognizedSystemCollection($key, array_keys($systemCollections));
+        }
+
         return $systemCollections[$key];
     }
 
@@ -103,7 +99,7 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
      */
     public function isSystemCollection($id)
     {
-        return in_array($id, array_values($this->getSystemCollections()));
+        return in_array($id, $this->getSystemCollections());
     }
 
     /**
@@ -114,17 +110,16 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
     private function getSystemCollections()
     {
         if (!$this->systemCollections) {
-            $cache = new ConfigCache($this->cachePath, $this->debug);
-            if (!$cache->isFresh()) {
+            if (!$this->cache->isFresh()) {
                 $systemCollections = $this->buildSystemCollections(
                     $this->locale,
                     $this->getUserId()
                 );
 
-                $cache->write(serialize($systemCollections));
+                $this->cache->write(serialize($systemCollections));
             }
 
-            $this->systemCollections = unserialize(file_get_contents($this->cachePath));
+            $this->systemCollections = unserialize($this->cache->read());
         }
 
         return $this->systemCollections;
@@ -217,7 +212,7 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
     private function getOrCreateCollection($key, $localizedTitles, $userId, $parent)
     {
         $locales = array_keys($localizedTitles);
-        $firstLocale = array_pop($locales);
+        $firstLocale = array_shift($locales);
 
         $collection = $this->collectionManager->getByKey($key, $firstLocale);
         if ($collection === null) {
