@@ -161,7 +161,7 @@ define([
                 var curMediaId = this.sandbox.dom.data(constants.logoImageId, 'mediaId');
                 var url = (!!curMediaId) ?
                     '/admin/api/media/' + curMediaId + '?action=new-version' :
-                    '/admin/api/media?collection=' + this.formOptions.avatarCollection; //todo: use system collection
+                    '/admin/api/media?collection=' + this.formOptions.accountAvatarCollection;
 
                 // if possible, change the title of the logo to the name of the account
                 if (!!data.name) {

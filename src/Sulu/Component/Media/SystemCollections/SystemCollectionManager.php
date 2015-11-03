@@ -66,7 +66,7 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
         array $config,
         CollectionManagerInterface $collectionManager,
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenProvider,
+        TokenStorageInterface $tokenProvider = null,
         $locale,
         $cachePath,
         $debug
@@ -110,7 +110,7 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
             if (!$cache->isFresh()) {
                 $systemCollections = $this->buildSystemCollections(
                     $this->locale,
-                    $this->tokenProvider->getToken()->getUser()
+                    $this->getUserId()
                 );
 
                 $cache->write(serialize($systemCollections));
@@ -123,6 +123,20 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
     }
 
     /**
+     * Returns current user.
+     *
+     * @return int
+     */
+    private function getUserId()
+    {
+        if (!$this->tokenProvider || ($token = $this->tokenProvider->getToken()) === null) {
+            return 1; // FIXME which id default?
+        }
+
+        return $token->getUser()->getId();
+    }
+
+    /**
      * Go thru configuration and build all system collections.
      *
      * @param string $locale
@@ -132,26 +146,25 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
      */
     private function buildSystemCollections($locale, $userId)
     {
-        $root = $this->getOrCreateNamespace('system_collections', $locale, $userId);
+        $root = $this->getOrCreateRoot('system_collections', 'System', $locale, $userId);
 
-        $namespaces = [];
         $collections = [];
-        foreach ($this->config as $key => $item) {
-            if (!array_key_exists($item['namespace'], $namespaces)) {
-                $namespaces[$item['namespace']] = $namespace = $this->getOrCreateNamespace(
-                    $item['namespace'],
-                    $locale,
-                    $userId,
-                    $root->getId()
-                );
-            }
-
-            $collections[$key] = $this->getOrCreateCollection(
-                $key,
-                $item['meta_title'],
+        foreach ($this->config as $namespaceKey => $namespaceItem) {
+            $namespace = $this->getOrCreateCollection(
+                $namespaceKey,
+                $namespaceItem['meta_title'],
                 $userId,
-                $namespaces[$item['namespace']]->getId()
-            )->getId();
+                $root->getId()
+            );
+
+            foreach ($namespaceItem['collections'] as $collectionKey => $collectionItem) {
+                $collections[sprintf('%s.%s', $namespaceKey, $collectionKey)] = $this->getOrCreateCollection(
+                    $collectionKey,
+                    $collectionItem['meta_title'],
+                    $userId,
+                    $namespace->getId()
+                )->getId();
+            }
         }
 
         $this->entityManager->flush();
@@ -163,21 +176,22 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
      * Finds or create a new system-collection namespace.
      *
      * @param string $namespace
+     * @param string $title
      * @param string $locale
      * @param int $userId
      * @param int|null $parent id of parent collection or null for root.
      *
      * @return Collection
      */
-    private function getOrCreateNamespace($namespace, $locale, $userId, $parent = null)
+    private function getOrCreateRoot($namespace, $title, $locale, $userId, $parent = null)
     {
         if (($collection = $this->collectionManager->getByKey($namespace, $locale)) !== null) {
-            $collection->setTitle(String::humanize($namespace));
+            $collection->setTitle($title);
 
             return $collection;
         }
 
-        return $this->createCollection(String::humanize($namespace), $namespace, $locale, $userId, $parent);
+        return $this->createCollection($title, $namespace, $locale, $userId, $parent);
     }
 
     /**

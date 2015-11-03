@@ -176,7 +176,7 @@
             <argument>%sulu_media.system_collections%</argument>
             <argument type="service" id="sulu_media.collection_manager"/>
             <argument type="service" id="doctrine.orm.entity_manager" />
-            <argument type="service" id="security.token_storage"/>
+            <argument type="service" id="security.token_storage" on-invalid="null"/>
             <argument>%kernel.default_locale%</argument>
             <argument>%sulu.cache_dir%/system_collection.cache</argument>
             <argument>%kernel.debug%</argument>

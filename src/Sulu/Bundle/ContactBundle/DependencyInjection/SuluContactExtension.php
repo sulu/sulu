@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContactBundle\DependencyInjection;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
@@ -22,9 +23,36 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class SuluContactExtension extends Extension
+class SuluContactExtension extends Extension implements PrependExtensionInterface
 {
     use PersistenceExtensionTrait;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function prepend(ContainerBuilder $container)
+    {
+        if ($container->hasExtension('sulu_media')) {
+            $container->prependExtensionConfig(
+                'sulu_media',
+                [
+                    'system_collections' => [
+                        'sulu_contact' => [
+                            'meta_title' => ['en' => 'Sulu contacts', 'de' => 'Sulu Kontakte'],
+                            'collections' => [
+                                'contact' => [
+                                    'meta_title' => ['en' => 'People', 'de' => 'Personen']
+                                ],
+                                'account' => [
+                                    'meta_title' => ['en' => 'Organizations', 'de' => 'Organisationen']
+                                ],
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
+    }
 
     /**
      * {@inheritdoc}

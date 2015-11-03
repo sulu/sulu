@@ -33,7 +33,10 @@ class JsConfigAvatarCollection implements JsConfigInterface
      */
     public function getParameters()
     {
-        return ['avatarCollection' => $this->systemCollectionManager->getSystemCollection('contact')];
+        return [
+            'contactAvatarCollection' => $this->systemCollectionManager->getSystemCollection('sulu_contact.contact'),
+            'accountAvatarCollection' => $this->systemCollectionManager->getSystemCollection('sulu_contact.account'),
+        ];
     }
 
     /**
