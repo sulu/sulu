@@ -16,6 +16,7 @@ use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Metadata\BaseMetadataFactory;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Helper\ProgressHelper;
 
 /**
@@ -96,8 +97,7 @@ class ReindexListener
         $count = [];
 
         $documents = $query->execute();
-        $progress = new ProgressHelper();
-        $progress->start($output, count($documents));
+        $progress = new ProgressBar($output, count($documents));
 
         foreach ($documents as $document) {
             $locales = $this->inspector->getLocales($document);
