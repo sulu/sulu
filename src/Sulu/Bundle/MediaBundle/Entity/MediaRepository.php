@@ -81,10 +81,6 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                         break;
                     case 'lang':
                         break;
-                    case 'tag':
-                        $queryBuilder->andWhere('tag.name IN (:tags)');
-                        $parameter['tags'] = $value;
-                        break;
                     default:
                         break;
                 }

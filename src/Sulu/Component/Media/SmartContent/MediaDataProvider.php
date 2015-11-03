@@ -35,7 +35,6 @@ class MediaDataProvider extends BaseDataProvider
         $request = $this->requestStack->getCurrentRequest();
 
          return array_filter([
-             'tag' => array_filter(explode(',', $request->get('tag', ''))),
              'filetype' => $request->get('filetype'),
              'language' => $request->get('lang')
          ]);
