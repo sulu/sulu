@@ -186,10 +186,8 @@
             <argument>%kernel.default_locale%</argument>
         </service>
 
-        <service id="sulu_media.system_collections.warm_up" class="Sulu\Component\Media\SystemCollections\SystemCollectionCacheWarmer">
-            <argument type="service" id="sulu_media.system_collections.manager"/>
-
-            <tag name="kernel.cache_warmer"/>
+        <service id="sulu_media.system_collections.warm_up" class="Sulu\Component\Media\SystemCollections\SystemCollectionBuilder">
+            <tag name="massive_build.builder" />
         </service>
     </services>
 </container>
