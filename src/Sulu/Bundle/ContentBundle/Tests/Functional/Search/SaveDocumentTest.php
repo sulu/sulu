@@ -69,7 +69,7 @@ class SaveDocumentTest extends BaseTestCase
         ];
 
         foreach ($searches as $search => $count) {
-            $res = $searchManager->createSearch($search)->locale('de')->index('page_')->execute();
+            $res = $searchManager->createSearch($search)->locale('de')->index('page_sulu_io')->execute();
             $this->assertCount($count, $res, 'Searching for: ' . $search);
         }
     }

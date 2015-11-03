@@ -12,12 +12,15 @@
 namespace Sulu\Component\Content\Mapper;
 
 use Behat\Behat\Snippet\Snippet;
+use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
 use PHPCR\Util\UUIDHelper;
+use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 class ContentMapperSnippetTest extends SuluTestCase
 {
@@ -46,6 +49,21 @@ class ContentMapperSnippetTest extends SuluTestCase
      */
     private $snippet1OriginalPath;
 
+    /**
+     * @var DocumentManagerInterface
+     */
+    private $documentManager;
+
+    /**
+     * @var HomeDocument
+     */
+    private $parent;
+
+    /**
+     * @var NodeInterface
+     */
+    private $snippet1Node;
+
     public function setUp()
     {
         $this->initPhpcr();
@@ -58,7 +76,7 @@ class ContentMapperSnippetTest extends SuluTestCase
 
     public function loadFixtures()
     {
-        $req = ContentMapperRequest::create()
+        $contentMapperRequest = ContentMapperRequest::create()
             ->setType(Structure::TYPE_SNIPPET)
             ->setTemplateKey('animal')
             ->setLocale('en')
@@ -68,9 +86,9 @@ class ContentMapperSnippetTest extends SuluTestCase
             ])
             ->setState(StructureInterface::STATE_PUBLISHED);
 
-        $this->snippet1 = $this->contentMapper->saveRequest($req);
+        $this->snippet1 = $this->contentMapper->saveRequest($contentMapperRequest);
 
-        $req = ContentMapperRequest::create()
+        $contentMapperRequest = ContentMapperRequest::create()
             ->setType(Structure::TYPE_SNIPPET)
             ->setTemplateKey('animal')
             ->setLocale('de')
@@ -80,12 +98,12 @@ class ContentMapperSnippetTest extends SuluTestCase
             ])
             ->setState(StructureInterface::STATE_PUBLISHED);
 
-        $this->snippet2 = $this->contentMapper->saveRequest($req);
+        $this->snippet2 = $this->contentMapper->saveRequest($contentMapperRequest);
 
         $this->snippet1Node = $this->session->getNodeByIdentifier($this->snippet1->getUuid());
         $this->snippet1OriginalPath = $this->snippet1Node->getPath();
 
-        $req = ContentMapperRequest::create()
+        $contentMapperRequest = ContentMapperRequest::create()
             ->setUuid($this->snippet1->getUuid())
             ->setType(Structure::TYPE_SNIPPET)
             ->setTemplateKey('animal')
@@ -95,9 +113,9 @@ class ContentMapperSnippetTest extends SuluTestCase
                 'title' => 'English ElePHPant',
             ])
             ->setState(StructureInterface::STATE_PUBLISHED);
-        $this->contentMapper->saveRequest($req);
+        $this->contentMapper->saveRequest($contentMapperRequest);
 
-        $req = ContentMapperRequest::create()
+        $contentMapperRequest = ContentMapperRequest::create()
             ->setType(Structure::TYPE_SNIPPET)
             ->setTemplateKey('animal')
             ->setLocale('en')
@@ -106,7 +124,7 @@ class ContentMapperSnippetTest extends SuluTestCase
                 'title' => 'Some other animal',
             ])
             ->setState(StructureInterface::STATE_PUBLISHED);
-        $this->contentMapper->saveRequest($req);
+        $this->contentMapper->saveRequest($contentMapperRequest);
     }
 
     public function testChangeSnippetTemplate()

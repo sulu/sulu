@@ -17,7 +17,6 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Metadata\BaseMetadataFactory;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Helper\ProgressHelper;
 
 /**
