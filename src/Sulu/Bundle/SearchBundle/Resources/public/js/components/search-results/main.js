@@ -349,14 +349,16 @@ define([
         },
 
         /**
+         * TODO should be injected in some way, so that it is extensible
          * @type {Object}
          */
         indexIconMapping: {
             'contact': 'fa-user',
-            'page': 'fa-file-o',
             'snippet': 'fa-file',
             'account': 'fa-university'
         },
+
+        defaultIcon: 'fa-file-o',
 
         /**
          * @method getTemplate
@@ -378,6 +380,7 @@ define([
                 indexes: this.indexes,
                 totals: this.totals,
                 indexIconMapping: this.indexIconMapping,
+                defaultIcon: this.defaultIcon,
                 translate: this.sandbox.translate
             });
         },
