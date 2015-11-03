@@ -2,6 +2,18 @@
 
 ## dev-develop
 
+### System Collections
+Update the database schema and then update the data-fixtures by running following sql statement.
+
+```bash
+app/console doctrine:schema:update --force
+```
+
+```sql
+UPDATE me_collection_types SET collection_type_key='collection.default', name='Default' WHERE id=1;
+INSERT INTO me_collection_types (id, name, collection_type_key) VALUES ('2', 'System Collections', 'collection.system');
+```
+
 ### Websocket Component
 The following Interfaces has new methods
 

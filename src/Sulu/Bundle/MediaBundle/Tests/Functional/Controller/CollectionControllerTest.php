@@ -605,6 +605,8 @@ class CollectionControllerTest extends SuluTestCase
         $style->type = 'circle';
         $style->color = '#00ccff';
 
+        $id = $response->id;
+
         $this->assertEquals($style, $response->style);
         $this->assertEquals($this->collection1->getId(), $response->id);
         $this->assertNotNull($response->type->id);
@@ -629,8 +631,12 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertEquals(2, $response->total); // 1 created 1 system collection
 
+        $this->assertTrue(isset($response->_embedded->collections[0]));
         $this->assertTrue(isset($response->_embedded->collections[1]));
-        $responseFirstEntity = $response->_embedded->collections[1];
+        $responseFirstEntity = $response->_embedded->collections[0];
+        if ($responseFirstEntity->id !== $id) {
+            $responseFirstEntity = $response->_embedded->collections[1];
+        }
 
         $style = new \stdClass();
         $style->type = 'circle';
@@ -705,8 +711,12 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertEquals(2, $response->total); // 1 created 1 system collection
 
+        $this->assertTrue(isset($response->_embedded->collections[0]));
         $this->assertTrue(isset($response->_embedded->collections[1]));
-        $responseFirstEntity = $response->_embedded->collections[1];
+        $responseFirstEntity = $response->_embedded->collections[0];
+        if ($responseFirstEntity->id !== $id) {
+            $responseFirstEntity = $response->_embedded->collections[1];
+        }
 
         $style = new \stdClass();
         $style->type = 'circle';
