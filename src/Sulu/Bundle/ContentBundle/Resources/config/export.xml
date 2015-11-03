@@ -9,6 +9,9 @@
         <parameter key="sulu_content.export.webspace.formats" type="collection">
             <parameter key="1.2.xliff">SuluContentBundle:Export:Webspace/1.2.xliff.twig</parameter>
         </parameter>
+        <parameter key="sulu_content.import.webspace.class">Sulu\Component\Content\Import\Webspace</parameter>
+        <parameter key="sulu_content.import.manager.class">Sulu\Component\Content\Import\ContentImportManager</parameter>
+        <parameter key="sulu_content.import.webspace.xliff_1_2">Sulu\Component\Content\Import\Format\Xliff_1_2</parameter>
     </parameters>
 
     <services>
@@ -23,6 +26,18 @@
             <argument type="service" id="sulu.content.structure_manager" />
             <argument type="service" id="sulu_content.export.manager" />
             <argument>%sulu_content.export.webspace.formats%</argument>
+        </service>
+
+        <service id="sulu_content.import.manager" class="%sulu_content.export.import.class%">
+            <argument type="service" id="sulu.content.type_manager" />
+        </service>
+
+        <service id="sulu_content.import.webspace" class="%sulu_content.import.webspace.class%">
+
+        </service>
+
+        <service id="sulu_content.import.webspace.xliff_1_2" class="%sulu_content.import.webspace.xliff_1_2%">
+            <tag name="sulu.content.import.service" format="1.2.xliff" />
         </service>
 
         <service id="sulu_content.export_twig_extension" class="%sulu_content.export_twig_extension.class%">
