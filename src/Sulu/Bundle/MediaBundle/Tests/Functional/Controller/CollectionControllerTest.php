@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
@@ -18,6 +19,26 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class CollectionControllerTest extends SuluTestCase
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    private $em;
+
+    /**
+     * @var Collection
+     */
+    private $collection1;
+
+    /**
+     * @var CollectionType
+     */
+    private $collectionType1;
+
+    /**
+     * @var CollectionType
+     */
+    private $collectionType2;
+
     protected function setUp()
     {
         parent::setUp();
@@ -28,14 +49,28 @@ class CollectionControllerTest extends SuluTestCase
 
     protected function initOrm()
     {
-        $this->collection1 = $this->createCollection(
+        // force id = 1
+        $metadata = $this->em->getClassMetaData(CollectionType::class);
+        $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+
+        $this->collectionType1 = $this->createCollectionType(
+            1,
+            'collection.default',
             'Default Collection Type',
+            'Default Collection Type'
+        );
+        $this->collectionType2 = $this->createCollectionType(2, 'collection.system', 'System Collections');
+        $this->em->persist($this->collectionType1);
+        $this->em->persist($this->collectionType2);
+        $this->em->flush();
+
+        $this->collection1 = $this->createCollection(
+            $this->collectionType1,
             ['en-gb' => 'Test Collection', 'de' => 'Test Kollektion']
         );
-        $this->collectionType1 = $this->collection1->getType();
     }
 
-    private function createCollection($typeName, $title = [], $parent = null)
+    private function createCollection(CollectionType $collectionType, $title = [], $parent = null, $key = null)
     {
         // Collection
         $collection = new Collection();
@@ -46,12 +81,7 @@ class CollectionControllerTest extends SuluTestCase
         ];
 
         $collection->setStyle(json_encode($style));
-
-        // Create Collection Type
-        $collectionType = new CollectionType();
-        $collectionType->setName($typeName);
-        $collectionType->setDescription('Default Collection Type');
-
+        $collection->setKey($key);
         $collection->setType($collectionType);
 
         // Collection Meta 1
@@ -83,6 +113,17 @@ class CollectionControllerTest extends SuluTestCase
         $this->em->flush();
 
         return $collection;
+    }
+
+    private function createCollectionType($id, $key, $name, $description = '')
+    {
+        $collectionType = new CollectionType();
+        $collectionType->setId($id);
+        $collectionType->setName($name);
+        $collectionType->setKey($key);
+        $collectionType->setDescription($description);
+
+        return $collectionType;
     }
 
     /**
@@ -364,7 +405,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertNotEmpty($response);
-        $this->assertEquals(2, $response->total);
+        $this->assertEquals(6, $response->total); // 2 test-created and 4 system collections
     }
 
     /**
@@ -586,10 +627,10 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertNotEmpty($response);
 
-        $this->assertEquals(1, $response->total);
+        $this->assertEquals(2, $response->total); // 1 created 1 system collection
 
-        $this->assertTrue(isset($response->_embedded->collections[0]));
-        $responseFirstEntity = $response->_embedded->collections[0];
+        $this->assertTrue(isset($response->_embedded->collections[1]));
+        $responseFirstEntity = $response->_embedded->collections[1];
 
         $style = new \stdClass();
         $style->type = 'circle';
@@ -662,10 +703,10 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertNotEmpty($response);
 
-        $this->assertEquals(1, $response->total);
+        $this->assertEquals(2, $response->total); // 1 created 1 system collection
 
-        $this->assertTrue(isset($response->_embedded->collections[0]));
-        $responseFirstEntity = $response->_embedded->collections[0];
+        $this->assertTrue(isset($response->_embedded->collections[1]));
+        $responseFirstEntity = $response->_embedded->collections[1];
 
         $style = new \stdClass();
         $style->type = 'circle';
@@ -691,6 +732,7 @@ class CollectionControllerTest extends SuluTestCase
         // Add New Collection Type
         $collectionType = new CollectionType();
         $collectionType->setName('Second Collection Type');
+        $collectionType->setKey('my-type');
         $collectionType->setDescription('Second Collection Type');
 
         $this->em->persist($collectionType);
@@ -793,12 +835,35 @@ class CollectionControllerTest extends SuluTestCase
     private function prepareTree()
     {
         $collection1 = $this->collection1;
-        $collection2 = $this->createCollection('My Type 1', ['en-gb' => 'col2'], $collection1);
-        $collection3 = $this->createCollection('My Type 2', ['en-gb' => 'col3'], $collection1);
-        $collection4 = $this->createCollection('My Type 3', ['en-gb' => 'col4']);
-        $collection5 = $this->createCollection('My Type 4', ['en-gb' => 'col5'], $collection4);
-        $collection6 = $this->createCollection('My Type 5', ['en-gb' => 'col6'], $collection4);
-        $collection7 = $this->createCollection('My Type 6', ['en-gb' => 'col7'], $collection6);
+        $collection2 = $this->createCollection(
+            $this->createCollectionType(3, 'my-type-1', 'My Type 1'),
+            ['en-gb' => 'col2'],
+            $collection1
+        );
+        $collection3 = $this->createCollection(
+            $this->createCollectionType(4, 'my-type-2', 'My Type 2'),
+            ['en-gb' => 'col3'],
+            $collection1
+        );
+        $collection4 = $this->createCollection(
+            $this->createCollectionType(5, 'my-type-3', 'My Type 3'),
+            ['en-gb' => 'col4']
+        );
+        $collection5 = $this->createCollection(
+            $this->createCollectionType(6, 'my-type-4', 'My Type 4'),
+            ['en-gb' => 'col5'],
+            $collection4
+        );
+        $collection6 = $this->createCollection(
+            $this->createCollectionType(7, 'my-type-5', 'My Type 5'),
+            ['en-gb' => 'col6'],
+            $collection4
+        );
+        $collection7 = $this->createCollection(
+            $this->createCollectionType(8, 'my-type-6', 'My Type 6'),
+            ['en-gb' => 'col7'],
+            $collection6
+        );
 
         return [
             [
@@ -1274,7 +1339,11 @@ class CollectionControllerTest extends SuluTestCase
     public function testPaginationChildren()
     {
         list($titles, $ids, $collections) = $this->prepareTree();
-        $this->createCollection('My new type', ['en-gb' => 'my collection'], $collections[3]);
+        $this->createCollection(
+            $this->createCollectionType(9, 'my-type', 'My new type'),
+            ['en-gb' => 'my collection'],
+            $collections[3]
+        );
 
         $client = $this->createAuthenticatedClient();
         $client->request(
@@ -1326,5 +1395,50 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals($titles[4], $response['_embedded']['collections'][0]['title']);
         $this->assertEquals($titles[5], $response['_embedded']['collections'][1]['title']);
         $this->assertEquals('my collection', $response['_embedded']['collections'][2]['title']);
+    }
+
+    public function testPostParentIsSystemCollection()
+    {
+        $collection = $this->createCollection($this->collectionType2, ['en' => 'Test'], null, 'system_collections');
+        $this->em->flush();
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'POST',
+            '/api/collections',
+            [
+                'locale' => 'en-gb',
+                'type' => [
+                    'id' => $this->collectionType1->getId(),
+                ],
+                'title' => 'Test Collection 2',
+                'description' => 'This Description 2 is only for testing',
+                'parent' => $collection->getId(),
+            ]
+        );
+
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+    }
+
+    public function testPutSystemCollection()
+    {
+        $collection = $this->createCollection($this->collectionType2, ['en' => 'Test'], null, 'system_collections');
+        $this->em->flush();
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'PUT',
+            '/api/collections/' . $collection->getId(),
+            [
+                'locale' => 'en-gb',
+                'type' => [
+                    'id' => $this->collectionType1->getId(),
+                ],
+                'title' => 'Test Collection 2',
+                'description' => 'This Description 2 is only for testing',
+            ]
+        );
+
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 }

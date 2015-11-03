@@ -156,7 +156,7 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
     {
         $root = $this->getOrCreateRoot('system_collections', 'System', $locale, $userId);
 
-        $collections = [];
+        $collections = ['root' => $root->getId()];
         foreach ($this->config as $namespaceKey => $namespaceItem) {
             $namespace = $this->getOrCreateCollection(
                 $namespaceKey,
