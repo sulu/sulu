@@ -377,7 +377,7 @@ class Webspace implements WebspaceInterface
             }
 
             if (!empty($wheres)) {
-                return ($not ? 'NOT ' : '') .  '(' . implode(' OR ' , $wheres) . ')';
+                return ($not ? 'NOT ' : '') .  '(' . implode(' OR ', $wheres) . ')';
             }
         }
     }
