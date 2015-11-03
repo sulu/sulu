@@ -978,9 +978,9 @@ class MediaManager implements MediaManagerInterface, DataProviderRepositoryInter
     /**
      * {@inheritdoc}
      */
-    public function findByFilters($filters, $page, $pageSize, $limit, $locale)
+    public function findByFilters($filters, $page, $pageSize, $limit, $locale, $options = [])
     {
-        $entities = $this->mediaRepository->findByFilters($filters, $page, $pageSize, $limit, $locale);
+        $entities = $this->mediaRepository->findByFilters($filters, $page, $pageSize, $limit, $locale, $options);
 
         return array_map(
             function ($media) use ($locale) {

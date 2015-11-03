@@ -40,7 +40,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         $queryBuilder->leftJoin('entity.type', 'type')
             ->leftJoin('entity.collection', 'collection')
             ->leftJoin('entity.files', 'file')
-            ->leftJoin('file.fileVersions', 'fileVersion')
+            ->leftJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version')
             ->leftJoin('fileVersion.tags', 'tag')
             ->leftJoin('fileVersion.meta', 'fileVersionMeta')
             ->leftJoin('fileVersion.defaultMeta', 'fileVersionDefaultMeta')
@@ -63,6 +63,47 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             ->addSelect('changer')
             ->addSelect('creatorContact')
             ->addSelect('changerContact');
+    }
+
+    protected function append(QueryBuilder $queryBuilder, $options = [])
+    {
+
+        $parameter = [];
+
+        // TODO append condition by options
+        if (count($options) > 0) {
+            foreach ($options as $key => $value) {
+                switch ($key) {
+                    case 'filetype':
+                        $queryBuilder->leftJoin('fileVersion.tags', 'tag');
+                        $queryBuilder->andWhere('fileVersion.mimeType = :mimeType');
+                        $parameter['mimeType'] = $value;
+                        break;
+                    case 'lang':
+                        break;
+                    case 'tag':
+                        $queryBuilder->andWhere('tag.name IN (:tags)');
+                        $parameter['tags'] = $value;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        return $parameter;
+    }
+
+    protected function appendTagsRelation(QueryBuilder $queryBuilder, $alias)
+    {
+        $queryBuilder
+            ->leftJoin($alias . '.files', 'file')
+            ->leftJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version');
+    }
+
+    protected function getTagsRelation($alias)
+    {
+        return 'fileVersion.tags';
     }
 
     /**
@@ -126,7 +167,8 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         $offset = null,
         UserInterface $user = null,
         $permission = null
-    ) {
+    )
+    {
         try {
             list($collection, $types, $search, $orderBy, $orderSort, $ids) = $this->extractFilterVars($filter);
 
@@ -306,7 +348,8 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         $limit = null,
         $offset = null,
         $select = 'media.id'
-    ) {
+    )
+    {
         $subQueryBuilder = $this->createQueryBuilder('media')->select($select);
 
         if ($collection !== null) {
@@ -371,7 +414,8 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         $orderSort = null,
         $limit = null,
         $offset = null
-    ) {
+    )
+    {
         $subQuery = $this->getIdsQuery($collection, $types, $search, $orderBy, $orderSort, $limit, $offset);
 
         return $subQuery->getScalarResult();

@@ -78,8 +78,9 @@ abstract class BaseDataProvider implements DataProviderInterface
         $limit = null,
         $page = 1,
         $pageSize = null
-    ) {
-        list($result, $hasNextPage) = $this->resolveFilters($filters, $options['locale'], $limit, $page, $pageSize);
+    )
+    {
+        list($result, $hasNextPage) = $this->resolveFilters($filters, $options['locale'], $limit, $page, $pageSize, $this->getOptions($propertyParameter, $options));
 
         return new DataProviderResult($this->decorateDataItems($result), $hasNextPage);
     }
@@ -94,8 +95,9 @@ abstract class BaseDataProvider implements DataProviderInterface
         $limit = null,
         $page = 1,
         $pageSize = null
-    ) {
-        list($result, $hasNextPage) = $this->resolveFilters($filters, $options['locale'], $limit, $page, $pageSize);
+    )
+    {
+        list($result, $hasNextPage) = $this->resolveFilters($filters, $options['locale'], $limit, $page, $pageSize, $this->getOptions($propertyParameter, $options));
 
         return new DataProviderResult($this->decorateResourceItems($result, $options['locale']), $hasNextPage);
     }
@@ -108,9 +110,11 @@ abstract class BaseDataProvider implements DataProviderInterface
         $locale,
         $limit = null,
         $page = 1,
-        $pageSize = null
-    ) {
-        $result = $this->repository->findByFilters($filters, $page, $pageSize, $limit, $locale);
+        $pageSize = null,
+        $options = []
+    )
+    {
+        $result = $this->repository->findByFilters($filters, $page, $pageSize, $limit, $locale, $options);
 
         $hasNextPage = false;
         if ($pageSize !== null && count($result) > $pageSize) {
@@ -167,6 +171,13 @@ abstract class BaseDataProvider implements DataProviderInterface
     protected function getSerializationContext()
     {
         return SerializationContext::create()->setSerializeNull(true);
+    }
+
+    protected function getOptions(
+        array $propertyParameter,
+        array $options = []
+    ) {
+        return [];
     }
 
     /**

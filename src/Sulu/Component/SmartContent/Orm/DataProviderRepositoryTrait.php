@@ -21,17 +21,17 @@ trait DataProviderRepositoryTrait
     /**
      * @see DataProviderRepositoryInterface::findByFilters
      */
-    public function findByFilters($filters, $page, $pageSize, $limit, $locale)
+    public function findByFilters($filters, $page, $pageSize, $limit, $locale, $options = [])
     {
         $queryBuilder = $this->createQueryBuilder('entity')
             ->addSelect('entity')
             ->where('entity.id IN (:ids)')
             ->orderBy('entity.id', 'ASC');
-
         $this->appendJoins($queryBuilder);
 
         $query = $queryBuilder->getQuery();
-        $query->setParameter('ids', $this->findByFiltersIds($filters, $page, $pageSize, $limit));
+        $query->setParameter('ids', $this->findByFiltersIds($filters, $page, $pageSize, $limit, $options));
+
 
         return $query->getResult();
     }
@@ -46,7 +46,7 @@ trait DataProviderRepositoryTrait
      *
      * @return array
      */
-    private function findByFiltersIds($filters, $page, $pageSize, $limit)
+    private function findByFiltersIds($filters, $page, $pageSize, $limit, $options = [])
     {
         $parameter = [];
 
@@ -54,12 +54,16 @@ trait DataProviderRepositoryTrait
             ->select('c.id')
             ->orderBy('c.id', 'ASC');
 
+        $this->appendTagsRelation($queryBuilder, 'c');
+        $this->appendCategoriesRelation($queryBuilder, 'c');
+        $parameter = array_merge($parameter, $this->append($queryBuilder, $options));
+
         if (isset($filters['tags']) && !empty($filters['tags'])) {
             $parameter = array_merge(
                 $parameter,
                 $this->appendRelation(
                     $queryBuilder,
-                    'c.tags',
+                    $this->getTagsRelation('c'),
                     $filters['tags'],
                     strtolower($filters['tagOperator']),
                     'adminTags'
@@ -72,7 +76,7 @@ trait DataProviderRepositoryTrait
                 $parameter,
                 $this->appendRelation(
                     $queryBuilder,
-                    'c.categories',
+                    $this->getCategoriesRelation('c'),
                     $filters['categories'],
                     strtolower($filters['categoryOperator']),
                     'adminCategories'
@@ -85,7 +89,7 @@ trait DataProviderRepositoryTrait
                 $parameter,
                 $this->appendRelation(
                     $queryBuilder,
-                    'c.tags',
+                    $this->getTagsRelation('c'),
                     $filters['websiteTags'],
                     strtolower($filters['websiteTagsOperator']),
                     'websiteTags'
@@ -98,7 +102,7 @@ trait DataProviderRepositoryTrait
                 $parameter,
                 $this->appendRelation(
                     $queryBuilder,
-                    'c.categories',
+                    $this->getCategoriesRelation('c'),
                     $filters['websiteCategories'],
                     strtolower($filters['websiteCategoriesOperator']),
                     'websiteCategories'
@@ -224,4 +228,36 @@ trait DataProviderRepositoryTrait
      * @param QueryBuilder $queryBuilder
      */
     abstract protected function appendJoins(QueryBuilder $queryBuilder);
+
+    /**
+     * Append additional condition to query builder for "findByFilters" function.
+     *
+     * @param QueryBuilder $queryBuilder
+     * @param array $options
+     *
+     * @return array parameter for query
+     */
+    protected function append(QueryBuilder $queryBuilder, $options = [])
+    {
+        // empty implementation can be overwritten by repository
+        return [];
+    }
+
+    protected function appendTagsRelation(QueryBuilder $queryBuilder, $alias)
+    {
+    }
+
+    protected function appendCategoriesRelation(QueryBuilder $queryBuilder, $alias)
+    {
+    }
+
+    protected function getTagsRelation($alias)
+    {
+        return $alias . '.tags';
+    }
+
+    protected function getCategoriesRelation($alias)
+    {
+        return $alias . '.categories';
+    }
 }

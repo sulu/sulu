@@ -6,17 +6,39 @@ use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Component\SmartContent\Orm\BaseDataProvider;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Media DataProvider for SmartContent.
  */
 class MediaDataProvider extends BaseDataProvider
 {
-    public function __construct(DataProviderRepositoryInterface $repository, SerializerInterface $serializer)
+
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    public function __construct(DataProviderRepositoryInterface $repository, SerializerInterface $serializer, RequestStack $requestStack)
     {
         parent::__construct($repository, $serializer);
 
         $this->configuration = $this->initConfiguration(true, true, true, true, true, []);
+        $this->requestStack = $requestStack;
+    }
+
+    protected function getOptions(
+        array $propertyParameter,
+        array $options = []
+    )
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+         return array_filter([
+             'tag' => array_filter(explode(',', $request->get('tag', ''))),
+             'filetype' => $request->get('filetype'),
+             'language' => $request->get('lang')
+         ]);
     }
 
     /**
