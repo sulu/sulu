@@ -172,7 +172,7 @@
             <argument>sulu.media.collections</argument>
         </service>
 
-        <service id="sulu_media.system_collections.manager.cache" class="Sulu\Component\Cache\ConfigCache">
+        <service id="sulu_media.system_collections.cache" class="Sulu\Component\Cache\ConfigCache">
             <argument>%sulu.cache_dir%/system_collection.cache</argument>
             <argument>%kernel.debug%</argument>
         </service>
@@ -182,8 +182,14 @@
             <argument type="service" id="sulu_media.collection_manager"/>
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="security.token_storage" on-invalid="null"/>
-            <argument type="service" id="sulu_media.system_collections.manager.cache"/>
+            <argument type="service" id="sulu_media.system_collections.cache"/>
             <argument>%kernel.default_locale%</argument>
+        </service>
+
+        <service id="sulu_media.system_collections.warm_up" class="Sulu\Component\Media\SystemCollections\SystemCollectionCacheWarmer">
+            <argument type="service" id="sulu_media.system_collections.manager"/>
+
+            <tag name="kernel.cache_warmer"/>
         </service>
     </services>
 </container>
