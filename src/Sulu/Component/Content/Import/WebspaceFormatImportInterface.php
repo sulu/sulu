@@ -11,14 +11,29 @@
 namespace Sulu\Component\Content\Import;
 
 /**
- * Defines the methods for the import.
+ * Defines the methods for the import services.
  */
 interface WebspaceFormatImportInterface
 {
     /**
+     * Will parse the given file and return a documents array.
+     *
      * @param string $filePath
+     * @param string $locale
      *
      * @return array
      */
-    public function import($filePath);
+    public function parse($filePath, $locale);
+
+    /**
+     * Will return the correct property value by the parsed data.
+     *
+     * @param string $name
+     * @param array $data
+     * @param string $contentTypeName
+     * @param string $extension
+     *
+     * @return mixed
+     */
+    public function getPropertyData($name, $data, $contentTypeName = null, $extension = null);
 }

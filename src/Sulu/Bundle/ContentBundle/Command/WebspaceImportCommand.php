@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Command;
 
-use Sulu\Component\Content\Export\WebspaceInterface;
+use Sulu\Component\Content\Import\WebspaceInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -25,7 +25,7 @@ class WebspaceImportCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('sulu:webspaces:export')
+        $this->setName('sulu:webspaces:import')
             ->addArgument('file', InputArgument::REQUIRED, 'test.xliff')
             ->addOption('webspace', 'w', InputOption::VALUE_REQUIRED)
             ->addOption('locale', 'l', InputOption::VALUE_REQUIRED)
@@ -43,10 +43,10 @@ class WebspaceImportCommand extends ContainerAwareCommand
         $locale = $input->getOption('locale');
         $format = $input->getOption('format');
 
-        /** @var WebspaceInterface $webspaceExporter */
-        $webspaceExporter = $this->getContainer()->get('sulu_content.import.webspace');
+        /** @var WebspaceInterface $webspaceImporter */
+        $webspaceImporter = $this->getContainer()->get('sulu_content.import.webspace');
 
-        $webspaceExporter->export(
+        $webspaceImporter->import(
             $webspaceKey,
             $locale,
             $filePath,

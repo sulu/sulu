@@ -10,16 +10,16 @@
 
 namespace Sulu\Bundle\ContentBundle\DependencyInjection\Compiler;
 
-use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterContentTypesCompilerPass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Collects all export able content types.
+ * Collects all webspace import formats.
  */
-class ContentExportCompilerPass implements CompilerPassInterface
+class ContentImportCompilerPass implements CompilerPassInterface
 {
-    const CONTENT_IMPORT_SERVICE_ID = 'sulu_content.import.manager';
+    const CONTENT_IMPORT_SERVICE_ID = 'sulu_content.import.webspace';
     const IMPORT_SERVICE_TAG = 'sulu.content.import.service';
 
     /**
@@ -34,10 +34,9 @@ class ContentExportCompilerPass implements CompilerPassInterface
         $definition = $container->getDefinition(self::CONTENT_IMPORT_SERVICE_ID);
         $taggedServices = $container->findTaggedServiceIds(self::IMPORT_SERVICE_TAG);
         foreach ($taggedServices as $id => $tagAttributes) {
-            $importServiceDefinition = $container->getDefinition($id);
             foreach ($tagAttributes as $attributes) {
                 $format = $attributes['format'];
-                $definition->addMethodCall('add', [$importServiceDefinition, $format]);
+                $definition->addMethodCall('add', [new Reference($id), $format]);
             }
         }
     }

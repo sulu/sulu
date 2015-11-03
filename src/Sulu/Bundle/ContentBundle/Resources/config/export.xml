@@ -11,7 +11,7 @@
         </parameter>
         <parameter key="sulu_content.import.webspace.class">Sulu\Component\Content\Import\Webspace</parameter>
         <parameter key="sulu_content.import.manager.class">Sulu\Component\Content\Import\ContentImportManager</parameter>
-        <parameter key="sulu_content.import.webspace.xliff_1_2">Sulu\Component\Content\Import\Format\Xliff_1_2</parameter>
+        <parameter key="sulu_content.import.webspace.xliff12">Sulu\Component\Content\Import\Format\Xliff12</parameter>
     </parameters>
 
     <services>
@@ -28,15 +28,17 @@
             <argument>%sulu_content.export.webspace.formats%</argument>
         </service>
 
-        <service id="sulu_content.import.manager" class="%sulu_content.export.import.class%">
+        <service id="sulu_content.import.manager" class="%sulu_content.import.manager.class%">
             <argument type="service" id="sulu.content.type_manager" />
         </service>
 
         <service id="sulu_content.import.webspace" class="%sulu_content.import.webspace.class%">
-
+            <argument type="service" id="sulu_document_manager.document_manager" />
+            <argument type="service" id="sulu_document_manager.document_inspector" />
+            <argument type="service" id="sulu.content.structure_manager" />
         </service>
 
-        <service id="sulu_content.import.webspace.xliff_1_2" class="%sulu_content.import.webspace.xliff_1_2%">
+        <service id="sulu_content.import.webspace.xliff12" class="%sulu_content.import.webspace.xliff12%">
             <tag name="sulu.content.import.service" format="1.2.xliff" />
         </service>
 

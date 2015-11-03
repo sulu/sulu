@@ -10,6 +10,8 @@
 
 namespace Sulu\Component\Content;
 
+use PHPCR\NodeInterface;
+
 /**
  * Interface for exportable Content Types.
  */
@@ -21,4 +23,15 @@ interface ContentTypeExportInterface
      * @return string
      */
     public function exportData($propertyValue);
+
+    /**
+     * @param NodeInterface $node
+     * @param $name
+     * @param $value
+     */
+    public function importData(
+        NodeInterface $node,
+        $name,
+        $value
+    );
 }

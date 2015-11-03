@@ -21,7 +21,7 @@ interface WebspaceInterface
      * @param WebspaceFormatImportInterface $service
      * @param $format
      */
-    public function add(WebspaceFormatImportInterface $service, $format);
+    public function add($service, $format);
 
     /**
      * @param string $webspaceKey
