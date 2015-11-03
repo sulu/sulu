@@ -48,6 +48,7 @@ class IndexConfiguration
 
     /**
      * Returns the security context required to access index.
+     *
      * @return string
      */
     public function getSecurityContext()
