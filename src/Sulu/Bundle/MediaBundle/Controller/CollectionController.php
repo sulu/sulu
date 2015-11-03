@@ -30,6 +30,7 @@ use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerI
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Makes collections available through a REST API.
@@ -318,6 +319,15 @@ class CollectionController extends RestController
      */
     protected function saveEntity($id, Request $request)
     {
+        $systemCollectionManager = $this->get('sulu_media.system_collections.manager');
+        $parent = $request->get('parent');
+
+        if (($id !== null && $systemCollectionManager->isSystemCollection(intval($id))) ||
+            ($parent !== null && $systemCollectionManager->isSystemCollection(intval($parent)))
+        ) {
+            throw new AccessDeniedException('Permission "update" or "create" is not granted for system collections');
+        }
+
         try {
             $collectionManager = $this->getCollectionManager();
             $data = $this->getData($request);

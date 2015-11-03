@@ -28,4 +28,13 @@ interface SystemCollectionManagerInterface
      * @return int id of system collection
      */
     public function getSystemCollection($key);
+
+    /**
+     * Returns TRUE if given id is registered as system collection.
+     *
+     * @param int $id
+     *
+     * @returns bool
+     */
+    public function isSystemCollection($id);
 }

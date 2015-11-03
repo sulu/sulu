@@ -99,6 +99,14 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function isSystemCollection($id)
+    {
+        return in_array($id, array_values($this->getSystemCollections()));
+    }
+
+    /**
      * Returns system collections.
      *
      * @return array
@@ -156,10 +164,12 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
                 $userId,
                 $root->getId()
             );
+            $collections[$namespaceKey] = $namespace->getId();
 
             foreach ($namespaceItem['collections'] as $collectionKey => $collectionItem) {
-                $collections[sprintf('%s.%s', $namespaceKey, $collectionKey)] = $this->getOrCreateCollection(
-                    $collectionKey,
+                $key = sprintf('%s.%s', $namespaceKey, $collectionKey);
+                $collections[$key] = $this->getOrCreateCollection(
+                    $key,
                     $collectionItem['meta_title'],
                     $userId,
                     $namespace->getId()
