@@ -483,6 +483,17 @@ class Collection extends ApiWrapper
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("locked")
+     *
+     * @return string
+     */
+    public function getLocked()
+    {
+        return !$this->entity->getType() || $this->entity->getType()->getKey() === 'collection.system';
+    }
+
+    /**
      * @param bool $create
      *
      * @return CollectionMeta

@@ -41,10 +41,10 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                             'meta_title' => ['en' => 'Sulu contacts', 'de' => 'Sulu Kontakte'],
                             'collections' => [
                                 'contact' => [
-                                    'meta_title' => ['en' => 'People', 'de' => 'Personen']
+                                    'meta_title' => ['en' => 'People', 'de' => 'Personen'],
                                 ],
                                 'account' => [
-                                    'meta_title' => ['en' => 'Organizations', 'de' => 'Organisationen']
+                                    'meta_title' => ['en' => 'Organizations', 'de' => 'Organisationen'],
                                 ],
                             ],
                         ],
