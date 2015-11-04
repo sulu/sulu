@@ -32,8 +32,7 @@ class FileVersionMetaRepository extends EntityRepository implements FileVersionM
                 'accessControl.entityClass = :entityClass AND accessControl.entityId = collection.id'
             )
             ->where('file.version = fileVersion.version')
-            ->groupBy('accessControl')
-            ->having('COUNT(accessControl) = 0');
+            ->andWhere('accessControl.id is null');
 
         return $queryBuilder->setParameter('entityClass', Collection::class)->getQuery()->getResult();
     }
