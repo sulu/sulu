@@ -35,7 +35,9 @@ class WebspacesPass implements CompilerPassInterface
 
         foreach ($finder as $file) {
             /** @var SplFileInfo $file */
-            $webspaceKey = pathinfo($file->getFilename(), PATHINFO_FILENAME);
+            $webspaceConfig = simplexml_load_file($file->getPathName());
+            $webspaceConfig->registerXPathNamespace('x', 'http://schemas.sulu.io/webspace/webspace');
+            $webspaceKey = (string) $webspaceConfig->xpath('/x:webspace/x:key')[0];
             $indexes['page_' . $webspaceKey] = ['security_context' => 'sulu.webspaces.' . $webspaceKey];
         }
 
