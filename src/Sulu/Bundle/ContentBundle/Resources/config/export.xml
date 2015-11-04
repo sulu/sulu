@@ -35,7 +35,11 @@
         <service id="sulu_content.import.webspace" class="%sulu_content.import.webspace.class%">
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
+            <argument type="service" id="sulu_document_manager.document_registry" />
+            <argument type="service" id="sulu_document_manager.property_encoder" />
+            <argument type="service" id="sulu.content.rlp.strategy.tree" />
             <argument type="service" id="sulu.content.structure_manager" />
+            <argument type="service" id="sulu_content.import.manager" />
         </service>
 
         <service id="sulu_content.import.webspace.xliff12" class="%sulu_content.import.webspace.xliff12%">

@@ -10,17 +10,59 @@
 
 namespace Sulu\Component\Content\Import;
 
+use PHPCR\NodeInterface;
+use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Import\Exception\WebspaceFormatImporterNotFoundException;
-use Sulu\Component\DocumentManager\DocumentInspector;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\DocumentRegistry;
+use Sulu\Component\DocumentManager\PropertyEncoder;
 
 class Webspace implements WebspaceInterface
 {
     /**
+     * @var DocumentManager
+     */
+    protected $documentManager;
+
+    /**
+     * @var DocumentInspector
+     */
+    protected $documentInspector;
+
+    /**
+     * @var DocumentRegistry
+     */
+    protected $documentRegistry;
+
+    /**
+     * @var StructureManagerInterface
+     */
+    protected $structureManager;
+
+    /**
      * @var WebspaceFormatImportInterface[]
      */
     protected $fileParser = [];
+
+    /**
+     * @var ContentImportManagerInterface
+     */
+    protected $contentImportManager;
+
+    /**
+     * @var PropertyEncoder
+     */
+    protected $propertyEncoder;
+
+    /**
+     * @var RlpStrategyInterface
+     */
+    protected $rlpStrategy;
 
     /**
      * {@inheritdoc}
@@ -30,14 +72,31 @@ class Webspace implements WebspaceInterface
         $this->fileParser[$format] = $service;
     }
 
+    /**
+     * @param DocumentManager $documentManager
+     * @param DocumentInspector $documentInspector
+     * @param DocumentRegistry $documentRegistry
+     * @param PropertyEncoder $propertyEncoder
+     * @param RlpStrategyInterface $rlpStrategy
+     * @param StructureManagerInterface $structureManager
+     * @param ContentImportManagerInterface $contentImportManager
+     */
     public function __construct(
         DocumentManager $documentManager,
         DocumentInspector $documentInspector,
-        StructureManagerInterface $structureManager
+        DocumentRegistry $documentRegistry,
+        PropertyEncoder $propertyEncoder,
+        RlpStrategyInterface $rlpStrategy,
+        StructureManagerInterface $structureManager,
+        ContentImportManagerInterface $contentImportManager
     ) {
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
+        $this->documentRegistry = $documentRegistry;
+        $this->propertyEncoder = $propertyEncoder;
+        $this->rlpStrategy = $rlpStrategy;
         $this->structureManager = $structureManager;
+        $this->contentImportManager = $contentImportManager;
     }
 
     /**
@@ -49,7 +108,7 @@ class Webspace implements WebspaceInterface
         $filePath,
         $format = '1.2.xliff'
     ) {
-        $parsedDataList = $this->getParser($format)->import($filePath, $locale);
+        $parsedDataList = $this->getParser($format)->parse($filePath, $locale);
         $failedImports = [];
 
         foreach ($parsedDataList as $parsedData) {
@@ -68,15 +127,11 @@ class Webspace implements WebspaceInterface
      */
     protected function importDocument(array $parsedData, $format, $webspaceKey, $locale)
     {
-        if (!isset($parsedData['uuid'])) {
-            return;
-        }
-
-        if (!isset($parsedData['structureType'])) {
-            return;
-        }
-
-        if (!isset($parsedData['data'])) {
+        if (
+            !isset($parsedData['uuid'])
+            || !isset($parsedData['structureType'])
+            || !isset($parsedData['data'])
+        ) {
             return;
         }
 
@@ -84,32 +139,83 @@ class Webspace implements WebspaceInterface
         $structureType = $parsedData['structureType'];
         $data = $parsedData['data'];
 
-        $document = $this->loadDocument($uuid, $webspaceKey, $locale);
+        $document = $this->documentManager->find($uuid, $locale);
 
-        $this->setDocumentData($document, $structureType, $format, $data);
+        if ($document->getWebspaceName() != $webspaceKey || !$document instanceof BasePageDocument) {
+            return;
+        }
+
+        $this->setDocumentData($document, $structureType, $webspaceKey, $locale, $format, $data);
     }
 
     /**
-     * @param $document
+     * @param BasePageDocument $document
      * @param string $structureType
+     * @param string $webspaceKey
+     * @param string $locale
      * @param string $format
      * @param array $data
      */
-    protected function setDocumentData($document, $structureType, $format, $data)
+    protected function setDocumentData(BasePageDocument $document, $structureType, $webspaceKey, $locale, $format, $data)
     {
-        // $this->getParser($format)->getPropertyData($name, $data);
+        $structure = $this->structureManager->getStructure($structureType);
+        $properties = $structure->getProperties(true);
+        $node = $this->documentRegistry->getNodeForDocument($document);
+
+        foreach ($properties as $property) {
+            $value = $this->getParser($format)->getPropertyData(
+                $property->getName(),
+                $data,
+                $property->getContentTypeName()
+            );
+
+            if ( $property->getContentTypeName() == 'resource_locator') {
+                $parent = $document->getParent();
+                if ($parent instanceof BasePageDocument) {
+                    $parentPath = $parent->getResourceSegment();
+                    $value = $this->generateUrl(
+                        $structure->getPropertiesByTagName('sulu.rlp.part'),
+                        $parentPath,
+                        $webspaceKey,
+                        $locale,
+                        $format,
+                        $data
+                    );
+                }
+            }
+
+            $this->importProperty($property, $node, $value, $webspaceKey, $locale, $format);
+        }
+
+        $extensions = $this->structureManager->getExtensions($structureType);
+
+        foreach ($extensions as $extension) {
+            var_dump(get_class($extension));
+        }
     }
 
     /**
-     * @param $uuid
-     * @param $webspaceKey
-     * @param $locale
-     *
-     * @return object
+     * @param PropertyInterface $property
+     * @param NodeInterface $node
+     * @param string $value
+     * @param string $webspaceKey
+     * @param string $locale
+     * @param string $format
      */
-    protected function loadDocument($uuid, $webspaceKey, $locale)
-    {
-        return $this->documentManager->find($uuid, $locale);
+    protected function importProperty(
+        PropertyInterface $property,
+        NodeInterface $node,
+        $value,
+        $webspaceKey,
+        $locale,
+        $format
+    ) {
+        $name = $this->propertyEncoder->localizedContentName($property->getName(), $locale);
+        $contentType = $property->getContentTypeName();
+
+        if ($this->contentImportManager->hasImport($contentType, $format)) {
+            $this->contentImportManager->import($contentType, $node, $name, $value, null, $webspaceKey, $locale);
+        }
     }
 
     /**
@@ -126,5 +232,32 @@ class Webspace implements WebspaceInterface
         }
 
         return $this->fileParser[$format];
+    }
+
+    /**
+     * @param PropertyInterface[] $properties
+     * @param string $parentPath
+     * @param string $webspaceKey
+     * @param string $locale
+     * @param string $format
+     * @param array $data
+     *
+     * @return string
+     */
+    private function generateUrl($properties, $parentPath, $webspaceKey, $locale, $format, $data)
+    {
+        $rlpParts = [];
+
+        foreach ($properties as $property) {
+            $rlpParts[] = $this->getParser($format)->getPropertyData(
+                $property->getName(),
+                $data,
+                $property->getContentTypeName()
+            );
+        }
+
+        $title = trim(implode(' ', $rlpParts));
+
+        return $this->rlpStrategy->generate($title, $parentPath, $webspaceKey, $locale);
     }
 }

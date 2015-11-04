@@ -8,23 +8,17 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content;
+namespace Sulu\Component\Content\Import;
 
 use PHPCR\NodeInterface;
 
 /**
- * Interface for exportable Content Types.
+ * Defines the methods for the ContentImportManager.
  */
-interface ContentTypeExportInterface
+interface ContentImportManagerInterface
 {
     /**
-     * @param mixed $propertyValue
-     *
-     * @return string
-     */
-    public function exportData($propertyValue);
-
-    /**
+     * @param $contentTypeName
      * @param NodeInterface $node
      * @param string $name
      * @param string|array $value
@@ -33,7 +27,8 @@ interface ContentTypeExportInterface
      * @param string $languageCode
      * @param string $segmentKey
      */
-    public function importData(
+    public function import(
+        $contentTypeName,
         NodeInterface $node,
         $name,
         $value,
@@ -42,4 +37,12 @@ interface ContentTypeExportInterface
         $languageCode,
         $segmentKey = null
     );
+
+    /**
+     * @param $contentTypeName
+     * @param $format
+     *
+     * @return bool
+     */
+    public function hasImport($contentTypeName, $format);
 }

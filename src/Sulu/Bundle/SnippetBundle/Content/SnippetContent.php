@@ -120,9 +120,20 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
         $languageCode,
         $segmentKey
     ) {
-        $snippetReferences = [];
-        $values = $property->getValue();
+        $this->writeSnippets($node, $property->getName(), $property->getValue());
+    }
 
+    /**
+     * @param NodeInterface $node
+     * @param $propertyName
+     * @param $values
+     */
+    protected function writeSnippets(
+        NodeInterface $node,
+        $propertyName,
+        $values
+    ) {
+        $snippetReferences = [];
         $values = is_array($values) ? $values : [];
 
         foreach ($values as $value) {
@@ -142,7 +153,7 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
             }
         }
 
-        $node->setProperty($property->getName(), $snippetReferences, PropertyType::REFERENCE);
+        $node->setProperty($propertyName, $snippetReferences, PropertyType::REFERENCE);
     }
 
     /**
@@ -275,5 +286,21 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
         }
 
         return '';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importData(
+        NodeInterface $node,
+        $name,
+        $value,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $values = json_decode($value);
+        $this->writeSnippets($node, $name, $values);
     }
 }

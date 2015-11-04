@@ -31,7 +31,7 @@ class Xliff12 implements WebspaceFormatImportInterface
     /**
      * {@inheritdoc}
      */
-    public function getPropertyData($name, $data, $contentTypeName = null, $extension = null)
+    public function getProperty($name, $data, $contentTypeName = null, $extension = null)
     {
         $propertyName = '';
 
@@ -45,7 +45,28 @@ class Xliff12 implements WebspaceFormatImportInterface
             return;
         }
 
-        return $data[$propertyName];
+        $property = $data[$propertyName];
+        $property['type'] = $contentTypeName;
+
+        return $property;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPropertyData($name, $data, $contentTypeName = null, $extension = null)
+    {
+        $property = $this->getProperty($name, $data, $contentTypeName, $extension);
+
+        if (isset($property['children'])) {
+            return $property['children'];
+        }
+
+        if (!isset($property['value'])) {
+            return;
+        }
+
+        return $property['value'];
     }
 
     /**
@@ -126,7 +147,10 @@ class Xliff12 implements WebspaceFormatImportInterface
                         $data[$blockName]['children'][$blockNr] = [];
                     }
 
-                    $data[$blockName]['children'][$blockNr][$name] = $value;
+                    $data[$blockName]['children'][$blockNr][$name] = [
+                        'name' => $name,
+                        'value' => $value,
+                    ];
                 } else {
                     $property = [
                         'name' => $name,

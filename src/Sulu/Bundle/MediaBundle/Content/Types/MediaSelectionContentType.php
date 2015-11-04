@@ -222,4 +222,28 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
 
         return '';
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importData(
+        NodeInterface $node,
+        $name,
+        $value,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        // is valid json
+        if (!json_decode($value)) {
+            if ($node->hasProperty($name)) {
+                $node->getProperty($name)->remove();
+            }
+
+            return;
+        }
+
+        $node->setProperty($name, $value);
+    }
 }

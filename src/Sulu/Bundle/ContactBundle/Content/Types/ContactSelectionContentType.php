@@ -238,4 +238,19 @@ class ContactSelectionContentType extends ComplexContentType implements ContentT
 
         return '';
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importData(
+        NodeInterface $node,
+        $name,
+        $value,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $node->setProperty($name, json_decode($value));
+    }
 }

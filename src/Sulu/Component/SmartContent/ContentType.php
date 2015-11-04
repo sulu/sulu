@@ -430,4 +430,72 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
 
         return '';
     }
+
+    /**
+     * @param NodeInterface $node
+     * @param string $name
+     * @param string|array $value
+     * @param integer $userId
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
+     */
+    public function importData(
+        NodeInterface $node,
+        $name,
+        $value,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $value = json_decode($value, true);
+
+        // is valid json
+        if (!$value) {
+            if ($node->hasProperty($name)) {
+                $node->getProperty($name)->remove();
+            }
+
+            return;
+        }
+
+        if (!empty($value['categories'])) {
+            var_dump($value);
+            exit;
+        }
+
+        $this->resolveTags($value, 'tags');
+        $this->resolveTags($value, 'websiteTags');
+
+        $node->setProperty($name, json_encode($value));
+    }
+
+    /**
+     * @param $value
+     * @param $key
+     */
+    public function resolveTags(&$value, $key)
+    {
+        if (isset($value[$key])) {
+            $ids = [];
+            $names = [];
+            foreach($value[$key] as $tag) {
+                if (is_numeric($tag)) {
+                    $ids[] = $tag;
+                } else {
+                    $names[] = $tag;
+                }
+            }
+
+            if (!empty($names)) {
+                foreach ($this->tagManager->resolveTagNames($names) as $id) {
+                    $ids[] = $id;
+                }
+            }
+
+            $value[$key] = $ids;
+        }
+    }
+
 }

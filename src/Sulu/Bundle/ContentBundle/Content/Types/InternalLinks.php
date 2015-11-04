@@ -148,6 +148,19 @@ class InternalLinks extends ComplexContentType implements ContentTypeExportInter
             $value = $value->toArray();
         }
 
+        $this->writeLinks($node, $property->getName(), $value);
+    }
+
+    /**
+     * @param NodeInterface $node
+     * @param $propertyName
+     * @param $value
+     */
+    protected function writeLinks(
+        NodeInterface $node,
+        $propertyName,
+        $value
+    ) {
         if (isset($value)) {
             // remove not existing ids
             $session = $node->getSession();
@@ -163,7 +176,7 @@ class InternalLinks extends ComplexContentType implements ContentTypeExportInter
         }
 
         // set value to node
-        $node->setProperty($property->getName(), $value, PropertyType::REFERENCE);
+        $node->setProperty($propertyName, $value, PropertyType::REFERENCE);
     }
 
     /**
@@ -218,5 +231,28 @@ class InternalLinks extends ComplexContentType implements ContentTypeExportInter
         }
 
         return '';
+    }
+
+    /**
+     * @param NodeInterface $node
+     * @param string $name
+     * @param string|array $value
+     * @param integer $userId
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
+     */
+    public function importData(
+        NodeInterface $node,
+        $name,
+        $value,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $ids = json_decode($value);
+
+        $this->writeLinks($node, $name, $ids);
     }
 }

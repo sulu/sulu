@@ -145,4 +145,19 @@ class TagList extends ComplexContentType implements ContentTypeExportInterface
 
         return '';
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importData(
+        NodeInterface $node,
+        $name,
+        $value,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $node->setProperty($name, json_decode($value));
+    }
 }

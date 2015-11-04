@@ -36,4 +36,16 @@ interface WebspaceFormatImportInterface
      * @return mixed
      */
     public function getPropertyData($name, $data, $contentTypeName = null, $extension = null);
+
+    /**
+     * Will return the correct property value by the parsed data.
+     *
+     * @param string $name
+     * @param array $data
+     * @param string $contentTypeName
+     * @param string $extension
+     *
+     * @return mixed
+     */
+    public function getProperty($name, $data, $contentTypeName = null, $extension = null);
 }

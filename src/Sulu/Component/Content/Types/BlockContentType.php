@@ -404,4 +404,19 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
     {
         return $propertyValue;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importData(
+        NodeInterface $node,
+        $name,
+        $value,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        // TODO: Implement importData() method.
+    }
 }

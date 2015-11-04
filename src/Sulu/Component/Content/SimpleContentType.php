@@ -203,4 +203,25 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
 
         return '';
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importData(
+        NodeInterface $node,
+        $name,
+        $value,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        if ($value != null) {
+            $node->setProperty($name, $value);
+        } else {
+            if ($node->hasProperty($name)) {
+                $node->getProperty($name)->remove();
+            }
+        }
+    }
 }

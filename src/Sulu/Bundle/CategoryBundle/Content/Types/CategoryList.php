@@ -161,4 +161,25 @@ class CategoryList extends ComplexContentType implements ContentTypeExportInterf
 
         return '';
     }
+
+    /**
+     * @param NodeInterface $node
+     * @param string $name
+     * @param string|array $value
+     * @param integer $userId
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
+     */
+    public function importData(
+        NodeInterface $node,
+        $name,
+        $value,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $node->setProperty($name, json_decode($value));
+    }
 }
