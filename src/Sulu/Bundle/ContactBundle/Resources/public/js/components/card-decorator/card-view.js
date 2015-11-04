@@ -250,7 +250,7 @@ define(function() {
         renderItem: function(id, picture, title, firstInfoRow, secondInfoRow, appendAtBottom) {
             this.$items[id] = this.sandbox.dom.createElement(
                 this.sandbox.util.template(templates.item)({
-                    name: this.sandbox.util.cropTail(String(title), 32),
+                    name: this.sandbox.util.cropTail(String(title), 25),
                     picture: picture,
                     pictureIcon: this.options.icons.picture
                 })
