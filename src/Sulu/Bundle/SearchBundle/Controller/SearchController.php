@@ -20,6 +20,7 @@ use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 use Sulu\Bundle\SearchBundle\Rest\SearchResultRepresentation;
+use Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfiguration;
 use Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfigurationProviderInterface;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -155,7 +156,16 @@ class SearchController
     public function indexesAction()
     {
         return $this->viewHandler->handle(
-            View::create($this->getAllowedIndexes())
+            View::create(
+                array_map(
+                    function ($indexName) {
+                        $indexConfiguration = $this->indexConfigurationProvider->getIndexConfiguration($indexName);
+
+                        return $indexConfiguration ?: new IndexConfiguration($indexName);
+                    },
+                    $this->getAllowedIndexes()
+                )
+            )
         );
     }
 

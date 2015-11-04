@@ -54,10 +54,6 @@
                 <source>search-overlay.index.snippet.title</source>
                 <target>Snippets</target>
             </trans-unit>
-            <trans-unit id="e4b1428ja8a085e2kt4sdws5acb2d39e" resname="search-overlay.placeholder.snippet">
-                <source>search-overlay.placeholder.snippet</source>
-                <target>Snippets durchsuchen...</target>
-            </trans-unit>
         </body>
     </file>
 </xliff>

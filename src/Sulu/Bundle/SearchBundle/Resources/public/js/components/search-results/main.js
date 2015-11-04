@@ -142,16 +142,20 @@ define([
 
         /**
          * @method addIndex
-         * @param {String} index
+         * @param {String} indexConfiguration
          */
-        addIndex: function(index) {
+        addIndex: function(indexConfiguration) {
             var indexEntry = {
-                'id': index,
-                'name': this.sandbox.translate('search-overlay.index.' + index + '.title'),
-                'placeholder': this.sandbox.translate('search-overlay.placeholder.' + index)
+                'id': indexConfiguration.indexName,
+                'name': this.sandbox.translate('search-overlay.index.' + indexConfiguration.indexName + '.title'),
             };
 
-            this.indexes[index] = indexEntry;
+            // use the single translation value for the title if given by the api
+            if (!!indexConfiguration.name) {
+                indexEntry.name = indexConfiguration.name;
+            }
+
+            this.indexes[indexConfiguration.indexName] = indexEntry;
             this.enabledIndexes.push(indexEntry);
         },
 
@@ -169,7 +173,7 @@ define([
         loadIndexes: function() {
             return this.sandbox.util.load(this.options.enabledIndexesUrl)
                 .then(function(data) {
-                    this.addIndex('all');
+                    this.addIndex({indexName: 'all'});
                     data.forEach(this.addIndex.bind(this));
                 }.bind(this));
         },

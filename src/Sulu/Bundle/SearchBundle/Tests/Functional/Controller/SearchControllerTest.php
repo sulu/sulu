@@ -178,7 +178,7 @@ class SearchControllerTest extends SuluTestCase
         $this->assertEquals(200, $response->getStatusCode());
         $result = json_decode($response->getContent(), true);
 
-        $this->assertContains('product', $result);
+        $this->assertEquals('product', $result[0]['indexName']);
     }
 
     public function setUp()

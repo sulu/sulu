@@ -162,10 +162,6 @@
                 <source>search-overlay.index.media.title</source>
                 <target>Medien</target>
             </trans-unit>
-            <trans-unit id="e4b1428ja8a085e2kt45sds5acb2d39e" resname="search-overlay.placeholder.media">
-                <source>search-overlay.placeholder.media</source>
-                <target>Medien durchsuchen...</target>
-            </trans-unit>
             <trans-unit id="c28342a4fe2011e4a3221697f925ec7b" resname="media-selection.overlay.selected-image-label">
                 <source>media-selection.overlay.selected-image-label</source>
                 <target>Bild ausgewählt</target>

@@ -38,7 +38,11 @@ class WebspacesPass implements CompilerPassInterface
             $webspaceConfig = simplexml_load_file($file->getPathName());
             $webspaceConfig->registerXPathNamespace('x', 'http://schemas.sulu.io/webspace/webspace');
             $webspaceKey = (string) $webspaceConfig->xpath('/x:webspace/x:key')[0];
-            $indexes['page_' . $webspaceKey] = ['security_context' => 'sulu.webspaces.' . $webspaceKey];
+            $webspaceName = (string) $webspaceConfig->xpath('/x:webspace/x:name')[0];
+            $indexes['page_' . $webspaceKey] = [
+                'security_context' => 'sulu.webspaces.' . $webspaceKey,
+                'name' => $webspaceName,
+            ];
         }
 
         $container->setParameter('sulu_search.indexes', $indexes);

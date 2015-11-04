@@ -58,17 +58,9 @@
                 <source>search-overlay.index.contact.title</source>
                 <target>Contacts</target>
             </trans-unit>
-            <trans-unit id="e4blol69a8a085ede200b7f5acb2d39e" resname="search-overlay.placeholder.contact">
-                <source>search-overlay.placeholder.contact</source>
-                <target>Search contacts...</target>
-            </trans-unit>
             <trans-unit id="e4b1428ja8a085edec45b7f5acb2d39e" resname="search-overlay.index.account.title">
                 <source>search-overlay.index.account.title</source>
                 <target>Accounts</target>
-            </trans-unit>
-            <trans-unit id="e4b1428ja8a085edec45sds5acb2d39e" resname="search-overlay.placeholder.account">
-                <source>search-overlay.placeholder.account</source>
-                <target>Search accounts...</target>
             </trans-unit>
             <trans-unit id="643c99ff2964652633a5ca2178d22191" resname="contact.accounts.bankAccount.label">
                 <source>contact.accounts.bankAccount.label</source>

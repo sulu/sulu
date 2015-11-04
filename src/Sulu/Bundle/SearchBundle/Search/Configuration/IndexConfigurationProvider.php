@@ -21,14 +21,15 @@ class IndexConfigurationProvider implements IndexConfigurationProviderInterface
     private $indexConfigurations = [];
 
     /**
-     * @param array $indexConfiguration
+     * @param array $indexConfigurations
      */
-    public function __construct($indexConfigurations)
+    public function __construct(array $indexConfigurations)
     {
         foreach ($indexConfigurations as $indexName => $indexConfiguration) {
             $this->indexConfigurations[$indexName] = new IndexConfiguration(
                 $indexName,
-                $indexConfiguration['security_context']
+                isset($indexConfiguration['name']) ? $indexConfiguration['name'] : null,
+                isset($indexConfiguration['security_context']) ? $indexConfiguration['security_context'] : null
             );
         }
     }

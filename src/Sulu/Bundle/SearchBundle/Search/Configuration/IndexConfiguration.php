@@ -24,15 +24,22 @@ class IndexConfiguration
     /**
      * @var string
      */
+    private $name;
+
+    /**
+     * @var string
+     */
     private $securityContext;
 
     /**
      * @param string $indexName The name of the index
+     * @param string $name The name of the index for the user interface
      * @param string $securityContext The required security context to access the index
      */
-    public function __construct($indexName, $securityContext)
+    public function __construct($indexName, $name = null, $securityContext = null)
     {
         $this->indexName = $indexName;
+        $this->name = $name;
         $this->securityContext = $securityContext;
     }
 
@@ -44,6 +51,17 @@ class IndexConfiguration
     public function getIndexName()
     {
         return $this->indexName;
+    }
+
+    /**
+     * Returns the already translated name for the index. Should only be used for non-translatable names. Useful for
+     * displaying in the user interface.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**

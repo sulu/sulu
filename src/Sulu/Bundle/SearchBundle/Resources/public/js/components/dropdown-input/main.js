@@ -203,7 +203,7 @@ define(['text!sulusearch/components/dropdown-input/main.html'], function(mainTem
             selected = _.where(this.options.data, {id: selected})[0];
 
             this.$input.attr({
-                'placeholder': selected.placeholder || ''
+                'placeholder': this.sandbox.translate('search-overlay.placeholder').replace('%s', selected.name) || ''
             });
         },
 
