@@ -22,7 +22,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 /**
  * UserRole.
  *
- * @ExclusionPolicy("all");
+ * @ExclusionPolicy("all")
  */
 abstract class BaseUserRole extends ApiEntity
 {
@@ -34,7 +34,6 @@ abstract class BaseUserRole extends ApiEntity
 
     /**
      * @var string
-     * @Expose
      */
     protected $locale;
 
