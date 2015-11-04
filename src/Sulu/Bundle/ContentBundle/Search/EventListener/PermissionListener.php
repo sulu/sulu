@@ -15,6 +15,9 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;
 
+/**
+ * Removes a document from the index, as soon as it gets secured.
+ */
 class PermissionListener
 {
     /**

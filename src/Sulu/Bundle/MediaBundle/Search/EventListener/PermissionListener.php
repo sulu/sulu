@@ -15,6 +15,9 @@ use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMetaRepository;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;
 
+/**
+ * Removes a media from the index, as soon as it gets secured.
+ */
 class PermissionListener
 {
     /**
