@@ -3,9 +3,9 @@
 ## dev-develop
 
 ### System Collections
-Remove the config `sulu_contact.form.avatar_collection` and use it in the sql bellow as `{old-avatar-collection}`.
-if you have not configured that the value for the placeholder is `1`. The value of `{new-system-collection-id}` you will
-get over the URL in the backend.
+
+Remove the config `sulu_contact.form.avatar_collection` and not it you will need it in the sql statement below for the
+placeholder `{old-avatar-collection}` (default value is `1`).
 
 Update the database schema and then update the data-fixtures by running following sql statement.
 
@@ -18,6 +18,8 @@ UPDATE me_collection_types SET collection_type_key='collection.default', name='D
 INSERT INTO me_collection_types (id, name, collection_type_key) VALUES ('2', 'System Collections', 'collection.system');
 UPDATE me_media SET idCollections={new-system-collection-id} WHERE idCollections={old-avatar-collection};
 ```
+
+The value for the placeholder `{new-system-collection-id}` you will find in the URL in the backend.
 
 ### Websocket Component
 The following Interfaces has new methods

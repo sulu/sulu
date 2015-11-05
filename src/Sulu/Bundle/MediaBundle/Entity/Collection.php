@@ -50,9 +50,6 @@ class Collection extends BaseCollection
      */
     private $key;
 
-    /**
-     * Constructor.
-     */
     public function __construct()
     {
         $this->meta = new ArrayCollection();

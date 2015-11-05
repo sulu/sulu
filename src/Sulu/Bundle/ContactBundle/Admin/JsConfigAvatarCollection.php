@@ -23,7 +23,7 @@ class JsConfigAvatarCollection implements JsConfigInterface
      */
     private $systemCollectionManager;
 
-    public function __construct($systemCollectionManager)
+    public function __construct(SystemCollectionManagerInterface $systemCollectionManager)
     {
         $this->systemCollectionManager = $systemCollectionManager;
     }

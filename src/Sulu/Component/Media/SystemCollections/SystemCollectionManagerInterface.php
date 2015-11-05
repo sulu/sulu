@@ -30,7 +30,7 @@ interface SystemCollectionManagerInterface
     public function getSystemCollection($key);
 
     /**
-     * Returns TRUE if given id is registered as system collection.
+     * Returns true if given id is registered as system collection.
      *
      * @param int $id
      *

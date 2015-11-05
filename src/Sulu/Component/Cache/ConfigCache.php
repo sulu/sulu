@@ -12,6 +12,9 @@ namespace Sulu\Component\Cache;
 
 use Symfony\Component\Config\ConfigCache as BaseConfigCache;
 
+/**
+ * These class extends the symfony ConfigCache class and adds the ability to read the file content.
+ */
 class ConfigCache extends BaseConfigCache
 {
     /**

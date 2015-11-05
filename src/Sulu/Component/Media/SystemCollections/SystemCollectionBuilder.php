@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Warm-up cache for system collections.
+ * Build task to initialize system collections.
  */
 class SystemCollectionBuilder implements BuilderInterface, ContainerAwareInterface
 {
