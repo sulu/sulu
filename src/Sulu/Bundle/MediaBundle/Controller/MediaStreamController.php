@@ -20,6 +20,7 @@ use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\StorageManager\StorageManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -121,17 +122,16 @@ class MediaStreamController extends Controller
         $storageName = $fileVersion->getStorageName();
         $pathInfo = pathinfo($fileName);
 
-        $resourcePath = $this->getStorageManager()->load($storageOptions, $storageName);
-
         $downloadUrl = $this->getStorageManager()->getDownloadUrl($storageOptions, $storageName);
 
+        // If external download Url exists redirect to it.
         if (!empty($downloadUrl)) {
             return new RedirectResponse($downloadUrl);
         }
 
-        if (is_string($resourcePath)) {
-            $response = new BinaryFileResponse($resourcePath);
-        } else {
+        $resourcePath = $this->getStorageManager()->load($storageOptions, $storageName);
+
+        if (is_resource($resourcePath)) {
             $handle = $resourcePath;
             $response = new StreamedResponse(function () use ($handle) {
                 flush(); // send headers
@@ -142,6 +142,11 @@ class MediaStreamController extends Controller
                 }
                 fclose($handle);
             });
+        } elseif (empty($resourcePath)) {
+            // 404 when resourcePath is empty
+            return new Response('File not found.', 404);
+        } else {
+            $response = new BinaryFileResponse($resourcePath);
         }
 
         // Prepare headers
