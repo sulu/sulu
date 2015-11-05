@@ -109,7 +109,7 @@ class QueryBuilder extends ContentQueryBuilder
         if ($this->hasConfig('websiteTags')) {
             $sql2Where[] = $this->buildTagsWhere(
                 $this->getConfig('websiteTags', []),
-                $this->getConfig('websiteTagOperator', 'OR'),
+                $this->getConfig('websiteTagsOperator', 'OR'),
                 $locale
             );
         }
@@ -127,7 +127,7 @@ class QueryBuilder extends ContentQueryBuilder
         if ($this->hasConfig('websiteCategories')) {
             $sql2Where[] = $this->buildCategoriesWhere(
                 $this->getConfig('websiteCategories', []),
-                $this->getConfig('websiteCategoryOperator', 'OR'),
+                $this->getConfig('websiteCategoriesOperator', 'OR'),
                 $locale
             );
         }

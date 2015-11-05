@@ -443,7 +443,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                 'config' => [
                     'dataSource' => $root->getIdentifier(),
                     'websiteTags' => [$this->tag1->getId(), $this->tag2->getId()],
-                    'websiteTagOperator' => 'and',
+                    'websiteTagsOperator' => 'and',
                 ],
             ]
         );
@@ -456,7 +456,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                 'config' => [
                     'dataSource' => $root->getIdentifier(),
                     'websiteTags' => [$this->tag1->getId(), $this->tag2->getId()],
-                    'websiteTagOperator' => 'or',
+                    'websiteTagsOperator' => 'or',
                 ],
             ]
         );
@@ -469,7 +469,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                 'config' => [
                     'dataSource' => $root->getIdentifier(),
                     'websiteTags' => [$this->tag3->getId(), $this->tag2->getId()],
-                    'websiteTagOperator' => 'or',
+                    'websiteTagsOperator' => 'or',
                 ],
             ]
         );
@@ -482,7 +482,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                 'config' => [
                     'dataSource' => $root->getIdentifier(),
                     'websiteTags' => [$this->tag1->getId()],
-                    'websiteTagOperator' => 'and',
+                    'websiteTagsOperator' => 'and',
                 ],
             ]
         );
@@ -495,7 +495,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                 'config' => [
                     'dataSource' => $root->getIdentifier(),
                     'websiteTags' => [$this->tag2->getId()],
-                    'websiteTagOperator' => 'and',
+                    'websiteTagsOperator' => 'and',
                 ],
             ]
         );
@@ -508,7 +508,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                 'config' => [
                     'dataSource' => $root->getIdentifier(),
                     'websiteTags' => [$this->tag3->getId()],
-                    'websiteTagOperator' => 'and',
+                    'websiteTagsOperator' => 'and',
                 ],
             ]
         );
@@ -534,7 +534,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                     'tags' => [$this->tag1->getId()],
                     'tagOperator' => 'and',
                     'websiteTags' => [$this->tag2->getId()],
-                    'websiteTagOperator' => 'and',
+                    'websiteTagsOperator' => 'and',
                 ],
             ]
         );
@@ -548,7 +548,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                     'tags' => [$this->tag1->getId()],
                     'tagOperator' => 'and',
                     'websiteTags' => [$this->tag1->getId(), $this->tag2->getId()],
-                    'websiteTagOperator' => 'OR',
+                    'websiteTagsOperator' => 'OR',
                 ],
             ]
         );

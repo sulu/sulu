@@ -196,7 +196,7 @@ class ContactRepositoryTest extends SuluTestCase
             ],
             // no pagination, website-tag 0
             [
-                ['websiteTags' => [0], 'websiteTagOperator' => 'or'],
+                ['websiteTags' => [0], 'websiteTagsOperator' => 'or'],
                 null,
                 0,
                 null,
@@ -205,7 +205,7 @@ class ContactRepositoryTest extends SuluTestCase
             ],
             // no pagination, website-tag 0 or 1
             [
-                ['websiteTags' => [0, 1], 'websiteTagOperator' => 'or'],
+                ['websiteTags' => [0, 1], 'websiteTagsOperator' => 'or'],
                 null,
                 0,
                 null,
@@ -213,7 +213,7 @@ class ContactRepositoryTest extends SuluTestCase
             ],
             // no pagination, website-tag 0 and 1
             [
-                ['websiteTags' => [0, 1], 'websiteTagOperator' => 'and'],
+                ['websiteTags' => [0, 1], 'websiteTagsOperator' => 'and'],
                 null,
                 0,
                 null,
@@ -222,7 +222,7 @@ class ContactRepositoryTest extends SuluTestCase
             ],
             // no pagination, website-tag 1, tags 3
             [
-                ['websiteTags' => [1], 'websiteTagOperator' => 'or', 'tags' => [3], 'tagOperator' => 'or'],
+                ['websiteTags' => [1], 'websiteTagsOperator' => 'or', 'tags' => [3], 'tagOperator' => 'or'],
                 null,
                 0,
                 null,
@@ -231,7 +231,7 @@ class ContactRepositoryTest extends SuluTestCase
             ],
             // no pagination, website-tag 2 or 3, tags 1
             [
-                ['websiteTags' => [2, 3], 'websiteTagOperator' => 'or', 'tags' => [1], 'tagOperator' => 'or'],
+                ['websiteTags' => [2, 3], 'websiteTagsOperator' => 'or', 'tags' => [1], 'tagOperator' => 'or'],
                 null,
                 0,
                 null,
@@ -240,7 +240,7 @@ class ContactRepositoryTest extends SuluTestCase
             ],
             // no pagination, website-tag 1, tags 2 or 3
             [
-                ['websiteTags' => [1], 'websiteTagOperator' => 'or', 'tags' => [2, 3], 'tagOperator' => 'or'],
+                ['websiteTags' => [1], 'websiteTagsOperator' => 'or', 'tags' => [2, 3], 'tagOperator' => 'or'],
                 null,
                 0,
                 null,
@@ -314,7 +314,7 @@ class ContactRepositoryTest extends SuluTestCase
             ],
             // no pagination, website-category 0
             [
-                ['websiteCategories' => [0], 'websiteCategoryOperator' => 'or'],
+                ['websiteCategories' => [0], 'websiteCategoriesOperator' => 'or'],
                 null,
                 0,
                 null,
@@ -323,7 +323,7 @@ class ContactRepositoryTest extends SuluTestCase
             ],
             // no pagination, website-category 0 or 1
             [
-                ['websiteCategories' => [0, 1], 'websiteCategoryOperator' => 'or'],
+                ['websiteCategories' => [0, 1], 'websiteCategoriesOperator' => 'or'],
                 null,
                 0,
                 null,
@@ -331,7 +331,7 @@ class ContactRepositoryTest extends SuluTestCase
             ],
             // no pagination, website-category 0 and 1
             [
-                ['websiteCategories' => [0, 1], 'websiteCategoryOperator' => 'and'],
+                ['websiteCategories' => [0, 1], 'websiteCategoriesOperator' => 'and'],
                 null,
                 0,
                 null,
@@ -343,7 +343,7 @@ class ContactRepositoryTest extends SuluTestCase
             [
                 [
                     'websiteCategories' => [1],
-                    'websiteCategoryOperator' => 'or',
+                    'websiteCategoriesOperator' => 'or',
                     'categories' => [3],
                     'categoryOperator' => 'or',
                 ],
@@ -358,7 +358,7 @@ class ContactRepositoryTest extends SuluTestCase
             [
                 [
                     'websiteCategories' => [2, 3],
-                    'websiteCategoryOperator' => 'or',
+                    'websiteCategoriesOperator' => 'or',
                     'categories' => [1],
                     'categoryOperator' => 'or',
                 ],
@@ -373,7 +373,7 @@ class ContactRepositoryTest extends SuluTestCase
             [
                 [
                     'websiteCategories' => [1],
-                    'websiteCategoryOperator' => 'or',
+                    'websiteCategoriesOperator' => 'or',
                     'categories' => [2, 3],
                     'categoryOperator' => 'or',
                 ],
@@ -397,9 +397,9 @@ class ContactRepositoryTest extends SuluTestCase
             [
                 [
                     'websiteCategories' => [0],
-                    'websiteCategoryOperator' => 'or',
+                    'websiteCategoriesOperator' => 'or',
                     'websiteTags' => [1],
-                    'websiteTagOperator' => 'or',
+                    'websiteTagsOperator' => 'or',
                 ],
                 null,
                 0,
@@ -413,11 +413,11 @@ class ContactRepositoryTest extends SuluTestCase
                     'categories' => [0],
                     'categoryOperator' => 'or',
                     'websiteCategories' => [1],
-                    'websiteCategoryOperator' => 'or',
+                    'websiteCategoriesOperator' => 'or',
                     'tags' => [0],
                     'tagOperator' => 'or',
                     'websiteTags' => [1],
-                    'websiteTagOperator' => 'or',
+                    'websiteTagsOperator' => 'or',
                 ],
                 null,
                 0,
