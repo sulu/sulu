@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
@@ -39,19 +40,68 @@ class CollectionControllerTest extends SuluTestCase
      */
     private $collectionType2;
 
+    /**
+     * @var array
+     */
+    private $systemCollectionConfig;
+
     protected function setUp()
     {
         parent::setUp();
+
         $this->purgeDatabase();
         $this->em = $this->db('ORM')->getOm();
         $this->initOrm();
+
+        $this->systemCollectionConfig = $this->getContainer()->getParameter('sulu_media.system_collections');
+    }
+
+    /**
+     * Returns amount of system collections.
+     *
+     * @param int|null $depth
+     *
+     * @return int
+     */
+    protected function getAmountOfSystemCollections($depth = null)
+    {
+        $amount = 1; // 1 root collection
+
+        if ($depth > 0 || $depth === null) {
+            $amount += $this->iterateOverSystemCollections($this->systemCollectionConfig, $depth);
+        }
+
+        return $amount;
+    }
+
+    /**
+     * Loops thru all system collections until reach the depth.
+     *
+     * @param $config
+     * @param null $depth
+     *
+     * @return int
+     */
+    protected function iterateOverSystemCollections($config, $depth = null)
+    {
+        $amount = count($config);
+
+        if ($depth > 0 || $depth === null) {
+            foreach ($config as $child) {
+                if (array_key_exists('collections', $child)) {
+                    $amount += $this->iterateOverSystemCollections($child['collections'], $depth - 1);
+                }
+            }
+        }
+
+        return $amount;
     }
 
     protected function initOrm()
     {
         // force id = 1
         $metadata = $this->em->getClassMetaData(CollectionType::class);
-        $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
         $this->collectionType1 = $this->createCollectionType(
             1,
@@ -405,7 +455,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertNotEmpty($response);
-        $this->assertEquals(6, $response->total); // 2 test-created and 4 system collections
+        $this->assertEquals(2 + $this->getAmountOfSystemCollections(), $response->total);
     }
 
     /**
@@ -629,7 +679,10 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertNotEmpty($response);
 
-        $this->assertEquals(2, $response->total); // 1 created 1 system collection
+        $this->assertEquals(
+            1 + $this->getAmountOfSystemCollections(0),
+            $response->total
+        );
 
         $this->assertTrue(isset($response->_embedded->collections[0]));
         $this->assertTrue(isset($response->_embedded->collections[1]));
@@ -711,7 +764,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertNotEmpty($response);
 
-        $this->assertEquals(2, $response->total); // 1 created 1 system collection
+        $this->assertEquals(2, $response->total);
 
         $this->assertTrue(isset($response->_embedded->collections[0]));
         $this->assertTrue(isset($response->_embedded->collections[1]));

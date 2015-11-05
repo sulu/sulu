@@ -166,6 +166,7 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
      * @param $userId
      * @param null $parent
      * @param string $namespace
+     *
      * @return array
      */
     private function iterateOverCollections($children, $userId, $parent = null, $namespace = '')
