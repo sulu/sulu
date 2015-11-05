@@ -17,21 +17,21 @@ class DoctrineCaseFieldDescriptorTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 'test',
-                new DoctrineCaseDescriptor('entity1', 'field1'),
-                new DoctrineCaseDescriptor('entity2', 'field2'),
+                new DoctrineDescriptor('entity1', 'field1'),
+                new DoctrineDescriptor('entity2', 'field2'),
                 'CASE WHEN entity1.field1 IS NOT NULL THEN entity1.field1 ELSE entity2.field2 END',
                 [],
             ],
             [
                 'test',
-                new DoctrineCaseDescriptor('test1', 'test2'),
-                new DoctrineCaseDescriptor('test3', 'test4'),
+                new DoctrineDescriptor('test1', 'test2'),
+                new DoctrineDescriptor('test3', 'test4'),
                 'CASE WHEN test1.test2 IS NOT NULL THEN test1.test2 ELSE test3.test4 END',
                 [],
             ],
             [
                 'test',
-                new DoctrineCaseDescriptor(
+                new DoctrineDescriptor(
                     'test1',
                     'test2',
                     [
@@ -41,7 +41,7 @@ class DoctrineCaseFieldDescriptorTest extends \PHPUnit_Framework_TestCase
                         ),
                     ]
                 ),
-                new DoctrineCaseDescriptor('test3', 'test4'),
+                new DoctrineDescriptor('test3', 'test4'),
                 'CASE WHEN test1.test2 IS NOT NULL THEN test1.test2 ELSE test3.test4 END',
                 [
                     'entity1' => new DoctrineJoinDescriptor(
@@ -52,11 +52,11 @@ class DoctrineCaseFieldDescriptorTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 'test',
-                new DoctrineCaseDescriptor(
+                new DoctrineDescriptor(
                     'test1',
                     'test2'
                 ),
-                new DoctrineCaseDescriptor(
+                new DoctrineDescriptor(
                     'test3',
                     'test4',
                     [
@@ -76,7 +76,7 @@ class DoctrineCaseFieldDescriptorTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 'test',
-                new DoctrineCaseDescriptor(
+                new DoctrineDescriptor(
                     'test1',
                     'test2',
                     [
@@ -86,7 +86,7 @@ class DoctrineCaseFieldDescriptorTest extends \PHPUnit_Framework_TestCase
                         ),
                     ]
                 ),
-                new DoctrineCaseDescriptor(
+                new DoctrineDescriptor(
                     'test3',
                     'test4',
                     [

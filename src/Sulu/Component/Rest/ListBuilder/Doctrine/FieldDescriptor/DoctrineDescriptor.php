@@ -13,7 +13,7 @@ namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 /**
  * This class describes a doctrine case.
  */
-class DoctrineCaseDescriptor
+class DoctrineDescriptor
 {
     /**
      * @var string

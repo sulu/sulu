@@ -18,8 +18,8 @@ use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
 use Sulu\Bundle\CategoryBundle\Event\CategoryDeleteEvent;
 use Sulu\Bundle\CategoryBundle\Event\CategoryEvents;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCaseDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCaseFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
@@ -111,7 +111,7 @@ class CategoryManager implements CategoryManagerInterface
             );
             $this->fieldDescriptors['name'] = new DoctrineCaseFieldDescriptor(
                 'name',
-                new DoctrineCaseDescriptor(
+                new DoctrineDescriptor(
                     'translation',
                     'translation',
                     [
@@ -122,7 +122,7 @@ class CategoryManager implements CategoryManagerInterface
                         ),
                     ]
                 ),
-                new DoctrineCaseDescriptor(
+                new DoctrineDescriptor(
                     'defaultTranslation',
                     'translation',
                     [
@@ -137,7 +137,7 @@ class CategoryManager implements CategoryManagerInterface
             );
             $this->fieldDescriptors['locale'] = new DoctrineCaseFieldDescriptor(
                 'locale',
-                new DoctrineCaseDescriptor(
+                new DoctrineDescriptor(
                     'translation',
                     'locale',
                     [
@@ -148,7 +148,7 @@ class CategoryManager implements CategoryManagerInterface
                         ),
                     ]
                 ),
-                new DoctrineCaseDescriptor(
+                new DoctrineDescriptor(
                     'defaultTranslation',
                     'locale',
                     [

@@ -20,18 +20,18 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 class DoctrineCaseFieldDescriptor extends AbstractDoctrineFieldDescriptor
 {
     /**
-     * @var DoctrineCaseDescriptor
+     * @var DoctrineDescriptor
      */
     private $case1;
     /**
-     * @var DoctrineCaseDescriptor
+     * @var DoctrineDescriptor
      */
     private $case2;
 
     public function __construct(
         $name,
-        DoctrineCaseDescriptor $case1,
-        DoctrineCaseDescriptor $case2,
+        DoctrineDescriptor $case1,
+        DoctrineDescriptor $case2,
         $translation = null,
         $disabled = false,
         $default = false,
