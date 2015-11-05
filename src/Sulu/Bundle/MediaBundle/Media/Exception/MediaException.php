@@ -194,6 +194,13 @@ class MediaException extends Exception
     const EXCEPTION_INVALID_STORAGE_OPTIONS = 5025;
 
     /**
+     * A file resource was not found.
+     *
+     * @var int
+     */
+    const EXCEPTION_FILE_RESOURCE_NOT_FOUND = 5026;
+
+    /**
      * Systemfile is not found.
      *
      * @var int
