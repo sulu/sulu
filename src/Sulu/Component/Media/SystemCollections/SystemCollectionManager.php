@@ -150,29 +150,47 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
     private function buildSystemCollections($locale, $userId)
     {
         $root = $this->getOrCreateRoot('system_collections', 'System', $locale, $userId);
-
         $collections = ['root' => $root->getId()];
-        foreach ($this->config as $namespaceKey => $namespaceItem) {
-            $namespace = $this->getOrCreateCollection(
-                $namespaceKey,
-                $namespaceItem['meta_title'],
-                $userId,
-                $root->getId()
-            );
-            $collections[$namespaceKey] = $namespace->getId();
-
-            foreach ($namespaceItem['collections'] as $collectionKey => $collectionItem) {
-                $key = sprintf('%s.%s', $namespaceKey, $collectionKey);
-                $collections[$key] = $this->getOrCreateCollection(
-                    $key,
-                    $collectionItem['meta_title'],
-                    $userId,
-                    $namespace->getId()
-                )->getId();
-            }
-        }
+        $collections = array_merge($collections, $this->iterateOverCollections($this->config, $userId, $root->getId()));
 
         $this->entityManager->flush();
+
+        return $collections;
+    }
+
+    /**
+     * Iterates over an array of children collections, creates them.
+     * This function is recursive!
+     *
+     * @param $children
+     * @param $userId
+     * @param null $parent
+     * @param string $namespace
+     * @return array
+     */
+    private function iterateOverCollections($children, $userId, $parent = null, $namespace = '')
+    {
+        $format = ($namespace !== '' ? '%s.%s' : '%s%s');
+        $collections = [];
+        foreach ($children as $collectionKey => $collectionItem) {
+            $key = sprintf($format, $namespace, $collectionKey);
+            $collections[$key] = $this->getOrCreateCollection(
+                $key,
+                $collectionItem['meta_title'],
+                $userId,
+                $parent
+            )->getId();
+
+            if (array_key_exists('collections', $collectionItem)) {
+                $childCollections = $this->iterateOverCollections(
+                    $collectionItem['collections'],
+                    $userId,
+                    $collections[$key],
+                    $key
+                );
+                $collections = array_merge($collections, $childCollections);
+            }
+        }
 
         return $collections;
     }
