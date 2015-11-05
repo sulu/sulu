@@ -189,15 +189,8 @@ class Webspace implements WebspaceInterface
             $this->importExtension($extension, $node, $data, $webspaceKey, $locale, $format);
         }
 
-        $this->saveNode($node);
-    }
-
-    /**
-     * @param NodeInterface $node
-     */
-    protected function saveNode(NodeInterface $node)
-    {
-        // TODO
+        $this->documentManager->persist($document);
+        $this->documentManager->flush();
     }
 
     /**
