@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #1749 [SnippetBundle]   Enabled search in snippet selection overlay
     * ENHANCEMENT #1743 [SmartContent]    Fixed param names for website operators
     * FEATURE     #1739 [MediaBundle]     Implemented system collections
     * BUGFIX      #1733 [ContactBundle]   Added delete warning and download icon for contact avatar and account logo
