@@ -198,8 +198,9 @@ class FormatManager implements FormatManagerInterface
 
                 // save image
                 if ($this->saveImage) {
+                    file_put_contents($original, $responseContent);
                     $this->formatCache->save(
-                        $this->createTmpFile($responseContent),
+                        $original,
                         $media->getId(),
                         $this->replaceExtension($fileName, $imageExtension),
                         $storageOptions,
@@ -486,12 +487,11 @@ class FormatManager implements FormatManagerInterface
     protected function createTmpFile($resource)
     {
         $tempFile = tempnam(null, 'media_original');
-        if (is_resource($resource)) {
-            $handle = fopen($tempFile, 'w');
-            stream_copy_to_stream($resource, $handle);
-        } else {
-            file_put_contents($tempFile, $resource);
+        $handle = fopen($tempFile, 'w');
+        if (is_string($resource)) {
+            $resource = fopen($resource, 'r');
         }
+        stream_copy_to_stream($resource, $handle);
 
         $this->tempFiles[] = $tempFile;
 
