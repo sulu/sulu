@@ -13,8 +13,8 @@ namespace Sulu\Component\Media\SystemCollections;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
-use Sulu\Component\Cache\ConfigCache;
 use Sulu\Component\Security\Authentication\UserInterface;
+use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -337,6 +337,9 @@ class SystemCollectionManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testWarmUpNotFresh($config, $existingCollections, $notExistingCollections, $data)
     {
+        $tempName = tempnam('/tmp', 'system_collections');
+        file_put_contents($tempName, serialize($data));
+
         $tokenStorage = $this->getTokenStorage();
         $collectionManager = $this->getCollectionManager($existingCollections, $notExistingCollections);
 
@@ -344,7 +347,7 @@ class SystemCollectionManagerTest extends \PHPUnit_Framework_TestCase
         $cache = $this->prophesize(ConfigCache::class);
         $cache->isFresh()->shouldBeCalled()->willReturn(false);
         $cache->write(serialize($data))->shouldBeCalled();
-        $cache->read()->shouldBeCalled()->willReturn(serialize($data));
+        $cache->__toString()->shouldBeCalled()->willReturn($tempName);
 
         $manager = new SystemCollectionManager(
             $config,
@@ -363,6 +366,9 @@ class SystemCollectionManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testWarmUpFresh($config, $existingCollections, $notExistingCollections, $data)
     {
+        $tempName = tempnam('/tmp', 'system_collections');
+        file_put_contents($tempName, serialize($data));
+
         $tokenStorage = $this->getTokenStorage();
         $collectionManager = $this->getCollectionManager($existingCollections, $notExistingCollections, false);
 
@@ -370,7 +376,7 @@ class SystemCollectionManagerTest extends \PHPUnit_Framework_TestCase
         $cache = $this->prophesize(ConfigCache::class);
         $cache->isFresh()->shouldBeCalled()->willReturn(true);
         $cache->write(serialize($data))->shouldNotBeCalled();
-        $cache->read()->shouldBeCalled()->willReturn(serialize($data));
+        $cache->__toString()->shouldBeCalled()->willReturn($tempName);
 
         $manager = new SystemCollectionManager(
             $config,
@@ -389,6 +395,9 @@ class SystemCollectionManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetSystemCollection($data, $key, $expected, $exception = null)
     {
+        $tempName = tempnam('/tmp', 'system_collections');
+        file_put_contents($tempName, serialize($data));
+
         if ($exception !== null) {
             $this->setExpectedException($exception);
         }
@@ -399,7 +408,7 @@ class SystemCollectionManagerTest extends \PHPUnit_Framework_TestCase
         $entityManager = $this->prophesize(EntityManagerInterface::class);
         $cache = $this->prophesize(ConfigCache::class);
         $cache->isFresh()->shouldBeCalled()->willReturn(true);
-        $cache->read()->shouldBeCalled()->willReturn(serialize($data));
+        $cache->__toString()->shouldBeCalled()->willReturn($tempName);
 
         $manager = new SystemCollectionManager(
             [],
@@ -421,13 +430,16 @@ class SystemCollectionManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsSystemCollection($data, $id, $expected)
     {
+        $tempName = tempnam('/tmp', 'system_collections');
+        file_put_contents($tempName, serialize($data));
+
         $tokenStorage = $this->getTokenStorage();
         $collectionManager = $this->getCollectionManager();
 
         $entityManager = $this->prophesize(EntityManagerInterface::class);
         $cache = $this->prophesize(ConfigCache::class);
         $cache->isFresh()->shouldBeCalled()->willReturn(true);
-        $cache->read()->shouldBeCalled()->willReturn(serialize($data));
+        $cache->__toString()->shouldBeCalled()->willReturn($tempName);
 
         $manager = new SystemCollectionManager(
             [],

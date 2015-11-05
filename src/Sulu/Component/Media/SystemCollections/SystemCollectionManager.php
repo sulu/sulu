@@ -13,7 +13,7 @@ namespace Sulu\Component\Media\SystemCollections;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
-use Sulu\Component\Cache\ConfigCache;
+use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -119,7 +119,7 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
                 $this->cache->write(serialize($systemCollections));
             }
 
-            $this->systemCollections = unserialize($this->cache->read());
+            $this->systemCollections = unserialize(file_get_contents($this->cache));
         }
 
         return $this->systemCollections;

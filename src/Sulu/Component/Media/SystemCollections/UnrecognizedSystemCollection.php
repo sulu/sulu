@@ -27,7 +27,13 @@ class UnrecognizedSystemCollection extends \Exception
 
     public function __construct($key, array $recognizedSystemCollections)
     {
-        parent::__construct(sprintf('Unrecognized system collection "%s"', $key));
+        parent::__construct(
+            sprintf(
+                'Unrecognized system collection "%s" available collections: [%s]',
+                $key,
+                implode(', ', $recognizedSystemCollections)
+            )
+        );
 
         $this->key = $key;
         $this->recognizedSystemCollections = $recognizedSystemCollections;

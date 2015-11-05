@@ -172,7 +172,7 @@
             <argument>sulu.media.collections</argument>
         </service>
 
-        <service id="sulu_media.system_collections.cache" class="Sulu\Component\Cache\ConfigCache">
+        <service id="sulu_media.system_collections.cache" class="Symfony\Component\Config\ConfigCache">
             <argument>%sulu.cache_dir%/system_collection.cache</argument>
             <argument>%kernel.debug%</argument>
         </service>

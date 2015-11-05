@@ -14,7 +14,6 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use Doctrine\ORM\UnexpectedResultException;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryTrait;
@@ -250,7 +249,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
 
         try {
             return $query->getSingleResult();
-        } catch (UnexpectedResultException $ex) {
+        } catch (NoResultException $ex) {
             return;
         }
     }
