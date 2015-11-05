@@ -237,6 +237,7 @@ class SnippetRepository
         }
 
         if (null !== $search) {
+            $search = str_replace('*', '%', $search);
             $searchConstraint = $qf->orConstraint(
                 $qf->comparison(
                     $qf->propertyValue('a', 'i18n:' . $languageCode . '-title'),
