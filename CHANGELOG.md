@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1751 [Persistence]     Fixed UserBlameSubscriber for new DoctrineBundle
     * ENHANCEMENT #1746 [Rest]            Use * as placeholder in ListBuilder search
     * ENHANCEMENT #1743 [SmartContent]    Fixed param names for website operators
     * FEATURE     #1739 [MediaBundle]     Implemented system collections
