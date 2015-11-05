@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Content;
 
+use PHPCR\SessionInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
 use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
 use Sulu\Component\Content\Compat\Structure\SnippetBridge;
@@ -28,6 +29,11 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
      */
     protected $snippetRepository;
 
+    /**
+     * @var SessionInterface
+     */
+    private $phpcrSession;
+
     public function setUp()
     {
         $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
@@ -42,24 +48,25 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
     {
         return [
             [
-                null, null, null,
-                5,
+                null, null, null, null, 5,
             ],
             [
-                'hotel', null, null,
-                2,
+                'hotel', null, null, null, 2,
             ],
             [
-                'car', null, null,
-                3,
+                'car', null, null, null, 3,
             ],
             [
-                'car', 1, 2,
-                2,
+                'car', 1, 2, null, 2,
             ],
             [
-                'car', 1, 1,
-                1,
+                'car', 1, 1, null, 1,
+            ],
+            [
+                'hotel', null, null, 'budapest', 1,
+            ],
+            [
+                'hotel', null, null, 'b*t', 1,
             ],
         ];
     }
@@ -67,9 +74,9 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
     /**
      * @dataProvider provideGetSnippets
      */
-    public function testGetSnippets($type, $offset, $limit, $expectedCount)
+    public function testGetSnippets($type, $offset, $limit, $search, $expectedCount)
     {
-        $snippets = $this->snippetRepository->getSnippets('de', $type, $offset, $limit);
+        $snippets = $this->snippetRepository->getSnippets('de', $type, $offset, $limit, $search);
         $this->assertCount($expectedCount, $snippets);
         foreach ($snippets as $snippet) {
             $this->assertInstanceOf(SnippetBridge::class, $snippet);

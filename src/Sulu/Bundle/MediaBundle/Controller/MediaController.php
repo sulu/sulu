@@ -126,7 +126,7 @@ class MediaController extends RestController
                     [
                         'collection' => $collection,
                         'types' => $types,
-                        'search' => $search,
+                        'search' => str_replace('*', '%', $search),
                         'orderBy' => $orderBy,
                         'orderSort' => $orderSort,
                     ],
