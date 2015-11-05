@@ -87,7 +87,7 @@ trait DataProviderRepositoryTrait
                     $queryBuilder,
                     'c.tags',
                     $filters['websiteTags'],
-                    strtolower($filters['websiteTagOperator']),
+                    strtolower($filters['websiteTagsOperator']),
                     'websiteTags'
                 )
             );
@@ -100,7 +100,7 @@ trait DataProviderRepositoryTrait
                     $queryBuilder,
                     'c.categories',
                     $filters['websiteCategories'],
-                    strtolower($filters['websiteCategoryOperator']),
+                    strtolower($filters['websiteCategoriesOperator']),
                     'websiteCategories'
                 )
             );

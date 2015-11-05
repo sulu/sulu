@@ -259,13 +259,13 @@ class ContentType extends ComplexContentType
 
         // extends selected filter with requested tags
         $filters['websiteTags'] = $this->tagRequestHandler->getTags($params['tags_parameter']->getValue());
-        $filters['websiteTagOperator'] = $params['website_tags_operator']->getValue();
+        $filters['websiteTagsOperator'] = $params['website_tags_operator']->getValue();
 
         // extends selected filter with requested categories
         $filters['websiteCategories'] = $this->categoryRequestHandler->getCategories(
             $params['categories_parameter']->getValue()
         );
-        $filters['websiteCategoryOperator'] = $params['website_categories_operator']->getValue();
+        $filters['websiteCategoriesOperator'] = $params['website_categories_operator']->getValue();
 
         // resolve tags to id
         if (!empty($filters['tags'])) {
