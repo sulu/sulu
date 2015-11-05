@@ -7,6 +7,8 @@ CHANGELOG for Sulu
     * BUGIFX      #1871 [ContentBundle]   Fixed url-generation and save button
     * BUGFIX      #1873 [ContactBundle]   Fixed remove title and position
     * BUGFIX      #1873 [ContactBundle]   Fixed remove contact birthday
+    * FEATURE     #595  [MediaBundle]     Implement Media Flysystem Storage to add Support for S3, Dropbox and co.
+    * FEATURE     #1137 [MediaBundle]     Implement Media Storage Manager for multi storage support.
 
 * dev-master
     * HOTFIX      #1888 [ContentBundle]   used auto_name in phpcr migrations

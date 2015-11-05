@@ -150,6 +150,27 @@ Category has now a default locale this has to set before use. You can use this s
 UPDATE ca_categories AS c SET default_locale = (SELECT locale FROM ca_category_translations WHERE idCategories = c.id LIMIT 1) WHERE default_locale = "";
 ```
 
+## Media Manager Constructor changed
+
+If you have done any changes on the MediaManager or did overwrite it you need implement the new StorageManager.
+In the constructor of the MediaManager the variable $storage (`StorageInterface`)
+was replaced with $storageManger (`StorageManagerInterface`).
+
+## Media Storage Configuration changed
+
+If you have use the local storage `sulu_media` configuration you need to change them to the new syntax:
+
+```
+sulu_media:
+    storage:
+        default: local
+        adapters:
+            local:
+                type: local
+                segments: 10
+                uploadPath: %kernel.root_dir%/../uploads/media
+```
+
 ### Websocket Component
 The following Interfaces has new methods
 
