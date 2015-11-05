@@ -16,10 +16,15 @@ app/console doctrine:schema:update --force
 ```sql
 UPDATE me_collection_types SET collection_type_key='collection.default', name='Default' WHERE id=1;
 INSERT INTO me_collection_types (id, name, collection_type_key) VALUES ('2', 'System Collections', 'collection.system');
-UPDATE me_media SET idCollections={new-system-collection-id} WHERE idCollections={old-avatar-collection};
 ```
 
-The value for the placeholder `{new-system-collection-id}` you will find in the URL in the backend.
+The following sql statement moves the avatar images into the newly created system collections. To find the value for the
+placeholder `{new-system-collection-id}` you can browse in the admin to the collection and note the `id` you find in the
+url.
+
+```sql
+UPDATE me_media SET idCollections={new-system-collection-id} WHERE idCollections={old-avatar-collection};
+```
 
 ### Websocket Component
 The following Interfaces has new methods
