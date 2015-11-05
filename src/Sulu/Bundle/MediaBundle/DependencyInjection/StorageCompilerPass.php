@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Compiler pass for collecting services tagged with sulu_media.image.command.
+ * Compiler to create flysystem storage and add storage to the manager.
  */
 class StorageCompilerPass implements CompilerPassInterface
 {
