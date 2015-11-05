@@ -12,8 +12,9 @@ namespace Sulu\Component\Content\Import;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
-use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Import\Exception\WebspaceFormatImporterNotFoundException;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
@@ -55,11 +56,6 @@ class Webspace implements WebspaceInterface
     protected $contentImportManager;
 
     /**
-     * @var PropertyEncoder
-     */
-    protected $propertyEncoder;
-
-    /**
      * @var RlpStrategyInterface
      */
     protected $rlpStrategy;
@@ -76,7 +72,7 @@ class Webspace implements WebspaceInterface
      * @param DocumentManager $documentManager
      * @param DocumentInspector $documentInspector
      * @param DocumentRegistry $documentRegistry
-     * @param PropertyEncoder $propertyEncoder
+     * @param LegacyPropertyFactory $legacyPropertyFactory
      * @param RlpStrategyInterface $rlpStrategy
      * @param StructureManagerInterface $structureManager
      * @param ContentImportManagerInterface $contentImportManager
@@ -85,7 +81,7 @@ class Webspace implements WebspaceInterface
         DocumentManager $documentManager,
         DocumentInspector $documentInspector,
         DocumentRegistry $documentRegistry,
-        PropertyEncoder $propertyEncoder,
+        LegacyPropertyFactory $legacyPropertyFactory,
         RlpStrategyInterface $rlpStrategy,
         StructureManagerInterface $structureManager,
         ContentImportManagerInterface $contentImportManager
@@ -93,7 +89,7 @@ class Webspace implements WebspaceInterface
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
         $this->documentRegistry = $documentRegistry;
-        $this->propertyEncoder = $propertyEncoder;
+        $this->legacyPropertyFactory = $legacyPropertyFactory;
         $this->rlpStrategy = $rlpStrategy;
         $this->structureManager = $structureManager;
         $this->contentImportManager = $contentImportManager;
@@ -169,7 +165,7 @@ class Webspace implements WebspaceInterface
                 $property->getContentTypeName()
             );
 
-            if ( $property->getContentTypeName() == 'resource_locator') {
+            if ($property->getContentTypeName() == 'resource_locator') {
                 $parent = $document->getParent();
                 if ($parent instanceof BasePageDocument) {
                     $parentPath = $parent->getResourceSegment();
@@ -184,14 +180,37 @@ class Webspace implements WebspaceInterface
                 }
             }
 
-            $this->importProperty($property, $node, $value, $webspaceKey, $locale, $format);
+            $this->importProperty($property, $node, $structure, $value, $webspaceKey, $locale, $format);
         }
 
         $extensions = $this->structureManager->getExtensions($structureType);
 
         foreach ($extensions as $extension) {
-            var_dump(get_class($extension));
+            $this->importExtension($extension, $node, $data, $webspaceKey, $locale, $format);
         }
+
+        $this->saveNode($node);
+    }
+
+    /**
+     * @param NodeInterface $node
+     */
+    protected function saveNode(NodeInterface $node)
+    {
+        // TODO
+    }
+
+    /**
+     * @param $extension
+     * @param $node
+     * @param $data
+     * @param $webspaceKey
+     * @param $locale
+     * @param $format
+     */
+    protected function importExtension($extension, $node, $data, $webspaceKey, $locale, $format)
+    {
+        // TODO
     }
 
     /**
@@ -205,16 +224,18 @@ class Webspace implements WebspaceInterface
     protected function importProperty(
         PropertyInterface $property,
         NodeInterface $node,
+        StructureInterface $structure,
         $value,
         $webspaceKey,
         $locale,
         $format
     ) {
-        $name = $this->propertyEncoder->localizedContentName($property->getName(), $locale);
         $contentType = $property->getContentTypeName();
 
         if ($this->contentImportManager->hasImport($contentType, $format)) {
-            $this->contentImportManager->import($contentType, $node, $name, $value, null, $webspaceKey, $locale);
+            $translateProperty = $this->legacyPropertyFactory->createTranslatedProperty($property, $locale, $structure);
+            $translateProperty->setValue($value);
+            $this->contentImportManager->import($contentType, $node, $translateProperty, null, $webspaceKey, $locale);
         }
     }
 

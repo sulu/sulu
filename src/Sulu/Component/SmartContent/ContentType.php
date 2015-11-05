@@ -144,9 +144,8 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
             $value = $value->toArray();
         }
 
-        if (!empty($value['tags'])) {
-            $value['tags'] = $this->tagManager->resolveTagNames($value['tags']);
-        }
+        $this->resolveTags($value, 'tags');
+        $this->resolveTags($value, 'websiteTags');
 
         $node->setProperty($property->getName(), json_encode($value));
     }
@@ -269,14 +268,10 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         $filters['websiteCategoriesOperator'] = $params['website_categories_operator']->getValue();
 
         // resolve tags to id
-        if (!empty($filters['tags'])) {
-            $filters['tags'] = $this->tagManager->resolveTagNames($filters['tags']);
-        }
+        $this->resolveTags($filters, 'tags');
 
         // resolve website tags to id
-        if (!empty($filters['websiteTags'])) {
-            $filters['websiteTags'] = $this->tagManager->resolveTagNames($filters['websiteTags']);
-        }
+        $this->resolveTags($filters, 'websiteTags');
 
         // get provider
         $provider = $this->getProvider($property);
@@ -432,50 +427,25 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
     }
 
     /**
-     * @param NodeInterface $node
-     * @param string $name
-     * @param string|array $value
-     * @param integer $userId
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
+     * {@inheritdoc}
      */
     public function importData(
         NodeInterface $node,
-        $name,
-        $value,
+        PropertyInterface $property,
         $userId,
         $webspaceKey,
         $languageCode,
         $segmentKey = null
     ) {
-        $value = json_decode($value, true);
-
-        // is valid json
-        if (!$value) {
-            if ($node->hasProperty($name)) {
-                $node->getProperty($name)->remove();
-            }
-
-            return;
-        }
-
-        if (!empty($value['categories'])) {
-            var_dump($value);
-            exit;
-        }
-
-        $this->resolveTags($value, 'tags');
-        $this->resolveTags($value, 'websiteTags');
-
-        $node->setProperty($name, json_encode($value));
+        $property->setValue(json_decode($property->getValue(), true));
+        $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 
     /**
      * @param $value
      * @param $key
      */
-    public function resolveTags(&$value, $key)
+    protected function resolveTags(&$value, $key)
     {
         if (isset($value[$key])) {
             $ids = [];

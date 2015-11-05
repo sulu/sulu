@@ -59,7 +59,16 @@ class Xliff12 implements WebspaceFormatImportInterface
         $property = $this->getProperty($name, $data, $contentTypeName, $extension);
 
         if (isset($property['children'])) {
-            return $property['children'];
+            $data = [];
+            foreach ($property['children'] as $key => $child) {
+                $childProperties = [];
+                foreach(array_keys($child) as $childKey) {
+                    $childProperties[$childKey] = $this->getPropertyData($childKey, $child, $contentTypeName = null, $extension = null);
+                }
+                $data[$key] = $childProperties;
+            }
+
+            return $data;
         }
 
         if (!isset($property['value'])) {
@@ -128,7 +137,7 @@ class Xliff12 implements WebspaceFormatImportInterface
                 }
 
                 $name = (string) $attributes['resname'];
-                $value = $this->utf8ToCharset((string) $translation->target, $encoding);
+                $value = $this->utf8ToCharset((string) $translation->source, $encoding); // change to target FIXME TODO
 
                 if (strpos($name, '#') !== false) {
                     $names = explode('#', $name, 2);

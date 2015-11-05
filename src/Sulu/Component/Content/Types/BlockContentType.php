@@ -410,13 +410,12 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
      */
     public function importData(
         NodeInterface $node,
-        $name,
-        $value,
+        PropertyInterface $property,
         $userId,
         $webspaceKey,
         $languageCode,
         $segmentKey = null
     ) {
-        // TODO: Implement importData() method.
+        $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 }

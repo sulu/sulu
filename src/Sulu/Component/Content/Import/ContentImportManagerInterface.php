@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content\Import;
 
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 
 /**
  * Defines the methods for the ContentImportManager.
@@ -20,8 +21,7 @@ interface ContentImportManagerInterface
     /**
      * @param $contentTypeName
      * @param NodeInterface $node
-     * @param string $name
-     * @param string|array $value
+     * @param PropertyInterface $property
      * @param integer $userId
      * @param string $webspaceKey
      * @param string $languageCode
@@ -30,8 +30,7 @@ interface ContentImportManagerInterface
     public function import(
         $contentTypeName,
         NodeInterface $node,
-        $name,
-        $value,
+        PropertyInterface $property,
         $userId,
         $webspaceKey,
         $languageCode,

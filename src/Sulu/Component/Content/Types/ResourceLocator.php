@@ -152,36 +152,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
             return;
         }
 
-        $this->writeUrl(
-            $node,
-            $property->getName(),
-            $value,
-            $userId,
-            $webspaceKey,
-            $languageCode,
-            $segmentKey
-        );
-    }
-
-    /**
-     * @param NodeInterface $node
-     * @param $propertyName
-     * @param $url
-     * @param $userId
-     * @param $webspaceKey
-     * @param $languageCode
-     * @param string $segmentKey
-     */
-    protected function writeUrl(
-        NodeInterface $node,
-        $propertyName,
-        $url,
-        $userId,
-        $webspaceKey,
-        $languageCode,
-        $segmentKey = null
-    ) {
-        $propertyValue = $node->getPropertyValueWithDefault($propertyName, null);
+        $propertyValue = $node->getPropertyValueWithDefault($property->getName(), null);
         $treeValue = $this->getResourceLocator($node, $webspaceKey, $languageCode, $segmentKey);
         if ($treeValue === '/') {
             return;
@@ -190,11 +161,11 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
         // only if property value is the same as tree value (is different in move / copy / rename workflow)
         // or the tree value does not exist
         if ($treeValue === null) {
-            $this->getStrategy()->save($node, $url, $userId, $webspaceKey, $languageCode, $segmentKey);
-        } elseif ($propertyValue === $treeValue && $propertyValue != $url) {
+            $this->getStrategy()->save($node, $value, $userId, $webspaceKey, $languageCode, $segmentKey);
+        } elseif ($propertyValue === $treeValue && $propertyValue != $value) {
             $this->getStrategy()->move(
                 $treeValue,
-                $url,
+                $value,
                 $node,
                 $userId,
                 $webspaceKey,
@@ -203,7 +174,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
             );
         }
 
-        $node->setProperty($propertyName, $url);
+        $node->setProperty($property->getName(), $value);
     }
 
     /**
@@ -216,36 +187,10 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
         $languageCode,
         $segmentKey = null
     ) {
-        $this->removeUrl(
-            $node,
-            $property->getName(),
-            $property->getValue(),
-            $webspaceKey,
-            $languageCode,
-            $segmentKey
-        );
-    }
+        $this->strategy->deleteByPath($property->getValue(), $webspaceKey, $languageCode, $segmentKey);
 
-    /**
-     * @param NodeInterface $node
-     * @param string $propertyName
-     * @param string $url
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
-     */
-    protected function removeUrl(
-        NodeInterface $node,
-        $propertyName,
-        $url,
-        $webspaceKey,
-        $languageCode,
-        $segmentKey = null
-    ) {
-        $this->strategy->deleteByPath($url, $webspaceKey, $languageCode, $segmentKey);
-
-        if ($node->hasProperty($propertyName)) {
-            $node->getProperty($propertyName)->remove();
+        if ($node->hasProperty($property->getName())) {
+            $node->getProperty($property->getName())->remove();
         }
     }
 
@@ -299,35 +244,12 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
      */
     public function importData(
         NodeInterface $node,
-        $name,
-        $value,
+        PropertyInterface $property,
         $userId,
         $webspaceKey,
         $languageCode,
         $segmentKey = null
     ) {
-        if ($value === null || $value === '') {
-            $this->removeUrl(
-                $node,
-                $name,
-                $value,
-                $webspaceKey,
-                $languageCode,
-                $segmentKey
-            );
-
-            return;
-        }
-
-        $this->writeUrl(
-            $node,
-            $name,
-            $value,
-            $userId,
-            $webspaceKey,
-            $languageCode,
-            $segmentKey
-        );
+        $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
-
 }

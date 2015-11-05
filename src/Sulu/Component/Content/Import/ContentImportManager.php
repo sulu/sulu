@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content\Import;
 
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Import\Exception\ContentTypeImportMissingException;
@@ -37,8 +38,7 @@ class ContentImportManager implements ContentImportManagerInterface
     public function import(
         $contentTypeName,
         NodeInterface $node,
-        $name,
-        $value,
+        PropertyInterface $property,
         $userId,
         $webspaceKey,
         $languageCode,
@@ -50,7 +50,7 @@ class ContentImportManager implements ContentImportManagerInterface
             throw new ContentTypeImportMissingException($contentTypeName);
         }
 
-        $contentType->importData($node, $name, $value, $userId, $webspaceKey, $languageCode, $segmentKey);
+        $contentType->importData($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 
     /**

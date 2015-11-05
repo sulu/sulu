@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content;
 
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 
 /**
  * Interface for exportable Content Types.
@@ -26,8 +27,7 @@ interface ContentTypeExportInterface
 
     /**
      * @param NodeInterface $node
-     * @param string $name
-     * @param string|array $value
+     * @param PropertyInterface $property
      * @param integer $userId
      * @param string $webspaceKey
      * @param string $languageCode
@@ -35,8 +35,7 @@ interface ContentTypeExportInterface
      */
     public function importData(
         NodeInterface $node,
-        $name,
-        $value,
+        PropertyInterface $property,
         $userId,
         $webspaceKey,
         $languageCode,
