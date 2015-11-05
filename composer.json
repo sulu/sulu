@@ -34,11 +34,11 @@
         "pagerfanta/pagerfanta": "~1.0",
         "sulu/document-manager": "dev-develop",
         "evenement/evenement": "2.0.0 as 1.0.0",
-        "pulse00/ffmpeg-bundle": "^0.5.2"
+        "pulse00/ffmpeg-bundle": "^0.5.2",
+        "doctrine/doctrine-bundle": "1.5.*"
     },
     "require-dev": {
         "phpcr/phpcr-shell": "~1.0.0@alpha",
-        "doctrine/doctrine-bundle": "1.4.*",
         "jackalope/jackalope-jackrabbit": "~1.2.0",
         "doctrine/doctrine-fixtures-bundle": "2.2.*",
         "guzzle/plugin-mock": "3.9.*",
