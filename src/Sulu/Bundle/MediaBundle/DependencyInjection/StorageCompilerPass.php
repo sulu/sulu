@@ -121,8 +121,12 @@ class StorageCompilerPass implements CompilerPassInterface
                 ));
         }
 
-        // set constructor
+        // set the new service constructor
+        // the storage types are abstract to be reused and to have multiple services based on them
+        // some parameters are required which don't exist in the abstract construct e.g. the fileSystem in flySystem
+        // they will be set here. It is needed that the variable name is the same as the key in the config.yml file.
         foreach ($config as $name => $value) {
+            // loop throw all exist parameters and replace them by the new config
             foreach ($class->getMethod('__construct')->getParameters() as $key => $parameter) {
                 if ($parameter->getName() == $name) {
                     $storageDefinition->replaceArgument($key, $value);
