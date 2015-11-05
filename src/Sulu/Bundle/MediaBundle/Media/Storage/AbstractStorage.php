@@ -62,7 +62,7 @@ abstract class AbstractStorage implements StorageInterface
             if (isset($fileNameParts[1])) {
                 $extension = '.' . $fileNameParts[1];
             }
-            $newFileName = $fileNameParts[0] . '-' . $counter . '.' . $extension;
+            $newFileName = $fileNameParts[0] . '-' . $counter . $extension;
         }
 
         $filePath = $this->getPathByFolderAndFileName($folder, $newFileName);
