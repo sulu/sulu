@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\Exclude;
 
 /**
@@ -19,6 +20,11 @@ use JMS\Serializer\Annotation\Exclude;
 class CollectionType
 {
     /**
+     * @var int
+     */
+    private $id;
+
+    /**
      * @var string
      */
     private $name;
@@ -26,15 +32,15 @@ class CollectionType
     /**
      * @var string
      */
+    private $key;
+
+    /**
+     * @var string
+     */
     private $description;
 
     /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      * @Exclude
      */
     private $collections;
@@ -44,7 +50,7 @@ class CollectionType
      */
     public function __construct()
     {
-        $this->collections = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->collections = new ArrayCollection();
     }
 
     /**
@@ -52,7 +58,7 @@ class CollectionType
      *
      * @param string $name
      *
-     * @return CollectionType
+     * @return $this
      */
     public function setName($name)
     {
@@ -76,7 +82,7 @@ class CollectionType
      *
      * @param string $description
      *
-     * @return CollectionType
+     * @return $this
      */
     public function setDescription($description)
     {
@@ -99,10 +105,14 @@ class CollectionType
      * To force id = 1 in load fixtures.
      *
      * @param int $id
+     *
+     * @return $this
      */
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -118,11 +128,11 @@ class CollectionType
     /**
      * Add collections.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\Collection $collections
+     * @param Collection $collections
      *
-     * @return CollectionType
+     * @return $this
      */
-    public function addCollection(\Sulu\Bundle\MediaBundle\Entity\Collection $collections)
+    public function addCollection(Collection $collections)
     {
         $this->collections[] = $collections;
 
@@ -132,20 +142,48 @@ class CollectionType
     /**
      * Remove collections.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\Collection $collections
+     * @param Collection $collections
+     *
+     * @return $this
      */
-    public function removeCollection(\Sulu\Bundle\MediaBundle\Entity\Collection $collections)
+    public function removeCollection(Collection $collections)
     {
         $this->collections->removeElement($collections);
+
+        return $this;
     }
 
     /**
      * Get collections.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getCollections()
     {
         return $this->collections;
+    }
+
+    /**
+     * Set key.
+     *
+     * @param string $key
+     *
+     * @return $this
+     */
+    public function setKey($key)
+    {
+        $this->key = $key;
+
+        return $this;
+    }
+
+    /**
+     * Get key.
+     *
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->key;
     }
 }

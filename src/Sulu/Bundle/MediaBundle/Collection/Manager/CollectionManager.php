@@ -20,7 +20,6 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
-use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionTypeNotFoundException;
@@ -154,6 +153,20 @@ class CollectionManager implements CollectionManagerInterface
         }
 
         return $collections;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getByKey($key, $locale)
+    {
+        $collection = $this->collectionRepository->findCollectionByKey($key);
+
+        if (!$collection) {
+            return;
+        }
+
+        return $this->getApiEntity($collection, $locale);
     }
 
     /**
@@ -384,10 +397,7 @@ class CollectionManager implements CollectionManagerInterface
         $collectionEntity = new CollectionEntity();
         $collection = $this->getApiEntity($collectionEntity, $data['locale']);
 
-        $collection = $this->setDataToCollection(
-            $collection,
-            $data
-        );
+        $collection = $this->setDataToCollection($collection, $data);
 
         /** @var CollectionEntity $collectionEntity */
         $collectionEntity = $collection->getEntity();
@@ -422,6 +432,9 @@ class CollectionManager implements CollectionManagerInterface
                 switch ($attribute) {
                     case 'title':
                         $collection->setTitle($value);
+                        break;
+                    case 'key':
+                        $collection->setKey($value);
                         break;
                     case 'description':
                         $collection->setDescription($value);
@@ -654,6 +667,10 @@ class CollectionManager implements CollectionManagerInterface
      */
     protected function getCurrentUser()
     {
-        return $this->tokenStorage ? $this->tokenStorage->getToken()->getUser() : null;
+        if ($this->tokenStorage && ($token = $this->tokenStorage->getToken())) {
+            return $this->tokenStorage ? $token->getUser() : null;
+        }
+
+        return;
     }
 }

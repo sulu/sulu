@@ -171,5 +171,23 @@
         <service id="sulu_media.security_context" class="Sulu\Component\Security\Authorization\SecurityCondition">
             <argument>sulu.media.collections</argument>
         </service>
+
+        <service id="sulu_media.system_collections.cache" class="Symfony\Component\Config\ConfigCache">
+            <argument>%sulu.cache_dir%/system_collection.cache</argument>
+            <argument>%kernel.debug%</argument>
+        </service>
+
+        <service id="sulu_media.system_collections.manager" class="Sulu\Component\Media\SystemCollections\SystemCollectionManager">
+            <argument>%sulu_media.system_collections%</argument>
+            <argument type="service" id="sulu_media.collection_manager"/>
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="security.token_storage" on-invalid="null"/>
+            <argument type="service" id="sulu_media.system_collections.cache"/>
+            <argument>%kernel.default_locale%</argument>
+        </service>
+
+        <service id="sulu_media.system_collections.warm_up" class="Sulu\Component\Media\SystemCollections\SystemCollectionBuilder">
+            <tag name="massive_build.builder" />
+        </service>
     </services>
 </container>

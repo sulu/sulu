@@ -110,6 +110,11 @@ class Collection extends ApiWrapper
      */
     protected $breadcrumb;
 
+    /**
+     * @var CollectionInterface
+     */
+    protected $entity;
+
     public function __construct(CollectionInterface $collection, $locale)
     {
         $this->entity = $collection;
@@ -360,6 +365,29 @@ class Collection extends ApiWrapper
     }
 
     /**
+     * @param string $key
+     *
+     * @return $this
+     */
+    public function setKey($key)
+    {
+        $this->entity->setKey($key);
+
+        return $this;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("key")
+     *
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->entity->getKey();
+    }
+
+    /**
      * @param CollectionType $type
      *
      * @return $this
@@ -452,6 +480,17 @@ class Collection extends ApiWrapper
         }
 
         return;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("locked")
+     *
+     * @return string
+     */
+    public function getLocked()
+    {
+        return !$this->entity->getType() || $this->entity->getType()->getKey() === 'collection.system';
     }
 
     /**

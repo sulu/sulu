@@ -44721,10 +44721,10 @@ define('husky_components/data-navigation/list-view',[], function() {
             return [
                 '       <% _.each(data.children, function(child) { %>',
                 '           <li data-id="<%= child.id %>" class="data-navigation-item">',
-                '               <% if (!!child.preview) { %>',
+                '               <% if (!!child.preview && !child.locked) { %>',
                 '                   <div class="data-navigation-item-thumb" style="background-image: url(\'<%=child.preview.url%>\')"></div>',
                 '               <% } else { %>',
-                '                   <div class="fa-coffee data-navigation-item-thumb" style="margin-top: 10px;padding-left: 10px;"></div>',
+                '                   <div class="<% if(!child.locked) { %>fa-coffee<% } else { %>fa-lock<% } %> data-navigation-item-thumb" style="margin-top: 10px;padding-left: 10px;"></div>',
                 '               <% } %>',
                 '               <div class="data-navigation-item-name">',
                 '                   <%= child[options.nameKey] %>',
