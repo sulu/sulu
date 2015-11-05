@@ -21,6 +21,7 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\StorageManager\StorageManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -121,6 +122,12 @@ class MediaStreamController extends Controller
         $pathInfo = pathinfo($fileName);
 
         $resourcePath = $this->getStorageManager()->load($storageOptions, $storageName);
+
+        $downloadUrl = $this->getStorageManager()->getDownloadUrl($storageOptions, $storageName);
+
+        if (!empty($downloadUrl)) {
+            return new RedirectResponse($downloadUrl);
+        }
 
         if (is_string($resourcePath)) {
             $response = new BinaryFileResponse($resourcePath);
