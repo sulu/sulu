@@ -486,7 +486,7 @@ class FormatManager implements FormatManagerInterface
      */
     protected function createTmpFile($resource)
     {
-        $tempFile = tempnam(null, 'media_original');
+        $tempFile = tempnam(sys_get_temp_dir(), 'media_original');
         $handle = fopen($tempFile, 'w');
         if (is_string($resource)) {
             $resource = fopen($resource, 'r');
