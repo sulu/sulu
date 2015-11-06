@@ -4,7 +4,7 @@
 
 ### System Collections
 
-Remove the config `sulu_contact.form.avatar_collection` and not it you will need it in the sql statement below for the
+Remove the config `sulu_contact.form.avatar_collection` and note it you will need it in the sql statement below for the
 placeholder `{old-avatar-collection}` (default value is `1`).
 
 Update the database schema and then update the data-fixtures by running following sql statement.
