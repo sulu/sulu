@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1754 [MediaBundle]     Moved collection key functions to base collection
     * BUGFIX      #1751 [Persistence]     Fixed UserBlameSubscriber for new DoctrineBundle
     * ENHANCEMENT #1746 [Rest]            Use * as placeholder in ListBuilder search
     * FEATURE     #1749 [SnippetBundle]   Enabled search in snippet selection overlay

@@ -75,6 +75,11 @@ abstract class BaseCollection implements CollectionInterface
     protected $creator;
 
     /**
+     * @var string
+     */
+    private $key;
+
+    /**
      * Set changer.
      *
      * @param UserInterface $changer
@@ -270,5 +275,29 @@ abstract class BaseCollection implements CollectionInterface
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Set key.
+     *
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
+     * Get key.
+     *
+     * @param string $key
+     *
+     * @return CollectionInterface
+     */
+    public function setKey($key)
+    {
+        $this->key = $key;
+
+        return $this;
     }
 }

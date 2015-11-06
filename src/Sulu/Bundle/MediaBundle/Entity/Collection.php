@@ -45,11 +45,6 @@ class Collection extends BaseCollection
      */
     private $defaultMeta;
 
-    /**
-     * @var string
-     */
-    private $key;
-
     public function __construct()
     {
         $this->meta = new ArrayCollection();
@@ -211,22 +206,6 @@ class Collection extends BaseCollection
     public function getDefaultMeta()
     {
         return $this->defaultMeta;
-    }
-
-    /**
-     * @return string
-     */
-    public function getKey()
-    {
-        return $this->key;
-    }
-
-    /**
-     * @param string $key
-     */
-    public function setKey($key)
-    {
-        $this->key = $key;
     }
 
     /**
