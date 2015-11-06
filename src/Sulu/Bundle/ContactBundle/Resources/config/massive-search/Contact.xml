@@ -1,12 +1,10 @@
 <?xml version="1.0" ?>
 <massive-search-mapping xmlns="http://massiveart.io/schema/dic/massive-search-mapping">
-
     <mapping class="Sulu\Bundle\ContactBundle\Entity\Contact">
         <id property="id" />
         <title expr="join(' ', [object.getTitle(), object.getFirstName(), object.getLastName()])" />
         <description expr="'&lt;p&gt;' ~ join(' ', map(object.getEmails(), 'el.getEmail()')) ~ '&lt;/p&gt;&lt;p&gt;' ~ (object.getMainAddress() ? join(',', [object.getMainAddress().getNumber(), object.getMainAddress().getStreet(), object.getMainAddress().getZip(), object.getMainAddress().getState()]) : '') ~ '&lt;/p&gt;'" />
-        <index name="contact" />
-        <category name="contact" />
+        <index value="contact" />
 
         <fields>
             <field name="firstName" type="string" />
@@ -15,7 +13,5 @@
             <field name="mainPhone" expr="join(' ', map(object.getPhones(), 'el.getPhone()'))" type="string" />
             <field name="address" expr="object.getMainAddress() ? join(' ', [object.getMainAddress().getNumber(), object.getMainAddress().getStreet(), object.getMainAddress().getZip(), object.getMainAddress().getState()]) : ''" type="string" />
         </fields>
-
     </mapping>
-
 </massive-search-mapping>

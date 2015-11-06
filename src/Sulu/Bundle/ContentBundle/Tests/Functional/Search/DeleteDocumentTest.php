@@ -21,12 +21,12 @@ class DeleteDocumentTest extends BaseTestCase
         $structure = $this->indexDocument('About Us', '/about-us');
         $this->documentManager->flush();
 
-        $res = $searchManager->createSearch('About')->locale('de')->index('page')->execute();
-        $this->assertCount(1, $res);
+        $result = $searchManager->createSearch('About')->locale('de')->index('page_sulu_io')->execute();
+        $this->assertCount(1, $result);
 
         $mapper->delete($structure->getUuid(), 'sulu_io');
-        $res = $searchManager->createSearch('About')->locale('de')->index('page')->execute();
+        $result = $searchManager->createSearch('About')->locale('de')->index('page_sulu_io')->execute();
 
-        $this->assertCount(0, $res);
+        $this->assertCount(0, $result);
     }
 }

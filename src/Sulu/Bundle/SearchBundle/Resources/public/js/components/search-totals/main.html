@@ -6,8 +6,8 @@
             <% var i=0; %>
             <% _.each(data, function(total, key) { if (total > 0) { i++; %>
             <td>
-                <span class="name"><%= translate(categories[key].name) %>:</span>
-                <a href="#" class="category-link <% if (activeCategory === key) { %>active<% } %>" data-category="<%= key %>"><%= total %></a>
+                <span class="name"><%= translate(indexes[key].name) %>:</span>
+                <a href="#" class="category-link <% if (activeIndex === key) { %>active<% } %>" data-category="<%= key %>"><%= total %></a>
             </td>
             <% if(i % 3 === 0) { %>
         </tr>

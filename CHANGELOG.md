@@ -8,6 +8,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1743 [SmartContent]    Fixed param names for website operators
     * FEATURE     #1739 [MediaBundle]     Implemented system collections
     * BUGFIX      #1733 [ContentBundle]   Added empty locale condition to fix empty locale bug
+    * ENHANCEMENT #1719 [SearchBundle]    Updated search to only return granted documents
     * BUGFIX      #1733 [ContactBundle]   Added delete warning and download icon for contact avatar and account logo
     * BUGFIX      #1733 [MediaBundle]     Fixed a few media-selection bugs
     * ENHANCEMENT #1605 [MediaBundle]     Adjust media-selection-overlay title

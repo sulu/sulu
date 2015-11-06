@@ -43,6 +43,11 @@ class FileVersionMetaRepositoryTest extends SuluTestCase
      */
     private $collection;
 
+    /**
+     * @var CollectionType
+     */
+    private $collectionType;
+
     protected function setUp()
     {
         parent::setUp();
@@ -51,22 +56,22 @@ class FileVersionMetaRepositoryTest extends SuluTestCase
         $this->em = $this->db('ORM')->getOm();
         $this->fileVersionMetaRepository = $this->em->getRepository('SuluMediaBundle:FileVersionMeta');
 
-        $collectionType = new CollectionType();
-        $collectionType->setName('image');
+        $this->collectionType = new CollectionType();
+        $this->collectionType->setName('image');
 
         $this->collection = new Collection();
-        $this->collection->setType($collectionType);
+        $this->collection->setType($this->collectionType);
 
         $this->mediaType = new MediaType();
         $this->mediaType->setName('image');
 
-        $this->em->persist($collectionType);
+        $this->em->persist($this->collectionType);
         $this->em->persist($this->mediaType);
         $this->em->persist($this->collection);
         $this->em->flush();
     }
 
-    public function testFindLatest()
+    public function testFindLatestWithoutSecurity()
     {
         $this->createFile('Old Title 1', 'New Title 1');
         $this->createFile('Old Title 2', 'New Title 2');
@@ -77,7 +82,7 @@ class FileVersionMetaRepositoryTest extends SuluTestCase
             function (FileVersionMeta $fileVersionMeta) {
                 return $fileVersionMeta->getTitle();
             },
-            $this->fileVersionMetaRepository->findLatest()
+            $this->fileVersionMetaRepository->findLatestWithoutSecurity()
         );
 
         $this->assertContains('New Title 1', $titles);
@@ -86,11 +91,39 @@ class FileVersionMetaRepositoryTest extends SuluTestCase
         $this->assertNotContains('Old Title 2', $titles);
     }
 
-    private function createFile($oldTitle, $newTitle)
+    public function testFindByCollectionId()
+    {
+        $collection = new Collection();
+        $collection->setType($this->collectionType);
+
+        $this->em->persist($collection);
+
+        $this->createFile('Old Title 1', 'New Title 1');
+        $this->createFile('Old Title 2', 'New Title 2');
+        $this->createFile('Old Title 3', 'New Title 3', $collection);
+
+        $this->em->flush();
+
+        $titles = array_map(
+            function (FileVersionMeta $fileVersionMeta) {
+                return $fileVersionMeta->getTitle();
+            },
+            $this->fileVersionMetaRepository->findByCollectionId($this->collection->getId())
+        );
+
+        $this->assertContains('New Title 1', $titles);
+        $this->assertContains('New Title 2', $titles);
+        $this->assertContains('Old Title 1', $titles);
+        $this->assertContains('Old Title 2', $titles);
+        $this->assertNotContains('New Title 3', $titles);
+        $this->assertNotContains('Old Title 3', $titles);
+    }
+
+    private function createFile($oldTitle, $newTitle, $collection = null)
     {
         $media = new Media();
         $media->setType($this->mediaType);
-        $media->setCollection($this->collection);
+        $media->setCollection($collection ?: $this->collection);
 
         $file = new File();
         $file->setVersion(2);

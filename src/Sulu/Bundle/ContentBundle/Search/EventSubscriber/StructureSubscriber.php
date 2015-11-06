@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContentBundle\Search\EventSubscriber;
 
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
@@ -59,13 +60,17 @@ class StructureSubscriber implements EventSubscriberInterface
             return;
         }
 
+        if ($document instanceof SecurityBehavior && !empty($document->getPermissions())) {
+            return;
+        }
+
         $this->searchManager->index($document);
     }
 
     /**
      * Schedules a document to be deindexed.
      *
-     * @param ContentNodeDeleteEvent
+     * @param RemoveEvent $event
      */
     public function handlePreRemove(RemoveEvent $event)
     {
