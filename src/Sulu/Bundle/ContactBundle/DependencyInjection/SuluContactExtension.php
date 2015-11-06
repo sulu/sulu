@@ -49,13 +49,7 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                 ]
             );
         }
-    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function prepend(ContainerBuilder $container)
-    {
         if ($container->hasExtension('sulu_media')) {
             $container->prependExtensionConfig(
                 'sulu_media',

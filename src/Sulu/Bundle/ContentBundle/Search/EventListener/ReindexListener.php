@@ -82,7 +82,7 @@ class ReindexListener
         foreach ($typeMap as $type) {
             $phpcrType = $type['phpcr_type'];
 
-            if ($phpcrType !== 'sulu:home' && $phpcrType !== 'sulu:path') {
+            if ($phpcrType !== 'sulu:path') {
                 $phpcrTypes[] = sprintf('[jcr:mixinTypes] = "%s"', $phpcrType);
             }
         }
