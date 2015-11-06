@@ -24,6 +24,7 @@ url.
 
 ```sql
 UPDATE me_media SET idCollections={new-system-collection-id} WHERE idCollections={old-avatar-collection};
+```
 
 ### Search
 
