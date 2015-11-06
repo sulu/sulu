@@ -14,10 +14,24 @@ namespace Sulu\Bundle\SnippetBundle\DependencyInjection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
-class SuluSnippetExtension extends Extension
+class SuluSnippetExtension extends Extension implements PrependExtensionInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function prepend(ContainerBuilder $container)
+    {
+        if ($container->hasExtension('sulu_search')) {
+            $container->prependExtensionConfig(
+                'sulu_search',
+                ['indexes' => ['snippet' => ['security_context' => 'sulu.global.snippets']]]
+            );
+        }
+    }
+
     /**
      * {@inheritdoc}
      */

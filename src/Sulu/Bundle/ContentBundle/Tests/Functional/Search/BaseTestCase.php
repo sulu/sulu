@@ -42,7 +42,7 @@ class BaseTestCase extends SuluTestCase
 
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
-        $this->getSearchManager()->purge('page');
+        $this->getSearchManager()->purge('page_');
         $this->homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
     }
 
@@ -81,6 +81,11 @@ class BaseTestCase extends SuluTestCase
         $document->setStructureType('default');
         $document->setParent($this->homeDocument);
         $document->setResourceSegment($url);
+
+        $webspaceReflection = new \ReflectionProperty(PageDocument::class, 'webspaceName');
+        $webspaceReflection->setAccessible(true);
+        $webspaceReflection->setValue($document, 'sulu_io');
+
         $this->documentManager->persist($document, 'de');
 
         return $document;

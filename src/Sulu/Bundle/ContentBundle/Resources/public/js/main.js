@@ -57,6 +57,11 @@ define([
                         url: data.url,
                         locale: data.locale
                     };
+                },
+                function (key) {
+                    if (key.indexOf('page_') === 0) {
+                        return 'page';
+                    }
                 }
             );
 

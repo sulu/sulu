@@ -14,6 +14,8 @@ namespace Sulu\Bundle\ContentBundle\Search\Metadata;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Metadata\ComplexMetadata;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Value;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
@@ -106,7 +108,6 @@ class StructureProvider implements ProviderInterface
         $indexMeta->setLocaleField($this->factory->createMetadataField('locale'));
 
         $indexName = 'page';
-        $categoryName = 'page';
 
         // See if the mapping overrides the default index and category name
         foreach ($this->mapping as $className => $mapping) {
@@ -118,11 +119,13 @@ class StructureProvider implements ProviderInterface
             }
 
             $indexName = $mapping['index'];
-            $categoryName = $mapping['category'];
         }
 
-        $indexMeta->setCategoryName($categoryName);
-        $indexMeta->setIndexName($indexName);
+        if ($indexName === 'page') {
+            $indexMeta->setIndexName(new Expression('"page_"~object.getWebspaceName()'));
+        } else {
+            $indexMeta->setIndexName(new Value($indexName));
+        }
 
         foreach ($structure->getProperties() as $property) {
             if ($property instanceof BlockMetadata) {

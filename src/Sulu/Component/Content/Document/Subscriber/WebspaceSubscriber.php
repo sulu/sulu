@@ -11,10 +11,9 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
-use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -45,17 +44,16 @@ class WebspaceSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
+            Events::PERSIST => ['handleWebspace'],
             // should happen after content is hydrated
-            Events::HYDRATE => ['handleHydrate', -10],
+            Events::HYDRATE => ['handleWebspace', -10],
         ];
     }
 
     /**
-     * @param AbstractMappingEvent|HydrateEvent $event
-     *
-     * @throws \Sulu\Component\DocumentManager\Exception\DocumentManagerException
+     * @param AbstractMappingEvent $event
      */
-    public function handleHydrate(AbstractMappingEvent $event)
+    public function handleWebspace(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();
 

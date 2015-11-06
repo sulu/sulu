@@ -107,7 +107,6 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
 
     /**
      * @var Collection
-     * @Groups({"fullContact"})
      */
     protected $emails;
 

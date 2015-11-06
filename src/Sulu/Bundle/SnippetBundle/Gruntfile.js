@@ -59,9 +59,17 @@ module.exports = function (grunt) {
         'watch'
     ]);
 
-    grunt.registerTask('build', [
-        'uglify',
+    grunt.registerTask('build:css', [
         'compass:dev',
         'cssmin'
+    ]);
+
+    grunt.registerTask('build:js', [
+        'uglify'
+    ]);
+
+    grunt.registerTask('build', [
+        // 'build:css', TODO uncomment if css is not empty
+        'build:js'
     ]);
 };

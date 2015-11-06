@@ -26,6 +26,24 @@ url.
 UPDATE me_media SET idCollections={new-system-collection-id} WHERE idCollections={old-avatar-collection};
 ```
 
+### Search
+
+The search mapping has to be changed, in particular the `index` tag. It is now
+evaluated the same way as the other fields, so using `<index name="..."/>` will
+now try to resolve the name of the index using a property from the given
+object. If the old behavior is desired `<index value="..."/>` should be used
+now.
+
+Also the structure of the indexes has changed. Instead of one `page` index
+containing all the pages this index is split into smaller ones after the scheme
+`page_<webspace-key>`. This means that your own SearchController have to be
+adapted. Additionally you have to rebuild your index, in order for these
+changes to apply:
+
+```bash
+app/console massive:search:index:rebuild --purge
+```
+
 ### Websocket Component
 The following Interfaces has new methods
 

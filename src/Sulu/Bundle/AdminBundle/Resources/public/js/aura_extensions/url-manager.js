@@ -10,7 +10,8 @@
 
             initialize: function(app) {
                 var sandbox = app.sandbox,
-                    urlStore = {};
+                    urlStore = {},
+                    keyModifiers = [];
 
                 sandbox.urlManager = {};
 
@@ -18,14 +19,19 @@
                  * Set a url in the url store
                  * @method setUrl
                  * @param {String} key
-                 * @param {Mixed} template
+                 * @param {Function} template
                  * @param {Function} handler
+                 * @param {Function} keyModifier
                  */
-                sandbox.urlManager.setUrl = function(key, template, handler) {
+                sandbox.urlManager.setUrl = function(key, template, handler, keyModifier) {
                     urlStore[key] = {
                         template: template,
                         handler: handler
                     };
+
+                    if (!!keyModifier) {
+                        keyModifiers.push(keyModifier);
+                    }
                 };
 
                 /**
@@ -34,8 +40,19 @@
                  * @param {Object} data
                  */
                 sandbox.urlManager.getUrl = function(key, data) {
-                    var urlEntry = urlStore[key],
-                        template;
+                    var urlEntry, template;
+
+                    if (key in urlStore) {
+                        urlEntry = urlStore[key];
+                    } else {
+                        for (var i = -1, length = keyModifiers.length, modifiedKey; ++i < length;) {
+                            modifiedKey = keyModifiers[i](key);
+                            if (modifiedKey in urlStore) {
+                                urlEntry = urlStore[modifiedKey];
+                                break;
+                            }
+                        }
+                    }
 
                     if (!urlEntry) {
                         return null;

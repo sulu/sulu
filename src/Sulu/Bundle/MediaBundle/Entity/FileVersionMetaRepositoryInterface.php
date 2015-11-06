@@ -13,7 +13,18 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 interface FileVersionMetaRepositoryInterface
 {
     /**
+     * Only finds the FileVersionMeta for the latest files.
+     *
      * @return FileVersionMeta[]
      */
-    public function findLatest();
+    public function findLatestWithoutSecurity();
+
+    /**
+     * Find all FileVersionMeta for the given collection.
+     *
+     * @param int $collectionId
+     *
+     * @return FileVersionMeta[]
+     */
+    public function findByCollectionId($collectionId);
 }

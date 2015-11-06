@@ -14,6 +14,9 @@ use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
+use Sulu\Component\Security\Event\PermissionUpdateEvent;
+use Sulu\Component\Security\Event\SecurityEvents;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * An implementation of the AccessControlManagerInterface, which supports registering AccessControlProvider. All method
@@ -31,9 +34,15 @@ class AccessControlManager implements AccessControlManagerInterface
      */
     private $maskConverter;
 
-    public function __construct(MaskConverterInterface $maskConverter)
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    public function __construct(MaskConverterInterface $maskConverter, EventDispatcherInterface $eventDispatcher)
     {
         $this->maskConverter = $maskConverter;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -48,6 +57,11 @@ class AccessControlManager implements AccessControlManagerInterface
         }
 
         $accessControlProvider->setPermissions($type, $identifier, $permissions);
+
+        $this->eventDispatcher->dispatch(
+            SecurityEvents::PERMISSION_UPDATE,
+            new PermissionUpdateEvent($type, $identifier, $permissions)
+        );
     }
 
     /**
