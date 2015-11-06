@@ -38,6 +38,11 @@ class PermissionListener
         $this->searchManager = $searchManager;
     }
 
+    /**
+     * Removes all FileVersionMetas belonging to the collection, which just got secured.
+     *
+     * @param PermissionUpdateEvent $event
+     */
     public function onPermissionUpdate(PermissionUpdateEvent $event)
     {
         if ($event->getType() !== Collection::class) {
