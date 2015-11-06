@@ -61,7 +61,6 @@ class Configuration implements ConfigurationInterface
                             ->prototype('array')
                                 ->children()
                                     ->scalarNode('index')->info('Name of index to use')->isRequired()->end()
-                                    ->scalarNode('category')->info('Search category')->isRequired()->end()
                                 ->end()
                             ->end()
                         ->end()

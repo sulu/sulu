@@ -60,10 +60,8 @@ sulu_content:
         mapping:
             Sulu\Bundle\ContentBundle\Document\PageDocument:
                 index: page
-                category: page
             Sulu\Bundle\SnippetBundle\Document\SnippetDocument:
                 index: snippet
-                category: snippet
 
 sulu_admin:
     name: SULU 2.0
