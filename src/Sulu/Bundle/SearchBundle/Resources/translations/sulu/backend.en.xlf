@@ -2,13 +2,13 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
     <file source-language="en" datatype="plaintext" original="file.ext">
         <body>
-            <trans-unit id="e4b1406d7ka085ede200b7f5acb2d39e" resname="search-overlay.category.all.title">
-                <source>search-overlay.category.all.title</source>
+            <trans-unit id="e4b1406d7ka085ede200b7f5acb2d39e" resname="search-overlay.index.all.title">
+                <source>search-overlay.index.all.title</source>
                 <target>Everything</target>
             </trans-unit>
-            <trans-unit id="e4b1428ja8a085ede200b7f5acb2d39e" resname="search-overlay.placeholder.all">
+            <trans-unit id="e4b1428ja8a085ede200b7f5acb2d39e" resname="search-overlay.placeholder">
                 <source>search-overlay.placeholder.all</source>
-                <target>Search everything...</target>
+                <target>Search %s...</target>
             </trans-unit>
             <trans-unit id="e4b1428ja8a085ede200b7f5656d39e" resname="search-overlay.asterix-info-text">
                 <source>search-overlay.asterix-info-text</source>

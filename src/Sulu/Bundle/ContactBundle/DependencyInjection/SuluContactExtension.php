@@ -28,10 +28,28 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
     use PersistenceExtensionTrait;
 
     /**
-     * {@inheritdoc}
+     * Allow an extension to prepend the extension configurations.
+     *
+     * @param ContainerBuilder $container
      */
     public function prepend(ContainerBuilder $container)
     {
+        if ($container->hasExtension('sulu_search')) {
+            $container->prependExtensionConfig(
+                'sulu_search',
+                [
+                    'indexes' => [
+                        'contact' => [
+                            'security_context' => 'sulu.contact.people',
+                        ],
+                        'account' => [
+                            'security_context' => 'sulu.contact.organizations',
+                        ],
+                    ],
+                ]
+            );
+        }
+
         if ($container->hasExtension('sulu_media')) {
             $container->prependExtensionConfig(
                 'sulu_media',

@@ -91,6 +91,7 @@
 
         <service id="sulu_security.access_control_manager" class="%sulu_security.access_control_manager.class%">
             <argument type="service" id="sulu_security.mask_converter"/>
+            <argument type="service" id="event_dispatcher"/>
         </service>
 
         <service id="sulu_security.phpcr_access_control_provider" class="%sulu_security.phpcr_access_control_provider.class%">

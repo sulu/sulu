@@ -17,6 +17,8 @@ use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
+use Sulu\Component\Security\Event\PermissionUpdateEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class AccessControlManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -30,10 +32,19 @@ class AccessControlManagerTest extends \PHPUnit_Framework_TestCase
      */
     private $maskConverter;
 
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
     public function setUp()
     {
         $this->maskConverter = $this->prophesize(MaskConverterInterface::class);
-        $this->accessControlManager = new AccessControlManager($this->maskConverter->reveal());
+        $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $this->accessControlManager = new AccessControlManager(
+            $this->maskConverter->reveal(),
+            $this->eventDispatcher->reveal()
+        );
     }
 
     public function testSetPermissions()
@@ -47,6 +58,11 @@ class AccessControlManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->accessControlManager->addAccessControlProvider($accessControlProvider1->reveal());
         $this->accessControlManager->addAccessControlProvider($accessControlProvider2->reveal());
+
+        $this->eventDispatcher->dispatch(
+            'sulu_security.permission_update',
+            new PermissionUpdateEvent(\stdClass::class, '1', [])
+        )->shouldBeCalled();
 
         $this->accessControlManager->setPermissions(\stdClass::class, '1', []);
     }

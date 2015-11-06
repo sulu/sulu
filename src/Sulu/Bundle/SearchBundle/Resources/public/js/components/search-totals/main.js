@@ -18,8 +18,8 @@ define(['text!sulusearch/components/search-totals/main.html'], function(mainTemp
 
     var defaults = {
             instanceName: null,
-            allCategory: 'all',
-            categories: {}
+            allIndexes: 'all',
+            indexes: {}
         },
 
         /**
@@ -38,7 +38,7 @@ define(['text!sulusearch/components/search-totals/main.html'], function(mainTemp
         },
 
         /**
-         * update component with new totals and actove category
+         * update component with new totals and active index
          * @event sulu.search-totals.[INSTANCE_NAME].update
          */
         UPDATE = function() {
@@ -63,7 +63,7 @@ define(['text!sulusearch/components/search-totals/main.html'], function(mainTemp
         bindCustomEvents: function() {
             this.sandbox.on(UPDATE.call(this), function(data, category) {
                 this.data = data;
-                this.activeCategory = category || this.options.allCategory;
+                this.activeIndex = category || this.options.allIndexes;
                 this.render();
             }.bind(this));
         },
@@ -79,7 +79,7 @@ define(['text!sulusearch/components/search-totals/main.html'], function(mainTemp
                 var $element = this.sandbox.dom.find(event.currentTarget),
                     category = this.sandbox.dom.data($element, 'category');
 
-                this.sandbox.emit('sulu.dropdown-input.searchResults.set', this.options.categories[category]);
+                this.sandbox.emit('sulu.dropdown-input.searchResults.set', this.options.indexes[category]);
 
                 return false;
             }.bind(this), '.category-link');
@@ -91,11 +91,11 @@ define(['text!sulusearch/components/search-totals/main.html'], function(mainTemp
          */
         render: function() {
             var template = '';
-            if (this.activeCategory === this.options.allCategory && this.getTotal() > 0) {
+            if (this.activeIndex === this.options.allIndexes && this.getTotal() > 0) {
                 template = this.mainTemplate({
                     data: this.data,
-                    categories: this.options.categories,
-                    activeCategory: this.activeCategory,
+                    indexes: this.options.indexes,
+                    activeIndex: this.activeIndex,
                     translate: this.sandbox.translate
                 });
             }
@@ -104,7 +104,7 @@ define(['text!sulusearch/components/search-totals/main.html'], function(mainTemp
         },
 
         /**
-         * returns current total overall categories
+         * returns current total overall indexes
          * @method getTotal
          */
         getTotal: function() {

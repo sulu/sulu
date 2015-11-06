@@ -32,6 +32,11 @@
             <tag name="twig.extension"/>
             <argument type="service" id="sulu.content.type_manager"/>
         </service>
+        <service id="sulu_content.permission_listener" class="Sulu\Bundle\ContentBundle\Search\EventListener\PermissionListener">
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="massive_search.search_manager"/>
+            <tag name="kernel.event_listener" event="sulu_security.permission_update" method="onPermissionUpdate"/>
+        </service>
 
         <!-- nodes -->
         <service id="sulu_content.node_repository" class="%sulu_content.node_repository.class%">

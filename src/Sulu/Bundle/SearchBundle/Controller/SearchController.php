@@ -15,13 +15,17 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\SerializationContext;
+use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 use Sulu\Bundle\SearchBundle\Rest\SearchResultRepresentation;
+use Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfiguration;
+use Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfigurationProviderInterface;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Sulu search controller.
@@ -34,6 +38,16 @@ class SearchController
     private $searchManager;
 
     /**
+     * @var ProviderInterface
+     */
+    private $metadataProvider;
+
+    /**
+     * @var SecurityCheckerInterface
+     */
+    private $securityChecker;
+
+    /**
      * @var ViewHandler
      */
     private $viewHandler;
@@ -44,16 +58,32 @@ class SearchController
     private $listRestHelper;
 
     /**
+     * @var IndexConfigurationProviderInterface
+     */
+    private $indexConfigurationProvider;
+
+    /**
      * @param SearchManagerInterface $searchManager
+     * @param ProviderInterface $metadataProvider
+     * @param SecurityCheckerInterface $securityChecker
+     * @param ViewHandler $viewHandler
+     * @param ListRestHelper $listRestHelper
+     * @param IndexConfigurationProviderInterface $indexConfigurationProvider
      */
     public function __construct(
         SearchManagerInterface $searchManager,
+        ProviderInterface $metadataProvider,
+        SecurityCheckerInterface $securityChecker,
         ViewHandler $viewHandler,
-        ListRestHelper $listRestHelper
+        ListRestHelper $listRestHelper,
+        IndexConfigurationProviderInterface $indexConfigurationProvider
     ) {
         $this->searchManager = $searchManager;
+        $this->metadataProvider = $metadataProvider;
+        $this->securityChecker = $securityChecker;
         $this->viewHandler = $viewHandler;
         $this->listRestHelper = $listRestHelper;
+        $this->indexConfigurationProvider = $indexConfigurationProvider;
     }
 
     /**
@@ -61,40 +91,31 @@ class SearchController
      *
      * @param Request $request
      *
-     * @return JsonResponse
+     * @return Response
      */
     public function searchAction(Request $request)
     {
         $queryString = $request->query->get('q');
-        $category = $request->query->get('category', null);
+        $index = $request->query->get('index', null);
         $locale = $request->query->get('locale', null);
 
         $page = $this->listRestHelper->getPage();
         $limit = $this->listRestHelper->getLimit();
-        $aggregateHits = [];
         $startTime = microtime(true);
 
-        $categories = $category ? [$category] : $this->searchManager->getCategoryNames();
+        $indexes = $index ? [$index] : $this->getAllowedIndexes();
 
-        foreach ($categories as $category) {
-            $query = $this->searchManager->createSearch($queryString);
+        $query = $this->searchManager->createSearch($queryString);
 
-            if ($locale) {
-                $query->locale($locale);
-            }
-
-            if ($category) {
-                $query->category($category);
-            }
-
-            foreach ($query->execute() as $hit) {
-                $aggregateHits[] = $hit;
-            }
+        if ($locale) {
+            $query->locale($locale);
         }
+
+        $query->indexes($indexes);
 
         $time = microtime(true) - $startTime;
 
-        $adapter = new ArrayAdapter($aggregateHits);
+        $adapter = new ArrayAdapter($query->execute());
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage($limit);
         $pager->setCurrentPage($page);
@@ -105,7 +126,7 @@ class SearchController
             [
                 'locale' => $locale,
                 'query' => $query,
-                'category' => $category,
+                'index' => $index,
             ],
             (integer) $page,
             (integer) $limit,
@@ -113,8 +134,8 @@ class SearchController
             'page',
             'limit',
             false,
-            count($aggregateHits),
-            $this->getCategoryTotals($aggregateHits),
+            $adapter->getNbResults(),
+            $this->getIndexTotals($adapter->getArray()),
             number_format($time, 8)
         );
 
@@ -130,35 +151,66 @@ class SearchController
     /**
      * Return a JSON encoded scalar array of index names.
      *
-     * @return JsonResponse
+     * @return Response
      */
-    public function categoriesAction()
+    public function indexesAction()
     {
         return $this->viewHandler->handle(
-            View::create($this->searchManager->getCategoryNames())
+            View::create(
+                array_map(
+                    function ($indexName) {
+                        $indexConfiguration = $this->indexConfigurationProvider->getIndexConfiguration($indexName);
+
+                        return $indexConfiguration ?: new IndexConfiguration($indexName);
+                    },
+                    $this->getAllowedIndexes()
+                )
+            )
         );
     }
 
     /**
      * Return the category totals for the search results.
      *
-     * @param Hit[]
+     * @param Hit []
      *
      * @return array
      */
-    private function getCategoryTotals($hits)
+    private function getIndexTotals($hits)
     {
-        $categoryNames = $this->searchManager->getCategoryNames();
-        $categoryCount = array_combine(
-            $categoryNames,
-            array_fill(0, count($categoryNames), 0)
+        $indexNames = $this->searchManager->getIndexNames();
+        $indexCount = array_combine(
+            $indexNames,
+            array_fill(0, count($indexNames), 0)
         );
 
         foreach ($hits as $hit) {
-            $category = $hit->getDocument()->getCategory();
-            ++$categoryCount[$category];
+            ++$indexCount[$hit->getDocument()->getIndex()];
         }
 
-        return $categoryCount;
+        return $indexCount;
+    }
+
+    /**
+     * @return array
+     */
+    private function getAllowedIndexes()
+    {
+        $allowedIndexNames = [];
+        $indexNames = $this->searchManager->getIndexNames();
+
+        foreach ($indexNames as $indexName) {
+            $indexConfiguration = $this->indexConfigurationProvider->getIndexConfiguration($indexName);
+            if (!$indexConfiguration) {
+                $allowedIndexNames[] = $indexName;
+                continue;
+            }
+
+            if ($this->securityChecker->hasPermission($indexConfiguration->getSecurityContext(), 'view')) {
+                $allowedIndexNames[] = $indexName;
+            }
+        }
+
+        return $allowedIndexNames;
     }
 }
