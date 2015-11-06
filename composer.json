@@ -24,7 +24,6 @@
         "imagine/imagine": "~0.6.1",
         "liip/theme-bundle": "1.3.*",
         "massive/search-bundle": "dev-develop",
-        "massive/search-bundle": "dev-feature/index-name-evaluation",
         "php": ">=5.5",
         "sensio/framework-extra-bundle": "3.0.*",
         "stof/doctrine-extensions-bundle": "1.1.*",
