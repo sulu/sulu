@@ -11,37 +11,52 @@
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Groups;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * BaseRole.
+ *
+ * @ExclusionPolicy("all")
  */
 abstract class BaseRole extends Role implements RoleInterface
 {
     /**
      * @var string
+     * @Expose
+     * @Groups({"fullRole", "partialRole"})
      */
     private $name;
 
     /**
      * @var string
+     * @Expose
+     * @Groups({"fullRole", "partialRole"})
      */
     private $system;
 
     /**
      * @var \DateTime
+     * @Expose
+     * @Groups({"fullRole", "partialRole"})
      */
     private $created;
 
     /**
      * @var \DateTime
+     * @Expose
+     * @Groups({"fullRole", "partialRole"})
      */
     private $changed;
 
     /**
      * @var int
+     * @Expose
+     * @Groups({"fullRole", "partialRole"})
      */
     private $id;
 
@@ -59,10 +74,6 @@ abstract class BaseRole extends Role implements RoleInterface
      * @var SecurityType
      */
     private $securityType;
-
-    public function __construct()
-    {
-    }
 
     /**
      * Set name.

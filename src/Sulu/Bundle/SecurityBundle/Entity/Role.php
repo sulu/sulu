@@ -11,26 +11,33 @@
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
-use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * Role.
+ *
+ * @ExclusionPolicy("all")
  */
 class Role extends BaseRole
 {
     /**
      * @var \Doctrine\Common\Collections\Collection
+     * @Expose
+     * @Groups({"fullRole"})
      */
     private $permissions;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
-     * @Exclude
      */
     private $userRoles;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     * @Expose
+     * @Groups({"fullRole"})
      */
     private $groups;
 
