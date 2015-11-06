@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * BUGFIX      #1751 [Persistence]     Fixed UserBlameSubscriber for new DoctrineBundle
     * ENHANCEMENT #1746 [Rest]            Use * as placeholder in ListBuilder search
+    * FEATURE     #1749 [SnippetBundle]   Enabled search in snippet selection overlay
     * ENHANCEMENT #1743 [SmartContent]    Fixed param names for website operators
     * FEATURE     #1739 [MediaBundle]     Implemented system collections
     * BUGFIX      #1733 [ContentBundle]   Added empty locale condition to fix empty locale bug
