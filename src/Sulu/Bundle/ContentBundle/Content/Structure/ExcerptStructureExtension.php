@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContentBundle\Content\Structure;
 
 use PHPCR\NodeInterface;
+use Sulu\Bundle\SearchBundle\Search\Factory;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
@@ -70,12 +71,19 @@ class ExcerptStructureExtension extends AbstractExtension
      */
     private $languageCode;
 
+    /**
+     * @var Factory
+     */
+    private $factory;
+
     public function __construct(
         StructureManagerInterface $structureManager,
-        ContentTypeManagerInterface $contentTypeManager
+        ContentTypeManagerInterface $contentTypeManager,
+        Factory $factory
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
+        $this->factory = $factory;
     }
 
     /**
@@ -166,6 +174,25 @@ class ExcerptStructureExtension extends AbstractExtension
         }
 
         return $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFieldMapping()
+    {
+        $mappings = parent::getFieldMapping();
+
+        foreach ($this->getExcerptStructure()->getPropertiesByTagName('sulu.search.field') as $property) {
+            $mappings['excerpt' . ucfirst($property->getName())] = [
+                'type' => 'string',
+                'field' => $this->factory->createMetadataExpression(
+                    sprintf('object.getExtensionsData()["excerpt"]["%s"]', $property->getName())
+                )
+            ];
+        }
+
+        return $mappings;
     }
 
     /**

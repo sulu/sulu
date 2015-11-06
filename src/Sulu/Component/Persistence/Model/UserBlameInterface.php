@@ -12,7 +12,7 @@
 namespace Sulu\Component\Persistence\Model;
 
 /**
- * Classes implemting this interface must ensure they keep track
+ * Classes implementing this interface must ensure they keep track
  * of uses that create and update it.
  */
 interface UserBlameInterface

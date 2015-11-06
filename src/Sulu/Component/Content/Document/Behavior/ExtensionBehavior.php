@@ -18,7 +18,7 @@ namespace Sulu\Component\Content\Document\Behavior;
 interface ExtensionBehavior extends StructureBehavior
 {
     /**
-     * Reutrn all extension data.
+     * Returns all extension data.
      *
      * @return array
      */
@@ -26,6 +26,8 @@ interface ExtensionBehavior extends StructureBehavior
 
     /**
      * Set all the extension data.
+     *
+     * @param array $extensionData
      */
     public function setExtensionsData($extensionData);
 
