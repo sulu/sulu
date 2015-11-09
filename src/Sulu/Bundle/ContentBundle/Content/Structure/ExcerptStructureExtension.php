@@ -1,7 +1,6 @@
 <?php
-
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -184,8 +183,11 @@ class ExcerptStructureExtension extends AbstractExtension
         $mappings = parent::getFieldMapping();
 
         foreach ($this->getExcerptStructure()->getPropertiesByTagName('sulu.search.field') as $property) {
+            $tag = $property->getTag('sulu.search.field');
+            $tagAttributes = $tag->getAttributes();
+
             $mappings['excerpt' . ucfirst($property->getName())] = [
-                'type' => 'string',
+                'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
                 'field' => $this->factory->createMetadataExpression(
                     sprintf('object.getExtensionsData()["excerpt"]["%s"]', $property->getName())
                 )

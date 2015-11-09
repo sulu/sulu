@@ -43,7 +43,7 @@
                 <title lang="en">Categories</title>
             </meta>
 
-            <tag name="sulu.search.field"/>
+            <tag name="sulu.search.field" type="array"/>
         </property>
 
         <property name="tags" type="tag_list">
@@ -52,7 +52,7 @@
                 <title lang="en">Tags</title>
             </meta>
 
-            <tag name="sulu.search.field"/>
+            <tag name="sulu.search.field" type="tags"/>
         </property>
 
         <property name="icon" type="media_selection">
