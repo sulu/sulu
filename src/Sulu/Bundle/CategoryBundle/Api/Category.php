@@ -33,9 +33,9 @@ class Category extends ApiEntityWrapper
      *
      * @VirtualProperty
      * @SerializedName("id")
+     * @Groups({"fullCategory","partialCategory"})
      *
      * @return array
-     * @Groups({"fullCategory","partialCategory"})
      */
     public function getId()
     {
@@ -47,13 +47,27 @@ class Category extends ApiEntityWrapper
      *
      * @VirtualProperty
      * @SerializedName("key")
+     * @Groups({"fullCategory","partialCategory"})
      *
      * @return string
-     * @Groups({"fullCategory","partialCategory"})
      */
     public function getKey()
     {
         return $this->entity->getKey();
+    }
+
+    /**
+     * Returns the default locale of the category.
+     *
+     * @VirtualProperty
+     * @SerializedName("defaultLocale")
+     * @Groups({"fullCategory","partialCategory"})
+     *
+     * @return string
+     */
+    public function getDefaultLocale()
+    {
+        return $this->entity->getDefaultLocale();
     }
 
     /**
@@ -67,7 +81,7 @@ class Category extends ApiEntityWrapper
      */
     public function getName()
     {
-        if (($translation = $this->getTranslation()) === null) {
+        if (($translation = $this->getTranslation(true)) === null) {
             return;
         }
 
@@ -75,13 +89,31 @@ class Category extends ApiEntityWrapper
     }
 
     /**
+     * Returns the locale of the Category dependent on the existing translations and default locale.
+     *
+     * @VirtualProperty
+     * @SerializedName("locale")
+     * @Groups({"fullCategory","partialCategory"})
+     *
+     * @return string
+     */
+    public function getLocale()
+    {
+        if (($translation = $this->getTranslation(true)) === null) {
+            return;
+        }
+
+        return $translation->getLocale();
+    }
+
+    /**
      * Returns the name of the Category dependent on the locale.
      *
      * @VirtualProperty
      * @SerializedName("meta")
+     * @Groups({"fullCategory","partialCategory"})
      *
      * @return array
-     * @Groups({"fullCategory","partialCategory"})
      */
     public function getMeta()
     {
@@ -202,7 +234,7 @@ class Category extends ApiEntityWrapper
      */
     public function setName($name)
     {
-        $translation = $this->getTranslation();
+        $translation = $this->getTranslation(false);
         if ($translation === null) {
             $translation = $this->createTranslation();
         }
@@ -337,6 +369,7 @@ class Category extends ApiEntityWrapper
             'key' => $this->getKey(),
             'name' => $this->getName(),
             'meta' => $this->getMeta(),
+            'defaultLocale' => $this->getDefaultLocale(),
             'creator' => $this->getCreator(),
             'changer' => $this->getChanger(),
             'created' => $this->getCreated(),
@@ -345,14 +378,34 @@ class Category extends ApiEntityWrapper
     }
 
     /**
-     * Returns the translation with the given locale.
+     * Returns the translation with the current locale.
+     *
+     * @param $withDefault
      *
      * @return CategoryTranslation
      */
-    private function getTranslation()
+    private function getTranslation($withDefault = false)
+    {
+        $translation = $this->getTranslationByLocale($this->locale);
+
+        if (true === $withDefault && null === $translation && $this->getDefaultLocale() !== null) {
+            return $this->getTranslationByLocale($this->getDefaultLocale());
+        }
+
+        return $translation;
+    }
+
+    /**
+     * Returns the translation with the given locale.
+     *
+     * @param string $locale
+     *
+     * @return CategoryTranslation
+     */
+    private function getTranslationByLocale($locale)
     {
         foreach ($this->entity->getTranslations() as $translation) {
-            if ($translation->getLocale() == $this->locale) {
+            if ($translation->getLocale() == $locale) {
                 return $translation;
             }
         }
@@ -372,6 +425,12 @@ class Category extends ApiEntityWrapper
         $translation->setCategory($this->entity);
 
         $this->entity->addTranslation($translation);
+
+        if ($this->getId() === null && $this->getDefaultLocale() === null) {
+            // new entity and new translation
+            // save first locale as default
+            $this->entity->setDefaultLocale($this->locale);
+        }
 
         return $translation;
     }

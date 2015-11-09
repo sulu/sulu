@@ -57,11 +57,19 @@ class CategoryControllerTest extends SuluTestCase
         -------------------------------------*/
         $category = new Category();
         $category->setKey('first-category-key');
+        $category->setDefaultLocale('en');
 
-        // name for first category
+        // name for first category (en)
         $categoryTrans = new CategoryTranslation();
         $categoryTrans->setLocale('en');
         $categoryTrans->setTranslation('First Category');
+        $categoryTrans->setCategory($category);
+        $category->addTranslation($categoryTrans);
+
+        // name for first category (de)
+        $categoryTrans = new CategoryTranslation();
+        $categoryTrans->setLocale('de');
+        $categoryTrans->setTranslation('Erste Kategorie');
         $categoryTrans->setCategory($category);
         $category->addTranslation($categoryTrans);
         $this->category1 = $category;
@@ -81,12 +89,13 @@ class CategoryControllerTest extends SuluTestCase
         -------------------------------------*/
         $category2 = new Category();
         $category2->setKey('second-category-key');
+        $category2->setDefaultLocale('en');
         $this->category2 = $category2;
 
         // name for second category
         $categoryTrans2 = new CategoryTranslation();
         $categoryTrans2->setLocale('de');
-        $categoryTrans2->setTranslation('Second Category');
+        $categoryTrans2->setTranslation('Zweite Kategorie');
         $categoryTrans2->setCategory($category2);
         $category2->addTranslation($categoryTrans2);
 
@@ -94,7 +103,7 @@ class CategoryControllerTest extends SuluTestCase
         $categoryMeta2 = new CategoryMeta();
         $categoryMeta2->setLocale('de');
         $categoryMeta2->setKey('description');
-        $categoryMeta2->setValue('Description of second Category');
+        $categoryMeta2->setValue('Beschreibung der zweiten Kategorie');
         $categoryMeta2->setCategory($category2);
         $category2->addMeta($categoryMeta2);
 
@@ -111,6 +120,7 @@ class CategoryControllerTest extends SuluTestCase
         -------------------------------------*/
         $category3 = new Category();
         $category3->setParent($category);
+        $category3->setDefaultLocale('en');
         $this->category3 = $category3;
 
         // name for third category
@@ -134,6 +144,7 @@ class CategoryControllerTest extends SuluTestCase
         -------------------------------------*/
         $category4 = new Category();
         $category4->setParent($category3);
+        $category4->setDefaultLocale('en');
         $this->category4 = $category4;
 
         // name for fourth category
@@ -208,9 +219,11 @@ class CategoryControllerTest extends SuluTestCase
         $categories = $response->_embedded->categories;
 
         $this->assertEquals('First Category', $categories[0]->name);
+        $this->assertEquals('en', $categories[0]->defaultLocale);
         $this->assertEquals('Third Category', $categories[0]->children[0]->name);
         $this->assertEquals('Fourth Category', $categories[0]->children[0]->children[0]->name);
         $this->assertEquals('second-category-key', $categories[1]->key);
+        $this->assertEquals('en', $categories[1]->defaultLocale);
 
         $this->assertCount(2, $categories);
         $this->assertCount(1, $categories[0]->children);
@@ -297,6 +310,7 @@ class CategoryControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('New Category', $response->name);
         $this->assertEquals('new-category-key', $response->key);
+        $this->assertEquals('en', $response->defaultLocale);
         $this->assertEquals(1, count($response->meta));
         $this->assertEquals('myKey', $response->meta[0]->key);
         $this->assertEquals('myValue', $response->meta[0]->value);
@@ -346,6 +360,7 @@ class CategoryControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('Modified Category', $response->name);
         $this->assertEquals('modified-category-key', $response->key);
+        $this->assertEquals('en', $response->defaultLocale);
         $this->assertEquals(2, count($response->meta));
         $this->assertTrue('modifiedKey' === $response->meta[0]->key || 'newMeta' === $response->meta[0]->key);
         $this->assertTrue('This meta got overriden' === $response->meta[0]->value || 'This meta got added' === $response->meta[0]->value);
@@ -537,5 +552,85 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals(2, count($response->_embedded->categories));
         $this->assertEquals($this->category4->getId(), $response->_embedded->categories[0]->id);
         $this->assertEquals($this->category3->getId(), $response->_embedded->categories[1]->id);
+    }
+
+    public function testGetFallbacks()
+    {
+        $category = new Category();
+        $category->setDefaultLocale('en');
+
+        $categoryTrans = new CategoryTranslation();
+        $categoryTrans->setLocale('en');
+        $categoryTrans->setTranslation('EN');
+        $categoryTrans->setCategory($category);
+        $category->addTranslation($categoryTrans);
+
+        $categoryTrans = new CategoryTranslation();
+        $categoryTrans->setLocale('en_us');
+        $categoryTrans->setTranslation('EN-US');
+        $categoryTrans->setCategory($category);
+        $category->addTranslation($categoryTrans);
+
+        $this->em->persist($category);
+        $this->em->flush();
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/categories/' . $category->getId() . '?locale=de'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals('en', $response->locale);
+        $this->assertEquals('en', $response->defaultLocale);
+        $this->assertEquals('EN', $response->name);
+
+        $client->request(
+            'GET',
+            '/api/categories/' . $category->getId() . '?locale=en_us'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals('en_us', $response->locale);
+        $this->assertEquals('en', $response->defaultLocale);
+        $this->assertEquals('EN-US', $response->name);
+    }
+
+    public function testCGetFallbacks()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/categories?locale=de&flat=true'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertCount(4, $response->_embedded->categories);
+        $this->assertEquals('de', $response->_embedded->categories[0]->locale);
+        $this->assertEquals('en', $response->_embedded->categories[0]->defaultLocale);
+        $this->assertEquals('Erste Kategorie', $response->_embedded->categories[0]->name);
+
+        $this->assertEquals('de', $response->_embedded->categories[1]->locale);
+        $this->assertEquals('en', $response->_embedded->categories[1]->defaultLocale);
+        $this->assertEquals('Zweite Kategorie', $response->_embedded->categories[1]->name);
+
+        $this->assertEquals('en', $response->_embedded->categories[2]->locale);
+        $this->assertEquals('en', $response->_embedded->categories[2]->defaultLocale);
+        $this->assertEquals('Third Category', $response->_embedded->categories[2]->name);
+
+        $this->assertEquals('en', $response->_embedded->categories[3]->locale);
+        $this->assertEquals('en', $response->_embedded->categories[3]->defaultLocale);
+        $this->assertEquals('Fourth Category', $response->_embedded->categories[3]->name);
     }
 }
