@@ -14,6 +14,7 @@ namespace Sulu\Bundle\WebsiteBundle\Resolver;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Resolves the request_analyzer to an array.
@@ -34,11 +35,16 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
      * @var array
      */
     private $previewDefaults;
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
 
-    public function __construct(WebspaceManagerInterface $webspaceManager, $environment, $previewDefaults = [])
+    public function __construct(WebspaceManagerInterface $webspaceManager, RequestStack $requestStack, $environment, $previewDefaults = [])
     {
         $this->environment = $environment;
         $this->webspaceManager = $webspaceManager;
+        $this->requestStack = $requestStack;
 
         $this->previewDefaults = array_merge(['analyticsKey' => ''], $previewDefaults);
     }
@@ -84,8 +90,8 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
                 'portalUrl' => $portalUrl,
                 'resourceLocatorPrefix' => '',
                 'resourceLocator' => '',
-                'get' => [],
-                'post' => [],
+                'get' => $this->requestStack->getCurrentRequest()->query->all(),
+                'post' => $this->requestStack->getCurrentRequest()->request->all(),
                 'analyticsKey' => $this->previewDefaults['analyticsKey'],
             ],
         ];
