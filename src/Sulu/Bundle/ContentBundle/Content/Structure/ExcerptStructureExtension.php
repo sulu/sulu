@@ -15,10 +15,12 @@ use PHPCR\NodeInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Export\ContentExportManager;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Extension\ExportExtensionInterface;
+use Sulu\Component\Content\Import\ContentImportManager;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 
 /**
@@ -80,11 +82,13 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
     public function __construct(
         StructureManagerInterface $structureManager,
         ContentTypeManagerInterface $contentTypeManager,
-        ContentExportManager $contentExportManager
+        ContentExportManager $contentExportManager,
+        ContentImportManager $contentImportManager
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
         $this->contentExportManager = $contentExportManager;
+        $this->contentImportManager = $contentImportManager;
     }
 
     /**
@@ -229,5 +233,52 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
         }
 
         return $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getImportPropertyNames()
+    {
+        $propertyNames = [];
+
+        foreach ($this->getExcerptStructure()->getProperties() as $property) {
+            $propertyNames[] = $property->getName();
+        }
+
+        return $propertyNames;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function import(NodeInterface $node, $data, $webspaceKey, $languageCode, $format)
+    {
+        $this->setLanguageCode($languageCode, 'i18n', $format);
+
+        foreach ($this->excerptStructure->getProperties() as $property) {
+            $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+
+            if (
+                isset($data[$property->getName()])
+                && $this->contentImportManager->hasImport($property->getContentTypeName(), $format)
+            ) {
+                $property->setValue($data[$property->getName()]);
+                /** @var ContentTypeExportInterface $contentType */
+                $contentType->importData(
+                    $node,
+                    new TranslatedProperty(
+                        $property,
+                        $languageCode,
+                        $this->languageNamespace,
+                        $this->additionalPrefix
+                    ),
+                    null, // userid
+                    $webspaceKey,
+                    $languageCode,
+                    null // segmentkey
+                );
+            }
+        }
     }
 }

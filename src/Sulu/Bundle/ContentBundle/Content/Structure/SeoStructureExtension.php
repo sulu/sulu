@@ -132,4 +132,38 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
 
         return;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getImportPropertyNames()
+    {
+        return $this->properties;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function import(NodeInterface $node, $data, $webspaceKey, $languageCode, $format)
+    {
+        $this->setLanguageCode($languageCode, 'i18n', null);
+
+        $this->convertCheckboxData($data, 'noIndex');
+        $this->convertCheckboxData($data, 'noFollow');
+        $this->convertCheckboxData($data, 'hideInSitemap');
+
+        $this->save($node, $data, $webspaceKey, $languageCode);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function convertCheckboxData(&$data, $key, $default = false)
+    {
+        if (!empty($data[$key]) && $data[$key] !== '0') {
+            $data[$key] = true;
+        }
+
+        $data[$key] = $default;
+    }
 }

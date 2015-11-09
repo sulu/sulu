@@ -11,11 +11,14 @@
 namespace Sulu\Component\Content\Import;
 
 use PHPCR\NodeInterface;
+use Psr\Log\LoggerInterface;
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Extension\ExportExtensionInterface;
 use Sulu\Component\Content\Import\Exception\WebspaceFormatImporterNotFoundException;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
@@ -61,6 +64,11 @@ class Webspace implements WebspaceInterface
     protected $rlpStrategy;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * {@inheritdoc}
      */
     public function add($service, $format)
@@ -76,6 +84,7 @@ class Webspace implements WebspaceInterface
      * @param RlpStrategyInterface $rlpStrategy
      * @param StructureManagerInterface $structureManager
      * @param ContentImportManagerInterface $contentImportManager
+     * @param LoggerInterface $logger
      */
     public function __construct(
         DocumentManager $documentManager,
@@ -84,7 +93,8 @@ class Webspace implements WebspaceInterface
         LegacyPropertyFactory $legacyPropertyFactory,
         RlpStrategyInterface $rlpStrategy,
         StructureManagerInterface $structureManager,
-        ContentImportManagerInterface $contentImportManager
+        ContentImportManagerInterface $contentImportManager,
+        LoggerInterface $logger
     ) {
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
@@ -93,6 +103,7 @@ class Webspace implements WebspaceInterface
         $this->rlpStrategy = $rlpStrategy;
         $this->structureManager = $structureManager;
         $this->contentImportManager = $contentImportManager;
+        $this->logger = $logger;
     }
 
     /**
@@ -112,6 +123,12 @@ class Webspace implements WebspaceInterface
                 $failedImports[] = $parsedData;
             }
         }
+
+        return [
+            count($parsedDataList),
+            count($failedImports),
+            $failedImports,
+        ];
     }
 
     /**
@@ -123,25 +140,58 @@ class Webspace implements WebspaceInterface
      */
     protected function importDocument(array $parsedData, $format, $webspaceKey, $locale)
     {
-        if (
-            !isset($parsedData['uuid'])
-            || !isset($parsedData['structureType'])
-            || !isset($parsedData['data'])
-        ) {
-            return;
+        try {
+            if (
+                !isset($parsedData['uuid'])
+                || !isset($parsedData['structureType'])
+                || !isset($parsedData['data'])
+            ) {
+                throw new \Exception('uuid, structureType or data for import not found.');
+            }
+
+            $uuid = $parsedData['uuid'];
+            $structureType = $parsedData['structureType'];
+            $data = $parsedData['data'];
+
+            try {
+                /** @var BasePageDocument $document */
+                $document = $this->documentManager->find(
+                    $uuid,
+                    $locale,
+                    [
+                        'type' => Structure::TYPE_PAGE,
+                        'load_ghost_content' => false,
+                    ]
+                );
+            } catch (\RuntimeException $e) {
+                // TODO create new page for none exist locale
+            }
+
+            $document->setStructureType($structureType);
+
+            if ($document->getWebspaceName() != $webspaceKey) {
+                throw new \Exception(
+                    sprintf('Document(%s) is part of another webspace: "%s"', $uuid, $document->getWebspaceName())
+                );
+            }
+
+            if (!$document instanceof BasePageDocument) {
+                throw new \Exception(
+                    sprintf('Document(%s) is not an instanecof BasePageDocument', $uuid)
+                );
+            }
+
+            $this->setDocumentData($document, $structureType, $webspaceKey, $locale, $format, $data);
+
+            return true;
+
+        } catch (\Exception $e) {
+            $this->logger->error(
+                get_class($e) . ': <error>' . $e->getMessage() . '</error>' . PHP_EOL . $e->getTraceAsString()
+            );
         }
 
-        $uuid = $parsedData['uuid'];
-        $structureType = $parsedData['structureType'];
-        $data = $parsedData['data'];
-
-        $document = $this->documentManager->find($uuid, $locale);
-
-        if ($document->getWebspaceName() != $webspaceKey || !$document instanceof BasePageDocument) {
-            return;
-        }
-
-        $this->setDocumentData($document, $structureType, $webspaceKey, $locale, $format, $data);
+        return false;
     }
 
     /**
@@ -152,8 +202,14 @@ class Webspace implements WebspaceInterface
      * @param string $format
      * @param array $data
      */
-    protected function setDocumentData(BasePageDocument $document, $structureType, $webspaceKey, $locale, $format, $data)
-    {
+    protected function setDocumentData(
+        BasePageDocument $document,
+        $structureType,
+        $webspaceKey,
+        $locale,
+        $format,
+        $data
+    ) {
         $structure = $this->structureManager->getStructure($structureType);
         $properties = $structure->getProperties(true);
         $node = $this->documentRegistry->getNodeForDocument($document);
@@ -185,8 +241,8 @@ class Webspace implements WebspaceInterface
 
         $extensions = $this->structureManager->getExtensions($structureType);
 
-        foreach ($extensions as $extension) {
-            $this->importExtension($extension, $node, $data, $webspaceKey, $locale, $format);
+        foreach ($extensions as $key => $extension) {
+            $this->importExtension($extension, $key, $node, $data, $webspaceKey, $locale, $format);
         }
 
         $this->documentManager->persist($document);
@@ -194,16 +250,36 @@ class Webspace implements WebspaceInterface
     }
 
     /**
-     * @param $extension
-     * @param $node
-     * @param $data
-     * @param $webspaceKey
-     * @param $locale
-     * @param $format
+     * @param ExportExtensionInterface $extension
+     * @param string $extensionKey
+     * @param NodeInterface $node
+     * @param array $data
+     * @param string $webspaceKey
+     * @param string $locale
+     * @param string $format
      */
-    protected function importExtension($extension, $node, $data, $webspaceKey, $locale, $format)
-    {
-        // TODO
+    protected function importExtension(
+        ExportExtensionInterface $extension,
+        $extensionKey,
+        NodeInterface $node,
+        $data,
+        $webspaceKey,
+        $locale,
+        $format
+    ) {
+        $extensionData = [];
+        foreach ($extension->getImportPropertyNames() as $propertyName) {
+            $value = $this->getParser($format)->getPropertyData(
+                $propertyName,
+                $data,
+                null,
+                $extensionKey
+            );
+
+            $extensionData[$propertyName] = $value;
+        }
+
+        $extension->import($node, $extensionData, $webspaceKey, $locale, $format);
     }
 
     /**

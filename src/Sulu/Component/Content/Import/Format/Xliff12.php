@@ -137,7 +137,7 @@ class Xliff12 implements WebspaceFormatImportInterface
                 }
 
                 $name = (string) $attributes['resname'];
-                $value = $this->utf8ToCharset((string) $translation->target, $encoding);
+                $value = $this->utf8ToCharset((string) $translation->source, $encoding);
 
                 if (strpos($name, '#') !== false) {
                     $names = explode('#', $name, 2);

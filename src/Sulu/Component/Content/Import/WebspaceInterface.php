@@ -29,7 +29,7 @@ interface WebspaceInterface
      * @param string $filePath
      * @param string $format
      *
-     * @return string
+     * @return array
      *
      * @throws WebspaceFormatImporterNotFoundException
      */

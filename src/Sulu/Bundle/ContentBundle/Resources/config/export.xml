@@ -40,6 +40,7 @@
             <argument type="service" id="sulu.content.rlp.strategy.tree" />
             <argument type="service" id="sulu.content.structure_manager" />
             <argument type="service" id="sulu_content.import.manager" />
+            <argument type="service" id="logger" />
         </service>
 
         <service id="sulu_content.import.webspace.xliff12" class="%sulu_content.import.webspace.xliff12%">

@@ -69,6 +69,7 @@
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu_content.export.manager" />
+            <argument type="service" id="sulu_content.import.manager" />
             <tag name="sulu.structure.extension"/>
         </service>
 

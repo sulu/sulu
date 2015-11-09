@@ -10,6 +10,8 @@
 
 namespace Sulu\Component\Content\Extension;
 
+use PHPCR\NodeInterface;
+
 interface ExportExtensionInterface
 {
     /**
@@ -19,4 +21,18 @@ interface ExportExtensionInterface
      * @return string[]
      */
     public function export($properties, $format = null);
+
+    /**
+     * @return string[]
+     */
+    public function getImportPropertyNames();
+
+    /**
+     * @param NodeInterface $node
+     * @param array $data
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $format
+     */
+    public function import(NodeInterface $node, $data, $webspaceKey, $languageCode, $format);
 }
