@@ -22,7 +22,7 @@ class TagsConverterTest extends \PHPUnit_Framework_TestCase
 
         $converter = new TagsConverter($manager->reveal());
 
-        $this->assertEquals('|1|2|3|', $converter->convert(['Tag1', 'Tag2', 'Tag3']));
+        $this->assertEquals([1, 2, 3], $converter->convert(['Tag1', 'Tag2', 'Tag3']));
         $manager->resolveTagNames(['Tag1', 'Tag2', 'Tag3'])->shouldBeCalled();
     }
 }

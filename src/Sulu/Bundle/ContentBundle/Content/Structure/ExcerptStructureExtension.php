@@ -190,7 +190,7 @@ class ExcerptStructureExtension extends AbstractExtension
                 'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
                 'field' => $this->factory->createMetadataExpression(
                     sprintf('object.getExtensionsData()["excerpt"]["%s"]', $property->getName())
-                )
+                ),
             ];
         }
 

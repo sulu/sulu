@@ -11,9 +11,7 @@
 namespace Sulu\Bundle\TagBundle\Search;
 
 use Massive\Bundle\SearchBundle\Search\Converter\ConverterInterface;
-use Massive\Bundle\SearchBundle\Search\Field;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Converts tag names into id array.
