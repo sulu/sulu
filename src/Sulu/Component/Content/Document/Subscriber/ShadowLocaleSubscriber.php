@@ -42,10 +42,6 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
      */
     private $encoder;
 
-    /**
-     * @param PropertyEncoder   $encoder
-     * @param DocumentInspector $inspector
-     */
     public function __construct(
         PropertyEncoder $encoder,
         DocumentInspector $inspector,
@@ -100,7 +96,7 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
      *
      * Note that this should happen before the fallback locale has been resolved
      *
-     * @param HydrateEvent $event
+     * @param AbstractMappingEvent $event
      */
     public function handleHydrate(AbstractMappingEvent $event)
     {
@@ -133,6 +129,10 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
         $document = $event->getDocument();
 
         if (!$document instanceof ShadowLocaleBehavior) {
+            return;
+        }
+
+        if (!$event->getLocale()) {
             return;
         }
 

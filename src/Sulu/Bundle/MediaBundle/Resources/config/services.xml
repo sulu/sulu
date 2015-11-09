@@ -21,6 +21,7 @@
         <parameter key="sulu_media.type_manager.class">Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManager</parameter>
         <parameter key="sulu_media.collection_entity">SuluMediaBundle:Collection</parameter>
         <parameter key="sulu_category.entity.media">SuluMediaBundle:Media</parameter>
+        <parameter key="sulu_media.entity.file_version_meta">SuluMediaBundle:FileVersionMeta</parameter>
         <parameter key="sulu_media.twig_extension.disposition_type.class">Sulu\Bundle\MediaBundle\Twig\DispositionTypeTwigExtension</parameter>
         <parameter key="sulu_media.twig_extension.media.class">Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension</parameter>
         <parameter key="tmp">Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension</parameter>
@@ -50,6 +51,12 @@
                  factory-service="doctrine.orm.entity_manager"
                  factory-method="getRepository">
             <argument>%sulu_media.collection_entity%</argument>
+        </service>
+        <service id="sulu_media.file_version_meta_repository"
+                 class="Sulu\Bundle\MediaBundle\Entity\FileVersionMetaRepository"
+                 factory-service="doctrine.orm.entity_manager"
+                 factory-method="getRepository">
+            <argument>%sulu_media.entity.file_version_meta%</argument>
         </service>
         <service id="sulu_media.storage" class="%sulu_media.storage.class%">
             <argument>%sulu_media.media.storage.local.path%</argument>
@@ -152,6 +159,12 @@
             <argument type="service" id="dubture_ffmpeg.ffmpeg"/>
         </service>
 
+        <service id="sulu_media.permission_listener" class="Sulu\Bundle\MediaBundle\Search\EventListener\PermissionListener">
+            <argument type="service" id="sulu_media.file_version_meta_repository"/>
+            <argument type="service" id="massive_search.search_manager"/>
+            <tag name="kernel.event_listener" event="sulu_security.permission_update" method="onPermissionUpdate"/>
+        </service>
+
         <service id="sulu_media.js_config" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">
             <argument>sulu-media</argument>
             <argument type="collection">
@@ -170,6 +183,24 @@
 
         <service id="sulu_media.security_context" class="Sulu\Component\Security\Authorization\SecurityCondition">
             <argument>sulu.media.collections</argument>
+        </service>
+
+        <service id="sulu_media.system_collections.cache" class="Symfony\Component\Config\ConfigCache">
+            <argument>%sulu.cache_dir%/system_collection.cache</argument>
+            <argument>%kernel.debug%</argument>
+        </service>
+
+        <service id="sulu_media.system_collections.manager" class="Sulu\Component\Media\SystemCollections\SystemCollectionManager">
+            <argument>%sulu_media.system_collections%</argument>
+            <argument type="service" id="sulu_media.collection_manager"/>
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="security.token_storage" on-invalid="null"/>
+            <argument type="service" id="sulu_media.system_collections.cache"/>
+            <argument>%kernel.default_locale%</argument>
+        </service>
+
+        <service id="sulu_media.system_collections.warm_up" class="Sulu\Component\Media\SystemCollections\SystemCollectionBuilder">
+            <tag name="massive_build.builder" />
         </service>
     </services>
 </container>

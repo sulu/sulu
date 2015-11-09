@@ -788,7 +788,6 @@ class UserControllerTest extends SuluTestCase
         $this->assertObjectNotHasAttribute('account', $contact);
         $this->assertObjectNotHasAttribute('phones', $contact);
         $this->assertObjectNotHasAttribute('faxes', $contact);
-        $this->assertObjectNotHasAttribute('emails', $contact);
         $this->assertObjectNotHasAttribute('position', $contact);
         $this->assertObjectNotHasAttribute('addresses', $contact);
         $this->assertObjectNotHasAttribute('notes', $contact);

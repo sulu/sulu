@@ -11,18 +11,45 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 
 class FileVersionMetaRepository extends EntityRepository implements FileVersionMetaRepositoryInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function findLatest()
+    public function findLatestWithoutSecurity()
     {
         $queryBuilder = $this->createQueryBuilder('fileVersionMeta')
             ->leftJoin('fileVersionMeta.fileVersion', 'fileVersion')
             ->leftJoin('fileVersion.file', 'file')
-            ->where('file.version = fileVersion.version');
+            ->leftJoin('file.media', 'media')
+            ->leftJoin('media.collection', 'collection')
+            ->leftJoin(
+                AccessControl::class,
+                'accessControl',
+                'WITH',
+                'accessControl.entityClass = :entityClass AND accessControl.entityId = collection.id'
+            )
+            ->where('file.version = fileVersion.version')
+            ->andWhere('accessControl.id is null');
+
+        return $queryBuilder->setParameter('entityClass', Collection::class)->getQuery()->getResult();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findByCollectionId($collectionId)
+    {
+        $queryBuilder = $this->createQueryBuilder('fileVersionMeta')
+            ->leftJoin('fileVersionMeta.fileVersion', 'fileVersion')
+            ->leftJoin('fileVersion.file', 'file')
+            ->leftJoin('file.media', 'media')
+            ->leftJoin('media.collection', 'collection')
+            ->where('collection.id = :collectionId');
+
+        $queryBuilder->setParameter('collectionId', $collectionId);
 
         return $queryBuilder->getQuery()->getResult();
     }

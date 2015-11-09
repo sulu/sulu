@@ -2,6 +2,55 @@
 
 ## dev-develop
 
+### System Collections
+
+Remove the config `sulu_contact.form.avatar_collection` and note it you will need it in the sql statement below for the
+placeholder `{old-avatar-collection}` (default value is `1`).
+
+Update the database schema and then update the data-fixtures by running following sql statement.
+
+```bash
+app/console doctrine:schema:update --force
+```
+
+```sql
+UPDATE me_collection_types SET collection_type_key='collection.default', name='Default' WHERE id=1;
+INSERT INTO me_collection_types (id, name, collection_type_key) VALUES ('2', 'System Collections', 'collection.system');
+```
+
+The following sql statement moves the avatar images into the newly created system collections. To find the value for the
+placeholder `{new-system-collection-id}` you can browse in the admin to the collection and note the `id` you find in the
+url.
+
+```sql
+UPDATE me_media SET idCollections={new-system-collection-id} WHERE idCollections={old-avatar-collection};
+```
+
+### Search
+
+The search mapping has to be changed, in particular the `index` tag. It is now
+evaluated the same way as the other fields, so using `<index name="..."/>` will
+now try to resolve the name of the index using a property from the given
+object. If the old behavior is desired `<index value="..."/>` should be used
+now.
+
+Also the structure of the indexes has changed. Instead of one `page` index
+containing all the pages this index is split into smaller ones after the scheme
+`page_<webspace-key>`. This means that your own SearchController have to be
+adapted. Additionally you have to rebuild your index, in order for these
+changes to apply:
+
+```bash
+app/console massive:search:index:rebuild --purge
+
+### Category
+Category has now a default locale this has to set before use. You can use this sql statement after update your schema
+(`app/console doctrine:schema:update --force`):
+
+```sql
+UPDATE ca_categories AS c SET default_locale = (SELECT locale FROM ca_category_translations WHERE idCategories = c.id LIMIT 1) WHERE default_locale = "";
+```
+
 ### Websocket Component
 The following Interfaces has new methods
 

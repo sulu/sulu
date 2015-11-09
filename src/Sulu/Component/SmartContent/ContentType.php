@@ -178,8 +178,8 @@ class ContentType extends ComplexContentType
             'page_parameter' => new PropertyParameter('page_parameter', 'p'),
             'tags_parameter' => new PropertyParameter('tags_parameter', 'tags'),
             'categories_parameter' => new PropertyParameter('categories_parameter', 'categories'),
-            'website_tag_operator' => new PropertyParameter('website_tag_operator', 'OR'),
-            'website_category_operator' => new PropertyParameter('website_category_operator', 'OR'),
+            'website_tags_operator' => new PropertyParameter('website_tags_operator', 'OR'),
+            'website_categories_operator' => new PropertyParameter('website_categories_operator', 'OR'),
             'sorting' => new PropertyParameter('sorting', $configuration->getSorting(), 'collection'),
             'present_as' => new PropertyParameter('present_as', [], 'collection'),
             'category_root' => new PropertyParameter('category_root', null),
@@ -259,13 +259,13 @@ class ContentType extends ComplexContentType
 
         // extends selected filter with requested tags
         $filters['websiteTags'] = $this->tagRequestHandler->getTags($params['tags_parameter']->getValue());
-        $filters['websiteTagOperator'] = $params['website_tag_operator']->getValue();
+        $filters['websiteTagsOperator'] = $params['website_tags_operator']->getValue();
 
         // extends selected filter with requested categories
         $filters['websiteCategories'] = $this->categoryRequestHandler->getCategories(
             $params['categories_parameter']->getValue()
         );
-        $filters['websiteCategoryOperator'] = $params['website_category_operator']->getValue();
+        $filters['websiteCategoriesOperator'] = $params['website_categories_operator']->getValue();
 
         // resolve tags to id
         if (!empty($filters['tags'])) {

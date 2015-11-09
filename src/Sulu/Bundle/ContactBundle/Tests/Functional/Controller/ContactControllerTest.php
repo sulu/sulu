@@ -286,6 +286,7 @@ class ContactControllerTest extends SuluTestCase
         -------------------------------------*/
         $category = new Category();
         $category->setKey('first-category-key');
+        $category->setDefaultLocale('en');
 
         $this->category = $category;
 
@@ -310,6 +311,7 @@ class ContactControllerTest extends SuluTestCase
         -------------------------------------*/
         $category2 = new Category();
         $category2->setKey('second-category-key');
+        $category2->setDefaultLocale('en');
 
         $this->category2 = $category2;
 

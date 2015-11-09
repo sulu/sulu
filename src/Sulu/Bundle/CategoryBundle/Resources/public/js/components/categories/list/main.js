@@ -47,12 +47,15 @@ define(function () {
         templates: ['/admin/category/template/category/list'],
 
         initialize: function () {
+            this.locale = this.options.locale;
+
             this.sandbox.sulu.triggerDeleteSuccessLabel('labels.success.category-delete-desc');
             this.bindCustomEvents();
             this.render();
         },
 
         bindCustomEvents: function() {
+            this.sandbox.on('sulu.header.language-changed', this.changeLanguage.bind(this));
             this.sandbox.on('husky.datagrid.item.click', this.saveLastClickedCategory.bind(this));
             this.sandbox.on('sulu.toolbar.add', this.addNewCategory.bind(this));
             this.sandbox.on('sulu.toolbar.delete', this.deleteSelected.bind(this));
@@ -62,6 +65,15 @@ define(function () {
                 var postfix = number > 0 ? 'enable' : 'disable';
                 this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'deleteSelected', false);
             }.bind(this));
+        },
+
+        /**
+         * Triggered when locale was changed.
+         *
+         * @param {{id}} localeItem
+         */
+        changeLanguage: function(localeItem) {
+            this.locale = localeItem.id;
         },
 
         /**
@@ -79,7 +91,7 @@ define(function () {
                 },
                 {
                     el: this.$find(constants.listSelector),
-                    url: '/admin/api/categories?flat=true&sortBy=depth&sortOrder=asc&locale=' + this.options.locale,
+                    url: '/admin/api/categories?flat=true&sortBy=depth&sortOrder=asc&locale=' + this.locale,
                     childrenPropertyName: 'hasChildren',
                     resultKey: 'categories',
                     searchFields: ['name'],
@@ -88,6 +100,8 @@ define(function () {
                     viewOptions: {
                         table: {
                             openChildId: this.sandbox.sulu.getUserSetting(constants.lastClickedCategorySettingsKey),
+                            hideChildrenAtBeginning: false,
+                            cropContents: false,
                             selectItem: {
                                 type: 'checkbox',
                                 inFirstCell: true
@@ -99,7 +113,28 @@ define(function () {
                                     callback: this.addNewCategory.bind(this)
                                 }
                             ],
-                            cropContents: false
+                            badges: [
+                                {
+                                    column: 'name',
+                                    callback: function(item, badge) {
+                                        if (item.defaultLocale === item.locale && item.locale !== this.locale) {
+                                            badge.title = item.locale;
+
+                                            return badge;
+                                        }
+                                    }.bind(this)
+                                }
+                            ],
+                            cssClasses: [
+                                {
+                                    column: 'name',
+                                    callback: function(item) {
+                                        if (item.defaultLocale === item.locale && item.locale !== this.locale) {
+                                            return 'row-gray';
+                                        }
+                                    }.bind(this)
+                                }
+                            ]
                         }
                     }
                 }

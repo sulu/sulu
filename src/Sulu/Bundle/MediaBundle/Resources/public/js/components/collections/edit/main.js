@@ -23,16 +23,16 @@ define([
         header: function() {
             var buttons = {};
 
-            if (SecurityChecker.hasPermission(this.data, 'edit')) {
+            if (SecurityChecker.hasPermission(this.data, 'edit') && !this.data.locked) {
                 buttons.editCollection = {};
                 buttons.moveCollection = {};
             }
 
-            if (SecurityChecker.hasPermission(this.data, 'delete')) {
+            if (SecurityChecker.hasPermission(this.data, 'delete') && !this.data.locked) {
                 buttons.deleteCollection = {};
             }
 
-            if (SecurityChecker.hasPermission(this.data, 'security')) {
+            if (SecurityChecker.hasPermission(this.data, 'security') && !this.data.locked) {
                 buttons.permissionSettings = {};
             }
 
@@ -91,7 +91,7 @@ define([
          * Updates the state of the add button in the data navigation based on the security of the current collection.
          */
         updateDataNavigationAddButton: function() {
-            if (SecurityChecker.hasPermission(this.data, 'add')) {
+            if (SecurityChecker.hasPermission(this.data, 'add') && !this.data.locked) {
                 this.sandbox.emit('husky.data-navigation.collections.add-button.show');
             } else {
                 this.sandbox.emit('husky.data-navigation.collections.add-button.hide');

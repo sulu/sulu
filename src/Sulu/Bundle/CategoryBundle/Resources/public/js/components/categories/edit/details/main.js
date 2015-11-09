@@ -36,12 +36,27 @@ define(function () {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.saved = true;
 
+            this.locale = this.options.locale;
+            this.prepareData(this.options.data);
+
             this.bindCustomEvents();
             this.render();
 
-            if (!!this.options.data.id) {
-                this.sandbox.sulu.saveUserSetting(constants.lastClickedCategorySettingsKey, this.options.data.id);
+            if (!!this.data.id) {
+                this.sandbox.sulu.saveUserSetting(constants.lastClickedCategorySettingsKey, this.data.id);
             }
+        },
+
+        /**
+         * Prepare the data with fallbacks.
+         */
+        prepareData: function(data) {
+            this.data = data;
+            if (this.data.defaultLocale === this.data.locale && this.data.locale !== this.locale) {
+                this.fallbackData = {locale: this.data.locale, name: this.data.name};
+                this.data.name = null;
+            }
+            this.data.locale = this.locale;
         },
 
         /**
@@ -52,25 +67,47 @@ define(function () {
                 this.sandbox.emit('sulu.category.categories.list');
             }.bind(this));
 
+            this.sandbox.on('sulu.header.language-changed', this.changeLanguage.bind(this));
             this.sandbox.on('sulu.toolbar.save', this.saveDetails.bind(this));
             this.sandbox.on('sulu.toolbar.delete', this.deleteCategory.bind(this));
             this.sandbox.on('sulu.category.categories.changed', this.changeHandler.bind(this));
         },
 
         /**
+         * Triggered when locale was changed.
+         *
+         * @param {{id}} localeItem
+         */
+        changeLanguage: function(localeItem) {
+            this.locale = localeItem.id;
+        },
+
+        /**
          * Renderes the details tab
          */
         render: function () {
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/category/template/category/form/details'));
+            var placeholder = this.sandbox.translate('sulu.category.category-name');
+
+            if (!!this.fallbackData) {
+                placeholder = this.fallbackData.locale.toUpperCase() + ': ' + this.fallbackData.name;
+            }
+
+            this.sandbox.dom.html(
+                this.$el,
+                this.renderTemplate(
+                    '/admin/category/template/category/form/details',
+                    {placeholder: placeholder}
+                )
+            );
             this.sandbox.form.create(constants.detailsFromSelector);
-            this.sandbox.form.setData(constants.detailsFromSelector, this.options.data).then(function () {
+            this.sandbox.form.setData(constants.detailsFromSelector, this.data).then(function() {
                 this.bindDomEvents();
             }.bind(this));
         },
 
         changeHandler: function(category) {
-            this.options.data = category;
-            this.sandbox.form.setData(constants.detailsFromSelector, this.options.data);
+            this.prepareData(category);
+            this.sandbox.form.setData(constants.detailsFromSelector, this.data);
         },
 
         /**
@@ -90,8 +127,8 @@ define(function () {
          * Deletes the current category
          */
         deleteCategory: function () {
-            if (!!this.options.data.id) {
-                this.sandbox.emit('sulu.category.categories.delete', [this.options.data.id], null, function () {
+            if (!!this.data.id) {
+                this.sandbox.emit('sulu.category.categories.delete', [this.data.id], null, function() {
                     this.sandbox.sulu.unlockDeleteSuccessLabel();
                     this.sandbox.emit('sulu.category.categories.list');
                 }.bind(this));
@@ -104,9 +141,9 @@ define(function () {
         saveDetails: function (action) {
             if (this.sandbox.form.validate(constants.detailsFromSelector)) {
                 var data = this.sandbox.form.getData(constants.detailsFromSelector);
-                this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
+                this.data = this.sandbox.util.extend(true, {}, this.data, data);
                 this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
-                this.sandbox.emit('sulu.category.categories.save', this.options.data, this.savedCallback.bind(this, !this.options.data.id, action));
+                this.sandbox.emit('sulu.category.categories.save', this.data, this.savedCallback.bind(this, !this.data.id, action));
             }
         },
 

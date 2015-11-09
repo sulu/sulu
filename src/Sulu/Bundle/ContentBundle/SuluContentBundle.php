@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle;
 
 use Sulu\Bundle\ContentBundle\DependencyInjection\Compiler\SecurityPass;
 use Sulu\Bundle\ContentBundle\DependencyInjection\Compiler\SmartContentDataProviderCompilerPass;
+use Sulu\Bundle\ContentBundle\DependencyInjection\Compiler\WebspacesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -24,5 +25,6 @@ class SuluContentBundle extends Bundle
 
         $container->addCompilerPass(new SecurityPass());
         $container->addCompilerPass(new SmartContentDataProviderCompilerPass());
+        $container->addCompilerPass(new WebspacesPass());
     }
 }

@@ -155,12 +155,12 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function findIdsByGivenCriteria()
     {
-        $subquerybuilder = $this->createSubQueryBuilder();
+        $subQueryBuilder = $this->createSubQueryBuilder();
         if ($this->limit != null) {
-            $subquerybuilder->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
+            $subQueryBuilder->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
         }
-        $this->assignSortFields($subquerybuilder);
-        $ids = $subquerybuilder->getQuery()->getArrayResult();
+        $this->assignSortFields($subQueryBuilder);
+        $ids = $subQueryBuilder->getQuery()->getArrayResult();
         // if no results are found - return
         if (count($ids) < 1) {
             return [];
@@ -385,7 +385,7 @@ class DoctrineListBuilder extends AbstractListBuilder
             }
 
             $this->queryBuilder->andWhere('(' . implode(' OR ', $searchParts) . ')');
-            $this->queryBuilder->setParameter('search', '%' . $this->search . '%');
+            $this->queryBuilder->setParameter('search', '%' . str_replace('*', '%', $this->search) . '%');
         }
 
         return $this->queryBuilder;

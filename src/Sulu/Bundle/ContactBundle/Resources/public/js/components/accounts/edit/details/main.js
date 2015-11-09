@@ -28,6 +28,7 @@ define([
             logoImageId: '#image-content',
             logoDropzoneSelector: '#image-dropzone',
             logoDeleteSelector: '#image-delete',
+            avatarDownloadSelector: '#image-download',
             logoThumbnailFormat: '400x400-inset'
         },
 
@@ -148,7 +149,7 @@ define([
          */
         initLogoContainer: function(data) {
             if (!!data.logo) {
-                this.updateLogoContainer(data.logo.id, data.logo.thumbnails[constants.logoThumbnailFormat]);
+                this.updateLogoContainer(data.logo.id, data.logo.thumbnails[constants.logoThumbnailFormat], data.logo.url);
             }
 
             /**
@@ -159,8 +160,8 @@ define([
             var getPostUrl = function() {
                 var curMediaId = this.sandbox.dom.data(constants.logoImageId, 'mediaId');
                 var url = (!!curMediaId) ?
-                '/admin/api/media/' + curMediaId + '?action=new-version' :
-                    '/admin/api/media?collection=' + this.formOptions.avatarCollection; //todo: use system collection
+                    '/admin/api/media/' + curMediaId + '?action=new-version' :
+                    '/admin/api/media?collection=' + this.formOptions.accountAvatarCollection;
 
                 // if possible, change the title of the logo to the name of the account
                 if (!!data.name) {
@@ -193,9 +194,13 @@ define([
             this.sandbox.dom.on(constants.logoDeleteSelector, 'click', function() {
                 var curMediaId = this.sandbox.dom.data(constants.logoImageId, 'mediaId');
 
-                this.sandbox.util.save('/admin/api/media/' + curMediaId, 'DELETE').done(function() {
-                    this.clearLogoContainer();
-                    this.sandbox.emit('sulu.labels.success.show', 'contact.accounts.logo.saved');
+                this.sandbox.sulu.showDeleteDialog(function(confirmed) {
+                    if (!!confirmed) {
+                        this.sandbox.util.save('/admin/api/media/' + curMediaId, 'DELETE').done(function() {
+                            this.clearLogoContainer();
+                            this.sandbox.emit('sulu.labels.success.show', 'contact.accounts.logo.saved');
+                        }.bind(this));
+                    }
                 }.bind(this));
             }.bind(this));
         },
@@ -204,12 +209,14 @@ define([
          * Display given picture in logo container. Set logo-div data to media id which is read on saving.
          * @param mediaId
          * @param url
+         * @param fullUrl
          */
-        updateLogoContainer: function(mediaId, url) {
+        updateLogoContainer: function(mediaId, url, fullUrl) {
             var $imageContent = this.sandbox.dom.find(constants.logoImageId);
             this.sandbox.dom.data($imageContent, 'mediaId', mediaId);
             this.sandbox.dom.css($imageContent, 'background-image', 'url(' + url + ')');
             this.sandbox.dom.addClass($imageContent.parent(), 'no-default');
+            this.sandbox.dom.attr(constants.avatarDownloadSelector, 'href', fullUrl);
         },
 
         /**
@@ -226,8 +233,8 @@ define([
          * Assign uploaded logo to account by saving account with given media id
          * @param mediaResponse media upload response
          */
-        saveLogoData: function(mediaResponse){
-            if (!!this.sandbox.dom.data(constants.logoImageId, 'mediaId')){
+        saveLogoData: function(mediaResponse) {
+            if (!!this.sandbox.dom.data(constants.logoImageId, 'mediaId')) {
                 // logo was uploaded as new version of existing logo
                 this.sandbox.emit('sulu.labels.success.show', 'contact.accounts.logo.saved');
             } else if (!!this.data.id) {
@@ -440,7 +447,7 @@ define([
 
             this.sandbox.on('husky.dropzone.account-logo.success', function(file, response) {
                 this.saveLogoData(response);
-                this.updateLogoContainer(response.id, response.thumbnails[constants.logoThumbnailFormat]);
+                this.updateLogoContainer(response.id, response.thumbnails[constants.logoThumbnailFormat], response.url);
             }, this);
         },
 

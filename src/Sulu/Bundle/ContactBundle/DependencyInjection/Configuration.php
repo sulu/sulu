@@ -61,7 +61,6 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('form')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('avatar_collection')->defaultValue(1)->end()
                         ->arrayNode('contact')
                             ->addDefaultsIfNotSet()
                             ->children()

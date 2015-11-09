@@ -5,7 +5,6 @@
                   xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
 
     <entity name="Sulu\Bundle\MediaBundle\Entity\Collection" table="me_collections" repository-class="Sulu\Bundle\MediaBundle\Entity\CollectionRepository">
-
         <one-to-one field="defaultMeta" target-entity="Sulu\Bundle\MediaBundle\Entity\CollectionMeta">
             <cascade>
                 <cascade-all />

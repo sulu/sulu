@@ -2,6 +2,17 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1750 [SecurityBundle]  Added seraialization groups for user
+    * ENHANCEMENT #1754 [MediaBundle]     Moved collection key functions to base collection
+    * BUGFIX      #1751 [Persistence]     Fixed UserBlameSubscriber for new DoctrineBundle
+    * ENHANCEMENT #1746 [Rest]            Use * as placeholder in ListBuilder search
+    * FEATURE     #1749 [SnippetBundle]   Enabled search in snippet selection overlay
+    * ENHANCEMENT #1743 [SmartContent]    Fixed param names for website operators
+    * FEATURE     #1739 [MediaBundle]     Implemented system collections
+    * BUGFIX      #1733 [ContentBundle]   Added empty locale condition to fix empty locale bug
+    * ENHANCEMENT #1719 [SearchBundle]    Updated search to only return granted documents
+    * BUGFIX      #1733 [ContactBundle]   Added delete warning and download icon for contact avatar and account logo
+    * BUGFIX      #1733 [MediaBundle]     Fixed a few media-selection bugs
     * ENHANCEMENT #1605 [MediaBundle]     Adjust media-selection-overlay title
     * BUGFIX      #1716 [ContactBundle]   Fixed wrong contact entity identifier
     * FEATURE     #1611 [All]             Improved PHPCR content handling to allow custom PHPCR content
@@ -13,6 +24,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1685 [ContactBundle]   Fixed delete logo/avatar from collection and form
     * FEATURE     #1697 [MediaBundle]     Replaced StreamedResponse with BinaryFileResponse
     * BUGFIX      #1701 [ContentBundle]   Added website cache clear button in preview toolbar
+    * ENHANCEMENT #1700 [CategoryBundle]  Added category translate fallbacks
     * BUGFIX      #1696 [MediaBundle]     Fixed dropzone for uploading new versions of media
     * BUGFIX      #1693 [All]             Fixed behat tests
     * BUGFIX      #1675 [ContactBundle]   Fixed null value for smart content

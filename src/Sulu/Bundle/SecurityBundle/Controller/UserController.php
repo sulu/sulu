@@ -110,12 +110,7 @@ class UserController extends RestController implements ClassResourceInterface, S
 
         $view = $this->responseGetById($id, $find);
 
-        // set serialization groups
-        $view->setSerializationContext(
-            SerializationContext::create()->setGroups(
-                ['Default', 'partialContact', 'fullUser']
-            )
-        );
+        $this->addSerializationGroups($view);
 
         return $this->handleView($view);
     }
@@ -144,6 +139,8 @@ class UserController extends RestController implements ClassResourceInterface, S
         } catch (RestException $re) {
             $view = $this->view($re->toArray(), 400);
         }
+
+        $this->addSerializationGroups($view);
 
         return $this->handleView($view);
     }
@@ -175,6 +172,8 @@ class UserController extends RestController implements ClassResourceInterface, S
             $view = $this->view($exc->toArray(), 400);
         }
 
+        $this->addSerializationGroups($view);
+
         return $this->handleView($view);
     }
 
@@ -203,6 +202,8 @@ class UserController extends RestController implements ClassResourceInterface, S
             $view = $this->view($exc->toArray(), 400);
         }
 
+        $this->addSerializationGroups($view);
+
         return $this->handleView($view);
     }
 
@@ -229,6 +230,8 @@ class UserController extends RestController implements ClassResourceInterface, S
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
         }
+
+        $this->addSerializationGroups($view);
 
         return $this->handleView($view);
     }
@@ -326,12 +329,7 @@ class UserController extends RestController implements ClassResourceInterface, S
             $view = $this->view($list, 200);
         }
 
-        // set serialization groups
-        $view->setSerializationContext(
-            SerializationContext::create()->setGroups(
-                ['Default', 'partialContact', 'fullUser']
-            )
-        );
+        $this->addSerializationGroups($view);
 
         return $this->handleView($view);
     }
@@ -342,6 +340,19 @@ class UserController extends RestController implements ClassResourceInterface, S
     public function getSecurityContext()
     {
         return 'sulu.security.users';
+    }
+
+    /**
+     * Adds the necessary serialization groups to the given view.
+     */
+    private function addSerializationGroups($view)
+    {
+        // set serialization groups
+        $view->setSerializationContext(
+            SerializationContext::create()->setGroups(
+                ['Default', 'partialContact', 'fullUser']
+            )
+        );
     }
 
     /**

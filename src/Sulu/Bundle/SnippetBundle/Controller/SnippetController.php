@@ -73,9 +73,6 @@ class SnippetController implements SecuredControllerInterface
      */
     protected $languageCode;
 
-    /**
-     * Constructor.
-     */
     public function __construct(
         ViewHandler $viewHandler,
         ContentMapper $contentMapper,

@@ -49,6 +49,11 @@ class SubscriberTestCase extends \PHPUnit_Framework_TestCase
      */
     protected $accessor;
 
+    /**
+     * @var NodeInterface
+     */
+    protected $parentNode;
+
     public function setUp()
     {
         $this->persistEvent = $this->prophesize(PersistEvent::class);

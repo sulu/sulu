@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
@@ -21,8 +22,21 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class SuluMediaExtension extends Extension
+class SuluMediaExtension extends Extension implements PrependExtensionInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function prepend(ContainerBuilder $container)
+    {
+        if ($container->hasExtension('sulu_search')) {
+            $container->prependExtensionConfig(
+                'sulu_search',
+                ['indexes' => ['media' => ['security_context' => 'sulu.media.collections']]]
+            );
+        }
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -30,6 +44,9 @@ class SuluMediaExtension extends Extension
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
+
+        // system collections
+        $container->setParameter('sulu_media.system_collections', $config['system_collections']);
 
         // routing paths
         $container->setParameter('sulu_media.format_cache.media_proxy_path', $config['routing']['media_proxy_path']);

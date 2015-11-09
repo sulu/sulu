@@ -55,6 +55,14 @@ sulu_core:
     translations: ['de', 'en']
     fallback_locale: 'en'
 
+sulu_content:
+    search:
+        mapping:
+            Sulu\Bundle\ContentBundle\Document\PageDocument:
+                index: page
+            Sulu\Bundle\SnippetBundle\Document\SnippetDocument:
+                index: snippet
+
 sulu_admin:
     name: SULU 2.0
     email: installation.email@sulu.test

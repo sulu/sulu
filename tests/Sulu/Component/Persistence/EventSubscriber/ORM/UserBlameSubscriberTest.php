@@ -11,10 +11,74 @@
 
 namespace Sulu\Component\Persistence\EventSubscriber\ORM;
 
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Event\OnFlushEventArgs;
+use Doctrine\ORM\UnitOfWork;
 use Prophecy\Argument;
+use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class UserBlameSubscriberTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var LoadClassMetadataEventArgs
+     */
+    private $loadClassMetadataEvent;
+
+    /**
+     * @var OnFlushEventArgs
+     */
+    private $onFlushEvent;
+
+    /**
+     * @var \stdClass
+     */
+    private $userBlameObject;
+
+    /**
+     * @var ClassMetadata
+     */
+    private $classMetadata;
+
+    /**
+     * @var \ReflectionClass
+     */
+    private $refl;
+
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * @var UnitOfWork
+     */
+    private $unitOfWork;
+
+    /**
+     * @var UserInterface
+     */
+    private $user;
+
+    /**
+     * @var TokenInterface
+     */
+    private $token;
+
+    /**
+     * @var TokenStorage
+     */
+    private $tokenStorage;
+
+    /**
+     * @var UserBlameSubscriber
+     */
+    private $subscriber;
+
     public function setUp()
     {
         parent::setUp();
@@ -32,7 +96,7 @@ class UserBlameSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->token = $this->prophesize('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $this->tokenStorage = $this->prophesize('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage');
 
-        $this->subscriber = new UserBlameSubscriber($this->tokenStorage->reveal(), true);
+        $this->subscriber = new UserBlameSubscriber($this->tokenStorage->reveal(), User::class);
 
         $this->tokenStorage->getToken()->willReturn($this->token->reveal());
         $this->token->getUser()->willReturn($this->user->reveal());

@@ -30158,6 +30158,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             openChildId: null,
             highlightSelected: false,
             icons: [],
+            cssClasses: [],
             removeIcon: 'trash-o',
             emptyIcon: 'fa-coffee',
             noImgIcon: 'fa-coffee',
@@ -30475,6 +30476,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.cropBreakPoint = null;
             this.icons = this.sandbox.util.extend(true, [], this.options.icons);
             this.badges = this.sandbox.util.extend(true, [], this.options.badges);
+            this.cssClasses = this.sandbox.util.extend(true, [], this.options.cssClasses);
         },
 
         /**
@@ -30860,12 +30862,17 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                     content: content
                 });
             }
+
             if (!!this.icons) {
                 content = this.addIconsToCellContent(content, column, $cell);
             }
 
             if (!!this.badges) {
                 content = this.addBadgesToCellContent(content, column, record);
+            }
+
+            if (!!this.cssClasses) {
+                content = this.addCssClassesToCellContent(content, column, record);
             }
 
             return content;
@@ -30978,6 +30985,35 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                         this.sandbox.dom.prepend(content, badgeStr);
                     } else if (typeof content === 'string') {
                         content = badgeStr + content;
+                    }
+                }
+            }.bind(this));
+
+            return content;
+        },
+
+        /**
+         * Adds css-classes to a cell content
+         * @param content {String|Object} html or a dom object
+         * @param column {Object} the column data object
+         * @param record {Object} record which will be rendered
+         * @returns content {String|Object} html or a dom object
+         */
+        addCssClassesToCellContent: function(content, column, record) {
+            this.sandbox.util.foreach(this.cssClasses, function(cssClass) {
+                if (cssClass.column === column.attribute) {
+                    if (!!cssClass.callback) {
+                        cssClass = cssClass.callback(record, cssClass);
+                    }
+
+                    if (!cssClass) {
+                        return;
+                    }
+
+                    if (typeof content === 'object') {
+                        $(content).wrap(['<span class="', cssClass, '" />'].join(''));
+                    } else if (typeof content === 'string') {
+                        content = ['<span class="', cssClass, '">', content, "</span>"].join('');
                     }
                 }
             }.bind(this));
@@ -33100,6 +33136,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
              * raised when limit of request changed
              * @event husky.datagrid.page-size.changed
              * @param {Integer} pageSize new size
+             * @param {String} paginationId current pagination
              */
             PAGE_SIZE_CHANGED = function() {
                 return this.createEventName('page-size.changed');
@@ -34615,7 +34652,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                         if (!limit) {
                             limit = this.data.limit;
                         } else if (this.data.limit !== limit) {
-                            this.sandbox.emit(PAGE_SIZE_CHANGED.call(this), limit);
+                            this.sandbox.emit(PAGE_SIZE_CHANGED.call(this), limit, this.paginationId);
                         }
 
                         // generate uri for loading
@@ -44721,10 +44758,10 @@ define('husky_components/data-navigation/list-view',[], function() {
             return [
                 '       <% _.each(data.children, function(child) { %>',
                 '           <li data-id="<%= child.id %>" class="data-navigation-item">',
-                '               <% if (!!child.preview) { %>',
+                '               <% if (!!child.preview && !child.locked) { %>',
                 '                   <div class="data-navigation-item-thumb" style="background-image: url(\'<%=child.preview.url%>\')"></div>',
                 '               <% } else { %>',
-                '                   <div class="fa-coffee data-navigation-item-thumb" style="margin-top: 10px;padding-left: 10px;"></div>',
+                '                   <div class="<% if(!child.locked) { %>fa-coffee<% } else { %>fa-lock<% } %> data-navigation-item-thumb" style="margin-top: 10px;padding-left: 10px;"></div>',
                 '               <% } %>',
                 '               <div class="data-navigation-item-name">',
                 '                   <%= child[options.nameKey] %>',
@@ -52223,9 +52260,9 @@ define('husky_extensions/template',['underscore', 'jquery'], function(_, $) {
  */
 
 /**
- * @deprecated use util-service instead
+ * Provides the util function into a sandbox.
  */
-define('husky_extensions/util',['services/husky/util'], function(Util) {
+define('husky_extensions/util',['services/husky/util'], function(util) {
 
     'use strict';
 
@@ -52233,53 +52270,9 @@ define('husky_extensions/util',['services/husky/util'], function(Util) {
         name: 'Util',
 
         initialize: function(app) {
-            app.core.util.compare = Util.compare;
-
-            app.core.util.typeOf = Util.typeOf;
-
-            app.core.util.isEqual = Util.isEqual;
-
-            app.core.util.isEmpty = Util.isEmpty;
-
-            app.core.util.foreach = Util.foreach;
-
-            app.core.util.load = Util.load;
-
-            app.core.util.save = Util.save;
-
-            app.core.util.cropMiddle = Util.cropMiddle;
-
-            app.core.util.cropFront = Util.cropFront;
-
-            app.core.util.cropTail = Util.cropTail;
-
-            app.core.util.contains = Util.contains;
-
-            app.core.util.isAlphaNumeric = Util.isAlphaNumeric;
-
-            app.core.util.uniqueId = Util.uniqueId;
-
-            app.core.util.delay = Util.delay;
-
-            app.core.util.union = Util.union;
-
-            app.core.util.deepCopy = Util.deepCopy;
-
-            app.core.util.getParameterByName =  Util.getParameterByName;
-
-			app.core.util.template = Util.template;
-
-            app.core.util.escapeHtml = Util.escapeHtml;
-
-            app.core.util.arrayGetColumn = Util.arrayGetColumn;
-
-            app.core.util.removeFromArray = Util.removeFromArray;
-
-            app.core.util.capitalizeFirstLetter = Util.capitalizeFirstLetter;
-
-            app.core.util.arrayMap = Util.arrayMap;
-
-            app.core.util.object = Util.object;
+            for (var key in util) {
+                app.core.util[key] = util[key];
+            }
         }
     };
 });

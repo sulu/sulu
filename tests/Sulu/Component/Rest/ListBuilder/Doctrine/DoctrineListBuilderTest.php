@@ -354,6 +354,28 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->doctrineListBuilder->execute();
     }
 
+    public function testSearchWithPlaceholder()
+    {
+        $this->doctrineListBuilder->addSearchField(
+            new DoctrineFieldDescriptor('desc', 'desc', self::$translationEntityName)
+        );
+        $this->doctrineListBuilder->addSearchField(
+            new DoctrineFieldDescriptor('name', 'name', self::$entityName)
+        );
+
+        $this->doctrineListBuilder->search('val*e');
+
+        $this->queryBuilder->expects($this->once())->method('andWhere')->with(
+            '(' . self::$translationEntityName . '.desc LIKE :search OR ' . self::$entityName . '.name LIKE :search)'
+        );
+        // 2 calls: one for setting IDs in subquery and one for setting values
+        $this->queryBuilder->expects($this->exactly(2))->method('setParameter')->withConsecutive(
+            ['search', '%val%e%']
+        );
+
+        $this->doctrineListBuilder->execute();
+    }
+
     public function testSort()
     {
         $this->doctrineListBuilder->sort(new DoctrineFieldDescriptor('desc', 'desc', self::$entityName));

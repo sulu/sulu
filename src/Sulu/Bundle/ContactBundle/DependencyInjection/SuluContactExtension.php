@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContactBundle\DependencyInjection;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
@@ -22,9 +23,54 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class SuluContactExtension extends Extension
+class SuluContactExtension extends Extension implements PrependExtensionInterface
 {
     use PersistenceExtensionTrait;
+
+    /**
+     * Allow an extension to prepend the extension configurations.
+     *
+     * @param ContainerBuilder $container
+     */
+    public function prepend(ContainerBuilder $container)
+    {
+        if ($container->hasExtension('sulu_search')) {
+            $container->prependExtensionConfig(
+                'sulu_search',
+                [
+                    'indexes' => [
+                        'contact' => [
+                            'security_context' => 'sulu.contact.people',
+                        ],
+                        'account' => [
+                            'security_context' => 'sulu.contact.organizations',
+                        ],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('sulu_media')) {
+            $container->prependExtensionConfig(
+                'sulu_media',
+                [
+                    'system_collections' => [
+                        'sulu_contact' => [
+                            'meta_title' => ['en' => 'Sulu contacts', 'de' => 'Sulu Kontakte'],
+                            'collections' => [
+                                'contact' => [
+                                    'meta_title' => ['en' => 'People', 'de' => 'Personen'],
+                                ],
+                                'account' => [
+                                    'meta_title' => ['en' => 'Organizations', 'de' => 'Organisationen'],
+                                ],
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
+    }
 
     /**
      * {@inheritdoc}
@@ -59,10 +105,6 @@ class SuluContactExtension extends Extension
         $container->setParameter(
             'sulu_contact.content-type.contact.template',
             $config['types']['contact']['template']
-        );
-        $container->setParameter(
-            'sulu_contact.form.avatar_collection',
-            $config['form']['avatar_collection']
         );
 
         $this->configurePersistence($config['objects'], $container);

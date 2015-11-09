@@ -81,6 +81,14 @@ define([], function() {
 
             this.sandbox.start([
                 {
+                    name: 'search@husky',
+                    options: {
+                        appearance: 'white small',
+                        instanceName: this.options.instanceName + '-search',
+                        el: getId.call(this, 'search')
+                    }
+                },
+                {
                     name: 'datagrid@husky',
                     options: {
                         url: this.options.url,
