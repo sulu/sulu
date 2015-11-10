@@ -152,7 +152,7 @@ class Xliff12 implements WebspaceFormatImportInterface
                         $data[$blockName]['children'] = [];
                     }
 
-                    if (!isset($data[$blockName][$blockNr])) {
+                    if (!isset($data[$blockName]['children'][$blockNr])) {
                         $data[$blockName]['children'][$blockNr] = [];
                     }
 
