@@ -167,7 +167,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     {
         try {
             /** @var User $user */
-            $user = $this->findUserWithSecurityByIdentifier($identifier);
+            $user = $this->findUserByIdentifier($identifier);
 
             if (!$user->getEnabled()) {
                 throw new DisabledException();
@@ -285,7 +285,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
      *
      * @throws NoResultException if the user is not found
      */
-    public function findUserWithSecurityByIdentifier($identifier)
+    public function findUserByIdentifier($identifier)
     {
         $qb = $this->getUserWithPermissionsQuery()
             ->where('user.email=:email')

@@ -222,8 +222,8 @@ class UserRepositoryTest extends SuluTestCase
         /** @var UserRepository $userRepository */
         $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
 
-        $userByMail = $userRepository->findUserWithSecurityByIdentifier('user2@test.com');
-        $userByUsername = $userRepository->findUserWithSecurityByIdentifier('test');
+        $userByMail = $userRepository->findUserByIdentifier('user2@test.com');
+        $userByUsername = $userRepository->findUserByIdentifier('test');
 
         $this->assertEquals('user2@test.com', $userByMail->getEmail());
         $this->assertEquals('test', $userByMail->getUsername());
