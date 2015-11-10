@@ -12,7 +12,6 @@ namespace Sulu\Bundle\MediaBundle\Media\Service;
 
 use Sulu\Bundle\MediaBundle\Api\Media;
 
-
 /**
  * The Service Manager notify all registered services.
  */
@@ -25,7 +24,7 @@ interface ServiceManagerInterface
     /**
      * @param Media $media
      * @param string $status
-     * 
+     *
      * @return bool
      */
     public function addMedia(Media $media, $status = self::MEDIA_STATUS_ADD);
