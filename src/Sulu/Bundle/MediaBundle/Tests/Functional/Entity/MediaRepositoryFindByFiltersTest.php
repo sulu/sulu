@@ -53,14 +53,14 @@ class MediaRepositoryFindByFiltersTest extends SuluTestCase
      * @var array
      */
     private $mediaData = [
-        ['Bild 1', [0, 1, 2]],
-        ['Bild 2', [0, 1, 3]],
-        ['Bild 3', [0, 1]],
-        ['Bild 4', [0, 1, 2]],
-        ['Bild 5', [0]],
-        ['Bild 6', [0]],
-        ['Bild 7', [0]],
-        ['Bild 8', []],
+        ['Bild 1', 'image/jpg', [0, 1, 2]],
+        ['Bild 2', 'image/jpg', [0, 1, 3]],
+        ['Bild 3', 'video/mov', [0, 1]],
+        ['Bild 4', 'image/png', [0, 1, 2]],
+        ['Bild 5', 'video/mkv', [0]],
+        ['Bild 6', 'application/pdf', [0]],
+        ['Bild 7', 'application/pdf', [0]],
+        ['Bild 8', 'application/pdf', []],
     ];
 
     /**
@@ -106,7 +106,7 @@ class MediaRepositoryFindByFiltersTest extends SuluTestCase
         $this->em->flush();
 
         foreach ($this->mediaData as $media) {
-            $this->medias[] = $this->createMediaWithTags($media[0], $media[1]);
+            $this->medias[] = $this->createMediaWithTags($media[0], $media[1], $media[2]);
         }
         $this->em->flush();
     }
@@ -121,7 +121,7 @@ class MediaRepositoryFindByFiltersTest extends SuluTestCase
         return $tag;
     }
 
-    private function createMediaWithTags($title, $tags = [])
+    private function createMediaWithTags($title, $mimeType, $tags = [])
     {
         $media = new Media();
         $file = new File();
@@ -134,6 +134,7 @@ class MediaRepositoryFindByFiltersTest extends SuluTestCase
         $fileVersion->setVersion(1);
         $fileVersion->setName($title);
         $fileVersion->setSize(0);
+        $fileVersion->setMimeType($mimeType);
         $fileVersion->setFile($file);
         $file->setVersion(1);
         $file->addFileVersion($fileVersion);
@@ -274,13 +275,43 @@ class MediaRepositoryFindByFiltersTest extends SuluTestCase
                 array_slice($this->mediaData, 0, 4),
                 [0, 1],
             ],
+            // options mimetype
+            [
+                [],
+                null,
+                0,
+                null,
+                array_slice($this->mediaData, 0, 2),
+                [],
+                ['mimetype' => 'image/jpg'],
+            ],
+            // options mimetype and admin tags
+            [
+                ['tags' => [0], 'tagOperator' => 'or'],
+                null,
+                0,
+                null,
+                array_slice($this->mediaData, 5, 2),
+                [],
+                ['mimetype' => 'application/pdf'],
+            ],
+            // options mimetype and website tags
+            [
+                ['websiteTags' => [0], 'websiteTagsOperator' => 'or'],
+                null,
+                0,
+                null,
+                array_slice($this->mediaData, 5, 2),
+                [],
+                ['mimetype' => 'application/pdf'],
+            ],
         ];
     }
 
     /**
      * @dataProvider findByProvider
      */
-    public function testFindBy($filters, $page, $pageSize, $limit, $expected, $tags = [])
+    public function testFindBy($filters, $page, $pageSize, $limit, $expected, $tags = [], $options = [])
     {
         $repository = $this->em->getRepository(Media::class);
 
@@ -304,7 +335,7 @@ class MediaRepositoryFindByFiltersTest extends SuluTestCase
             );
         }
 
-        $result = $repository->findByFilters($filters, $page, $pageSize, $limit, 'de');
+        $result = $repository->findByFilters($filters, $page, $pageSize, $limit, 'de', $options);
 
         $length = count($expected);
         $this->assertCount($length, $result);
