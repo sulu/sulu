@@ -113,7 +113,7 @@ class CollectionController extends RestController
                         $depth,
                         $breadcrumb,
                         $filter,
-                        $sortBy !== null ? [$sortBy => $sortOrder] : []
+                        $sortBy !== null ? [$sortBy => $sortOrder] : ['id' => 'ASC']
                     );
                 }
             );
@@ -157,7 +157,7 @@ class CollectionController extends RestController
                     ],
                     $limit,
                     $offset,
-                    $sortBy !== null ? [$sortBy => $sortOrder] : []
+                    $sortBy !== null ? [$sortBy => $sortOrder] : ['id' => 'ASC']
                 );
             } else {
                 $collections = $collectionManager->getTree(

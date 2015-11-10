@@ -107,22 +107,29 @@ class RoleControllerTest extends SuluTestCase
         $this->assertEquals('Sulu Administrator', $response->name);
         $this->assertEquals('Sulu', $response->system);
         $this->assertEquals(2, count($response->permissions));
-        $this->assertEquals('context1', $response->permissions[0]->context);
-        $this->assertEquals(false, $response->permissions[0]->permissions->view);
-        $this->assertEquals(false, $response->permissions[0]->permissions->add);
-        $this->assertEquals(false, $response->permissions[0]->permissions->edit);
-        $this->assertEquals(true, $response->permissions[0]->permissions->delete);
-        $this->assertEquals(true, $response->permissions[0]->permissions->archive);
-        $this->assertEquals(true, $response->permissions[0]->permissions->live);
-        $this->assertEquals(true, $response->permissions[0]->permissions->security);
-        $this->assertEquals('context2', $response->permissions[1]->context);
-        $this->assertEquals(false, $response->permissions[1]->permissions->view);
-        $this->assertEquals(false, $response->permissions[1]->permissions->add);
-        $this->assertEquals(true, $response->permissions[1]->permissions->edit);
-        $this->assertEquals(false, $response->permissions[1]->permissions->delete);
-        $this->assertEquals(false, $response->permissions[1]->permissions->archive);
-        $this->assertEquals(false, $response->permissions[1]->permissions->live);
-        $this->assertEquals(true, $response->permissions[1]->permissions->security);
+
+        $permissions = $response->permissions;
+        usort($permissions, function ($a, $b) {
+            return ($a->id < $b->id) ? -1 : 1;
+        });
+
+        $this->assertEquals('context1', $permissions[0]->context);
+        $this->assertEquals(false, $permissions[0]->permissions->view);
+        $this->assertEquals(false, $permissions[0]->permissions->add);
+        $this->assertEquals(false, $permissions[0]->permissions->edit);
+        $this->assertEquals(true, $permissions[0]->permissions->delete);
+        $this->assertEquals(true, $permissions[0]->permissions->archive);
+        $this->assertEquals(true, $permissions[0]->permissions->live);
+        $this->assertEquals(true, $permissions[0]->permissions->security);
+        $this->assertEquals('context2', $permissions[1]->context);
+        $this->assertEquals(false, $permissions[1]->permissions->view);
+        $this->assertEquals(false, $permissions[1]->permissions->add);
+        $this->assertEquals(true, $permissions[1]->permissions->edit);
+        $this->assertEquals(false, $permissions[1]->permissions->delete);
+        $this->assertEquals(false, $permissions[1]->permissions->archive);
+        $this->assertEquals(false, $permissions[1]->permissions->live);
+        $this->assertEquals(true, $permissions[1]->permissions->security);
+
         $this->assertEquals('Security Type 1', $response->securityType->name);
     }
 
@@ -173,22 +180,28 @@ class RoleControllerTest extends SuluTestCase
         $this->assertEquals('Portal Manager', $response->name);
         $this->assertEquals('Sulu', $response->system);
         $this->assertEquals(2, count($response->permissions));
-        $this->assertEquals('portal1', $response->permissions[0]->context);
-        $this->assertEquals(false, $response->permissions[0]->permissions->view);
-        $this->assertEquals(false, $response->permissions[0]->permissions->add);
-        $this->assertEquals(true, $response->permissions[0]->permissions->edit);
-        $this->assertEquals(true, $response->permissions[0]->permissions->delete);
-        $this->assertEquals(false, $response->permissions[0]->permissions->archive);
-        $this->assertEquals(true, $response->permissions[0]->permissions->live);
-        $this->assertEquals(false, $response->permissions[0]->permissions->security);
-        $this->assertEquals('portal2', $response->permissions[1]->context);
-        $this->assertEquals(false, $response->permissions[1]->permissions->view);
-        $this->assertEquals(false, $response->permissions[1]->permissions->add);
-        $this->assertEquals(false, $response->permissions[1]->permissions->edit);
-        $this->assertEquals(true, $response->permissions[1]->permissions->delete);
-        $this->assertEquals(false, $response->permissions[1]->permissions->archive);
-        $this->assertEquals(false, $response->permissions[1]->permissions->live);
-        $this->assertEquals(false, $response->permissions[1]->permissions->security);
+
+        $permissions = $response->permissions;
+        usort($permissions, function ($a, $b) {
+            return ($a->id < $b->id) ? -1 : 1;
+        });
+        $this->assertEquals('portal1', $permissions[0]->context);
+        $this->assertEquals(false, $permissions[0]->permissions->view);
+        $this->assertEquals(false, $permissions[0]->permissions->add);
+        $this->assertEquals(true, $permissions[0]->permissions->edit);
+        $this->assertEquals(true, $permissions[0]->permissions->delete);
+        $this->assertEquals(false, $permissions[0]->permissions->archive);
+        $this->assertEquals(true, $permissions[0]->permissions->live);
+        $this->assertEquals(false, $permissions[0]->permissions->security);
+        $this->assertEquals('portal2', $permissions[1]->context);
+        $this->assertEquals(false, $permissions[1]->permissions->view);
+        $this->assertEquals(false, $permissions[1]->permissions->add);
+        $this->assertEquals(false, $permissions[1]->permissions->edit);
+        $this->assertEquals(true, $permissions[1]->permissions->delete);
+        $this->assertEquals(false, $permissions[1]->permissions->archive);
+        $this->assertEquals(false, $permissions[1]->permissions->live);
+        $this->assertEquals(false, $permissions[1]->permissions->security);
+
         $this->assertEquals('Security Type 2', $response->securityType->name);
 
         $client->request(
@@ -200,23 +213,28 @@ class RoleControllerTest extends SuluTestCase
 
         $this->assertEquals('Portal Manager', $response->name);
         $this->assertEquals('Sulu', $response->system);
+
         $this->assertEquals(2, count($response->permissions));
-        $this->assertEquals('portal1', $response->permissions[0]->context);
-        $this->assertEquals(false, $response->permissions[0]->permissions->view);
-        $this->assertEquals(false, $response->permissions[0]->permissions->add);
-        $this->assertEquals(true, $response->permissions[0]->permissions->edit);
-        $this->assertEquals(true, $response->permissions[0]->permissions->delete);
-        $this->assertEquals(false, $response->permissions[0]->permissions->archive);
-        $this->assertEquals(true, $response->permissions[0]->permissions->live);
-        $this->assertEquals(false, $response->permissions[0]->permissions->security);
-        $this->assertEquals('portal2', $response->permissions[1]->context);
-        $this->assertEquals(false, $response->permissions[1]->permissions->view);
-        $this->assertEquals(false, $response->permissions[1]->permissions->add);
-        $this->assertEquals(false, $response->permissions[1]->permissions->edit);
-        $this->assertEquals(true, $response->permissions[1]->permissions->delete);
-        $this->assertEquals(false, $response->permissions[1]->permissions->archive);
-        $this->assertEquals(false, $response->permissions[1]->permissions->live);
-        $this->assertEquals(false, $response->permissions[1]->permissions->security);
+        $permissions = $response->permissions;
+        usort($permissions, function ($a, $b) {
+            return ($a->id < $b->id) ? -1 : 1;
+        });
+        $this->assertEquals('portal1', $permissions[0]->context);
+        $this->assertEquals(false, $permissions[0]->permissions->view);
+        $this->assertEquals(false, $permissions[0]->permissions->add);
+        $this->assertEquals(true, $permissions[0]->permissions->edit);
+        $this->assertEquals(true, $permissions[0]->permissions->delete);
+        $this->assertEquals(false, $permissions[0]->permissions->archive);
+        $this->assertEquals(true, $permissions[0]->permissions->live);
+        $this->assertEquals(false, $permissions[0]->permissions->security);
+        $this->assertEquals('portal2', $permissions[1]->context);
+        $this->assertEquals(false, $permissions[1]->permissions->view);
+        $this->assertEquals(false, $permissions[1]->permissions->add);
+        $this->assertEquals(false, $permissions[1]->permissions->edit);
+        $this->assertEquals(true, $permissions[1]->permissions->delete);
+        $this->assertEquals(false, $permissions[1]->permissions->archive);
+        $this->assertEquals(false, $permissions[1]->permissions->live);
+        $this->assertEquals(false, $permissions[1]->permissions->security);
         $this->assertEquals('Security Type 2', $response->securityType->name);
     }
 
@@ -280,30 +298,37 @@ class RoleControllerTest extends SuluTestCase
 
         $this->assertEquals('Portal Manager', $response->name);
         $this->assertEquals('Sulu', $response->system);
-        $this->assertEquals('portal1', $response->permissions[0]->context);
-        $this->assertEquals(true, $response->permissions[0]->permissions->view);
-        $this->assertEquals(true, $response->permissions[0]->permissions->add);
-        $this->assertEquals(true, $response->permissions[0]->permissions->edit);
-        $this->assertEquals(true, $response->permissions[0]->permissions->delete);
-        $this->assertEquals(false, $response->permissions[0]->permissions->archive);
-        $this->assertEquals(false, $response->permissions[0]->permissions->live);
-        $this->assertEquals(false, $response->permissions[0]->permissions->security);
-        $this->assertEquals('portal2', $response->permissions[1]->context);
-        $this->assertEquals(false, $response->permissions[1]->permissions->view);
-        $this->assertEquals(false, $response->permissions[1]->permissions->add);
-        $this->assertEquals(false, $response->permissions[1]->permissions->edit);
-        $this->assertEquals(false, $response->permissions[1]->permissions->delete);
-        $this->assertEquals(true, $response->permissions[1]->permissions->archive);
-        $this->assertEquals(true, $response->permissions[1]->permissions->live);
-        $this->assertEquals(true, $response->permissions[1]->permissions->security);
-        $this->assertEquals('portal3', $response->permissions[2]->context);
-        $this->assertEquals(false, $response->permissions[2]->permissions->view);
-        $this->assertEquals(false, $response->permissions[2]->permissions->add);
-        $this->assertEquals(false, $response->permissions[2]->permissions->edit);
-        $this->assertEquals(false, $response->permissions[2]->permissions->delete);
-        $this->assertEquals(true, $response->permissions[2]->permissions->archive);
-        $this->assertEquals(true, $response->permissions[2]->permissions->live);
-        $this->assertEquals(true, $response->permissions[2]->permissions->security);
+
+        $permissions = $response->permissions;
+        usort($permissions, function ($a, $b) {
+            return ($a->id < $b->id) ? -1 : 1;
+        });
+
+        $this->assertEquals('portal1', $permissions[0]->context);
+        $this->assertEquals(true, $permissions[0]->permissions->view);
+        $this->assertEquals(true, $permissions[0]->permissions->add);
+        $this->assertEquals(true, $permissions[0]->permissions->edit);
+        $this->assertEquals(true, $permissions[0]->permissions->delete);
+        $this->assertEquals(false, $permissions[0]->permissions->archive);
+        $this->assertEquals(false, $permissions[0]->permissions->live);
+        $this->assertEquals(false, $permissions[0]->permissions->security);
+        $this->assertEquals('portal2', $permissions[1]->context);
+        $this->assertEquals(false, $permissions[1]->permissions->view);
+        $this->assertEquals(false, $permissions[1]->permissions->add);
+        $this->assertEquals(false, $permissions[1]->permissions->edit);
+        $this->assertEquals(false, $permissions[1]->permissions->delete);
+        $this->assertEquals(true, $permissions[1]->permissions->archive);
+        $this->assertEquals(true, $permissions[1]->permissions->live);
+        $this->assertEquals(true, $permissions[1]->permissions->security);
+        $this->assertEquals('portal3', $permissions[2]->context);
+        $this->assertEquals(false, $permissions[2]->permissions->view);
+        $this->assertEquals(false, $permissions[2]->permissions->add);
+        $this->assertEquals(false, $permissions[2]->permissions->edit);
+        $this->assertEquals(false, $permissions[2]->permissions->delete);
+        $this->assertEquals(true, $permissions[2]->permissions->archive);
+        $this->assertEquals(true, $permissions[2]->permissions->live);
+        $this->assertEquals(true, $permissions[2]->permissions->security);
+
         $this->assertEquals('Security Type 2', $response->securityType->name);
 
         $client->request(
@@ -315,29 +340,35 @@ class RoleControllerTest extends SuluTestCase
 
         $this->assertEquals('Portal Manager', $response->name);
         $this->assertEquals('Sulu', $response->system);
-        $this->assertEquals(true, $response->permissions[0]->permissions->view);
-        $this->assertEquals(true, $response->permissions[0]->permissions->add);
-        $this->assertEquals(true, $response->permissions[0]->permissions->edit);
-        $this->assertEquals(true, $response->permissions[0]->permissions->delete);
-        $this->assertEquals(false, $response->permissions[0]->permissions->archive);
-        $this->assertEquals(false, $response->permissions[0]->permissions->live);
-        $this->assertEquals(false, $response->permissions[0]->permissions->security);
-        $this->assertEquals('portal2', $response->permissions[1]->context);
-        $this->assertEquals(false, $response->permissions[1]->permissions->view);
-        $this->assertEquals(false, $response->permissions[1]->permissions->add);
-        $this->assertEquals(false, $response->permissions[1]->permissions->edit);
-        $this->assertEquals(false, $response->permissions[1]->permissions->delete);
-        $this->assertEquals(true, $response->permissions[1]->permissions->archive);
-        $this->assertEquals(true, $response->permissions[1]->permissions->live);
-        $this->assertEquals(true, $response->permissions[1]->permissions->security);
-        $this->assertEquals('portal3', $response->permissions[2]->context);
-        $this->assertEquals(false, $response->permissions[2]->permissions->view);
-        $this->assertEquals(false, $response->permissions[2]->permissions->add);
-        $this->assertEquals(false, $response->permissions[2]->permissions->edit);
-        $this->assertEquals(false, $response->permissions[2]->permissions->delete);
-        $this->assertEquals(true, $response->permissions[2]->permissions->archive);
-        $this->assertEquals(true, $response->permissions[2]->permissions->live);
-        $this->assertEquals(true, $response->permissions[2]->permissions->security);
+
+        $permissions = $response->permissions;
+        usort($permissions, function ($a, $b) {
+            return ($a->id < $b->id) ? -1 : 1;
+        });
+        $this->assertEquals(true, $permissions[0]->permissions->view);
+        $this->assertEquals(true, $permissions[0]->permissions->add);
+        $this->assertEquals(true, $permissions[0]->permissions->edit);
+        $this->assertEquals(true, $permissions[0]->permissions->delete);
+        $this->assertEquals(false, $permissions[0]->permissions->archive);
+        $this->assertEquals(false, $permissions[0]->permissions->live);
+        $this->assertEquals(false, $permissions[0]->permissions->security);
+        $this->assertEquals('portal2', $permissions[1]->context);
+        $this->assertEquals(false, $permissions[1]->permissions->view);
+        $this->assertEquals(false, $permissions[1]->permissions->add);
+        $this->assertEquals(false, $permissions[1]->permissions->edit);
+        $this->assertEquals(false, $permissions[1]->permissions->delete);
+        $this->assertEquals(true, $permissions[1]->permissions->archive);
+        $this->assertEquals(true, $permissions[1]->permissions->live);
+        $this->assertEquals(true, $permissions[1]->permissions->security);
+        $this->assertEquals('portal3', $permissions[2]->context);
+        $this->assertEquals(false, $permissions[2]->permissions->view);
+        $this->assertEquals(false, $permissions[2]->permissions->add);
+        $this->assertEquals(false, $permissions[2]->permissions->edit);
+        $this->assertEquals(false, $permissions[2]->permissions->delete);
+        $this->assertEquals(true, $permissions[2]->permissions->archive);
+        $this->assertEquals(true, $permissions[2]->permissions->live);
+        $this->assertEquals(true, $permissions[2]->permissions->security);
+
         $this->assertEquals('Security Type 2', $response->securityType->name);
     }
 
@@ -398,30 +429,36 @@ class RoleControllerTest extends SuluTestCase
 
         $this->assertEquals('Portal Manager', $response->name);
         $this->assertEquals('Sulu', $response->system);
-        $this->assertEquals('portal1', $response->permissions[0]->context);
-        $this->assertEquals(true, $response->permissions[0]->permissions->view);
-        $this->assertEquals(true, $response->permissions[0]->permissions->add);
-        $this->assertEquals(true, $response->permissions[0]->permissions->edit);
-        $this->assertEquals(true, $response->permissions[0]->permissions->delete);
-        $this->assertEquals(false, $response->permissions[0]->permissions->archive);
-        $this->assertEquals(false, $response->permissions[0]->permissions->live);
-        $this->assertEquals(false, $response->permissions[0]->permissions->security);
-        $this->assertEquals('portal2', $response->permissions[1]->context);
-        $this->assertEquals(false, $response->permissions[1]->permissions->view);
-        $this->assertEquals(false, $response->permissions[1]->permissions->add);
-        $this->assertEquals(false, $response->permissions[1]->permissions->edit);
-        $this->assertEquals(false, $response->permissions[1]->permissions->delete);
-        $this->assertEquals(true, $response->permissions[1]->permissions->archive);
-        $this->assertEquals(true, $response->permissions[1]->permissions->live);
-        $this->assertEquals(true, $response->permissions[1]->permissions->security);
-        $this->assertEquals('portal3', $response->permissions[2]->context);
-        $this->assertEquals(false, $response->permissions[2]->permissions->view);
-        $this->assertEquals(false, $response->permissions[2]->permissions->add);
-        $this->assertEquals(false, $response->permissions[2]->permissions->edit);
-        $this->assertEquals(false, $response->permissions[2]->permissions->delete);
-        $this->assertEquals(true, $response->permissions[2]->permissions->archive);
-        $this->assertEquals(true, $response->permissions[2]->permissions->live);
-        $this->assertEquals(true, $response->permissions[2]->permissions->security);
+
+        $permissions = $response->permissions;
+        usort($permissions, function ($a, $b) {
+            return ($a->id < $b->id) ? -1 : 1;
+        });
+        $this->assertEquals('portal1', $permissions[0]->context);
+        $this->assertEquals(true, $permissions[0]->permissions->view);
+        $this->assertEquals(true, $permissions[0]->permissions->add);
+        $this->assertEquals(true, $permissions[0]->permissions->edit);
+        $this->assertEquals(true, $permissions[0]->permissions->delete);
+        $this->assertEquals(false, $permissions[0]->permissions->archive);
+        $this->assertEquals(false, $permissions[0]->permissions->live);
+        $this->assertEquals(false, $permissions[0]->permissions->security);
+        $this->assertEquals('portal2', $permissions[1]->context);
+        $this->assertEquals(false, $permissions[1]->permissions->view);
+        $this->assertEquals(false, $permissions[1]->permissions->add);
+        $this->assertEquals(false, $permissions[1]->permissions->edit);
+        $this->assertEquals(false, $permissions[1]->permissions->delete);
+        $this->assertEquals(true, $permissions[1]->permissions->archive);
+        $this->assertEquals(true, $permissions[1]->permissions->live);
+        $this->assertEquals(true, $permissions[1]->permissions->security);
+        $this->assertEquals('portal3', $permissions[2]->context);
+        $this->assertEquals(false, $permissions[2]->permissions->view);
+        $this->assertEquals(false, $permissions[2]->permissions->add);
+        $this->assertEquals(false, $permissions[2]->permissions->edit);
+        $this->assertEquals(false, $permissions[2]->permissions->delete);
+        $this->assertEquals(true, $permissions[2]->permissions->archive);
+        $this->assertEquals(true, $permissions[2]->permissions->live);
+        $this->assertEquals(true, $permissions[2]->permissions->security);
+
         $this->assertObjectNotHasAttribute('securityType', $response);
 
         $client->request(
@@ -433,29 +470,35 @@ class RoleControllerTest extends SuluTestCase
 
         $this->assertEquals('Portal Manager', $response->name);
         $this->assertEquals('Sulu', $response->system);
-        $this->assertEquals(true, $response->permissions[0]->permissions->view);
-        $this->assertEquals(true, $response->permissions[0]->permissions->add);
-        $this->assertEquals(true, $response->permissions[0]->permissions->edit);
-        $this->assertEquals(true, $response->permissions[0]->permissions->delete);
-        $this->assertEquals(false, $response->permissions[0]->permissions->archive);
-        $this->assertEquals(false, $response->permissions[0]->permissions->live);
-        $this->assertEquals(false, $response->permissions[0]->permissions->security);
-        $this->assertEquals('portal2', $response->permissions[1]->context);
-        $this->assertEquals(false, $response->permissions[1]->permissions->view);
-        $this->assertEquals(false, $response->permissions[1]->permissions->add);
-        $this->assertEquals(false, $response->permissions[1]->permissions->edit);
-        $this->assertEquals(false, $response->permissions[1]->permissions->delete);
-        $this->assertEquals(true, $response->permissions[1]->permissions->archive);
-        $this->assertEquals(true, $response->permissions[1]->permissions->live);
-        $this->assertEquals(true, $response->permissions[1]->permissions->security);
-        $this->assertEquals('portal3', $response->permissions[2]->context);
-        $this->assertEquals(false, $response->permissions[2]->permissions->view);
-        $this->assertEquals(false, $response->permissions[2]->permissions->add);
-        $this->assertEquals(false, $response->permissions[2]->permissions->edit);
-        $this->assertEquals(false, $response->permissions[2]->permissions->delete);
-        $this->assertEquals(true, $response->permissions[2]->permissions->archive);
-        $this->assertEquals(true, $response->permissions[2]->permissions->live);
-        $this->assertEquals(true, $response->permissions[2]->permissions->security);
+
+        $permissions = $response->permissions;
+        usort($permissions, function ($a, $b) {
+            return ($a->id < $b->id) ? -1 : 1;
+        });
+        $this->assertEquals(true, $permissions[0]->permissions->view);
+        $this->assertEquals(true, $permissions[0]->permissions->add);
+        $this->assertEquals(true, $permissions[0]->permissions->edit);
+        $this->assertEquals(true, $permissions[0]->permissions->delete);
+        $this->assertEquals(false, $permissions[0]->permissions->archive);
+        $this->assertEquals(false, $permissions[0]->permissions->live);
+        $this->assertEquals(false, $permissions[0]->permissions->security);
+        $this->assertEquals('portal2', $permissions[1]->context);
+        $this->assertEquals(false, $permissions[1]->permissions->view);
+        $this->assertEquals(false, $permissions[1]->permissions->add);
+        $this->assertEquals(false, $permissions[1]->permissions->edit);
+        $this->assertEquals(false, $permissions[1]->permissions->delete);
+        $this->assertEquals(true, $permissions[1]->permissions->archive);
+        $this->assertEquals(true, $permissions[1]->permissions->live);
+        $this->assertEquals(true, $permissions[1]->permissions->security);
+        $this->assertEquals('portal3', $permissions[2]->context);
+        $this->assertEquals(false, $permissions[2]->permissions->view);
+        $this->assertEquals(false, $permissions[2]->permissions->add);
+        $this->assertEquals(false, $permissions[2]->permissions->edit);
+        $this->assertEquals(false, $permissions[2]->permissions->delete);
+        $this->assertEquals(true, $permissions[2]->permissions->archive);
+        $this->assertEquals(true, $permissions[2]->permissions->live);
+        $this->assertEquals(true, $permissions[2]->permissions->security);
+
         $this->assertObjectNotHasAttribute('securityType', $response);
     }
 
