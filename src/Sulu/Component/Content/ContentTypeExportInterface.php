@@ -28,7 +28,7 @@ interface ContentTypeExportInterface
     /**
      * @param NodeInterface $node
      * @param PropertyInterface $property
-     * @param integer $userId
+     * @param int $userId
      * @param string $webspaceKey
      * @param string $languageCode
      * @param string $segmentKey

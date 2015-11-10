@@ -28,6 +28,7 @@ interface WebspaceInterface
      * @param string $locale
      * @param string $filePath
      * @param string $format
+     * @param string $uuid
      *
      * @return array
      *
@@ -37,6 +38,7 @@ interface WebspaceInterface
         $webspaceKey,
         $locale,
         $filePath,
-        $format = '1.2.xliff'
+        $format = '1.2.xliff',
+        $uuid = null
     );
 }

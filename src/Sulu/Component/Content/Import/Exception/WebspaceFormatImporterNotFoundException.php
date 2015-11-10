@@ -19,7 +19,7 @@ class WebspaceFormatImporterNotFoundException extends \Exception
      * {@inheritdoc}
      */
     public function __construct(
-        $message = "",
+        $message = '',
         $code = 0,
         \Exception $previous = null
     ) {

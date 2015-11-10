@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Import;
 use PHPCR\NodeInterface;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
@@ -20,11 +21,9 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Extension\ExportExtensionInterface;
 use Sulu\Component\Content\Import\Exception\WebspaceFormatImporterNotFoundException;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\DocumentRegistry;
-use Sulu\Component\DocumentManager\PropertyEncoder;
 
 class Webspace implements WebspaceInterface
 {
@@ -113,20 +112,30 @@ class Webspace implements WebspaceInterface
         $webspaceKey,
         $locale,
         $filePath,
-        $format = '1.2.xliff'
+        $format = '1.2.xliff',
+        $uuid = null
     ) {
         $parsedDataList = $this->getParser($format)->parse($filePath, $locale);
         $failedImports = [];
 
+        $importedCounter = 0;
+        $successCounter = 0;
         foreach ($parsedDataList as $parsedData) {
-            if (!$this->importDocument($parsedData, $format, $webspaceKey, $locale)) {
-                $failedImports[] = $parsedData;
+            // filter for specific uuid
+            if (!$uuid || $uuid && isset($parsedData['uuid']) && $parsedData['uuid'] == $uuid) {
+                $importedCounter++;
+                if (!$this->importDocument($parsedData, $format, $webspaceKey, $locale)) {
+                    $failedImports[] = $parsedData;
+                } else {
+                    $successCounter++;
+                }
             }
         }
 
         return [
-            count($parsedDataList),
+            $importedCounter,
             count($failedImports),
+            $successCounter,
             $failedImports,
         ];
     }
@@ -140,6 +149,7 @@ class Webspace implements WebspaceInterface
      */
     protected function importDocument(array $parsedData, $format, $webspaceKey, $locale)
     {
+        $uuid = null;
         try {
             if (
                 !isset($parsedData['uuid'])
@@ -153,19 +163,20 @@ class Webspace implements WebspaceInterface
             $structureType = $parsedData['structureType'];
             $data = $parsedData['data'];
 
-            try {
-                /** @var BasePageDocument $document */
-                $document = $this->documentManager->find(
-                    $uuid,
-                    $locale,
-                    [
-                        'type' => Structure::TYPE_PAGE,
-                        'load_ghost_content' => false,
-                    ]
-                );
-            } catch (\RuntimeException $e) {
-                // TODO create new page for none exist locale
+            $documentType = Structure::TYPE_PAGE;
+            if ($this->getParser($format)->getPropertyData('url', $data) === '/') {
+                $documentType = 'home'; // TODO no constant
             }
+
+            /** @var BasePageDocument $document */
+            $document = $this->documentManager->find(
+                $uuid,
+                $locale,
+                [
+                    'type' => $documentType,
+                    'load_ghost_content' => false,
+                ]
+            );
 
             $document->setStructureType($structureType);
 
@@ -184,10 +195,15 @@ class Webspace implements WebspaceInterface
             $this->setDocumentData($document, $structureType, $webspaceKey, $locale, $format, $data);
 
             return true;
-
         } catch (\Exception $e) {
             $this->logger->error(
-                get_class($e) . ': <error>' . $e->getMessage() . '</error>' . PHP_EOL . $e->getTraceAsString()
+                sprintf(
+                    '<info>%s</info>%s: <error>%s</error>%s',
+                    $uuid,
+                    PHP_EOL . get_class($e),
+                    $e->getMessage(),
+                    PHP_EOL . $e->getTraceAsString()
+                )
             );
         }
 
@@ -213,6 +229,7 @@ class Webspace implements WebspaceInterface
         $structure = $this->structureManager->getStructure($structureType);
         $properties = $structure->getProperties(true);
         $node = $this->documentRegistry->getNodeForDocument($document);
+        $node->setProperty(sprintf('i18n:%s-template', $locale), $structureType);
 
         foreach ($properties as $property) {
             $value = $this->getParser($format)->getPropertyData(
@@ -245,8 +262,11 @@ class Webspace implements WebspaceInterface
             $this->importExtension($extension, $key, $node, $data, $webspaceKey, $locale, $format);
         }
 
+        $document->setTitle($this->getParser($format)->getPropertyData('title', $data));
+
         $this->documentManager->persist($document);
         $this->documentManager->flush();
+        $this->documentRegistry->clear(); // FIXME else it failed on multiple page import
     }
 
     /**

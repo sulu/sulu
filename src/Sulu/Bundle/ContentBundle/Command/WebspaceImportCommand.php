@@ -30,7 +30,8 @@ class WebspaceImportCommand extends ContainerAwareCommand
             ->addOption('webspace', 'w', InputOption::VALUE_REQUIRED)
             ->addOption('locale', 'l', InputOption::VALUE_REQUIRED)
             ->addOption('format', 'f', InputOption::VALUE_REQUIRED, '', '1.2.xliff')
-            ->setDescription('Export webspace');
+            ->addOption('uuid', 'u', InputOption::VALUE_REQUIRED)
+            ->setDescription('Import webspace');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -42,17 +43,23 @@ class WebspaceImportCommand extends ContainerAwareCommand
         }
         $locale = $input->getOption('locale');
         $format = $input->getOption('format');
+        $uuid = $input->getOption('uuid');
 
         /** @var WebspaceInterface $webspaceImporter */
         $webspaceImporter = $this->getContainer()->get('sulu_content.import.webspace');
 
-        $webspaceImporter->import(
+        list($count, $fails, $successes, $failed) = $webspaceImporter->import(
             $webspaceKey,
             $locale,
             $filePath,
-            $format
+            $format,
+            $uuid
         );
 
-        return 0;
+        if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+            $output->writeln(sprintf('<info>Imported %s/%s</info>', $successes, $count));
+        }
+
+        return $fails;
     }
 }

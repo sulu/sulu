@@ -62,7 +62,7 @@ class Xliff12 implements WebspaceFormatImportInterface
             $data = [];
             foreach ($property['children'] as $key => $child) {
                 $childProperties = [];
-                foreach(array_keys($child) as $childKey) {
+                foreach (array_keys($child) as $childKey) {
                     $childProperties[$childKey] = $this->getPropertyData($childKey, $child, $contentTypeName = null, $extension = null);
                 }
                 $data[$key] = $childProperties;
@@ -129,7 +129,7 @@ class Xliff12 implements WebspaceFormatImportInterface
     {
         $data = [];
 
-        foreach($file->body->children() as $translation) {
+        foreach ($file->body->children() as $translation) {
             if ($translation instanceof \SimpleXMLElement) {
                 $attributes = $translation->attributes();
                 if (!isset($attributes['resname'])) {
@@ -137,7 +137,7 @@ class Xliff12 implements WebspaceFormatImportInterface
                 }
 
                 $name = (string) $attributes['resname'];
-                $value = $this->utf8ToCharset((string) $translation->target, $encoding);
+                $value = $this->utf8ToCharset((string) $translation->source, $encoding);
 
                 if (strpos($name, '#') !== false) {
                     $names = explode('#', $name, 2);

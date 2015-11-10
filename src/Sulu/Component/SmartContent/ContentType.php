@@ -450,7 +450,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         if (isset($value[$key])) {
             $ids = [];
             $names = [];
-            foreach($value[$key] as $tag) {
+            foreach ($value[$key] as $tag) {
                 if (is_numeric($tag)) {
                     $ids[] = $tag;
                 } else {
