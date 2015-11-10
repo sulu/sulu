@@ -230,6 +230,8 @@ class Webspace implements WebspaceInterface
         $properties = $structure->getProperties(true);
         $node = $this->documentRegistry->getNodeForDocument($document);
         $node->setProperty(sprintf('i18n:%s-template', $locale), $structureType);
+        $state = $this->getParser($format)->getPropertyData('state', $data, null, null, 2);
+        $node->setProperty(sprintf('i18n:%s-state', $locale), $state);
 
         foreach ($properties as $property) {
             $value = $this->getParser($format)->getPropertyData(

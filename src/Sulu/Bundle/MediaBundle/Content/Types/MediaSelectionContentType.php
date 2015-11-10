@@ -234,6 +234,7 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         $languageCode,
         $segmentKey = null
     ) {
+        $property->setValue(json_decode($property->getValue(), true));
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 }

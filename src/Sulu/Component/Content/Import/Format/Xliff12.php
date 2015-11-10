@@ -31,7 +31,7 @@ class Xliff12 implements WebspaceFormatImportInterface
     /**
      * {@inheritdoc}
      */
-    public function getProperty($name, $data, $contentTypeName = null, $extension = null)
+    public function getProperty($name, $data, $contentTypeName = null, $extension = null, $default = null)
     {
         $propertyName = '';
 
@@ -42,7 +42,7 @@ class Xliff12 implements WebspaceFormatImportInterface
         $propertyName .= $name;
 
         if (!isset($data[$propertyName])) {
-            return;
+            return $default;
         }
 
         $property = $data[$propertyName];
@@ -54,7 +54,7 @@ class Xliff12 implements WebspaceFormatImportInterface
     /**
      * {@inheritdoc}
      */
-    public function getPropertyData($name, $data, $contentTypeName = null, $extension = null)
+    public function getPropertyData($name, $data, $contentTypeName = null, $extension = null, $default = null)
     {
         $property = $this->getProperty($name, $data, $contentTypeName, $extension);
 
@@ -72,7 +72,7 @@ class Xliff12 implements WebspaceFormatImportInterface
         }
 
         if (!isset($property['value'])) {
-            return;
+            return $default;
         }
 
         return $property['value'];
