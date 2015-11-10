@@ -198,7 +198,7 @@ class UserRepositoryTest extends SuluTestCase
         $this->assertEquals('max.mustermann@muster.at', $user->getContact()->getEmails()[0]->getEmail());
     }
 
-    public function testfindUserByEmail()
+    public function testFindUserByEmail()
     {
         $this->prepareUser('sulu', 'sulu');
 
@@ -213,7 +213,7 @@ class UserRepositoryTest extends SuluTestCase
         $this->assertEquals('test', $user->getUsername());
     }
 
-    public function testfindUserByIdentifier()
+    public function testFindUserWithSecurityByIdentifier()
     {
         $this->prepareUser('sulu', 'sulu');
 
@@ -222,8 +222,8 @@ class UserRepositoryTest extends SuluTestCase
         /** @var UserRepository $userRepository */
         $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
 
-        $userByMail = $userRepository->findUserByIdentifier('user2@test.com');
-        $userByUsername = $userRepository->findUserByIdentifier('test');
+        $userByMail = $userRepository->findUserWithSecurityByIdentifier('user2@test.com');
+        $userByUsername = $userRepository->findUserWithSecurityByIdentifier('test');
 
         $this->assertEquals('user2@test.com', $userByMail->getEmail());
         $this->assertEquals('test', $userByMail->getUsername());
