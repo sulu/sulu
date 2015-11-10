@@ -157,7 +157,12 @@ class TagList extends ComplexContentType implements ContentTypeExportInterface
         $languageCode,
         $segmentKey = null
     ) {
-        $property->setValue(json_decode($property->getValue()));
+        $tagNames = [];
+        $tagIds = json_decode($property->getValue());
+        if (!empty($tagIds)) {
+            $tagNames = $this->tagManager->resolveTagIds($tagIds);
+        }
+        $property->setValue($tagNames);
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 }
