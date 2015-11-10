@@ -181,7 +181,7 @@ trait DataProviderRepositoryTrait
      */
     private function appendRelationOr(QueryBuilder $queryBuilder, $relation, $values, $alias)
     {
-        $queryBuilder->join($relation, $alias)
+        $queryBuilder->leftJoin($relation, $alias)
             ->andWhere($alias . '.id IN (:' . $alias . ')');
 
         return [$alias => $values];
@@ -204,7 +204,7 @@ trait DataProviderRepositoryTrait
 
         $length = count($values);
         for ($i = 0; $i < $length; ++$i) {
-            $queryBuilder->join($relation, $alias . $i);
+            $queryBuilder->leftJoin($relation, $alias . $i);
 
             $expr->add($queryBuilder->expr()->eq($alias . $i . '.id', ':' . $alias . $i));
 
