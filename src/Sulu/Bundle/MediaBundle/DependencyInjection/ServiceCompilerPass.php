@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Compiler Pass for collecting services tagged with sulu_media.media.service
+ * Compiler Pass for collecting services tagged with sulu_media.media.service.
  */
 class ServiceCompilerPass implements CompilerPassInterface
 {
@@ -35,7 +35,7 @@ class ServiceCompilerPass implements CompilerPassInterface
             foreach ($tags as $attributes) {
                 $definition->addMethodCall(
                     'add',
-                    array(new Reference($id), $attributes['alias'])
+                    [new Reference($id), $attributes['alias']]
                 );
             }
         }

@@ -162,7 +162,7 @@ class Configuration implements ConfigurationInterface
                 ->useAttributeAsKey('name')
                 ->prototype('array')
                     ->prototype('scalar')->end()
-                ->end()->defaultValue(array())
+                ->end()->defaultValue([])
             ->end();
 
         return $treeBuilder;

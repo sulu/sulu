@@ -13,8 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Event;
 use Sulu\Bundle\MediaBundle\Api\Media;
 
 /**
- * Interface ApiMediaEventInterface
- * Defines the ApiMediaEvent Structure
+ * Defines the ApiMediaEvent Structure.
  */
 interface ApiMediaEventInterface
 {

@@ -14,8 +14,7 @@ use Sulu\Bundle\MediaBundle\Api\Media;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Class MediaApiEvent
- * To Call Events with Media Api Objects
+ * To Call Events with Media Api Objects.
  */
 class ApiMediaEvent extends Event implements ApiMediaEventInterface
 {

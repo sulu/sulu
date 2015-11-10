@@ -9,38 +9,38 @@
  */
 
 namespace Sulu\Bundle\MediaBundle\Media\Service;
+
 use Sulu\Bundle\MediaBundle\Api\Media;
 
 /**
- * Class ServiceInterface
- * @package Sulu\Bundle\MediaBundle\Media\Service
+ * Defines an media event subscriber.
  */
 interface ServiceInterface
 {
     /**
-     * Send add external media request
+     * Send add external media request.
      *
      * @param Media[] $media
      *
-     * @return boolean
+     * @return bool
      */
     public function add(array $media);
 
     /**
-     * Send update external media request
+     * Send update external media request.
      *
      * @param Media[] $media
      *
-     * @return boolean
+     * @return bool
      */
     public function update(array $media);
 
     /**
-     * Send delete external media request
+     * Send delete external media request.
      *
      * @param Media[] $media
      *
-     * @return boolean
+     * @return bool
      */
     public function delete(array $media);
 }

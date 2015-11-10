@@ -12,8 +12,7 @@ use Sulu\Bundle\MediaBundle\Api\Media;
 
 
 /**
- * Class ServiceManager
- * The Service Manager notify all registered services
+ * The Service Manager notify all registered services.
  */
 interface ServiceManagerInterface
 {
@@ -24,12 +23,12 @@ interface ServiceManagerInterface
     /**
      * @param Media $media
      * @param string $status
-     * @return boolean
+     * @return bool
      */
     public function addMedia(Media $media, $status = self::MEDIA_STATUS_ADD);
 
     /**
-     * notifies all services
+     * notifies all services.
      */
     public function notify();
 

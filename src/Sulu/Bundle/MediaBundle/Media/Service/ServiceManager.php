@@ -14,20 +14,19 @@ use Psr\Log\NullLogger;
 use Sulu\Bundle\MediaBundle\Api\Media;
 
 /**
- * Class ServiceManager
- * The Service Manager notify all registered services
+ * The Service Manager notify all registered services.
  */
 class ServiceManager implements ServiceManagerInterface
 {
     /**
      * @var array
      */
-    protected $mediaRegister = array();
+    protected $mediaRegister = [];
 
     /**
      * @var ServiceInterface[]
      */
-    protected $services = array();
+    protected $services = [];
 
     /**
      * @var LoggerInterface
@@ -35,16 +34,17 @@ class ServiceManager implements ServiceManagerInterface
     protected $logger;
 
     /**
-     * creates default media register structure
+     * creates default media register structure.
+     *
      * @param LoggerInterface $logger
      */
     public function __construct(
         $logger = null
     ) {
-        $this->logger = $logger ? : new NullLogger();
-        $this->mediaRegister[self::MEDIA_STATUS_ADD] = array();
-        $this->mediaRegister[self::MEDIA_STATUS_UPDATE] = array();
-        $this->mediaRegister[self::MEDIA_STATUS_DELETE] = array();
+        $this->logger = $logger ?: new NullLogger();
+        $this->mediaRegister[self::MEDIA_STATUS_ADD] = [];
+        $this->mediaRegister[self::MEDIA_STATUS_UPDATE] = [];
+        $this->mediaRegister[self::MEDIA_STATUS_DELETE] = [];
     }
 
     /**

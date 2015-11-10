@@ -10,17 +10,15 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Service;
 
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Sulu\Bundle\MediaBundle\Event\ApiMediaEventInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Class EventListener
- * Handles all media events
+ * Handles all media events.
  */
 class EventListener implements EventSubscriberInterface
 {
@@ -43,7 +41,7 @@ class EventListener implements EventSubscriberInterface
         $logger = null
     ) {
         $this->serviceManager = $serviceManager;
-        $this->logger = $logger ? : new NullLogger();
+        $this->logger = $logger ?: new NullLogger();
     }
 
     /**
@@ -71,7 +69,7 @@ class EventListener implements EventSubscriberInterface
     }
 
     /**
-     * will notify all servcies
+     * will notify all services.
      */
     public function onTerminate()
     {
@@ -83,12 +81,12 @@ class EventListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        $listeners = array(
+        $listeners = [
             MediaManagerInterface::EVENT_POST_MEDIA_ADD => 'onMediaAdd',
             MediaManagerInterface::EVENT_POST_MEDIA_UPDATE => 'onMediaUpdate',
             MediaManagerInterface::EVENT_POST_MEDIA_DELETE => 'onMediaDelete',
             KernelEvents::TERMINATE => 'onTerminate',
-        );
+        ];
 
         return $listeners;
     }
@@ -96,7 +94,8 @@ class EventListener implements EventSubscriberInterface
     /**
      * @param $media
      * @param $status
-     * @return boolean
+     *
+     * @return bool
      */
     private function addMediaToManager($media, $status)
     {
