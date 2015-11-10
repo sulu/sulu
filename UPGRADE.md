@@ -2,6 +2,16 @@
 
 ## dev-develop
 
+### Search
+
+To index multiple fields (and `category_list` content-type) you have to add the attribute `type="array"` to the
+`sulu.search.field` tag. The `tag_list` content-type has its own search-field type `tags`
+(`<tag name="sulu.search.field" type="tags"/>`).
+
+### Category Content-Type
+
+The category now content-type converts the selected ids into category data only for website rendering. 
+
 ### System Collections
 
 Remove the config `sulu_contact.form.avatar_collection` and note it you will need it in the sql statement below for the
