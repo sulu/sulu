@@ -29,6 +29,7 @@ use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class MediaManagerTest extends \PHPUnit_Framework_TestCase
@@ -94,6 +95,11 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
     private $securityChecker;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * @var FFProbe
      */
     private $ffprobe;
@@ -109,6 +115,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $this->storage = $this->prophesize(StorageInterface::class);
         $this->validator = $this->prophesize(FileValidatorInterface::class);
         $this->formatManager = $this->prophesize(FormatManagerInterface::class);
+        $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
         $this->tagManager = $this->prophesize(TagManagerInterface::class);
         $this->typeManager = $this->prophesize(TypeManagerInterface::class);
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
@@ -127,6 +134,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
             $this->typeManager->reveal(),
             $this->tokenStorage->reveal(),
             $this->securityChecker->reveal(),
+            $this->eventDispatcher->reveal(),
             $this->ffprobe->reveal(),
             [
                 'view' => 64,
