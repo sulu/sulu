@@ -1018,7 +1018,6 @@ class Account extends ApiWrapper
             /** @var AccountContactEntity $accountContact */
             foreach ($accountContacts as $accountContact) {
                 $contacts[] = new Contact($accountContact->getContact(), $this->locale);
-                $contacts[] = new Contact($accountContact->getContact(), $this->locale);
             }
         }
 
