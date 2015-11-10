@@ -9,6 +9,7 @@
  */
 
 namespace Sulu\Bundle\MediaBundle\Media\Service;
+
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Sulu\Bundle\MediaBundle\Api\Media;

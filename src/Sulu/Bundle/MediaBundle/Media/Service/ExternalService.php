@@ -47,9 +47,9 @@ class ExternalService implements ServiceInterface
                 $this->logger->error(
                     sprintf(
                         'External Service Notification send error: %s %s',
-                        $e->getResponse()->getStatusCode(), 
+                        $e->getResponse()->getStatusCode(),
                         $value[$action]
-                    )        
+                    )
                 );
             }
         }
