@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class MediaDataProvider extends BaseDataProvider
 {
-
     /**
      * @var RequestStack
      */
@@ -30,18 +29,18 @@ class MediaDataProvider extends BaseDataProvider
     protected function getOptions(
         array $propertyParameter,
         array $options = []
-    )
-    {
+    ) {
         $request = $this->requestStack->getCurrentRequest();
 
-         return array_filter([
+        return array_filter([
              'filetype' => $request->get('filetype'),
-             'language' => $request->get('lang')
+             'language' => $request->get('lang'),
          ]);
     }
 
     /**
      * @param array $data
+     *
      * @return array
      */
     protected function decorateDataItems(array $data)

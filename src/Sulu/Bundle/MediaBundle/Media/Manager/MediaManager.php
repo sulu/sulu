@@ -974,7 +974,6 @@ class MediaManager implements MediaManagerInterface, DataProviderRepositoryInter
         return $this->tokenStorage->getToken()->getUser();
     }
 
-
     /**
      * {@inheritdoc}
      */

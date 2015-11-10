@@ -32,7 +32,6 @@ trait DataProviderRepositoryTrait
         $query = $queryBuilder->getQuery();
         $query->setParameter('ids', $this->findByFiltersIds($filters, $page, $pageSize, $limit, $options));
 
-
         return $query->getResult();
     }
 

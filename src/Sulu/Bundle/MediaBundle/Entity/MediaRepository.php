@@ -67,7 +67,6 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
 
     protected function append(QueryBuilder $queryBuilder, $options = [])
     {
-
         $parameter = [];
 
         // TODO append condition by options
@@ -163,8 +162,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         $offset = null,
         UserInterface $user = null,
         $permission = null
-    )
-    {
+    ) {
         try {
             list($collection, $types, $search, $orderBy, $orderSort, $ids) = $this->extractFilterVars($filter);
 
@@ -344,8 +342,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         $limit = null,
         $offset = null,
         $select = 'media.id'
-    )
-    {
+    ) {
         $subQueryBuilder = $this->createQueryBuilder('media')->select($select);
 
         if ($collection !== null) {
@@ -410,8 +407,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         $orderSort = null,
         $limit = null,
         $offset = null
-    )
-    {
+    ) {
         $subQuery = $this->getIdsQuery($collection, $types, $search, $orderBy, $orderSort, $limit, $offset);
 
         return $subQuery->getScalarResult();
