@@ -12,6 +12,7 @@ namespace Sulu\Component\SmartContent\Orm;
 
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
+use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\ProviderConfiguration;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
@@ -170,6 +171,14 @@ abstract class BaseDataProvider implements DataProviderInterface
         return SerializationContext::create()->setSerializeNull(true);
     }
 
+    /**
+     * Returns additional options for query creation.
+     *
+     * @param PropertyParameter[] $propertyParameter
+     * @param array $options
+     *
+     * @return array
+     */
     protected function getOptions(
         array $propertyParameter,
         array $options = []

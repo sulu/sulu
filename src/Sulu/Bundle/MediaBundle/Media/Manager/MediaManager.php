@@ -164,7 +164,7 @@ class MediaManager implements MediaManagerInterface, DataProviderRepositoryInter
      * @param string $maxFileSize
      */
     public function __construct(
-        MediaRepository $mediaRepository,
+        MediaRepositoryInterface $mediaRepository,
         CollectionRepositoryInterface $collectionRepository,
         UserRepositoryInterface $userRepository,
         EntityManager $em,
@@ -940,9 +940,11 @@ class MediaManager implements MediaManagerInterface, DataProviderRepositoryInter
     }
 
     /**
-     * @param $id
-     * @param $fileName
-     * @param $version
+     * Returns download url for given id and filename.
+     *
+     * @param string $id
+     * @param string $fileName
+     * @param string $version
      *
      * @return string
      */
@@ -961,6 +963,11 @@ class MediaManager implements MediaManagerInterface, DataProviderRepositoryInter
         ) . '?v=' . $version;
     }
 
+    /**
+     * Returns current user or null if no user is loggedin.
+     *
+     * @return UserInterface|void
+     */
     protected function getCurrentUser()
     {
         if (!$this->tokenStorage) {
@@ -983,7 +990,7 @@ class MediaManager implements MediaManagerInterface, DataProviderRepositoryInter
 
         return array_map(
             function ($media) use ($locale) {
-                return $this->addFormatsAndUrl(new Media($media, $locale), $locale);
+                return $this->addFormatsAndUrl(new Media($media, $locale));
             },
             $entities
         );

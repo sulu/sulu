@@ -23,14 +23,15 @@ trait DataProviderRepositoryTrait
      */
     public function findByFilters($filters, $page, $pageSize, $limit, $locale, $options = [])
     {
-        $queryBuilder = $this->createQueryBuilder('entity')
-            ->addSelect('entity')
-            ->where('entity.id IN (:ids)')
-            ->orderBy('entity.id', 'ASC');
-        $this->appendJoins($queryBuilder);
+        $alias = 'entity';
+        $queryBuilder = $this->createQueryBuilder($alias)
+            ->addSelect($alias)
+            ->where($alias . '.id IN (:ids)')
+            ->orderBy($alias . '.id', 'ASC');
+        $this->appendJoins($queryBuilder, $alias, $locale);
 
         $query = $queryBuilder->getQuery();
-        $query->setParameter('ids', $this->findByFiltersIds($filters, $page, $pageSize, $limit, $options));
+        $query->setParameter('ids', $this->findByFiltersIds($filters, $page, $pageSize, $limit, $locale, $options));
 
         return $query->getResult();
     }
@@ -42,10 +43,12 @@ trait DataProviderRepositoryTrait
      * @param int $page
      * @param int $pageSize
      * @param int $limit
+     * @param string $locale
+     * @param array $options
      *
      * @return array
      */
-    private function findByFiltersIds($filters, $page, $pageSize, $limit, $options = [])
+    private function findByFiltersIds($filters, $page, $pageSize, $limit, $locale, $options = [])
     {
         $parameter = [];
 
@@ -53,16 +56,16 @@ trait DataProviderRepositoryTrait
             ->select('c.id')
             ->orderBy('c.id', 'ASC');
 
-        $this->appendTagsRelation($queryBuilder, 'c');
-        $this->appendCategoriesRelation($queryBuilder, 'c');
-        $parameter = array_merge($parameter, $this->append($queryBuilder, $options));
+        $tagRelation = $this->appendTagsRelation($queryBuilder, 'c');
+        $categoryRelation = $this->appendCategoriesRelation($queryBuilder, 'c');
+        $parameter = array_merge($parameter, $this->append($queryBuilder, $locale, $options));
 
         if (isset($filters['tags']) && !empty($filters['tags'])) {
             $parameter = array_merge(
                 $parameter,
                 $this->appendRelation(
                     $queryBuilder,
-                    $this->getTagsRelation('c'),
+                    $tagRelation,
                     $filters['tags'],
                     strtolower($filters['tagOperator']),
                     'adminTags'
@@ -75,7 +78,7 @@ trait DataProviderRepositoryTrait
                 $parameter,
                 $this->appendRelation(
                     $queryBuilder,
-                    $this->getCategoriesRelation('c'),
+                    $categoryRelation,
                     $filters['categories'],
                     strtolower($filters['categoryOperator']),
                     'adminCategories'
@@ -88,7 +91,7 @@ trait DataProviderRepositoryTrait
                 $parameter,
                 $this->appendRelation(
                     $queryBuilder,
-                    $this->getTagsRelation('c'),
+                    $tagRelation,
                     $filters['websiteTags'],
                     strtolower($filters['websiteTagsOperator']),
                     'websiteTags'
@@ -101,7 +104,7 @@ trait DataProviderRepositoryTrait
                 $parameter,
                 $this->appendRelation(
                     $queryBuilder,
-                    $this->getCategoriesRelation('c'),
+                    $categoryRelation,
                     $filters['websiteCategories'],
                     strtolower($filters['websiteCategoriesOperator']),
                     'websiteCategories'
@@ -225,38 +228,49 @@ trait DataProviderRepositoryTrait
      * Append joins to query builder for "findByFilters" function.
      *
      * @param QueryBuilder $queryBuilder
+     * @param string $alias
+     * @param string $locale
      */
-    abstract protected function appendJoins(QueryBuilder $queryBuilder);
+    abstract protected function appendJoins(QueryBuilder $queryBuilder, $alias, $locale);
 
     /**
      * Append additional condition to query builder for "findByFilters" function.
      *
      * @param QueryBuilder $queryBuilder
+     * @param string $locale
      * @param array $options
      *
-     * @return array parameter for query
+     * @return array parameters for query
      */
-    protected function append(QueryBuilder $queryBuilder, $options = [])
+    protected function append(QueryBuilder $queryBuilder, $locale, $options = [])
     {
         // empty implementation can be overwritten by repository
         return [];
     }
 
+    /**
+     * Extension point to append relations to tag relation if it is not direct linked.
+     *
+     * @param QueryBuilder $queryBuilder
+     * @param string $alias
+     *
+     * @return string field path to tag relation
+     */
     protected function appendTagsRelation(QueryBuilder $queryBuilder, $alias)
     {
+        return $alias . '.categories';
     }
 
+    /**
+     * Extension point to append relations to category relation if it is not direct linked.
+     *
+     * @param QueryBuilder $queryBuilder
+     * @param string $alias
+     *
+     * @return string field path to category relation
+     */
     protected function appendCategoriesRelation(QueryBuilder $queryBuilder, $alias)
     {
-    }
-
-    protected function getTagsRelation($alias)
-    {
         return $alias . '.tags';
-    }
-
-    protected function getCategoriesRelation($alias)
-    {
-        return $alias . '.categories';
     }
 }

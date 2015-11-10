@@ -27,8 +27,6 @@ interface DataProviderRepositoryInterface
      * @param $options
      *
      * @return \object[]
-     *
-     * @internal param string $local
      */
     public function findByFilters($filters, $page, $pageSize, $limit, $locale, $options = []);
 }

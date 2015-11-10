@@ -35,20 +35,20 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     /**
      * {@inheritdoc}
      */
-    public function appendJoins(QueryBuilder $queryBuilder)
+    public function appendJoins(QueryBuilder $queryBuilder, $alias, $locale)
     {
-        $queryBuilder->leftJoin('entity.type', 'type')
-            ->leftJoin('entity.collection', 'collection')
-            ->leftJoin('entity.files', 'file')
+        $queryBuilder->leftJoin($alias . '.type', 'type')
+            ->leftJoin($alias . '.collection', 'collection')
+            ->leftJoin($alias . '.files', 'file')
             ->leftJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version')
             ->leftJoin('fileVersion.tags', 'tag')
             ->leftJoin('fileVersion.meta', 'fileVersionMeta')
             ->leftJoin('fileVersion.defaultMeta', 'fileVersionDefaultMeta')
             ->leftJoin('fileVersion.contentLanguages', 'fileVersionContentLanguage')
             ->leftJoin('fileVersion.publishLanguages', 'fileVersionPublishLanguage')
-            ->leftJoin('entity.creator', 'creator')
+            ->leftJoin($alias . '.creator', 'creator')
             ->leftJoin('creator.contact', 'creatorContact')
-            ->leftJoin('entity.changer', 'changer')
+            ->leftJoin($alias . '.changer', 'changer')
             ->leftJoin('changer.contact', 'changerContact')
             ->addSelect('type')
             ->addSelect('collection')
@@ -65,39 +65,31 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             ->addSelect('changerContact');
     }
 
-    protected function append(QueryBuilder $queryBuilder, $options = [])
+    /**
+     * {@inheritdoc}
+     */
+    protected function append(QueryBuilder $queryBuilder, $locale, $options = [])
     {
         $parameter = [];
 
-        // TODO append condition by options
-        if (count($options) > 0) {
-            foreach ($options as $key => $value) {
-                switch ($key) {
-                    case 'filetype':
-                        $queryBuilder->leftJoin('fileVersion.tags', 'tag');
-                        $queryBuilder->andWhere('fileVersion.mimeType = :mimeType');
-                        $parameter['mimeType'] = $value;
-                        break;
-                    case 'lang':
-                        break;
-                    default:
-                        break;
-                }
-            }
+        if (array_key_exists('mimetype', $options)) {
+            $queryBuilder->leftJoin('fileVersion.tags', 'tag');
+            $queryBuilder->andWhere('fileVersion.mimeType = :mimeType');
+            $parameter['mimeType'] = $options['mimetype'];
         }
 
         return $parameter;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function appendTagsRelation(QueryBuilder $queryBuilder, $alias)
     {
         $queryBuilder
             ->leftJoin($alias . '.files', 'file')
             ->leftJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version');
-    }
 
-    protected function getTagsRelation($alias)
-    {
         return 'fileVersion.tags';
     }
 
