@@ -40,6 +40,8 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
 
     public function testRender()
     {
+        $request = new Request(['test' => 1], ['test' => 2], [], ['test' => 3]);
+
         $activeTheme = $this->prophesize(ActiveTheme::class);
         $controllerResolver = $this->prophesize(ControllerResolver::class);
         $webspaceManager = $this->prophesize(WebspaceManager::class);
@@ -59,7 +61,19 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
                     return [new TestController(), 'testAction'];
                 }
             );
-        $requestStack->push(Argument::type(Request::class))->shouldBeCalled();
+
+        $requestStack->getCurrentRequest()->willReturn($request);
+        $requestStack->push(
+            Argument::that(
+                function (Request $newRequest) use ($request) {
+                    $this->assertEquals($request->query->all(), $newRequest->query->all());
+                    $this->assertEquals($request->request->all(), $newRequest->request->all());
+                    $this->assertEquals($request->cookies->all(), $newRequest->cookies->all());
+
+                    return true;
+                }
+            )
+        )->shouldBeCalledTimes(1);
         $requestStack->pop()->shouldBeCalled();
 
         $translator->getLocale()->willReturn('de');

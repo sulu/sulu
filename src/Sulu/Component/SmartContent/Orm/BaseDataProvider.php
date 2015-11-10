@@ -80,7 +80,14 @@ abstract class BaseDataProvider implements DataProviderInterface
         $page = 1,
         $pageSize = null
     ) {
-        list($result, $hasNextPage) = $this->resolveFilters($filters, $options['locale'], $limit, $page, $pageSize, $this->getOptions($propertyParameter, $options));
+        list($result, $hasNextPage) = $this->resolveFilters(
+            $filters,
+            $options['locale'],
+            $limit,
+            $page,
+            $pageSize,
+            $this->getOptions($propertyParameter, $options)
+        );
 
         return new DataProviderResult($this->decorateDataItems($result), $hasNextPage);
     }
@@ -96,7 +103,14 @@ abstract class BaseDataProvider implements DataProviderInterface
         $page = 1,
         $pageSize = null
     ) {
-        list($result, $hasNextPage) = $this->resolveFilters($filters, $options['locale'], $limit, $page, $pageSize, $this->getOptions($propertyParameter, $options));
+        list($result, $hasNextPage) = $this->resolveFilters(
+            $filters,
+            $options['locale'],
+            $limit,
+            $page,
+            $pageSize,
+            $this->getOptions($propertyParameter, $options)
+        );
 
         return new DataProviderResult($this->decorateResourceItems($result, $options['locale']), $hasNextPage);
     }

@@ -31,7 +31,8 @@ trait DataProviderRepositoryTrait
         $this->appendJoins($queryBuilder, $alias, $locale);
 
         $query = $queryBuilder->getQuery();
-        $query->setParameter('ids', $this->findByFiltersIds($filters, $page, $pageSize, $limit, $locale, $options));
+        $ids = $this->findByFiltersIds($filters, $page, $pageSize, $limit, $locale, $options);
+        $query->setParameter('ids', $ids);
 
         return $query->getResult();
     }
@@ -258,7 +259,7 @@ trait DataProviderRepositoryTrait
      */
     protected function appendTagsRelation(QueryBuilder $queryBuilder, $alias)
     {
-        return $alias . '.categories';
+        return $alias . '.tags';
     }
 
     /**
@@ -271,6 +272,6 @@ trait DataProviderRepositoryTrait
      */
     protected function appendCategoriesRelation(QueryBuilder $queryBuilder, $alias)
     {
-        return $alias . '.tags';
+        return $alias . '.categories';
     }
 }

@@ -103,6 +103,17 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
                 null,
                 1,
                 null,
+                [],
+                [['id' => 1], ['id' => 2], ['id' => 3], ['id' => 4]],
+                false,
+                [['id' => 1], ['id' => 2], ['id' => 3], ['id' => 4]],
+            ],
+            [
+                [],
+                null,
+                1,
+                null,
+                ['test' => 1],
                 [['id' => 1], ['id' => 2], ['id' => 3], ['id' => 4]],
                 false,
                 [['id' => 1], ['id' => 2], ['id' => 3], ['id' => 4]],
@@ -112,6 +123,7 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
                 null,
                 1,
                 null,
+                [],
                 [['id' => 1], ['id' => 2], ['id' => 3], ['id' => 4]],
                 false,
                 [['id' => 1], ['id' => 2], ['id' => 3], ['id' => 4]],
@@ -121,6 +133,7 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
                 2,
                 1,
                 null,
+                [],
                 [['id' => 1], ['id' => 2]],
                 false,
                 [['id' => 1], ['id' => 2]],
@@ -130,6 +143,7 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
                 null,
                 1,
                 2,
+                [],
                 [['id' => 1], ['id' => 2]],
                 false,
                 [['id' => 1], ['id' => 2]],
@@ -139,6 +153,7 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
                 null,
                 1,
                 2,
+                [],
                 [['id' => 1], ['id' => 2], ['id' => 3]],
                 true,
                 [['id' => 1], ['id' => 2]],
@@ -148,6 +163,7 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
                 null,
                 2,
                 2,
+                [],
                 [['id' => 2], ['id' => 3]],
                 false,
                 [['id' => 2], ['id' => 3]],
@@ -157,6 +173,7 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
                 null,
                 2,
                 2,
+                [],
                 [['id' => 2], ['id' => 3], ['id' => 4]],
                 true,
                 [['id' => 2], ['id' => 3]],
@@ -172,12 +189,13 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
         $limit,
         $page,
         $pageSize,
+        $options,
         $repositoryResult,
         $hasNextPage,
         $items
     ) {
         $repository = $this->prophesize(DataProviderRepositoryInterface::class);
-        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en')->shouldBeCalled()->willReturn(
+        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', $options)->shouldBeCalled()->willReturn(
             $repositoryResult
         );
 
@@ -193,7 +211,7 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
         $method = $class->getMethod('resolveFilters');
         $method->setAccessible(true);
 
-        $result = $method->invokeArgs($provider, [$filters, 'en', $limit, $page, $pageSize]);
+        $result = $method->invokeArgs($provider, [$filters, 'en', $limit, $page, $pageSize, $options]);
 
         $this->assertEquals($items, $result[0]);
         $this->assertEquals($hasNextPage, $result[1]);
@@ -207,12 +225,13 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
         $limit,
         $page,
         $pageSize,
+        $options,
         $repositoryResult,
         $hasNextPage,
         $items
     ) {
         $repository = $this->prophesize(DataProviderRepositoryInterface::class);
-        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en')->shouldBeCalled()->willReturn(
+        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', [])->shouldBeCalled()->willReturn(
             $repositoryResult
         );
 
@@ -248,6 +267,7 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
         $limit,
         $page,
         $pageSize,
+        $options,
         $repositoryResult,
         $hasNextPage,
         $items
@@ -263,7 +283,7 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
         );
 
         $repository = $this->prophesize(DataProviderRepositoryInterface::class);
-        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en')->shouldBeCalled()->willReturn(
+        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', [])->shouldBeCalled()->willReturn(
             $mockedItems
         );
 
