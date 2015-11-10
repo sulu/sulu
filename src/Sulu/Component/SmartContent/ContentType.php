@@ -467,5 +467,4 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
             $value[$key] = $ids;
         }
     }
-
 }

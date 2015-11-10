@@ -123,11 +123,11 @@ class Webspace implements WebspaceInterface
         foreach ($parsedDataList as $parsedData) {
             // filter for specific uuid
             if (!$uuid || $uuid && isset($parsedData['uuid']) && $parsedData['uuid'] == $uuid) {
-                $importedCounter++;
+                ++$importedCounter;
                 if (!$this->importDocument($parsedData, $format, $webspaceKey, $locale)) {
                     $failedImports[] = $parsedData;
                 } else {
-                    $successCounter++;
+                    ++$successCounter;
                 }
             }
         }
