@@ -81,7 +81,6 @@ define([
          */
         updateDataNavigation: function() {
             var url = '/admin/api/collections/' + this.data.id + '?depth=1&sortBy=title';
-            this.sandbox.emit('husky.data-navigation.collections.set-url', url);
             this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
 
             this.updateDataNavigationAddButton();

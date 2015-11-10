@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1778 [MediaBundle]     Fixed cache handling of system collections
     * ENHANCEMENT #1775 [SmartContent]    Add possibility to get ArrayAccessItem as json
     * ENHANCEMENT #1772 [SbippetBundle]   Added translated template to snippet list
+    * BUGFIX      #1761 [MediaBundle]     Reduced the number of requests in the collection view
     * BUGFIX      #1736 [AdminBundle]     Fixed layout for content form
     * ENHANCEMENT #1760 [SecurityBundle]  Added missing joins on query for security
     * BUGFIX      #1759 [ContactBundle]   Fixed upload avatar when category is selected

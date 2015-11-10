@@ -68,7 +68,6 @@ define([
         updateDataNavigation: function() {
             var url = '/admin/api/collections?sortBy=title',
                 permissions = Config.get('sulu-media').permissions;
-            this.sandbox.emit('husky.data-navigation.collections.set-url', url);
             this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
 
             if (!!permissions.add) {
