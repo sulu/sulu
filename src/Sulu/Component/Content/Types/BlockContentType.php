@@ -203,7 +203,8 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         $userId,
         $webspaceKey,
         $languageCode,
-        $segmentKey
+        $segmentKey,
+        $isImport = false
     ) {
         if ($property->getIsBlock()) {
             /** @var BlockPropertyInterface $blockProperty */
@@ -263,7 +264,8 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
                         $userId,
                         $webspaceKey,
                         $languageCode,
-                        $segmentKey
+                        $segmentKey,
+                        $isImport
                     );
                 }
             }
@@ -283,7 +285,8 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         $userId,
         $webspaceKey,
         $languageCode,
-        $segmentKey
+        $segmentKey,
+        $isImport = false
     ) {
         // save sub property
         $contentType = $this->contentTypeManager->get($property->getContentTypeName());
@@ -297,14 +300,26 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
             $languageCode,
             $segmentKey
         );
-        $contentType->write(
-            $node,
-            $blockPropertyWrapper,
-            $userId,
-            $webspaceKey,
-            $languageCode,
-            $segmentKey
-        );
+
+        if ($isImport && $contentType instanceof ContentTypeExportInterface) {
+            $contentType->importData(
+                $node,
+                $blockPropertyWrapper,
+                $userId,
+                $webspaceKey,
+                $languageCode,
+                $segmentKey
+            );
+        } else {
+            $contentType->write(
+                $node,
+                $blockPropertyWrapper,
+                $userId,
+                $webspaceKey,
+                $languageCode,
+                $segmentKey
+            );
+        }
     }
 
     /**
@@ -416,6 +431,6 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         $languageCode,
         $segmentKey = null
     ) {
-        $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
+        $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey, true);
     }
 }

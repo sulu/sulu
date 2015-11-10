@@ -122,13 +122,15 @@ class Webspace implements WebspaceInterface
         $successCounter = 0;
         foreach ($parsedDataList as $parsedData) {
             // filter for specific uuid
-            if (!$uuid || $uuid && isset($parsedData['uuid']) && $parsedData['uuid'] == $uuid) {
+            if (!$uuid || isset($parsedData['uuid']) && $parsedData['uuid'] == $uuid) {
                 ++$importedCounter;
                 if (!$this->importDocument($parsedData, $format, $webspaceKey, $locale)) {
                     $failedImports[] = $parsedData;
                 } else {
                     ++$successCounter;
                 }
+
+                $this->logger->info(sprintf('Document %s/%s', $importedCounter, $uuid ? 1 : count($parsedDataList)));
             }
         }
 
@@ -233,6 +235,7 @@ class Webspace implements WebspaceInterface
         $state = $this->getParser($format)->getPropertyData('state', $data, null, null, 2);
         $node->setProperty(sprintf('i18n:%s-state', $locale), $state);
 
+        // import all content data
         foreach ($properties as $property) {
             $value = $this->getParser($format)->getPropertyData(
                 $property->getName(),
@@ -240,32 +243,44 @@ class Webspace implements WebspaceInterface
                 $property->getContentTypeName()
             );
 
+            // don't generate a new url when one exists
+            $doImport = true;
             if ($property->getContentTypeName() == 'resource_locator') {
-                $parent = $document->getParent();
-                if ($parent instanceof BasePageDocument) {
-                    $parentPath = $parent->getResourceSegment();
-                    $value = $this->generateUrl(
-                        $structure->getPropertiesByTagName('sulu.rlp.part'),
-                        $parentPath,
-                        $webspaceKey,
-                        $locale,
-                        $format,
-                        $data
-                    );
+                if (!$document->getResourceSegment()) {
+                    $parent = $document->getParent();
+                    if ($parent instanceof BasePageDocument) {
+                        $parentPath = $parent->getResourceSegment();
+                        $value = $this->generateUrl(
+                            $structure->getPropertiesByTagName('sulu.rlp.part'),
+                            $parentPath,
+                            $webspaceKey,
+                            $locale,
+                            $format,
+                            $data
+                        );
+                    }
+                } else {
+                    $doImport = false;
                 }
             }
 
-            $this->importProperty($property, $node, $structure, $value, $webspaceKey, $locale, $format);
+            // import property data
+            if ($doImport) {
+                $this->importProperty($property, $node, $structure, $value, $webspaceKey, $locale, $format);
+            }
         }
 
+        // import extensions
         $extensions = $this->structureManager->getExtensions($structureType);
 
         foreach ($extensions as $key => $extension) {
             $this->importExtension($extension, $key, $node, $data, $webspaceKey, $locale, $format);
         }
 
+        // set required data
         $document->setTitle($this->getParser($format)->getPropertyData('title', $data));
 
+        // save document
         $this->documentManager->persist($document);
         $this->documentManager->flush();
         $this->documentRegistry->clear(); // FIXME else it failed on multiple page import
