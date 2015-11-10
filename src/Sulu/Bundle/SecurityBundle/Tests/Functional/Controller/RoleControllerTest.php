@@ -329,7 +329,6 @@ class RoleControllerTest extends SuluTestCase
         $this->assertEquals(true, $permissions[2]->permissions->live);
         $this->assertEquals(true, $permissions[2]->permissions->security);
 
-
         $this->assertEquals('Security Type 2', $response->securityType->name);
 
         $client->request(
