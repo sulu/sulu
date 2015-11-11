@@ -42,6 +42,7 @@ changes to apply:
 
 ```bash
 app/console massive:search:index:rebuild --purge
+```
 
 ### Category
 Category has now a default locale this has to set before use. You can use this sql statement after update your schema
