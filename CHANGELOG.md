@@ -149,6 +149,11 @@ CHANGELOG for Sulu
     * BUGFIX      #1365 [ContactBundle]   Fixed bug caused by new instance name of datagrid
     * BUGFIX      #1136 [MediaBundle]     Fixed image scale forceRatio parameter for none squared image formats
 
+* 1.0.12 (2015-10-22)
+    * HOTFIX      #1634 [SecurityBundle] Allow attribute overrides for user email field
+    * HOTFIX      #1624 [ContentBundle]  Fixed nullable internal link and added server/clientside validation
+    * BUGFIX      #1668 [ContentBundle]  Fixed smart content for usage with block property
+    
 * 1.0.11 (2015-09-23)
     * HOTFIX      #1596 [GeneratorBundle] Fixed sulu bundle generator path generation
     * HOTFIX      #1615 [Content]         Fixed resource segment subscriber for order internal link

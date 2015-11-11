@@ -425,7 +425,7 @@ class StructureBridge implements StructureInterface
         if ($document instanceof RedirectTypeBehavior) {
             $redirectType = $document->getRedirectType();
             $result['linked'] = null;
-            if ($redirectType == RedirectType::INTERNAL) {
+            if ($redirectType == RedirectType::INTERNAL && $document->getRedirectTarget() !== null) {
                 $result['linked'] = 'internal';
                 $result['internal_link'] = $document->getRedirectTarget()->getUuid();
             } elseif ($redirectType == RedirectType::EXTERNAL) {
@@ -552,7 +552,8 @@ class StructureBridge implements StructureInterface
     public function getNodeName()
     {
         if ($this->document instanceof RedirectTypeBehavior &&
-            $this->document->getRedirectType() == RedirectType::INTERNAL
+            $this->document->getRedirectType() == RedirectType::INTERNAL &&
+            $this->document->getRedirectTarget() !== null
         ) {
             return $this->getDocument()->getRedirectTarget()->getTitle();
         }
