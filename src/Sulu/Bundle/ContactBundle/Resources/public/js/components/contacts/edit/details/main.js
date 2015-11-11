@@ -229,12 +229,10 @@ define([
                 // avatar was uploaded as new version of existing avatar
                 this.sandbox.emit('sulu.labels.success.show', 'contact.contacts.avatar.saved');
             } else if (!!this.data.id) {
-                // avatar was added to existing contact
-                this.sandbox.util.extend(true, this.data, {
-                    avatar: {id: mediaResponse.id}
-                });
+                var data = this.getData();
+                data.avatar = {id: mediaResponse.id};
 
-                ContactManager.saveAvatar(this.data).then(function(savedData) {
+                ContactManager.saveAvatar(data).then(function(savedData) {
                     this.sandbox.emit('sulu.tab.data-changed', savedData);
                 }.bind(this));
             }
@@ -488,23 +486,29 @@ define([
             return field;
         },
 
+        getData: function() {
+            var data = this.sandbox.util.extend(false, {}, this.data, this.sandbox.form.getData(formSelector));
+            if (data.id === '') {
+                delete data.id;
+            }
+            data.tags = this.sandbox.dom.data(this.$find(constants.tagsId), 'tags');
+            data.avatar = {
+                id: this.sandbox.dom.data(constants.avatarImageId, 'mediaId')
+            };
+
+            // FIXME auto complete in mapper
+            // only get id, if auto-complete is not empty:
+            data.account = {
+                id: this.sandbox.dom.attr('#' + this.companyInstanceName, 'data-id')
+            };
+
+            return data;
+        },
+
         save: function() {
             if (this.sandbox.form.validate(formSelector)) {
-                var data = this.sandbox.util.extend(false, {}, this.data, this.sandbox.form.getData(formSelector));
-                if (data.id === '') {
-                    delete data.id;
-                }
-                data.tags = this.sandbox.dom.data(this.$find(constants.tagsId), 'tags');
-                data.avatar = {
-                    id: this.sandbox.dom.data(constants.avatarImageId, 'mediaId')
-                };
-
-                // FIXME auto complete in mapper
-                // only get id, if auto-complete is not empty:
-                data.account = {
-                    id: this.sandbox.dom.attr('#' + this.companyInstanceName, 'data-id')
-                };
                 this.sandbox.emit('sulu.tab.saving');
+                var data = this.getData();
                 ContactManager.save(data).then(function(savedData) {
                     this.data = savedData;
                     var formData = this.initContactData();
