@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Types;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Types\Rlp\Strategy\RLPStrategyInterface;
@@ -21,7 +22,7 @@ use Sulu\Component\Content\Types\Rlp\Strategy\RLPStrategyInterface;
 /**
  * Class ResourceLocator.
  */
-class ResourceLocator extends ComplexContentType implements ResourceLocatorInterface
+class ResourceLocator extends ComplexContentType implements ResourceLocatorInterface, ContentTypeExportInterface
 {
     /**
      * @var RlpStrategyInterface
@@ -187,6 +188,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
         $segmentKey = null
     ) {
         $this->strategy->deleteByPath($property->getValue(), $webspaceKey, $languageCode, $segmentKey);
+
         if ($node->hasProperty($property->getName())) {
             $node->getProperty($property->getName())->remove();
         }
@@ -223,5 +225,31 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
     public function getTemplate()
     {
         return $this->template;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exportData($propertyValue)
+    {
+        if (is_string($propertyValue)) {
+            return $propertyValue;
+        }
+
+        return '';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importData(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 }

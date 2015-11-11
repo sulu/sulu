@@ -15,6 +15,7 @@
             <argument type="service" id="sulu_location.map_manager"/>
             <argument>%sulu_location.geolocator.name%</argument>
             <tag name="sulu.content.type" alias="location" />
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
 
         <!-- Admin class -->

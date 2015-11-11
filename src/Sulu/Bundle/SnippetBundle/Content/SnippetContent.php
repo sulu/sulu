@@ -19,13 +19,14 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 
 /**
  * ContentType for Snippets.
  */
-class SnippetContent extends ComplexContentType
+class SnippetContent extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
      * @var ContentMapperInterface
@@ -119,9 +120,9 @@ class SnippetContent extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        $snippetReferences = [];
         $values = $property->getValue();
 
+        $snippetReferences = [];
         $values = is_array($values) ? $values : [];
 
         foreach ($values as $value) {
@@ -260,5 +261,34 @@ class SnippetContent extends ComplexContentType
         $ids = is_array($data) ? $data : [];
 
         return $ids;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exportData($propertyValue)
+    {
+        $uuids = $this->getUuids($propertyValue);
+
+        if (!empty($uuids)) {
+            return json_encode($this->getUuids($propertyValue));
+        }
+
+        return '';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importData(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $property->setValue(json_decode($property->getValue()));
+        $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 }

@@ -1,0 +1,43 @@
+{% extends "SuluContentBundle:Export:Webspace/base.export.twig" %}
+
+{% block main %}
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <!-- WebspaceKey: {{ webspaceKey }} -->
+{{ parent() }}
+</xliff>
+{% endblock main %}
+
+{% if false %} {# avoid output of block directly #}
+    {# Output page #}
+    {% block page %}
+    <file source-language="{{ document.locale }}" datatype="plaintext" original="{{ document.uuid }}">
+        <body>
+        {{- parent() -}}
+        </body>
+    </file>
+    {% endblock page %}
+
+    {# view #}
+    {%- block view -%}
+        {% spaceless %}
+        {% set attributes = '' %}
+        {% set target = '' %}
+        {%- if options.translate is defined and not options.translate -%}
+            {% set attributes = attributes  ~ ' translate="no"' %}
+            {% set target = value %}
+        {%- endif -%}
+        {% if type == 'text_editor' %}
+            {% set attributes = attributes ~ ' datatype="html"' %}
+        {% endif %}
+        {% endspaceless %}
+        {% autoescape false %}
+
+            <!-- {{ name }}: {{ type }} -->
+            <trans-unit id="{{ sulu_content_type_export_counter() }}" resname="{{ name }}"{{ attributes }}>
+                <source>{{ sulu_content_type_export_escape(value) }}</source>
+                <target>{{ sulu_content_type_export_escape(target) }}</target>
+            </trans-unit>
+        {% endautoescape %}
+    {%- endblock view -%}
+{% endif %}
