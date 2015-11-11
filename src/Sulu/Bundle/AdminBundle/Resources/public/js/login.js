@@ -28,12 +28,12 @@ require.config({
     ]
 });
 
-require(['husky'], function(Husky) {
+require(['husky', 'underscore'], function(Husky, _) {
 
     'use strict';
 
     var browserLocale,
-        language = 'en';
+        locale = SULU.fallbackLocale;
 
     // detect browser locale (ie, ff, chrome fallbacks)
     browserLocale = window.navigator.languages ? window.navigator.languages[0] : null;
@@ -43,14 +43,11 @@ require(['husky'], function(Husky) {
     browserLocale = browserLocale.slice(0, 2).toLowerCase();
 
     // get the locale for the login
-    for (var i = -1, length = SULU.locales.length; ++i < length;) {
-        if (SULU.locales[i] === browserLocale) {
-            language = SULU.locales[i];
-            break;
-        }
+    if(_.contains(SULU.translations, browserLocale)){
+        locale = browserLocale;
     }
 
-    require(['text!/admin/translations/sulu.' + language + '.json'], function(messagesText) {
+    require(['text!/admin/translations/sulu.' + locale + '.json'], function(messagesText) {
         var messages = JSON.parse(messagesText),
 
         app = new Husky({
@@ -58,7 +55,7 @@ require(['husky'], function(Husky) {
                 enable: !!SULU.debug
             },
             culture: {
-                name: language,
+                name: locale,
                 messages: messages
             }
         });

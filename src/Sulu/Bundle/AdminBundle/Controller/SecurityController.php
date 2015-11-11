@@ -47,6 +47,9 @@ class SecurityController extends Controller
             [
                 'name' => $this->container->getParameter('sulu_admin.name'),
                 'locales' => $this->container->getParameter('sulu_core.locales'),
+                'translated_locales' => $this->container->getParameter('sulu_core.translated_locales'),
+                'translations' => $this->container->getParameter('sulu_core.translations'),
+                'fallback_locale' => $this->container->getParameter('sulu_core.fallback_locale'),
             ]
         );
     }
