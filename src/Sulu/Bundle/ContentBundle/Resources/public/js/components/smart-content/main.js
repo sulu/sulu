@@ -1244,6 +1244,7 @@ define(['services/husky/util'], function(util) {
             this.$overlayContent.html('');
             this.appendOverlayContent(this.$overlayContent, this.overlayData);
             this.startOverlayComponents();
+            this.handleCategoriesInitialized({ids: [], operator: 'or', items:[]});
         }
     };
 });
