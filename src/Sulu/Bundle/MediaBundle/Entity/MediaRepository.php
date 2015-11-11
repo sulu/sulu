@@ -67,7 +67,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     /**
      * {@inheritdoc}
      */
-    protected function append(QueryBuilder $queryBuilder, $locale, $options = [])
+    protected function append(QueryBuilder $queryBuilder, $alias, $locale, $options = [])
     {
         $parameter = [];
 
@@ -75,6 +75,11 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             $queryBuilder->leftJoin('fileVersion.tags', 'tag');
             $queryBuilder->andWhere('fileVersion.mimeType = :mimeType');
             $parameter['mimeType'] = $options['mimetype'];
+        }
+        if (array_key_exists('type', $options)) {
+            $queryBuilder->leftJoin($alias . '.type', 'type');
+            $queryBuilder->andWhere('type.name = :type');
+            $parameter['type'] = $options['type'];
         }
 
         return $parameter;

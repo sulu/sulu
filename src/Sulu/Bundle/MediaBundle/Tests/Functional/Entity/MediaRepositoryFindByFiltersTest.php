@@ -53,20 +53,25 @@ class MediaRepositoryFindByFiltersTest extends SuluTestCase
      * @var array
      */
     private $mediaData = [
-        ['Bild 1', 'image/jpg', [0, 1, 2]],
-        ['Bild 2', 'image/jpg', [0, 1, 3]],
-        ['Bild 3', 'video/mov', [0, 1]],
-        ['Bild 4', 'image/png', [0, 1, 2]],
-        ['Bild 5', 'video/mkv', [0]],
-        ['Bild 6', 'application/pdf', [0]],
-        ['Bild 7', 'application/pdf', [0]],
-        ['Bild 8', 'application/pdf', []],
+        ['Bild 1', 'image/jpg', 'image', [0, 1, 2]],
+        ['Bild 2', 'image/jpg', 'image', [0, 1, 3]],
+        ['Bild 3', 'image/png', 'image', [0, 1]],
+        ['Bild 4', 'video/mov', 'video', [0, 1, 2]],
+        ['Bild 5', 'video/mkv', 'video', [0]],
+        ['Bild 6', 'application/pdf', 'document', [0]],
+        ['Bild 7', 'application/pdf', 'document', [0]],
+        ['Bild 8', 'application/pdf', 'document', []],
     ];
 
     /**
-     * @var MediaType
+     * @var array
      */
-    private $type;
+    private $mediaTypeData = ['image', 'video', 'document'];
+
+    /**
+     * @var MediaType[]
+     */
+    private $mediaTypes = [];
 
     /**
      * @var Collection
@@ -80,25 +85,27 @@ class MediaRepositoryFindByFiltersTest extends SuluTestCase
         $this->purgeDatabase();
         $this->em = $this->db('ORM')->getOm();
 
-        $this->type = new MediaType();
-        $this->type->setName('document');
-        $this->type->setDescription('This is a document');
-        $this->em->persist($this->type);
-
         $this->collection = new Collection();
         $collectionType = new CollectionType();
         $collectionType->setName('Default Collection Type');
         $collectionType->setDescription('Default Collection Type');
-        $this->collection->setType($collectionType);
         $collectionMeta = new CollectionMeta();
         $collectionMeta->setTitle('Test Collection');
         $collectionMeta->setDescription('This Description is only for testing');
         $collectionMeta->setLocale('en-gb');
+
+        $this->collection->setType($collectionType);
         $collectionMeta->setCollection($this->collection);
         $this->collection->addMeta($collectionMeta);
+
+        $this->em->persist($this->collection);
         $this->em->persist($collectionMeta);
         $this->em->persist($collectionType);
-        $this->em->persist($this->collection);
+
+        foreach ($this->mediaTypeData as $type) {
+            $this->mediaTypes[$type] = $this->createType($type);
+        }
+        $this->em->flush();
 
         foreach ($this->tagData as $tag) {
             $this->tags[] = $this->createTag($tag);
@@ -106,9 +113,19 @@ class MediaRepositoryFindByFiltersTest extends SuluTestCase
         $this->em->flush();
 
         foreach ($this->mediaData as $media) {
-            $this->medias[] = $this->createMediaWithTags($media[0], $media[1], $media[2]);
+            $this->medias[] = $this->createMediaWithTags($media[0], $media[1], $media[2], $media[3]);
         }
         $this->em->flush();
+    }
+
+    private function createType($name)
+    {
+        $type = new MediaType();
+        $type->setName($name);
+
+        $this->em->persist($type);
+
+        return $type;
     }
 
     private function createTag($name)
@@ -121,7 +138,7 @@ class MediaRepositoryFindByFiltersTest extends SuluTestCase
         return $tag;
     }
 
-    private function createMediaWithTags($title, $mimeType, $tags = [])
+    private function createMediaWithTags($title, $mimeType, $type, $tags = [])
     {
         $media = new Media();
         $file = new File();
@@ -140,7 +157,7 @@ class MediaRepositoryFindByFiltersTest extends SuluTestCase
         $file->addFileVersion($fileVersion);
         $file->setMedia($media);
         $media->addFile($file);
-        $media->setType($this->type);
+        $media->setType($this->mediaTypes[$type]);
         $media->setCollection($this->collection);
 
         foreach ($tags as $tag) {
@@ -304,6 +321,36 @@ class MediaRepositoryFindByFiltersTest extends SuluTestCase
                 array_slice($this->mediaData, 5, 2),
                 [],
                 ['mimetype' => 'application/pdf'],
+            ],
+            // options type and admin tags
+            [
+                ['tags' => [0], 'tagOperator' => 'or'],
+                null,
+                0,
+                null,
+                array_slice($this->mediaData, 0, 3),
+                [],
+                ['type' => 'image'],
+            ],
+            // options mimetype and website tags
+            [
+                ['websiteTags' => [0], 'websiteTagsOperator' => 'or'],
+                null,
+                0,
+                null,
+                array_slice($this->mediaData, 5, 2),
+                [],
+                ['type' => 'document'],
+            ],
+            // options mimetype/type and admin tags
+            [
+                [],
+                null,
+                0,
+                null,
+                array_slice($this->mediaData, 5, 3),
+                [],
+                ['mimetype' => 'application/pdf', 'type' => 'document'],
             ],
         ];
     }

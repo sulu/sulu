@@ -59,7 +59,7 @@ trait DataProviderRepositoryTrait
 
         $tagRelation = $this->appendTagsRelation($queryBuilder, 'c');
         $categoryRelation = $this->appendCategoriesRelation($queryBuilder, 'c');
-        $parameter = array_merge($parameter, $this->append($queryBuilder, $locale, $options));
+        $parameter = array_merge($parameter, $this->append($queryBuilder, 'c', $locale, $options));
 
         if (isset($filters['tags']) && !empty($filters['tags'])) {
             $parameter = array_merge(
@@ -243,7 +243,7 @@ trait DataProviderRepositoryTrait
      *
      * @return array parameters for query
      */
-    protected function append(QueryBuilder $queryBuilder, $locale, $options = [])
+    protected function append(QueryBuilder $queryBuilder, $alias, $locale, $options = [])
     {
         // empty implementation can be overwritten by repository
         return [];

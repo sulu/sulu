@@ -41,6 +41,7 @@ class MediaDataProvider extends BaseDataProvider
     {
         return [
             'mimetype_parameter' => new PropertyParameter('mimetype_parameter', 'mimetype', 'string'),
+            'type_parameter' => new PropertyParameter('type_parameter', 'type', 'string'),
         ];
     }
 
@@ -55,6 +56,7 @@ class MediaDataProvider extends BaseDataProvider
 
         return array_filter([
             'mimetype' => $request->get($propertyParameter['mimetype_parameter']->getValue()),
+            'type' => $request->get($propertyParameter['types_parameter']->getValue()),
          ]);
     }
 
