@@ -61,6 +61,15 @@ trait DataProviderRepositoryTrait
         $categoryRelation = $this->appendCategoriesRelation($queryBuilder, 'c');
         $parameter = array_merge($parameter, $this->append($queryBuilder, 'c', $locale, $options));
 
+        if (isset($filters['dataSource'])) {
+            $includeSubFolders = $filters['includeSubFolders'] === 'true' ? true : false;
+
+            $parameter = array_merge(
+                $parameter,
+                $this->appendDatasource($filters['dataSource'], $includeSubFolders, $queryBuilder, 'c')
+            );
+        }
+
         if (isset($filters['tags']) && !empty($filters['tags'])) {
             $parameter = array_merge(
                 $parameter,
@@ -273,5 +282,21 @@ trait DataProviderRepositoryTrait
     protected function appendCategoriesRelation(QueryBuilder $queryBuilder, $alias)
     {
         return $alias . '.categories';
+    }
+
+    /**
+     * Extension point to append datasource.
+     *
+     * @param mixed $datasource
+     * @param bool $includeSubFolders
+     * @param QueryBuilder $queryBuilder
+     * @param string $alias
+     *
+     * @return array parameters for query
+     */
+    protected function appendDatasource($datasource, $includeSubFolders, QueryBuilder $queryBuilder, $alias)
+    {
+        // empty implementation can be overwritten by repository
+        return [];
     }
 }

@@ -27,7 +27,7 @@ abstract class BaseDataProvider implements DataProviderInterface
     /**
      * @var DataProviderRepositoryInterface
      */
-    private $repository;
+    protected $repository;
 
     /**
      * @var ProviderConfigurationInterface

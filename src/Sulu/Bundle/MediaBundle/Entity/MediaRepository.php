@@ -14,11 +14,9 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryTrait;
-use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
 
 /**
  * MediaRepository.
@@ -29,73 +27,6 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
 class MediaRepository extends EntityRepository implements MediaRepositoryInterface
 {
     use SecuredEntityRepositoryTrait;
-    use DataProviderRepositoryTrait;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function appendJoins(QueryBuilder $queryBuilder, $alias, $locale)
-    {
-        $queryBuilder->leftJoin($alias . '.type', 'type')
-            ->leftJoin($alias . '.collection', 'collection')
-            ->leftJoin($alias . '.files', 'file')
-            ->leftJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version')
-            ->leftJoin('fileVersion.tags', 'tag')
-            ->leftJoin('fileVersion.meta', 'fileVersionMeta')
-            ->leftJoin('fileVersion.defaultMeta', 'fileVersionDefaultMeta')
-            ->leftJoin('fileVersion.contentLanguages', 'fileVersionContentLanguage')
-            ->leftJoin('fileVersion.publishLanguages', 'fileVersionPublishLanguage')
-            ->leftJoin($alias . '.creator', 'creator')
-            ->leftJoin('creator.contact', 'creatorContact')
-            ->leftJoin($alias . '.changer', 'changer')
-            ->leftJoin('changer.contact', 'changerContact')
-            ->addSelect('type')
-            ->addSelect('collection')
-            ->addSelect('file')
-            ->addSelect('tag')
-            ->addSelect('fileVersion')
-            ->addSelect('fileVersionMeta')
-            ->addSelect('fileVersionDefaultMeta')
-            ->addSelect('fileVersionContentLanguage')
-            ->addSelect('fileVersionPublishLanguage')
-            ->addSelect('creator')
-            ->addSelect('changer')
-            ->addSelect('creatorContact')
-            ->addSelect('changerContact');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function append(QueryBuilder $queryBuilder, $alias, $locale, $options = [])
-    {
-        $parameter = [];
-
-        if (array_key_exists('mimetype', $options)) {
-            $queryBuilder->leftJoin('fileVersion.tags', 'tag');
-            $queryBuilder->andWhere('fileVersion.mimeType = :mimeType');
-            $parameter['mimeType'] = $options['mimetype'];
-        }
-        if (array_key_exists('type', $options)) {
-            $queryBuilder->leftJoin($alias . '.type', 'type');
-            $queryBuilder->andWhere('type.name = :type');
-            $parameter['type'] = $options['type'];
-        }
-
-        return $parameter;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function appendTagsRelation(QueryBuilder $queryBuilder, $alias)
-    {
-        $queryBuilder
-            ->leftJoin($alias . '.files', 'file')
-            ->leftJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version');
-
-        return 'fileVersion.tags';
-    }
 
     /**
      * {@inheritdoc}

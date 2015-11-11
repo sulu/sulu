@@ -11,7 +11,10 @@
 namespace Sulu\Component\Media\SmartContent;
 
 use JMS\Serializer\SerializerInterface;
+use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
+use Sulu\Component\SmartContent\Configuration\ComponentConfiguration;
+use Sulu\Component\SmartContent\DatasourceItem;
 use Sulu\Component\SmartContent\Orm\BaseDataProvider;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -26,12 +29,31 @@ class MediaDataProvider extends BaseDataProvider
      */
     private $requestStack;
 
-    public function __construct(DataProviderRepositoryInterface $repository, SerializerInterface $serializer, RequestStack $requestStack)
-    {
+    /**
+     * @var CollectionManagerInterface
+     */
+    private $collectionManager;
+
+    public function __construct(
+        DataProviderRepositoryInterface $repository,
+        CollectionManagerInterface $collectionManager,
+        SerializerInterface $serializer,
+        RequestStack $requestStack
+    ) {
         parent::__construct($repository, $serializer);
 
-        $this->configuration = $this->initConfiguration(true, true, true, true, true, []);
+        $this->configuration = $this->initConfiguration(true, false, true, true, true, []);
+        $this->configuration->setDatasource(
+            new ComponentConfiguration(
+                'media-datasource@sulumedia',
+                [
+                    'url' => '/admin/api/collections?sortBy=title&limit=9999&locale={locale}',
+                    'resultKey' => 'collections',
+                ]
+            )
+        );
         $this->requestStack = $requestStack;
+        $this->collectionManager = $collectionManager;
     }
 
     /**
@@ -48,16 +70,32 @@ class MediaDataProvider extends BaseDataProvider
     /**
      * {@inheritdoc}
      */
+    public function resolveDatasource($datasource, array $propertyParameter, array $options)
+    {
+        $entity = $this->collectionManager->getById($datasource, $options['locale']);
+
+        return new DatasourceItem($entity->getId(), $entity->getTitle(), null);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function getOptions(
         array $propertyParameter,
         array $options = []
     ) {
         $request = $this->requestStack->getCurrentRequest();
 
-        return array_filter([
-            'mimetype' => $request->get($propertyParameter['mimetype_parameter']->getValue()),
-            'type' => $request->get($propertyParameter['types_parameter']->getValue()),
-         ]);
+        $result = [];
+
+        if (array_key_exists('mimetype_parameter', $propertyParameter)) {
+            $result['mimetype'] = $request->get($propertyParameter['mimetype_parameter']->getValue());
+        }
+        if (array_key_exists('type_parameter', $propertyParameter)) {
+            $result['type'] = $request->get($propertyParameter['type_parameter']->getValue());
+        }
+
+        return array_filter($result);
     }
 
     /**

@@ -20,7 +20,7 @@
         <parameter key="sulu_media.collection_manager.class">Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager</parameter>
         <parameter key="sulu_media.type_manager.class">Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManager</parameter>
         <parameter key="sulu_media.collection_entity">SuluMediaBundle:Collection</parameter>
-        <parameter key="sulu_category.entity.media">SuluMediaBundle:Media</parameter>
+        <parameter key="sulu_media.media_entity">SuluMediaBundle:Media</parameter>
         <parameter key="sulu_media.entity.file_version_meta">SuluMediaBundle:FileVersionMeta</parameter>
         <parameter key="sulu_media.twig_extension.disposition_type.class">Sulu\Bundle\MediaBundle\Twig\DispositionTypeTwigExtension</parameter>
         <parameter key="sulu_media.twig_extension.media.class">Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension</parameter>
@@ -45,7 +45,7 @@
                  class="%sulu_media.media_repository.class%"
                  factory-service="doctrine.orm.entity_manager"
                  factory-method="getRepository">
-            <argument>%sulu_category.entity.media%</argument>
+            <argument>%sulu_media.media_entity%</argument>
         </service>
         <service id="sulu_media.collection_repository"
                  class="%sulu_media.collection_repository.class%"
@@ -188,6 +188,22 @@
             <argument>sulu.media.collections</argument>
         </service>
 
+        <service id="sulu_media.smart_content.data_provider.media.repository" class="Sulu\Bundle\MediaBundle\Entity\MediaDataProviderRepository">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu_media.media_manager"/>
+            <argument type="string">%sulu_media.media_entity%</argument>
+            <argument type="string">%sulu_media.collection_entity%</argument>
+        </service>
+
+        <service id="sulu_media.smart_content.data_provider.media" class="Sulu\Component\Media\SmartContent\MediaDataProvider">
+            <argument type="service" id="sulu_media.smart_content.data_provider.media.repository"/>
+            <argument type="service" id="sulu_media.collection_manager"/>
+            <argument type="service" id="serializer"/>
+            <argument type="service" id="request_stack"/>
+
+            <tag name="sulu.smart_content.data_provider" alias="media"/>
+        </service>
+
         <service id="sulu_media.system_collections.cache" class="Sulu\Component\Cache\DataCache">
             <argument>%sulu.cache_dir%/system_collection.cache</argument>
         </service>
@@ -203,14 +219,6 @@
 
         <service id="sulu_media.system_collections.builder" class="Sulu\Component\Media\SystemCollections\SystemCollectionBuilder">
             <tag name="massive_build.builder" />
-        </service>
-
-        <service id="sulu_media.smart_content.data_provider.media" class="Sulu\Component\Media\SmartContent\MediaDataProvider">
-            <argument type="service" id="sulu_media.media_manager"/>
-            <argument type="service" id="serializer"/>
-            <argument type="service" id="request_stack"/>
-
-            <tag name="sulu.smart_content.data_provider" alias="media"/>
         </service>
     </services>
 </container>

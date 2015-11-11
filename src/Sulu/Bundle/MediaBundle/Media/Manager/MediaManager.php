@@ -46,7 +46,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 /**
  * Default implementation of media manager.
  */
-class MediaManager implements MediaManagerInterface, DataProviderRepositoryInterface
+class MediaManager implements MediaManagerInterface
 {
     const ENTITY_NAME_MEDIA = 'SuluMediaBundle:Media';
     const ENTITY_NAME_COLLECTION = 'SuluMediaBundle:Collection';
@@ -165,6 +165,7 @@ class MediaManager implements MediaManagerInterface, DataProviderRepositoryInter
      */
     public function __construct(
         MediaRepositoryInterface $mediaRepository,
+
         CollectionRepositoryInterface $collectionRepository,
         UserRepositoryInterface $userRepository,
         EntityManager $em,
@@ -979,20 +980,5 @@ class MediaManager implements MediaManagerInterface, DataProviderRepositoryInter
         }
 
         return $this->tokenStorage->getToken()->getUser();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function findByFilters($filters, $page, $pageSize, $limit, $locale, $options = [])
-    {
-        $entities = $this->mediaRepository->findByFilters($filters, $page, $pageSize, $limit, $locale, $options);
-
-        return array_map(
-            function ($media) use ($locale) {
-                return $this->addFormatsAndUrl(new Media($media, $locale));
-            },
-            $entities
-        );
     }
 }

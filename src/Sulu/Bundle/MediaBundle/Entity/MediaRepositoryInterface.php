@@ -20,7 +20,7 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 /**
  * Defines the method for the doctrine repository.
  */
-interface MediaRepositoryInterface extends DataProviderRepositoryInterface
+interface MediaRepositoryInterface
 {
     /**
      * Finds the media with a given id.
