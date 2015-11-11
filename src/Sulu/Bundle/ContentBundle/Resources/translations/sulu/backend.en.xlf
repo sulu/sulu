@@ -533,7 +533,7 @@
             </trans-unit>
             <trans-unit id="e4b14069a8a085ede2092hf51234dh49" resname="smart-content.choose-categories.ok">
                 <source>smart-content.choose-categories.ok</source>
-                <target>Apply Categories</target>
+                <target>Apply categories</target>
             </trans-unit>
             <trans-unit id="9" resname="content.delete-referenced-by-following">
                 <source>content.delete-referenced-by-following</source>
