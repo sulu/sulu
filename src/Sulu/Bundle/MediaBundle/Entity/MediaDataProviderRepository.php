@@ -10,10 +10,10 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
-use Sulu\Bundle\MediaBundle\Api\Media as MediaApi;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
+use Sulu\Bundle\MediaBundle\Api\Media as MediaApi;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
@@ -117,7 +117,6 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
 
         if (array_key_exists('mimetype', $options)) {
             $queryBuilder
-                ->innerJoin('fileVersion.tags', 'tag')
                 ->andWhere('fileVersion.mimeType = :mimeType');
 
             $parameter['mimeType'] = $options['mimetype'];

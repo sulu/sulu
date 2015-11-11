@@ -15,7 +15,6 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Component\Security\Authentication\UserInterface;
-use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 
 /**
  * Defines the method for the doctrine repository.

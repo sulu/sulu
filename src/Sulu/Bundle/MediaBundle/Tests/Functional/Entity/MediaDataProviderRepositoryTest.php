@@ -174,20 +174,6 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         // when pagination is active the result count is pageSize + 1 to determine has next page
 
         return [
-            // options mimetype/type
-            [
-                [],
-                null,
-                0,
-                null,
-                array_slice($this->mediaData, 5, 3),
-                [],
-                ['mimetype' => 'application/pdf', 'type' => 'document'],
-            ],
-
-
-
-
             // no pagination
             [[], null, 0, null, $this->mediaData],
             // page 1, no limit
