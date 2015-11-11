@@ -22,7 +22,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class MediaRepositoryFindByFiltersTest extends SuluTestCase
+class MediaDataProviderRepositoryTest extends SuluTestCase
 {
     /**
      * @var EntityManager
@@ -174,6 +174,20 @@ class MediaRepositoryFindByFiltersTest extends SuluTestCase
         // when pagination is active the result count is pageSize + 1 to determine has next page
 
         return [
+            // options mimetype/type
+            [
+                [],
+                null,
+                0,
+                null,
+                array_slice($this->mediaData, 5, 3),
+                [],
+                ['mimetype' => 'application/pdf', 'type' => 'document'],
+            ],
+
+
+
+
             // no pagination
             [[], null, 0, null, $this->mediaData],
             // page 1, no limit
@@ -342,7 +356,7 @@ class MediaRepositoryFindByFiltersTest extends SuluTestCase
                 [],
                 ['type' => 'document'],
             ],
-            // options mimetype/type and admin tags
+            // options mimetype/type
             [
                 [],
                 null,
@@ -360,7 +374,7 @@ class MediaRepositoryFindByFiltersTest extends SuluTestCase
      */
     public function testFindBy($filters, $page, $pageSize, $limit, $expected, $tags = [], $options = [])
     {
-        $repository = $this->em->getRepository(Media::class);
+        $repository = $this->getContainer()->get('sulu_media.smart_content.data_provider.media.repository');
 
         // if tags isset replace the array indexes with database id
         if (array_key_exists('tags', $filters)) {
@@ -388,13 +402,11 @@ class MediaRepositoryFindByFiltersTest extends SuluTestCase
         $this->assertCount($length, $result);
 
         for ($i = 0; $i < $length; ++$i) {
-            $file = $result[$i]->getFiles()->first();
-            $fileVersion = $file->getFileVersions()->first();
-            $meta = $fileVersion->getMeta()->first();
-            $this->assertEquals($expected[$i][0], $meta->getTitle(), $i);
+            $this->assertEquals($expected[$i][0], $result[$i]->getTitle(), $i);
 
+            $existingTags = $result[$i]->getTags();
             foreach ($tags as $tag) {
-                $this->assertTrue($fileVersion->getTags()->contains($this->tags[$tag]));
+                $this->assertContains($this->tags[$tag]->getName(), $existingTags);
             }
         }
     }

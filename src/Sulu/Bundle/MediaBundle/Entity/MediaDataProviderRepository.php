@@ -117,14 +117,14 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
 
         if (array_key_exists('mimetype', $options)) {
             $queryBuilder
-                ->leftJoin('fileVersion.tags', 'tag')
+                ->innerJoin('fileVersion.tags', 'tag')
                 ->andWhere('fileVersion.mimeType = :mimeType');
 
             $parameter['mimeType'] = $options['mimetype'];
         }
         if (array_key_exists('type', $options)) {
             $queryBuilder
-                ->leftJoin($alias . '.type', 'type')
+                ->innerJoin($alias . '.type', 'type')
                 ->andWhere('type.name = :type');
 
             $parameter['type'] = $options['type'];
@@ -152,7 +152,7 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
     {
         if (!$includeSubFolders) {
             $queryBuilder
-                ->leftJoin($alias . '.collection', 'collection')
+                ->innerJoin($alias . '.collection', 'collection')
                 ->andWhere('collection.id = :collectionId');
         } else {
             $queryBuilder
