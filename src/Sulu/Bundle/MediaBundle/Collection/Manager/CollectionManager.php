@@ -97,7 +97,7 @@ class CollectionManager implements CollectionManagerInterface
         FormatManagerInterface $formatManager,
         UserRepositoryInterface $userRepository,
         EntityManager $em,
-        TokenStorageInterface $tokenStorage,
+        TokenStorageInterface $tokenStorage = null,
         $collectionPreviewFormat,
         $permissions
     ) {
