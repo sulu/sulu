@@ -62,8 +62,7 @@ trait DataProviderRepositoryTrait
         $parameter = array_merge($parameter, $this->append($queryBuilder, 'c', $locale, $options));
 
         if (isset($filters['dataSource'])) {
-            $includeSubFolders = $filters['includeSubFolders'] === 'true' ? true : false;
-
+            $includeSubFolders = $this->getBoolean($filters['includeSubFolders'] ?: false);
             $parameter = array_merge(
                 $parameter,
                 $this->appendDatasource($filters['dataSource'], $includeSubFolders, $queryBuilder, 'c')
@@ -151,6 +150,22 @@ trait DataProviderRepositoryTrait
             },
             $query->getScalarResult()
         );
+    }
+
+    /**
+     * Returns boolean for string.
+     *
+     * @param string|bool $value
+     *
+     * @return bool
+     */
+    private function getBoolean($value)
+    {
+        if ($value === true || $value === 'true') {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

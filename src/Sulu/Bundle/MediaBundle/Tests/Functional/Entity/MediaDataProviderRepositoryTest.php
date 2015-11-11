@@ -53,14 +53,14 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
      * @var array
      */
     private $mediaData = [
-        ['Bild 1', 'image/jpg', 'image', [0, 1, 2]],
-        ['Bild 2', 'image/jpg', 'image', [0, 1, 3]],
-        ['Bild 3', 'image/png', 'image', [0, 1]],
-        ['Bild 4', 'video/mov', 'video', [0, 1, 2]],
-        ['Bild 5', 'video/mkv', 'video', [0]],
-        ['Bild 6', 'application/pdf', 'document', [0]],
-        ['Bild 7', 'application/pdf', 'document', [0]],
-        ['Bild 8', 'application/pdf', 'document', []],
+        ['Bild 1', 1, 'image/jpg', 'image', [0, 1, 2]],
+        ['Bild 2', 2, 'image/jpg', 'image', [0, 1, 3]],
+        ['Bild 3', 4, 'image/png', 'image', [0, 1]],
+        ['Bild 4', 3, 'video/mov', 'video', [0, 1, 2]],
+        ['Bild 5', 0, 'video/mkv', 'video', [0]],
+        ['Bild 6', 0, 'application/pdf', 'document', [0]],
+        ['Bild 7', 0, 'application/pdf', 'document', [0]],
+        ['Bild 8', 0, 'application/pdf', 'document', []],
     ];
 
     /**
@@ -74,9 +74,20 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
     private $mediaTypes = [];
 
     /**
-     * @var Collection
+     * @var array
      */
-    private $collection;
+    private $collectionData = [
+        ['Test-2', null],
+        ['Test-1', null],
+        ['Test-1.1', 1],
+        ['Test-1.1.1', 2],
+        ['Test-1.2', 1],
+    ];
+
+    /**
+     * @var Collection[]
+     */
+    private $collections;
 
     protected function setUp()
     {
@@ -85,22 +96,10 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         $this->purgeDatabase();
         $this->em = $this->db('ORM')->getOm();
 
-        $this->collection = new Collection();
-        $collectionType = new CollectionType();
-        $collectionType->setName('Default Collection Type');
-        $collectionType->setDescription('Default Collection Type');
-        $collectionMeta = new CollectionMeta();
-        $collectionMeta->setTitle('Test Collection');
-        $collectionMeta->setDescription('This Description is only for testing');
-        $collectionMeta->setLocale('en-gb');
-
-        $this->collection->setType($collectionType);
-        $collectionMeta->setCollection($this->collection);
-        $this->collection->addMeta($collectionMeta);
-
-        $this->em->persist($this->collection);
-        $this->em->persist($collectionMeta);
-        $this->em->persist($collectionType);
+        foreach ($this->collectionData as $collection) {
+            $this->collections[] = $this->createCollection($collection[0], $collection[1]);
+        }
+        $this->em->flush();
 
         foreach ($this->mediaTypeData as $type) {
             $this->mediaTypes[$type] = $this->createType($type);
@@ -113,9 +112,36 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         $this->em->flush();
 
         foreach ($this->mediaData as $media) {
-            $this->medias[] = $this->createMediaWithTags($media[0], $media[1], $media[2], $media[3]);
+            $this->medias[] = $this->createMediaWithTags($media[0], $media[1], $media[2], $media[3], $media[4]);
         }
         $this->em->flush();
+    }
+
+    private function createCollection($name, $parent = null)
+    {
+        $collection = new Collection();
+        $collectionType = new CollectionType();
+        $collectionType->setName($name);
+        $collectionType->setDescription('Default Collection Type');
+        $collectionMeta = new CollectionMeta();
+        $collectionMeta->setTitle('Test Collection');
+        $collectionMeta->setDescription('This Description is only for testing');
+        $collectionMeta->setLocale('en-gb');
+
+        $collection->setType($collectionType);
+        $collectionMeta->setCollection($collection);
+        $collection->addMeta($collectionMeta);
+
+        if ($parent !== null) {
+            $collection->setParent($this->collections[$parent]);
+            $this->collections[$parent]->addChildren($collection);
+        }
+
+        $this->em->persist($collection);
+        $this->em->persist($collectionMeta);
+        $this->em->persist($collectionType);
+
+        return $collection;
     }
 
     private function createType($name)
@@ -138,7 +164,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         return $tag;
     }
 
-    private function createMediaWithTags($title, $mimeType, $type, $tags = [])
+    private function createMediaWithTags($title, $collection, $mimeType, $type, $tags = [])
     {
         $media = new Media();
         $file = new File();
@@ -158,7 +184,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         $file->setMedia($media);
         $media->addFile($file);
         $media->setType($this->mediaTypes[$type]);
-        $media->setCollection($this->collection);
+        $media->setCollection($this->collections[$collection]);
 
         foreach ($tags as $tag) {
             $fileVersion->addTag($this->tags[$tag]);
@@ -352,6 +378,56 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 [],
                 ['mimetype' => 'application/pdf', 'type' => 'document'],
             ],
+            // datasource no sub folder
+            [
+                ['dataSource' => 1, 'includeSubFolders' => 'false'],
+                null,
+                0,
+                null,
+                array_slice($this->mediaData, 0, 1),
+                [],
+                [],
+            ],
+            // datasource no sub folder
+            [
+                ['dataSource' => 1, 'includeSubFolders' => false],
+                null,
+                0,
+                null,
+                array_slice($this->mediaData, 0, 1),
+                [],
+                [],
+            ],
+            // datasource sub folder
+            [
+                ['dataSource' => 1, 'includeSubFolders' => 'true'],
+                null,
+                0,
+                null,
+                array_slice($this->mediaData, 0, 4),
+                [],
+                [],
+            ],
+            // datasource sub folder
+            [
+                ['dataSource' => 1, 'includeSubFolders' => true],
+                null,
+                0,
+                null,
+                array_slice($this->mediaData, 0, 4),
+                [],
+                [],
+            ],
+            // datasource sub folder with tags
+            [
+                ['dataSource' => 0, 'includeSubFolders' => true, 'tags' => [0], 'tagOperator' => 'or'],
+                null,
+                0,
+                null,
+                array_slice($this->mediaData, 4, 3),
+                [],
+                [],
+            ],
         ];
     }
 
@@ -361,6 +437,11 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
     public function testFindBy($filters, $page, $pageSize, $limit, $expected, $tags = [], $options = [])
     {
         $repository = $this->getContainer()->get('sulu_media.smart_content.data_provider.media.repository');
+
+        // if data-source isset replace the index with the id
+        if (array_key_exists('dataSource', $filters)) {
+            $filters['dataSource'] = $this->collections[$filters['dataSource']]->getId();
+        }
 
         // if tags isset replace the array indexes with database id
         if (array_key_exists('tags', $filters)) {
