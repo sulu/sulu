@@ -2,6 +2,15 @@
 
 ## dev-develop
 
+### Media View Settings
+
+The media collection thumbnailLarge view was removed from the media, 
+to avoid an error, remove all `collectionEditListView` from the user settings table.
+
+```sql
+DELETE FROM `se_user_settings` WHERE `settingsKey` = 'collectionEditListView';
+```
+
 ### System Collections
 
 Remove the config `sulu_contact.form.avatar_collection` and note it you will need it in the sql statement below for the
@@ -134,7 +143,7 @@ The function `getTranslation` was removed.  This avoid a INSERT SQL Exception wh
 ### Registering JS-Routes
 When registering backbone-routes now - instead of directly starting the corresponding component via 'this.html' - make your callback returning the component.
 So for example the following:
-```
+``` js
 sandbox.mvc.routes.push({
     route: 'contacts/accounts/edit::id/:content',
     callback: function(id) {
@@ -143,13 +152,38 @@ sandbox.mvc.routes.push({
 });
 ```
 becomes:
-```
+``` js
 sandbox.mvc.routes.push({
     route: 'contacts/accounts/edit::id/:content',
     callback: function(id) {
         return '<div data-aura-component="accounts/edit@sulucontact" data-aura-id="' + id + '"/>';
     }
 });
+```
+
+### Media Content Selection Type attribute changed
+
+When you use the sulu media selection in your custom bundle you need to change the `data-type`.
+
+**Before:**
+
+``` html
+<div id="{{ id|raw }}"
+    ...
+    data-type="mediaSelection"
+    data-aura-component="media-selection@sulumedia"
+    ...
+</div>
+```
+
+**After:**
+``` html
+<div id="{{ id|raw }}"
+    ...
+    data-type="media-selection"
+    data-aura-component="media-selection@sulumedia"
+    ...
+</div>
 ```
 
 ### Header
@@ -160,7 +194,7 @@ Some properties in the header-hook have changed, some are new, some not supporte
 The major work when upgrading to the new header is to change the button-templates to sulu-buttons. Before you had to pass a template like e.g. 'default', which initialized a set of buttons, now each button is passed explicitly which gives you more flexibility. Lets have a look at an example:
 
 **Before:**
-```
+```js
 header: {
     tabs: {
         url: '/admin/content-navigations?alias=category'
@@ -172,7 +206,7 @@ header: {
 ```
 
 **After:**
-```
+```js
 header: {
     tabs: {
         url: '/admin/content-navigations?alias=category'
@@ -192,7 +226,30 @@ header: {
 }
 ```
 
-If you are using the 'default' template in the header and now change to the sulu-buttons 'save' and 'delete' the emitted events are now `sulu.toolbar.save` instead of `sulu.header.toolbar.save` and 'sulu.toolbar.delete' instead of `sulu.header.toolbar.delete`. 
+If you are using the `default` template in the header and now change to the sulu-buttons `save` and `delete` the emitted events changed.
+
+| **Before**                    | **After**                    |
+|-------------------------------|------------------------------|
+| `sulu.header.toolbar.save`    | `sulu.toolbar.save`          |
+| `sulu.header.toolbar.delete`  | `sulu.toolbar.delete`        |
+
+Also the call for `disable`, `enable` and `loading` state of the `save` button has changed:
+
+**Before:**
+
+``` js
+this.sandbox.emit('sulu.header.toolbar.state.change', 'edit', false); // enable
+this.sandbox.emit('sulu.header.toolbar.state.change', 'edit', true, true); // disabled
+this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button'); // loading 
+```
+
+**After:**
+
+``` js
+this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false); // enable
+this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true); // disabled
+this.sandbox.emit('sulu.header.toolbar.item.loading', 'save'); // loading 
+```
 
 #### Tabs
 The tabs can be configured with the 'url', 'data' and 'container' option. The option 'fullControll' got removed. You can get the same effect by passing data with no 'component'-property.
@@ -204,7 +261,25 @@ Moreover the format of the buttons itself changed: https://github.com/massiveart
 Have a look at the documentation: http://docs.sulu.io/en/latest/bundles/admin/javascript-hooks/header.html
 
 #### Language changer
-The interface of the language-changer in the header hook stayed the same, however the emitted event changed from `sulu.header.toolbar.language-changed` to `sulu.header.language-changed`. A callback to this event recieves an object with an 'id'- and a 'title'-property.
+The interface of the language-changer in the header hook stayed the same, however the emitted event changed from `sulu.header.toolbar.language-changed` to `sulu.header.language-changed`. A callback to this event recieves an object with an `id`- and a `title`-property.
+
+**Before:**
+```js
+this.sandbox.on('sulu.header.toolbar.language-changed', this.languageChanged.bind(this));
+// ...
+languageChanged: function(locale) {
+    this.options.locale = locale;
+}
+```
+
+**After:**
+```js
+this.sandbox.on('sulu.header.language-changed', this.languageChanged.bind(this));
+// ...
+languageChanged: function(locale) {
+    this.options.locale = locale.id;
+}
+```
 
 #### Sulu-buttons
 Buttons for toolbars get specified in an aura-extension (`sandbox.sulu.buttons` and `sandbox.sulu.buttons.dropdownItems`). Therfore each bundle can add their own buttons to the pool. The toolbar in the header fetches its buttons from this pool.
