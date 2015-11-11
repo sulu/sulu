@@ -54,22 +54,8 @@ define(function() {
                     sortable: false,
                     responsive: false,
                     resultKey: this.options.resultKey,
-                    selected: this.options.selected,
-                    prefilledData: {
-                        '_embedded': {
-                            'collections': [
-                                {
-                                    'id': 'root',
-                                    'title': this.sandbox.translate('navigation.media.collections'),
-                                    'hasSub': true,
-                                    '_links': {
-                                        'children': {'href': this.prepareUrl(this.options.url)}
-                                    },
-                                    '_embedded': {'collections': []}
-                                }
-                            ]
-                        }
-                    }
+                    url: this.prepareUrl(this.options.url),
+                    selected: this.options.selected
                 });
 
             // start child components and bind events

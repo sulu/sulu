@@ -525,7 +525,11 @@ define(['services/husky/util'], function(util) {
             var desc, $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent);
             this.sandbox.dom.text($element, this.sandbox.util.cropMiddle(this.overlayData.fullQualifiedTitle, 30, '...'));
 
-            if (!!this.options.has.datasource && typeof(this.overlayData.dataSource) !== 'undefined') {
+            if (!!this.options.has.datasource &&
+                typeof(this.overlayData.dataSource) !== 'undefined' &&
+                this.overlayData.dataSource !== '' &&
+                this.overlayData.title !== '' && this.overlayData.title !== null
+            ) {
                 desc = this.sandbox.translate(this.translations.from);
                 if (this.overlayData.includeSubFolders !== false) {
                     desc += ' (' + this.sandbox.translate(this.translations.subFoldersInclusive) + '):';
@@ -722,6 +726,11 @@ define(['services/husky/util'], function(util) {
                         }
                     ],
                     cancelCallback: function() {
+                        var $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent);
+                        this.overlayData.dataSource = null;
+                        $element.text('');
+                        $element.data('id', null);
+
                         this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-to', this.mainSlide);
                         return false;
                     }.bind(this)
@@ -1100,22 +1109,6 @@ define(['services/husky/util'], function(util) {
         loadContent: function() {
             //only request if URI has changed
             if (this.URI.hasChanged === true) {
-                // no datasource selected empty form
-                if (!!this.options.has.datasource &&
-                    (
-                        this.URI.data[this.options.dataSourceParameter] === null ||
-                        this.URI.data[this.options.dataSourceParameter].length === 0
-                    )
-                ) {
-                    this.overlayData.title = null;
-                    this.overlayData.fullQualifiedTitle = null;
-
-                    this.items = [];
-                    this.sandbox.emit(DATA_RETRIEVED.call(this));
-
-                    return;
-                }
-
                 this.sandbox.emit(DATA_REQUEST.call(this));
                 this.$find('.' + constants.contentListClass).empty();
                 this.$container.addClass(constants.isLoadingClass);
@@ -1126,9 +1119,12 @@ define(['services/husky/util'], function(util) {
 
                     success: function(data) {
                         this.$container.removeClass(constants.isLoadingClass);
-                        if (!!this.options.has.datasource && !!data[this.options.datasourceKey]) {
+                        if (!!this.options.has.datasource && data[this.options.datasourceKey]) {
                             this.overlayData.title = data[this.options.datasourceKey][this.options.titleKey];
                             this.overlayData.fullQualifiedTitle = data[this.options.datasourceKey][this.options.pathKey];
+                        } else {
+                            this.overlayData.title = null;
+                            this.overlayData.fullQualifiedTitle = '';
                         }
                         this.items = data._embedded[this.options.resultKey];
                         this.updateSelectedCounter(this.items.length);
