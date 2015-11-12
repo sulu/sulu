@@ -41,6 +41,7 @@
  * @params {String} [options.resultKey] key for the data in the returning JSON-embedded-result
  * @params {String} [options.tagsResultKey] key for the data in the returning JSON-embedded-result for the tags-component
  * @params {String} [options.titleKey] key for the title in the returning JSON-result
+ * @params {String} [options.imageKey] key for the image in the returning JSON-result
  * @params {String} [options.pathKey] key for the full-qualified-title in the returning JSON-result
  * @params {Boolean} [options.subFoldersDisabled] if true sub-folders overlay-item will be disabled
  * @params {Boolean} [options.tagsDisabled] if true tags overlay-item will be disabled
@@ -121,6 +122,7 @@ define(['services/husky/util'], function(util) {
             datasourceKey: 'datasource',
             tagsResultKey: 'tags',
             titleKey: 'title',
+            imageKey: 'image',
             pathKey: 'path',
             translations: {},
             elementDataName: 'smart-content',
@@ -195,6 +197,9 @@ define(['services/husky/util'], function(util) {
             contentItem: [
                 '<li data-id="<%= dataId %>">',
                 '    <span class="num"><%= num %></span>',
+                '<% if (!!image) { %>',
+                '    <span class="image"><img src="<%= image %>"/></span>',
+                '<% } %>',
                 '    <span class="value"><%= value %></span>',
                 '</li>'
             ].join(''),
@@ -586,6 +591,7 @@ define(['services/husky/util'], function(util) {
                     this.sandbox.dom.append(ul, _.template(templates.contentItem)({
                         dataId: item[this.options.idKey],
                         value: item[this.options.titleKey],
+                        image: item[this.options.imageKey] ? item[this.options.imageKey] : null,
                         num: (index + 1)
                     }));
                 }.bind(this));
