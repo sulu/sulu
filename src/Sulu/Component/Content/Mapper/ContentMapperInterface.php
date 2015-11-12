@@ -283,7 +283,8 @@ interface ContentMapperInterface
         $webspaceKey,
         $locales,
         $fields,
-        $maxDepth
+        $maxDepth,
+        $onlyPublished = true
     );
 
     /**

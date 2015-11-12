@@ -136,6 +136,7 @@ class ContentDataProvider implements DataProviderInterface
             [
                 'ids' => [$datasource],
                 'properties' => $properties,
+                'published' => false,
             ]
         );
 
