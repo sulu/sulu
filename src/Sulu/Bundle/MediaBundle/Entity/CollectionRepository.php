@@ -253,4 +253,24 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             return;
         }
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findTree($id)
+    {
+        $subQueryBuilder = $this->createQueryBuilder('subCollection')
+            ->select('subCollection.id')
+            ->leftJoin($this->_entityName, 'c', Query\Expr\Join::WITH, 'c.id = :id')
+            ->andWhere('subCollection.lft <= c.lft AND subCollection.rgt > c.lft');
+
+        $queryBuilder = $this->createQueryBuilder('collection')
+            ->leftJoin('collection.parent', 'parent')
+            ->where(sprintf('parent.id IN (%s)', $subQueryBuilder->getDQL()))
+            ->orWhere('parent.id is NULL')
+            ->orderBy('collection.lft')
+            ->setParameter('id', $id);
+
+        return $queryBuilder->getQuery()->getResult();
+    }
 }

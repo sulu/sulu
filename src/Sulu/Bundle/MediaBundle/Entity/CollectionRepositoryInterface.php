@@ -77,4 +77,13 @@ interface CollectionRepositoryInterface
      * @return Collection
      */
     public function findCollectionByKey($key);
+
+    /**
+     * Finds the parent collections and all the sliblings of them + the children of given id.
+     *
+     * @param $id
+     *
+     * @return Collection[]
+     */
+    public function findTree($id);
 }
