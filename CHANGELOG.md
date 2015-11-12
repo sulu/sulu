@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1775 [SmartContent]    Add possibility to get ArrayAccessItem as json
     * BUGFIX      #1736 [AdminBundle]     Fixed layout for content form
     * ENHANCEMENT #1760 [SecurityBundle]  Added missing joins on query for security
     * BUGFIX      #1759 [ContactBundle]   Fixed upload avatar when category is selected
