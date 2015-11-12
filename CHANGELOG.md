@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.0.13 (2015-11-12)
     * HOTFIX      #1771 [AdminBundle]    Fixed login translations if browser-locale is not translated
 
 * 1.0.12 (2015-10-22)
