@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1778 [MediaBundle]     Fixed cache handling of system collections
     * ENHANCEMENT #1775 [SmartContent]    Add possibility to get ArrayAccessItem as json
     * BUGFIX      #1736 [AdminBundle]     Fixed layout for content form
     * ENHANCEMENT #1760 [SecurityBundle]  Added missing joins on query for security
