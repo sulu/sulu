@@ -13,6 +13,7 @@ require.config({
         suluadmin: '../../suluadmin/js',
 
         'main': 'login',
+        'app-config': 'components/app-config/main',
 
         'cultures': 'vendor/globalize/cultures',
         'aura_extensions/backbone-relational': 'aura_extensions/backbone-relational',
@@ -28,12 +29,12 @@ require.config({
     ]
 });
 
-require(['husky', 'underscore'], function(Husky, _) {
+require(['husky', 'app-config', 'underscore'], function(Husky, AppConfig, _) {
 
     'use strict';
 
     var browserLocale,
-        locale = SULU.fallbackLocale;
+        locale = AppConfig.getFallbackLocale();
 
     // detect browser locale (ie, ff, chrome fallbacks)
     browserLocale = window.navigator.languages ? window.navigator.languages[0] : null;
@@ -43,7 +44,7 @@ require(['husky', 'underscore'], function(Husky, _) {
     browserLocale = browserLocale.slice(0, 2).toLowerCase();
 
     // get the locale for the login
-    if(_.contains(SULU.translations, browserLocale)){
+    if(_.contains(AppConfig.getTranslations(), browserLocale)){
         locale = browserLocale;
     }
 
@@ -52,7 +53,7 @@ require(['husky', 'underscore'], function(Husky, _) {
 
         app = new Husky({
             debug: {
-                enable: !!SULU.debug
+                enable: AppConfig.getDebug()
             },
             culture: {
                 name: locale,
