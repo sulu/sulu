@@ -13,7 +13,7 @@
 
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-    <link rel="stylesheet" href="/bundles/suluadmin/dist/login.min.1442242113106.css">
+    <link rel="stylesheet" href="/bundles/suluadmin/dist/login.min.1447339502420.css">
 
     <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/css/main.css"/>
 </head>
@@ -36,11 +36,14 @@
         {% autoescape false %}
         var SULU = {
             debug: false,
-            locales: {{ locales | json_encode }}
+            locales: {{ locales | json_encode }},
+            translatedLocales: {{ translated_locales | json_encode }},
+            translations: {{ translations | json_encode }},
+            fallbackLocale: '{{ fallback_locale }}'
         };
         {% endautoescape %}
     </script>
 
-    <script data-main="/bundles/suluadmin/dist/login.min.1442242113106" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
+    <script data-main="/bundles/suluadmin/dist/login.min.1447339502420" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
 </body>
 </html>
