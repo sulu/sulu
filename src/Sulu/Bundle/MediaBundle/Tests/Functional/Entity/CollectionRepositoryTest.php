@@ -127,7 +127,7 @@ class CollectionRepositoryTest extends SuluTestCase
         /** @var CollectionRepository $repository */
         $repository = $this->getContainer()->get('sulu_media.collection_repository');
 
-        $result = $repository->findTree($id);
+        $result = $repository->findTree($id, 'de');
 
         $this->assertEquals($expected, $result);
     }

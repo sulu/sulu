@@ -172,6 +172,31 @@ class CollectionManager implements CollectionManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function getTreeById($id, $locale)
+    {
+        $collectionSet = $this->collectionRepository->findTree($id, $locale);
+
+        /** @var Collection[] $collections sorted by id */
+        $collections = [];
+        /** @var Collection[] $result collections without parent */
+        $result = [];
+        foreach ($collectionSet as $collection) {
+            $apiEntity = $this->getApiEntity($collection, $locale);
+            $collections[$collection->getId()] = $apiEntity;
+
+            if ($collection->getParent() !== null) {
+                $collections[$collection->getParent()->getId()]->addChild($apiEntity);
+            } else {
+                $result[] = $apiEntity;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getTree($locale, $offset, $limit, $search, $depth = 0, $sortBy = [])
     {
         /** @var Paginator $collectionSet */

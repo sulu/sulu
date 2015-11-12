@@ -47,7 +47,8 @@ class MediaDataProvider extends BaseDataProvider
             new ComponentConfiguration(
                 'media-datasource@sulumedia',
                 [
-                    'url' => '/admin/api/collections?sortBy=title&limit=9999&locale={locale}',
+                    'rootUrl' => '/admin/api/collections?sortBy=title&limit=9999&locale={locale}',
+                    'selectedUrl' => '/admin/api/collections/{datasource}?tree=true&locale={locale}',
                     'resultKey' => 'collections',
                 ]
             )

@@ -15,6 +15,7 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
@@ -84,6 +85,16 @@ class CollectionController extends RestController
      */
     public function getAction($id, Request $request)
     {
+        if ($this->getBooleanRequestParameter($request, 'tree', false, false)) {
+            $collections = $this->getCollectionManager()->getTreeById($id, $this->getLocale($request));
+
+            return $this->handleView(
+                $this->view(
+                    new CollectionRepresentation($collections, 'collections')
+                )
+            );
+        }
+
         try {
             $locale = $this->getLocale($request);
             $depth = intval($request->get('depth', 0));

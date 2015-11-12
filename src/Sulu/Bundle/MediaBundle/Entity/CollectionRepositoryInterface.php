@@ -81,9 +81,10 @@ interface CollectionRepositoryInterface
     /**
      * Finds the parent collections and all the sliblings of them + the children of given id.
      *
-     * @param $id
+     * @param id $id
+     * @param string $locale
      *
      * @return Collection[]
      */
-    public function findTree($id);
+    public function findTree($id, $locale);
 }

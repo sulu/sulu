@@ -128,6 +128,11 @@ define([], function() {
             this.html(this.$columnNavigationElement);
         },
 
+        /**
+         * Set new selected and update column-navigation.
+         *
+         * @param {String} selected
+         */
         setSelected: function(selected) {
             this.selected = selected;
 

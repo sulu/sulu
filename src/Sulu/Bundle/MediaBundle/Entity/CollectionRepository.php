@@ -257,7 +257,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     /**
      * {@inheritdoc}
      */
-    public function findTree($id)
+    public function findTree($id, $locale)
     {
         $subQueryBuilder = $this->createQueryBuilder('subCollection')
             ->select('subCollection.id')
@@ -265,11 +265,19 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             ->andWhere('subCollection.lft <= c.lft AND subCollection.rgt > c.lft');
 
         $queryBuilder = $this->createQueryBuilder('collection')
+            ->addSelect('meta')
+            ->addSelect('defaultMeta')
+            ->addSelect('type')
+            ->addSelect('parent')
+            ->leftJoin('collection.meta', 'meta', Query\Expr\Join::WITH, 'meta.locale = :locale')
+            ->leftJoin('collection.defaultMeta', 'defaultMeta')
+            ->innerJoin('collection.type', 'type')
             ->leftJoin('collection.parent', 'parent')
             ->where(sprintf('parent.id IN (%s)', $subQueryBuilder->getDQL()))
             ->orWhere('parent.id is NULL')
             ->orderBy('collection.lft')
-            ->setParameter('id', $id);
+            ->setParameter('id', $id)
+            ->setParameter('locale', $locale);
 
         return $queryBuilder->getQuery()->getResult();
     }

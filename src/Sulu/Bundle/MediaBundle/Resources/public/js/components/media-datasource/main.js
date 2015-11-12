@@ -12,7 +12,8 @@ define(function() {
     'use strict';
 
     var defaults = {
-            url: null,
+            rootUrl: null,
+            selectedUrl: null,
             resultKey: null,
             selected: null,
             webspace: null,
@@ -21,14 +22,30 @@ define(function() {
             }
         },
         columnNavigationDefaults = {
-            responsive: false,
-            actionIcon: 'fa-check',
-            showOptions: false,
+            actionIcon: 'fa-check-circle',
             sortable: false,
-            showStatus: false
-        };
+            showStatus: false,
+            responsive: false,
+            showOptions: false
+        },
+
+        /**
+         * namespace for events
+         * @type {string}
+         */
+        eventNamespace = 'smart-content.datasource.';
 
     return {
+
+        events: {
+            names: {
+                setSelected: {
+                    postFix: 'set-selected',
+                    type: 'on'
+                }
+            },
+            namespace: eventNamespace
+        },
 
         /**
          * Initialize component
@@ -47,19 +64,45 @@ define(function() {
             this.columnNavigationOptions = this.sandbox.util.extend(true, {}, columnNavigationDefaults,
                 {
                     el: this.$columnNavigationElement,
-                    instanceName: 'smart-content.' + this.options.instanceName,
-                    actionIcon: 'fa-check-circle',
-                    showOptions: false,
-                    showStatus: false,
-                    sortable: false,
-                    responsive: false,
+                    instanceName: 'smart-content-' + this.options.instanceName,
                     resultKey: this.options.resultKey,
-                    url: this.prepareUrl(this.options.url),
-                    selected: this.options.selected
+                    url: this.getUrl(),
+                    selected: this.selected,
+                    actionCallback: function(item) {
+                        this.selected = item.id;
+                        this.options.selectCallback(item.id, item.title);
+                    }.bind(this)
                 });
 
             // start child components and bind events
             this.startColumnNavigation(this.columnNavigationOptions).then(this.bindCustomEvents.bind(this));
+        },
+
+        /**
+         * Set new selected and update column-navigation.
+         *
+         * @param {String} selected
+         */
+        setSelected: function(selected) {
+            this.selected = selected;
+
+            this.sandbox.emit(
+                'husky.column-navigation.smart-content-' + this.options.instanceName + '.set-options',
+                {selected: selected, url: this.getUrl()}
+            );
+        },
+
+        /**
+         * Returns url for column-navigation.
+         *
+         * @returns {String}
+         */
+        getUrl: function() {
+            if (!!this.selected) {
+                return this.prepareUrl(this.options.selectedUrl);
+            }
+
+            return this.prepareUrl(this.options.rootUrl);
         },
 
         /**
@@ -71,6 +114,7 @@ define(function() {
          */
         prepareUrl: function(url) {
             url = url.replace('{locale}', this.options.locale);
+            url = url.replace('{datasource}', this.selected);
 
             return url;
         },
@@ -103,10 +147,8 @@ define(function() {
          * Bind events to call select callback
          */
         bindCustomEvents: function() {
-            this.sandbox.on('husky.column-navigation.smart-content.' + this.options.instanceName + '.action', function(item) {
-                this.selected = item.id;
-                this.options.selectCallback(item.id, item.title);
-            }.bind(this));
+            // setter for selected
+            this.events.setSelected(this.setSelected.bind(this));
         }
     };
 });

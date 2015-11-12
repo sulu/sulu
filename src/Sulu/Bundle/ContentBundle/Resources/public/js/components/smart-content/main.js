@@ -1267,6 +1267,10 @@ define(['services/husky/util'], function(util) {
             this.appendOverlayContent(this.$overlayContent, this.overlayData);
             this.startOverlayComponents();
             this.handleCategoriesInitialized({ids: [], operator: 'or', items:[]});
+            this.sandbox.emit(
+                'smart-content.datasource.' + this.options.instanceName + '.set-selected',
+                this.overlayData.dataSource
+            );
         }
     };
 });
