@@ -17,10 +17,9 @@ use Sulu\Component\SmartContent\Exception\NotSupportedException;
 
 /**
  * Base class for DataProvider items.
- *
  * @ExclusionPolicy("all")
  */
-class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess
+class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess, \JsonSerializable
 {
     /**
      * @var string
@@ -59,7 +58,6 @@ class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess
 
     /**
      * {@inheritdoc}
-     *
      * @VirtualProperty()
      */
     public function getId()
@@ -85,7 +83,6 @@ class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess
      * @param string $key
      *
      * @return mixed
-     *
      * @throws NoSuchPropertyException
      */
     protected function get($key)
@@ -130,9 +127,18 @@ class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess
     }
 
     /**
+     * {@inheritdoc}
      */
     public function offsetUnset($offset)
     {
         throw new NotSupportedException();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return $this->data;
     }
 }
