@@ -282,7 +282,7 @@
                             onlyOnClickOnArrow: true
                         }
                     }
-                },
+                }
             ];
 
             adminDropdownItems = [

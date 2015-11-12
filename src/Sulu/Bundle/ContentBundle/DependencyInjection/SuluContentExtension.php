@@ -158,6 +158,10 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
             'sulu.content.type.checkbox.template',
             $config['types']['checkbox']['template']
         );
+        $container->setParameter(
+            'sulu.content.type.multiple_select.template',
+            $config['types']['multiple_select']['template']
+        );
     }
 
     private function processSearch($config, LoaderInterface $loader, ContainerBuilder $container)

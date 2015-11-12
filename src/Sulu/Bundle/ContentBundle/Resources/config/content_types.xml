@@ -60,5 +60,9 @@
             <argument>%sulu.content.type.checkbox.template%</argument>
             <tag name="sulu.content.type" alias="checkbox"/>
         </service>
+        <service id="sulu.content.type.multiple_select" class="Sulu\Bundle\ContentBundle\Content\Types\MultipleSelect">
+            <argument>%sulu.content.type.multiple_select.template%</argument>
+            <tag name="sulu.content.type" alias="multiple_select"/>
+        </service>
     </services>
 </container>
