@@ -73,7 +73,7 @@ class MediaDataProvider extends BaseDataProvider
     public function resolveDatasource($datasource, array $propertyParameter, array $options)
     {
         if (empty($datasource)) {
-            return null;
+            return;
         }
 
         $entity = $this->collectionManager->getById($datasource, $options['locale']);

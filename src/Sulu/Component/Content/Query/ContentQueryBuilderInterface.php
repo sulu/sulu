@@ -33,7 +33,7 @@ interface ContentQueryBuilderInterface
     /**
      * Returns if unpublished pages are loaded.
      *
-     * @return boolean
+     * @return bool
      */
     public function getPublished();
 }
