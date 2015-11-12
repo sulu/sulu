@@ -314,7 +314,9 @@ class ContentDataProviderTest extends \PHPUnit_Framework_TestCase
         $data = ['uuid' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'];
 
         $provider = new ContentDataProvider(
-            $this->getContentQueryBuilder(['ids' => [$data['uuid']], 'properties' => ['my-properties' => true]]),
+            $this->getContentQueryBuilder(
+                ['ids' => [$data['uuid']], 'properties' => ['my-properties' => true], 'published' => false]
+            ),
             $this->getContentQueryExecutor(0, 1, [$data]),
             $this->getDocumentManager([$data['uuid'] => $data]),
             $this->getProxyFactory()

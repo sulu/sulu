@@ -1,7 +1,6 @@
 <?php
-
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -181,7 +180,9 @@ class CollectionManager implements CollectionManagerInterface
         /** @var Collection[] $result collections without parent */
         $result = [];
         foreach ($collectionSet as $collection) {
-            $apiEntity = $this->getApiEntity($collection, $locale);
+            $apiEntity = new Collection($collection, $locale);
+            $this->addPreview($apiEntity);
+
             $collections[$collection->getId()] = $apiEntity;
 
             if ($collection->getParent() !== null) {
