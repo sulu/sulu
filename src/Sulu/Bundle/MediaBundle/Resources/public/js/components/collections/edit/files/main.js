@@ -385,14 +385,6 @@ define([
         },
 
         /**
-         * loads the collection-data into this.data. is automatically executed before component initialization
-         * @returns {*}
-         */
-        loadComponentData: function() {
-            return CollectionManager.loadOrNew(this.options.id, UserSettingsManager.getMediaLocale());
-        },
-
-        /**
          * Handles the scroll event to hide or show the tabs
          */
         scrollHandler: function() {
