@@ -15,27 +15,12 @@ use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation as CategoryTranslationEntity;
+use Sulu\Component\Content\Compat\Property;
+use Sulu\Component\Content\Compat\StructureInterface;
 
 class CategoryListTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var CategoryList
-     */
-    private $categoryList;
-
-    /**
-     * @var CategoryManagerInterface
-     */
-    private $categoryManager;
-
-    public function setUp()
-    {
-        $this->categoryManager = $this->getMockBuilder('Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface')
-            ->getMock();
-        $this->categoryList = new CategoryList($this->categoryManager, '');
-    }
-
-    public function testRead()
+    public function testGetContentData()
     {
         $categoryEntity1 = new CategoryEntity();
         $categoryTranslation1 = new CategoryTranslationEntity();
@@ -50,35 +35,25 @@ class CategoryListTest extends \PHPUnit_Framework_TestCase
         $category1 = new Category($categoryEntity1, 'en');
         $category2 = new Category($categoryEntity2, 'en');
 
-        $this->categoryManager->expects($this->any())->method('findByIds')->will($this->returnValueMap(
-                [
-                    [[1, 2], [$categoryEntity1, $categoryEntity2]],
-                ]
-            )
-        );
+        $categoryManager = $this->prophesize(CategoryManagerInterface::class);
 
-        $this->categoryManager->expects($this->any())->method('getApiObjects')->will($this->returnValueMap(
-                [
-                    [[$categoryEntity1, $categoryEntity2], 'en', [$category1, $category2]],
-                ]
-            )
-        );
+        $categoryManager->findByIds([1, 2])->willReturn([$categoryEntity1, $categoryEntity2]);
+        $categoryManager->getApiObjects([$categoryEntity1, $categoryEntity2], 'de')->willReturn([$category1, $category2]);
 
-        $node = $this->getMockBuilder('PHPCR\NodeInterface')
-            ->getMock();
-        $node->expects($this->any())->method('getPropertyValueWithDefault')->will($this->returnValueMap(
-                [
-                    ['property', [], [1, 2]],
-                ]
-            )
-        );
+        $categoryList = new CategoryList($categoryManager->reveal(), '');
 
-        $property = $this->getMockBuilder('Sulu\Component\Content\Compat\PropertyInterface')
-            ->getMock();
-        $property->expects($this->any())->method('getName')->willReturn('property');
-        $property->expects($this->any())->method('setValue')->with([$category1->toArray(), $category2->toArray()]);
+        $structure = $this->prophesize(StructureInterface::class);
+        $structure->getLanguageCode()->willReturn('de');
 
-        $this->categoryManager->expects($this->once())->method('findByIds');
-        $this->categoryList->read($node, $property, null, 'en', null);
+        $property = $this->prophesize(Property::class);
+        $property->getValue()->willReturn([1, 2]);
+        $property->getStructure()->willReturn($structure->reveal());
+
+        $result = $categoryList->getContentData($property->reveal());
+
+        $this->assertEquals([$category1->toArray(), $category2->toArray()], $result);
+
+        $categoryManager->findByIds([1, 2])->shouldBeCalled();
+        $categoryManager->getApiObjects([$categoryEntity1, $categoryEntity2], 'de')->shouldBeCalled();
     }
 }

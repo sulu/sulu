@@ -119,4 +119,12 @@ abstract class AbstractExtension implements ExtensionInterface
     {
         return $container;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFieldMapping()
+    {
+        return [];
+    }
 }

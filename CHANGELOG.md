@@ -9,6 +9,8 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1760 [SecurityBundle]  Added missing joins on query for security
     * BUGFIX      #1759 [ContactBundle]   Fixed upload avatar when category is selected
     * BUGFIX      #1750 [SecurityBundle]  Added seraialization groups for user
+    * BUGFIX      #1756 [ContentBundle]   Added excerpt values (title, description, tags and categories) to search
+                                          indexing
     * ENHANCEMENT #1754 [MediaBundle]     Moved collection key functions to base collection
     * BUGFIX      #1751 [Persistence]     Fixed UserBlameSubscriber for new DoctrineBundle
     * ENHANCEMENT #1746 [Rest]            Use * as placeholder in ListBuilder search

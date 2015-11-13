@@ -17,6 +17,8 @@
                 <title lang="de">Titel</title>
                 <title lang="en">Title</title>
             </meta>
+
+            <tag name="sulu.search.field"/>
         </property>
 
         <property name="more" type="text_line">
@@ -31,6 +33,8 @@
                 <title lang="de">Beschreibung</title>
                 <title lang="en">Description</title>
             </meta>
+
+            <tag name="sulu.search.field"/>
         </property>
 
         <property name="categories" type="category_list">
@@ -38,6 +42,8 @@
                 <title lang="de">Kategorien</title>
                 <title lang="en">Categories</title>
             </meta>
+
+            <tag name="sulu.search.field" type="array"/>
         </property>
 
         <property name="tags" type="tag_list">
@@ -45,6 +51,8 @@
                 <title lang="de">Tags</title>
                 <title lang="en">Tags</title>
             </meta>
+
+            <tag name="sulu.search.field" type="tags"/>
         </property>
 
         <property name="icon" type="media_selection">

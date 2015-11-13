@@ -10,6 +10,15 @@ to avoid an error, remove all `collectionEditListView` from the user settings ta
 ```sql
 DELETE FROM `se_user_settings` WHERE `settingsKey` = 'collectionEditListView';
 ```
+### Search
+
+To index multiple fields (and `category_list` content-type) you have to add the attribute `type="array"` to the
+`sulu.search.field` tag. The `tag_list` content-type has its own search-field type `tags`
+(`<tag name="sulu.search.field" type="tags"/>`).
+
+### Category Content-Type
+
+The category content-type converts the selected ids into category data only for website rendering now. 
 
 ### System Collections
 
