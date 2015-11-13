@@ -13,6 +13,12 @@ namespace Sulu\Component\Cache;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
+/**
+ * DataCache manages serialized data cached in a file.
+ *
+ * When the file exists the cache uses the data in the
+ * file and does not rely on other files.
+ */
 class DataCache implements CacheInterface
 {
     /**

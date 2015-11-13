@@ -11,7 +11,7 @@
 namespace Sulu\Component\Cache;
 
 /**
- * Interface for cache.
+ * These cache is a interface to manage serialized data.
  */
 interface CacheInterface
 {
@@ -41,7 +41,7 @@ interface CacheInterface
     /**
      * Checks if the cache is still fresh.
      *
-     * This method always returns true when debug is off and the
+     * This method always returns true when the
      * cache file exists.
      *
      * @return bool true if the cache is fresh, false otherwise
