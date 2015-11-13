@@ -11,7 +11,7 @@
 namespace Sulu\Component\Cache;
 
 /**
- * These cache is a interface to manage serialized data.
+ * This cache interface is determined to manage caches without corresponding files.
  */
 interface CacheInterface
 {
