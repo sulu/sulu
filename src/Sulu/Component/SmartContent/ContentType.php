@@ -290,7 +290,7 @@ class ContentType extends ComplexContentType
             'locale' => $property->getStructure()->getLanguageCode(),
         ];
 
-        if (isset($params['max_per_page']) && $configuration->getPaginated()) {
+        if (isset($params['max_per_page']) && $configuration->hasPagination()) {
             // is paginated
             $page = $this->getCurrentPage($params['page_parameter']->getValue());
             $pageSize = intval($params['max_per_page']->getValue());
@@ -317,7 +317,7 @@ class ContentType extends ComplexContentType
         $filters['page'] = $page;
         $filters['hasNextPage'] = $data->getHasNextPage();
         $filters['referencedUuids'] = $data->getReferencedUuids();
-        $filters['paginated'] = $configuration->getPaginated();
+        $filters['paginated'] = $configuration->hasPagination();
         $property->setValue($filters);
 
         // save result in cache

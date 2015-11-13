@@ -14,16 +14,29 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\SmartContent\ArrayAccessItem;
+use Sulu\Component\SmartContent\Configuration\Builder;
+use Sulu\Component\SmartContent\Configuration\BuilderInterface;
 use Sulu\Component\SmartContent\Configuration\ProviderConfiguration;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
+use Sulu\Component\SmartContent\ItemInterface;
 
 /**
  * Provides basic functionality for contact and account providers.
  */
 abstract class BaseDataProvider implements DataProviderInterface
 {
+    /**
+     * Creates a new configuration object.
+     *
+     * @return BuilderInterface
+     */
+    protected static function createConfigurationBuilder()
+    {
+        return Builder::create();
+    }
+
     /**
      * @var DataProviderRepositoryInterface
      */
@@ -141,6 +154,8 @@ abstract class BaseDataProvider implements DataProviderInterface
      * Initiate configuration.
      *
      * @return ProviderConfigurationInterface
+     *
+     * @deprecated use self::createConfigurationBuilder instead.
      */
     protected function initConfiguration($tags, $categories, $limit, $presentAs, $paginated, $sorting)
     {
@@ -205,7 +220,7 @@ abstract class BaseDataProvider implements DataProviderInterface
      *
      * @param array $data
      *
-     * @return array
+     * @return ItemInterface[]
      */
     abstract protected function decorateDataItems(array $data);
 }

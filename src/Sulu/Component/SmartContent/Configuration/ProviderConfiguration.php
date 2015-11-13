@@ -25,12 +25,12 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     /**
      * @var bool
      */
-    private $tags;
+    private $tags = false;
 
     /**
      * @var bool
      */
-    private $categories;
+    private $categories = false;
 
     /**
      * @var PropertyParameter[]
@@ -40,17 +40,17 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     /**
      * @var bool
      */
-    private $limit;
+    private $limit = false;
 
     /**
      * @var bool
      */
-    private $presentAs;
+    private $presentAs = false;
 
     /**
      * @var bool
      */
-    private $paginated;
+    private $paginated = false;
 
     /**
      * {@inheritdoc}
@@ -167,7 +167,7 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getPaginated()
+    public function hasPagination()
     {
         return $this->paginated;
     }

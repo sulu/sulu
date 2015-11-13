@@ -13,7 +13,6 @@ namespace Sulu\Component\Media\SmartContent;
 use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
-use Sulu\Component\SmartContent\Configuration\ComponentConfiguration;
 use Sulu\Component\SmartContent\DatasourceItem;
 use Sulu\Component\SmartContent\Orm\BaseDataProvider;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
@@ -42,9 +41,12 @@ class MediaDataProvider extends BaseDataProvider
     ) {
         parent::__construct($repository, $serializer);
 
-        $this->configuration = $this->initConfiguration(true, false, true, true, true, []);
-        $this->configuration->setDatasource(
-            new ComponentConfiguration(
+        $this->configuration = self::createConfigurationBuilder()
+            ->enableTags()
+            ->enableLimit()
+            ->enablePagination()
+            ->enablePresentAs()
+            ->enableDatasource(
                 'media-datasource@sulumedia',
                 [
                     'rootUrl' => '/admin/api/collections?sortBy=title&limit=9999&locale={locale}',
@@ -52,7 +54,8 @@ class MediaDataProvider extends BaseDataProvider
                     'resultKey' => 'collections',
                 ]
             )
-        );
+            ->getConfiguration();
+
         $this->requestStack = $requestStack;
         $this->collectionManager = $collectionManager;
     }

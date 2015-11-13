@@ -80,5 +80,5 @@ interface ProviderConfigurationInterface
      *
      * @return bool
      */
-    public function getPaginated();
+    public function hasPagination();
 }

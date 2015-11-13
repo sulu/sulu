@@ -77,7 +77,7 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($limit, $configuration->hasLimit());
         $this->assertEquals($presentAs, $configuration->hasPresentAs());
         $this->assertEquals($sorting, $configuration->getSorting());
-        $this->assertEquals($paginated, $configuration->getPaginated());
+        $this->assertEquals($paginated, $configuration->hasPagination());
         $this->assertEquals(count($sorting) > 0, $configuration->hasSorting());
     }
 
