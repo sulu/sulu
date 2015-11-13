@@ -101,7 +101,7 @@ UPDATE co_urls AS url SET url.url = CONCAT('http://', url.url) WHERE url.url NOT
 To updated you content pages and snippets simply run:
 
 ```bash
-app/console doctrine:phpcr:migrator:migrate
+app/console phpcr:migrations:migrate
 ```
 
 Consider that the URL is now stored including the scheme (http://, ftp://, and so on), and therefore must not be
