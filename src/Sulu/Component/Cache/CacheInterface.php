@@ -32,6 +32,13 @@ interface CacheInterface
     public function write($data);
 
     /**
+     * Invalidate cache.
+     *
+     * @throws \RuntimeException When cache file can't be invalidated
+     */
+    public function invalidate();
+
+    /**
      * Checks if the cache is still fresh.
      *
      * This method always returns true when debug is off and the

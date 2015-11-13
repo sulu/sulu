@@ -56,6 +56,15 @@ class DataCache implements CacheInterface
     /**
      * {@inheritdoc}
      */
+    public function invalidate()
+    {
+        $filesystem = new Filesystem();
+        $filesystem->remove($this->file);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isFresh()
     {
         return is_file($this->file);
