@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1764 [MediaBundle]     Added no cache headers for 404 thumbnails
     * BUGFIX      #1778 [MediaBundle]     Fixed cache handling of system collections
     * ENHANCEMENT #1775 [SmartContent]    Add possibility to get ArrayAccessItem as json
     * ENHANCEMENT #1772 [SbippetBundle]   Added translated template to snippet list
