@@ -10,7 +10,7 @@ To index multiple fields (and `category_list` content-type) you have to add the 
 
 ### Category Content-Type
 
-The category now content-type converts the selected ids into category data only for website rendering. 
+The category content-type converts the selected ids into category data only for website rendering now. 
 
 ### System Collections
 

@@ -78,10 +78,8 @@ class CategoryList extends ComplexContentType
      */
     public function getContentData(PropertyInterface $property)
     {
-        $categoryIds = parent::getContentData($property);
-
         $data = [];
-        $categories = $this->categoryManager->findByIds($categoryIds);
+        $categories = $this->categoryManager->findByIds($property->getValue());
         $categories = $this->categoryManager->getApiObjects($categories, $property->getStructure()->getLanguageCode());
 
         foreach ($categories as $category) {
