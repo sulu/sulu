@@ -29267,6 +29267,10 @@ define('__component__$navigation@husky',[],function() {
                 domObject = item.domObject,
                 parent;
 
+            if ($(domObject).hasClass('is-selected')) {
+                return;
+            }
+
             if (this.sandbox.dom.hasClass(domObject, 'js-navigation-sub-item')) {
                 parent = this.sandbox.dom.closest(domObject, '.navigation-items');
 
@@ -29511,7 +29515,6 @@ define('__component__$navigation@husky',[],function() {
          * @param {Object} options Extends the item
          */
         selectSubItem: function(event, customTarget, emit, options) {
-
             if (!!event) {
                 event.preventDefault();
             } else {
@@ -44953,13 +44956,17 @@ define('__component__$data-navigation@husky',[
             return createEventName.call(this, 'initialized');
         },
 
+        SELECT = function() {
+            return createEventName.call(this, 'select');
+        },
+
         /**
          * raised after the item was selected
          * @param item {Object} selected item
          * @event husky.data-navigation.select
          */
-        SELECT = function() {
-            return createEventName.call(this, 'select')
+        SELECTED = function() {
+            return createEventName.call(this, 'selected')
         },
 
         /**
@@ -44967,8 +44974,8 @@ define('__component__$data-navigation@husky',[
          * @param item {Object} selected item
          * @event husky.data-navigation.select
          */
-        SELECT_GLOBAL = function() {
-            return eventNamespace + 'select';
+        SELECTED_GLOBAL = function() {
+            return eventNamespace + 'selected';
         },
 
         /**
@@ -45196,12 +45203,16 @@ define('__component__$data-navigation@husky',[
                 }
             }.bind(this));
 
+            this.sandbox.on(SELECT.call(this), function(id) {
+                this.showChildren(id);
+            }.bind(this));
+
             this.sandbox.on(SHOW_ADD_BUTTON.call(this), this.showAddButton.bind(this));
 
             this.sandbox.on(HIDE_ADD_BUTTON.call(this), this.hideAddButton.bind(this));
 
-            this.sandbox.on(RELOAD.call(this), function() {
-                this.setUrl(this.getCurrentUrl(), true);
+            this.sandbox.on(RELOAD.call(this), function(callback) {
+                this.setUrl(this.getCurrentUrl(), true, callback);
             }.bind(this));
 
             this.sandbox.on(CLEAR_CACHE.call(this), function() {
@@ -45231,7 +45242,7 @@ define('__component__$data-navigation@husky',[
             return url;
         },
 
-        setUrl: function(url, clearCache) {
+        setUrl: function(url, clearCache, callback) {
             if (!!clearCache) {
                 this.cache.deleteAll();
             }
@@ -45241,6 +45252,9 @@ define('__component__$data-navigation@husky',[
                 .then(function(data) {
                     this.updateHeader(data);
                     this.currentView.render(data, this.options);
+                    if (typeof callback === 'function') {
+                        callback.call(this);
+                    }
                 }.bind(this));
         },
 
@@ -45360,7 +45374,7 @@ define('__component__$data-navigation@husky',[
                 item, url;
 
             if (!data) {
-                if (id === constants.ROOT_ID) {
+                if (id === constants.ROOT_ID || id == null) {
                     if (!!this.data.parent) {
                         url = this.data.parent._links[this.options.childrenLinkKey].href;
                     } else {
@@ -45395,13 +45409,13 @@ define('__component__$data-navigation@husky',[
         },
 
         /**
-         * @method openChildrenHandler
-         * @param {Object} event
+         * Show the children for the item with the given id
+         *
+         * @param id
+         * @returns {*}
          */
-        openChildrenHandler: function(event) {
-            var $item = $(event.currentTarget).closest('li'),
-                id = $item.data('id'),
-                oldView = this.currentView;
+        showChildren: function(id) {
+            var oldView = this.currentView;
 
             this.clearSearch();
             this.currentView = this.createView();
@@ -45412,6 +45426,14 @@ define('__component__$data-navigation@husky',[
                     this.updateHeader(data);
                     this.currentView.render(data, this.options);
                 }.bind(this));
+        },
+
+        /**
+         * @method openChildrenHandler
+         * @param {Object} event
+         */
+        openChildrenHandler: function(event) {
+            return this.showChildren($(event.currentTarget).closest('li').data('id'));
         },
 
         /**
@@ -45439,9 +45461,9 @@ define('__component__$data-navigation@husky',[
         selectParentDataHandler: function(event) {
             event.stopPropagation();
 
-            this.sandbox.emit(SELECT.call(this), this.data.parent);
+            this.sandbox.emit(SELECTED.call(this), this.data.parent);
             if (this.options.globalEvents) {
-                this.sandbox.emit(SELECT_GLOBAL.call(this), this.data.parent);
+                this.sandbox.emit(SELECTED_GLOBAL.call(this), this.data.parent);
             }
 
             this.openParentHandler(event);
@@ -45468,9 +45490,9 @@ define('__component__$data-navigation@husky',[
                 id = $item.data('id'),
                 item = this.getItem(id);
 
-            this.sandbox.emit(SELECT.call(this), item);
+            this.sandbox.emit(SELECTED.call(this), item);
             if (this.options.globalEvents) {
-                this.sandbox.emit(SELECT_GLOBAL.call(this), item);
+                this.sandbox.emit(SELECTED_GLOBAL.call(this), item);
             }
 
             this.openChildrenHandler(event);

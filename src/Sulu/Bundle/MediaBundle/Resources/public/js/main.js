@@ -84,7 +84,7 @@ define([
                     return;
                     }
 
-                this.sandbox.on('husky.data-navigation.collections.select', function(item) {
+                this.sandbox.on('husky.data-navigation.collections.selected', function(item) {
                     if (item === null) {
                         MediaRouter.toRoot();
                     }
@@ -96,6 +96,10 @@ define([
 
                 this.sandbox.on('sulu.media.collection-create.created', function(collection) {
                     MediaRouter.toCollection(collection.id);
+
+                    this.sandbox.emit('husky.data-navigation.collections.reload', function() {
+                        this.sandbox.emit('husky.data-navigation.collections.select', collection.id);
+                    });
                 }.bind(this));
 
                 this.sandbox.on('husky.dropzone.error', function() {
