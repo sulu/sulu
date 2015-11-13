@@ -185,9 +185,8 @@
             <argument>sulu.media.collections</argument>
         </service>
 
-        <service id="sulu_media.system_collections.cache" class="Symfony\Component\Config\ConfigCache">
+        <service id="sulu_media.system_collections.cache" class="Sulu\Component\Cache\DataCache">
             <argument>%sulu.cache_dir%/system_collection.cache</argument>
-            <argument>%kernel.debug%</argument>
         </service>
 
         <service id="sulu_media.system_collections.manager" class="Sulu\Component\Media\SystemCollections\SystemCollectionManager">
@@ -199,7 +198,7 @@
             <argument>%kernel.default_locale%</argument>
         </service>
 
-        <service id="sulu_media.system_collections.warm_up" class="Sulu\Component\Media\SystemCollections\SystemCollectionBuilder">
+        <service id="sulu_media.system_collections.builder" class="Sulu\Component\Media\SystemCollections\SystemCollectionBuilder">
             <tag name="massive_build.builder" />
         </service>
     </services>
