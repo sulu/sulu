@@ -70,16 +70,17 @@ class SnippetRepository
      *
      * @param array  $uuids
      * @param string $languageCode
+     * @param bool $loadGhostContent
      *
      * @return SnippetBridge[]
      */
-    public function getSnippetsByUuids(array $uuids = [], $languageCode)
+    public function getSnippetsByUuids(array $uuids = [], $languageCode, $loadGhostContent = false)
     {
         $snippets = [];
 
         foreach ($uuids as $uuid) {
             try {
-                $snippet = $this->contentMapper->load($uuid, null, $languageCode);
+                $snippet = $this->contentMapper->load($uuid, null, $languageCode, $loadGhostContent);
                 $snippets[] = $snippet;
             } catch (DocumentNotFoundException $e) {
                 // ignore not found items
