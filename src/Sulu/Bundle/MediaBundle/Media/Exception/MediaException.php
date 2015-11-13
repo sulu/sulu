@@ -165,6 +165,13 @@ class MediaException extends Exception
      */
     const EXCEPTION_CODE_FILE_NOT_FOUND = 5021;
 
+    /**
+     * Systemfile is not found.
+     *
+     * @var int
+     */
+    const EXCEPTION_CODE_SYSTEM_FILE_NOT_FOUND = 5027;
+
     public function toArray()
     {
         return [

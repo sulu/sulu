@@ -18,6 +18,7 @@ use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
+use Sulu\Bundle\MediaBundle\Media\Exception\SystemFileNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\GhostScriptNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidImageFormat;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
@@ -140,6 +141,8 @@ class FormatManager implements FormatManagerInterface
      */
     public function returnImage($id, $formatName)
     {
+        $setExpireHeaders = false;
+
         try {
             // load Media
             $media = $this->mediaRepository->findMediaById($id);
@@ -188,8 +191,9 @@ class FormatManager implements FormatManagerInterface
                     $this->getOptionsFromImage($image, $imageExtension, $formatOptions)
                 );
 
-                // HTTP Status
+                // HTTP Headers
                 $status = 200;
+                $setExpireHeaders = true;
 
                 // save image
                 if ($this->saveImage) {
@@ -216,7 +220,7 @@ class FormatManager implements FormatManagerInterface
         $this->clearTempFiles();
 
         // set header
-        $headers = $this->getResponseHeaders($responseMimeType);
+        $headers = $this->getResponseHeaders($responseMimeType, $setExpireHeaders);
 
         // return image
         return new Response($responseContent, $status, $headers);
@@ -268,20 +272,26 @@ class FormatManager implements FormatManagerInterface
     }
 
     /**
-     * @param $mimeType
+     * @param string $mimeType
+     * @param bool $setExpireHeaders
      *
      * @return array
      */
-    protected function getResponseHeaders($mimeType = '')
+    protected function getResponseHeaders($mimeType = '', $setExpireHeaders = false)
     {
         $headers = [];
 
         if (!empty($this->responseHeaders)) {
             $headers = $this->responseHeaders;
-            if (isset($this->responseHeaders['Expires'])) {
+            if (isset($this->responseHeaders['Expires']) && $setExpireHeaders) {
                 $date = new \DateTime();
                 $date->modify($this->responseHeaders['Expires']);
                 $headers['Expires'] = $date->format('D, d M Y H:i:s \G\M\T');
+            } else {
+                // will remove exist set expire header
+                $headers['Expires'] = null;
+                $headers['Cache-Control'] = 'no-cache';
+                $headers['Pragma'] = null;
             }
         }
 
@@ -437,6 +447,8 @@ class FormatManager implements FormatManagerInterface
      * @param string $mimeType
      *
      * @return string
+     *
+     * @throws SystemFileNotFoundException
      */
     protected function getFile($uri, $mimeType)
     {
@@ -446,7 +458,13 @@ class FormatManager implements FormatManagerInterface
             $uri = $tempFile;
         }
 
-        return file_get_contents($uri);
+        $file = @file_get_contents($uri);
+
+        if (!$file) {
+            throw new SystemFileNotFoundException($uri);
+        }
+
+        return $file;
     }
 
     /**
