@@ -236,6 +236,8 @@ class MediaControllerTest extends SuluTestCase
      */
     public function testResponseHeader()
     {
+        $media = $this->createMedia('photo');
+
         $date = new DateTime();
         $date->modify('+1 month');
 
@@ -243,10 +245,26 @@ class MediaControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/uploads/media/50x50/01/1-photo.jpeg'
+            '/uploads/media/50x50/01/' . $media->getId() . '-photo.jpeg'
         );
 
         $this->assertEquals($date->format('Y-m-d'), $client->getResponse()->getExpires()->format('Y-m-d'));
+    }
+
+    /**
+     * Test Media DownloadCounter.
+     */
+    public function test404ResponseHeader()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/uploads/media/50x50/01/0-photo.jpeg'
+        );
+
+        $this->assertFalse($client->getResponse()->isCacheable());
+        $this->assertEmpty($client->getResponse()->getExpires());
     }
 
     /**
