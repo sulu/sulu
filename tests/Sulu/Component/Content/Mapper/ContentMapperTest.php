@@ -18,6 +18,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\ContentTypeManager;
+use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Extension\ExtensionInterface;
@@ -3005,7 +3006,7 @@ class ContentMapperTest extends SuluTestCase
 
         $result = $this->documentManager->find($site->getUuid(), 'en');
         $this->assertEquals(30, $result->getSuluOrder());
-        $this->assertNull($result->getResourceSegment());
+        $this->assertEquals(RedirectType::INTERNAL, $result->getRedirectType());
 
         $result = $this->mapper->loadByParent($data[0]->getUuid(), 'sulu_io', 'en');
         $this->assertEquals('/page-1/page-1-1', $result[0]->getPath());

@@ -75,10 +75,6 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if ($document instanceof RedirectTypeBehavior && $document->getRedirectType() !== RedirectType::NONE) {
-            return;
-        }
-
         $node = $event->getNode();
         $property = $this->getResourceSegmentProperty($document);
         $originalLocale = $this->inspector->getOriginalLocale($document);
