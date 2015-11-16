@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * ENHANCEMENT #1786 [ContactBundle]   Added cascade options to account and contact
+    * BUGFIX      #1789 [CoreBundle]      Added replacers for box brackets
     * BUGFIX      #1785 [ContentBundle]   Fixed data returned for internal link in settings tab
     * BUGFIX      #1784 [ContentBundle]   Removed webspace as required parameter for get action
     * BUGFIX      #1783 [MediaBundle]     Fixed not removed deleted original files
