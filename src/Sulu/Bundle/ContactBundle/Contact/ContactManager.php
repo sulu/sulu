@@ -22,6 +22,7 @@ use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Sulu\Bundle\ContactBundle\Entity\contactTitleRepository;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
+use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContentBundle\Content\Types\Email;
 use Sulu\Bundle\ContentBundle\Content\Types\Phone;
@@ -167,6 +168,14 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
             foreach ($faxes as $fax) {
                 if ($fax->getAccounts()->count() == 0 && $fax->getContacts()->count() == 1) {
                     $this->em->remove($fax);
+                }
+            }
+
+            $notes = $contact->getNotes()->toArray();
+            /** @var Note $note */
+            foreach ($notes as $note) {
+                if ($note->getAccounts()->count() == 0 && $note->getContacts()->count() == 1) {
+                    $this->em->remove($note);
                 }
             }
 
