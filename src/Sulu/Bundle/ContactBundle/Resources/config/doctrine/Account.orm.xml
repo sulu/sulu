@@ -66,6 +66,9 @@
         </many-to-many>
 
         <many-to-many field="urls" target-entity="Sulu\Bundle\ContactBundle\Entity\Url" inversed-by="accounts">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
             <join-table name="co_account_urls">
                 <join-columns>
                     <join-column name="idAccounts" referenced-column-name="id"/>
@@ -79,6 +82,9 @@
             </order-by>
         </many-to-many>
         <many-to-many field="phones" target-entity="Sulu\Bundle\ContactBundle\Entity\Phone" inversed-by="accounts">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
             <join-table name="co_account_phones">
                 <join-columns>
                     <join-column name="idAccounts" referenced-column-name="id"/>
@@ -92,6 +98,9 @@
             </order-by>
         </many-to-many>
         <many-to-many field="emails" target-entity="Sulu\Bundle\ContactBundle\Entity\Email" inversed-by="accounts">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
             <join-table name="co_account_emails">
                 <join-columns>
                     <join-column name="idAccounts" referenced-column-name="id"/>
@@ -105,6 +114,9 @@
             </order-by>
         </many-to-many>
         <many-to-many field="notes" target-entity="Sulu\Bundle\ContactBundle\Entity\Note" inversed-by="accounts">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
             <join-table name="co_account_notes">
                 <join-columns>
                     <join-column name="idAccounts" referenced-column-name="id"/>
@@ -118,6 +130,9 @@
             </order-by>
         </many-to-many>
         <many-to-many field="faxes" target-entity="Sulu\Bundle\ContactBundle\Entity\Fax" inversed-by="accounts">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
             <join-table name="co_account_faxes">
                 <join-columns>
                     <join-column name="idAccounts" referenced-column-name="id"/>
@@ -131,6 +146,9 @@
             </order-by>
         </many-to-many>
         <many-to-many field="bankAccounts" target-entity="Sulu\Bundle\ContactBundle\Entity\BankAccount" inversed-by="accounts">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
             <join-table name="co_account_bank_accounts">
                 <join-columns>
                     <join-column name="idAccounts" referenced-column-name="id"/>
