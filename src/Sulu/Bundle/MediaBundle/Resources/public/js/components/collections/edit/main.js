@@ -152,7 +152,6 @@ define([
             this.sandbox.on('sulu.medias.collection.saved', function(id, collection) {
                 if (!collection.locale || collection.locale === UserSettingsManager.getMediaLocale()) {
                     this.data = collection;
-                    this.sandbox.emit('sulu.header.set-title', this.data.title);
                 }
             }.bind(this));
 

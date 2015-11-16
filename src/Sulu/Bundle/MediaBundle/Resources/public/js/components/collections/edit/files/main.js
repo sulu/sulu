@@ -28,7 +28,8 @@ define([
             fixedClass: 'fixed',
             dropzoneSelector: '.dropzone-container',
             toolbarSelector: '.list-toolbar-container',
-            datagridSelector: '.datagrid-container'
+            datagridSelector: '.datagrid-container',
+            collectionTitleSelector: '.collection-title h2'
         };
 
     return {
@@ -142,6 +143,11 @@ define([
             this.sandbox.on('sulu.collection-select.move-media.closed', this.enableDropzone.bind(this));
             this.sandbox.on('sulu.media-edit.closed', this.enableDropzone.bind(this));
             this.sandbox.on('sulu.permission-settings.closed', this.enableDropzone.bind(this));
+            this.sandbox.on('sulu.medias.collection.saved', function(id, collection) {
+                if (!collection.locale || collection.locale === UserSettingsManager.getMediaLocale()) {
+                    $(constants.collectionTitleSelector).text(collection.title)
+                }
+            }.bind(this));
         },
 
         /**
