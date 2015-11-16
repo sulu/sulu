@@ -306,12 +306,15 @@ class NodeControllerTest extends SuluTestCase
 
         $internalLinkPage = $this->documentManager->create('page');
         $internalLinkPage->setTitle('page');
-        $internalLinkPage->setStructureType('internal-link');
-        $internalLinkPage->setRedirectType(RedirectType::INTERNAL);
-        $internalLinkPage->setRedirectTarget($targetPage);
+        $internalLinkPage->setStructureType('default');
         $internalLinkPage->setResourceSegment('/test');
         $this->documentManager->persist($internalLinkPage, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->flush();
 
+        $internalLinkPage = $this->documentManager->find($internalLinkPage->getUuid());
+        $internalLinkPage->setRedirectType(RedirectType::INTERNAL);
+        $internalLinkPage->setRedirectTarget($targetPage);
+        $this->documentManager->persist($internalLinkPage, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
         $this->documentManager->flush();
 
         $client->request('GET', '/api/nodes/' . $internalLinkPage->getUuid() . '?webspace=sulu_io&language=en');

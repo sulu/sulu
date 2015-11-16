@@ -57,7 +57,8 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
     public function doHydrate(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();
-        if ($document instanceof RedirectTypeBehavior && $document->getRedirectType() !== RedirectType::NONE) {
+
+        if (!$this->supports($document)) {
             return;
         }
 

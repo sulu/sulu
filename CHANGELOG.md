@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * BUGFIX      #1785 [ContentBundle]   Fixed data returned for internal link in settings tab
+    
 * 1.0.14 (2015-11-13)
     * BUGFIX      #1191 [AdminBundle]    Fixed unique Navigation ID
 
