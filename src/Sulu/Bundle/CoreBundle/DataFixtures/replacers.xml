@@ -27,6 +27,16 @@
     </item>
     <item>
         <column name="locale">default</column>
+        <column name="from">[</column>
+        <column name="to">-</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
+        <column name="from">]</column>
+        <column name="to">-</column>
+    </item>
+    <item>
+        <column name="locale">default</column>
         <column name="from">ü</column>
         <column name="to">ue</column>
     </item>
