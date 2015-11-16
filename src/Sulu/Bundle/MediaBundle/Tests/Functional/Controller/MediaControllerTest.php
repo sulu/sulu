@@ -911,6 +911,7 @@ class MediaControllerTest extends SuluTestCase
     public function testDeleteById()
     {
         $media = $this->createMedia('photo');
+        $this->assertFileExists(__DIR__ . '/../../uploads/media/1/photo.jpeg');
 
         $client = $this->createAuthenticatedClient();
 
@@ -929,6 +930,8 @@ class MediaControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(5015, $response->code);
         $this->assertTrue(isset($response->message));
+
+        $this->assertFileNotExists(__DIR__ . '/../../uploads/media/1/photo.jpeg');
     }
 
     /**

@@ -176,6 +176,40 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $this->mediaManager->delete(1, true);
     }
 
+    public function testDelete()
+    {
+        $collection = $this->prophesize(Collection::class);
+        $collection->getId()->willReturn(2);
+
+        $file = $this->prophesize(File::class);
+        $fileVersion = $this->prophesize(FileVersion::class);
+        $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
+        $fileVersion->getId()->willReturn(1);
+        $fileVersion->getName()->willReturn('test');
+        $fileVersion->getStorageOptions()->willReturn(json_encode(['segment' => '01', 'fileName' => 'test.jpg']));
+
+        $media = $this->prophesize(Media::class);
+        $media->getCollection()->willReturn($collection);
+        $media->getFiles()->willReturn([$file->reveal()]);
+        $media->getId()->willReturn(1);
+
+        $this->formatManager->purge(
+            1,
+            'test',
+            json_encode(['segment' => '01', 'fileName' => 'test.jpg'])
+        )->shouldBeCalled();
+
+        $this->mediaRepository->findMediaById(1)->willReturn($media);
+        $this->securityChecker->checkPermission(
+            new SecurityCondition('sulu.media.collections', null, Collection::class, 2),
+            'delete'
+        )->shouldBeCalled();
+
+        $this->storage->remove(json_encode(['segment' => '01', 'fileName' => 'test.jpg']))->shouldBeCalled();
+
+        $this->mediaManager->delete(1, true);
+    }
+
     public function provideGetByIds()
     {
         $media1 = $this->createMedia(1);
