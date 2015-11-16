@@ -21,6 +21,10 @@ class FileVersionMetaRepository extends EntityRepository implements FileVersionM
     public function findLatestWithoutSecurity()
     {
         $queryBuilder = $this->createQueryBuilder('fileVersionMeta')
+            ->addSelect('fileVersion')
+            ->addSelect('file')
+            ->addSelect('media')
+            ->addSelect('collection')
             ->leftJoin('fileVersionMeta.fileVersion', 'fileVersion')
             ->leftJoin('fileVersion.file', 'file')
             ->leftJoin('file.media', 'media')

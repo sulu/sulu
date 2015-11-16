@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #1831 [MediaBundle]     Fixed query for retrieving entities to index
     * HOTFIX      #1868 [ContentBundle]   Added date upgrade script for blocks
     * HOTFIX      #1869 [CategoryBundle]  Fixed opened category tree on startup
     * HOTFIX      #1799 [ContentBundle]   Added 'published' field to be indexed
