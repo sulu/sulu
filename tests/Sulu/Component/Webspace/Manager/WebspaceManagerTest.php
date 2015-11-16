@@ -502,13 +502,10 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
     public function testFindUrlsByResourceLocator()
     {
         $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'en_us', 'massiveart');
-        $this->assertEquals(
-            [
-                'http://massiveart.lo/en-us/w/test',
-                'http://massiveart.lo/en-us/s/test',
-            ],
-            $result
-        );
+
+        $this->assertCount(2, $result);
+        $this->assertContains('http://massiveart.lo/en-us/w/test', $result);
+        $this->assertContains('http://massiveart.lo/en-us/s/test', $result);
 
         $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'de_at', 'sulu_io');
         $this->assertEquals(['http://sulu.lo/test'], $result);
@@ -594,6 +591,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
                 unset($localization['localization']);
                 unset($localization['shadow']);
                 unset($localization['default']);
+                unset($localization['xDefault']);
             }
         );
 
