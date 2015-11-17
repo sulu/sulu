@@ -26,6 +26,9 @@
         <parameter key="sulu_media.twig_extension.media.class">Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension</parameter>
         <parameter key="tmp">Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension</parameter>
         <parameter key="sulu_media.video_thumbnail_generator.class">Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailService</parameter>
+        <parameter key="sulu_media.external_service.class">Sulu\Bundle\MediaBundle\Media\Service\ExternalService</parameter>
+        <parameter key="sulu_media.service.event_listener.class">Sulu\Bundle\MediaBundle\Media\Service\EventListener</parameter>
+        <parameter key="sulu_media.media.service_manager.class">Sulu\Bundle\MediaBundle\Media\Service\ServiceManager</parameter>
     </parameters>
 
     <services>
@@ -101,6 +104,7 @@
             <argument type="service" id="sulu_media.type_manager" />
             <argument type="service" id="security.token_storage" on-invalid="null" />
             <argument type="service" id="sulu_security.security_checker" on-invalid="null" />
+            <argument type="service" id="event_dispatcher" />
             <argument type="service" id="dubture_ffmpeg.ffprobe" />
             <argument>%sulu_security.permissions%</argument>
             <argument type="string">%sulu_media.media_manager.media_download_path%</argument>
@@ -157,6 +161,7 @@
             <tag name="twig.extension"/>
         </service>
 
+
         <service id="sulu_media.video_thumbnail_generator" class="%sulu_media.video_thumbnail_generator.class%">
             <argument type="service" id="dubture_ffmpeg.ffmpeg"/>
         </service>
@@ -202,6 +207,24 @@
 
         <service id="sulu_media.system_collections.builder" class="Sulu\Component\Media\SystemCollections\SystemCollectionBuilder">
             <tag name="massive_build.builder" />
+        </service>
+
+        <service id="sulu_media.media.service_manager" class="%sulu_media.media.service_manager.class%">
+            <argument type="service" id="logger" />
+        </service>
+
+        <service id="sulu_media.external_service" class="%sulu_media.external_service.class%">
+            <argument>%sulu_media.external_service%</argument>
+            <argument type="service" id="jms_serializer" />
+            <argument type="service" id="logger" />
+
+            <tag name="sulu_media.media.service" alias="external_service" />
+        </service>
+
+        <service id="sulu_media.service.event_listener" class="%sulu_media.service.event_listener.class%">
+            <argument type="service" id="sulu_media.media.service_manager" />
+            <argument type="service" id="logger" />
+            <tag name="kernel.event_subscriber" />
         </service>
     </services>
 </container>

@@ -157,6 +157,12 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('media_proxy_path')->defaultValue('/uploads/media/{slug}')->end()
                     ->scalarNode('media_download_path')->defaultValue('/media/{id}/download/{slug}')->end()
                 ->end()
+            ->end()
+            ->arrayNode('external_service')
+                ->useAttributeAsKey('name')
+                ->prototype('array')
+                    ->prototype('scalar')->end()
+                ->end()->defaultValue([])
             ->end();
 
         return $treeBuilder;
