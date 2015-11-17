@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1796 [ContentBundle]   Fixed content type date to save as date data-type in phpcr
     * BUGFIX      #1793 [TagBundle]       Fixed tag-list preview update 
     * BUGFIX      #1793 [CategoryBundle]  Fixed category-list preview update 
     * ENHANCEMENT #1786 [ContactBundle]   Added cascade options to account and contact

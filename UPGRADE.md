@@ -2,6 +2,14 @@
 
 ## dev-develop
 
+### Date Content-Type
+
+The type of the date value in the database was wrong to update your existing data use following command:
+
+```bash
+app/console phpcr:migrations:migrate
+```
+
 ### Media View Settings
 
 The media collection thumbnailLarge view was removed from the media, 
