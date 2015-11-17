@@ -94,16 +94,16 @@ class MediaDataProvider extends BaseDataProvider
     ) {
         $request = $this->requestStack->getCurrentRequest();
 
-        $result = [];
+        $queryOptions = [];
 
         if (array_key_exists('mimetype_parameter', $propertyParameter)) {
-            $result['mimetype'] = $request->get($propertyParameter['mimetype_parameter']->getValue());
+            $queryOptions['mimetype'] = $request->get($propertyParameter['mimetype_parameter']->getValue());
         }
         if (array_key_exists('type_parameter', $propertyParameter)) {
-            $result['type'] = $request->get($propertyParameter['type_parameter']->getValue());
+            $queryOptions['type'] = $request->get($propertyParameter['type_parameter']->getValue());
         }
 
-        return array_filter($result);
+        return array_merge($options, array_filter($queryOptions));
     }
 
     /**

@@ -30153,7 +30153,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             cssClass: '',
             thumbnailFormat: '50x50',
             showHead: true,
-            hideChildrenAtBeginning: true,
+            hideChildrenAtBeginning: false,
             openChildId: null,
             highlightSelected: false,
             icons: [],
@@ -41235,7 +41235,7 @@ define('__component__$column-navigation@husky',[],function() {
             }
         },
 
-        unBindDOMEvents: function() {
+        unbindDOMEvents: function() {
             this.$el.off();
             if (!!this.dom.$add) {
                 this.dom.$add.off();
@@ -41436,7 +41436,7 @@ define('__component__$column-navigation@husky',[],function() {
             this.sandbox.on(HIGHLIGHT.call(this), this.highlight.bind(this));
             this.sandbox.on(ORDER.call(this), this.startOrderModeItem.bind(this));
             this.sandbox.on(SET_OPTIONS.call(this), function(options) {
-                this.unBindDOMEvents();
+                this.unbindDOMEvents();
                 this.$el.children().remove();
                 this.options = this.sandbox.util.extend(true, {}, this.options, options);
 

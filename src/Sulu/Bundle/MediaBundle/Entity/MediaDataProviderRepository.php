@@ -80,19 +80,6 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
     public function appendJoins(QueryBuilder $queryBuilder, $alias, $locale)
     {
         $queryBuilder
-            ->leftJoin($alias . '.type', 'type')
-            ->leftJoin($alias . '.collection', 'collection')
-            ->leftJoin($alias . '.files', 'file')
-            ->leftJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version')
-            ->leftJoin('fileVersion.tags', 'tag')
-            ->leftJoin('fileVersion.meta', 'fileVersionMeta')
-            ->leftJoin('fileVersion.defaultMeta', 'fileVersionDefaultMeta')
-            ->leftJoin('fileVersion.contentLanguages', 'fileVersionContentLanguage')
-            ->leftJoin('fileVersion.publishLanguages', 'fileVersionPublishLanguage')
-            ->leftJoin($alias . '.creator', 'creator')
-            ->leftJoin('creator.contact', 'creatorContact')
-            ->leftJoin($alias . '.changer', 'changer')
-            ->leftJoin('changer.contact', 'changerContact')
             ->addSelect('type')
             ->addSelect('collection')
             ->addSelect('file')
@@ -105,7 +92,20 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
             ->addSelect('creator')
             ->addSelect('changer')
             ->addSelect('creatorContact')
-            ->addSelect('changerContact');
+            ->addSelect('changerContact')
+            ->leftJoin($alias . '.type', 'type')
+            ->leftJoin($alias . '.collection', 'collection')
+            ->leftJoin($alias . '.files', 'file')
+            ->leftJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version')
+            ->leftJoin('fileVersion.tags', 'tag')
+            ->leftJoin('fileVersion.meta', 'fileVersionMeta')
+            ->leftJoin('fileVersion.defaultMeta', 'fileVersionDefaultMeta')
+            ->leftJoin('fileVersion.contentLanguages', 'fileVersionContentLanguage')
+            ->leftJoin('fileVersion.publishLanguages', 'fileVersionPublishLanguage')
+            ->leftJoin($alias . '.creator', 'creator')
+            ->leftJoin('creator.contact', 'creatorContact')
+            ->leftJoin($alias . '.changer', 'changer')
+            ->leftJoin('changer.contact', 'changerContact');
     }
 
     /**

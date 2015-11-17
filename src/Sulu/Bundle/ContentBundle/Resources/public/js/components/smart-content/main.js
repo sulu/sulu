@@ -535,7 +535,8 @@ define(['services/husky/util'], function(util) {
             if (!!this.options.has.datasource &&
                 typeof(this.overlayData.dataSource) !== 'undefined' &&
                 this.overlayData.dataSource !== '' &&
-                this.overlayData.title !== '' && this.overlayData.title !== null
+                this.overlayData.title !== '' &&
+                this.overlayData.title !== null
             ) {
                 desc = this.sandbox.translate(this.translations.from);
                 if (this.overlayData.includeSubFolders !== false) {
@@ -591,7 +592,7 @@ define(['services/husky/util'], function(util) {
                     this.sandbox.dom.append(ul, _.template(templates.contentItem)({
                         dataId: item[this.options.idKey],
                         value: item[this.options.titleKey],
-                        image: item[this.options.imageKey] ? item[this.options.imageKey] : null,
+                        image: item[this.options.imageKey] || null,
                         num: (index + 1)
                     }));
                 }.bind(this));

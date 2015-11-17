@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -261,7 +262,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     {
         $subQueryBuilder = $this->createQueryBuilder('subCollection')
             ->select('subCollection.id')
-            ->leftJoin($this->_entityName, 'c', Query\Expr\Join::WITH, 'c.id = :id')
+            ->leftJoin($this->_entityName, 'c', Join::WITH, 'c.id = :id')
             ->andWhere('subCollection.lft <= c.lft AND subCollection.rgt > c.lft');
 
         $queryBuilder = $this->createQueryBuilder('collection')
@@ -269,7 +270,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             ->addSelect('defaultMeta')
             ->addSelect('type')
             ->addSelect('parent')
-            ->leftJoin('collection.meta', 'meta', Query\Expr\Join::WITH, 'meta.locale = :locale')
+            ->leftJoin('collection.meta', 'meta', Join::WITH, 'meta.locale = :locale')
             ->leftJoin('collection.defaultMeta', 'defaultMeta')
             ->innerJoin('collection.type', 'type')
             ->leftJoin('collection.parent', 'parent')
