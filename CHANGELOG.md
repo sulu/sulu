@@ -178,6 +178,15 @@ CHANGELOG for Sulu
     * BUGFIX      #1365 [ContactBundle]   Fixed bug caused by new instance name of datagrid
     * BUGFIX      #1136 [MediaBundle]     Fixed image scale forceRatio parameter for none squared image formats
 
+* dev-master
+    * HOTFIX      #1795 [ContentBundle]   Fixed copying shadow pages with urls
+    
+* 1.0.14 (2015-11-13)
+    * BUGFIX      #1191 [AdminBundle]    Fixed unique Navigation ID
+
+* 1.0.13 (2015-11-12)
+    * HOTFIX      #1771 [AdminBundle]    Fixed login translations if browser-locale is not translated
+
 * 1.0.12 (2015-10-22)
     * HOTFIX      #1634 [SecurityBundle] Allow attribute overrides for user email field
     * HOTFIX      #1624 [ContentBundle]  Fixed nullable internal link and added server/clientside validation
