@@ -14,22 +14,28 @@ define([
 
     'use strict';
 
-    var itemHandler = function() {
-        App.emit('sulu.content.changed');
-    };
 
     return function($el, options) {
-        var defaults = {
-
-            },
+        var defaults = {},
 
             typeInterface = {
                 initializeSub: function() {
-                    App.off('husky.datagrid.categories.item.select', itemHandler);
-                    App.on('husky.datagrid.categories.item.select', itemHandler);
+                    App.off('husky.datagrid.' + this.options.instanceName + '.item.select');
+                    App.off('husky.datagrid.' + this.options.instanceName + '.item.deselect');
 
-                    App.off('husky.datagrid.categories.item.deselect', itemHandler);
-                    App.on('husky.datagrid.categories.item.deselect', itemHandler);
+                    App.on(
+                        'husky.datagrid.' + this.options.instanceName + '.item.select',
+                        this.itemHandler.bind(this)
+                    );
+                    App.on(
+                        'husky.datagrid.' + this.options.instanceName + '.item.deselect',
+                        this.itemHandler.bind(this)
+                    );
+                },
+
+                itemHandler: function() {
+                    App.emit('sulu.preview.update', $el, this.getValue());
+                    App.emit('sulu.content.changed');
                 },
 
                 setValue: function(value) {
