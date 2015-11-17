@@ -143,11 +143,7 @@ define([
             this.sandbox.on('sulu.collection-select.move-media.closed', this.enableDropzone.bind(this));
             this.sandbox.on('sulu.media-edit.closed', this.enableDropzone.bind(this));
             this.sandbox.on('sulu.permission-settings.closed', this.enableDropzone.bind(this));
-            this.sandbox.on('sulu.medias.collection.saved', function(id, collection) {
-                if (!collection.locale || collection.locale === UserSettingsManager.getMediaLocale()) {
-                    $(constants.collectionTitleSelector).text(collection.title)
-                }
-            }.bind(this));
+            this.sandbox.on('sulu.medias.collection.saved', this.savedHandler.bind(this));
         },
 
         /**
@@ -208,6 +204,12 @@ define([
             }.bind(this));
 
             this.sandbox.dom.on(constants.scrollContainerSelector, 'scroll', this.scrollHandler.bind(this));
+        },
+
+        savedHandler: function(id, collection) {
+            if (!collection.locale || collection.locale === UserSettingsManager.getMediaLocale()) {
+                $(constants.collectionTitleSelector).text(collection.title)
+            }
         },
 
         /**
