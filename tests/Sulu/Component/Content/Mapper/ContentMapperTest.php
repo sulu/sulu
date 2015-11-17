@@ -1884,7 +1884,15 @@ class ContentMapperTest extends SuluTestCase
             'blog' => 'English',
             'url' => '/news/test',
         ];
-        $structureEn = $this->mapper->save($dataEn, 'default', 'sulu_io', 'en', 1, true, $structureDe->getUuid())->toArray();
+        $structureEn = $this->mapper->save(
+            $dataEn,
+            'default',
+            'sulu_io',
+            'en',
+            1,
+            true,
+            $structureDe->getUuid()
+        )->toArray();
         $structureDe = $this->mapper->load($structureDe->getUuid(), 'sulu_io', 'de');
 
         // check data
@@ -2062,13 +2070,16 @@ class ContentMapperTest extends SuluTestCase
             $documentNames[] = $ancestor->getPath();
         }
 
-        $this->assertEquals([
-            '/news/news-1/subnews-3/subsubnews-2',
-            '/news/news-1/subnews-3',
-            '/news/news-1',
-            '/news',
-            '',
-        ], $documentNames);
+        $this->assertEquals(
+            [
+                '/news/news-1/subnews-3/subsubnews-2',
+                '/news/news-1/subnews-3',
+                '/news/news-1',
+                '/news',
+                '',
+            ],
+            $documentNames
+        );
     }
 
     public function testLanguageCopy()
@@ -2970,6 +2981,52 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('/page-2/subpage/subpage/subpage', $page2SubSubSub->url);
     }
 
+    public function testCopyWithShadow()
+    {
+        $startPage = $this->mapper->saveStartPage(['title' => 'Start Page'], 'overview', 'sulu_io', 'de', 1);
+
+        // save content
+        $germanPage = $this->mapper->save(['title' => 'test', 'url' => '/test-de'], 'overview', 'sulu_io', 'de', 1);
+        $englishPage = $this->mapper->save(
+            ['title' => 'test', 'url' => '/test-en'],
+            'default',
+            'sulu_io',
+            'en',
+            1,
+            true,
+            $germanPage->getUuid(),
+            null,
+            null
+        );
+        $englishPage = $this->mapper->save(
+            ['title' => 'test', 'url' => '/test-en'],
+            'default',
+            'sulu_io',
+            'en',
+            1,
+            true,
+            $germanPage->getUuid(),
+            null,
+            null,
+            true,
+            'de'
+        );
+
+        $copiedGermanDocument = $this->mapper->copy(
+            $germanPage->getUuid(),
+            $startPage->getUuid(),
+            1,
+            'sulu_io',
+            'de'
+        );
+        // check cached value of german page
+        $this->assertStringStartsWith('/test-de', $copiedGermanDocument->getUrl());
+
+        $copiedEnglishDocument = $this->mapper->load($copiedGermanDocument->getUuid(), 'sulu_io', 'en');
+        //check cached value of english page
+        $this->assertStringStartsWith('/test-en', $copiedEnglishDocument->getUrl());
+    }
+
     public function testOrderBefore()
     {
         $data = $this->prepareCopyMoveTestData();
@@ -3366,9 +3423,13 @@ class ContentMapperTest extends SuluTestCase
         $page->setStructureType('default');
         $page->setTitle('Hallo');
         $page->setResourceSegment('/hallo');
-        $this->documentManager->persist($page, 'de', [
-            'parent_path' => '/cmf/sulu_io/contents',
-        ]);
+        $this->documentManager->persist(
+            $page,
+            'de',
+            [
+                'parent_path' => '/cmf/sulu_io/contents',
+            ]
+        );
         $this->documentManager->flush();
 
         $data = [
@@ -3397,25 +3458,37 @@ class ContentMapperTest extends SuluTestCase
         $page->setTitle('Beschreibung');
         $page->setResourceSegment('/beschreibung');
         $page->setWorkflowStage(WorkflowStage::PUBLISHED);
-        $this->documentManager->persist($page, 'de', [
-            'parent_path' => '/cmf/sulu_io/contents',
-        ]);
+        $this->documentManager->persist(
+            $page,
+            'de',
+            [
+                'parent_path' => '/cmf/sulu_io/contents',
+            ]
+        );
         $this->documentManager->flush();
 
         $page->setTitle('Description');
         $page->setResourceSegment('/description');
         $page->setWorkflowStage(WorkflowStage::TEST);
-        $this->documentManager->persist($page, 'en', [
-            'parent_path' => '/cmf/sulu_io/contents',
-        ]);
+        $this->documentManager->persist(
+            $page,
+            'en',
+            [
+                'parent_path' => '/cmf/sulu_io/contents',
+            ]
+        );
         $this->documentManager->flush();
 
         $page->setShadowLocaleEnabled(true);
         $page->setShadowLocale('de');
 
-        $this->documentManager->persist($page, 'en', [
-            'parent_path' => '/cmf/sulu_io/contents',
-        ]);
+        $this->documentManager->persist(
+            $page,
+            'en',
+            [
+                'parent_path' => '/cmf/sulu_io/contents',
+            ]
+        );
         $this->documentManager->flush();
 
         $content = $this->mapper->load($page->getUuid(), 'sulu_io', 'en');

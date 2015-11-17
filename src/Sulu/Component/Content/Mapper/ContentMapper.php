@@ -758,14 +758,9 @@ class ContentMapper implements ContentMapperInterface
             $this->documentManager->find($document->getUuid(), $locale);
             $this->documentManager->find($parentDocument->getUuid(), $locale);
 
-            $parentResourceLocator = '/';
-            if ($parentDocument instanceof ResourceSegmentBehavior) {
-                $parentResourceLocator = $parentDocument->getResourceSegment();
-            }
-
             // TODO: This could be optimized
             $localizationState = $this->inspector->getLocalizationState($document);
-            if ($localizationState !== LocalizationState::LOCALIZED) {
+            if ($localizationState === LocalizationState::GHOST) {
                 continue;
             }
 
@@ -791,7 +786,6 @@ class ContentMapper implements ContentMapperInterface
 
         $this->documentManager->flush();
 
-        // 
         $this->documentManager->find($document->getUuid(), $originalLocale);
 
         return $this->documentToStructure($document);
