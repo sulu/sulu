@@ -15,7 +15,6 @@ use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
-use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\StructureMetadata;
@@ -74,7 +73,6 @@ class Version201511171538 implements VersionInterface, ContainerAwareInterface
     {
         $this->session = $session;
         $this->iterateStructures(true);
-        $this->upgradeExternalLinks(true);
     }
 
     /**
@@ -86,49 +84,14 @@ class Version201511171538 implements VersionInterface, ContainerAwareInterface
     {
         $this->session = $session;
         $this->iterateStructures(false);
-        $this->upgradeExternalLinks(false);
-    }
-
-    /**
-     * External links are easily updated by fetching all nodes with the external redirect type, and add or remove the
-     * scheme to the external property.
-     *
-     * @param bool $addScheme Adds the scheme to dates if true, removes the scheme otherwise
-     */
-    private function upgradeExternalLinks($addScheme)
-    {
-        foreach ($this->localizationManager->getLocalizations() as $localization) {
-            $rows = $this->session->getWorkspace()->getQueryManager()->createQuery(
-                sprintf(
-                    'SELECT * FROM [nt:unstructured] WHERE [%s] = "%s"',
-                    $this->propertyEncoder->localizedSystemName('nodeType', $localization->getLocalization()),
-                    RedirectType::EXTERNAL
-                ),
-                'JCR-SQL2'
-            )->execute();
-
-            $name = $this->propertyEncoder->localizedSystemName('external', $localization->getLocalization());
-            foreach ($rows->getNodes() as $node) {
-                /** @var NodeInterface $node */
-                $value = $node->getPropertyValue($name);
-
-                if ($addScheme) {
-                    $this->upgradeDate($value);
-                } else {
-                    $this->downgradeDate($value);
-                }
-
-                $node->setProperty($name, $value);
-            }
-        }
     }
 
     /**
      * Structures are updated according to their xml definition.
      *
-     * @param bool $addScheme Adds the scheme to dates if true, removes the scheme otherwise
+     * @param bool $up Indicates that this is up or down
      */
-    private function iterateStructures($addScheme)
+    private function iterateStructures($up)
     {
         $properties = [];
 
@@ -152,7 +115,7 @@ class Version201511171538 implements VersionInterface, ContainerAwareInterface
             $this->iterateStructureNodes(
                 $structureMetadata,
                 $properties[$structureMetadata->getName()],
-                $addScheme
+                $up
             );
         }
 
@@ -200,9 +163,9 @@ class Version201511171538 implements VersionInterface, ContainerAwareInterface
      *
      * @param StructureMetadata $structureMetadata The structure metadata, whose pages have to be upgraded
      * @param array $properties The properties which are or contain date fields
-     * @param bool $addScheme Adds the scheme to dates if true, removes the scheme otherwise
+     * @param bool $up Indicates that this is up or down
      */
-    private function iterateStructureNodes(StructureMetadata $structureMetadata, array $properties, $addScheme)
+    private function iterateStructureNodes(StructureMetadata $structureMetadata, array $properties, $up)
     {
         foreach ($this->localizationManager->getLocalizations() as $localization) {
             $rows = $this->session->getWorkspace()->getQueryManager()->createQuery(
@@ -217,7 +180,7 @@ class Version201511171538 implements VersionInterface, ContainerAwareInterface
             )->execute();
 
             foreach ($rows->getNodes() as $node) {
-                $this->upgradeNode($node, $localization->getLocalization(), $properties, $addScheme);
+                $this->upgradeNode($node, $localization->getLocalization(), $properties, $up);
             }
         }
     }
@@ -227,15 +190,14 @@ class Version201511171538 implements VersionInterface, ContainerAwareInterface
      *
      * @param NodeInterface $node The node to be upgraded
      * @param string $locale The locale of the node to be upgraded
-     * @param array $properties The properties which are or contain date fields
-     * @param bool $addScheme Adds the scheme to dates if true, removes the scheme otherwise
+     * @param array $properties The properties which are or contain date fields$up
      */
-    private function upgradeNode(NodeInterface $node, $locale, $properties, $addScheme)
+    private function upgradeNode(NodeInterface $node, $locale, $properties, $up)
     {
         foreach ($properties as $property) {
             $propertyName = $this->propertyEncoder->localizedContentName($property, $locale);
             if ($node->hasProperty($propertyName)) {
-                $value = $this->upgradeProperty($node->getPropertyValue($propertyName), $addScheme);
+                $value = $this->upgradeProperty($node->getPropertyValue($propertyName), $up);
                 $node->setProperty($propertyName, $value);
             }
         }
@@ -243,12 +205,11 @@ class Version201511171538 implements VersionInterface, ContainerAwareInterface
 
     /**
      * Upgrades the given property to the new date representation.
-     *
-     * @param bool $addScheme Adds the scheme to date if true, removes the scheme otherwise
+     *$up.
      */
-    private function upgradeProperty($value, $addScheme)
+    private function upgradeProperty($value, $up)
     {
-        if ($addScheme) {
+        if ($up) {
             $this->upgradeDate($value);
         } else {
             $this->downgradeDate($value);
