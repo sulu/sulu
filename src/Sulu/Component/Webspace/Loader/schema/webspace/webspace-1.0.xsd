@@ -33,6 +33,7 @@
         <xs:attribute type="xs:string" name="language" use="required"/>
         <xs:attribute type="xs:string" name="country" use="optional"/>
         <xs:attribute type="xs:boolean" name="default" use="optional"/>
+        <xs:attribute type="xs:boolean" name="x-default" use="optional"/>
         <xs:attribute name="shadow" use="optional">
             <xs:simpleType>
                 <xs:restriction base="xs:string">

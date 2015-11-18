@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<webspace xmlns="http://schemas.sulu.io/webspace/webspace"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.0.xsd">
+
+    <name>Sulu CMF</name>
+    <key>sulu.io_xdefault_locale</key>
+
+    <security>
+        <system>sulu_io</system>
+    </security>
+
+    <localizations>
+        <localization language="en" country="us" shadow="auto"/>
+        <localization language="de" country="at" default="true"/>
+    </localizations>
+
+    <theme>
+        <key>sulu</key>
+        <default-templates>
+            <default-template type="page">default</default-template>
+            <default-template type="homepage">overview</default-template>
+        </default-templates>
+    </theme>
+
+    <navigation>
+        <contexts>
+            <context key="main">
+                <meta>
+                    <title lang="de">Hauptnavigation</title>
+                    <title lang="en">Mainnavigation</title>
+                </meta>
+            </context>
+            <context key="footer">
+                <meta>
+                    <title lang="de">Unten</title>
+                    <title lang="en">Footer</title>
+                </meta>
+            </context>
+        </contexts>
+    </navigation>
+
+    <portals>
+        <portal>
+            <name>Sulu CMF AT</name>
+            <key>xdefault_locale</key>
+            <resource-locator>
+                <strategy>short</strategy>
+            </resource-locator>
+
+            <localizations>
+                <localization language="de" country="at" default="true"/>
+                <localization language="en" country="us" x-default="true"/>
+            </localizations>
+
+            <environments>
+                <environment type="prod">
+                    <urls>
+                        <url language="de" country="at">test.at</url>
+                        <url redirect="sulu.at">www.test.at</url>
+                    </urls>
+                </environment>
+                <environment type="dev">
+                    <urls>
+                        <url language="de" country="at">test.lo</url>
+                    </urls>
+                </environment>
+            </environments>
+        </portal>
+    </portals>
+</webspace>

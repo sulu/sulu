@@ -30,6 +30,11 @@ class MetaTwigExtensionTest extends \PHPUnit_Framework_TestCase
      */
     private $contentPath;
 
+    /**
+     * @var Portal
+     */
+    private $portal;
+
     protected function setUp()
     {
         parent::setUp();
@@ -42,11 +47,12 @@ class MetaTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $locale = new Localization();
         $locale->setLanguage('en');
 
-        $portal = new Portal();
-        $portal->setDefaultLocalization($locale);
+        $this->portal = new Portal();
+        $this->portal->setDefaultLocalization($locale);
+        $this->portal->setXDefaultLocalization($locale);
 
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);
-        $this->requestAnalyzer->getPortal()->willReturn($portal);
+        $this->requestAnalyzer->getPortal()->willReturn($this->portal);
         $this->requestAnalyzer->getCurrentLocalization()->willReturn($locale);
 
         $this->contentPath = $this->prophesize(ContentPathInterface::class);
@@ -79,6 +85,42 @@ class MetaTwigExtensionTest extends \PHPUnit_Framework_TestCase
             [
                 '<link rel="alternate" href="/de/test" hreflang="de" />',
                 '<link rel="alternate" href="/en/test-en" hreflang="x-default" />',
+                '<link rel="alternate" href="/en/test-en" hreflang="en" />',
+                '<link rel="alternate" href="/en/test-en-us" hreflang="en-us" />',
+                '<link rel="alternate" href="/fr/test-fr" hreflang="fr" />',
+            ],
+            explode(PHP_EOL, $urls)
+        );
+    }
+
+    /**
+     * Test get alternate links.
+     */
+    public function testGetAlternateLinksDifferentDefaultLocale()
+    {
+        $locale = new Localization();
+        $locale->setLanguage('de');
+
+        $this->portal->setXDefaultLocalization($locale);
+
+        $extension = new MetaTwigExtension(
+            $this->requestAnalyzer->reveal(),
+            $this->contentPath->reveal()
+        );
+
+        $urls = $extension->getAlternateLinks(
+            [
+                'de' => '/test',
+                'en' => '/test-en',
+                'en-us' => '/test-en-us',
+                'fr' => '/test-fr',
+            ]
+        );
+
+        $this->assertEquals(
+            [
+                '<link rel="alternate" href="/de/test" hreflang="x-default" />',
+                '<link rel="alternate" href="/de/test" hreflang="de" />',
                 '<link rel="alternate" href="/en/test-en" hreflang="en" />',
                 '<link rel="alternate" href="/en/test-en-us" hreflang="en-us" />',
                 '<link rel="alternate" href="/fr/test-fr" hreflang="fr" />',
