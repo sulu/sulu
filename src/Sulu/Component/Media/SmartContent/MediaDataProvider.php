@@ -118,12 +118,4 @@ class MediaDataProvider extends BaseDataProvider
             $data
         );
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getSerializationContext()
-    {
-        return parent::getSerializationContext()->setGroups(['fullMedia']);
-    }
 }
