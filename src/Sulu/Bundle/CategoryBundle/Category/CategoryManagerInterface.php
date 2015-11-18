@@ -59,7 +59,7 @@ interface CategoryManagerInterface
      *
      * @param string $key the key of the category
      *
-     * @return CategoryEntity
+     * @return Category
      */
     public function findByKey($key);
 
@@ -68,7 +68,7 @@ interface CategoryManagerInterface
      *
      * @param $ids
      *
-     * @return Category
+     * @return Category[]
      */
     public function findByIds(array $ids);
 
