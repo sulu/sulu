@@ -134,7 +134,9 @@ class SnippetController implements SecuredControllerInterface
         $data = [];
 
         foreach ($snippets as $snippet) {
-            $data[] = $snippet->toArray();
+            $snippetData = $snippet->toArray();
+            $snippetData['localizedTemplate'] = $snippet->getLocalizedTitle($this->languageCode);
+            $data[] = $snippetData;
         }
 
         $data = new ListRepresentation(
@@ -321,7 +323,7 @@ class SnippetController implements SecuredControllerInterface
                     'editable' => false,
                 ],
                 [
-                    'name' => 'template',
+                    'name' => 'localizedTemplate',
                     'translation' => 'snippets.list.template',
                     'disabled' => false,
                     'default' => true,

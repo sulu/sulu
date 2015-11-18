@@ -37,7 +37,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
      * @var string
      * @Expose
      */
-    private $email;
+    protected $email;
 
     /**
      * @var string

@@ -13,6 +13,8 @@ namespace Sulu\Bundle\MediaBundle\Media\Storage;
 
 use stdClass;
 use Sulu\Bundle\MediaBundle\Media\Exception\FilenameAlreadyExistsException;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Log\NullLogger;
 use Symfony\Component\HttpKernel\Tests\Logger;
 
@@ -34,19 +36,20 @@ class LocalStorage implements StorageInterface
     private $segments;
 
     /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    /**
      * @var NullLogger|Logger
      */
     protected $logger;
 
-    /**
-     * @param string $uploadPath
-     * @param int    $segments
-     * @param null   $logger
-     */
-    public function __construct($uploadPath, $segments, $logger = null)
+    public function __construct($uploadPath, $segments, Filesystem $filesystem, $logger = null)
     {
         $this->uploadPath = $uploadPath;
         $this->segments = $segments;
+        $this->filesystem = $filesystem;
         $this->logger = $logger ?: new NullLogger();
     }
 
@@ -69,16 +72,16 @@ class LocalStorage implements StorageInterface
         $filePath = $this->getPathByFolderAndFileName($segmentPath, $fileName);
         $this->logger->debug('Check FilePath: ' . $filePath);
 
-        if (!file_exists($segmentPath)) {
+        if (!$this->filesystem->exists($segmentPath)) {
             $this->logger->debug('Try Create Folder: ' . $segmentPath);
-            mkdir($segmentPath, 0777, true);
+            $this->filesystem->mkdir($segmentPath, 0777);
         }
 
         $this->logger->debug('Try to copy File "' . $tempPath . '" to "' . $filePath . '"');
-        if (file_exists($filePath)) {
+        if ($this->filesystem->exists($filePath)) {
             throw new FilenameAlreadyExistsException($filePath);
         }
-        copy($tempPath, $filePath);
+        $this->filesystem->copy($tempPath, $filePath);
 
         $this->addStorageOption('segment', $segment);
         $this->addStorageOption('fileName', $fileName);
@@ -113,13 +116,17 @@ class LocalStorage implements StorageInterface
         $segment = $this->getStorageOption('segment');
         $fileName = $this->getStorageOption('fileName');
 
-        if ($segment && $fileName) {
-            @unlink($this->uploadPath . '/' . $segment . '/' . $fileName);
-
-            return true;
-        } else {
+        if (!$segment || !$fileName) {
             return false;
         }
+
+        try {
+            $this->filesystem->remove($this->uploadPath . '/' . $segment . '/' . $fileName);
+        } catch (IOException $ex) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -144,7 +151,7 @@ class LocalStorage implements StorageInterface
 
         $this->logger->debug('Check FilePath: ' . $filePath);
 
-        if (!file_exists($filePath)) {
+        if (!$this->filesystem->exists($filePath)) {
             return $newFileName;
         }
 

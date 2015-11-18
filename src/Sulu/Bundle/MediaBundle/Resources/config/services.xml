@@ -58,9 +58,11 @@
                  factory-method="getRepository">
             <argument>%sulu_media.entity.file_version_meta%</argument>
         </service>
+        <service id="sulu_media.storage.file_system" class="Symfony\Component\Filesystem\Filesystem"/>
         <service id="sulu_media.storage" class="%sulu_media.storage.class%">
             <argument>%sulu_media.media.storage.local.path%</argument>
             <argument>%sulu_media.media.storage.local.segments%</argument>
+            <argument type="service" id="sulu_media.storage.file_system"/>
             <argument type="service" id="logger"/>
         </service>
         <service id="sulu_media.file_validator" class="%sulu_media.file_validator.class%" />
@@ -185,9 +187,8 @@
             <argument>sulu.media.collections</argument>
         </service>
 
-        <service id="sulu_media.system_collections.cache" class="Symfony\Component\Config\ConfigCache">
+        <service id="sulu_media.system_collections.cache" class="Sulu\Component\Cache\DataCache">
             <argument>%sulu.cache_dir%/system_collection.cache</argument>
-            <argument>%kernel.debug%</argument>
         </service>
 
         <service id="sulu_media.system_collections.manager" class="Sulu\Component\Media\SystemCollections\SystemCollectionManager">
@@ -199,7 +200,7 @@
             <argument>%kernel.default_locale%</argument>
         </service>
 
-        <service id="sulu_media.system_collections.warm_up" class="Sulu\Component\Media\SystemCollections\SystemCollectionBuilder">
+        <service id="sulu_media.system_collections.builder" class="Sulu\Component\Media\SystemCollections\SystemCollectionBuilder">
             <tag name="massive_build.builder" />
         </service>
     </services>

@@ -20,7 +20,7 @@ use Sulu\Component\SmartContent\Exception\NotSupportedException;
  *
  * @ExclusionPolicy("all")
  */
-class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess
+class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess, \JsonSerializable
 {
     /**
      * @var string
@@ -130,9 +130,18 @@ class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess
     }
 
     /**
+     * {@inheritdoc}
      */
     public function offsetUnset($offset)
     {
         throw new NotSupportedException();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return $this->data;
     }
 }

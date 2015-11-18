@@ -58,7 +58,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
  *      "children",
  *      href = @Route(
  *          "get_collection",
- *          parameters = { "id" = "expr(object.getId())", "depth" = 1 }
+ *          parameters = { "id" = "expr(object.getId())", "depth" = 1, "sortBy": "title" }
  *      )
  * )
  * @Relation(

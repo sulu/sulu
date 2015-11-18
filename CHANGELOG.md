@@ -2,7 +2,28 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1793 [TagBundle]       Fixed tag-list preview update 
+    * BUGFIX      #1793 [CategoryBundle]  Fixed category-list preview update 
+    * BUGFIX      #1790 [MediaBundle]     Fixed collection twice after edit collection
+    * BUGFIX      #1792 [WebsiteBundle]   Fixed alternate links with custom x-default locale and remove links to 
+                                          homepage
+    * ENHANCEMENT #1786 [ContactBundle]   Added cascade options to account and contact
+    * BUGFIX      #1789 [CoreBundle]      Added replacers for box brackets
+    * BUGFIX      #1785 [ContentBundle]   Fixed data returned for internal link in settings tab
+    * BUGFIX      #1784 [ContentBundle]   Removed webspace as required parameter for get action
+    * BUGFIX      #1783 [MediaBundle]     Fixed not removed deleted original files
+    * ENHANCEMENT #1782 [SnippetBundle]   Added ghost content parameter to getSnippetsByUuids in repository
+    * BUGFIX      #1764 [MediaBundle]     Added no cache headers for 404 thumbnails
+    * BUGFIX      #1778 [MediaBundle]     Fixed cache handling of system collections
+    * ENHANCEMENT #1775 [SmartContent]    Add possibility to get ArrayAccessItem as json
+    * ENHANCEMENT #1772 [SbippetBundle]   Added translated template to snippet list
+    * BUGFIX      #1761 [MediaBundle]     Reduced the number of requests in the collection view
+    * BUGFIX      #1736 [AdminBundle]     Fixed layout for content form
+    * ENHANCEMENT #1760 [SecurityBundle]  Added missing joins on query for security
+    * BUGFIX      #1759 [ContactBundle]   Fixed upload avatar when category is selected
     * BUGFIX      #1750 [SecurityBundle]  Added seraialization groups for user
+    * BUGFIX      #1756 [ContentBundle]   Added excerpt values (title, description, tags and categories) to search
+                                          indexing
     * ENHANCEMENT #1754 [MediaBundle]     Moved collection key functions to base collection
     * BUGFIX      #1751 [Persistence]     Fixed UserBlameSubscriber for new DoctrineBundle
     * ENHANCEMENT #1746 [Rest]            Use * as placeholder in ListBuilder search
@@ -15,6 +36,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1733 [MediaBundle]     Fixed a few media-selection bugs
     * ENHANCEMENT #1605 [MediaBundle]     Adjust media-selection-overlay title
     * BUGFIX      #1716 [ContactBundle]   Fixed wrong contact entity identifier
+    * ENHANCEMENT #1717 [Persistence]     Improved performance of MetadataSubscriber
     * FEATURE     #1611 [All]             Improved PHPCR content handling to allow custom PHPCR content
     * ENHANCEMENT #1706 [MediaBundle]     Changed download link in media section to real link
     * BUGFIX      #1714 [ContentBundle]   Fixed migration for url scheme
@@ -145,6 +167,11 @@ CHANGELOG for Sulu
     * BUGFIX      #1365 [ContactBundle]   Fixed bug caused by new instance name of datagrid
     * BUGFIX      #1136 [MediaBundle]     Fixed image scale forceRatio parameter for none squared image formats
 
+* 1.0.12 (2015-10-22)
+    * HOTFIX      #1634 [SecurityBundle] Allow attribute overrides for user email field
+    * HOTFIX      #1624 [ContentBundle]  Fixed nullable internal link and added server/clientside validation
+    * BUGFIX      #1668 [ContentBundle]  Fixed smart content for usage with block property
+    
 * 1.0.11 (2015-09-23)
     * HOTFIX      #1596 [GeneratorBundle] Fixed sulu bundle generator path generation
     * HOTFIX      #1615 [Content]         Fixed resource segment subscriber for order internal link

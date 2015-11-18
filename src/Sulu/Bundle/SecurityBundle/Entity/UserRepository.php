@@ -287,13 +287,32 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
      */
     public function findUserByIdentifier($identifier)
     {
-        $qb = $this->createQueryBuilder('user')
+        $qb = $this->getUserWithPermissionsQuery()
             ->where('user.email=:email')
             ->orWhere('user.username=:username');
 
         $query = $qb->getQuery();
         $query->setParameter('email', $identifier);
         $query->setParameter('username', $identifier);
+
+        return $query->getSingleResult();
+    }
+
+    /**
+     * @param $id
+     *
+     * @return mixed
+     *
+     * @throws NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findUserWithSecurityById($id)
+    {
+        $queryBuilder = $this->getUserWithPermissionsQuery()
+            ->where('user.id = :id');
+
+        $query = $queryBuilder->getQuery();
+        $query->setParameter('id', $id);
 
         return $query->getSingleResult();
     }
@@ -319,7 +338,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             );
         }
 
-        return $this->find($user->getId());
+        return $this->findUserWithSecurityById($user->getId());
     }
 
     /**
@@ -401,5 +420,22 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             $message = 'Unable to find any SuluSecurityBundle:User object with a contact';
             throw new UsernameNotFoundException($message, 0, $nre);
         }
+    }
+
+    /**
+     * Returns the query for the user with the joins for retrieving the permissions. Especially useful for security
+     * related queries.
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function getUserWithPermissionsQuery()
+    {
+        return $this->createQueryBuilder('user')
+            ->addSelect('userRoles')
+            ->addSelect('role')
+            ->addSelect('permissions')
+            ->leftJoin('user.userRoles', 'userRoles')
+            ->leftJoin('userRoles.role', 'role')
+            ->leftJoin('role.permissions', 'permissions');
     }
 }

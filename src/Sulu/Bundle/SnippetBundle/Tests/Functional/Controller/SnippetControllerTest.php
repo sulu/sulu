@@ -15,6 +15,7 @@ use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Client;
 
 class SnippetControllerTest extends SuluTestCase
 {
@@ -53,10 +54,10 @@ class SnippetControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $res = json_decode($response->getContent(), true);
+        $result = json_decode($response->getContent(), true);
 
-        $this->assertEquals('Le grande budapest', $res['title']); // snippet nodes do not have a path
-        $this->assertEquals($this->hotel1->getUuid(), $res['id']);
+        $this->assertEquals('Le grande budapest', $result['title']); // snippet nodes do not have a path
+        $this->assertEquals($this->hotel1->getUuid(), $result['id']);
     }
 
     public function testGetMany()
@@ -70,12 +71,31 @@ class SnippetControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $res = json_decode($response->getContent(), true);
+        $result = json_decode($response->getContent(), true);
+        $this->assertCount(2, $result['_embedded']['snippets']);
 
-        $this->assertCount(2, $res['_embedded']['snippets']);
-        $res = reset($res['_embedded']['snippets']);
-        $this->assertEquals('Le grande budapest', $res['title']);
-        $this->assertEquals($this->hotel1->getUuid(), $res['id']);
+        $result = reset($result['_embedded']['snippets']);
+        $this->assertEquals('Le grande budapest', $result['title']);
+        $this->assertEquals($this->hotel1->getUuid(), $result['id']);
+        $this->assertEquals('Hotel', $result['localizedTemplate']);
+    }
+
+    public function testGetManyLocalizedTemplate()
+    {
+        $this->client->request(
+            'GET',
+            sprintf(
+                '/snippets?ids=%s&language=fr',
+                $this->hotel1->getUuid()
+            )
+        );
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $result = json_decode($response->getContent(), true);
+        $result = reset($result['_embedded']['snippets']);
+        $this->assertEquals($this->hotel1->getUuid(), $result['id']);
+        $this->assertEquals('Hôtel', $result['localizedTemplate']);
     }
 
     public function testGetMultipleWithNotExistingIds()
@@ -90,13 +110,12 @@ class SnippetControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $res = json_decode($response->getContent(), true);
-        $res = $res['_embedded']['snippets'];
-
-        $this->assertCount(2, $res);
-        $res = reset($res);
-        $this->assertEquals('Le grande budapest', $res['title']);
-        $this->assertEquals($this->hotel1->getUuid(), $res['id']);
+        $result = json_decode($response->getContent(), true);
+        $result = $result['_embedded']['snippets'];
+        $this->assertCount(2, $result);
+        $result = reset($result);
+        $this->assertEquals('Le grande budapest', $result['title']);
+        $this->assertEquals($this->hotel1->getUuid(), $result['id']);
     }
 
     public function provideIndex()
@@ -156,10 +175,10 @@ class SnippetControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $res = json_decode($response->getContent(), true);
-        $this->assertCount($expectedNbResults, $res['_embedded']['snippets']);
+        $result = json_decode($response->getContent(), true);
+        $this->assertCount($expectedNbResults, $result['_embedded']['snippets']);
 
-        foreach ($res['_embedded']['snippets'] as $snippet) {
+        foreach ($result['_embedded']['snippets'] as $snippet) {
             // check if all snippets have a title, even if it is a ghost page
             $this->assertArrayHasKey('title', $snippet);
         }
@@ -206,10 +225,10 @@ class SnippetControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $res = json_decode($response->getContent(), true);
-        $this->assertEquals($data['title'], $res['title']);
-        $this->assertEquals($params['language'], reset($res['concreteLanguages']));
-        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $res['nodeState']);
+        $result = json_decode($response->getContent(), true);
+        $this->assertEquals($data['title'], $result['title']);
+        $this->assertEquals($params['language'], reset($result['concreteLanguages']));
+        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $result['nodeState']);
     }
 
     /**
@@ -232,10 +251,10 @@ class SnippetControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $res = json_decode($response->getContent(), true);
-        $this->assertEquals($data['title'], $res['title']);
-        $this->assertEquals($params['language'], reset($res['concreteLanguages']));
-        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $res['nodeState']);
+        $result = json_decode($response->getContent(), true);
+        $this->assertEquals($data['title'], $result['title']);
+        $this->assertEquals($params['language'], reset($result['concreteLanguages']));
+        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $result['nodeState']);
     }
 
     /**
@@ -258,10 +277,10 @@ class SnippetControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $res = json_decode($response->getContent(), true);
-        $this->assertEquals($data['title'], $res['title']);
-        $this->assertEquals($params['language'], reset($res['concreteLanguages']));
-        $this->assertEquals(StructureInterface::STATE_TEST, $res['nodeState']);
+        $result = json_decode($response->getContent(), true);
+        $this->assertEquals($data['title'], $result['title']);
+        $this->assertEquals($params['language'], reset($result['concreteLanguages']));
+        $this->assertEquals(StructureInterface::STATE_TEST, $result['nodeState']);
     }
 
     public function providePut()
@@ -291,11 +310,11 @@ class SnippetControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $res = json_decode($response->getContent(), true);
-        $this->assertEquals($data['template'], $res['template']);
-        $this->assertEquals($data['title'], $res['title']);
-        $this->assertEquals($params['language'], reset($res['concreteLanguages']));
-        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $res['nodeState']);
+        $result = json_decode($response->getContent(), true);
+        $this->assertEquals($data['template'], $result['template']);
+        $this->assertEquals($data['title'], $result['title']);
+        $this->assertEquals($params['language'], reset($result['concreteLanguages']));
+        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $result['nodeState']);
     }
 
     /**
@@ -313,11 +332,11 @@ class SnippetControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $res = json_decode($response->getContent(), true);
-        $this->assertEquals($data['template'], $res['template']);
-        $this->assertEquals($data['title'], $res['title']);
-        $this->assertEquals($params['language'], reset($res['concreteLanguages']));
-        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $res['nodeState']);
+        $result = json_decode($response->getContent(), true);
+        $this->assertEquals($data['template'], $result['template']);
+        $this->assertEquals($data['title'], $result['title']);
+        $this->assertEquals($params['language'], reset($result['concreteLanguages']));
+        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $result['nodeState']);
     }
 
     /**
@@ -335,11 +354,11 @@ class SnippetControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $res = json_decode($response->getContent(), true);
-        $this->assertEquals($data['template'], $res['template']);
-        $this->assertEquals($data['title'], $res['title']);
-        $this->assertEquals($params['language'], reset($res['concreteLanguages']));
-        $this->assertEquals(StructureInterface::STATE_TEST, $res['nodeState']);
+        $result = json_decode($response->getContent(), true);
+        $this->assertEquals($data['template'], $result['template']);
+        $this->assertEquals($data['title'], $result['title']);
+        $this->assertEquals($params['language'], reset($result['concreteLanguages']));
+        $this->assertEquals(StructureInterface::STATE_TEST, $result['nodeState']);
     }
 
     public function testDeleteReferenced()

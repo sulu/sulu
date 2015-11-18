@@ -198,7 +198,7 @@ class UserRepositoryTest extends SuluTestCase
         $this->assertEquals('max.mustermann@muster.at', $user->getContact()->getEmails()[0]->getEmail());
     }
 
-    public function testfindUserByEmail()
+    public function testFindUserByEmail()
     {
         $this->prepareUser('sulu', 'sulu');
 
@@ -213,7 +213,7 @@ class UserRepositoryTest extends SuluTestCase
         $this->assertEquals('test', $user->getUsername());
     }
 
-    public function testfindUserByIdentifier()
+    public function testFindUserWithSecurityByIdentifier()
     {
         $this->prepareUser('sulu', 'sulu');
 

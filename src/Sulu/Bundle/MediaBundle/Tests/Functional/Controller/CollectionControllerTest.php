@@ -17,6 +17,7 @@ use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Cache\CacheInterface;
 
 class CollectionControllerTest extends SuluTestCase
 {
@@ -41,6 +42,11 @@ class CollectionControllerTest extends SuluTestCase
     private $collectionType2;
 
     /**
+     * @var CacheInterface
+     */
+    private $systemCollectionCache;
+
+    /**
      * @var array
      */
     private $systemCollectionConfig;
@@ -53,7 +59,11 @@ class CollectionControllerTest extends SuluTestCase
         $this->em = $this->db('ORM')->getOm();
         $this->initOrm();
 
+        $this->systemCollectionCache = $this->getContainer()->get('sulu_media.system_collections.cache');
         $this->systemCollectionConfig = $this->getContainer()->getParameter('sulu_media.system_collections');
+
+        // to be sure that the system collections will rebuild after purge database
+        $this->systemCollectionCache->invalidate();
     }
 
     /**

@@ -13,23 +13,25 @@ namespace Sulu\Component\Localization;
 
 class LocalizationTest extends \PHPUnit_Framework_TestCase
 {
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->localization = new Localization();
-        $this->localization->setLanguage('fr');
-        $this->localization->setCountry('at');
-        $this->localization->setDefault('gb');
-    }
+    /**
+     * @var Localization
+     */
+    private $localization;
 
     public function testToArray()
     {
+        $this->localization = new Localization();
+        $this->localization->setLanguage('fr');
+        $this->localization->setCountry('at');
+        $this->localization->setDefault(true);
+        $this->localization->setXDefault(true);
+
         $expected = [
             'language' => 'fr',
             'localization' => 'fr_at',
             'country' => 'at',
-            'default' => 'gb',
+            'default' => true,
+            'xDefault' => true,
             'children' => [],
             'shadow' => null,
         ];

@@ -20,6 +20,7 @@ use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
+use Sulu\Component\Content\Exception\MandatoryPropertyException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
@@ -130,7 +131,7 @@ class NodeController extends RestController
     private function getSingleNode(Request $request, $uuid)
     {
         $language = $this->getLanguage($request);
-        $webspace = $this->getWebspace($request);
+        $webspace = $this->getWebspace($request, false);
         $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
         $complete = $this->getBooleanRequestParameter($request, 'complete', false, true);
         $ghostContent = $this->getBooleanRequestParameter($request, 'ghost-content', false, false);
@@ -394,18 +395,22 @@ class NodeController extends RestController
 
         $data = $request->request->all();
 
-        $mapperRequest = ContentMapperRequest::create()
-            ->setType($type)
-            ->setTemplateKey($template)
-            ->setWebspaceKey($webspace)
-            ->setUserId($this->getUser()->getId())
-            ->setState($state)
-            ->setIsShadow($isShadow)
-            ->setShadowBaseLanguage($shadowBaseLanguage)
-            ->setLocale($language)
-            ->setUuid($uuid)
-            ->setData($data);
-        $result = $this->getRepository()->saveNodeRequest($mapperRequest);
+        try {
+            $mapperRequest = ContentMapperRequest::create()
+                ->setType($type)
+                ->setTemplateKey($template)
+                ->setWebspaceKey($webspace)
+                ->setUserId($this->getUser()->getId())
+                ->setState($state)
+                ->setIsShadow($isShadow)
+                ->setShadowBaseLanguage($shadowBaseLanguage)
+                ->setLocale($language)
+                ->setUuid($uuid)
+                ->setData($data);
+            $result = $this->getRepository()->saveNodeRequest($mapperRequest);
+        } catch (MandatoryPropertyException $ex) {
+            return $this->handleView($this->view($ex->getMessage(), 400));
+        }
 
         return $this->handleView(
             $this->view($result)

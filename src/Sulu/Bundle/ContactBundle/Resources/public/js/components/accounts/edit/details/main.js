@@ -238,12 +238,10 @@ define([
                 // logo was uploaded as new version of existing logo
                 this.sandbox.emit('sulu.labels.success.show', 'contact.accounts.logo.saved');
             } else if (!!this.data.id) {
-                // logo was added to existing account
-                this.sandbox.util.extend(true, this.data, {
-                    logo: {id: mediaResponse.id}
-                });
+                var data = this.getData();
+                data.logo = {id: mediaResponse.id};
 
-                AccountManager.saveLogo(this.data).then(function(savedData) {
+                AccountManager.saveLogo(data).then(function(savedData) {
                     this.sandbox.emit('sulu.tab.data-changed', savedData);
                 }.bind(this));
             }
@@ -482,22 +480,28 @@ define([
             return newArray;
         },
 
+        getData: function() {
+            var data = this.sandbox.util.extend(false, {}, this.data, this.sandbox.form.getData(constants.formSelector));
+            if (!data.id) {
+                delete data.id;
+            }
+            data.logo = {
+                id: this.sandbox.dom.data(constants.logoImageId, 'mediaId')
+            };
+
+            data.tags = this.sandbox.dom.data(this.$find(constants.tagsId), 'tags');
+            // FIXME auto complete in mapper
+            data.parent = {
+                id: this.sandbox.dom.attr('#company input', 'data-id')
+            };
+
+            return data;
+        },
+
         save: function() {
             if (this.sandbox.form.validate(constants.formSelector)) {
-                var data = this.sandbox.util.extend(false, {}, this.data, this.sandbox.form.getData(constants.formSelector));
-                if (!data.id) {
-                    delete data.id;
-                }
-                data.logo = {
-                    id: this.sandbox.dom.data(constants.logoImageId, 'mediaId')
-                };
-
-                data.tags = this.sandbox.dom.data(this.$find(constants.tagsId), 'tags');
-                // FIXME auto complete in mapper
-                data.parent = {
-                    id: this.sandbox.dom.attr('#company input', 'data-id')
-                };
                 this.sandbox.emit('sulu.tab.saving');
+                var data = this.getData();
                 AccountManager.save(data).then(function(savedData) {
                     this.data = savedData;
                     var formData = this.initAccountData();

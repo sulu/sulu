@@ -7,6 +7,11 @@
 
     <key>hotel</key>
 
+    <meta>
+        <title lang="de">Hotel</title>
+        <title lang="fr">Hôtel</title>
+    </meta>
+
     <properties>
         <property name="title" type="text_line" mandatory="true">
             <meta>

@@ -56,7 +56,8 @@ define([
         initialize: function() {
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-            this.updateDataNavigation();
+            this.sandbox.emit('husky.navigation.select-id', 'collections-edit');
+            this.updateDataNavigationAddButton();
 
             this.bindCustomEvents();
             this.render();
@@ -65,11 +66,8 @@ define([
         /**
          * Set the data-navigation url
          */
-        updateDataNavigation: function() {
-            var url = '/admin/api/collections?sortBy=title',
-                permissions = Config.get('sulu-media').permissions;
-            this.sandbox.emit('husky.data-navigation.collections.set-url', url);
-            this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
+        updateDataNavigationAddButton: function() {
+            var permissions = Config.get('sulu-media').permissions;
 
             if (!!permissions.add) {
                 this.sandbox.emit('husky.data-navigation.collections.add-button.show');

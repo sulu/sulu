@@ -490,4 +490,24 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('sulu-without-slash.lo', $environmentDev->getUrls()[0]->getUrl());
         $this->assertEquals('sulu-with-slash.lo', $environmentDev->getUrls()[1]->getUrl());
     }
+
+    public function testXDefaulLocale()
+    {
+        $webspace = $this->loader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/xdefault/sulu.io_xdefault_locale.xml'
+        );
+
+        $this->assertEquals('de_at', $webspace->getPortals()[0]->getDefaultLocalization()->getLocalization());
+        $this->assertEquals('en_us', $webspace->getPortals()[0]->getXDefaultLocalization()->getLocalization());
+    }
+
+    public function testXDefaulLocaleNotExists()
+    {
+        $webspace = $this->loader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/xdefault/sulu.io_no_xdefault_locale.xml'
+        );
+
+        $this->assertEquals('de_at', $webspace->getPortals()[0]->getDefaultLocalization()->getLocalization());
+        $this->assertEquals('de_at', $webspace->getPortals()[0]->getXDefaultLocalization()->getLocalization());
+    }
 }
