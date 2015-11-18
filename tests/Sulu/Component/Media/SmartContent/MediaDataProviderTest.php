@@ -221,7 +221,7 @@ class MediaDataProviderTest extends \PHPUnit_Framework_TestCase
         $pageSize = 0,
         $limit = null,
         $result = [],
-        $options = []
+        $options = ['webspace' => 'sulu_io', 'locale' => 'en']
     ) {
         $mock = $this->prophesize(DataProviderRepositoryInterface::class);
 
