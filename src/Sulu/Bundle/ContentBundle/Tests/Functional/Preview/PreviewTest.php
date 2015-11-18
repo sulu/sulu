@@ -17,6 +17,8 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -40,10 +42,19 @@ class PreviewTest extends SuluTestCase
      */
     private $mapper;
 
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
     protected function setUp()
     {
         parent::initPhpcr();
 
+        $request = new Request();
+
+        $this->requestStack = $this->getContainer()->get('request_stack');
+        $this->requestStack->push($request);
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');
         $this->preview = $this->getContainer()->get('sulu_content.preview');
 

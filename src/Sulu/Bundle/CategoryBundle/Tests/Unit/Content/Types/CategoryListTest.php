@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\CategoryBundle\Content\Types;
 
+use Prophecy\Argument;
 use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
@@ -55,5 +56,22 @@ class CategoryListTest extends \PHPUnit_Framework_TestCase
 
         $categoryManager->findByIds([1, 2])->shouldBeCalled();
         $categoryManager->getApiObjects([$categoryEntity1, $categoryEntity2], 'de')->shouldBeCalled();
+    }
+
+    public function testGetContentDataNullPropertyValue()
+    {
+        $categoryManager = $this->prophesize(CategoryManagerInterface::class);
+
+        $categoryList = new CategoryList($categoryManager->reveal(), '');
+
+        $property = $this->prophesize(Property::class);
+        $property->getValue()->willReturn(null);
+
+        $result = $categoryList->getContentData($property->reveal());
+
+        $this->assertEquals([], $result);
+
+        $categoryManager->findByIds(Argument::any())->shouldNotBeCalled();
+        $categoryManager->getApiObjects(Argument::any(), Argument::any())->shouldNotBeCalled();
     }
 }

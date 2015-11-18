@@ -166,6 +166,14 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getPublished()
+    {
+        return $this->published;
+    }
+
+    /**
      * Returns custom select statement.
      */
     abstract protected function buildWhere($webspaceKey, $locale);

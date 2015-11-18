@@ -175,11 +175,17 @@ class ContactDataProviderTest extends \PHPUnit_Framework_TestCase
     /**
      * @return DataProviderRepositoryInterface
      */
-    private function getRepository($filters = [], $page = null, $pageSize = 0, $limit = null, $result = [])
-    {
+    private function getRepository(
+        $filters = [],
+        $page = null,
+        $pageSize = 0,
+        $limit = null,
+        $result = [],
+        $options = []
+    ) {
         $mock = $this->prophesize(DataProviderRepositoryInterface::class);
 
-        $mock->findByFilters($filters, $page, $pageSize, $limit, 'en')->willReturn($result);
+        $mock->findByFilters($filters, $page, $pageSize, $limit, 'en', $options)->willReturn($result);
 
         return $mock->reveal();
     }

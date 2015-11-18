@@ -161,7 +161,7 @@ class File implements AuditableInterface
     /**
      * Get fileVersions.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return FileVersion[]
      */
     public function getFileVersions()
     {

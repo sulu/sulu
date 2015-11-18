@@ -30153,7 +30153,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             cssClass: '',
             thumbnailFormat: '50x50',
             showHead: true,
-            hideChildrenAtBeginning: true,
+            hideChildrenAtBeginning: false,
             openChildId: null,
             highlightSelected: false,
             icons: [],
@@ -40341,8 +40341,9 @@ define('__component__$password-fields@husky',[], function() {
  * @params {Boolean} [options.tooltipTranslations.unpublished] translation-keys for unpublished
  * @params {Boolean} [options.tooltipTranslations.internalLink] translation-keys for internal-link
  * @params {Boolean} [options.tooltipTranslations.externalLink] translation-keys for external-link
+ * @params {Callback} [options.actionCallback] callback which will be called on action
  */
-define('__component__$column-navigation@husky',[], function() {
+define('__component__$column-navigation@husky',[],function() {
 
     'use strict';
 
@@ -40381,7 +40382,8 @@ define('__component__$column-navigation@husky',[], function() {
                 unpublished: 'public.unpublished',
                 internalLink: 'public.internal-link',
                 externalLink: 'public.external-link'
-            }
+            },
+            actionCallback: null
         },
 
         constants = {
@@ -40447,7 +40449,7 @@ define('__component__$column-navigation@husky',[], function() {
             item: [
                 '<li data-id="<%= id %>" class="' + constants.columnItemClass + '">',
                 '    <span class="' + constants.iconsLeftClass + '"></span>',
-                '    <span title="<%= title %>" class="' + constants.itemTextClass + '"><%= title%></span>',
+                '    <span title="<%= title %>" class="' + constants.itemTextClass + '"><%= title %></span>',
                 '    <span class="' + constants.iconsRightClass + '"></span>',
                 '</li>'
             ].join(''),
@@ -40587,6 +40589,15 @@ define('__component__$column-navigation@husky',[], function() {
          */
         RESIZE = function() {
             return createEventName.call(this, 'resize');
+        },
+
+        /**
+         * @event husky.column-navigation.set-options
+         * @description the element will be rerendered with given options
+         * @param {{url, selected}} options
+         */
+        SET_OPTIONS = function() {
+            return createEventName.call(this, 'set-options');
         },
 
         createContext = function(column) {
@@ -40972,7 +40983,7 @@ define('__component__$column-navigation@husky',[], function() {
          */
         renderItem: function(data) {
             var $item = this.sandbox.dom.createElement(this.sandbox.util.template(templates.item)({
-                    title: this.sandbox.util.escapeHtml(data[this.options.titleName]),
+                    title: this.sandbox.translate(this.sandbox.util.escapeHtml(data[this.options.titleName])),
                     id: data[this.options.idName]
                 })),
                 disabled = (this.options.disableIds.indexOf(data[this.options.idName]) !== -1);
@@ -41224,6 +41235,22 @@ define('__component__$column-navigation@husky',[], function() {
             }
         },
 
+        unbindDOMEvents: function() {
+            this.$el.off();
+            if (!!this.dom.$add) {
+                this.dom.$add.off();
+            }
+            if (!!this.dom.$container) {
+                this.dom.$container.off();
+            }
+            if (!!this.dom.$wrapper) {
+                this.dom.$wrapper.off();
+            }
+            if (!!this.dom.$ok) {
+                this.dom.$ok.off();
+            }
+        },
+
         /**
          * Handles the key-down event of a order-input
          * @param event
@@ -41234,7 +41261,7 @@ define('__component__$column-navigation@husky',[], function() {
             }
             if (event.keyCode === 27) { // cancel on esc
                 var column = this.sandbox.dom.attr(this.sandbox.dom.parents(
-                        event.currentTarget, '.' + constants.columnClass), 'data-column'),
+                    event.currentTarget, '.' + constants.columnClass), 'data-column'),
                     item = this.sandbox.dom.attr(this.sandbox.dom.parents(
                         event.currentTarget, '.' + constants.columnItemClass), 'data-id');
                 this.resetOrderInput(column, item);
@@ -41400,10 +41427,21 @@ define('__component__$column-navigation@husky',[], function() {
         },
 
         bindCustomEvents: function() {
+            if (!!this.customEvents) {
+                return;
+            }
+
             this.sandbox.on(BREADCRUMB.call(this), this.getBreadCrumb.bind(this));
             this.sandbox.on(UNMARK.call(this), this.unmark.bind(this));
             this.sandbox.on(HIGHLIGHT.call(this), this.highlight.bind(this));
             this.sandbox.on(ORDER.call(this), this.startOrderModeItem.bind(this));
+            this.sandbox.on(SET_OPTIONS.call(this), function(options) {
+                this.unbindDOMEvents();
+                this.$el.children().remove();
+                this.options = this.sandbox.util.extend(true, {}, this.options, options);
+
+                this.initialize();
+            }.bind(this));
 
             this.sandbox.on('husky.dropdown.' + this.options.instanceName + '.settings.dropdown.item.click', this.dropdownItemClicked.bind(this));
 
@@ -41413,6 +41451,8 @@ define('__component__$column-navigation@husky',[], function() {
                     this.setOverflowClass();
                 }.bind(this));
             }
+
+            this.customEvents = true;
         },
 
         /**
@@ -41792,7 +41832,11 @@ define('__component__$column-navigation@husky',[], function() {
             }
 
             this.sandbox.dom.stopPropagation(event);
-            this.sandbox.emit(ACTION.call(this), item);
+            if (!!this.options.actionCallback) {
+                this.options.actionCallback(item)
+            } else {
+                this.sandbox.emit(ACTION.call(this), item);
+            }
         }
     };
 });

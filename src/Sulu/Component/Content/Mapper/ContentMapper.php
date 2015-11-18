@@ -828,7 +828,8 @@ class ContentMapper implements ContentMapperInterface
         $webspaceKey,
         $locales,
         $fields,
-        $maxDepth
+        $maxDepth,
+        $onlyPublished = true
     ) {
         $rootDepth = substr_count($this->sessionManager->getContentPath($webspaceKey), '/');
 
@@ -838,7 +839,7 @@ class ContentMapper implements ContentMapperInterface
                 $pageDepth = substr_count($row->getPath('page'), '/') - $rootDepth;
 
                 if ($maxDepth === null || $maxDepth < 0 || ($maxDepth > 0 && $pageDepth <= $maxDepth)) {
-                    $item = $this->rowToArray($row, $locale, $webspaceKey, $fields);
+                    $item = $this->rowToArray($row, $locale, $webspaceKey, $fields, $onlyPublished);
 
                     if (false === $item || in_array($item, $result)) {
                         continue;
@@ -875,7 +876,7 @@ class ContentMapper implements ContentMapperInterface
     /**
      * converts a query row to an array.
      */
-    private function rowToArray(Row $row, $locale, $webspaceKey, $fields)
+    private function rowToArray(Row $row, $locale, $webspaceKey, $fields, $onlyPublished = true)
     {
         // reset cache
         $this->initializeExtensionCache();
@@ -919,7 +920,7 @@ class ContentMapper implements ContentMapperInterface
         }
 
         // if page is not piblished ignore it
-        if ($nodeState !== WorkflowStage::PUBLISHED) {
+        if ($onlyPublished && $nodeState !== WorkflowStage::PUBLISHED) {
             return false;
         }
 

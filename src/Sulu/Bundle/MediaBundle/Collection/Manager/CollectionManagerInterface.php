@@ -61,6 +61,16 @@ interface CollectionManagerInterface
     public function getByKey($key, $locale);
 
     /**
+     * Returns tree for given id. Including all parents with sliblings and children.
+     *
+     * @param int $id
+     * @param string $locale
+     *
+     * @return Collection[]
+     */
+    public function getTreeById($id, $locale);
+
+    /**
      * Returns collections from root with given depth.
      *
      * @param string $locale the locale which the collection should be return
