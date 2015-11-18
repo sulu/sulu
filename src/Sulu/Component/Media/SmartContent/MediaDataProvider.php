@@ -49,8 +49,8 @@ class MediaDataProvider extends BaseDataProvider
             ->enableDatasource(
                 'media-datasource@sulumedia',
                 [
-                    'rootUrl' => '/admin/api/collections?sortBy=title&limit=9999&locale={locale}',
-                    'selectedUrl' => '/admin/api/collections/{datasource}?tree=true&locale={locale}',
+                    'rootUrl' => '/admin/api/collections?sortBy=title&limit=9999&locale={locale}&include-root=true',
+                    'selectedUrl' => '/admin/api/collections/{datasource}?tree=true&sortBy=title&locale={locale}&include-root=true',
                     'resultKey' => 'collections',
                 ]
             )
@@ -78,6 +78,12 @@ class MediaDataProvider extends BaseDataProvider
     {
         if (empty($datasource)) {
             return;
+        }
+
+        if ($datasource === 'root') {
+            $title = 'smart-content.media.all-collections';
+
+            return new DatasourceItem('root', $title, $title);
         }
 
         $entity = $this->collectionManager->getById($datasource, $options['locale']);

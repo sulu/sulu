@@ -40449,7 +40449,7 @@ define('__component__$column-navigation@husky',[],function() {
             item: [
                 '<li data-id="<%= id %>" class="' + constants.columnItemClass + '">',
                 '    <span class="' + constants.iconsLeftClass + '"></span>',
-                '    <span title="<%= title %>" class="' + constants.itemTextClass + '"><%= title%></span>',
+                '    <span title="<%= title %>" class="' + constants.itemTextClass + '"><%= title %></span>',
                 '    <span class="' + constants.iconsRightClass + '"></span>',
                 '</li>'
             ].join(''),
@@ -40983,7 +40983,7 @@ define('__component__$column-navigation@husky',[],function() {
          */
         renderItem: function(data) {
             var $item = this.sandbox.dom.createElement(this.sandbox.util.template(templates.item)({
-                    title: this.sandbox.util.escapeHtml(data[this.options.titleName]),
+                    title: this.sandbox.translate(this.sandbox.util.escapeHtml(data[this.options.titleName])),
                     id: data[this.options.idName]
                 })),
                 disabled = (this.options.disableIds.indexOf(data[this.options.idName]) !== -1);

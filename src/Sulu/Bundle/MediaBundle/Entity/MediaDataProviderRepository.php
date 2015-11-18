@@ -64,6 +64,18 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
      */
     public function findByFilters($filters, $page, $pageSize, $limit, $locale, $options = [])
     {
+        if (!array_key_exists('dataSource', $filters) ||
+            $filters['dataSource'] === '' ||
+            ($limit !== null && $limit < 1)
+        ) {
+            return [];
+        }
+
+        if ($filters['dataSource'] === 'root') {
+            // if root collection is selected remove filter for data-source
+            $filters['dataSource'] = null;
+        }
+
         $entities = $this->parentFindByFilters($filters, $page, $pageSize, $limit, $locale, $options);
 
         return array_map(

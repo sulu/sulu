@@ -529,8 +529,11 @@ define(['services/husky/util'], function(util) {
          * Renders the source text and inserts it to the header
          */
         insertSource: function() {
-            var desc, $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent);
-            this.sandbox.dom.text($element, this.sandbox.util.cropMiddle(this.overlayData.fullQualifiedTitle, 30, '...'));
+            var desc,
+                $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent),
+                fullQualifiedTitle = this.sandbox.translate(this.overlayData.fullQualifiedTitle);
+
+            this.sandbox.dom.text($element, this.sandbox.util.cropMiddle(fullQualifiedTitle, 30, '...'));
 
             if (!!this.options.has.datasource &&
                 typeof(this.overlayData.dataSource) !== 'undefined' &&
@@ -546,7 +549,7 @@ define(['services/husky/util'], function(util) {
                 }
                 this.sandbox.dom.append(this.$header, this.sandbox.util.template(templates.source)({
                     desc: desc,
-                    val: this.overlayData.title
+                    val: this.sandbox.translate(this.overlayData.title)
                 }));
             }
         },
@@ -861,6 +864,8 @@ define(['services/husky/util'], function(util) {
                     locale: this.options.locale,
                     instanceName: this.options.instanceName,
                     selectCallback: function(id, fullQualifiedTitle) {
+                        fullQualifiedTitle = this.sandbox.translate(fullQualifiedTitle);
+
                         var $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent);
                         this.overlayData.dataSource = id;
                         this.sandbox.dom.text($element, this.sandbox.util.cropMiddle(fullQualifiedTitle, 30, '...'));

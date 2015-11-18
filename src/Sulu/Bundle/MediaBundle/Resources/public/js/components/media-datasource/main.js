@@ -51,6 +51,7 @@ define(function() {
          * Initialize component
          */
         initialize: function() {
+
             this.sandbox.logger.log('initialize', this);
 
             // merge options with defaults
@@ -88,7 +89,7 @@ define(function() {
 
             this.sandbox.emit(
                 'husky.column-navigation.smart-content-' + this.options.instanceName + '.set-options',
-                {selected: selected, url: this.getUrl()}
+                {selected: this.selected, url: this.getUrl()}
             );
         },
 
