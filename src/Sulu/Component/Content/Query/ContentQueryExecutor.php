@@ -108,7 +108,8 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
             $webspaceKey,
             $locales,
             $fields,
-            $depth
+            $depth,
+            $contentQueryBuilder->getPublished()
         );
 
         if ($this->stopwatch) {

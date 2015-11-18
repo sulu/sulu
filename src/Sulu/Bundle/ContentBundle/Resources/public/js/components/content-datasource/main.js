@@ -12,32 +12,53 @@ define([], function() {
     'use strict';
 
     var defaults = {
-            url: null,
-            resultKey: null,
-            selected: null,
-            webspace: null,
-            locale: null,
-            selectCallback: function(item) {
+            options: {
+                url: null,
+                resultKey: null,
+                selected: null,
+                webspace: null,
+                locale: null,
+                selectCallback: function(item) {
+                }
+            },
+            templates: {
+                columnNavigationContainer: '<div/>'
             }
         },
+
         columnNavigationDefaults = {
             responsive: false,
             actionIcon: 'fa-check',
             showOptions: false,
             sortable: false,
             showStatus: false
-        };
+        },
+
+        /**
+         * namespace for events
+         * @type {string}
+         */
+        eventNamespace = 'smart-content.datasource.';
 
     return {
+
+        defaults: defaults,
+
+        events: {
+            names: {
+                setSelected: {
+                    postFix: 'set-selected',
+                    type: 'on'
+                }
+            },
+            namespace: eventNamespace
+        },
 
         /**
          * Initialize component
          */
         initialize: function() {
-            this.sandbox.logger.log('initialize', this);
-
-            // merge options with defaults
-            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+            // init variables
             this.selected = this.options.selected;
 
             // render
@@ -47,11 +68,14 @@ define([], function() {
             this.columnNavigationOptions = this.sandbox.util.extend(true, {}, columnNavigationDefaults,
                 {
                     el: this.$columnNavigationElement,
-                    instanceName: 'smart-content.' + this.options.instanceName,
+                    instanceName: 'smart-content-' + this.options.instanceName,
                     url: this.prepareUrl(this.options.url),
                     resultKey: this.options.resultKey,
-                    selected: this.options.selected,
-                    responsive: false
+                    selected: this.selected,
+                    actionCallback: function(item) {
+                        this.selected = item.id;
+                        this.options.selectCallback(item.id, item.path);
+                    }.bind(this)
                 });
 
             // start child components and bind events
@@ -96,18 +120,34 @@ define([], function() {
          * Render container for column-navigation
          */
         render: function() {
-            this.$columnNavigationElement = this.sandbox.dom.createElement('<div/>');
+            if (!!this.$columnNavigationElement) {
+                this.sandbox.stop(this.$columnNavigationElement);
+            }
+
+            this.$columnNavigationElement = this.sandbox.dom.createElement(this.templates.columnNavigationContainer());
             this.html(this.$columnNavigationElement);
+        },
+
+        /**
+         * Set new selected and update column-navigation.
+         *
+         * @param {String} selected
+         */
+        setSelected: function(selected) {
+            this.selected = selected;
+
+            this.sandbox.emit(
+                'husky.column-navigation.smart-content-' + this.options.instanceName + '.set-options',
+                {selected: selected, url: this.prepareUrl(this.options.url)}
+            );
         },
 
         /**
          * Bind events to call select callback
          */
         bindCustomEvents: function() {
-            this.sandbox.on('husky.column-navigation.smart-content.' + this.options.instanceName + '.action', function(item) {
-                this.selected = item.id;
-                this.options.selectCallback(item.id, item.path);
-            }.bind(this));
+            // setter for selected
+            this.events.setSelected(this.setSelected.bind(this));
         }
     };
 });

@@ -351,9 +351,9 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     /**
      * {@inheritdoc}
      */
-    public function findByFilters($filters, $page, $pageSize, $limit, $locale)
+    public function findByFilters($filters, $page, $pageSize, $limit, $locale, $options = [])
     {
-        $entities = $this->accountRepository->findByFilters($filters, $page, $pageSize, $limit, $locale);
+        $entities = $this->accountRepository->findByFilters($filters, $page, $pageSize, $limit, $locale, $options);
 
         return array_map(
             function ($contact) use ($locale) {

@@ -148,6 +148,7 @@ define(['services/husky/util'], function(util) {
                             preselected: this.data.ids,
                             viewOptions: {
                                 table: {
+                                    cropContents: false,
                                     noItemsText: this.translations.noCategoriesAvailable,
                                     showHead: false,
                                     cssClass: 'white-box',

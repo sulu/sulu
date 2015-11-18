@@ -21,6 +21,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
+use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
@@ -144,23 +145,6 @@ class MediaManager implements MediaManagerInterface
      */
     public $count;
 
-    /**
-     * @param MediaRepositoryInterface $mediaRepository
-     * @param CollectionRepositoryInterface $collectionRepository
-     * @param UserRepositoryInterface $userRepository
-     * @param EntityManager $em
-     * @param StorageInterface $storage
-     * @param FileValidatorInterface $validator
-     * @param FormatManagerInterface $formatManager
-     * @param TagManagerInterface $tagManager
-     * @param TypeManagerInterface $typeManager
-     * @param TokenStorageInterface $tokenStorage
-     * @param SecurityCheckerInterface $securityChecker
-     * @param FFProbe $ffprobe
-     * @param array $permissions
-     * @param string $downloadPath
-     * @param string $maxFileSize
-     */
     public function __construct(
         MediaRepositoryInterface $mediaRepository,
         CollectionRepositoryInterface $collectionRepository,
@@ -938,9 +922,11 @@ class MediaManager implements MediaManagerInterface
     }
 
     /**
-     * @param $id
-     * @param $fileName
-     * @param $version
+     * Returns download url for given id and filename.
+     *
+     * @param string $id
+     * @param string $fileName
+     * @param string $version
      *
      * @return string
      */
@@ -959,6 +945,11 @@ class MediaManager implements MediaManagerInterface
         ) . '?v=' . $version;
     }
 
+    /**
+     * Returns current user or null if no user is loggedin.
+     *
+     * @return UserInterface|void
+     */
     protected function getCurrentUser()
     {
         if (!$this->tokenStorage) {

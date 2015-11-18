@@ -1,7 +1,6 @@
 <?php
-
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -97,7 +96,7 @@ class CollectionManager implements CollectionManagerInterface
         FormatManagerInterface $formatManager,
         UserRepositoryInterface $userRepository,
         EntityManager $em,
-        TokenStorageInterface $tokenStorage,
+        TokenStorageInterface $tokenStorage = null,
         $collectionPreviewFormat,
         $permissions
     ) {
@@ -167,6 +166,33 @@ class CollectionManager implements CollectionManagerInterface
         }
 
         return $this->getApiEntity($collection, $locale);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTreeById($id, $locale)
+    {
+        $collectionSet = $this->collectionRepository->findTree($id, $locale);
+
+        /** @var Collection[] $collections sorted by id */
+        $collections = [];
+        /** @var Collection[] $result collections without parent */
+        $result = [];
+        foreach ($collectionSet as $collection) {
+            $apiEntity = new Collection($collection, $locale);
+            $this->addPreview($apiEntity);
+
+            $collections[$collection->getId()] = $apiEntity;
+
+            if ($collection->getParent() !== null) {
+                $collections[$collection->getParent()->getId()]->addChild($apiEntity);
+            } else {
+                $result[] = $apiEntity;
+            }
+        }
+
+        return $result;
     }
 
     /**

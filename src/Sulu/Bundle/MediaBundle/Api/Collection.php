@@ -128,15 +128,19 @@ class Collection extends ApiWrapper
      */
     public function setChildren($children)
     {
-        $childrenEntities = [];
-
-        foreach ($children as $child) {
-            $childrenEntities[] = $child->getEntity();
-        }
-
         // FIXME remove cache for children and generate then on the fly
         //       reason: preview images cannot be generated without a service
         $this->children = $children;
+    }
+
+    /**
+     * Add child to resource.
+     *
+     * @param Collection $child
+     */
+    public function addChild(Collection $child)
+    {
+        $this->children[] = $child;
     }
 
     /**

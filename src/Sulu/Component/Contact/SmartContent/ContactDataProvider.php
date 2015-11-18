@@ -23,7 +23,13 @@ class ContactDataProvider extends BaseDataProvider
     {
         parent::__construct($repository, $serializer);
 
-        $this->configuration = $this->initConfiguration(true, true, true, true, true, []);
+        $this->configuration = self::createConfigurationBuilder()
+            ->enableTags()
+            ->enableCategories()
+            ->enableLimit()
+            ->enablePagination()
+            ->enablePresentAs()
+            ->getConfiguration();
     }
 
     /**
