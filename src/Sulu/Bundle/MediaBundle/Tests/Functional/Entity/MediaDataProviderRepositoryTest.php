@@ -200,33 +200,62 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         // when pagination is active the result count is pageSize + 1 to determine has next page
 
         return [
+            // no data-source
+            [[], null, 0, null, []],
             // no pagination
-            [[], null, 0, null, $this->mediaData],
+            [['dataSource' => 'root'], null, 0, null, $this->mediaData],
             // page 1, no limit
-            [[], 1, 3, null, array_slice($this->mediaData, 0, 4)],
+            [['dataSource' => 'root'], 1, 3, null, array_slice($this->mediaData, 0, 4)],
             // page 2, no limit
-            [[], 2, 3, null, array_slice($this->mediaData, 3, 4)],
+            [['dataSource' => 'root'], 2, 3, null, array_slice($this->mediaData, 3, 4)],
             // page 3, no limit
-            [[], 3, 3, null, array_slice($this->mediaData, 6, 2)],
+            [['dataSource' => 'root'], 3, 3, null, array_slice($this->mediaData, 6, 2)],
             // no pagination, limit 3
-            [[], null, 0, 3, array_slice($this->mediaData, 0, 3)],
+            [['dataSource' => 'root'], null, 0, 3, array_slice($this->mediaData, 0, 3)],
             // page 1, limit 5
-            [[], 1, 3, 5, array_slice($this->mediaData, 0, 4)],
+            [['dataSource' => 'root'], 1, 3, 5, array_slice($this->mediaData, 0, 4)],
             // page 2, limit 5
-            [[], 2, 3, 5, array_slice($this->mediaData, 3, 2)],
+            [['dataSource' => 'root'], 2, 3, 5, array_slice($this->mediaData, 3, 2)],
             // page 3, limit 5
-            [[], 3, 3, 5, []],
+            [['dataSource' => 'root'], 3, 3, 5, []],
             // no pagination, tag 0
-            [['tags' => [0], 'tagOperator' => 'or'], null, 0, null, array_slice($this->mediaData, 0, 7), [0]],
+            [
+                ['dataSource' => 'root', 'tags' => [0], 'tagOperator' => 'or'],
+                null,
+                0,
+                null,
+                array_slice($this->mediaData, 0, 7),
+                [0],
+            ],
             // no pagination, tag 0 or 1
-            [['tags' => [0, 1], 'tagOperator' => 'or'], null, 0, null, array_slice($this->mediaData, 0, 7)],
+            [
+                ['dataSource' => 'root', 'tags' => [0, 1], 'tagOperator' => 'or'],
+                null,
+                0,
+                null,
+                array_slice($this->mediaData, 0, 7),
+            ],
             // no pagination, tag 0 and 1
-            [['tags' => [0, 1], 'tagOperator' => 'and'], null, 0, null, array_slice($this->mediaData, 0, 4), [0, 1]],
+            [
+                ['dataSource' => 'root', 'tags' => [0, 1], 'tagOperator' => 'and'],
+                null,
+                0,
+                null,
+                array_slice($this->mediaData, 0, 4),
+                [0, 1],
+            ],
             // no pagination, tag 0 and 3
-            [['tags' => [0, 3], 'tagOperator' => 'and'], null, 0, null, [$this->mediaData[1]], [0, 3]],
+            [
+                ['dataSource' => 'root', 'tags' => [0, 3], 'tagOperator' => 'and'],
+                null,
+                0,
+                null,
+                [$this->mediaData[1]],
+                [0, 3],
+            ],
             // page 1, no limit, tag 0
             [
-                ['tags' => [0], 'tagOperator' => 'or'],
+                ['dataSource' => 'root', 'tags' => [0], 'tagOperator' => 'or'],
                 1,
                 3,
                 null,
@@ -235,7 +264,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
             ],
             // page 2, no limit, tag 0
             [
-                ['tags' => [0], 'tagOperator' => 'or'],
+                ['dataSource' => 'root', 'tags' => [0], 'tagOperator' => 'or'],
                 2,
                 3,
                 null,
@@ -244,7 +273,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
             ],
             // page 3, no limit, tag 0
             [
-                ['tags' => [0], 'tagOperator' => 'or'],
+                ['dataSource' => 'root', 'tags' => [0], 'tagOperator' => 'or'],
                 3,
                 3,
                 null,
@@ -253,7 +282,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
             ],
             // no pagination, website-tag 0
             [
-                ['websiteTags' => [0], 'websiteTagsOperator' => 'or'],
+                ['dataSource' => 'root', 'websiteTags' => [0], 'websiteTagsOperator' => 'or'],
                 null,
                 0,
                 null,
@@ -262,7 +291,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
             ],
             // no pagination, website-tag 0 or 1
             [
-                ['websiteTags' => [0, 1], 'websiteTagsOperator' => 'or'],
+                ['dataSource' => 'root', 'websiteTags' => [0, 1], 'websiteTagsOperator' => 'or'],
                 null,
                 0,
                 null,
@@ -270,7 +299,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
             ],
             // no pagination, website-tag 0 and 1
             [
-                ['websiteTags' => [0, 1], 'websiteTagsOperator' => 'and'],
+                ['dataSource' => 'root', 'websiteTags' => [0, 1], 'websiteTagsOperator' => 'and'],
                 null,
                 0,
                 null,
@@ -279,7 +308,13 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
             ],
             // no pagination, website-tag 1, tags 3
             [
-                ['websiteTags' => [1], 'websiteTagsOperator' => 'or', 'tags' => [3], 'tagOperator' => 'or'],
+                [
+                    'dataSource' => 'root',
+                    'websiteTags' => [1],
+                    'websiteTagsOperator' => 'or',
+                    'tags' => [3],
+                    'tagOperator' => 'or',
+                ],
                 null,
                 0,
                 null,
@@ -288,7 +323,13 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
             ],
             // no pagination, website-tag 2 or 3, tags 1
             [
-                ['websiteTags' => [2, 3], 'websiteTagsOperator' => 'or', 'tags' => [1], 'tagOperator' => 'or'],
+                [
+                    'dataSource' => 'root',
+                    'websiteTags' => [2, 3],
+                    'websiteTagsOperator' => 'or',
+                    'tags' => [1],
+                    'tagOperator' => 'or',
+                ],
                 null,
                 0,
                 null,
@@ -297,7 +338,13 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
             ],
             // no pagination, website-tag 1, tags 2 or 3
             [
-                ['websiteTags' => [1], 'websiteTagsOperator' => 'or', 'tags' => [2, 3], 'tagOperator' => 'or'],
+                [
+                    'dataSource' => 'root',
+                    'websiteTags' => [1],
+                    'websiteTagsOperator' => 'or',
+                    'tags' => [2, 3],
+                    'tagOperator' => 'or',
+                ],
                 null,
                 0,
                 null,
@@ -307,6 +354,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
             // combination website/admin-tag
             [
                 [
+                    'dataSource' => 'root',
                     'tags' => [0],
                     'tagOperator' => 'or',
                     'websiteTags' => [1],
@@ -320,7 +368,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
             ],
             // options mimetype
             [
-                [],
+                ['dataSource' => 'root'],
                 null,
                 0,
                 null,
@@ -330,7 +378,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
             ],
             // options mimetype and admin tags
             [
-                ['tags' => [0], 'tagOperator' => 'or'],
+                ['dataSource' => 'root', 'tags' => [0], 'tagOperator' => 'or'],
                 null,
                 0,
                 null,
@@ -340,7 +388,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
             ],
             // options mimetype and website tags
             [
-                ['websiteTags' => [0], 'websiteTagsOperator' => 'or'],
+                ['dataSource' => 'root', 'websiteTags' => [0], 'websiteTagsOperator' => 'or'],
                 null,
                 0,
                 null,
@@ -350,7 +398,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
             ],
             // options type and admin tags
             [
-                ['tags' => [0], 'tagOperator' => 'or'],
+                ['dataSource' => 'root', 'tags' => [0], 'tagOperator' => 'or'],
                 null,
                 0,
                 null,
@@ -360,7 +408,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
             ],
             // options mimetype and website tags
             [
-                ['websiteTags' => [0], 'websiteTagsOperator' => 'or'],
+                ['dataSource' => 'root', 'websiteTags' => [0], 'websiteTagsOperator' => 'or'],
                 null,
                 0,
                 null,
@@ -370,7 +418,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
             ],
             // options mimetype/type
             [
-                [],
+                ['dataSource' => 'root'],
                 null,
                 0,
                 null,
@@ -439,7 +487,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         $repository = $this->getContainer()->get('sulu_media.smart_content.data_provider.media.repository');
 
         // if data-source isset replace the index with the id
-        if (array_key_exists('dataSource', $filters)) {
+        if (array_key_exists('dataSource', $filters) && $filters['dataSource'] !== 'root') {
             $filters['dataSource'] = $this->collections[$filters['dataSource']]->getId();
         }
 
