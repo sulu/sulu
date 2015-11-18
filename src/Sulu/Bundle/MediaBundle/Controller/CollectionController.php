@@ -36,8 +36,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * Makes collections available through a REST API.
  */
-class CollectionController extends RestController
-    implements ClassResourceInterface, SecuredControllerInterface, SecuredObjectControllerInterface
+class CollectionController extends RestController implements ClassResourceInterface, SecuredControllerInterface, SecuredObjectControllerInterface
 {
     use RequestParametersTrait;
 
