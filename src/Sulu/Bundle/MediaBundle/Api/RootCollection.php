@@ -87,7 +87,7 @@ class RootCollection
     /**
      * @return bool
      */
-    public function isHasSub()
+    public function hasSub()
     {
         return $this->hasSub;
     }
