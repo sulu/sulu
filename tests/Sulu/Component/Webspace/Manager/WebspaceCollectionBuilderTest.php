@@ -153,7 +153,7 @@ class WebspaceCollectionBuilderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Sulu\Component\Webspace\Exception\NoValidWebspaceException
+     * @expectedException \Sulu\Component\Webspace\Exception\NoValidWebspaceException
      */
     public function testBuildWithInvalidWebspacesOnly()
     {

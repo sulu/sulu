@@ -168,16 +168,22 @@ class SeoTwigExtension extends \Twig_Extension
     {
         $html = '';
 
-        $portal = $this->requestAnalyzer->getPortal();
         $defaultLocale = null;
+        $portal = $this->requestAnalyzer->getPortal();
         if ($portal) {
-            $defaultLocale = $portal->getDefaultLocalization()->getLocalization();
-
-            $html .= $this->renderAlternateLink($urls[$defaultLocale], $webspaceKey, $defaultLocale, true);
+            $defaultLocale = $portal->getXDefaultLocalization()->getLocalization();
         }
 
         foreach ($urls as $locale => $url) {
-            $html .= $this->renderAlternateLink($url, $webspaceKey, $locale);
+            // url = '/' means that there is no translation for this page
+            // the only exception is the homepage where the requested resource-locator is false
+            if ($url !== '/' || $this->requestAnalyzer->getResourceLocator() === false) {
+                if ($defaultLocale === $locale) {
+                    $html .= $this->renderAlternateLink($url, $webspaceKey, $locale, true);
+                }
+
+                $html .= $this->renderAlternateLink($url, $webspaceKey, $locale);
+            }
         }
 
         return $html;
@@ -197,7 +203,7 @@ class SeoTwigExtension extends \Twig_Extension
     {
         return sprintf(
             '<link rel="alternate" href="%s" hreflang="%s"/>' . PHP_EOL,
-            $this->contentPath->getContentPath($url, $webspaceKey, $locale),
+            rtrim($this->contentPath->getContentPath($url, $webspaceKey, $locale), '/'),
             $default ? 'x-default' : str_replace('_', '-', $locale)
         );
     }

@@ -222,6 +222,13 @@ class XmlFileLoader extends FileLoader
             $localization->setDefault(false);
         }
 
+        $xDefaultNode = $localizationNode->attributes->getNamedItem('x-default');
+        if ($xDefaultNode) {
+            $localization->setXDefault($xDefaultNode->nodeValue == 'true');
+        } else {
+            $localization->setXDefault(false);
+        }
+
         // set child nodes
         if (!$flat) {
             foreach ($this->xpath->query('x:localization', $localizationNode) as $childNode) {

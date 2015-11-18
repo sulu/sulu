@@ -5,6 +5,8 @@ CHANGELOG for Sulu
     * BUGFIX      #1793 [TagBundle]       Fixed tag-list preview update 
     * BUGFIX      #1793 [CategoryBundle]  Fixed category-list preview update 
     * BUGFIX      #1790 [MediaBundle]     Fixed collection twice after edit collection
+    * BUGFIX      #1792 [WebsiteBundle]   Fixed alternate links with custom x-default locale and remove links to 
+                                          homepage
     * ENHANCEMENT #1786 [ContactBundle]   Added cascade options to account and contact
     * BUGFIX      #1789 [CoreBundle]      Added replacers for box brackets
     * BUGFIX      #1785 [ContentBundle]   Fixed data returned for internal link in settings tab
