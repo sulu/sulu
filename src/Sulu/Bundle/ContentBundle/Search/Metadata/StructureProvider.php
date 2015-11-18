@@ -228,6 +228,15 @@ class StructureProvider implements ProviderInterface
                     ),
                 ]
             );
+            $indexMeta->addFieldMapping(
+                'published',
+                [
+                    'type' => 'date',
+                    'field' => $this->factory->createMetadataExpression(
+                        'object.getPublished()'
+                    ),
+                ]
+            );
         }
 
         $indexMeta->addFieldMapping(
