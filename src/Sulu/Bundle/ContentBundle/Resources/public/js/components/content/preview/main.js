@@ -135,7 +135,7 @@ define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config
                     keyupFilter = '.preview-update:not(' + changeFilter + ', .no-preview-update)';
 
                 this.sandbox.dom.on(this.formId, 'keyup', _.debounce(updateEvent.bind(this), this.config.delay), keyupFilter);
-                this.sandbox.dom.on(this.formId, 'change', updateEvent.bind(this), changeFilter);
+                this.sandbox.dom.on(this.formId, 'change', _.debounce(updateEvent.bind(this), 10), changeFilter);
             };
 
         return {
