@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1802 [ContentBundle]   Fixed appearances of content tabs
     * BUGFIX      #1793 [TagBundle]       Fixed tag-list preview update 
     * BUGFIX      #1793 [CategoryBundle]  Fixed category-list preview update 
     * BUGFIX      #1790 [MediaBundle]     Fixed collection twice after edit collection

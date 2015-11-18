@@ -21,23 +21,21 @@ define([
 
         SHOW_GHOST_PAGES_KEY = 'column-navigation-show-ghost-pages',
 
-        /**
-         * node type constant for content
-         * @type {number}
-         */
-        TYPE_CONTENT = 1,
-
         constants = {
             localizationUrl: '/admin/api/webspace/localizations',
             previewExpandIcon: 'fa-step-backward',
-            previewCollapseIcon: 'fa-step-forward'
+            previewCollapseIcon: 'fa-step-forward',
+            tabPrefix: 'tab-',
+            contentNodeType: 1,
+            internalLinkNodeType: 2,
+            externalLinkNodeType: 4
         },
 
         translationKeys = {
             deleteReferencedByFollowing: 'content.delete-referenced-by-following',
             deleteConfirmText: 'content.delete-confirm-text',
             deleteConfirmTitle: 'content.delete-confirm-title',
-            deleteDoIt: 'content.delete-do-it',
+            deleteDoIt: 'content.delete-do-it'
         },
 
         states = {
@@ -257,6 +255,7 @@ define([
             this.sandbox.on('sulu.content.contents.saved', function(id, data) {
                 this.data = data;
                 this.setHeaderBar(true);
+                this.updateTabVisibility();
 
                 // FIXME select should be able to override text in a item
                 this.sandbox.dom.html('li[data-id="' + this.options.language + '"] a', this.options.language);
@@ -286,7 +285,7 @@ define([
             // set default template
             this.sandbox.on('sulu.content.contents.default-template', function(name) {
                 this.template = name;
-                if (this.data.nodeType !== TYPE_CONTENT) {
+                if (this.data.nodeType !== constants.contentNodeType) {
                     this.sandbox.emit('sulu.header.toolbar.item.change', 'template', name);
                     if (this.hiddenTemplate) {
                         this.hiddenTemplate = false;
@@ -606,7 +605,7 @@ define([
         /**
          * Routes either to the list, content-add or content-edit, depending on the passed parameter
          * @param action {String} 'new', 'add' or 'edit'
-         * @param toEidt {Boolean} iff true and no action has been passed the method routes to 'edit'
+         * @param toEdit {Boolean} iff true and no action has been passed the method routes to 'edit'
          */
         afterSaveAction: function(action, toEdit) {
             if (action === 'back') {
@@ -631,7 +630,7 @@ define([
         load: function(item, webspace, language, forceReload) {
             var action = 'content';
             if (
-                (!!item.nodeType && item.nodeType !== TYPE_CONTENT) ||
+                (!!item.nodeType && item.nodeType !== constants.contentNodeType) ||
                 (!!item.type && !!item.type.name && item.type.name === 'shadow')
             ) {
                 action = 'settings';
@@ -665,12 +664,9 @@ define([
         render: function() {
             this.setTemplate(this.data);
             this.setState(this.data);
+            this.updateTabVisibility();
 
-            if (!!this.options.preview && this.data.nodeType === TYPE_CONTENT && !this.data.shadowOn) {
-                this.sandbox.util.each(['content', 'excerpt', 'seo'], function(i, tabName) {
-                    this.sandbox.emit('husky.tabs.header.item.show', 'tab-' + tabName);
-                }.bind(this));
-
+            if (!!this.options.preview && this.data.nodeType === constants.contentNodeType && !this.data.shadowOn) {
                 this.sandbox.on('sulu.preview.initiated', function() {
                     this.renderPreview(this.data);
                 }.bind(this));
@@ -695,32 +691,16 @@ define([
             }
 
             if (!!this.options.id) {
-                // disable content tab
-                if (this.data.shadowOn === true || this.data.nodeType !== TYPE_CONTENT) {
-                    this.sandbox.util.each(['content', 'seo'], function(i, tabName) {
-                        this.sandbox.emit('husky.tabs.header.item.hide', 'tab-' + tabName);
-                    }.bind(this));
-                }
-
-                if (!!this.options.id) {
-                    // disable content tab
-                    if (this.data.shadowOn === true || this.data.nodeType !== TYPE_CONTENT) {
-                        this.sandbox.util.each(['content', 'seo'], function(i, tabName) {
-                            this.sandbox.emit('husky.tabs.header.item.hide', 'tab-' + tabName);
-                        }.bind(this));
-                    }
-
-                    // route to settings
-                    if (
-                        (this.options.content !== 'settings' && this.data.shadowOn === true) ||
-                        (this.options.content === 'content' && this.data.nodeType !== TYPE_CONTENT)
-                    ) {
-                        this.sandbox.emit(
-                            'sulu.router.navigate',
-                            'content/contents/' + this.options.webspace +
-                            '/' + this.options.language + '/edit:' + this.data.id + '/settings'
-                        );
-                    }
+                // route to settings
+                if (
+                    (this.options.content !== 'settings' && this.data.shadowOn === true) ||
+                    (this.options.content === 'content' && this.data.nodeType !== constants.contentNodeType)
+                ) {
+                    this.sandbox.emit(
+                        'sulu.router.navigate',
+                        'content/contents/' + this.options.webspace +
+                        '/' + this.options.language + '/edit:' + this.data.id + '/settings'
+                    );
                 }
             }
 
@@ -909,7 +889,7 @@ define([
             this.template = data.originTemplate;
 
             if (
-                this.data.nodeType === TYPE_CONTENT &&
+                this.data.nodeType === constants.contentNodeType &&
                 this.template !== '' &&
                 this.template !== undefined &&
                 this.template !== null
@@ -936,15 +916,43 @@ define([
          * @param {Boolean} saved
          */
         setHeaderBar: function(saved) {
-            if (saved !== this.saved) {
-                if (saved === true) {
-                    this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
-                } else {
-                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
-                }
-                this.sandbox.emit('sulu.preview.state.change', saved);
+            if (saved === this.saved) {
+                return;
             }
+
+            if (saved === true) {
+                this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
+            } else {
+                this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
+            }
+
+            this.sandbox.emit('sulu.preview.state.change', saved);
+
             this.saved = saved;
+        },
+
+        updateTabVisibility: function() {
+            var tabs = ['content', 'excerpt', 'seo'],
+                usedTabs = tabs,
+                unusedTabs;
+
+            if (this.data.nodeType === constants.internalLinkNodeType
+                || this.data.nodeType === constants.externalLinkNodeType
+            ) {
+                usedTabs = ['seo'];
+            } else if (!!this.data.shadowOn) {
+                usedTabs = [];
+            }
+
+            unusedTabs = _.difference(tabs, usedTabs);
+
+            usedTabs.forEach(function(tab) {
+                this.sandbox.emit('husky.tabs.header.item.show', constants.tabPrefix + tab);
+            }.bind(this));
+
+            unusedTabs.forEach(function(tab) {
+                this.sandbox.emit('husky.tabs.header.item.hide', constants.tabPrefix + tab);
+            }.bind(this));
         },
 
         getPreviewDocument: function() {
