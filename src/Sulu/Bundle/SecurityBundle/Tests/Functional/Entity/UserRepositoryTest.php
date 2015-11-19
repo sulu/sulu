@@ -21,6 +21,8 @@ use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Component\Security\Core\Exception\DisabledException;
+use Symfony\Component\Security\Core\Exception\LockedException;
 
 class UserRepositoryTest extends SuluTestCase
 {
@@ -196,6 +198,32 @@ class UserRepositoryTest extends SuluTestCase
         $user = $userRepository->loadUserByUsername('sulu');
 
         $this->assertEquals('max.mustermann@muster.at', $user->getContact()->getEmails()[0]->getEmail());
+    }
+
+    public function testLoadUserByUsernameWithLockedUser()
+    {
+        $this->setExpectedException(LockedException::class);
+        $this->prepareUser('sulu', 'sulu', true, true);
+
+        $client = $this->createAuthenticatedClient();
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
+
+        $userRepository->loadUserByUsername('sulu');
+    }
+
+    public function testLoadUserByUsernameWithDisabledUser()
+    {
+        $this->setExpectedException(DisabledException::class);
+        $this->prepareUser('sulu', 'sulu', false, false);
+
+        $client = $this->createAuthenticatedClient();
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
+
+        $userRepository->loadUserByUsername('sulu');
     }
 
     public function testFindUserByEmail()
