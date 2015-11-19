@@ -762,7 +762,7 @@
             </trans-unit>
             <trans-unit id="a50af522de18a35014430b4720e29a4f" resname="form.validation-warning">
                 <source>form.validation-warning</source>
-                <target><![CDATA[Bitte überprüfen deine Eingabe.<br/>Erst wenn alle Felder korrekt ausgefüllt sind, kann gespeichert werden.]]></target>
+                <target>Bitte überprüfe deine Eingabe. Erst wenn alle Felder korrekt ausgefüllt sind, kann gespeichert werden.</target>
             </trans-unit>
             <trans-unit id="a504f522de145650142c0b4720e29a4f" resname="public.status">
                 <source>public.status</source>

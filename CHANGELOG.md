@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * BUGFIX      #1800 [ContentBundle]   Fixed preview update of date and color
     * BUGFIX      #1801 [ContentBundle]   Fixed reset values in smart content if values was selected before
+    * ENHANCEMENT #1805 [ContentBundle]   Fixed validation of external node type and format of warning message
     * BUGFIX      #1796 [ContentBundle]   Fixed content type date to save as date data-type in phpcr
     * BUGFIX      #1802 [ContentBundle]   Fixed appearances of content tabs
     * BUGFIX      #1793 [TagBundle]       Fixed tag-list preview update 
