@@ -1037,7 +1037,7 @@ define(['services/husky/util'], function(util) {
                     options: {
                         el: this.sandbox.dom.find('.' + constants.tagListClass, this.$overlayContent),
                         instanceName: this.options.instanceName + constants.tagListClass,
-                        items: this.options.tags,
+                        items: this.overlayData.tags,
                         remoteUrl: this.options.tagsAutoCompleteUrl,
                         autocomplete: (this.options.tagsAutoCompleteUrl !== ''),
                         getParameter: this.options.tagsGetParameter,
@@ -1056,7 +1056,8 @@ define(['services/husky/util'], function(util) {
                             {id: operators.or, name: this.sandbox.translate(this.translations.useAnyTag)},
                             {id: operators.and, name: this.sandbox.translate(this.translations.useAllTags)}
                         ],
-                        preSelectedElements: [operators[this.options.preSelectedTagOperator]],
+                        preSelectedElements: !!this.overlayData.tagOperator ?
+                            [operators[this.overlayData.tagOperator]] : null,
                         disabled: this.overlayDisabled.tags
                     }
                 },
@@ -1067,7 +1068,7 @@ define(['services/husky/util'], function(util) {
                         instanceName: this.options.instanceName + constants.sortByDropdownClass,
                         value: 'name',
                         data: this.options.sortBy,
-                        preSelectedElements: [this.options.preSelectedSortBy],
+                        preSelectedElements: !!this.overlayData.sortBy ? [this.overlayData.sortBy] : null,
                         disabled: this.overlayDisabled.sortBy,
                         defaultLabel: this.sandbox.translate('smart-content.no-sorting'),
                         deselectField: this.sandbox.translate('smart-content.no-sorting')
@@ -1083,7 +1084,8 @@ define(['services/husky/util'], function(util) {
                             {id: sortMethods.asc, name: this.sandbox.translate(this.translations.ascending)},
                             {id: sortMethods.desc, name: this.sandbox.translate(this.translations.descending)}
                         ],
-                        preSelectedElements: [sortMethods[this.options.preSelectedSortMethod]],
+                        preSelectedElements: !!this.overlayData.sortMethod ?
+                            [sortMethods[this.overlayData.sortMethod]] : null,
                         disabled: this.overlayDisabled.sortBy
                     }
                 },
@@ -1095,7 +1097,7 @@ define(['services/husky/util'], function(util) {
                         defaultLabel: this.sandbox.translate(this.translations.choosePresentAs),
                         value: 'name',
                         data: this.options.presentAs,
-                        preSelectedElements: [this.options.preSelectedPresentAs],
+                        preSelectedElements: !!this.overlayData.presentAs ? [this.overlayData.presentAs] : null,
                         disabled: this.overlayDisabled.presentAs
                     }
                 }
