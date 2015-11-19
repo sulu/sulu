@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1806 [ContentBundle]   Fixed serialization depth for column-navigation
     * BUGFIX      #1800 [ContentBundle]   Fixed preview update of date and color
     * BUGFIX      #1801 [ContentBundle]   Fixed reset values in smart content if values was selected before
     * BUGFIX      #1796 [ContentBundle]   Fixed content type date to save as date data-type in phpcr
