@@ -373,6 +373,7 @@ define([
                 var urlData = this.sandbox.dom.data('#external', 'url-data');
                 data.title = this.sandbox.dom.val('#external-title');
                 data.external = urlData.scheme + urlData.specificPart;
+                data.urlParts = urlData;
             }
 
             if (!!baseLanguages && baseLanguages.length > 0) {
@@ -433,7 +434,7 @@ define([
                 this.sandbox.dom.addClass(constants.externalLink.titleContainer, constants.validateErrorClass);
             }
 
-            if (!data.external) {
+            if (!data.urlParts.scheme || !data.urlParts.specificPart) {
                 result = false;
                 this.sandbox.dom.addClass(constants.externalLink.linkContainer, constants.validateErrorClass);
             }
