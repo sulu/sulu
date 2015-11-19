@@ -418,9 +418,9 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
 
         listenForChange: function() {
             this.dfdListenForResourceLocator.then(function() {
-                this.sandbox.dom.on(this.$el, 'keyup change', function() {
+                this.sandbox.dom.on(this.$el, 'keyup change', _.debounce(function() {
                     this.setHeaderBar(false);
-                }.bind(this), '.trigger-save-button');
+                }.bind(this), 10), '.trigger-save-button');
             }.bind(this));
 
             this.sandbox.on('sulu.content.changed', function() {

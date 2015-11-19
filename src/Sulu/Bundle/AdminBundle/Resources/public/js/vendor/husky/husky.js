@@ -44527,6 +44527,13 @@ define('__component__$input@husky',[], function() {
          * Binds Dom-related events
          */
         bindDomEvents: function() {
+            this.sandbox.dom.on(this.$el, 'change', function(event) {
+                event.stopPropagation();
+                event.preventDefault();
+
+                this.$el.trigger('change');
+            }.bind(this), 'input');
+
             this.sandbox.dom.on(this.$el, 'click', function() {
                 this.sandbox.dom.focus(this.input.$input);
             }.bind(this));
