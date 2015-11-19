@@ -508,14 +508,14 @@ class NodeRepository implements NodeRepositoryInterface
     ) {
         ++$currentDepth;
 
-        if ($maxDepth !== null && $currentDepth > $maxDepth) {
-            return [];
-        }
-
         $results = [];
         foreach ($nodes as $node) {
             $result = $this->prepareNode($node, $webspaceKey, $languageCode, 1, $complete, $excludeGhosts);
-            if ($node->getHasChildren() && $node->getChildren() != null) {
+            if ($maxDepth !== null &&
+                $currentDepth < $maxDepth &&
+                $node->getHasChildren() &&
+                $node->getChildren() != null
+            ) {
                 $result['_embedded']['nodes'] = $this->prepareNodesTree(
                     $node->getChildren(),
                     $webspaceKey,
