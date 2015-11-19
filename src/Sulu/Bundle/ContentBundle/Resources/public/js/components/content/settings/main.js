@@ -166,22 +166,23 @@ define([
                     this.sandbox.dom.hide('#shadow-container');
                 }
             }.bind(this), '.content-type');
+
+            this.sandbox.dom.on('#shadow_on_checkbox', 'click', function() {
+                this.updateTabVisibilityForShadowCheckbox(false);
+            }.bind(this));
+
         },
 
         updateTabVisibilityForShadowCheckbox: function(isInitial) {
             var checkboxEl = this.sandbox.dom.find('#shadow_on_checkbox')[0],
-                action = checkboxEl.checked ? 'hide' : 'show';
+                action = checkboxEl.checked ? 'hide' : 'show',
+                tabAction;
 
-            var tabAction = action;
             if (false === isInitial) {
                 tabAction = 'hide';
             }
 
-            if (tabAction === 'hide') {
-                this.sandbox.util.each(['content', 'seo', 'excerpt'], function(i, tabName) {
-                    this.sandbox.emit('husky.tabs.header.item.' + tabAction, 'tab-' + tabName);
-                }.bind(this));
-
+            if (tabAction    === 'hide') {
                 this.sandbox.emit('husky.toolbar.header.item.disable', 'state', false);
             } else {
                 this.sandbox.emit('husky.toolbar.header.item.enable', 'state', false);
@@ -218,10 +219,6 @@ define([
                 this.listenForChange();
                 this.startComponents();
                 this.sandbox.start(this.$el, {reset: true});
-
-                this.sandbox.dom.on('#shadow_on_checkbox', 'click', function() {
-                    this.updateTabVisibilityForShadowCheckbox(false);
-                }.bind(this));
 
                 this.updateTabVisibilityForShadowCheckbox(true);
 
