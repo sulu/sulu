@@ -26,6 +26,7 @@ use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
@@ -84,6 +85,11 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
     private $typeManager;
 
     /**
+     * @var PathCleanupInterface
+     */
+    private $pathCleaner;
+
+    /**
      * @var TokenStorageInterface
      */
     private $tokenStorage;
@@ -111,6 +117,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $this->formatManager = $this->prophesize(FormatManagerInterface::class);
         $this->tagManager = $this->prophesize(TagManagerInterface::class);
         $this->typeManager = $this->prophesize(TypeManagerInterface::class);
+        $this->pathCleaner = $this->prophesize(PathCleanupInterface::class);
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $this->securityChecker = $this->prophesize(SecurityCheckerInterface::class);
         $this->ffprobe = $this->prophesize(FFProbe::class);
@@ -125,6 +132,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
             $this->formatManager->reveal(),
             $this->tagManager->reveal(),
             $this->typeManager->reveal(),
+            $this->pathCleaner->reveal(),
             $this->tokenStorage->reveal(),
             $this->securityChecker->reveal(),
             $this->ffprobe->reveal(),
