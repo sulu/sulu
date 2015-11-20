@@ -31,6 +31,7 @@ use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -120,6 +121,11 @@ class MediaManager implements MediaManagerInterface
     private $securityChecker;
 
     /**
+     * @var PathCleanupInterface
+     */
+    private $pathCleaner;
+
+    /**
      * @var array
      */
     private $permissions;
@@ -156,6 +162,7 @@ class MediaManager implements MediaManagerInterface
      * @param TypeManagerInterface $typeManager
      * @param TokenStorageInterface $tokenStorage
      * @param SecurityCheckerInterface $securityChecker
+     * @param PathCleanupInterface $pathCleaner
      * @param FFProbe $ffprobe
      * @param array $permissions
      * @param string $downloadPath
@@ -173,6 +180,7 @@ class MediaManager implements MediaManagerInterface
         TypeManagerInterface $typeManager,
         TokenStorageInterface $tokenStorage = null,
         SecurityCheckerInterface $securityChecker = null,
+        PathCleanupInterface $pathCleaner = null,
         FFProbe $ffprobe,
         $permissions,
         $downloadPath,
@@ -189,6 +197,7 @@ class MediaManager implements MediaManagerInterface
         $this->typeManager = $typeManager;
         $this->tokenStorage = $tokenStorage;
         $this->securityChecker = $securityChecker;
+        $this->pathCleaner = $pathCleaner;
         $this->ffprobe = $ffprobe;
         $this->permissions = $permissions;
         $this->downloadPath = $downloadPath;
@@ -611,9 +620,13 @@ class MediaManager implements MediaManagerInterface
 
         $this->validator->validate($uploadedFile);
 
+        // normalize file name
+        $originalFileName = $uploadedFile->getClientOriginalName();
+        $fileName = $this->pathCleaner->cleanup($originalFileName);
+
         $data['storageOptions'] = $this->storage->save(
             $uploadedFile->getPathname(),
-            $uploadedFile->getClientOriginalName(),
+            $fileName,
             1
         );
 
