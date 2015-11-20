@@ -87,6 +87,44 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('/test-3', $result[2]->getPath());
     }
 
+    public function testFindByParentMapping()
+    {
+        $this->initPhpcr();
+
+        $this->createPage('test-1', 'de');
+        $this->createPage('test-2', 'de');
+        $this->createPage('test-3', 'de');
+
+        $parentUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
+
+        $result = $this->contentRepository->findByParentUuid($parentUuid, 'de', 'sulu_io', ['title']);
+
+        $this->assertCount(3, $result);
+
+        $this->assertEquals('test-1', $result[0]['title']);
+        $this->assertEquals('test-2', $result[1]['title']);
+        $this->assertEquals('test-3', $result[2]['title']);
+    }
+
+    public function testFindByParentWithShadow()
+    {
+        $this->initPhpcr();
+
+        $this->createShadowPage('test-1', 'de', 'en');
+        $this->createPage('test-2', 'en');
+        $this->createPage('test-3', 'en');
+
+        $parentUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
+
+        $result = $this->contentRepository->findByParentUuid($parentUuid, 'en', 'sulu_io', ['title']);
+
+        $this->assertCount(3, $result);
+
+        $this->assertEquals('test-1', $result[0]['title']);
+        $this->assertEquals('test-2', $result[1]['title']);
+        $this->assertEquals('test-3', $result[2]['title']);
+    }
+
     private function createPage($title, $locale, $data = [])
     {
         $data['title'] = $title;
@@ -108,6 +146,23 @@ class ContentRepositoryTest extends SuluTestCase
                 'auto_create' => true,
             ]
         );
+        $this->documentManager->flush();
+
+        return $document;
+    }
+
+    private function createShadowPage($title, $locale, $shadowedLocale)
+    {
+        $document1 = $this->createPage($title, $locale);
+        $document = $this->documentManager->find($document1->getUuid(), $shadowedLocale, ['load_ghost_content' => false]);
+
+        $document->setShadowLocaleEnabled(true);
+        $document->setTitle(strrev($title));
+        $document->setShadowLocale($locale);
+        $document->setLocale($shadowedLocale);
+        $document->setResourceSegment($document1->getResourceSegment());
+
+        $this->documentManager->persist($document, $shadowedLocale);
         $this->documentManager->flush();
 
         return $document;

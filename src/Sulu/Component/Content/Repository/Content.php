@@ -10,7 +10,9 @@
 
 namespace Sulu\Component\Content\Repository;
 
-class Content
+use Sulu\Exception\FeatureNotImplementedException;
+
+class Content implements \ArrayAccess
 {
     /**
      * @var string
@@ -56,5 +58,37 @@ class Content
     public function getData()
     {
         return $this->data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function offsetExists($offset)
+    {
+        return array_key_exists($offset, $this->data);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function offsetGet($offset)
+    {
+        return $this->data[$offset];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function offsetSet($offset, $value)
+    {
+        throw new FeatureNotImplementedException();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function offsetUnset($offset)
+    {
+        throw new FeatureNotImplementedException();
     }
 }

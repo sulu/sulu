@@ -100,6 +100,8 @@ class ContentRepository
             ->select('node', $this->propertyEncoder->localizedContentName('nodeType', $locale), 'nodeType')
             ->addSelect('node', 'jcr:uuid', 'uuid')
             ->addSelect('node', $this->propertyEncoder->localizedContentName('nodeType', $locale), 'nodeType')
+            ->addSelect('node', $this->propertyEncoder->localizedContentName('shadow-on', $locale), 'shadowOn')
+            ->addSelect('node', $this->propertyEncoder->localizedContentName('shadow-base', $locale), 'shadowBase')
             ->from($qomFactory->selector('node', 'nt:unstructured'))
             ->where($qomFactory->descendantNode('node', $parentPath));
     }
@@ -126,23 +128,29 @@ class ContentRepository
     private function appendSingleMapping(QueryBuilder $queryBuilder, $propertyName, $locale, $locales)
     {
         foreach ($locales as $item) {
-            $name = sprintf('%s%s', $item, ucfirst($propertyName));
+            $alias = sprintf('%s%s', $item, ucfirst($propertyName));
 
             if ($locale === $item) {
-                $name = $propertyName;
+                $alias = $propertyName;
             }
 
-            $queryBuilder->addSelect('node', $this->propertyEncoder->localizedContentName($name, $item), $name);
+            $queryBuilder->addSelect(
+                'node',
+                $this->propertyEncoder->localizedContentName($propertyName, $item),
+                $alias
+            );
         }
     }
 
     private function resolveContent(Row $row, $mapping, $webspaceKey)
     {
-        $values = $row->getValues();
-
         $data = [];
         foreach ($mapping as $item) {
-            $data[$item] = $this->resolveProperty($values, $item, null);
+            $data[$item] = $this->resolveProperty(
+                $row,
+                $item,
+                $row->getValue('shadowOn') ? $row->getValue('shadowBase') : null
+            );
         }
 
         return new Content(
@@ -152,10 +160,12 @@ class ContentRepository
         );
     }
 
-    private function resolveProperty($data, $name, $shadowLocale)
+    private function resolveProperty(Row $row, $name, $shadowLocale)
     {
-        // TODO resolve shadow
+        if (null !== $shadowLocale) {
+            $name = sprintf('%s%s', $shadowLocale, ucfirst($name));
+        }
 
-        return $data[sprintf('node.%s', $name)];
+        return $row->getValue($name);
     }
 }
