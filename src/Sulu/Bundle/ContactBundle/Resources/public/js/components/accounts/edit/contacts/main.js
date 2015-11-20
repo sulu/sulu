@@ -187,7 +187,8 @@ define([
                                 data: response._embedded.positions,
                                 noNewValues: true,
                                 deselectField: 'select.no-choice',
-                                isNative: true
+                                isNative: true,
+                                defaultLabel: this.sandbox.translate('public.please-choose')
                             }
                         }
                     ]);
