@@ -161,9 +161,9 @@ class MediaManager implements MediaManagerInterface
      * @param FormatManagerInterface $formatManager
      * @param TagManagerInterface $tagManager
      * @param TypeManagerInterface $typeManager
+     * @param PathCleanupInterface $pathCleaner
      * @param TokenStorageInterface $tokenStorage
      * @param SecurityCheckerInterface $securityChecker
-     * @param PathCleanupInterface $pathCleaner
      * @param FFProbe $ffprobe
      * @param array $permissions
      * @param string $downloadPath
@@ -179,9 +179,9 @@ class MediaManager implements MediaManagerInterface
         FormatManagerInterface $formatManager,
         TagManagerInterface $tagManager,
         TypeManagerInterface $typeManager,
+        PathCleanupInterface $pathCleaner,
         TokenStorageInterface $tokenStorage = null,
         SecurityCheckerInterface $securityChecker = null,
-        PathCleanupInterface $pathCleaner = null,
         FFProbe $ffprobe,
         $permissions,
         $downloadPath,
@@ -196,9 +196,9 @@ class MediaManager implements MediaManagerInterface
         $this->formatManager = $formatManager;
         $this->tagManager = $tagManager;
         $this->typeManager = $typeManager;
+        $this->pathCleaner = $pathCleaner;
         $this->tokenStorage = $tokenStorage;
         $this->securityChecker = $securityChecker;
-        $this->pathCleaner = $pathCleaner;
         $this->ffprobe = $ffprobe;
         $this->permissions = $permissions;
         $this->downloadPath = $downloadPath;
