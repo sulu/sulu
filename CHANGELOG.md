@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * BUGFIX      #1812 [ContactBundle]   Fixed translation bug in position dropdown
+    * BUGFIX      #1814 [MediaBundle]     Fixed media selection bug
     * ENHANCEMENT #1806 [ContentBundle]   Fixed serialization depth for column-navigation
     * BUGFIX      #1800 [ContentBundle]   Fixed preview update of date and color
     * BUGFIX      #1801 [ContentBundle]   Fixed reset values in smart content if values was selected before
