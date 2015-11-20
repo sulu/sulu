@@ -77,6 +77,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
 
     /**
      * @var bool
+     * @Expose
      */
     protected $locked = false;
 

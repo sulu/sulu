@@ -56,6 +56,7 @@ define([
             this.user.set('contact', this.contact);
             this.user.set('locale', data.user.locale);
             this.user.set('email', (!!data.user.email) ? data.user.email : null);
+            this.user.set('locked', !!data.user.locked);
 
             if (!!data.user.password && data.user.password !== '') {
                 this.user.set('password', data.user.password);

@@ -86,14 +86,11 @@ define([
         },
 
         destroy: function() {
-            this.sandbox.emit('sulu.header.toolbar.item.hide', 'disabler');
-            this.cleanUp();
+            // stop contact form before leaving
+            this.sandbox.stop(constants.editFormSelector);
         },
 
         render: function() {
-            this.sandbox.emit(this.options.disablerToggler + '.change', this.data.disabled);
-            this.sandbox.emit('sulu.header.toolbar.item.show', 'disabler');
-
             this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
             this.sandbox.once('sulu.contacts.set-types', this.setTypes.bind(this));
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/form'));
@@ -398,14 +395,6 @@ define([
         toggleDisableContact: function(disable) {
             this.data.disabled = disable;
             this.sandbox.emit('sulu.tab.dirty');
-        },
-
-        /**
-         * Does some cleanup with aura components
-         */
-        cleanUp: function() {
-            // stop contact form before leaving
-            this.sandbox.stop(constants.editFormSelector);
         },
 
         initContactData: function() {
