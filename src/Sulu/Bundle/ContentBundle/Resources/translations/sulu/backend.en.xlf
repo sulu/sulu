@@ -242,9 +242,13 @@
                 <source>smart-content.choose-data-source</source>
                 <target>Choose data source</target>
             </trans-unit>
-            <trans-unit id="90a3276459ba0f52ef7a4d320298d5d" resname="smart-content.choose-data-source.cancel">
-                <source>smart-content.choose-data-source.cancel</source>
+            <trans-unit id="90a3276459ba0f52ef7a4d320298d5d" resname="smart-content.choose-data-source.reset">
+                <source>smart-content.choose-data-source.reset</source>
                 <target>Reset</target>
+            </trans-unit>
+            <trans-unit id="90a3276459ba0f52ef7a41320298d5d" resname="smart-content.choose-data-source.back">
+                <source>smart-content.choose-data-source.back</source>
+                <target>Back</target>
             </trans-unit>
             <trans-unit id="443d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.title">
                 <source>sulu.content.seo.title</source>
@@ -533,7 +537,7 @@
             </trans-unit>
             <trans-unit id="e4b14069a8a085ede2092hf51234dh49" resname="smart-content.choose-categories.ok">
                 <source>smart-content.choose-categories.ok</source>
-                <target>Apply Categories</target>
+                <target>Apply categories</target>
             </trans-unit>
             <trans-unit id="9" resname="content.delete-referenced-by-following">
                 <source>content.delete-referenced-by-following</source>

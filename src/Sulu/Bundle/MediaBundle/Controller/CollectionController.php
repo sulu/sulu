@@ -1,7 +1,6 @@
 <?php
-
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,7 +14,9 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\MediaBundle\Api\Collection;
+use Sulu\Bundle\MediaBundle\Api\RootCollection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
@@ -84,6 +85,22 @@ class CollectionController extends RestController
      */
     public function getAction($id, Request $request)
     {
+        if ($this->getBooleanRequestParameter($request, 'tree', false, false)) {
+            $collections = $this->getCollectionManager()->getTreeById($id, $this->getLocale($request));
+
+            if ($this->getBooleanRequestParameter($request, 'include-root', false, false)) {
+                $collections = [
+                    new RootCollection($collections),
+                ];
+            }
+
+            return $this->handleView(
+                $this->view(
+                    new CollectionRepresentation($collections, 'collections')
+                )
+            );
+        }
+
         try {
             $locale = $this->getLocale($request);
             $depth = intval($request->get('depth', 0));
@@ -168,6 +185,12 @@ class CollectionController extends RestController
                     $depth,
                     $sortBy !== null ? [$sortBy => $sortOrder] : []
                 );
+            }
+
+            if ($this->getBooleanRequestParameter($request, 'include-root', false, false)) {
+                $collections = [
+                    new RootCollection($collections),
+                ];
             }
 
             $all = $collectionManager->getCount();

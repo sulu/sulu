@@ -139,7 +139,7 @@ class Media implements AuditableInterface
     /**
      * Get files.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return File[]
      */
     public function getFiles()
     {

@@ -38,7 +38,12 @@
                     <script type="text/template" id="address-tpl">
                         <div class="grid-col-12 floating m-top-0 address-component">
                             <~ var uid = _.uniqueId('address_'), first = true; ~>
-                            <~ var getAddressString=function(street,number,zip,city,country){var str=!!street?street:"",part=(zip+" "+city).trim();str+=!!str.length&&!!number?" "+number:number;str+=!!str.length&&!!part?", "+part:part;str+=!!str.length&&!!country?", "+country:country;return str}; ~>
+                            <~ var lines = []; ~>
+                            <~ lines.push(title); ~>
+                            <~ var streetAndNumber = (street + ' ' + number).trim(); if (streetAndNumber !== '') { lines.push(streetAndNumber); } ~>
+                            <~ var zipAndCity = (zip + ' ' + city).trim(); if (zipAndCity !== '') { lines.push(zipAndCity); } ~>
+                            <~ lines.push(country.name); ~>
+                            <~ var addressString = lines.join(', '); ~>
                             <div class="form-group">
 
                                 <label class="visible"></label>
@@ -57,10 +62,11 @@
 
                                 <div class="address-row clickable pointer">
 
-                                    <span><~ print(getAddressString(street, number, zip, city, country.name)) ~></span>
+                                    <span><~= addressString ~></span>
 
                                     <div class="hidden">
                                         <input type="hidden" data-mapper-property="id" class="id-value"/>
+                                        <span data-mapper-property="title" data-form="true"></span>
                                         <span data-mapper-property="street" data-form="true"></span>
                                         <span data-mapper-property="number" data-form="true"></span>
                                         <span data-mapper-property="zip" data-form="true"></span>
@@ -71,7 +77,6 @@
                                         <span data-mapper-property="postboxNumber" data-form="true"></span>
                                         <span data-mapper-property="postboxPostcode" data-form="true"></span>
                                         <span data-mapper-property="postboxCity" data-form="true"></span>
-                                        <span data-mapper-property="title" data-form="true"></span>
                                     </div>
 
                                     <~ if(billingAddress && deliveryAddress) { ~>

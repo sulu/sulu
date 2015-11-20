@@ -2,11 +2,21 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1809 [MediaBundle]     Normalize file names to avoid error in video preview image generation
+    * ENHANCEMENT #1806 [ContentBundle]   Fixed serialization depth for column-navigation
+    * BUGFIX      #1800 [ContentBundle]   Fixed preview update of date and color
+    * BUGFIX      #1801 [ContentBundle]   Fixed reset values in smart content if values was selected before
+    * ENHANCEMENT #1805 [ContentBundle]   Fixed validation of external node type and format of warning message
+    * BUGFIX      #1796 [ContentBundle]   Fixed content type date to save as date data-type in phpcr
+    * BUGFIX      #1802 [ContentBundle]   Fixed appearances of content tabs
     * BUGFIX      #1793 [TagBundle]       Fixed tag-list preview update 
     * BUGFIX      #1793 [CategoryBundle]  Fixed category-list preview update 
     * BUGFIX      #1790 [MediaBundle]     Fixed collection twice after edit collection
     * BUGFIX      #1792 [WebsiteBundle]   Fixed alternate links with custom x-default locale and remove links to 
                                           homepage
+    * FEATURE     #1712 [MediaBundle]     Added media data-provider
+    * ENHANCEMENT #1779 [ContactBundle]   Added title to address list and fixed style of title
+    * BUGFIX      #1794 [ContactBundle]   Fixed account-contact allocation with position
     * ENHANCEMENT #1786 [ContactBundle]   Added cascade options to account and contact
     * BUGFIX      #1789 [CoreBundle]      Added replacers for box brackets
     * BUGFIX      #1785 [ContentBundle]   Fixed data returned for internal link in settings tab

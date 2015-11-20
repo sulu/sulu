@@ -10,6 +10,10 @@
                 <source>navigation.media.collections</source>
                 <target>Collections</target>
             </trans-unit>
+            <trans-unit id="3fd1f800bd2ecfb7af0abf749b716788" resname="smart-content.media.all-collections">
+                <source>navigation.media.collections</source>
+                <target>All collections</target>
+            </trans-unit>
             <trans-unit id="3fd1f800bd2ecfb6af0abf750b716788" resname="navigation.media.collections.search">
                 <source>navigation.media.collections.search</source>
                 <target>Filter collections...</target>

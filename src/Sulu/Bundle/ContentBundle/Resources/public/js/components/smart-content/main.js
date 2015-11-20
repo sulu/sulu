@@ -41,6 +41,7 @@
  * @params {String} [options.resultKey] key for the data in the returning JSON-embedded-result
  * @params {String} [options.tagsResultKey] key for the data in the returning JSON-embedded-result for the tags-component
  * @params {String} [options.titleKey] key for the title in the returning JSON-result
+ * @params {String} [options.imageKey] key for the image in the returning JSON-result
  * @params {String} [options.pathKey] key for the full-qualified-title in the returning JSON-result
  * @params {Boolean} [options.subFoldersDisabled] if true sub-folders overlay-item will be disabled
  * @params {Boolean} [options.tagsDisabled] if true tags overlay-item will be disabled
@@ -77,6 +78,7 @@
  * @params {String} [options.translations.viewLess] translation key
  * @params {String} [options.translations.chooseDataSource] translation key
  * @params {String} [options.translations.chooseDataSourceOk] translation key
+ * @params {String} [options.translations.chooseDataSourceReset] translation key
  * @params {String} [options.translations.chooseDataSourceCancel] translation key
  * @params {String} [options.translations.chooseCategoriesSource] translation key
  * @params {String} [options.translations.chooseCategoriesOk] translation key
@@ -120,6 +122,7 @@ define(['services/husky/util'], function(util) {
             datasourceKey: 'datasource',
             tagsResultKey: 'tags',
             titleKey: 'title',
+            imageKey: 'image',
             pathKey: 'path',
             translations: {},
             elementDataName: 'smart-content',
@@ -194,6 +197,9 @@ define(['services/husky/util'], function(util) {
             contentItem: [
                 '<li data-id="<%= dataId %>">',
                 '    <span class="num"><%= num %></span>',
+                '<% if (!!image) { %>',
+                '    <span class="image"><img src="<%= image %>"/></span>',
+                '<% } %>',
                 '    <span class="value"><%= value %></span>',
                 '</li>'
             ].join(''),
@@ -448,6 +454,7 @@ define(['services/husky/util'], function(util) {
                 viewLess: 'smart-content.view-less',
                 chooseDataSource: 'smart-content.choose-data-source',
                 chooseDataSourceOk: 'smart-content.choose-data-source.ok',
+                chooseDataSourceReset: 'smart-content.choose-data-source.reset',
                 chooseDataSourceCancel: 'smart-content.choose-data-source.cancel',
                 chooseCategories: 'smart-content.choose-categories',
                 chooseCategoriesOk: 'smart-content.choose-categories.ok',
@@ -522,10 +529,18 @@ define(['services/husky/util'], function(util) {
          * Renders the source text and inserts it to the header
          */
         insertSource: function() {
-            var desc, $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent);
-            this.sandbox.dom.text($element, this.sandbox.util.cropMiddle(this.overlayData.fullQualifiedTitle, 30, '...'));
+            var desc,
+                $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent),
+                fullQualifiedTitle = this.sandbox.translate(this.overlayData.fullQualifiedTitle);
 
-            if (!!this.options.has.datasource && typeof(this.overlayData.dataSource) !== 'undefined') {
+            this.sandbox.dom.text($element, this.sandbox.util.cropMiddle(fullQualifiedTitle, 30, '...'));
+
+            if (!!this.options.has.datasource &&
+                typeof(this.overlayData.dataSource) !== 'undefined' &&
+                this.overlayData.dataSource !== '' &&
+                this.overlayData.title !== '' &&
+                this.overlayData.title !== null
+            ) {
                 desc = this.sandbox.translate(this.translations.from);
                 if (this.overlayData.includeSubFolders !== false) {
                     desc += ' (' + this.sandbox.translate(this.translations.subFoldersInclusive) + '):';
@@ -534,7 +549,7 @@ define(['services/husky/util'], function(util) {
                 }
                 this.sandbox.dom.append(this.$header, this.sandbox.util.template(templates.source)({
                     desc: desc,
-                    val: this.overlayData.title
+                    val: this.sandbox.translate(this.overlayData.title)
                 }));
             }
         },
@@ -580,6 +595,7 @@ define(['services/husky/util'], function(util) {
                     this.sandbox.dom.append(ul, _.template(templates.contentItem)({
                         dataId: item[this.options.idKey],
                         value: item[this.options.titleKey],
+                        image: item[this.options.imageKey] || null,
                         num: (index + 1)
                     }));
                 }.bind(this));
@@ -716,13 +732,31 @@ define(['services/husky/util'], function(util) {
                         {
                             type: 'cancel',
                             inactive: false,
-                            classes: 'just-text',
                             text: this.translations.chooseDataSourceCancel,
-                            align: 'center'
+                            align: 'left'
+                        },
+                        {
+                            inactive: false,
+                            classes: 'just-text',
+                            text: this.translations.chooseDataSourceReset,
+                            align: 'center',
+                            callback: function() {
+                                var $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent);
+                                this.overlayData.dataSource = null;
+                                $element.text('');
+                                $element.data('id', null);
+
+                                this.sandbox.emit('smart-content.datasource.' + this.options.instanceName + '.set-selected', this.overlayData.dataSource);
+                                this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-to', this.mainSlide);
+
+                                return false;
+                            }.bind(this)
                         }
                     ],
                     cancelCallback: function() {
+                        this.sandbox.emit('smart-content.datasource.' + this.options.instanceName + '.set-selected', this.overlayData.dataSource);
                         this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-to', this.mainSlide);
+
                         return false;
                     }.bind(this)
                 });
@@ -830,12 +864,15 @@ define(['services/husky/util'], function(util) {
                     locale: this.options.locale,
                     instanceName: this.options.instanceName,
                     selectCallback: function(id, fullQualifiedTitle) {
-                        this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-to', this.mainSlide);
+                        fullQualifiedTitle = this.sandbox.translate(fullQualifiedTitle);
 
                         var $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent);
                         this.overlayData.dataSource = id;
                         this.sandbox.dom.text($element, this.sandbox.util.cropMiddle(fullQualifiedTitle, 30, '...'));
                         this.sandbox.dom.data($element, 'id', id);
+
+                        this.sandbox.emit('smart-content.datasource.' + this.options.instanceName + '.set-selected', this.overlayData.dataSource);
+                        this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-to', this.mainSlide);
                     }.bind(this)
                 },
                 componentOptions = this.sandbox.util.extend(true, {}, componentDefaults, this.options.datasource.options);
@@ -1000,7 +1037,7 @@ define(['services/husky/util'], function(util) {
                     options: {
                         el: this.sandbox.dom.find('.' + constants.tagListClass, this.$overlayContent),
                         instanceName: this.options.instanceName + constants.tagListClass,
-                        items: this.options.tags,
+                        items: this.overlayData.tags,
                         remoteUrl: this.options.tagsAutoCompleteUrl,
                         autocomplete: (this.options.tagsAutoCompleteUrl !== ''),
                         getParameter: this.options.tagsGetParameter,
@@ -1019,7 +1056,8 @@ define(['services/husky/util'], function(util) {
                             {id: operators.or, name: this.sandbox.translate(this.translations.useAnyTag)},
                             {id: operators.and, name: this.sandbox.translate(this.translations.useAllTags)}
                         ],
-                        preSelectedElements: [operators[this.options.preSelectedTagOperator]],
+                        preSelectedElements: !!this.overlayData.tagOperator ?
+                            [operators[this.overlayData.tagOperator]] : null,
                         disabled: this.overlayDisabled.tags
                     }
                 },
@@ -1030,7 +1068,7 @@ define(['services/husky/util'], function(util) {
                         instanceName: this.options.instanceName + constants.sortByDropdownClass,
                         value: 'name',
                         data: this.options.sortBy,
-                        preSelectedElements: [this.options.preSelectedSortBy],
+                        preSelectedElements: !!this.overlayData.sortBy ? [this.overlayData.sortBy] : null,
                         disabled: this.overlayDisabled.sortBy,
                         defaultLabel: this.sandbox.translate('smart-content.no-sorting'),
                         deselectField: this.sandbox.translate('smart-content.no-sorting')
@@ -1046,7 +1084,8 @@ define(['services/husky/util'], function(util) {
                             {id: sortMethods.asc, name: this.sandbox.translate(this.translations.ascending)},
                             {id: sortMethods.desc, name: this.sandbox.translate(this.translations.descending)}
                         ],
-                        preSelectedElements: [sortMethods[this.options.preSelectedSortMethod]],
+                        preSelectedElements: !!this.overlayData.sortMethod ?
+                            [sortMethods[this.overlayData.sortMethod]] : null,
                         disabled: this.overlayDisabled.sortBy
                     }
                 },
@@ -1058,7 +1097,7 @@ define(['services/husky/util'], function(util) {
                         defaultLabel: this.sandbox.translate(this.translations.choosePresentAs),
                         value: 'name',
                         data: this.options.presentAs,
-                        preSelectedElements: [this.options.preSelectedPresentAs],
+                        preSelectedElements: !!this.overlayData.presentAs ? [this.overlayData.presentAs] : null,
                         disabled: this.overlayDisabled.presentAs
                     }
                 }
@@ -1100,22 +1139,6 @@ define(['services/husky/util'], function(util) {
         loadContent: function() {
             //only request if URI has changed
             if (this.URI.hasChanged === true) {
-                // no datasource selected empty form
-                if (!!this.options.has.datasource &&
-                    (
-                        this.URI.data[this.options.dataSourceParameter] === null ||
-                        this.URI.data[this.options.dataSourceParameter].length === 0
-                    )
-                ) {
-                    this.overlayData.title = null;
-                    this.overlayData.fullQualifiedTitle = null;
-
-                    this.items = [];
-                    this.sandbox.emit(DATA_RETRIEVED.call(this));
-
-                    return;
-                }
-
                 this.sandbox.emit(DATA_REQUEST.call(this));
                 this.$find('.' + constants.contentListClass).empty();
                 this.$container.addClass(constants.isLoadingClass);
@@ -1126,9 +1149,12 @@ define(['services/husky/util'], function(util) {
 
                     success: function(data) {
                         this.$container.removeClass(constants.isLoadingClass);
-                        if (!!this.options.has.datasource && !!data[this.options.datasourceKey]) {
+                        if (!!this.options.has.datasource && data[this.options.datasourceKey]) {
                             this.overlayData.title = data[this.options.datasourceKey][this.options.titleKey];
                             this.overlayData.fullQualifiedTitle = data[this.options.datasourceKey][this.options.pathKey];
+                        } else {
+                            this.overlayData.title = null;
+                            this.overlayData.fullQualifiedTitle = '';
                         }
                         this.items = data._embedded[this.options.resultKey];
                         this.updateSelectedCounter(this.items.length);
@@ -1248,6 +1274,11 @@ define(['services/husky/util'], function(util) {
             this.$overlayContent.html('');
             this.appendOverlayContent(this.$overlayContent, this.overlayData);
             this.startOverlayComponents();
+            this.handleCategoriesInitialized({ids: [], operator: 'or', items:[]});
+            this.sandbox.emit(
+                'smart-content.datasource.' + this.options.instanceName + '.set-selected',
+                this.overlayData.dataSource
+            );
         }
     };
 });

@@ -44,7 +44,7 @@ define([
 
             // when a position is selected in the company overlay
             this.sandbox.on('husky.select.company-position-select.selected.item', function(id) {
-                this.companyPosition = id;
+                this.companyPosition = this.positions[parseInt(id)];
             }, this);
 
             // receive form of address values via template
@@ -172,6 +172,11 @@ define([
 
             this.sandbox.util.load('/admin/api/contact/positions')
                 .then(function(response) {
+                    this.positions = {};
+                    $.each(response._embedded.positions, function(index, item) {
+                        this.positions[item['id']] = item;
+                    }.bind(this));
+
                     this.sandbox.start([
                         {
                             name: 'select@husky',
@@ -179,7 +184,6 @@ define([
                                 el: constants.positionSelector,
                                 instanceName: 'company-position-select',
                                 valueName: 'position',
-                                returnValue: 'id',
                                 data: response._embedded.positions,
                                 noNewValues: true,
                                 deselectField: 'select.no-choice',

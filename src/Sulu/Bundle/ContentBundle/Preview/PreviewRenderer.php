@@ -71,12 +71,14 @@ class PreviewRenderer
      */
     public function render(PageBridge $content, $partial = false)
     {
+        $currentRequest = $this->requestStack->getCurrentRequest();
+
         // set active theme
         $webspace = $this->webspaceManager->findWebspaceByKey($content->getWebspaceKey());
         $this->activeTheme->setName($webspace->getTheme()->getKey());
 
         // get controller and invoke action
-        $request = new Request();
+        $request = new Request($currentRequest->query->all(), $currentRequest->request->all(), [], $currentRequest->cookies->all());
         $request->attributes->set('_controller', $content->getController());
         $controller = $this->controllerResolver->getController($request);
 

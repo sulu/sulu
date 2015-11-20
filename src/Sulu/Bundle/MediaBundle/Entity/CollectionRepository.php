@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -252,5 +253,33 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         } catch (NoResultException $ex) {
             return;
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findTree($id, $locale)
+    {
+        $subQueryBuilder = $this->createQueryBuilder('subCollection')
+            ->select('subCollection.id')
+            ->leftJoin($this->_entityName, 'c', Join::WITH, 'c.id = :id')
+            ->andWhere('subCollection.lft <= c.lft AND subCollection.rgt > c.lft');
+
+        $queryBuilder = $this->createQueryBuilder('collection')
+            ->addSelect('meta')
+            ->addSelect('defaultMeta')
+            ->addSelect('type')
+            ->addSelect('parent')
+            ->leftJoin('collection.meta', 'meta', Join::WITH, 'meta.locale = :locale')
+            ->leftJoin('collection.defaultMeta', 'defaultMeta')
+            ->innerJoin('collection.type', 'type')
+            ->leftJoin('collection.parent', 'parent')
+            ->where(sprintf('parent.id IN (%s)', $subQueryBuilder->getDQL()))
+            ->orWhere('parent.id is NULL')
+            ->orderBy('collection.lft')
+            ->setParameter('id', $id)
+            ->setParameter('locale', $locale);
+
+        return $queryBuilder->getQuery()->getResult();
     }
 }

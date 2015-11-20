@@ -387,10 +387,8 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
 
     /**
      * Append joins to query builder for "findByFilters" function.
-     *
-     * @param QueryBuilder $queryBuilder
      */
-    protected function appendJoins(QueryBuilder $queryBuilder)
+    protected function appendJoins(QueryBuilder $queryBuilder, $alias, $locale)
     {
         $queryBuilder->addSelect('emails')
             ->addSelect('emailType')
@@ -403,16 +401,16 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
             ->addSelect('tags')
             ->addSelect('categories')
             ->addSelect('translations')
-            ->leftJoin('entity.emails', 'emails')
+            ->leftJoin($alias . '.emails', 'emails')
             ->leftJoin('emails.emailType', 'emailType')
-            ->leftJoin('entity.phones', 'phones')
+            ->leftJoin($alias . '.phones', 'phones')
             ->leftJoin('phones.phoneType', 'phoneType')
-            ->leftJoin('entity.faxes', 'faxes')
+            ->leftJoin($alias . '.faxes', 'faxes')
             ->leftJoin('faxes.faxType', 'faxType')
-            ->leftJoin('entity.urls', 'urls')
+            ->leftJoin($alias . '.urls', 'urls')
             ->leftJoin('urls.urlType', 'urlType')
-            ->leftJoin('entity.tags', 'tags')
-            ->leftJoin('entity.categories', 'categories')
+            ->leftJoin($alias . '.tags', 'tags')
+            ->leftJoin($alias . '.categories', 'categories')
             ->leftJoin('categories.translations', 'translations');
     }
 }

@@ -14,6 +14,7 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,14 +28,22 @@ class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
      */
     private $webspaceManager;
 
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
     protected function setUp()
     {
         parent::setUp();
 
         $this->prepareWebspaceManager();
 
+        $this->requestStack = $this->prophesize(RequestStack::class);
+
         $this->resolver = new RequestAnalyzerResolver(
             $this->webspaceManager->reveal(),
+            $this->requestStack->reveal(),
             'dev',
             ['analyticsKey' => 'UA-SULU-Test']
         );
@@ -121,6 +130,9 @@ class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
     {
         $this->webspaceManager->getPortalInformations('dev')->willReturn(['sulu.io/de' => []]);
 
+        $request = new \Symfony\Component\HttpFoundation\Request();
+        $this->requestStack->getCurrentRequest()->willReturn($request);
+
         $result = $this->resolver->resolveForPreview('sulu_io', 'de');
         $this->assertEquals(
             [
@@ -133,6 +145,32 @@ class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
                     'resourceLocator' => '',
                     'get' => [],
                     'post' => [],
+                    'analyticsKey' => 'UA-SULU-Test',
+                ],
+            ],
+            $result
+        );
+    }
+
+    public function testResolveForPreviewWithRequestParameter()
+    {
+        $this->webspaceManager->getPortalInformations('dev')->willReturn(['sulu.io/de' => []]);
+
+        $request = new \Symfony\Component\HttpFoundation\Request(['test' => 1], ['test' => 2]);
+        $this->requestStack->getCurrentRequest()->willReturn($request);
+
+        $result = $this->resolver->resolveForPreview('sulu_io', 'de');
+        $this->assertEquals(
+            [
+                'request' => [
+                    'webspaceKey' => 'sulu_io',
+                    'locale' => 'de',
+                    'defaultLocale' => 'de',
+                    'portalUrl' => 'sulu.io/de',
+                    'resourceLocatorPrefix' => '',
+                    'resourceLocator' => '',
+                    'get' => ['test' => 1],
+                    'post' => ['test' => 2],
                     'analyticsKey' => 'UA-SULU-Test',
                 ],
             ],

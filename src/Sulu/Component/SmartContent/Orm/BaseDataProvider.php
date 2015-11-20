@@ -12,11 +12,15 @@ namespace Sulu\Component\SmartContent\Orm;
 
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
+use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\SmartContent\ArrayAccessItem;
+use Sulu\Component\SmartContent\Configuration\Builder;
+use Sulu\Component\SmartContent\Configuration\BuilderInterface;
 use Sulu\Component\SmartContent\Configuration\ProviderConfiguration;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
+use Sulu\Component\SmartContent\ItemInterface;
 
 /**
  * Provides basic functionality for contact and account providers.
@@ -24,9 +28,19 @@ use Sulu\Component\SmartContent\DataProviderResult;
 abstract class BaseDataProvider implements DataProviderInterface
 {
     /**
+     * Creates a new configuration object.
+     *
+     * @return BuilderInterface
+     */
+    protected static function createConfigurationBuilder()
+    {
+        return Builder::create();
+    }
+
+    /**
      * @var DataProviderRepositoryInterface
      */
-    private $repository;
+    protected $repository;
 
     /**
      * @var ProviderConfigurationInterface
@@ -79,7 +93,14 @@ abstract class BaseDataProvider implements DataProviderInterface
         $page = 1,
         $pageSize = null
     ) {
-        list($result, $hasNextPage) = $this->resolveFilters($filters, $options['locale'], $limit, $page, $pageSize);
+        list($result, $hasNextPage) = $this->resolveFilters(
+            $filters,
+            $options['locale'],
+            $limit,
+            $page,
+            $pageSize,
+            $this->getOptions($propertyParameter, $options)
+        );
 
         return new DataProviderResult($this->decorateDataItems($result), $hasNextPage);
     }
@@ -95,7 +116,14 @@ abstract class BaseDataProvider implements DataProviderInterface
         $page = 1,
         $pageSize = null
     ) {
-        list($result, $hasNextPage) = $this->resolveFilters($filters, $options['locale'], $limit, $page, $pageSize);
+        list($result, $hasNextPage) = $this->resolveFilters(
+            $filters,
+            $options['locale'],
+            $limit,
+            $page,
+            $pageSize,
+            $this->getOptions($propertyParameter, $options)
+        );
 
         return new DataProviderResult($this->decorateResourceItems($result, $options['locale']), $hasNextPage);
     }
@@ -108,9 +136,10 @@ abstract class BaseDataProvider implements DataProviderInterface
         $locale,
         $limit = null,
         $page = 1,
-        $pageSize = null
+        $pageSize = null,
+        $options = []
     ) {
-        $result = $this->repository->findByFilters($filters, $page, $pageSize, $limit, $locale);
+        $result = $this->repository->findByFilters($filters, $page, $pageSize, $limit, $locale, $options);
 
         $hasNextPage = false;
         if ($pageSize !== null && count($result) > $pageSize) {
@@ -125,6 +154,8 @@ abstract class BaseDataProvider implements DataProviderInterface
      * Initiate configuration.
      *
      * @return ProviderConfigurationInterface
+     *
+     * @deprecated use self::createConfigurationBuilder instead.
      */
     protected function initConfiguration($tags, $categories, $limit, $presentAs, $paginated, $sorting)
     {
@@ -170,11 +201,26 @@ abstract class BaseDataProvider implements DataProviderInterface
     }
 
     /**
+     * Returns additional options for query creation.
+     *
+     * @param PropertyParameter[] $propertyParameter
+     * @param array $options
+     *
+     * @return array
+     */
+    protected function getOptions(
+        array $propertyParameter,
+        array $options = []
+    ) {
+        return [];
+    }
+
+    /**
      * Decorates result as data item.
      *
      * @param array $data
      *
-     * @return array
+     * @return ItemInterface[]
      */
     abstract protected function decorateDataItems(array $data);
 }
