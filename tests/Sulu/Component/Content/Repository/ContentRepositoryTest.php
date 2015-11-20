@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content\Repository;
 
 use PHPCR\SessionInterface;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
@@ -125,6 +126,91 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-3', $result[2]['title']);
     }
 
+    public function testFindByParentWithInternalLink()
+    {
+        $this->initPhpcr();
+
+        $link = $this->createPage('test-1', 'de');
+        $this->createInternalLinkPage('test-2', 'de', $link);
+        $this->createPage('test-3', 'de');
+
+        $parentUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
+
+        $result = $this->contentRepository->findByParentUuid($parentUuid, 'de', 'sulu_io', ['title']);
+
+        $this->assertCount(3, $result);
+
+        $this->assertEquals('test-1', $result[0]['title']);
+        $this->assertEquals('test-1', $result[1]['title']);
+        $this->assertEquals('test-3', $result[2]['title']);
+    }
+
+    public function testFindByParentWithInternalLinkAndShadow()
+    {
+        $this->initPhpcr();
+
+        $link = $this->createShadowPage('test-1', 'de', 'en');
+        $this->createInternalLinkPage('test-2', 'en', $link);
+        $this->createPage('test-3', 'en');
+
+        $parentUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
+
+        $result = $this->contentRepository->findByParentUuid($parentUuid, 'en', 'sulu_io', ['title']);
+
+        $this->assertCount(3, $result);
+
+        $this->assertEquals('test-1', $result[0]['title']);
+        $this->assertEquals('test-1', $result[1]['title']);
+        $this->assertEquals('test-3', $result[2]['title']);
+    }
+
+    public function testFind()
+    {
+        $this->initPhpcr();
+
+        $page = $this->createPage('test-1', 'de');
+
+        $result = $this->contentRepository->find($page->getUuid(), 'de', 'sulu_io', ['title']);
+
+        $this->assertNotNull($result->getUuid());
+        $this->assertEquals('/test-1', $result->getPath());
+        $this->assertEquals('test-1', $result['title']);
+    }
+
+    public function testFindWithShadow()
+    {
+        $this->initPhpcr();
+
+        $page = $this->createShadowPage('test-1', 'de', 'en');
+
+        $result = $this->contentRepository->find($page->getUuid(), 'en', 'sulu_io', ['title']);
+
+        $this->assertNotNull($result->getUuid());
+        $this->assertEquals('/1-tset', $result->getPath()); // path will be generated with reversed string
+        $this->assertEquals('test-1', $result['title']);
+    }
+
+    public function testFindWithInternalLink()
+    {
+        $this->initPhpcr();
+
+        $link = $this->createPage('test-1', 'de');
+        $page = $this->createInternalLinkPage('test-2', 'de', $link);
+
+        $result = $this->contentRepository->find($page->getUuid(), 'de', 'sulu_io', ['title']);
+
+        $this->assertEquals($page->getUuid(), $result->getUuid());
+        $this->assertEquals('/test-2', $result->getPath());
+        $this->assertEquals('test-1', $result['title']);
+    }
+
+    /**
+     * @param string $title
+     * @param string $locale
+     * @param array $data
+     *
+     * @return PageDocument
+     */
     private function createPage($title, $locale, $data = [])
     {
         $data['title'] = $title;
@@ -151,10 +237,21 @@ class ContentRepositoryTest extends SuluTestCase
         return $document;
     }
 
+    /**
+     * @param string $title
+     * @param string $locale
+     * @param string $shadowedLocale
+     *
+     * @return PageDocument
+     */
     private function createShadowPage($title, $locale, $shadowedLocale)
     {
         $document1 = $this->createPage($title, $locale);
-        $document = $this->documentManager->find($document1->getUuid(), $shadowedLocale, ['load_ghost_content' => false]);
+        $document = $this->documentManager->find(
+            $document1->getUuid(),
+            $shadowedLocale,
+            ['load_ghost_content' => false]
+        );
 
         $document->setShadowLocaleEnabled(true);
         $document->setTitle(strrev($title));
@@ -163,6 +260,33 @@ class ContentRepositoryTest extends SuluTestCase
         $document->setResourceSegment($document1->getResourceSegment());
 
         $this->documentManager->persist($document, $shadowedLocale);
+        $this->documentManager->flush();
+
+        return $document;
+    }
+
+    private function createInternalLinkPage($title, $locale, PageDocument $link)
+    {
+        $data['title'] = $title;
+        $data['url'] = '/' . $title;
+
+        /** @var PageDocument $document */
+        $document = $this->documentManager->create('page');
+        $document->setStructureType('simple');
+        $document->setTitle($title);
+        $document->setResourceSegment($data['url']);
+        $document->setLocale($locale);
+        $document->setRedirectType(RedirectType::INTERNAL);
+        $document->setRedirectTarget($link);
+        $document->getStructure()->bind($data);
+        $this->documentManager->persist(
+            $document,
+            $locale,
+            [
+                'path' => $this->sessionManager->getContentPath('sulu_io') . '/' . $title,
+                'auto_create' => true,
+            ]
+        );
         $this->documentManager->flush();
 
         return $document;
