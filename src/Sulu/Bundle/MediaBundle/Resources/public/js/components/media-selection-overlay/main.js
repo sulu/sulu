@@ -251,7 +251,7 @@ define([
             );
 
             this.sandbox.on(
-                'husky.data-navigation.' + this.options.instanceName + '.select',
+                'husky.data-navigation.' + this.options.instanceName + '.selected',
                 dataNavigationSelectHandler.bind(this)
             );
 
