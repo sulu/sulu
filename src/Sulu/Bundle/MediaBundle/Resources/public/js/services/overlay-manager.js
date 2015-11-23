@@ -202,7 +202,7 @@ define(function() {
         /**
          * Start play-video overlay
          * @param videoId Id of the video that should be opened in overlay
-         * @params locale Locale the videos should be loaded in
+         * @params locale Locale the video should be loaded in
          */
         startPlayVideoOverlay: function(videoId, locale) {
             if (!!overlayOpened) {
