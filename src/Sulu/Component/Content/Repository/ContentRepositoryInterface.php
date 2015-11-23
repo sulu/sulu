@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Content\Repository;
 
+use Sulu\Component\Content\Repository\Mapping\MappingInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
@@ -23,12 +24,12 @@ interface ContentRepositoryInterface
      * @param string $uuid
      * @param string $locale
      * @param string $webspaceKey
-     * @param string[] $mapping array of property names.
+     * @param MappingInterface $mapping Includes array of property names.
      * @param UserInterface $user
      *
      * @return Content
      */
-    public function find($uuid, $locale, $webspaceKey, $mapping = [], UserInterface $user = null);
+    public function find($uuid, $locale, $webspaceKey, MappingInterface $mapping, UserInterface $user = null);
 
     /**
      * Find content which are children of parent uuid.
@@ -36,22 +37,28 @@ interface ContentRepositoryInterface
      * @param string $uuid
      * @param string $locale
      * @param string $webspaceKey
-     * @param string[] $mapping array of property names.
+     * @param MappingInterface $mapping Includes array of property names.
      * @param UserInterface $user
      *
      * @return Content[]
      */
-    public function findByParentUuid($uuid, $locale, $webspaceKey, $mapping = [], UserInterface $user = null);
+    public function findByParentUuid(
+        $uuid,
+        $locale,
+        $webspaceKey,
+        MappingInterface $mapping,
+        UserInterface $user = null
+    );
 
     /**
      * Find content which are children of webspace root.
      *
      * @param string $locale
      * @param string $webspaceKey
-     * @param string[] $mapping array of property names.
+     * @param MappingInterface $mapping Includes array of property names.
      * @param UserInterface $user
      *
      * @return Content[]
      */
-    public function findByWebspaceRoot($locale, $webspaceKey, $mapping = [], UserInterface $user = null);
+    public function findByWebspaceRoot($locale, $webspaceKey, MappingInterface $mapping, UserInterface $user = null);
 }

@@ -18,6 +18,7 @@ use PHPCR\Util\QOM\QueryBuilder;
 use Sulu\Component\Content\Compat\LocalizationFinder;
 use Sulu\Component\Content\Compat\StructureType;
 use Sulu\Component\Content\Document\RedirectType;
+use Sulu\Component\Content\Repository\Mapping\MappingInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -92,7 +93,7 @@ class ContentRepository implements ContentRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function find($uuid, $locale, $webspaceKey, $mapping = [], UserInterface $user = null)
+    public function find($uuid, $locale, $webspaceKey, MappingInterface $mapping, UserInterface $user = null)
     {
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
         $queryBuilder = $this->getQueryBuilder($locale, $user);
@@ -103,7 +104,7 @@ class ContentRepository implements ContentRepositoryInterface
                 $this->qomFactory->literal($uuid)
             )
         );
-        $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
+        $this->appendMapping($queryBuilder, $mapping, $locales);
 
         $rows = $queryBuilder->execute();
 
@@ -118,8 +119,13 @@ class ContentRepository implements ContentRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function findByParentUuid($uuid, $locale, $webspaceKey, $mapping = [], UserInterface $user = null)
-    {
+    public function findByParentUuid(
+        $uuid,
+        $locale,
+        $webspaceKey,
+        MappingInterface $mapping,
+        UserInterface $user = null
+    ) {
         $queryBuilder = new QueryBuilder($this->qomFactory);
 
         $queryBuilder
@@ -143,7 +149,7 @@ class ContentRepository implements ContentRepositoryInterface
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
         $queryBuilder = $this->getQueryBuilder($locale, $user);
         $queryBuilder->where($this->qomFactory->childNode('node', $rows->getRows()->current()->getPath()));
-        $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
+        $this->appendMapping($queryBuilder, $mapping, $locales);
 
         return array_map(
             function (Row $row) use ($mapping, $webspaceKey, $locale, $user) {
@@ -156,14 +162,14 @@ class ContentRepository implements ContentRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function findByWebspaceRoot($locale, $webspaceKey, $mapping = [], UserInterface $user = null)
+    public function findByWebspaceRoot($locale, $webspaceKey, MappingInterface $mapping, UserInterface $user = null)
     {
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
         $queryBuilder = $this->getQueryBuilder($locale, $user);
         $queryBuilder->where(
             $this->qomFactory->childNode('node', $this->sessionManager->getContentPath($webspaceKey))
         );
-        $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
+        $this->appendMapping($queryBuilder, $mapping, $locales);
 
         return array_map(
             function (Row $row) use ($mapping, $webspaceKey, $locale, $user) {
@@ -229,15 +235,15 @@ class ContentRepository implements ContentRepositoryInterface
      * Append mapping selects to given query-builder.
      *
      * @param QueryBuilder $queryBuilder
-     * @param string[] $mapping array of property names.
-     * @param string $locale
+     * @param MappingInterface $mapping Includes array of property names.
      * @param string[] $locales
      */
-    private function appendMapping(QueryBuilder $queryBuilder, $mapping, $locale, $locales)
+    private function appendMapping(QueryBuilder $queryBuilder, MappingInterface $mapping, $locales)
     {
-        $mapping[] = 'template';
-        foreach (array_unique($mapping) as $propertyName) {
-            $this->appendSingleMapping($queryBuilder, $propertyName, $locale, $locales);
+        $properties = $mapping->getProperties();
+        $properties[] = 'template';
+        foreach ($properties as $propertyName) {
+            $this->appendSingleMapping($queryBuilder, $propertyName, $locales);
         }
     }
 
@@ -246,10 +252,9 @@ class ContentRepository implements ContentRepositoryInterface
      *
      * @param QueryBuilder $queryBuilder
      * @param string $propertyName
-     * @param string $locale
      * @param string[] $locales
      */
-    private function appendSingleMapping(QueryBuilder $queryBuilder, $propertyName, $locale, $locales)
+    private function appendSingleMapping(QueryBuilder $queryBuilder, $propertyName, $locales)
     {
         foreach ($locales as $item) {
             $alias = sprintf('%s%s', $item, ucfirst($propertyName));
@@ -268,40 +273,51 @@ class ContentRepository implements ContentRepositoryInterface
      * @param Row $row
      * @param string $locale
      * @param string $webspaceKey
-     * @param string[] $mapping array of property names.
+     * @param MappingInterface $mapping Includes array of property names.
      * @param UserInterface $user
      *
      * @return Content
      */
-    private function resolveContent(Row $row, $locale, $webspaceKey, $mapping, UserInterface $user = null)
-    {
+    private function resolveContent(
+        Row $row,
+        $locale,
+        $webspaceKey,
+        MappingInterface $mapping,
+        UserInterface $user = null
+    ) {
         $originalLocale = $locale;
         $locale = $this->localizationFinder->findAvailableLocale(
             $webspaceKey,
             $this->resolveAvailableLocales($row),
             $locale
         );
+        if (!$mapping->hydrateGhost() && $originalLocale !== $locale) {
+            return;
+        }
 
         $type = null;
         if ($locale !== $originalLocale) {
             $type = StructureType::getGhost($locale);
         } elseif ($row->getValue('shadowOn')) {
+            if (!$mapping->hydrateShadow()) {
+                return;
+            }
             $type = StructureType::getShadow($row->getValue('shadowBase'));
         }
 
-        if ($row->getValue('nodeType') === RedirectType::INTERNAL) {
+        if ($row->getValue('nodeType') === RedirectType::INTERNAL && $mapping->followInternalLink()) {
             // TODO collect all internal link contents and query once
             return $this->resolveInternalLinkContent($row, $locale, $webspaceKey, $mapping, $type, $user);
         }
 
+        $shadowBase = null;
+        if ($row->getValue('shadowOn')) {
+            $shadowBase = $row->getValue('shadowBase');
+        }
+
         $data = [];
-        foreach ($mapping as $item) {
-            $data[$item] = $this->resolveProperty(
-                $row,
-                $item,
-                $locale,
-                $row->getValue('shadowOn') ? $row->getValue('shadowBase') : null
-            );
+        foreach ($mapping->getProperties() as $item) {
+            $data[$item] = $this->resolveProperty($row, $item, $locale, $shadowBase);
         }
 
         return new Content(
@@ -343,7 +359,7 @@ class ContentRepository implements ContentRepositoryInterface
      * @param Row $row
      * @param string $locale
      * @param string $webspaceKey
-     * @param string[] $mapping array of property names.
+     * @param MappingInterface $mapping Includes array of property names.
      * @param StructureType $type
      * @param UserInterface $user
      *
@@ -353,7 +369,7 @@ class ContentRepository implements ContentRepositoryInterface
         Row $row,
         $locale,
         $webspaceKey,
-        $mapping,
+        MappingInterface $mapping,
         StructureType $type = null,
         UserInterface $user = null
     ) {

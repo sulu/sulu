@@ -15,6 +15,7 @@ use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\LocalizationFinder;
 use Sulu\Component\Content\Document\RedirectType;
+use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -84,7 +85,12 @@ class ContentRepositoryTest extends SuluTestCase
 
         $parentUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
 
-        $result = $this->contentRepository->findByParentUuid($parentUuid, 'de', 'sulu_io');
+        $result = $this->contentRepository->findByParentUuid(
+            $parentUuid,
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->getMapping()
+        );
 
         $this->assertCount(3, $result);
 
@@ -106,7 +112,12 @@ class ContentRepositoryTest extends SuluTestCase
 
         $parentUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
 
-        $result = $this->contentRepository->findByParentUuid($parentUuid, 'de', 'sulu_io', ['title']);
+        $result = $this->contentRepository->findByParentUuid(
+            $parentUuid,
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->addProperties(['title'])->getMapping()
+        );
 
         $this->assertCount(3, $result);
 
@@ -125,7 +136,12 @@ class ContentRepositoryTest extends SuluTestCase
 
         $parentUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
 
-        $result = $this->contentRepository->findByParentUuid($parentUuid, 'en', 'sulu_io', ['title']);
+        $result = $this->contentRepository->findByParentUuid(
+            $parentUuid,
+            'en',
+            'sulu_io',
+            MappingBuilder::create()->addProperties(['title'])->getMapping()
+        );
 
         $this->assertCount(3, $result);
 
@@ -144,7 +160,12 @@ class ContentRepositoryTest extends SuluTestCase
 
         $parentUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
 
-        $result = $this->contentRepository->findByParentUuid($parentUuid, 'de', 'sulu_io', ['title']);
+        $result = $this->contentRepository->findByParentUuid(
+            $parentUuid,
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->addProperties(['title'])->getMapping()
+        );
 
         $this->assertCount(3, $result);
 
@@ -163,7 +184,12 @@ class ContentRepositoryTest extends SuluTestCase
 
         $parentUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
 
-        $result = $this->contentRepository->findByParentUuid($parentUuid, 'en', 'sulu_io', ['title']);
+        $result = $this->contentRepository->findByParentUuid(
+            $parentUuid,
+            'en',
+            'sulu_io',
+            MappingBuilder::create()->addProperties(['title'])->getMapping()
+        );
 
         $this->assertCount(3, $result);
 
@@ -186,7 +212,8 @@ class ContentRepositoryTest extends SuluTestCase
 
         $parentUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
 
-        $result = $this->contentRepository->findByParentUuid($parentUuid, 'de', 'sulu_io');
+        $result = $this->contentRepository->findByParentUuid($parentUuid, 'de', 'sulu_io',
+            MappingBuilder::create()->getMapping());
 
         $this->assertCount(3, $result);
 
@@ -206,7 +233,8 @@ class ContentRepositoryTest extends SuluTestCase
         $this->createPage('test-2', 'de');
         $this->createPage('test-3', 'de');
 
-        $result = $this->contentRepository->findByWebspaceRoot('de', 'sulu_io');
+        $result = $this->contentRepository->findByWebspaceRoot('de', 'sulu_io',
+            MappingBuilder::create()->getMapping());
 
         $this->assertCount(3, $result);
 
@@ -226,7 +254,11 @@ class ContentRepositoryTest extends SuluTestCase
         $this->createPage('test-2', 'de');
         $this->createPage('test-3', 'de');
 
-        $result = $this->contentRepository->findByWebspaceRoot('de', 'sulu_io', ['title']);
+        $result = $this->contentRepository->findByWebspaceRoot(
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->addProperties(['title'])->getMapping()
+        );
 
         $this->assertCount(3, $result);
 
@@ -243,7 +275,11 @@ class ContentRepositoryTest extends SuluTestCase
         $this->createPage('test-2', 'en');
         $this->createPage('test-3', 'en');
 
-        $result = $this->contentRepository->findByWebspaceRoot('en', 'sulu_io', ['title']);
+        $result = $this->contentRepository->findByWebspaceRoot(
+            'en',
+            'sulu_io',
+            MappingBuilder::create()->addProperties(['title'])->getMapping()
+        );
 
         $this->assertCount(3, $result);
 
@@ -260,7 +296,11 @@ class ContentRepositoryTest extends SuluTestCase
         $this->createInternalLinkPage('test-2', 'de', $link);
         $this->createPage('test-3', 'de');
 
-        $result = $this->contentRepository->findByWebspaceRoot('de', 'sulu_io', ['title']);
+        $result = $this->contentRepository->findByWebspaceRoot(
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->addProperties(['title'])->getMapping()
+        );
 
         $this->assertCount(3, $result);
 
@@ -277,7 +317,11 @@ class ContentRepositoryTest extends SuluTestCase
         $this->createInternalLinkPage('test-2', 'en', $link);
         $this->createPage('test-3', 'en');
 
-        $result = $this->contentRepository->findByWebspaceRoot('en', 'sulu_io', ['title']);
+        $result = $this->contentRepository->findByWebspaceRoot(
+            'en',
+            'sulu_io',
+            MappingBuilder::create()->addProperties(['title'])->getMapping()
+        );
 
         $this->assertCount(3, $result);
 
@@ -298,7 +342,8 @@ class ContentRepositoryTest extends SuluTestCase
         $this->createPage('test-2-2', 'de', [], $page2);
         $this->createPage('test-3', 'de');
 
-        $result = $this->contentRepository->findByWebspaceRoot('de', 'sulu_io');
+        $result = $this->contentRepository->findByWebspaceRoot('de', 'sulu_io',
+            MappingBuilder::create()->getMapping());
 
         $this->assertCount(3, $result);
 
@@ -316,7 +361,12 @@ class ContentRepositoryTest extends SuluTestCase
 
         $page = $this->createPage('test-1', 'de');
 
-        $result = $this->contentRepository->find($page->getUuid(), 'de', 'sulu_io', ['title']);
+        $result = $this->contentRepository->find(
+            $page->getUuid(),
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->addProperties(['title'])->getMapping()
+        );
 
         $this->assertNotNull($result->getUuid());
         $this->assertEquals($page->getUuid(), $result->getUuid());
@@ -330,7 +380,12 @@ class ContentRepositoryTest extends SuluTestCase
 
         $page = $this->createPage('test-1', 'en');
 
-        $result = $this->contentRepository->find($page->getUuid(), 'en_us', 'sulu_io', ['title']);
+        $result = $this->contentRepository->find(
+            $page->getUuid(),
+            'en_us',
+            'sulu_io',
+            MappingBuilder::create()->addProperties(['title'])->getMapping()
+        );
 
         $this->assertNotNull($result->getUuid());
         $this->assertEquals($page->getUuid(), $result->getUuid());
@@ -344,7 +399,12 @@ class ContentRepositoryTest extends SuluTestCase
 
         $page = $this->createShadowPage('test-1', 'de', 'en');
 
-        $result = $this->contentRepository->find($page->getUuid(), 'en', 'sulu_io', ['title']);
+        $result = $this->contentRepository->find(
+            $page->getUuid(),
+            'en',
+            'sulu_io',
+            MappingBuilder::create()->addProperties(['title'])->getMapping()
+        );
 
         $this->assertNotNull($result->getUuid());
         $this->assertEquals($page->getUuid(), $result->getUuid());
@@ -359,7 +419,12 @@ class ContentRepositoryTest extends SuluTestCase
         $link = $this->createPage('test-1', 'de');
         $page = $this->createInternalLinkPage('test-2', 'de', $link);
 
-        $result = $this->contentRepository->find($page->getUuid(), 'de', 'sulu_io', ['title']);
+        $result = $this->contentRepository->find(
+            $page->getUuid(),
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->addProperties(['title'])->getMapping()
+        );
 
         $this->assertEquals($page->getUuid(), $result->getUuid());
         $this->assertEquals('/test-2', $result->getPath());
@@ -373,7 +438,12 @@ class ContentRepositoryTest extends SuluTestCase
         $link = $this->createShadowPage('test-1', 'de', 'en');
         $page = $this->createInternalLinkPage('test-2', 'de', $link);
 
-        $result = $this->contentRepository->find($page->getUuid(), 'de', 'sulu_io', ['title']);
+        $result = $this->contentRepository->find(
+            $page->getUuid(),
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->addProperties(['title'])->getMapping()
+        );
 
         $this->assertEquals($page->getUuid(), $result->getUuid());
         $this->assertEquals('/test-2', $result->getPath());
@@ -392,11 +462,13 @@ class ContentRepositoryTest extends SuluTestCase
             $page->getUuid(),
             'de',
             'sulu_io',
-            [
-                'title',
-                'created',
-                'changed',
-            ]
+            MappingBuilder::create()->addProperties(
+                [
+                    'title',
+                    'created',
+                    'changed',
+                ]
+            )->getMapping()
         );
 
         $this->assertGreaterThan($link->getCreated(), $result['created']);

@@ -14,6 +14,7 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Component\Content\Repository\ContentRepositoryInterface;
+use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,7 +47,7 @@ class ContentController extends RestController implements ClassResourceInterface
     public function __construct(
         ContentRepositoryInterface $contentRepository,
         ViewHandlerInterface $viewHandler,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage = null
     ) {
         $this->contentRepository = $contentRepository;
         $this->viewHandler = $viewHandler;
@@ -56,11 +57,19 @@ class ContentController extends RestController implements ClassResourceInterface
     public function cgetAction(Request $request)
     {
         $parent = $request->get('parent');
-        $mapping = array_filter(explode(',', $request->get('mapping', '')));
+        $properties = array_filter(explode(',', $request->get('mapping', '')));
+        $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
+        $excludeShadows = $this->getBooleanRequestParameter($request, 'exclude-shadows', false, false);
         $locale = $this->getRequestParameter($request, 'locale', true);
         $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
 
         $user = $this->tokenStorage->getToken()->getUser();
+
+        $mapping = MappingBuilder::create()
+            ->disableHydrateGhost($excludeGhosts)
+            ->disableHydrateShadow($excludeShadows)
+            ->addProperties($properties)
+            ->getMapping();
 
         if (!$parent) {
             $contents = $this->contentRepository->findByWebspaceRoot($locale, $webspaceKey, $mapping, $user);
