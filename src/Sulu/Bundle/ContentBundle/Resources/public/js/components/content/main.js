@@ -1058,8 +1058,12 @@ define([
 
             if (this.options.display === 'column') {
                 var showGhostPages = this.sandbox.sulu.getUserSetting(SHOW_GHOST_PAGES_KEY),
-                    toggler = (!!JSON.parse(showGhostPages) ? 'toggler-on' : 'toggler'),
+                    toggler = 'toggler-on',
                     columnButtons = {};
+
+                if (showGhostPages !== null) {
+                    toggler = (!!JSON.parse(showGhostPages) ? 'toggler-on' : 'toggler');
+                }
 
                 columnButtons[toggler] = {
                     options: {

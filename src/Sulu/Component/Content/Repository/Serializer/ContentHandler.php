@@ -61,9 +61,9 @@ class ContentHandler
         $result = $content->jsonSerialize();
         $result['publishedState'] = (WorkflowStage::PUBLISHED === $content->getWorkflowStage());
         if (RedirectType::EXTERNAL === $content->getNodeType()) {
-            $result['linked'] = 'external';
+            $result['_linked'] = 'external';
         } elseif (RedirectType::INTERNAL === $content->getNodeType()) {
-            $result['linked'] = 'internal';
+            $result['_linked'] = 'internal';
         }
         $result['_permissions'] = $this->accessControlManager->getUserPermissionByArray(
             $content->getLocale(),
@@ -72,7 +72,7 @@ class ContentHandler
             $this->tokenStorage->getToken()->getUser()
         );
         if (null !== $content->getLocalizationType()) {
-            $result['type'] = $content->getLocalizationType()->toArray();
+            $result['_type'] = $content->getLocalizationType()->toArray();
         }
 
         return $result;
