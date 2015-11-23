@@ -23,14 +23,16 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\Security\Acl\Exception\Exception;
 
 /**
- * Content repository which querying with sql2 statements.
+ * Content repository which query content with sql2 statements.
  */
 class ContentRepository implements ContentRepositoryInterface
 {
     // TODO bad name they should not be handled by redirects and shadow
-    const NON_FALLBACK_PROPERTIES = [
+    private static $nonFallbackProperties = [
         'created',
+        'creator',
         'changed',
+        'changer',
         'shadowOn',
         'shadowBase',
         'url', // TODO non fix name in templates
@@ -248,7 +250,12 @@ class ContentRepository implements ContentRepositoryInterface
         $linkedContent = $this->find($row->getValue('internalLink'), $locale, $webspaceKey, $mapping);
         $data = $linkedContent->getData();
 
-        // TODO handle self::NON_FALLBACK_PROPERTIES
+        // properties which are in the intersection of the data and non
+        // fallback properties should be handled on the original row.
+        $properties = array_intersect(self::$nonFallbackProperties, array_keys($data));
+        foreach ($properties as $property) {
+            $data[$property] = $this->resolveProperty($row, $property);
+        }
 
         return new Content($row->getValue('uuid'), $this->resolvePath($row, $webspaceKey), $data);
     }
@@ -262,9 +269,9 @@ class ContentRepository implements ContentRepositoryInterface
      *
      * @return mixed
      */
-    private function resolveProperty(Row $row, $name, $shadowLocale)
+    private function resolveProperty(Row $row, $name, $shadowLocale = null)
     {
-        if (null !== $shadowLocale && !in_array($name, self::NON_FALLBACK_PROPERTIES)) {
+        if (null !== $shadowLocale && !in_array($name, self::$nonFallbackProperties)) {
             $name = sprintf('%s%s', $shadowLocale, ucfirst($name));
         }
 

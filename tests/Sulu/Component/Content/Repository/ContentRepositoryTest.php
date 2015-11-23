@@ -173,6 +173,7 @@ class ContentRepositoryTest extends SuluTestCase
         $result = $this->contentRepository->find($page->getUuid(), 'de', 'sulu_io', ['title']);
 
         $this->assertNotNull($result->getUuid());
+        $this->assertEquals($page->getUuid(), $result->getUuid());
         $this->assertEquals('/test-1', $result->getPath());
         $this->assertEquals('test-1', $result['title']);
     }
@@ -186,6 +187,7 @@ class ContentRepositoryTest extends SuluTestCase
         $result = $this->contentRepository->find($page->getUuid(), 'en', 'sulu_io', ['title']);
 
         $this->assertNotNull($result->getUuid());
+        $this->assertEquals($page->getUuid(), $result->getUuid());
         $this->assertEquals('/1-tset', $result->getPath()); // path will be generated with reversed string
         $this->assertEquals('test-1', $result['title']);
     }
@@ -198,6 +200,50 @@ class ContentRepositoryTest extends SuluTestCase
         $page = $this->createInternalLinkPage('test-2', 'de', $link);
 
         $result = $this->contentRepository->find($page->getUuid(), 'de', 'sulu_io', ['title']);
+
+        $this->assertEquals($page->getUuid(), $result->getUuid());
+        $this->assertEquals('/test-2', $result->getPath());
+        $this->assertEquals('test-1', $result['title']);
+    }
+
+    public function testFindWithInternalLinkAndShadow()
+    {
+        $this->initPhpcr();
+
+        $link = $this->createShadowPage('test-1', 'de', 'en');
+        $page = $this->createInternalLinkPage('test-2', 'de', $link);
+
+        $result = $this->contentRepository->find($page->getUuid(), 'de', 'sulu_io', ['title']);
+
+        $this->assertEquals($page->getUuid(), $result->getUuid());
+        $this->assertEquals('/test-2', $result->getPath());
+        $this->assertEquals('test-1', $result['title']);
+    }
+
+    public function testFindWithNonFallbackProperties()
+    {
+        $this->initPhpcr();
+
+        $link = $this->createPage('test-1', 'de');
+        usleep(1000000); // create a difference between link and page (created / changed)
+        $page = $this->createInternalLinkPage('test-2', 'de', $link);
+
+        $result = $this->contentRepository->find(
+            $page->getUuid(),
+            'de',
+            'sulu_io',
+            [
+                'title',
+                'created',
+                'changed',
+            ]
+        );
+
+        $this->assertGreaterThan($link->getCreated(), $result['created']);
+        $this->assertGreaterThan($link->getChanged(), $result['changed']);
+
+        $this->assertEquals($page->getChanged(), $result['changed']);
+        $this->assertEquals($page->getCreated(), $result['created']);
 
         $this->assertEquals($page->getUuid(), $result->getUuid());
         $this->assertEquals('/test-2', $result->getPath());
