@@ -10,9 +10,15 @@
 
 namespace Sulu\Component\Content\Repository;
 
+use JMS\Serializer\Annotation\ExclusionPolicy;
 use Sulu\Exception\FeatureNotImplementedException;
 
-class Content implements \ArrayAccess
+/**
+ * Container class for content data.
+ *
+ * @ExclusionPolicy("all")
+ */
+class Content implements \ArrayAccess, \JsonSerializable
 {
     /**
      * @var string
@@ -90,5 +96,13 @@ class Content implements \ArrayAccess
     public function offsetUnset($offset)
     {
         throw new FeatureNotImplementedException();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return array_merge(['uuid' => $this->getUuid(), 'path' => $this->getPath()], $this->getData());
     }
 }

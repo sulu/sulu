@@ -38,4 +38,15 @@ interface ContentRepositoryInterface
      * @return Content[]
      */
     public function findByParentUuid($uuid, $locale, $webspaceKey, $mapping = []);
+
+    /**
+     * Find content which are children of webspace root.
+     *
+     * @param string $locale
+     * @param string $webspaceKey
+     * @param string[] $mapping array of property names.
+     *
+     * @return Content[]
+     */
+    public function findByWebspaceRoot($locale, $webspaceKey, $mapping = []);
 }

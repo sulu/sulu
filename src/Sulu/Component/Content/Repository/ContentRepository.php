@@ -29,6 +29,7 @@ class ContentRepository implements ContentRepositoryInterface
 {
     // TODO bad name they should not be handled by redirects and shadow
     private static $nonFallbackProperties = [
+        'uuid',
         'created',
         'creator',
         'changed',
@@ -113,6 +114,26 @@ class ContentRepository implements ContentRepositoryInterface
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
         $queryBuilder = $this->getQueryBuilder($locale);
         $queryBuilder->where($this->qomFactory->descendantNode('node', $node->getPath()));
+        $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
+
+        return array_map(
+            function (Row $row) use ($mapping, $webspaceKey, $locale) {
+                return $this->resolveContent($row, $locale, $webspaceKey, $mapping);
+            },
+            iterator_to_array($queryBuilder->execute())
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findByWebspaceRoot($locale, $webspaceKey, $mapping = [])
+    {
+        $locales = $this->getLocalesByWebspaceKey($webspaceKey);
+        $queryBuilder = $this->getQueryBuilder($locale);
+        $queryBuilder->where(
+            $this->qomFactory->descendantNode('node', $this->sessionManager->getContentPath($webspaceKey))
+        );
         $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
 
         return array_map(

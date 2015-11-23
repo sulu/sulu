@@ -164,6 +164,94 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-3', $result[2]['title']);
     }
 
+    public function testFindByWebspaceRoot()
+    {
+        $this->initPhpcr();
+
+        $this->createPage('test-1', 'de');
+        $this->createPage('test-2', 'de');
+        $this->createPage('test-3', 'de');
+
+        $result = $this->contentRepository->findByWebspaceRoot('de', 'sulu_io');
+
+        $this->assertCount(3, $result);
+
+        $this->assertNotNull($result[0]->getUuid());
+        $this->assertEquals('/test-1', $result[0]->getPath());
+        $this->assertNotNull($result[1]->getUuid());
+        $this->assertEquals('/test-2', $result[1]->getPath());
+        $this->assertNotNull($result[2]->getUuid());
+        $this->assertEquals('/test-3', $result[2]->getPath());
+    }
+
+    public function testFindByWebspaceRootMapping()
+    {
+        $this->initPhpcr();
+
+        $this->createPage('test-1', 'de');
+        $this->createPage('test-2', 'de');
+        $this->createPage('test-3', 'de');
+
+        $result = $this->contentRepository->findByWebspaceRoot('de', 'sulu_io', ['title']);
+
+        $this->assertCount(3, $result);
+
+        $this->assertEquals('test-1', $result[0]['title']);
+        $this->assertEquals('test-2', $result[1]['title']);
+        $this->assertEquals('test-3', $result[2]['title']);
+    }
+
+    public function testFindByWebspaceRootWithShadow()
+    {
+        $this->initPhpcr();
+
+        $this->createShadowPage('test-1', 'de', 'en');
+        $this->createPage('test-2', 'en');
+        $this->createPage('test-3', 'en');
+
+        $result = $this->contentRepository->findByWebspaceRoot('en', 'sulu_io', ['title']);
+
+        $this->assertCount(3, $result);
+
+        $this->assertEquals('test-1', $result[0]['title']);
+        $this->assertEquals('test-2', $result[1]['title']);
+        $this->assertEquals('test-3', $result[2]['title']);
+    }
+
+    public function testFindByWebspaceRootWithInternalLink()
+    {
+        $this->initPhpcr();
+
+        $link = $this->createPage('test-1', 'de');
+        $this->createInternalLinkPage('test-2', 'de', $link);
+        $this->createPage('test-3', 'de');
+
+        $result = $this->contentRepository->findByWebspaceRoot('de', 'sulu_io', ['title']);
+
+        $this->assertCount(3, $result);
+
+        $this->assertEquals('test-1', $result[0]['title']);
+        $this->assertEquals('test-1', $result[1]['title']);
+        $this->assertEquals('test-3', $result[2]['title']);
+    }
+
+    public function testFindByWebspaceRootWithInternalLinkAndShadow()
+    {
+        $this->initPhpcr();
+
+        $link = $this->createShadowPage('test-1', 'de', 'en');
+        $this->createInternalLinkPage('test-2', 'en', $link);
+        $this->createPage('test-3', 'en');
+
+        $result = $this->contentRepository->findByWebspaceRoot('en', 'sulu_io', ['title']);
+
+        $this->assertCount(3, $result);
+
+        $this->assertEquals('test-1', $result[0]['title']);
+        $this->assertEquals('test-1', $result[1]['title']);
+        $this->assertEquals('test-3', $result[2]['title']);
+    }
+
     public function testFind()
     {
         $this->initPhpcr();
