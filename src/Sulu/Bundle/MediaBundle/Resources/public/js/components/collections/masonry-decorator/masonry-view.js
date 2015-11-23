@@ -21,7 +21,10 @@
  * @param {Function} [removeRecord] function to remove an existing record from the grid
  * @param {Function} [destroy] function to destroy the view and unbind events
  */
-define(function() {
+define([
+    'services/sulumedia/overlay-manager',
+    'services/sulumedia/user-settings-manager'
+], function(OverlayManager, UserSettingsManager) {
 
     'use strict';
 
@@ -55,7 +58,8 @@ define(function() {
             headIconClass: 'head-icon',
             headImageClass: 'head-image',
             actionNavigatorClass: 'action-navigator',
-            downloadNavigatorClass: 'download-navigator'
+            downloadNavigatorClass: 'download-navigator',
+            playVideoNavigatorClass: 'play-video-navigator',
         },
 
         templates = {
@@ -80,6 +84,9 @@ define(function() {
                 '       <div class="footer-checkbox custom-checkbox"><input type="checkbox"><span class="icon"></span></div>',
                 '       <% } %>',
                 '       <a href= "<%= downloadUrl %>" class="fa-cloud-download footer-download ' + constants.downloadNavigatorClass + '"></a>',
+                '       <% if (!!isVideo) { %>',
+                '           <span class="fa-play footer-play-video ' + constants.playVideoNavigatorClass + '"></span>',
+                '       <% } %>',
                 '   </div>',
                 '</div>'
             ].join('')
@@ -246,10 +253,11 @@ define(function() {
                         item,
                         this.options.fields.description,
                         this.options.separators.description
-                    );
+                    ),
+                    isVideo = (item.type.name === 'video');
 
                 // pass the found data to a render method
-                this.renderItem(id, image, downloadUrl, title, description, appendAtBottom);
+                this.renderItem(id, image, downloadUrl, title, description, isVideo, appendAtBottom);
             }.bind(this));
         },
 
@@ -260,15 +268,17 @@ define(function() {
          * @param downloadUrl
          * @param title
          * @param description
+         * @param isVideo
          * @param appendAtBottom
          */
-        renderItem: function(id, image, downloadUrl, title, description, appendAtBottom) {
+        renderItem: function(id, image, downloadUrl, title, description, isVideo, appendAtBottom) {
             this.$items[id] = this.sandbox.dom.createElement(
                 this.sandbox.util.template(templates.item, {
                     image: image,
                     downloadUrl: downloadUrl,
                     title: this.sandbox.util.cropMiddle(String(title), 24),
                     description: this.sandbox.util.cropMiddle(String(description), 32),
+                    isVideo: isVideo,
                     selectable: this.options.selectable
                 })
             );
@@ -304,6 +314,11 @@ define(function() {
                 this.sandbox.dom.stopPropagation(event);
                 window.location.href = $(event.currentTarget).attr('href');
             }.bind(this), '.' + constants.downloadNavigatorClass);
+
+            this.sandbox.dom.on(this.$items[id], 'click', function(event) {
+                this.sandbox.dom.stopPropagation(event);
+                OverlayManager.startPlayVideoOverlay.call(this, id, UserSettingsManager.getMediaLocale());
+            }.bind(this), '.' + constants.playVideoNavigatorClass);
 
             if (!!this.options.selectable) {
                 this.sandbox.dom.on(this.$items[id], 'click', function(event) {
