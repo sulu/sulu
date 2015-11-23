@@ -338,7 +338,17 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             );
         }
 
-        return $this->findUserWithSecurityById($user->getId());
+        $user = $this->findUserWithSecurityById($user->getId());
+
+        if (!$user->getEnabled()) {
+            throw new DisabledException();
+        }
+
+        if ($user->getLocked()) {
+            throw new LockedException();
+        }
+
+        return $user;
     }
 
     /**

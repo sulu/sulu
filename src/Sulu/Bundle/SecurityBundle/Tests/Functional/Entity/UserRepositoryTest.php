@@ -226,6 +226,46 @@ class UserRepositoryTest extends SuluTestCase
         $userRepository->loadUserByUsername('sulu');
     }
 
+    public function testRefreshUser()
+    {
+        $user = $this->prepareUser('sulu', 'sulu', true, false);
+
+        $client = $this->createAuthenticatedClient();
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
+
+        $this->assertEquals($user->getUsername(), $userRepository->refreshUser($user)->getUsername());
+    }
+
+    public function testRefreshUserWithLockedUser()
+    {
+        $this->setExpectedException(LockedException::class);
+
+        $user = $this->prepareUser('sulu', 'sulu', true, true);
+
+        $client = $this->createAuthenticatedClient();
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
+
+        $userRepository->refreshUser($user);
+    }
+
+    public function testRefreshUserWithDisabledUser()
+    {
+        $this->setExpectedException(DisabledException::class);
+
+        $user = $this->prepareUser('sulu', 'sulu', false, false);
+
+        $client = $this->createAuthenticatedClient();
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
+
+        $userRepository->refreshUser($user);
+    }
+
     public function testFindUserByEmail()
     {
         $this->prepareUser('sulu', 'sulu');
@@ -313,5 +353,7 @@ class UserRepositoryTest extends SuluTestCase
         $this->em->persist($userRole);
 
         $this->em->flush();
+
+        return $user;
     }
 }
