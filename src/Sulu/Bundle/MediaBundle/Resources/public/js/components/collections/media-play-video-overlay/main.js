@@ -8,8 +8,8 @@
  */
 
 /**
- * @class MediaEdit
- * Class which shows overlays for editing media models
+ * @class MediaPlayVideoOverlay
+ * Class which shows overlays for playing videos
  * @constructor
  */
 define([
@@ -143,14 +143,16 @@ define([
         },
 
         /**
-         * Starts the actual overlay for single-edit
+         * Starts the actual overlay for displaying video
          */
         startVideoOverlay: function(video) {
             var videoSrc = video.url + '&inline=1',
                 $container,
                 $data;
 
-            $container = this.sandbox.dom.createElement('<div class="' + constants.singleEditClass + '" id="media-form"/>');
+            $container = this.sandbox.dom.createElement(
+                '<div class="' + constants.singleEditClass + '" id="media-form"/>'
+            );
 
             $data = this.sandbox.dom.createElement(
                 templates.video(videoSrc)
@@ -179,7 +181,7 @@ define([
         },
 
         /**
-         * Binds events related to the single-edit overlay
+         * Binds events related to the video-play overlay
          */
         bindVideoOverlayEvents: function() {
             this.sandbox.once('husky.overlay.media-play-video.opened', function() {
