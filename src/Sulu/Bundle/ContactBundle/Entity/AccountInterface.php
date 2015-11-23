@@ -85,22 +85,6 @@ interface AccountInterface
     public function getCorporation();
 
     /**
-     * Set disabled.
-     *
-     * @param int $disabled
-     *
-     * @return AccountInterface
-     */
-    public function setDisabled($disabled);
-
-    /**
-     * Get disabled.
-     *
-     * @return int
-     */
-    public function getDisabled();
-
-    /**
      * Set uid.
      *
      * @param string $uid

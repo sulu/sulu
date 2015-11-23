@@ -134,11 +134,6 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $salutation;
 
     /**
-     * @var int
-     */
-    protected $disabled = 0;
-
-    /**
      * @var Collection
      * @Accessor(getter="getTagNameArray")
      * @Groups({"fullContact"})
@@ -657,24 +652,6 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     public function getSalutation()
     {
         return $this->salutation;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setDisabled($disabled)
-    {
-        $this->disabled = $disabled;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDisabled()
-    {
-        return $this->disabled;
     }
 
     /**

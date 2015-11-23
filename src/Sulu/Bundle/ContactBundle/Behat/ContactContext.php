@@ -58,7 +58,6 @@ class ContactContext extends BaseContext implements SnippetAcceptingContext
         $email->setEmailType($type);
 
         $contact->addEmail($email);
-        $contact->setDisabled(0);
         $contact->setFormOfAddress(0);
 
         $this->getEntityManager()->persist($email);

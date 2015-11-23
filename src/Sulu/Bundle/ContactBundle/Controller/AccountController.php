@@ -534,12 +534,6 @@ class AccountController extends RestController implements ClassResourceInterface
             $accountManager->setLogo($account, $request->get('logo')['id']);
         }
 
-        $disabled = $request->get('disabled');
-        if ($disabled === null) {
-            $disabled = false;
-        }
-        $account->setDisabled($disabled);
-
         // set parent
         $this->setParent($request->get('parent'), $account);
 
@@ -617,12 +611,6 @@ class AccountController extends RestController implements ClassResourceInterface
         $account->setName($request->get('name'));
         $account->setCorporation($request->get('corporation'));
         $accountManager = $this->getAccountManager();
-
-        // set disabled
-        $disabled = $request->get('disabled');
-        if ($disabled !== null) {
-            $account->setDisabled($disabled);
-        }
 
         if ($request->get('uid') !== null) {
             $account->setUid($request->get('uid'));
@@ -1419,17 +1407,6 @@ class AccountController extends RestController implements ClassResourceInterface
             true,
             false,
             'date'
-        );
-
-        $this->fieldDescriptors['disabled'] = new DoctrineFieldDescriptor(
-            'disabled',
-            'disabled',
-            $this->getAccountEntityName(),
-            'public.locked',
-            [],
-            true,
-            false,
-            'boolean'
         );
 
         $this->fieldDescriptors['uid'] = new DoctrineFieldDescriptor(

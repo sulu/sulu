@@ -150,7 +150,6 @@ class ContactControllerTest extends SuluTestCase
         $contact->setPosition('CEO');
         $contact->setFormOfAddress(1);
         $contact->setSalutation('Sehr geehrter Herr Dr Mustermann');
-        $contact->setDisabled(0);
 
         $this->contact = $contact;
 
@@ -418,7 +417,6 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals(1, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter Herr Dr Mustermann', $response->salutation);
-        $this->assertEquals(0, $response->disabled);
     }
 
     private function createTestClient()
@@ -511,7 +509,6 @@ class ContactControllerTest extends SuluTestCase
                     ['value' => 'Note 1'],
                     ['value' => 'Note 2'],
                 ],
-                'disabled' => 0,
                 'salutation' => 'Sehr geehrte Frau Dr Mustermann',
                 'formOfAddress' => [
                     'id' => 0,
@@ -540,7 +537,6 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
-        $this->assertEquals(0, $response->disabled);
 
         $this->assertEquals(true, $response->addresses[0]->billingAddress);
         $this->assertEquals(true, $response->addresses[0]->primaryAddress);
@@ -568,7 +564,6 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('note', $response->addresses[0]->note);
         $this->assertEquals('Note 1', $response->notes[0]->value);
         $this->assertEquals('Note 2', $response->notes[1]->value);
-        $this->assertEquals(0, $response->disabled);
 
         $this->assertEquals(true, $response->addresses[0]->billingAddress);
         $this->assertEquals(true, $response->addresses[0]->primaryAddress);
@@ -579,7 +574,6 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
-        $this->assertEquals(0, $response->disabled);
     }
 
     public function testPost()
@@ -681,7 +675,6 @@ class ContactControllerTest extends SuluTestCase
                     ['value' => 'Note 1'],
                     ['value' => 'Note 2'],
                 ],
-                'disabled' => 0,
                 'salutation' => 'Sehr geehrte Frau Dr Mustermann',
                 'formOfAddress' => [
                     'id' => 0,
@@ -729,7 +722,6 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
-        $this->assertEquals(0, $response->disabled);
 
         $this->assertObjectHasAttribute('avatar', $response);
         $this->assertObjectHasAttribute('thumbnails', $response->avatar);
@@ -776,7 +768,6 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
-        $this->assertEquals(0, $response->disabled);
 
         $this->assertEquals(2, count($response->categories));
     }
@@ -796,7 +787,6 @@ class ContactControllerTest extends SuluTestCase
                     'id' => $this->contactPosition->getId(),
                     'position' => $this->contactPosition->getPosition(),
                 ],
-                'disabled' => 0,
                 'salutation' => 'Sehr geehrte Frau Dr Mustermann',
                 'formOfAddress' => [
                     'id' => 0,
@@ -819,37 +809,6 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('MSc', $response->title->title);
     }
 
-    public function testPostWithoutDisabledFlag()
-    {
-        $client = $this->createTestClient();
-
-        $client->request(
-            'POST',
-            '/api/contacts',
-            [
-                'firstName' => 'Erika',
-                'lastName' => 'Mustermann',
-                'title' => $this->contactTitle->getId(),
-                'position' => [
-                    'id' => $this->contactPosition->getId(),
-                    'position' => $this->contactPosition->getPosition(),
-                ],
-                'salutation' => 'Sehr geehrte Frau Mustermann',
-                'formOfAddress' => [
-                    'id' => 0,
-                ],
-            ]
-        );
-
-        $response = json_decode($client->getResponse()->getContent());
-
-        $this->assertEquals(400, $client->getResponse()->getStatusCode());
-        $this->assertEquals(
-            'The "Sulu\Bundle\ContactBundle\Entity\Contact"-entity requires a "disabled"-argument',
-            $response->message
-        );
-    }
-
     public function testPostWithoutFormOfAddress()
     {
         $client = $this->createTestClient();
@@ -866,7 +825,6 @@ class ContactControllerTest extends SuluTestCase
                     'position' => $this->contactPosition->getPosition(),
                 ],
                 'salutation' => 'Sehr geehrte Frau Mustermann',
-                'disabled' => 0,
             ]
         );
 
@@ -895,7 +853,6 @@ class ContactControllerTest extends SuluTestCase
                 'phones' => [],
                 'notes' => [],
                 'addresses' => [],
-                'disabled' => 0,
                 'salutation' => 'Sehr geehrte Frau Dr Mustermann',
                 'formOfAddress' => [
                     'id' => 0,
@@ -911,7 +868,6 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
-        $this->assertEquals(0, $response->disabled);
 
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
@@ -923,7 +879,6 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
-        $this->assertEquals(0, $response->disabled);
     }
 
     public function testGetListSearch()
@@ -1063,7 +1018,6 @@ class ContactControllerTest extends SuluTestCase
                         'value' => 'Note 1_1',
                     ],
                 ],
-                'disabled' => 0,
                 'salutation' => 'Sehr geehrter John',
                 'formOfAddress' => [
                     'id' => 0,
@@ -1109,7 +1063,6 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
-        $this->assertEquals(0, $response->disabled);
 
         $this->assertObjectHasAttribute('avatar', $response);
         $this->assertObjectHasAttribute('thumbnails', $response->avatar);
@@ -1150,7 +1103,6 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
-        $this->assertEquals(0, $response->disabled);
 
         $this->assertObjectHasAttribute('avatar', $response);
         $this->assertObjectHasAttribute('thumbnails', $response->avatar);
@@ -1232,7 +1184,6 @@ class ContactControllerTest extends SuluTestCase
                         'value' => 'Note 1_1',
                     ],
                 ],
-                'disabled' => 0,
                 'salutation' => 'Sehr geehrter John',
                 'formOfAddress' => [
                     'id' => 0,
@@ -1266,7 +1217,6 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
-        $this->assertEquals(0, $response->disabled);
 
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
@@ -1295,7 +1245,6 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
-        $this->assertEquals(0, $response->disabled);
     }
 
     public function testPutNoEmail()
@@ -1370,7 +1319,6 @@ class ContactControllerTest extends SuluTestCase
                         'value' => 'Note 1_1',
                     ],
                 ],
-                'disabled' => 0,
                 'salutation' => 'Sehr geehrter John',
                 'formOfAddress' => [
                     'id' => 0,
@@ -1395,7 +1343,6 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
-        $this->assertEquals(0, $response->disabled);
     }
 
     public function testPutNewCountryOnlyId()
@@ -1462,7 +1409,6 @@ class ContactControllerTest extends SuluTestCase
                         'value' => 'Note 1_1',
                     ],
                 ],
-                'disabled' => 0,
                 'salutation' => 'Sehr geehrter John',
                 'formOfAddress' => [
                     'id' => 0,
@@ -1481,7 +1427,6 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
-        $this->assertEquals(0, $response->disabled);
     }
 
     public function testPutNewAccount()
@@ -1551,7 +1496,6 @@ class ContactControllerTest extends SuluTestCase
                         'value' => 'Note 1_1',
                     ],
                 ],
-                'disabled' => 0,
                 'salutation' => 'Sehr geehrter John',
                 'formOfAddress' => [
                     'id' => 0,
@@ -1572,7 +1516,6 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
-        $this->assertEquals(0, $response->disabled);
     }
 
     public function testPutNotExisting()
@@ -1603,7 +1546,6 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals(1, $response->_embedded->contacts[0]->formOfAddress);
         $this->assertEquals('Sehr geehrter Herr Dr Mustermann', $response->_embedded->contacts[0]->salutation);
-        $this->assertEquals(0, $response->_embedded->contacts[0]->disabled);
     }
 
     public function testGetListFields()
@@ -1807,7 +1749,6 @@ class ContactControllerTest extends SuluTestCase
                         'value' => 'Note 1_1',
                     ],
                 ],
-                'disabled' => 0,
                 'salutation' => 'Sehr geehrter John',
                 'formOfAddress' => [
                     'id' => 0,
@@ -1837,7 +1778,6 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
-        $this->assertEquals(0, $response->disabled);
 
         $client->request(
             'PUT',
@@ -1947,7 +1887,6 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
-        $this->assertEquals(0, $response->disabled);
 
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
@@ -1971,7 +1910,6 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
-        $this->assertEquals(0, $response->disabled);
     }
 
     public function testPrimaryAddressHandlingPost()
@@ -2058,7 +1996,6 @@ class ContactControllerTest extends SuluTestCase
                     ['value' => 'Note 1'],
                     ['value' => 'Note 2'],
                 ],
-                'disabled' => 0,
                 'salutation' => 'Sehr geehrte Frau Dr Mustermann',
                 'formOfAddress' => [
                     'id' => 0,
@@ -2201,7 +2138,6 @@ class ContactControllerTest extends SuluTestCase
                         'postboxNumber' => '4711',
                     ],
                 ],
-                'disabled' => 0,
                 'salutation' => 'Sehr geehrter John',
                 'formOfAddress' => [
                     'id' => 0,

@@ -64,7 +64,6 @@ class AccountMediaControllerTest extends SuluTestCase
     {
         $this->account = new Account();
         $this->account->setName('Company');
-        $this->account->setDisabled(0);
         $this->account->setPlaceOfJurisdiction('Feldkirch');
 
         $urlType = new UrlType();
@@ -132,7 +131,6 @@ class AccountMediaControllerTest extends SuluTestCase
         $contact->setFirstName('Vorname');
         $contact->setLastName('Nachname');
         $contact->setMiddleName('Mittelname');
-        $contact->setDisabled(0);
         $contact->setFormOfAddress(0);
 
         $accountContact = new AccountContact();

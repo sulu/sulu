@@ -320,17 +320,6 @@ class ContactController extends RestController implements ClassResourceInterface
             'date'
         );
 
-        $this->fieldDescriptors['disabled'] = new DoctrineFieldDescriptor(
-            'disabled',
-            'disabled',
-            $this->container->getParameter('sulu.model.contact.class'),
-            'public.deactivate',
-            [],
-            true,
-            false,
-            'boolean'
-        );
-
         $this->fieldDescriptors['birthday'] = new DoctrineFieldDescriptor(
             'birthday',
             'birthday',
@@ -803,9 +792,6 @@ class ContactController extends RestController implements ClassResourceInterface
         }
         if ($request->get('lastName') === null) {
             throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'password');
-        }
-        if (is_null($request->get('disabled'))) {
-            throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'disabled');
         }
         if ($request->get('formOfAddress') == null) {
             throw new MissingArgumentException($this->container->getParameter('sulu.model.contact.class'), 'contact');

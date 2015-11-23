@@ -43,7 +43,6 @@ define([
                 addresses: [],
                 formOfAddress: '',
                 salutation: '',
-                disabled: false,
                 medias: [],
                 bankAccount: [],
                 categories: []

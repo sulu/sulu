@@ -272,11 +272,6 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
             $contact->setFormOfAddress($formOfAddress['id']);
         }
 
-        $disabled = $this->getProperty($data, 'disabled');
-        if (!is_null($disabled)) {
-            $contact->setDisabled($disabled);
-        }
-
         $salutation = $this->getProperty($data, 'salutation');
         if (!empty($salutation)) {
             $contact->setSalutation($salutation);

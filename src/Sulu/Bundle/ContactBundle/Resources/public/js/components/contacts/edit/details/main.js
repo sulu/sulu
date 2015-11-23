@@ -380,21 +380,10 @@ define([
                 'position-select',
                 'api/contact/positions');
 
-            this.sandbox.on('husky.toggler.sulu-toolbar.changed', this.toggleDisableContact.bind(this));
-
             this.sandbox.on('husky.dropzone.contact-avatar.success', function(file, response) {
                 this.saveAvatarData(response);
                 this.updateAvatarContainer(response.id, response.thumbnails[constants.imageFormat], response.url);
             }, this);
-        },
-
-        /**
-         * Disables or enables the contact
-         * @param disable {Boolean} true to disable, false to enable
-         */
-        toggleDisableContact: function(disable) {
-            this.data.disabled = disable;
-            this.sandbox.emit('sulu.tab.dirty');
         },
 
         initContactData: function() {

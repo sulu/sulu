@@ -292,10 +292,6 @@
                 <source>contact.contacts.salutation</source>
                 <target>Salutation</target>
             </trans-unit>
-            <trans-unit id="f224042b2d3aceaf238eefc31a71d124" resname="contact.contacts.disabled">
-                <source>contact.contacts.disabled</source>
-                <target>Deactivated</target>
-            </trans-unit>
             <trans-unit id="16cc76aeac068c2027efe58d0ae9d008" resname="contact.contacts.formOfAddress">
                 <source>contact.contacts.formOfAddress</source>
                 <target>Form of address</target>
