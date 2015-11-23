@@ -113,7 +113,7 @@ class ContentRepository implements ContentRepositoryInterface
 
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
         $queryBuilder = $this->getQueryBuilder($locale);
-        $queryBuilder->where($this->qomFactory->descendantNode('node', $node->getPath()));
+        $queryBuilder->where($this->qomFactory->childNode('node', $node->getPath()));
         $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
 
         return array_map(
@@ -132,7 +132,7 @@ class ContentRepository implements ContentRepositoryInterface
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
         $queryBuilder = $this->getQueryBuilder($locale);
         $queryBuilder->where(
-            $this->qomFactory->descendantNode('node', $this->sessionManager->getContentPath($webspaceKey))
+            $this->qomFactory->childNode('node', $this->sessionManager->getContentPath($webspaceKey))
         );
         $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
 
@@ -237,6 +237,7 @@ class ContentRepository implements ContentRepositoryInterface
     private function resolveContent(Row $row, $locale, $webspaceKey, $mapping)
     {
         if ($row->getValue('nodeType') === RedirectType::INTERNAL) {
+            // TODO collect all internal link contents and query once
             return $this->resolveInternalLinkContent($row, $locale, $webspaceKey, $mapping);
         }
 

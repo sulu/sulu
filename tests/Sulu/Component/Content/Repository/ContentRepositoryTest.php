@@ -164,6 +164,32 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-3', $result[2]['title']);
     }
 
+    public function testFindByParentOneLayer()
+    {
+        $this->initPhpcr();
+
+        $page1 = $this->createPage('test-1', 'de');
+        $this->createPage('test-1-1', 'de', [], $page1);
+        $this->createPage('test-1-2', 'de', [], $page1);
+        $page2 = $this->createPage('test-2', 'de');
+        $this->createPage('test-2-1', 'de', [], $page2);
+        $this->createPage('test-2-2', 'de', [], $page2);
+        $this->createPage('test-3', 'de');
+
+        $parentUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
+
+        $result = $this->contentRepository->findByParentUuid($parentUuid, 'de', 'sulu_io');
+
+        $this->assertCount(3, $result);
+
+        $this->assertNotNull($result[0]->getUuid());
+        $this->assertEquals('/test-1', $result[0]->getPath());
+        $this->assertNotNull($result[1]->getUuid());
+        $this->assertEquals('/test-2', $result[1]->getPath());
+        $this->assertNotNull($result[2]->getUuid());
+        $this->assertEquals('/test-3', $result[2]->getPath());
+    }
+
     public function testFindByWebspaceRoot()
     {
         $this->initPhpcr();
@@ -250,6 +276,30 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-1', $result[0]['title']);
         $this->assertEquals('test-1', $result[1]['title']);
         $this->assertEquals('test-3', $result[2]['title']);
+    }
+
+    public function testFindByWebspaceRootOneLayer()
+    {
+        $this->initPhpcr();
+
+        $page1 = $this->createPage('test-1', 'de');
+        $this->createPage('test-1-1', 'de', [], $page1);
+        $this->createPage('test-1-2', 'de', [], $page1);
+        $page2 = $this->createPage('test-2', 'de');
+        $this->createPage('test-2-1', 'de', [], $page2);
+        $this->createPage('test-2-2', 'de', [], $page2);
+        $this->createPage('test-3', 'de');
+
+        $result = $this->contentRepository->findByWebspaceRoot('de', 'sulu_io');
+
+        $this->assertCount(3, $result);
+
+        $this->assertNotNull($result[0]->getUuid());
+        $this->assertEquals('/test-1', $result[0]->getPath());
+        $this->assertNotNull($result[1]->getUuid());
+        $this->assertEquals('/test-2', $result[1]->getPath());
+        $this->assertNotNull($result[2]->getUuid());
+        $this->assertEquals('/test-3', $result[2]->getPath());
     }
 
     public function testFind()
@@ -342,15 +392,24 @@ class ContentRepositoryTest extends SuluTestCase
      * @param string $title
      * @param string $locale
      * @param array $data
+     * @param PageDocument $parent
      *
      * @return PageDocument
      */
-    private function createPage($title, $locale, $data = [])
+    private function createPage($title, $locale, $data = [], $parent = null)
     {
+        /** @var PageDocument $document */
+        $document = $this->documentManager->create('page');
+
+        $path = $this->sessionManager->getContentPath('sulu_io') . '/' . $title;
+        if ($parent !== null) {
+            $path = $parent->getPath();
+            $document->setParent($parent);
+        }
+
         $data['title'] = $title;
         $data['url'] = '/' . $title;
 
-        $document = $this->documentManager->create('page');
         $document->setStructureType('simple');
         $document->setTitle($title);
         $document->setResourceSegment($data['url']);
@@ -362,7 +421,7 @@ class ContentRepositoryTest extends SuluTestCase
             $document,
             $locale,
             [
-                'path' => $this->sessionManager->getContentPath('sulu_io') . '/' . $title,
+                'path' => $path,
                 'auto_create' => true,
             ]
         );
