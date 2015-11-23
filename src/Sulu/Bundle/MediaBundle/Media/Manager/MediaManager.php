@@ -994,7 +994,7 @@ class MediaManager implements MediaManagerInterface
     }
 
     /**
-     * Returns file name without special characters and preserves file extension
+     * Returns file name without special characters and preserves file extension.
      *
      * @param $originalFileName
      *
