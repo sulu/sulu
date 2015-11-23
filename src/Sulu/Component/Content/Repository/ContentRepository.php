@@ -120,12 +120,29 @@ class ContentRepository implements ContentRepositoryInterface
      */
     public function findByParentUuid($uuid, $locale, $webspaceKey, $mapping = [], UserInterface $user = null)
     {
-        // TODO only load needed data
-        $node = $this->session->getNodeByIdentifier($uuid);
+        $queryBuilder = new QueryBuilder($this->qomFactory);
+
+        $queryBuilder
+            ->select('node', 'jcr:uuid', 'uuid')
+            ->from($this->qomFactory->selector('node', 'nt:unstructured'))
+            ->where(
+                $this->qomFactory->comparison(
+                    $this->qomFactory->propertyValue('node', 'jcr:uuid'),
+                    '=',
+                    $this->qomFactory->literal($uuid)
+                )
+            );
+
+        $rows = $queryBuilder->execute();
+
+        if (count(iterator_to_array($rows->getRows())) !== 1) {
+            // TODO Exception
+            throw new Exception();
+        }
 
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
         $queryBuilder = $this->getQueryBuilder($locale, $user);
-        $queryBuilder->where($this->qomFactory->childNode('node', $node->getPath()));
+        $queryBuilder->where($this->qomFactory->childNode('node', $rows->getRows()->current()->getPath()));
         $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
 
         return array_map(
