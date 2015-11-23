@@ -31049,6 +31049,10 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @returns {boolean}
          */
         containerIsOverflown: function() {
+            if (!this.table.$container) {
+                return false;
+            }
+
             return this.sandbox.dom.get(this.table.$container, 0).scrollWidth > this.sandbox.dom.width(this.table.$container);
         },
 
@@ -31093,7 +31097,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                             $contentContainer = this.sandbox.dom.find('.' + constants.textContainerClass, cell.$el);
                             if (crop === true) {
                                 content = this.sandbox.util.cropMiddle(cell.originalContent, this.options.croppedMaxLength);
-                                this.sandbox.dom.attr($contentContainer, 'title', cell.originalContent);;
+                                this.sandbox.dom.attr($contentContainer, 'title', cell.originalContent);
                                 this.tableCropped = true;
                                 this.cropBreakPoint = this.sandbox.dom.width(this.table.$container);
                             } else {
@@ -32782,7 +32786,8 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 RADIO: 'radio',
                 COUNT: 'count',
                 TRANSLATION: 'translation',
-                NUMBER: 'number'
+                NUMBER: 'number',
+                CURRENCY: 'currency'
             },
 
             decorators = {
@@ -32845,6 +32850,16 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                  */
                 number: function(val) {
                     return this.sandbox.numberFormat(val, 'n');
+                },
+
+
+                /**
+                 * Formats a float as culture specific currency
+                 * @param val {String} the string to format
+                 * @returns {String}
+                 */
+                currency: function(val) {
+                    return this.sandbox.numberFormat(val, 'c');
                 },
 
                 /**
@@ -50110,6 +50125,9 @@ define("datepicker-zh-TW", function(){});
                     },
                     getTimePatter: function() {
                         return Globalize.culture().calendar.patterns.t;
+                    },
+                    setCurrency: function(symbol) {
+                        Globalize.culture().numberFormat.currency.symbol = symbol;
                     }
                 };
 
@@ -50253,6 +50271,8 @@ define("datepicker-zh-TW", function(){});
 
                     app.setLanguage(app.config.culture.name, app.config.culture.messages);
                 }
+
+                app.sandbox.globalize.setCurrency('');
             }
         };
     });
