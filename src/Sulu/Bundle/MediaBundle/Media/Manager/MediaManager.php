@@ -541,9 +541,11 @@ class MediaManager implements MediaManagerInterface
             ++$version;
             $this->validator->validate($uploadedFile);
 
+            $fileName = $this->getNormalizedFileName($uploadedFile->getClientOriginalName());
+
             $data['storageOptions'] = $this->storage->save(
                 $uploadedFile->getPathname(),
-                $uploadedFile->getClientOriginalName(),
+                $fileName,
                 $version,
                 $currentFileVersion->getStorageOptions()
             );
@@ -621,9 +623,7 @@ class MediaManager implements MediaManagerInterface
 
         $this->validator->validate($uploadedFile);
 
-        // normalize file name
-        $originalFileName = $uploadedFile->getClientOriginalName();
-        $fileName = $this->pathCleaner->cleanup($originalFileName);
+        $fileName = $this->getNormalizedFileName($uploadedFile->getClientOriginalName());
 
         $data['storageOptions'] = $this->storage->save(
             $uploadedFile->getPathname(),
@@ -991,5 +991,25 @@ class MediaManager implements MediaManagerInterface
         }
 
         return $this->tokenStorage->getToken()->getUser();
+    }
+
+    /**
+     * Returns file name without special characters and preserves file extension
+     *
+     * @param $originalFileName
+     *
+     * @return string
+     */
+    private function getNormalizedFileName($originalFileName)
+    {
+        if (strpos($originalFileName, '.') !== false) {
+            $pathParts = pathinfo($originalFileName);
+            $fileName = $this->pathCleaner->cleanup($pathParts['filename']);
+            $fileName .= '.' . $pathParts['extension'];
+        } else {
+            $fileName = $this->pathCleaner->cleanup($originalFileName);
+        }
+
+        return $fileName;
     }
 }
