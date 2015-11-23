@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * BUGFIX      #1820 [ContentBundle]   Fixed migrate url script
+    * BUGFIX      #1815 [SecurityBundle]  Fixed missing locale check for security
     * BUGFIX      #1812 [ContactBundle]   Fixed translation bug in position dropdown
     * BUGFIX      #1814 [MediaBundle]     Fixed media selection bug
     * ENHANCEMENT #1806 [ContentBundle]   Fixed serialization depth for column-navigation

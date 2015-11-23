@@ -255,6 +255,13 @@ class AccessControlManagerTest extends \PHPUnit_Framework_TestCase
                 null,
                 ['view' => true, 'edit' => true],
             ],
+            [
+                [1 => ['view' => true, 'edit' => true]],
+                96,
+                ['en'],
+                'de',
+                ['view' => false, 'edit' => false],
+            ],
         ];
     }
 }
