@@ -12,29 +12,20 @@
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Compat\LocalizationFinder;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\Localization\Localization;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Set a fallback locale for the document if necessary.
- *
- * TODO: Most of this code is legacy. It seems to me that this could be
- *       much simpler and more efficient.
  */
 class FallbackLocalizationSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
     /**
      * @var PropertyEncoder
      */
@@ -50,16 +41,21 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
      */
     private $documentRegistry;
 
+    /**
+     * @var LocalizationFinder
+     */
+    private $localizationFinder;
+
     public function __construct(
         PropertyEncoder $encoder,
-        WebspaceManagerInterface $webspaceManager,
         DocumentInspector $inspector,
-        DocumentRegistry $documentRegistry
+        DocumentRegistry $documentRegistry,
+        LocalizationFinder $localizationFinder
     ) {
-        $this->webspaceManager = $webspaceManager;
         $this->encoder = $encoder;
         $this->inspector = $inspector;
         $this->documentRegistry = $documentRegistry;
+        $this->localizationFinder = $localizationFinder;
     }
 
     /**
@@ -128,7 +124,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         $fallbackLocale = null;
 
         if ($document instanceof WebspaceBehavior) {
-            $fallbackLocale = $this->getWebspaceLocale(
+            $fallbackLocale = $this->localizationFinder->findAvailableLocale(
                 $this->inspector->getWebspace($document),
                 $availableLocales,
                 $locale
@@ -144,138 +140,5 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         }
 
         return $fallbackLocale;
-    }
-
-    /**
-     * @param string   $webspaceName
-     * @param string[] $availableLocales
-     * @param string   $locale
-     *
-     * @return string
-     */
-    private function getWebspaceLocale($webspaceName, array $availableLocales, $locale)
-    {
-        if (!$webspaceName) {
-            return;
-        }
-
-        // get localization object for querying parent localizations
-        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceName);
-        $localization = $webspace->getLocalization($locale);
-
-        if (null === $localization) {
-            return;
-        }
-
-        $resultLocalization = null;
-
-        // find first available localization in parents
-        $resultLocalization = $this->findAvailableParentLocalization(
-            $availableLocales,
-            $localization
-        );
-
-        // find first available localization in children, if no result is found yet
-        if (!$resultLocalization) {
-            $resultLocalization = $this->findAvailableChildLocalization(
-                $availableLocales,
-                $localization
-            );
-        }
-
-        // find any localization available, if no result is found yet
-        if (!$resultLocalization) {
-            $resultLocalization = $this->findAvailableLocalization(
-                $availableLocales,
-                $webspace->getLocalizations()
-            );
-        }
-
-        if (!$resultLocalization) {
-            return;
-        }
-
-        return $resultLocalization->getLocalization();
-    }
-
-    /**
-     * Finds the next available parent-localization in which the node has a translation.
-     *
-     * @param string[]     $availableLocales
-     * @param Localization $localization     The localization to start the search for
-     *
-     * @return null|Localization
-     */
-    private function findAvailableParentLocalization(
-        array $availableLocales,
-        Localization $localization
-    ) {
-        do {
-            if (in_array($localization->getLocalization(), $availableLocales)) {
-                return $localization;
-            }
-
-            // try to load parent and stop if there is no parent
-            $localization = $localization->getParent();
-        } while ($localization != null);
-
-        return;
-    }
-
-    /**
-     * Finds the next available child-localization in which the node has a translation.
-     *
-     * @param string[]     $availableLocales
-     * @param Localization $localization     The localization to start the search for
-     *
-     * @return null|Localization
-     */
-    private function findAvailableChildLocalization(
-        array $availableLocales,
-        Localization $localization
-    ) {
-        $childrenLocalizations = $localization->getChildren();
-
-        if (!empty($childrenLocalizations)) {
-            foreach ($childrenLocalizations as $childrenLocalization) {
-                // return the localization if a translation exists in the child localization
-                if (in_array($childrenLocalization->getLocalization(), $availableLocales)) {
-                    return $childrenLocalization;
-                }
-
-                // recursively call this function for checking children
-                return $this->findAvailableChildLocalization($availableLocales, $childrenLocalization);
-            }
-        }
-
-        // return null if nothing was found
-        return;
-    }
-
-    /**
-     * Finds any localization, in which the node is translated.
-     *
-     * @param string[]       $availableLocales
-     * @param Localization[] $localizations    The available localizations
-     *
-     * @return null|Localization
-     */
-    private function findAvailableLocalization(
-        array $availableLocales,
-        array $localizations
-    ) {
-        foreach ($localizations as $localization) {
-            if (in_array($localization->getLocalization(), $availableLocales)) {
-                return $localization;
-            }
-
-            $children = $localization->getChildren();
-
-            if ($children) {
-                return $this->findAvailableLocalization($availableLocales, $children);
-            }
-        }
-
-        return;
     }
 }

@@ -148,5 +148,9 @@
                 <argument key="snippet">%sulu.content.node_names.snippet%</argument>
             </argument>
         </service>
+
+        <service id="sulu.content.localization_finder" class="Sulu\Component\Content\Compat\LocalizationFinder">
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+        </service>
     </services>
 </container>

@@ -88,6 +88,7 @@
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="sulu_document_manager.property_encoder"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu.content.localization_finder"/>
         </service>
         <service id="sulu_content.content_repositor.serialize_handler"
                  class="Sulu\Component\Content\Repository\Serializer\ContentHandler">
@@ -97,6 +98,7 @@
         <service id="sulu_content.content_repository.controller" class="Sulu\Bundle\ContentBundle\Controller\ContentController">
             <argument type="service" id="sulu_content.content_repository"/>
             <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="security.token_storage"/>
         </service>
     </services>
 </container>

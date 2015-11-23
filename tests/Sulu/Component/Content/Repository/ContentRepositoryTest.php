@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Repository;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Content\Compat\LocalizationFinder;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
@@ -51,6 +52,11 @@ class ContentRepositoryTest extends SuluTestCase
      */
     private $webspaceManager;
 
+    /**
+     * @var LocalizationFinder
+     */
+    private $localizationFinder;
+
     public function setUp()
     {
         $this->session = $this->getContainer()->get('doctrine_phpcr.default_session');
@@ -58,11 +64,13 @@ class ContentRepositoryTest extends SuluTestCase
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->propertyEncoder = $this->getContainer()->get('sulu_document_manager.property_encoder');
         $this->webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
+        $this->localizationFinder = $this->getContainer()->get('sulu.content.localization_finder');
 
         $this->contentRepository = new ContentRepository(
             $this->sessionManager,
             $this->propertyEncoder,
-            $this->webspaceManager
+            $this->webspaceManager,
+            $this->localizationFinder
         );
     }
 
@@ -309,6 +317,20 @@ class ContentRepositoryTest extends SuluTestCase
         $page = $this->createPage('test-1', 'de');
 
         $result = $this->contentRepository->find($page->getUuid(), 'de', 'sulu_io', ['title']);
+
+        $this->assertNotNull($result->getUuid());
+        $this->assertEquals($page->getUuid(), $result->getUuid());
+        $this->assertEquals('/test-1', $result->getPath());
+        $this->assertEquals('test-1', $result['title']);
+    }
+
+    public function testFindWithGhost()
+    {
+        $this->initPhpcr();
+
+        $page = $this->createPage('test-1', 'en');
+
+        $result = $this->contentRepository->find($page->getUuid(), 'en_us', 'sulu_io', ['title']);
 
         $this->assertNotNull($result->getUuid());
         $this->assertEquals($page->getUuid(), $result->getUuid());

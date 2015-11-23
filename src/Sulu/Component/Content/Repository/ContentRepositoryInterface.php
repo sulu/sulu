@@ -10,6 +10,8 @@
 
 namespace Sulu\Component\Content\Repository;
 
+use Sulu\Component\Security\Authentication\UserInterface;
+
 /**
  * Interface for content repository.
  */
@@ -22,10 +24,11 @@ interface ContentRepositoryInterface
      * @param string $locale
      * @param string $webspaceKey
      * @param string[] $mapping array of property names.
+     * @param UserInterface $user
      *
      * @return Content
      */
-    public function find($uuid, $locale, $webspaceKey, $mapping = []);
+    public function find($uuid, $locale, $webspaceKey, $mapping = [], UserInterface $user = null);
 
     /**
      * Find content which are children of parent uuid.
@@ -34,10 +37,11 @@ interface ContentRepositoryInterface
      * @param string $locale
      * @param string $webspaceKey
      * @param string[] $mapping array of property names.
+     * @param UserInterface $user
      *
      * @return Content[]
      */
-    public function findByParentUuid($uuid, $locale, $webspaceKey, $mapping = []);
+    public function findByParentUuid($uuid, $locale, $webspaceKey, $mapping = [], UserInterface $user = null);
 
     /**
      * Find content which are children of webspace root.
@@ -45,8 +49,9 @@ interface ContentRepositoryInterface
      * @param string $locale
      * @param string $webspaceKey
      * @param string[] $mapping array of property names.
+     * @param UserInterface $user
      *
      * @return Content[]
      */
-    public function findByWebspaceRoot($locale, $webspaceKey, $mapping = []);
+    public function findByWebspaceRoot($locale, $webspaceKey, $mapping = [], UserInterface $user = null);
 }

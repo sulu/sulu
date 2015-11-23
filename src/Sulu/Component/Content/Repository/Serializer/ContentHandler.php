@@ -12,6 +12,8 @@ namespace Sulu\Component\Content\Repository\Serializer;
 
 use JMS\Serializer\Context;
 use JMS\Serializer\JsonSerializationVisitor;
+use Sulu\Component\Content\Document\RedirectType;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Repository\Content;
 
 /**
@@ -35,6 +37,18 @@ class ContentHandler
         array $type,
         Context $context
     ) {
-        return $content->jsonSerialize();
+        $result = $content->jsonSerialize();
+        $result['publishedState'] = (WorkflowStage::PUBLISHED === $content->getWorkflowStage());
+        if (RedirectType::EXTERNAL === $content->getNodeType()) {
+            $result['linked'] = 'external';
+        } elseif (RedirectType::INTERNAL === $content->getNodeType()) {
+            $result['linked'] = 'internal';
+        }
+        $result['_permissions'] = $content->getPermissions();
+        if (null !== $content->getLocalizationType()) {
+            $result['type'] = $content->getLocalizationType()->toArray();
+        }
+
+        return $result;
     }
 }

@@ -15,10 +15,13 @@ use Jackalope\Query\Row;
 use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\QOM\QueryBuilder;
+use Sulu\Component\Content\Compat\LocalizationFinder;
+use Sulu\Component\Content\Compat\StructureType;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\Security\Acl\Exception\Exception;
 
@@ -30,6 +33,8 @@ class ContentRepository implements ContentRepositoryInterface
     // TODO bad name they should not be handled by redirects and shadow
     private static $nonFallbackProperties = [
         'uuid',
+        'state',
+        'order',
         'created',
         'creator',
         'changed',
@@ -64,14 +69,21 @@ class ContentRepository implements ContentRepositoryInterface
      */
     private $qomFactory;
 
+    /**
+     * @var LocalizationFinder
+     */
+    private $localizationFinder;
+
     public function __construct(
         SessionManagerInterface $sessionManager,
         PropertyEncoder $propertyEncoder,
-        WebspaceManagerInterface $webspaceManager
+        WebspaceManagerInterface $webspaceManager,
+        LocalizationFinder $localizationFinder
     ) {
         $this->sessionManager = $sessionManager;
         $this->propertyEncoder = $propertyEncoder;
         $this->webspaceManager = $webspaceManager;
+        $this->localizationFinder = $localizationFinder;
 
         $this->session = $sessionManager->getSession();
         $this->qomFactory = $this->session->getWorkspace()->getQueryManager()->getQOMFactory();
@@ -80,10 +92,10 @@ class ContentRepository implements ContentRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function find($uuid, $locale, $webspaceKey, $mapping = [])
+    public function find($uuid, $locale, $webspaceKey, $mapping = [], UserInterface $user = null)
     {
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
-        $queryBuilder = $this->getQueryBuilder($locale);
+        $queryBuilder = $this->getQueryBuilder($locale, $user);
         $queryBuilder->where(
             $this->qomFactory->comparison(
                 new PropertyValue('node', 'jcr:uuid'),
@@ -100,25 +112,25 @@ class ContentRepository implements ContentRepositoryInterface
             throw new Exception();
         }
 
-        return $this->resolveContent($rows->getRows()->current(), $locale, $webspaceKey, $mapping);
+        return $this->resolveContent($rows->getRows()->current(), $locale, $webspaceKey, $mapping, $user);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findByParentUuid($uuid, $locale, $webspaceKey, $mapping = [])
+    public function findByParentUuid($uuid, $locale, $webspaceKey, $mapping = [], UserInterface $user = null)
     {
         // TODO only load needed data
         $node = $this->session->getNodeByIdentifier($uuid);
 
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
-        $queryBuilder = $this->getQueryBuilder($locale);
+        $queryBuilder = $this->getQueryBuilder($locale, $user);
         $queryBuilder->where($this->qomFactory->childNode('node', $node->getPath()));
         $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
 
         return array_map(
-            function (Row $row) use ($mapping, $webspaceKey, $locale) {
-                return $this->resolveContent($row, $locale, $webspaceKey, $mapping);
+            function (Row $row) use ($mapping, $webspaceKey, $locale, $user) {
+                return $this->resolveContent($row, $locale, $webspaceKey, $mapping, $user);
             },
             iterator_to_array($queryBuilder->execute())
         );
@@ -127,18 +139,18 @@ class ContentRepository implements ContentRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function findByWebspaceRoot($locale, $webspaceKey, $mapping = [])
+    public function findByWebspaceRoot($locale, $webspaceKey, $mapping = [], UserInterface $user = null)
     {
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
-        $queryBuilder = $this->getQueryBuilder($locale);
+        $queryBuilder = $this->getQueryBuilder($locale, $user);
         $queryBuilder->where(
             $this->qomFactory->childNode('node', $this->sessionManager->getContentPath($webspaceKey))
         );
         $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
 
         return array_map(
-            function (Row $row) use ($mapping, $webspaceKey, $locale) {
-                return $this->resolveContent($row, $locale, $webspaceKey, $mapping);
+            function (Row $row) use ($mapping, $webspaceKey, $locale, $user) {
+                return $this->resolveContent($row, $locale, $webspaceKey, $mapping, $user);
             },
             iterator_to_array($queryBuilder->execute())
         );
@@ -148,21 +160,33 @@ class ContentRepository implements ContentRepositoryInterface
      * Returns QueryBuilder with basic select and where statements.
      *
      * @param string $locale
+     * @param UserInterface $user
      *
      * @return QueryBuilder
      */
-    private function getQueryBuilder($locale)
+    private function getQueryBuilder($locale, UserInterface $user = null)
     {
         $queryBuilder = new QueryBuilder($this->qomFactory);
 
-        return $queryBuilder
+        $queryBuilder
             ->select('node', 'jcr:uuid', 'uuid')
             ->addSelect('node', $this->propertyEncoder->localizedContentName('nodeType', $locale), 'nodeType')
             ->addSelect('node', $this->propertyEncoder->localizedContentName('internal_link', $locale), 'internalLink')
             ->addSelect('node', $this->propertyEncoder->localizedContentName('state', $locale), 'state')
             ->addSelect('node', $this->propertyEncoder->localizedContentName('shadow-on', $locale), 'shadowOn')
             ->addSelect('node', $this->propertyEncoder->localizedContentName('shadow-base', $locale), 'shadowBase')
-            ->from($this->qomFactory->selector('node', 'nt:unstructured'));
+            ->addSelect('node', $this->propertyEncoder->localizedContentName('shadow-base', $locale), 'shadowBase')
+            ->addSelect('node', $this->propertyEncoder->systemName('order'), 'order')
+            ->from($this->qomFactory->selector('node', 'nt:unstructured'))
+            ->orderBy($this->qomFactory->propertyValue('node', 'sulu:order'));
+
+        if (null !== $user) {
+            foreach ($user->getRoleObjects() as $role) {
+                $queryBuilder->addSelect('node', sprintf('sec:%s', 'role-' . $role->getId()), $role->getIdentifier());
+            }
+        }
+
+        return $queryBuilder;
     }
 
     /**
@@ -194,7 +218,8 @@ class ContentRepository implements ContentRepositoryInterface
      */
     private function appendMapping(QueryBuilder $queryBuilder, $mapping, $locale, $locales)
     {
-        foreach ($mapping as $propertyName) {
+        $mapping[] = 'template';
+        foreach (array_unique($mapping) as $propertyName) {
             $this->appendSingleMapping($queryBuilder, $propertyName, $locale, $locales);
         }
     }
@@ -212,10 +237,6 @@ class ContentRepository implements ContentRepositoryInterface
         foreach ($locales as $item) {
             $alias = sprintf('%s%s', $item, ucfirst($propertyName));
 
-            if ($locale === $item) {
-                $alias = $propertyName;
-            }
-
             $queryBuilder->addSelect(
                 'node',
                 $this->propertyEncoder->localizedContentName($propertyName, $item),
@@ -231,21 +252,38 @@ class ContentRepository implements ContentRepositoryInterface
      * @param string $locale
      * @param string $webspaceKey
      * @param string[] $mapping array of property names.
+     * @param UserInterface $user
      *
      * @return Content
      */
-    private function resolveContent(Row $row, $locale, $webspaceKey, $mapping)
+    private function resolveContent(Row $row, $locale, $webspaceKey, $mapping, UserInterface $user = null)
     {
+        $originalLocale = $locale;
+        $locale = $this->localizationFinder->findAvailableLocale(
+            $webspaceKey,
+            $this->resolveAvailableLocales($row),
+            $locale
+        );
+
+        $type = null;
+        if ($locale !== $originalLocale) {
+            $type = StructureType::getGhost($locale);
+        } elseif ($row->getValue('shadowOn')) {
+            $type = StructureType::getShadow($row->getValue('shadowBase'));
+        }
+
         if ($row->getValue('nodeType') === RedirectType::INTERNAL) {
             // TODO collect all internal link contents and query once
-            return $this->resolveInternalLinkContent($row, $locale, $webspaceKey, $mapping);
+            return $this->resolveInternalLinkContent($row, $locale, $webspaceKey, $mapping, $type, $user);
         }
+
 
         $data = [];
         foreach ($mapping as $item) {
             $data[$item] = $this->resolveProperty(
                 $row,
                 $item,
+                $locale,
                 $row->getValue('shadowOn') ? $row->getValue('shadowBase') : null
             );
         }
@@ -253,8 +291,32 @@ class ContentRepository implements ContentRepositoryInterface
         return new Content(
             $row->getValue('uuid'),
             $this->resolvePath($row, $webspaceKey),
-            $data
+            $row->getValue('state'),
+            $row->getValue('nodeType'),
+            $this->resolveHasChildren($row),
+            $data,
+            $this->resolvePermissions($row, $user),
+            $type
         );
+    }
+
+    /**
+     * Resolves all available localizations for given row.
+     *
+     * @param Row $row
+     *
+     * @return string[]
+     */
+    private function resolveAvailableLocales(Row $row)
+    {
+        $locales = [];
+        foreach ($row->getValues() as $key => $value) {
+            if (preg_match('/^node.([a-zA-Z_]*?)Template/', $key, $matches) && '' !== $value) {
+                $locales[] = $matches[1];
+            }
+        }
+
+        return $locales;
     }
 
     /**
@@ -264,11 +326,19 @@ class ContentRepository implements ContentRepositoryInterface
      * @param string $locale
      * @param string $webspaceKey
      * @param string[] $mapping array of property names.
+     * @param StructureType $type
+     * @param UserInterface $user
      *
      * @return Content
      */
-    public function resolveInternalLinkContent(Row $row, $locale, $webspaceKey, $mapping)
-    {
+    public function resolveInternalLinkContent(
+        Row $row,
+        $locale,
+        $webspaceKey,
+        $mapping,
+        StructureType $type = null,
+        UserInterface $user = null
+    ) {
         $linkedContent = $this->find($row->getValue('internalLink'), $locale, $webspaceKey, $mapping);
         $data = $linkedContent->getData();
 
@@ -276,10 +346,19 @@ class ContentRepository implements ContentRepositoryInterface
         // fallback properties should be handled on the original row.
         $properties = array_intersect(self::$nonFallbackProperties, array_keys($data));
         foreach ($properties as $property) {
-            $data[$property] = $this->resolveProperty($row, $property);
+            $data[$property] = $this->resolveProperty($row, $property, $locale);
         }
 
-        return new Content($row->getValue('uuid'), $this->resolvePath($row, $webspaceKey), $data);
+        return new Content(
+            $row->getValue('uuid'),
+            $this->resolvePath($row, $webspaceKey),
+            $row->getValue('state'),
+            $row->getValue('nodeType'),
+            $this->resolveHasChildren($row),
+            $data,
+            $this->resolvePermissions($row, $user),
+            $type
+        );
     }
 
     /**
@@ -291,11 +370,17 @@ class ContentRepository implements ContentRepositoryInterface
      *
      * @return mixed
      */
-    private function resolveProperty(Row $row, $name, $shadowLocale = null)
+    private function resolveProperty(Row $row, $name, $locale, $shadowLocale = null)
     {
-        if (null !== $shadowLocale && !in_array($name, self::$nonFallbackProperties)) {
-            $name = sprintf('%s%s', $shadowLocale, ucfirst($name));
+        if (array_key_exists(sprintf('node.%s', $name), $row->getValues())) {
+            return $row->getValue($name);
         }
+
+        if (null !== $shadowLocale && !in_array($name, self::$nonFallbackProperties)) {
+            $locale = $shadowLocale;
+        }
+
+        $name = sprintf('%s%s', $locale, ucfirst($name));
 
         return $row->getValue($name);
     }
@@ -311,5 +396,49 @@ class ContentRepository implements ContentRepositoryInterface
     private function resolvePath(Row $row, $webspaceKey)
     {
         return str_replace($this->sessionManager->getContentPath($webspaceKey), '', $row->getPath());
+    }
+
+    /**
+     * Resolves permissions for given user.
+     *
+     * @param Row $row
+     * @param UserInterface $user
+     *
+     * @return array
+     */
+    private function resolvePermissions(Row $row, UserInterface $user = null)
+    {
+        $permissions = [];
+        if (null !== $user) {
+            foreach ($user->getRoleObjects() as $role) {
+                $permissions[sprintf('role-%s', $role->getId())] = array_filter(
+                    explode(' ', $row->getValue($role->getIdentifier()))
+                );
+            }
+        }
+
+        return $permissions;
+    }
+
+    /**
+     * Resolve property has-children with given node.
+     *
+     * @param Row $row
+     *
+     * @return bool
+     */
+    private function resolveHasChildren(Row $row)
+    {
+        $queryBuilder = new QueryBuilder($this->qomFactory);
+
+        $queryBuilder
+            ->select('node', 'jcr:uuid', 'uuid')
+            ->from($this->qomFactory->selector('node', 'nt:unstructured'))
+            ->where($this->qomFactory->childNode('node', $row->getPath()))
+            ->setMaxResults(1);
+
+        $result = $queryBuilder->execute();
+
+        return (count(iterator_to_array($result->getRows())) > 0);
     }
 }

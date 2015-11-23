@@ -17,6 +17,7 @@ use Sulu\Component\Content\Repository\ContentRepositoryInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Provides api for content querying.
@@ -37,10 +38,19 @@ class ContentController extends RestController implements ClassResourceInterface
      */
     private $viewHandler;
 
-    public function __construct(ContentRepositoryInterface $contentRepository, ViewHandlerInterface $viewHandler)
-    {
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    public function __construct(
+        ContentRepositoryInterface $contentRepository,
+        ViewHandlerInterface $viewHandler,
+        TokenStorageInterface $tokenStorage
+    ) {
         $this->contentRepository = $contentRepository;
         $this->viewHandler = $viewHandler;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function cgetAction(Request $request)
@@ -50,10 +60,12 @@ class ContentController extends RestController implements ClassResourceInterface
         $locale = $this->getRequestParameter($request, 'locale', true);
         $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
 
+        $user = $this->tokenStorage->getToken()->getUser();
+
         if (!$parent) {
-            $contents = $this->contentRepository->findByWebspaceRoot($locale, $webspaceKey, $mapping);
+            $contents = $this->contentRepository->findByWebspaceRoot($locale, $webspaceKey, $mapping, $user);
         } else {
-            $contents = $this->contentRepository->findByParentUuid($parent, $locale, $webspaceKey, $mapping);
+            $contents = $this->contentRepository->findByParentUuid($parent, $locale, $webspaceKey, $mapping, $user);
         }
 
         $list = new CollectionRepresentation($contents, self::$relationName);

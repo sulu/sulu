@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content\Repository;
 
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use Sulu\Component\Content\Compat\StructureType;
 use Sulu\Exception\FeatureNotImplementedException;
 
 /**
@@ -31,15 +32,53 @@ class Content implements \ArrayAccess, \JsonSerializable
     private $path;
 
     /**
+     * @var int
+     */
+    private $workflowStage;
+
+    /**
+     * @var int
+     */
+    private $nodeType;
+
+    /**
+     * @var bool
+     */
+    private $hasChildren;
+
+    /**
      * @var array
      */
     private $data;
 
-    public function __construct($uuid, $path, array $data)
-    {
+    /**
+     * @var array
+     */
+    private $permissions;
+
+    /**
+     * @var StructureType
+     */
+    private $localizationType;
+
+    public function __construct(
+        $uuid,
+        $path,
+        $workflowStage,
+        $nodeType,
+        $hasChildren,
+        array $data,
+        array $permissions,
+        StructureType $localizationType = null
+    ) {
         $this->uuid = $uuid;
         $this->path = $path;
+        $this->workflowStage = $workflowStage;
+        $this->nodeType = $nodeType;
+        $this->hasChildren = $hasChildren;
         $this->data = $data;
+        $this->permissions = $permissions;
+        $this->localizationType = $localizationType;
     }
 
     /**
@@ -64,6 +103,46 @@ class Content implements \ArrayAccess, \JsonSerializable
     public function getData()
     {
         return $this->data;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWorkflowStage()
+    {
+        return $this->workflowStage;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNodeType()
+    {
+        return $this->nodeType;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPermissions()
+    {
+        return $this->permissions;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function hasChildren()
+    {
+        return $this->hasChildren;
+    }
+
+    /**
+     * @return StructureType
+     */
+    public function getLocalizationType()
+    {
+        return $this->localizationType;
     }
 
     /**
@@ -103,6 +182,9 @@ class Content implements \ArrayAccess, \JsonSerializable
      */
     public function jsonSerialize()
     {
-        return array_merge(['uuid' => $this->getUuid(), 'path' => $this->getPath()], $this->getData());
+        return array_merge(
+            ['uuid' => $this->getUuid(), 'path' => $this->getPath(), 'hasChildren' => $this->hasChildren()],
+            $this->getData()
+        );
     }
 }
