@@ -24,6 +24,16 @@ class Content implements \ArrayAccess, \JsonSerializable
     /**
      * @var string
      */
+    private $locale;
+
+    /**
+     * @var string
+     */
+    private $webspaceKey;
+
+    /**
+     * @var string
+     */
     private $uuid;
 
     /**
@@ -62,6 +72,8 @@ class Content implements \ArrayAccess, \JsonSerializable
     private $localizationType;
 
     public function __construct(
+        $locale,
+        $webspaceKey,
         $uuid,
         $path,
         $workflowStage,
@@ -79,6 +91,8 @@ class Content implements \ArrayAccess, \JsonSerializable
         $this->data = $data;
         $this->permissions = $permissions;
         $this->localizationType = $localizationType;
+        $this->locale = $locale;
+        $this->webspaceKey = $webspaceKey;
     }
 
     /**
@@ -130,7 +144,7 @@ class Content implements \ArrayAccess, \JsonSerializable
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasChildren()
     {
@@ -143,6 +157,22 @@ class Content implements \ArrayAccess, \JsonSerializable
     public function getLocalizationType()
     {
         return $this->localizationType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWebspaceKey()
+    {
+        return $this->webspaceKey;
     }
 
     /**

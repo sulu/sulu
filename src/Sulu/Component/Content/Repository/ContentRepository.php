@@ -294,7 +294,6 @@ class ContentRepository implements ContentRepositoryInterface
             return $this->resolveInternalLinkContent($row, $locale, $webspaceKey, $mapping, $type, $user);
         }
 
-
         $data = [];
         foreach ($mapping as $item) {
             $data[$item] = $this->resolveProperty(
@@ -306,6 +305,8 @@ class ContentRepository implements ContentRepositoryInterface
         }
 
         return new Content(
+            $locale,
+            $webspaceKey,
             $row->getValue('uuid'),
             $this->resolvePath($row, $webspaceKey),
             $row->getValue('state'),
@@ -367,6 +368,8 @@ class ContentRepository implements ContentRepositoryInterface
         }
 
         return new Content(
+            $locale,
+            $webspaceKey,
             $row->getValue('uuid'),
             $this->resolvePath($row, $webspaceKey),
             $row->getValue('state'),
@@ -428,9 +431,9 @@ class ContentRepository implements ContentRepositoryInterface
         $permissions = [];
         if (null !== $user) {
             foreach ($user->getRoleObjects() as $role) {
-                $permissions[sprintf('role-%s', $role->getId())] = array_filter(
-                    explode(' ', $row->getValue($role->getIdentifier()))
-                );
+                foreach (array_filter(explode(' ', $row->getValue($role->getIdentifier()))) as $permission) {
+                    $permissions[$role->getId()][$permission] = true;
+                }
             }
         }
 

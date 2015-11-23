@@ -22,6 +22,13 @@ use Sulu\Component\Webspace\Webspace;
 class ContentAdmin extends Admin
 {
     /**
+     * The prefix for the security context, the key of the webspace has to be appended.
+     *
+     * @var string
+     */
+    const SECURITY_CONTEXT_PREFIX = 'sulu.webspaces.';
+
+    /**
      * @var WebspaceManagerInterface
      */
     private $webspaceManager;
@@ -35,13 +42,6 @@ class ContentAdmin extends Admin
      * @var SessionManagerInterface
      */
     private $sessionManager;
-
-    /**
-     * The prefix for the security context, the key of the webspace has to be appended.
-     *
-     * @var string
-     */
-    private $securityContextPrefix = 'sulu.webspaces.';
 
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
@@ -61,7 +61,7 @@ class ContentAdmin extends Admin
 
         /** @var Webspace $webspace */
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            if ($this->securityChecker->hasPermission($this->securityContextPrefix . $webspace->getKey(), 'view')) {
+            if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT_PREFIX . $webspace->getKey(), 'view')) {
                 $webspaceItem = new NavigationItem($webspace->getName());
                 $webspaceItem->setIcon('bullseye');
 
@@ -108,7 +108,7 @@ class ContentAdmin extends Admin
         $webspaceContexts = [];
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             /* @var Webspace $webspace */
-            $webspaceContexts[] = $this->securityContextPrefix . $webspace->getKey();
+            $webspaceContexts[] = self::SECURITY_CONTEXT_PREFIX . $webspace->getKey();
         }
 
         return [

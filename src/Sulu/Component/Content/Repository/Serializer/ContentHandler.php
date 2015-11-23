@@ -12,15 +12,36 @@ namespace Sulu\Component\Content\Repository\Serializer;
 
 use JMS\Serializer\Context;
 use JMS\Serializer\JsonSerializationVisitor;
+use Sulu\Bundle\ContentBundle\Admin\ContentAdmin;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Repository\Content;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * Seializes content objects to json.
+ * Serializes content objects to json.
  */
 class ContentHandler
 {
+    /**
+     * @var AccessControlManagerInterface
+     */
+    private $accessControlManager;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    public function __construct(
+        AccessControlManagerInterface $accessControlManager,
+        TokenStorageInterface $tokenStorage
+    ) {
+        $this->accessControlManager = $accessControlManager;
+        $this->tokenStorage = $tokenStorage;
+    }
+
     /**
      * Serializes content data to json array.
      *
@@ -44,7 +65,12 @@ class ContentHandler
         } elseif (RedirectType::INTERNAL === $content->getNodeType()) {
             $result['linked'] = 'internal';
         }
-        $result['_permissions'] = $content->getPermissions();
+        $result['_permissions'] = $this->accessControlManager->getUserPermissionByArray(
+            $content->getLocale(),
+            ContentAdmin::SECURITY_CONTEXT_PREFIX . $content->getWebspaceKey(),
+            $content->getPermissions(),
+            $this->tokenStorage->getToken()->getUser()
+        );
         if (null !== $content->getLocalizationType()) {
             $result['type'] = $content->getLocalizationType()->toArray();
         }

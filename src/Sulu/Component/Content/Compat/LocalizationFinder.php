@@ -14,7 +14,7 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
- * Find best localization
+ * Find best localization.
  */
 class LocalizationFinder
 {
