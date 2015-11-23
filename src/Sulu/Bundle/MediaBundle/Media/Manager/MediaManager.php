@@ -549,7 +549,7 @@ class MediaManager implements MediaManagerInterface
                 $version,
                 $currentFileVersion->getStorageOptions()
             );
-            $data['name'] = $uploadedFile->getClientOriginalName();
+            $data['name'] = $fileName;
             $data['size'] = intval($uploadedFile->getSize());
             $data['mimeType'] = $uploadedFile->getMimeType();
             $data['properties'] = $this->getProperties($uploadedFile);
@@ -631,7 +631,7 @@ class MediaManager implements MediaManagerInterface
             1
         );
 
-        $data['name'] = $uploadedFile->getClientOriginalName();
+        $data['name'] = $fileName;
         $data['size'] = $uploadedFile->getSize();
         $data['mimeType'] = $uploadedFile->getMimeType();
         $data['properties'] = $this->getProperties($uploadedFile);

@@ -30,6 +30,7 @@ use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class MediaManagerTest extends \PHPUnit_Framework_TestCase
@@ -216,6 +217,17 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $this->storage->remove(json_encode(['segment' => '01', 'fileName' => 'test.jpg']))->shouldBeCalled();
 
         $this->mediaManager->delete(1, true);
+    }
+
+    public function testSpecialCharacterFileName()
+    {
+        $fileName = 'aäüßa';
+
+        /** @var UploadedFile $uploadedFile */
+        $uploadedFile = $this->prophesize(UploadedFile::class, '', 1, null, null, false, true);
+
+        $this->pathCleaner->cleanup(Argument::cetera($fileName))->shouldBeCalled();
+        $this->mediaManager->save($uploadedFile->reveal(), null, 1);
     }
 
     public function provideGetByIds()
