@@ -525,7 +525,7 @@ class FormatManager implements FormatManagerInterface
             foreach ($file->getFileVersions() as $fileVersion) {
                 if ($fileVersion->getVersion() == $version) {
                     $storageOptions = $fileVersion->getStorageOptions();
-                    $fileName = $storageOptions['fileName'];
+                    $fileName = json_decode($storageOptions)->fileName;
                     $mimeType = $fileVersion->getMimeType();
                     break;
                 }
