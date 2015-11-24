@@ -64,6 +64,11 @@ class Media extends ApiWrapper
     /**
      * @var array
      */
+    protected $previewImageThumbnails;
+
+    /**
+     * @var array
+     */
     protected $formats = [];
 
     /**
@@ -789,6 +794,25 @@ class Media extends ApiWrapper
     }
 
     /**
+     * @param array $previewImageThumbnails
+     */
+    public function setPreviewImage(array $previewImageThumbnails)
+    {
+        $this->previewImageThumbnails = $previewImageThumbnails;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("previewImage")
+     *
+     * @return string
+     */
+    public function getPreviewImage()
+    {
+        return $this->previewImageThumbnails;
+    }
+
+    /**
      * Returns array representation of media.
      *
      * @return array
@@ -815,6 +839,7 @@ class Media extends ApiWrapper
             'created' => $this->getCreated(),
             'creator' => $this->getCreator(),
             'downloadCounter' => $this->getDownloadCounter(),
+            'previewImageUrl' => $this->getPreviewImageUrl()
         ];
     }
 

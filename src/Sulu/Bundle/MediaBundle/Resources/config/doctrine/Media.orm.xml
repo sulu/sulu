@@ -28,5 +28,9 @@
                 <join-column name="idMediaTypes" referenced-column-name="id" nullable="false"/>
             </join-columns>
         </many-to-one>
+
+        <one-to-one field="previewImage" target-entity="Sulu\Bundle\MediaBundle\Entity\Media">
+            <join-column name="idPreviewImage" referenced-column-name="id"/>
+        </one-to-one>
     </entity>
 </doctrine-mapping>
