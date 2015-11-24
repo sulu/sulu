@@ -41759,7 +41759,7 @@ define('__component__$column-navigation@husky',[],function() {
                 }
 
                 // scroll for add column
-                if (!selectedItem.hasSub) {
+                if (!selectedItem[this.options.hasSubName]) {
                     this.insertAddColumn(selectedItem, column);
                     this.scrollIfNeeded(column);
                     this.setOverflowClass();
@@ -44365,6 +44365,7 @@ define('__component__$dropzone@husky',[], function() {
  * @params {String} [options.skin] name of the skin to use. Currently 'phone', 'password', 'url', 'email', 'date', 'time', 'color'. Each skin brings it's own default values. For example the password skin has automatically inputType: 'password'
  * @params {Object} [options.datepickerOptions] config-object to pass to the datepicker component - you can find possible values here http://bootstrap-datepicker.readthedocs.org/en/release/options.html
  * @params {Object} [options.colorPickerOptions] config-object to pass to the colorpicker component
+ * @params {Object} [options.lockOptions] config-object to pass to the lock component
  * @params {String} [options.frontIcon] name of icon to display in front
  * @params {String} [options.frontText] text to display in front
  * @params {String} [options.frontHtml] html to display in front
@@ -44393,6 +44394,9 @@ define('__component__$input@husky',[], function() {
                 todayHighlight: true
             },
             colorPickerOptions: {},
+            lockOptions: {
+                locked: false
+            },
             frontIcon: null,
             frontText: null,
             frontHtml: null,
@@ -44413,7 +44417,9 @@ define('__component__$input@husky',[], function() {
             colorFieldClass: 'color-field',
             colorpickerClass: 'colorpicker',
             datepickerClass: 'pickdate',
-            linkClickableClass: 'clickable'
+            linkClickableClass: 'clickable',
+            lockIconClass: 'fa-lock',
+            unlockIconClass: 'fa-unlock'
         },
 
         templates = {
@@ -44436,6 +44442,15 @@ define('__component__$input@husky',[], function() {
             },
             email: function() {
                 this.renderLink('mailto:');
+            },
+            lock: function() {
+                this.renderLock();
+            }
+        },
+
+        frontClickedCallbacks = {
+            lock: function(event) {
+                this.lockClickedCallback(event);
             }
         },
 
@@ -44468,6 +44483,10 @@ define('__component__$input@husky',[], function() {
                 frontIcon: 'clock-o',
                 placeholder: 'HH - MM',
                 renderMethod: 'time'
+            },
+            lock: {
+                frontIcon: 'lock',
+                renderMethod: 'lock'
             }
         },
 
@@ -44483,6 +44502,14 @@ define('__component__$input@husky',[], function() {
          */
         INITIALIZED = function() {
             return createEventName.call(this, 'initialized');
+        },
+
+        LOCKED = function() {
+            return createEventName.call(this, 'locked');
+        },
+
+        UNLOCKED = function() {
+            return createEventName.call(this, 'unlocked');
         },
 
         /** returns normalized event names */
@@ -44548,6 +44575,13 @@ define('__component__$input@husky',[], function() {
 
                 this.$el.trigger('change');
             }.bind(this), 'input');
+
+            this.sandbox.dom.on(this.$el.find('.' + constants.frontClass), 'click', function(event) {
+                // check if input has custom functionality, when front is clicked
+                if (frontClickedCallbacks.hasOwnProperty(this.options.skin)) {
+                    frontClickedCallbacks[this.options.skin].call(this, event);
+                }
+            }.bind(this));
 
             this.sandbox.dom.on(this.$el, 'click', function() {
                 this.sandbox.dom.focus(this.input.$input);
@@ -44664,6 +44698,81 @@ define('__component__$input@husky',[], function() {
             this.linkProtocol = protocol;
             this.sandbox.dom.on(this.input.$input, 'keyup', this.changeFrontLink.bind(this));
             this.changeFrontLink();
+        },
+
+        /**
+         * Lock-input specific actions. Makes sure the correct icon is rendered and the dom data is set.
+         */
+        renderLock: function() {
+            var locked = this.options.lockOptions.locked;
+            // always enable front icon
+            this.sandbox.dom.addClass(this.sandbox.dom.find('a', this.input.$front), constants.linkClickableClass);
+            this.renderLockIcon();
+            this.$el.data('locked', locked);
+        },
+
+        /**
+         * Gets called, when front icon of lock-input is clicked.
+         *
+         * @param {Object} event
+         */
+        lockClickedCallback: function(event) {
+
+            if (this.options.disabled === true) {
+                return;
+            }
+
+            var locked = !this.options.lockOptions.locked;
+
+            // set options value
+            this.options.lockOptions.locked = locked;
+            // en/disable input
+            this.sandbox.dom.prop(this.input.$input, 'disabled', locked);
+            // render appropiate icon
+            this.renderLockIcon();
+            // set data
+            this.$el.data('locked', locked);
+
+            // trigger event
+            if (locked) {
+                this.sandbox.emit(LOCKED.call(this));
+                event.stopPropagation();
+            } else {
+                this.sandbox.emit(UNLOCKED.call(this));
+            }
+        },
+
+        /**
+         * Renders the appropiate locked icon.
+         */
+        renderLockIcon: function() {
+            var removeIcon = constants.lockIconClass,
+                addIcon = constants.unlockIconClass;
+
+            if (this.options.lockOptions.locked) {
+                removeIcon = constants.unlockIconClass;
+                addIcon = constants.lockIconClass;
+            }
+
+            this.exchangeFrontIconClass(addIcon, removeIcon);
+        },
+
+        /**
+         * Exchanges a icon class with another.
+         *
+         * @param {String} addClass
+         * @param {String} removeClass
+         */
+        exchangeFrontIconClass: function(addClass, removeClass) {
+            var selector = this.sandbox.dom.find('a', this.input.$front);
+            this.sandbox.dom.removeClass(selector, removeClass);
+            this.sandbox.dom.addClass(selector, addClass);
+
+            // if clickable-class is set, set it behind icon class
+            if (this.sandbox.dom.hasClass(selector, constants.linkClickableClass)) {
+                this.sandbox.dom.removeClass(selector, constants.linkClickableClass);
+                this.sandbox.dom.addClass(selector, constants.linkClickableClass);
+            }
         },
 
         /**
