@@ -436,8 +436,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->createPage('test-2-2', 'de', [], $page2);
         $this->createPage('test-3', 'de');
 
-        $result = $this->contentRepository->findByWebspaceRoot('de', 'sulu_io',
-            MappingBuilder::create()->getMapping());
+        $result = $this->contentRepository->findByWebspaceRoot('de', 'sulu_io', MappingBuilder::create()->getMapping());
 
         $this->assertCount(3, $result);
 
@@ -574,6 +573,60 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals($page->getUuid(), $result->getUuid());
         $this->assertEquals('/test-2', $result->getPath());
         $this->assertEquals('test-1', $result['title']);
+    }
+
+    public function testFindParentsWithSiblingsByUuid()
+    {
+        $this->initPhpcr();
+
+        $page1 = $this->createPage('test-1', 'de');
+        $page2 = $this->createPage('test-2', 'de');
+        $page3 = $this->createPage('test-3', 'de', [], $page1);
+        $page4 = $this->createPage('test-4', 'de', [], $page1);
+        $page5 = $this->createPage('test-5', 'de', [], $page2);
+        $page6 = $this->createPage('test-6', 'de', [], $page2);
+        $page7 = $this->createPage('test-7', 'de', [], $page3);
+        $page8 = $this->createPage('test-8', 'de', [], $page4);
+        $page9 = $this->createPage('test-9', 'de', [], $page6);
+        $page10 = $this->createPage('test-10', 'de', [], $page6);
+        $page11 = $this->createPage('test-11', 'de', [], $page10);
+        $page12 = $this->createPage('test-12', 'de', [], $page10);
+        $page13 = $this->createPage('test-13', 'de', [], $page12);
+
+        $result = $this->contentRepository->findParentsWithSiblingsByUuid(
+            $page10->getUuid(),
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->getMapping()
+        );
+
+        $layer = $result;
+        $this->assertCount(2, $layer);
+        $this->assertEquals($page1->getUuid(), $layer[0]->getUuid());
+        $this->assertCount(0, $layer[0]->getChildren());
+        $this->assertEquals($page2->getUuid(), $layer[1]->getUuid());
+        $this->assertCount(2, $layer[1]->getChildren());
+
+        $layer = $layer[1]->getChildren();
+        $this->assertCount(2, $layer);
+        $this->assertEquals($page5->getUuid(), $layer[0]->getUuid());
+        $this->assertCount(0, $layer[0]->getChildren());
+        $this->assertEquals($page6->getUuid(), $layer[1]->getUuid());
+        $this->assertCount(2, $layer[1]->getChildren());
+
+        $layer = $layer[1]->getChildren();
+        $this->assertCount(2, $layer);
+        $this->assertEquals($page9->getUuid(), $layer[0]->getUuid());
+        $this->assertCount(0, $layer[0]->getChildren());
+        $this->assertEquals($page10->getUuid(), $layer[1]->getUuid());
+        $this->assertCount(2, $layer[1]->getChildren());
+
+        $layer = $layer[1]->getChildren();
+        $this->assertCount(2, $layer);
+        $this->assertEquals($page11->getUuid(), $layer[0]->getUuid());
+        $this->assertCount(0, $layer[0]->getChildren());
+        $this->assertEquals($page12->getUuid(), $layer[1]->getUuid());
+        $this->assertCount(0, $layer[1]->getChildren());
     }
 
     /**

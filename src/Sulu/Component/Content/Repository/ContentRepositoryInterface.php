@@ -61,4 +61,22 @@ interface ContentRepositoryInterface
      * @return Content[]
      */
     public function findByWebspaceRoot($locale, $webspaceKey, MappingInterface $mapping, UserInterface $user = null);
+
+    /**
+     * Find content with uuid inclusive his parents and their siblings.
+     *
+     * @param string $locale
+     * @param string $webspaceKey
+     * @param MappingInterface $mapping Includes array of property names.
+     * @param UserInterface $user
+     *
+     * @return Content[]
+     */
+    public function findParentsWithSiblingsByUuid(
+        $uuid,
+        $locale,
+        $webspaceKey,
+        MappingInterface $mapping,
+        UserInterface $user = null
+    );
 }

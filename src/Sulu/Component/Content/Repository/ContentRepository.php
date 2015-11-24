@@ -12,6 +12,7 @@ namespace Sulu\Component\Content\Repository;
 
 use Jackalope\Query\QOM\PropertyValue;
 use Jackalope\Query\Row;
+use PHPCR\ItemNotFoundException;
 use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\QOM\QueryBuilder;
@@ -24,7 +25,6 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Symfony\Component\Security\Acl\Exception\Exception;
 
 /**
  * Content repository which query content with sql2 statements.
@@ -109,8 +109,7 @@ class ContentRepository implements ContentRepositoryInterface
         $rows = $queryBuilder->execute();
 
         if (count(iterator_to_array($rows->getRows())) !== 1) {
-            // TODO Exception
-            throw new Exception();
+            throw new ItemNotFoundException();
         }
 
         return $this->resolveContent($rows->getRows()->current(), $locale, $webspaceKey, $mapping, $user);
@@ -126,29 +125,11 @@ class ContentRepository implements ContentRepositoryInterface
         MappingInterface $mapping,
         UserInterface $user = null
     ) {
-        $queryBuilder = new QueryBuilder($this->qomFactory);
-
-        $queryBuilder
-            ->select('node', 'jcr:uuid', 'uuid')
-            ->from($this->qomFactory->selector('node', 'nt:unstructured'))
-            ->where(
-                $this->qomFactory->comparison(
-                    $this->qomFactory->propertyValue('node', 'jcr:uuid'),
-                    '=',
-                    $this->qomFactory->literal($uuid)
-                )
-            );
-
-        $rows = $queryBuilder->execute();
-
-        if (count(iterator_to_array($rows->getRows())) !== 1) {
-            // TODO Exception
-            throw new Exception();
-        }
+        $path = $this->resolvePathByUuid($uuid);
 
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
         $queryBuilder = $this->getQueryBuilder($locale, $user);
-        $queryBuilder->where($this->qomFactory->childNode('node', $rows->getRows()->current()->getPath()));
+        $queryBuilder->where($this->qomFactory->childNode('node', $path));
         $this->appendMapping($queryBuilder, $mapping, $locales);
 
         return $this->resolveQueryBuilder($queryBuilder, $locale, $webspaceKey, $mapping, $user);
@@ -167,6 +148,109 @@ class ContentRepository implements ContentRepositoryInterface
         $this->appendMapping($queryBuilder, $mapping, $locales);
 
         return $this->resolveQueryBuilder($queryBuilder, $locale, $webspaceKey, $mapping, $user);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findParentsWithSiblingsByUuid(
+        $uuid,
+        $locale,
+        $webspaceKey,
+        MappingInterface $mapping,
+        UserInterface $user = null
+    ) {
+        $contentPath = $this->sessionManager->getContentPath($webspaceKey);
+        $path = $this->resolvePathByUuid($uuid);
+
+        $locales = $this->getLocalesByWebspaceKey($webspaceKey);
+        $queryBuilder = $this->getQueryBuilder($locale, $user)
+            ->orderBy($this->qomFactory->propertyValue('node', 'jcr:path'))
+            ->where($this->qomFactory->childNode('node', $path));
+
+        while ($path !== $contentPath) {
+            $path = dirname($path);
+            $queryBuilder->orWhere($this->qomFactory->childNode('node', $path));
+        }
+
+        $mapping->addProperties(['order']);
+        $this->appendMapping($queryBuilder, $mapping, $locales);
+
+        $result = $this->resolveQueryBuilder($queryBuilder, $locale, $webspaceKey, $mapping, $user);
+
+        return $this->generateTreeByPath($result);
+    }
+
+    /**
+     * Generates a content-tree with paths of given content array.
+     *
+     * @param Content[] $contents
+     *
+     * @return Content[]
+     */
+    private function generateTreeByPath(array $contents)
+    {
+        $childrenByPath = [];
+
+        foreach ($contents as $content) {
+            $path = dirname($content->getPath());
+            if (!isset($childrenByPath[$path])) {
+                $childrenByPath[$path] = [];
+            }
+
+            $order = $content['order'];
+            while (isset($childrenByPath[$path][$order])) {
+                $order++;
+            }
+
+            $childrenByPath[$path][$order] = $content;
+        }
+
+        foreach ($contents as $content) {
+            if (!isset($childrenByPath[$content->getPath()])) {
+                continue;
+            }
+
+            ksort($childrenByPath[$content->getPath()]);
+            $content->setChildren(array_values($childrenByPath[$content->getPath()]));
+        }
+
+        ksort($childrenByPath['/']);
+
+        return array_values($childrenByPath['/']);
+    }
+
+    /**
+     * Resolve path for node with given uuid.
+     *
+     * @param string $uuid
+     *
+     * @return string
+     *
+     * @throws ItemNotFoundException
+     */
+    private function resolvePathByUuid($uuid)
+    {
+        $queryBuilder = new QueryBuilder($this->qomFactory);
+
+        $queryBuilder
+            ->select('node', 'jcr:uuid', 'uuid')
+            ->from($this->qomFactory->selector('node', 'nt:unstructured'))
+            ->where(
+                $this->qomFactory->comparison(
+                    $this->qomFactory->propertyValue('node', 'jcr:uuid'),
+                    '=',
+                    $this->qomFactory->literal($uuid)
+                )
+            );
+
+        $rows = $queryBuilder->execute();
+
+        if (count(iterator_to_array($rows->getRows())) !== 1) {
+            throw new ItemNotFoundException();
+        }
+
+        return $rows->getRows()->current()->getPath();
     }
 
     /**

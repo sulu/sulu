@@ -57,6 +57,11 @@ class Content implements \ArrayAccess, \JsonSerializable
     private $hasChildren;
 
     /**
+     * @var Content[]
+     */
+    private $children = [];
+
+    /**
      * @var array
      */
     private $data;
@@ -173,6 +178,22 @@ class Content implements \ArrayAccess, \JsonSerializable
     public function getWebspaceKey()
     {
         return $this->webspaceKey;
+    }
+
+    /**
+     * @param Content[] $children
+     */
+    public function setChildren($children)
+    {
+        $this->children = $children;
+    }
+
+    /**
+     * @return Content[]
+     */
+    public function getChildren()
+    {
+        return $this->children;
     }
 
     /**
