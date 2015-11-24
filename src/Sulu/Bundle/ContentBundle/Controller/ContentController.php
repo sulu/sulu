@@ -13,11 +13,13 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Hateoas\Representation\CollectionRepresentation;
+use JMS\Serializer\SerializationContext;
 use Sulu\Component\Content\Repository\ContentRepositoryInterface;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -54,6 +56,13 @@ class ContentController extends RestController implements ClassResourceInterface
         $this->tokenStorage = $tokenStorage;
     }
 
+    /**
+     * Returns content array by parent or webspace root.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
     public function cgetAction(Request $request)
     {
         $parent = $request->get('parent');
@@ -79,6 +88,50 @@ class ContentController extends RestController implements ClassResourceInterface
 
         $list = new CollectionRepresentation($contents, self::$relationName);
         $view = $this->view($list);
+
+        return $this->viewHandler->handle($view);
+    }
+
+    /**
+     * Returns content array by parent or webspace root.
+     *
+     * @param string $uuid
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function getAction($uuid, Request $request)
+    {
+        $properties = array_filter(explode(',', $request->get('mapping', '')));
+        $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
+        $excludeShadows = $this->getBooleanRequestParameter($request, 'exclude-shadows', false, false);
+        $tree = $this->getBooleanRequestParameter($request, 'tree', false, false);
+        $locale = $this->getRequestParameter($request, 'locale', true);
+        $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
+
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        $mapping = MappingBuilder::create()
+            ->disableHydrateGhost(!$excludeGhosts)
+            ->disableHydrateShadow(!$excludeShadows)
+            ->addProperties($properties)
+            ->getMapping();
+
+        if ($tree) {
+            $contents = $this->contentRepository->findParentsWithSiblingsByUuid(
+                $uuid,
+                $locale,
+                $webspaceKey,
+                $mapping,
+                $user
+            );
+            $data = new CollectionRepresentation($contents, self::$relationName);
+        } else {
+            // TODO empty response ...
+            $data = $this->contentRepository->find($uuid, $locale, $webspaceKey, $mapping, $user);
+        }
+
+        $view = $this->view($data);
 
         return $this->viewHandler->handle($view);
     }

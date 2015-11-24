@@ -10,7 +10,13 @@
 
 namespace Sulu\Component\Content\Repository;
 
+use Hateoas\Configuration\Annotation\Embedded;
+use Hateoas\Configuration\Annotation\Exclusion;
+use Hateoas\Configuration\Annotation\Relation;
+use Hateoas\Configuration\Annotation\Route;
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Groups;
 use Sulu\Component\Content\Compat\StructureType;
 use Sulu\Exception\FeatureNotImplementedException;
 
@@ -18,6 +24,17 @@ use Sulu\Exception\FeatureNotImplementedException;
  * Container class for content data.
  *
  * @ExclusionPolicy("all")
+ * @Relation(
+ *      "children",
+ *      href = @Route(
+ *          "get_contents",
+ *          parameters = {"parent" = "expr(object.getUuid())", "locale" = "expr(object.getLocale())", "webspace" = "expr(object.getWebspaceKey())", "mapping" = "expr(object.getMapping())"}
+ *      )
+ * )
+ * @Relation(
+ *      "children",
+ *      embedded = @Embedded("expr(object.getChildren())")
+ * )
  */
 class Content implements \ArrayAccess, \JsonSerializable
 {
@@ -33,11 +50,15 @@ class Content implements \ArrayAccess, \JsonSerializable
 
     /**
      * @var string
+     *
+     * @Expose
      */
     private $uuid;
 
     /**
      * @var string
+     *
+     * @Expose
      */
     private $path;
 
@@ -53,6 +74,8 @@ class Content implements \ArrayAccess, \JsonSerializable
 
     /**
      * @var bool
+     *
+     * @Expose
      */
     private $hasChildren;
 
@@ -194,6 +217,11 @@ class Content implements \ArrayAccess, \JsonSerializable
     public function getChildren()
     {
         return $this->children;
+    }
+
+    public function getMapping()
+    {
+        return join(',', array_keys($this->data));
     }
 
     /**

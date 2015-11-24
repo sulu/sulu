@@ -90,13 +90,12 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu.content.localization_finder"/>
         </service>
-        <service id="sulu_content.content_repository.serialize_handler"
-                 class="Sulu\Component\Content\Repository\Serializer\ContentHandler">
+        <service id="sulu_content.content_repository.event_subscriber"
+                 class="Sulu\Component\Content\Repository\Serializer\SerializerEventListener">
             <argument type="service" id="sulu_security.access_control_manager"/>
             <argument type="service" id="security.token_storage"/>
 
-            <tag name="jms_serializer.handler" type="Sulu\Component\Content\Repository\Content"
-                 direction="serialization" format="json" method="serializeContentToJson"/>
+            <tag name="jms_serializer.event_subscriber" />
             <tag name="sulu.context" context="admin"/>
         </service>
         <service id="sulu_content.content_repository.controller" class="Sulu\Bundle\ContentBundle\Controller\ContentController">
