@@ -230,6 +230,14 @@
                 <source>sulu.media.preview</source>
                 <target>Preview</target>
             </trans-unit>
+            <trans-unit id="243d88cf2f643526337js55369f22124" resname="sulu.media.reset-preview-image">
+                <source>sulu.media.reset-preview-image</source>
+                <target>Reset preview image</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f22124" resname="sulu.media.upload-new-version">
+                <source>sulu.media.upload-new-version</source>
+                <target>Upload new preview image</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

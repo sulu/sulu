@@ -430,6 +430,21 @@
   width: 150px;
   height: 150px;
 }
+/* line 47, ../scss/modules/media-edit-overlay.scss */
+.media-edit-preview-image #preview-img-change {
+  width: 100%;
+  height: 100%;
+}
+/* line 51, ../scss/modules/media-edit-overlay.scss */
+.media-edit-preview-image #preview-img-change .dropzone-container {
+  width: 150px;
+  height: 150px;
+}
+
+/* line 59, ../scss/modules/media-edit-overlay.scss */
+.overlay-footer .btn.media-reset-preview-action.hide {
+  display: none;
+}
 
 /* line 1, ../scss/modules/media-play-video-overlay.scss */
 .media-play-video-container {
