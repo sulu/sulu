@@ -61,6 +61,11 @@ class Media implements AuditableInterface
     private $creator;
 
     /**
+     * @var Media
+     */
+    private $previewImage;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -240,5 +245,29 @@ class Media implements AuditableInterface
     public function getCreator()
     {
         return $this->creator;
+    }
+
+    /**
+     * Set preview image.
+     *
+     * @param Media $previewImage
+     *
+     * @return Media
+     */
+    public function setPreviewImage(Media $previewImage = null)
+    {
+        $this->previewImage = $previewImage;
+
+        return $this;
+    }
+
+    /**
+     * Get preview image.
+     *
+     * @return Media
+     */
+    public function getPreviewImage()
+    {
+        return $this->previewImage;
     }
 }

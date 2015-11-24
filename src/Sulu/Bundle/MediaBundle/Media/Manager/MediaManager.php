@@ -936,6 +936,42 @@ class MediaManager implements MediaManagerInterface
             $media->setUrl($versionData[$media->getVersion()]['url']);
         }
 
+        // Get preview image versions
+        /** @var \Sulu\Bundle\MediaBundle\Entity\Media $previewImage */
+        $previewImage = $media->getEntity()->getPreviewImage();
+
+        if ($previewImage !== null) {
+            /** @var FileVersion $latestVersion */
+            $latestVersion = null;
+
+            /** @var File $file */
+            foreach ($previewImage->getFiles() as $file) {
+                foreach ($file->getFileVersions() as $version) {
+                    $highestVersion = 0;
+
+                    if ($version->getVersion() > $highestVersion) {
+                        $latestVersion = $version;
+                        $highestVersion = $version->getVersion();
+                    }
+                }
+
+                // currently only one file per media exists
+                break;
+            }
+
+            if ($latestVersion !== null) {
+                $media->setPreviewImage(
+                    $this->formatManager->getFormats(
+                        $previewImage->getId(),
+                        $latestVersion->getName(),
+                        $latestVersion->getStorageOptions(),
+                        $latestVersion->getVersion(),
+                        $latestVersion->getMimeType()
+                    )
+                );
+            }
+        }
+
         return $media;
     }
 

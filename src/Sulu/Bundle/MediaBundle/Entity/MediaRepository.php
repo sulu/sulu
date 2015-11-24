@@ -48,6 +48,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 ->leftJoin('creator.contact', 'creatorContact')
                 ->leftJoin('media.changer', 'changer')
                 ->leftJoin('changer.contact', 'changerContact')
+                ->leftJoin('media.previewImage', 'previewImage')
                 ->addSelect('type')
                 ->addSelect('collection')
                 ->addSelect('file')
@@ -61,6 +62,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 ->addSelect('changer')
                 ->addSelect('creatorContact')
                 ->addSelect('changerContact')
+                ->addSelect('previewImage')
                 ->where('media.id = :mediaId');
 
             $query = $queryBuilder->getQuery();
