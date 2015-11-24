@@ -27,6 +27,7 @@ define([
 
         defaults = {
             instanceName: '',
+            previewInitialized: false,
             locale: Husky.sulu.user.locale
         },
 
@@ -42,7 +43,8 @@ define([
             singleEditClass: 'single-edit',
             multiEditClass: 'multi-edit',
             loadingClass: 'loading',
-            loaderClass: 'media-edit-loader'
+            loaderClass: 'media-edit-loader',
+            resetPreviewActionClass: 'media-reset-preview-action'
         },
 
         /**
@@ -220,7 +222,10 @@ define([
 
             if (!!$preview) {
                 tabs.push(
-                    {title: this.sandbox.translate('sulu.media.preview'), data: $preview}
+                    {
+                        title: this.sandbox.translate('sulu.media.preview'),
+                        data: $preview
+                    }
                 );
             }
 
@@ -229,21 +234,49 @@ define([
                     name: 'overlay@husky',
                     options: {
                         el: $container,
-                        title: this.media.title,
-                        tabs: tabs,
-                        languageChanger: {
-                            locales: this.sandbox.sulu.locales,
-                            preSelected: this.options.locale
-                        },
-                        skin: 'wide',
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'media-edit',
-                        propagateEvents: false,
-                        okCallback: this.singleOkCallback.bind(this),
-                        cancelCallback: function() {
-                            this.sandbox.stop();
-                        }.bind(this)
+                        slides: [
+                            {
+                                title: this.media.title,
+                                tabs: tabs,
+                                languageChanger: {
+                                    locales: this.sandbox.sulu.locales,
+                                    preSelected: this.options.locale
+                                },
+                                skin: 'wide',
+                                propagateEvents: false,
+                                okCallback: this.singleOkCallback.bind(this),
+                                cancelCallback: function() {
+                                    this.sandbox.stop();
+                                }.bind(this),
+                                buttons: [
+                                    {
+                                        type: 'cancel',
+                                        inactive: false,
+                                        text: 'public.cancel',
+                                        align: 'left'
+                                    },
+                                    {
+                                        classes: 'just-text ' + constants.resetPreviewActionClass,
+                                        inactive: false,
+                                        text: 'sulu.media.reset-preview-image',
+                                        align: 'center',
+                                        callback: function() {
+                                            this.resetPreviewImage.call(this);
+                                            return false;
+                                        }.bind(this)
+                                    },
+                                    {
+                                        type: 'ok',
+                                        inactive: false,
+                                        text: 'public.ok',
+                                        align: 'right'
+                                    }
+                                ]
+                            }
+                        ]
                     }
                 }
             ]);
@@ -270,8 +303,8 @@ define([
                 this.sandbox.form.create(constants.formSelector).initialized.then(function() {
                     this.sandbox.form.setData(constants.formSelector, this.media).then(function() {
                         this.sandbox.start(constants.formSelector);
+                        this.sandbox.dom.addClass($('.' + constants.resetPreviewActionClass), 'hide');
                         this.startSingleDropzone();
-                        this.startPreviewDropzone();
                     }.bind(this));
                 }.bind(this));
             }.bind(this));
@@ -281,7 +314,24 @@ define([
             }.bind(this));
 
             // change language (single-edit)
-            this.sandbox.once('husky.overlay.media-edit.language-changed', this.languageChangedSingle.bind(this));
+            this.sandbox.on('husky.tabs.overlaymedia-edit.item.select', function(tab) {
+                var $resetPreviewButton = $('.' + constants.resetPreviewActionClass);
+
+                if (tab.$el[0].id === 'media-preview') {
+                    if (!this.options.previewInitialized) {
+                        this.startPreviewDropzone();
+                        this.options.previewInitialized = true;
+                    }
+                    this.sandbox.dom.removeClass($resetPreviewButton, 'hide');
+                } else {
+                    this.sandbox.dom.addClass($resetPreviewButton, 'hide');
+                }
+            }.bind(this));
+
+            // initialize preview image upload tab
+            this.sandbox.once('husky.overlay.media-edit.initialized', function() {
+                this.sandbox.emit('husky.overlay.media-edit.loading.close');
+            }.bind(this));
         },
 
         /**
@@ -554,6 +604,13 @@ define([
             }
 
             return promise;
+        },
+
+        /**
+         * Removes selected preview image and sets video thumbnail
+         */
+        resetPreviewImage: function() {
+
         },
 
         /**
