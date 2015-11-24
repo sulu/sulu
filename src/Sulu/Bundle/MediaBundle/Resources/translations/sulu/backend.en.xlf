@@ -226,10 +226,10 @@
                 <source>sulu.media.copyright-information</source>
                 <target>Copyright information</target>
             </trans-unit>
-            <trans-unit id="243d88cf2f646526727ls55369f22124" resname="sulu.media.play-video.loading">
-                <source>sulu.media.play-video.loading</source>
-                <target>Loading video</target>
+            <trans-unit id="243d88cf2f643526337ls55369f22124" resname="sulu.media.preview">
+                <source>sulu.media.preview</source>
+                <target>Preview</target>
             </trans-unit>
-       </body>
+        </body>
     </file>
 </xliff>

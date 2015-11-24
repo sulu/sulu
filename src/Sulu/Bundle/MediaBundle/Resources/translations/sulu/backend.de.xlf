@@ -226,9 +226,9 @@
                 <source>sulu.media.copyright-information</source>
                 <target>Urheberrechtsinformationen</target>
             </trans-unit>
-            <trans-unit id="243d88cf2f646526727ls55369f22124" resname="sulu.media.play-video.loading">
-                <source>sulu.media.play-video.loading</source>
-                <target>Lade Video</target>
+            <trans-unit id="243d88cf2f643526337ls55369f22124" resname="sulu.media.preview">
+                <source>sulu.media.preview</source>
+                <target>Vorschau</target>
             </trans-unit>
         </body>
     </file>

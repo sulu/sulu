@@ -17,8 +17,9 @@ define([
     'services/sulumedia/media-manager',
     'text!./info.html',
     'text!./copyright.html',
-    'text!./versions.html'
-], function(config, mediaManager, infoTemplate, copyrightTemplate, versionsTemplate) {
+    'text!./versions.html',
+    'text!./preview.html'
+], function(config, mediaManager, infoTemplate, copyrightTemplate, versionsTemplate, previewTemplate) {
 
     'use strict';
 
@@ -32,7 +33,8 @@ define([
         constants = {
             formSelector: '#media-form',
             multipleEditFormSelector: '#media-multiple-edit',
-            dropzoneSelector: '#file-version-change',
+            fileDropzoneSelector: '#file-version-change',
+            previewDropzoneSelector: '#preview-img-change',
             multipleEditDescSelector: '.media-description',
             multipleEditTagsSelector: '.media-tags',
             descriptionCheckboxSelector: '#show-descriptions',
@@ -179,6 +181,7 @@ define([
          * @param media {Object} the id of the media to edit
          */
         editSingleMedia: function(media) {
+            var $preview;
             this.media = media;
             var $info = this.sandbox.dom.createElement(_.template(infoTemplate, {
                 media: this.media,
@@ -192,27 +195,42 @@ define([
                 media: this.media,
                 translate: this.sandbox.translate
             }));
-            this.startSingleOverlay($info, $copyright, $versions);
+            if (media.type.name === 'video') {
+                $preview = this.sandbox.dom.createElement(_.template(previewTemplate, {
+                    media: this.media,
+                    translate: this.sandbox.translate
+                }));
+            }
+            this.startSingleOverlay($info, $copyright, $versions, $preview);
         },
 
         /**
          * Starts the actual overlay for single-edit
          */
-        startSingleOverlay: function($info, $copyright, $versions) {
+        startSingleOverlay: function($info, $copyright, $versions, $preview) {
             var $container = this.sandbox.dom.createElement('<div class="' + constants.singleEditClass + '" id="media-form"/>');
             this.sandbox.dom.append(this.$el, $container);
             this.bindSingleOverlayEvents();
+
+            var tabs = [
+                {title: this.sandbox.translate('public.info'), data: $info},
+                {title: this.sandbox.translate('sulu.media.copyright'), data: $copyright},
+                {title: this.sandbox.translate('sulu.media.history'), data: $versions}
+            ];
+
+            if (!!$preview) {
+                tabs.push(
+                    {title: this.sandbox.translate('sulu.media.preview'), data: $preview}
+                );
+            }
+
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
                     options: {
                         el: $container,
                         title: this.media.title,
-                        tabs: [
-                            {title: this.sandbox.translate('public.info'), data: $info},
-                            {title: this.sandbox.translate('sulu.media.copyright'), data: $copyright},
-                            {title: this.sandbox.translate('sulu.media.history'), data: $versions}
-                        ],
+                        tabs: tabs,
                         languageChanger: {
                             locales: this.sandbox.sulu.locales,
                             preSelected: this.options.locale
@@ -253,6 +271,7 @@ define([
                     this.sandbox.form.setData(constants.formSelector, this.media).then(function() {
                         this.sandbox.start(constants.formSelector);
                         this.startSingleDropzone();
+                        this.startPreviewDropzone();
                     }.bind(this));
                 }.bind(this));
             }.bind(this));
@@ -327,7 +346,7 @@ define([
                 {
                     name: 'dropzone@husky',
                     options: {
-                        el: constants.dropzoneSelector,
+                        el: constants.fileDropzoneSelector,
                         maxFilesize: config.get('sulu-media').maxFilesize,
                         url: '/admin/api/media/' + this.media.id + '?action=new-version',
                         method: 'POST',
@@ -337,6 +356,32 @@ define([
                         titleKey: '',
                         descriptionKey: 'sulu.media.upload-new-version',
                         instanceName: 'file-version',
+                        maxFiles: 1
+                    }
+                }
+            ]);
+        },
+
+        /**
+         * Starts the dropzone for changing the preview image
+         */
+        startPreviewDropzone: function() {
+            //this.sandbox.on('husky.dropzone.preview-img.files-added', this.newVersionUploadedHandler.bind(this));
+
+            this.sandbox.start([
+                {
+                    name: 'dropzone@husky',
+                    options: {
+                        el: constants.previewDropzoneSelector,
+                        maxFilesize: config.get('sulu-media').maxFilesize,
+                        url: '/admin/api/media/' + this.media.id + '?action=new-version',
+                        method: 'POST',
+                        paramName: 'previewImg',
+                        showOverlay: false,
+                        skin: 'overlay',
+                        titleKey: '',
+                        descriptionKey: 'sulu.media.upload-new-preview',
+                        instanceName: 'preview-img',
                         maxFiles: 1
                     }
                 }
