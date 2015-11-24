@@ -200,7 +200,7 @@ class ContentRepository implements ContentRepositoryInterface
 
             $order = $content['order'];
             while (isset($childrenByPath[$path][$order])) {
-                $order++;
+                ++$order;
             }
 
             $childrenByPath[$path][$order] = $content;

@@ -13,13 +13,14 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Hateoas\Representation\CollectionRepresentation;
-use JMS\Serializer\SerializationContext;
+use PHPCR\ItemNotFoundException;
 use Sulu\Component\Content\Repository\ContentRepositoryInterface;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -46,13 +47,20 @@ class ContentController extends RestController implements ClassResourceInterface
      */
     private $tokenStorage;
 
+    /**
+     * @var RouterInterface
+     */
+    private $router;
+
     public function __construct(
         ContentRepositoryInterface $contentRepository,
         ViewHandlerInterface $viewHandler,
+    RouterInterface $router,
         TokenStorageInterface $tokenStorage = null
     ) {
         $this->contentRepository = $contentRepository;
         $this->viewHandler = $viewHandler;
+        $this->router = $router;
         $this->tokenStorage = $tokenStorage;
     }
 
@@ -93,7 +101,7 @@ class ContentController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Returns content array by parent or webspace root.
+     * Returns single content (tree=false) or all parents with the siblings to the given uuid.
      *
      * @param string $uuid
      * @param Request $request
@@ -117,18 +125,33 @@ class ContentController extends RestController implements ClassResourceInterface
             ->addProperties($properties)
             ->getMapping();
 
-        if ($tree) {
-            $contents = $this->contentRepository->findParentsWithSiblingsByUuid(
-                $uuid,
-                $locale,
-                $webspaceKey,
-                $mapping,
-                $user
+        try {
+            if ($tree) {
+                $contents = $this->contentRepository->findParentsWithSiblingsByUuid(
+                    $uuid,
+                    $locale,
+                    $webspaceKey,
+                    $mapping,
+                    $user
+                );
+                $data = new CollectionRepresentation($contents, self::$relationName);
+            } else {
+                $data = $this->contentRepository->find($uuid, $locale, $webspaceKey, $mapping, $user);
+            }
+        } catch (ItemNotFoundException $ex) {
+            // TODO return 404 and handle this edge case on client side
+            return $this->redirect(
+                $this->router->generate(
+                    'get_contents',
+                    [
+                        'locale' => $locale,
+                        'webspace' => $webspaceKey,
+                        'exclude-ghosts' => $excludeGhosts,
+                        'exclude-shadows' => $excludeShadows,
+                        'mapping' => implode(',', $properties),
+                    ]
+                )
             );
-            $data = new CollectionRepresentation($contents, self::$relationName);
-        } else {
-            // TODO empty response ...
-            $data = $this->contentRepository->find($uuid, $locale, $webspaceKey, $mapping, $user);
         }
 
         $view = $this->view($data);

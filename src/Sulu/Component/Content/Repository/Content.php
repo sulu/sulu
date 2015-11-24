@@ -11,12 +11,10 @@
 namespace Sulu\Component\Content\Repository;
 
 use Hateoas\Configuration\Annotation\Embedded;
-use Hateoas\Configuration\Annotation\Exclusion;
 use Hateoas\Configuration\Annotation\Relation;
 use Hateoas\Configuration\Annotation\Route;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
-use JMS\Serializer\Annotation\Groups;
 use Sulu\Component\Content\Compat\StructureType;
 use Sulu\Exception\FeatureNotImplementedException;
 
@@ -28,15 +26,15 @@ use Sulu\Exception\FeatureNotImplementedException;
  *      "children",
  *      href = @Route(
  *          "get_contents",
- *          parameters = {"parent" = "expr(object.getUuid())", "locale" = "expr(object.getLocale())", "webspace" = "expr(object.getWebspaceKey())", "mapping" = "expr(object.getMapping())"}
+ *          parameters = {"parent" = "expr(object.getId())", "locale" = "expr(object.getLocale())", "webspace" = "expr(object.getWebspaceKey())", "mapping" = "expr(object.getMapping())"}
  *      )
  * )
  * @Relation(
- *      "children",
+ *      "content",
  *      embedded = @Embedded("expr(object.getChildren())")
  * )
  */
-class Content implements \ArrayAccess, \JsonSerializable
+class Content implements \ArrayAccess
 {
     /**
      * @var string
@@ -53,7 +51,7 @@ class Content implements \ArrayAccess, \JsonSerializable
      *
      * @Expose
      */
-    private $uuid;
+    private $id;
 
     /**
      * @var string
@@ -102,7 +100,7 @@ class Content implements \ArrayAccess, \JsonSerializable
     public function __construct(
         $locale,
         $webspaceKey,
-        $uuid,
+        $id,
         $path,
         $workflowStage,
         $nodeType,
@@ -111,7 +109,7 @@ class Content implements \ArrayAccess, \JsonSerializable
         array $permissions,
         StructureType $localizationType = null
     ) {
-        $this->uuid = $uuid;
+        $this->id = $id;
         $this->path = $path;
         $this->workflowStage = $workflowStage;
         $this->nodeType = $nodeType;
@@ -126,9 +124,9 @@ class Content implements \ArrayAccess, \JsonSerializable
     /**
      * @return string
      */
-    public function getUuid()
+    public function getId()
     {
-        return $this->uuid;
+        return $this->id;
     }
 
     /**
@@ -221,7 +219,7 @@ class Content implements \ArrayAccess, \JsonSerializable
 
     public function getMapping()
     {
-        return join(',', array_keys($this->data));
+        return implode(',', array_keys($this->data));
     }
 
     /**
@@ -254,16 +252,5 @@ class Content implements \ArrayAccess, \JsonSerializable
     public function offsetUnset($offset)
     {
         throw new FeatureNotImplementedException();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function jsonSerialize()
-    {
-        return array_merge(
-            ['uuid' => $this->getUuid(), 'path' => $this->getPath(), 'hasChildren' => $this->hasChildren()],
-            $this->getData()
-        );
     }
 }

@@ -101,6 +101,7 @@
         <service id="sulu_content.content_repository.controller" class="Sulu\Bundle\ContentBundle\Controller\ContentController">
             <argument type="service" id="sulu_content.content_repository"/>
             <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="router"/>
             <argument type="service" id="security.token_storage" on-invalid="null"/>
         </service>
     </services>
