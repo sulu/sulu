@@ -2,6 +2,14 @@
 
 ## dev-develop
 
+### Url Content-Type
+
+The old upgrade for the url content-type don't upgrade properties in blocks. Rerun the migrate command to upgrade them.
+
+```bash
+app/console phpcr:migrations:migrate
+```
+
 ### Date Content-Type
 
 The type of the date value in the database was wrong to update your existing data use following command:
