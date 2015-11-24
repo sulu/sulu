@@ -16,7 +16,7 @@ namespace Sulu\Component\Content\Repository\Mapping;
 interface MappingInterface
 {
     /**
-     * Indicates if content-repository should follow shadow links.
+     * Indicates if content-repository should hydrate shadow pages.
      *
      * @return bool
      */
@@ -30,7 +30,7 @@ interface MappingInterface
     public function followInternalLink();
 
     /**
-     * Indicates if content-repository should follow ghost.
+     * Indicates if content-repository should hydrate ghost pages.
      *
      * @return bool
      */

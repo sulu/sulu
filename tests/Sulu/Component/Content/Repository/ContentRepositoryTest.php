@@ -19,6 +19,8 @@ use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Security\Authentication\RoleInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 class ContentRepositoryTest extends SuluTestCase
@@ -94,11 +96,11 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertCount(3, $result);
 
-        $this->assertNotNull($result[0]->getUuid());
+        $this->assertNotNull($result[0]->getId());
         $this->assertEquals('/test-1', $result[0]->getPath());
-        $this->assertNotNull($result[1]->getUuid());
+        $this->assertNotNull($result[1]->getId());
         $this->assertEquals('/test-2', $result[1]->getPath());
-        $this->assertNotNull($result[2]->getUuid());
+        $this->assertNotNull($result[2]->getId());
         $this->assertEquals('/test-3', $result[2]->getPath());
     }
 
@@ -241,6 +243,7 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertEquals('test-1', $result[0]['title']);
         $this->assertEquals('test-1', $result[1]['title']);
+        $this->assertEquals(RedirectType::INTERNAL, $result[1]->getNodeType());
         $this->assertEquals('test-3', $result[2]['title']);
     }
 
@@ -289,6 +292,7 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertEquals('test-1', $result[0]['title']);
         $this->assertEquals('test-1', $result[1]['title']);
+        $this->assertEquals(RedirectType::INTERNAL, $result[1]->getNodeType());
         $this->assertEquals('test-3', $result[2]['title']);
     }
 
@@ -311,11 +315,11 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertCount(3, $result);
 
-        $this->assertNotNull($result[0]->getUuid());
+        $this->assertNotNull($result[0]->getId());
         $this->assertEquals('/test-1', $result[0]->getPath());
-        $this->assertNotNull($result[1]->getUuid());
+        $this->assertNotNull($result[1]->getId());
         $this->assertEquals('/test-2', $result[1]->getPath());
-        $this->assertNotNull($result[2]->getUuid());
+        $this->assertNotNull($result[2]->getId());
         $this->assertEquals('/test-3', $result[2]->getPath());
     }
 
@@ -332,11 +336,11 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertCount(3, $result);
 
-        $this->assertNotNull($result[0]->getUuid());
+        $this->assertNotNull($result[0]->getId());
         $this->assertEquals('/test-1', $result[0]->getPath());
-        $this->assertNotNull($result[1]->getUuid());
+        $this->assertNotNull($result[1]->getId());
         $this->assertEquals('/test-2', $result[1]->getPath());
-        $this->assertNotNull($result[2]->getUuid());
+        $this->assertNotNull($result[2]->getId());
         $this->assertEquals('/test-3', $result[2]->getPath());
     }
 
@@ -440,11 +444,11 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertCount(3, $result);
 
-        $this->assertNotNull($result[0]->getUuid());
+        $this->assertNotNull($result[0]->getId());
         $this->assertEquals('/test-1', $result[0]->getPath());
-        $this->assertNotNull($result[1]->getUuid());
+        $this->assertNotNull($result[1]->getId());
         $this->assertEquals('/test-2', $result[1]->getPath());
-        $this->assertNotNull($result[2]->getUuid());
+        $this->assertNotNull($result[2]->getId());
         $this->assertEquals('/test-3', $result[2]->getPath());
     }
 
@@ -461,8 +465,8 @@ class ContentRepositoryTest extends SuluTestCase
             MappingBuilder::create()->addProperties(['title'])->getMapping()
         );
 
-        $this->assertNotNull($result->getUuid());
-        $this->assertEquals($page->getUuid(), $result->getUuid());
+        $this->assertNotNull($result->getId());
+        $this->assertEquals($page->getUuid(), $result->getId());
         $this->assertEquals('/test-1', $result->getPath());
         $this->assertEquals('test-1', $result['title']);
     }
@@ -480,8 +484,8 @@ class ContentRepositoryTest extends SuluTestCase
             MappingBuilder::create()->addProperties(['title'])->getMapping()
         );
 
-        $this->assertNotNull($result->getUuid());
-        $this->assertEquals($page->getUuid(), $result->getUuid());
+        $this->assertNotNull($result->getId());
+        $this->assertEquals($page->getUuid(), $result->getId());
         $this->assertEquals('/test-1', $result->getPath());
         $this->assertEquals('test-1', $result['title']);
     }
@@ -499,8 +503,8 @@ class ContentRepositoryTest extends SuluTestCase
             MappingBuilder::create()->addProperties(['title'])->getMapping()
         );
 
-        $this->assertNotNull($result->getUuid());
-        $this->assertEquals($page->getUuid(), $result->getUuid());
+        $this->assertNotNull($result->getId());
+        $this->assertEquals($page->getUuid(), $result->getId());
         $this->assertEquals('/1-tset', $result->getPath()); // path will be generated with reversed string
         $this->assertEquals('test-1', $result['title']);
     }
@@ -519,7 +523,7 @@ class ContentRepositoryTest extends SuluTestCase
             MappingBuilder::create()->addProperties(['title'])->getMapping()
         );
 
-        $this->assertEquals($page->getUuid(), $result->getUuid());
+        $this->assertEquals($page->getUuid(), $result->getId());
         $this->assertEquals('/test-2', $result->getPath());
         $this->assertEquals('test-1', $result['title']);
     }
@@ -538,7 +542,7 @@ class ContentRepositoryTest extends SuluTestCase
             MappingBuilder::create()->addProperties(['title'])->getMapping()
         );
 
-        $this->assertEquals($page->getUuid(), $result->getUuid());
+        $this->assertEquals($page->getUuid(), $result->getId());
         $this->assertEquals('/test-2', $result->getPath());
         $this->assertEquals('test-1', $result['title']);
     }
@@ -570,9 +574,39 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals($page->getChanged(), $result['changed']);
         $this->assertEquals($page->getCreated(), $result['created']);
 
-        $this->assertEquals($page->getUuid(), $result->getUuid());
+        $this->assertEquals($page->getUuid(), $result->getId());
         $this->assertEquals('/test-2', $result->getPath());
         $this->assertEquals('test-1', $result['title']);
+    }
+
+    public function testFindPermissions()
+    {
+        $this->initPhpcr();
+
+        $role1 = $this->prophesize(RoleInterface::class);
+        $role1->getId()->willReturn(1);
+        $role1->getIdentifier()->willReturn('ROLE_1');
+        $role2 = $this->prophesize(RoleInterface::class);
+        $role2->getId()->willReturn(2);
+        $role2->getIdentifier()->willReturn('ROLE_2');
+
+        $user = $this->prophesize(UserInterface::class);
+        $user->getRoleObjects()->willReturn([$role1->reveal(), $role2->reveal()]);
+
+        $page = $this->createPage('test-1', 'de', [], null, [1 => 'edit', 2 => 'view archive', 3 => 'add']);
+
+        $result = $this->contentRepository->find(
+            $page->getUuid(),
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->getMapping(),
+            $user->reveal()
+        );
+
+        $this->assertEquals(
+            [1 => ['edit' => true], 2 => ['view' => true, 'archive' => true]],
+            $result->getPermissions()
+        );
     }
 
     public function testFindParentsWithSiblingsByUuid()
@@ -602,30 +636,38 @@ class ContentRepositoryTest extends SuluTestCase
 
         $layer = $result;
         $this->assertCount(2, $layer);
-        $this->assertEquals($page1->getUuid(), $layer[0]->getUuid());
+        $this->assertEquals($page1->getUuid(), $layer[0]->getId());
+        $this->assertTrue($layer[0]->hasChildren());
         $this->assertCount(0, $layer[0]->getChildren());
-        $this->assertEquals($page2->getUuid(), $layer[1]->getUuid());
+        $this->assertEquals($page2->getUuid(), $layer[1]->getId());
+        $this->assertTrue($layer[1]->hasChildren());
         $this->assertCount(2, $layer[1]->getChildren());
 
         $layer = $layer[1]->getChildren();
         $this->assertCount(2, $layer);
-        $this->assertEquals($page5->getUuid(), $layer[0]->getUuid());
+        $this->assertEquals($page5->getUuid(), $layer[0]->getId());
+        $this->assertFalse($layer[0]->hasChildren());
         $this->assertCount(0, $layer[0]->getChildren());
-        $this->assertEquals($page6->getUuid(), $layer[1]->getUuid());
+        $this->assertEquals($page6->getUuid(), $layer[1]->getId());
+        $this->assertTrue($layer[1]->hasChildren());
         $this->assertCount(2, $layer[1]->getChildren());
 
         $layer = $layer[1]->getChildren();
         $this->assertCount(2, $layer);
-        $this->assertEquals($page9->getUuid(), $layer[0]->getUuid());
+        $this->assertEquals($page9->getUuid(), $layer[0]->getId());
+        $this->assertFalse($layer[0]->hasChildren());
         $this->assertCount(0, $layer[0]->getChildren());
-        $this->assertEquals($page10->getUuid(), $layer[1]->getUuid());
+        $this->assertEquals($page10->getUuid(), $layer[1]->getId());
+        $this->assertTrue($layer[1]->hasChildren());
         $this->assertCount(2, $layer[1]->getChildren());
 
         $layer = $layer[1]->getChildren();
         $this->assertCount(2, $layer);
-        $this->assertEquals($page11->getUuid(), $layer[0]->getUuid());
+        $this->assertEquals($page11->getUuid(), $layer[0]->getId());
+        $this->assertFalse($layer[0]->hasChildren());
         $this->assertCount(0, $layer[0]->getChildren());
-        $this->assertEquals($page12->getUuid(), $layer[1]->getUuid());
+        $this->assertEquals($page12->getUuid(), $layer[1]->getId());
+        $this->assertTrue($layer[1]->hasChildren());
         $this->assertCount(0, $layer[1]->getChildren());
     }
 
@@ -634,10 +676,11 @@ class ContentRepositoryTest extends SuluTestCase
      * @param string $locale
      * @param array $data
      * @param PageDocument $parent
+     * @param array $permissions
      *
      * @return PageDocument
      */
-    private function createPage($title, $locale, $data = [], $parent = null)
+    private function createPage($title, $locale, $data = [], $parent = null, array $permissions = [])
     {
         /** @var PageDocument $document */
         $document = $this->documentManager->create('page');
@@ -658,6 +701,7 @@ class ContentRepositoryTest extends SuluTestCase
         $document->setRedirectType(RedirectType::NONE);
         $document->setShadowLocaleEnabled(false);
         $document->getStructure()->bind($data);
+        $document->setPermissions($permissions);
         $this->documentManager->persist(
             $document,
             $locale,

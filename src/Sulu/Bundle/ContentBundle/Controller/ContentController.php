@@ -55,7 +55,7 @@ class ContentController extends RestController implements ClassResourceInterface
     public function __construct(
         ContentRepositoryInterface $contentRepository,
         ViewHandlerInterface $viewHandler,
-    RouterInterface $router,
+        RouterInterface $router,
         TokenStorageInterface $tokenStorage = null
     ) {
         $this->contentRepository = $contentRepository;

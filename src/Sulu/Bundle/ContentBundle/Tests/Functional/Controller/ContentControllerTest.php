@@ -52,11 +52,11 @@ class ContentControllerTest extends SuluTestCase
 
         $this->assertCount(3, $items);
 
-        $this->assertNotNull($items[0]['uuid']);
+        $this->assertNotNull($items[0]['id']);
         $this->assertEquals('/test-1', $items[0]['path']);
-        $this->assertNotNull($items[1]['uuid']);
+        $this->assertNotNull($items[1]['id']);
         $this->assertEquals('/test-2', $items[1]['path']);
-        $this->assertNotNull($items[2]['uuid']);
+        $this->assertNotNull($items[2]['id']);
         $this->assertEquals('/test-3', $items[2]['path']);
     }
 
@@ -206,19 +206,189 @@ class ContentControllerTest extends SuluTestCase
         $this->assertEquals('test-3', $items[0]['title']);
     }
 
+    public function testGet()
+    {
+        $this->initPhpcr();
+
+        $page1 = $this->createPage('test-1', 'de');
+        $this->createPage('test-1-1', 'de', [], $page1);
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            sprintf('/api/contents/%s', $page1->getUuid()),
+            ['webspace' => 'sulu_io', 'locale' => 'de']
+        );
+        $result = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals($page1->getUuid(), $result['id']);
+        $this->assertTrue($result['hasChildren']);
+        $this->assertEmpty($result['_embedded']['content']);
+    }
+
+    public function testGetTree()
+    {
+        $this->initPhpcr();
+
+        $page1 = $this->createPage('test-1', 'de');
+        $page2 = $this->createPage('test-2', 'de');
+        $page3 = $this->createPage('test-3', 'de', [], $page1);
+        $page4 = $this->createPage('test-4', 'de', [], $page1);
+        $page5 = $this->createPage('test-5', 'de', [], $page2);
+        $page6 = $this->createPage('test-6', 'de', [], $page2);
+        $page7 = $this->createPage('test-7', 'de', [], $page3);
+        $page8 = $this->createPage('test-8', 'de', [], $page4);
+        $page9 = $this->createPage('test-9', 'de', [], $page6);
+        $page10 = $this->createPage('test-10', 'de', [], $page6);
+        $page11 = $this->createPage('test-11', 'de', [], $page10);
+        $page12 = $this->createPage('test-12', 'de', [], $page10);
+        $page13 = $this->createPage('test-13', 'de', [], $page12);
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            sprintf('/api/contents/%s', $page10->getUuid()),
+            ['webspace' => 'sulu_io', 'locale' => 'de', 'tree' => true]
+        );
+        $result = json_decode($client->getResponse()->getContent(), true);
+
+        $layer = $result['_embedded']['content'];
+        $this->assertCount(2, $layer);
+        $this->assertEquals($page1->getUuid(), $layer[0]['id']);
+        $this->assertTrue($layer[0]['hasChildren']);
+        $this->assertCount(0, $layer[0]['_embedded']['content']);
+        $this->assertEquals($page2->getUuid(), $layer[1]['id']);
+        $this->assertTrue($layer[1]['hasChildren']);
+        $this->assertCount(2, $layer[1]['_embedded']['content']);
+
+        $layer = $layer[1]['_embedded']['content'];
+        $this->assertCount(2, $layer);
+        $this->assertEquals($page5->getUuid(), $layer[0]['id']);
+        $this->assertFalse($layer[0]['hasChildren']);
+        $this->assertCount(0, $layer[0]['_embedded']['content']);
+        $this->assertEquals($page6->getUuid(), $layer[1]['id']);
+        $this->assertTrue($layer[1]['hasChildren']);
+        $this->assertCount(2, $layer[1]['_embedded']['content']);
+
+        $layer = $layer[1]['_embedded']['content'];
+        $this->assertCount(2, $layer);
+        $this->assertEquals($page9->getUuid(), $layer[0]['id']);
+        $this->assertFalse($layer[0]['hasChildren']);
+        $this->assertCount(0, $layer[0]['_embedded']['content']);
+        $this->assertEquals($page10->getUuid(), $layer[1]['id']);
+        $this->assertTrue($layer[1]['hasChildren']);
+        $this->assertCount(2, $layer[1]['_embedded']['content']);
+
+        $layer = $layer[1]['_embedded']['content'];
+        $this->assertCount(2, $layer);
+        $this->assertEquals($page11->getUuid(), $layer[0]['id']);
+        $this->assertFalse($layer[0]['hasChildren']);
+        $this->assertCount(0, $layer[0]['_embedded']['content']);
+        $this->assertEquals($page12->getUuid(), $layer[1]['id']);
+        $this->assertTrue($layer[1]['hasChildren']);
+        $this->assertCount(0, $layer[1]['_embedded']['content']);
+    }
+
+    public function testLinkedInternal()
+    {
+        $this->initPhpcr();
+
+        $link = $this->createPage('test-1', 'en');
+        $page = $this->createInternalLinkPage('test-2', 'en', $link);
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            sprintf('/api/contents/%s', $page->getUuid()),
+            ['webspace' => 'sulu_io', 'locale' => 'en']
+        );
+        $result = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals('internal', $result['_linked']);
+    }
+
+    public function testLinkedExternal()
+    {
+        $this->initPhpcr();
+
+        $page = $this->createExternalLinkPage('test-2', 'en', 'http://www.google.at');
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            sprintf('/api/contents/%s', $page->getUuid()),
+            ['webspace' => 'sulu_io', 'locale' => 'en']
+        );
+        $result = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals('external', $result['_linked']);
+    }
+
+    public function testTypeGhost()
+    {
+        $this->initPhpcr();
+
+        $page = $this->createPage('test-2', 'en');
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            sprintf('/api/contents/%s', $page->getUuid()),
+            ['webspace' => 'sulu_io', 'locale' => 'de']
+        );
+        $result = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals('ghost', $result['_type']['name']);
+        $this->assertEquals('en', $result['_type']['value']);
+    }
+
+    public function testTypeShadow()
+    {
+        $this->initPhpcr();
+
+        $page = $this->createShadowPage('test-2', 'en', 'de');
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            sprintf('/api/contents/%s', $page->getUuid()),
+            ['webspace' => 'sulu_io', 'locale' => 'de']
+        );
+        $result = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals('shadow', $result['_type']['name']);
+        $this->assertEquals('en', $result['_type']['value']);
+    }
+
     /**
      * @param string $title
      * @param string $locale
      * @param array $data
+     * @param PageDocument $parent
+     * @param array $permissions
      *
      * @return PageDocument
      */
-    private function createPage($title, $locale, $data = [])
+    private function createPage($title, $locale, $data = [], $parent = null, array $permissions = [])
     {
+        /** @var PageDocument $document */
+        $document = $this->documentManager->create('page');
+
+        $path = $this->sessionManager->getContentPath('sulu_io') . '/' . $title;
+        if ($parent !== null) {
+            $path = $parent->getPath();
+            $document->setParent($parent);
+        }
+
         $data['title'] = $title;
         $data['url'] = '/' . $title;
 
-        $document = $this->documentManager->create('page');
         $document->setStructureType('simple');
         $document->setTitle($title);
         $document->setResourceSegment($data['url']);
@@ -226,11 +396,12 @@ class ContentControllerTest extends SuluTestCase
         $document->setRedirectType(RedirectType::NONE);
         $document->setShadowLocaleEnabled(false);
         $document->getStructure()->bind($data);
+        $document->setPermissions($permissions);
         $this->documentManager->persist(
             $document,
             $locale,
             [
-                'path' => $this->sessionManager->getContentPath('sulu_io') . '/' . $title,
+                'path' => $path,
                 'auto_create' => true,
             ]
         );
@@ -287,6 +458,40 @@ class ContentControllerTest extends SuluTestCase
         $document->setLocale($locale);
         $document->setRedirectType(RedirectType::INTERNAL);
         $document->setRedirectTarget($link);
+        $document->getStructure()->bind($data);
+        $this->documentManager->persist(
+            $document,
+            $locale,
+            [
+                'path' => $this->sessionManager->getContentPath('sulu_io') . '/' . $title,
+                'auto_create' => true,
+            ]
+        );
+        $this->documentManager->flush();
+
+        return $document;
+    }
+
+    /**
+     * @param string $title
+     * @param string $locale
+     * @param string $link
+     *
+     * @return PageDocument
+     */
+    private function createExternalLinkPage($title, $locale, $link)
+    {
+        $data['title'] = $title;
+        $data['url'] = '/' . $title;
+
+        /** @var PageDocument $document */
+        $document = $this->documentManager->create('page');
+        $document->setStructureType('simple');
+        $document->setTitle($title);
+        $document->setResourceSegment($data['url']);
+        $document->setLocale($locale);
+        $document->setRedirectType(RedirectType::EXTERNAL);
+        $document->setRedirectExternal($link);
         $document->getStructure()->bind($data);
         $this->documentManager->persist(
             $document,
