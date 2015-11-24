@@ -197,9 +197,13 @@ class AccessControlManager implements AccessControlManagerInterface
 
             $hasLocale = $locale == null || in_array($locale, $userRole->getLocales());
 
+            if (!$hasLocale) {
+                continue;
+            }
+
             if ($checkPermissionType) {
                 $userPermission = $this->maskConverter->convertPermissionsToArray($permission->getPermissions());
-            } elseif ($hasLocale) {
+            } else {
                 array_walk($userPermission, function (&$permission) {
                     $permission = true;
                 });
