@@ -396,10 +396,6 @@ define([
          * Handles the scroll event to hide or show the tabs
          */
         scrollHandler: function() {
-            if (UserSettingsManager.getMediaListView() !== 'datagrid/decorators/masonry-view') {
-                return;
-            }
-
             var scrollTop = this.sandbox.dom.scrollTop(constants.scrollContainerSelector);
             if (scrollTop > 90) {
                 this.$el.addClass(constants.fixedClass);
