@@ -431,16 +431,12 @@
   height: 150px;
 }
 
-/* line 2, ../scss/modules/media-play-video-overlay.scss */
-#play-video-overlay .media-play-video-container {
+/* line 1, ../scss/modules/media-play-video-overlay.scss */
+.media-play-video-container {
   width: 100%;
   text-align: center;
 }
-/* line 6, ../scss/modules/media-play-video-overlay.scss */
-#play-video-overlay .media-play-video-container video {
+/* line 5, ../scss/modules/media-play-video-overlay.scss */
+.media-play-video-container video {
   max-width: 100%;
-}
-/* line 11, ../scss/modules/media-play-video-overlay.scss */
-#play-video-overlay .btn.overlay-ok {
-  display: none;
 }

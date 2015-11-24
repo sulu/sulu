@@ -108,15 +108,24 @@ define([
                     name: 'overlay@husky',
                     options: {
                         el: $container,
-                        title: this.sandbox.translate('sulu.media.play-video.loading'),
-                        data: $loader,
                         skin: 'wide',
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'media-play-video.loading',
                         closeIcon: '',
-                        okInactive: true,
-                        propagateEvents: false
+                        slides: [{
+                            title: this.sandbox.translate('sulu.media.play-video.loading'),
+                            data: $loader,
+                            okInactive: true,
+                            buttons: [
+                                {
+                                    type: 'cancel',
+                                    inactive: false,
+                                    text: 'public.cancel',
+                                    align: 'left'
+                                }
+                            ]
+                        }]
                     }
                 }
             ]);
@@ -165,16 +174,27 @@ define([
                     name: 'overlay@husky',
                     options: {
                         el: $container,
-                        title: video.title,
-                        data: $data,
                         skin: 'wide',
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'media-play-video',
                         propagateEvents: false,
-                        cancelCallback: function() {
-                            this.sandbox.stop();
-                        }.bind(this)
+                        slides: [{
+                            title: video.title,
+                            data: $data,
+                            okInactive: true,
+                            buttons: [
+                                {
+                                    type: 'cancel',
+                                    inactive: false,
+                                    text: 'public.cancel',
+                                    align: 'left'
+                                }
+                            ],
+                            cancelCallback: function () {
+                                this.sandbox.stop();
+                            }.bind(this)
+                        }]
                     }
                 }
             ]);
