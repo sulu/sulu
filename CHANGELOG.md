@@ -7,6 +7,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1806 [All]             Added sticky toolbar to content lists
     * BUGFIX      #1820 [ContentBundle]   Fixed migrate url script
     * BUGFIX      #1815 [SecurityBundle]  Fixed missing locale check for security
+    * BUGFIX      #1811 [MediaBundle]     Normalize file names to avoid error in video preview image generation
     * BUGFIX      #1812 [ContactBundle]   Fixed translation bug in position dropdown
     * BUGFIX      #1814 [MediaBundle]     Fixed media selection bug
     * BUGFIX      #1807 [SecurityBundle]  Removed user locked field and used contact disabled field instead
