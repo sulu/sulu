@@ -66,8 +66,8 @@ class ContentController extends RestController implements ClassResourceInterface
         $user = $this->tokenStorage->getToken()->getUser();
 
         $mapping = MappingBuilder::create()
-            ->disableHydrateGhost($excludeGhosts)
-            ->disableHydrateShadow($excludeShadows)
+            ->disableHydrateGhost(!$excludeGhosts)
+            ->disableHydrateShadow(!$excludeShadows)
             ->addProperties($properties)
             ->getMapping();
 

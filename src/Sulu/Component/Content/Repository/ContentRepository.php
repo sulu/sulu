@@ -262,6 +262,7 @@ class ContentRepository implements ContentRepositoryInterface
     {
         $properties = $mapping->getProperties();
         $properties[] = 'template';
+        $properties[] = 'shadow-on';
         foreach ($properties as $propertyName) {
             $this->appendSingleMapping($queryBuilder, $propertyName, $locales);
         }
@@ -277,7 +278,7 @@ class ContentRepository implements ContentRepositoryInterface
     private function appendSingleMapping(QueryBuilder $queryBuilder, $propertyName, $locales)
     {
         foreach ($locales as $item) {
-            $alias = sprintf('%s%s', $item, ucfirst($propertyName));
+            $alias = sprintf('%s%s', $item, str_replace('-', '_', ucfirst($propertyName)));
 
             $queryBuilder->addSelect(
                 'node',
@@ -306,23 +307,24 @@ class ContentRepository implements ContentRepositoryInterface
         UserInterface $user = null
     ) {
         $originalLocale = $locale;
-        $locale = $this->localizationFinder->findAvailableLocale(
+        $ghostLocale = $this->localizationFinder->findAvailableLocale(
             $webspaceKey,
             $this->resolveAvailableLocales($row),
             $locale
         );
-        if (!$mapping->hydrateGhost() && $originalLocale !== $locale) {
-            return;
-        }
 
         $type = null;
-        if ($locale !== $originalLocale) {
-            $type = StructureType::getGhost($locale);
-        } elseif ($row->getValue('shadowOn')) {
+        if ($row->getValue('shadowOn')) {
             if (!$mapping->hydrateShadow()) {
                 return;
             }
             $type = StructureType::getShadow($row->getValue('shadowBase'));
+        } elseif ($ghostLocale !== $originalLocale) {
+            if (!$mapping->hydrateGhost()) {
+                return;
+            }
+            $locale = $ghostLocale;
+            $type = StructureType::getGhost($locale);
         }
 
         if ($row->getValue('nodeType') === RedirectType::INTERNAL && $mapping->followInternalLink()) {

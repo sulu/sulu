@@ -154,7 +154,7 @@ class ContentRepositoryTest extends SuluTestCase
     {
         $this->initPhpcr();
 
-        $this->createShadowPage('test-1', 'de', 'en');
+        $this->createShadowPage('test-1', 'en_us', 'en');
         $this->createPage('test-2', 'en');
         $this->createPage('test-3', 'en');
 
@@ -187,13 +187,14 @@ class ContentRepositoryTest extends SuluTestCase
             $parentUuid,
             'de',
             'sulu_io',
-            MappingBuilder::create()->disableHydrateGhost()->addProperties(['title'])->getMapping()
+            MappingBuilder::create()->addProperties(['title'])->getMapping()
         );
 
-        $this->assertCount(2, $result);
+        $this->assertCount(3, $result);
 
-        $this->assertEquals('test-2', $result[0]['title']);
-        $this->assertEquals('test-3', $result[1]['title']);
+        $this->assertEquals('test-1', $result[0]['title']);
+        $this->assertEquals('test-2', $result[1]['title']);
+        $this->assertEquals('test-3', $result[2]['title']);
     }
 
     public function testFindByParentWithGhostNoHydrate()

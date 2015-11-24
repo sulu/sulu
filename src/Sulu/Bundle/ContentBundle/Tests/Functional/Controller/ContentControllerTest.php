@@ -60,6 +60,152 @@ class ContentControllerTest extends SuluTestCase
         $this->assertEquals('/test-3', $items[2]['path']);
     }
 
+    public function testCGetWithShadow()
+    {
+        $this->initPhpcr();
+
+        $this->createShadowPage('test-1', 'en', 'de');
+        $this->createPage('test-2', 'de');
+        $this->createPage('test-3', 'de');
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('GET', '/api/contents', ['webspace' => 'sulu_io', 'locale' => 'de', 'mapping' => 'title']);
+
+        $result = json_decode($client->getResponse()->getContent(), true);
+
+        $items = $result['_embedded']['content'];
+
+        $this->assertCount(3, $items);
+
+        $this->assertEquals('test-1', $items[0]['title']);
+        $this->assertEquals('test-2', $items[1]['title']);
+        $this->assertEquals('test-3', $items[2]['title']);
+    }
+
+    public function testCGetExcludeShadow()
+    {
+        $this->initPhpcr();
+
+        $this->createShadowPage('test-1', 'en', 'de');
+        $this->createPage('test-2', 'de');
+        $this->createPage('test-3', 'de');
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/contents',
+            ['webspace' => 'sulu_io', 'locale' => 'de', 'mapping' => 'title', 'exclude-shadows' => true]
+        );
+
+        $result = json_decode($client->getResponse()->getContent(), true);
+
+        $items = $result['_embedded']['content'];
+
+        $this->assertCount(2, $items);
+
+        $this->assertEquals('test-2', $items[0]['title']);
+        $this->assertEquals('test-3', $items[1]['title']);
+    }
+
+    public function testCGetWithGhost()
+    {
+        $this->initPhpcr();
+
+        $this->createPage('test-1', 'en');
+        $this->createPage('test-2', 'de');
+        $this->createPage('test-3', 'de');
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('GET', '/api/contents', ['webspace' => 'sulu_io', 'locale' => 'de', 'mapping' => 'title']);
+
+        $result = json_decode($client->getResponse()->getContent(), true);
+
+        $items = $result['_embedded']['content'];
+
+        $this->assertCount(3, $items);
+
+        $this->assertEquals('test-1', $items[0]['title']);
+        $this->assertEquals('test-2', $items[1]['title']);
+        $this->assertEquals('test-3', $items[2]['title']);
+    }
+
+    public function testCGetExcludeGhost()
+    {
+        $this->initPhpcr();
+
+        $this->createPage('test-1', 'en');
+        $this->createPage('test-2', 'de');
+        $this->createPage('test-3', 'de');
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/contents',
+            ['webspace' => 'sulu_io', 'locale' => 'de', 'mapping' => 'title', 'exclude-ghosts' => true]
+        );
+
+        $result = json_decode($client->getResponse()->getContent(), true);
+
+        $items = $result['_embedded']['content'];
+
+        $this->assertCount(2, $items);
+
+        $this->assertEquals('test-2', $items[0]['title']);
+        $this->assertEquals('test-3', $items[1]['title']);
+    }
+
+    public function testCGetWithGhostAndShadow()
+    {
+        $this->initPhpcr();
+
+        $this->createPage('test-1', 'en');
+        $this->createShadowPage('test-2', 'en', 'de');
+        $this->createPage('test-3', 'de');
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('GET', '/api/contents', ['webspace' => 'sulu_io', 'locale' => 'de', 'mapping' => 'title']);
+
+        $result = json_decode($client->getResponse()->getContent(), true);
+
+        $items = $result['_embedded']['content'];
+
+        $this->assertCount(3, $items);
+
+        $this->assertEquals('test-1', $items[0]['title']);
+        $this->assertEquals('test-2', $items[1]['title']);
+        $this->assertEquals('test-3', $items[2]['title']);
+    }
+
+    public function testCGetExcludeGhostAndShadow()
+    {
+        $this->initPhpcr();
+
+        $this->createPage('test-1', 'en');
+        $this->createShadowPage('test-2', 'en', 'de');
+        $this->createPage('test-3', 'de');
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/contents',
+            ['webspace' => 'sulu_io', 'locale' => 'de', 'mapping' => 'title', 'exclude-ghosts' => true, 'exclude-shadows' => true]
+        );
+
+        $result = json_decode($client->getResponse()->getContent(), true);
+
+        $items = $result['_embedded']['content'];
+
+        $this->assertCount(1, $items);
+
+        $this->assertEquals('test-3', $items[0]['title']);
+    }
+
     /**
      * @param string $title
      * @param string $locale
@@ -79,6 +225,68 @@ class ContentControllerTest extends SuluTestCase
         $document->setLocale($locale);
         $document->setRedirectType(RedirectType::NONE);
         $document->setShadowLocaleEnabled(false);
+        $document->getStructure()->bind($data);
+        $this->documentManager->persist(
+            $document,
+            $locale,
+            [
+                'path' => $this->sessionManager->getContentPath('sulu_io') . '/' . $title,
+                'auto_create' => true,
+            ]
+        );
+        $this->documentManager->flush();
+
+        return $document;
+    }
+
+    /**
+     * @param string $title
+     * @param string $locale
+     * @param string $shadowedLocale
+     *
+     * @return PageDocument
+     */
+    private function createShadowPage($title, $locale, $shadowedLocale)
+    {
+        $document1 = $this->createPage($title, $locale);
+        $document = $this->documentManager->find(
+            $document1->getUuid(),
+            $shadowedLocale,
+            ['load_ghost_content' => false]
+        );
+
+        $document->setShadowLocaleEnabled(true);
+        $document->setTitle(strrev($title));
+        $document->setShadowLocale($locale);
+        $document->setLocale($shadowedLocale);
+        $document->setResourceSegment($document1->getResourceSegment());
+
+        $this->documentManager->persist($document, $shadowedLocale);
+        $this->documentManager->flush();
+
+        return $document;
+    }
+
+    /**
+     * @param string $title
+     * @param string $locale
+     * @param PageDocument $link
+     *
+     * @return PageDocument
+     */
+    private function createInternalLinkPage($title, $locale, PageDocument $link)
+    {
+        $data['title'] = $title;
+        $data['url'] = '/' . $title;
+
+        /** @var PageDocument $document */
+        $document = $this->documentManager->create('page');
+        $document->setStructureType('simple');
+        $document->setTitle($title);
+        $document->setResourceSegment($data['url']);
+        $document->setLocale($locale);
+        $document->setRedirectType(RedirectType::INTERNAL);
+        $document->setRedirectTarget($link);
         $document->getStructure()->bind($data);
         $this->documentManager->persist(
             $document,
