@@ -36,15 +36,15 @@ class MappingBuilder
     }
 
     /**
-     * Enable follow ghost relations.
+     * Enable hydrate ghost pages.
      *
-     * @param bool $disable
+     * @param bool $enable
      *
      * @return $this
      */
-    public function disableHydrateGhost($disable = true)
+    public function disableHydrateGhost($enable = false)
     {
-        $this->mapping->setHydrateGhost($disable);
+        $this->mapping->setHydrateGhost($enable);
 
         return $this;
     }
@@ -52,27 +52,27 @@ class MappingBuilder
     /**
      * Enable follow internal-link relations.
      *
-     * @param bool $disable
+     * @param bool $enable
      *
      * @return $this
      */
-    public function disableFollowInternalLink($disable = true)
+    public function disableFollowInternalLink($enable = false)
     {
-        $this->mapping->setFollowInternalLink($disable);
+        $this->mapping->setFollowInternalLink($enable);
 
         return $this;
     }
 
     /**
-     * Enable follow shadow relations.
+     * Enable hydrate shadow pages.
      *
-     * @param bool $disable
+     * @param bool $enable
      *
      * @return $this
      */
-    public function disableHydrateShadow($disable = true)
+    public function disableHydrateShadow($enable = false)
     {
-        $this->mapping->setHydrateShadow($disable);
+        $this->mapping->setHydrateShadow($enable);
 
         return $this;
     }

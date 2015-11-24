@@ -151,12 +151,7 @@ class ContentRepository implements ContentRepositoryInterface
         $queryBuilder->where($this->qomFactory->childNode('node', $rows->getRows()->current()->getPath()));
         $this->appendMapping($queryBuilder, $mapping, $locales);
 
-        return array_map(
-            function (Row $row) use ($mapping, $webspaceKey, $locale, $user) {
-                return $this->resolveContent($row, $locale, $webspaceKey, $mapping, $user);
-            },
-            iterator_to_array($queryBuilder->execute())
-        );
+        return $this->resolveQueryBuilder($queryBuilder, $locale, $webspaceKey, $mapping, $user);
     }
 
     /**
@@ -171,11 +166,36 @@ class ContentRepository implements ContentRepositoryInterface
         );
         $this->appendMapping($queryBuilder, $mapping, $locales);
 
-        return array_map(
-            function (Row $row) use ($mapping, $webspaceKey, $locale, $user) {
-                return $this->resolveContent($row, $locale, $webspaceKey, $mapping, $user);
-            },
-            iterator_to_array($queryBuilder->execute())
+        return $this->resolveQueryBuilder($queryBuilder, $locale, $webspaceKey, $mapping, $user);
+    }
+
+    /**
+     * Resolves query results to content.
+     *
+     * @param QueryBuilder $queryBuilder
+     * @param string $locale
+     * @param string $webspaceKey
+     * @param MappingInterface $mapping
+     * @param UserInterface $user
+     *
+     * @return Content[]
+     */
+    private function resolveQueryBuilder(
+        QueryBuilder $queryBuilder,
+        $locale,
+        $webspaceKey,
+        MappingInterface $mapping,
+        UserInterface $user = null
+    ) {
+        return array_values(
+            array_filter(
+                array_map(
+                    function (Row $row) use ($mapping, $webspaceKey, $locale, $user) {
+                        return $this->resolveContent($row, $locale, $webspaceKey, $mapping, $user);
+                    },
+                    iterator_to_array($queryBuilder->execute())
+                )
+            )
         );
     }
 

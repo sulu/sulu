@@ -150,6 +150,75 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-3', $result[2]['title']);
     }
 
+    public function testFindByParentWithShadowNoHydrate()
+    {
+        $this->initPhpcr();
+
+        $this->createShadowPage('test-1', 'de', 'en');
+        $this->createPage('test-2', 'en');
+        $this->createPage('test-3', 'en');
+
+        $parentUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
+
+        $result = $this->contentRepository->findByParentUuid(
+            $parentUuid,
+            'en',
+            'sulu_io',
+            MappingBuilder::create()->disableHydrateShadow()->addProperties(['title'])->getMapping()
+        );
+
+        $this->assertCount(2, $result);
+
+        $this->assertEquals('test-2', $result[0]['title']);
+        $this->assertEquals('test-3', $result[1]['title']);
+    }
+
+    public function testFindByParentWithGhost()
+    {
+        $this->initPhpcr();
+
+        $this->createPage('test-1', 'en');
+        $this->createPage('test-2', 'de');
+        $this->createPage('test-3', 'de');
+
+        $parentUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
+
+        $result = $this->contentRepository->findByParentUuid(
+            $parentUuid,
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->disableHydrateGhost()->addProperties(['title'])->getMapping()
+        );
+
+        $this->assertCount(2, $result);
+
+        $this->assertEquals('test-2', $result[0]['title']);
+        $this->assertEquals('test-3', $result[1]['title']);
+    }
+
+    public function testFindByParentWithGhostNoHydrate()
+    {
+        $this->initPhpcr();
+
+        $this->createPage('test-1', 'en');
+        $this->createPage('test-2', 'de');
+        $this->createPage('test-3', 'de');
+
+        $parentUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
+
+        $result = $this->contentRepository->findByParentUuid(
+            $parentUuid,
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->disableHydrateGhost()->addProperties(['title'])->getMapping()
+        );
+
+        $this->assertCount(2, $result);
+
+        $this->assertEquals('test-2', $result[0]['title']);
+        $this->assertEquals('test-3', $result[1]['title']);
+    }
+
     public function testFindByParentWithInternalLink()
     {
         $this->initPhpcr();
@@ -171,6 +240,30 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertEquals('test-1', $result[0]['title']);
         $this->assertEquals('test-1', $result[1]['title']);
+        $this->assertEquals('test-3', $result[2]['title']);
+    }
+
+    public function testFindByParentWithInternalLinkNotFollow()
+    {
+        $this->initPhpcr();
+
+        $link = $this->createPage('test-1', 'de');
+        $this->createInternalLinkPage('test-2', 'de', $link);
+        $this->createPage('test-3', 'de');
+
+        $parentUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
+
+        $result = $this->contentRepository->findByParentUuid(
+            $parentUuid,
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->disableFollowInternalLink()->addProperties(['title'])->getMapping()
+        );
+
+        $this->assertCount(3, $result);
+
+        $this->assertEquals('test-1', $result[0]['title']);
+        $this->assertEquals('test-2', $result[1]['title']);
         $this->assertEquals('test-3', $result[2]['title']);
     }
 
