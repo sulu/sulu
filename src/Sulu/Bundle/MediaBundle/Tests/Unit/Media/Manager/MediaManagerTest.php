@@ -220,24 +220,24 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->mediaManager->delete(1, true);
     }
-//
-//    public function testSpecialCharacterFileName()
-//    {
-//        $fileName = 'aäüßa';
-//
-//        /** @var UploadedFile $uploadedFile */
-//        $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith(['', 1, null, null, 1, true]);
-//        $uploadedFile->getClientOriginalName()->willReturn($fileName);
-//        $uploadedFile->getPathname()->willReturn('');
-//        $uploadedFile->getSize()->willReturn('123');
-//        $uploadedFile->getMimeType()->willReturn('img');
-//
-//        $user = $this->prophesize(User::class)->willImplement(UserInterface::class);
-//        $this->userRepository->findUserById(1)->willReturn($user);
-//
-//        $this->pathCleaner->cleanup(Argument::cetera($fileName))->shouldBeCalled();
-//        $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en'], 1);
-//    }
+
+    public function testSpecialCharacterFileName()
+    {
+        $fileName = 'aäüßa';
+
+        /** @var UploadedFile $uploadedFile */
+        $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith(['', 1, null, null, 1, true]);
+        $uploadedFile->getClientOriginalName()->willReturn($fileName);
+        $uploadedFile->getPathname()->willReturn('');
+        $uploadedFile->getSize()->willReturn('123');
+        $uploadedFile->getMimeType()->willReturn('img');
+
+        $user = $this->prophesize(User::class)->willImplement(UserInterface::class);
+        $this->userRepository->findUserById(1)->willReturn($user);
+
+        $this->pathCleaner->cleanup(Argument::cetera($fileName))->shouldBeCalled();
+        $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'my title'], 1);
+    }
 
     public function provideGetByIds()
     {
