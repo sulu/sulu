@@ -10,6 +10,18 @@ The old upgrade for the url content-type don't upgrade properties in blocks. Rer
 app/console phpcr:migrations:migrate
 ```
 
+### User locking
+
+The locked toggler in the user tab of the contact section now sets the `locked`
+field in the `se_users` table. Before this setting was written to the
+`disabled` flag in the `co_contacts` table, which is removed now. If you have
+used this field make sure to backup the data before applying the following
+command:
+
+```bash
+app/console doctrine:schema:update --force
+```
+
 ### Date Content-Type
 
 The type of the date value in the database was wrong to update your existing data use following command:
