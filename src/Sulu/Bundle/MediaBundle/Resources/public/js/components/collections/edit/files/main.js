@@ -402,6 +402,13 @@ define([
             } else {
                 this.$el.removeClass(constants.fixedClass);
             }
+        },
+
+        /**
+         * Remove scroll listener when component is deleted.
+         */
+        destroy: function() {
+            this.sandbox.dom.off(constants.scrollContainerSelector, 'scroll');
         }
     };
 });
