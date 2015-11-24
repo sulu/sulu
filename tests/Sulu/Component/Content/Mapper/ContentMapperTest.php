@@ -2951,7 +2951,13 @@ class ContentMapperTest extends SuluTestCase
 
     public function testCopyWithShadow()
     {
-        $startPage = $this->mapper->saveStartPage(['title' => 'Start Page'], 'overview', 'sulu_io', 'de', 1);
+        $startPage = $this->saveStartPage(
+            ['title' => 'Start Page'],
+            'overview',
+            'sulu_io',
+            'de',
+            1
+        );
 
         // save content
         $germanPage = $this->mapper->save(['title' => 'test', 'url' => '/test-de'], 'overview', 'sulu_io', 'de', 1);
@@ -3491,7 +3497,7 @@ class ContentMapperTest extends SuluTestCase
 
     private function saveStartPage($data, $templateKey, $webspaceKey, $locale, $userId)
     {
-        $this->mapper->save(
+        return $this->mapper->save(
             $data,
             $templateKey,
             $webspaceKey,
