@@ -68,17 +68,14 @@ class AccountControllerTest extends SuluTestCase
     {
         $account = new Account();
         $account->setName('Company');
-        $account->setDisabled(0);
         $account->setPlaceOfJurisdiction('Feldkirch');
 
         $parentAccount = new Account();
         $parentAccount->setName('Parent');
-        $parentAccount->setDisabled(0);
         $parentAccount->setPlaceOfJurisdiction('Feldkirch');
 
         $childAccount = new Account();
         $childAccount->setName('Child');
-        $childAccount->setDisabled(0);
         $childAccount->setPlaceOfJurisdiction('Feldkirch');
         $childAccount->setParent($parentAccount);
 
@@ -167,7 +164,6 @@ class AccountControllerTest extends SuluTestCase
         $contact->setFirstName('Vorname');
         $contact->setLastName('Nachname');
         $contact->setMiddleName('Mittelname');
-        $contact->setDisabled(0);
         $contact->setFormOfAddress(0);
 
         $accountContact = new AccountContact();
@@ -1423,7 +1419,6 @@ class AccountControllerTest extends SuluTestCase
         $contact->setFirstName('Vorname');
         $contact->setLastName('Nachname');
         $contact->setMiddleName('Mittelname');
-        $contact->setDisabled(0);
         $contact->setFormOfAddress(0);
         $this->em->persist($contact);
         $accountContact = new AccountContact();
@@ -1480,7 +1475,6 @@ class AccountControllerTest extends SuluTestCase
             $contact->setFirstName('Vorname ' . $i);
             $contact->setLastName('Nachname ' . $i);
             $contact->setMiddleName('Mittelname ' . $i);
-            $contact->setDisabled(0);
             $contact->setFormOfAddress(0);
             $this->em->persist($contact);
 
@@ -1537,7 +1531,6 @@ class AccountControllerTest extends SuluTestCase
             $contact->setFirstName('Vorname ' . $i);
             $contact->setLastName('Nachname ' . $i);
             $contact->setMiddleName('Mittelname ' . $i);
-            $contact->setDisabled(0);
             $contact->setFormOfAddress(0);
             $this->em->persist($contact);
 

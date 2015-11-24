@@ -298,8 +298,6 @@ define([], function() {
 
             // store the instance-name of the toolbar
             this.toolbarInstanceName = 'header' + this.options.instanceName;
-            this.toolbarCollapsed = false;
-            this.toolbarExpandedWidth = 0;
             this.oldScrollPosition = 0;
             this.$tabs = null;
             this.tabsAction = null;

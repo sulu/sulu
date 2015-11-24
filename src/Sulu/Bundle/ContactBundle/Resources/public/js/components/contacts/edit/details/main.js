@@ -86,14 +86,11 @@ define([
         },
 
         destroy: function() {
-            this.sandbox.emit('sulu.header.toolbar.item.hide', 'disabler');
-            this.cleanUp();
+            // stop contact form before leaving
+            this.sandbox.stop(constants.editFormSelector);
         },
 
         render: function() {
-            this.sandbox.emit(this.options.disablerToggler + '.change', this.data.disabled);
-            this.sandbox.emit('sulu.header.toolbar.item.show', 'disabler');
-
             this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
             this.sandbox.once('sulu.contacts.set-types', this.setTypes.bind(this));
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/form'));
@@ -383,29 +380,10 @@ define([
                 'position-select',
                 'api/contact/positions');
 
-            this.sandbox.on('husky.toggler.sulu-toolbar.changed', this.toggleDisableContact.bind(this));
-
             this.sandbox.on('husky.dropzone.contact-avatar.success', function(file, response) {
                 this.saveAvatarData(response);
                 this.updateAvatarContainer(response.id, response.thumbnails[constants.imageFormat], response.url);
             }, this);
-        },
-
-        /**
-         * Disables or enables the contact
-         * @param disable {Boolean} true to disable, false to enable
-         */
-        toggleDisableContact: function(disable) {
-            this.data.disabled = disable;
-            this.sandbox.emit('sulu.tab.dirty');
-        },
-
-        /**
-         * Does some cleanup with aura components
-         */
-        cleanUp: function() {
-            // stop contact form before leaving
-            this.sandbox.stop(constants.editFormSelector);
         },
 
         initContactData: function() {

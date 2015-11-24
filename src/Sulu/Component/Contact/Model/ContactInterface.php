@@ -335,22 +335,6 @@ interface ContactInterface
     public function getSalutation();
 
     /**
-     * Set disabled.
-     *
-     * @param int $disabled
-     *
-     * @return ContactInterface
-     */
-    public function setDisabled($disabled);
-
-    /**
-     * Get disabled.
-     *
-     * @return int
-     */
-    public function getDisabled();
-
-    /**
      * Add account contact.
      *
      * @param AccountContact $accountContact

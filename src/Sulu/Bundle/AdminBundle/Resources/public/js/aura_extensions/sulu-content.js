@@ -291,11 +291,13 @@ define(function() {
             }
 
             getTabsData.call(this, header).then(function(tabsData) {
-                if (!!$('body').find('.sulu-header').length) {
+                var $container = this.sandbox.dom.createElement('<div class="sulu-header"/>'),
+                    $header = $('.sulu-header');
+
+                if (!!$header.length) {
                     Husky.stop('.sulu-header');
-                    $('body').find('.sulu-header').remove();
+                    $header.remove();
                 }
-                var $container = this.sandbox.dom.createElement('<div class="sulu-header"/>');
                 this.sandbox.dom.prepend('.content-column', $container);
 
                 this.sandbox.start([{
@@ -326,7 +328,7 @@ define(function() {
         /**
          * Loades and prepares the tabs-data for a header object
          * @param header {Object} the header object
-         * @returns {Deffered} a deferred-object with a then method
+         * @returns {Deferred} a deferred-object with a then method
          */
         getTabsData = function(header) {
             var loaded = this.sandbox.data.deferred();

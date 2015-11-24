@@ -14,8 +14,6 @@
 
         <field name="corporation" type="string" column="corporation" length="255" nullable="true"/>
 
-        <field name="disabled" type="integer" column="disabled" length="1" nullable="false"/>
-
         <!-- financial infos -->
         <field name="uid" type="string" column="uid" length="50" nullable="true" />
         <field name="registerNumber" type="string" column="registerNumber" nullable="true" />

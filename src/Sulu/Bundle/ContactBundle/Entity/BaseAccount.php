@@ -18,9 +18,6 @@ use Sulu\Component\Persistence\Model\AuditableInterface;
 
 abstract class BaseAccount extends ApiEntity implements AuditableInterface, AccountInterface
 {
-    const ENABLED = 0;
-    const DISABLED = 1;
-
     /**
      * @var int
      */
@@ -67,11 +64,6 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
      * @var string
      */
     private $corporation;
-
-    /**
-     * @var int
-     */
-    private $disabled = self::ENABLED;
 
     /**
      * @var string
@@ -236,30 +228,6 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     public function getCorporation()
     {
         return $this->corporation;
-    }
-
-    /**
-     * Set disabled.
-     *
-     * @param int $disabled
-     *
-     * @return BaseAccount
-     */
-    public function setDisabled($disabled)
-    {
-        $this->disabled = $disabled;
-
-        return $this;
-    }
-
-    /**
-     * Get disabled.
-     *
-     * @return int
-     */
-    public function getDisabled()
-    {
-        return $this->disabled;
     }
 
     /**

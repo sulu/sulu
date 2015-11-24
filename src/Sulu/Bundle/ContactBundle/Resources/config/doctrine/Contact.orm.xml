@@ -17,7 +17,6 @@
 
         <field name="salutation" type="string" column="salutation" length="255" nullable="true"/>
         <field name="formOfAddress" type="integer" column="formOfAddress" nullable="true"/>
-        <field name="disabled" type="boolean" column="disabled" nullable="true"/>
         <field name="newsletter" type="boolean" column="newsletter" nullable="true"/>
         <field name="gender" type="string" column="gender" length="1" nullable="true"/>
 

@@ -653,34 +653,6 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set disabled.
-     *
-     * @param int $disabled
-     *
-     * @return Contact
-     */
-    public function setDisabled($disabled)
-    {
-        $this->entity->setDisabled($disabled);
-
-        return $this;
-    }
-
-    /**
-     * Get disabled.
-     *
-     * @return int
-     *
-     * @VirtualProperty
-     * @SerializedName("disabled")
-     * @Groups({"fullContact","partialContact"})
-     */
-    public function getDisabled()
-    {
-        return $this->entity->getDisabled();
-    }
-
-    /**
      * Sets the avatar (media-api object).
      *
      * @param Media $avatar

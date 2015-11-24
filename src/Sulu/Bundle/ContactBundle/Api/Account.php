@@ -460,33 +460,6 @@ class Account extends ApiWrapper
     }
 
     /**
-     * Set disabled.
-     *
-     * @param int $disabled
-     *
-     * @return Account
-     */
-    public function setDisabled($disabled)
-    {
-        $this->entity->setDisabled($disabled);
-
-        return $this;
-    }
-
-    /**
-     * Get disabled.
-     *
-     * @return int
-     * @VirtualProperty
-     * @SerializedName("disabled")
-     * @Groups({"fullAccount", "partialAccount"})
-     */
-    public function getDisabled()
-    {
-        return $this->entity->getDisabled();
-    }
-
-    /**
      * Set uid.
      *
      * @param string $uid

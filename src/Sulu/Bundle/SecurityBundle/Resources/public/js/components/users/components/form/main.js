@@ -87,12 +87,19 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
 
         render: function() {
             var headline = this.contact ? this.contact.firstName + ' ' + this.contact.lastName : this.sandbox.translate('security.permission.title');
+
+            this.sandbox.emit('husky.toggler.sulu-toolbar.change', this.user.locked);
+            this.sandbox.emit('sulu.header.toolbar.item.show', 'disabler');
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/security/template/permission/form', {
                 user: !!this.user ? this.user : null,
                 headline: headline
             }));
             this.sandbox.start(this.$el);
             this.startLanguageDropdown();
+        },
+
+        destroy: function() {
+            this.sandbox.emit('sulu.header.toolbar.item.hide', 'disabler');
         },
 
         /**
@@ -219,6 +226,11 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
             this.sandbox.on('husky.select.systemLanguage.selected.item', function(locale) {
                 this.systemLanguage = locale;
             }.bind(this));
+
+            this.sandbox.on('husky.toggler.sulu-toolbar.changed', function(value) {
+                this.user.locked = value;
+                this.sandbox.emit('sulu.tab.dirty');
+            }.bind(this));
         },
 
         save: function(action) {
@@ -230,7 +242,8 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                         username: this.sandbox.dom.val('#username'),
                         email: this.sandbox.dom.val('#email'),
                         contact: this.contact,
-                        locale: this.systemLanguage
+                        locale: this.systemLanguage,
+                        locked: this.user.locked
                     },
 
                     selectedRolesAndConfig: this.getSelectedRolesAndLanguages(),

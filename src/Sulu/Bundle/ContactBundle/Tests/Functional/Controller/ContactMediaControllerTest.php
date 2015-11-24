@@ -53,7 +53,6 @@ class ContactMediaControllerTest extends SuluTestCase
         $contact->setPosition('CEO');
         $contact->setFormOfAddress(1);
         $contact->setSalutation('Sehr geehrter Herr Dr Mustermann');
-        $contact->setDisabled(0);
 
         $this->contact = $contact;
 

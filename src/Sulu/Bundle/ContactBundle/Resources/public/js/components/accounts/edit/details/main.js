@@ -85,7 +85,6 @@ define([
         },
 
         render: function() {
-            this.sandbox.emit(this.options.disablerToggler + '.change', !!this.data.disabled);
             this.sandbox.emit('sulu.header.toolbar.item.show', 'disabler');
             this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
             this.sandbox.once('sulu.contacts.set-types', this.setTypes.bind(this));
@@ -441,21 +440,10 @@ define([
                 this.updateBankAccountAddIcon(this.numberOfBankAccounts);
             }, this);
 
-            this.sandbox.on('husky.toggler.sulu-toolbar.changed', this.toggleDisableAccount.bind(this));
-
             this.sandbox.on('husky.dropzone.account-logo.success', function(file, response) {
                 this.saveLogoData(response);
                 this.updateLogoContainer(response.id, response.thumbnails[constants.logoThumbnailFormat], response.url);
             }, this);
-        },
-
-        /**
-         * Disables or enables the account
-         * @param disable {Boolean} true to disable, false to enable
-         */
-        toggleDisableAccount: function(disable) {
-            this.data.disabled = !!disable;
-            this.sandbox.emit('sulu.tab.dirty');
         },
 
         /**

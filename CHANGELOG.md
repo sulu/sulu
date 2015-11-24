@@ -6,6 +6,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1815 [SecurityBundle]  Fixed missing locale check for security
     * BUGFIX      #1812 [ContactBundle]   Fixed translation bug in position dropdown
     * BUGFIX      #1814 [MediaBundle]     Fixed media selection bug
+    * BUGFIX      #1807 [SecurityBundle]  Removed user locked field and used contact disabled field instead
     * ENHANCEMENT #1806 [ContentBundle]   Fixed serialization depth for column-navigation
     * BUGFIX      #1800 [ContentBundle]   Fixed preview update of date and color
     * BUGFIX      #1801 [ContentBundle]   Fixed reset values in smart content if values was selected before
