@@ -59,6 +59,8 @@ define([
             this.sandbox.emit('husky.navigation.select-id', 'collections-edit');
             this.updateDataNavigationAddButton();
 
+            this.sandbox.stickyToolbar.enable(this.$el);
+
             this.bindCustomEvents();
             this.render();
         },
@@ -92,6 +94,8 @@ define([
                     this.sandbox.emit('husky.datagrid.view.change', 'table');
                     this.sandbox.emit('husky.datagrid.pagination.change', 'dropdown');
                 }.bind(this));
+
+                this.sandbox.stickyToolbar.reset(this.$el);
             }.bind(this));
 
             // change datagrid view to masonry
@@ -106,6 +110,8 @@ define([
                     this.sandbox.emit('husky.datagrid.view.change', 'datagrid/decorators/masonry-view');
                     this.sandbox.emit('husky.datagrid.pagination.change', 'infinite-scroll');
                 }.bind(this));
+
+                this.sandbox.stickyToolbar.reset(this.$el);
             }.bind(this));
 
             // language change
@@ -178,6 +184,13 @@ define([
                     }
                 }
             );
+        },
+
+        /**
+         * Remove scroll listener when component is deleted.
+         */
+        destroy: function() {
+            this.sandbox.stickyToolbar.disable();
         }
     };
 });

@@ -23,9 +23,7 @@ define([
         },
 
         constants = {
-            scrollContainerSelector: '.content-column > .wrapper .page',
             hideToolbarClass: 'toolbar-hidden',
-            fixedClass: 'fixed',
             dropzoneSelector: '.dropzone-container',
             toolbarSelector: '.list-toolbar-container',
             datagridSelector: '.datagrid-container',
@@ -59,6 +57,8 @@ define([
             this.bindOverlayEvents();
             this.bindManagerEvents();
             this.bindListToolbarEvents();
+
+            this.sandbox.stickyToolbar.enable(this.$el);
 
             this.sandbox.emit('sulu.medias.collection.get-data', function(data) {
                 this.data = data;
@@ -181,8 +181,7 @@ define([
                     'dropdown'
                 );
 
-                // reset scroll handler
-                this.$el.removeClass(constants.fixedClass);
+                this.sandbox.stickyToolbar.reset(this.$el);
             }.bind(this));
 
             // change datagrid view to masonry
@@ -199,11 +198,8 @@ define([
                     'infinite-scroll'
                 );
 
-                // reset scroll handler
-                this.$el.removeClass(constants.fixedClass);
+                this.sandbox.stickyToolbar.reset(this.$el);
             }.bind(this));
-
-            this.sandbox.dom.on(constants.scrollContainerSelector, 'scroll', this.scrollHandler.bind(this));
         },
 
         savedHandler: function(id, collection) {
@@ -393,22 +389,10 @@ define([
         },
 
         /**
-         * Handles the scroll event to hide or show the tabs
-         */
-        scrollHandler: function() {
-            var scrollTop = this.sandbox.dom.scrollTop(constants.scrollContainerSelector);
-            if (scrollTop > 90) {
-                this.$el.addClass(constants.fixedClass);
-            } else {
-                this.$el.removeClass(constants.fixedClass);
-            }
-        },
-
-        /**
          * Remove scroll listener when component is deleted.
          */
         destroy: function() {
-            this.sandbox.dom.off(constants.scrollContainerSelector, 'scroll');
+            this.sandbox.stickyToolbar.disable();
         }
     };
 });
