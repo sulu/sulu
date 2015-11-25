@@ -7,6 +7,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1823 [TagBundle]       Added tag serialization groups to tag controller
     * ENHANCEMENT #1806 [All]             Added sticky toolbar to content lists
     * FEATURE     #1808 [ContentBundle]   Implemented content repository to query simple content fast
+    * ENHANCEMENT #1822 [MediaBundle]     Preview image upload for video assets
     * BUGFIX      #1820 [ContentBundle]   Fixed migrate url script
     * BUGFIX      #1815 [SecurityBundle]  Fixed missing locale check for security
     * ENHANCEMENT #1816 [MediaBundle]     Added play button to video assets list
