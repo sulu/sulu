@@ -37,7 +37,7 @@ define(['services/husky/util'], function(util) {
                     '</div>',
                     '<div class="form-group">',
                     '   <label><%=categoriesLabel%></label>',
-                    '   <div class="<%=constants.categoriesClass%>"></div>',
+                    '   <div class="<%=constants.categoriesClass%> categories-container"></div>',
                     '</div>'
                 ].join('')
             }
