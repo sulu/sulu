@@ -142,7 +142,7 @@
 }
 /* line 34, ../scss/modules/card-grid.scss */
 #people-list .card-grid-container .card-grid .card-item .item-head .head-container, #companies-list .card-grid-container .card-grid .card-item .item-head .head-container {
-  width: 100px;
+  width: 160px;
   margin: 0 auto;
   text-align: center;
 }
