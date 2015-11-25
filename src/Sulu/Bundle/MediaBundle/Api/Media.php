@@ -64,11 +64,6 @@ class Media extends ApiWrapper
     /**
      * @var array
      */
-    protected $previewImageThumbnails;
-
-    /**
-     * @var array
-     */
     protected $formats = [];
 
     /**
@@ -791,25 +786,6 @@ class Media extends ApiWrapper
         }
 
         return $downloadCounter;
-    }
-
-    /**
-     * @param array $previewImageThumbnails
-     */
-    public function setPreviewImage(array $previewImageThumbnails)
-    {
-        $this->previewImageThumbnails = $previewImageThumbnails;
-    }
-
-    /**
-     * @VirtualProperty
-     * @SerializedName("previewImage")
-     *
-     * @return string
-     */
-    public function getPreviewImage()
-    {
-        return $this->previewImageThumbnails;
     }
 
     /**
