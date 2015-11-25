@@ -263,7 +263,7 @@ class MediaController extends RestController
     }
 
     /**
-     * Creates a new preview image and saves it to the provided media.
+     * Removes current preview image and sets default video thumbnail.
      *
      * @Get("media/reset-preview/{id}")
      *
@@ -302,7 +302,6 @@ class MediaController extends RestController
 
         return $this->handleView($view);
     }
-
 
     /**
      * Trigger an action for given media. Action is specified over get-action parameter.

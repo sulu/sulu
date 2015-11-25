@@ -815,7 +815,6 @@ class Media extends ApiWrapper
             'created' => $this->getCreated(),
             'creator' => $this->getCreator(),
             'downloadCounter' => $this->getDownloadCounter(),
-            'previewImageUrl' => $this->getPreviewImageUrl()
         ];
     }
 

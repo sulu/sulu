@@ -615,7 +615,7 @@ define([
         },
 
         /**
-         * Removes selected preview image and sets default video thumbnail
+         * Removes current preview image and sets default video thumbnail
          */
         resetPreviewImage: function() {
             var mediaId = this.media.id;
