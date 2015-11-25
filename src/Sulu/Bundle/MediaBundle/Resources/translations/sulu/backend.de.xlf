@@ -234,8 +234,8 @@
                 <source>sulu.media.reset-preview-image</source>
                 <target>Vorschaubild zurücksetzen</target>
             </trans-unit>
-            <trans-unit id="243d88cf2f64352w337js55369f22124" resname="sulu.media.upload-new-version">
-                <source>sulu.media.upload-new-version</source>
+            <trans-unit id="243d88cf2f64352w337js55369f22124" resname="sulu.media.upload-new-preview">
+                <source>sulu.media.upload-new-preview</source>
                 <target>Neues Vorschaubild hochladen</target>
             </trans-unit>
         </body>

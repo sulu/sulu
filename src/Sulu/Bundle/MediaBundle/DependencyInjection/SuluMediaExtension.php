@@ -35,6 +35,24 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                 ['indexes' => ['media' => ['security_context' => 'sulu.media.collections']]]
             );
         }
+
+        if ($container->hasExtension('sulu_media')) {
+            $container->prependExtensionConfig(
+                'sulu_media',
+                [
+                    'system_collections' => [
+                        'sulu_media' => [
+                            'meta_title' => ['en' => 'Sulu media', 'de' => 'Sulu Medien'],
+                            'collections' => [
+                                'preview_img' => [
+                                    'meta_title' => ['en' => 'Preview images', 'de' => 'Vorschaubilder'],
+                                ]
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
     }
 
     /**

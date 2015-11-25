@@ -473,6 +473,15 @@ class MediaManager implements MediaManagerInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function saveEntity(\Sulu\Bundle\MediaBundle\Entity\Media $media)
+    {
+        $this->em->persist($media);
+        $this->em->flush();
+    }
+
+    /**
      * @param UploadedFile $uploadedFile
      *
      * @return array
@@ -598,8 +607,8 @@ class MediaManager implements MediaManagerInterface
         );
 
         $mediaEntity = $media->getEntity();
-        $this->em->persist($mediaEntity);
-        $this->em->flush();
+
+        $this->saveEntity($mediaEntity);
 
         return $media;
     }
@@ -936,7 +945,7 @@ class MediaManager implements MediaManagerInterface
             $media->setUrl($versionData[$media->getVersion()]['url']);
         }
 
-        // Get preview image versions
+        // Get preview image and overwrite thumbnails if set
         /** @var \Sulu\Bundle\MediaBundle\Entity\Media $previewImage */
         $previewImage = $media->getEntity()->getPreviewImage();
 
@@ -960,7 +969,7 @@ class MediaManager implements MediaManagerInterface
             }
 
             if ($latestVersion !== null) {
-                $media->setPreviewImage(
+                $media->setFormats(
                     $this->formatManager->getFormats(
                         $previewImage->getId(),
                         $latestVersion->getName(),

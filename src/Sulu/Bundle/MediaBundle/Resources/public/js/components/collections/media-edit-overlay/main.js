@@ -27,7 +27,6 @@ define([
 
         defaults = {
             instanceName: '',
-            previewInitialized: false,
             locale: Husky.sulu.user.locale
         },
 
@@ -84,6 +83,8 @@ define([
             if (!this.options.mediaIds) {
                 throw new Error('media-ids are not defined');
             }
+
+            this.options.previewInitialized = false;
 
             // for single edit
             this.media = null;
@@ -416,7 +417,7 @@ define([
          * Starts the dropzone for changing the preview image
          */
         startPreviewDropzone: function() {
-            //this.sandbox.on('husky.dropzone.preview-img.files-added', this.newVersionUploadedHandler.bind(this));
+            this.sandbox.on('husky.dropzone.preview-img.files-added', this.newVersionUploadedHandler.bind(this));
 
             this.sandbox.start([
                 {
@@ -424,7 +425,7 @@ define([
                     options: {
                         el: constants.previewDropzoneSelector,
                         maxFilesize: config.get('sulu-media').maxFilesize,
-                        url: '/admin/api/media/' + this.media.id + '?action=new-version',
+                        url: '/admin/api/media/preview/' + this.media.id,
                         method: 'POST',
                         paramName: 'previewImg',
                         showOverlay: false,
@@ -432,7 +433,10 @@ define([
                         titleKey: '',
                         descriptionKey: 'sulu.media.upload-new-preview',
                         instanceName: 'preview-img',
-                        maxFiles: 1
+                        maxFiles: 1,
+                        successCallback: function(file, response) {
+
+                        }.bind(this)
                     }
                 }
             ]);
