@@ -17,6 +17,7 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\Route;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
+use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\TagBundle\Controller\Exception\ConstraintViolationException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
@@ -126,6 +127,8 @@ class TagController extends RestController implements ClassResourceInterface, Se
             }
         );
 
+        $view->setSerializationContext(SerializationContext::create()->setGroups(['partialTag']));
+
         return $this->handleView($view);
     }
 
@@ -158,14 +161,15 @@ class TagController extends RestController implements ClassResourceInterface, Se
                 $listBuilder->getLimit(),
                 $listBuilder->count()
             );
+            $view = $this->view($list, 200);
         } else {
             $list = new CollectionRepresentation(
                 $this->getManager()->findAll(),
                 self::$entityKey
             );
+            $view = $this->view($list, 200);
+            $view->setSerializationContext(SerializationContext::create()->setGroups(['partialTag']));
         }
-
-        $view = $this->view($list, 200);
 
         return $this->handleView($view);
     }
@@ -195,6 +199,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
             $tag = $this->getManager()->save(['name' => $name], $this->getUser()->getId());
 
             $view = $this->view($tag, 200);
+            $view->setSerializationContext(SerializationContext::create()->setGroups(['partialTag']));
         } catch (TagAlreadyExistsException $exc) {
             $cvExistsException = new ConstraintViolationException(
                 'A tag with the name "' . $exc->getName() . '"already exists!',
@@ -232,6 +237,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
             $tag = $this->getManager()->save(['name' => $name], $this->getUser()->getId(), $id);
 
             $view = $this->view($tag, 200);
+            $view->setSerializationContext(SerializationContext::create()->setGroups(['partialTag']));
         } catch (TagAlreadyExistsException $exc) {
             $cvExistsException = new ConstraintViolationException(
                 'A tag with the name "' . $exc->getName() . '"already exists!',
@@ -324,6 +330,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
             }
             $this->getDoctrine()->getManager()->flush();
             $view = $this->view($tags, 200);
+            $view->setSerializationContext(SerializationContext::create()->setGroups(['partialTag']));
         } catch (TagAlreadyExistsException $exc) {
             $cvExistsException = new ConstraintViolationException(
                 'A tag with the name "' . $exc->getName() . '"already exists!',
