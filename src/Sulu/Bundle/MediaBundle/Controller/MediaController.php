@@ -249,6 +249,9 @@ class MediaController extends RestController
             $mediaEntity->setPreviewImage($previewImg->getEntity());
             $mediaManager->saveEntity($mediaEntity);
 
+            // Add preview thumbnails
+            $media = $mediaManager->addFormatsAndUrl($media);
+            
             $view = $this->view($media, 200);
         } catch (MediaNotFoundException $e) {
             $view = $this->view($e->toArray(), 404);
