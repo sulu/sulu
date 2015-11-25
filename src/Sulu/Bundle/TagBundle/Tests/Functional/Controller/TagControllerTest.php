@@ -52,11 +52,13 @@ class TagControllerTest extends SuluTestCase
             '/api/tags/' . $this->tag1->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $this->assertEquals('tag1', $response->name);
+        $this->assertEquals('tag1', $response['name']);
+        $this->assertNotContains('creator', array_keys($response));
+        $this->assertNotContains('changer', array_keys($response));
     }
 
     public function testList()
@@ -123,11 +125,13 @@ class TagControllerTest extends SuluTestCase
             '/api/tags/' . $response->id
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $this->assertEquals('tag3', $response->name);
+        $this->assertEquals('tag3', $response['name']);
+        $this->assertNotContains('creator', array_keys($response));
+        $this->assertNotContains('changer', array_keys($response));
     }
 
     public function testPostExistingName()
@@ -164,11 +168,13 @@ class TagControllerTest extends SuluTestCase
             '/api/tags/' . $this->tag1->getId()
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $this->assertEquals('tag1_new', $response->name);
+        $this->assertEquals('tag1_new', $response['name']);
+        $this->assertNotContains('creator', array_keys($response));
+        $this->assertNotContains('changer', array_keys($response));
     }
 
     public function testPutExistingName()
