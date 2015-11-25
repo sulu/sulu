@@ -214,7 +214,7 @@ define([
         render: function() {
             this.sandbox.dom.html(
                 this.$el,
-                this.renderTemplate('/admin/media/template/collection/files', {title: this.data.title})
+                this.renderTemplate('/admin/media/template/collection/files')
             );
 
             if (SecurityChecker.hasPermission(this.data, 'add')) {
@@ -388,11 +388,8 @@ define([
             this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.enable');
         },
 
-        /**
-         * Remove scroll listener when component is deleted.
-         */
         destroy: function() {
-            this.sandbox.stickyToolbar.disable();
+            this.sandbox.stickyToolbar.disable(this.$el);
         }
     };
 });

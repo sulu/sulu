@@ -14,7 +14,8 @@ define(function() {
     var constants = {
             scrollContainerSelector: '.content-column > .wrapper .page',
             fixedClass: 'fixed',
-            scrollMarginTop: 90
+            scrollMarginTop: 90,
+            stickyToolbarClass: 'sticky-toolbar'
         },
 
         /**
@@ -36,12 +37,16 @@ define(function() {
          */
         app.sandbox.stickyToolbar = {
             enable: function($el) {
+                $el.addClass(constants.stickyToolbarClass);
+
                 app.sandbox.dom.on(constants.scrollContainerSelector, 'scroll.sticky-toolbar', function() {
                     scrollHandler($el, app.sandbox.dom.scrollTop(constants.scrollContainerSelector));
                 });
             },
 
-            disable: function() {
+            disable: function($el) {
+                $el.removeClass(constants.stickyToolbarClass);
+
                 app.sandbox.dom.off(constants.scrollContainerSelector, 'scroll.sticky-toolbar');
             },
 

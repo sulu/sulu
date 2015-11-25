@@ -25,6 +25,8 @@ define([
 
     return {
         header: {
+            title: 'sulu.media.all',
+
             noBack: true,
             toolbar: {
                 template: 'empty',
@@ -127,10 +129,7 @@ define([
         render: function() {
             this.sandbox.dom.html(
                 this.$el,
-                this.renderTemplate(
-                    '/admin/media/template/collection/files',
-                    {title: this.sandbox.translate('sulu.media.all')}
-                )
+                this.renderTemplate('/admin/media/template/collection/files')
             );
             this.startDatagrid();
         },
@@ -186,11 +185,8 @@ define([
             );
         },
 
-        /**
-         * Remove scroll listener when component is deleted.
-         */
         destroy: function() {
-            this.sandbox.stickyToolbar.disable();
+            this.sandbox.stickyToolbar.disable(this.$el);
         }
     };
 });

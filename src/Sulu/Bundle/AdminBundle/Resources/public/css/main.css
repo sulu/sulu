@@ -1022,3 +1022,21 @@ input, select {
 .sulu-dashboard .logo.is-visible {
   opacity: 1;
 }
+
+/* line 2, ../scss/modules/sticky-toolbar.scss */
+.sticky-toolbar.fixed .list-toolbar-container {
+  width: 93%;
+  position: absolute;
+  background: #f1f1f1;
+  z-index: 98;
+  top: 30px;
+  padding-top: 10px;
+}
+/* line 11, ../scss/modules/sticky-toolbar.scss */
+.sticky-toolbar.fixed .datagrid-container {
+  margin-top: 80px;
+}
+/* line 15, ../scss/modules/sticky-toolbar.scss */
+.sticky-toolbar.fixed .list-toolbar {
+  padding-bottom: 10px;
+}
