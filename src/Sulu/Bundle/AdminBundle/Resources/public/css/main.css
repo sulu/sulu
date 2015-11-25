@@ -1025,30 +1025,31 @@ input, select {
 
 /* line 2, ../scss/modules/sticky-toolbar.scss */
 .sticky-toolbar.fixed .list-toolbar-container {
-  width: 93%;
+  width: 100%;
+  padding-right: 100px;
   position: absolute;
   background: #f1f1f1;
   z-index: 98;
   top: 30px;
   padding-top: 10px;
 }
-/* line 10, ../scss/modules/sticky-toolbar.scss */
+/* line 11, ../scss/modules/sticky-toolbar.scss */
 .sticky-toolbar.fixed .list-toolbar-container.fixed {
   padding-right: 100px;
   width: 920px;
 }
 @media only screen and (max-width: 1050px) {
-  /* line 16, ../scss/modules/sticky-toolbar.scss */
+  /* line 17, ../scss/modules/sticky-toolbar.scss */
   .sticky-toolbar.fixed .list-toolbar-container.fixed {
     padding-right: 104px;
     width: 100%;
   }
 }
-/* line 23, ../scss/modules/sticky-toolbar.scss */
+/* line 24, ../scss/modules/sticky-toolbar.scss */
 .sticky-toolbar.fixed .datagrid-container {
   margin-top: 80px;
 }
-/* line 27, ../scss/modules/sticky-toolbar.scss */
+/* line 28, ../scss/modules/sticky-toolbar.scss */
 .sticky-toolbar.fixed .list-toolbar {
   padding-bottom: 10px;
 }
