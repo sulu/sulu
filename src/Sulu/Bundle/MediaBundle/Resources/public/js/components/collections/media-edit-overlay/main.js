@@ -46,6 +46,10 @@ define([
             resetPreviewActionClass: 'media-reset-preview-action'
         },
 
+        resetPreviewUrl = function(id) {
+            return '/admin/api/media/reset-preview/' + id;
+        },
+
         /**
          * raised when the overlay get closed
          * @event sulu.media-edit.closed
@@ -611,10 +615,16 @@ define([
         },
 
         /**
-         * Removes selected preview image and sets video thumbnail
+         * Removes selected preview image and sets default video thumbnail
          */
         resetPreviewImage: function() {
+            var mediaId = this.media.id;
 
+            this.sandbox.util.load(resetPreviewUrl(mediaId))
+                .then(function(newMedia) {
+                    // Converts to array since newVersionUploadedHandler() expects this as input parameter
+                    this.newVersionUploadedHandler.call(this, [newMedia]);
+                }.bind(this));
         },
 
         /**
