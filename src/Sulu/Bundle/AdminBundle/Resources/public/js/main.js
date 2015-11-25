@@ -47,6 +47,7 @@ require.config({
         'aura_extensions/url-manager',
         'aura_extensions/default-extension',
         'aura_extensions/event-extension',
+        'aura_extensions/sticky-toolbar',
         'widget-groups',
 
         '__component__$app@suluadmin',
