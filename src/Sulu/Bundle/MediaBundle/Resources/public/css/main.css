@@ -111,7 +111,7 @@
 }
 
 /* line 111, ../scss/modules/collection.scss */
-.sticky-toolbar.fixed .list-toolbar-container {
+.sticky-toolbar.fixed .list-toolbar-container.collection {
   width: 92.75%;
 }
 

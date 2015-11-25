@@ -54,6 +54,7 @@ define([
                 this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.pagination.change', 'dropdown');
                 this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.change.page', 1);
 
+                this.sandbox.stickyToolbar.reset(this.$el);
             }.bind(this));
 
             this.sandbox.on('sulu.toolbar.change.cards', function() {
@@ -69,6 +70,8 @@ define([
                     'husky.datagrid.' + constants.datagridInstanceName + '.pagination.change', 'infinite-scroll'
                 );
                 this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.change.page', 1);
+
+                this.sandbox.stickyToolbar.reset(this.$el);
             }.bind(this));
         },
 
@@ -109,6 +112,8 @@ define([
         initialize: function() {
             this.render();
             bindCustomEvents.call(this);
+
+            this.sandbox.stickyToolbar.enable(this.$el);
         },
 
         /**
@@ -181,6 +186,10 @@ define([
                 'accounts',
                 '#companies-list-info'
             );
+        },
+
+        destroy: function() {
+            this.sandbox.stickyToolbar.disable(this.$el);
         }
     };
 });

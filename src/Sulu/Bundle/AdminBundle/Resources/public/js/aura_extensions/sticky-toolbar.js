@@ -21,8 +21,8 @@ define(function() {
         /**
          * Handles the scroll event to fix or unfix the given element.
          */
-        scrollHandler = function($el, scrollTop) {
-            if (scrollTop > constants.scrollMarginTop) {
+        scrollHandler = function($el, scrollTop, scrollMarginTop) {
+            if (scrollTop > (scrollMarginTop || constants.scrollMarginTop)) {
                 $el.addClass(constants.fixedClass);
             } else {
                 $el.removeClass(constants.fixedClass);
@@ -36,11 +36,11 @@ define(function() {
          * @type {{enable, disable}}
          */
         app.sandbox.stickyToolbar = {
-            enable: function($el) {
+            enable: function($el, scrollMarginTop) {
                 $el.addClass(constants.stickyToolbarClass);
 
                 app.sandbox.dom.on(constants.scrollContainerSelector, 'scroll.sticky-toolbar', function() {
-                    scrollHandler($el, app.sandbox.dom.scrollTop(constants.scrollContainerSelector));
+                    scrollHandler($el, app.sandbox.dom.scrollTop(constants.scrollContainerSelector), scrollMarginTop);
                 });
             },
 

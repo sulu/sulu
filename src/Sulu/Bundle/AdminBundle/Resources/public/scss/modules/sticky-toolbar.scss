@@ -6,6 +6,18 @@
         z-index: 98;
         top: 30px;
         padding-top: 10px;
+
+        &.fixed {
+            padding-right: 100px;
+            width: $contentFixedWidth;
+        }
+
+        @media only screen and (max-width: 50px + $contentFixedSmallWidth + $sidebarMaxCollapseWidth) {
+            &.fixed {
+                padding-right: 104px;
+                width: 100%;
+            }
+        }
     }
 
     .datagrid-container {
