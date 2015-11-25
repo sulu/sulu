@@ -251,7 +251,7 @@ class MediaController extends RestController
 
             // Add preview thumbnails
             $media = $mediaManager->addFormatsAndUrl($media);
-            
+
             $view = $this->view($media, 200);
         } catch (MediaNotFoundException $e) {
             $view = $this->view($e->toArray(), 404);
@@ -261,6 +261,48 @@ class MediaController extends RestController
 
         return $this->handleView($view);
     }
+
+    /**
+     * Creates a new preview image and saves it to the provided media.
+     *
+     * @Get("media/reset-preview/{id}")
+     *
+     * @param $id
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException
+     */
+    public function resetPreviewAction($id, Request $request)
+    {
+        try {
+            $mediaManager = $this->getMediaManager();
+
+            $locale = $this->getLocale($request);
+
+            $media = $mediaManager->getById($id, $locale);
+            $mediaEntity = $media->getEntity();
+            $oldPreviewImageId = $mediaEntity->getPreviewImage()->getId();
+
+            $mediaEntity->setPreviewImage(null);
+
+            $mediaManager->saveEntity($mediaEntity);
+            $mediaManager->delete($oldPreviewImageId);
+
+            // Reload thumbnails
+            $media = $mediaManager->addFormatsAndUrl($media);
+
+            $view = $this->view($media, 200);
+        } catch (MediaNotFoundException $e) {
+            $view = $this->view($e->toArray(), 404);
+        } catch (MediaException $e) {
+            $view = $this->view($e->toArray(), 400);
+        }
+
+        return $this->handleView($view);
+    }
+
 
     /**
      * Trigger an action for given media. Action is specified over get-action parameter.
