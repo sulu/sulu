@@ -99,6 +99,8 @@ define(function() {
         initialize: function() {
             this.render();
             bindCustomEvents.call(this);
+
+            this.sandbox.stickyToolbar.enable(this.$el);
         },
 
         render: function() {
@@ -128,6 +130,10 @@ define(function() {
                 'tags',
                 '#tags-list-info'
             );
+        },
+
+        destroy: function() {
+            this.sandbox.stickyToolbar.disable(this.$el);
         }
     };
 });

@@ -16,8 +16,8 @@ define([
     'use strict';
 
     var template = [
-            '<div id="list-toolbar-container"></div>',
-            '<div id="snippet-list"></div>',
+            '<div id="list-toolbar-container" class="list-toolbar-container"></div>',
+            '<div id="snippet-list" class="datagrid-container"></div>',
             '<div id="dialog"></div>'
         ].join(''),
 
@@ -63,6 +63,8 @@ define([
         this.bindCustomEvents();
 
         this.render();
+
+        this.sandbox.stickyToolbar.enable(this.$el);
     };
 
     SnippetList.prototype.bindCustomEvents = function() {
@@ -144,6 +146,10 @@ define([
                 }
             }
         );
+    };
+
+    SnippetList.prototype.destroy = function() {
+        this.sandbox.stickyToolbar.disable(this.$el);
     };
 
     return new SnippetList();

@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * BUGFIX      #1824 [CategoryBundle]  Fixed category-list scroll behaviour
     * BUGFIX      #1823 [TagBundle]       Added tag serialization groups to tag controller
+    * ENHANCEMENT #1806 [All]             Added sticky toolbar to content lists
     * BUGFIX      #1820 [ContentBundle]   Fixed migrate url script
     * BUGFIX      #1815 [SecurityBundle]  Fixed missing locale check for security
     * BUGFIX      #1812 [ContactBundle]   Fixed translation bug in position dropdown
