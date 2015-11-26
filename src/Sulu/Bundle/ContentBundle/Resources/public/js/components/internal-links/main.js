@@ -97,7 +97,7 @@ define([], function() {
                         name: 'column-navigation@husky',
                         options: {
                             el: getId.call(this, 'columnNavigation'),
-                            url: getUrl.call(this),
+                            url: getColumnNavigationUrl.call(this),
                             linkedName: '_linked',
                             typeName: '_type',
                             hasSubName: 'hasChildren',
@@ -122,13 +122,13 @@ define([], function() {
          *
          * @returns {String}
          */
-        getUrl = function() {
+        getColumnNavigationUrl = function() {
             var url = '/admin/api/contents',
                 urlParts = [
                     'webspace=' + this.options.webspace,
                     'locale=' + this.options.locale,
                     'mapping=title,order',
-                    'webspace-nodes=true'
+                    'webspace-nodes=all'
                 ];
 
             return url + '?' + urlParts.join('&');

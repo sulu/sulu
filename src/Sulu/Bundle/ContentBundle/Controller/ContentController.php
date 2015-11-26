@@ -38,6 +38,8 @@ class ContentController extends RestController implements ClassResourceInterface
 {
     private static $relationName = 'content';
 
+    const WEBSPACE_NODE_SINGLE = 'single';
+    const WEBSPACE_NODES_ALL = 'all';
     use RequestParametersTrait;
 
     /**
@@ -102,14 +104,18 @@ class ContentController extends RestController implements ClassResourceInterface
         $properties = array_filter(explode(',', $request->get('mapping', '')));
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
         $excludeShadows = $this->getBooleanRequestParameter($request, 'exclude-shadows', false, false);
-        $webspaceNodes = $this->getBooleanRequestParameter($request, 'webspace-nodes', false, false);
+        $webspaceNodes = $this->getRequestParameter($request, 'webspace-nodes');
         $locale = $this->getRequestParameter($request, 'locale', true);
         $webspaceKey = $this->getRequestParameter($request, 'webspace', false);
 
         if (!$webspaceKey && !$webspaceNodes) {
             throw new MissingParameterException(
-                get_class($this), sprintf('"%s" or "%s"', 'webspace', 'webspace-nodes')
+                get_class($this), sprintf('"%s" or "%s" or "%s"', 'webspace', 'webspace-nodes', 'webspace-nodes')
             );
+        }
+
+        if (!in_array($webspaceNodes, [self::WEBSPACE_NODE_SINGLE, self::WEBSPACE_NODES_ALL, null])) {
+            throw new ParameterDataTypeException(get_class($this), 'webspace-nodes');
         }
 
         $user = $this->tokenStorage->getToken()->getUser();
@@ -129,8 +135,10 @@ class ContentController extends RestController implements ClassResourceInterface
             }
         }
 
-        if ($webspaceNodes) {
+        if ($webspaceNodes === self::WEBSPACE_NODES_ALL) {
             $contents = $this->getWebspaceNodes($mapping, $contents, $locale, $user, $webspaceKey);
+        } elseif ($webspaceNodes === self::WEBSPACE_NODE_SINGLE) {
+            $contents = $this->getWebspaceNode($mapping, $contents, $webspaceKey, $locale, $user);
         }
 
         $list = new CollectionRepresentation($contents, self::$relationName);
@@ -155,7 +163,7 @@ class ContentController extends RestController implements ClassResourceInterface
         $properties = array_filter(explode(',', $request->get('mapping', '')));
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
         $excludeShadows = $this->getBooleanRequestParameter($request, 'exclude-shadows', false, false);
-        $webspaceNodes = $this->getBooleanRequestParameter($request, 'webspace-nodes', false, false);
+        $webspaceNodes = $this->getRequestParameter($request, 'webspace-nodes');
         $tree = $this->getBooleanRequestParameter($request, 'tree', false, false);
         $locale = $this->getRequestParameter($request, 'locale', true);
         $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
@@ -173,7 +181,6 @@ class ContentController extends RestController implements ClassResourceInterface
         }
 
         $data = $this->contentRepository->find($uuid, $locale, $webspaceKey, $mapping, $user);
-
         $view = $this->view($data);
 
         return $this->viewHandler->handle($view);
@@ -190,6 +197,8 @@ class ContentController extends RestController implements ClassResourceInterface
      * @param UserInterface $user
      *
      * @return Response
+     *
+     * @throws ParameterDataTypeException
      */
     private function getTreeAction(
         $uuid,
@@ -199,6 +208,10 @@ class ContentController extends RestController implements ClassResourceInterface
         MappingInterface $mapping,
         UserInterface $user
     ) {
+        if (!in_array($webspaceNodes, [self::WEBSPACE_NODE_SINGLE, self::WEBSPACE_NODES_ALL], null)) {
+            throw new ParameterDataTypeException(get_class($this), 'webspace-nodes');
+        }
+
         try {
             $contents = $this->contentRepository->findParentsWithSiblingsByUuid(
                 $uuid,
@@ -223,8 +236,10 @@ class ContentController extends RestController implements ClassResourceInterface
             );
         }
 
-        if ($webspaceNodes) {
+        if ($webspaceNodes === self::WEBSPACE_NODES_ALL) {
             $contents = $this->getWebspaceNodes($mapping, $contents, $locale, $user, $webspaceKey);
+        } elseif ($webspaceNodes === self::WEBSPACE_NODE_SINGLE) {
+            $contents = $this->getWebspaceNode($mapping, $contents, $webspaceKey, $locale, $user);
         }
 
         $view = $this->view(new CollectionRepresentation($contents, self::$relationName));
@@ -251,18 +266,75 @@ class ContentController extends RestController implements ClassResourceInterface
         UserInterface $user,
         $webspaceKey = null
     ) {
-        $webspacePaths = [];
-        $webspaceData = [];
+        $paths = [];
+        $webspaces = [];
         /** @var Webspace $webspace */
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            $webspacePaths[] = $this->sessionManager->getContentPath($webspace->getKey());
-            $webspaceData[$webspace->getKey()] = $webspace;
+            $paths[] = $this->sessionManager->getContentPath($webspace->getKey());
+            $webspaces[$webspace->getKey()] = $webspace;
         }
 
-        $webspaceContents = $this->contentRepository->findByPaths($webspacePaths, $locale, $mapping, $user);
+        return $this->getWebspaceNodesByPaths($paths, $webspaceKey, $locale, $mapping, $webspaces, $contents, $user);
+    }
+
+    /**
+     * Returns content for all webspaces.
+     * If a webspaceKey is given the $contents array will be set as children of this webspace.
+     *
+     * @param MappingInterface $mapping
+     * @param array $contents
+     * @param string $webspaceKey
+     * @param string $locale
+     * @param UserInterface $user
+     *
+     * @return Content[]
+     */
+    private function getWebspaceNode(
+        MappingInterface $mapping,
+        array $contents,
+        $webspaceKey,
+        $locale,
+        UserInterface $user
+    ) {
+        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
+        $paths = [$this->sessionManager->getContentPath($webspace->getKey())];
+        $webspaces = [$webspace->getKey() => $webspace];
+
+        return $this->getWebspaceNodesByPaths(
+            $paths,
+            $webspaceKey,
+            $locale,
+            $mapping,
+            $webspaces,
+            $contents,
+            $user
+        );
+    }
+
+    /**
+     * @param string[] $paths
+     * @param string $webspaceKey
+     * @param string $locale
+     * @param MappingInterface $mapping
+     * @param Webspace[] $webspaces
+     * @param Content[] $contents
+     * @param UserInterface $user
+     *
+     * @return Content[]
+     */
+    private function getWebspaceNodesByPaths(
+        array $paths,
+        $webspaceKey,
+        $locale,
+        MappingInterface $mapping,
+        array $webspaces,
+        array $contents,
+        UserInterface $user
+    ) {
+        $webspaceContents = $this->contentRepository->findByPaths($paths, $locale, $mapping, $user);
 
         foreach ($webspaceContents as $webspaceContent) {
-            $webspaceContent->setDataProperty('title', $webspaceData[$webspaceContent->getWebspaceKey()]->getName());
+            $webspaceContent->setDataProperty('title', $webspaces[$webspaceContent->getWebspaceKey()]->getName());
 
             if ($webspaceContent->getWebspaceKey() === $webspaceKey) {
                 $webspaceContent->setChildren($contents);
