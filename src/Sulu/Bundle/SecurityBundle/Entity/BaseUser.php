@@ -18,6 +18,7 @@ use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Serializable;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
+use Sulu\Component\Contact\Model\ContactInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
@@ -111,6 +112,11 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
      * @var int
      */
     private $passwordResetTokenEmailsSent;
+
+    /**
+     * @var \DateTime
+     */
+    private $deletedAt;
 
     /**
      * Constructor.
@@ -520,5 +526,29 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     public function getPasswordResetTokenEmailsSent()
     {
         return $this->passwordResetTokenEmailsSent;
+    }
+
+    /**
+     * Get deleted at.
+     *
+     * @return \DateTime
+     */
+    public function getDeletedAt()
+    {
+        return $this->deletedAt;
+    }
+
+    /**
+     * Set deleted at.
+     *
+     * @param \DateTime $deletedAt
+     *
+     * @return ContactInterface
+     */
+    public function setDeletedAt(\DateTime $deletedAt = null)
+    {
+        $this->deletedAt = $deletedAt;
+
+        return $this;
     }
 }
