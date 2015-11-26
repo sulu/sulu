@@ -81,13 +81,6 @@ interface MediaManagerInterface
     public function save($uploadedFile, $data, $userId);
 
     /**
-     * Persists entity in database.
-     *
-     * @param \Sulu\Bundle\MediaBundle\Entity\Media $media The media entity that should be persisted
-     */
-    public function saveEntity(\Sulu\Bundle\MediaBundle\Entity\Media $media);
-
-    /**
      * Deletes a media with a given id.
      *
      * @param int $id the id of the category to delete

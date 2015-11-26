@@ -169,6 +169,23 @@ class File implements AuditableInterface
     }
 
     /**
+     * Get latest file version.
+     *
+     * @return FileVersion[]
+     */
+    public function getLatestFileVersion()
+    {
+        /** @var FileVersion $fileVersion */
+        foreach ($this->fileVersions as $fileVersion) {
+            if ($fileVersion->getVersion() === $this->getVersion()) {
+                return $fileVersion;
+            }
+        }
+
+        return;
+    }
+
+    /**
      * Set media.
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\Media $media
