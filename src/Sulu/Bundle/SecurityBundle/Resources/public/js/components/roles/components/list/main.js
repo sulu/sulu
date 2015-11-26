@@ -36,6 +36,9 @@ define(function() {
         };
 
     return {
+
+        stickyToolbar: true,
+
         name: 'Sulu Security Role List',
 
         layout: {
@@ -65,8 +68,6 @@ define(function() {
         initialize: function() {
             this.initializeDataGrid();
             bindCustomEvents.call(this);
-
-            this.sandbox.stickyToolbar.enable(this.$el);
         },
 
         initializeDataGrid: function() {
@@ -100,10 +101,6 @@ define(function() {
                 'roles',
                 '#roles-list-info'
             );
-        },
-
-        destroy: function() {
-            this.sandbox.stickyToolbar.disable(this.$el);
         }
     };
 });

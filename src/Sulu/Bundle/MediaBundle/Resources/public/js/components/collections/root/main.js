@@ -24,6 +24,9 @@ define([
         defaults = {};
 
     return {
+
+        stickyToolbar: true,
+
         header: {
             title: 'sulu.media.all',
 
@@ -60,8 +63,6 @@ define([
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.sandbox.emit('husky.navigation.select-id', 'collections-edit');
             this.updateDataNavigationAddButton();
-
-            this.sandbox.stickyToolbar.enable(this.$el);
 
             this.bindCustomEvents();
             this.render();
@@ -183,10 +184,6 @@ define([
                     }
                 }
             );
-        },
-
-        destroy: function() {
-            this.sandbox.stickyToolbar.disable(this.$el);
         }
     };
 });

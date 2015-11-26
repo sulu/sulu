@@ -255,6 +255,8 @@ define([
 
     return {
 
+        stickyToolbar: 140,
+
         layout: function() {
             return {
                 content: {
@@ -271,8 +273,6 @@ define([
             this.companyPosition = null;
             bindCustomEvents.call(this);
             this.render();
-
-            this.sandbox.stickyToolbar.enable(this.$el, 140);
         },
 
         render: function() {
@@ -306,10 +306,6 @@ define([
                     }
                 }
             );
-        },
-
-        destroy: function() {
-            this.sandbox.stickyToolbar.disable(this.$el);
         }
     };
 });

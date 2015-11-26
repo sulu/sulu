@@ -16,6 +16,8 @@ define([
 
     return {
 
+        stickyToolbar: 140,
+
         layout: function() {
             return {
                 content: {
@@ -33,8 +35,6 @@ define([
             this.currentSelection = this.sandbox.util.arrayGetColumn(this.data.medias, 'id');
             this.bindCustomEvents();
             this.render();
-
-            this.sandbox.stickyToolbar.enable(this.$el, 140);
         },
 
         render: function() {
@@ -178,10 +178,6 @@ define([
                     preselectedIds: this.currentSelection
                 }
             }]);
-        },
-
-        destroy: function() {
-            this.sandbox.stickyToolbar.disable(this.$el);
         }
     };
 });

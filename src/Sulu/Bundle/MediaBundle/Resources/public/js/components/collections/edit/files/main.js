@@ -32,6 +32,8 @@ define([
 
     return {
 
+        stickyToolbar: true,
+
         layout: {
             navigation: {
                 collapsed: true
@@ -57,8 +59,6 @@ define([
             this.bindOverlayEvents();
             this.bindManagerEvents();
             this.bindListToolbarEvents();
-
-            this.sandbox.stickyToolbar.enable(this.$el);
 
             this.sandbox.emit('sulu.medias.collection.get-data', function(data) {
                 this.data = data;
@@ -386,10 +386,6 @@ define([
          */
         enableDropzone: function() {
             this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.enable');
-        },
-
-        destroy: function() {
-            this.sandbox.stickyToolbar.disable(this.$el);
         }
     };
 });

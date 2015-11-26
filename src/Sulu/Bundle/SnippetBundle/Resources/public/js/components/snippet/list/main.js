@@ -32,6 +32,7 @@ define([
     SnippetList.prototype.constructor = BaseSnippet;
 
     SnippetList.prototype.view = true;
+    SnippetList.prototype.stickyToolbar = true;
     SnippetList.prototype.layout = {
         content: {
             width: 'max'
@@ -63,8 +64,6 @@ define([
         this.bindCustomEvents();
 
         this.render();
-
-        this.sandbox.stickyToolbar.enable(this.$el);
     };
 
     SnippetList.prototype.bindCustomEvents = function() {
@@ -146,10 +145,6 @@ define([
                 }
             }
         );
-    };
-
-    SnippetList.prototype.destroy = function() {
-        this.sandbox.stickyToolbar.disable(this.$el);
     };
 
     return new SnippetList();

@@ -19,6 +19,8 @@ define(function () {
 
     return {
 
+        stickyToolbar: true,
+
         layout: {
             content: {
                 width: 'max'
@@ -52,8 +54,6 @@ define(function () {
             this.sandbox.sulu.triggerDeleteSuccessLabel('labels.success.category-delete-desc');
             this.bindCustomEvents();
             this.render();
-
-            this.sandbox.stickyToolbar.enable(this.$el);
         },
 
         bindCustomEvents: function() {
@@ -182,10 +182,6 @@ define(function () {
                     this.sandbox.emit('sulu.labels.success.show', 'labels.success.category-delete-desc', 'labels.success');
                 }.bind(this));
             }.bind(this));
-        },
-
-        destroy: function() {
-            this.sandbox.stickyToolbar.disable(this.$el);
         }
     };
 });

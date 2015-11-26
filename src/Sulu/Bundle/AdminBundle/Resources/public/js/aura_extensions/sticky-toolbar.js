@@ -54,5 +54,30 @@ define(function() {
                 $el.removeClass(constants.fixedClass);
             }
         };
+
+        /**
+         * Gets executed every time BEFORE a component gets initialized.
+         */
+        app.components.after('initialize', function() {
+            if (!this.stickyToolbar) {
+                return;
+            }
+
+            this.sandbox.stickyToolbar.enable(
+                this.$el,
+                (typeof this.stickyToolbar === 'number' ? this.stickyToolbar : null)
+            );
+        });
+
+        /**
+         * Gets executed every time BEFORE a component gets destroyed.
+         */
+        app.components.before('destroy', function() {
+            if (!this.stickyToolbar) {
+                return;
+            }
+
+            this.sandbox.stickyToolbar.disable(this.$el);
+        });
     };
 });

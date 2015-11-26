@@ -87,6 +87,8 @@ define([
 
     return {
 
+        stickyToolbar: true,
+
         layout: {
             content: {
                 width: 'max'
@@ -112,8 +114,6 @@ define([
         initialize: function() {
             this.render();
             bindCustomEvents.call(this);
-
-            this.sandbox.stickyToolbar.enable(this.$el);
         },
 
         /**
@@ -186,10 +186,6 @@ define([
                 'accounts',
                 '#companies-list-info'
             );
-        },
-
-        destroy: function() {
-            this.sandbox.stickyToolbar.disable(this.$el);
         }
     };
 });
