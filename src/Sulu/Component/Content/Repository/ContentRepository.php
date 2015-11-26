@@ -189,6 +189,9 @@ class ContentRepository implements ContentRepositoryInterface
         return $this->generateTreeByPath($result);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function findByPaths(
         array $paths,
         $locale,
@@ -200,11 +203,7 @@ class ContentRepository implements ContentRepositoryInterface
 
         foreach ($paths as $path) {
             $queryBuilder->orWhere(
-                $this->qomFactory->comparison(
-                    new PropertyValue('node', 'jcr:path'),
-                    '=',
-                    $this->qomFactory->literal($path)
-                )
+                $this->qomFactory->sameNode('node', $path)
             );
         }
         $this->appendMapping($queryBuilder, $mapping, $locales);
@@ -407,12 +406,12 @@ class ContentRepository implements ContentRepositoryInterface
      */
     private function appendSingleMapping(QueryBuilder $queryBuilder, $propertyName, $locales)
     {
-        foreach ($locales as $item) {
-            $alias = sprintf('%s%s', $item, str_replace('-', '_', ucfirst($propertyName)));
+        foreach ($locales as $locale) {
+            $alias = sprintf('%s%s', $locale, str_replace('-', '_', ucfirst($propertyName)));
 
             $queryBuilder->addSelect(
                 'node',
-                $this->propertyEncoder->localizedContentName($propertyName, $item),
+                $this->propertyEncoder->localizedContentName($propertyName, $locale),
                 $alias
             );
         }

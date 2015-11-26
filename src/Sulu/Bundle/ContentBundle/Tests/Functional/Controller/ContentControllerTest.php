@@ -13,6 +13,7 @@ namespace Functional\Controller;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\RedirectType;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
@@ -366,21 +367,250 @@ class ContentControllerTest extends SuluTestCase
         $this->assertEquals('en', $result['_type']['value']);
     }
 
+    public function testCGetActionSingleWebspaceNodes()
+    {
+        $this->initPhpcr();
+        $this->createWebspaceRoot('test_io');
+
+        $page1 = $this->createPage('test-1', 'de');
+        $page2 = $this->createPage('test-2', 'de');
+        $this->createPage('test-1-1', 'de', [], $page1);
+        $this->createPage('my-test', 'de', [], null, [], '/cmf/test_io/contents/my-test');
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/contents',
+            ['webspace' => 'sulu_io', 'locale' => 'de', 'webspace-nodes' => 'single', 'mapping' => 'title']
+        );
+        $result = json_decode($client->getResponse()->getContent(), true);
+
+        $layer = $result['_embedded']['content'];
+        $this->assertCount(1, $layer);
+        $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $layer[0]['id']);
+        $this->assertEquals('Sulu CMF', $layer[0]['title']);
+        $this->assertTrue($layer[0]['hasChildren']);
+        $this->assertCount(2, $layer[0]['_embedded']['content']);
+
+        $layer = $layer[0]['_embedded']['content'];
+        $this->assertCount(2, $layer);
+        $this->assertEquals($page1->getUuid(), $layer[0]['id']);
+        $this->assertEquals('test-1', $layer[0]['title']);
+        $this->assertTrue($layer[0]['hasChildren']);
+        $this->assertEmpty($layer[0]['_embedded']['content']);
+        $this->assertEquals($page2->getUuid(), $layer[1]['id']);
+        $this->assertEquals('test-2', $layer[1]['title']);
+        $this->assertFalse($layer[1]['hasChildren']);
+        $this->assertEmpty($layer[1]['_embedded']['content']);
+    }
+
+    public function testCGetActionAllWebspaceNodes()
+    {
+        $this->initPhpcr();
+        $this->createWebspaceRoot('test_io');
+
+        $page1 = $this->createPage('test-1', 'de');
+        $page2 = $this->createPage('test-2', 'de');
+        $this->createPage('test-1-1', 'de', [], $page1);
+        $this->createPage('my-test', 'de', [], null, [], '/cmf/test_io/contents/my-test');
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/contents',
+            ['webspace' => 'sulu_io', 'locale' => 'de', 'webspace-nodes' => 'all', 'mapping' => 'title']
+        );
+        $result = json_decode($client->getResponse()->getContent(), true);
+
+        $layer = $result['_embedded']['content'];
+        $this->assertCount(2, $layer);
+        $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $layer[0]['id']);
+        $this->assertEquals('Sulu CMF', $layer[0]['title']);
+        $this->assertTrue($layer[0]['hasChildren']);
+        $this->assertCount(2, $layer[0]['_embedded']['content']);
+        $this->assertEquals($this->sessionManager->getContentNode('test_io')->getIdentifier(), $layer[1]['id']);
+        $this->assertEquals('Test CMF', $layer[1]['title']);
+        $this->assertTrue($layer[1]['hasChildren']);
+        $this->assertCount(0, $layer[1]['_embedded']['content']);
+
+        $layer = $layer[0]['_embedded']['content'];
+        $this->assertCount(2, $layer);
+        $this->assertEquals($page1->getUuid(), $layer[0]['id']);
+        $this->assertEquals('test-1', $layer[0]['title']);
+        $this->assertTrue($layer[0]['hasChildren']);
+        $this->assertEmpty($layer[0]['_embedded']['content']);
+        $this->assertEquals($page2->getUuid(), $layer[1]['id']);
+        $this->assertEquals('test-2', $layer[1]['title']);
+        $this->assertFalse($layer[1]['hasChildren']);
+        $this->assertEmpty($layer[1]['_embedded']['content']);
+    }
+
+    public function testGetTreeActionSingleWebspaceNodes()
+    {
+        $this->initPhpcr();
+        $this->createWebspaceRoot('test_io');
+
+        $page1 = $this->createPage('test-1', 'de');
+        $page2 = $this->createPage('test-2', 'de');
+        $page11 = $this->createPage('test-1-1', 'de', [], $page1);
+        $this->createPage('test-1-1-1', 'de', [], $page11);
+        $this->createPage('my-test', 'de', [], null, [], '/cmf/test_io/contents/my-test');
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/contents/' . $page1->getUuid(),
+            [
+                'tree' => 'true',
+                'webspace' => 'sulu_io',
+                'locale' => 'de',
+                'webspace-nodes' => 'single',
+                'mapping' => 'title',
+            ]
+        );
+        $result = json_decode($client->getResponse()->getContent(), true);
+
+        $layer = $result['_embedded']['content'];
+        $this->assertCount(1, $layer);
+        $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $layer[0]['id']);
+        $this->assertEquals('Sulu CMF', $layer[0]['title']);
+        $this->assertTrue($layer[0]['hasChildren']);
+        $this->assertCount(2, $layer[0]['_embedded']['content']);
+
+        $layer = $layer[0]['_embedded']['content'];
+        $this->assertCount(2, $layer);
+        $this->assertEquals($page1->getUuid(), $layer[0]['id']);
+        $this->assertEquals('test-1', $layer[0]['title']);
+        $this->assertTrue($layer[0]['hasChildren']);
+        $this->assertCount(1, $layer[0]['_embedded']['content']);
+        $this->assertEquals($page2->getUuid(), $layer[1]['id']);
+        $this->assertEquals('test-2', $layer[1]['title']);
+        $this->assertFalse($layer[1]['hasChildren']);
+        $this->assertEmpty($layer[1]['_embedded']['content']);
+
+        $layer = $layer[0]['_embedded']['content'];
+        $this->assertEquals($page11->getUuid(), $layer[0]['id']);
+        $this->assertEquals('test-1-1', $layer[0]['title']);
+        $this->assertTrue($layer[0]['hasChildren']);
+        $this->assertEmpty($layer[0]['_embedded']['content']);
+    }
+
+    public function testGetTreeActionAllWebspaceNodes()
+    {
+        $this->initPhpcr();
+        $this->createWebspaceRoot('test_io');
+
+        $page1 = $this->createPage('test-1', 'de');
+        $page2 = $this->createPage('test-2', 'de');
+        $page11 = $this->createPage('test-1-1', 'de', [], $page1);
+        $this->createPage('test-1-1-1', 'de', [], $page11);
+        $this->createPage('my-test', 'de', [], null, [], '/cmf/test_io/contents/my-test');
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/contents/' . $page1->getUuid(),
+            [
+                'tree' => 'true',
+                'webspace' => 'sulu_io',
+                'locale' => 'de',
+                'webspace-nodes' => 'all',
+                'mapping' => 'title',
+            ]
+        );
+        $result = json_decode($client->getResponse()->getContent(), true);
+
+        $layer = $result['_embedded']['content'];
+        $this->assertCount(2, $layer);
+        $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $layer[0]['id']);
+        $this->assertEquals('Sulu CMF', $layer[0]['title']);
+        $this->assertTrue($layer[0]['hasChildren']);
+        $this->assertCount(2, $layer[0]['_embedded']['content']);
+        $this->assertEquals($this->sessionManager->getContentNode('test_io')->getIdentifier(), $layer[1]['id']);
+        $this->assertEquals('Test CMF', $layer[1]['title']);
+        $this->assertTrue($layer[1]['hasChildren']);
+        $this->assertCount(0, $layer[1]['_embedded']['content']);
+
+        $layer = $layer[0]['_embedded']['content'];
+        $this->assertCount(2, $layer);
+        $this->assertEquals($page1->getUuid(), $layer[0]['id']);
+        $this->assertEquals('test-1', $layer[0]['title']);
+        $this->assertTrue($layer[0]['hasChildren']);
+        $this->assertCount(1, $layer[0]['_embedded']['content']);
+        $this->assertEquals($page2->getUuid(), $layer[1]['id']);
+        $this->assertEquals('test-2', $layer[1]['title']);
+        $this->assertFalse($layer[1]['hasChildren']);
+        $this->assertEmpty($layer[1]['_embedded']['content']);
+
+        $layer = $layer[0]['_embedded']['content'];
+        $this->assertEquals($page11->getUuid(), $layer[0]['id']);
+        $this->assertEquals('test-1-1', $layer[0]['title']);
+        $this->assertTrue($layer[0]['hasChildren']);
+        $this->assertEmpty($layer[0]['_embedded']['content']);
+    }
+
+    /**
+     * Create webspace root.
+     *
+     * @param string $key
+     */
+    private function createWebspaceRoot($key)
+    {
+        $session = $this->sessionManager->getSession();
+        $cmf = $session->getNode('/cmf');
+
+        // we should use the doctrinephpcrbundle repository initializer to do this.
+        $webspace = $cmf->addNode($key);
+        $webspace->addMixin('mix:referenceable');
+
+        $content = $webspace->addNode('contents');
+        $content->setProperty('i18n:en-template', 'default');
+        $content->setProperty('i18n:en-creator', 1);
+        $content->setProperty('i18n:en-created', new \DateTime());
+        $content->setProperty('i18n:en-changer', 1);
+        $content->setProperty('i18n:en-changed', new \DateTime());
+        $content->setProperty('i18n:en-title', 'Homepage');
+        $content->setProperty('i18n:en-state', WorkflowStage::PUBLISHED);
+        $content->setProperty('i18n:en-published', new \DateTime());
+        $content->setProperty('i18n:en-url', '/');
+        $content->addMixin('sulu:home');
+
+        $webspace->addNode('temp');
+
+        $session->save();
+        $nodes = $webspace->addNode('routes');
+        foreach (['de', 'de_at', 'en', 'en_us', 'fr'] as $locale) {
+            $localeNode = $nodes->addNode($locale);
+            $localeNode->setProperty('sulu:content', $content);
+            $localeNode->setProperty('sulu:history', false);
+            $localeNode->addMixin('sulu:path');
+        }
+
+        $session->save();
+    }
+
     /**
      * @param string $title
      * @param string $locale
      * @param array $data
      * @param PageDocument $parent
      * @param array $permissions
+     * @param string $path
      *
      * @return PageDocument
      */
-    private function createPage($title, $locale, $data = [], $parent = null, array $permissions = [])
+    private function createPage($title, $locale, $data = [], $parent = null, array $permissions = [], $path = null)
     {
         /** @var PageDocument $document */
         $document = $this->documentManager->create('page');
 
-        $path = $this->sessionManager->getContentPath('sulu_io') . '/' . $title;
+        if (!$path) {
+            $path = $this->sessionManager->getContentPath('sulu_io') . '/' . $title;
+        }
         if ($parent !== null) {
             $path = $parent->getPath();
             $document->setParent($parent);

@@ -21,6 +21,7 @@ use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Util\SuluNodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 class ContentRepositoryTest extends SuluTestCase
@@ -60,6 +61,11 @@ class ContentRepositoryTest extends SuluTestCase
      */
     private $localizationFinder;
 
+    /**
+     * @var SuluNodeHelper
+     */
+    private $nodeHelper;
+
     public function setUp()
     {
         $this->session = $this->getContainer()->get('doctrine_phpcr.default_session');
@@ -68,12 +74,14 @@ class ContentRepositoryTest extends SuluTestCase
         $this->propertyEncoder = $this->getContainer()->get('sulu_document_manager.property_encoder');
         $this->webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
         $this->localizationFinder = $this->getContainer()->get('sulu.content.localization_finder');
+        $this->nodeHelper = $this->getContainer()->get('sulu.util.node_helper');
 
         $this->contentRepository = new ContentRepository(
             $this->sessionManager,
             $this->propertyEncoder,
             $this->webspaceManager,
-            $this->localizationFinder
+            $this->localizationFinder,
+            $this->nodeHelper
         );
     }
 
@@ -669,6 +677,33 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals($page12->getUuid(), $layer[1]->getId());
         $this->assertTrue($layer[1]->hasChildren());
         $this->assertCount(0, $layer[1]->getChildren());
+    }
+
+    public function testFindByPaths()
+    {
+        $this->initPhpcr();
+
+        $page1 = $this->createPage('test-1', 'de');
+        $page11 = $this->createPage('test-1/test-1', 'de', [], $page1);
+        $page2 = $this->createPage('test-2', 'de');
+        $page3 = $this->createPage('test-3', 'de');
+
+        $result = $this->contentRepository->findByPaths(
+            ['/cmf/sulu_io/contents', '/cmf/sulu_io/contents/test-1', '/cmf/sulu_io/contents/test-2'],
+            'de',
+            MappingBuilder::create()->addProperties(['title'])->getMapping()
+        );
+
+        $this->assertCount(3, $result);
+        $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $result[0]->getId());
+        $this->assertTrue($result[0]->hasChildren());
+        $this->assertEmpty($result[0]->getChildren());
+        $this->assertEquals($page1->getUuid(), $result[1]->getId());
+        $this->assertTrue($result[1]->hasChildren());
+        $this->assertEmpty($result[1]->getChildren());
+        $this->assertEquals($page2->getUuid(), $result[2]->getId());
+        $this->assertFalse($result[2]->hasChildren());
+        $this->assertEmpty($result[2]->getChildren());
     }
 
     /**

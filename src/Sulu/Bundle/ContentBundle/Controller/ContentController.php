@@ -36,10 +36,11 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class ContentController extends RestController implements ClassResourceInterface
 {
-    private static $relationName = 'content';
-
     const WEBSPACE_NODE_SINGLE = 'single';
     const WEBSPACE_NODES_ALL = 'all';
+
+    private static $relationName = 'content';
+
     use RequestParametersTrait;
 
     /**
@@ -208,7 +209,7 @@ class ContentController extends RestController implements ClassResourceInterface
         MappingInterface $mapping,
         UserInterface $user
     ) {
-        if (!in_array($webspaceNodes, [self::WEBSPACE_NODE_SINGLE, self::WEBSPACE_NODES_ALL], null)) {
+        if (!in_array($webspaceNodes, [self::WEBSPACE_NODE_SINGLE, self::WEBSPACE_NODES_ALL, null])) {
             throw new ParameterDataTypeException(get_class($this), 'webspace-nodes');
         }
 
