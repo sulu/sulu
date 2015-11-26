@@ -1035,21 +1035,20 @@ input, select {
 }
 /* line 11, ../scss/modules/sticky-toolbar.scss */
 .sticky-toolbar.fixed .list-toolbar-container.fixed {
-  padding-right: 100px;
   width: 920px;
 }
 @media only screen and (max-width: 1050px) {
-  /* line 17, ../scss/modules/sticky-toolbar.scss */
+  /* line 11, ../scss/modules/sticky-toolbar.scss */
   .sticky-toolbar.fixed .list-toolbar-container.fixed {
-    padding-right: 104px;
     width: 100%;
+    max-width: 920px;
   }
 }
-/* line 24, ../scss/modules/sticky-toolbar.scss */
+/* line 21, ../scss/modules/sticky-toolbar.scss */
 .sticky-toolbar.fixed .datagrid-container {
   margin-top: 80px;
 }
-/* line 28, ../scss/modules/sticky-toolbar.scss */
+/* line 25, ../scss/modules/sticky-toolbar.scss */
 .sticky-toolbar.fixed .list-toolbar {
   padding-bottom: 10px;
 }
