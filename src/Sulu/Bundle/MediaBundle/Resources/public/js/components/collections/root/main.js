@@ -24,7 +24,12 @@ define([
         defaults = {};
 
     return {
+
+        stickyToolbar: true,
+
         header: {
+            title: 'sulu.media.all',
+
             noBack: true,
             toolbar: {
                 template: 'empty',
@@ -92,6 +97,8 @@ define([
                     this.sandbox.emit('husky.datagrid.view.change', 'table');
                     this.sandbox.emit('husky.datagrid.pagination.change', 'dropdown');
                 }.bind(this));
+
+                this.sandbox.stickyToolbar.reset(this.$el);
             }.bind(this));
 
             // change datagrid view to masonry
@@ -106,6 +113,8 @@ define([
                     this.sandbox.emit('husky.datagrid.view.change', 'datagrid/decorators/masonry-view');
                     this.sandbox.emit('husky.datagrid.pagination.change', 'infinite-scroll');
                 }.bind(this));
+
+                this.sandbox.stickyToolbar.reset(this.$el);
             }.bind(this));
 
             // language change
@@ -121,10 +130,7 @@ define([
         render: function() {
             this.sandbox.dom.html(
                 this.$el,
-                this.renderTemplate(
-                    '/admin/media/template/collection/files',
-                    {title: this.sandbox.translate('sulu.media.all')}
-                )
+                this.renderTemplate('/admin/media/template/collection/files')
             );
             this.startDatagrid();
         },

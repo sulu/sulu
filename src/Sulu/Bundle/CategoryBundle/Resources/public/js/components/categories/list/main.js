@@ -19,6 +19,8 @@ define(function () {
 
     return {
 
+        stickyToolbar: true,
+
         layout: {
             content: {
                 width: 'max'

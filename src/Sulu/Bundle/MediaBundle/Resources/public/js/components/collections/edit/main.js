@@ -37,6 +37,8 @@ define([
             }
 
             return {
+                title: this.data.title,
+
                 noBack: true,
                 tabs: {
                     url: '/admin/content-navigations?alias=media'

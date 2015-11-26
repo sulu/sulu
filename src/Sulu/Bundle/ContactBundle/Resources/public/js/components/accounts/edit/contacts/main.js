@@ -255,6 +255,8 @@ define([
 
     return {
 
+        stickyToolbar: 140,
+
         layout: function() {
             return {
                 content: {
@@ -263,7 +265,7 @@ define([
             };
         },
 
-        templates: ['/admin/contact/template/contact/list'],
+        templates: ['/admin/contact/template/account/form/contact'],
 
         initialize: function() {
             this.data = this.options.data();
@@ -274,7 +276,7 @@ define([
         },
 
         render: function() {
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/list'));
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/account/form/contact'));
 
             // init list-toolbar and datagrid
             this.sandbox.sulu.initListToolbarAndList.call(this, 'accountsContactsFields', '/admin/api/contacts/fields?accountContacts=true',

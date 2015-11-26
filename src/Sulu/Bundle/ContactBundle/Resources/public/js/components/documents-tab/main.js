@@ -16,6 +16,8 @@ define([
 
     return {
 
+        stickyToolbar: 140,
+
         layout: function() {
             return {
                 content: {

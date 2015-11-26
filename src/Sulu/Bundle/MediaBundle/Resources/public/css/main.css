@@ -111,27 +111,11 @@
 }
 
 /* line 111, ../scss/modules/collection.scss */
-.fixed .collection-header-container {
+.sticky-toolbar.fixed .list-toolbar-container.collection {
   width: 92.75%;
-  position: absolute;
-  background: #f1f1f1;
-  z-index: 98;
-  top: 0;
-}
-/* line 119, ../scss/modules/collection.scss */
-.fixed .datagrid-container {
-  margin-top: 150px;
-}
-/* line 123, ../scss/modules/collection.scss */
-.fixed .list-toolbar-container {
-  margin-top: 10px;
-}
-/* line 127, ../scss/modules/collection.scss */
-.fixed .list-toolbar {
-  padding-bottom: 10px;
 }
 
-/* line 133, ../scss/modules/collection.scss */
+/* line 117, ../scss/modules/collection.scss */
 .toolbar-hidden .collection-header-container {
   top: -60px;
 }

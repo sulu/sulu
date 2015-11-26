@@ -26,6 +26,7 @@ require.config({
         'aura_extensions/url-manager': 'aura_extensions/url-manager',
         'aura_extensions/default-extension': 'aura_extensions/default-extension',
         'aura_extensions/event-extension': 'aura_extensions/event-extension',
+        'aura_extensions/sticky-toolbar': 'aura_extensions/sticky-toolbar',
 
         '__component__$app@suluadmin': 'components/app/main',
         '__component__$overlay@suluadmin': 'components/overlay/main',
@@ -46,6 +47,7 @@ require.config({
         'aura_extensions/url-manager',
         'aura_extensions/default-extension',
         'aura_extensions/event-extension',
+        'aura_extensions/sticky-toolbar',
         'widget-groups',
 
         '__component__$app@suluadmin',
@@ -104,6 +106,7 @@ require(['husky', 'app-config'], function(Husky, AppConfig) {
         app.use('aura_extensions/sulu-buttons');
         app.use('aura_extensions/default-extension');
         app.use('aura_extensions/event-extension');
+        app.use('aura_extensions/sticky-toolbar');
 
         bundles.forEach(function(bundle) {
             app.use('/bundles/' + bundle + '/js/main.js');

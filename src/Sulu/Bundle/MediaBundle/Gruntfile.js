@@ -114,11 +114,19 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('build', [
+    grunt.registerTask('build:css', [
+        'compass:dev'
+    ]);
+
+    grunt.registerTask('build:js', [
         'uglify',
         'replace:build',
-        'copy:templates',
-        'compass:dev'
+        'copy:templates'
+    ]);
+
+    grunt.registerTask('build', [
+        'build:js',
+        'build:css'
     ]);
 
     grunt.registerTask('update', [

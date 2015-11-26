@@ -36,6 +36,9 @@ define(function() {
         };
 
     return {
+
+        stickyToolbar: true,
+
         name: 'Sulu Security Role List',
 
         layout: {
@@ -98,7 +101,6 @@ define(function() {
                 'roles',
                 '#roles-list-info'
             );
-
         }
     };
 });

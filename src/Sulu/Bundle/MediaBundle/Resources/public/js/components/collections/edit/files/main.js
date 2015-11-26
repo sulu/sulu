@@ -23,9 +23,7 @@ define([
         },
 
         constants = {
-            scrollContainerSelector: '.content-column > .wrapper .page',
             hideToolbarClass: 'toolbar-hidden',
-            fixedClass: 'fixed',
             dropzoneSelector: '.dropzone-container',
             toolbarSelector: '.list-toolbar-container',
             datagridSelector: '.datagrid-container',
@@ -33,6 +31,8 @@ define([
         };
 
     return {
+
+        stickyToolbar: true,
 
         layout: {
             navigation: {
@@ -181,8 +181,7 @@ define([
                     'dropdown'
                 );
 
-                // reset scroll handler
-                this.$el.removeClass(constants.fixedClass);
+                this.sandbox.stickyToolbar.reset(this.$el);
             }.bind(this));
 
             // change datagrid view to masonry
@@ -199,11 +198,8 @@ define([
                     'infinite-scroll'
                 );
 
-                // reset scroll handler
-                this.$el.removeClass(constants.fixedClass);
+                this.sandbox.stickyToolbar.reset(this.$el);
             }.bind(this));
-
-            this.sandbox.dom.on(constants.scrollContainerSelector, 'scroll', this.scrollHandler.bind(this));
         },
 
         savedHandler: function(id, collection) {
@@ -218,7 +214,7 @@ define([
         render: function() {
             this.sandbox.dom.html(
                 this.$el,
-                this.renderTemplate('/admin/media/template/collection/files', {title: this.data.title})
+                this.renderTemplate('/admin/media/template/collection/files')
             );
 
             if (SecurityChecker.hasPermission(this.data, 'add')) {
@@ -390,22 +386,6 @@ define([
          */
         enableDropzone: function() {
             this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.enable');
-        },
-
-        /**
-         * Handles the scroll event to hide or show the tabs
-         */
-        scrollHandler: function() {
-            if (UserSettingsManager.getMediaListView() !== 'datagrid/decorators/masonry-view') {
-                return;
-            }
-
-            var scrollTop = this.sandbox.dom.scrollTop(constants.scrollContainerSelector);
-            if (scrollTop > 90) {
-                this.$el.addClass(constants.fixedClass);
-            } else {
-                this.$el.removeClass(constants.fixedClass);
-            }
         }
     };
 });

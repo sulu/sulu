@@ -2,6 +2,10 @@
 
 ## dev-develop
 
+### List-Toobar
+
+To enable a sticky behaviour take a look at the documentation <http://docs.sulu.io/en/latest/bundles/admin/javascript-hooks/sticky-toolbar.html>
+
 ### Url Content-Type
 
 The old upgrade for the url content-type don't upgrade properties in blocks. Rerun the migrate command to upgrade them.

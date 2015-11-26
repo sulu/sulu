@@ -107,25 +107,9 @@
     }
 }
 
-.fixed {
-    .collection-header-container {
+.sticky-toolbar.fixed {
+    .list-toolbar-container.collection {
         width: 92.75%;
-        position: absolute;
-        background: $baseBackgroundColor;
-        z-index: 98;
-        top: 0;
-    }
-
-    .datagrid-container {
-        margin-top: 150px;
-    }
-
-    .list-toolbar-container {
-        margin-top: 10px;
-    }
-
-    .list-toolbar {
-        padding-bottom: 10px;
     }
 }
 
