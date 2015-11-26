@@ -68,6 +68,8 @@ class DateTest extends \PHPUnit_Framework_TestCase
 
         $date = new Date('test.html.twig');
 
+        // to avoid second jumps
+        $dateValue = new \DateTime();
         $date->write($node->reveal(), $property->reveal(), 1, $webspaceKey, $locale, null);
 
         $node->setProperty('test', $dateValue)->shouldBeCalled();
