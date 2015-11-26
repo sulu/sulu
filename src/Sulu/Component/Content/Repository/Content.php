@@ -146,6 +146,15 @@ class Content implements \ArrayAccess
     }
 
     /**
+     * @param string $propertyName
+     * @param mixed $value
+     */
+    public function setDataProperty($propertyName, $value)
+    {
+        $this->data[$propertyName] = $value;
+    }
+
+    /**
      * @return int
      */
     public function getWorkflowStage()

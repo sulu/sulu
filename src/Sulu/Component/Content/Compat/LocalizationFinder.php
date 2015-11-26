@@ -148,7 +148,11 @@ class LocalizationFinder
             $children = $localization->getChildren();
 
             if ($children) {
-                return $this->findAvailableLocalization($availableLocales, $children);
+                $result = $this->findAvailableLocalization($availableLocales, $children);
+
+                if (null !== $result) {
+                    return $result;
+                }
             }
         }
 

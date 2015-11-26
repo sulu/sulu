@@ -24,6 +24,7 @@ use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Util\SuluNodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
@@ -75,16 +76,23 @@ class ContentRepository implements ContentRepositoryInterface
      */
     private $localizationFinder;
 
+    /**
+     * @var SuluNodeHelper
+     */
+    private $nodeHelper;
+
     public function __construct(
         SessionManagerInterface $sessionManager,
         PropertyEncoder $propertyEncoder,
         WebspaceManagerInterface $webspaceManager,
-        LocalizationFinder $localizationFinder
+        LocalizationFinder $localizationFinder,
+        SuluNodeHelper $nodeHelper
     ) {
         $this->sessionManager = $sessionManager;
         $this->propertyEncoder = $propertyEncoder;
         $this->webspaceManager = $webspaceManager;
         $this->localizationFinder = $localizationFinder;
+        $this->nodeHelper = $nodeHelper;
 
         $this->session = $sessionManager->getSession();
         $this->qomFactory = $this->session->getWorkspace()->getQueryManager()->getQOMFactory();
@@ -181,6 +189,29 @@ class ContentRepository implements ContentRepositoryInterface
         return $this->generateTreeByPath($result);
     }
 
+    public function findByPaths(
+        array $paths,
+        $locale,
+        MappingInterface $mapping,
+        UserInterface $user = null
+    ) {
+        $locales = $this->getLocales();
+        $queryBuilder = $this->getQueryBuilder($locale, $user);
+
+        foreach ($paths as $path) {
+            $queryBuilder->orWhere(
+                $this->qomFactory->comparison(
+                    new PropertyValue('node', 'jcr:path'),
+                    '=',
+                    $this->qomFactory->literal($path)
+                )
+            );
+        }
+        $this->appendMapping($queryBuilder, $mapping, $locales);
+
+        return $this->resolveQueryBuilder($queryBuilder, $locale, null, $mapping, $user);
+    }
+
     /**
      * Generates a content-tree with paths of given content array.
      *
@@ -267,7 +298,7 @@ class ContentRepository implements ContentRepositoryInterface
     private function resolveQueryBuilder(
         QueryBuilder $queryBuilder,
         $locale,
-        $webspaceKey,
+        $webspaceKey = null,
         MappingInterface $mapping,
         UserInterface $user = null
     ) {
@@ -336,6 +367,21 @@ class ContentRepository implements ContentRepositoryInterface
     }
 
     /**
+     * Returns array of locales for webspaces.
+     *
+     * @return string[]
+     */
+    private function getLocales()
+    {
+        return array_map(
+            function (Localization $localization) {
+                return $localization->getLocalization();
+            },
+            $this->webspaceManager->getAllLocalizations()
+        );
+    }
+
+    /**
      * Append mapping selects to given query-builder.
      *
      * @param QueryBuilder $queryBuilder
@@ -390,6 +436,10 @@ class ContentRepository implements ContentRepositoryInterface
         MappingInterface $mapping,
         UserInterface $user = null
     ) {
+        if (!$webspaceKey) {
+            $webspaceKey = $this->nodeHelper->extractWebspaceFromPath($row->getPath());
+        }
+
         $originalLocale = $locale;
         $ghostLocale = $this->localizationFinder->findAvailableLocale(
             $webspaceKey,
@@ -508,6 +558,7 @@ class ContentRepository implements ContentRepositoryInterface
      *
      * @param Row $row
      * @param string $name
+     * @param string $locale
      * @param string $shadowLocale
      *
      * @return mixed
@@ -537,7 +588,7 @@ class ContentRepository implements ContentRepositoryInterface
      */
     private function resolvePath(Row $row, $webspaceKey)
     {
-        return str_replace($this->sessionManager->getContentPath($webspaceKey), '', $row->getPath());
+        return '/' . ltrim(str_replace($this->sessionManager->getContentPath($webspaceKey), '', $row->getPath()), '/');
     }
 
     /**

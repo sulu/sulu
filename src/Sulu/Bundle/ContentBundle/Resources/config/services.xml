@@ -89,6 +89,7 @@
             <argument type="service" id="sulu_document_manager.property_encoder"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu.content.localization_finder"/>
+            <argument type="service" id="sulu.util.node_helper"/>
         </service>
         <service id="sulu_content.content_repository.event_subscriber"
                  class="Sulu\Component\Content\Repository\Serializer\SerializerEventListener">
@@ -102,6 +103,8 @@
             <argument type="service" id="sulu_content.content_repository"/>
             <argument type="service" id="fos_rest.view_handler"/>
             <argument type="service" id="router"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="security.token_storage" on-invalid="null"/>
         </service>
     </services>

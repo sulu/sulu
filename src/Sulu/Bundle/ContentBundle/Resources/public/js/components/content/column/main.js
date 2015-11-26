@@ -597,20 +597,22 @@ define([
          * @returns {String}
          */
         getUrl: function(selected) {
+            var url = '/admin/api/contents',
+                urlParts = [
+                    'webspace=' + this.options.webspace,
+                    'locale=' + this.options.language,
+                    '&mapping=title,order',
+                    '&webspace-nodes=true',
+                    'exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false'),
+                    '&exclude-shadows=' + (!this.showGhostPages ? 'true' : 'false')
+                ];
+
             if (!!selected) {
-                return '/admin/api/contents/' + selected + '?tree=true' +
-                    '&webspace=' + this.options.webspace +
-                    '&locale=' + this.options.language +
-                    '&mapping=title,order' +
-                    '&exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false') +
-                    '&exclude-shadows=' + (!this.showGhostPages ? 'true' : 'false');
-            } else {
-                return '/admin/api/contents?webspace=' + this.options.webspace +
-                    '&locale=' + this.options.language +
-                    '&mapping=title,order' +
-                    '&exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false') +
-                    '&exclude-shadows=' + (!this.showGhostPages ? 'true' : 'false');
+                url += '/' + selected;
+                urlParts.push('tree=true');
             }
+
+            return url + urlParts.join('&');
         },
 
         /**
