@@ -34,7 +34,7 @@ define([
             formSelector: '#media-form',
             multipleEditFormSelector: '#media-multiple-edit',
             fileDropzoneSelector: '#file-version-change',
-            previewDropzoneSelector: '#preview-img-change',
+            previewDropzoneSelector: '#preview-image-change',
             multipleEditDescSelector: '.media-description',
             multipleEditTagsSelector: '.media-tags',
             descriptionCheckboxSelector: '#show-descriptions',
@@ -47,7 +47,7 @@ define([
         },
 
         resetPreviewUrl = function(id) {
-            return '/admin/api/media/reset-preview/' + id;
+            return '/admin/api/media/' + id + '/preview';
         },
 
         /**
@@ -188,26 +188,32 @@ define([
          * @param media {Object} the id of the media to edit
          */
         editSingleMedia: function(media) {
-            var $preview;
+            var $info, $copyright, $versions, $preview;
+
             this.media = media;
-            var $info = this.sandbox.dom.createElement(_.template(infoTemplate, {
+
+            $info = this.sandbox.dom.createElement(_.template(infoTemplate, {
                 media: this.media,
                 translate: this.sandbox.translate
             }));
-            var $copyright = this.sandbox.dom.createElement(_.template(copyrightTemplate, {
+
+            $copyright = this.sandbox.dom.createElement(_.template(copyrightTemplate, {
                 media: this.media,
                 translate: this.sandbox.translate
             }));
-            var $versions = this.sandbox.dom.createElement(_.template(versionsTemplate, {
+
+            $versions = this.sandbox.dom.createElement(_.template(versionsTemplate, {
                 media: this.media,
                 translate: this.sandbox.translate
             }));
+
             if (media.type.name === 'video') {
                 $preview = this.sandbox.dom.createElement(_.template(previewTemplate, {
                     media: this.media,
                     translate: this.sandbox.translate
                 }));
             }
+
             this.startSingleOverlay($info, $copyright, $versions, $preview);
         },
 
@@ -367,6 +373,21 @@ define([
         },
 
         /**
+         * Handles the reset and rerendering of preview images
+         */
+        previewImageChangeHandler: function() {
+            var mediaId = this.media.id;
+
+            mediaManager.loadOrNew(mediaId, this.options.locale).then(function(media) {
+                this.sandbox.emit('sulu.medias.media.saved', media.id, media);
+                this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-save-desc');
+
+                this.sandbox.stop(this.$find('*'));
+                this.initialize();
+            }.bind(this));
+        },
+
+        /**
          * Save the media if form-data is valid and something was changed
          */
         saveSingleMedia: function() {
@@ -421,7 +442,7 @@ define([
          * Starts the dropzone for changing the preview image
          */
         startPreviewDropzone: function() {
-            this.sandbox.on('husky.dropzone.preview-img.files-added', this.newVersionUploadedHandler.bind(this));
+            this.sandbox.on('husky.dropzone.preview-image.files-added', this.previewImageChangeHandler.bind(this));
 
             this.sandbox.start([
                 {
@@ -429,18 +450,15 @@ define([
                     options: {
                         el: constants.previewDropzoneSelector,
                         maxFilesize: config.get('sulu-media').maxFilesize,
-                        url: '/admin/api/media/preview/' + this.media.id,
+                        url: '/admin/api/media/' + this.media.id + '/preview',
                         method: 'POST',
-                        paramName: 'previewImg',
+                        paramName: 'previewImage',
                         showOverlay: false,
                         skin: 'overlay',
                         titleKey: '',
                         descriptionKey: 'sulu.media.upload-new-preview',
-                        instanceName: 'preview-img',
-                        maxFiles: 1,
-                        successCallback: function(file, response) {
-
-                        }.bind(this)
+                        instanceName: 'preview-image',
+                        maxFiles: 1
                     }
                 }
             ]);
@@ -620,11 +638,13 @@ define([
         resetPreviewImage: function() {
             var mediaId = this.media.id;
 
-            this.sandbox.util.load(resetPreviewUrl(mediaId))
-                .then(function(newMedia) {
-                    // Converts to array since newVersionUploadedHandler() expects this as input parameter
-                    this.newVersionUploadedHandler.call(this, [newMedia]);
-                }.bind(this));
+            $.ajax({
+                url: resetPreviewUrl(mediaId),
+                type: 'DELETE',
+                success: function() {
+                    this.previewImageChangeHandler.call(this);
+                }.bind(this)
+            });
         },
 
         /**

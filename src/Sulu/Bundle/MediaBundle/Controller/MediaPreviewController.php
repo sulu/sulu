@@ -10,15 +10,26 @@
  */
 
 namespace Sulu\Bundle\MediaBundle\Controller;
+
+use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\RouteResource;
+use FOS\RestBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
+use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Makes medias preview images available through a REST API.
+ *
+ * @RouteResource("Preview")
  */
-class PreviewMediaController extends RestController implements ClassResourceInterface
+class MediaPreviewController extends AbstractMediaController implements ClassResourceInterface
 {
     /**
      * Creates a new preview image and saves it to the provided media.
+     *
+     * @Post("media/{id}/preview")
      *
      * @param int $id
      * @param Request $request
@@ -36,9 +47,12 @@ class PreviewMediaController extends RestController implements ClassResourceInte
             $locale = $this->getLocale($request);
 
             $media = $mediaManager->getById($id, $locale);
+            /** @var Media $mediaEntity */
             $mediaEntity = $media->getEntity();
 
             $data = $this->getData($request, false);
+
+            // Unset id to not overwrite original file
             unset($data['id']);
 
             if ($mediaEntity->getPreviewImage() !== null) {
@@ -48,16 +62,51 @@ class PreviewMediaController extends RestController implements ClassResourceInte
             $data['locale'] = $locale;
             $data['title'] = $media->getTitle();
 
-            $uploadedFile = $this->getUploadedFile($request, 'previewImg');
+            $uploadedFile = $this->getUploadedFile($request, 'previewImage');
             $previewImg = $mediaManager->save($uploadedFile, $data, $this->getUser()->getId());
 
             $mediaEntity->setPreviewImage($previewImg->getEntity());
-            $mediaManager->saveEntity($mediaEntity);
 
-            // Add preview thumbnails
-            $media = $mediaManager->addFormatsAndUrl($media);
+            $this->getDoctrine()->getEntityManager()->flush();
 
-            $view = $this->view($media, 200);
+            $view = $this->view($previewImg, 200);
+        } catch (MediaNotFoundException $e) {
+            $view = $this->view($e->toArray(), 404);
+        } catch (MediaException $e) {
+            $view = $this->view($e->toArray(), 400);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * Removes current preview image and sets default video thumbnail.
+     *
+     * @param $id
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteAction($id, Request $request)
+    {
+        try {
+            $mediaManager = $this->getMediaManager();
+
+            $locale = $this->getLocale($request);
+
+            $media = $mediaManager->getById($id, $locale);
+            /** @var Media $mediaEntity */
+            $mediaEntity = $media->getEntity();
+
+            if ($mediaEntity->getPreviewImage() !== null) {
+                $oldPreviewImageId = $mediaEntity->getPreviewImage()->getId();
+
+                $mediaEntity->setPreviewImage(null);
+
+                $mediaManager->delete($oldPreviewImageId);
+            }
+
+            $view = $this->view(null, 204);
         } catch (MediaNotFoundException $e) {
             $view = $this->view($e->toArray(), 404);
         } catch (MediaException $e) {

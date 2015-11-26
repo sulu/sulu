@@ -17,23 +17,20 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
-use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
-use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Makes media available through a REST API.
  */
-class MediaController extends RestController
+class MediaController extends AbstractMediaController
     implements ClassResourceInterface, SecuredControllerInterface, SecuredObjectControllerInterface
 {
     use RequestParametersTrait;
@@ -211,99 +208,6 @@ class MediaController extends RestController
     }
 
     /**
-     * Creates a new preview image and saves it to the provided media.
-     *
-     * @Post("media/preview/{id}")
-     *
-     * @param int $id
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException
-     */
-    public function postPreviewAction($id, Request $request)
-    {
-        try {
-            $mediaManager = $this->getMediaManager();
-            $systemCollectionManager = $this->get('sulu_media.system_collections.manager');
-
-            $locale = $this->getLocale($request);
-
-            $media = $mediaManager->getById($id, $locale);
-            $mediaEntity = $media->getEntity();
-
-            $data = $this->getData($request, false);
-            unset($data['id']);
-
-            if ($mediaEntity->getPreviewImage() !== null) {
-                $data['id'] = $mediaEntity->getPreviewImage()->getId();
-            }
-            $data['collection'] = $systemCollectionManager->getSystemCollection('sulu_media.preview_img');
-            $data['locale'] = $locale;
-            $data['title'] = $media->getTitle();
-
-            $uploadedFile = $this->getUploadedFile($request, 'previewImg');
-            $previewImg = $mediaManager->save($uploadedFile, $data, $this->getUser()->getId());
-
-            $mediaEntity->setPreviewImage($previewImg->getEntity());
-            $mediaManager->saveEntity($mediaEntity);
-
-            // Add preview thumbnails
-            $media = $mediaManager->addFormatsAndUrl($media);
-
-            $view = $this->view($media, 200);
-        } catch (MediaNotFoundException $e) {
-            $view = $this->view($e->toArray(), 404);
-        } catch (MediaException $e) {
-            $view = $this->view($e->toArray(), 400);
-        }
-
-        return $this->handleView($view);
-    }
-
-    /**
-     * Removes current preview image and sets default video thumbnail.
-     *
-     * @Get("media/reset-preview/{id}")
-     *
-     * @param $id
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException
-     */
-    public function resetPreviewAction($id, Request $request)
-    {
-        try {
-            $mediaManager = $this->getMediaManager();
-
-            $locale = $this->getLocale($request);
-
-            $media = $mediaManager->getById($id, $locale);
-            $mediaEntity = $media->getEntity();
-            $oldPreviewImageId = $mediaEntity->getPreviewImage()->getId();
-
-            $mediaEntity->setPreviewImage(null);
-
-            $mediaManager->saveEntity($mediaEntity);
-            $mediaManager->delete($oldPreviewImageId);
-
-            // Reload thumbnails
-            $media = $mediaManager->addFormatsAndUrl($media);
-
-            $view = $this->view($media, 200);
-        } catch (MediaNotFoundException $e) {
-            $view = $this->view($e->toArray(), 404);
-        } catch (MediaException $e) {
-            $view = $this->view($e->toArray(), 400);
-        }
-
-        return $this->handleView($view);
-    }
-
-    /**
      * Trigger an action for given media. Action is specified over get-action parameter.
      *
      * @Post("media/{id}")
@@ -389,75 +293,6 @@ class MediaController extends RestController
         }
 
         return $this->handleView($view);
-    }
-
-    /**
-     * @param Request $request
-     * @param $name
-     *
-     * @return UploadedFile
-     */
-    protected function getUploadedFile(Request $request, $name)
-    {
-        return $request->files->get($name);
-    }
-
-    /**
-     * @param Request $request
-     * @param bool $fallback
-     *
-     * @return array
-     */
-    protected function getData(Request $request, $fallback = true)
-    {
-        return [
-            'id' => $request->get('id'),
-            'locale' => $request->get('locale', $fallback ? $this->getLocale($request) : null),
-            'type' => $request->get('type'),
-            'collection' => $request->get('collection'),
-            'versions' => $request->get('versions'),
-            'version' => $request->get('version'),
-            'size' => $request->get('size'),
-            'contentLanguages' => $request->get('contentLanguages', []),
-            'publishLanguages' => $request->get('publishLanguages', []),
-            'tags' => $request->get('tags'),
-            'formats' => $request->get('formats', []),
-            'url' => $request->get('url'),
-            'name' => $request->get('name'),
-            'title' => $request->get('title', $fallback ? $this->getTitleFromUpload($request, 'fileVersion') : null),
-            'description' => $request->get('description'),
-            'copyright' => $request->get('copyright'),
-            'changer' => $request->get('changer'),
-            'creator' => $request->get('creator'),
-            'changed' => $request->get('changed'),
-            'created' => $request->get('created'),
-        ];
-    }
-
-    /**
-     * @param Request $request
-     */
-    protected function getTitleFromUpload($request)
-    {
-        $title = null;
-
-        $uploadedFile = $this->getUploadedFile($request, 'fileVersion');
-
-        if ($uploadedFile) {
-            $title = $part = implode('.', explode('.', $uploadedFile->getClientOriginalName(), -1));
-        }
-
-        return $title;
-    }
-
-    /**
-     * getMediaManager.
-     *
-     * @return MediaManagerInterface
-     */
-    protected function getMediaManager()
-    {
-        return $this->get('sulu_media.media_manager');
     }
 
     /**

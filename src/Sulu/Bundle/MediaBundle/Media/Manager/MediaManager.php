@@ -473,15 +473,6 @@ class MediaManager implements MediaManagerInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function saveEntity(\Sulu\Bundle\MediaBundle\Entity\Media $media)
-    {
-        $this->em->persist($media);
-        $this->em->flush();
-    }
-
-    /**
      * @param UploadedFile $uploadedFile
      *
      * @return array
@@ -606,9 +597,8 @@ class MediaManager implements MediaManagerInterface
             $user
         );
 
-        $mediaEntity = $media->getEntity();
-
-        $this->saveEntity($mediaEntity);
+        $this->em->persist($media->getEntity());
+        $this->em->flush();
 
         return $media;
     }
@@ -908,16 +898,44 @@ class MediaManager implements MediaManagerInterface
      */
     public function addFormatsAndUrl(Media $media)
     {
-        // Set Formats
-        $media->setFormats(
-            $this->formatManager->getFormats(
-                $media->getId(),
-                $media->getName(),
-                $media->getStorageOptions(),
-                $media->getVersion(),
-                $media->getMimeType()
-            )
-        );
+        // Get preview image and set either preview thumbnails if set, else rendered images
+        /** @var \Sulu\Bundle\MediaBundle\Entity\Media $previewImage */
+        $previewImage = $media->getEntity()->getPreviewImage();
+
+        if ($previewImage !== null) {
+            /** @var FileVersion $latestVersion */
+            $latestVersion = null;
+
+            /** @var File $file */
+            foreach ($previewImage->getFiles() as $file) {
+                $latestVersion = $file->getLatestFileVersion();
+
+                // currently only one file per media exists
+                break;
+            }
+
+            if ($latestVersion !== null) {
+                $media->setFormats(
+                    $this->formatManager->getFormats(
+                        $previewImage->getId(),
+                        $latestVersion->getName(),
+                        $latestVersion->getStorageOptions(),
+                        $latestVersion->getVersion(),
+                        $latestVersion->getMimeType()
+                    )
+                );
+            }
+        } else {
+            $media->setFormats(
+                $this->formatManager->getFormats(
+                    $media->getId(),
+                    $media->getName(),
+                    $media->getStorageOptions(),
+                    $media->getVersion(),
+                    $media->getMimeType()
+                )
+            );
+        }
 
         // Set Version Urls
         $versionData = [];
@@ -943,42 +961,6 @@ class MediaManager implements MediaManagerInterface
             && isset($versionData[$media->getVersion()]['url'])
         ) {
             $media->setUrl($versionData[$media->getVersion()]['url']);
-        }
-
-        // Get preview image and overwrite thumbnails if set
-        /** @var \Sulu\Bundle\MediaBundle\Entity\Media $previewImage */
-        $previewImage = $media->getEntity()->getPreviewImage();
-
-        if ($previewImage !== null) {
-            /** @var FileVersion $latestVersion */
-            $latestVersion = null;
-
-            /** @var File $file */
-            foreach ($previewImage->getFiles() as $file) {
-                foreach ($file->getFileVersions() as $version) {
-                    $highestVersion = 0;
-
-                    if ($version->getVersion() > $highestVersion) {
-                        $latestVersion = $version;
-                        $highestVersion = $version->getVersion();
-                    }
-                }
-
-                // currently only one file per media exists
-                break;
-            }
-
-            if ($latestVersion !== null) {
-                $media->setFormats(
-                    $this->formatManager->getFormats(
-                        $previewImage->getId(),
-                        $latestVersion->getName(),
-                        $latestVersion->getStorageOptions(),
-                        $latestVersion->getVersion(),
-                        $latestVersion->getMimeType()
-                    )
-                );
-            }
         }
 
         return $media;
