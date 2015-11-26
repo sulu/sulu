@@ -577,4 +577,20 @@ interface ContactInterface
      * @return Collection
      */
     public function getBankAccounts();
+
+    /**
+     * Get deleted at.
+     *
+     * @return \DateTime
+     */
+    public function getDeletedAt();
+
+    /**
+     * Set deleted at.
+     *
+     * @param \DateTime $deletedAt
+     *
+     * @return ContactInterface
+     */
+    public function setDeletedAt(\DateTime $deletedAt = null);
 }

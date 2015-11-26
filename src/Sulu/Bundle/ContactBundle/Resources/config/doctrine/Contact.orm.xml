@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
+                  xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
 
     <mapped-superclass name="Sulu\Bundle\ContactBundle\Entity\Contact" table="co_contacts"
-            repository-class="Sulu\Bundle\ContactBundle\Entity\ContactRepository">
+                       repository-class="Sulu\Bundle\ContactBundle\Entity\ContactRepository">
+
+        <indexes>
+            <index columns="deletedAt" name="deleted_at_idx"/>
+        </indexes>
 
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
@@ -26,12 +31,18 @@
         <field name="mainFax" type="string" column="mainFax" nullable="true"/>
         <field name="mainUrl" type="string" column="mainUrl" nullable="true"/>
 
+        <field name="deletedAt" type="datetime" nullable="true"/>
 
-        <one-to-many field="locales" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactLocale" mapped-by="contact"/>
+        <gedmo:soft-deleteable field-name="deletedAt" />
 
-        <one-to-many field="contactAddresses" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactAddress" mapped-by="contact"/>
+        <one-to-many field="locales" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactLocale"
+                     mapped-by="contact"/>
 
-        <one-to-many field="accountContacts" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountContact" mapped-by="contact"/>
+        <one-to-many field="contactAddresses" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactAddress"
+                     mapped-by="contact"/>
+
+        <one-to-many field="accountContacts" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountContact"
+                     mapped-by="contact"/>
 
         <many-to-one field="avatar" target-entity="Sulu\Bundle\MediaBundle\Entity\Media">
             <join-columns>
@@ -166,7 +177,8 @@
                 <order-by-field name="name" direction="ASC"/>
             </order-by>
         </many-to-many>
-        <many-to-many field="bankAccounts" target-entity="Sulu\Bundle\ContactBundle\Entity\BankAccount" inversed-by="contacts">
+        <many-to-many field="bankAccounts" target-entity="Sulu\Bundle\ContactBundle\Entity\BankAccount"
+                      inversed-by="contacts">
             <cascade>
                 <cascade-persist/>
             </cascade>

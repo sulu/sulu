@@ -230,6 +230,11 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $avatar;
 
     /**
+     * @var \DateTime
+     */
+    private $deletedAt;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -1009,6 +1014,24 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     public function getBankAccounts()
     {
         return $this->bankAccounts;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDeletedAt()
+    {
+        return $this->deletedAt;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDeletedAt(\DateTime $deletedAt = null)
+    {
+        $this->deletedAt = $deletedAt;
+
+        return $this;
     }
 
     /**
