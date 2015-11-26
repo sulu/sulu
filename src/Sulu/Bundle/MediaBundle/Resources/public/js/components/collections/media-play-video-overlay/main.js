@@ -18,16 +18,15 @@ define([
 
     'use strict';
 
-    var namespace = 'sulu.media-play-video.',
-
-        defaults = {
-            instanceName: ''
+    var defaults = {
+            instanceName: 'play-video-overlay'
         },
 
         constants = {
             loadingClass: 'loading',
             loaderClass: 'media-play-video-loader',
-            playVideoId: 'media-play-video-id'
+            playVideoId: 'media-play-video-id',
+            eventNamespace: 'sulu.media-play-video.'
         },
 
         templates = {
@@ -40,30 +39,26 @@ define([
                     '</div>'
                 ].join('');
             }
-        },
-
-        /**
-         * raised when the overlay get closed
-         * @event sulu.media-play-video.closed
-         */
-        CLOSED = function() {
-            return createEventName.call(this, 'closed');
-        },
-
-        /**
-         * raised when component is initialized
-         * @event sulu.media-play-video.closed
-         */
-        INITIALIZED = function() {
-            return createEventName.call(this, 'initialized');
-        },
-
-        /** returns normalized event names */
-        createEventName = function(postFix) {
-            return namespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
         };
 
     return {
+
+        defaults: {
+            options: {instanceName: this.options.instanceName}
+        },
+
+        events: {
+            names: {
+                initialized: {
+                    postFix: 'initialized'
+                },
+                closed: {
+                    postfix: 'closed'
+                }
+            },
+            namespace: constants.eventNamespace
+        },
+
         /**
          * Initializes the overlay component
          */
@@ -80,7 +75,7 @@ define([
                 this.startVideoOverlay(video);
             }.bind(this));
 
-            this.sandbox.emit(INITIALIZED.call(this));
+            this.events.initialized();
         },
 
         /**
@@ -218,7 +213,7 @@ define([
          * Called when component gets destroyed
          */
         destroy: function() {
-            this.sandbox.emit(CLOSED.call(this));
+            this.events.closed();
         }
     };
 });
