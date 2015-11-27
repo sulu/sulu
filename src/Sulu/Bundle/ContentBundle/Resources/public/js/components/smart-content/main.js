@@ -1057,7 +1057,7 @@ define(['services/husky/util'], function(util) {
                             {id: operators.and, name: this.sandbox.translate(this.translations.useAllTags)}
                         ],
                         preSelectedElements: !!this.overlayData.tagOperator ?
-                            [operators[this.overlayData.tagOperator]] : null,
+                            [operators[this.overlayData.tagOperator]] : [],
                         disabled: this.overlayDisabled.tags
                     }
                 },
@@ -1068,7 +1068,7 @@ define(['services/husky/util'], function(util) {
                         instanceName: this.options.instanceName + constants.sortByDropdownClass,
                         value: 'name',
                         data: this.options.sortBy,
-                        preSelectedElements: !!this.overlayData.sortBy ? [this.overlayData.sortBy] : null,
+                        preSelectedElements: !!this.overlayData.sortBy ? [this.overlayData.sortBy] : [],
                         disabled: this.overlayDisabled.sortBy,
                         defaultLabel: this.sandbox.translate('smart-content.no-sorting'),
                         deselectField: this.sandbox.translate('smart-content.no-sorting')
@@ -1097,7 +1097,7 @@ define(['services/husky/util'], function(util) {
                         defaultLabel: this.sandbox.translate(this.translations.choosePresentAs),
                         value: 'name',
                         data: this.options.presentAs,
-                        preSelectedElements: !!this.overlayData.presentAs ? [this.overlayData.presentAs] : null,
+                        preSelectedElements: !!this.overlayData.presentAs ? [this.overlayData.presentAs] : [],
                         disabled: this.overlayDisabled.presentAs
                     }
                 }
