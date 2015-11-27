@@ -197,6 +197,30 @@ define(function() {
                 }
             }]);
             registerOpenedOverlay.call(this, 'sulu.permission-settings.closed');
+        },
+
+        /**
+         * Start play-video overlay
+         * @param videoId Id of the video that should be opened in overlay
+         * @param locale Locale the video should be loaded in
+         */
+        startPlayVideoOverlay: function(videoId, locale) {
+            if (!!overlayOpened) {
+                return false;
+            }
+
+            var $container = getOverlayContainer('play-video-overlay');
+
+            this.sandbox.start([{
+                name: 'collections/media-play-video-overlay@sulumedia',
+                options: {
+                    el: $container,
+                    videoId: videoId,
+                    locale: locale
+                }
+            }]);
+
+            registerOpenedOverlay.call(this, 'sulu.media-play-video.play-video-overlay.closed');
         }
     };
 
