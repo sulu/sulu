@@ -220,7 +220,7 @@ define(function() {
                 }
             }]);
 
-            registerOpenedOverlay.call(this, 'sulu.media-play-video.closed');
+            registerOpenedOverlay.call(this, 'sulu.media-play-video.play-video-overlay.closed');
         }
     };
 

@@ -19,7 +19,18 @@ define([
     'use strict';
 
     var defaults = {
-            instanceName: 'play-video-overlay'
+            options: {
+                instanceName: 'play-video-overlay'
+            },
+            templates: {
+                video: [
+                    '<div class="media-play-video-container">',
+                    '   <video id="<%= playVideoId %>" controls>',
+                    '       <source src="<%= videoUrl %>" />',
+                    '   </video>',
+                    '</div>'
+                ].join('')
+            }
         },
 
         constants = {
@@ -27,25 +38,11 @@ define([
             loaderClass: 'media-play-video-loader',
             playVideoId: 'media-play-video-id',
             eventNamespace: 'sulu.media-play-video.'
-        },
-
-        templates = {
-            video: function(videoUrl) {
-                return [
-                    '<div class="media-play-video-container">',
-                    '   <video id="', constants.playVideoId, '" controls>',
-                    '       <source src="', videoUrl, '" />',
-                    '   </video>',
-                    '</div>'
-                ].join('');
-            }
         };
 
     return {
 
-        defaults: {
-            options: {instanceName: this.options.instanceName}
-        },
+        defaults: defaults,
 
         events: {
             names: {
@@ -53,7 +50,7 @@ define([
                     postFix: 'initialized'
                 },
                 closed: {
-                    postfix: 'closed'
+                    postFix: 'closed'
                 }
             },
             namespace: constants.eventNamespace
@@ -150,7 +147,7 @@ define([
          * Starts the actual overlay for displaying video
          */
         startVideoOverlay: function(video) {
-            var videoSrc = video.url + '&inline=1',
+            var videoUrl = video.url + '&inline=1',
                 $container,
                 $data;
 
@@ -158,8 +155,11 @@ define([
                 '<div class="' + constants.singleEditClass + '" id="media-form"/>'
             );
 
-            $data = this.sandbox.dom.createElement(
-                templates.video(videoSrc)
+            $data = this.templates.video(
+                {
+                    videoUrl: videoUrl,
+                    playVideoId: constants.playVideoId
+                }
             );
 
             this.sandbox.dom.append(this.$el, $container);
