@@ -151,7 +151,7 @@ class NodeController extends RestController
      * @throws \Sulu\Component\Rest\Exception\MissingParameterException
      * @throws \Sulu\Component\Rest\Exception\ParameterDataTypeException
      */
-    public function getContent(Request $request, $uuid)
+    private function getContent(Request $request, $uuid)
     {
         $properties = array_filter(explode(',', $request->get('fields', '')));
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
@@ -447,7 +447,7 @@ class NodeController extends RestController
      * @throws MissingParameterException
      * @throws ParameterDataTypeException
      */
-    public function cgetContent(Request $request)
+    private function cgetContent(Request $request)
     {
         $parent = $request->get('parent');
         $properties = array_filter(explode(',', $request->get('fields', '')));
