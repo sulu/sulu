@@ -450,6 +450,26 @@ class PhpcrMapperTest extends SuluTestCase
         $this->assertFalse($rootNode->hasNode('test/news-1/sub-2'));
     }
 
+    public function provideInvalidDeleteByPathArguments()
+    {
+        return [
+            [''],
+            ['/'],
+            [null],
+        ];
+    }
+
+    /**
+     * The deleteByPath method would delete the entire route tree for the given language, if an invalid path is passed.
+     *
+     * @dataProvider provideInvalidDeleteByPathArguments
+     */
+    public function testDeleteByPathWithInvalidArguments($invalidPath)
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->rlpMapper->deleteByPath($invalidPath, 'sulu_io', 'en');
+    }
+
     public function testTreeDeleteByPath()
     {
         $session = $this->sessionManager->getSession();

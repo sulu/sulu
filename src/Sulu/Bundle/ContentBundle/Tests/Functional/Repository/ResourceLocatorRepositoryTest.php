@@ -11,8 +11,10 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Repository;
 
+use PHPCR\SessionInterface;
 use Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 
 /**
  * @group functional
@@ -20,6 +22,16 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
  */
 class ResourceLocatorRepositoryTest extends SuluTestCase
 {
+    /**
+     * @var ContentMapperInterface
+     */
+    private $mapper;
+
+    /**
+     * @var SessionInterface
+     */
+    private $session;
+
     /**
      * @var ResourceLocatorRepositoryInterface
      */
@@ -29,6 +41,7 @@ class ResourceLocatorRepositoryTest extends SuluTestCase
     {
         $this->initPhpcr();
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');
+        $this->session = $this->getContainer()->get('doctrine_phpcr.default_session');
         $this->repository = $this->getContainer()->get('sulu_content.rl_repository');
     }
 
@@ -146,6 +159,7 @@ class ResourceLocatorRepositoryTest extends SuluTestCase
         $structure = $this->prepareHistoryTestData();
 
         $this->repository->delete('/test', 'sulu_io', 'en');
+        $this->session->save();
         $result = $this->repository->getHistory($structure->getUuid(), 'sulu_io', 'en');
 
         $this->assertEquals(1, count($result['_embedded']['resourcelocators']));
