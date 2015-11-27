@@ -174,7 +174,7 @@ class ContentRepositoryTest extends SuluTestCase
             $parentUuid,
             'en',
             'sulu_io',
-            MappingBuilder::create()->shouldHydrateShadow(false)->addProperties(['title'])->getMapping()
+            MappingBuilder::create()->setHydrateShadow(false)->addProperties(['title'])->getMapping()
         );
 
         $this->assertCount(2, $result);
@@ -221,7 +221,7 @@ class ContentRepositoryTest extends SuluTestCase
             $parentUuid,
             'de',
             'sulu_io',
-            MappingBuilder::create()->shouldHydrateGhost(false)->addProperties(['title'])->getMapping()
+            MappingBuilder::create()->setHydrateGhost(false)->addProperties(['title'])->getMapping()
         );
 
         $this->assertCount(2, $result);
@@ -269,7 +269,7 @@ class ContentRepositoryTest extends SuluTestCase
             $parentUuid,
             'de',
             'sulu_io',
-            MappingBuilder::create()->shouldFollowInternalLink(false)->addProperties(['title'])->getMapping()
+            MappingBuilder::create()->setFollowInternalLink(false)->addProperties(['title'])->getMapping()
         );
 
         $this->assertCount(3, $result);

@@ -42,7 +42,7 @@ class MappingBuilder
      *
      * @return $this
      */
-    public function shouldHydrateGhost($enable)
+    public function setHydrateGhost($enable)
     {
         $this->mapping->setHydrateGhost($enable);
 
@@ -56,7 +56,7 @@ class MappingBuilder
      *
      * @return $this
      */
-    public function shouldFollowInternalLink($enable)
+    public function setFollowInternalLink($enable)
     {
         $this->mapping->setFollowInternalLink($enable);
 
@@ -70,7 +70,7 @@ class MappingBuilder
      *
      * @return $this
      */
-    public function shouldHydrateShadow($enable)
+    public function setHydrateShadow($enable)
     {
         $this->mapping->setHydrateShadow($enable);
 
