@@ -8,6 +8,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1820 [ContentBundle]   Fixed migrate url script
     * BUGFIX      #1815 [SecurityBundle]  Fixed missing locale check for security
     * ENHANCEMENT #1816 [MediaBundle]     Added play button to video assets list
+    * BUGFIX      #1811 [MediaBundle]     Normalize file names to avoid error in video preview image generation
     * BUGFIX      #1812 [ContactBundle]   Fixed translation bug in position dropdown
     * BUGFIX      #1814 [MediaBundle]     Fixed media selection bug
     * BUGFIX      #1807 [SecurityBundle]  Removed user locked field and used contact disabled field instead

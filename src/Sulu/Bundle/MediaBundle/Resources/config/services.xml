@@ -100,6 +100,7 @@
             <argument type="service" id="sulu_media.format_manager" />
             <argument type="service" id="sulu_tag.tag_manager" />
             <argument type="service" id="sulu_media.type_manager" />
+            <argument type="service" id="sulu.content.path_cleaner" />
             <argument type="service" id="security.token_storage" on-invalid="null" />
             <argument type="service" id="sulu_security.security_checker" on-invalid="null" />
             <argument type="service" id="dubture_ffmpeg.ffprobe" />

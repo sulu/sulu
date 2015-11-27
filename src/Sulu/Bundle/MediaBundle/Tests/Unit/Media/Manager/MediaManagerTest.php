@@ -25,11 +25,15 @@ use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class MediaManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -84,6 +88,11 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
     private $typeManager;
 
     /**
+     * @var PathCleanupInterface
+     */
+    private $pathCleaner;
+
+    /**
      * @var TokenStorageInterface
      */
     private $tokenStorage;
@@ -111,6 +120,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $this->formatManager = $this->prophesize(FormatManagerInterface::class);
         $this->tagManager = $this->prophesize(TagManagerInterface::class);
         $this->typeManager = $this->prophesize(TypeManagerInterface::class);
+        $this->pathCleaner = $this->prophesize(PathCleanupInterface::class);
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $this->securityChecker = $this->prophesize(SecurityCheckerInterface::class);
         $this->ffprobe = $this->prophesize(FFProbe::class);
@@ -125,6 +135,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
             $this->formatManager->reveal(),
             $this->tagManager->reveal(),
             $this->typeManager->reveal(),
+            $this->pathCleaner->reveal(),
             $this->tokenStorage->reveal(),
             $this->securityChecker->reveal(),
             $this->ffprobe->reveal(),
@@ -210,6 +221,25 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $this->mediaManager->delete(1, true);
     }
 
+    /**
+     * @dataProvider provideSpecialCharacterFileName
+     */
+    public function testSpecialCharacterFileName($fileName, $cleanUpArgument)
+    {
+        /** @var UploadedFile $uploadedFile */
+        $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith(['', 1, null, null, 1, true]);
+        $uploadedFile->getClientOriginalName()->willReturn($fileName);
+        $uploadedFile->getPathname()->willReturn('');
+        $uploadedFile->getSize()->willReturn('123');
+        $uploadedFile->getMimeType()->willReturn('img');
+
+        $user = $this->prophesize(User::class)->willImplement(UserInterface::class);
+        $this->userRepository->findUserById(1)->willReturn($user);
+
+        $this->pathCleaner->cleanup(Argument::exact($cleanUpArgument))->shouldBeCalled();
+        $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'my title'], 1);
+    }
+
     public function provideGetByIds()
     {
         $media1 = $this->createMedia(1);
@@ -220,6 +250,14 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
             [[1, 2, 3], [$media1, $media2, $media3], [$media1, $media2, $media3]],
             [[2, 1, 3], [$media1, $media2, $media3], [$media2, $media1, $media3]],
             [[4, 1, 2], [$media1, $media2], [$media1, $media2]],
+        ];
+    }
+
+    public function provideSpecialCharacterFileName()
+    {
+        return [
+            ['aäüßa', 'aäüßa'],
+            ['aäüßa.mp4', 'aäüßa'],
         ];
     }
 

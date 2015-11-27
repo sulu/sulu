@@ -32,6 +32,7 @@ use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -121,6 +122,11 @@ class MediaManager implements MediaManagerInterface
     private $securityChecker;
 
     /**
+     * @var PathCleanupInterface
+     */
+    private $pathCleaner;
+
+    /**
      * @var array
      */
     private $permissions;
@@ -145,6 +151,24 @@ class MediaManager implements MediaManagerInterface
      */
     public $count;
 
+    /**
+     * @param MediaRepositoryInterface $mediaRepository
+     * @param CollectionRepositoryInterface $collectionRepository
+     * @param UserRepositoryInterface $userRepository
+     * @param EntityManager $em
+     * @param StorageInterface $storage
+     * @param FileValidatorInterface $validator
+     * @param FormatManagerInterface $formatManager
+     * @param TagManagerInterface $tagManager
+     * @param TypeManagerInterface $typeManager
+     * @param PathCleanupInterface $pathCleaner
+     * @param TokenStorageInterface $tokenStorage
+     * @param SecurityCheckerInterface $securityChecker
+     * @param FFProbe $ffprobe
+     * @param array $permissions
+     * @param string $downloadPath
+     * @param string $maxFileSize
+     */
     public function __construct(
         MediaRepositoryInterface $mediaRepository,
         CollectionRepositoryInterface $collectionRepository,
@@ -155,6 +179,7 @@ class MediaManager implements MediaManagerInterface
         FormatManagerInterface $formatManager,
         TagManagerInterface $tagManager,
         TypeManagerInterface $typeManager,
+        PathCleanupInterface $pathCleaner,
         TokenStorageInterface $tokenStorage = null,
         SecurityCheckerInterface $securityChecker = null,
         FFProbe $ffprobe,
@@ -171,6 +196,7 @@ class MediaManager implements MediaManagerInterface
         $this->formatManager = $formatManager;
         $this->tagManager = $tagManager;
         $this->typeManager = $typeManager;
+        $this->pathCleaner = $pathCleaner;
         $this->tokenStorage = $tokenStorage;
         $this->securityChecker = $securityChecker;
         $this->ffprobe = $ffprobe;
@@ -515,13 +541,15 @@ class MediaManager implements MediaManagerInterface
             ++$version;
             $this->validator->validate($uploadedFile);
 
+            $fileName = $this->getNormalizedFileName($uploadedFile->getClientOriginalName());
+
             $data['storageOptions'] = $this->storage->save(
                 $uploadedFile->getPathname(),
-                $uploadedFile->getClientOriginalName(),
+                $fileName,
                 $version,
                 $currentFileVersion->getStorageOptions()
             );
-            $data['name'] = $uploadedFile->getClientOriginalName();
+            $data['name'] = $fileName;
             $data['size'] = intval($uploadedFile->getSize());
             $data['mimeType'] = $uploadedFile->getMimeType();
             $data['properties'] = $this->getProperties($uploadedFile);
@@ -595,13 +623,15 @@ class MediaManager implements MediaManagerInterface
 
         $this->validator->validate($uploadedFile);
 
+        $fileName = $this->getNormalizedFileName($uploadedFile->getClientOriginalName());
+
         $data['storageOptions'] = $this->storage->save(
             $uploadedFile->getPathname(),
-            $uploadedFile->getClientOriginalName(),
+            $fileName,
             1
         );
 
-        $data['name'] = $uploadedFile->getClientOriginalName();
+        $data['name'] = $fileName;
         $data['size'] = $uploadedFile->getSize();
         $data['mimeType'] = $uploadedFile->getMimeType();
         $data['properties'] = $this->getProperties($uploadedFile);
@@ -961,5 +991,25 @@ class MediaManager implements MediaManagerInterface
         }
 
         return $this->tokenStorage->getToken()->getUser();
+    }
+
+    /**
+     * Returns file name without special characters and preserves file extension.
+     *
+     * @param $originalFileName
+     *
+     * @return string
+     */
+    private function getNormalizedFileName($originalFileName)
+    {
+        if (strpos($originalFileName, '.') !== false) {
+            $pathParts = pathinfo($originalFileName);
+            $fileName = $this->pathCleaner->cleanup($pathParts['filename']);
+            $fileName .= '.' . $pathParts['extension'];
+        } else {
+            $fileName = $this->pathCleaner->cleanup($originalFileName);
+        }
+
+        return $fileName;
     }
 }
