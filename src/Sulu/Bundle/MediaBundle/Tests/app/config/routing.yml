@@ -1,5 +1,6 @@
 sulu_media:
     resource: "@SuluMediaBundle/Resources/config/routing_api.yml"
+    type: rest
     prefix: /api
 
 sulu_media:
