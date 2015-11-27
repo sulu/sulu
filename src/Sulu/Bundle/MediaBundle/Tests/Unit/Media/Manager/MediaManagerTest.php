@@ -257,7 +257,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['aäüßa', 'aäüßa'],
-            ['aäüßa.mp4', 'aäüßa']
+            ['aäüßa.mp4', 'aäüßa'],
         ];
     }
 
