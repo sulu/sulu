@@ -81,9 +81,13 @@ class SerializerEventListener implements EventSubscriberInterface
         $visitor->addData('publishedState', (WorkflowStage::PUBLISHED === $content->getWorkflowStage()));
 
         if (RedirectType::EXTERNAL === $content->getNodeType()) {
-            $visitor->addData('_linked', 'external');
+            $visitor->addData('linked', 'external');
         } elseif (RedirectType::INTERNAL === $content->getNodeType()) {
-            $visitor->addData('_linked', 'internal');
+            $visitor->addData('linked', 'internal');
+        }
+
+        if (null !== $content->getLocalizationType()) {
+            $visitor->addData('type', $content->getLocalizationType()->toArray());
         }
 
         $visitor->addData(
@@ -95,9 +99,5 @@ class SerializerEventListener implements EventSubscriberInterface
                 $this->tokenStorage->getToken()->getUser()
             )
         );
-
-        if (null !== $content->getLocalizationType()) {
-            $visitor->addData('_type', $content->getLocalizationType()->toArray());
-        }
     }
 }

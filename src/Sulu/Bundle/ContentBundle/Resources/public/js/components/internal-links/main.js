@@ -98,8 +98,8 @@ define([], function() {
                         options: {
                             el: getId.call(this, 'columnNavigation'),
                             url: getColumnNavigationUrl.call(this),
-                            linkedName: '_linked',
-                            typeName: '_type',
+                            linkedName: 'linked',
+                            typeName: 'type',
                             hasSubName: 'hasChildren',
                             instanceName: this.options.instanceName,
                             actionIcon: 'fa-plus-circle',

@@ -308,7 +308,7 @@ class ContentControllerTest extends SuluTestCase
         );
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals('internal', $result['_linked']);
+        $this->assertEquals('internal', $result['linked']);
     }
 
     public function testLinkedExternal()
@@ -326,7 +326,7 @@ class ContentControllerTest extends SuluTestCase
         );
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals('external', $result['_linked']);
+        $this->assertEquals('external', $result['linked']);
     }
 
     public function testTypeGhost()
@@ -344,8 +344,8 @@ class ContentControllerTest extends SuluTestCase
         );
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals('ghost', $result['_type']['name']);
-        $this->assertEquals('en', $result['_type']['value']);
+        $this->assertEquals('ghost', $result['type']['name']);
+        $this->assertEquals('en', $result['type']['value']);
     }
 
     public function testTypeShadow()
@@ -363,8 +363,8 @@ class ContentControllerTest extends SuluTestCase
         );
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals('shadow', $result['_type']['name']);
-        $this->assertEquals('en', $result['_type']['value']);
+        $this->assertEquals('shadow', $result['type']['name']);
+        $this->assertEquals('en', $result['type']['value']);
     }
 
     public function testCGetActionSingleWebspaceNodes()
