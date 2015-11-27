@@ -123,11 +123,11 @@ define([], function() {
          * @returns {String}
          */
         getColumnNavigationUrl = function() {
-            var url = '/admin/api/contents',
+            var url = '/admin/api/nodes',
                 urlParts = [
                     'webspace=' + this.options.webspace,
-                    'locale=' + this.options.locale,
-                    'mapping=title,order',
+                    'language=' + this.options.locale,
+                    'fields=title,order',
                     'webspace-nodes=all'
                 ];
 

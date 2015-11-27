@@ -246,6 +246,8 @@ class NodeController extends RestController
      * @param string  $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @deprecated this will be removed when the content-repository is able to solve all requirements.
      */
     private function getSingleNode(Request $request, $uuid)
     {
@@ -384,6 +386,23 @@ class NodeController extends RestController
             return $this->cgetContent($request);
         }
 
+        return $this->cgetNodes($request);
+    }
+
+    /**
+     * Returns complete nodes.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     *
+     * @throws MissingParameterException
+     * @throws ParameterDataTypeException
+     *
+     * @deprecated this will be removed when the content-repository is able to solve all requirements.
+     */
+    public function cgetNodes(Request $request)
+    {
         $tree = $this->getBooleanRequestParameter($request, 'tree', false, false);
         $ids = $this->getRequestParameter($request, 'ids');
 
@@ -414,15 +433,14 @@ class NodeController extends RestController
             $excludeGhosts
         );
 
-        return $this->handleView(
-            $this->view($result)
-        );
+        return $this->handleView($this->view($result));
     }
 
     /**
      * Returns content array by parent or webspace root.
      *
      * @param Request $request
+     *
      * @return Response
      *
      * @throws MissingParameterChoiceException

@@ -435,7 +435,7 @@ define([
                         options: {
                             el: '#child-column-navigation',
                             selected: id,
-                            resultKey: 'content',
+                            resultKey: 'nodes',
                             linkedName: 'linked',
                             typeName: 'type',
                             hasSubName: 'hasChildren',
@@ -514,7 +514,7 @@ define([
                         el: this.$find('#content-column'),
                         instanceName: 'node',
                         selected: this.getLastSelected(),
-                        resultKey: 'content',
+                        resultKey: 'nodes',
                         linkedName: 'linked',
                         typeName: 'type',
                         hasSubName: 'hasChildren',
@@ -597,14 +597,14 @@ define([
          * @returns {String}
          */
         getUrl: function(selected) {
-            var url = '/admin/api/contents',
+            var url = '/admin/api/nodes',
                 urlParts = [
                     'webspace=' + this.options.webspace,
-                    'locale=' + this.options.language,
-                    '&mapping=title,order',
-                    '&webspace-nodes=true',
+                    'language=' + this.options.language,
+                    'mapping=title,order',
+                    'webspace-nodes=true',
                     'exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false'),
-                    '&exclude-shadows=' + (!this.showGhostPages ? 'true' : 'false')
+                    'exclude-shadows=' + (!this.showGhostPages ? 'true' : 'false')
                 ];
 
             if (!!selected) {
@@ -612,7 +612,7 @@ define([
                 urlParts.push('tree=true');
             }
 
-            return url + urlParts.join('&');
+            return url + '?' + urlParts.join('&');
         },
 
         /**

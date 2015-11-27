@@ -18,7 +18,7 @@ class TagsConverterTest extends \PHPUnit_Framework_TestCase
     public function testConvert()
     {
         $manager = $this->prophesize(TagManager::class);
-        $manager->resolveTagNames(['Tag1', 'Tag2', 'Tag3'])->willReturn([1,2,3]);
+        $manager->resolveTagNames(['Tag1', 'Tag2', 'Tag3'])->willReturn([1, 2, 3]);
 
         $converter = new TagsConverter($manager->reveal());
 
