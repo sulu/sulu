@@ -90,7 +90,10 @@ class ExcerptStructureExtension extends AbstractExtension
      */
     public function save(NodeInterface $node, $data, $webspaceKey, $languageCode)
     {
-        foreach ($this->excerptStructure->getProperties() as $property) {
+        $excerptStructure = $this->getExcerptStructure();
+        $excerptStructure->setLanguageCode($languageCode);
+
+        foreach ($excerptStructure->getProperties() as $property) {
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
 
             if (isset($data[$property->getName()])) {
@@ -117,6 +120,9 @@ class ExcerptStructureExtension extends AbstractExtension
      */
     public function load(NodeInterface $node, $webspaceKey, $languageCode)
     {
+        $excerptStructure = $this->getExcerptStructure();
+        $excerptStructure->setLanguageCode($languageCode);
+
         $data = [];
         foreach ($this->excerptStructure->getProperties() as $property) {
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());

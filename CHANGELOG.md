@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1830 [ContentBundle]   Fixed load data in correct locale for excerpt
     * BUGFIX      #1826 [ContentBundle]   Fixed preselected select elements null
     * BUGFIX      #1824 [CategoryBundle]  Fixed category-list scroll behaviour
     * BUGFIX      #1823 [TagBundle]       Added tag serialization groups to tag controller
