@@ -2,6 +2,22 @@
 
 ## dev-develop
 
+
+### IndexName decorators from MassiveSearchBundle
+
+The names of the indexes in the system can now be altered using decorators. There
+is also a `PrefixDecorator`, which can prefixes the index name with an installation
+specific prefix, which can be set using the `massive_search.metadata.prefix`
+parameter.
+
+The configuration parameter `massive_search.localization_strategy` have been removed.
+
+The indexes have to be rebuilt using the following command:
+
+```bash
+app/console massive:search:index:rebuild --purge
+```
+
 ### List-Toobar
 
 To enable a sticky behaviour take a look at the documentation <http://docs.sulu.io/en/latest/bundles/admin/javascript-hooks/sticky-toolbar.html>
