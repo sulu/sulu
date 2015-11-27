@@ -13,7 +13,7 @@ namespace Sulu\Component\Content\Repository;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\Compat\LocalizationFinder;
+use Sulu\Component\Content\Compat\LocalizationFinderInterface;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
@@ -57,7 +57,7 @@ class ContentRepositoryTest extends SuluTestCase
     private $webspaceManager;
 
     /**
-     * @var LocalizationFinder
+     * @var LocalizationFinderInterface
      */
     private $localizationFinder;
 
@@ -174,7 +174,7 @@ class ContentRepositoryTest extends SuluTestCase
             $parentUuid,
             'en',
             'sulu_io',
-            MappingBuilder::create()->disableHydrateShadow()->addProperties(['title'])->getMapping()
+            MappingBuilder::create()->shouldHydrateShadow(false)->addProperties(['title'])->getMapping()
         );
 
         $this->assertCount(2, $result);
@@ -221,7 +221,7 @@ class ContentRepositoryTest extends SuluTestCase
             $parentUuid,
             'de',
             'sulu_io',
-            MappingBuilder::create()->disableHydrateGhost()->addProperties(['title'])->getMapping()
+            MappingBuilder::create()->shouldHydrateGhost(false)->addProperties(['title'])->getMapping()
         );
 
         $this->assertCount(2, $result);
@@ -269,7 +269,7 @@ class ContentRepositoryTest extends SuluTestCase
             $parentUuid,
             'de',
             'sulu_io',
-            MappingBuilder::create()->disableFollowInternalLink()->addProperties(['title'])->getMapping()
+            MappingBuilder::create()->shouldFollowInternalLink(false)->addProperties(['title'])->getMapping()
         );
 
         $this->assertCount(3, $result);

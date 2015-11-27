@@ -20,7 +20,7 @@ interface MappingInterface
      *
      * @return bool
      */
-    public function hydrateShadow();
+    public function shouldHydrateShadow();
 
     /**
      * Indicates if content-repository should follow internal links.
@@ -34,7 +34,7 @@ interface MappingInterface
      *
      * @return bool
      */
-    public function hydrateGhost();
+    public function shouldHydrateGhost();
 
     /**
      * Returns list of properties.

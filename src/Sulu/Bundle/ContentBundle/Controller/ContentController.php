@@ -19,6 +19,7 @@ use Sulu\Component\Content\Repository\ContentRepositoryInterface;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 use Sulu\Component\Content\Repository\Mapping\MappingInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Rest\Exception\MissingParameterChoiceException;
 use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\ParameterDataTypeException;
 use Sulu\Component\Rest\RequestParametersTrait;
@@ -36,12 +37,12 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class ContentController extends RestController implements ClassResourceInterface
 {
+    use RequestParametersTrait;
+
     const WEBSPACE_NODE_SINGLE = 'single';
     const WEBSPACE_NODES_ALL = 'all';
 
     private static $relationName = 'content';
-
-    use RequestParametersTrait;
 
     /**
      * @var ContentRepositoryInterface
@@ -110,20 +111,18 @@ class ContentController extends RestController implements ClassResourceInterface
         $webspaceKey = $this->getRequestParameter($request, 'webspace', false);
 
         if (!$webspaceKey && !$webspaceNodes) {
-            throw new MissingParameterException(
-                get_class($this), sprintf('"%s" or "%s" or "%s"', 'webspace', 'webspace-nodes', 'webspace-nodes')
-            );
+            throw new MissingParameterChoiceException(get_class($this), ['webspace', 'webspace-nodes']);
         }
 
-        if (!in_array($webspaceNodes, [self::WEBSPACE_NODE_SINGLE, self::WEBSPACE_NODES_ALL, null])) {
+        if (!in_array($webspaceNodes, [self::WEBSPACE_NODE_SINGLE, static::WEBSPACE_NODES_ALL, null])) {
             throw new ParameterDataTypeException(get_class($this), 'webspace-nodes');
         }
 
         $user = $this->tokenStorage->getToken()->getUser();
 
         $mapping = MappingBuilder::create()
-            ->disableHydrateGhost(!$excludeGhosts)
-            ->disableHydrateShadow(!$excludeShadows)
+            ->shouldHydrateGhost(!$excludeGhosts)
+            ->shouldHydrateShadow(!$excludeShadows)
             ->addProperties($properties)
             ->getMapping();
 
@@ -136,13 +135,13 @@ class ContentController extends RestController implements ClassResourceInterface
             }
         }
 
-        if ($webspaceNodes === self::WEBSPACE_NODES_ALL) {
-            $contents = $this->getWebspaceNodes($mapping, $contents, $locale, $user, $webspaceKey);
-        } elseif ($webspaceNodes === self::WEBSPACE_NODE_SINGLE) {
+        if ($webspaceNodes === static::WEBSPACE_NODES_ALL) {
+            $contents = $this->getWebspaceNodes($mapping, $contents, $webspaceKey, $locale, $user);
+        } elseif ($webspaceNodes === static::WEBSPACE_NODE_SINGLE) {
             $contents = $this->getWebspaceNode($mapping, $contents, $webspaceKey, $locale, $user);
         }
 
-        $list = new CollectionRepresentation($contents, self::$relationName);
+        $list = new CollectionRepresentation($contents, static::$relationName);
         $view = $this->view($list);
 
         return $this->viewHandler->handle($view);
@@ -172,8 +171,8 @@ class ContentController extends RestController implements ClassResourceInterface
         $user = $this->tokenStorage->getToken()->getUser();
 
         $mapping = MappingBuilder::create()
-            ->disableHydrateGhost(!$excludeGhosts)
-            ->disableHydrateShadow(!$excludeShadows)
+            ->shouldHydrateGhost(!$excludeGhosts)
+            ->shouldHydrateShadow(!$excludeShadows)
             ->addProperties($properties)
             ->getMapping();
 
@@ -209,7 +208,7 @@ class ContentController extends RestController implements ClassResourceInterface
         MappingInterface $mapping,
         UserInterface $user
     ) {
-        if (!in_array($webspaceNodes, [self::WEBSPACE_NODE_SINGLE, self::WEBSPACE_NODES_ALL, null])) {
+        if (!in_array($webspaceNodes, [static::WEBSPACE_NODE_SINGLE, static::WEBSPACE_NODES_ALL, null])) {
             throw new ParameterDataTypeException(get_class($this), 'webspace-nodes');
         }
 
@@ -229,21 +228,21 @@ class ContentController extends RestController implements ClassResourceInterface
                     [
                         'locale' => $locale,
                         'webspace' => $webspaceKey,
-                        'exclude-ghosts' => !$mapping->hydrateGhost(),
-                        'exclude-shadows' => !$mapping->hydrateShadow(),
+                        'exclude-ghosts' => !$mapping->shouldHydrateGhost(),
+                        'exclude-shadows' => !$mapping->shouldHydrateShadow(),
                         'mapping' => implode(',', $mapping->getProperties()),
                     ]
                 )
             );
         }
 
-        if ($webspaceNodes === self::WEBSPACE_NODES_ALL) {
-            $contents = $this->getWebspaceNodes($mapping, $contents, $locale, $user, $webspaceKey);
-        } elseif ($webspaceNodes === self::WEBSPACE_NODE_SINGLE) {
+        if ($webspaceNodes === static::WEBSPACE_NODES_ALL) {
+            $contents = $this->getWebspaceNodes($mapping, $contents, $webspaceKey, $locale, $user);
+        } elseif ($webspaceNodes === static::WEBSPACE_NODE_SINGLE) {
             $contents = $this->getWebspaceNode($mapping, $contents, $webspaceKey, $locale, $user);
         }
 
-        $view = $this->view(new CollectionRepresentation($contents, self::$relationName));
+        $view = $this->view(new CollectionRepresentation($contents, static::$relationName));
 
         return $this->viewHandler->handle($view);
     }
@@ -254,18 +253,18 @@ class ContentController extends RestController implements ClassResourceInterface
      *
      * @param MappingInterface $mapping
      * @param array $contents
+     * @param string|null $webspaceKey
      * @param string $locale
      * @param UserInterface $user
-     * @param string $webspaceKey
      *
      * @return Content[]
      */
     private function getWebspaceNodes(
         MappingInterface $mapping,
         array $contents,
+        $webspaceKey,
         $locale,
-        UserInterface $user,
-        $webspaceKey = null
+        UserInterface $user
     ) {
         $paths = [];
         $webspaces = [];

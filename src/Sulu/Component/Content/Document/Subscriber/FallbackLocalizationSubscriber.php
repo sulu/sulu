@@ -12,7 +12,7 @@
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Component\Content\Compat\LocalizationFinder;
+use Sulu\Component\Content\Compat\LocalizationFinderInterface;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\DocumentManager\DocumentRegistry;
@@ -42,7 +42,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
     private $documentRegistry;
 
     /**
-     * @var LocalizationFinder
+     * @var LocalizationFinderInterface
      */
     private $localizationFinder;
 
@@ -50,7 +50,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         PropertyEncoder $encoder,
         DocumentInspector $inspector,
         DocumentRegistry $documentRegistry,
-        LocalizationFinder $localizationFinder
+        LocalizationFinderInterface $localizationFinder
     ) {
         $this->encoder = $encoder;
         $this->inspector = $inspector;

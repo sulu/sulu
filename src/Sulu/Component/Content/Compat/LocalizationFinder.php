@@ -14,9 +14,9 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
- * Find best localization.
+ * Tries to find localizations in the tree down then up and if nothing is found it returns any localization.
  */
-class LocalizationFinder
+class LocalizationFinder implements LocalizationFinderInterface
 {
     /**
      * @var WebspaceManagerInterface
@@ -28,13 +28,6 @@ class LocalizationFinder
         $this->webspaceManager = $webspaceManager;
     }
 
-    /**
-     * @param string $webspaceName
-     * @param string[] $availableLocales
-     * @param string $locale
-     *
-     * @return string
-     */
     public function findAvailableLocale($webspaceName, array $availableLocales, $locale)
     {
         if (!$webspaceName) {

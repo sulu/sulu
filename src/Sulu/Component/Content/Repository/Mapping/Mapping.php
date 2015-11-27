@@ -46,7 +46,7 @@ class Mapping implements MappingInterface
     /**
      * {@inheritdoc}
      */
-    public function hydrateShadow()
+    public function shouldHydrateShadow()
     {
         return $this->hydrateShadow;
     }
@@ -78,7 +78,7 @@ class Mapping implements MappingInterface
     /**
      * {@inheritdoc}
      */
-    public function hydrateGhost()
+    public function shouldHydrateGhost()
     {
         return $this->hydrateGhost;
     }

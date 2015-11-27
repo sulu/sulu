@@ -426,7 +426,7 @@ define([
          * @param {String} id of selected item
          */
         startOverlayColumnNavigation: function(id) {
-            var url =this.getUrl(id);
+            var url = this.getUrl(id);
 
             this.sandbox.start(
                 [

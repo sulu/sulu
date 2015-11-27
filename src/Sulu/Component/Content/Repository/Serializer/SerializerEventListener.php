@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Component\Content\Repository\Serializer;
 
@@ -13,6 +21,9 @@ use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
+/**
+ * Appends additional data to content-serialization.
+ */
 class SerializerEventListener implements EventSubscriberInterface
 {
     /**

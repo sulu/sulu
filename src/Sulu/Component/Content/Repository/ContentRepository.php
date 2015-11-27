@@ -16,7 +16,7 @@ use PHPCR\ItemNotFoundException;
 use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\QOM\QueryBuilder;
-use Sulu\Component\Content\Compat\LocalizationFinder;
+use Sulu\Component\Content\Compat\LocalizationFinderInterface;
 use Sulu\Component\Content\Compat\StructureType;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Repository\Mapping\MappingInterface;
@@ -32,7 +32,6 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
  */
 class ContentRepository implements ContentRepositoryInterface
 {
-    // TODO bad name they should not be handled by redirects and shadow
     private static $nonFallbackProperties = [
         'uuid',
         'state',
@@ -72,7 +71,7 @@ class ContentRepository implements ContentRepositoryInterface
     private $qomFactory;
 
     /**
-     * @var LocalizationFinder
+     * @var LocalizationFinderInterface
      */
     private $localizationFinder;
 
@@ -85,7 +84,7 @@ class ContentRepository implements ContentRepositoryInterface
         SessionManagerInterface $sessionManager,
         PropertyEncoder $propertyEncoder,
         WebspaceManagerInterface $webspaceManager,
-        LocalizationFinder $localizationFinder,
+        LocalizationFinderInterface $localizationFinder,
         SuluNodeHelper $nodeHelper
     ) {
         $this->sessionManager = $sessionManager;
@@ -104,7 +103,7 @@ class ContentRepository implements ContentRepositoryInterface
     public function find($uuid, $locale, $webspaceKey, MappingInterface $mapping, UserInterface $user = null)
     {
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
-        $queryBuilder = $this->getQueryBuilder($locale, $user);
+        $queryBuilder = $this->getQueryBuilder($locale, $locales, $user);
         $queryBuilder->where(
             $this->qomFactory->comparison(
                 new PropertyValue('node', 'jcr:uuid'),
@@ -136,7 +135,7 @@ class ContentRepository implements ContentRepositoryInterface
         $path = $this->resolvePathByUuid($uuid);
 
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
-        $queryBuilder = $this->getQueryBuilder($locale, $user);
+        $queryBuilder = $this->getQueryBuilder($locale, $locales, $user);
         $queryBuilder->where($this->qomFactory->childNode('node', $path));
         $this->appendMapping($queryBuilder, $mapping, $locales);
 
@@ -149,7 +148,7 @@ class ContentRepository implements ContentRepositoryInterface
     public function findByWebspaceRoot($locale, $webspaceKey, MappingInterface $mapping, UserInterface $user = null)
     {
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
-        $queryBuilder = $this->getQueryBuilder($locale, $user);
+        $queryBuilder = $this->getQueryBuilder($locale, $locales, $user);
         $queryBuilder->where(
             $this->qomFactory->childNode('node', $this->sessionManager->getContentPath($webspaceKey))
         );
@@ -172,7 +171,7 @@ class ContentRepository implements ContentRepositoryInterface
         $path = $this->resolvePathByUuid($uuid);
 
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
-        $queryBuilder = $this->getQueryBuilder($locale, $user)
+        $queryBuilder = $this->getQueryBuilder($locale, $locales, $user)
             ->orderBy($this->qomFactory->propertyValue('node', 'jcr:path'))
             ->where($this->qomFactory->childNode('node', $path));
 
@@ -199,7 +198,7 @@ class ContentRepository implements ContentRepositoryInterface
         UserInterface $user = null
     ) {
         $locales = $this->getLocales();
-        $queryBuilder = $this->getQueryBuilder($locale, $user);
+        $queryBuilder = $this->getQueryBuilder($locale, $locales, $user);
 
         foreach ($paths as $path) {
             $queryBuilder->orWhere(
@@ -317,11 +316,12 @@ class ContentRepository implements ContentRepositoryInterface
      * Returns QueryBuilder with basic select and where statements.
      *
      * @param string $locale
+     * @param string[] $locales
      * @param UserInterface $user
      *
      * @return QueryBuilder
      */
-    private function getQueryBuilder($locale, UserInterface $user = null)
+    private function getQueryBuilder($locale, $locales, UserInterface $user = null)
     {
         $queryBuilder = new QueryBuilder($this->qomFactory);
 
@@ -336,6 +336,9 @@ class ContentRepository implements ContentRepositoryInterface
             ->addSelect('node', $this->propertyEncoder->systemName('order'), 'order')
             ->from($this->qomFactory->selector('node', 'nt:unstructured'))
             ->orderBy($this->qomFactory->propertyValue('node', 'sulu:order'));
+
+        $this->appendSingleMapping($queryBuilder, 'template', $locales);
+        $this->appendSingleMapping($queryBuilder, 'shadow-on', $locales);
 
         if (null !== $user) {
             foreach ($user->getRoleObjects() as $role) {
@@ -390,8 +393,6 @@ class ContentRepository implements ContentRepositoryInterface
     private function appendMapping(QueryBuilder $queryBuilder, MappingInterface $mapping, $locales)
     {
         $properties = $mapping->getProperties();
-        $properties[] = 'template';
-        $properties[] = 'shadow-on';
         foreach ($properties as $propertyName) {
             $this->appendSingleMapping($queryBuilder, $propertyName, $locales);
         }
@@ -448,12 +449,12 @@ class ContentRepository implements ContentRepositoryInterface
 
         $type = null;
         if ($row->getValue('shadowOn')) {
-            if (!$mapping->hydrateShadow()) {
+            if (!$mapping->shouldHydrateShadow()) {
                 return;
             }
             $type = StructureType::getShadow($row->getValue('shadowBase'));
         } elseif ($ghostLocale !== $originalLocale) {
-            if (!$mapping->hydrateGhost()) {
+            if (!$mapping->shouldHydrateGhost()) {
                 return;
             }
             $locale = $ghostLocale;
