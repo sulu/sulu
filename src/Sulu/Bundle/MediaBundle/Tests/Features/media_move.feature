@@ -4,17 +4,18 @@ Feature: Media move
     I need to be able to move medias
 
     Background:
-        Given I am logged in as an administrator
-
-    Scenario: Move media
         Given the media collection "Foobar" exists
         And the file "image1.png" has been uploaded to the "Dornbirn" collection
         And the file "image2.png" has been uploaded to the "Dornbirn" collection
         And the file "image3.jpg" has been uploaded to the "Dornbirn" collection
         And the file "image4.jpg" has been uploaded to the "Dornbirn" collection
+
+    Scenario: Move media
+        Given I am logged in as an administrator
         When I am editing the media collection "Dornbirn"
+        And I expect the "husky.datagrid.view.rendered" event
         Then I expect to see "4" ".masonry-item" elements
-        When I click on the element ".masonry-item:nth-child(1)"
+        When I click on the element ".masonry-item:nth-child(1) .custom-checkbox"
         And I click toolbar item "media-move"
         And I expect an overlay to appear
         And I expect the "husky.column-navigation.collection-select.initialized" event
@@ -26,15 +27,12 @@ Feature: Media move
         Then I expect to see "3" ".masonry-item" elements
 
     Scenario: Move multiple media
-        Given the media collection "Foobar" exists
-        And the file "image1.png" has been uploaded to the "Dornbirn" collection
-        And the file "image2.png" has been uploaded to the "Dornbirn" collection
-        And the file "image3.jpg" has been uploaded to the "Dornbirn" collection
-        And the file "image4.jpg" has been uploaded to the "Dornbirn" collection
+        Given I am logged in as an administrator
         And I am editing the media collection "Dornbirn"
+        And I expect the "husky.datagrid.view.rendered" event
         And I expect to see "4" ".masonry-item" elements
-        When I click on the element ".masonry-item:nth-child(1)"
-        And I click on the element ".masonry-item:nth-child(3)"
+        When I click on the element ".masonry-item:nth-child(1) .custom-checkbox"
+        And I click on the element ".masonry-item:nth-child(3) .custom-checkbox"
         And I click toolbar item "media-move"
         Then I expect an overlay to appear
         And I expect the "husky.column-navigation.collection-select.initialized" event
