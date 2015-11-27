@@ -25,12 +25,12 @@ use Sulu\Exception\FeatureNotImplementedException;
  * @Relation(
  *      "children",
  *      href = @Route(
- *          "get_contents",
- *          parameters = {"parent" = "expr(object.getId())", "locale" = "expr(object.getLocale())", "webspace" = "expr(object.getWebspaceKey())", "mapping" = "expr(object.getMapping())"}
+ *          "get_nodes",
+ *          parameters = {"parent" = "expr(object.getId())", "language" = "expr(object.getLocale())", "webspace" = "expr(object.getWebspaceKey())", "fields" = "expr(object.getMapping())"}
  *      )
  * )
  * @Relation(
- *      "content",
+ *      "nodes",
  *      embedded = @Embedded("expr(object.getChildren())")
  * )
  */

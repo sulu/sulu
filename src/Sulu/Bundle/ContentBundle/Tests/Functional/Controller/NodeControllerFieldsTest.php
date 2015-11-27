@@ -17,7 +17,7 @@ use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
-class ContentControllerTest extends SuluTestCase
+class NodeControllerFieldsTest extends SuluTestCase
 {
     /**
      * @var DocumentManagerInterface
@@ -45,11 +45,11 @@ class ContentControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/contents', ['webspace' => 'sulu_io', 'locale' => 'de']);
+        $client->request('GET', '/api/nodes', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
 
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $items = $result['_embedded']['content'];
+        $items = $result['_embedded']['nodes'];
 
         $this->assertCount(3, $items);
 
@@ -71,11 +71,11 @@ class ContentControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/contents', ['webspace' => 'sulu_io', 'locale' => 'de', 'mapping' => 'title']);
+        $client->request('GET', '/api/nodes', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
 
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $items = $result['_embedded']['content'];
+        $items = $result['_embedded']['nodes'];
 
         $this->assertCount(3, $items);
 
@@ -96,13 +96,13 @@ class ContentControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/contents',
-            ['webspace' => 'sulu_io', 'locale' => 'de', 'mapping' => 'title', 'exclude-shadows' => true]
+            '/api/nodes',
+            ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title', 'exclude-shadows' => true]
         );
 
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $items = $result['_embedded']['content'];
+        $items = $result['_embedded']['nodes'];
 
         $this->assertCount(2, $items);
 
@@ -120,11 +120,11 @@ class ContentControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/contents', ['webspace' => 'sulu_io', 'locale' => 'de', 'mapping' => 'title']);
+        $client->request('GET', '/api/nodes', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
 
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $items = $result['_embedded']['content'];
+        $items = $result['_embedded']['nodes'];
 
         $this->assertCount(3, $items);
 
@@ -145,13 +145,13 @@ class ContentControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/contents',
-            ['webspace' => 'sulu_io', 'locale' => 'de', 'mapping' => 'title', 'exclude-ghosts' => true]
+            '/api/nodes',
+            ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title', 'exclude-ghosts' => true]
         );
 
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $items = $result['_embedded']['content'];
+        $items = $result['_embedded']['nodes'];
 
         $this->assertCount(2, $items);
 
@@ -169,11 +169,11 @@ class ContentControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/contents', ['webspace' => 'sulu_io', 'locale' => 'de', 'mapping' => 'title']);
+        $client->request('GET', '/api/nodes', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
 
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $items = $result['_embedded']['content'];
+        $items = $result['_embedded']['nodes'];
 
         $this->assertCount(3, $items);
 
@@ -194,13 +194,13 @@ class ContentControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/contents',
-            ['webspace' => 'sulu_io', 'locale' => 'de', 'mapping' => 'title', 'exclude-ghosts' => true, 'exclude-shadows' => true]
+            '/api/nodes',
+            ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title', 'exclude-ghosts' => true, 'exclude-shadows' => true]
         );
 
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $items = $result['_embedded']['content'];
+        $items = $result['_embedded']['nodes'];
 
         $this->assertCount(1, $items);
 
@@ -218,14 +218,14 @@ class ContentControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            sprintf('/api/contents/%s', $page1->getUuid()),
-            ['webspace' => 'sulu_io', 'locale' => 'de']
+            sprintf('/api/nodes/%s', $page1->getUuid()),
+            ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']
         );
         $result = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals($page1->getUuid(), $result['id']);
         $this->assertTrue($result['hasChildren']);
-        $this->assertEmpty($result['_embedded']['content']);
+        $this->assertEmpty($result['_embedded']['nodes']);
     }
 
     public function testGetTree()
@@ -250,46 +250,46 @@ class ContentControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            sprintf('/api/contents/%s', $page10->getUuid()),
-            ['webspace' => 'sulu_io', 'locale' => 'de', 'tree' => true]
+            sprintf('/api/nodes/%s', $page10->getUuid()),
+            ['webspace' => 'sulu_io', 'language' => 'de', 'tree' => true, 'fields' => 'title']
         );
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $layer = $result['_embedded']['content'];
+        $layer = $result['_embedded']['nodes'];
         $this->assertCount(2, $layer);
         $this->assertEquals($page1->getUuid(), $layer[0]['id']);
         $this->assertTrue($layer[0]['hasChildren']);
-        $this->assertCount(0, $layer[0]['_embedded']['content']);
+        $this->assertCount(0, $layer[0]['_embedded']['nodes']);
         $this->assertEquals($page2->getUuid(), $layer[1]['id']);
         $this->assertTrue($layer[1]['hasChildren']);
-        $this->assertCount(2, $layer[1]['_embedded']['content']);
+        $this->assertCount(2, $layer[1]['_embedded']['nodes']);
 
-        $layer = $layer[1]['_embedded']['content'];
+        $layer = $layer[1]['_embedded']['nodes'];
         $this->assertCount(2, $layer);
         $this->assertEquals($page5->getUuid(), $layer[0]['id']);
         $this->assertFalse($layer[0]['hasChildren']);
-        $this->assertCount(0, $layer[0]['_embedded']['content']);
+        $this->assertCount(0, $layer[0]['_embedded']['nodes']);
         $this->assertEquals($page6->getUuid(), $layer[1]['id']);
         $this->assertTrue($layer[1]['hasChildren']);
-        $this->assertCount(2, $layer[1]['_embedded']['content']);
+        $this->assertCount(2, $layer[1]['_embedded']['nodes']);
 
-        $layer = $layer[1]['_embedded']['content'];
+        $layer = $layer[1]['_embedded']['nodes'];
         $this->assertCount(2, $layer);
         $this->assertEquals($page9->getUuid(), $layer[0]['id']);
         $this->assertFalse($layer[0]['hasChildren']);
-        $this->assertCount(0, $layer[0]['_embedded']['content']);
+        $this->assertCount(0, $layer[0]['_embedded']['nodes']);
         $this->assertEquals($page10->getUuid(), $layer[1]['id']);
         $this->assertTrue($layer[1]['hasChildren']);
-        $this->assertCount(2, $layer[1]['_embedded']['content']);
+        $this->assertCount(2, $layer[1]['_embedded']['nodes']);
 
-        $layer = $layer[1]['_embedded']['content'];
+        $layer = $layer[1]['_embedded']['nodes'];
         $this->assertCount(2, $layer);
         $this->assertEquals($page11->getUuid(), $layer[0]['id']);
         $this->assertFalse($layer[0]['hasChildren']);
-        $this->assertCount(0, $layer[0]['_embedded']['content']);
+        $this->assertCount(0, $layer[0]['_embedded']['nodes']);
         $this->assertEquals($page12->getUuid(), $layer[1]['id']);
         $this->assertTrue($layer[1]['hasChildren']);
-        $this->assertCount(0, $layer[1]['_embedded']['content']);
+        $this->assertCount(0, $layer[1]['_embedded']['nodes']);
     }
 
     public function testLinkedInternal()
@@ -303,8 +303,8 @@ class ContentControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            sprintf('/api/contents/%s', $page->getUuid()),
-            ['webspace' => 'sulu_io', 'locale' => 'en']
+            sprintf('/api/nodes/%s', $page->getUuid()),
+            ['webspace' => 'sulu_io', 'language' => 'en', 'fields' => 'title']
         );
         $result = json_decode($client->getResponse()->getContent(), true);
 
@@ -321,8 +321,8 @@ class ContentControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            sprintf('/api/contents/%s', $page->getUuid()),
-            ['webspace' => 'sulu_io', 'locale' => 'en']
+            sprintf('/api/nodes/%s', $page->getUuid()),
+            ['webspace' => 'sulu_io', 'language' => 'en', 'fields' => 'title']
         );
         $result = json_decode($client->getResponse()->getContent(), true);
 
@@ -339,8 +339,8 @@ class ContentControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            sprintf('/api/contents/%s', $page->getUuid()),
-            ['webspace' => 'sulu_io', 'locale' => 'de']
+            sprintf('/api/nodes/%s', $page->getUuid()),
+            ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']
         );
         $result = json_decode($client->getResponse()->getContent(), true);
 
@@ -358,8 +358,8 @@ class ContentControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            sprintf('/api/contents/%s', $page->getUuid()),
-            ['webspace' => 'sulu_io', 'locale' => 'de']
+            sprintf('/api/nodes/%s', $page->getUuid()),
+            ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']
         );
         $result = json_decode($client->getResponse()->getContent(), true);
 
@@ -381,28 +381,28 @@ class ContentControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/contents',
-            ['webspace' => 'sulu_io', 'locale' => 'de', 'webspace-nodes' => 'single', 'mapping' => 'title']
+            '/api/nodes',
+            ['webspace' => 'sulu_io', 'language' => 'de', 'webspace-nodes' => 'single', 'fields' => 'title']
         );
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $layer = $result['_embedded']['content'];
+        $layer = $result['_embedded']['nodes'];
         $this->assertCount(1, $layer);
         $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $layer[0]['id']);
         $this->assertEquals('Sulu CMF', $layer[0]['title']);
         $this->assertTrue($layer[0]['hasChildren']);
-        $this->assertCount(2, $layer[0]['_embedded']['content']);
+        $this->assertCount(2, $layer[0]['_embedded']['nodes']);
 
-        $layer = $layer[0]['_embedded']['content'];
+        $layer = $layer[0]['_embedded']['nodes'];
         $this->assertCount(2, $layer);
         $this->assertEquals($page1->getUuid(), $layer[0]['id']);
         $this->assertEquals('test-1', $layer[0]['title']);
         $this->assertTrue($layer[0]['hasChildren']);
-        $this->assertEmpty($layer[0]['_embedded']['content']);
+        $this->assertEmpty($layer[0]['_embedded']['nodes']);
         $this->assertEquals($page2->getUuid(), $layer[1]['id']);
         $this->assertEquals('test-2', $layer[1]['title']);
         $this->assertFalse($layer[1]['hasChildren']);
-        $this->assertEmpty($layer[1]['_embedded']['content']);
+        $this->assertEmpty($layer[1]['_embedded']['nodes']);
     }
 
     public function testCGetActionAllWebspaceNodes()
@@ -419,32 +419,32 @@ class ContentControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/contents',
-            ['webspace' => 'sulu_io', 'locale' => 'de', 'webspace-nodes' => 'all', 'mapping' => 'title']
+            '/api/nodes',
+            ['webspace' => 'sulu_io', 'language' => 'de', 'webspace-nodes' => 'all', 'fields' => 'title']
         );
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $layer = $result['_embedded']['content'];
+        $layer = $result['_embedded']['nodes'];
         $this->assertCount(2, $layer);
         $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $layer[0]['id']);
         $this->assertEquals('Sulu CMF', $layer[0]['title']);
         $this->assertTrue($layer[0]['hasChildren']);
-        $this->assertCount(2, $layer[0]['_embedded']['content']);
+        $this->assertCount(2, $layer[0]['_embedded']['nodes']);
         $this->assertEquals($this->sessionManager->getContentNode('test_io')->getIdentifier(), $layer[1]['id']);
         $this->assertEquals('Test CMF', $layer[1]['title']);
         $this->assertTrue($layer[1]['hasChildren']);
-        $this->assertCount(0, $layer[1]['_embedded']['content']);
+        $this->assertCount(0, $layer[1]['_embedded']['nodes']);
 
-        $layer = $layer[0]['_embedded']['content'];
+        $layer = $layer[0]['_embedded']['nodes'];
         $this->assertCount(2, $layer);
         $this->assertEquals($page1->getUuid(), $layer[0]['id']);
         $this->assertEquals('test-1', $layer[0]['title']);
         $this->assertTrue($layer[0]['hasChildren']);
-        $this->assertEmpty($layer[0]['_embedded']['content']);
+        $this->assertEmpty($layer[0]['_embedded']['nodes']);
         $this->assertEquals($page2->getUuid(), $layer[1]['id']);
         $this->assertEquals('test-2', $layer[1]['title']);
         $this->assertFalse($layer[1]['hasChildren']);
-        $this->assertEmpty($layer[1]['_embedded']['content']);
+        $this->assertEmpty($layer[1]['_embedded']['nodes']);
     }
 
     public function testGetTreeActionSingleWebspaceNodes()
@@ -462,40 +462,40 @@ class ContentControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/contents/' . $page1->getUuid(),
+            '/api/nodes/' . $page1->getUuid(),
             [
                 'tree' => 'true',
                 'webspace' => 'sulu_io',
-                'locale' => 'de',
+                'language' => 'de',
                 'webspace-nodes' => 'single',
-                'mapping' => 'title',
+                'fields' => 'title',
             ]
         );
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $layer = $result['_embedded']['content'];
+        $layer = $result['_embedded']['nodes'];
         $this->assertCount(1, $layer);
         $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $layer[0]['id']);
         $this->assertEquals('Sulu CMF', $layer[0]['title']);
         $this->assertTrue($layer[0]['hasChildren']);
-        $this->assertCount(2, $layer[0]['_embedded']['content']);
+        $this->assertCount(2, $layer[0]['_embedded']['nodes']);
 
-        $layer = $layer[0]['_embedded']['content'];
+        $layer = $layer[0]['_embedded']['nodes'];
         $this->assertCount(2, $layer);
         $this->assertEquals($page1->getUuid(), $layer[0]['id']);
         $this->assertEquals('test-1', $layer[0]['title']);
         $this->assertTrue($layer[0]['hasChildren']);
-        $this->assertCount(1, $layer[0]['_embedded']['content']);
+        $this->assertCount(1, $layer[0]['_embedded']['nodes']);
         $this->assertEquals($page2->getUuid(), $layer[1]['id']);
         $this->assertEquals('test-2', $layer[1]['title']);
         $this->assertFalse($layer[1]['hasChildren']);
-        $this->assertEmpty($layer[1]['_embedded']['content']);
+        $this->assertEmpty($layer[1]['_embedded']['nodes']);
 
-        $layer = $layer[0]['_embedded']['content'];
+        $layer = $layer[0]['_embedded']['nodes'];
         $this->assertEquals($page11->getUuid(), $layer[0]['id']);
         $this->assertEquals('test-1-1', $layer[0]['title']);
         $this->assertTrue($layer[0]['hasChildren']);
-        $this->assertEmpty($layer[0]['_embedded']['content']);
+        $this->assertEmpty($layer[0]['_embedded']['nodes']);
     }
 
     public function testGetTreeActionAllWebspaceNodes()
@@ -513,44 +513,44 @@ class ContentControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/contents/' . $page1->getUuid(),
+            '/api/nodes/' . $page1->getUuid(),
             [
                 'tree' => 'true',
                 'webspace' => 'sulu_io',
-                'locale' => 'de',
+                'language' => 'de',
                 'webspace-nodes' => 'all',
-                'mapping' => 'title',
+                'fields' => 'title',
             ]
         );
         $result = json_decode($client->getResponse()->getContent(), true);
 
-        $layer = $result['_embedded']['content'];
+        $layer = $result['_embedded']['nodes'];
         $this->assertCount(2, $layer);
         $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $layer[0]['id']);
         $this->assertEquals('Sulu CMF', $layer[0]['title']);
         $this->assertTrue($layer[0]['hasChildren']);
-        $this->assertCount(2, $layer[0]['_embedded']['content']);
+        $this->assertCount(2, $layer[0]['_embedded']['nodes']);
         $this->assertEquals($this->sessionManager->getContentNode('test_io')->getIdentifier(), $layer[1]['id']);
         $this->assertEquals('Test CMF', $layer[1]['title']);
         $this->assertTrue($layer[1]['hasChildren']);
-        $this->assertCount(0, $layer[1]['_embedded']['content']);
+        $this->assertCount(0, $layer[1]['_embedded']['nodes']);
 
-        $layer = $layer[0]['_embedded']['content'];
+        $layer = $layer[0]['_embedded']['nodes'];
         $this->assertCount(2, $layer);
         $this->assertEquals($page1->getUuid(), $layer[0]['id']);
         $this->assertEquals('test-1', $layer[0]['title']);
         $this->assertTrue($layer[0]['hasChildren']);
-        $this->assertCount(1, $layer[0]['_embedded']['content']);
+        $this->assertCount(1, $layer[0]['_embedded']['nodes']);
         $this->assertEquals($page2->getUuid(), $layer[1]['id']);
         $this->assertEquals('test-2', $layer[1]['title']);
         $this->assertFalse($layer[1]['hasChildren']);
-        $this->assertEmpty($layer[1]['_embedded']['content']);
+        $this->assertEmpty($layer[1]['_embedded']['nodes']);
 
-        $layer = $layer[0]['_embedded']['content'];
+        $layer = $layer[0]['_embedded']['nodes'];
         $this->assertEquals($page11->getUuid(), $layer[0]['id']);
         $this->assertEquals('test-1-1', $layer[0]['title']);
         $this->assertTrue($layer[0]['hasChildren']);
-        $this->assertEmpty($layer[0]['_embedded']['content']);
+        $this->assertEmpty($layer[0]['_embedded']['nodes']);
     }
 
     /**
