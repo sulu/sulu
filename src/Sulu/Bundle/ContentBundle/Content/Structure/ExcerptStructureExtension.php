@@ -46,11 +46,6 @@ class ExcerptStructureExtension extends AbstractExtension
     protected $additionalPrefix = self::EXCERPT_EXTENSION_NAME;
 
     /**
-     * @var StructureInterface
-     */
-    protected $excerptStructure;
-
-    /**
      * @var ContentTypeManagerInterface
      */
     protected $contentTypeManager;
@@ -90,8 +85,7 @@ class ExcerptStructureExtension extends AbstractExtension
      */
     public function save(NodeInterface $node, $data, $webspaceKey, $languageCode)
     {
-        $excerptStructure = $this->getExcerptStructure();
-        $excerptStructure->setLanguageCode($languageCode);
+        $excerptStructure = $this->getExcerptStructure($languageCode);
 
         foreach ($excerptStructure->getProperties() as $property) {
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
@@ -120,11 +114,10 @@ class ExcerptStructureExtension extends AbstractExtension
      */
     public function load(NodeInterface $node, $webspaceKey, $languageCode)
     {
-        $excerptStructure = $this->getExcerptStructure();
-        $excerptStructure->setLanguageCode($languageCode);
+        $excerptStructure = $this->getExcerptStructure($languageCode);
 
         $data = [];
-        foreach ($this->excerptStructure->getProperties() as $property) {
+        foreach ($excerptStructure->getProperties() as $property) {
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
             $contentType->read(
                 $node,
@@ -153,13 +146,12 @@ class ExcerptStructureExtension extends AbstractExtension
         // lazy load excerpt structure to avoid redeclaration of classes
         // should be done before parent::setLanguageCode because it uses the $thi<->properties
         // which will be set in initExcerptStructure
-        if ($this->excerptStructure === null) {
-            $this->initProperties();
-        }
+        $this->initProperties($languageCode);
+
         $this->languageCode = $languageCode;
+        $this->languageNamespace = $languageNamespace;
 
         parent::setLanguageCode($languageCode, $languageNamespace, $namespace);
-        $this->languageNamespace = $languageNamespace;
     }
 
     /**
@@ -206,25 +198,31 @@ class ExcerptStructureExtension extends AbstractExtension
     /**
      * Returns and caches excerpt-structure.
      *
+     * @param string $locale
+     *
      * @return StructureInterface
      */
-    private function getExcerptStructure()
+    private function getExcerptStructure($locale = null)
     {
-        if ($this->excerptStructure === null) {
-            $this->excerptStructure = $this->structureManager->getStructure(self::EXCERPT_EXTENSION_NAME);
-            $this->excerptStructure->setLanguageCode($this->languageCode);
+        if ($locale === null) {
+            $locale = $this->languageCode;
         }
 
-        return $this->excerptStructure;
+        $excerptStructure = $this->structureManager->getStructure(self::EXCERPT_EXTENSION_NAME);
+        $excerptStructure->setLanguageCode($locale);
+
+        return $excerptStructure;
     }
 
     /**
-     * initiates structure and properties.
+     * Initiates structure and properties.
+     *
+     * @param string $locale
      */
-    private function initProperties()
+    private function initProperties($locale)
     {
         /** @var PropertyInterface $property */
-        foreach ($this->getExcerptStructure()->getProperties() as $property) {
+        foreach ($this->getExcerptStructure($locale)->getProperties() as $property) {
             $this->properties[] = $property->getName();
         }
     }
