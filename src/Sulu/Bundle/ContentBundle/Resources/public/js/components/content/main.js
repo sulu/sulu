@@ -457,7 +457,7 @@ define([
                         var content = new Content({id: id});
                         content.fullDestroy(this.options.webspace, this.options.language, false, {
                             processData: true,
-                            success: this.deleteSuccessCallback,
+                            success: this.deleteSuccessCallback.bind(this),
                             error: function(model, response) {
                                 this.displayReferentialIntegrityDialog(model, response.responseJSON);
                                 this.sandbox.emit('sulu.preview.deleted', id);
@@ -536,6 +536,7 @@ define([
         deleteSuccessCallback: function() {
             var route = 'content/contents/' + this.options.webspace + '/' + this.options.language;
             this.sandbox.emit('sulu.router.navigate', route);
+            this.sandbox.emit('sulu.content.content.deleted');
         },
 
         changeState: function(state) {
@@ -1058,8 +1059,12 @@ define([
 
             if (this.options.display === 'column') {
                 var showGhostPages = this.sandbox.sulu.getUserSetting(SHOW_GHOST_PAGES_KEY),
-                    toggler = (!!JSON.parse(showGhostPages) ? 'toggler-on' : 'toggler'),
+                    toggler = 'toggler-on',
                     columnButtons = {};
+
+                if (showGhostPages !== null) {
+                    toggler = (!!JSON.parse(showGhostPages) ? 'toggler-on' : 'toggler');
+                }
 
                 columnButtons[toggler] = {
                     options: {

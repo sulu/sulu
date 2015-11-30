@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
 
 use PHPCR\NodeInterface;
+use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Content\Types\Date;
 use Sulu\Component\Content\Compat\PropertyInterface;
 
@@ -68,8 +69,20 @@ class DateTest extends \PHPUnit_Framework_TestCase
 
         $date = new Date('test.html.twig');
 
+        // to avoid second jumps
+        $dateValue = new \DateTime();
         $date->write($node->reveal(), $property->reveal(), 1, $webspaceKey, $locale, null);
 
-        $node->setProperty('test', $dateValue)->shouldBeCalled();
+        $node->setProperty(
+            'test',
+            Argument::that(
+                function (\DateTime $value) use ($dateValue) {
+                    // let there a delta of 2 seconds is ok
+                    $this->assertEquals($dateValue->getTimestamp(), $value->getTimestamp(), '', 60);
+
+                    return true;
+                }
+            )
+        )->shouldBeCalled();
     }
 }

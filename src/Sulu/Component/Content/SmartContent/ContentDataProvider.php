@@ -94,7 +94,8 @@ class ContentDataProvider implements DataProviderInterface
             ->enableDatasource(
                 'content-datasource@sulucontent',
                 [
-                    'url' => '/admin/api/nodes?{id=dataSource&}tree=true&webspace-node=true&webspace={webspace}&language={locale}',
+                    'rootUrl' => '/admin/api/nodes?webspace={webspace}&language={locale}&fields=title,order&webspace-nodes=single',
+                    'selectedUrl' => '/admin/api/nodes/{datasource}?tree=true&webspace={webspace}&language={locale}&fields=title,order&webspace-nodes=single',
                     'resultKey' => 'nodes',
                 ]
             )

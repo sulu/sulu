@@ -13,7 +13,8 @@ define([], function() {
 
     var defaults = {
             options: {
-                url: null,
+                rootUrl: null,
+                selectedUrl: null,
                 resultKey: null,
                 selected: null,
                 webspace: null,
@@ -69,7 +70,10 @@ define([], function() {
                 {
                     el: this.$columnNavigationElement,
                     instanceName: 'smart-content-' + this.options.instanceName,
-                    url: this.prepareUrl(this.options.url),
+                    url: this.getUrl(),
+                    linkedName: 'linked',
+                    typeName: 'type',
+                    hasSubName: 'hasChildren',
                     resultKey: this.options.resultKey,
                     selected: this.selected,
                     actionCallback: function(item) {
@@ -83,19 +87,29 @@ define([], function() {
         },
 
         /**
-         * Prepare url for column-navigation
+         * Returns url for column-navigation.
+         *
+         * @returns {String}
+         */
+        getUrl: function() {
+            if (!!this.selected) {
+                return this.prepareUrl(this.options.selectedUrl);
+            }
+
+            return this.prepareUrl(this.options.rootUrl);
+        },
+
+        /**
+         * Prepare url for column-navigation.
          *
          * @param {String} url
          *
          * @returns {String}
          */
         prepareUrl: function(url) {
-            url = url.replace(
-                '{id=dataSource&}',
-                (!!this.selected ? 'id=' + this.selected + '&' : '')
-            );
-            url = url.replace('{webspace}', this.options.webspace);
             url = url.replace('{locale}', this.options.locale);
+            url = url.replace('{webspace}', this.options.webspace);
+            url = url.replace('{datasource}', this.selected);
 
             return url;
         },
@@ -138,7 +152,7 @@ define([], function() {
 
             this.sandbox.emit(
                 'husky.column-navigation.smart-content-' + this.options.instanceName + '.set-options',
-                {selected: selected, url: this.prepareUrl(this.options.url)}
+                {selected: selected, url: this.getUrl()}
             );
         },
 

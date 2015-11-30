@@ -82,5 +82,22 @@
 
             <tag name="sulu.js_config"/>
         </service>
+
+        <!-- Content Repository -->
+        <service id="sulu_content.content_repository" class="Sulu\Component\Content\Repository\ContentRepository">
+            <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu_document_manager.property_encoder"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu.content.localization_finder"/>
+            <argument type="service" id="sulu.util.node_helper"/>
+        </service>
+        <service id="sulu_content.content_repository.event_subscriber"
+                 class="Sulu\Component\Content\Repository\Serializer\SerializerEventListener">
+            <argument type="service" id="sulu_security.access_control_manager"/>
+            <argument type="service" id="security.token_storage"/>
+
+            <tag name="jms_serializer.event_subscriber" />
+            <tag name="sulu.context" context="admin"/>
+        </service>
     </services>
 </container>

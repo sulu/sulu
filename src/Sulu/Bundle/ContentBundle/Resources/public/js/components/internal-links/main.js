@@ -21,7 +21,8 @@ define([], function() {
             eventNamespace: 'sulu.internal-links',
             resultKey: 'nodes',
             idKey: 'uuid',
-            columnNavigationUrl: '',
+            locale: null,
+            webspace: null,
             hideConfigButton: true,
             hidePositionElement: true,
             dataAttribute: 'internal-links',
@@ -38,7 +39,7 @@ define([], function() {
         templates = {
             data: function(options) {
                 return [
-                    '<div id="', options.ids.columnNavigation, '"/>',
+                    '<div id="', options.ids.columnNavigation, '"/>'
                 ].join('');
             },
 
@@ -96,7 +97,10 @@ define([], function() {
                         name: 'column-navigation@husky',
                         options: {
                             el: getId.call(this, 'columnNavigation'),
-                            url: this.options.columnNavigationUrl,
+                            url: getColumnNavigationUrl.call(this),
+                            linkedName: 'linked',
+                            typeName: 'type',
+                            hasSubName: 'hasChildren',
                             instanceName: this.options.instanceName,
                             actionIcon: 'fa-plus-circle',
                             resultKey: this.options.resultKey,
@@ -111,6 +115,23 @@ define([], function() {
                     }
                 ]
             );
+        },
+
+        /**
+         * returns url for main column-navigation
+         *
+         * @returns {String}
+         */
+        getColumnNavigationUrl = function() {
+            var url = '/admin/api/nodes',
+                urlParts = [
+                    'webspace=' + this.options.webspace,
+                    'language=' + this.options.locale,
+                    'fields=title,order',
+                    'webspace-nodes=all'
+                ];
+
+            return url + '?' + urlParts.join('&');
         },
 
         /**
