@@ -230,9 +230,9 @@
                 <source>sulu.media.play-video.loading</source>
                 <target>Lade Video</target>
             </trans-unit>
-            <trans-unit id="243d88cf2f643526337ls55369f22124" resname="sulu.media.preview">
+            <trans-unit id="243d88cf2f643526337ls55369f22124" resname="sulu.media.preview-tab">
                 <source>sulu.media.preview</source>
-                <target>Vorschau</target>
+                <target>Vorschaubild</target>
             </trans-unit>
             <trans-unit id="243d88cf2f643526337js55369f22124" resname="sulu.media.reset-preview-image">
                 <source>sulu.media.reset-preview-image</source>
