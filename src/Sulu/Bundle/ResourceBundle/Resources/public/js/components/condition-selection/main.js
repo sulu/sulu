@@ -507,11 +507,26 @@ define([], function() {
         },
 
         /**
+         * Returns if given type is supported for filtering.
+         *
+         * @param typeString
+         *
+         * @returns {boolean}
+         */
+        isSupportedType = function(typeString) {
+            if (getTypeByName(typeString, false) !== null) {
+                return true;
+            }
+
+            return false;
+        },
+
+        /**
          * Retrieves a numeric representation for a string representation of a type
          * @param type
          * @returns {number}
          */
-        getTypeByName = function(type) {
+        getTypeByName = function(type, showError) {
             switch (type) {
                 case 'string':
                     return STRING_TYPE;
@@ -525,7 +540,9 @@ define([], function() {
                 case 'datetime':
                     return DATETIME_TYPE;
                 default:
-                    this.sandbox.logger.error('Unsupported type "' + type + '" found!');
+                    if (showError !== false) {
+                        this.sandbox.logger.error('Unsupported type "' + type + '" found!');
+                    }
                     return null;
             }
         },
@@ -848,9 +865,13 @@ define([], function() {
          */
         transformFieldsArrayToObject = function(fields) {
             var result = {};
+
             fields.forEach(function(field) {
-                result[field.name] = field;
+                if (isSupportedType(field.type)) {
+                    result[field.name] = field;
+                }
             }.bind(this));
+
             return result;
         };
 
