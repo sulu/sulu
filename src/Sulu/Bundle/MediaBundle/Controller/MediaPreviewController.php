@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\Delete;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
@@ -58,18 +59,18 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
             if ($mediaEntity->getPreviewImage() !== null) {
                 $data['id'] = $mediaEntity->getPreviewImage()->getId();
             }
-            $data['collection'] = $systemCollectionManager->getSystemCollection('sulu_media.preview_img');
+            $data['collection'] = $systemCollectionManager->getSystemCollection('sulu_media.preview_image');
             $data['locale'] = $locale;
             $data['title'] = $media->getTitle();
 
             $uploadedFile = $this->getUploadedFile($request, 'previewImage');
-            $previewImg = $mediaManager->save($uploadedFile, $data, $this->getUser()->getId());
+            $previewImage = $mediaManager->save($uploadedFile, $data, $this->getUser()->getId());
 
-            $mediaEntity->setPreviewImage($previewImg->getEntity());
+            $mediaEntity->setPreviewImage($previewImage->getEntity());
 
             $this->getDoctrine()->getEntityManager()->flush();
 
-            $view = $this->view($previewImg, 200);
+            $view = $this->view($previewImage, 200);
         } catch (MediaNotFoundException $e) {
             $view = $this->view($e->toArray(), 404);
         } catch (MediaException $e) {
@@ -81,6 +82,8 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
 
     /**
      * Removes current preview image and sets default video thumbnail.
+     *
+     * @Delete("media/{id}/preview")
      *
      * @param $id
      * @param Request $request
