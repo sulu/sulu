@@ -258,17 +258,13 @@ class StructureSubscriber implements EventSubscriberInterface
             $legacyProperty = $this->legacyPropertyFactory->createTranslatedProperty($structureProperty, $locale);
             $legacyProperty->setValue($value);
 
-            try {
-                $contentType->remove(
-                    $node,
-                    $legacyProperty,
-                    null,
-                    $webspaceName,
-                    $locale,
-                    null
-                );
-            } catch (\Exception $e) {
-            }
+            $contentType->remove(
+                $node,
+                $legacyProperty,
+                $webspaceName,
+                $locale,
+                null
+            );
 
             $contentType->write(
                 $node,

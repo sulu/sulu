@@ -151,7 +151,6 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
             return;
         }
 
-        $propertyValue = $node->getPropertyValueWithDefault($property->getName(), null);
         $treeValue = $this->getResourceLocator($node, $webspaceKey, $languageCode, $segmentKey);
         if ($treeValue === '/') {
             return;
@@ -161,7 +160,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
         // or the tree value does not exist
         if ($treeValue === null) {
             $this->getStrategy()->save($node, $value, $userId, $webspaceKey, $languageCode, $segmentKey);
-        } elseif ($propertyValue === $treeValue && $propertyValue != $value) {
+        } elseif ($treeValue !== $value) {
             $this->getStrategy()->move(
                 $treeValue,
                 $value,
@@ -186,7 +185,6 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
         $languageCode,
         $segmentKey = null
     ) {
-        $this->strategy->deleteByPath($property->getValue(), $webspaceKey, $languageCode, $segmentKey);
         if ($node->hasProperty($property->getName())) {
             $node->getProperty($property->getName())->remove();
         }

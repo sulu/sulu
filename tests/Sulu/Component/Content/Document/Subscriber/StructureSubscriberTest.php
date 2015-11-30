@@ -161,6 +161,14 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->structure->getProperty('prop1')->willReturn($this->propertyValue->reveal());
         $this->propertyValue->getValue()->willReturn('test');
 
+        $this->contentType->remove(
+            $this->node->reveal(),
+            $this->legacyProperty->reveal(),
+            'webspace',
+            'fr',
+            null
+        )->shouldBeCalled();
+
         $this->contentType->write(
             $this->node->reveal(),
             $this->legacyProperty->reveal(),

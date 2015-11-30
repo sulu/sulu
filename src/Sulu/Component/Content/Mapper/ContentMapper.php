@@ -1099,8 +1099,6 @@ class ContentMapper implements ContentMapperInterface
             $locale,
             $segmentKey
         );
-
-        $this->sessionManager->getSession()->save();
     }
 
     private function loadDocument($pathOrUuid, $locale, $options, $shouldExclude = true)
