@@ -522,8 +522,11 @@ define([], function() {
         },
 
         /**
-         * Retrieves a numeric representation for a string representation of a type
-         * @param type
+         * Retrieves a numeric representation for a string representation of a type.
+         *
+         * @param {string} type
+         * @param {boolean} showError Defines if an error should be shown, when type not supported.
+         *
          * @returns {number}
          */
         getTypeByName = function(type, showError) {
