@@ -51,7 +51,7 @@ define(['app-config', 'config'], function(AppConfig, Config) {
          * @param result {Object} contains result from datagrid update
          */
         updateFilterResult = function(result) {
-            if (!!this.filter && !!result && !!result.total) {
+            if (!!this.filter && !!result) {
                 if (!this.filterResultComponentStarted) {
                     this.filterResultComponentStarted = true;
                     App.start([
@@ -88,16 +88,22 @@ define(['app-config', 'config'], function(AppConfig, Config) {
          * Called when filter is unset
          */
         unsetFilter = function() {
-            this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.unmark', this.filter.id);
+            // reset toolbar button
+            this.sandbox.emit(
+                'husky.toolbar.' + this.toolbarInstanceName + '.item.reset',
+                constants.toolbarSelectButtonId
+            );
             this.filter = null;
             saveFilterUserSetting.call(this, null, this.datagridInstance);
         },
 
         /**
-         * Returns the object to render the dropdown for the filters
+         * Returns the object to render the dropdown for the filters.
+         *
          * @param context {String}
          * @param dataGridInstanceName {String}
          * @param url {String}
+         *
          * @returns {Object}
          */
         getFilterDropdown = function(context, dataGridInstanceName, url) {
@@ -115,6 +121,12 @@ define(['app-config', 'config'], function(AppConfig, Config) {
                     preSelected: !!this.filter ? parseInt(this.filter.id) : null,
                     callback: function(item) {
                         applyFilterToList.call(this, item, dataGridInstanceName, context);
+                        // set toolbar button
+                        this.sandbox.emit(
+                            'husky.toolbar.' + dataGridInstanceName + '.item.change',
+                            constants.toolbarSelectButtonId,
+                            item.id
+                        );
                     }.bind(this)
                 },
                 dropdownItems: [
@@ -131,7 +143,8 @@ define(['app-config', 'config'], function(AppConfig, Config) {
         },
 
         /**
-         * Creates the url to edit a specific filter
+         * Creates the url to edit a specific filter.
+         *
          * @returns {string}
          */
         createUrlToFilterDetails = function() {
@@ -150,8 +163,10 @@ define(['app-config', 'config'], function(AppConfig, Config) {
         },
 
         /**
-         * Returns a setting key for filters
+         * Returns a setting key for filters.
+         *
          * @param datagridInstance
+         *
          * @returns {string}
          */
         getFilterSettingKey = function(datagridInstance) {
@@ -214,7 +229,6 @@ define(['app-config', 'config'], function(AppConfig, Config) {
         };
 
     return {
-
         initialize: function(app) {
             app.components.before('initialize', function() {
                 if (this.name !== 'Sulu App') {

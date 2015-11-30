@@ -36079,6 +36079,10 @@ define('__component__$toolbar@husky',[],function() {
             markedClass: 'marked'
         },
 
+        selectors = {
+            dropdownMenu: '.toolbar-dropdown-menu'
+        },
+
         /** templates container */
         templates = {
             skeleton: [
@@ -36169,12 +36173,22 @@ define('__component__$toolbar@husky',[],function() {
          * event to change a buttons selected dropdown-item
          *
          * @event husky.toolbar.[INSTANCE_NAME.]item.change
-         * @param {string} button The id of the button
-         * @param {string} item the id or the index of the dropdown-item
-         * @param {boolean} executeCallback if true callback of dropdown item gets executed
+         * @param {string} buttonId The id of the button
+         * @param {string} itemId The id or the index of the dropdown-item
+         * @param {boolean} executeCallback If true callback of dropdown item gets executed
          */
         ITEM_CHANGE = function() {
             return createEventName.call(this, 'item.change');
+        },
+
+        /**
+         * Event to reset a buttons and it's dropdown-items into original state.
+         *
+         * @event husky.toolbar.[INSTANCE_NAME.]item.reset
+         * @param {string} buttonId The id of the button
+         */
+        ITEM_RESET = function() {
+            return createEventName.call(this, 'item.reset');
         },
 
         /**
@@ -36322,20 +36336,9 @@ define('__component__$toolbar@husky',[],function() {
 
             this.sandbox.on(ITEM_UNMARK.call(this), unmarkItem.bind(this));
 
-            this.sandbox.on(ITEM_CHANGE.call(this), function(button, id, executeCallback) {
-                if (!!this.items[button]) {
-                    this.items[button].initialized.then(function() {
-                        var index = getItemIndexById.call(this, id, this.items[button]);
-                        changeMainListItem.call(this, this.items[button].$el, this.items[button].dropdownItems[index]);
-                        this.sandbox.emit(ITEM_MARK.call(this), this.items[button].dropdownItems[index].id);
-                        if (executeCallback === true || !!this.items[button].dropdownItems[index].callback) {
-                            if (typeof this.items[button].dropdownItems[index].callback === 'function') {
-                                this.items[button].dropdownItems[index].callback();
-                            }
-                        }
-                    }.bind(this));
-                }
-            }.bind(this));
+            this.sandbox.on(ITEM_CHANGE.call(this), changeButton.bind(this));
+
+            this.sandbox.on(ITEM_RESET.call(this), resetButton.bind(this));
 
             this.sandbox.on(BUTTON_SET.call(this), function(button, newData) {
                 changeMainListItem.call(this, this.items[button].$el, newData);
@@ -36356,6 +36359,50 @@ define('__component__$toolbar@husky',[],function() {
                         this.sandbox.dom.hide(this.sandbox.dom.find('.dropdown-toggle', this.items[button].$el));
                     }
                 }
+            }.bind(this));
+        },
+
+        /**
+         * Changes a button text and icon.
+         *
+         * @param {String} button
+         * @param {String|Number} itemId
+         * @param {Bool} executeCallback
+         */
+        changeButton = function(buttonId, itemId, executeCallback) {
+            // check if button exists
+            if (!this.items[buttonId]) {
+                return;
+            }
+
+            var button = this.items[buttonId];
+
+            button.initialized.then(function() {
+                // update icon
+                var index = getItemIndexById.call(this, itemId, button);
+                changeMainListItem.call(this, button.$el, button.dropdownItems[index]);
+                this.sandbox.emit(ITEM_MARK.call(this), button.dropdownItems[index].id);
+                if (executeCallback === true || !!button.dropdownItems[index].callback
+                    && typeof button.dropdownItems[index].callback === 'function'
+                ) {
+                    button.dropdownItems[index].callback();
+                }
+            }.bind(this));
+        },
+
+        /**
+         * Resets button to its original state.
+         *
+         * @param {String} buttonId
+         */
+        resetButton = function(buttonId) {
+            // check if button exists
+            if (!this.items[buttonId]) {
+                return;
+            }
+
+            this.items[buttonId].initialized.then(function() {
+                resetMainListItem.call(this, this.items[buttonId].$el);
             }.bind(this));
         },
 
@@ -36423,7 +36470,6 @@ define('__component__$toolbar@husky',[],function() {
          * @param highlight {boolean} if true a highlight effect is played
          */
         toggleEnabled = function(enabled, id, highlight) {
-
             // check if toolbar has an item with specified id
             if (!this.items[id]) {
                 return;
@@ -36549,7 +36595,7 @@ define('__component__$toolbar@husky',[],function() {
 
                 if (!visible) {
                     this.sandbox.dom.addClass($list, 'is-expanded');
-                    this.sandbox.dom.show(this.sandbox.dom.find('.toolbar-dropdown-menu', $list));
+                    this.sandbox.dom.show(this.sandbox.dom.find(selectors.dropdownMenu, $list));
                     // TODO: check if dropdown overlaps screen: set ul to .right-aligned
 
                     // on every click remove sub-menu
@@ -36584,7 +36630,7 @@ define('__component__$toolbar@husky',[],function() {
          */
         hideDropdowns = function() {
             this.sandbox.dom.removeClass(this.sandbox.dom.find('.is-expanded', this.$el), 'is-expanded');
-            this.sandbox.dom.hide(this.$find('.toolbar-dropdown-menu'));
+            this.sandbox.dom.hide(this.$find(selectors.dropdownMenu));
             if (this.options.responsive === true) {
                 unlockToolbarScroll.call(this);
             }
@@ -36597,7 +36643,6 @@ define('__component__$toolbar@husky',[],function() {
          * @param event
          */
         selectItem = function(event) {
-
             this.sandbox.dom.stopPropagation(event);
             this.sandbox.dom.preventDefault(event);
 
@@ -36627,7 +36672,6 @@ define('__component__$toolbar@husky',[],function() {
          * @param $parent
          */
         triggerSelectEvent = function(item, $parent) {
-
             var parentItem,
                 original = item._original || item,
                 $content = this.sandbox.dom.find('.content', this.items[item.id].$el);
@@ -36661,7 +36705,42 @@ define('__component__$toolbar@husky',[],function() {
         },
 
         /**
-         * changes the list items icon and title
+         * Resets the list items icon and title. Tries to set to default, otherwise to null.
+         *
+         * @param listElement
+         */
+        resetMainListItem = function(listElement) {
+            var listItems = this.sandbox.dom.find('span', listElement),
+                itemId = this.sandbox.dom.data(listElement).id,
+                item = this.items[itemId];
+
+            // reset icon
+            this.sandbox.dom.removeClass(listItems.eq(0), '');
+            item.icon = item.defaultIcon;
+            if (!!item.defaultIcon) {
+                this.sandbox.dom.addClass(listItems.eq(0), createIconSupportClass.call(this, item));
+            }
+
+            // reset title
+            item.title = this.sandbox.translate(item.defaultTitle);
+            this.sandbox.dom.html(listItems.eq(1), item.title);
+            this.items[itemId].title = item.title;
+
+            // remove marked class from dropdown-item
+            if (!!item.dropdownItems) {
+                this.sandbox.dom.removeClass(selectors.dropdownMenu + ' li', 'marked');
+            }
+
+            if (this.options.responsive === true) {
+                updateOverflow.call(this);
+            }
+
+            this.sandbox.emit(BUTTON_CHANGED.call(this));
+        },
+
+        /**
+         * Changes the list items icon and title.
+         *
          * @param listElement
          * @param item
          */
@@ -36927,7 +37006,7 @@ define('__component__$toolbar@husky',[],function() {
         deleteDropdown = function(button) {
             if (!!button.dropdownItems) {
                 // remove the related stuff
-                this.sandbox.dom.remove(this.sandbox.dom.find('.toolbar-dropdown-menu', button.$el));
+                this.sandbox.dom.remove(this.sandbox.dom.find(selectors.dropdownMenu, button.$el));
                 this.sandbox.dom.hide(this.sandbox.dom.find('.dropdown-toggle', button.$el));
 
                 // delete JS related stuff
@@ -37079,6 +37158,10 @@ define('__component__$toolbar@husky',[],function() {
 
                 var dfd = this.sandbox.data.deferred();
 
+                // set default title and icon
+                item.defaultTitle = item.title;
+                item.defaultIcon = item.icon;
+
                 // save to items array
                 this.items[item.id] = item;
                 this.items[item.id].initialized = dfd.promise();
@@ -37108,7 +37191,6 @@ define('__component__$toolbar@husky',[],function() {
 
                 // if has-search is true render a search bar, else render the item normally
                 if (item.hasSearch === true) {
-
                     insertSearch.call(this, $listItem);
                 } else {
                     if (!!item.icon) {
