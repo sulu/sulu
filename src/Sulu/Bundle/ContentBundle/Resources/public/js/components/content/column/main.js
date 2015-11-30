@@ -601,8 +601,7 @@ define([
                 urlParts = [
                     'webspace=' + this.options.webspace,
                     'language=' + this.options.language,
-                    'mapping=title,order',
-                    'webspace-nodes=true',
+                    'fields=title,order',
                     'exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false'),
                     'exclude-shadows=' + (!this.showGhostPages ? 'true' : 'false')
                 ];
