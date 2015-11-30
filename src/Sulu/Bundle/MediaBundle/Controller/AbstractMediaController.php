@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * This class contains all basic functions required in the various media controller classes
+ * This class contains all basic functions required in the various media controller classes.
  */
 class AbstractMediaController extends RestController
 {
