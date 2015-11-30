@@ -44,7 +44,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                         'sulu_media' => [
                             'meta_title' => ['en' => 'Sulu media', 'de' => 'Sulu Medien'],
                             'collections' => [
-                                'preview_img' => [
+                                'preview_image' => [
                                     'meta_title' => ['en' => 'Preview images', 'de' => 'Vorschaubilder'],
                                 ],
                             ],

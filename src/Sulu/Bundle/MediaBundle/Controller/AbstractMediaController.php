@@ -16,6 +16,9 @@ use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * This class contains all basic functions required in the various media controller classes
+ */
 class AbstractMediaController extends RestController
 {
     /**
@@ -72,7 +75,7 @@ class AbstractMediaController extends RestController
         $uploadedFile = $this->getUploadedFile($request, 'fileVersion');
 
         if ($uploadedFile) {
-            $title = $part = implode('.', explode('.', $uploadedFile->getClientOriginalName(), -1));
+            $title = implode('.', explode('.', $uploadedFile->getClientOriginalName(), -1));
         }
 
         return $title;
