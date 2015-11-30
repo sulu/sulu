@@ -202,17 +202,17 @@ define([
                 translate: this.sandbox.translate
             }));
 
-            $versions = this.sandbox.dom.createElement(_.template(versionsTemplate, {
-                media: this.media,
-                translate: this.sandbox.translate
-            }));
-
-            if (media.type.name === 'video') {
+            if (media.type.name !== 'image') {
                 $preview = this.sandbox.dom.createElement(_.template(previewTemplate, {
                     media: this.media,
                     translate: this.sandbox.translate
                 }));
             }
+
+            $versions = this.sandbox.dom.createElement(_.template(versionsTemplate, {
+                media: this.media,
+                translate: this.sandbox.translate
+            }));
 
             this.startSingleOverlay($info, $copyright, $versions, $preview);
         },
@@ -227,18 +227,24 @@ define([
 
             var tabs = [
                 {title: this.sandbox.translate('public.info'), data: $info},
-                {title: this.sandbox.translate('sulu.media.copyright'), data: $copyright},
-                {title: this.sandbox.translate('sulu.media.history'), data: $versions}
+                {title: this.sandbox.translate('sulu.media.copyright'), data: $copyright}
             ];
 
             if (!!$preview) {
                 tabs.push(
                     {
-                        title: this.sandbox.translate('sulu.media.preview'),
+                        title: this.sandbox.translate('sulu.media.preview-tab'),
                         data: $preview
                     }
                 );
             }
+
+            tabs.push(
+                {
+                    title: this.sandbox.translate('sulu.media.history'),
+                    data: $versions
+                }
+            );
 
             this.sandbox.start([
                 {
