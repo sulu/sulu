@@ -40,7 +40,7 @@
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a73a4123dfdf006" resname="content.contents.settings.delete">
                 <source>content.contents.settings.delete</source>
-                <target>Delete node</target>
+                <target>Delete page</target>
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a73a4123dfdf007" resname="content.contents.settings.copy">
                 <source>content.contents.settings.copy</source>
@@ -204,7 +204,7 @@
             </trans-unit>
             <trans-unit id="18fe4f5f2d5a25f1a9b5360e0bd18bfa" resname="content.delete.dialog.title">
                 <source>content.delete.dialog.title</source>
-                <target>Delete Node</target>
+                <target>Delete page</target>
             </trans-unit>
             <trans-unit id="0c64601205aa73314446c02e5a3dd4c8" resname="content.delete.dialog.content">
                 <source>content.delete.dialog.content</source>
