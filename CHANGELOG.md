@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * ENHANCEMENT #1839 [ContentBundle]   Fixed title generation to ignore checkboxes
     * BUGFIX      #1839 [ResourceBundle]  Fixed filter-selection of non supported types
+    * ENHANCEMENT #1837 [ContentBundle]   Extended path-replacers xml file
     * BUGFIX      #1837 [ResourceBundle]  Fixed filter-result bar when filtering has no results
     * BUGFIX      #1836 [ContentBundle]   Fixed preview to save before render and avoid over writing cached values
     * BUGFIX      #1795 [ContentBundle]   Fixed copying shadow pages with urls
