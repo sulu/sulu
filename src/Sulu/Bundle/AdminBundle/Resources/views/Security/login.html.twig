@@ -39,7 +39,10 @@
         {% autoescape false %}
         var SULU = {
             debug: true,
-            locales: {{ locales | json_encode }}
+            locales: {{ locales | json_encode }},
+            translatedLocales: {{ translated_locales | json_encode }},
+            translations: {{ translations | json_encode }},
+            fallbackLocale: '{{ fallback_locale }}'
         };
         {% endautoescape %}
     </script>

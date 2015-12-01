@@ -79,9 +79,9 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $config = $this->processConfiguration($configuration, $configs);
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
-        $container->setParameter('sulu_core.locales', array_keys($config['locales']));
+        $container->setParameter('sulu_core.locales', array_unique(array_keys($config['locales'])));
         $container->setParameter('sulu_core.translated_locales', $config['locales']);
-        $container->setParameter('sulu_core.translations', $config['translations']);
+        $container->setParameter('sulu_core.translations', array_unique($config['translations']));
         $container->setParameter('sulu_core.fallback_locale', $config['fallback_locale']);
 
         $container->setParameter('sulu.cache_dir', $config['cache_dir']);

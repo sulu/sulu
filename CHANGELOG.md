@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-develop
+* 1.1.0 (2015-12-01)
     * BUGFIX      #1846 [CoreBundle]      Fixed name of type map config parameter
     * BUGFIX      #1847 [ContentBundle]   Removed disabler from account form
     * BUGFIX      #1844 [ContactBundle]   Fixed dimensions and position of contact avatar
@@ -200,6 +200,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1342 [SecurityBundle]  Added creator and changer of contact to 'fullContact' serialization group
     * BUGFIX      #1365 [ContactBundle]   Fixed bug caused by new instance name of datagrid
     * BUGFIX      #1136 [MediaBundle]     Fixed image scale forceRatio parameter for none squared image formats
+    * BUGFIX      #1785 [ContentBundle]   Fixed data returned for internal link in settings tab
     
 * 1.0.14 (2015-11-13)
     * BUGFIX      #1191 [AdminBundle]    Fixed unique Navigation ID
