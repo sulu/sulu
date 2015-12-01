@@ -46,6 +46,16 @@ define([], function() {
             validationSelector: null
         },
 
+        typeMappings = {
+            'string': STRING_TYPE,
+            'number': NUMBER_TYPE,
+            'integer': NUMBER_TYPE,
+            'float': NUMBER_TYPE,
+            'boolean': BOOLEAN_TYPE,
+            'date': DATETIME_TYPE,
+            'datetime': DATETIME_TYPE
+        },
+
         templates = {
             container: function(cssClass, id) {
                 return ['<div class="', cssClass, '" id="', id, '" style="display:none"></div>'].join('');
@@ -509,12 +519,12 @@ define([], function() {
         /**
          * Returns if given type is supported for filtering.
          *
-         * @param typeString
+         * @param {string} type
          *
          * @returns {boolean}
          */
-        isSupportedType = function(typeString) {
-            if (getTypeByName(typeString, false) !== null) {
+        isSupportedType = function(type) {
+            if (typeMappings.hasOwnProperty(type)) {
                 return true;
             }
 
@@ -525,29 +535,18 @@ define([], function() {
          * Retrieves a numeric representation for a string representation of a type.
          *
          * @param {string} type
-         * @param {boolean} showError Defines if an error should be shown, when type not supported.
          *
          * @returns {number}
          */
-        getTypeByName = function(type, showError) {
-            switch (type) {
-                case 'string':
-                    return STRING_TYPE;
-                case 'number':
-                case 'integer':
-                case 'float':
-                    return NUMBER_TYPE;
-                case 'boolean':
-                    return BOOLEAN_TYPE;
-                case 'date':
-                case 'datetime':
-                    return DATETIME_TYPE;
-                default:
-                    if (showError !== false) {
-                        this.sandbox.logger.error('Unsupported type "' + type + '" found!');
-                    }
-                    return null;
+        getTypeByName = function(type) {
+            // check if mapping is supported
+            if (typeMappings.hasOwnProperty(type)) {
+                return typeMappings[type];
             }
+
+            this.sandbox.logger.error('Unsupported type "' + type + '" found!');
+
+            return null;
         },
 
         /**
