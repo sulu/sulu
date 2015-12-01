@@ -105,6 +105,19 @@ class ContactController extends RestController implements ClassResourceInterface
     {
         $this->fieldDescriptors = [];
 
+        $contactAddressJoin = [
+            self::$contactAddressEntityName => new DoctrineJoinDescriptor(
+                self::$contactAddressEntityName,
+                $this->container->getParameter('sulu.model.contact.class') . '.contactAddresses',
+                self::$contactAddressEntityName . '.main = true',
+                'LEFT'
+            ),
+            self::$addressEntityName => new DoctrineJoinDescriptor(
+                self::$addressEntityName,
+                self::$contactAddressEntityName . '.address'
+            ),
+        ];
+
         $this->fieldDescriptors['avatar'] = new DoctrineFieldDescriptor(
             'id',
             'avatar',
@@ -211,20 +224,31 @@ class ContactController extends RestController implements ClassResourceInterface
             'city',
             self::$addressEntityName,
             'contact.address.city',
-            [
-                self::$contactAddressEntityName => new DoctrineJoinDescriptor(
-                    self::$contactAddressEntityName,
-                    $this->container->getParameter('sulu.model.contact.class') . '.contactAddresses',
-                    self::$contactAddressEntityName . '.main = true',
-                    'LEFT'
-                ),
-                self::$addressEntityName => new DoctrineJoinDescriptor(
-                    self::$addressEntityName,
-                    self::$contactAddressEntityName . '.address'
-                ),
-            ],
+            $contactAddressJoin,
             false,
             true,
+            'string'
+        );
+
+        $this->fieldDescriptors['zip'] = new DoctrineFieldDescriptor(
+            'zip',
+            'zip',
+            self::$addressEntityName,
+            'contact.address.zip',
+            $contactAddressJoin,
+            true,
+            false,
+            'string'
+        );
+
+        $this->fieldDescriptors['state'] = new DoctrineFieldDescriptor(
+            'state',
+            'state',
+            self::$addressEntityName,
+            'contact.address.state',
+            $contactAddressJoin,
+            true,
+            false,
             'string'
         );
 
@@ -233,22 +257,15 @@ class ContactController extends RestController implements ClassResourceInterface
             'countryCode',
             self::$countryEntityName,
             'contact.address.countryCode',
-            [
-                self::$contactAddressEntityName => new DoctrineJoinDescriptor(
-                    self::$contactAddressEntityName,
-                    $this->container->getParameter('sulu.model.contact.class') . '.contactAddresses',
-                    self::$contactAddressEntityName . '.main = true',
-                    'LEFT'
-                ),
-                self::$addressEntityName => new DoctrineJoinDescriptor(
-                    self::$addressEntityName,
-                    self::$contactAddressEntityName . '.address'
-                ),
-                self::$countryEntityName => new DoctrineJoinDescriptor(
-                    self::$countryEntityName,
-                    self::$addressEntityName . '.country'
-                ),
-            ],
+            array_merge(
+                $contactAddressJoin,
+                [
+                    self::$countryEntityName => new DoctrineJoinDescriptor(
+                        self::$countryEntityName,
+                        self::$addressEntityName . '.country'
+                    ),
+                ]
+            ),
             false,
             true,
             'string'

@@ -1235,6 +1235,19 @@ class AccountController extends RestController implements ClassResourceInterface
     {
         $this->fieldDescriptors = [];
 
+        $accountAddressJoin = [
+            self::$accountAddressEntityName => new DoctrineJoinDescriptor(
+                self::$accountAddressEntityName,
+                $this->getAccountEntityName() .
+                '.accountAddresses',
+                self::$accountAddressEntityName . '.main = true', DoctrineJoinDescriptor::JOIN_METHOD_LEFT
+            ),
+            self::$addressEntityName => new DoctrineJoinDescriptor(
+                self::$addressEntityName,
+                self::$accountAddressEntityName . '.address'
+            ),
+        ];
+
         $this->fieldDescriptors['logo'] = new DoctrineFieldDescriptor(
             'id',
             'logo',
@@ -1294,18 +1307,48 @@ class AccountController extends RestController implements ClassResourceInterface
             'city',
             self::$addressEntityName,
             'contact.address.city',
-            [
-                self::$accountAddressEntityName => new DoctrineJoinDescriptor(
-                    self::$accountAddressEntityName,
-                    $this->getAccountEntityName() .
-                    '.accountAddresses',
-                    self::$accountAddressEntityName . '.main = true', DoctrineJoinDescriptor::JOIN_METHOD_LEFT
-                ),
-                self::$addressEntityName => new DoctrineJoinDescriptor(
-                    self::$addressEntityName,
-                    self::$accountAddressEntityName . '.address'
-                ),
-            ],
+            $accountAddressJoin,
+            false,
+            true,
+            'string'
+        );
+
+        $this->fieldDescriptors['zip'] = new DoctrineFieldDescriptor(
+            'zip',
+            'zip',
+            self::$addressEntityName,
+            'contact.address.zip',
+            $accountAddressJoin,
+            true,
+            false,
+            'string'
+        );
+
+        $this->fieldDescriptors['state'] = new DoctrineFieldDescriptor(
+            'state',
+            'state',
+            self::$addressEntityName,
+            'contact.address.state',
+            $accountAddressJoin,
+            true,
+            false,
+            'string'
+        );
+
+        $this->fieldDescriptors['countryCode'] = new DoctrineFieldDescriptor(
+            'code',
+            'countryCode',
+            self::$countryEntityName,
+            'contact.address.countryCode',
+            array_merge(
+                $accountAddressJoin,
+                [
+                    self::$countryEntityName => new DoctrineJoinDescriptor(
+                        self::$countryEntityName,
+                        self::$addressEntityName . '.country'
+                    ),
+                ]
+            ),
             false,
             true,
             'string'
