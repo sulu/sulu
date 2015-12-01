@@ -19,7 +19,7 @@ define([
 
         /**
          * Returns the header config for this main-view
-         * if an existing contact is edited a delete-button and a toggler get added
+         * if an existing contact is edited a delete-button is added
          * @return {Object} the header config object
          */
         header: function() {
@@ -30,7 +30,6 @@ define([
                 tabs: {
                     url: '/admin/content-navigations?alias=account',
                     options: {
-                        disablerToggler: 'husky.toggler.sulu-toolbar',
                         data: function() {
                             // this.data is set by sulu-content.js with data from loadComponentData()
                             return this.sandbox.util.extend(false, {}, this.data);
@@ -47,13 +46,6 @@ define([
             };
             if (!!this.options.id) {
                 config.toolbar.buttons.delete = {};
-                config.toolbar.buttons.disabler = {
-                    parent: 'toggler',
-                    options: {
-                        title: 'public.locked',
-                        hidden: true
-                    }
-                };
             }
             return config;
         },
