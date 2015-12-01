@@ -38,8 +38,10 @@
 
             .head-image {
               height: 100px;
+              margin: 0 auto;
               overflow: hidden;
               position: relative;
+              width: 100px;
               z-index: 0;
 
               &.no-default {
