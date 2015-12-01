@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * BUGFIX      #1846 [CoreBundle]      Fixed name of type map config parameter
+    * BUGFIX      #1847 [ContentBundle]   Removed disabler from account form
     * BUGFIX      #1844 [ContactBundle]   Fixed dimensions and position of contact avatar
     * ENHANCEMENT #1843 [ContactBundle]   Added new field-descriptors for accounts and contacts (zip, state, country,..)
     * ENHANCEMENT #1842 [ContentBundle]   Fixed title generation to ignore checkboxes
