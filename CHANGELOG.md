@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1844 [ContactBundle]   Fixed dimensions and position of contact avatar
     * ENHANCEMENT #1839 [ContentBundle]   Fixed title generation to ignore checkboxes
     * BUGFIX      #1839 [ResourceBundle]  Fixed filter-selection of non supported types
     * ENHANCEMENT #1837 [ContentBundle]   Extended path-replacers xml file
