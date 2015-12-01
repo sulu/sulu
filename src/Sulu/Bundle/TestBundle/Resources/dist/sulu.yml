@@ -44,7 +44,7 @@ sulu_core:
                      path: "%kernel.root_dir%/../../../CoreBundle/Content/templates"
                      type: "page"
 
-             typeMap:
+             type_map:
                  page: "\\Sulu\\Component\\Content\\Compat\\Structure\\PageBridge"
                  home: "\\Sulu\\Component\\Content\\Compat\\Structure\\PageBridge"
                  snippet: "\\Sulu\\Component\\Content\\Compat\\Structure\\SnippetBridge"
