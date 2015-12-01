@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1839 [ResourceBundle]  Fixed filter-selection of non supported types
     * BUGFIX      #1837 [ResourceBundle]  Fixed filter-result bar when filtering has no results
     * BUGFIX      #1830 [ContentBundle]   Fixed load data in correct locale for excerpt
     * BUGFIX      #1826 [ContentBundle]   Fixed preselected select elements null

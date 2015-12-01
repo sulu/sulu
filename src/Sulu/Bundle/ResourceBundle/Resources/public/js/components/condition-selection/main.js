@@ -46,6 +46,16 @@ define([], function() {
             validationSelector: null
         },
 
+        typeMappings = {
+            'string': STRING_TYPE,
+            'number': NUMBER_TYPE,
+            'integer': NUMBER_TYPE,
+            'float': NUMBER_TYPE,
+            'boolean': BOOLEAN_TYPE,
+            'date': DATETIME_TYPE,
+            'datetime': DATETIME_TYPE
+        },
+
         templates = {
             container: function(cssClass, id) {
                 return ['<div class="', cssClass, '" id="', id, '" style="display:none"></div>'].join('');
@@ -507,27 +517,36 @@ define([], function() {
         },
 
         /**
-         * Retrieves a numeric representation for a string representation of a type
-         * @param type
+         * Returns if given type is supported for filtering.
+         *
+         * @param {string} type
+         *
+         * @returns {boolean}
+         */
+        isSupportedType = function(type) {
+            if (typeMappings.hasOwnProperty(type)) {
+                return true;
+            }
+
+            return false;
+        },
+
+        /**
+         * Retrieves a numeric representation for a string representation of a type.
+         *
+         * @param {string} type
+         *
          * @returns {number}
          */
         getTypeByName = function(type) {
-            switch (type) {
-                case 'string':
-                    return STRING_TYPE;
-                case 'number':
-                case 'integer':
-                case 'float':
-                    return NUMBER_TYPE;
-                case 'boolean':
-                    return BOOLEAN_TYPE;
-                case 'date':
-                case 'datetime':
-                    return DATETIME_TYPE;
-                default:
-                    this.sandbox.logger.error('Unsupported type "' + type + '" found!');
-                    return null;
+            // check if mapping is supported
+            if (!isSupportedType(type)) {
+                this.sandbox.logger.error('Unsupported type "' + type + '" found!');
+
+                return null;
             }
+
+            return typeMappings[type];
         },
 
         /**
@@ -848,9 +867,13 @@ define([], function() {
          */
         transformFieldsArrayToObject = function(fields) {
             var result = {};
+
             fields.forEach(function(field) {
-                result[field.name] = field;
+                if (isSupportedType(field.type)) {
+                    result[field.name] = field;
+                }
             }.bind(this));
+
             return result;
         };
 
