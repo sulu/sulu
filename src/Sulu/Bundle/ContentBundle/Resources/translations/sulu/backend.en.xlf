@@ -4,7 +4,7 @@
         <body>
             <trans-unit id="f1234df37123123fd4a73a4123dfdf00A" resname="public.url-history.none">
                 <source>public.url-history.none</source>
-                <target>No history for this node exists ...</target>
+                <target>No history for this page exists ...</target>
             </trans-unit>
             <trans-unit id="fbf455837741abced4a73a4ba3fdf006" resname="single-internal-link.title">
                 <source>single-internal-link.title</source>
@@ -64,7 +64,7 @@
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a73a4123dfdf00C" resname="content.contents.settings.order.title">
                 <source>content.contents.settings.order.title</source>
-                <target>Place node</target>
+                <target>Place page</target>
             </trans-unit>
             <trans-unit id="92762f7528ee1cbcd85bf435fd03c846" resname="smart-content.nocontent-found">
                 <source>smart-content.nocontent-found</source>
@@ -208,7 +208,7 @@
             </trans-unit>
             <trans-unit id="0c64601205aa73314446c02e5a3dd4c8" resname="content.delete.dialog.content">
                 <source>content.delete.dialog.content</source>
-                <target>Do you realy want to delete the selected node?</target>
+                <target>Do you realy want to delete the selected page?</target>
             </trans-unit>
             <trans-unit id="18ffe800b505f7d878907c67d7fb1be4" resname="content.delete.dialog.cancel">
                 <source>content.delete.dialog.cancel</source>
@@ -485,7 +485,7 @@
             </trans-unit>
             <trans-unit id="75435af307a7ae8f965923968a0e0f94" resname="labels.error.content-save-desc">
                 <source>labels.error.content-save-desc</source>
-                <target>Node could not be saved.</target>
+                <target>Page could not be saved.</target>
             </trans-unit>
             <trans-unit id="75435af3a7a7a38f968923968a0e0f94" resname="labels.error.content-save-resource-locator">
                 <source>labels.error.content-save-resource-locator</source>
@@ -493,11 +493,11 @@
             </trans-unit>
             <trans-unit id="2647c238cae0fa45d7fbad336e43750f" resname="labels.success.content-deleted-desc">
                 <source>labels.success.content-deleted-desc</source>
-                <target>Node successfully deleted.</target>
+                <target>Page successfully deleted.</target>
             </trans-unit>
             <trans-unit id="487f946d51783a9899fa59d31dcfc3e8" resname="labels.success.content-save-desc">
                 <source>labels.success.content-save-desc</source>
-                <target>Node sucessfully saved</target>
+                <target>Page sucessfully saved</target>
             </trans-unit>
             <trans-unit id="e4b14069a8a085ede2092hf51234dh40" resname="smart-content.categories.label">
                 <source>smart-content.categories.label</source>
