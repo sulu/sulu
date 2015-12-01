@@ -101,7 +101,7 @@ define([
          * @returns {Boolean} true iff a title has been found
          */
         setCollapsedTitle = function($field, $block) {
-            if ($field.is(':visible') && $field.is('input') && !!$field.data('element')) {
+            if ($field.is(':visible') && $field.is('input[type="text"]') && !!$field.data('element')) {
                 if (!!$field.data('element').getValue()) {
                     $block.find('.collapsed-container .title').html($field.data('element').getValue());
                     return true;
@@ -117,7 +117,7 @@ define([
          * for incoming data for the media-selection. The found image gets set as the image in the collapsed element.
          * @param $field {Object} the dom-object of the field
          * @param $block {Object} the dom-object of the block
-         * @returns {Boolean} true iff a a image has been found immediatelly
+         * @returns {Boolean} true if a a image has been found immediately
          */
         setCollapsedImage = function($field, $block) {
             if (!!$field.data('type') && $field.data('type') === 'media-selection') {
