@@ -540,13 +540,13 @@ define([], function() {
          */
         getTypeByName = function(type) {
             // check if mapping is supported
-            if (typeMappings.hasOwnProperty(type)) {
-                return typeMappings[type];
+            if (!isSupportedType(type)) {
+                this.sandbox.logger.error('Unsupported type "' + type + '" found!');
+
+                return null;
             }
 
-            this.sandbox.logger.error('Unsupported type "' + type + '" found!');
-
-            return null;
+            return typeMappings[type];
         },
 
         /**
