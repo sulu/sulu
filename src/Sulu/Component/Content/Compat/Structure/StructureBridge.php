@@ -659,17 +659,12 @@ class StructureBridge implements StructureInterface
         return $document->getResourceSegment();
     }
 
-    protected function readOnlyException($method)
-    {
-        throw new \BadMethodCallException(
-            sprintf(
-                'Compatibility layer StructureBridge instances are readonly. Tried to call "%s"',
-                $method
-            )
-        );
-    }
-
-    protected function getDocument()
+    /**
+     * Returns document.
+     *
+     * @return object
+     */
+    public function getDocument()
     {
         if (!$this->document) {
             throw new \RuntimeException(
@@ -678,6 +673,26 @@ class StructureBridge implements StructureInterface
         }
 
         return $this->document;
+    }
+
+    /**
+     * Returns structure metadata.
+     *
+     * @return StructureMetadata
+     */
+    public function getStructure()
+    {
+        return $this->structure;
+    }
+
+    protected function readOnlyException($method)
+    {
+        throw new \BadMethodCallException(
+            sprintf(
+                'Compatibility layer StructureBridge instances are readonly. Tried to call "%s"',
+                $method
+            )
+        );
     }
 
     protected function documentToStructure(StructureBehavior $document)

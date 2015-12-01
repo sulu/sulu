@@ -4,6 +4,8 @@ CHANGELOG for Sulu
 * dev-develop
     * BUGFIX      #1839 [ResourceBundle]  Fixed filter-selection of non supported types
     * BUGFIX      #1837 [ResourceBundle]  Fixed filter-result bar when filtering has no results
+    * BUGFIX      #1836 [ContentBundle]   Fixed preview to save before render and avoid over writing cached values
+    * BUGFIX      #1795 [ContentBundle]   Fixed copying shadow pages with urls
     * BUGFIX      #1830 [ContentBundle]   Fixed load data in correct locale for excerpt
     * BUGFIX      #1826 [ContentBundle]   Fixed preselected select elements null
     * BUGFIX      #1829 [ContentBundle]   Refactored url and content type handling
@@ -192,9 +194,6 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1342 [SecurityBundle]  Added creator and changer of contact to 'fullContact' serialization group
     * BUGFIX      #1365 [ContactBundle]   Fixed bug caused by new instance name of datagrid
     * BUGFIX      #1136 [MediaBundle]     Fixed image scale forceRatio parameter for none squared image formats
-
-* dev-master
-    * HOTFIX      #1795 [ContentBundle]   Fixed copying shadow pages with urls
     
 * 1.0.14 (2015-11-13)
     * BUGFIX      #1191 [AdminBundle]    Fixed unique Navigation ID
