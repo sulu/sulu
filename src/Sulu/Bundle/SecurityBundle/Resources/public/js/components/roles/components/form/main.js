@@ -22,7 +22,7 @@ define(['config'], function(Config) {
 
         name: 'Sulu Security Role Form',
 
-        view: true,
+        layout: {},
 
         templates: ['/admin/security/template/role/form'],
 
@@ -47,7 +47,9 @@ define(['config'], function(Config) {
         },
 
         bindDOMEvents: function() {
-            this.sandbox.dom.on(this.$el, 'change', this.setGod.bind(this), '#god');
+            this.sandbox.dom.on('#select-all', 'click', function() {
+                this.sandbox.emit('husky.matrix.set-all');
+            }.bind(this));
         },
 
         bindCustomEvents: function() {
@@ -55,19 +57,17 @@ define(['config'], function(Config) {
                 this.changePermission(data);
             }.bind(this));
 
-            this.sandbox.on('sulu.header.toolbar.save', function() {
-                this.save();
+            this.sandbox.on('sulu.toolbar.save', function(action) {
+                this.save(action);
             }.bind(this));
 
-            this.sandbox.on('sulu.header.toolbar.delete', function() {
+            this.sandbox.on('sulu.toolbar.delete', function() {
                 this.sandbox.emit('sulu.role.delete', this.sandbox.dom.val('#id'));
             }.bind(this));
 
             this.sandbox.on('sulu.role.saved', function(id) {
                 this.options.data.id = id;
                 this.setHeaderBar(true);
-                this.setTitle();
-                this.setBreadcrumb();
             }, this);
 
             // back to list
@@ -158,14 +158,6 @@ define(['config'], function(Config) {
             }.bind(this));
         },
 
-        setGod: function() {
-            if (!!this.sandbox.dom.is('#god', ':checked')) {
-                this.sandbox.emit('husky.matrix.set-all');
-            } else {
-                this.sandbox.emit('husky.matrix.unset-all');
-            }
-        },
-
         changePermission: function(data) {
             if (typeof(data.value) === 'string') {
                 this.setPermission(data.section, data.value, data.activated);
@@ -207,7 +199,7 @@ define(['config'], function(Config) {
             return contextKey;
         },
 
-        save: function() {
+        save: function(action) {
             if (!!this.sandbox.form.validate(formSelector)) {
                 // FIXME  Use datamapper instead
                 var data = {
@@ -221,7 +213,7 @@ define(['config'], function(Config) {
                     }*/
                 };
                 this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
-                this.sandbox.emit('sulu.roles.save', data);
+                this.sandbox.emit('sulu.roles.save', data, action);
             }
         },
 
@@ -229,40 +221,16 @@ define(['config'], function(Config) {
             this.$el.html(this.renderTemplate('/admin/security/template/role/form', {data: this.options.data}));
             //starts the dropdown-component
             this.sandbox.start(this.$el);
-            this.setTitle();
-            this.setBreadcrumb();
-        },
-
-        setTitle: function() {
-            var title = 'security.roles.title';
-            if (!!this.options.data && !!this.options.data.name) {
-                title = this.options.data.name;
-            }
-            this.sandbox.emit('sulu.header.set-title', title);
-        },
-
-        setBreadcrumb: function() {
-            var breadcrumb = [
-                {title: 'navigation.settings'},
-                {title: 'security.roles.title', event: 'sulu.roles.list'}
-            ];
-            if (!!this.options.data && !!this.options.data.name) {
-                breadcrumb.push({
-                    title: this.options.data.name
-                });
-            } else {
-                breadcrumb.push({
-                    title: 'security.roles.title'
-                });
-            }
-            this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
         },
 
         // @var Bool saved - defines if saved state should be shown
         setHeaderBar: function(saved) {
             if (saved !== this.saved) {
-                var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
-                this.sandbox.emit('sulu.header.toolbar.state.change', type, saved, true);
+                if (!!saved) {
+                    this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
+                } else {
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
+                }
             }
             this.saved = saved;
         },

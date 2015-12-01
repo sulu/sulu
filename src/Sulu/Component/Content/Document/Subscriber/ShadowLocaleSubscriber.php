@@ -17,46 +17,48 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
+use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ShadowLocaleSubscriber extends AbstractMappingSubscriber
+class ShadowLocaleSubscriber implements EventSubscriberInterface
 {
     const SHADOW_ENABLED_FIELD = 'shadow-on';
     const SHADOW_LOCALE_FIELD = 'shadow-base';
 
+    /**
+     * @var DocumentInspector
+     */
     private $inspector;
+
+    /**
+     * @var DocumentRegistry
+     */
     private $registry;
 
     /**
-     * @param PropertyEncoder   $encoder
-     * @param DocumentInspector $inspector
+     * @var PropertyEncoder
      */
+    private $encoder;
+
     public function __construct(
         PropertyEncoder $encoder,
         DocumentInspector $inspector,
         DocumentRegistry $registry
     ) {
-        parent::__construct($encoder);
+        $this->encoder = $encoder;
         $this->inspector = $inspector;
         $this->registry = $registry;
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function supports($document)
-    {
-        return $document instanceof ShadowLocaleBehavior;
-    }
-
-    /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
         return [
+            Events::METADATA_LOAD => 'handleMetadataLoad',
             Events::PERSIST => [
                 // before resourceSegment and content
                 ['handlePersistUpdateUrl', 20],
@@ -68,19 +70,44 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
         ];
     }
 
+    public function handleMetadataLoad(MetadataLoadEvent $event)
+    {
+        $metadata = $event->getMetadata();
+
+        if (!$metadata->getReflectionClass()->isSubclassOf(ShadowLocaleBehavior::class)) {
+            return;
+        }
+
+        $metadata->addFieldMapping('shadowLocaleEnabled', [
+            'property' => self::SHADOW_ENABLED_FIELD,
+            'encoding' => 'system_localized',
+            'mapped' => false,
+        ]);
+
+        $metadata->addFieldMapping('shadowLocale', [
+            'property' => self::SHADOW_LOCALE_FIELD,
+            'encoding' => 'system_localized',
+            'mapped' => false,
+        ]);
+    }
+
     /**
      * Update the locale to the shadow locale, if it is enabled.
      *
      * Note that this should happen before the fallback locale has been resolved
      *
-     * @param HydrateEvent $event
+     * @param AbstractMappingEvent $event
      */
-    public function doHydrate(AbstractMappingEvent $event)
+    public function handleHydrate(AbstractMappingEvent $event)
     {
-        $node = $event->getNode();
-        $locale = $event->getLocale();
         $document = $event->getDocument();
 
+        if (!$document instanceof ShadowLocaleBehavior) {
+            return;
+        }
+
+        $node = $event->getNode();
+        $locale = $event->getLocale();
         $shadowLocaleEnabled = $this->getShadowLocaleEnabled($node, $locale);
         $document->setShadowLocaleEnabled($shadowLocaleEnabled);
 
@@ -88,19 +115,26 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
             return;
         }
 
-        $document->setShadowLocale($this->getShadowLocale($node, $locale));
-
         $shadowLocale = $this->getShadowLocale($node, $locale);
+        $document->setShadowLocale($shadowLocale);
         $this->registry->updateLocale($document, $shadowLocale, $locale);
         $event->setLocale($shadowLocale);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function doPersist(PersistEvent $event)
+    public function handlePersist(PersistEvent $event)
     {
         $document = $event->getDocument();
+
+        if (!$document instanceof ShadowLocaleBehavior) {
+            return;
+        }
+
+        if (!$event->getLocale()) {
+            return;
+        }
 
         if ($document->isShadowLocaleEnabled()) {
             $this->validateShadow($document);
@@ -128,7 +162,7 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
     {
         $document = $event->getDocument();
 
-        if (!$this->supports($document)) {
+        if (!$document instanceof ShadowLocaleBehavior) {
             return;
         }
 

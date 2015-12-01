@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\NoResultException;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
+use Sulu\Component\Persistence\Repository\ORM\OrderByTrait;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\Security\Core\Exception\DisabledException;
@@ -27,6 +28,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class UserRepository extends EntityRepository implements UserRepositoryInterface
 {
+    use OrderByTrait;
+
     /**
      * @var RequestAnalyzerInterface
      */
@@ -48,7 +51,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
-    public function findUsersByAccount($accountId)
+    public function findUsersByAccount($accountId, $sortBy = [])
     {
         try {
             $qb = $this->createQueryBuilder('user')
@@ -69,6 +72,8 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
                 ->addSelect('contact')
                 ->addSelect('emails')
                 ->where('account.id=:accountId');
+
+            $this->addOrderBy($qb, 'user', $sortBy);
 
             $query = $qb->getQuery();
             $query->setParameter('accountId', $accountId);
@@ -282,13 +287,32 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
      */
     public function findUserByIdentifier($identifier)
     {
-        $qb = $this->createQueryBuilder('user')
+        $qb = $this->getUserWithPermissionsQuery()
             ->where('user.email=:email')
             ->orWhere('user.username=:username');
 
         $query = $qb->getQuery();
         $query->setParameter('email', $identifier);
         $query->setParameter('username', $identifier);
+
+        return $query->getSingleResult();
+    }
+
+    /**
+     * @param $id
+     *
+     * @return mixed
+     *
+     * @throws NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findUserWithSecurityById($id)
+    {
+        $queryBuilder = $this->getUserWithPermissionsQuery()
+            ->where('user.id = :id');
+
+        $query = $queryBuilder->getQuery();
+        $query->setParameter('id', $id);
 
         return $query->getSingleResult();
     }
@@ -314,7 +338,17 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             );
         }
 
-        return $this->find($user->getId());
+        $user = $this->findUserWithSecurityById($user->getId());
+
+        if (!$user->getEnabled()) {
+            throw new DisabledException();
+        }
+
+        if ($user->getLocked()) {
+            throw new LockedException();
+        }
+
+        return $user;
     }
 
     /**
@@ -322,7 +356,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
      *
      * @param string $class
      *
-     * @return Boolean
+     * @return bool
      */
     public function supportsClass($class)
     {
@@ -396,5 +430,22 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             $message = 'Unable to find any SuluSecurityBundle:User object with a contact';
             throw new UsernameNotFoundException($message, 0, $nre);
         }
+    }
+
+    /**
+     * Returns the query for the user with the joins for retrieving the permissions. Especially useful for security
+     * related queries.
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function getUserWithPermissionsQuery()
+    {
+        return $this->createQueryBuilder('user')
+            ->addSelect('userRoles')
+            ->addSelect('role')
+            ->addSelect('permissions')
+            ->leftJoin('user.userRoles', 'userRoles')
+            ->leftJoin('userRoles.role', 'role')
+            ->leftJoin('role.permissions', 'permissions');
     }
 }

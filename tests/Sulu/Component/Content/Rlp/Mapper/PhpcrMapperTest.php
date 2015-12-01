@@ -399,7 +399,7 @@ class PhpcrMapperTest extends SuluTestCase
 
         $result = $this->rlpMapper->loadHistoryByContentUuid($this->content1->getIdentifier(), 'sulu_io', 'de');
 
-        $this->assertEquals(4, sizeof($result));
+        $this->assertEquals(4, count($result));
         $this->assertEquals('/content2-news', $result[0]->getResourceLocator());
         $this->assertEquals('/products/content2-news', $result[1]->getResourceLocator());
         $this->assertEquals('/products/asdf/content2-news', $result[2]->getResourceLocator());
@@ -448,6 +448,26 @@ class PhpcrMapperTest extends SuluTestCase
         $this->assertTrue($rootNode->hasNode('news/news-1'));
         $this->assertTrue($rootNode->hasNode('test/news-1/sub-1'));
         $this->assertFalse($rootNode->hasNode('test/news-1/sub-2'));
+    }
+
+    public function provideInvalidDeleteByPathArguments()
+    {
+        return [
+            [''],
+            ['/'],
+            [null],
+        ];
+    }
+
+    /**
+     * The deleteByPath method would delete the entire route tree for the given language, if an invalid path is passed.
+     *
+     * @dataProvider provideInvalidDeleteByPathArguments
+     */
+    public function testDeleteByPathWithInvalidArguments($invalidPath)
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->rlpMapper->deleteByPath($invalidPath, 'sulu_io', 'en');
     }
 
     public function testTreeDeleteByPath()
@@ -511,7 +531,7 @@ class PhpcrMapperTest extends SuluTestCase
 
         // load history
         $result = $this->rlpMapper->loadHistoryByContentUuid($this->content2->getIdentifier(), 'sulu_io', 'de');
-        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals(2, count($result));
 
         $news = $rootNode->getNode('news');
         $news1 = $rootNode->getNode('news/news-1');
@@ -550,7 +570,7 @@ class PhpcrMapperTest extends SuluTestCase
         // load history
         $result = $this->rlpMapper->loadHistoryByContentUuid($this->content2->getIdentifier(), 'sulu_io', 'de');
 
-        $this->assertEquals(2, sizeof($result));
+        $this->assertEquals(2, count($result));
         $this->assertEquals('/test', $result[0]->getResourceLocator());
         $this->assertTrue($result[0]->getCreated() > $result[1]->getCreated());
         $this->assertEquals('/asdf', $result[1]->getResourceLocator());

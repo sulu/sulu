@@ -12,41 +12,39 @@
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
-use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
-use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
+use Sulu\Component\DocumentManager\Events;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class NavigationContextSubscriber extends AbstractMappingSubscriber
+class NavigationContextSubscriber implements EventSubscriberInterface
 {
     const FIELD = 'navContexts';
 
-    public function supports($document)
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedEvents()
     {
-        return $document instanceof NavigationContextBehavior;
+        return [
+            Events::METADATA_LOAD => 'handleMetadataLoad',
+        ];
     }
 
     /**
-     * @param HydrateEvent $event
+     * @param MetadataLoadEvent $event
      */
-    public function doHydrate(AbstractMappingEvent $event)
+    public function handleMetadataLoad(MetadataLoadEvent $event)
     {
-        $node = $event->getNode();
-        $value = $node->getPropertyValueWithDefault(
-            $this->encoder->localizedSystemName(self::FIELD, $event->getLocale()),
-            []
-        );
-        $event->getDocument()->setNavigationContexts($value);
-    }
+        $metadata = $event->getMetadata();
 
-    /**
-     * @param PersistEvent $event
-     */
-    public function doPersist(PersistEvent $event)
-    {
-        $node = $event->getNode();
-        $node->setProperty(
-            $this->encoder->localizedSystemName(self::FIELD, $event->getLocale()),
-            $event->getDocument()->getNavigationContexts() ?: null
-        );
+        if (!$metadata->getReflectionClass()->isSubclassOf(NavigationContextBehavior::class)) {
+            return;
+        }
+
+        $metadata->addFieldMapping('navigationContexts', [
+            'encoding' => 'system_localized',
+            'property' => self::FIELD,
+            'multiple' => true,
+        ]);
     }
 }

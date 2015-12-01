@@ -58,6 +58,7 @@ class SnippetLocaleCopyCommandTest extends SuluTestCase
             'en',
             [
                 'parent_path' => '/cmf/snippets/car',
+                'auto_create' => true,
             ]
         );
         $this->documentManager->flush();

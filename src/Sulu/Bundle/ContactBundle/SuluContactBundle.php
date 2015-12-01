@@ -20,7 +20,7 @@ class SuluContactBundle extends Bundle
     use PersistenceBundleTrait;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function build(ContainerBuilder $container)
     {

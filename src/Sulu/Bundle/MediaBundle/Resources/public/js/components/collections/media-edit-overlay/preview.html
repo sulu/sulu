@@ -1,0 +1,17 @@
+<form id="media-preview" class="grid">
+    <div class="grid-row">
+        <div class="grid-col-6">
+            <div class="media-edit-preview-image-container">
+                <% if (!!media.thumbnails && !!media.thumbnails['400x400']) { %>
+                    <div class="media-edit-preview-image"
+                         style="background-image: url('<%=media.thumbnails['400x400']%>');">
+                <% } else { %>
+                        <div class="media-edit-preview-image">
+                <% } %>
+                    <div id="preview-image-change"></div>
+                </div>
+            </div>
+        </div>
+        <div class="grid-col-6"></div>
+    </div>
+</form>

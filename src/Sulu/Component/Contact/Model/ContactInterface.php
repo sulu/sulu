@@ -335,22 +335,6 @@ interface ContactInterface
     public function getSalutation();
 
     /**
-     * Set disabled.
-     *
-     * @param int $disabled
-     *
-     * @return ContactInterface
-     */
-    public function setDisabled($disabled);
-
-    /**
-     * Get disabled.
-     *
-     * @return int
-     */
-    public function getDisabled();
-
-    /**
      * Add account contact.
      *
      * @param AccountContact $accountContact
@@ -533,6 +517,20 @@ interface ContactInterface
      * @return Collection
      */
     public function getMedias();
+
+    /**
+     * Get the contacts avatar.
+     *
+     * @return Media
+     */
+    public function getAvatar();
+
+    /**
+     * Sets the avatar for the contact.
+     *
+     * @param Media $avatar
+     */
+    public function setAvatar($avatar);
 
     /**
      * Add category.

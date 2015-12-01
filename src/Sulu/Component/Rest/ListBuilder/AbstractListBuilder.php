@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
+use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
+
 abstract class AbstractListBuilder implements ListBuilderInterface
 {
     /**
@@ -18,7 +20,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      *
      * @var AbstractFieldDescriptor[]
      */
-    protected $fields = [];
+    protected $selectFields = [];
 
     /**
      * The field descriptors for the field, which will be used for the search.
@@ -37,16 +39,16 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * The field descriptor for the field to sort.
      *
-     * @var AbstractFieldDescriptor
+     * @var AbstractFieldDescriptor[]
      */
-    protected $sortField = null;
+    protected $sortFields = [];
 
     /**
      * Defines the sort order of the string.
      *
-     * @var string
+     * @var string[]
      */
-    protected $sortOrder;
+    protected $sortOrders;
 
     /**
      * The limit for this query.
@@ -56,67 +58,11 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     protected $limit = null;
 
     /**
-     * The fields to be checked.
-     *
-     * @var array
-     */
-    protected $whereFields = [];
-
-    /**
-     * The values the where fields should have.
-     *
-     * @var array
-     */
-    protected $whereValues = [];
-
-    /**
-     * The where-not fields to be checked.
-     *
-     * @var array
-     */
-    protected $whereNotFields = [];
-
-    /**
-     * The values the where-not fields should have.
-     *
-     * @var array
-     */
-    protected $whereNotValues = [];
-
-    /**
      * group by fields.
      *
      * @var array
      */
     protected $groupByFields = [];
-
-    /**
-     * The fields which will be used for in-clauses.
-     *
-     * @var array
-     */
-    protected $inFields = [];
-
-    /**
-     * The fields which will be used for between-clauses.
-     *
-     * @var array
-     */
-    protected $betweenFields = [];
-
-    /**
-     * The values for the in-clauses.
-     *
-     * @var array
-     */
-    protected $inValues = [];
-
-    /**
-     * The values for the between-clauses.
-     *
-     * @var array
-     */
-    protected $betweenValues = [];
 
     /**
      * The page the resulting query will be returning.
@@ -126,33 +72,103 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     protected $page = 1;
 
     /**
-     * {@inheritDoc}
+     * All field descriptors for the current context.
+     *
+     * @var AbstractFieldDescriptor[]
      */
-    public function setFields($fieldDescriptors)
+    protected $fieldDescriptors = [];
+
+    /**
+     * @var ExpressionInterface[]
+     */
+    protected $expressions = [];
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setSelectFields($fieldDescriptors)
     {
-        $this->fields = $fieldDescriptors;
+        $this->selectFields = $fieldDescriptors;
     }
 
     /**
-     * {@inheritDoc}
+     * @deprecated use setSelectFields instead
      */
-    public function addField(AbstractFieldDescriptor $fieldDescriptor)
+    public function setFields($fieldDescriptors)
     {
-        $this->fields[$fieldDescriptor->getName()] = $fieldDescriptor;
+        $this->selectFields = $fieldDescriptors;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addSelectField(AbstractFieldDescriptor $fieldDescriptor)
+    {
+        $this->selectFields[$fieldDescriptor->getName()] = $fieldDescriptor;
 
         return $this;
     }
 
     /**
-     * {@inheritDoc}
+     * @deprecated use addSelectField instead
      */
-    public function hasField($name)
+    public function addField(AbstractFieldDescriptor $fieldDescriptor)
     {
-        return array_key_exists($name, $this->fields);
+        $this->selectFields[$fieldDescriptor->getName()] = $fieldDescriptor;
+
+        return $this;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     */
+    public function getSelectField($fieldName)
+    {
+        if (array_key_exists($fieldName, $this->selectFields)) {
+            return $this->selectFields[$fieldName];
+        }
+
+        return;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasSelectField($name)
+    {
+        return array_key_exists($name, $this->selectFields);
+    }
+
+    /**
+     * @deprecated use hasSelectField instead
+     */
+    public function hasField($name)
+    {
+        return array_key_exists($name, $this->selectFields);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setFieldDescriptors(array $fieldDescriptors)
+    {
+        $this->fieldDescriptors = $fieldDescriptors;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFieldDescriptor($fieldName)
+    {
+        if (array_key_exists($fieldName, $this->fieldDescriptors)) {
+            return $this->fieldDescriptors[$fieldName];
+        }
+
+        return;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function addSearchField(AbstractFieldDescriptor $fieldDescriptor)
     {
@@ -162,7 +178,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function search($search)
     {
@@ -170,18 +186,18 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function sort(AbstractFieldDescriptor $fieldDescriptor, $order = self::SORTORDER_ASC)
     {
-        $this->sortField = $fieldDescriptor;
-        $this->sortOrder = $order;
+        $this->sortFields[] = $fieldDescriptor;
+        $this->sortOrders[] = $order;
 
         return $this;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function limit($limit)
     {
@@ -191,7 +207,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getLimit()
     {
@@ -199,7 +215,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setCurrentPage($page)
     {
@@ -209,7 +225,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getCurrentPage()
     {
@@ -217,46 +233,67 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function where(AbstractFieldDescriptor $fieldDescriptor, $value)
+    public function where(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator = self::WHERE_COMPARATOR_EQUAL)
     {
-        $this->whereFields[$fieldDescriptor->getName()] = $fieldDescriptor;
-        $this->whereValues[$fieldDescriptor->getName()] = $value;
+        $this->expressions[] = $this->createWhereExpression($fieldDescriptor, $value, $comparator);
+        $this->addFieldDescriptor($fieldDescriptor);
     }
 
     /**
-     * {@inheritDoc}
+     * @deprecated use where instead
+     *
+     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param $value
      */
     public function whereNot(AbstractFieldDescriptor $fieldDescriptor, $value)
     {
-        $this->whereNotFields[$fieldDescriptor->getName()] = $fieldDescriptor;
-        $this->whereNotValues[$fieldDescriptor->getName()] = $value;
+        $this->expressions[] = $this->createWhereExpression($fieldDescriptor, $value, self::WHERE_COMPARATOR_UNEQUAL);
+        $this->addFieldDescriptor($fieldDescriptor);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function in(AbstractFieldDescriptor $fieldDescriptor, $values)
+    public function in(AbstractFieldDescriptor $fieldDescriptor, array $values)
     {
-        $this->inFields[$fieldDescriptor->getName()] = $fieldDescriptor;
-        $this->inValues[$fieldDescriptor->getName()] = $values;
+        $this->expressions[] = $this->createInExpression($fieldDescriptor, $values);
+        $this->addFieldDescriptor($fieldDescriptor);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function between(AbstractFieldDescriptor $fieldDescriptor, $values)
+    public function between(AbstractFieldDescriptor $fieldDescriptor, array $values)
     {
-        $this->betweenFields[$fieldDescriptor->getName()] = $fieldDescriptor;
-        $this->betweenValues[$fieldDescriptor->getName()] = $values;
+        $this->expressions[] = $this->createBetweenExpression($fieldDescriptor, $values);
+        $this->addFieldDescriptor($fieldDescriptor);
     }
 
     /**
-     * {@inheritDoc}
+     * Adds a field descriptor.
+     *
+     * @param AbstractFieldDescriptor $fieldDescriptor
+     */
+    protected function addFieldDescriptor(AbstractFieldDescriptor $fieldDescriptor)
+    {
+        $this->fieldDescriptors[$fieldDescriptor->getName()] = $fieldDescriptor;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function addGroupBy(AbstractFieldDescriptor $fieldDescriptor)
     {
         $this->groupByFields[$fieldDescriptor->getName()] = $fieldDescriptor;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addExpression(ExpressionInterface $expression)
+    {
+        $this->expressions[] = $expression;
     }
 }

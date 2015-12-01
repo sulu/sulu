@@ -20,21 +20,34 @@ use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ResourceSegmentSubscriber extends AbstractMappingSubscriber
+/**
+ * TODO: This could be made into a pure metadata subscriber if we make
+ *       the resource locator a system property.
+ */
+class ResourceSegmentSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var DocumentInspector
+     */
     private $inspector;
+
+    /**
+     * @var PropertyEncoder
+     */
+    private $encoder;
 
     public function __construct(
         PropertyEncoder $encoder,
         DocumentInspector $inspector
     ) {
-        parent::__construct($encoder);
+        $this->encoder = $encoder;
         $this->inspector = $inspector;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
@@ -42,7 +55,7 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
             // persist should happen before content is mapped
             Events::PERSIST => ['handlePersist', 10],
             // hydrate should happen afterwards
-            Events::HYDRATE => ['handleHydrate', -10],
+            Events::HYDRATE => ['handleHydrate', -200],
         ];
     }
 
@@ -54,7 +67,7 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
     /**
      * @param AbstractMappingEvent $event
      */
-    public function doHydrate(AbstractMappingEvent $event)
+    public function handleHydrate(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();
 
@@ -79,9 +92,14 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
     /**
      * @param PersistEvent $event
      */
-    public function doPersist(PersistEvent $event)
+    public function handlePersist(PersistEvent $event)
     {
         $document = $event->getDocument();
+
+        if (!$this->supports($document)) {
+            return;
+        }
+
         if ($document instanceof RedirectTypeBehavior && $document->getRedirectType() !== RedirectType::NONE) {
             return;
         }

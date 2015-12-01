@@ -14,6 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * Defines the method for the doctrine repository.
@@ -33,16 +34,24 @@ interface MediaRepositoryInterface
      * finds all media, can be filtered with parent.
      *
      * @param array $filter
-     * @param int   $limit
-     * @param int   $offset
+     * @param int $limit
+     * @param int $offset
+     * @param UserInterface $user
+     * @param null $permission
      *
      * @return Paginator
      */
-    public function findMedia($filter = [], $limit = null, $offset = null);
+    public function findMedia(
+        $filter = [],
+        $limit = null,
+        $offset = null,
+        UserInterface $user = null,
+        $permission = null
+    );
 
     /**
      * @param string $filename
-     * @param int    $collectionId
+     * @param int $collectionId
      *
      * @return Media
      */

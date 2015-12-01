@@ -1,7 +1,6 @@
 <?php
-
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -14,8 +13,7 @@ namespace Sulu\Component\Content\Compat\Serializer;
 use JMS\Serializer\Context;
 use JMS\Serializer\GraphNavigator;
 use JMS\Serializer\Handler\SubscribingHandlerInterface;
-use JMS\Serializer\JsonDeserializationVisitor;
-use JMS\Serializer\JsonSerializationVisitor;
+use JMS\Serializer\VisitorInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
@@ -60,44 +58,35 @@ class PageBridgeHandler implements SubscribingHandlerInterface
     }
 
     /**
-     * @param JsonSerializationVisitor $visitor
-     * @param PageBridge               $bridge
-     * @param array                    $type
-     * @param Context                  $context
+     * @param VisitorInterface $visitor
+     * @param PageBridge $bridge
+     * @param array $type
+     * @param Context $context
      */
     public function doSerialize(
-        JsonSerializationVisitor $visitor,
+        VisitorInterface $visitor,
         PageBridge $bridge,
         array $type,
         Context $context
     ) {
-        $refl = new \ReflectionClass(PageBridge::class);
-        $documentProperty = $refl->getProperty('document');
-        $structureProperty = $refl->getProperty('structure');
-        $documentProperty->setAccessible(true);
-        $structureProperty->setAccessible(true);
-
-        $document = $documentProperty->getValue($bridge);
-        $structure = $structureProperty->getValue($bridge);
-
         $context->accept(
             [
-                'document' => $document,
-                'structure' => $structure->name,
+                'document' => $bridge->getDocument(),
+                'structure' => $bridge->getStructure()->getName(),
             ]
         );
     }
 
     /**
-     * @param JsonDeserializationVisitor|JsonSerializationVisitor $visitor
-     * @param array                                               $data
-     * @param array                                               $type
-     * @param Context                                             $context
+     * @param VisitorInterface $visitor
+     * @param array $data
+     * @param array $type
+     * @param Context $context
      *
      * @return PageBridge
      */
     public function doDeserialize(
-        JsonDeserializationVisitor $visitor,
+        VisitorInterface $visitor,
         array $data,
         array $type,
         Context $context

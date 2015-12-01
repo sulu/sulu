@@ -13,13 +13,11 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
+use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
 abstract class BaseAccount extends ApiEntity implements AuditableInterface, AccountInterface
 {
-    const ENABLED = 0;
-    const DISABLED = 1;
-
     /**
      * @var int
      */
@@ -68,11 +66,6 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     private $corporation;
 
     /**
-     * @var int
-     */
-    private $disabled = self::ENABLED;
-
-    /**
      * @var string
      */
     private $uid;
@@ -111,6 +104,11 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
      * @var \Sulu\Component\Contact\Model\ContactInterface
      */
     private $mainContact;
+
+    /**
+     * @var Media
+     */
+    protected $logo;
 
     /**
      * setId.
@@ -230,30 +228,6 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     public function getCorporation()
     {
         return $this->corporation;
-    }
-
-    /**
-     * Set disabled.
-     *
-     * @param int $disabled
-     *
-     * @return BaseAccount
-     */
-    public function setDisabled($disabled)
-    {
-        $this->disabled = $disabled;
-
-        return $this;
-    }
-
-    /**
-     * Get disabled.
-     *
-     * @return int
-     */
-    public function getDisabled()
-    {
-        return $this->disabled;
     }
 
     /**
@@ -388,6 +362,24 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
         $this->mainFax = $mainFax;
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setLogo($logo)
+    {
+        $this->logo = $logo;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLogo()
+    {
+        return $this->logo;
     }
 
     /**

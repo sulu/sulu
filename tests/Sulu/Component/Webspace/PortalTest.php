@@ -70,6 +70,7 @@ class PortalTest extends \PHPUnit_Framework_TestCase
         $this->environment->getType()->willReturn('d');
         $this->localization->toArray()->willReturn($expected['localizations'][0]);
         $this->localization->isDefault()->willReturn(true);
+        $this->localization->isXDefault()->willReturn(false);
         $this->environment->getUrls()->willReturn([]);
 
         $this->portal->addEnvironment($this->environment->reveal());

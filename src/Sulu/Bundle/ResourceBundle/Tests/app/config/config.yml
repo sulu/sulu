@@ -1,0 +1,10 @@
+sulu_resource:
+    contexts:
+        contact:
+            fields: "/admin/api/contacts/fields"
+            features:
+                - "filters"
+        account:
+            fields: "/admin/api/accounts/fields"
+            features:
+                 - "filters"

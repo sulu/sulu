@@ -119,7 +119,7 @@ class ManagedExtensionContainer extends ExtensionContainer
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function offsetExists($extensionName)
     {
@@ -127,7 +127,7 @@ class ManagedExtensionContainer extends ExtensionContainer
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function toArray()
     {

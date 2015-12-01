@@ -18,6 +18,7 @@
             <tag name="sulu.context" context="admin"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu_security.security_checker"/>
+            <argument type="service" id="sulu.phpcr.session"/>
             <argument>%sulu_admin.name%</argument>
         </service>
 
@@ -31,6 +32,11 @@
             <tag name="twig.extension"/>
             <argument type="service" id="sulu.content.type_manager"/>
         </service>
+        <service id="sulu_content.permission_listener" class="Sulu\Bundle\ContentBundle\Search\EventListener\PermissionListener">
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="massive_search.search_manager"/>
+            <tag name="kernel.event_listener" event="sulu_security.permission_update" method="onPermissionUpdate"/>
+        </service>
 
         <!-- nodes -->
         <service id="sulu_content.node_repository" class="%sulu_content.node_repository.class%">
@@ -38,8 +44,10 @@
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="sulu_security.user_manager"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument type="service" id="sulu.content.type.smart_content.query_builder"/>
+            <argument type="service" id="sulu_content.smart_content.data_provider.content.query_builder"/>
             <argument type="service" id="sulu.content.query_executor"/>
+            <argument type="service" id="sulu_security.access_control_manager"/>
+            <argument type="service" id="security.token_storage" on-invalid="null"/>
             <argument type="service" id="logger"/>
         </service>
 
@@ -60,6 +68,8 @@
         <service id="sulu_content.extension.excerpt" class="%sulu_content.extension.excerpt.class%">
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu.content.type_manager"/>
+            <argument type="service" id="massive_search.factory" />
+
             <tag name="sulu.structure.extension"/>
         </service>
 
@@ -67,11 +77,27 @@
         <service id="sulu_content.jsconfig" class="%sulu_content.jsconfig.class%">
             <argument type="string">sulu-content</argument>
             <argument type="collection">
-                <argument key="showInSortModeTag" type="string">sulu.content.sortmode.show</argument>
                 <argument key="locales" type="expression">service('sulu_core.webspace.webspace_manager').getAllLocalizations()</argument>
             </argument>
 
             <tag name="sulu.js_config"/>
+        </service>
+
+        <!-- Content Repository -->
+        <service id="sulu_content.content_repository" class="Sulu\Component\Content\Repository\ContentRepository">
+            <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu_document_manager.property_encoder"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu.content.localization_finder"/>
+            <argument type="service" id="sulu.util.node_helper"/>
+        </service>
+        <service id="sulu_content.content_repository.event_subscriber"
+                 class="Sulu\Component\Content\Repository\Serializer\SerializerEventListener">
+            <argument type="service" id="sulu_security.access_control_manager"/>
+            <argument type="service" id="security.token_storage"/>
+
+            <tag name="jms_serializer.event_subscriber" />
+            <tag name="sulu.context" context="admin"/>
         </service>
     </services>
 </container>

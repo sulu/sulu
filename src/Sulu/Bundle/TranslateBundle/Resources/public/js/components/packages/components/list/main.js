@@ -12,11 +12,6 @@ define([], function() {
     'use strict';
 
     var bindCustomEvents = function() {
-        // navigate to edit contact
-        this.sandbox.on('husky.datagrid.item.click', function(item) {
-            this.sandbox.emit('sulu.translate.package.load', item);
-        }, this);
-
         // delete clicked
         this.sandbox.on('sulu.list-toolbar.delete', function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
@@ -32,25 +27,15 @@ define([], function() {
 
     return {
 
-        view: true,
-
         layout: {
             content: {
-                width: 'max',
-                leftSpace: false,
-                rightSpace: false
+                width: 'max'
             }
         },
 
         header: function() {
             return {
-                title: 'translate.package.title',
-                noBack: true,
-
-                breadcrumb: [
-                    {title: 'navigation.settings'},
-                    {title: 'translate.package.title'}
-                ]
+                noBack: true
             };
         },
 
@@ -69,18 +54,15 @@ define([], function() {
             this.sandbox.sulu.initListToolbarAndList.call(this, 'packages', '/admin/api/packages/fields',
                 {
                     el: '#list-toolbar-container',
-                    instanceName: 'package',
-                    inHeader: true
+                    instanceName: 'package'
                 },
                 {
                     el: this.$find('#package-list'),
                     url: '/admin/api/packages?flat=true',
                     resultKey: 'packages',
-                    viewOptions: {
-                        table: {
-                            fullWidth: true
-                        }
-                    }
+                    actionCallback: function(item) {
+                        this.sandbox.emit('sulu.translate.package.load', item);
+                    }.bind(this)
                 }
             );
         }

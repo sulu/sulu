@@ -27,6 +27,56 @@ use Sulu\Component\DocumentManager\Event\PersistEvent;
 
 class StructureSubscriberTest extends SubscriberTestCase
 {
+    /**
+     * @var ContentTypeManagerInterface
+     */
+    private $contentTypeManager;
+
+    /**
+     * @var PropertyMetadata
+     */
+    private $structureProperty;
+
+    /**
+     * @var ContentTypeInterface
+     */
+    private $contentType;
+
+    /**
+     * @var PropertyValue
+     */
+    private $propertyValue;
+
+    /**
+     * @var TranslatedProperty
+     */
+    private $legacyProperty;
+
+    /**
+     * @var StructureMetadata
+     */
+    private $structureMetadata;
+
+    /**
+     * @var Structure
+     */
+    private $structure;
+
+    /**
+     * @var LegacyPropertyFactory
+     */
+    private $propertyFactory;
+
+    /**
+     * @var DocumentInspector
+     */
+    private $inspector;
+
+    /**
+     * @var StructureSubscriber
+     */
+    private $subscriber;
+
     public function setUp()
     {
         parent::setUp();
@@ -71,6 +121,20 @@ class StructureSubscriberTest extends SubscriberTestCase
     }
 
     /**
+     * It should return early if the locale is null.
+     */
+    public function testPersistNoLocale()
+    {
+        $document = new TestContentDocument($this->structure->reveal());
+        $this->persistEvent->getLocale()->willReturn(null);
+        $this->persistEvent->getDocument()->willReturn($document);
+
+        $this->subscriber->handlePersist($this->persistEvent->reveal());
+
+        $this->node->setProperty()->shouldNotBeCalled();
+    }
+
+    /**
      * It should set the structure type and map the content to thethe node.
      */
     public function testPersist()
@@ -96,6 +160,14 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->propertyFactory->createTranslatedProperty($this->structureProperty->reveal(), 'fr')->willReturn($this->legacyProperty->reveal());
         $this->structure->getProperty('prop1')->willReturn($this->propertyValue->reveal());
         $this->propertyValue->getValue()->willReturn('test');
+
+        $this->contentType->remove(
+            $this->node->reveal(),
+            $this->legacyProperty->reveal(),
+            'webspace',
+            'fr',
+            null
+        )->shouldBeCalled();
 
         $this->contentType->write(
             $this->node->reveal(),

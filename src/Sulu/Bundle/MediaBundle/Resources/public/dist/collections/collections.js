@@ -1,0 +1,1 @@
+define(["mvc/collection","sulumedia/models/collection"],function(a,b){return a({model:b,url:function(){return"/admin/api/collections?limit=99999&depth=99999&flat=true"},fetchSorted:function(a,b){return b=_.defaults(b||{},{url:this.url()+"&sortBy="+a}),this.fetch.call(this,b)},parse:function(a){return a._embedded.collections}})});

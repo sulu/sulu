@@ -4,7 +4,7 @@
         <body>
             <trans-unit id="f1234df37123123fd4a73a4123dfdf00A" resname="public.url-history.none">
                 <source>public.url-history.none</source>
-                <target>No history for this node exists ...</target>
+                <target>No history for this page exists ...</target>
             </trans-unit>
             <trans-unit id="fbf455837741abced4a73a4ba3fdf006" resname="single-internal-link.title">
                 <source>single-internal-link.title</source>
@@ -40,7 +40,7 @@
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a73a4123dfdf006" resname="content.contents.settings.delete">
                 <source>content.contents.settings.delete</source>
-                <target>Delete node</target>
+                <target>Delete page</target>
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a73a4123dfdf007" resname="content.contents.settings.copy">
                 <source>content.contents.settings.copy</source>
@@ -64,7 +64,7 @@
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a73a4123dfdf00C" resname="content.contents.settings.order.title">
                 <source>content.contents.settings.order.title</source>
-                <target>Place node</target>
+                <target>Place page</target>
             </trans-unit>
             <trans-unit id="92762f7528ee1cbcd85bf435fd03c846" resname="smart-content.nocontent-found">
                 <source>smart-content.nocontent-found</source>
@@ -116,7 +116,7 @@
             </trans-unit>
             <trans-unit id="831eaac1fa8a279d10e452f59e716b35" resname="smart-content.no-sorting">
                 <source>smart-content.no-sorting</source>
-                <target>Default Sorting</target>
+                <target>Admin-Sorting</target>
             </trans-unit>
             <trans-unit id="fc27db8368ee8e93b0432c6f929eb22c" resname="smart-content.ascending">
                 <source>smart-content.ascending</source>
@@ -164,7 +164,27 @@
             </trans-unit>
             <trans-unit id="cc88fcd370c8ff1d96f0b9f99adb8317" resname="smart-content.title">
                 <source>smart-content.title</source>
-                <target>Title</target>
+                <target>Title (alphabetic)</target>
+            </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f99adb8327" resname="smart-content.published">
+                <source>smart-content.published</source>
+                <target>Published (date)</target>
+            </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f99ad18337" resname="smart-content.created">
+                <source>smart-content.created</source>
+                <target>Created (date)</target>
+            </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f99ad28337" resname="smart-content.changed">
+                <source>smart-content.changed</source>
+                <target>Changed (date)</target>
+            </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f99bdb8317" resname="smart-content.save">
+                <source>smart-content.save</source>
+                <target>Save</target>
+            </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b0f99bdb8317" resname="smart-content.clear">
+                <source>smart-content.clear</source>
+                <target>Reset fields</target>
             </trans-unit>
             <trans-unit id="ad64f69edc5ce6dae6033001f5d01b6e" resname="content.template.dialog.titile">
                 <source>content.template.dialog.titile</source>
@@ -184,11 +204,11 @@
             </trans-unit>
             <trans-unit id="18fe4f5f2d5a25f1a9b5360e0bd18bfa" resname="content.delete.dialog.title">
                 <source>content.delete.dialog.title</source>
-                <target>Delete Node</target>
+                <target>Delete page</target>
             </trans-unit>
             <trans-unit id="0c64601205aa73314446c02e5a3dd4c8" resname="content.delete.dialog.content">
                 <source>content.delete.dialog.content</source>
-                <target>Do you realy want to delete the selected node?</target>
+                <target>Do you realy want to delete the selected page?</target>
             </trans-unit>
             <trans-unit id="18ffe800b505f7d878907c67d7fb1be4" resname="content.delete.dialog.cancel">
                 <source>content.delete.dialog.cancel</source>
@@ -222,9 +242,13 @@
                 <source>smart-content.choose-data-source</source>
                 <target>Choose data source</target>
             </trans-unit>
-            <trans-unit id="90a3276459ba0f52ef7a4d320298d5d" resname="smart-content.choose-data-source.cancel">
-                <source>smart-content.choose-data-source.cancel</source>
-                <target>Cancel</target>
+            <trans-unit id="90a3276459ba0f52ef7a4d320298d5d" resname="smart-content.choose-data-source.reset">
+                <source>smart-content.choose-data-source.reset</source>
+                <target>Reset</target>
+            </trans-unit>
+            <trans-unit id="90a3276459ba0f52ef7a41320298d5d" resname="smart-content.choose-data-source.back">
+                <source>smart-content.choose-data-source.back</source>
+                <target>Back</target>
             </trans-unit>
             <trans-unit id="443d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.title">
                 <source>sulu.content.seo.title</source>
@@ -342,13 +366,13 @@
                 <source>sulu.content.form.settings.type.external-link.url</source>
                 <target>URL</target>
             </trans-unit>
-            <trans-unit id="abaaaaa382139fbed4a73a4123dfdf013" resname="sulu.content.sort.blocks">
-                <source>sulu.content.sort.blocks</source>
-                <target>Sort text blocks</target>
+            <trans-unit id="abaaaaa382139fbed4a73a4123dfdf013" resname="sulu.content.collapse.blocks">
+                <source>sulu.content.collapse.blocks</source>
+                <target>Collapse all blocks</target>
             </trans-unit>
-            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf113" resname="sulu.content.edit.blocks">
-                <source>sulu.content.edit.blocks</source>
-                <target>Edit text blocks</target>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf113" resname="sulu.content.expand.blocks">
+                <source>sulu.content.expand.blocks</source>
+                <target>Expand all blocks</target>
             </trans-unit>
             <trans-unit id="abaaaaa382148fbed4a73a4123dfdf013" resname="content.contents.settings.copy-locales.title">
                 <source>content.contents.settings.copy-locales.title</source>
@@ -459,13 +483,77 @@
                 <source>column-navigation.order-message</source>
                 <target>The operation you are about to do will rearrange a page.</target>
             </trans-unit>
-            <trans-unit id="e4b14069a8a085ede200b7f5acb2dh4b" resname="search-overlay.category.page.title">
-                <source>search-overlay.category.page.title</source>
-                <target>Pages</target>
+            <trans-unit id="75435af307a7ae8f965923968a0e0f94" resname="labels.error.content-save-desc">
+                <source>labels.error.content-save-desc</source>
+                <target>Page could not be saved.</target>
             </trans-unit>
-            <trans-unit id="e4b14069a8a085ede2092hf5acb2dh4b" resname="search-overlay.placeholder.page">
-                <source>search-overlay.placeholder.page</source>
-                <target>Search pages...</target>
+            <trans-unit id="75435af3a7a7a38f968923968a0e0f94" resname="labels.error.content-save-resource-locator">
+                <source>labels.error.content-save-resource-locator</source>
+                <target>The given Resource Locator is not valid.</target>
+            </trans-unit>
+            <trans-unit id="2647c238cae0fa45d7fbad336e43750f" resname="labels.success.content-deleted-desc">
+                <source>labels.success.content-deleted-desc</source>
+                <target>Page successfully deleted.</target>
+            </trans-unit>
+            <trans-unit id="487f946d51783a9899fa59d31dcfc3e8" resname="labels.success.content-save-desc">
+                <source>labels.success.content-save-desc</source>
+                <target>Page sucessfully saved</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh40" resname="smart-content.categories.label">
+                <source>smart-content.categories.label</source>
+                <target>Filter by categories</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh41" resname="smart-content.categories.button">
+                <source>smart-content.categories.button</source>
+                <target>Choose categories</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh42" resname="smart-content.categories">
+                <source>smart-content.categories</source>
+                <target>Categories</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh43" resname="smart-content.choose-categories">
+                <source>smart-content.choose-categories</source>
+                <target>Choose categories</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh44" resname="smart-content.categories.operator-label">
+                <source>smart-content.categories.operator-label</source>
+                <target>Condition</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh45" resname="smart-content.categories.use-any-category">
+                <source>smart-content.categories.use-any-category</source>
+                <target>Use pages that use ANY tag</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh46" resname="smart-content.categories.use-all-categories">
+                <source>smart-content.categories.use-all-categories</source>
+                <target>Use pages that use ALL categories</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh47" resname="smart-content.categories.categories-label">
+                <source>smart-content.categories.categories-label</source>
+                <target>Choose categories</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh48" resname="smart-content.choose-categories.cancel">
+                <source>smart-content.choose-categories.cancel</source>
+                <target>Back</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh49" resname="smart-content.choose-categories.ok">
+                <source>smart-content.choose-categories.ok</source>
+                <target>Apply categories</target>
+            </trans-unit>
+            <trans-unit id="9" resname="content.delete-referenced-by-following">
+                <source>content.delete-referenced-by-following</source>
+                <target>This page is referenced by the following pages:</target>
+            </trans-unit>
+            <trans-unit id="10" resname="content.delete-confirm-text">
+                <source>content.delete-confirm-text</source>
+                <target>Are you sure you want to remove it?</target>
+            </trans-unit>
+            <trans-unit id="11" resname="content.delete-confirm-title">
+                <source>content.delete-confirm-title</source>
+                <target>Confirm delete</target>
+            </trans-unit>
+            <trans-unit id="12" resname="content.delete-do-it">
+                <source>content.delete-do-it</source>
+                <target>Yes, I am sure</target>
             </trans-unit>
         </body>
     </file>

@@ -34,7 +34,7 @@ abstract class SuluTestCase extends BaseTestCase
     /**
      * Create a new SuluTestKernel and pass the sulu.context to it.
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @throws InvalidArgumentException If the found kernel does
      *                                  not extend SuluTestKernel
@@ -133,7 +133,6 @@ abstract class SuluTestCase extends BaseTestCase
     {
         /** @var SessionInterface $session */
         $session = $this->db('PHPCR')->getOm()->getPhpcrSession();
-        $structureFactory = $this->getContainer()->get('sulu_content.structure.factory');
 
         if ($session->nodeExists('/cmf')) {
             $session->getNode('/cmf')->remove();
@@ -142,8 +141,6 @@ abstract class SuluTestCase extends BaseTestCase
         $session->save();
 
         $cmf = $session->getRootNode()->addNode('cmf');
-
-        $snippetsNode = $cmf->addNode('snippets');
 
         // we should use the doctrinephpcrbundle repository initializer to do this.
         $webspace = $cmf->addNode('sulu_io');

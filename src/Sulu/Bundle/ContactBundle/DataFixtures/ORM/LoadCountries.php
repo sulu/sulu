@@ -17,7 +17,7 @@ use Sulu\Bundle\ContactBundle\Entity\Country;
 class LoadCountries implements FixtureInterface, OrderedFixtureInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(ObjectManager $manager)
     {
@@ -60,7 +60,7 @@ class LoadCountries implements FixtureInterface, OrderedFixtureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getOrder()
     {

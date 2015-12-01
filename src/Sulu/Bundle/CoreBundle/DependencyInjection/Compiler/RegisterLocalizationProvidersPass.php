@@ -22,7 +22,7 @@ class RegisterLocalizationProvidersPass implements CompilerPassInterface
     const LOCALIZATION_PROVIDER_TAG = 'sulu.localization_provider';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {

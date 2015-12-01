@@ -183,6 +183,10 @@ define([
                 removeBankAccount.call(this, event.currentTarget);
             }.bind(this), '.bank-account-remove');
 
+            this.sandbox.dom.on(this.$el, 'change keyup', function(event) {
+                this.sandbox.dom.stopPropagation(event);
+            }.bind(this), '.husky-overlay-container');
+
             this.sandbox.dom.on(this.$el, 'click', function(event) {
                 event.stopPropagation();
                 addBankAccount.call(this, event.currentTarget);
@@ -348,7 +352,7 @@ define([
                 if (url.id === "") {
                     delete url.id;
                 }
-                return url.url !== "";
+                return !!url.url;
             });
 
             this.sandbox.form.addCollectionFilter(this.form, 'faxes', function(fax) {
@@ -804,14 +808,12 @@ define([
             // add to collection
             if (!mapperId) {
                 this.sandbox.form.addToCollection(this.form, 'addresses', formData).then(function($element) {
-                    // crop the label
                     cropLabelOfElement.call(this, $element);
                 }.bind(this));
             } else {
                 this.sandbox.form.editInCollection(this.form, mapperId, formData);
 
                 $element = this.$find('[data-mapper-id="' + mapperId + '"]');
-                // crop the label
                 cropLabelOfElement.call(this, $element);
             }
 

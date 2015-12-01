@@ -127,6 +127,12 @@ for BUNDLE in $BUNDLES; do
             && $CONSOLE doctrine:schema:update --force
     fi
 
+    comment "Running preparation script"
+    BEFORE_SCRIPT="bin/before-test.sh"
+    if [ -e $BEFORE_SCRIPT ]; then
+        bash $BEFORE_SCRIPT
+    fi
+
     cd -
     comment "Running tests"
 

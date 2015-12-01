@@ -168,7 +168,7 @@ class MediaControllerTest extends SuluTestCase
         // create meta
         $fileVersionMeta = new FileVersionMeta();
         $fileVersionMeta->setLocale('en-gb');
-        $fileVersionMeta->setTitle($this->mediaDefaultTitle);
+        $fileVersionMeta->setTitle($name);
         $fileVersionMeta->setDescription($this->mediaDefaultDescription);
         $fileVersionMeta->setFileVersion($fileVersion);
 
@@ -236,6 +236,8 @@ class MediaControllerTest extends SuluTestCase
      */
     public function testResponseHeader()
     {
+        $media = $this->createMedia('photo');
+
         $date = new DateTime();
         $date->modify('+1 month');
 
@@ -243,10 +245,26 @@ class MediaControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/uploads/media/50x50/01/1-photo.jpeg'
+            '/uploads/media/50x50/01/' . $media->getId() . '-photo.jpeg'
         );
 
         $this->assertEquals($date->format('Y-m-d'), $client->getResponse()->getExpires()->format('Y-m-d'));
+    }
+
+    /**
+     * Test Media DownloadCounter.
+     */
+    public function test404ResponseHeader()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/uploads/media/50x50/01/0-photo.jpeg'
+        );
+
+        $this->assertFalse($client->getResponse()->isCacheable());
+        $this->assertEmpty($client->getResponse()->getExpires());
     }
 
     /**
@@ -265,7 +283,10 @@ class MediaControllerTest extends SuluTestCase
         );
         ob_end_clean();
 
-        $this->assertEquals('attachment; filename="photo.jpeg"', $client->getResponse()->headers->get('Content-Disposition'));
+        $this->assertEquals(
+            'attachment; filename="photo.jpeg"',
+            $client->getResponse()->headers->get('Content-Disposition')
+        );
     }
 
     /**
@@ -284,7 +305,10 @@ class MediaControllerTest extends SuluTestCase
         );
         ob_end_clean();
 
-        $this->assertEquals('inline; filename="photo.jpeg"', $client->getResponse()->headers->get('Content-Disposition'));
+        $this->assertEquals(
+            'inline; filename="photo.jpeg"',
+            $client->getResponse()->headers->get('Content-Disposition')
+        );
     }
 
     /**
@@ -503,6 +527,37 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('photo1.jpeg', $response->_embedded->media[1]->name);
     }
 
+    public function testCgetSearch()
+    {
+        $media1 = $this->createMedia('photo1');
+        $media2 = $this->createMedia('photo2');
+        $media3 = $this->createMedia('picture3');
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/media?flat=true&search=photo%2A'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals(2, $response['total']);
+        $this->assertCount(2, $response['_embedded']['media']);
+
+        $titles = array_map(
+            function ($media) {
+                return $media['name'];
+            },
+            $response['_embedded']['media']
+        );
+
+        $this->assertContains('photo2.jpeg', $titles);
+        $this->assertContains('photo1.jpeg', $titles);
+    }
+
     /**
      * Test GET all Media.
      */
@@ -562,6 +617,7 @@ class MediaControllerTest extends SuluTestCase
                 'locale' => 'en-gb',
                 'title' => 'New Image Title',
                 'description' => 'New Image Description',
+                'copyright' => 'My copyright',
                 'contentLanguages' => [
                     'en-gb',
                 ],
@@ -589,19 +645,26 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('photo.jpeg', $response->name);
         $this->assertEquals('New Image Title', $response->title);
         $this->assertEquals('New Image Description', $response->description);
+        $this->assertEquals('My copyright', $response->copyright);
         $this->assertNotEmpty($response->url);
         $this->assertNotEmpty($response->thumbnails);
 
-        $this->assertEquals([
-            'en-gb',
-        ], $response->contentLanguages);
+        $this->assertEquals(
+            [
+                'en-gb',
+            ],
+            $response->contentLanguages
+        );
 
-        $this->assertEquals([
-            'en-gb',
-            'en-au',
-            'en',
-            'de',
-        ], $response->publishLanguages);
+        $this->assertEquals(
+            [
+                'en-gb',
+                'en-au',
+                'en',
+                'de',
+            ],
+            $response->publishLanguages
+        );
     }
 
     /**
@@ -695,6 +758,7 @@ class MediaControllerTest extends SuluTestCase
                 'locale' => 'en-gb',
                 'title' => 'New Image Title',
                 'description' => 'New Image Description',
+                'copyright' => 'My copyright',
                 'contentLanguages' => [
                     'en-gb',
                 ],
@@ -723,15 +787,22 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('en-gb', $response->locale);
         $this->assertEquals('New Image Title', $response->title);
         $this->assertEquals('New Image Description', $response->description);
-        $this->assertEquals([
-            'en-gb',
-        ], $response->contentLanguages);
-        $this->assertEquals([
-            'en-gb',
-            'en-au',
-            'en',
-            'de',
-        ], $response->publishLanguages);
+        $this->assertEquals('My copyright', $response->copyright);
+        $this->assertEquals(
+            [
+                'en-gb',
+            ],
+            $response->contentLanguages
+        );
+        $this->assertEquals(
+            [
+                'en-gb',
+                'en-au',
+                'en',
+                'de',
+            ],
+            $response->publishLanguages
+        );
     }
 
     /**
@@ -751,6 +822,7 @@ class MediaControllerTest extends SuluTestCase
                 'locale' => 'en-gb',
                 'title' => 'Update Title',
                 'description' => 'Update Description',
+                'copyright' => 'My copyright',
                 'contentLanguages' => [
                     'en-gb',
                 ],
@@ -773,17 +845,24 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('en-gb', $response->locale);
         $this->assertEquals('Update Title', $response->title);
         $this->assertEquals('Update Description', $response->description);
+        $this->assertEquals('My copyright', $response->copyright);
         $this->assertNotEmpty($response->url);
         $this->assertNotEmpty($response->thumbnails);
-        $this->assertEquals([
-            'en-gb',
-        ], $response->contentLanguages);
-        $this->assertEquals([
-            'en-gb',
-            'en-au',
-            'en',
-            'de',
-        ], $response->publishLanguages);
+        $this->assertEquals(
+            [
+                'en-gb',
+            ],
+            $response->contentLanguages
+        );
+        $this->assertEquals(
+            [
+                'en-gb',
+                'en-au',
+                'en',
+                'de',
+            ],
+            $response->publishLanguages
+        );
     }
 
     /**
@@ -832,6 +911,7 @@ class MediaControllerTest extends SuluTestCase
     public function testDeleteById()
     {
         $media = $this->createMedia('photo');
+        $this->assertFileExists(__DIR__ . '/../../uploads/media/1/photo.jpeg');
 
         $client = $this->createAuthenticatedClient();
 
@@ -850,6 +930,8 @@ class MediaControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(5015, $response->code);
         $this->assertTrue(isset($response->message));
+
+        $this->assertFileNotExists(__DIR__ . '/../../uploads/media/1/photo.jpeg');
     }
 
     /**

@@ -52,7 +52,7 @@ class RouteDocument implements
     private $targetDocument;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getNodeName()
     {
@@ -60,7 +60,7 @@ class RouteDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getPath()
     {
@@ -68,7 +68,7 @@ class RouteDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getUuid()
     {
@@ -76,7 +76,7 @@ class RouteDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getTargetDocument()
     {
@@ -84,7 +84,7 @@ class RouteDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setTargetDocument($targetDocument)
     {

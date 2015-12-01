@@ -24,6 +24,7 @@ abstract class GeneratorCommand extends ContainerAwareCommand
     private $generator;
 
     // only useful for unit tests
+
     public function setGenerator(Generator $generator)
     {
         $this->generator = $generator;

@@ -1,0 +1,159 @@
+#people-list, #companies-list {
+  .card-grid-container {
+    .empty-list {
+      background: none;
+    }
+
+    .card-grid {
+      margin: 0 -20px -30px 0; //outbalance contact-item margins
+
+      .card-item {
+        width: 190px;
+        height: 260px;
+        margin: 0 20px 30px 0;
+        position: relative;
+
+        background-color: $white;
+        display: inline-block;
+        vertical-align: top; //fix inline-block alignment
+        border-radius: 3px;
+
+        &:hover {
+          .item-head {
+            .head-checkbox {
+              display: block;
+            }
+          }
+        }
+
+        .item-head {
+          width: 100%;
+          height: 190px;
+          padding-top: 30px;
+
+          .head-container {
+            width: 160px;
+            margin: 0 auto;
+            text-align: center;
+
+            .head-image {
+              height: 100px;
+              margin: 0 auto;
+              overflow: hidden;
+              position: relative;
+              width: 100px;
+              z-index: 0;
+
+              &.no-default {
+                .image-default {
+                  display: none;
+                }
+              }
+
+              .image-default {
+                position: relative;
+                font-size: 100px;
+                color: $grayLightMedium2;
+              }
+
+              .image-content {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+
+                background-repeat: no-repeat;
+                background-position: center;
+              }
+            }
+
+            .head-name {
+              margin-top: 14px;
+              line-height: 18px;
+            }
+          }
+
+          .head-checkbox {
+            display: none; //display on hover
+
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            margin: 0;
+          }
+        }
+
+        .item-info {
+          width: 100%;
+          height: 70px;
+          padding: 15px;
+
+          background-color: $grayLighterer;
+          border-radius: 0 0 3px 3px;
+
+          .info-row {
+            white-space: nowrap;
+            overflow: hidden;
+
+            .info-icon {
+              width: 15px;
+              margin-right: 8px;
+              color: white;
+              text-align: center;
+
+            }
+
+            .info-text {
+              color: $grayLight;
+              font-size: 12px;
+            }
+          }
+        }
+
+        .action-navigator {
+          cursor: pointer;
+        }
+
+        &.selected {
+          .head-checkbox {
+            display: block;
+          }
+        }
+      }
+
+      .empty-list {
+        background: none;
+      }
+    }
+  }
+}
+
+#people-list {
+  .head-image {
+    border: 1px solid $grayLightMedium2;
+    border-radius: 50px;
+
+    .image-default {
+      top: 15px;
+    }
+
+    .image-content {
+      @include background-size(cover);
+    }
+  }
+}
+
+#companies-list {
+  .head-image {
+    border: none;
+
+    .image-default {
+      top: 0;
+    }
+
+    .image-content {
+      @include background-size(contain);
+    }
+  }
+}

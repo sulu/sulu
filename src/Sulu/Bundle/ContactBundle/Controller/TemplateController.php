@@ -22,17 +22,17 @@ class TemplateController extends RestController
      */
     public function contactListAction()
     {
-        $data['form_of_address'] = [];
-        foreach ($this->container->getParameter('sulu_contact.form_of_address') as $el) {
-            $data['form_of_address'][] = $el;
-        }
+        return $this->render('SuluContactBundle:Template:contact.list.html.twig', $this->getContactListData());
+    }
 
-        $emailTypeEntity = 'SuluContactBundle:EmailType';
-        $data['email_types'] = $this->getDoctrine($emailTypeEntity)
-            ->getRepository($emailTypeEntity)
-            ->findAll();
-
-        return $this->render('SuluContactBundle:Template:contact.list.html.twig', $data);
+    /**
+     * Returns Template for account form contact list.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function accountFormContactListAction()
+    {
+        return $this->render('SuluContactBundle:Template:account.form.contact.html.twig', $this->getContactListData());
     }
 
     /**
@@ -42,9 +42,7 @@ class TemplateController extends RestController
      */
     public function accountListAction()
     {
-        return $this->render(
-            'SuluContactBundle:Template:account.list.html.twig'
-        );
+        return $this->render('SuluContactBundle:Template:account.list.html.twig');
     }
 
     /**
@@ -213,5 +211,25 @@ class TemplateController extends RestController
             ->find($config['country']);
 
         return $defaults;
+    }
+
+    /**
+     * Returns data to render contact list.
+     *
+     * @return array
+     */
+    private function getContactListData()
+    {
+        $data['form_of_address'] = [];
+        foreach ($this->container->getParameter('sulu_contact.form_of_address') as $el) {
+            $data['form_of_address'][] = $el;
+        }
+
+        $emailTypeEntity = 'SuluContactBundle:EmailType';
+        $data['email_types'] = $this->getDoctrine($emailTypeEntity)
+            ->getRepository($emailTypeEntity)
+            ->findAll();
+
+        return $data;
     }
 }

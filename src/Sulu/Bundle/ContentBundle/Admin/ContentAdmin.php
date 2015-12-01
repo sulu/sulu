@@ -14,12 +14,20 @@ namespace Sulu\Bundle\ContentBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 
 class ContentAdmin extends Admin
 {
+    /**
+     * The prefix for the security context, the key of the webspace has to be appended.
+     *
+     * @var string
+     */
+    const SECURITY_CONTEXT_PREFIX = 'sulu.webspaces.';
+
     /**
      * @var WebspaceManagerInterface
      */
@@ -31,19 +39,19 @@ class ContentAdmin extends Admin
     private $securityChecker;
 
     /**
-     * The prefix for the security context, the key of the webspace has to be appended.
-     *
-     * @var string
+     * @var SessionManagerInterface
      */
-    private $securityContextPrefix = 'sulu.webspaces.';
+    private $sessionManager;
 
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
         SecurityCheckerInterface $securityChecker,
+        SessionManagerInterface $sessionManager,
         $title
     ) {
         $this->webspaceManager = $webspaceManager;
         $this->securityChecker = $securityChecker;
+        $this->sessionManager = $sessionManager;
 
         $rootNavigationItem = new NavigationItem($title);
 
@@ -53,13 +61,15 @@ class ContentAdmin extends Admin
 
         /** @var Webspace $webspace */
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            if ($this->securityChecker->hasPermission($this->securityContextPrefix . $webspace->getKey(), 'view')) {
+            if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT_PREFIX . $webspace->getKey(), 'view')) {
                 $webspaceItem = new NavigationItem($webspace->getName());
                 $webspaceItem->setIcon('bullseye');
 
+                $indexUuid = $this->sessionManager->getContentNode($webspace->getKey())->getIdentifier();
+
                 $indexPageItem = new NavigationItem('navigation.webspaces.index-page');
                 $indexPageItem->setAction(
-                    'content/contents/' . $webspace->getKey() . '/edit:index/details'
+                    'content/contents/' . $webspace->getKey() . '/edit:' . $indexUuid . '/details'
                 );
                 $webspaceItem->addChild($indexPageItem);
 
@@ -91,14 +101,14 @@ class ContentAdmin extends Admin
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getSecurityContexts()
     {
         $webspaceContexts = [];
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             /* @var Webspace $webspace */
-            $webspaceContexts[] = $this->securityContextPrefix . $webspace->getKey();
+            $webspaceContexts[] = self::SECURITY_CONTEXT_PREFIX . $webspace->getKey();
         }
 
         return [

@@ -12,7 +12,8 @@
 namespace Sulu\Bundle\SecurityBundle;
 
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
-use Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\CurrentUserDataCompilerPass;
+use Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\AccessControlProviderPass;
+use Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\UserManagerCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -26,11 +27,13 @@ class SuluSecurityBundle extends Bundle
             [
                 'Sulu\Component\Security\Authentication\UserInterface' => 'sulu.model.user.class',
                 'Sulu\Component\Security\Authentication\RoleInterface' => 'sulu.model.role.class',
+                'Sulu\Component\Security\Authorization\AccessControl\AccessControlInterface' => 'sulu.model.access_control.class',
             ],
             $container
         );
 
-        $container->addCompilerPass(new CurrentUserDataCompilerPass());
+        $container->addCompilerPass(new UserManagerCompilerPass());
+        $container->addCompilerPass(new AccessControlProviderPass());
 
         parent::build($container);
     }

@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Content\Compat\Block;
 
-use JMS\Serializer\Annotation\Type;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
@@ -182,7 +181,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
      */
     public function getLength()
     {
-        return sizeof($this->properties);
+        return count($this->properties);
     }
 
     /**
@@ -193,6 +192,10 @@ class BlockProperty extends Property implements BlockPropertyInterface
     public function setValue($value)
     {
         $this->doSetValue($value);
+
+        if ($this->propertyValue) {
+            $this->propertyValue->setValue($value);
+        }
     }
 
     public function setPropertyValue(PropertyValue $value)

@@ -1,7 +1,6 @@
 <?php
-
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,14 +19,15 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
-use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionTypeNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Default implementation of collection manager.
@@ -66,6 +66,11 @@ class CollectionManager implements CollectionManagerInterface
     protected $em;
 
     /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
      * @var DoctrineFieldDescriptor[]
      */
     private $fieldDescriptors;
@@ -80,20 +85,29 @@ class CollectionManager implements CollectionManagerInterface
      */
     private $collectionPreviewFormat;
 
+    /**
+     * @var array
+     */
+    private $permissions;
+
     public function __construct(
         CollectionRepositoryInterface $collectionRepository,
         MediaRepositoryInterface $mediaRepository,
         FormatManagerInterface $formatManager,
         UserRepositoryInterface $userRepository,
         EntityManager $em,
-        $collectionPreviewFormat
+        TokenStorageInterface $tokenStorage = null,
+        $collectionPreviewFormat,
+        $permissions
     ) {
-        $this->em = $em;
-        $this->userRepository = $userRepository;
         $this->collectionRepository = $collectionRepository;
         $this->mediaRepository = $mediaRepository;
         $this->formatManager = $formatManager;
+        $this->userRepository = $userRepository;
+        $this->em = $em;
+        $this->tokenStorage = $tokenStorage;
         $this->collectionPreviewFormat = $collectionPreviewFormat;
+        $this->permissions = $permissions;
     }
 
     /**
@@ -110,7 +124,9 @@ class CollectionManager implements CollectionManagerInterface
             $depth,
             $filter,
             $collectionEntity,
-            $sortBy
+            $sortBy,
+            $this->getCurrentUser(),
+            $this->permissions['view']
         );
 
         $breadcrumbEntities = null;
@@ -141,6 +157,47 @@ class CollectionManager implements CollectionManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function getByKey($key, $locale)
+    {
+        $collection = $this->collectionRepository->findCollectionByKey($key);
+
+        if (!$collection) {
+            return;
+        }
+
+        return $this->getApiEntity($collection, $locale);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTreeById($id, $locale)
+    {
+        $collectionSet = $this->collectionRepository->findTree($id, $locale);
+
+        /** @var Collection[] $collections sorted by id */
+        $collections = [];
+        /** @var Collection[] $result collections without parent */
+        $result = [];
+        foreach ($collectionSet as $collection) {
+            $apiEntity = new Collection($collection, $locale);
+            $this->addPreview($apiEntity);
+
+            $collections[$collection->getId()] = $apiEntity;
+
+            if ($collection->getParent() !== null) {
+                $collections[$collection->getParent()->getId()]->addChild($apiEntity);
+            } else {
+                $result[] = $apiEntity;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getTree($locale, $offset, $limit, $search, $depth = 0, $sortBy = [])
     {
         /** @var Paginator $collectionSet */
@@ -148,7 +205,9 @@ class CollectionManager implements CollectionManagerInterface
             $depth,
             ['offset' => $offset, 'limit' => $limit, 'search' => $search, 'locale' => $locale],
             null,
-            $sortBy
+            $sortBy,
+            $this->getCurrentUser(),
+            $this->permissions['view']
         );
 
         $collections = [];
@@ -364,10 +423,7 @@ class CollectionManager implements CollectionManagerInterface
         $collectionEntity = new CollectionEntity();
         $collection = $this->getApiEntity($collectionEntity, $data['locale']);
 
-        $collection = $this->setDataToCollection(
-            $collection,
-            $data
-        );
+        $collection = $this->setDataToCollection($collection, $data);
 
         /** @var CollectionEntity $collectionEntity */
         $collectionEntity = $collection->getEntity();
@@ -402,6 +458,9 @@ class CollectionManager implements CollectionManagerInterface
                 switch ($attribute) {
                     case 'title':
                         $collection->setTitle($value);
+                        break;
+                    case 'key':
+                        $collection->setKey($value);
                         break;
                     case 'description':
                         $collection->setDescription($value);
@@ -625,5 +684,19 @@ class CollectionManager implements CollectionManagerInterface
         }
 
         return $this->addPreview($apiEntity);
+    }
+
+    /**
+     * Returns the current user from the token storage.
+     *
+     * @return UserInterface|null
+     */
+    protected function getCurrentUser()
+    {
+        if ($this->tokenStorage && ($token = $this->tokenStorage->getToken())) {
+            return $this->tokenStorage ? $token->getUser() : null;
+        }
+
+        return;
     }
 }

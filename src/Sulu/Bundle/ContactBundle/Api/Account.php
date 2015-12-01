@@ -42,6 +42,13 @@ use Sulu\Component\Rest\ApiWrapper;
  */
 class Account extends ApiWrapper
 {
+    const TYPE = 'account';
+
+    /**
+     * @var Media
+     */
+    private $logo = null;
+
     /**
      * @param AccountInterface $account
      * @param string           $locale  The locale of this product
@@ -450,33 +457,6 @@ class Account extends ApiWrapper
     public function getCorporation()
     {
         return $this->entity->getCorporation();
-    }
-
-    /**
-     * Set disabled.
-     *
-     * @param int $disabled
-     *
-     * @return Account
-     */
-    public function setDisabled($disabled)
-    {
-        $this->entity->setDisabled($disabled);
-
-        return $this;
-    }
-
-    /**
-     * Get disabled.
-     *
-     * @return int
-     * @VirtualProperty
-     * @SerializedName("disabled")
-     * @Groups({"fullAccount", "partialAccount"})
-     */
-    public function getDisabled()
-    {
-        return $this->entity->getDisabled();
     }
 
     /**
@@ -1011,11 +991,42 @@ class Account extends ApiWrapper
             /** @var AccountContactEntity $accountContact */
             foreach ($accountContacts as $accountContact) {
                 $contacts[] = new Contact($accountContact->getContact(), $this->locale);
-                $contacts[] = new Contact($accountContact->getContact(), $this->locale);
             }
         }
 
         return $contacts;
+    }
+
+    /**
+     * Sets the logo (media-api object).
+     *
+     * @param Media $logo
+     */
+    public function setLogo(Media $logo)
+    {
+        $this->logo = $logo;
+    }
+
+    /**
+     * Get the accounts logo and return the array of different formats.
+     *
+     * @return Media
+     *
+     * @VirtualProperty
+     * @SerializedName("logo")
+     * @Groups({"fullAccount"})
+     */
+    public function getLogo()
+    {
+        if ($this->logo) {
+            return [
+                'id' => $this->logo->getId(),
+                'url' => $this->logo->getUrl(),
+                'thumbnails' => $this->logo->getFormats(),
+            ];
+        }
+
+        return;
     }
 
     /**
@@ -1080,5 +1091,17 @@ class Account extends ApiWrapper
         }
 
         return $entities;
+    }
+
+    /**
+     * Get type of api entity.
+     *
+     * @VirtualProperty
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return self::TYPE;
     }
 }

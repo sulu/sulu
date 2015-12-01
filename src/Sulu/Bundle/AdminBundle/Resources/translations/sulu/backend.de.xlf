@@ -18,6 +18,10 @@
                 <source>public.key</source>
                 <target>Diese Liste ist leer</target>
             </trans-unit>
+            <trans-unit id="fbf5558377419fbed4c723f096fdf007" resname="public.reached-list-end">
+                    <source>public.reached-list-end</source>
+                    <target>Ende der Liste erreicht</target>
+                </trans-unit>
             <trans-unit id="a10bd71863ade53bc0e1bd8822e865fc" resname="public.tags">
                 <source>public.tags</source>
                 <target>Tags</target>
@@ -162,8 +166,8 @@
                 <source>country.germany</source>
                 <target>Deutschland</target>
             </trans-unit>
-            <trans-unit id="769a438685ade58b963d872013c70edd" resname="toolbar.delete">
-                <source>toolbar.delete</source>
+            <trans-unit id="769a438685ade58b963d872013c70edd" resname="public.delete">
+                <source>public.delete</source>
                 <target>Löschen</target>
             </trans-unit>
             <trans-unit id="b0e756e39c8e2107ac4461ba08222b46" resname="sulu.list-toolbar.import">
@@ -358,18 +362,6 @@
                 <source>labels.warning</source>
                 <target>Warnung</target>
             </trans-unit>
-            <trans-unit id="2647c238cae0fa45d7fbad336e43750f" resname="labels.success.content-deleted-desc">
-                <source>labels.success.content-deleted-desc</source>
-                <target>Seite erfolgreich gelöscht.</target>
-            </trans-unit>
-            <trans-unit id="487f946d51783a9899fa59d31dcfc3e8" resname="labels.success.content-save-desc">
-                <source>labels.success.content-save-desc</source>
-                <target>Node erfolgreich gespeichert.</target>
-            </trans-unit>
-            <trans-unit id="75435af307a7ae8f965923968a0e0f94" resname="labels.error.content-save-desc">
-                <source>labels.error.content-save-desc</source>
-                <target>Seite konnte nicht gespeichert werden.</target>
-            </trans-unit>
             <trans-unit id="58b06d6f4d02d93226d543aa6df546cc" resname="sulu.matcher.unmatched-column">
                 <source>sulu.matcher.unmatched-column</source>
                 <target>Nicht zugeordnete Spalte</target>
@@ -552,17 +544,17 @@
                 <source>sulu.upload.dropzone-desc</source>
                 <target>oder klicken um hinzuzufügen</target>
             </trans-unit>
-            <trans-unit id="2e3b70e82001f5bfc22e941e65376ee6" resname="sulu.list-toolbar.small-thumbnails">
-                <source>sulu.list-toolbar.small-thumbnails</source>
+            <trans-unit id="2e3b70e82001f5bfc22e941e65376ee6" resname="sulu.toolbar.small-thumbnails">
+                <source>sulu.toolbar.small-thumbnails</source>
                 <target>Kleine Vorschaubilder</target>
             </trans-unit>
-            <trans-unit id="8c04c5d1dbf406f6222a2c4338e26663" resname="sulu.list-toolbar.big-thumbnails">
-                <source>sulu.list-toolbar.big-thumbnails</source>
+            <trans-unit id="8c04c5d1dbf406f6222a2c4338e26663" resname="sulu.toolbar.big-thumbnails">
+                <source>sulu.toolbar.big-thumbnails</source>
                 <target>Große Vorschaubilder</target>
             </trans-unit>
-            <trans-unit id="aa005e19189f861dc79bc978a5caa663" resname="sulu.list-toolbar.table">
-                <source>sulu.list-toolbar.table</source>
-                <target>Tabelle</target>
+            <trans-unit id="aa005e19189f861dc79bc978a5caa663" resname="sulu.toolbar.table">
+                <source>sulu.toolbar.table</source>
+                <target>Liste</target>
             </trans-unit>
             <trans-unit id="b7c8c053e39fcd8e8a627e91dd6b650e" resname="public.disabled">
                 <source>public.disabled</source>
@@ -770,7 +762,7 @@
             </trans-unit>
             <trans-unit id="a50af522de18a35014430b4720e29a4f" resname="form.validation-warning">
                 <source>form.validation-warning</source>
-                <target><![CDATA[Bitte überprüfen deine Eingabe.<br/>Erst wenn alle Felder korrekt ausgefüllt sind, kann gespeichert werden.]]></target>
+                <target>Bitte überprüfe deine Eingabe. Erst wenn alle Felder korrekt ausgefüllt sind, kann gespeichert werden.</target>
             </trans-unit>
             <trans-unit id="a504f522de145650142c0b4720e29a4f" resname="public.status">
                 <source>public.status</source>
@@ -798,7 +790,7 @@
             </trans-unit>
             <trans-unit id="a504f52dde1456ff4132c0b4820e29a41" resname="sulu.login.back-login">
                 <source>sulu.login.back-login</source>
-                <target>Zurück zum Login</target>
+                <target>Zum Login</target>
             </trans-unit>
             <trans-unit id="a504f52dde1456ff4132c0b4820e29a42" resname="sulu.login.resend-email">
                 <source>sulu.login.resend-email</source>
@@ -863,6 +855,62 @@
             <trans-unit id="b504f52dde2354cc4132c0b4820e28adc" resname="public.elements-selected">
                 <source>public.elements-selected</source>
                 <target>Elemente ausgewählt</target>
+            </trans-unit>
+            <trans-unit id="b504a53dde2354cc4132c0b4820e28ade" resname="public.save">
+                <source>public.save</source>
+                <target>Speichern</target>
+            </trans-unit>
+            <trans-unit id="b504a53dde2354cc4132c0b4820e22ade" resname="public.save-and-back">
+                <source>public.save-and-back</source>
+                <target>Speichern und zurück</target>
+            </trans-unit>
+            <trans-unit id="b504a53dde1354cc4132c0b4820e22ade" resname="public.save-and-new">
+                <source>public.save-and-new</source>
+                <target>Speichern und neu</target>
+            </trans-unit>
+            <trans-unit id="b504a54dde1354cc4132c0b4820e22ade" resname="public.settings">
+                <source>public.settings</source>
+                <target>Einstellungen</target>
+            </trans-unit>
+            <trans-unit id="b504a53dde1354cc4132c0b4820e22ada" resname="public.delete">
+                <source>public.delete</source>
+                <target>Löschen</target>
+            </trans-unit>
+            <trans-unit id="b504a53dde1354cc4132c0b4820e28ada" resname="public.delete-selected">
+                <source>public.delete-selected</source>
+                <target>Ausgewählte löschen</target>
+            </trans-unit>
+            <trans-unit id="b503a53dde1354cc4132c0b4820e28ada" resname="public.add-new">
+                <source>public.add-new</source>
+                <target>Neu hinzufügen</target>
+            </trans-unit>
+            <trans-unit id="b500b52dde1354cc4132c0b4820e28ada" resname="public.avatar">
+                <source>public.avatar</source>
+                <target>Avatar</target>
+            </trans-unit>
+            <trans-unit id="a300b52dde1354cc4132c0b4820e28ada" resname="public.logo">
+                <source>public.logo</source>
+                <target>Logo</target>
+            </trans-unit>
+            <trans-unit id="a321c52dae1354cc4132c0b4820e28ada" resname="public.refresh">
+                <source>public.refresh</source>
+                <target>Neu laden</target>
+            </trans-unit>
+            <trans-unit id="a329c52dae1354cc4132c0b4820e23cda" resname="public.cancel">
+                <source>public.cancel</source>
+                <target>Abbrechen</target>
+            </trans-unit>
+            <trans-unit id="b229c52dae1354cc4132c0b4820e23cda" resname="public.ok">
+                <source>public.ok</source>
+                <target>Ok</target>
+            </trans-unit>
+            <trans-unit id="b229c52dae1354cc4123c0b4820e23cda" resname="public.show-selected">
+                <source>public.show-selected</source>
+                <target>Ausgewählte anzeigen</target>
+            </trans-unit>
+            <trans-unit id="b229c52dae1354cc4123c0b4820e23cdb" resname="public.show-all">
+                <source>public.show-all</source>
+                <target>Alle anzeigen</target>
             </trans-unit>
         </body>
     </file>

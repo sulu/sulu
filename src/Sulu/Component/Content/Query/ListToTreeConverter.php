@@ -52,7 +52,7 @@ class ListToTreeConverter
 
             $parts = explode('/', $path);
             $parts = array_filter($parts);
-            $depth = sizeof($parts);
+            $depth = count($parts);
             if ($minDepth > $depth) {
                 $minDepth = $depth;
             }
@@ -97,7 +97,7 @@ class ListToTreeConverter
             $tree['children'] = array_values($tree['children']);
 
             // search for empty nodes
-            for ($i = 0; $i < sizeof($tree['children']); ++$i) {
+            for ($i = 0; $i < count($tree['children']); ++$i) {
                 if (array_keys($tree['children'][$i]) === ['children']) {
                     if ($this->moveUp) {
                         array_splice($tree['children'], $i + 1, 0, $tree['children'][$i]['children']);
@@ -110,7 +110,7 @@ class ListToTreeConverter
             $tree['children'] = array_values($tree['children']);
 
             // recursive to array
-            for ($i = 0; $i < sizeof($tree['children']); ++$i) {
+            for ($i = 0; $i < count($tree['children']); ++$i) {
                 $tree['children'][$i] = $this->toArray($tree['children'][$i]);
             }
         } else {

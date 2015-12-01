@@ -13,6 +13,11 @@ define([
 
     'use strict';
 
+    var constants = {
+        datagridInstanceName: 'tags',
+        toolbarInstanceName: 'saveToolbar'
+    };
+
     return {
 
         initialize: function() {
@@ -42,48 +47,22 @@ define([
         },
 
         delTags: function(ids) {
-            this.confirmDeleteDialog(function(wasConfirmed) {
+            this.sandbox.sulu.showDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
                     ids.forEach(function(id) {
                         var tag = new Tag({id: id});
                         tag.destroy({
                             success: function() {
-                                this.sandbox.emit('husky.datagrid.record.remove', id);
+                                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.record.remove', id);
+                                this.sandbox.emit('husky.toolbar.' + constants.toolbarInstanceName + '.item.disable', 'delete');
                             }.bind(this),
                             error: function() {
-                                this.sandbox.logger.log('error while removing tag with id '+id);
+                                this.sandbox.logger.log('error while removing tag with id ' + id);
                             }.bind(this)
                         });
                     }.bind(this));
                 }
             }.bind(this));
-        },
-
-        /**
-         * @var ids - array of ids to delete
-         * @var callback - callback function returns true or false if data got deleted
-         */
-        confirmDeleteDialog: function(callbackFunction) {
-            // check if callback is a function
-            if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
-                throw 'callback is not a function';
-            }
-
-            // show warning dialog
-            this.sandbox.emit('sulu.overlay.show-warning',
-                'sulu.overlay.be-careful',
-                'sulu.overlay.delete-desc',
-
-                function() {
-                    // cancel callback
-                    callbackFunction(false);
-                }.bind(this),
-
-                function() {
-                    // ok callback
-                    callbackFunction(true);
-                }.bind(this)
-            );
         }
     };
 });

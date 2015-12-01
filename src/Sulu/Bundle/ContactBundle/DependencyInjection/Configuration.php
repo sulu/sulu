@@ -21,7 +21,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 class Configuration implements ConfigurationInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getConfigTreeBuilder()
     {
@@ -30,6 +30,21 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->arrayNode('types')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('contact')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('template')
+                                    ->defaultValue(
+                                        'SuluContactBundle:Template:content-types/contact-selection.html.twig'
+                                    )
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
                 ->arrayNode('defaults')
                     ->addDefaultsIfNotSet()
                     ->children()

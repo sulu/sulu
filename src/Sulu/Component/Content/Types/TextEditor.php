@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\Types;
 
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\SimpleContentType;
 
@@ -19,6 +20,9 @@ use Sulu\Component\Content\SimpleContentType;
  */
 class TextEditor extends SimpleContentType
 {
+    /**
+     * @var string
+     */
     private $template;
 
     public function __construct($template)
@@ -29,9 +33,7 @@ class TextEditor extends SimpleContentType
     }
 
     /**
-     * returns a template to render a form.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getTemplate()
     {
@@ -39,17 +41,15 @@ class TextEditor extends SimpleContentType
     }
 
     /**
-     * returns default parameters.
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    public function getDefaultParams()
+    public function getDefaultParams(PropertyInterface $property = null)
     {
         return [
             'table' => new PropertyParameter('table', true),
             'link' => new PropertyParameter('link', true),
-            'height' => new PropertyParameter('height', 300),
-            'max_height' => new PropertyParameter('max_height', 500),
+            'height' => new PropertyParameter('height', 65),
+            'max_height' => new PropertyParameter('max_height', 300),
             'paste_from_word' => new PropertyParameter('paste_from_word', true),
         ];
     }

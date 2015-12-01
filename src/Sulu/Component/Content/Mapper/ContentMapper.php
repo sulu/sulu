@@ -50,7 +50,6 @@ use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Sulu\Component\Util\NodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -151,7 +150,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function saveRequest(ContentMapperRequest $request)
     {
@@ -207,7 +206,7 @@ class ContentMapper implements ContentMapperInterface
             $document = $this->documentManager->find(
                 $uuid,
                 $locale,
-                array('type' => $documentAlias, 'load_ghost_content' => false)
+                ['type' => $documentAlias, 'load_ghost_content' => false]
             );
         } else {
             $document = $this->documentManager->create($documentAlias);
@@ -220,9 +219,9 @@ class ContentMapper implements ContentMapperInterface
             ));
         }
 
-        $options = array(
-            'clear_missing_content' => !$partialUpdate
-        );
+        $options = [
+            'clear_missing_content' => !$partialUpdate,
+        ];
 
         // We eventually handle this from the controller, in which case we will not
         // have to deal with not knowing what sort of form we will have.
@@ -242,9 +241,9 @@ class ContentMapper implements ContentMapperInterface
             throw new InvalidFormException($form);
         }
 
-        $this->documentManager->persist($document, $locale, array(
+        $this->documentManager->persist($document, $locale, [
             'user' => $userId,
-        ));
+        ]);
 
         $this->documentManager->flush();
 
@@ -271,9 +270,9 @@ class ContentMapper implements ContentMapperInterface
         $document = $this->loadDocument(
             $uuid,
             $locale,
-            array(
+            [
                 'exclude_ghost' => true,
-            )
+            ]
         );
 
         if ($document === null) {
@@ -306,37 +305,6 @@ class ContentMapper implements ContentMapperInterface
         return $structure;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function saveStartPage(
-        $data,
-        $templateKey,
-        $webspaceKey,
-        $locale,
-        $userId,
-        $partialUpdate = true,
-        $isShadow = null,
-        $shadowBaseLanguage = null
-    ) {
-        $uuid = $this->inspector->getUuid($this->getContentDocument($webspaceKey, $locale));
-
-        return $this->save(
-            $data,
-            $templateKey,
-            $webspaceKey,
-            $locale,
-            $userId,
-            $partialUpdate,
-            $uuid,
-            null,
-            WorkflowStage::PUBLISHED,
-            $isShadow,
-            $shadowBaseLanguage,
-            'home'
-        );
-    }
-
     public function loadByParent(
         $uuid,
         $webspaceKey,
@@ -347,7 +315,7 @@ class ContentMapper implements ContentMapperInterface
         $excludeGhosts = false
     ) {
         $parent = null;
-        $options = array('load_ghost_content' => true);
+        $options = ['load_ghost_content' => true];
         if ($uuid) {
             $parent = $this->documentManager->find($uuid, $languageCode, $options);
         }
@@ -363,9 +331,9 @@ class ContentMapper implements ContentMapperInterface
         }
 
         $children = $this->inspector->getChildren($parent, $options);
-        $children = $this->documentsToStructureCollection($children->toArray(), array(
+        $children = $this->documentsToStructureCollection($children->toArray(), [
             'exclude_ghost' => $excludeGhosts,
-        ));
+        ]);
 
         if ($flat) {
             foreach ($children as $child) {
@@ -392,9 +360,9 @@ class ContentMapper implements ContentMapperInterface
      */
     public function load($uuid, $webspaceKey, $locale, $loadGhostContent = false)
     {
-        $document = $this->documentManager->find($uuid, $locale, array(
+        $document = $this->documentManager->find($uuid, $locale, [
             'load_ghost_content' => $loadGhostContent,
-        ));
+        ]);
 
         return $this->documentToStructure($document);
     }
@@ -406,7 +374,7 @@ class ContentMapper implements ContentMapperInterface
     {
         $startPage = $this->getContentDocument($webspaceKey, $locale);
         $startPage->setWorkflowStage(WorkflowStage::PUBLISHED);
-        $startPage->setNavigationContexts(array());
+        $startPage->setNavigationContexts([]);
 
         return $this->documentToStructure($startPage);
     }
@@ -423,9 +391,9 @@ class ContentMapper implements ContentMapperInterface
             $segmentKey
         );
 
-        $document = $this->loadDocument($uuid, $locale, array(
+        $document = $this->loadDocument($uuid, $locale, [
             'exclude_shadow' => false,
-        ));
+        ]);
 
         return $this->documentToStructure($document);
     }
@@ -444,7 +412,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function loadByQuery(
         QueryInterface $query,
@@ -453,10 +421,10 @@ class ContentMapper implements ContentMapperInterface
         $excludeGhost = true,
         $loadGhostContent = false
     ) {
-        $options = array(
+        $options = [
             'exclude_ghost' => $excludeGhost,
             'load_ghost_content' => $loadGhostContent,
-        );
+        ];
 
         $documents = $this->documentManager->createQuery($query, $locale, $options)->execute();
 
@@ -470,19 +438,28 @@ class ContentMapper implements ContentMapperInterface
         $uuid,
         $locale,
         $webspaceKey = null,
-        $excludeGhost = true
+        $excludeGhost = true,
+        $excludeShadow = true
     ) {
-        $document = $this->loadDocument($uuid, $locale, $options = array(
-            'load_ghost_content' => true,
-            'exclude_ghost' => $excludeGhost,
-            'exclude_shadow' => false,
-        ));
+        $document = $this->loadDocument(
+            $uuid,
+            $locale,
+            $options = [
+                'load_ghost_content' => true,
+                'exclude_ghost' => $excludeGhost,
+                'exclude_shadow' => $excludeShadow,
+            ],
+            false
+        );
 
         if (null === $document) {
-            return array();
+            return [];
         }
 
-        $documents = array($document);
+        $documents = [];
+        if (!$this->optionsShouldExcludeDocument($document, $options)) {
+            $documents[] = $document;
+        }
 
         if ($document instanceof HomeDocument) {
             return $this->documentsToStructureCollection($documents, $options);
@@ -535,11 +512,11 @@ class ContentMapper implements ContentMapperInterface
         $document = $this->loadDocument(
             $node->getIdentifier(),
             $locale,
-            array(
+            [
                 'load_ghost_content' => $loadGhostContent,
                 'exclude_ghost' => $excludeGhost,
                 'exclude_shadow' => $excludeShadow,
-            )
+            ]
         );
 
         return $this->documentToStructure($document);
@@ -552,7 +529,7 @@ class ContentMapper implements ContentMapperInterface
     {
         $document = $this->documentManager->find($uuid, $locale);
 
-        $documents = array();
+        $documents = [];
         $contentDocument = $this->getContentDocument($webspaceKey, $locale);
         $contentDepth = $this->inspector->getDepth($contentDocument);
         $document = $this->inspector->getParent($document);
@@ -565,7 +542,7 @@ class ContentMapper implements ContentMapperInterface
             $documentDepth = $this->inspector->getDepth($document);
         }
 
-        $items = array();
+        $items = [];
         foreach ($documents as $document) {
             $items[] = new BreadcrumbItem(
                 $this->inspector->getDepth($document) - $contentDepth,
@@ -582,10 +559,10 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function delete($uuid, $webspaceKey, $dereference = false)
+    public function delete($uuid, $webspaceKey)
     {
         $document = $this->documentManager->find($uuid);
-        $this->documentManager->remove($document, $dereference);
+        $this->documentManager->remove($document);
         $this->documentManager->flush();
     }
 
@@ -606,7 +583,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function copyLanguage(
         $uuid,
@@ -617,7 +594,7 @@ class ContentMapper implements ContentMapperInterface
         $structureType = LegacyStructure::TYPE_PAGE
     ) {
         if (!is_array($destLocales)) {
-            $destLocales = array($destLocales);
+            $destLocales = [$destLocales];
         }
 
         $document = $this->documentManager->find($uuid, $srcLocale);
@@ -628,7 +605,7 @@ class ContentMapper implements ContentMapperInterface
         foreach ($destLocales as $destLocale) {
             $document->setLocale($destLocale);
             $document->getStructure()->bind($document->getStructure()->toArray());
-            
+
             // TODO: This can be removed if RoutingAuto replaces the ResourceLocator code.
             if ($document instanceof ResourceSegmentBehavior) {
                 $parentResourceLocator = $resourceLocatorType->getResourceLocatorByUuid(
@@ -654,22 +631,22 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function orderBefore($uuid, $beforeUuid, $userId, $webspaceKey, $locale)
     {
         $document = $this->documentManager->find($uuid, $locale);
         $this->documentManager->reorder($document, $beforeUuid);
-        $this->documentManager->persist($document, $locale, array(
+        $this->documentManager->persist($document, $locale, [
             'user' => $userId,
-        ));
+        ]);
 
         return $this->documentToStructure($document);
     }
 
     /**
      * TODO: Move this logic to the DocumentManager
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function orderAt($uuid, $position, $userId, $webspaceKey, $locale)
     {
@@ -704,7 +681,11 @@ class ContentMapper implements ContentMapperInterface
             $this->documentManager->reorder($document, $targetSibling->getPath());
         }
 
-        $this->documentManager->persist($document, $locale);
+        // this should not be necessary (see https://github.com/sulu-io/sulu-document-manager/issues/39)
+        foreach ($siblingDocuments as $siblingDocument) {
+            $this->documentManager->persist($siblingDocument, $locale);
+        }
+
         $this->documentManager->flush();
 
         return $this->documentToStructure($document);
@@ -758,14 +739,9 @@ class ContentMapper implements ContentMapperInterface
             $this->documentManager->find($document->getUuid(), $locale);
             $this->documentManager->find($parentDocument->getUuid(), $locale);
 
-            $parentResourceLocator = '/';
-            if ($parentDocument instanceof ResourceSegmentBehavior) {
-                $parentResourceLocator = $parentDocument->getResourceSegment();
-            }
-
             // TODO: This could be optimized
             $localizationState = $this->inspector->getLocalizationState($document);
-            if ($localizationState !== LocalizationState::LOCALIZED) {
+            if ($localizationState === LocalizationState::GHOST) {
                 continue;
             }
 
@@ -784,14 +760,13 @@ class ContentMapper implements ContentMapperInterface
 
             $document->setResourceSegment($newResourceLocator);
 
-            $this->documentManager->persist($document, $locale, array(
+            $this->documentManager->persist($document, $locale, [
                 'user' => $userId,
-            ));
+            ]);
         }
 
         $this->documentManager->flush();
 
-        // 
         $this->documentManager->find($document->getUuid(), $originalLocale);
 
         return $this->documentToStructure($document);
@@ -808,13 +783,13 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * Return the content document (aka the home page)
+     * Return the content document (aka the home page).
      *
      * @param $webspaceKey
      *
      * @return Document
      */
-    private function getContentDocument($webspaceKey, $locale, array $options = array())
+    private function getContentDocument($webspaceKey, $locale, array $options = [])
     {
         return $this->documentManager->find(
             $this->sessionManager->getContentPath($webspaceKey),
@@ -847,17 +822,18 @@ class ContentMapper implements ContentMapperInterface
         $webspaceKey,
         $locales,
         $fields,
-        $maxDepth
+        $maxDepth,
+        $onlyPublished = true
     ) {
         $rootDepth = substr_count($this->sessionManager->getContentPath($webspaceKey), '/');
 
-        $result = array();
+        $result = [];
         foreach ($locales as $locale) {
             foreach ($queryResult->getRows() as $row) {
                 $pageDepth = substr_count($row->getPath('page'), '/') - $rootDepth;
 
                 if ($maxDepth === null || $maxDepth < 0 || ($maxDepth > 0 && $pageDepth <= $maxDepth)) {
-                    $item = $this->rowToArray($row, $locale, $webspaceKey, $fields);
+                    $item = $this->rowToArray($row, $locale, $webspaceKey, $fields, $onlyPublished);
 
                     if (false === $item || in_array($item, $result)) {
                         continue;
@@ -882,10 +858,10 @@ class ContentMapper implements ContentMapperInterface
         if ($parent->hasNode($name)) {
             $i = 0;
             do {
-                $i++;
-            } while ($parent->hasNode($name.'-'.$i));
+                ++$i;
+            } while ($parent->hasNode($name . '-' . $i));
 
-            return $name.'-'.$i;
+            return $name . '-' . $i;
         } else {
             return $name;
         }
@@ -894,7 +870,7 @@ class ContentMapper implements ContentMapperInterface
     /**
      * converts a query row to an array.
      */
-    private function rowToArray(Row $row, $locale, $webspaceKey, $fields)
+    private function rowToArray(Row $row, $locale, $webspaceKey, $fields, $onlyPublished = true)
     {
         // reset cache
         $this->initializeExtensionCache();
@@ -924,7 +900,7 @@ class ContentMapper implements ContentMapperInterface
         }
 
         if ($redirectType === RedirectType::EXTERNAL) {
-            $url = 'http://'.$document->getRedirectExternal();
+            $url = $document->getRedirectExternal();
         }
 
         $originLocale = $locale;
@@ -938,7 +914,7 @@ class ContentMapper implements ContentMapperInterface
         }
 
         // if page is not piblished ignore it
-        if ($nodeState !== WorkflowStage::PUBLISHED) {
+        if ($onlyPublished && $nodeState !== WorkflowStage::PUBLISHED) {
             return false;
         }
 
@@ -964,7 +940,7 @@ class ContentMapper implements ContentMapperInterface
         $structureType = $document->getStructureType();
         $shortPath = $this->inspector->getContentPath($originalDocument);
 
-        $documentData = array(
+        $documentData = [
             'uuid' => $document->getUuid(),
             'nodeType' => $redirectType,
             'path' => $shortPath,
@@ -980,7 +956,7 @@ class ContentMapper implements ContentMapperInterface
             'webspaceKey' => $this->inspector->getWebspace($document),
             'template' => $structureType,
             'parent' => $this->inspector->getParent($document)->getUuid(),
-        );
+        ];
 
         if ($document instanceof OrderBehavior) {
             $documentData['order'] = $document->getSuluOrder();
@@ -994,12 +970,12 @@ class ContentMapper implements ContentMapperInterface
      */
     private function getFieldsData(Row $row, NodeInterface $node, $document, $fields, $templateKey, $webspaceKey, $locale)
     {
-        $fieldsData = array();
+        $fieldsData = [];
         foreach ($fields as $field) {
             // determine target for data in result array
             if (isset($field['target'])) {
                 if (!isset($fieldsData[$field['target']])) {
-                    $fieldsData[$field['target']] = array();
+                    $fieldsData[$field['target']] = [];
                 }
                 $target = &$fieldsData[$field['target']];
             } else {
@@ -1100,7 +1076,7 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * TODO: Move this to ResourceLocator repository>
+     * TODO: Move this to ResourceLocator repository>.
      *
      * {@inheritdoc}
      */
@@ -1123,35 +1099,19 @@ class ContentMapper implements ContentMapperInterface
             $locale,
             $segmentKey
         );
-
-        $this->sessionManager->getSession()->save();
     }
 
-    private function loadDocument($pathOrUuid, $locale, $options)
+    private function loadDocument($pathOrUuid, $locale, $options, $shouldExclude = true)
     {
-        $document = $this->documentManager->find($pathOrUuid, $locale, array(
+        $document = $this->documentManager->find($pathOrUuid, $locale, [
             'load_ghost_content' => isset($options['load_ghost_content']) ? $options['load_ghost_content'] : true,
-        ));
+        ]);
 
-        if ($this->optionsShouldExcludeDocument($document, $options)) {
+        if ($shouldExclude && $this->optionsShouldExcludeDocument($document, $options)) {
             return;
         }
 
         return $document;
-    }
-
-    private function filterDocuments($documents, $options)
-    {
-        $collection = array();
-        foreach ($documents as $document) {
-            if ($this->optionsShouldExcludeDocument($document, $options)) {
-                continue;
-            }
-
-            $collection[] = $document;
-        }
-
-        return $collection;
     }
 
     private function optionsShouldExcludeDocument($document, array $options = null)
@@ -1160,10 +1120,10 @@ class ContentMapper implements ContentMapperInterface
             return false;
         }
 
-        $options = array_merge(array(
+        $options = array_merge([
             'exclude_ghost' => true,
             'exclude_shadow' => true,
-        ), $options);
+        ], $options);
 
         $state = $this->inspector->getLocalizationState($document);
 
@@ -1209,14 +1169,14 @@ class ContentMapper implements ContentMapperInterface
 
     /**
      * Return a collection of structures for the given documents, optionally filtering according
-     * to the given options (as defined in optionsShouldExcludeDocument)
+     * to the given options (as defined in optionsShouldExcludeDocument).
      *
      * @param object[] $documents
      * @param array|null $filterOptions
      */
     private function documentsToStructureCollection($documents, $filterOptions = null)
     {
-        $collection = array();
+        $collection = [];
         foreach ($documents as $document) {
             if (!$document instanceof StructureBehavior) {
                 continue;

@@ -11,44 +11,55 @@ define(function() {
 
     'use strict';
 
-    var bindCustomEvents = function() {
-        this.sandbox.on('sulu.list-toolbar.add', function() {
-            this.sandbox.emit('sulu.roles.new');
-        }.bind(this));
+    var constants = {
+            datagridInstanceName: 'roles',
+            toolbarInstanceName: 'roles'
+        },
 
-        this.sandbox.on('sulu.list-toolbar.delete', function() {
-            this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                this.sandbox.emit('sulu.roles.delete', ids);
+        bindCustomEvents = function() {
+            this.sandbox.on('sulu.toolbar.add', function() {
+                this.sandbox.emit('sulu.roles.new');
             }.bind(this));
-        }.bind(this));
 
-        this.sandbox.on('husky.datagrid.item.click', function(id) {
-            this.sandbox.emit('sulu.roles.load', id);
-        }.bind(this));
-    };
+            this.sandbox.on('sulu.toolbar.delete', function() {
+                this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.items.get-selected', function(ids) {
+                    this.sandbox.emit('sulu.roles.delete', ids);
+                }.bind(this));
+            }.bind(this));
+
+            // checkbox clicked
+
+            this.sandbox.on('husky.datagrid.' + constants.datagridInstanceName + '.number.selections', function(number) {
+                var postfix = number > 0 ? 'enable' : 'disable';
+                this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'deleteSelected', false);
+            }.bind(this));
+        };
 
     return {
-        name: 'Sulu Security Role List',
 
-        view: true,
+        stickyToolbar: true,
+
+        name: 'Sulu Security Role List',
 
         layout: {
             content: {
-                width: 'max',
-                leftSpace: false,
-                rightSpace: false
+                width: 'max'
             }
         },
 
         header: function() {
             return {
-                title: 'security.roles.title',
                 noBack: true,
 
-                breadcrumb: [
-                    {title: 'navigation.settings'},
-                    {title: 'security.roles.title'}
-                ]
+                title: 'security.roles.title',
+                underline: false,
+
+                toolbar: {
+                    buttons: {
+                        add: {},
+                        deleteSelected: {}
+                    }
+                }
             };
         },
 
@@ -66,21 +77,30 @@ define(function() {
             this.sandbox.sulu.initListToolbarAndList.call(this, 'roles', '/admin/api/roles/fields',
                 {
                     el: this.$find('#list-toolbar-container'),
-                    instanceName: 'roles',
-                    inHeader: true
+                    instanceName: constants.toolbarInstanceName,
+                    groups: [
+                        {
+                            id: 1,
+                            align: 'left'
+                        },
+                        {
+                            id: 2,
+                            align: 'right'
+                        }
+                    ]
                 },
                 {
                     el: this.sandbox.dom.find('#roles-list', this.$el),
                     url: '/admin/api/roles?flat=true',
                     resultKey: 'roles',
-                    viewOptions: {
-                        table: {
-                            fullWidth: true
-                        }
-                    }
-                }
+                    instanceName: constants.datagridInstanceName,
+                    actionCallback: function(id) {
+                        this.sandbox.emit('sulu.roles.load', id);
+                    }.bind(this)
+                },
+                'roles',
+                '#roles-list-info'
             );
-
         }
     };
 });

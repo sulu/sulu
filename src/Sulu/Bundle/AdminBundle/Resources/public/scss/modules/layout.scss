@@ -6,28 +6,53 @@
     min-width: 50px + $contentMinWidth;
 }
 
+.navigation-container {
+    float: left;
+    height: 100%;
+    position: relative;
+}
+
 .content-container {
     height: 100%;
     overflow: hidden;
     position: relative;
+
+    &.has-visible-sidebar.has-max-sidebar .content-column {
+        float: left;
+    }
 }
 
 .content-column {
     height: 100%;
     position: relative;
     overflow: hidden;
-    min-width: $contentMinWidth;
-    @include transition(width $shrinkAnimationDuration);
+
+    .wrapper {
+        height: 100%;
+        overflow: hidden;
+    }
 
     .page {
         height: 100%;
+        overflow: auto;
+        &::before {
+            display: block;
+            content: "";
+            width: 100%;
+            margin-bottom: $contentPaddingTop;
+        }
+        &::after {
+          display: block;
+          content: "";
+          width: 100%;
+          margin-bottom: $contentPaddingBottom;
+        }
     }
 
     #content {
-        height: 100%;
-        overflow: auto;
-        padding: $contentPaddingTop $contentPaddingRight $contentPaddingBottom $contentPaddingLeft;
-        @include transition(padding-left $shrinkAnimationDuration, padding-right $shrinkAnimationDuration);
+        @include transition(width $shrinkAnimationDuration, padding-left $shrinkAnimationDuration, padding-right $shrinkAnimationDuration);
+        min-width: $contentMinWidth;
+        padding: 0 $contentPaddingRight 0 $contentPaddingLeft;
 
         h2.mainheadline {
             margin-top: 35px;
@@ -40,23 +65,58 @@
         .content-tabs-content {
             padding-top: 80px;
         }
+    }
 
+    .sulu-title {
+      @include transition(width $shrinkAnimationDuration, padding-left $shrinkAnimationDuration, padding-right $shrinkAnimationDuration);
+        padding-left: $contentPaddingLeft;
+        padding-right: $contentPaddingRight;
+        min-width: $contentMinWidth;
+    }
+
+    .fixed-width {
+        @include clear-float;
+        min-width: $contentMinWidth;
+        width: $contentFixedWidth;
+        padding-left: $contentPaddingLeft;
+        padding-right: $contentPaddingRight;
+        @include transition(width $shrinkAnimationDuration, padding-right $shrinkAnimationDuration, padding-left $shrinkAnimationDuration);
         &.no-left-space {
             padding-left: 0;
         }
-
         &.no-right-space {
             padding-right: 0;
         }
+    }
 
-        &.no-top-space {
-            padding-top: 0;
+    &.no-left-space {
+        #content {
+            padding-left: 0;
+        }
+    }
+
+    &.no-right-space {
+      #content {
+          padding-right: 0;
+      }
+    }
+
+    &.no-top-space {
+        .page::before {
+            height: 0;
+            margin-bottom: 0;
         }
     }
 
     &.no-transitions {
         @include transition(none);
-        #content {
+        #content, .page {
+            @include transition(none);
+            .fixed-width {
+              @include transition(none);
+            }
+        }
+        .sulu-title {
             @include transition(none);
         }
     }
@@ -65,22 +125,20 @@
         position: absolute;
         top: 0px;
         right: 0px;
-        z-index: 100;
+        z-index: 120;
         cursor: pointer;
-        width: 30px;
-        height: 30px;
+        width: 25px;
+        height: 25px;
         overflow: hidden;
         background: #21272E;
         color: $white;
         text-align: center;
-        border-radius: 0 0 0 2px;
-        font-size: 20px;
-        line-height: 32px;
+        line-height: 25px;
         .fa-chevron-right {
-            padding-left: 3px;
+            padding-left: 2px;
         }
         .fa-chevron-left {
-            padding-right: 3px;
+            padding-right: 2px;
         }
     }
 
@@ -90,15 +148,32 @@
     }
 
     &.fixed {
-        width: $contentFixedWidth;
-        float: left;
+        float: none;
+        width: auto;
 
-        &.small-fixed {
+        #content, .sulu-title {
+          width: $contentFixedWidth;
+        }
+    }
+
+    &.small-fixed {
+        &.fixed:not(.no-right-space) #content,
+        &.fixed .sulu-title {
+            padding-right: $contentPaddingRightSmall;
+        }
+        &.fixed:not(.no-left-space) #content,
+        &.fixed .sulu-title {
+            padding-left: $contentPaddingLeftSmall;
+        }
+        &.fixed {
+          #content, .sulu-title {
             width: $contentFixedSmallWidth;
-            #content {
-                padding-left: $contentPaddingLeftSmall;
-                padding-right: $contentPaddingRightSmall;
-            }
+          }
+        }
+        .fixed-width {
+          width: $contentFixedSmallWidth;
+          padding-left: $contentPaddingLeftSmall;
+          padding-right: $contentPaddingRightSmall;
         }
     }
 }
@@ -108,6 +183,7 @@
     overflow: hidden;
     z-index: 99;
     position: relative;
+    border-left: 1px solid $borderColor;
 
     &.fixed {
         width: $sidebarFixedWidth;
@@ -146,30 +222,37 @@
 
 // 1. collapses the content-column to medium width
 @media only screen and (max-width: 50px + $contentFixedWidth + $sidebarMaxCollapseWidth) {
-    .has-visible-sidebar .content-column.fixed {
-        width: $contentFixedMediumWidth;
+    .has-visible-sidebar .content-column {
+        &.fixed {
+            #content, .sulu-title {
+                width: $contentFixedSmallWidth;
+            }
+        }
+      .fixed-width {
+          width: $contentFixedSmallWidth;
+      }
     }
 }
 
-// 2. collapses the content-column to small width
-@media only screen and (max-width: 50px + $contentFixedMediumWidth + $sidebarMaxCollapseWidth) {
-    .has-visible-sidebar .content-column.fixed {
-        width: $contentFixedSmallWidth;
-    }
-}
-
-// 3. hides the sidebar and brings the content-column to fit the screen
+// 2. hides the sidebar and brings the content-column to fit the screen
 @media only screen and (max-width: 50px + $contentFixedSmallWidth + $sidebarMaxCollapseWidth) {
     .sidebar-column.max {
         width: 0;
         height: 0;
+        border-left: 0;
     }
 
-    .has-visible-sidebar .content-column.fixed {
-        float: none;
-        width: auto;
-        max-width: $contentFixedWidth;
-
+    .has-visible-sidebar .content-column {
+        &.fixed {
+            float: none;
+            width: 100%;
+            #content, .sulu-title {
+                width: 100%;
+            }
+        }
+        .fixed-width {
+            width: 100%;
+        }
     }
 
     .sulu-app-shrink {
@@ -184,12 +267,17 @@
 
 // 1. makes the content-column fit the screen
 @media only screen and (max-width: 50px + $contentFixedWidth) {
-    .has-no-visible-sidebar .content-column.fixed {
-        float: none;
-        width: auto;
-        max-width: $contentFixedWidth;
+    .has-no-visible-sidebar .content-column {
+        &.fixed {
+            float: none;
+            #content, .sulu-title {
+                width: auto;
+            }
+        }
+        .fixed-width {
+            width: auto;
+        }
     }
-
 }
 
 //
@@ -199,9 +287,17 @@
 
 // 1. makes the content-column fit the rest of the screen
 @media only screen and (max-width: 250px + $contentFixedWidth + $sidebarFixedWidth) {
-    .has-visible-sidebar .sidebar-column.fixed + .content-column.fixed {
-        float: none;
-        width: auto;
-        max-width: $contentFixedWidth;
+    .has-visible-sidebar .sidebar-column.fixed + .content-column {
+        &.fixed {
+            float: none;
+            #content, .sulu-title {
+                max-width: $contentFixedWidth;
+                width: auto;
+            }
+        }
+        .fixed-width {
+            max-width: $contentFixedWidth;
+            width: auto;
+        }
     }
 }

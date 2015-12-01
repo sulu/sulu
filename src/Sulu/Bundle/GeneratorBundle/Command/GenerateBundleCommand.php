@@ -281,7 +281,7 @@ EOT
         if ($input->isInteractive()) {
             $auto = $dialog->askConfirmation($output, $dialog->getQuestion('Confirm automatic update of the Routing', 'yes', '?'), true);
             if ($auto) {
-                $this->route = $dialog->askAndValidate($output, 'Route [length > 3]: ', function ($x) {
+                $this->route = $dialog->askAndValidate($output, 'Route prefix [length > 3]: ', function ($x) {
                     if (strlen($x) < 3) {
                         return false;
                     }

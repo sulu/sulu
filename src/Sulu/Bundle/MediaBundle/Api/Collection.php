@@ -58,7 +58,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
  *      "children",
  *      href = @Route(
  *          "get_collection",
- *          parameters = { "id" = "expr(object.getId())", "depth" = 1 }
+ *          parameters = { "id" = "expr(object.getId())", "depth" = 1, "sortBy": "title" }
  *      )
  * )
  * @Relation(
@@ -110,6 +110,11 @@ class Collection extends ApiWrapper
      */
     protected $breadcrumb;
 
+    /**
+     * @var CollectionInterface
+     */
+    protected $entity;
+
     public function __construct(CollectionInterface $collection, $locale)
     {
         $this->entity = $collection;
@@ -123,15 +128,19 @@ class Collection extends ApiWrapper
      */
     public function setChildren($children)
     {
-        $childrenEntities = [];
-
-        foreach ($children as $child) {
-            $childrenEntities[] = $child->getEntity();
-        }
-
         // FIXME remove cache for children and generate then on the fly
         //       reason: preview images cannot be generated without a service
         $this->children = $children;
+    }
+
+    /**
+     * Add child to resource.
+     *
+     * @param Collection $child
+     */
+    public function addChild(Collection $child)
+    {
+        $this->children[] = $child;
     }
 
     /**
@@ -360,6 +369,29 @@ class Collection extends ApiWrapper
     }
 
     /**
+     * @param string $key
+     *
+     * @return $this
+     */
+    public function setKey($key)
+    {
+        $this->entity->setKey($key);
+
+        return $this;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("key")
+     *
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->entity->getKey();
+    }
+
+    /**
      * @param CollectionType $type
      *
      * @return $this
@@ -452,6 +484,17 @@ class Collection extends ApiWrapper
         }
 
         return;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("locked")
+     *
+     * @return string
+     */
+    public function getLocked()
+    {
+        return !$this->entity->getType() || $this->entity->getType()->getKey() === 'collection.system';
     }
 
     /**

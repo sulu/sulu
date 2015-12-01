@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\CategoryBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\CategoryBundle\Category\CategoryListRepresentation;
@@ -68,20 +67,24 @@ class CategoryController extends RestController implements ClassResourceInterfac
      *
      * @Get("categories/fields")
      *
+     * @param Request $request
+     *
      * @return mixed
      */
-    public function getFieldsAction()
+    public function getFieldsAction(Request $request)
     {
         // default contacts list
         return $this->handleView(
             $this->view(
                 array_values(
                     array_diff_key(
-                        $this->getManager()->getFieldDescriptors(),
+                        $this->getManager()->getFieldDescriptors($this->getLocale($request)),
                         [
                             'depth' => false,
                             'parent' => false,
                             'hasChildren' => false,
+                            'locale' => false,
+                            'defaultLocale' => false,
                         ]
                     )
                 ),
@@ -295,16 +298,17 @@ class CategoryController extends RestController implements ClassResourceInterfac
 
         $listBuilder = $factory->create(self::$entityName);
 
-        $restHelper->initializeListBuilder(
-            $listBuilder,
-            $this->getManager()->getFieldDescriptors()
-        );
+        $fieldDescriptors = $this->getManager()->getFieldDescriptors($this->getLocale($request));
 
-        $listBuilder->addField($this->getManager()->getFieldDescriptor('depth'));
-        $listBuilder->addField($this->getManager()->getFieldDescriptor('parent'));
-        $listBuilder->addField($this->getManager()->getFieldDescriptor('hasChildren'));
+        $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
-        $listBuilder->addGroupBy($this->getManager()->getFieldDescriptor('id'));
+        $listBuilder->addSelectField($fieldDescriptors['depth']);
+        $listBuilder->addSelectField($fieldDescriptors['parent']);
+        $listBuilder->addSelectField($fieldDescriptors['hasChildren']);
+        $listBuilder->addSelectField($fieldDescriptors['locale']);
+        $listBuilder->addSelectField($fieldDescriptors['defaultLocale']);
+
+        $listBuilder->addGroupBy($fieldDescriptors['id']);
 
         if ($parentKey !== null) {
             $this->addParentSelector($parentKey, $listBuilder);
@@ -359,7 +363,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getSecurityContext()
     {

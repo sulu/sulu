@@ -18,23 +18,10 @@ define(function() {
 
     return {
 
-        view: true,
-
         layout: {
-            navigation: {
-                collapsed: false
-            },
             content: {
-                width: 'max',
-                topSpace: false,
-                leftSpace: false,
-                rightSpace: false
-            },
-            sidebar: false
-        },
-
-        header: {
-            hidden: true
+                width: 'max'
+            }
         },
 
         /**

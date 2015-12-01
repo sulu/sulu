@@ -19,7 +19,7 @@ Feature: Role management
     Scenario: Edit a role
         Given I am on "/admin/#settings/roles"
         And I wait to see "1" "#roles-list tbody .row" elements
-        And I click the row containing "Sulu"
+        And I click the edit icon in the row containing "Sulu"
         And I expect the "husky.select.system.preselected.item" event
         And I fill in "name" with "Goat"
         And I click the save icon
@@ -32,7 +32,7 @@ Feature: Role management
             | Content editor | Sulu |
             | Translator | Sulu | 
         And I am on "/admin/#settings/roles"
-        And I click the row containing "Translator"
+        And I click the edit icon in the row containing "Translator"
         And I wait a second
         And I click delete from the drop down
         Then I expect a confirmation dialog to appear
@@ -42,11 +42,12 @@ Feature: Role management
 
     Scenario: Create a role
         Given I am on "/admin/#settings/roles"
+        And I wait a second
         And I click the add icon
         And I expect a form to appear
         And I fill in "name" with "Foobar"
         And I click the save icon
-        And I expect the "sulu.header.initialized" event
-        Then I should see "Foobar"
+        And I wait a second
+        Then the role "Foobar" should exist
         # TODO: Notification: Then I expect a success notification to appear
         # See: https://github.com/sulu-cmf/sulu/issues/708

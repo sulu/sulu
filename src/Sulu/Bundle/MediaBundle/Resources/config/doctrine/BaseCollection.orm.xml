@@ -5,6 +5,10 @@
                   xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
 
     <mapped-superclass name="Sulu\Bundle\MediaBundle\Entity\BaseCollection">
+        <indexes>
+            <index name="key_idx" columns="collection_key" />
+        </indexes>
+
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
@@ -18,6 +22,8 @@
         <field name="depth" type="integer" column="depth">
             <gedmo:tree-level/>
         </field>
+
+        <field name="key" type="string" column="collection_key" length="255" unique="true" nullable="true"/>
 
         <many-to-one field="type" target-entity="Sulu\Bundle\MediaBundle\Entity\CollectionType" inversed-by="collections">
             <join-columns>

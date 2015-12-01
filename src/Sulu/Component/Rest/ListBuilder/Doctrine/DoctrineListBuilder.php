@@ -12,15 +12,35 @@
 namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\QueryBuilder;
+use Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\AbstractListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\AbstractDoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Rest\ListBuilder\Event\ListBuilderCreateEvent;
+use Sulu\Component\Rest\ListBuilder\Event\ListBuilderEvents;
+use Sulu\Component\Rest\ListBuilder\Expression\BasicExpressionInterface;
+use Sulu\Component\Rest\ListBuilder\Expression\ConjunctionExpressionInterface;
+use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\AbstractDoctrineExpression;
+use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineAndExpression;
+use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineBetweenExpression;
+use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineInExpression;
+use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineOrExpression;
+use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineWhereExpression;
+use Sulu\Component\Rest\ListBuilder\Expression\Exception\InvalidExpressionArgumentException;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * The listbuilder implementation for doctrine.
  */
 class DoctrineListBuilder extends AbstractListBuilder
 {
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
     /**
      * @var EntityManager
      */
@@ -36,7 +56,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * @var AbstractDoctrineFieldDescriptor[]
      */
-    protected $fields = [];
+    protected $selectFields = [];
 
     /**
      * @var AbstractDoctrineFieldDescriptor[]
@@ -44,86 +64,146 @@ class DoctrineListBuilder extends AbstractListBuilder
     protected $searchFields = [];
 
     /**
-     * @var AbstractDoctrineFieldDescriptor[]
+     * @var AbstractDoctrineExpression[]
      */
-    protected $whereFields = [];
+    protected $expressions = [];
 
     /**
-     * @var AbstractDoctrineFieldDescriptor[]
+     * Array of unique field descriptors from expressions.
+     *
+     * @var array
      */
-    protected $whereNotFields = [];
-
-    /**
-     * @var AbstractDoctrineFieldDescriptor[]
-     */
-    protected $inFields = [];
-
-    /**
-     * @var AbstractDoctrineFieldDescriptor
-     */
-    protected $sortField;
+    protected $expressionFields = [];
 
     /**
      * @var \Doctrine\ORM\QueryBuilder
      */
     protected $queryBuilder;
 
-    public function __construct(EntityManager $em, $entityName)
+    public function __construct(EntityManager $em, $entityName, EventDispatcherInterface $eventDispatcher)
     {
         $this->em = $em;
         $this->entityName = $entityName;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function count()
     {
-        // TODO: remove uneccessary joins from count!
+        $subQueryBuilder = $this->createSubQueryBuilder('COUNT(' . $this->entityName . '.id)');
 
-        $entityId = $this->entityName . '.id';
-        $this->queryBuilder = $this->createQueryBuilder()
-            ->select('count(' . $entityId . ')');
-
-        $result = $this->queryBuilder->getQuery()->getScalarResult();
-        if (!$result) {
-            return 0;
-        }
-
-        // in case result has multiple results,
-        // group by separated result into multiple results,
-        // so return count of results
-        if (($temp = count($result)) > 1) {
-            $result = $temp;
-        } else {
-            // reset array indices
+        $result = $subQueryBuilder->getQuery()->getScalarResult();
+        $numResults = count($result);
+        if ($numResults > 1) {
+            return $numResults;
+        } elseif ($numResults == 1) {
             $result = array_values($result[0]);
-            $result = $result[0];
+
+            return (int) $result[0];
         }
 
-        return $result;
+        return 0;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function execute()
     {
-        $this->queryBuilder = $this->createQueryBuilder();
+        // emit listbuilder.create event
+        $event = new ListBuilderCreateEvent($this);
+        $this->eventDispatcher->dispatch(ListBuilderEvents::LISTBUILDER_CREATE, $event);
+        $this->expressionFields = $this->getUniqueExpressionFieldDescriptors($this->expressions);
 
-        foreach ($this->fields as $field) {
+        // first create simplified id query
+        // select ids with all necessary filter data
+        $ids = $this->findIdsByGivenCriteria();
+
+        // if no results are found - return
+        if (count($ids) < 1) {
+            return [];
+        }
+
+        // now select all data
+        $this->queryBuilder = $this->em->createQueryBuilder()
+            ->from($this->entityName, $this->entityName);
+        $this->assignJoins($this->queryBuilder);
+
+        // Add all select fields
+        foreach ($this->selectFields as $field) {
             $this->queryBuilder->addSelect($field->getSelect() . ' AS ' . $field->getName());
         }
+        // group by
+        $this->assignGroupBy($this->queryBuilder);
+        // assign sort-fields
+        $this->assignSortFields($this->queryBuilder);
 
-        if ($this->limit != null) {
-            $this->queryBuilder->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
-        }
-
-        if ($this->sortField != null) {
-            $this->queryBuilder->orderBy($this->sortField->getSelect(), $this->sortOrder);
-        }
+        // use ids previously selected ids for query
+        $this->queryBuilder->where($this->entityName . '.id IN (:ids)')
+            ->setParameter('ids', $ids);
 
         return $this->queryBuilder->getQuery()->getArrayResult();
+    }
+
+    /**
+     * Function that finds all IDs of entities that match the
+     * search criteria.
+     *
+     * @return array
+     */
+    protected function findIdsByGivenCriteria()
+    {
+        $subQueryBuilder = $this->createSubQueryBuilder();
+        if ($this->limit != null) {
+            $subQueryBuilder->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
+        }
+        $this->assignSortFields($subQueryBuilder);
+        $ids = $subQueryBuilder->getQuery()->getArrayResult();
+        // if no results are found - return
+        if (count($ids) < 1) {
+            return [];
+        }
+        $ids = array_map(
+            function ($array) {
+                return $array['id'];
+            },
+            $ids
+        );
+
+        return $ids;
+    }
+
+    /**
+     * Assigns ORDER BY clauses to querybuilder.
+     *
+     * @param QueryBuilder $queryBuilder
+     */
+    protected function assignSortFields($queryBuilder)
+    {
+        // if no sort has been assigned add order by id ASC as default
+        if (count($this->sortFields) === 0) {
+            $queryBuilder->addOrderBy($this->entityName . '.id', 'ASC');
+        }
+
+        foreach ($this->sortFields as $index => $sortField) {
+            $queryBuilder->addOrderBy($sortField->getSelect(), $this->sortOrders[$index]);
+        }
+    }
+
+    /**
+     * Sets group by fields to querybuilder.
+     *
+     * @param QueryBuilder $queryBuilder
+     */
+    protected function assignGroupBy($queryBuilder)
+    {
+        if (!empty($this->groupByFields)) {
+            foreach ($this->groupByFields as $fields) {
+                $queryBuilder->groupBy($fields->getSelect());
+            }
+        }
     }
 
     /**
@@ -131,15 +211,15 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @return DoctrineJoinDescriptor[]
      */
-    private function getJoins()
+    protected function getJoins()
     {
         $joins = [];
 
-        if ($this->sortField != null) {
-            $joins = array_merge($joins, $this->sortField->getJoins());
+        foreach ($this->sortFields as $sortField) {
+            $joins = array_merge($joins, $sortField->getJoins());
         }
 
-        foreach ($this->fields as $field) {
+        foreach ($this->selectFields as $field) {
             $joins = array_merge($joins, $field->getJoins());
         }
 
@@ -147,75 +227,156 @@ class DoctrineListBuilder extends AbstractListBuilder
             $joins = array_merge($joins, $searchField->getJoins());
         }
 
-        foreach ($this->whereFields as $whereField) {
-            $joins = array_merge($joins, $whereField->getJoins());
-        }
-
-        foreach ($this->whereNotFields as $whereNotField) {
-            $joins = array_merge($joins, $whereNotField->getJoins());
-        }
-
-        foreach ($this->inFields as $inField) {
-            $joins = array_merge($joins, $inField->getJoins());
+        foreach ($this->expressionFields as $expressionField) {
+            $joins = array_merge($joins, $expressionField->getJoins());
         }
 
         return $joins;
     }
 
     /**
+     * Returns all FieldDescriptors that were passed to list builder.
+     *
+     * @param bool $onlyReturnFilterFields Define if only filtering FieldDescriptors should be returned
+     *
+     * @return AbstractDoctrineFieldDescriptor[]
+     */
+    protected function getAllFields($onlyReturnFilterFields = false)
+    {
+        $fields = array_merge(
+            $this->searchFields,
+            $this->sortFields,
+            $this->getUniqueExpressionFieldDescriptors($this->expressions)
+        );
+
+        if ($onlyReturnFilterFields !== true) {
+            $fields = array_merge($fields, $this->selectFields);
+        }
+
+        return $fields;
+    }
+
+    /**
+     * Creates a query-builder for sub-selecting ID's.
+     *
+     * @param null|string $select
+     *
+     * @return QueryBuilder
+     */
+    protected function createSubQueryBuilder($select = null)
+    {
+        if (!$select) {
+            $select = $this->entityName . '.id';
+        }
+
+        // get all filter-fields
+        $filterFields = $this->getAllFields(true);
+
+        // get entity names
+        $entityNames = $this->getEntityNamesOfFieldDescriptors($filterFields);
+
+        // get necessary joins to achieve filtering
+        $addJoins = $this->getNecessaryJoins($entityNames);
+
+        // create querybuilder and add select
+        return $this->createQueryBuilder($addJoins)
+            ->select($select);
+    }
+
+    /**
+     * Function returns all necessary joins for filtering result.
+     *
+     * @param string[] $necessaryEntityNames
+     *
+     * @return AbstractDoctrineFieldDescriptor[]
+     */
+    protected function getNecessaryJoins($necessaryEntityNames)
+    {
+        $addJoins = [];
+
+        // iterate through all field descriptors to find necessary joins
+        foreach ($this->getAllFields() as $key => $field) {
+            // if field is in any conditional clause -> add join
+            if (($field instanceof DoctrineFieldDescriptor || $field instanceof DoctrineJoinDescriptor) &&
+                array_search($field->getEntityName(), $necessaryEntityNames) !== false
+                && $field->getEntityName() !== $this->entityName
+            ) {
+                $addJoins = array_merge($addJoins, $field->getJoins());
+            } else {
+                // include inner joins
+                foreach ($field->getJoins() as $entityName => $join) {
+                    if ($join->getJoinMethod() !== DoctrineJoinDescriptor::JOIN_METHOD_INNER &&
+                        array_search($entityName, $necessaryEntityNames) === false
+                    ) {
+                        break;
+                    }
+                    $addJoins = array_merge($addJoins, [$entityName => $join]);
+                }
+            }
+        }
+
+        return $addJoins;
+    }
+
+    /**
+     * Returns array of field-descriptor aliases.
+     *
+     * @param array $filterFields
+     *
+     * @return string[]
+     */
+    protected function getEntityNamesOfFieldDescriptors($filterFields)
+    {
+        $fields = [];
+
+        // filter array for DoctrineFieldDescriptors
+        foreach ($filterFields as $field) {
+            // add joins of field
+            $fields = array_merge($fields, $field->getJoins());
+
+            if ($field instanceof DoctrineFieldDescriptor
+                || $field instanceof DoctrineJoinDescriptor
+            ) {
+                $fields[] = $field;
+            }
+        }
+
+        $fieldEntityNames = [];
+        foreach ($fields as $key => $field) {
+            // special treatment for join descriptors
+            if ($field instanceof DoctrineJoinDescriptor) {
+                $fieldEntityNames[] = $key;
+            }
+            $fieldEntityNames[] = $field->getEntityName();
+        }
+
+        // unify result
+        return array_unique($fieldEntityNames);
+    }
+
+    /**
+     * Creates Querybuilder.
+     *
+     * @param array|null $joins Define which joins should be made
+     *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    private function createQueryBuilder()
+    protected function createQueryBuilder($joins = null)
     {
         $this->queryBuilder = $this->em->createQueryBuilder()
             ->from($this->entityName, $this->entityName);
 
-        foreach ($this->getJoins() as $entity => $join) {
-            switch ($join->getJoinMethod()) {
-                case DoctrineJoinDescriptor::JOIN_METHOD_LEFT:
-                    $this->queryBuilder->leftJoin(
-                        $join->getJoin(),
-                        $entity,
-                        $join->getJoinConditionMethod(),
-                        $join->getJoinCondition()
-                    );
-                    break;
-                case DoctrineJoinDescriptor::JOIN_METHOD_INNER:
-                    $this->queryBuilder->innerJoin(
-                        $join->getJoin(),
-                        $entity,
-                        $join->getJoinConditionMethod(),
-                        $join->getJoinCondition()
-                    );
-                    break;
+        $this->assignJoins($this->queryBuilder, $joins);
+
+        // set expressions
+        if (!empty($this->expressions)) {
+            foreach ($this->expressions as $expression) {
+                $this->queryBuilder->andWhere('(' . $expression->getStatement($this->queryBuilder) . ')');
             }
         }
 
-        // set where
-        if (!empty($this->whereFields)) {
-            $this->addWheres($this->whereFields, $this->whereValues, self::WHERE_COMPARATOR_EQUAL);
-        }
-
-        // set where not
-        if (!empty($this->whereNotFields)) {
-            $this->addWheres($this->whereNotFields, $this->whereNotValues, self::WHERE_COMPARATOR_UNEQUAL);
-        }
-
-        if (!empty($this->groupByFields)) {
-            foreach ($this->groupByFields as $fields) {
-                $this->queryBuilder->groupBy($fields->getSelect());
-            }
-        }
-
-        // set in
-        if (!empty($this->inFields)) {
-            $this->addIns($this->inFields, $this->inValues);
-        }
-
-        // set between
-        if (!empty($this->betweenFields)) {
-            $this->addBetweens($this->betweenFields, $this->betweenValues);
-        }
+        // group by
+        $this->assignGroupBy($this->queryBuilder);
 
         if ($this->search != null) {
             $searchParts = [];
@@ -224,88 +385,148 @@ class DoctrineListBuilder extends AbstractListBuilder
             }
 
             $this->queryBuilder->andWhere('(' . implode(' OR ', $searchParts) . ')');
-            $this->queryBuilder->setParameter('search', '%' . $this->search . '%');
+            $this->queryBuilder->setParameter('search', '%' . str_replace('*', '%', $this->search) . '%');
         }
 
         return $this->queryBuilder;
     }
 
     /**
-     * adds where statements for in-clauses.
+     * Adds joins to querybuilder.
      *
-     * @param array $inFields
-     * @param array $inValues
+     * @param QueryBuilder $queryBuilder
+     * @param array $joins
      */
-    protected function addIns(array $inFields, array $inValues)
+    protected function assignJoins(QueryBuilder $queryBuilder, array $joins = null)
     {
-        $inParts = [];
-        foreach ($inFields as $inField) {
-            $inParts[] = $inField->getSelect() . ' IN (:' . $inField->getName() . ')';
-            $this->queryBuilder->setParameter($inField->getName(), $inValues[$inField->getName()]);
+        if ($joins === null) {
+            $joins = $this->getJoins();
         }
 
-        $this->queryBuilder->andWhere('(' . implode(' AND ', $inParts) . ')');
+        foreach ($joins as $entity => $join) {
+            switch ($join->getJoinMethod()) {
+                case DoctrineJoinDescriptor::JOIN_METHOD_LEFT:
+                    $queryBuilder->leftJoin(
+                        $join->getJoin(),
+                        $entity,
+                        $join->getJoinConditionMethod(),
+                        $join->getJoinCondition()
+                    );
+                    break;
+                case DoctrineJoinDescriptor::JOIN_METHOD_INNER:
+                    $queryBuilder->innerJoin(
+                        $join->getJoin(),
+                        $entity,
+                        $join->getJoinConditionMethod(),
+                        $join->getJoinCondition()
+                    );
+                    break;
+            }
+        }
     }
 
     /**
-     * adds where statements for in-clauses.
-     *
-     * @param array $betweenFields
-     * @param array $betweenValues
+     * {@inheritdoc}
      */
-    protected function addBetweens(array $betweenFields, array $betweenValues)
+    public function createWhereExpression(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator)
     {
-        $betweenParts = [];
-        foreach ($betweenFields as $betweenField) {
-            $betweenParts[] = $betweenField->getSelect() .
-                ' BETWEEN :' . $betweenField->getName() . '1' .
-                ' AND :' . $betweenField->getName() . '2';
-            $values = $betweenValues[$betweenField->getName()];
-            $this->queryBuilder->setParameter($betweenField->getName() . '1', $values[0]);
-            $this->queryBuilder->setParameter($betweenField->getName() . '2', $values[1]);
+        if (!$fieldDescriptor instanceof AbstractDoctrineFieldDescriptor) {
+            throw new InvalidExpressionArgumentException('where', 'fieldDescriptor');
         }
 
-        $this->queryBuilder->andWhere('(' . implode(' AND ', $betweenParts) . ')');
+        return new DoctrineWhereExpression($fieldDescriptor, $value, $comparator);
     }
 
     /**
-     * sets where statement.
-     *
-     * @param array  $whereFields
-     * @param array  $whereValues
-     * @param string $comparator
+     * {@inheritdoc}
      */
-    protected function addWheres(array $whereFields, array $whereValues, $comparator = self::WHERE_COMPARATOR_EQUAL)
+    public function createInExpression(AbstractFieldDescriptor $fieldDescriptor, array $values)
     {
-        $whereParts = [];
-        foreach ($whereFields as $whereField) {
-            $value = $whereValues[$whereField->getName()];
+        if (!$fieldDescriptor instanceof AbstractDoctrineFieldDescriptor) {
+            throw new InvalidExpressionArgumentException('in', 'fieldDescriptor');
+        }
 
-            if ($value === null) {
-                $whereParts[] = $whereField->getSelect() . ' ' . $this->convertNullComparator($comparator);
-            } else {
-                $whereParts[] = $whereField->getSelect() . ' ' . $comparator . ' :' . $whereField->getName();
-                $this->queryBuilder->setParameter($whereField->getName(), $value);
+        return new DoctrineInExpression($fieldDescriptor, $values);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createBetweenExpression(AbstractFieldDescriptor $fieldDescriptor, array $values)
+    {
+        if (!$fieldDescriptor instanceof AbstractDoctrineFieldDescriptor) {
+            throw new InvalidExpressionArgumentException('between', 'fieldDescriptor');
+        }
+
+        return new DoctrineBetweenExpression($fieldDescriptor, $values[0], $values[1]);
+    }
+
+    /**
+     * Returns an array of unique expression field descriptors.
+     *
+     * @param AbstractDoctrineExpression[] $expressions
+     *
+     * @return array
+     */
+    protected function getUniqueExpressionFieldDescriptors(array $expressions)
+    {
+        if (count($this->expressionFields) === 0) {
+            $descriptors = [];
+            $uniqueNames = array_unique($this->getAllFieldNames($expressions));
+            foreach ($uniqueNames as $uniqueName) {
+                $descriptors[] = $this->fieldDescriptors[$uniqueName];
+            }
+
+            $this->expressionFields = $descriptors;
+
+            return $descriptors;
+        }
+
+        return $this->expressionFields;
+    }
+
+    /**
+     * Returns all fieldnames used in the expressions.
+     *
+     * @param AbstractDoctrineExpression[] $expressions
+     *
+     * @return array
+     */
+    protected function getAllFieldNames($expressions)
+    {
+        $fieldNames = [];
+        foreach ($expressions as $expression) {
+            if ($expression instanceof ConjunctionExpressionInterface) {
+                $fieldNames = array_merge($fieldNames, $expression->getFieldNames());
+            } elseif ($expression instanceof BasicExpressionInterface) {
+                $fieldNames[] = $expression->getFieldName();
             }
         }
 
-        $this->queryBuilder->andWhere('(' . implode(' AND ', $whereParts) . ')');
+        return $fieldNames;
     }
 
     /**
-     * @param $comparator
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    protected function convertNullComparator($comparator)
+    public function createAndExpression(array $expressions)
     {
-        switch ($comparator) {
-            case self::WHERE_COMPARATOR_EQUAL:
-                return 'IS NULL';
-            case self::WHERE_COMPARATOR_UNEQUAL:
-                return 'IS NOT NULL';
-            default:
-                return $comparator;
+        if (count($expressions) >= 2) {
+            return new DoctrineAndExpression($expressions);
         }
+
+        throw new InvalidExpressionArgumentException('and', 'expressions');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createOrExpression(array $expressions)
+    {
+        if (count($expressions) >= 2) {
+            return new DoctrineOrExpression($expressions);
+        }
+
+        throw new InvalidExpressionArgumentException('or', 'expressions');
     }
 }

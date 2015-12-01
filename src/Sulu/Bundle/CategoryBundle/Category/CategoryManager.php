@@ -18,6 +18,8 @@ use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
 use Sulu\Bundle\CategoryBundle\Event\CategoryDeleteEvent;
 use Sulu\Bundle\CategoryBundle\Event\CategoryEvents;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCaseFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
@@ -70,17 +72,17 @@ class CategoryManager implements CategoryManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function getFieldDescriptor($key)
+    public function getFieldDescriptor($locale, $key)
     {
-        return $this->getFieldDescriptors()[$key];
+        return $this->getFieldDescriptors($locale)[$key];
     }
 
     /**
      * Initializes the field descriptors used by the list-helper.
      */
-    public function getFieldDescriptors()
+    public function getFieldDescriptors($locale)
     {
         if (null === $this->fieldDescriptors) {
             $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
@@ -99,18 +101,65 @@ class CategoryManager implements CategoryManagerInterface
                 [],
                 true
             );
-            $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor(
-                'translation',
+            $this->fieldDescriptors['defaultLocale'] = new DoctrineFieldDescriptor(
+                'defaultLocale',
+                'defaultLocale',
+                self::$categoryEntityName,
+                'public.default',
+                [],
+                false
+            );
+            $this->fieldDescriptors['name'] = new DoctrineCaseFieldDescriptor(
                 'name',
-                self::$catTranslationEntityName,
-                'public.name',
-                [
-                    self::$catTranslationEntityName => new DoctrineJoinDescriptor(
-                            self::$catTranslationEntityName,
-                            self::$categoryEntityName .
-                            '.translations'
+                new DoctrineDescriptor(
+                    'translation',
+                    'translation',
+                    [
+                        'translation' => new DoctrineJoinDescriptor(
+                            'translation',
+                            self::$categoryEntityName . '.translations',
+                            sprintf('translation.locale = \'%s\'', $locale)
                         ),
-                ]
+                    ]
+                ),
+                new DoctrineDescriptor(
+                    'defaultTranslation',
+                    'translation',
+                    [
+                        'defaultTranslation' => new DoctrineJoinDescriptor(
+                            'defaultTranslation',
+                            self::$categoryEntityName . '.translations',
+                            sprintf('defaultTranslation.locale = %s.defaultLocale', self::$categoryEntityName)
+                        ),
+                    ]
+                ),
+                'public.name'
+            );
+            $this->fieldDescriptors['locale'] = new DoctrineCaseFieldDescriptor(
+                'locale',
+                new DoctrineDescriptor(
+                    'translation',
+                    'locale',
+                    [
+                        'translation' => new DoctrineJoinDescriptor(
+                            'translation',
+                            self::$categoryEntityName . '.translations',
+                            sprintf('translation.locale = \'%s\'', $locale)
+                        ),
+                    ]
+                ),
+                new DoctrineDescriptor(
+                    'defaultTranslation',
+                    'locale',
+                    [
+                        'defaultTranslation' => new DoctrineJoinDescriptor(
+                            'defaultTranslation',
+                            self::$categoryEntityName . '.translations',
+                            sprintf('defaultTranslation.locale = %s.defaultLocale', self::$categoryEntityName)
+                        ),
+                    ]
+                ),
+                'public.locale'
             );
             $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
                 'created',

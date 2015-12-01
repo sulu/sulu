@@ -78,9 +78,12 @@ class CodeController extends RestController implements ClassResourceInterface
             $listHelper = $this->get('sulu_core.list_rest_helper');
             $limit = $listHelper->getLimit();
             $offset = $listHelper->getOffset();
-            $sortOrder = $listHelper->getSortOrder();
             $sortColumn = $listHelper->getSortColumn();
-            $sorting = [$sortColumn => $sortOrder];
+            $sorting = ['id' => 'ASC'];
+            if ($sortColumn) {
+                $sortOrder = $listHelper->getSortOrder();
+                $sorting = [$sortColumn => $sortOrder];
+            }
 
             /** @var CodeRepository $repository */
             $repository = $this->getDoctrine()
@@ -279,7 +282,7 @@ class CodeController extends RestController implements ClassResourceInterface
             $code->setPackage($em->getReference(self::$packageEntity, $package['id']));
             $code->setLocation($em->getReference(self::$locationEntity, $location['id']));
 
-            if ($translations != null && sizeof($translations) > 0) {
+            if ($translations != null && count($translations) > 0) {
                 foreach ($translations as $translationData) {
                     /** @var Translation $translation */
                     $translation = $translationRepository->findOneBy(

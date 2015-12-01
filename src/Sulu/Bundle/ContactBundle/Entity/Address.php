@@ -145,6 +145,13 @@ class Address
     private $note;
 
     /**
+     * @var string
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
+     * @Expose
+     */
+    private $title;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -570,7 +577,7 @@ class Address
     /**
      * returns if address has at least one relation to another entity.
      *
-     * @return Bool
+     * @return bool
      */
     public function hasRelations()
     {
@@ -605,5 +612,29 @@ class Address
     public function getNote()
     {
         return $this->note;
+    }
+
+    /**
+     * Set title.
+     *
+     * @param string $title
+     *
+     * @return Address
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get title.
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
     }
 }

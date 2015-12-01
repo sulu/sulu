@@ -1,7 +1,6 @@
 <?php
-
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -14,54 +13,39 @@ namespace Sulu\Component\Security\Event;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * This event is dispatched when any object permission have been updated.
+ * This event is dispatched when the permissions of an object have been updated.
  */
 class PermissionUpdateEvent extends Event
 {
     /**
-     * The type of the object for which the permissions have been updated.
-     *
      * @var string
      */
     private $type;
 
     /**
-     * The identifier of the object for which the permissions have been updated.
-     *
      * @var string
      */
     private $identifier;
 
     /**
-     * The security identity for which the permissions have been updated.
-     *
      * @var string
      */
     private $securityIdentity;
 
     /**
-     * The new updated permissions.
-     *
-     * @var array
-     */
-    private $permissions;
-
-    /**
      * @param string $type
      * @param string $identifier
      * @param string $securityIdentity
-     * @param array  $permissions
      */
-    public function __construct($type, $identifier, $securityIdentity, $permissions)
+    public function __construct($type, $identifier, $securityIdentity)
     {
         $this->type = $type;
         $this->identifier = $identifier;
         $this->securityIdentity = $securityIdentity;
-        $this->permissions = $permissions;
     }
 
     /**
-     * Returns the type of the object for which the permissions have been updated.
+     * Returns the type of object for which the permissions have been updated.
      *
      * @return string
      */
@@ -81,22 +65,12 @@ class PermissionUpdateEvent extends Event
     }
 
     /**
-     * Returns the security identity for which the permissions have been updated.
+     * Returns the security identifier for which the permissions have been updated.
      *
      * @return string
      */
     public function getSecurityIdentity()
     {
         return $this->securityIdentity;
-    }
-
-    /**
-     * Returns the new updated permissions.
-     *
-     * @return array
-     */
-    public function getPermissions()
-    {
-        return $this->permissions;
     }
 }

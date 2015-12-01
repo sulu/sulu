@@ -21,6 +21,7 @@ use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
+use Sulu\Component\DocumentManager\Behavior\Path\AliasFilingBehavior;
 use Sulu\Component\DocumentManager\Behavior\Path\AutoNameBehavior;
 
 /**
@@ -31,6 +32,7 @@ class SnippetDocument implements
     TimestampBehavior,
     BlameBehavior,
     AutoNameBehavior,
+    AliasFilingBehavior,
     StructureTypeFilingBehavior,
     StructureBehavior,
     WorkflowStageBehavior,
@@ -59,7 +61,7 @@ class SnippetDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getNodeName()
     {
@@ -67,7 +69,7 @@ class SnippetDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getTitle()
     {
@@ -83,7 +85,7 @@ class SnippetDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getCreated()
     {
@@ -91,7 +93,7 @@ class SnippetDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getChanged()
     {
@@ -99,7 +101,7 @@ class SnippetDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getCreator()
     {
@@ -107,7 +109,7 @@ class SnippetDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getChanger()
     {
@@ -115,7 +117,7 @@ class SnippetDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getParent()
     {
@@ -123,7 +125,7 @@ class SnippetDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setParent($parent)
     {
@@ -131,7 +133,7 @@ class SnippetDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getWorkflowStage()
     {
@@ -139,7 +141,7 @@ class SnippetDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setWorkflowStage($workflowStage)
     {
@@ -147,7 +149,7 @@ class SnippetDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getPublished()
     {
@@ -155,7 +157,7 @@ class SnippetDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getUuid()
     {
@@ -163,7 +165,7 @@ class SnippetDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getStructureType()
     {
@@ -171,7 +173,7 @@ class SnippetDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getStructure()
     {
@@ -179,7 +181,7 @@ class SnippetDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setStructureType($structureType)
     {
@@ -187,7 +189,7 @@ class SnippetDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getLocale()
     {
@@ -195,7 +197,7 @@ class SnippetDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setLocale($locale)
     {
@@ -203,7 +205,7 @@ class SnippetDocument implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getPath()
     {

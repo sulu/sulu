@@ -363,7 +363,7 @@ class Webspace implements ArrayableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function toArray($depth = null)
     {

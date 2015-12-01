@@ -13,7 +13,7 @@
 
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-    <link rel="stylesheet" href="/bundles/suluadmin/dist/login.min.1447339502420.css">
+    <link rel="stylesheet" href="/bundles/suluadmin/dist/login.min.1448983734268.css">
 
     <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/css/main.css"/>
 </head>
@@ -24,13 +24,14 @@
              data-aura-reset-mail-url="{{ path('sulu_security.reset_password.email') }}"
              data-aura-resend-url="{{ path('sulu_security.reset_password.email.resend') }}"
              data-aura-login-url="{{ path('sulu_admin.login') }}"
+             data-aura-csrf-token="{{ csrf_token('authenticate') }}"
              {% if token is defined %}
                 data-aura-reset-token="{{ token }}"
                 data-aura-reset-mode="true"
              {% endif %}
              data-aura-reset-url="{{ path('sulu_security.reset_password.reset') }}"></div>
 
-        <div id="labels-container" data-aura-component="labels@suluadmin"></div>
+        <div id="labels-container" class='login-label-container' data-aura-component="labels@suluadmin"></div>
     </div>
     <script type="text/javascript">
         {% autoescape false %}
@@ -44,6 +45,6 @@
         {% endautoescape %}
     </script>
 
-    <script data-main="/bundles/suluadmin/dist/login.min.1447339502420" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
+    <script data-main="/bundles/suluadmin/dist/login.min.1448983734268" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
 </body>
 </html>

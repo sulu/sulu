@@ -2,25 +2,15 @@
 // Smart Content
 // --------------------------------------------------
 
-.smart-content-overlay {
-    .column-navigation-slide {
-        .overlay-header {
-            margin-bottom: 1px;
-        }
+.husky-overlay-container {
+    .data-source-slide {
         .overlay-content {
             margin: 0px;
         }
 
-        .overlay-footer {
-            margin: 0px;
+        .column-navigation-wrapper .column-navigation {
+            height: 381px;
         }
-    }
-
-    .overlay-header {
-        margin-bottom: 15px;
-    }
-    .overlay-footer {
-        margin-top: 5px;
     }
 }
 
@@ -51,7 +41,7 @@
     }
     .item-half {
         float: left;
-        width: 270px;
+        width: 260px;
     }
     .item {
         padding-right: 20px;
@@ -86,6 +76,22 @@
         border-radius: $borderRadius $borderRadius 0 0;
         input {
             margin: 7px 0 0 0;
+        }
+    }
+}
+
+.smart-content-container.no-content {
+    .header {
+        .text {
+            display: none;
+        }
+    }
+}
+
+.smart-content-container.is-loading {
+    .header {
+        .text {
+            display: none;
         }
     }
 }

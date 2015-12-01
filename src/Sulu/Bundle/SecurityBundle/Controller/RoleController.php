@@ -49,12 +49,13 @@ class RoleController extends RestController implements ClassResourceInterface, S
     protected $bundlePrefix = 'security.roles.';
 
     /**
-     * @var Array - Holds the field descriptors for the list response
-     *            TODO: Create a Manager and move the field descriptors to the manager
+     * @var array - Holds the field descriptors for the list response
+     * TODO: Create a Manager and move the field descriptors to the manager
      */
     protected $fieldDescriptors = [];
 
     // TODO: move field descriptors to a manager
+
     protected function getFieldDescriptors()
     {
         if (empty($this->fieldDescriptors)) {
@@ -73,19 +74,27 @@ class RoleController extends RestController implements ClassResourceInterface, S
             $this->container->getParameter('sulu.model.role.class'),
             'public.id',
             [],
-            false, false, '', '50px'
+            false, false, 'integer', '50px'
         );
         $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor(
             'name',
             'name',
             $this->container->getParameter('sulu.model.role.class'),
-            'public.name'
+            'public.name',
+            [],
+            false,
+            false,
+            'string'
         );
         $this->fieldDescriptors['system'] = new DoctrineFieldDescriptor(
             'system',
             'system',
             $this->container->getParameter('sulu.model.role.class'),
-            'security.roles.system'
+            'security.roles.system',
+            [],
+            false,
+            false,
+            'string'
         );
         $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
             'created',
@@ -489,7 +498,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getSecurityContext()
     {

@@ -27,7 +27,7 @@ Feature: Location content type
         And I fill in husky field "long" with "9.7669" in the overlay
         And I fill in husky field "lat" with "47.405" in the overlay
         And I fill in husky field "zoom" with "10" in the overlay
-        And I click the tick button
+        And I click the ok button
         And wait a second
         And I click the save icon
         Then I expect a success notification to appear
@@ -39,6 +39,6 @@ Feature: Location content type
         #     And I expect the aura component "location" to appear
         #     And I click the gears icon
         #     Then I should see "Ort auswählen"
-        #     And I click the tick button
+        #     And I click the ok button
         #     And I click the gears icon
         #     Then I should see "Ort auswählen"

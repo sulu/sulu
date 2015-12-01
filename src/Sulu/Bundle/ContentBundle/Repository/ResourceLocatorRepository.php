@@ -126,7 +126,7 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
             '_links' => [
                 'self' => $this->getBasePath($uuid) . '/history?language=' . $languageCode . '&webspace=' . $webspaceKey,
             ],
-            'total' => sizeof($result),
+            'total' => count($result),
         ];
     }
 

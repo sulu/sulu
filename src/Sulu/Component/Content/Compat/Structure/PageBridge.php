@@ -1,7 +1,6 @@
 <?php
-
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,7 +15,7 @@ use Sulu\Component\Content\Compat\PageInterface;
 class PageBridge extends StructureBridge implements PageInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getView()
     {
@@ -24,7 +23,7 @@ class PageBridge extends StructureBridge implements PageInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getController()
     {
@@ -37,7 +36,7 @@ class PageBridge extends StructureBridge implements PageInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getCacheLifeTime()
     {
@@ -45,7 +44,7 @@ class PageBridge extends StructureBridge implements PageInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getOriginTemplate()
     {
@@ -53,7 +52,7 @@ class PageBridge extends StructureBridge implements PageInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setOriginTemplate($originTemplate)
     {
@@ -61,7 +60,7 @@ class PageBridge extends StructureBridge implements PageInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getNavContexts()
     {
@@ -69,7 +68,7 @@ class PageBridge extends StructureBridge implements PageInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setNavContexts($navContexts)
     {
@@ -77,7 +76,7 @@ class PageBridge extends StructureBridge implements PageInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getExt()
     {
@@ -85,7 +84,7 @@ class PageBridge extends StructureBridge implements PageInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setExt($data)
     {
@@ -93,7 +92,7 @@ class PageBridge extends StructureBridge implements PageInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getInternalLinkContent()
     {
@@ -110,7 +109,7 @@ class PageBridge extends StructureBridge implements PageInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setInternalLinkContent($internalLinkContent)
     {
@@ -118,7 +117,7 @@ class PageBridge extends StructureBridge implements PageInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setInternal($internal)
     {
@@ -126,7 +125,7 @@ class PageBridge extends StructureBridge implements PageInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setNodeState($state)
     {

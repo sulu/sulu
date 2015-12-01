@@ -67,7 +67,7 @@ class Preview implements PreviewInterface
                 $this->previewCache->updateTemplate($template, $userId, $contentUuid, $webspaceKey, $locale);
             }
 
-            $result = $this->updateProperties($userId, $contentUuid, $webspaceKey, $locale, $data, false);
+            $result = $this->updateProperties($userId, $contentUuid, $webspaceKey, $locale, $data);
         }
 
         return $result;
@@ -99,8 +99,7 @@ class Preview implements PreviewInterface
         $contentUuid,
         $webspaceKey,
         $locale,
-        $changes,
-        $render = true
+        $changes
     ) {
         /** @var StructureInterface $content */
         $content = $this->previewCache->fetchStructure($userId, $contentUuid, $webspaceKey, $locale);
@@ -109,17 +108,9 @@ class Preview implements PreviewInterface
             throw new PreviewNotFoundException($userId, $contentUuid);
         }
 
-        if (is_array($changes) && sizeof($changes) > 0) {
+        if (is_array($changes) && count($changes) > 0) {
             foreach ($changes as $property => $data) {
-                $this->update(
-                    $userId,
-                    $webspaceKey,
-                    $locale,
-                    $property,
-                    $data,
-                    $content,
-                    $render
-                );
+                $this->update($webspaceKey, $locale, $property, $data, $content);
             }
 
             $this->previewCache->saveStructure($content, $userId, $contentUuid, $webspaceKey, $locale);
@@ -142,13 +133,10 @@ class Preview implements PreviewInterface
             throw new PreviewNotFoundException($userId, $contentUuid);
         }
 
-        try {
-            $content = $this->update($userId, $webspaceKey, $locale, $property, $data, $content);
-        } catch (\Twig_Error $ex) {
-            throw new TwigPreviewException($ex);
-        } finally {
-            $this->previewCache->saveStructure($content, $userId, $contentUuid, $webspaceKey, $locale);
-        }
+        $content = $this->update($webspaceKey, $locale, $property, $data, $content);
+        $this->previewCache->saveStructure($content, $userId, $contentUuid, $webspaceKey, $locale);
+
+        $this->generateChanges($userId, $webspaceKey, $locale, $property, $content);
 
         return $content;
     }
@@ -156,39 +144,43 @@ class Preview implements PreviewInterface
     /**
      * updates one property without saving structure.
      */
-    private function update(
-        $userId,
-        $webspaceKey,
-        $locale,
-        $property,
-        $data,
-        StructureInterface $content,
-        $render = true
-    ) {
-        $sequence = $this->setValue($content, $property, $data, $webspaceKey, $locale);
+    private function update($webspaceKey, $locale, $property, $data, StructureInterface $content)
+    {
+        $this->setValue($content, $property, $data, $webspaceKey, $locale);
+
+        return $content;
+    }
+
+    /**
+     * Generate changes and save them in the cache.
+     */
+    private function generateChanges($userId, $webspaceKey, $locale, $property, StructureInterface $content)
+    {
+        $sequence = $this->crawler->getSequence($content, $property);
 
         if (false !== $sequence) {
             // length of property path is important to render
             $property = implode(
                 ',',
-                array_slice($sequence['sequence'], 0, (-1) * sizeof($sequence['propertyPath']))
+                array_slice($sequence['sequence'], 0, (-1) * count($sequence['propertyPath']))
             );
         }
 
-        if ($render === true) {
+        try {
             $changes = $this->renderStructure($content, true, $property);
-            if ($changes !== false) {
-                $this->previewCache->appendChanges(
-                    [$property => $changes],
-                    $userId,
-                    $content->getUuid(),
-                    $webspaceKey,
-                    $locale
-                );
-            }
+        } catch (\Twig_Error $ex) {
+            throw new TwigPreviewException($ex);
         }
 
-        return $content;
+        if ($changes !== false) {
+            $this->previewCache->appendChanges(
+                [$property => $changes],
+                $userId,
+                $content->getUuid(),
+                $webspaceKey,
+                $locale
+            );
+        }
     }
 
     /**
@@ -247,7 +239,7 @@ class Preview implements PreviewInterface
             $tmp = $data;
             $data = $sequence['property']->getValue();
             $value = &$data;
-            $len = sizeof($sequence['index']);
+            $len = count($sequence['index']);
             for ($i = 0; $i < $len; ++$i) {
                 $value = &$value[$sequence['index'][$i]];
             }

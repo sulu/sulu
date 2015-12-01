@@ -20,9 +20,11 @@ Feature: Content type media selection
 
     Scenario: Select some medias
         Given I am editing a page of type "media_page"
-        When I click the add icon
+        And I expect the aura component "media" to appear
         And I wait a second
-        And I click on the element ".husky-thumbnails .item:nth-child(1) .custom-checkbox input"
+        When I click the action icon
+        And I wait a second
+        And I click on the element ".masonry-item:nth-child(1) .custom-checkbox input"
         And I click the close icon in container ".media-selection-overlay-content"
         Then I expect to see "1" ".items-list li" elements
         And I click the save icon

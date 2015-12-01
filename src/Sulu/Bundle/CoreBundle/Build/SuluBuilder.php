@@ -30,7 +30,7 @@ abstract class SuluBuilder implements ContainerAwareInterface, BuilderInterface
     protected $application;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setContext(BuilderContext $context)
     {
@@ -42,7 +42,7 @@ abstract class SuluBuilder implements ContainerAwareInterface, BuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setContainer(ContainerInterface $container = null)
     {

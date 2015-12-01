@@ -63,5 +63,5 @@ interface ResourceLocatorRepositoryInterface
      *
      * @return mixed
      */
-    public function restore($path, $userId,  $webspaceKey, $languageCode, $segmentKey = null);
+    public function restore($path, $userId, $webspaceKey, $languageCode, $segmentKey = null);
 }

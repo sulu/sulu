@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Content\Types;
 
+use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\SimpleContentType;
 
 /**
@@ -35,5 +37,15 @@ class TextLine extends SimpleContentType
     public function getTemplate()
     {
         return $this->template;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultParams(PropertyInterface $property = null)
+    {
+        return [
+            'headline' => new PropertyParameter('headline', false),
+        ];
     }
 }

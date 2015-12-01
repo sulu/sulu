@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Sulu\Bundle\ResourceBundle\Entity\Filter" table="re_filters"
+            repository-class="Sulu\Bundle\ResourceBundle\Entity\FilterRepository">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="conjunction" type="string" length="10" column="conjunction" nullable="true"/>
+        <field name="context" type="string" column="context" length="255" nullable="false"/>
+        <field name="private" type="boolean" column="private" nullable="false"/>
+        <field name="created" type="datetime" length="255"/>
+        <field name="changed" type="datetime" length="255"/>
+
+        <one-to-many target-entity="Sulu\Bundle\ResourceBundle\Entity\FilterTranslation" mapped-by="filter"
+                     field="translations">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+        </one-to-many>
+
+        <one-to-many target-entity="Sulu\Bundle\ResourceBundle\Entity\ConditionGroup" mapped-by="filter"
+                     field="conditionGroups"/>
+
+        <many-to-one field="user" target-entity="Sulu\Component\Security\Authentication\UserInterface">
+            <join-columns>
+                <join-column name="idUsers" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+            </join-columns>
+        </many-to-one>
+        <many-to-one field="changer" target-entity="Sulu\Component\Security\Authentication\UserInterface">
+            <join-columns>
+                <join-column name="idUsersChanger" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+            </join-columns>
+        </many-to-one>
+        <many-to-one field="creator" target-entity="Sulu\Component\Security\Authentication\UserInterface">
+            <join-columns>
+                <join-column name="idUsersCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+            </join-columns>
+        </many-to-one>
+
+    </entity>
+</doctrine-mapping>

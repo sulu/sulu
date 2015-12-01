@@ -21,6 +21,8 @@ use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Component\Security\Core\Exception\DisabledException;
+use Symfony\Component\Security\Core\Exception\LockedException;
 
 class UserRepositoryTest extends SuluTestCase
 {
@@ -198,7 +200,73 @@ class UserRepositoryTest extends SuluTestCase
         $this->assertEquals('max.mustermann@muster.at', $user->getContact()->getEmails()[0]->getEmail());
     }
 
-    public function testfindUserByEmail()
+    public function testLoadUserByUsernameWithLockedUser()
+    {
+        $this->setExpectedException(LockedException::class);
+        $this->prepareUser('sulu', 'sulu', true, true);
+
+        $client = $this->createAuthenticatedClient();
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
+
+        $userRepository->loadUserByUsername('sulu');
+    }
+
+    public function testLoadUserByUsernameWithDisabledUser()
+    {
+        $this->setExpectedException(DisabledException::class);
+        $this->prepareUser('sulu', 'sulu', false, false);
+
+        $client = $this->createAuthenticatedClient();
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
+
+        $userRepository->loadUserByUsername('sulu');
+    }
+
+    public function testRefreshUser()
+    {
+        $user = $this->prepareUser('sulu', 'sulu', true, false);
+
+        $client = $this->createAuthenticatedClient();
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
+
+        $this->assertEquals($user->getUsername(), $userRepository->refreshUser($user)->getUsername());
+    }
+
+    public function testRefreshUserWithLockedUser()
+    {
+        $this->setExpectedException(LockedException::class);
+
+        $user = $this->prepareUser('sulu', 'sulu', true, true);
+
+        $client = $this->createAuthenticatedClient();
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
+
+        $userRepository->refreshUser($user);
+    }
+
+    public function testRefreshUserWithDisabledUser()
+    {
+        $this->setExpectedException(DisabledException::class);
+
+        $user = $this->prepareUser('sulu', 'sulu', false, false);
+
+        $client = $this->createAuthenticatedClient();
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
+
+        $userRepository->refreshUser($user);
+    }
+
+    public function testFindUserByEmail()
     {
         $this->prepareUser('sulu', 'sulu');
 
@@ -213,7 +281,7 @@ class UserRepositoryTest extends SuluTestCase
         $this->assertEquals('test', $user->getUsername());
     }
 
-    public function testfindUserByIdentifier()
+    public function testFindUserWithSecurityByIdentifier()
     {
         $this->prepareUser('sulu', 'sulu');
 
@@ -285,5 +353,7 @@ class UserRepositoryTest extends SuluTestCase
         $this->em->persist($userRole);
 
         $this->em->flush();
+
+        return $user;
     }
 }

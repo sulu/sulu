@@ -11,6 +11,10 @@
 
 namespace Sulu\Component\HttpCache\Handler;
 
+use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\HttpCache\HandlerInterface;
+use Symfony\Component\HttpFoundation\Response;
+
 class PublicHandlerTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -32,6 +36,11 @@ class PublicHandlerTest extends \PHPUnit_Framework_TestCase
      * @var int
      */
     private $sharedMaxAge = 10;
+
+    /**
+     * @var Response
+     */
+    private $response;
 
     /**
      * @var mixed
@@ -57,6 +66,21 @@ class PublicHandlerTest extends \PHPUnit_Framework_TestCase
         $this->response->setSharedMaxAge($this->sharedMaxAge)->shouldBeCalled();
         $this->structure->getCacheLifeTime()->willReturn(10);
         $this->response->getAge()->willReturn(50);
+
+        $this->handler->updateResponse(
+            $this->response->reveal(),
+            $this->structure->reveal()
+        );
+    }
+
+    public function testDisableCache()
+    {
+        // disable cache
+        $this->structure->getCacheLifeTime()->willReturn(0);
+
+        $this->response->setPublic()->shouldNotBeCalled();
+        $this->response->setMaxAge($this->maxAge)->shouldNotBeCalled();
+        $this->response->setSharedMaxAge($this->sharedMaxAge)->shouldNotBeCalled();
 
         $this->handler->updateResponse(
             $this->response->reveal(),

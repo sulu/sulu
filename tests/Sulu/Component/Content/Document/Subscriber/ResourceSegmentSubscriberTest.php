@@ -57,7 +57,7 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $document->setResourceSegment($segment)->shouldBeCalled();
 
         $subscriber = new ResourceSegmentSubscriber($encoder->reveal(), $inspector->reveal());
-        $subscriber->doHydrate($event->reveal());
+        $subscriber->handleHydrate($event->reveal());
     }
 
     public function testPersist()
@@ -95,6 +95,6 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $localizedProperty->setValue($segment)->shouldBeCalled();
 
         $subscriber = new ResourceSegmentSubscriber($encoder->reveal(), $inspector->reveal());
-        $subscriber->doPersist($event->reveal());
+        $subscriber->handlePersist($event->reveal());
     }
 }

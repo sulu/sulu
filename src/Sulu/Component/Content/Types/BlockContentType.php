@@ -51,7 +51,7 @@ class BlockContentType extends ComplexContentType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getType()
     {
@@ -59,7 +59,7 @@ class BlockContentType extends ComplexContentType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function read(
         NodeInterface $node,
@@ -149,7 +149,7 @@ class BlockContentType extends ComplexContentType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function readForPreview(
         $data,
@@ -167,7 +167,7 @@ class BlockContentType extends ComplexContentType
 
             $blockProperty->clearProperties();
 
-            $len = sizeof($data);
+            $len = count($data);
 
             for ($i = 0; $i < $len; ++$i) {
                 $blockPropertyType = $blockProperty->initProperties($i, $data[$i]['type']);
@@ -186,13 +186,15 @@ class BlockContentType extends ComplexContentType
                     }
                 }
             }
+
+            $property->setValue($data);
         } else {
             throw new UnexpectedPropertyType($property, $this);
         }
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function write(
         NodeInterface $node,
@@ -305,7 +307,7 @@ class BlockContentType extends ComplexContentType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function remove(
         NodeInterface $node,
@@ -328,7 +330,7 @@ class BlockContentType extends ComplexContentType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getViewData(PropertyInterface $property)
     {
@@ -342,7 +344,7 @@ class BlockContentType extends ComplexContentType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getContentData(PropertyInterface $property)
     {

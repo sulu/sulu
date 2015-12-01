@@ -84,7 +84,7 @@ class SitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensi
             $webspaceKey
         );
 
-        if (sizeof($portalUrls) === 0) {
+        if (count($portalUrls) === 0) {
             return false;
         }
 

@@ -23,9 +23,9 @@ class RdfaCrawler
     /**
      * returns html value of rdfa property.
      *
-     * @param string             $html     content to crawl
+     * @param string $html content to crawl
      * @param StructureInterface $content
-     * @param string             $property could be a property sequence like (block,1,title,0)
+     * @param string $property could be a property sequence like (block,1,title,0)
      *
      * @return bool
      */
@@ -57,7 +57,7 @@ class RdfaCrawler
                     // check if one parent is property exclude it
                     $parents->each(
                         function ($node) use (&$count) {
-                            if ($node->attr('property')) {
+                            if (null !== $node->attr('property') && $node->attr('typeof') === 'collection') {
                                 ++$count;
                             }
                         }
@@ -72,8 +72,15 @@ class RdfaCrawler
         if ($nodes->count() > 0) {
             // create an array of changes
             return $nodes->each(
-                function (Crawler $node) {
-                    return $node->html();
+                function (Crawler $crawlerNode) {
+                    $node = $crawlerNode->getNode(0);
+                    $attributes = [];
+                    foreach ($node->attributes as $name => $value) {
+                        $attributes[$name] = $value->nodeValue;
+                    }
+                    $attributes['html'] = $crawlerNode->html();
+
+                    return $attributes;
                 }
             );
         }
@@ -85,7 +92,7 @@ class RdfaCrawler
      * extracts sequence information from property name.
      *
      * @param StructureInterface $content
-     * @param string             $property sequence like (block,1,title,0)
+     * @param string $property sequence like (block,1,title,0)
      *
      * @return array|bool
      */
@@ -96,14 +103,14 @@ class RdfaCrawler
             $propertyPath = [];
             $indexSequence = [];
             $propertyInstance = $content->getProperty($sequence[0]);
-            for ($i = 1; $i < sizeof($sequence); ++$i) {
+            for ($i = 1; $i < count($sequence); ++$i) {
                 // is not integer
                 if (!ctype_digit(strval($sequence[$i]))) {
                     $propertyPath[] = $sequence[$i];
                     if ($propertyInstance instanceof BlockPropertyInterface) {
-                        $lastIndex = $indexSequence[sizeof($indexSequence) - 1];
+                        $lastIndex = $indexSequence[count($indexSequence) - 1];
 
-                        unset($indexSequence[sizeof($indexSequence) - 1]);
+                        unset($indexSequence[count($indexSequence) - 1]);
                         $indexSequence = array_values($indexSequence);
 
                         $propertyInstance = $propertyInstance->getProperties($lastIndex)->getProperty($sequence[$i]);

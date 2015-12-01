@@ -8,14 +8,16 @@
  */
 
 define([
-    'sulusnippet/components/snippet/main'
-], function(BaseSnippet) {
+    'sulusnippet/components/snippet/main',
+    'sulucontent/components/copy-locale-overlay/main',
+    'sulucontent/components/open-ghost-overlay/main'
+], function(BaseSnippet, CopyLocale, OpenGhost) {
 
     'use strict';
 
     var template = [
-            '<div id="list-toolbar-container"></div>',
-            '<div id="snippet-list"></div>',
+            '<div id="list-toolbar-container" class="list-toolbar-container"></div>',
+            '<div id="snippet-list" class="datagrid-container"></div>',
             '<div id="dialog"></div>'
         ].join(''),
 
@@ -30,21 +32,31 @@ define([
     SnippetList.prototype.constructor = BaseSnippet;
 
     SnippetList.prototype.view = true;
+    SnippetList.prototype.stickyToolbar = true;
     SnippetList.prototype.layout = {
         content: {
-            width: 'max',
-            leftSpace: false,
-            rightSpace: false
+            width: 'max'
         },
         sidebar: false
     };
-    SnippetList.prototype.header = {
-        title: 'snippets.snippet.title',
-        noBack: true,
 
-        breadcrumb: [
-            {title: 'navigation.snippets'}
-        ]
+    SnippetList.prototype.header = function() {
+        return {
+            noBack: true,
+
+            title: 'snippets.snippet.title',
+            underline: false,
+
+            toolbar: {
+                buttons: {
+                    add: {},
+                    deleteSelected: {}
+                },
+                languageChanger: {
+                    preSelected: this.options.language
+                }
+            }
+        };
     };
 
     SnippetList.prototype.initialize = function() {
@@ -56,17 +68,22 @@ define([
 
     SnippetList.prototype.bindCustomEvents = function() {
         // delete clicked
-        this.sandbox.on('sulu.list-toolbar.delete', function() {
+        this.sandbox.on('sulu.toolbar.delete', function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
                 this.sandbox.emit('sulu.snippets.snippets.delete', ids);
             }.bind(this));
         }, this);
 
         // add clicked
-        this.sandbox.on('sulu.list-toolbar.add', function() {
+        this.sandbox.on('sulu.toolbar.add', function() {
             this.sandbox.emit('sulu.snippets.snippet.new');
         }, this);
 
+        // checkbox clicked
+        this.sandbox.on('husky.datagrid.number.selections', function(number) {
+            var postfix = number > 0 ? 'enable' : 'disable';
+            this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'deleteSelected', false);
+        }.bind(this));
     };
 
     SnippetList.prototype.render = function() {
@@ -76,8 +93,7 @@ define([
         this.sandbox.sulu.initListToolbarAndList.call(this, 'snippets', '/admin/api/snippet/fields',
             {
                 el: this.$find('#list-toolbar-container'),
-                instanceName: 'snippets',
-                inHeader: true
+                instanceName: 'snippets'
             },
             {
                 el: this.sandbox.dom.find('#snippet-list', this.$el),
@@ -85,20 +101,46 @@ define([
                 searchInstanceName: 'snippets',
                 searchFields: ['title'], // TODO ???
                 resultKey: 'snippets',
+                actionCallback: function(id, item) {
+                    if (!item.type || item.type.name !== 'ghost') {
+                        this.sandbox.emit('sulu.snippets.snippet.load', id);
+                    } else {
+                        OpenGhost.openGhost.call(this, item).then(function(copy, src) {
+                            if (!!copy) {
+                                CopyLocale.copyLocale.call(
+                                    this,
+                                    item.id,
+                                    src,
+                                    [this.options.language],
+                                    function() {
+                                        this.sandbox.emit('sulu.snippets.snippet.load', id);
+                                    }.bind(this)
+                                );
+                            } else {
+                                this.sandbox.emit('sulu.snippets.snippet.load', id);
+                            }
+                        }.bind(this));
+                    }
+                }.bind(this),
                 viewOptions: {
                     table: {
-                        icons: [
+                        badges: [
                             {
-                                icon: 'pencil',
                                 column: 'title',
-                                align: 'left',
-                                callback: function(id) {
-                                    this.sandbox.emit('sulu.snippets.snippet.load', id);
+                                callback: function(item, badge) {
+                                    if (!!item.type &&
+                                        item.type.name === 'ghost' &&
+                                        item.type.value !== this.options.language
+                                    ) {
+                                        badge.title = item.type.value;
+
+                                        return badge;
+                                    }
+
+                                    return false;
                                 }.bind(this)
                             }
-                        ],
-                        highlightSelected: true,
-                        fullWidth: true
+                        ]
                     }
                 }
             }

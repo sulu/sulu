@@ -43,7 +43,7 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
 
         $data = [
             '_embedded' => $templates,
-            'total' => sizeof($templates),
+            'total' => count($templates),
         ];
 
         return new JsonResponse($data);

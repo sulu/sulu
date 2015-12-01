@@ -12,85 +12,91 @@
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use PHPCR\NodeInterface;
-use PHPCR\PropertyType;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\DocumentManager\DocumentAccessor;
-use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
+use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\DocumentManager\PropertyEncoder;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class WorkflowStageSubscriber extends AbstractMappingSubscriber
+class WorkflowStageSubscriber implements EventSubscriberInterface
 {
     const WORKFLOW_STAGE_FIELD = 'state';
     const PUBLISHED_FIELD = 'published';
 
-    public function supports($document)
-    {
-        return $document instanceof WorkflowStageBehavior;
-    }
+    /**
+     * @var PropertyEncoder
+     */
+    private $encoder;
 
     /**
-     * @param HydrateEvent $event
+     * @param PropertyEncoder $encoder
      */
-    public function doHydrate(AbstractMappingEvent $event)
+    public function __construct(
+        PropertyEncoder $encoder
+    ) {
+        $this->encoder = $encoder;
+    }
+
+    public static function getSubscribedEvents()
     {
-        $locale = $event->getLocale();
-        $node = $event->getNode();
-        $document = $event->getDocument();
+        return [
+            Events::METADATA_LOAD => 'handleMetadataLoad',
+            Events::PERSIST => 'handlePersist',
+        ];
+    }
 
-        $workflowStage = $this->getWorkflowStage($node, $locale);
-        $document->setWorkflowStage($workflowStage);
+    public function handleMetadataLoad(MetadataLoadEvent $event)
+    {
+        $metadata = $event->getMetadata();
 
-        $publishedDate = $event->getNode()->getPropertyValueWithDefault(
-            $this->encoder->localizedSystemName(self::PUBLISHED_FIELD, $event->getLocale()),
-            null
-        );
-        $event->getAccessor()->set(
-            'published',
-            $publishedDate
-        );
+        if (false === $metadata->getReflectionClass()->isSubclassOf(WorkflowStageBehavior::class)) {
+            return;
+        }
+
+        $metadata->addFieldMapping('workflowStage', [
+            'encoding' => 'system_localized',
+            'property' => self::WORKFLOW_STAGE_FIELD,
+            'type' => 'long',
+        ]);
+        $metadata->addFieldMapping('published', [
+            'encoding' => 'system_localized',
+            'property' => self::PUBLISHED_FIELD,
+            'type' => 'date',
+        ]);
     }
 
     /**
      * @param PersistEvent $event
      */
-    public function doPersist(PersistEvent $event)
+    public function handlePersist(PersistEvent $event)
     {
+        $locale = $event->getLocale();
+
+        if (!$locale) {
+            return;
+        }
+
         $document = $event->getDocument();
+
+        if (!$document instanceof WorkflowStageBehavior) {
+            return;
+        }
+
         $stage = $document->getWorkflowStage();
         $node = $event->getNode();
-        $locale = $event->getLocale();
         $persistedStage = $this->getWorkflowStage($node, $locale);
 
         if ($stage == WorkflowStage::PUBLISHED && $stage !== $persistedStage) {
-            $this->setPublishedDate($event->getAccessor(), $node, $locale, new \DateTime());
+            $event->getAccessor()->set(self::PUBLISHED_FIELD, new \DateTime());
         }
 
         if ($stage == WorkflowStage::TEST && $stage !== $persistedStage) {
-            $this->setPublishedDate($event->getAccessor(), $node, $locale, null);
+            $event->getAccessor()->set(self::PUBLISHED_FIELD, null);
         }
 
-        $this->setWorkflowStage($node, $stage, $locale);
-    }
-
-    private function setWorkflowStage(NodeInterface $node, $stage, $locale)
-    {
-        $node->setProperty(
-            $this->encoder->localizedSystemName(self::WORKFLOW_STAGE_FIELD, $locale),
-            (integer) $stage,
-            PropertyType::LONG
-        );
-    }
-
-    private function setPublishedDate(DocumentAccessor $accessor, NodeInterface $node, $locale, \DateTime $date = null)
-    {
-        $node->setProperty(
-            $this->encoder->localizedSystemName(self::PUBLISHED_FIELD, $locale),
-            $date,
-            PropertyType::DATE
-        );
-        $accessor->set('published', $date);
+        $document->setWorkflowStage($stage);
     }
 
     private function getWorkflowStage(NodeInterface $node, $locale)

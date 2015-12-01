@@ -28,7 +28,7 @@ abstract class SuluKernel extends Kernel
      * Overload the parent constructor method to add an additional
      * constructor argument.
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @param string $environment
      * @param bool   $debug
@@ -37,6 +37,7 @@ abstract class SuluKernel extends Kernel
     public function __construct($environment, $debug, $suluContext = self::CONTEXT_ADMIN)
     {
         $this->setContext($suluContext);
+
         parent::__construct($environment, $debug);
     }
 
@@ -69,7 +70,7 @@ abstract class SuluKernel extends Kernel
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function getKernelParameters()
     {

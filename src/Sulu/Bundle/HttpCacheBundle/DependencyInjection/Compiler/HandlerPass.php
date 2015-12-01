@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\Reference;
 class HandlerPass implements CompilerPassInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {

@@ -32,8 +32,13 @@ class SuluTestKernel extends SuluKernel
             new \Symfony\Bundle\MonologBundle\MonologBundle(),
             new \Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new \Symfony\Bundle\TwigBundle\TwigBundle(),
+            new \Dubture\FFmpegBundle\DubtureFFmpegBundle(),
+
+            // Massive
+            new \Massive\Bundle\SearchBundle\MassiveSearchBundle(),
 
             // Sulu
+            new \Sulu\Bundle\SearchBundle\SuluSearchBundle(),
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
             new \Sulu\Bundle\PersistenceBundle\SuluPersistenceBundle(),
             new \Sulu\Bundle\AdminBundle\SuluAdminBundle(),
@@ -50,6 +55,7 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\WebsocketBundle\SuluWebsocketBundle(),
             new \Sulu\Bundle\LocationBundle\SuluLocationBundle(),
             new \Sulu\Bundle\DocumentManagerBundle\SuluDocumentManagerBundle(),
+            new \Sulu\Bundle\ResourceBundle\SuluResourceBundle(),
         ];
 
         return $bundles;
@@ -58,6 +64,13 @@ class SuluTestKernel extends SuluKernel
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load(SuluTestBundle::getConfigDir() . '/config.php');
+
+        // @see https://github.com/symfony/symfony/issues/7555
+        $envParameters = $this->getEnvParameters();
+
+        $loader->load(function ($container) use ($envParameters) {
+            $container->getParameterBag()->add($envParameters);
+        });
     }
 
     public function getCacheDir()
@@ -66,7 +79,7 @@ class SuluTestKernel extends SuluKernel
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * Add the Sulu environment to the container name
      */

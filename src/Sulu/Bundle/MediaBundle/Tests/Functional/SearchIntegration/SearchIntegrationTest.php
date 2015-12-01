@@ -11,14 +11,40 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\SearchIntegration;
 
+use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\MediaBundle\Api\Media as ApiMedia;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\DocumentManager\NodeManager;
 
 class SearchIntegrationTest extends SuluTestCase
 {
+    /**
+     * @var DocumentManagerInterface
+     */
     private $documentManager;
+
+    /**
+     * @var NodeManager
+     */
+    private $nodeManager;
+
+    /**
+     * @var HomeDocument
+     */
+    private $webspaceDocument;
+
+    /**
+     * @var ApiMedia
+     */
+    private $media;
+
+    /**
+     * @var MediaSelectionContainer
+     */
+    private $mediaSelectionContainer;
 
     protected function getKernelConfiguration()
     {

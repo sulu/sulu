@@ -5,6 +5,7 @@
 /tests/Resources/cache/*
 /tests/app/cache/*
 /tests/app/logs/*
+/tests/app/data/*
 /src/Sulu/Bundle/*/vendor
 /src/Sulu/Bundle/*/Tests/app/cache
 /src/Sulu/Bundle/*/Tests/app/logs

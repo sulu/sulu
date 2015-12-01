@@ -49,6 +49,11 @@ class SubscriberTestCase extends \PHPUnit_Framework_TestCase
      */
     protected $accessor;
 
+    /**
+     * @var NodeInterface
+     */
+    protected $parentNode;
+
     public function setUp()
     {
         $this->persistEvent = $this->prophesize(PersistEvent::class);
@@ -56,6 +61,7 @@ class SubscriberTestCase extends \PHPUnit_Framework_TestCase
         $this->notImplementing = new \stdClass();
         $this->encoder = $this->prophesize(PropertyEncoder::class);
         $this->node = $this->prophesize(NodeInterface::class);
+        $this->parentNode = $this->prophesize(NodeInterface::class);
         $this->accessor = $this->prophesize(DocumentAccessor::class);
         $this->persistEvent->getNode()->willReturn($this->node);
         $this->persistEvent->getAccessor()->willReturn($this->accessor);

@@ -23,9 +23,11 @@ use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidImageFormat;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMimeTypeForPreviewException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
+use Sulu\Bundle\MediaBundle\Media\Exception\OriginalFileNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
+use Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailServiceInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
 use Symfony\Component\HttpFoundation\Response;
@@ -93,10 +95,16 @@ class FormatManager implements FormatManagerInterface
     private $formats;
 
     /**
+     * @var VideoThumbnailServiceInterface
+     */
+    private $videoThumbnailService;
+
+    /**
      * @param MediaRepository         $mediaRepository
      * @param StorageInterface        $originalStorage
      * @param FormatCacheInterface    $formatCache
      * @param ImageConverterInterface $converter
+     * @param VideoThumbnailServiceInterface $videoThumbnailService
      * @param string                  $ghostScriptPath
      * @param string                  $saveImage
      * @param array                   $previewMimeTypes
@@ -108,6 +116,7 @@ class FormatManager implements FormatManagerInterface
         StorageInterface $originalStorage,
         FormatCacheInterface $formatCache,
         ImageConverterInterface $converter,
+        VideoThumbnailServiceInterface $videoThumbnailService,
         $ghostScriptPath,
         $saveImage,
         $previewMimeTypes,
@@ -124,6 +133,7 @@ class FormatManager implements FormatManagerInterface
         $this->responseHeaders = $responseHeaders;
         $this->fileSystem = new Filesystem();
         $this->formats = $formats;
+        $this->videoThumbnailService = $videoThumbnailService;
     }
 
     /**
@@ -131,6 +141,8 @@ class FormatManager implements FormatManagerInterface
      */
     public function returnImage($id, $formatName)
     {
+        $setExpireHeaders = false;
+
         try {
             // load Media
             $media = $this->mediaRepository->findMediaById($id);
@@ -144,7 +156,7 @@ class FormatManager implements FormatManagerInterface
 
             try {
                 // check if file has supported preview
-                if (!in_array($mimeType, $this->previewMimeTypes)) {
+                if (!$this->checkPreviewSupported($mimeType)) {
                     throw new InvalidMimeTypeForPreviewException($mimeType);
                 }
 
@@ -154,7 +166,7 @@ class FormatManager implements FormatManagerInterface
 
                 // load Original
                 $uri = $this->originalStorage->load($fileName, $version, $storageOptions);
-                $original = $this->createTmpFile($this->getFile($uri));
+                $original = $this->createTmpFile($this->getFile($uri, $mimeType));
 
                 // prepare Media
                 $this->prepareMedia($mimeType, $original);
@@ -179,8 +191,9 @@ class FormatManager implements FormatManagerInterface
                     $this->getOptionsFromImage($image, $imageExtension, $formatOptions)
                 );
 
-                // HTTP Status
+                // HTTP Headers
                 $status = 200;
+                $setExpireHeaders = true;
 
                 // save image
                 if ($this->saveImage) {
@@ -207,7 +220,7 @@ class FormatManager implements FormatManagerInterface
         $this->clearTempFiles();
 
         // set header
-        $headers = $this->getResponseHeaders($responseMimeType);
+        $headers = $this->getResponseHeaders($responseMimeType, $setExpireHeaders);
 
         // return image
         return new Response($responseContent, $status, $headers);
@@ -259,25 +272,37 @@ class FormatManager implements FormatManagerInterface
     }
 
     /**
-     * @param $mimeType
+     * @param string $mimeType
+     * @param bool $setExpireHeaders
      *
      * @return array
      */
-    protected function getResponseHeaders($mimeType = '')
+    protected function getResponseHeaders($mimeType = '', $setExpireHeaders = false)
     {
         $headers = [];
 
-        if (!empty($this->responseHeaders)) {
-            $headers = $this->responseHeaders;
-            if (isset($this->responseHeaders['Expires'])) {
-                $date = new \DateTime();
-                $date->modify($this->responseHeaders['Expires']);
-                $headers['Expires'] = $date->format('D, d M Y H:i:s \G\M\T');
-            }
-        }
-
         if (!empty($mimeType)) {
             $headers['Content-Type'] = $mimeType;
+        }
+
+        if (empty($this->responseHeaders)) {
+            return $headers;
+        }
+
+        $headers = array_merge(
+            $headers,
+            $this->responseHeaders
+        );
+
+        if (isset($this->responseHeaders['Expires']) && $setExpireHeaders) {
+            $date = new \DateTime();
+            $date->modify($this->responseHeaders['Expires']);
+            $headers['Expires'] = $date->format('D, d M Y H:i:s \G\M\T');
+        } else {
+            // will remove exist set expire header
+            $headers['Expires'] = null;
+            $headers['Cache-Control'] = 'no-cache';
+            $headers['Pragma'] = null;
         }
 
         return $headers;
@@ -425,12 +450,27 @@ class FormatManager implements FormatManagerInterface
      * get file from namespace.
      *
      * @param string $uri
+     * @param string $mimeType
      *
      * @return string
+     *
+     * @throws OriginalFileNotFoundException
      */
-    protected function getFile($uri)
+    protected function getFile($uri, $mimeType)
     {
-        return file_get_contents($uri);
+        if (fnmatch('video/*', $mimeType)) {
+            $tempFile = tempnam(sys_get_temp_dir(), 'media_original') . '.jpg';
+            $this->videoThumbnailService->generate($uri, '00:00:02:01', $tempFile);
+            $uri = $tempFile;
+        }
+
+        $file = @file_get_contents($uri);
+
+        if (!$file) {
+            throw new OriginalFileNotFoundException($uri);
+        }
+
+        return $file;
     }
 
     /**
@@ -506,7 +546,7 @@ class FormatManager implements FormatManagerInterface
     public function getFormats($id, $fileName, $storageOptions, $version, $mimeType)
     {
         $formats = [];
-        if (in_array($mimeType, $this->previewMimeTypes)) {
+        if ($this->checkPreviewSupported($mimeType)) {
             foreach ($this->formats as $format) {
                 $formats[$format['name']] = $this->formatCache->getMediaUrl(
                     $id,
@@ -527,5 +567,21 @@ class FormatManager implements FormatManagerInterface
     public function purge($idMedia, $fileName, $options)
     {
         return $this->formatCache->purge($idMedia, $fileName, $options);
+    }
+
+    /**
+     * @param $mimeType
+     *
+     * @return bool
+     */
+    private function checkPreviewSupported($mimeType)
+    {
+        foreach ($this->previewMimeTypes as $type) {
+            if (fnmatch($type, $mimeType)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

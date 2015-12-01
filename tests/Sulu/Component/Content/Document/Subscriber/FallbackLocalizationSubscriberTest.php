@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Compat\LocalizationFinder;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\DocumentManager\DocumentRegistry;
@@ -78,9 +79,9 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
 
         $this->subscriber = new FallbackLocalizationSubscriber(
             $this->encoder->reveal(),
-            $this->webspaceManager->reveal(),
             $this->inspector->reveal(),
-            $this->registry->reveal()
+            $this->registry->reveal(),
+            new LocalizationFinder($this->webspaceManager->reveal())
         );
 
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());

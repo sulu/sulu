@@ -65,20 +65,25 @@ class MetaTwigExtension extends \Twig_Extension
      * @param array $urls
      *
      * @return string
+     *
+     * @deprecated since 1.1 use SeoTwigExtension::renderSeoTags - sulu_seo
      */
     public function getAlternateLinks($urls)
     {
         // determine default and current values
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         $currentPortal = $this->requestAnalyzer->getPortal();
+
         $defaultLocale = null;
-        if ($currentPortal !== null && ($defaultLocale = $currentPortal->getDefaultLocalization()) !== null) {
+        if ($currentPortal !== null && ($defaultLocale = $currentPortal->getXDefaultLocalization()) !== null) {
             $defaultLocale = $defaultLocale->getLocalization();
         }
 
         $result = [];
         foreach ($urls as $locale => $url) {
-            if ($url !== null) {
+            // url = '/' means that there is no translation for this page
+            // the only exception is the homepage where the requested resource-locator is '/'
+            if ($url !== '/' || $this->requestAnalyzer->getResourceLocator() === '/') {
                 if ($locale === $defaultLocale) {
                     $result[] = $this->getAlternate($url, $webspaceKey, $locale, true);
                 }
@@ -96,6 +101,8 @@ class MetaTwigExtension extends \Twig_Extension
      * @param array $content
      *
      * @return string
+     *
+     * @deprecated since 1.1 use SeoTwigExtension::renderSeoTags - sulu_seo
      */
     public function getSeoMetaTags($extension, $content)
     {
@@ -139,7 +146,7 @@ class MetaTwigExtension extends \Twig_Extension
      * @param string $url
      * @param string $webspaceKey
      * @param string $locale
-     * @param bool   $default
+     * @param bool $default
      *
      * @return string
      */

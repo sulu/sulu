@@ -11,11 +11,29 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
+use Doctrine\ORM\EntityManager;
+use FFMpeg\FFProbe;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
+use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
+use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
+use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
+use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Component\PHPCR\PathCleanupInterface;
+use Sulu\Component\Security\Authentication\UserRepositoryInterface;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class MediaManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -69,19 +87,43 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
      */
     private $typeManager;
 
+    /**
+     * @var PathCleanupInterface
+     */
+    private $pathCleaner;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
+     * @var SecurityCheckerInterface
+     */
+    private $securityChecker;
+
+    /**
+     * @var FFProbe
+     */
+    private $ffprobe;
+
     public function setUp()
     {
         parent::setUp();
 
-        $this->mediaRepository = $this->prophesize('Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface');
-        $this->collectionRepository = $this->prophesize('Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface');
-        $this->userRepository = $this->prophesize('Sulu\Component\Security\Authentication\UserRepositoryInterface');
-        $this->em = $this->prophesize('Doctrine\ORM\EntityManager');
-        $this->storage = $this->prophesize('Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface');
-        $this->validator = $this->prophesize('Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface');
-        $this->formatManager = $this->prophesize('Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface');
-        $this->tagManager = $this->prophesize('Sulu\Bundle\TagBundle\Tag\TagManagerInterface');
-        $this->typeManager = $this->prophesize('Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface');
+        $this->mediaRepository = $this->prophesize(MediaRepositoryInterface::class);
+        $this->collectionRepository = $this->prophesize(CollectionRepositoryInterface::class);
+        $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
+        $this->em = $this->prophesize(EntityManager::class);
+        $this->storage = $this->prophesize(StorageInterface::class);
+        $this->validator = $this->prophesize(FileValidatorInterface::class);
+        $this->formatManager = $this->prophesize(FormatManagerInterface::class);
+        $this->tagManager = $this->prophesize(TagManagerInterface::class);
+        $this->typeManager = $this->prophesize(TypeManagerInterface::class);
+        $this->pathCleaner = $this->prophesize(PathCleanupInterface::class);
+        $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
+        $this->securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+        $this->ffprobe = $this->prophesize(FFProbe::class);
 
         $this->mediaManager = new MediaManager(
             $this->mediaRepository->reveal(),
@@ -93,6 +135,13 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
             $this->formatManager->reveal(),
             $this->tagManager->reveal(),
             $this->typeManager->reveal(),
+            $this->pathCleaner->reveal(),
+            $this->tokenStorage->reveal(),
+            $this->securityChecker->reveal(),
+            $this->ffprobe->reveal(),
+            [
+                'view' => 64,
+            ],
             '/',
             0
         );
@@ -112,6 +161,85 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testGetWithoutToken()
+    {
+        $this->tokenStorage->getToken()->willReturn(null);
+        $this->mediaRepository->findMedia(Argument::cetera())->willReturn([])->shouldBeCalled();
+        $this->mediaRepository->count(Argument::cetera())->shouldBeCalled();
+
+        $this->mediaManager->get(1);
+    }
+
+    public function testDeleteWithSecurity()
+    {
+        $collection = $this->prophesize(Collection::class);
+        $collection->getId()->willReturn(2);
+        $media = $this->prophesize(Media::class);
+        $media->getCollection()->willReturn($collection);
+        $media->getFiles()->willReturn([]);
+
+        $this->mediaRepository->findMediaById(1)->willReturn($media);
+        $this->securityChecker->checkPermission(
+            new SecurityCondition('sulu.media.collections', null, Collection::class, 2),
+            'delete'
+        )->shouldBeCalled();
+
+        $this->mediaManager->delete(1, true);
+    }
+
+    public function testDelete()
+    {
+        $collection = $this->prophesize(Collection::class);
+        $collection->getId()->willReturn(2);
+
+        $file = $this->prophesize(File::class);
+        $fileVersion = $this->prophesize(FileVersion::class);
+        $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
+        $fileVersion->getId()->willReturn(1);
+        $fileVersion->getName()->willReturn('test');
+        $fileVersion->getStorageOptions()->willReturn(json_encode(['segment' => '01', 'fileName' => 'test.jpg']));
+
+        $media = $this->prophesize(Media::class);
+        $media->getCollection()->willReturn($collection);
+        $media->getFiles()->willReturn([$file->reveal()]);
+        $media->getId()->willReturn(1);
+
+        $this->formatManager->purge(
+            1,
+            'test',
+            json_encode(['segment' => '01', 'fileName' => 'test.jpg'])
+        )->shouldBeCalled();
+
+        $this->mediaRepository->findMediaById(1)->willReturn($media);
+        $this->securityChecker->checkPermission(
+            new SecurityCondition('sulu.media.collections', null, Collection::class, 2),
+            'delete'
+        )->shouldBeCalled();
+
+        $this->storage->remove(json_encode(['segment' => '01', 'fileName' => 'test.jpg']))->shouldBeCalled();
+
+        $this->mediaManager->delete(1, true);
+    }
+
+    /**
+     * @dataProvider provideSpecialCharacterFileName
+     */
+    public function testSpecialCharacterFileName($fileName, $cleanUpArgument)
+    {
+        /** @var UploadedFile $uploadedFile */
+        $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith(['', 1, null, null, 1, true]);
+        $uploadedFile->getClientOriginalName()->willReturn($fileName);
+        $uploadedFile->getPathname()->willReturn('');
+        $uploadedFile->getSize()->willReturn('123');
+        $uploadedFile->getMimeType()->willReturn('img');
+
+        $user = $this->prophesize(User::class)->willImplement(UserInterface::class);
+        $this->userRepository->findUserById(1)->willReturn($user);
+
+        $this->pathCleaner->cleanup(Argument::exact($cleanUpArgument))->shouldBeCalled();
+        $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'my title'], 1);
+    }
+
     public function provideGetByIds()
     {
         $media1 = $this->createMedia(1);
@@ -122,6 +250,14 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
             [[1, 2, 3], [$media1, $media2, $media3], [$media1, $media2, $media3]],
             [[2, 1, 3], [$media1, $media2, $media3], [$media2, $media1, $media3]],
             [[4, 1, 2], [$media1, $media2], [$media1, $media2]],
+        ];
+    }
+
+    public function provideSpecialCharacterFileName()
+    {
+        return [
+            ['aäüßa', 'aäüßa'],
+            ['aäüßa.mp4', 'aäüßa'],
         ];
     }
 

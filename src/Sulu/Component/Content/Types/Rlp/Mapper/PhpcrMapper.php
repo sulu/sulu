@@ -384,18 +384,16 @@ class PhpcrMapper extends RlpMapper
         // create parent node for dest path
         $parentAbsDestPath = PathHelper::normalizePath($absDestPath . '/..');
         $this->createRecursive($parentAbsDestPath, $rootNode);
+        // TODO remove this save as soon as possible
         $session->save();
 
         // copy route to new
         $workspace->copy($absSrcPath, $absDestPath);
         $destNode = $routes->getNode(ltrim($dest, '/'));
         $destNode->setProperty('sulu:created', new DateTime());
-        $session->save();
-        $session->refresh(true);
 
         // change old route node to history
         $this->changePathToHistory($routeNode, $session, $absSrcPath, $absDestPath);
-        $session->save();
 
         // get all old routes (in old route tree)
         $qm = $workspace->getQueryManager();
@@ -421,10 +419,15 @@ class PhpcrMapper extends RlpMapper
      */
     public function deleteByPath($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
+        if (!is_string($path) || trim($path, '/') == '') {
+            throw new \InvalidArgumentException(
+                sprintf('The path to delete must be a non-empty string, "%s" given.', $path)
+            );
+        }
+
         $session = $this->sessionManager->getSession();
         $routeNode = $session->getNode($this->getPath($path, $webspaceKey, $languageCode, $segmentKey));
         $this->deleteByNode($routeNode, $session, $webspaceKey, $languageCode, $segmentKey);
-        $session->save();
     }
 
     /**
@@ -449,7 +452,6 @@ class PhpcrMapper extends RlpMapper
                 ) {
                     // delete history nodes
                     $this->deleteByNode($historyNode, $session, $webspaceKey, $languageCode, $segmentKey);
-                    $session->save();
                 },
                 $webspaceKey,
                 $languageCode,
@@ -534,7 +536,7 @@ class PhpcrMapper extends RlpMapper
     {
         $pathParts = explode('/', ltrim($path, '/'));
         $curNode = $rootNode;
-        for ($i = 0; $i < sizeof($pathParts); ++$i) {
+        for ($i = 0; $i < count($pathParts); ++$i) {
             if ($curNode->hasNode($pathParts[$i])) {
                 $curNode = $curNode->getNode($pathParts[$i]);
             } else {

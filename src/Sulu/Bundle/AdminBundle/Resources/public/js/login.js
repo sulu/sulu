@@ -13,7 +13,6 @@ require.config({
         suluadmin: '../../suluadmin/js',
 
         'main': 'login',
-        'app-config': 'components/app-config/main',
 
         'cultures': 'vendor/globalize/cultures',
         'aura_extensions/backbone-relational': 'aura_extensions/backbone-relational',
@@ -29,12 +28,16 @@ require.config({
     ]
 });
 
-require(['husky', 'app-config', 'underscore'], function(Husky, AppConfig, _) {
+define('underscore', function() {
+    return window._;
+});
+
+require(['husky'], function(Husky) {
 
     'use strict';
 
     var browserLocale,
-        locale = AppConfig.getFallbackLocale();
+        language = 'en';
 
     // detect browser locale (ie, ff, chrome fallbacks)
     browserLocale = window.navigator.languages ? window.navigator.languages[0] : null;
@@ -44,19 +47,22 @@ require(['husky', 'app-config', 'underscore'], function(Husky, AppConfig, _) {
     browserLocale = browserLocale.slice(0, 2).toLowerCase();
 
     // get the locale for the login
-    if(_.contains(AppConfig.getTranslations(), browserLocale)){
-        locale = browserLocale;
+    for (var i = -1, length = SULU.locales.length; ++i < length;) {
+        if (SULU.locales[i] === browserLocale) {
+            language = SULU.locales[i];
+            break;
+        }
     }
 
-    require(['text!/admin/translations/sulu.' + locale + '.json'], function(messagesText) {
+    require(['text!/admin/translations/sulu.' + language + '.json'], function(messagesText) {
         var messages = JSON.parse(messagesText),
 
         app = new Husky({
             debug: {
-                enable: AppConfig.getDebug()
+                enable: !!SULU.debug
             },
             culture: {
-                name: locale,
+                name: language,
                 messages: messages
             }
         });

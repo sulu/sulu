@@ -75,7 +75,7 @@ class XmlFileLoader extends FileLoader
      * @param mixed  $resource A resource
      * @param string $type     The resource type
      *
-     * @return Boolean true if this class supports the given resource, false otherwise
+     * @return bool true if this class supports the given resource, false otherwise
      */
     public function supports($resource, $type = null)
     {
@@ -220,6 +220,13 @@ class XmlFileLoader extends FileLoader
             $localization->setDefault($defaultNode->nodeValue == 'true');
         } else {
             $localization->setDefault(false);
+        }
+
+        $xDefaultNode = $localizationNode->attributes->getNamedItem('x-default');
+        if ($xDefaultNode) {
+            $localization->setXDefault($xDefaultNode->nodeValue == 'true');
+        } else {
+            $localization->setXDefault(false);
         }
 
         // set child nodes

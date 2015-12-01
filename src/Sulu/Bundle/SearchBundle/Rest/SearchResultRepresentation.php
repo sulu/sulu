@@ -34,7 +34,7 @@ class SearchResultRepresentation extends PaginatedRepresentation
     protected $time;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @param array $totals
      */

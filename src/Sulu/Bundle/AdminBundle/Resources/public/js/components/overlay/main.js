@@ -103,7 +103,7 @@ define(function() {
                 title: this.sandbox.translate(title),
                 message: this.sandbox.translate(message),
                 closeCallback: cancelCallback,
-                type: 'error'
+                type: 'alert'
             }, options));
         },
 
@@ -116,7 +116,7 @@ define(function() {
                 message: this.sandbox.translate(message),
                 closeCallback: cancelCallback,
                 okCallback: okCallback,
-                type: 'warning'
+                type: 'alert'
             }, options));
         },
 

@@ -21,7 +21,7 @@ use Sulu\Bundle\ContactBundle\Entity\UrlType;
 class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(ObjectManager $manager)
     {
@@ -115,7 +115,7 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getOrder()
     {

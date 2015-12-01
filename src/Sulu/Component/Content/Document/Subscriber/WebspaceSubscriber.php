@@ -11,64 +11,57 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
-use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
-use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class WebspaceSubscriber extends AbstractMappingSubscriber
+class WebspaceSubscriber implements EventSubscriberInterface
 {
     /**
      * @var DocumentInspector
      */
     private $inspector;
 
+    /**
+     * @var PropertyEncoder
+     */
+    private $encoder;
+
     public function __construct(
         PropertyEncoder $encoder,
         DocumentInspector $inspector
     ) {
-        parent::__construct($encoder);
-
+        $this->encoder = $encoder;
         $this->inspector = $inspector;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
         return [
+            Events::PERSIST => ['handleWebspace'],
             // should happen after content is hydrated
-            Events::HYDRATE => ['handleHydrate', -10],
-            Events::PERSIST => ['handlePersist', 10],
+            Events::HYDRATE => ['handleWebspace', -10],
         ];
     }
 
-    public function supports($document)
-    {
-        return $document instanceof WebspaceBehavior;
-    }
-
     /**
-     * @param AbstractMappingEvent|HydrateEvent $event
-     *
-     * @throws \Sulu\Component\DocumentManager\Exception\DocumentManagerException
+     * @param AbstractMappingEvent $event
      */
-    public function doHydrate(AbstractMappingEvent $event)
+    public function handleWebspace(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();
+
+        if (!$document instanceof WebspaceBehavior) {
+            return;
+        }
+
         $webspaceName = $this->inspector->getWebspace($document);
         $event->getAccessor()->set('webspaceName', $webspaceName);
-    }
-
-    /**
-     * @param PersistEvent $event
-     */
-    public function doPersist(PersistEvent $event)
-    {
-        $this->doHydrate($event);
     }
 }

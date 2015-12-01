@@ -172,14 +172,14 @@ class SitemapGeneratorTest extends SuluTestCase
             'products/products-2' => [
                 'title' => 'Products-2 ' . $locale,
                 'url' => '/products/product-2',
-                'external' => 'www.asdf.at',
+                'external' => 'http://www.asdf.at',
                 'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
                 'navContexts' => ['main'],
             ],
             'products/products-3' => [
                 'title' => 'Products-3 ' . $locale,
                 'url' => '/products/product-3',
-                'external' => 'www.asdf.at',
+                'external' => 'http://www.asdf.at',
                 'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
                 'navContexts' => ['main'],
             ],
@@ -274,7 +274,7 @@ class SitemapGeneratorTest extends SuluTestCase
     {
         $result = $this->sitemapGenerator->generateAllLocals('sulu_io', true)->getSitemap();
 
-        $this->assertEquals(11, sizeof($result));
+        $this->assertEquals(11, count($result));
         $this->assertEquals('Homepage', $result[0]['title']);
         $this->assertEquals('News en', $result[1]['title']);
         $this->assertEquals('News-1 en', $result[2]['title']);
@@ -288,7 +288,6 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->assertEquals('Products-2 en_us', $result[9]['title']);
         $this->assertEquals('Products-3 en_us', $result[10]['title']);
 
-        $this->assertEquals('/', $result[0]['url']);
         $this->assertEquals('/news', $result[1]['url']);
         $this->assertEquals('/news/news-1', $result[2]['url']);
         $this->assertEquals('/news/news-2', $result[3]['url']);
@@ -300,6 +299,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->assertEquals('http://www.asdf.at', $result[9]['url']);
         $this->assertEquals('/news', $result[10]['url']);
 
+        $this->assertEquals('/', $result[0]['url']);
         $this->assertEquals(1, $result[0]['nodeType']);
         $this->assertEquals(1, $result[1]['nodeType']);
         $this->assertEquals(1, $result[2]['nodeType']);
@@ -317,7 +317,7 @@ class SitemapGeneratorTest extends SuluTestCase
     {
         $result = $this->sitemapGenerator->generate('sulu_io', 'en', true)->getSitemap();
 
-        $this->assertEquals(6, sizeof($result));
+        $this->assertEquals(6, count($result));
         $this->assertEquals('Homepage', $result[0]['title']);
         $this->assertEquals('News en', $result[1]['title']);
         $this->assertEquals('News-1 en', $result[2]['title']);
@@ -351,7 +351,7 @@ class SitemapGeneratorTest extends SuluTestCase
 
         $layer1 = array_values($root['children']);
 
-        $this->assertEquals(3, sizeof($layer1));
+        $this->assertEquals(3, count($layer1));
 
         $this->assertEquals('News en', $layer1[0]['title']);
         $this->assertEquals('/news', $layer1[0]['url']);

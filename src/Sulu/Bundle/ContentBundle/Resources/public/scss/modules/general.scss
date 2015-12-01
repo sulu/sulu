@@ -2,6 +2,15 @@
   width: 95px;
 }
 
+#content-form {
+    @include clear-float;
+
+    .highlight-section .content {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+}
+
 .sortable-placeholder {
     margin-bottom: 20px;
 }
@@ -18,7 +27,7 @@
         color: white;
         background-color: #52b6ca;
         padding: 5px 10px;
-        border: 0px solid #ccc;
+        border: 0px solid $grayLighter;
         border-radius: 2px;
     }
 }
@@ -61,5 +70,5 @@
 }
 
 #changelog-container {
-    color: #999;
+    color: $grayLight;
 }

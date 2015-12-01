@@ -187,6 +187,26 @@
             };
 
             /**
+             * deletes data locally and in the database
+             * @param key
+             */
+            app.sandbox.sulu.deleteUserSetting = function(key) {
+                delete app.sandbox.sulu.userSettings[key];
+
+                var data = {
+                    key: key
+                };
+
+                // save to server
+                app.sandbox.util.ajax({
+                    type: 'DELETE',
+                    url: '/admin/security/profile/settings',
+                    data: data
+                });
+            };
+
+
+            /**
              * Shows a standard delete warning dialog
              * @param callback {Function} callback function to execute after dialog got closed. The callback gets always
              *                            executed (with true or false as first argument, whether the dialog got
@@ -199,7 +219,9 @@
                 if (!!callback && typeof(callback) !== 'function') {
                     throw 'callback is not a function';
                 }
-                title = (typeof title === 'string') ? title : 'sulu.overlay.be-careful';
+                if (typeof title !== 'string') {
+                    title = app.sandbox.util.capitalizeFirstLetter(app.sandbox.translate('public.delete')) + '?';
+                }
                 description = (typeof description === 'string') ? description : 'sulu.overlay.delete-desc';
 
                 // show warning dialog
@@ -215,7 +237,11 @@
                     function() {
                         // ok callback
                         callback(true);
-                    }.bind(this)
+                    }.bind(this),
+
+                    {
+                        okDefaultText: 'public.delete'
+                    }
                 );
             };
 
@@ -240,7 +266,7 @@
                  * @param order
                  */
                 insertOrderParamsInUrl = function(url, order) {
-                    if (!!order) {
+                    if (!!order && !!order.length) {
                         var idxBy = url.indexOf('sortBy'),
                             idxOrder = url.indexOf('sortOrder'),
                             divider = '&';
@@ -288,7 +314,7 @@
                     cropLabelOfElement(sandbox, elements[i]);
                 }
             };
-            
+
             /**
              * creates an address string from an object
              * @param address
@@ -359,12 +385,18 @@
              * @param fields {String | Object} Url to load fields from or the fieldsObject
              * @param listToolbarOptions {Object}
              * @param datagridOptions {Object}
+             * @param context {String}
+             * @param listInfoContainerSelector {String} Selector for the container above the list
              */
-            app.sandbox.sulu.initListToolbarAndList = function(key, fields, listToolbarOptions, datagridOptions) {
+            app.sandbox.sulu.initListToolbarAndList = function(
+                key, fields, listToolbarOptions, datagridOptions, context, listInfoContainerSelector
+            ) {
                 var orderKey = key + 'Order',
                     fieldsKey = key + 'Fields',
-                    pageSizeKey = key + 'PageSize',
-                    limit = this.sandbox.sulu.getUserSetting(pageSizeKey),
+                    dropdownPageSizeKey = key + 'DropdownPageSize',
+                    infinitePageSizeKey = key + 'InfinitePageSize',
+                    dropdownLimit = this.sandbox.sulu.getUserSetting(dropdownPageSizeKey),
+                    infiniteLimit = this.sandbox.sulu.getUserSetting(infinitePageSizeKey),
                     order = this.sandbox.sulu.getUserSetting(orderKey),
                     url = (typeof fields === 'string') ? fields : null,
                     callback = function(data) {
@@ -375,40 +407,52 @@
                                     url: url
                                 },
                                 instanceName: 'content',
-                                inHeader: false
+                                context: context
                             },
                             toolbarOptions = this.sandbox.util.extend(true, {}, toolbarDefaults, listToolbarOptions),
                             gridDefaults = {
                                 view: 'table',
                                 pagination: 'dropdown',
+                                paginationOptions: {},
                                 matchings: data,
                                 selectedCounter: true,
                                 viewOptions: {
                                     table: {
-                                        noItemsText: 'public.empty-list',
-                                        stickyHeader: true
+                                        noItemsText: 'public.empty-list'
                                     }
                                 }
                             },
                             paginationOptionsDefaults = {
                                 dropdown: {
-                                    limit: limit
+                                    limit: dropdownLimit
+                                },
+                                'infinite-scroll': {
+                                    limit: infiniteLimit
                                 }
                             },
-                            gridOptions;
+                            gridOptions,
+                            datagridEventNamespace = 'husky.datagrid.';
 
-                        if (!!limit) {
-                            gridDefaults.paginationOptions = paginationOptionsDefaults;
+                        if (!!dropdownLimit) {
+                            gridDefaults.paginationOptions.dropdown = paginationOptionsDefaults.dropdown;
+                        }
+                        if (!!infiniteLimit) {
+                            gridDefaults.paginationOptions.dropdown = paginationOptionsDefaults['infinite-scroll'];
                         }
 
                         gridOptions = this.sandbox.util.extend(true, {}, gridDefaults, datagridOptions);
 
                         // replace default order by custom order settings
-                        gridOptions.url = insertOrderParamsInUrl(gridOptions.url,order);
+                        gridOptions.url = insertOrderParamsInUrl(gridOptions.url, order);
+                        this.sandbox.emit('sulu.list.preload', gridOptions);
 
                         gridOptions.searchInstanceName = gridOptions.searchInstanceName || toolbarOptions.instanceName;
                         gridOptions.columnOptionsInstanceName =
                             gridOptions.columnOptionsInstanceName || toolbarOptions.instanceName;
+
+                        // add datagrid instance name to toolbar
+                        toolbarOptions.datagridInstanceName = gridOptions.instanceName;
+                        toolbarOptions.listInfoContainerSelector = listInfoContainerSelector;
 
                         //start list-toolbar and datagrid
                         this.sandbox.start([
@@ -422,13 +466,22 @@
                             }
                         ]);
 
+                        if (!!gridOptions.instanceName) {
+                            datagridEventNamespace += gridOptions.instanceName + '.';
+                        }
+
                         // save page size when changed
-                        this.sandbox.on('husky.datagrid.page-size.changed', function(size) {
-                            this.sandbox.sulu.saveUserSetting(pageSizeKey, size);
+                        this.sandbox.on(datagridEventNamespace + 'page-size.changed', function(size, paginationId) {
+                            var key = dropdownPageSizeKey;
+                            if (paginationId === 'infinite-scroll') {
+                                key = infinitePageSizeKey;
+                            }
+
+                            this.sandbox.sulu.saveUserSetting(key, size);
                         }.bind(this));
 
                         // save sorting when changed
-                        this.sandbox.on('husky.datagrid.data.sort', function(data) {
+                        this.sandbox.on(datagridEventNamespace + 'data.sort', function(data) {
                             this.sandbox.sulu.saveUserSetting(orderKey, data);
                         }.bind(this));
                     };

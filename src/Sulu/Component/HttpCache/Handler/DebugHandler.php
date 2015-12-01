@@ -52,7 +52,7 @@ class DebugHandler implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function updateResponse(Response $response, StructureInterface $structure)
     {

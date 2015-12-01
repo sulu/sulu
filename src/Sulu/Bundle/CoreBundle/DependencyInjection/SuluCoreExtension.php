@@ -26,7 +26,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 class SuluCoreExtension extends Extension implements PrependExtensionInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function prepend(ContainerBuilder $container)
     {
@@ -71,7 +71,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -114,6 +114,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('rest.xml');
         $loader->load('build.xml');
         $loader->load('localization.xml');
+        $loader->load('serializer.xml');
     }
 
     /**
@@ -196,6 +197,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('sulu.content.structure.default_types', $contentConfig['structure']['default_type']);
         $container->setParameter('sulu.content.structure.default_type.snippet', $contentConfig['structure']['default_type']['snippet']);
         $container->setParameter('sulu.content.internal_prefix', $contentConfig['internal_prefix']);
+        $container->setParameter('sulu.content.structure.type_map', $contentConfig['structure']['type_map']);
 
         // Template
         $paths = [];

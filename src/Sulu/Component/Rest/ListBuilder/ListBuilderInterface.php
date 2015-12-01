@@ -11,6 +11,9 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
+use Sulu\Component\Rest\ListBuilder\Expression\ConjunctionExpressionInterface;
+use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
+
 /**
  * This interface defines the the ListBuilder functionality, for the creation of REST list responses.
  */
@@ -20,9 +23,21 @@ interface ListBuilderInterface
 
     const WHERE_COMPARATOR_UNEQUAL = '!=';
 
+    const WHERE_COMPARATOR_GREATER = '>';
+
+    const WHERE_COMPARATOR_GREATER_THAN = '>=';
+
+    const WHERE_COMPARATOR_LESS = '<';
+
+    const WHERE_COMPARATOR_LESS_THAN = '<=';
+
     const SORTORDER_ASC = 'ASC';
 
     const SORTORDER_DESC = 'DESC';
+
+    const CONJUNCTION_AND = 'AND';
+
+    const CONJUNCTION_OR = 'OR';
 
     /**
      * Sets all the field descriptors for the ListBuilder at once.
@@ -30,6 +45,11 @@ interface ListBuilderInterface
      * @param AbstractFieldDescriptor[] $fieldDescriptors
      *
      * @return mixed
+     */
+    public function setSelectFields($fieldDescriptors);
+
+    /**
+     * @deprecated use setSelectFields instead
      */
     public function setFields($fieldDescriptors);
 
@@ -40,7 +60,21 @@ interface ListBuilderInterface
      *
      * @return ListBuilderInterface
      */
+    public function addSelectField(AbstractFieldDescriptor $fieldDescriptor);
+
+    /**
+     * @deprecated use addSelectField instead
+     */
     public function addField(AbstractFieldDescriptor $fieldDescriptor);
+
+    /**
+     * Gets a field descriptor used by the ListBuilder to retrieve and return the list.
+     *
+     * @param string $fieldName
+     *
+     * @return AbstractFieldDescriptor
+     */
+    public function getSelectField($fieldName);
 
     /**
      * Checks if field by name has been already added.
@@ -48,6 +82,11 @@ interface ListBuilderInterface
      * @param $name
      *
      * @return bool
+     */
+    public function hasSelectField($name);
+
+    /**
+     * @deprecated use hasSelectField instead
      */
     public function hasField($name);
 
@@ -70,7 +109,7 @@ interface ListBuilderInterface
     public function search($search);
 
     /**
-     * Defines the field by which the table is sorted.
+     * Adds a field by which the table is sorted.
      *
      * @param AbstractFieldDescriptor $fieldDescriptor
      * @param string                  $order
@@ -115,19 +154,19 @@ interface ListBuilderInterface
      * Defines a constraint for the rows to return.
      *
      * @param AbstractFieldDescriptor $fieldDescriptor The FieldDescriptor which is checked
-     * @param string                  $value           The value the FieldDescriptor should have
+     * @param string $value The value the FieldDescriptor should have
+     * @param string $comparator The comparator use to compare the values
      *
      * @return mixed
      */
-    public function where(AbstractFieldDescriptor $fieldDescriptor, $value);
+    public function where(
+        AbstractFieldDescriptor $fieldDescriptor,
+        $value,
+        $comparator = self::WHERE_COMPARATOR_EQUAL
+    );
 
     /**
-     * Defines a constraint for the rows to return which are not equal the specified values.
-     *
-     * @param AbstractFieldDescriptor $fieldDescriptor The FieldDescriptor which is checked
-     * @param string                  $value           The value the FieldDescriptor should not have
-     *
-     * @return mixed
+     * @deprecated use where instead
      */
     public function whereNot(AbstractFieldDescriptor $fieldDescriptor, $value);
 
@@ -141,20 +180,22 @@ interface ListBuilderInterface
     public function addGroupBy(AbstractFieldDescriptor $fieldDescriptor);
 
     /**
-     * Defines a in constraint.
+     * Defines an IN constraint.
      *
      * @param AbstractFieldDescriptor $fieldDescriptor
-     * @param $values
+     * @param array $values
      */
-    public function in(AbstractFieldDescriptor $fieldDescriptor, $values);
+    public function in(AbstractFieldDescriptor $fieldDescriptor, array $values);
 
     /**
      * Defines a between constraint.
      *
      * @param AbstractFieldDescriptor $fieldDescriptor
      * @param $values
+     *
+     * @return
      */
-    public function between(AbstractFieldDescriptor $fieldDescriptor, $values);
+    public function between(AbstractFieldDescriptor $fieldDescriptor, array $values);
 
     /**
      * The number of total elements for this list.
@@ -169,4 +210,76 @@ interface ListBuilderInterface
      * @return mixed
      */
     public function execute();
+
+    /**
+     * Sets an array of field descriptors.
+     *
+     * @param AbstractFieldDescriptor[] $fieldDescriptors
+     */
+    public function setFieldDescriptors(array $fieldDescriptors);
+
+    /**
+     * Returns a field descriptor by name.
+     *
+     * @param string $name
+     *
+     * @return AbstractFieldDescriptor | null
+     */
+    public function getFieldDescriptor($name);
+
+    /**
+     * Adds an expression.
+     *
+     * @param ExpressionInterface $expression
+     */
+    public function addExpression(ExpressionInterface $expression);
+
+    /**
+     * Creates a between expression from the given values.
+     *
+     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param array $values
+     *
+     * @return mixed
+     */
+    public function createBetweenExpression(AbstractFieldDescriptor $fieldDescriptor, array $values);
+
+    /**
+     * Creates an in expression from the given values.
+     *
+     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param array $values
+     *
+     * @return mixed
+     */
+    public function createInExpression(AbstractFieldDescriptor $fieldDescriptor, array $values);
+
+    /**
+     * Creates an where expression from the given values.
+     *
+     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param $value
+     * @param string $comparator
+     *
+     * @return mixed
+     */
+    public function createWhereExpression(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator);
+
+    /**
+     * Creates an and expression with the given expressions.
+     *
+     * @param ExpressionInterface[] $expressions
+     *
+     * @return ConjunctionExpressionInterface|null
+     */
+    public function createAndExpression(array $expressions);
+
+    /**
+     * Creates an or expressions with the given expressions.
+     *
+     * @param ExpressionInterface[] $expressions
+     *
+     * @return ConjunctionExpressionInterface|null
+     */
+    public function createOrExpression(array $expressions);
 }

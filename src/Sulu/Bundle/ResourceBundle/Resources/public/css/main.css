@@ -1,0 +1,19 @@
+/*----------------------------------------*/
+/* line 2, ../scss/modules/filters.scss */
+.conditions-container .m-top-7 {
+  margin-top: 7px !important;
+}
+
+/* line 7, ../scss/modules/filters.scss */
+.filter-result-box {
+  margin-bottom: 25px;
+  padding: 15px;
+  background: #ccc;
+  border-radius: 3px;
+  color: #666;
+}
+/* line 14, ../scss/modules/filters.scss */
+.filter-result-box .filter-icons {
+  float: right;
+  color: #000;
+}

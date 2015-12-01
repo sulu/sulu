@@ -22,6 +22,7 @@ use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
@@ -42,6 +43,7 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     protected static $entityKey = 'accounts';
     protected static $positionEntityName = 'SuluContactBundle:Position';
+    protected static $mediaEntityName = 'SuluMediaBundle:Media';
     protected static $contactEntityKey = 'contacts';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
     protected static $addressEntityName = 'SuluContactBundle:Address';
@@ -97,7 +99,7 @@ class AccountController extends RestController implements ClassResourceInterface
     public function getAction($id, Request $request)
     {
         $includes = explode(',', $request->get('include'));
-        $accountManager = $this->getContactManager();
+        $accountManager = $this->getAccountManager();
         $locale = $this->getUser()->getLocale();
 
         try {
@@ -173,7 +175,7 @@ class AccountController extends RestController implements ClassResourceInterface
                 $listBuilder->count()
             );
         } else {
-            $contactManager = $this->getContactManager();
+            $contactManager = $this->getAccountManager();
             $locale = $this->getUser()->getLocale();
             $contacts = $contactManager->findContactsByAccountId($id, $locale, false);
             $list = new CollectionRepresentation($contacts, self::$contactEntityKey);
@@ -273,7 +275,7 @@ class AccountController extends RestController implements ClassResourceInterface
             $accountContact->setContact($contact);
 
             // Set position on contact
-            $position = $this->getContactManager()->getPosition($request->get('position', null));
+            $position = $this->getAccountManager()->getPosition($request->get('position', null));
             $accountContact->setPosition($position);
             $contact->setCurrentPosition($position);
 
@@ -365,6 +367,7 @@ class AccountController extends RestController implements ClassResourceInterface
         // define filters
         $filter = [];
         $ids = $request->get('ids');
+        $locale = $this->getUser()->getLocale();
         if ($ids) {
             if (is_array($ids)) {
                 $filter['id'] = $ids;
@@ -378,11 +381,15 @@ class AccountController extends RestController implements ClassResourceInterface
             $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
             $fieldDescriptors = $this->getFieldDescriptors();
-            $listBuilder = $this->generateFlatListBuilder($request, $filter);
+            $listBuilder = $this->generateFlatListBuilder();
             $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+            $this->applyRequestParameters($request, $filter, $listBuilder);
+
+            $listResponse = $listBuilder->execute();
+            $listResponse = $this->addLogos($listResponse, $locale);
 
             $list = new ListRepresentation(
-                $listBuilder->execute(),
+                $listResponse,
                 self::$entityKey,
                 'get_accounts',
                 $request->query->all(),
@@ -392,8 +399,7 @@ class AccountController extends RestController implements ClassResourceInterface
             );
             $view = $this->view($list, 200);
         } else {
-            $accountManager = $this->getContactManager();
-            $locale = $this->getUser()->getLocale();
+            $accountManager = $this->getAccountManager();
             $accounts = $accountManager->findAll($locale, $filter);
             $list = new CollectionRepresentation($accounts, self::$entityKey);
             $view = $this->view($list, 200);
@@ -407,19 +413,28 @@ class AccountController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * @param Request $request
-     * @param $filter
+     * Creates a listbuilder instance.
      *
-     * @return \Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder
+     * @return DoctrineListBuilder
      */
-    protected function generateFlatListBuilder(Request $request, $filter)
+    protected function generateFlatListBuilder()
     {
-
         /** @var DoctrineListBuilderFactory $factory */
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
-
         $listBuilder = $factory->create($this->getAccountEntityName());
 
+        return $listBuilder;
+    }
+
+    /**
+     * Applies the filter parameter and hasNoparent parameter for listbuilder.
+     *
+     * @param Request $request
+     * @param array $filter
+     * @param DoctrineListBuilder $listBuilder
+     */
+    protected function applyRequestParameters(Request $request, $filter, $listBuilder)
+    {
         if (json_decode($request->get('hasNoParent', null))) {
             $listBuilder->where($this->getFieldDescriptorForNoParent(), null);
         }
@@ -431,8 +446,6 @@ class AccountController extends RestController implements ClassResourceInterface
                 $listBuilder->where($this->getFieldDescriptors()[$key], $value);
             }
         }
-
-        return $listBuilder;
     }
 
     /**
@@ -481,7 +494,7 @@ class AccountController extends RestController implements ClassResourceInterface
             $em->flush();
 
             // get api entity
-            $accountManager = $this->getContactManager();
+            $accountManager = $this->getAccountManager();
             $locale = $this->getUser()->getLocale();
             $acc = $accountManager->getAccount($account, $locale);
             $view = $this->view($acc, 200);
@@ -508,6 +521,7 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     protected function doPost(Request $request)
     {
+        $accountManager = $this->getAccountManager();
         $account = $this->get('sulu_contact.account_factory')->createEntity();
         $account->setName($request->get('name'));
         $account->setCorporation($request->get('corporation'));
@@ -516,17 +530,14 @@ class AccountController extends RestController implements ClassResourceInterface
             $account->setUid($request->get('uid'));
         }
 
-        $disabled = $request->get('disabled');
-        if ($disabled === null) {
-            $disabled = false;
+        if (array_key_exists('id', $request->get('logo', []))) {
+            $accountManager->setLogo($account, $request->get('logo')['id']);
         }
-        $account->setDisabled($disabled);
 
         // set parent
         $this->setParent($request->get('parent'), $account);
 
         // process categories
-        $accountManager = $this->getContactManager();
         $accountManager->processCategories($account, $request->get('categories', []));
 
         // set creator / changer
@@ -542,7 +553,7 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * Edits the existing contact with the given id.
      *
-     * @param int     $id      The id of the contact to update
+     * @param int $id The id of the contact to update
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -567,7 +578,7 @@ class AccountController extends RestController implements ClassResourceInterface
                 $em->flush();
 
                 // get api entity
-                $accountManager = $this->getContactManager();
+                $accountManager = $this->getAccountManager();
                 $locale = $this->getUser()->getLocale();
                 $acc = $accountManager->getAccount($account, $locale);
 
@@ -589,7 +600,7 @@ class AccountController extends RestController implements ClassResourceInterface
      * processes given entity for put.
      *
      * @param AccountInterface $account
-     * @param Request          $request
+     * @param Request $request
      *
      * @throws EntityNotFoundException
      * @throws RestException
@@ -599,15 +610,14 @@ class AccountController extends RestController implements ClassResourceInterface
         // set name
         $account->setName($request->get('name'));
         $account->setCorporation($request->get('corporation'));
-
-        // set disabled
-        $disabled = $request->get('disabled');
-        if ($disabled !== null) {
-            $account->setDisabled($disabled);
-        }
+        $accountManager = $this->getAccountManager();
 
         if ($request->get('uid') !== null) {
             $account->setUid($request->get('uid'));
+        }
+
+        if (array_key_exists('id', $request->get('logo', []))) {
+            $accountManager->setLogo($account, $request->get('logo')['id']);
         }
 
         // set parent
@@ -616,8 +626,6 @@ class AccountController extends RestController implements ClassResourceInterface
         // set changed
         $user = $this->getUser();
         $account->setChanger($user);
-
-        $accountManager = $this->getContactManager();
 
         // process details
         if (!($accountManager->processUrls($account, $request->get('urls', []))
@@ -637,7 +645,7 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * set parent to account.
      *
-     * @param array            $parentData
+     * @param array $parentData
      * @param AccountInterface $account
      *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
@@ -682,7 +690,7 @@ class AccountController extends RestController implements ClassResourceInterface
                 $em->flush();
 
                 // get api entity
-                $accountManager = $this->getContactManager();
+                $accountManager = $this->getAccountManager();
                 $locale = $this->getUser()->getLocale();
                 $acc = $accountManager->getAccount($account, $locale);
 
@@ -704,11 +712,12 @@ class AccountController extends RestController implements ClassResourceInterface
      * process geiven entity for patch.
      *
      * @param AccountInterface $account
-     * @param Request          $request
-     * @param ObjectManager    $entityManager
+     * @param Request $request
+     * @param ObjectManager $entityManager
      */
     protected function doPatch(AccountInterface $account, Request $request, ObjectManager $entityManager)
     {
+        $accountManager = $this->getAccountManager();
         if ($request->get('uid') !== null) {
             $account->setUid($request->get('uid'));
         }
@@ -718,14 +727,18 @@ class AccountController extends RestController implements ClassResourceInterface
         if ($request->get('number') !== null) {
             $account->setNumber($request->get('number'));
         }
-
         if ($request->get('placeOfJurisdiction') !== null) {
             $account->setPlaceOfJurisdiction($request->get('placeOfJurisdiction'));
+        }
+        if (array_key_exists('id', $request->get('logo', []))) {
+            $accountManager->setLogo($account, $request->get('logo')['id']);
         }
 
         // check if mainContact is set
         if (($mainContactRequest = $request->get('mainContact')) !== null) {
-            $mainContact = $entityManager->getRepository($this->container->getParameter('sulu.model.contact.class'))->find($mainContactRequest['id']);
+            $mainContact = $entityManager->getRepository(
+                $this->container->getParameter('sulu.model.contact.class')
+            )->find($mainContactRequest['id']);
             if ($mainContact) {
                 $account->setMainContact($mainContact);
             }
@@ -733,7 +746,6 @@ class AccountController extends RestController implements ClassResourceInterface
 
         // process details
         if ($request->get('bankAccounts') !== null) {
-            $accountManager = $this->getContactManager();
             $accountManager->processBankAccounts($account, $request->get('bankAccounts', []));
         }
     }
@@ -902,9 +914,33 @@ class AccountController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * Takes an array of accounts and resets the logo-property containing the media id with
+     * the actual urls to the logo thumbnails.
+     *
+     * @param array $accounts
+     * @param string $locale
+     *
+     * @return array
+     */
+    private function addLogos($accounts, $locale)
+    {
+        $ids = array_filter(array_column($accounts, 'logo'));
+        $logos = $this->get('sulu_media.media_manager')->getFormatUrls($ids, $locale);
+        $i = 0;
+        foreach ($accounts as $key => $account) {
+            if (array_key_exists('logo', $account) && $account['logo']) {
+                $accounts[$key]['logo'] = $logos[$i];
+                $i += 1;
+            }
+        }
+
+        return $accounts;
+    }
+
+    /**
      * @return AbstractContactManager
      */
-    protected function getContactManager()
+    protected function getAccountManager()
     {
         return $this->get('sulu_contact.account_manager');
     }
@@ -1198,6 +1234,39 @@ class AccountController extends RestController implements ClassResourceInterface
     protected function initFieldDescriptors()
     {
         $this->fieldDescriptors = [];
+
+        $accountAddressJoin = [
+            self::$accountAddressEntityName => new DoctrineJoinDescriptor(
+                self::$accountAddressEntityName,
+                $this->getAccountEntityName() .
+                '.accountAddresses',
+                self::$accountAddressEntityName . '.main = true', DoctrineJoinDescriptor::JOIN_METHOD_LEFT
+            ),
+            self::$addressEntityName => new DoctrineJoinDescriptor(
+                self::$addressEntityName,
+                self::$accountAddressEntityName . '.address'
+            ),
+        ];
+
+        $this->fieldDescriptors['logo'] = new DoctrineFieldDescriptor(
+            'id',
+            'logo',
+            self::$mediaEntityName,
+            'public.logo',
+            [
+                self::$mediaEntityName => new DoctrineJoinDescriptor(
+                    self::$mediaEntityName,
+                    $this->getAccountEntityName() . '.logo'
+                ),
+            ],
+            false,
+            true,
+            'thumbnails',
+            '',
+            '',
+            false
+        );
+
         $this->fieldDescriptors['number'] = new DoctrineFieldDescriptor(
             'number',
             'number',
@@ -1206,7 +1275,7 @@ class AccountController extends RestController implements ClassResourceInterface
             [],
             false,
             false,
-            '',
+            'string',
             '90px'
         );
 
@@ -1218,7 +1287,7 @@ class AccountController extends RestController implements ClassResourceInterface
             [],
             false,
             true,
-            '',
+            'string',
             '300px'
         );
 
@@ -1229,7 +1298,8 @@ class AccountController extends RestController implements ClassResourceInterface
             'contact.accounts.corporation',
             [],
             true,
-            false
+            false,
+            'string'
         );
 
         $this->fieldDescriptors['city'] = new DoctrineFieldDescriptor(
@@ -1237,21 +1307,51 @@ class AccountController extends RestController implements ClassResourceInterface
             'city',
             self::$addressEntityName,
             'contact.address.city',
-            [
-                self::$accountAddressEntityName => new DoctrineJoinDescriptor(
-                    self::$accountAddressEntityName,
-                    $this->getAccountEntityName() .
-                    '.accountAddresses',
-                    self::$accountAddressEntityName . '.main = true', DoctrineJoinDescriptor::JOIN_METHOD_LEFT
-                ),
-                self::$addressEntityName => new DoctrineJoinDescriptor(
-                    self::$addressEntityName,
-                    self::$accountAddressEntityName . '.address'
-                ),
-            ],
+            $accountAddressJoin,
             false,
             true,
-            true
+            'string'
+        );
+
+        $this->fieldDescriptors['zip'] = new DoctrineFieldDescriptor(
+            'zip',
+            'zip',
+            self::$addressEntityName,
+            'contact.address.zip',
+            $accountAddressJoin,
+            true,
+            false,
+            'string'
+        );
+
+        $this->fieldDescriptors['state'] = new DoctrineFieldDescriptor(
+            'state',
+            'state',
+            self::$addressEntityName,
+            'contact.address.state',
+            $accountAddressJoin,
+            true,
+            false,
+            'string'
+        );
+
+        $this->fieldDescriptors['countryCode'] = new DoctrineFieldDescriptor(
+            'code',
+            'countryCode',
+            self::$countryEntityName,
+            'contact.address.countryCode',
+            array_merge(
+                $accountAddressJoin,
+                [
+                    self::$countryEntityName => new DoctrineJoinDescriptor(
+                        self::$countryEntityName,
+                        self::$addressEntityName . '.country'
+                    ),
+                ]
+            ),
+            false,
+            true,
+            'string'
         );
 
         $this->fieldDescriptors['mainContact'] = new DoctrineConcatenationFieldDescriptor(
@@ -1288,7 +1388,7 @@ class AccountController extends RestController implements ClassResourceInterface
             ' ',
             false,
             true,
-            '',
+            'string',
             '200px',
             '',
             false
@@ -1298,7 +1398,11 @@ class AccountController extends RestController implements ClassResourceInterface
             'mainPhone',
             'mainPhone',
             $this->getAccountEntityName(),
-            'public.phone'
+            'public.phone',
+            [],
+            false,
+            false,
+            'string'
         );
 
         $this->fieldDescriptors['mainEmail'] = new DoctrineFieldDescriptor(
@@ -1309,7 +1413,7 @@ class AccountController extends RestController implements ClassResourceInterface
             [],
             false,
             true,
-            '',
+            'string',
             '',
             '140px'
         );
@@ -1322,7 +1426,7 @@ class AccountController extends RestController implements ClassResourceInterface
             [],
             true,
             false,
-            '',
+            'integer',
             '50px'
         );
 
@@ -1348,22 +1452,15 @@ class AccountController extends RestController implements ClassResourceInterface
             'date'
         );
 
-        $this->fieldDescriptors['disabled'] = new DoctrineFieldDescriptor(
-            'disabled',
-            'disabled',
-            $this->getAccountEntityName(),
-            'public.locked',
-            [],
-            true
-        );
-
         $this->fieldDescriptors['uid'] = new DoctrineFieldDescriptor(
             'uid',
             'uid',
             $this->getAccountEntityName(),
             'contact.accounts.uid',
             [],
-            true
+            true,
+            false,
+            'string'
         );
 
         $this->fieldDescriptors['registerNumber'] = new DoctrineFieldDescriptor(
@@ -1372,7 +1469,9 @@ class AccountController extends RestController implements ClassResourceInterface
             $this->getAccountEntityName(),
             'contact.accounts.registerNumber',
             [],
-            true
+            true,
+            false,
+            'string'
         );
 
         $this->fieldDescriptors['mainFax'] = new DoctrineFieldDescriptor(
@@ -1382,7 +1481,8 @@ class AccountController extends RestController implements ClassResourceInterface
             'public.phone',
             [],
             true,
-            false
+            false,
+            'string'
         );
 
         $this->fieldDescriptors['mainUrl'] = new DoctrineFieldDescriptor(
@@ -1392,7 +1492,8 @@ class AccountController extends RestController implements ClassResourceInterface
             'public.url',
             [],
             true,
-            false
+            false,
+            'string'
         );
 
         $this->fieldDescriptors['placeOfJurisdiction'] = new DoctrineFieldDescriptor(
@@ -1401,7 +1502,9 @@ class AccountController extends RestController implements ClassResourceInterface
             $this->getAccountEntityName(),
             'contact.accounts.placeOfJurisdiction',
             [],
-            true
+            true,
+            false,
+            'string'
         );
     }
 

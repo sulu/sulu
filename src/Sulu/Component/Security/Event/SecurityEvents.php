@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,11 +11,10 @@
 
 namespace Sulu\Component\Security\Event;
 
+/**
+ * This class contains all the available security events.
+ */
 final class SecurityEvents
 {
-    /**
-     * The permission.update event is thrown when the AccessControlManager has updated some permissions.
-     * The event listener receives a PermissionUpdateEvent.
-     */
-    const PERMISSION_UPDATE = 'sulu.security.permission.update';
+    const PERMISSION_UPDATE = 'sulu_security.permission_update';
 }

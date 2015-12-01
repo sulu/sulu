@@ -44,7 +44,7 @@ class StructureResolver implements StructureResolverInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function resolve(StructureInterface $structure)
     {

@@ -1,0 +1,1 @@
+define(["services/husky/mediator"],function(a){"use strict";function b(){}var c=null;return b.prototype={toCollection:function(b){b?a.emit("sulu.router.navigate","media/collections/edit:"+b+"/files",!0,!0):this.toRoot()},toRoot:function(){a.emit("sulu.router.navigate","media/collections/root",!0,!0)}},b.getInstance=function(){return null===c&&(c=new b),c},b.getInstance()});

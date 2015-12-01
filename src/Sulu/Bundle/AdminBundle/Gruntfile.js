@@ -74,6 +74,12 @@ module.exports = function(grunt) {
                         cwd: 'bower_components/iban',
                         src: ['iban.js'],
                         dest: 'Resources/public/js/vendor/iban-converter/'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'bower_components/require-css',
+                        src: ['css.js'],
+                        dest: 'Resources/public/js/vendor/require-css/'
                     }
                 ]
             }
@@ -186,7 +192,7 @@ module.exports = function(grunt) {
         watch: {
             scripts: {
                 files: ['Resources/public/**'],
-                tasks: ['publish']
+                tasks: ['compass']
             },
             options: {
                 nospawn: true

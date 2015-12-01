@@ -29,4 +29,11 @@ interface ContentQueryBuilderInterface
      * @param array $options
      */
     public function init(array $options);
+
+    /**
+     * Returns if unpublished pages are loaded.
+     *
+     * @return bool
+     */
+    public function getPublished();
 }

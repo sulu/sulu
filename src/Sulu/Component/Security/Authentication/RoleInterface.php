@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Security\Authentication;
 
+use Sulu\Bundle\SecurityBundle\Entity\Permission;
+use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
@@ -122,7 +124,7 @@ interface RoleInterface extends AuditableInterface, SecurityIdentityInterface
     /**
      * Get permissions.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Permission[]
      */
     public function getPermissions();
 

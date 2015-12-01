@@ -14,22 +14,27 @@ define([
 
     'use strict';
 
-    var itemHandler = function() {
-        App.emit('sulu.content.changed');
-    };
-
     return function($el, options) {
-        var defaults = {
-
-            },
+        var defaults = {},
 
             typeInterface = {
                 initializeSub: function() {
-                    App.off('husky.auto-complete-list.tags.item-added', itemHandler);
-                    App.on('husky.auto-complete-list.tags.item-added', itemHandler);
+                    App.off('husky.auto-complete-list.' + this.options.instanceName + '.item-added');
+                    App.off('husky.auto-complete-list.' + this.options.instanceName + '.item-deleted');
 
-                    App.off('husky.auto-complete-list.tags.item-deleted', itemHandler);
-                    App.on('husky.auto-complete-list.tags.item-deleted', itemHandler);
+                    App.on(
+                        'husky.auto-complete-list.' + this.options.instanceName + '.item-added',
+                        this.itemHandler.bind(this)
+                    );
+                    App.on(
+                        'husky.auto-complete-list.' + this.options.instanceName + '.item-deleted',
+                        this.itemHandler.bind(this)
+                    );
+                },
+
+                itemHandler: function() {
+                    App.emit('sulu.preview.update', $el, this.getValue());
+                    App.emit('sulu.content.changed');
                 },
 
                 setValue: function(value) {

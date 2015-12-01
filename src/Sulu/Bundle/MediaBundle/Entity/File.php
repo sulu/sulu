@@ -161,11 +161,28 @@ class File implements AuditableInterface
     /**
      * Get fileVersions.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return FileVersion[]
      */
     public function getFileVersions()
     {
         return $this->fileVersions;
+    }
+
+    /**
+     * Get latest file version.
+     *
+     * @return FileVersion[]
+     */
+    public function getLatestFileVersion()
+    {
+        /** @var FileVersion $fileVersion */
+        foreach ($this->fileVersions as $fileVersion) {
+            if ($fileVersion->getVersion() === $this->getVersion()) {
+                return $fileVersion;
+            }
+        }
+
+        return;
     }
 
     /**

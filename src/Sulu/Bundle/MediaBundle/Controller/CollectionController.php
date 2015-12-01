@@ -1,7 +1,6 @@
 <?php
-
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,8 +14,11 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\MediaBundle\Api\Collection;
+use Sulu\Bundle\MediaBundle\Api\RootCollection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
+use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -25,14 +27,17 @@ use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
+use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Makes collections available through a REST API.
  */
-class CollectionController extends RestController implements ClassResourceInterface, SecuredControllerInterface
+class CollectionController extends RestController
+    implements ClassResourceInterface, SecuredControllerInterface, SecuredObjectControllerInterface
 {
     use RequestParametersTrait;
 
@@ -80,6 +85,22 @@ class CollectionController extends RestController implements ClassResourceInterf
      */
     public function getAction($id, Request $request)
     {
+        if ($this->getBooleanRequestParameter($request, 'tree', false, false)) {
+            $collections = $this->getCollectionManager()->getTreeById($id, $this->getLocale($request));
+
+            if ($this->getBooleanRequestParameter($request, 'include-root', false, false)) {
+                $collections = [
+                    new RootCollection($collections),
+                ];
+            }
+
+            return $this->handleView(
+                $this->view(
+                    new CollectionRepresentation($collections, 'collections')
+                )
+            );
+        }
+
         try {
             $locale = $this->getLocale($request);
             $depth = intval($request->get('depth', 0));
@@ -166,6 +187,12 @@ class CollectionController extends RestController implements ClassResourceInterf
                 );
             }
 
+            if ($this->getBooleanRequestParameter($request, 'include-root', false, false)) {
+                $collections = [
+                    new RootCollection($collections),
+                ];
+            }
+
             $all = $collectionManager->getCount();
 
             $list = new ListRepresentation(
@@ -203,7 +230,7 @@ class CollectionController extends RestController implements ClassResourceInterf
     /**
      * Edits the existing collection with the given id.
      *
-     * @param int     $id      The id of the collection to update
+     * @param int $id The id of the collection to update
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -245,7 +272,7 @@ class CollectionController extends RestController implements ClassResourceInterf
      *
      * @Post("collections/{id}")
      *
-     * @param int     $id
+     * @param int $id
      * @param Request $request
      *
      * @return Response
@@ -272,7 +299,7 @@ class CollectionController extends RestController implements ClassResourceInterf
     /**
      * Moves an entity into another one.
      *
-     * @param int     $id
+     * @param int $id
      * @param Request $request
      *
      * @return Response
@@ -315,6 +342,15 @@ class CollectionController extends RestController implements ClassResourceInterf
      */
     protected function saveEntity($id, Request $request)
     {
+        $systemCollectionManager = $this->get('sulu_media.system_collections.manager');
+        $parent = $request->get('parent');
+
+        if (($id !== null && $systemCollectionManager->isSystemCollection(intval($id))) ||
+            ($parent !== null && $systemCollectionManager->isSystemCollection(intval($parent)))
+        ) {
+            throw new AccessDeniedException('Permission "update" or "create" is not granted for system collections');
+        }
+
         try {
             $collectionManager = $this->getCollectionManager();
             $data = $this->getData($request);
@@ -346,5 +382,21 @@ class CollectionController extends RestController implements ClassResourceInterf
     public function getSecurityContext()
     {
         return 'sulu.media.collections';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSecuredClass()
+    {
+        return CollectionEntity::class;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSecuredObjectId(Request $request)
+    {
+        return $request->get('id') ?: $request->get('parent');
     }
 }

@@ -11,10 +11,14 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
 
 class ListRestHelperTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var ObjectManager
+     */
     protected $em;
 
     public function setUp()
@@ -22,25 +26,50 @@ class ListRestHelperTest extends \PHPUnit_Framework_TestCase
         $this->em = $this->getMock('Doctrine\Common\Persistence\ObjectManager');
     }
 
-    public function testGetFields()
+    public static function dataFieldsProvider()
     {
-        $request = new Request([
-            'fields' => 'field1,field2,field3',
-            'sortBy' => 'id',
-            'sortOrder' => 'desc',
-            'search' => 'test',
-            'searchFields' => 'title',
-            'limit' => 10,
-            'page' => 3,
-        ]);
+        return [
+            [new Request([
+                'fields' => 'field1,field2,field3',
+                'sortBy' => 'id',
+                'sortOrder' => 'desc',
+                'search' => 'test',
+                'searchFields' => 'title',
+                'limit' => 10,
+                'page' => 3,
+            ])],
+            [new Request([
+                'fields' => 'one,two,three',
+                'sortBy' => 'three',
+                'sortOrder' => 'asc',
+                'search' => 'now',
+                'searchFields' => 'title',
+                'limit' => 20,
+                'page' => 1,
+            ])],
+            [new Request([
+                'fields' => 'one,two,three',
+                'search' => 'now',
+                'searchFields' => 'title',
+                'limit' => 20,
+                'page' => 1,
+            ])],
+        ];
+    }
+
+    /**
+     * @dataProvider dataFieldsProvider
+     */
+    public function testGetFields($request)
+    {
         $helper = new ListRestHelper($request, $this->em);
 
-        $this->assertEquals(['field1', 'field2', 'field3'], $helper->getFields());
-        $this->assertEquals('id', $helper->getSortColumn());
-        $this->assertEquals('desc', $helper->getSortOrder());
-        $this->assertEquals('test', $helper->getSearchPattern());
-        $this->assertEquals(['title'], $helper->getSearchFields());
-        $this->assertEquals(10, $helper->getLimit());
-        $this->assertEquals(20, $helper->getOffset());
+        $this->assertEquals(explode(',', $request->get('fields')), $helper->getFields());
+        $this->assertEquals($request->get('sortBy'), $helper->getSortColumn());
+        $this->assertEquals($request->get('sortOrder', 'asc'), $helper->getSortOrder());
+        $this->assertEquals($request->get('search'), $helper->getSearchPattern());
+        $this->assertEquals(explode(',', $request->get('searchFields')), $helper->getSearchFields());
+        $this->assertEquals($request->get('limit'), $helper->getLimit());
+        $this->assertEquals($request->get('limit') * ($request->get('page') - 1), $helper->getOffset());
     }
 }

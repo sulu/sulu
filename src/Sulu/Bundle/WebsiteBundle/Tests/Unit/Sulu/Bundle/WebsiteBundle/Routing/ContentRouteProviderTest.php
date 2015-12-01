@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
-use PHPCR\RepositoryException;
-use Prophecy\Argument;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;

@@ -1,0 +1,7 @@
+filter_form:
+    pattern: /template/filter/form.html
+    defaults: { _controller: SuluResourceBundle:Template:filterForm }
+
+filter_list:
+    pattern: /template/filter/list.html
+    defaults: { _controller: SuluResourceBundle:Template:filterList }

@@ -41,9 +41,9 @@ class MediaSelectionContentType extends ComplexContentType
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
-    public function getDefaultParams()
+    public function getDefaultParams(PropertyInterface $property = null)
     {
         return [
             'types' => new PropertyParameter('types', null),
@@ -176,7 +176,7 @@ class MediaSelectionContentType extends ComplexContentType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getContentData(PropertyInterface $property)
     {
@@ -198,7 +198,7 @@ class MediaSelectionContentType extends ComplexContentType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getViewData(PropertyInterface $property)
     {

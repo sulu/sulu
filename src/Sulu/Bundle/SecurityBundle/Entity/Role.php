@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
+use JMS\Serializer\Annotation\Exclude;
+
 /**
  * Role.
  */
@@ -23,6 +25,7 @@ class Role extends BaseRole
 
     /**
      * @var \Doctrine\Common\Collections\Collection
+     * @Exclude
      */
     private $userRoles;
 

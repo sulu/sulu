@@ -62,6 +62,14 @@ class Localization implements \JsonSerializable, ArrayableInterface
     private $default;
 
     /**
+     * Defines whether this localization is the x-default one or not.
+     * This will be used to determine the default hreflang tag.
+     *
+     * @var
+     */
+    private $xDefault;
+
+    /**
      * Sets the country of this localization.
      *
      * @param string $country
@@ -200,6 +208,16 @@ class Localization implements \JsonSerializable, ArrayableInterface
     }
 
     /**
+     * Sets if this localization is the x-default one.
+     *
+     * @param bool $xDefault
+     */
+    public function setXDefault($xDefault)
+    {
+        $this->xDefault = $xDefault;
+    }
+
+    /**
      * Returns if this localization is the default one.
      *
      * @return bool True if this is the default localization, otherwise false
@@ -207,6 +225,16 @@ class Localization implements \JsonSerializable, ArrayableInterface
     public function isDefault()
     {
         return $this->default;
+    }
+
+    /**
+     * Returns if this localization is the x-default one.
+     *
+     * @return bool True if this is the x-default localization, otherwise false
+     */
+    public function isXDefault()
+    {
+        return $this->xDefault;
     }
 
     /**
@@ -241,7 +269,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
     public function getAllLocalizations()
     {
         $localizations = [];
-        if ($this->getChildren() !== null && sizeof($this->getChildren()) > 0) {
+        if ($this->getChildren() !== null && count($this->getChildren()) > 0) {
             foreach ($this->getChildren() as $child) {
                 $localizations[] = $child;
                 $localizations = array_merge($localizations, $child->getAllLocalizations());
@@ -271,7 +299,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function toArray($depth = null)
     {
@@ -280,6 +308,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
         $res['language'] = $this->getLanguage();
         $res['localization'] = $this->getLocalization();
         $res['default'] = $this->isDefault();
+        $res['xDefault'] = $this->isXDefault();
         $res['children'] = [];
 
         $children = $this->getChildren();

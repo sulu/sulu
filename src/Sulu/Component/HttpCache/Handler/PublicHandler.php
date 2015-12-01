@@ -51,11 +51,16 @@ class PublicHandler implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function updateResponse(Response $response, StructureInterface $structure)
     {
         if (!$structure instanceof PageInterface) {
+            return;
+        }
+
+        // when structure cache-lifetime disabled - return
+        if ((int) $structure->getCacheLifeTime() === 0) {
             return;
         }
 

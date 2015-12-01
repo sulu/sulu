@@ -397,7 +397,7 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
         $fileInfo = explode('.', array_pop($pathParts));
 
         $path = rtrim(implode('/', $pathParts), '/') . '/' . $fileInfo[0];
-        if (sizeof($fileInfo) > 1) {
+        if (count($fileInfo) > 1) {
             $formatResult = end($fileInfo);
         } else {
             $formatResult = null;

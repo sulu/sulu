@@ -65,7 +65,7 @@ class TemplateController extends Controller
 
         $data = [
             '_embedded' => $templates,
-            'total' => sizeof($templates),
+            'total' => count($templates),
         ];
 
         return new JsonResponse($data);
@@ -87,13 +87,16 @@ class TemplateController extends Controller
         $language = $request->get('language');
         $type = $request->get('type', 'page');
 
-        if ($key === null && $type === 'page') {
-            $webspaceManager = $this->container->get('sulu_core.webspace.webspace_manager');
-            $key = $webspaceManager->findWebspaceByKey($webspace)->getTheme()->getDefaultTemplate($type);
-            $fireEvent = true;
-        } elseif ($key === null && $type === 'snippet') {
-            $key = $this->container->getParameter('sulu.content.structure.default_type.snippet');
-            $fireEvent = true;
+        if ($key === null) {
+            if ($type === 'page') {
+                $webspaceManager = $this->container->get('sulu_core.webspace.webspace_manager');
+                $key = $webspaceManager->findWebspaceByKey($webspace)->getTheme()->getDefaultTemplate($type);
+                $fireEvent = true;
+            } else {
+                $defaultTypes = $this->container->getParameter('sulu.content.structure.default_types');
+                $key = $defaultTypes[$type];
+                $fireEvent = true;
+            }
         }
 
         /** @var UserInterface $user */
@@ -124,18 +127,6 @@ class TemplateController extends Controller
     {
         return $this->render(
             'SuluContentBundle:Template:seo.html.twig'
-        );
-    }
-
-    /**
-     * returns form for seo tab.
-     *
-     * @return Response
-     */
-    public function excerptAction()
-    {
-        return $this->render(
-            'SuluContentBundle:Template:excerpt.html.twig'
         );
     }
 

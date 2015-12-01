@@ -24,6 +24,7 @@ use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Persistence\RelationTrait;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
@@ -65,13 +66,20 @@ abstract class AbstractContactManager implements ContactManagerInterface
     protected $tagManager;
 
     /**
+     * @var MediaManagerInterface
+     */
+    protected $mediaManager;
+
+    /**
      * @param ObjectManager       $em
      * @param TagManagerInterface $tagManager
+     * @param MediaManagerInterface $mediaManager
      */
-    public function __construct(ObjectManager $em, TagManagerInterface $tagManager)
+    public function __construct(ObjectManager $em, TagManagerInterface $tagManager, MediaManagerInterface $mediaManager)
     {
         $this->em = $em;
         $this->tagManager = $tagManager;
+        $this->mediaManager = $mediaManager;
     }
 
     /**
@@ -261,10 +269,10 @@ abstract class AbstractContactManager implements ContactManagerInterface
      *
      * @return mixed
      */
-    public function getPosition($id)
+    public function getPosition($data)
     {
-        if ($id) {
-            return $this->em->getRepository(self::$positionEntityName)->find($id);
+        if (is_array($data) && array_key_exists('id', $data)) {
+            return $this->em->getRepository(self::$positionEntityName)->find($data['id']);
         }
 
         return;
@@ -1159,6 +1167,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
             if (isset($addressData['note'])) {
                 $address->setNote($addressData['note']);
             }
+            if (isset($addressData['title'])) {
+                $address->setTitle($addressData['title']);
+            }
             if (isset($addressData['primaryAddress'])) {
                 $isMain = $this->getBooleanValue($addressData['primaryAddress']);
             } else {
@@ -1199,7 +1210,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      *
      * @param Address $address The phone object to update
      * @param mixed   $entry   The entry with the new data
-     * @param Bool    $isMain  returns if address should be set to main
+     * @param bool    $isMain  returns if address should be set to main
      *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      *
@@ -1233,6 +1244,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
                 if (isset($entry['note'])) {
                     $address->setNote($entry['note']);
+                }
+                if (isset($entry['title'])) {
+                    $address->setTitle($entry['title']);
                 }
 
                 if (isset($entry['primaryAddress'])) {
@@ -1620,7 +1634,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      */
     private function resetIndexOfSubentites($entities)
     {
-        if (sizeof($entities) > 0 && method_exists($entities, 'getValues')) {
+        if (count($entities) > 0 && method_exists($entities, 'getValues')) {
             $newEntities = $entities->getValues();
             $entities->clear();
             foreach ($newEntities as $value) {

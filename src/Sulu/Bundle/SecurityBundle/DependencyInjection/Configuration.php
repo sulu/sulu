@@ -21,7 +21,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 class Configuration implements ConfigurationInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getConfigTreeBuilder()
     {
@@ -75,6 +75,13 @@ class Configuration implements ConfigurationInterface
                             ->children()
                                 ->scalarNode('model')->defaultValue('Sulu\Bundle\SecurityBundle\Entity\Role')->end()
                                 ->scalarNode('repository')->defaultValue('Sulu\Bundle\SecurityBundle\Entity\RoleRepository')->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('access_control')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('model')->defaultValue('Sulu\Bundle\SecurityBundle\Entity\AccessControl')->end()
+                                ->scalarNode('repository')->defaultValue('Sulu\Bundle\SecurityBundle\Entity\AccessControlRepository')->end()
                             ->end()
                         ->end()
                     ->end()

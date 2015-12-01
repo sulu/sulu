@@ -79,34 +79,6 @@ interface ContentMapperInterface
     );
 
     /**
-     * saves the given data in the content storage.
-     *
-     * @param array       $data               The data to be saved
-     * @param string      $templateKey        Name of template
-     * @param string      $webspaceKey        Key of webspace
-     * @param string      $languageCode       Save data for given language
-     * @param int         $userId             The id of the user who saves
-     * @param bool        $partialUpdate      ignore missing property
-     * @param bool|null   $isShadow           indicates that this node is a shadow for the base language
-     * @param string|null $shadowBaseLanguage base language for shadow
-     *
-     * @throws \PHPCR\ItemExistsException if new title already exists
-     * @throws \InvalidArgumentException  if mandatory data is not valid or not passed
-     *
-     * @return StructureInterface
-     */
-    public function saveStartPage(
-        $data,
-        $templateKey,
-        $webspaceKey,
-        $languageCode,
-        $userId,
-        $partialUpdate = true,
-        $isShadow = null,
-        $shadowBaseLanguage = null
-    );
-
-    /**
      * returns a list of data from children of given node.
      *
      * @param string $uuid             The uuid of the parent node
@@ -224,7 +196,7 @@ interface ContentMapperInterface
      * @param string $uuid        UUID of content
      * @param string $webspaceKey Key of webspace
      */
-    public function delete($uuid, $webspaceKey, $dereference = false);
+    public function delete($uuid, $webspaceKey);
 
     /**
      * moves given node to a new parent node.
@@ -311,7 +283,8 @@ interface ContentMapperInterface
         $webspaceKey,
         $locales,
         $fields,
-        $maxDepth
+        $maxDepth,
+        $onlyPublished = true
     );
 
     /**

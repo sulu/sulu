@@ -58,9 +58,16 @@ interface ExtensionInterface
     public function getContentData($container);
 
     /**
-     * returns name of extension.
+     * Returns name of extension.
      *
      * @return string
      */
     public function getName();
+
+    /**
+     * Returns field mapping for documents with this extension.
+     *
+     * @return array field mapping for indexed fields.
+     */
+    public function getFieldMapping();
 }

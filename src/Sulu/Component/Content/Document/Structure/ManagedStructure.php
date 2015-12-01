@@ -84,7 +84,7 @@ class ManagedStructure extends Structure
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getProperty($name)
     {
@@ -124,8 +124,8 @@ class ManagedStructure extends Structure
         $contentType->read(
             $this->node,
             $property,
-            null,
-            null,
+            $bridge->getWebspaceKey(),
+            $bridge->getLanguageCode(),
             null
         );
 
@@ -136,7 +136,7 @@ class ManagedStructure extends Structure
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getContentViewProperty($name)
     {
@@ -187,7 +187,7 @@ class ManagedStructure extends Structure
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function offsetExists($offset)
     {

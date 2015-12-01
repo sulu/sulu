@@ -185,7 +185,7 @@ class NavigationItem implements \Iterator
     /**
      * Sets the action of the NavigationItem.
      *
-     * @param String $action The action of the NavigationItem
+     * @param string $action The action of the NavigationItem
      */
     public function setAction($action)
     {
@@ -195,7 +195,7 @@ class NavigationItem implements \Iterator
     /**
      * Returns the action of the NavigationItem.
      *
-     * @return String
+     * @return string
      */
     public function getAction()
     {
@@ -515,7 +515,7 @@ class NavigationItem implements \Iterator
      */
     public function valid()
     {
-        return $this->position < sizeof($this->children);
+        return $this->position < count($this->children);
     }
 
     /**

@@ -14,13 +14,17 @@ namespace Sulu\Bundle\ContentBundle\Search\Metadata;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Metadata\ComplexMetadata;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field\Value;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
+use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
+use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
@@ -52,26 +56,34 @@ class StructureProvider implements ProviderInterface
     private $structureFactory;
 
     /**
+     * @var ExtensionManagerInterface
+     */
+    private $extensionManager;
+
+    /**
      * @var MetadataFactory
      */
     private $metadataFactory;
 
     /**
-     * @param Factory                  $factory
-     * @param MetadataFactory          $metadataFactory
+     * @param Factory $factory
+     * @param MetadataFactory $metadataFactory
      * @param StructureMetadataFactory $structureFactory
-     * @param array                    $mapping
+     * @param ExtensionManagerInterface $extensionManager
+     * @param array $mapping
      */
     public function __construct(
         Factory $factory,
         MetadataFactory $metadataFactory,
         StructureMetadataFactory $structureFactory,
+        ExtensionManagerInterface $extensionManager,
         array $mapping = []
     ) {
         $this->factory = $factory;
         $this->mapping = $mapping;
         $this->metadataFactory = $metadataFactory;
         $this->structureFactory = $structureFactory;
+        $this->extensionManager = $extensionManager;
     }
 
     /**
@@ -106,7 +118,6 @@ class StructureProvider implements ProviderInterface
         $indexMeta->setLocaleField($this->factory->createMetadataField('locale'));
 
         $indexName = 'page';
-        $categoryName = 'page';
 
         // See if the mapping overrides the default index and category name
         foreach ($this->mapping as $className => $mapping) {
@@ -118,11 +129,13 @@ class StructureProvider implements ProviderInterface
             }
 
             $indexName = $mapping['index'];
-            $categoryName = $mapping['category'];
         }
 
-        $indexMeta->setCategoryName($categoryName);
-        $indexMeta->setIndexName($indexName);
+        if ($indexName === 'page') {
+            $indexMeta->setIndexName(new Expression('"page_"~object.getWebspaceName()'));
+        } else {
+            $indexMeta->setIndexName(new Value($indexName));
+        }
 
         foreach ($structure->getProperties() as $property) {
             if ($property instanceof BlockMetadata) {
@@ -162,6 +175,15 @@ class StructureProvider implements ProviderInterface
                 );
             } else {
                 $this->mapProperty($property, $indexMeta);
+            }
+        }
+
+        if ($class->isSubclassOf(ExtensionBehavior::class)) {
+            $extensions = $this->extensionManager->getExtensions($structure->getName());
+            foreach ($extensions as $extension) {
+                foreach ($extension->getFieldMapping() as $name => $mapping) {
+                    $indexMeta->addFieldMapping($name, $mapping);
+                }
             }
         }
 
@@ -224,7 +246,7 @@ class StructureProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getAllMetadata()
     {
@@ -246,7 +268,7 @@ class StructureProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getMetadataForDocument(Document $document)
     {

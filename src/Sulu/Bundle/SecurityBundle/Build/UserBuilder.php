@@ -19,7 +19,7 @@ use Sulu\Bundle\CoreBundle\Build\SuluBuilder;
 class UserBuilder extends SuluBuilder
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -27,7 +27,7 @@ class UserBuilder extends SuluBuilder
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getDependencies()
     {
@@ -35,7 +35,7 @@ class UserBuilder extends SuluBuilder
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function build()
     {

@@ -74,7 +74,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getStructureMetadata($type, $structureType = null)
     {
@@ -146,7 +146,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getStructures($type)
     {
@@ -161,7 +161,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function hasStructuresFor($type)
     {

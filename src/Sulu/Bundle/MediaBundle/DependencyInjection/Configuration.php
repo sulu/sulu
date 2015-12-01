@@ -22,13 +22,33 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 class Configuration implements ConfigurationInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('sulu_media');
         $rootNode->children()
+            ->arrayNode('system_collections')
+                ->useAttributeAsKey('key')
+                ->prototype('array')
+                    ->children()
+                        ->arrayNode('meta_title')
+                            ->prototype('scalar')->end()
+                        ->end()
+                        ->arrayNode('collections')
+                            ->useAttributeAsKey('key')
+                                ->prototype('array')
+                                ->children()
+                                    ->arrayNode('meta_title')
+                                        ->prototype('scalar')->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
             ->arrayNode('search')
                 ->addDefaultsIfNotSet()
                 ->children()
@@ -54,6 +74,15 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end()
+            ->arrayNode('upload')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->integerNode('max_filesize')
+                        ->defaultValue(256)
+                        ->min(0)
+                    ->end()
+                ->end()
+            ->end()
             ->arrayNode('format_manager')
                 ->addDefaultsIfNotSet()
                 ->children()
@@ -75,13 +104,8 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->arrayNode('mime_types')
                         ->prototype('scalar')->end()->defaultValue([
-                            'image/jpeg',
-                            'image/jpg',
-                            'image/gif',
-                            'image/png',
-                            'image/bmp',
-                            'image/svg+xml',
-                            'image/vnd.adobe.photoshop',
+                            'image/*',
+                            'video/*',
                             'application/pdf',
                         ])
                     ->end()
@@ -125,6 +149,13 @@ class Configuration implements ConfigurationInterface
                     ->arrayNode('mime_types_attachment')
                         ->prototype('scalar')->end()
                     ->end()
+                ->end()
+            ->end()
+            ->arrayNode('routing')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->scalarNode('media_proxy_path')->defaultValue('/uploads/media/{slug}')->end()
+                    ->scalarNode('media_download_path')->defaultValue('/media/{id}/download/{slug}')->end()
                 ->end()
             ->end();
 

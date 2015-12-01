@@ -26,6 +26,19 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
     public function testLoadNoConfig()
     {
         $this->load([
+            'content' => [
+                'structure' => [
+                    'default_type' => [
+                        'snippet' => 'default',
+                    ],
+                    'paths' => [],
+                    'type_map' => [
+                        'page' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
+                        'home' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
+                        'snippet' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge',
+                    ],
+                ],
+            ],
             'locales' => ['en' => 'English', 'de' => 'Deutsch'],
             'translations' => ['de', 'en'],
             'fallback_locale' => 'en',
@@ -49,6 +62,11 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
                         'snippet' => 'barfoo',
                     ],
                     'paths' => [],
+                    'type_map' => [
+                        'page' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
+                        'home' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
+                        'snippet' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge',
+                    ],
                 ],
             ],
             'locales' => ['en' => 'English', 'de' => 'Deutsch'],
@@ -66,6 +84,19 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
     {
         $this->load(
             [
+                'content' => [
+                    'structure' => [
+                        'default_type' => [
+                            'snippet' => 'barfoo',
+                        ],
+                        'paths' => [],
+                        'type_map' => [
+                            'page' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
+                            'home' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
+                            'snippet' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge',
+                        ],
+                    ],
+                ],
                 'locales' => ['en' => 'English', 'de' => 'Deutsch', 'fr' => 'France'],
                 'translations' => ['de', 'en'],
                 'fallback_locale' => 'en',

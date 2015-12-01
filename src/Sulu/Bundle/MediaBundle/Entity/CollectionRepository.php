@@ -13,8 +13,11 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryTrait;
 
 /**
  * CollectionRepository.
@@ -24,6 +27,8 @@ use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
  */
 class CollectionRepository extends NestedTreeRepository implements CollectionRepositoryInterface
 {
+    use SecuredEntityRepositoryTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -32,12 +37,12 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         $dql = sprintf(
             'SELECT n, collectionMeta, defaultMeta, collectionType, collectionParent, parentMeta, collectionChildren
                  FROM %s AS n
-                        LEFT JOIN n.meta AS collectionMeta
-                        LEFT JOIN n.defaultMeta AS defaultMeta
-                        LEFT JOIN n.type AS collectionType
-                        LEFT JOIN n.parent AS collectionParent
-                        LEFT JOIN n.children AS collectionChildren
-                        LEFT JOIN collectionParent.meta AS parentMeta
+                     LEFT JOIN n.meta AS collectionMeta
+                     LEFT JOIN n.defaultMeta AS defaultMeta
+                     LEFT JOIN n.type AS collectionType
+                     LEFT JOIN n.parent AS collectionParent
+                     LEFT JOIN n.children AS collectionChildren
+                     LEFT JOIN collectionParent.meta AS parentMeta
                  WHERE n.id = :id',
             $this->_entityName
         );
@@ -47,7 +52,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         $query->setParameter('id', $id);
         $result = $query->getResult();
 
-        if (sizeof($result) === 0) {
+        if (count($result) === 0) {
             return;
         }
 
@@ -57,47 +62,60 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     /**
      * {@inheritdoc}
      */
-    public function findCollectionSet($depth = 0, $filter = [], CollectionInterface $collection = null, $sortBy = [])
-    {
+    public function findCollectionSet(
+        $depth = 0,
+        $filter = [],
+        CollectionInterface $collection = null,
+        $sortBy = [],
+        UserInterface $user = null,
+        $permission = null
+    ) {
         try {
-            $dql = sprintf(
-                'SELECT n, collectionMeta, defaultMeta, collectionType, collectionParent, parentMeta, collectionChildren
-                 FROM %s AS n
-                        LEFT OUTER JOIN n.meta AS collectionMeta
-                        LEFT JOIN n.defaultMeta AS defaultMeta
-                        LEFT JOIN n.type AS collectionType
-                        LEFT JOIN n.parent AS collectionParent
-                        LEFT JOIN n.children AS collectionChildren
-                        LEFT JOIN collectionParent.meta AS parentMeta
-                 WHERE (n.depth <= :depth + :maxDepth OR collectionChildren.depth <= :maxDepthPlusOne)',
-                $this->_entityName
-            );
+            $queryBuilder = $this->createQueryBuilder('collection')
+                ->addSelect('collectionMeta')
+                ->addSelect('defaultMeta')
+                ->addSelect('collectionType')
+                ->addSelect('collectionParent')
+                ->addSelect('parentMeta')
+                ->addSelect('collectionChildren')
+                ->leftJoin('collection.meta', 'collectionMeta')
+                ->leftJoin('collection.defaultMeta', 'defaultMeta')
+                ->leftJoin('collection.type', 'collectionType')
+                ->leftJoin('collection.parent', 'collectionParent')
+                ->leftJoin('collection.children', 'collectionChildren')
+                ->leftJoin('collectionParent.meta', 'parentMeta')
+                ->where('collection.depth <= :depth1 OR collectionChildren.depth <= :depth2');
 
             if ($collection !== null) {
-                $dql .= ' AND n.lft BETWEEN :lft AND :rgt AND n.id != :id';
+                $queryBuilder->andWhere('collection.lft BETWEEN :lft AND :rgt AND collection.id != :id');
             }
 
             if (array_key_exists('search', $filter) && $filter['search'] !== null) {
-                $dql .= ' AND collectionMeta.title LIKE :search';
+                $queryBuilder->andWhere('collectionMeta.title LIKE :search');
             }
 
             if (array_key_exists('locale', $filter)) {
-                $dql .= ' AND (collectionMeta.locale = :locale OR defaultMeta != :locale)';
+                $queryBuilder->andWhere('collectionMeta.locale = :locale OR defaultMeta.locale != :locale');
             }
 
-            if ($sortBy !== null && is_array($sortBy) && sizeof($sortBy) > 0) {
-                $orderBy = [];
+            if ($sortBy !== null && is_array($sortBy) && count($sortBy) > 0) {
                 foreach ($sortBy as $column => $order) {
-                    $orderBy[] = 'collectionMeta.' . $column . ' ' . (strtolower($order) === 'asc' ? 'ASC' : 'DESC');
+                    $queryBuilder->addOrderBy(
+                        'collectionMeta.' . $column,
+                        (strtolower($order) === 'asc' ? 'ASC' : 'DESC')
+                    );
                 }
-                $dql .= ' ORDER BY ' . implode(', ', $orderBy);
             }
 
-            $query = new Query($this->_em);
-            $query->setDQL($dql);
-            $query->setParameter('maxDepth', intval($depth));
-            $query->setParameter('maxDepthPlusOne', intval($depth) + 1);
-            $query->setParameter('depth', $collection !== null ? $collection->getDepth() : 0);
+            if ($user !== null && $permission != null) {
+                $this->addAccessControl($queryBuilder, $user, $permission, Collection::class, 'collection');
+            }
+
+            $collectionDepth = $collection !== null ? $collection->getDepth() : 0;
+
+            $query = $queryBuilder->getQuery();
+            $query->setParameter('depth1', $collectionDepth + $depth);
+            $query->setParameter('depth2', $depth + 1);
 
             if ($collection !== null) {
                 $query->setParameter('lft', $collection->getLft());
@@ -145,25 +163,13 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 ->leftJoin('collection.type', 'type')
                 ->leftJoin('collection.parent', 'parent')
                 ->leftJoin('collection.children', 'children')
-                /*
-                ->leftJoin('collection.creator', 'creator')
-                ->leftJoin('creator.contact', 'creatorContact')
-                ->leftJoin('collection.changer', 'changer')
-                ->leftJoin('changer.contact', 'changerContact')
-                */
                 ->addSelect('collectionMeta')
                 ->addSelect('defaultMeta')
                 ->addSelect('type')
                 ->addSelect('parent')
                 ->addSelect('children');
-                /*
-                ->addSelect('creator')
-                ->addSelect('changer')
-                ->addSelect('creatorContact')
-                ->addSelect('changerContact')
-                */
 
-            if ($sortBy !== null && is_array($sortBy) && sizeof($sortBy) > 0) {
+            if ($sortBy !== null && is_array($sortBy) && count($sortBy) > 0) {
                 foreach ($sortBy as $column => $order) {
                     $qb->addOrderBy('collectionMeta.' . $column, strtolower($order) === 'asc' ? 'ASC' : 'DESC');
                 }
@@ -227,5 +233,53 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         } catch (NoResultException $ex) {
             return [];
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findCollectionByKey($key)
+    {
+        $queryBuilder = $this->createQueryBuilder('collection')
+            ->leftJoin('collection.meta', 'collectionMeta')
+            ->leftJoin('collection.defaultMeta', 'defaultMeta')
+            ->where('collection.key = :key');
+
+        $query = $queryBuilder->getQuery();
+        $query->setParameter('key', $key);
+
+        try {
+            return $query->getSingleResult();
+        } catch (NoResultException $ex) {
+            return;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findTree($id, $locale)
+    {
+        $subQueryBuilder = $this->createQueryBuilder('subCollection')
+            ->select('subCollection.id')
+            ->leftJoin($this->_entityName, 'c', Join::WITH, 'c.id = :id')
+            ->andWhere('subCollection.lft <= c.lft AND subCollection.rgt > c.lft');
+
+        $queryBuilder = $this->createQueryBuilder('collection')
+            ->addSelect('meta')
+            ->addSelect('defaultMeta')
+            ->addSelect('type')
+            ->addSelect('parent')
+            ->leftJoin('collection.meta', 'meta', Join::WITH, 'meta.locale = :locale')
+            ->leftJoin('collection.defaultMeta', 'defaultMeta')
+            ->innerJoin('collection.type', 'type')
+            ->leftJoin('collection.parent', 'parent')
+            ->where(sprintf('parent.id IN (%s)', $subQueryBuilder->getDQL()))
+            ->orWhere('parent.id is NULL')
+            ->orderBy('collection.lft')
+            ->setParameter('id', $id)
+            ->setParameter('locale', $locale);
+
+        return $queryBuilder->getQuery()->getResult();
     }
 }

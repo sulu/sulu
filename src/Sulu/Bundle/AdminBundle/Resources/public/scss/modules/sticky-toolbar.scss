@@ -1,0 +1,28 @@
+.sticky-toolbar.fixed {
+    .list-toolbar-container {
+        width: 100%;
+        padding-right: 100px;
+        position: absolute;
+        background: #f1f1f1;
+        z-index: 98;
+        top: 30px;
+        padding-top: 10px;
+
+        &.fixed {
+            width: $contentFixedWidth;
+
+            @media only screen and (max-width: 50px + $contentFixedSmallWidth + $sidebarMaxCollapseWidth) {
+                width: 100%;
+                max-width: $contentFixedWidth;
+            }
+        }
+    }
+
+    .datagrid-container {
+        margin-top: 80px;
+    }
+
+    .list-toolbar {
+        padding-bottom: 10px;
+    }
+}

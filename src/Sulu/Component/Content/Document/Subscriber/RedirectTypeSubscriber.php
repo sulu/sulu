@@ -11,115 +11,55 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use PHPCR\PropertyType;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\RedirectType;
-use Sulu\Component\Content\Exception\MandatoryPropertyException;
-use Sulu\Component\DocumentManager\DocumentRegistry;
-use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
-use Sulu\Component\DocumentManager\Event\PersistEvent;
-use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\DocumentManager\ProxyFactory;
+use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
+use Sulu\Component\DocumentManager\Events;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class RedirectTypeSubscriber extends AbstractMappingSubscriber
+class RedirectTypeSubscriber implements EventSubscriberInterface
 {
     const REDIRECT_TYPE_FIELD = 'nodeType';
     const INTERNAL_FIELD = 'internal_link';
     const EXTERNAL_FIELD = 'external';
 
-    private $proxyFactory;
-    private $documentRegistry;
-
-    /**
-     * @param PropertyEncoder $encoder
-     * @param ProxyFactory $proxyFactory
-     * @param DocumentRegistry $documentRegistry
-     */
-    public function __construct(
-        PropertyEncoder $encoder,
-        ProxyFactory $proxyFactory,
-        DocumentRegistry $documentRegistry
-    ) {
-        parent::__construct($encoder);
-        $this->proxyFactory = $proxyFactory;
-        $this->documentRegistry = $documentRegistry;
+    public static function getSubscribedEvents()
+    {
+        return [
+            Events::METADATA_LOAD => 'handleMetadataLoad',
+        ];
     }
 
-    public function supports($document)
+    public function handleMetadataLoad(MetadataLoadEvent $event)
     {
-        return $document instanceof RedirectTypeBehavior;
-    }
+        $metadata = $event->getMetadata();
 
-    /**
-     * @param AbstractMappingEvent $event
-     */
-    public function doHydrate(AbstractMappingEvent $event)
-    {
-        $node = $event->getNode();
-        $document = $event->getDocument();
-
-        $redirectType = $node->getPropertyValueWithDefault(
-            $this->encoder->localizedSystemName(self::REDIRECT_TYPE_FIELD, $event->getLocale()),
-            RedirectType::NONE
-        );
-        $document->setRedirectType($redirectType);
-
-        if ($redirectType === RedirectType::INTERNAL) {
-            $internalNode = $node->getPropertyValueWithDefault(
-                $this->encoder->localizedSystemName(self::INTERNAL_FIELD, $event->getLocale()),
-                null
-            );
-
-            if ($internalNode) {
-                $document->setRedirectTarget($this->proxyFactory->createProxyForNode($document, $internalNode));
-            }
-        }
-
-        if ($redirectType === RedirectType::EXTERNAL) {
-            $externalUrl = $node->getPropertyValueWithDefault(
-                $this->encoder->localizedSystemName(self::EXTERNAL_FIELD, $event->getLocale()),
-                null
-            );
-            $document->setRedirectExternal($externalUrl);
-        }
-    }
-
-    /**
-     * @param PersistEvent $event
-     *
-     * @throws MandatoryPropertyException
-     */
-    public function doPersist(PersistEvent $event)
-    {
-        $node = $event->getNode();
-        $document = $event->getDocument();
-
-        $node->setProperty(
-            $this->encoder->localizedSystemName(self::REDIRECT_TYPE_FIELD, $event->getLocale()),
-            $document->getRedirectType() ?: RedirectType::NONE,
-            PropertyType::LONG
-        );
-
-        $node->setProperty(
-            $this->encoder->localizedSystemName(self::EXTERNAL_FIELD, $event->getLocale()),
-            $document->getRedirectExternal()
-        );
-
-        $internalDocument = $document->getRedirectTarget();
-        if (!$internalDocument) {
-            if ($document->getRedirectType() == RedirectType::INTERNAL) {
-                throw new MandatoryPropertyException('Internal link property is mandatory.');
-            }
-
+        if (false === $metadata->getReflectionClass()->isSubclassOf(RedirectTypeBehavior::class)) {
             return;
         }
 
-        $internalNode = $this->documentRegistry->getNodeForDocument($internalDocument);
-        $node->setProperty(
-            $this->encoder->localizedSystemName(self::INTERNAL_FIELD, $event->getLocale()),
-            $internalNode
+        $metadata->addFieldMapping(
+            'redirectType',
+            [
+                'encoding' => 'system_localized',
+                'property' => self::REDIRECT_TYPE_FIELD,
+                'default' => RedirectType::NONE,
+            ]
         );
-
-        $this->doHydrate($event);
+        $metadata->addFieldMapping(
+            'redirectExternal',
+            [
+                'encoding' => 'system_localized',
+                'property' => self::EXTERNAL_FIELD,
+            ]
+        );
+        $metadata->addFieldMapping(
+            'redirectTarget',
+            [
+                'encoding' => 'system_localized',
+                'property' => self::INTERNAL_FIELD,
+                'type' => 'reference',
+            ]
+        );
     }
 }

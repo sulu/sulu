@@ -27,7 +27,7 @@ class UpdateResponseSubscriber implements EventSubscriberInterface
     private $handler;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {

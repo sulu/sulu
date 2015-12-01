@@ -118,6 +118,10 @@ define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config
                     updateOnly.call(this);
                 }.bind(this));
 
+                this.sandbox.on('sulu.app.before-navigate', function() {
+                    stop.call(this);
+                }.bind(this));
+
                 this.sandbox.on('sulu.preview.update', _.debounce(function($el, value) {
                     if (!!this.data.id) {
                         var property = this.getSequence($el);
@@ -127,11 +131,11 @@ define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config
             },
 
             bindDomEvents = function() {
-                var changeFilter = 'input[type="checkbox"].preview-update, input[type="radio"].preview-update, select.preview-update',
-                    keyupFilter = '.preview-update:not(' + changeFilter + ')';
+                var changeFilter = '.preview-change-update, input[type="checkbox"].preview-update, input[type="radio"].preview-update, select.preview-update',
+                    keyupFilter = '.preview-update:not(' + changeFilter + ', .no-preview-update)';
 
                 this.sandbox.dom.on(this.formId, 'keyup', _.debounce(updateEvent.bind(this), this.config.delay), keyupFilter);
-                this.sandbox.dom.on(this.formId, 'change', updateEvent.bind(this), changeFilter);
+                this.sandbox.dom.on(this.formId, 'change', _.debounce(updateEvent.bind(this), 10), changeFilter);
             };
 
         return {

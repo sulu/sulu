@@ -53,7 +53,7 @@ class LocalizationProvider implements LocalizationProviderInterface
 
         $localization = new Localization();
         $localization->setLanguage($parts[0]);
-        if (sizeof($parts) > 1) {
+        if (count($parts) > 1) {
             $localization->setCountry($parts[1]);
         }
 

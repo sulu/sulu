@@ -43,7 +43,7 @@ abstract class BasePageDocumentType extends AbstractStructureBehaviorType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setDefaultOptions(OptionsResolverInterface $options)
     {
@@ -54,7 +54,7 @@ abstract class BasePageDocumentType extends AbstractStructureBehaviorType
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -68,7 +68,7 @@ abstract class BasePageDocumentType extends AbstractStructureBehaviorType
             'allow_add' => true,
             'allow_delete' => true,
         ]);
-        $builder->add('redirectType', 'text');
+        $builder->add('redirectType', 'integer');
         $builder->add('redirectTarget', 'document_object');
         $builder->add('redirectExternal', 'text');
         $builder->add('workflowStage', 'integer');

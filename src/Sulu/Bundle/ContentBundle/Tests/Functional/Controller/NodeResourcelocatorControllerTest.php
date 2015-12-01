@@ -179,7 +179,7 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $result = (array) json_decode($this->client->getResponse()->getContent(), true);
 
-        $this->assertEquals(1, sizeof($result['_embedded']['resourcelocators']));
+        $this->assertEquals(1, count($result['_embedded']['resourcelocators']));
         $this->assertEquals(1, $result['total']);
         $this->assertEquals('/news', $result['_embedded']['resourcelocators'][0]['resourceLocator']);
     }
@@ -216,7 +216,7 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $result = (array) json_decode($this->client->getResponse()->getContent(), true);
 
-        $this->assertEquals(0, sizeof($result['_embedded']['resourcelocators']));
+        $this->assertEquals(0, count($result['_embedded']['resourcelocators']));
         $this->assertEquals(0, $result['total']);
     }
 

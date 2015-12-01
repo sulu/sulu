@@ -45,7 +45,7 @@ class NodeOrderBuilder implements BuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setContext(BuilderContext $context)
     {
@@ -53,7 +53,7 @@ class NodeOrderBuilder implements BuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -61,7 +61,7 @@ class NodeOrderBuilder implements BuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getDependencies()
     {
@@ -69,7 +69,7 @@ class NodeOrderBuilder implements BuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function build()
     {

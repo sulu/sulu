@@ -34,6 +34,7 @@ define([], function() {
             maxWidthClass: 'max',
             loaderClass: 'sidebar-loader',
             visibleSidebarClass: 'has-visible-sidebar',
+            maxSidebarClass: 'has-max-sidebar',
             noVisibleSidebarClass: 'has-no-visible-sidebar',
             hiddenClass: 'hidden'
         },
@@ -193,9 +194,10 @@ define([], function() {
 
         /**
          * Change the width type of the column
-         * @param {String} the new width-type. 'fixed' or 'max'
+         * @param {String} width the new width-type. 'fixed' or 'max'
          */
         changeWidth: function(width) {
+            this.width = width;
             if (width === 'fixed') {
                 this.changeToFixedWidth();
             } else if (width === 'max') {
@@ -221,6 +223,8 @@ define([], function() {
                 // other containers to take the max width
                 this.sandbox.dom.detach($column);
                 this.sandbox.dom.prepend($parent, $column);
+
+                this.sandbox.dom.removeClass($parent, constants.maxSidebarClass);
             }
         },
 
@@ -241,6 +245,8 @@ define([], function() {
                 // it isn't possible to take the max width
                 this.sandbox.dom.detach($column);
                 this.sandbox.dom.append($parent, $column);
+
+                this.sandbox.dom.addClass($parent, constants.maxSidebarClass);
             }
         },
 
@@ -264,6 +270,8 @@ define([], function() {
         showColumn: function() {
             var $column = this.sandbox.dom.find(constants.columnSelector),
                 $parent = this.sandbox.dom.parent($column);
+
+            this.changeWidth(this.width);
 
             this.sandbox.dom.removeClass($parent, constants.noVisibleSidebarClass);
             this.sandbox.dom.addClass($parent, constants.visibleSidebarClass);

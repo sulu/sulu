@@ -34,7 +34,7 @@ class ContactTitleController extends RestController implements ClassResourceInte
     protected static $entityName = 'SuluContactBundle:ContactTitle';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected static $entityKey = 'contactTitles';
 

@@ -27,9 +27,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
 {
     public function prepend(ContainerBuilder $container)
     {
-        $extensions = $container->getExtensions();
-
-        if (isset($extensions['sulu_core'])) {
+        if ($container->hasExtension('sulu_core')) {
             $prepend = [
                 'content' => [
                     'structure' => [
@@ -65,7 +63,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -84,6 +82,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         }
 
         $loader->load('services.xml');
+        $loader->load('smart_content.xml');
         $loader->load('content_types.xml');
         $loader->load('preview.xml');
         $loader->load('structure.xml');

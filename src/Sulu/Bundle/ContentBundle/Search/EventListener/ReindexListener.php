@@ -14,7 +14,9 @@ namespace Sulu\Bundle\ContentBundle\Search\EventListener;
 use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\Metadata\BaseMetadataFactory;
 use Symfony\Component\Console\Helper\ProgressHelper;
 
 /**
@@ -43,16 +45,23 @@ class ReindexListener
      */
     private $documentManager;
 
+    /**
+     * @var BaseMetadataFactory
+     */
+    private $baseMetadataFactory;
+
     public function __construct(
         DocumentManager $documentManager,
         DocumentInspector $inspector,
         SearchManagerInterface $searchManager,
+        BaseMetadataFactory $baseMetadataFactory,
         array $mapping = []
     ) {
         $this->searchManager = $searchManager;
         $this->mapping = $mapping;
         $this->documentManager = $documentManager;
         $this->inspector = $inspector;
+        $this->baseMetadataFactory = $baseMetadataFactory;
     }
 
     /**
@@ -63,27 +72,40 @@ class ReindexListener
     public function onIndexRebuild(IndexRebuildEvent $event)
     {
         $output = $event->getOutput();
-        $purge = $event->getPurge();
         $filter = $event->getFilter();
 
         $output->writeln('<info>Rebuilding content index</info>');
 
+        $typeMap = $this->baseMetadataFactory->getPhpcrTypeMap();
+
+        $phpcrTypes = [];
+        foreach ($typeMap as $type) {
+            $phpcrType = $type['phpcr_type'];
+
+            if ($phpcrType !== 'sulu:path') {
+                $phpcrTypes[] = sprintf('[jcr:mixinTypes] = "%s"', $phpcrType);
+            }
+        }
+
+        $condition = implode(' or ', $phpcrTypes);
+
         // TODO: We cannot select all contents via. the parent type, see: https://github.com/jackalope/jackalope-doctrine-dbal/issues/217
         $query = $this->documentManager->createQuery(
-            'SELECT * FROM [nt:unstructured] AS a WHERE [jcr:mixinTypes] = "sulu:page" or [jcr:mixinTypes] = "sulu:snippet"'
+            'SELECT * FROM [nt:unstructured] AS a WHERE ' . $condition
         );
 
         $count = [];
-
-        if ($purge) {
-            $this->purgeContentIndexes($output);
-        }
 
         $documents = $query->execute();
         $progress = new ProgressHelper();
         $progress->start($output, count($documents));
 
         foreach ($documents as $document) {
+            if ($document instanceof SecurityBehavior && !empty($document->getPermissions())) {
+                $progress->advance();
+                continue;
+            }
+
             $locales = $this->inspector->getLocales($document);
 
             foreach ($locales as $locale) {
@@ -125,15 +147,6 @@ class ReindexListener
                 $className,
                 $count
             ));
-        }
-    }
-
-    private function purgeContentIndexes($output)
-    {
-        foreach ($this->mapping as $structureMapping) {
-            $structureIndexName = $structureMapping['index'];
-            $output->writeln('<comment>Purging index</comment>: ' . $structureIndexName);
-            $this->searchManager->purge($structureIndexName);
         }
     }
 }

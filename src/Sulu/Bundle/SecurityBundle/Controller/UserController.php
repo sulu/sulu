@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
+use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\UsernameNotUniqueException;
@@ -44,6 +45,7 @@ class UserController extends RestController implements ClassResourceInterface, S
     protected $fieldDescriptors;
 
     // TODO: move field descriptors to a manager
+
     protected function getFieldDescriptors()
     {
         if (empty($this->fieldDescriptors)) {
@@ -106,9 +108,11 @@ class UserController extends RestController implements ClassResourceInterface, S
             return $this->getUserManager()->getUserById($id);
         };
 
-        return $this->handleView(
-            $this->responseGetById($id, $find)
-        );
+        $view = $this->responseGetById($id, $find);
+
+        $this->addSerializationGroups($view);
+
+        return $this->handleView($view);
     }
 
     /**
@@ -135,6 +139,8 @@ class UserController extends RestController implements ClassResourceInterface, S
         } catch (RestException $re) {
             $view = $this->view($re->toArray(), 400);
         }
+
+        $this->addSerializationGroups($view);
 
         return $this->handleView($view);
     }
@@ -166,6 +172,8 @@ class UserController extends RestController implements ClassResourceInterface, S
             $view = $this->view($exc->toArray(), 400);
         }
 
+        $this->addSerializationGroups($view);
+
         return $this->handleView($view);
     }
 
@@ -194,6 +202,8 @@ class UserController extends RestController implements ClassResourceInterface, S
             $view = $this->view($exc->toArray(), 400);
         }
 
+        $this->addSerializationGroups($view);
+
         return $this->handleView($view);
     }
 
@@ -221,6 +231,8 @@ class UserController extends RestController implements ClassResourceInterface, S
             $view = $this->view($exc->toArray(), 400);
         }
 
+        $this->addSerializationGroups($view);
+
         return $this->handleView($view);
     }
 
@@ -247,6 +259,7 @@ class UserController extends RestController implements ClassResourceInterface, S
 
     // TODO: Use schema validation see:
     // https://github.com/sulu-io/sulu/issues/1136
+
     private function checkArguments(Request $request)
     {
         if ($request->get('username') == null) {
@@ -275,7 +288,6 @@ class UserController extends RestController implements ClassResourceInterface, S
     {
         $view = null;
         if ($request->get('flat') == 'true') {
-
             /** @var RestHelperInterface $restHelper */
             $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
@@ -317,15 +329,30 @@ class UserController extends RestController implements ClassResourceInterface, S
             $view = $this->view($list, 200);
         }
 
+        $this->addSerializationGroups($view);
+
         return $this->handleView($view);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getSecurityContext()
     {
         return 'sulu.security.users';
+    }
+
+    /**
+     * Adds the necessary serialization groups to the given view.
+     */
+    private function addSerializationGroups($view)
+    {
+        // set serialization groups
+        $view->setSerializationContext(
+            SerializationContext::create()->setGroups(
+                ['Default', 'partialContact', 'fullUser']
+            )
+        );
     }
 
     /**

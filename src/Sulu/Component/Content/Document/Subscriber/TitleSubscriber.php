@@ -18,21 +18,30 @@ use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class TitleSubscriber extends AbstractMappingSubscriber
+class TitleSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var DocumentInspector
+     */
     private $inspector;
+
+    /**
+     * @var PropertyEncoder
+     */
+    private $encoder;
 
     public function __construct(
         PropertyEncoder $encoder,
         DocumentInspector $inspector
     ) {
-        parent::__construct($encoder);
+        $this->encoder = $encoder;
         $this->inspector = $inspector;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
@@ -43,17 +52,17 @@ class TitleSubscriber extends AbstractMappingSubscriber
         ];
     }
 
-    public function supports($document)
-    {
-        return $document instanceof TitleBehavior;
-    }
-
     /**
      * @param HydrateEvent $event
      */
-    public function doHydrate(AbstractMappingEvent $event)
+    public function handleHydrate(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();
+
+        if (!$document instanceof TitleBehavior) {
+            return;
+        }
+
         $title = $this->getTitle($document);
 
         $document->setTitle($title);
@@ -62,9 +71,13 @@ class TitleSubscriber extends AbstractMappingSubscriber
     /**
      * @param PersistEvent $event
      */
-    public function doPersist(PersistEvent $event)
+    public function handlePersist(PersistEvent $event)
     {
         $document = $event->getDocument();
+
+        if (!$document instanceof TitleBehavior) {
+            return;
+        }
 
         $title = $document->getTitle();
 
@@ -74,7 +87,7 @@ class TitleSubscriber extends AbstractMappingSubscriber
         }
 
         $document->getStructure()->getProperty('title')->setValue($title);
-        $this->doHydrate($event);
+        $this->handleHydrate($event);
     }
 
     private function getTitle($document)

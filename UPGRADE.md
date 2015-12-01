@@ -1,5 +1,393 @@
 # Upgrade
 
+## dev-develop
+
+
+### IndexName decorators from MassiveSearchBundle
+
+The names of the indexes in the system can now be altered using decorators. There
+is also a `PrefixDecorator`, which can prefixes the index name with an installation
+specific prefix, which can be set using the `massive_search.metadata.prefix`
+parameter.
+
+The configuration parameter `massive_search.localization_strategy` have been removed.
+
+The indexes have to be rebuilt using the following command:
+
+```bash
+app/console massive:search:index:rebuild --purge
+```
+
+### List-Toobar
+
+To enable a sticky behaviour take a look at the documentation <http://docs.sulu.io/en/latest/bundles/admin/javascript-hooks/sticky-toolbar.html>
+
+### Url Content-Type
+
+The old upgrade for the url content-type don't upgrade properties in blocks. Rerun the migrate command to upgrade them.
+
+```bash
+app/console phpcr:migrations:migrate
+```
+
+### User locking
+
+The locked toggler in the user tab of the contact section now sets the `locked`
+field in the `se_users` table. Before this setting was written to the
+`disabled` flag in the `co_contacts` table, which is removed now. If you have
+used this field make sure to backup the data before applying the following
+command:
+
+```bash
+app/console doctrine:schema:update --force
+```
+
+### Date Content-Type
+
+The type of the date value in the database was wrong to update your existing data use following command:
+
+```bash
+app/console phpcr:migrations:migrate
+```
+
+### Media View Settings
+
+The media collection thumbnailLarge view was removed from the media, 
+to avoid an error, remove all `collectionEditListView` from the user settings table.
+
+```sql
+DELETE FROM `se_user_settings` WHERE `settingsKey` = 'collectionEditListView';
+```
+### Search
+
+To index multiple fields (and `category_list` content-type) you have to add the attribute `type="array"` to the
+`sulu.search.field` tag. The `tag_list` content-type has its own search-field type `tags`
+(`<tag name="sulu.search.field" type="tags"/>`).
+
+### Category Content-Type
+
+The category content-type converts the selected ids into category data only for website rendering now. 
+
+### System Collections
+
+Remove the config `sulu_contact.form.avatar_collection` and note it you will need it in the sql statement below for the
+placeholder `{old-avatar-collection}` (default value is `1`).
+
+Update the database schema and then update the data-fixtures by running following sql statement.
+
+```bash
+app/console doctrine:schema:update --force
+```
+
+```sql
+UPDATE me_collection_types SET collection_type_key='collection.default', name='Default' WHERE id=1;
+INSERT INTO me_collection_types (id, name, collection_type_key) VALUES ('2', 'System Collections', 'collection.system');
+```
+
+The following sql statement moves the avatar images into the newly created system collections. To find the value for the
+placeholder `{new-system-collection-id}` you can browse in the admin to the collection and note the `id` you find in the
+url.
+
+```sql
+UPDATE me_media SET idCollections={new-system-collection-id} WHERE idCollections={old-avatar-collection};
+```
+
+### Search
+
+The search mapping has to be changed, in particular the `index` tag. It is now
+evaluated the same way as the other fields, so using `<index name="..."/>` will
+now try to resolve the name of the index using a property from the given
+object. If the old behavior is desired `<index value="..."/>` should be used
+now.
+
+Also the structure of the indexes has changed. Instead of one `page` index
+containing all the pages this index is split into smaller ones after the scheme
+`page_<webspace-key>`. This means that your own SearchController have to be
+adapted. Additionally you have to rebuild your index, in order for these
+changes to apply:
+
+```bash
+app/console massive:search:index:rebuild --purge
+```
+
+### Category
+Category has now a default locale this has to set before use. You can use this sql statement after update your schema
+(`app/console doctrine:schema:update --force`):
+
+```sql
+UPDATE ca_categories AS c SET default_locale = (SELECT locale FROM ca_category_translations WHERE idCategories = c.id LIMIT 1) WHERE default_locale = "";
+```
+
+### Websocket Component
+The following Interfaces has new methods
+
+Interface                                                             | Method                                                                  | Description
+----------------------------------------------------------------------|-------------------------------------------------------------------------|---------------------------------------------------
+Sulu/Component/Websocket/MessageDispatcher/MessageHandlerInterface    | onClose(ConnectionInterface $conn, MessageHandlerContext $context)      | will be called when a connection is closed or lost.
+Sulu/Component/Websocket/MessageDispatcher/MessageDispatcherInterface | onClose(ConnectionInterface $conn, ConnectionContextInterface $context) | will be called when a connection is closed or lost.
+
+### Logo/Avatar in Contact-Section
+Can now be deleted from collection view. For that the database has to be updated.
+
+```bash
+app/console doctrine:schema:update --force
+```
+
+### Infinite scroll
+The infinite-scroll-extension got refactored. To initialize infinite-scroll on an element, use
+"this.sandbox.infiniteScroll.initialize(selector, callback)" instead of "this.sandbox.infiniteScroll(selector, callback)"
+now. To unbind an infinite-scroll handler, use "this.sandbox.infiniteScroll.destroy(selector)"
+
+### URL-ContentType
+The URL-ContentType can now handle schemas like http or https. For that you have to add the default scheme to the
+database records by executing following SQL statement:
+
+```sql
+UPDATE co_urls AS url SET url.url = CONCAT('http://', url.url) WHERE url.url NOT LIKE 'http://%';
+```
+
+To updated you content pages and snippets simply run:
+
+```bash
+app/console phpcr:migrations:migrate
+```
+
+Consider that the URL is now stored including the scheme (http://, ftp://, and so on), and therefore must not be
+appended in the Twig template anymore.
+
+### Media Metadata
+Copyright field is now available in the metadata of medias. Therefore you have to update you database:
+
+```bash
+app/console doctrine:schema:update --force
+```
+
+### XML-Templates
+Blocks now supports `minOccurs="0"` and `maxOccurs > 127`. For that the validation was improved and for both negative
+values wont be supported anymore.
+
+### Preview
+The preview can now handle attributes and nested properties. To differentiate blocks and nested properties, it is now
+necessary to add the property `typeof="collection"` to the root of a block `<div>` and 
+`typeof="block" rel="name of block property"` to each child - see example.
+
+__block:__
+
+```twig
+<div class="row" property="block" typeof="collection">
+    {% for block in content.block %}
+        <div rel="block" typeof="block">
+            <h1 property="title">{{ block.title }}</h1>
+        </div>
+    {% endfor %}
+</div>
+```
+
+__nested properties:__
+
+```twig
+<div property="is_winter">
+    {% if content.is_winter %}
+        <div property="article">{{ content.winter_article }}</div>
+    {% endif %}
+</div>
+```
+
+### ApiCategory
+The function `getTranslation` was removed.  This avoid a INSERT SQL Exception when a serialization of categories
+(without translation) is called in the same request.
+
+### Registering JS-Routes
+When registering backbone-routes now - instead of directly starting the corresponding component via 'this.html' - make your callback returning the component.
+So for example the following:
+``` js
+sandbox.mvc.routes.push({
+    route: 'contacts/accounts/edit::id/:content',
+    callback: function(id) {
+        this.html('<div data-aura-component="accounts/edit@sulucontact" data-aura-id="' + id + '"/>');
+    }
+});
+```
+becomes:
+``` js
+sandbox.mvc.routes.push({
+    route: 'contacts/accounts/edit::id/:content',
+    callback: function(id) {
+        return '<div data-aura-component="accounts/edit@sulucontact" data-aura-id="' + id + '"/>';
+    }
+});
+```
+
+### Media Content Selection Type attribute changed
+
+When you use the sulu media selection in your custom bundle you need to change the `data-type`.
+
+**Before:**
+
+``` html
+<div id="{{ id|raw }}"
+    ...
+    data-type="mediaSelection"
+    data-aura-component="media-selection@sulumedia"
+    ...
+</div>
+```
+
+**After:**
+``` html
+<div id="{{ id|raw }}"
+    ...
+    data-type="media-selection"
+    data-aura-component="media-selection@sulumedia"
+    ...
+</div>
+```
+
+### Header
+The header got a complete redesign, the breadcrumb and bottom-content are not available anymore. Also the event `header.set-toolbar` got marked as deprecated. The recommended way to start a sulu-header is via the header-hook of a view-component.
+
+Some properties in the header-hook have changed, some are new, some not supported anymore. For a complete overview on the current properties in the header-hook see the documentation: http://docs.sulu.io/en/latest/bundles/admin/javascript-hooks/index.html
+
+The major work when upgrading to the new header is to change the button-templates to sulu-buttons. Before you had to pass a template like e.g. 'default', which initialized a set of buttons, now each button is passed explicitly which gives you more flexibility. Lets have a look at an example:
+
+**Before:**
+```js
+header: {
+    tabs: {
+        url: '/admin/content-navigations?alias=category'
+    },
+    toolbar: {
+        template: 'default'
+    }
+}
+```
+
+**After:**
+```js
+header: {
+    tabs: {
+        url: '/admin/content-navigations?alias=category'
+    },
+    toolbar: {
+        buttons: {
+            save: {},
+            settings: {
+                options: {
+                    dropdownItems: {
+                        delete: {}
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+If you are using the `default` template in the header and now change to the sulu-buttons `save` and `delete` the emitted events changed.
+
+| **Before**                    | **After**                    |
+|-------------------------------|------------------------------|
+| `sulu.header.toolbar.save`    | `sulu.toolbar.save`          |
+| `sulu.header.toolbar.delete`  | `sulu.toolbar.delete`        |
+
+Also the call for `disable`, `enable` and `loading` state of the `save` button has changed:
+
+**Before:**
+
+``` js
+this.sandbox.emit('sulu.header.toolbar.state.change', 'edit', false); // enable
+this.sandbox.emit('sulu.header.toolbar.state.change', 'edit', true, true); // disabled
+this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button'); // loading 
+```
+
+**After:**
+
+``` js
+this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false); // enable
+this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true); // disabled
+this.sandbox.emit('sulu.header.toolbar.item.loading', 'save'); // loading 
+```
+
+#### Tabs
+The tabs can be configured with the 'url', 'data' and 'container' option. The option 'fullControll' got removed. You can get the same effect by passing data with no 'component'-property.
+For a complete overview on the current properties in the header-hook see the documentation: http://docs.sulu.io/en/latest/bundles/admin/javascript-hooks/index.html
+
+#### Toolbar
+The language-changer can be configured as it was. 'Template' and 'parentTemplate' in contrast are not supported anymore. Instead you pass an array of sulu-buttons.
+Moreover the format of the buttons itself changed: https://github.com/massiveart/husky/blob/f9b3abeb547553c9c031710f1f98d0288b08ca9c/UPGRADE.md
+Have a look at the documentation: http://docs.sulu.io/en/latest/bundles/admin/javascript-hooks/header.html
+
+#### Language changer
+The interface of the language-changer in the header hook stayed the same, however the emitted event changed from `sulu.header.toolbar.language-changed` to `sulu.header.language-changed`. A callback to this event recieves an object with an `id`- and a `title`-property.
+
+**Before:**
+```js
+this.sandbox.on('sulu.header.toolbar.language-changed', this.languageChanged.bind(this));
+// ...
+languageChanged: function(locale) {
+    this.options.locale = locale;
+}
+```
+
+**After:**
+```js
+this.sandbox.on('sulu.header.language-changed', this.languageChanged.bind(this));
+// ...
+languageChanged: function(locale) {
+    this.options.locale = locale.id;
+}
+```
+
+#### Sulu-buttons
+Buttons for toolbars get specified in an aura-extension (`sandbox.sulu.buttons` and `sandbox.sulu.buttons.dropdownItems`). Therfore each bundle can add their own buttons to the pool. The toolbar in the header fetches its buttons from this pool.
+Have a look at the documentation: http://docs.sulu.io/en/latest/bundles/admin/sulu-buttons.html
+
+#### List-toolbar
+The 'inHeader' option got removed and is not supported anymore. `Sulu.buttons` are used internally and can be passed via the template which is recommended instead of using string templates.
+
+#### Content-Types
+
+Interface of Method has changed.
+
+Old                                | New
+-----------------------------------|---------------------------------------------------------------------
+public function getDefaultParams() | public function getDefaultParams(PropertyInterface $property = null)
+
+### Modified listbuilder to work with expressions
+
+The listbuilder uses now expressions to build the query. In course of these changes some default values have been
+removed from some methodes of the `AbstractListBuilder` because of unclear meaning / effect. Changed function parameters:
+
+- where (conjunction removed)
+- between (conjunction removed)
+
+### Security
+
+The security now requires its own phpcr namespace for storing security related information. To register this namespace
+execute the following command.
+
+```bash
+app/console sulu:phpcr:init
+```
+
+### Enabled listbuilder to have multiple sort fields
+
+It's now possible to have multiple sort fields by calling `sort()`. It's previous behavior was to always reset the sort
+field, instead of adding a new one. Check if you haven't applied `sort()` multiple times to a listbuilder with the
+purpose of overriding its previous sort field.
+
+### Datagrid style upgrade
+
+- Deleted options: fullwidth, stickyHeader, rowClickSelect
+- The list-view with no margin was removed from the design. The view is still of width: 'max' but now with spacing on the left and right.
+- For routing from a list to the edit the new option actionCallback should be used. For other actions like displaying additional information in the sidebar there exists a new option clickCallback. These two callbacks alow the component to adapt its style depending on if there is an action or not. For special cases there is still the item.click event.
+
+### Filter conjunction field is nullable
+
+```bash
+app/console doctrine:schema:update --force
+```
+
 ## 1.0.8
 
 The `sulu_meta_seo` twig method does not render the canonical tag for shadow pages. Therefore this method is deprecated
@@ -39,6 +427,11 @@ Filter values will now be copied from shadow-base locale to shadowed locale. Upg
 ```bash
 app/console phpcr:migrations:migrate
 ```
+
+### User serialization
+
+The groups of the JMSSerializer for the users have changed. Make sure to include the group `fullUser` in the
+`SerializationContext` if you are missing some fields in the serialized User.
 
 ## 1.0.0
 

@@ -12,15 +12,16 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Repository;
 
 use PHPCR\NodeInterface;
-use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Extension\ExtensionInterface;
+use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
-use Sulu\Component\Webspace\Webspace;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
 /**
  * @group functional
@@ -43,6 +44,11 @@ class NodeRepositoryTest extends SuluTestCase
      */
     private $extensions;
 
+    /**
+     * @var SessionManagerInterface
+     */
+    private $sessionManager;
+
     protected function setUp()
     {
         $this->initPhpcr();
@@ -50,6 +56,7 @@ class NodeRepositoryTest extends SuluTestCase
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');
         $this->nodeRepository = $this->getContainer()->get('sulu_content.node_repository');
         $this->extensionManager = $this->getContainer()->get('sulu_content.extension.manager');
+        $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->extensionManager->addExtension(new TestExtension('test1', 'test1'));
     }
 
@@ -159,25 +166,6 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('/asdf', $result['url']);
     }
 
-    public function testIndexNode()
-    {
-        $data = [
-            'title' => 'Testtitle',
-            'url' => '/',
-        ];
-        $this->nodeRepository->saveIndexNode(
-            $data,
-            'overview',
-            'sulu_io',
-            'en',
-            1
-        );
-
-        $index = $this->nodeRepository->getIndexNode('sulu_io', 'en');
-
-        $this->assertEquals('Testtitle', $index['title']);
-    }
-
     public function testGetWebspaceNode()
     {
         $result = $this->nodeRepository->getWebspaceNode('sulu_io', 'en');
@@ -187,9 +175,12 @@ class NodeRepositoryTest extends SuluTestCase
 
     public function testGetWebspaceNodes()
     {
+        $this->createWebspaceRoot('test_io');
+
         $result = $this->nodeRepository->getWebspaceNodes('en');
 
         $this->assertEquals('Sulu CMF', $result['_embedded']['nodes'][0]['title']);
+        $this->assertEquals('Test CMF', $result['_embedded']['nodes'][1]['title']);
     }
 
     /**
@@ -201,8 +192,8 @@ class NodeRepositoryTest extends SuluTestCase
         $structure = $structures[2];
         $this->assertEquals('Child 1', $structure->getTitle());
 
-        $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'en', false, false);
-        $this->assertEquals(2, sizeof($result['_embedded']['nodes']));
+        $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'en', false, false, false);
+        $this->assertEquals(2, count($result['_embedded']['nodes']));
     }
 
     /**
@@ -214,8 +205,8 @@ class NodeRepositoryTest extends SuluTestCase
         $structures = $this->prepareGetTreeTestData();
         $structure = $structures[0];
 
-        $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'en', false, false);
-        $this->assertEquals(2, sizeof($result['_embedded']['nodes']));
+        $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'en', false, false, false);
+        $this->assertEquals(2, count($result['_embedded']['nodes']));
         $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['path']);
         $this->assertTrue($result['_embedded']['nodes'][0]['hasSub']);
@@ -229,14 +220,14 @@ class NodeRepositoryTest extends SuluTestCase
         $structures = $this->prepareGetTreeTestData();
         $structure = $structures[0];
 
-        $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'en', false, true);
-        $this->assertEquals(1, sizeof($result['_embedded']['nodes']));
+        $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'en', false, false, true);
+        $this->assertEquals(1, count($result['_embedded']['nodes']));
         $webspace = $result['_embedded']['nodes'][0];
         $this->assertEquals('Sulu CMF', $webspace['title']);
         $this->assertEquals('/', $webspace['path']);
         $this->assertTrue($webspace['hasSub']);
 
-        $this->assertEquals(2, sizeof($webspace['_embedded']['nodes']));
+        $this->assertEquals(2, count($webspace['_embedded']['nodes']));
         $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['_embedded']['nodes'][0]['path']);
         $this->assertTrue($result['_embedded']['nodes'][0]['_embedded']['nodes'][0]['hasSub']);
@@ -250,8 +241,8 @@ class NodeRepositoryTest extends SuluTestCase
         $structures = $this->prepareGetTreeTestData();
         $structure = $structures[0];
 
-        $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'de', false, false);
-        $this->assertEquals(2, sizeof($result['_embedded']['nodes']));
+        $result = $this->nodeRepository->getNodesTree($structure->getUuid(), 'sulu_io', 'de', false, false, false);
+        $this->assertEquals(2, count($result['_embedded']['nodes']));
         $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['path']);
         $this->assertEquals('ghost', $result['_embedded']['nodes'][0]['type']['name']);
@@ -313,7 +304,7 @@ class NodeRepositoryTest extends SuluTestCase
         $data = $this->prepareGetTestData();
 
         $result = $this->nodeRepository->getNodesByIds([], 'sulu_io', 'en');
-        $this->assertEquals(0, sizeof($result['_embedded']['nodes']));
+        $this->assertEquals(0, count($result['_embedded']['nodes']));
         $this->assertEquals(0, $result['total']);
 
         $result = $this->nodeRepository->getNodesByIds(
@@ -323,7 +314,7 @@ class NodeRepositoryTest extends SuluTestCase
             'sulu_io',
             'en'
         );
-        $this->assertEquals(1, sizeof($result['_embedded']['nodes']));
+        $this->assertEquals(1, count($result['_embedded']['nodes']));
         $this->assertEquals(1, $result['total']);
         $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['path']);
@@ -334,7 +325,7 @@ class NodeRepositoryTest extends SuluTestCase
         $data = $this->prepareGetTestData();
 
         $result = $this->nodeRepository->getNodesByIds([], 'sulu_io', 'en');
-        $this->assertEquals(0, sizeof($result['_embedded']['nodes']));
+        $this->assertEquals(0, count($result['_embedded']['nodes']));
         $this->assertEquals(0, $result['total']);
 
         $result = $this->nodeRepository->getNodesByIds(
@@ -345,7 +336,7 @@ class NodeRepositoryTest extends SuluTestCase
             'sulu_io',
             'en'
         );
-        $this->assertEquals(1, sizeof($result['_embedded']['nodes']));
+        $this->assertEquals(1, count($result['_embedded']['nodes']));
         $this->assertEquals(1, $result['total']);
         $this->assertEquals('Testtitle', $result['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle', $result['_embedded']['nodes'][0]['path']);
@@ -542,13 +533,13 @@ class NodeRepositoryTest extends SuluTestCase
 
         // check none existing source node
         $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'sulu_io', 'en');
-        $this->assertEquals(1, sizeof($firstLayerNodes['_embedded']['nodes']));
+        $this->assertEquals(1, count($firstLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['path']);
         $this->assertEquals('/news/test2', $firstLayerNodes['_embedded']['nodes'][0]['url']);
 
         $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'sulu_io', 'en');
-        $this->assertEquals(1, sizeof($secondLayerNodes['_embedded']['nodes']));
+        $this->assertEquals(1, count($secondLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
         $this->assertEquals('/news/test2/test1', $secondLayerNodes['_embedded']['nodes'][0]['url']);
@@ -608,13 +599,13 @@ class NodeRepositoryTest extends SuluTestCase
 
         // check none existing source node
         $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'sulu_io', 'en');
-        $this->assertEquals(1, sizeof($firstLayerNodes['_embedded']['nodes']));
+        $this->assertEquals(1, count($firstLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['path']);
         $this->assertEquals('/news/test2', $firstLayerNodes['_embedded']['nodes'][0]['url']);
 
         $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'sulu_io', 'en');
-        $this->assertEquals(1, sizeof($secondLayerNodes['_embedded']['nodes']));
+        $this->assertEquals(1, count($secondLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
         $this->assertEquals($data[1]->getUuid(), $secondLayerNodes['_embedded']['nodes'][0]['internal_link']);
@@ -659,13 +650,13 @@ class NodeRepositoryTest extends SuluTestCase
 
         // check none existing source node
         $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'sulu_io', 'en');
-        $this->assertEquals(1, sizeof($firstLayerNodes['_embedded']['nodes']));
+        $this->assertEquals(1, count($firstLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][0]['path']);
         $this->assertEquals('/news/test2', $firstLayerNodes['_embedded']['nodes'][0]['url']);
 
         $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'sulu_io', 'en');
-        $this->assertEquals(1, sizeof($secondLayerNodes['_embedded']['nodes']));
+        $this->assertEquals(1, count($secondLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
         $this->assertEquals('www.google.at', $secondLayerNodes['_embedded']['nodes'][0]['external']);
@@ -691,14 +682,14 @@ class NodeRepositoryTest extends SuluTestCase
 
         // check none existing source node
         $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'sulu_io', 'en');
-        $this->assertEquals(2, sizeof($firstLayerNodes['_embedded']['nodes']));
+        $this->assertEquals(2, count($firstLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['path']);
         $this->assertEquals('Testtitle2', $firstLayerNodes['_embedded']['nodes'][1]['title']);
         $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][1]['path']);
 
         $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'sulu_io', 'en');
-        $this->assertEquals(1, sizeof($secondLayerNodes['_embedded']['nodes']));
+        $this->assertEquals(1, count($secondLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
     }
@@ -757,7 +748,7 @@ class NodeRepositoryTest extends SuluTestCase
 
         // check none existing source node
         $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'sulu_io', 'en');
-        $this->assertEquals(2, sizeof($firstLayerNodes['_embedded']['nodes']));
+        $this->assertEquals(2, count($firstLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['path']);
         $this->assertEquals($data[1]->getUuid(), $firstLayerNodes['_embedded']['nodes'][0]['internal_link']);
@@ -765,7 +756,7 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][1]['path']);
 
         $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'sulu_io', 'en');
-        $this->assertEquals(1, sizeof($secondLayerNodes['_embedded']['nodes']));
+        $this->assertEquals(1, count($secondLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
         $this->assertEquals($data[1]->getUuid(), $secondLayerNodes['_embedded']['nodes'][0]['internal_link']);
@@ -809,7 +800,7 @@ class NodeRepositoryTest extends SuluTestCase
 
         // check none existing source node
         $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'sulu_io', 'en');
-        $this->assertEquals(2, sizeof($firstLayerNodes['_embedded']['nodes']));
+        $this->assertEquals(2, count($firstLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle1', $firstLayerNodes['_embedded']['nodes'][0]['path']);
         $this->assertEquals('www.google.at', $firstLayerNodes['_embedded']['nodes'][0]['external']);
@@ -817,7 +808,7 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('/testtitle2', $firstLayerNodes['_embedded']['nodes'][1]['path']);
 
         $secondLayerNodes = $this->nodeRepository->getNodes($data[1]->getUuid(), 'sulu_io', 'en');
-        $this->assertEquals(1, sizeof($secondLayerNodes['_embedded']['nodes']));
+        $this->assertEquals(1, count($secondLayerNodes['_embedded']['nodes']));
         $this->assertEquals('Testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['title']);
         $this->assertEquals('/testtitle2/testtitle1', $secondLayerNodes['_embedded']['nodes'][0]['path']);
         $this->assertEquals('www.google.at', $secondLayerNodes['_embedded']['nodes'][0]['external']);
@@ -881,7 +872,7 @@ class NodeRepositoryTest extends SuluTestCase
         //$this->assertEquals(2, $result['changer']);
 
         $test = $this->nodeRepository->getNodes(null, 'sulu_io', 'en');
-        $this->assertEquals(4, sizeof($test['_embedded']['nodes']));
+        $this->assertEquals(4, count($test['_embedded']['nodes']));
         $nodes = $test['_embedded']['nodes'];
 
         $this->assertEquals('Test3', $nodes[0]['title']);
@@ -907,7 +898,7 @@ class NodeRepositoryTest extends SuluTestCase
         //$this->assertEquals(2, $result['changer']);
 
         $test = $this->nodeRepository->getNodes(null, 'sulu_io', 'en');
-        $this->assertEquals(4, sizeof($test['_embedded']['nodes']));
+        $this->assertEquals(4, count($test['_embedded']['nodes']));
         $nodes = $test['_embedded']['nodes'];
 
         $this->assertEquals('Test4', $nodes[0]['title']);
@@ -985,7 +976,7 @@ class NodeRepositoryTest extends SuluTestCase
         //$this->assertEquals(2, $result['changer']);
 
         $test = $this->nodeRepository->getNodes(null, 'sulu_io', 'en');
-        $this->assertEquals(4, sizeof($test['_embedded']['nodes']));
+        $this->assertEquals(4, count($test['_embedded']['nodes']));
         $nodes = $test['_embedded']['nodes'];
 
         $this->assertEquals('Test3', $nodes[0]['title']);
@@ -1065,6 +1056,46 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals($data['en']->getPropertyValue('url'), $result['url']);
         $this->assertContains('de', $result['concreteLanguages']);
         $this->assertContains('en', $result['concreteLanguages']);
+    }
+
+    /**
+     * Create webspace root.
+     *
+     * @param string $key
+     */
+    private function createWebspaceRoot($key)
+    {
+        $session = $this->sessionManager->getSession();
+        $cmf = $session->getNode('/cmf');
+
+        // we should use the doctrinephpcrbundle repository initializer to do this.
+        $webspace = $cmf->addNode($key);
+        $webspace->addMixin('mix:referenceable');
+
+        $content = $webspace->addNode('contents');
+        $content->setProperty('i18n:en-template', 'default');
+        $content->setProperty('i18n:en-creator', 1);
+        $content->setProperty('i18n:en-created', new \DateTime());
+        $content->setProperty('i18n:en-changer', 1);
+        $content->setProperty('i18n:en-changed', new \DateTime());
+        $content->setProperty('i18n:en-title', 'Homepage');
+        $content->setProperty('i18n:en-state', WorkflowStage::PUBLISHED);
+        $content->setProperty('i18n:en-published', new \DateTime());
+        $content->setProperty('i18n:en-url', '/');
+        $content->addMixin('sulu:home');
+
+        $webspace->addNode('temp');
+
+        $session->save();
+        $nodes = $webspace->addNode('routes');
+        foreach (['de', 'de_at', 'en', 'en_us', 'fr'] as $locale) {
+            $localeNode = $nodes->addNode($locale);
+            $localeNode->setProperty('sulu:content', $content);
+            $localeNode->setProperty('sulu:history', false);
+            $localeNode->addMixin('sulu:path');
+        }
+
+        $session->save();
     }
 }
 

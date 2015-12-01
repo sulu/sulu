@@ -189,11 +189,6 @@ class PreviewMessageHandler implements MessageHandlerInterface
             throw new MissingParameterException('content');
         }
         $contentUuid = $msg['content'];
-        // filter index page
-        if ($contentUuid === 'index') {
-            $startPage = $this->contentMapper->loadStartPage($webspaceKey, $locale);
-            $contentUuid = $startPage->getUuid();
-        }
         $context->set('content', $contentUuid);
 
         // init message vars
@@ -241,7 +236,7 @@ class PreviewMessageHandler implements MessageHandlerInterface
         $context->clear();
 
         return [
-            'command' => 'start',
+            'command' => 'stop',
             'content' => $contentUuid,
             'msg' => 'OK',
         ];
@@ -310,5 +305,22 @@ class PreviewMessageHandler implements MessageHandlerInterface
                 $locale
             ),
         ];
+    }
+
+    /**
+     * Connection lost.
+     *
+     * @param ConnectionInterface $conn
+     * @param MessageHandlerContext $context
+     */
+    public function onClose(ConnectionInterface $conn, MessageHandlerContext $context)
+    {
+        // get session vars
+        $user = $context->get('user');
+        $locale = $context->get('locale');
+        $contentUuid = $context->get('content');
+        $webspaceKey = $context->get('webspaceKey');
+
+        $this->preview->stop($user, $contentUuid, $webspaceKey, $locale);
     }
 }

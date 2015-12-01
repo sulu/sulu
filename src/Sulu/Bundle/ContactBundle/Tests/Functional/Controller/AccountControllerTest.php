@@ -27,6 +27,12 @@ use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
+use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Bundle\MediaBundle\Entity\File;
+use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AccountControllerTest extends SuluTestCase
@@ -40,6 +46,11 @@ class AccountControllerTest extends SuluTestCase
      * @var Account
      */
     private $childAccount;
+
+    /**
+     * @var Media
+     */
+    private $logo;
 
     /**
      * @var Account
@@ -57,17 +68,14 @@ class AccountControllerTest extends SuluTestCase
     {
         $account = new Account();
         $account->setName('Company');
-        $account->setDisabled(0);
         $account->setPlaceOfJurisdiction('Feldkirch');
 
         $parentAccount = new Account();
         $parentAccount->setName('Parent');
-        $parentAccount->setDisabled(0);
         $parentAccount->setPlaceOfJurisdiction('Feldkirch');
 
         $childAccount = new Account();
         $childAccount->setName('Child');
-        $childAccount->setDisabled(0);
         $childAccount->setPlaceOfJurisdiction('Feldkirch');
         $childAccount->setParent($parentAccount);
 
@@ -156,7 +164,6 @@ class AccountControllerTest extends SuluTestCase
         $contact->setFirstName('Vorname');
         $contact->setLastName('Nachname');
         $contact->setMiddleName('Mittelname');
-        $contact->setDisabled(0);
         $contact->setFormOfAddress(0);
 
         $accountContact = new AccountContact();
@@ -168,6 +175,9 @@ class AccountControllerTest extends SuluTestCase
         $note = new Note();
         $note->setValue('Note');
         $account->addNote($note);
+
+        $this->initLogo();
+        $account->setLogo($this->logo);
 
         $this->em->persist($account);
         $this->em->persist($childAccount);
@@ -189,6 +199,45 @@ class AccountControllerTest extends SuluTestCase
         $this->em->persist($contact);
 
         $this->em->flush();
+    }
+
+    public function initLogo()
+    {
+        $collectionType = new CollectionType();
+        $collectionType->setName('My collection type');
+        $this->em->persist($collectionType);
+
+        $collection = new Collection();
+        $collection->setType($collectionType);
+        $this->em->persist($collection);
+
+        $imageType = new MediaType();
+        $imageType->setName('image');
+        $imageType->setDescription('This is an image');
+        $this->em->persist($imageType);
+
+        $file = new File();
+        $file->setVersion(1);
+
+        $fileVersion = new FileVersion();
+        $fileVersion->setVersion(1);
+        $fileVersion->setName('logo.jpeg');
+        $fileVersion->setMimeType('image/jpg');
+        $fileVersion->setFile($file);
+        $fileVersion->setSize(1124214);
+        $fileVersion->setDownloadCounter(2);
+        $fileVersion->setChanged(new \DateTime('1937-04-20'));
+        $fileVersion->setCreated(new \DateTime('1937-04-20'));
+        $file->addFileVersion($fileVersion);
+        $this->em->persist($fileVersion);
+
+        $this->logo = new Media();
+        $this->logo->setType($imageType);
+        $this->logo->setCollection($collection);
+        $this->logo->addFile($file);
+        $file->setMedia($this->logo);
+        $this->em->persist($this->logo);
+        $this->em->persist($file);
     }
 
     public function testGetById()
@@ -231,6 +280,12 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('Dornbirn', $response->addresses[0]->postboxCity);
         $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
         $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
+
+        $this->assertObjectHasAttribute('logo', $response);
+        $this->assertEquals($this->logo->getId(), $response->logo->id);
+        $this->assertObjectHasAttribute('thumbnails', $response->logo);
+        $this->assertObjectHasAttribute('100x100', $response->logo->thumbnails);
+        $this->assertTrue(is_string($response->logo->thumbnails->{'100x100'}));
     }
 
     public function testGetByIdNotExisting()
@@ -276,6 +331,7 @@ class AccountControllerTest extends SuluTestCase
             [
                 'name' => 'ExampleCompany',
                 'parent' => ['id' => $this->account->getId()],
+                'logo' => ['id' => $this->logo->getId()],
                 'urls' => [
                     [
                         'url' => 'http://example.company.com',
@@ -392,6 +448,12 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
         $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
 
+        $this->assertObjectHasAttribute('logo', $response);
+        $this->assertEquals($this->logo->getId(), $response->logo->id);
+        $this->assertObjectHasAttribute('thumbnails', $response->logo);
+        $this->assertObjectHasAttribute('100x100', $response->logo->thumbnails);
+        $this->assertTrue(is_string($response->logo->thumbnails->{'100x100'}));
+
         $client->request('GET', '/api/accounts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
 
@@ -418,6 +480,12 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('Dornbirn', $response->addresses[0]->postboxCity);
         $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
         $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
+
+        $this->assertObjectHasAttribute('logo', $response);
+        $this->assertEquals($this->logo->getId(), $response->logo->id);
+        $this->assertObjectHasAttribute('thumbnails', $response->logo);
+        $this->assertObjectHasAttribute('100x100', $response->logo->thumbnails);
+        $this->assertTrue(is_string($response->logo->thumbnails->{'100x100'}));
     }
 
     public function testPostWithCategory()
@@ -898,6 +966,9 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(3, $response->total);
 
         $this->assertEquals('Company', $response->_embedded->accounts[0]->name);
+        $this->assertObjectHasAttribute('logo', $response->_embedded->accounts[0]);
+        $this->assertObjectHasAttribute('100x100', $response->_embedded->accounts[0]->logo);
+        $this->assertTrue(is_string($response->_embedded->accounts[0]->logo->{'100x100'}));
     }
 
     public function testGetListSearch()
@@ -925,6 +996,7 @@ class AccountControllerTest extends SuluTestCase
             '/api/accounts/' . $this->account->getId(),
             [
                 'name' => 'ExampleCompany',
+                'logo' => ['id' => $this->logo->getId()],
                 'urls' => [
                     [
                         'id' => $this->url->getId(),
@@ -1046,36 +1118,42 @@ class AccountControllerTest extends SuluTestCase
 
         $this->assertEquals('ExampleCompany', $response->name);
 
-        $this->assertEquals(2, sizeof($response->urls));
+        $this->assertEquals(2, count($response->urls));
         $this->assertEquals('http://example.company.com', $response->urls[0]->url);
         $this->assertEquals('Private', $response->urls[0]->urlType->name);
         $this->assertEquals('http://test.company.com', $response->urls[1]->url);
         $this->assertEquals('Private', $response->urls[1]->urlType->name);
 
-        $this->assertEquals(2, sizeof($response->emails));
+        $this->assertEquals(2, count($response->emails));
         $this->assertEquals('office@company.com', $response->emails[0]->email);
         $this->assertEquals('Private', $response->emails[0]->emailType->name);
         $this->assertEquals('erika.mustermann@company.com', $response->emails[1]->email);
         $this->assertEquals('Private', $response->emails[1]->emailType->name);
 
-        $this->assertEquals(2, sizeof($response->phones));
+        $this->assertEquals(2, count($response->phones));
         $this->assertEquals('4567890', $response->phones[0]->phone);
         $this->assertEquals('Private', $response->phones[0]->phoneType->name);
         $this->assertEquals('789456123', $response->phones[1]->phone);
         $this->assertEquals('Private', $response->phones[1]->phoneType->name);
 
-        $this->assertEquals(2, sizeof($response->faxes));
+        $this->assertEquals(2, count($response->faxes));
         $this->assertEquals('4567890-1', $response->faxes[0]->fax);
         $this->assertEquals('Private', $response->faxes[0]->faxType->name);
         $this->assertEquals('789456123-1', $response->faxes[1]->fax);
         $this->assertEquals('Private', $response->faxes[1]->faxType->name);
 
-        $this->assertEquals(2, sizeof($response->notes));
+        $this->assertEquals(2, count($response->notes));
         $this->assertEquals('Note1', $response->notes[0]->value);
         $this->assertEquals('Note2', $response->notes[1]->value);
 
+        $this->assertObjectHasAttribute('logo', $response);
+        $this->assertEquals($this->logo->getId(), $response->logo->id);
+        $this->assertObjectHasAttribute('thumbnails', $response->logo);
+        $this->assertObjectHasAttribute('100x100', $response->logo->thumbnails);
+        $this->assertTrue(is_string($response->logo->thumbnails->{'100x100'}));
+
         if ($response->addresses[0]->street === 'Bahnhofstraße') {
-            $this->assertEquals(2, sizeof($response->addresses));
+            $this->assertEquals(2, count($response->addresses));
             $this->assertEquals('Bahnhofstraße', $response->addresses[0]->street);
             $this->assertEquals('2', $response->addresses[0]->number);
             $this->assertEquals('0022', $response->addresses[0]->zip);
@@ -1103,7 +1181,7 @@ class AccountControllerTest extends SuluTestCase
             $this->assertEquals('ML', $response->addresses[1]->country->code);
             $this->assertEquals('Private', $response->addresses[1]->addressType->name);
         } else {
-            $this->assertEquals(2, sizeof($response->addresses));
+            $this->assertEquals(2, count($response->addresses));
             $this->assertEquals('Bahnhofstraße', $response->addresses[1]->street);
             $this->assertEquals('2', $response->addresses[1]->number);
             $this->assertEquals('note', $response->addresses[1]->note);
@@ -1141,36 +1219,42 @@ class AccountControllerTest extends SuluTestCase
 
         $this->assertEquals('ExampleCompany', $response->name);
 
-        $this->assertEquals(2, sizeof($response->urls));
+        $this->assertEquals(2, count($response->urls));
         $this->assertEquals('http://example.company.com', $response->urls[0]->url);
         $this->assertEquals('Private', $response->urls[0]->urlType->name);
         $this->assertEquals('http://test.company.com', $response->urls[1]->url);
         $this->assertEquals('Private', $response->urls[1]->urlType->name);
 
-        $this->assertEquals(2, sizeof($response->emails));
+        $this->assertEquals(2, count($response->emails));
         $this->assertEquals('office@company.com', $response->emails[0]->email);
         $this->assertEquals('Private', $response->emails[0]->emailType->name);
         $this->assertEquals('erika.mustermann@company.com', $response->emails[1]->email);
         $this->assertEquals('Private', $response->emails[1]->emailType->name);
 
-        $this->assertEquals(2, sizeof($response->phones));
+        $this->assertEquals(2, count($response->phones));
         $this->assertEquals('4567890', $response->phones[0]->phone);
         $this->assertEquals('Private', $response->phones[0]->phoneType->name);
         $this->assertEquals('789456123', $response->phones[1]->phone);
         $this->assertEquals('Private', $response->phones[1]->phoneType->name);
 
-        $this->assertEquals(2, sizeof($response->faxes));
+        $this->assertEquals(2, count($response->faxes));
         $this->assertEquals('4567890-1', $response->faxes[0]->fax);
         $this->assertEquals('Private', $response->faxes[0]->faxType->name);
         $this->assertEquals('789456123-1', $response->faxes[1]->fax);
         $this->assertEquals('Private', $response->faxes[1]->faxType->name);
 
-        $this->assertEquals(2, sizeof($response->notes));
+        $this->assertEquals(2, count($response->notes));
         $this->assertEquals('Note1', $response->notes[0]->value);
         $this->assertEquals('Note2', $response->notes[1]->value);
 
+        $this->assertObjectHasAttribute('logo', $response);
+        $this->assertEquals($this->logo->getId(), $response->logo->id);
+        $this->assertObjectHasAttribute('thumbnails', $response->logo);
+        $this->assertObjectHasAttribute('100x100', $response->logo->thumbnails);
+        $this->assertTrue(is_string($response->logo->thumbnails->{'100x100'}));
+
         if ($response->addresses[0]->street === 'Bahnhofstraße') {
-            $this->assertEquals(2, sizeof($response->addresses));
+            $this->assertEquals(2, count($response->addresses));
             $this->assertEquals('Bahnhofstraße', $response->addresses[0]->street);
             $this->assertEquals('2', $response->addresses[0]->number);
             $this->assertEquals('0022', $response->addresses[0]->zip);
@@ -1198,7 +1282,7 @@ class AccountControllerTest extends SuluTestCase
             $this->assertEquals('Private', $response->addresses[1]->addressType->name);
             $this->assertEquals('note1', $response->addresses[1]->note);
         } else {
-            $this->assertEquals(2, sizeof($response->addresses));
+            $this->assertEquals(2, count($response->addresses));
             $this->assertEquals('Bahnhofstraße', $response->addresses[1]->street);
             $this->assertEquals('2', $response->addresses[1]->number);
             $this->assertEquals('0022', $response->addresses[1]->zip);
@@ -1256,12 +1340,12 @@ class AccountControllerTest extends SuluTestCase
 
         $this->assertEquals('ExampleCompany', $response->name);
 
-        $this->assertEquals(0, sizeof($response->urls));
-        $this->assertEquals(0, sizeof($response->emails));
-        $this->assertEquals(0, sizeof($response->phones));
-        $this->assertEquals(0, sizeof($response->faxes));
-        $this->assertEquals(0, sizeof($response->notes));
-        $this->assertEquals(0, sizeof($response->addresses));
+        $this->assertEquals(0, count($response->urls));
+        $this->assertEquals(0, count($response->emails));
+        $this->assertEquals(0, count($response->phones));
+        $this->assertEquals(0, count($response->faxes));
+        $this->assertEquals(0, count($response->notes));
+        $this->assertEquals(0, count($response->addresses));
     }
 
     public function testPutNotExisting()
@@ -1335,7 +1419,6 @@ class AccountControllerTest extends SuluTestCase
         $contact->setFirstName('Vorname');
         $contact->setLastName('Nachname');
         $contact->setMiddleName('Mittelname');
-        $contact->setDisabled(0);
         $contact->setFormOfAddress(0);
         $this->em->persist($contact);
         $accountContact = new AccountContact();
@@ -1376,8 +1459,8 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(3, $response->total);
     }
 
-    /*
-     * test if deleteinfo returns correct data
+    /**
+     * Test if deleteinfo returns correct data.
      */
     public function testMultipleDeleteInfo()
     {
@@ -1392,7 +1475,6 @@ class AccountControllerTest extends SuluTestCase
             $contact->setFirstName('Vorname ' . $i);
             $contact->setLastName('Nachname ' . $i);
             $contact->setMiddleName('Mittelname ' . $i);
-            $contact->setDisabled(0);
             $contact->setFormOfAddress(0);
             $this->em->persist($contact);
 
@@ -1437,8 +1519,8 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(1, $response->numChildren);
     }
 
-    /*
-     * test if deleteinfo returns correct data
+    /**
+     * Test if deleteinfo returns correct data.
      */
     public function testGetDeleteInfoById()
     {
@@ -1449,7 +1531,6 @@ class AccountControllerTest extends SuluTestCase
             $contact->setFirstName('Vorname ' . $i);
             $contact->setLastName('Nachname ' . $i);
             $contact->setMiddleName('Mittelname ' . $i);
-            $contact->setDisabled(0);
             $contact->setFormOfAddress(0);
             $this->em->persist($contact);
 
@@ -1473,7 +1554,7 @@ class AccountControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         // number of returned contacts has to be less or equal 3
-        $this->assertEquals(3, sizeof($response->contacts));
+        $this->assertEquals(3, count($response->contacts));
 
         // return full number of contacts related to account
         $this->assertEquals($numContacts, $response->numContacts);
@@ -1482,8 +1563,8 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(0, $response->numChildren);
     }
 
-    /*
-     * test if delete info returns right isAllowed, when there is a superaccount
+    /**
+     * Test if delete info returns right isAllowed, when there is a superaccount.
      */
     public function testGetDeletInfoByIdWithSuperAccount()
     {
@@ -1508,7 +1589,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertGreaterThan(0, $response->numChildren);
 
         // number of returned contacts has to be less or equal 3
-        $this->assertLessThanOrEqual(3, sizeof($response->children));
+        $this->assertLessThanOrEqual(3, count($response->children));
     }
 
     public function testGetDeleteInfoByIdNotExisting()

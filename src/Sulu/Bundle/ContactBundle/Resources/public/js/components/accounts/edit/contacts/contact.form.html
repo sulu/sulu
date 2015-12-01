@@ -1,0 +1,83 @@
+<form id="contact-form" class="grid form-vertical">
+    <div class="grid-row small">
+        <div class="grid-col-6">
+            <div class="form-group">
+                <label for="form-of-address" class="required"><%=translate('contact.contacts.formOfAddress')%></label>
+
+                <div id="form-of-address"
+                     data-aura-component="select@husky"
+                     data-aura-data='<%= JSON.stringify(formOfAddress) %>'
+                     data-aura-default-label="<%=translate('contact.contacts.formOfAddress.select')%>"
+                     data-aura-value-name="translation"
+                     data-aura-multiple-select="false"
+                     data-aura-instance-name="form-of-address"
+                     data-type-label="translation"
+                     data-type-required="translation"
+                     data-mapper-property="formOfAddress"
+                     data-type="husky-select"
+                     data-validation-required="true"
+                     data-aura-pre-selected-elements="[]"
+                     data-form="true">
+                </div>
+            </div>
+        </div>
+        <div class="grid-col-6">
+            <div class="form-group">
+                <label for="email" class="required"><%=translate('public.email')%></label>
+
+                <div id="email"
+                     data-form="true"
+                     data-type="husky-input"
+                     data-aura-component="input@husky"
+                     data-aura-skin="email"
+                     data-aura-instance-name="email"
+                     data-validation-required="true"
+                     data-mapper-property="email">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-row small m-bottom-40">
+        <div class="grid-col-6">
+            <div class="form-group">
+                <label for="first-name" class="required"><%=translate('contact.contacts.firstName')%></label>
+                <input class="form-element" type="text" id="first-name" data-validation-required="true"
+                       data-mapper-property="firstName" value=""/>
+            </div>
+        </div>
+        <div class="grid-col-6">
+            <div class="form-group">
+                <label for="last-name" class="required"><%=translate('contact.contacts.lastName')%></label>
+                <input class="form-element" type="text" id="last-name" data-trigger="focusout"
+                       data-validation-required="true" data-mapper-property="lastName"
+                       value=""/>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-row small">
+        <div class="grid-col-6">
+            <div class="form-group">
+                <label for="contact-position"><%=translate('contact.contacts.position')%></label>
+
+                <div id="contact-position"
+                     data-form="true"
+                     data-aura-url="/admin/api/contact/positions"
+                     data-aura-result-key="positions"
+                     data-aura-default-label="<%=translate('public.please-choose')%>"
+                     data-aura-component="select@husky"
+                     data-aura-instance-name="position-select"
+                     data-aura-editable="false"
+                     data-aura-direction="bottom"
+                     data-aura-value-name="position"
+                     data-aura-deselect-field="select.no-choice"
+                     data-type="husky-select"
+                     data-aura-pre-selected-elements="[]"
+                     data-aura-is-native="true"
+                     data-mapper-property="position">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

@@ -29,6 +29,11 @@ class MetadataSubscriber implements EventSubscriber
     protected $objects;
 
     /**
+     * @var array
+     */
+    private $classNames;
+
+    /**
      * Constructor.
      *
      * @param array $objects
@@ -39,7 +44,7 @@ class MetadataSubscriber implements EventSubscriber
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getSubscribedEvents()
     {
@@ -95,7 +100,7 @@ class MetadataSubscriber implements EventSubscriber
                 $configuration->getNamingStrategy()
             );
 
-            if (!in_array($parent, $configuration->getMetadataDriverImpl()->getAllClassNames())) {
+            if (!in_array($parent, $this->getAllClassNames($configuration))) {
                 continue;
             }
 
@@ -142,5 +147,19 @@ class MetadataSubscriber implements EventSubscriber
             ],
             true
         );
+    }
+
+    /**
+     * @param Configuration $configuration
+     *
+     * @return array
+     */
+    private function getAllClassNames(Configuration $configuration)
+    {
+        if (!$this->classNames) {
+            $this->classNames = $configuration->getMetadataDriverImpl()->getAllClassNames();
+        }
+
+        return $this->classNames;
     }
 }

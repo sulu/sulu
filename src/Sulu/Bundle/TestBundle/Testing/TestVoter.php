@@ -24,7 +24,7 @@ class TestVoter implements VoterInterface
      *
      * @param string $attribute An attribute
      *
-     * @return Boolean true if this Voter supports the attribute, false otherwise
+     * @return bool true if this Voter supports the attribute, false otherwise
      */
     public function supportsAttribute($attribute)
     {
@@ -36,7 +36,7 @@ class TestVoter implements VoterInterface
      *
      * @param string $class A class name
      *
-     * @return Boolean true if this Voter can process the class
+     * @return bool true if this Voter can process the class
      */
     public function supportsClass($class)
     {

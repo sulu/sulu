@@ -84,6 +84,18 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function onClose(ConnectionInterface $connection)
+    {
+        $context = $this->getContext($connection);
+
+        $this->messageDispatcher->onClose($connection, $context);
+
+        parent::onClose($connection);
+    }
+
+    /**
      * Dispatches message to handler with dispatcher service.
      *
      * @param ConnectionInterface        $conn

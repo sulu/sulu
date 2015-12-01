@@ -1,5 +1,6 @@
-sulu_media.website.image.proxy:
-    path: /media/proxy
+sulu_media_website:
+    resource: "@SuluMediaBundle/Resources/config/routing_website.yml"
 
-sulu_media.website.media.download:
-    path: /media/download
+sulu_media_api:
+    resource: "@SuluMediaBundle/Resources/config/routing_api.yml"
+    prefix: /admin/api

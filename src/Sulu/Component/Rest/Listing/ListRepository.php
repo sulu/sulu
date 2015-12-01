@@ -91,11 +91,11 @@ class ListRepository extends EntityRepository
                 ->setMaxResults($this->helper->getLimit());
         }
         if ($searchPattern != null && $searchPattern != '') {
-            if (sizeof($searchFields) > 0) {
-                if (sizeof($textFields) > 0) {
+            if (count($searchFields) > 0) {
+                if (count($textFields) > 0) {
                     $query->setParameter('search', '%' . $searchPattern . '%');
                 }
-                if (sizeof($numberFields) > 0) {
+                if (count($numberFields) > 0) {
                     $query->setParameter('strictSearch', $searchPattern);
                 }
             }
@@ -110,10 +110,10 @@ class ListRepository extends EntityRepository
 
         // check if relational filter was set ( e.g. emails[0]_email)
         // and filter result
-        if (sizeof($filters = $queryBuilder->getRelationalFilters()) > 0) {
+        if (count($filters = $queryBuilder->getRelationalFilters()) > 0) {
             $filteredResults = [];
             // check if fields do contain id, else skip
-            if (sizeof($fields = $this->helper->getFields()) > 0 && array_search('id', $fields) !== false) {
+            if (count($fields = $this->helper->getFields()) > 0 && array_search('id', $fields) !== false) {
                 $ids = [];
                 foreach ($results as $result) {
                     $id = $result['id'];

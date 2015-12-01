@@ -22,25 +22,42 @@ use Sulu\Component\Content\Document\Property\Property;
 use Sulu\Component\Content\Document\Structure\ManagedStructure;
 use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Exception\MandatoryPropertyException;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class StructureSubscriber extends AbstractMappingSubscriber
+class StructureSubscriber implements EventSubscriberInterface
 {
     const STRUCTURE_TYPE_FIELD = 'template';
 
+    /**
+     * @var ContentTypeManagerInterface
+     */
     private $contentTypeManager;
+
+    /**
+     * @var DocumentInspector
+     */
     private $inspector;
+
+    /**
+     * @var LegacyPropertyFactory
+     */
     private $legacyPropertyFactory;
+
+    /**
+     * @var PropertyEncoder
+     */
+    private $encoder;
 
     /**
      * @param PropertyEncoder             $encoder
      * @param ContentTypeManagerInterface $contentTypeManager
-     * @param StructureMetadataFactory    $structureFactory
+     * @param DocumentInspector $inspector
+     * @param LegacyPropertyFactory $legacyPropertyFactory
      */
     public function __construct(
         PropertyEncoder $encoder,
@@ -48,14 +65,14 @@ class StructureSubscriber extends AbstractMappingSubscriber
         DocumentInspector $inspector,
         LegacyPropertyFactory $legacyPropertyFactory
     ) {
-        parent::__construct($encoder);
+        $this->encoder = $encoder;
         $this->contentTypeManager = $contentTypeManager;
         $this->inspector = $inspector;
         $this->legacyPropertyFactory = $legacyPropertyFactory;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
@@ -91,14 +108,6 @@ class StructureSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * {@inheritDoc}
-     */
-    protected function supports($document)
-    {
-        return $document instanceof StructureBehavior;
-    }
-
-    /**
      * Set the structure type early so that subsequent subscribers operate
      * upon the correct structure type.
      *
@@ -108,7 +117,7 @@ class StructureSubscriber extends AbstractMappingSubscriber
     {
         $document = $event->getDocument();
 
-        if (!$this->supports($document)) {
+        if (!$document instanceof StructureBehavior) {
             return;
         }
 
@@ -121,14 +130,17 @@ class StructureSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function doHydrate(AbstractMappingEvent $event)
+    public function handleHydrate(AbstractMappingEvent $event)
     {
-        // Set the structure type
-        $node = $event->getNode();
         $document = $event->getDocument();
 
+        if (!$document instanceof StructureBehavior) {
+            return;
+        }
+
+        $node = $event->getNode();
         $propertyName = $this->getStructureTypePropertyName($document, $event->getLocale());
         $value = $node->getPropertyValueWithDefault($propertyName, null);
         $document->setStructureType($value);
@@ -153,14 +165,22 @@ class StructureSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function doPersist(PersistEvent $event)
+    public function handlePersist(PersistEvent $event)
     {
         // Set the structure type
         $document = $event->getDocument();
 
+        if (!$document instanceof StructureBehavior) {
+            return;
+        }
+
         if (!$document->getStructureType()) {
+            return;
+        }
+
+        if (!$event->getLocale()) {
             return;
         }
 
@@ -186,8 +206,9 @@ class StructureSubscriber extends AbstractMappingSubscriber
     }
 
     /**
-     * @param mixed         $document
-     * @param NodeInterface $node
+     * @param mixed $document
+     *
+     * @return ManagedStructure
      */
     private function createStructure($document)
     {
@@ -202,8 +223,11 @@ class StructureSubscriber extends AbstractMappingSubscriber
     /**
      * Map to the content properties to the node using the content types.
      *
-     * @param mixed         $document
+     * @param mixed $document
      * @param NodeInterface $node
+     * @param string $locale
+     *
+     * @throws MandatoryPropertyException
      */
     private function mapContentToNode($document, NodeInterface $node, $locale)
     {
@@ -234,17 +258,13 @@ class StructureSubscriber extends AbstractMappingSubscriber
             $legacyProperty = $this->legacyPropertyFactory->createTranslatedProperty($structureProperty, $locale);
             $legacyProperty->setValue($value);
 
-            try {
-                $contentType->remove(
-                    $node,
-                    $legacyProperty,
-                    null,
-                    $webspaceName,
-                    $locale,
-                    null
-                );
-            } catch (\Exception $e) {
-            }
+            $contentType->remove(
+                $node,
+                $legacyProperty,
+                $webspaceName,
+                $locale,
+                null
+            );
 
             $contentType->write(
                 $node,

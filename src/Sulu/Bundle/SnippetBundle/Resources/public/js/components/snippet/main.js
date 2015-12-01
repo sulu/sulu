@@ -14,89 +14,98 @@ define([
 
     'use strict';
 
-    var CONTENT_LANGUAGE = 'contentLanguage';
+    var CONTENT_LANGUAGE = 'contentLanguage',
 
-    var BaseSnippet = function() {
-    };
+        BaseSnippet = function() {
+        },
 
-    var translationKeys = {
-        deleteReferencedByFollowing: 'snippet.delete-referenced-by-following',
-        deleteConfirmText: 'snippet.delete-confirm-text',
-        deleteConfirmTitle: 'snippet.delete-confirm-title',
-        deleteDoIt: 'snippet.delete-do-it',
-        deleteNoSnippetsSelected: 'snippet.delete-no-snippets-selected'
-    };
+        translationKeys = {
+            deleteReferencedByFollowing: 'snippet.delete-referenced-by-following',
+            deleteConfirmText: 'snippet.delete-confirm-text',
+            deleteConfirmTitle: 'snippet.delete-confirm-title',
+            deleteDoIt: 'snippet.delete-do-it',
+            deleteNoSnippetsSelected: 'snippet.delete-no-snippets-selected'
+        },
+
+        templates = {
+            referentialIntegrityMessage: function(pageTitles) {
+                var message = [];
+
+                message.push('<p>', this.sandbox.translate(translationKeys.deleteReferencedByFollowing), '</p>');
+                message.push('<ul>');
+
+                this.sandbox.util.foreach(pageTitles, function(pageTitle) {
+                    message.push('<li>', pageTitle, '</li>');
+                });
+
+                message.push('</ul>');
+                message.push('<p>', this.sandbox.translate(translationKeys.deleteConfirmText), '</p>');
+
+                return message.join('');
+            }
+        };
 
     BaseSnippet.prototype = {
         bindModelEvents: function() {
             // delete current
-            this.sandbox.on('sulu.snippets.snippet.delete', function() {
-                this.del();
-            }, this);
+            this.sandbox.on('sulu.snippets.snippet.delete', this.del, this);
 
             // save the current
-            this.sandbox.on('sulu.snippets.snippet.save', function(data) {
-                this.save(data);
-            }, this);
+            this.sandbox.on('sulu.snippets.snippet.save', this.save, this);
 
             // wait for navigation events
-            this.sandbox.on('sulu.snippets.snippet.load', function(id, language) {
-                this.load(id, language);
-            }, this);
+            this.sandbox.on('sulu.snippets.snippet.load', this.load, this);
 
             // add new
-            this.sandbox.on('sulu.snippets.snippet.new', function(language) {
-                this.add(language);
-            }, this);
+            this.sandbox.on('sulu.snippets.snippet.new', this.add, this);
 
             // delete selected
-            this.sandbox.on('sulu.snippets.snippets.delete', function(ids) {
-                this.delSnippets(ids);
-            }, this);
+            this.sandbox.on('sulu.snippets.snippets.delete', this.delSnippets, this);
 
             // load list view
-            this.sandbox.on('sulu.snippets.snippet.list', function() {
-                this.sandbox.emit('sulu.router.navigate', 'snippet/snippets');
+            this.sandbox.on('sulu.snippets.snippet.list', function(language) {
+                var route = 'snippet/snippets';
+
+                if (!!language) {
+                    route += '/' + language;
+                }
+
+                this.sandbox.emit('sulu.router.navigate', route);
             }, this);
 
             // change language
-            this.sandbox.on('sulu.header.toolbar.language-changed', function(item) {
-                this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.localization);
-                var data = this.model.toJSON();
-
-                // if there is a index id this should be after reload
-                if (this.options.id === 'index') {
-                    data.id = this.options.id;
-                }
+            this.sandbox.on('sulu.header.language-changed', function(item) {
+                this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.id);
 
                 if (this.type === 'edit') {
-                    this.sandbox.emit('sulu.snippets.snippet.load', data.id, item.localization);
+                    var data = this.model.toJSON();
+                    this.sandbox.emit('sulu.snippets.snippet.load', data.id, item.id);
                 } else if (this.type === 'add') {
-                    this.sandbox.emit('sulu.snippets.snippet.new', item.localization);
+                    this.sandbox.emit('sulu.snippets.snippet.new', item.id);
                 } else {
-                    this.sandbox.emit('sulu.snippets.snippet.list');
+                    this.sandbox.emit('sulu.snippets.snippet.list', item.id);
                 }
             }, this);
         },
 
         del: function() {
-            this.confirmDeleteDialog(function(wasConfirmed) {
+            this.sandbox.sulu.showDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
-                    this.destroySnippet(this.model, function () {
+                    this.destroySnippet(this.model, function() {
                         this.sandbox.emit('sulu.router.navigate', 'snippet/snippets');
                     }.bind(this));
 
-                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
+                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'settings');
                 }
             }.bind(this));
         },
 
-        destroySnippet: function (snippet, successCallback) {
+        destroySnippet: function(snippet, successCallback) {
             snippet.destroy({
                 success: function() {
                     successCallback();
                 }.bind(this),
-                error: function (model, response) {
+                error: function(model, response) {
                     if (response.status == 409) {
                         this.referentialIntegrityDialog(snippet, response.responseJSON, successCallback);
                     }
@@ -104,17 +113,12 @@ define([
             });
         },
 
-        referentialIntegrityDialog: function (snippet, data, successCallback) {
-            var message = [];
-            message.push(this.sandbox.translate(translationKeys.deleteReferencedByFollowing));
-            message.push('');
+        referentialIntegrityDialog: function(snippet, data, successCallback) {
+            var pageTitles = [];
 
-            this.sandbox.util.foreach(data.structures, function (structure) {
-                message.push(' - ' + structure.title);
+            this.sandbox.util.foreach(data.structures, function(structure) {
+                pageTitles.push(structure.title);
             });
-
-            message.push('');
-            message.push(this.sandbox.translate(translationKeys.deleteConfirmText));
 
             var $element = $('<div/>');
             $('body').append($element);
@@ -124,16 +128,17 @@ define([
                     name: 'overlay@husky',
                     options: {
                         el: $element,
+                        openOnStart: true,
                         title: this.sandbox.translate(translationKeys.deleteConfirmTitle),
-                        message: message.join('<br/>'),
+                        message: templates.referentialIntegrityMessage.call(this, pageTitles),
                         okDefaultText: this.sandbox.translate(translationKeys.deleteDoIt),
-                        type: 'warning',
+                        type: 'alert',
                         closeCallback: function() {
                         },
-                        okCallback: function(data) {
+                        okCallback: function() {
                             snippet.destroy({
                                 headers: {
-                                    SuluForceRemove: true,
+                                    SuluForceRemove: true
                                 },
                                 success: function() {
                                     successCallback()
@@ -145,8 +150,8 @@ define([
             ]);
         },
 
-        save: function(data) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+        save: function(data, action) {
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
             if (!!this.template) {
                 data.template = this.template;
             } else {
@@ -162,7 +167,12 @@ define([
                     var data = response.toJSON();
                     if (!!this.data.id) {
                         this.sandbox.emit('sulu.snippets.snippet.saved', data);
-                    } else {
+                    }
+                    if (action === 'back') {
+                        this.sandbox.emit('sulu.snippets.snippet.list');
+                    } else if (action === 'new') {
+                        this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + this.options.language + '/add', true, true);
+                    } else if (!this.data.id) {
                         this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + this.options.language + '/edit:' + data.id);
                     }
                 }.bind(this),
@@ -173,13 +183,18 @@ define([
             });
         },
 
-        load: function(id, language) {
+        load: function(id, language, forceReload) {
             if (!language) {
                 language = this.options.language;
             }
 
             // TODO: show loading icon
-            this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + language + '/edit:' + id);
+            this.sandbox.emit(
+                'sulu.router.navigate',
+                'snippet/snippets/' + language + '/edit:' + id,
+                undefined, undefined,
+                forceReload
+            );
         },
 
         add: function(language) {
@@ -197,18 +212,18 @@ define([
                 return;
             }
 
-            var deleteSnippetFromStack = function () {
+            var deleteSnippetFromStack = function() {
                 var id = ids.shift();
                 if (id !== undefined) {
                     var snippet = new Snippet({id: id});
-                    this.destroySnippet(snippet, function () {
+                    this.destroySnippet(snippet, function() {
                         this.sandbox.emit('husky.datagrid.record.remove', id);
                         deleteSnippetFromStack();
                     }.bind(this));
                 }
             }.bind(this);
 
-            this.confirmDeleteDialog(function(wasConfirmed) {
+            this.sandbox.sulu.showDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
                     deleteSnippetFromStack();
                 }
@@ -216,21 +231,16 @@ define([
         },
 
         /**
-         * @var ids - array of ids to delete
-         * @var callback - callback function returns true or false if data got deleted
+         * Returns copy snippet from a given locale to a array of other locales url
+         * @param {string} id
+         * @param {string} src
+         * @param {string[]} dest
+         * @returns {string}
          */
-        confirmDeleteDialog: function(callbackFunction) {
-            // check if callback is a function
-            if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
-                throw 'callback is not a function';
-            }
-            // show dialog
-            this.sandbox.emit('sulu.overlay.show-warning',
-                'sulu.overlay.be-careful',
-                'sulu.overlay.delete-desc',
-                callbackFunction.bind(this, false),
-                callbackFunction.bind(this, true)
-            );
+        getCopyLocaleUrl: function(id, src, dest) {
+            return [
+                '/admin/api/snippets/', id, '?language=', src, '&dest=', dest, '&action=copy-locale'
+            ].join('');
         }
     };
 

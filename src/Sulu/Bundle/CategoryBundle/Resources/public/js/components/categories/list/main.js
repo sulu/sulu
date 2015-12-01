@@ -19,40 +19,63 @@ define(function () {
 
     return {
 
-        view: true,
+        stickyToolbar: true,
 
         layout: {
             content: {
-                width: 'max',
-                leftSpace: false,
-                rightSpace: false
+                width: 'max'
             }
         },
 
         header: function () {
             return {
-                title: 'category.categories.title',
                 noBack: true,
 
-                breadcrumb: [
-                    {title: 'navigation.settings'},
-                    {title: 'category.categories.title'}
-                ]
+                title: 'category.categories.title',
+                underline: false,
+
+                toolbar: {
+                    buttons: {
+                        add: {},
+                        deleteSelected: {}
+                    },
+                    languageChanger: {
+                        preSelected: this.options.locale
+                    }
+                }
             };
         },
 
         templates: ['/admin/category/template/category/list'],
 
         initialize: function () {
+            this.locale = this.options.locale;
+
             this.sandbox.sulu.triggerDeleteSuccessLabel('labels.success.category-delete-desc');
             this.bindCustomEvents();
             this.render();
         },
 
         bindCustomEvents: function() {
-            this.sandbox.on('sulu.list-toolbar.add', this.addNewCategory.bind(this));
-            this.sandbox.on('sulu.list-toolbar.delete', this.deleteSelected.bind(this));
+            this.sandbox.on('sulu.header.language-changed', this.changeLanguage.bind(this));
             this.sandbox.on('husky.datagrid.item.click', this.saveLastClickedCategory.bind(this));
+            this.sandbox.on('sulu.toolbar.add', this.addNewCategory.bind(this));
+            this.sandbox.on('sulu.toolbar.delete', this.deleteSelected.bind(this));
+
+            // checkbox clicked
+            this.sandbox.on('husky.datagrid.number.selections', function(number) {
+                var postfix = number > 0 ? 'enable' : 'disable';
+                this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'deleteSelected', false);
+            }.bind(this));
+        },
+
+        /**
+         * Triggered when locale was changed.
+         *
+         * @param {{id}} localeItem
+         */
+        changeLanguage: function(localeItem) {
+            this.locale = localeItem.id;
         },
 
         /**
@@ -66,20 +89,21 @@ define(function () {
                 {
                     el: this.$find(constants.toolbarSelector),
                     template: 'default',
-                    instanceName: this.instanceName,
-                    inHeader: true
+                    instanceName: this.instanceName
                 },
                 {
                     el: this.$find(constants.listSelector),
-                    url: '/admin/api/categories?flat=true&sortBy=depth&sortOrder=asc',
+                    url: '/admin/api/categories?flat=true&sortBy=depth&sortOrder=asc&locale=' + this.locale,
                     childrenPropertyName: 'hasChildren',
                     resultKey: 'categories',
                     searchFields: ['name'],
                     pagination: false,
+                    actionCallback: this.editCategory.bind(this),
                     viewOptions: {
                         table: {
                             openChildId: this.sandbox.sulu.getUserSetting(constants.lastClickedCategorySettingsKey),
-                            fullWidth: true,
+                            hideChildrenAtBeginning: false,
+                            cropContents: false,
                             selectItem: {
                                 type: 'checkbox',
                                 inFirstCell: true
@@ -87,13 +111,30 @@ define(function () {
                             icons: [
                                 {
                                     column: 'name',
-                                    icon: 'pencil',
-                                    callback: this.editCategory.bind(this)
-                                },
-                                {
-                                    column: 'name',
                                     icon: 'plus-circle',
                                     callback: this.addNewCategory.bind(this)
+                                }
+                            ],
+                            badges: [
+                                {
+                                    column: 'name',
+                                    callback: function(item, badge) {
+                                        if (item.defaultLocale === item.locale && item.locale !== this.locale) {
+                                            badge.title = item.locale;
+
+                                            return badge;
+                                        }
+                                    }.bind(this)
+                                }
+                            ],
+                            cssClasses: [
+                                {
+                                    column: 'name',
+                                    callback: function(item) {
+                                        if (item.defaultLocale === item.locale && item.locale !== this.locale) {
+                                            return 'row-gray';
+                                        }
+                                    }.bind(this)
                                 }
                             ]
                         }

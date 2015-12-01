@@ -85,22 +85,6 @@ interface AccountInterface
     public function getCorporation();
 
     /**
-     * Set disabled.
-     *
-     * @param int $disabled
-     *
-     * @return AccountInterface
-     */
-    public function setDisabled($disabled);
-
-    /**
-     * Get disabled.
-     *
-     * @return int
-     */
-    public function getDisabled();
-
-    /**
      * Set uid.
      *
      * @param string $uid
@@ -188,6 +172,22 @@ interface AccountInterface
      * @return AccountInterface
      */
     public function setMainFax($mainFax);
+
+    /**
+     * Set logo.
+     *
+     * @param Media $logo
+     *
+     * @return AccountInterface
+     */
+    public function setLogo($logo);
+
+    /**
+     * Get logo.
+     *
+     * @return Media
+     */
+    public function getLogo();
 
     /**
      * Get mainFax.

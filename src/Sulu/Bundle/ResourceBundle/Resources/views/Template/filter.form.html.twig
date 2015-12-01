@@ -1,0 +1,52 @@
+<form id="filter-form" class="form">
+    <input type="hidden" id="id" data-mapper-property="id"/>
+
+    <div class="grid-row">
+        <div class="grid-col-12 form-group">
+            <label for="name" class="required"><%= translate('resource.filter.name') %></label>
+            <input class="form-element" type="text" id="name" data-validation-required="true"
+                   data-validation-max-length="255" data-mapper-property="name"/>
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="grid-col-4 form-group">
+            <label for="conjunction"><%= translate('resource.filter.conjunction') %></label>
+            <div id="conjunction"
+                 data-aura-component="select@husky"
+                 data-aura-data="{{ conjunctions|json_encode() }}"
+                 data-aura-default-label="<%=translate('public.please-choose')%>"
+                 data-aura-multiple-select="false"
+                 data-aura-instance-name="conjunction"
+                 data-aura-value-name="translation"
+                 data-type-label="conjunction"
+                 data-type-required="conjunction"
+                 data-mapper-property="conjunction"
+                 data-type="husky-select"
+                 data-validation-required="false"
+                 data-form="true">
+            </div>
+        </div>
+        <div class="grid-col-4 form-group">
+            <label></label>
+            <label for="private">
+                <div class="custom-checkbox m-top-5">
+                    <input class="form-element husky-validate" type="checkbox" id="private" data-mapper-property="private">
+                    <span class="icon"></span>
+                </div>
+                <span class="clickable"><%=translate('resource.filter.private')%></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="grid-row" id="conditions-wrapper">
+        <h2 class="divider"><%= translate('resource.filter.conditions') %></h2>
+        <div class="grid-row small">
+            <div class="grid-col-12">
+                <div class="form-group">
+                    <div id="conditions" data-type="conditionSelection" data-form="true" data-mapper-property="conditionGroups"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

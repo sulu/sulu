@@ -24,7 +24,7 @@ class SaveDocumentTest extends BaseTestCase
         $this->indexDocument('About Us', '/about-us');
 
         $searchManager = $this->getSearchManager();
-        $res = $searchManager->createSearch('About')->locale('de')->index('page')->execute();
+        $res = $searchManager->createSearch('About')->locale('de')->index('page_sulu_io')->execute();
         $this->assertCount(1, $res);
         $hit = $res[0];
         $document = $hit->getDocument();
@@ -69,7 +69,7 @@ class SaveDocumentTest extends BaseTestCase
         ];
 
         foreach ($searches as $search => $count) {
-            $res = $searchManager->createSearch($search)->locale('de')->index('page')->execute();
+            $res = $searchManager->createSearch($search)->locale('de')->index('page_sulu_io')->execute();
             $this->assertCount($count, $res, 'Searching for: ' . $search);
         }
     }

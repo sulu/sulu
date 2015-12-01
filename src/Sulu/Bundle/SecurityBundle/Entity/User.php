@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Component\Contact\Model\ContactInterface;
@@ -29,23 +30,24 @@ class User extends BaseUser
     /**
      * @var ContactInterface
      * @Expose
+     * @Groups({"frontend", "fullUser"})
      */
     protected $contact;
 
     /**
-     * @var Collection
+     * @var UserRole[]
      * @Expose
      */
     protected $userRoles;
 
     /**
-     * @var Collection
+     * @var UserGroup[]
      * @Expose
      */
     protected $userGroups;
 
     /**
-     * @var Collection
+     * @var UserSetting[]
      */
     protected $userSettings;
 
@@ -96,6 +98,8 @@ class User extends BaseUser
 
     /**
      * {@inheritdoc}
+     *
+     * @VirtualProperty
      */
     public function getRoles()
     {
@@ -104,6 +108,19 @@ class User extends BaseUser
         foreach ($this->getUserRoles() as $userRole) {
             /* @var UserRole $userRole */
             $roles[] = $userRole->getRole()->getIdentifier();
+        }
+
+        return $roles;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRoleObjects()
+    {
+        $roles = [];
+        foreach ($this->getUserRoles() as $userRole) {
+            $roles[] = $userRole->getRole();
         }
 
         return $roles;
@@ -178,6 +195,20 @@ class User extends BaseUser
     }
 
     /**
+     * @VirtualProperty
+     * @Groups({"frontend"})
+     */
+    public function getSettings()
+    {
+        $userSettingValues = [];
+        foreach ($this->userSettings as $userSetting) {
+            $userSettingValues[$userSetting->getKey()] = json_decode($userSetting->getValue(), true);
+        }
+
+        return $userSettingValues;
+    }
+
+    /**
      * Set contact.
      *
      * @param ContactInterface $contact
@@ -204,6 +235,7 @@ class User extends BaseUser
     /**
      * @VirtualProperty
      * @SerializedName("fullName")
+     * @Groups({"frontend", "fullUser"})
      *
      * @return string
      */

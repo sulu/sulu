@@ -12,70 +12,53 @@
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.1447339502420.css">
-
-        <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/css/main.css"/>
-        <link rel="stylesheet" type="text/css" href="/bundles/sulucontact/css/main.min.css"/>
-        <link rel="stylesheet" type="text/css" href="/bundles/sulucontent/css/main.min.css"/>
-        <link rel="stylesheet" type="text/css" href="/bundles/sulumedia/css/main.css"/>
-        <link rel="stylesheet" type="text/css" href="/bundles/sululocation/css/main.css"/>
-        <link rel="stylesheet" type="text/css" href="/bundles/sulusnippet/css/main.css"/>
-        <link rel="stylesheet" type="text/css" href="/bundles/sulusearch/css/main.css"/>
-        <link rel="stylesheet" type="text/css" href="/bundles/sululocation/js/vendor/leaflet/leaflet.css"/>
+        <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.1448983734268.css">
     </head>
     <body>
-        <div class="sulu-header-background" id="sulu-header-background" style="display: none;"></div>
-        <div id="main">
-            <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true"
-                {% if user.username is not defined %}
-                data-aura-footer="false"
-                {% endif %}
-                 data-aura-user-name="{{ user.fullname }}"
-                 data-aura-system-name="{{ name }}"
-                 data-aura-system-version="{{ suluVersion }}"
-                 data-aura-user-locales='{{ locales | json_encode }}'
-                 data-aura-user-locale="{{ user.locale }}"
-                 data-aura-logout-route="{{ user.logout }}"
-                 class="navigation-column">
+        <div class="spinner initial-loader">
+            <div class="double-bounce1 bouncer"></div>
+            <div class="double-bounce2 bouncer"></div>
+        </div>
+        <div id="main" data-aura-component="app@suluadmin" data-aura-user="{{ user| json_encode }}">
+            <div class="navigation-container">
+                <div class="sulu-navigation-labels"></div>
+                <div data-aura-component="navigation@husky" data-aura-url="/admin/navigation" data-aura-collapse="true"
+                     data-aura-user-name="{{ user.fullName }}"
+                     data-aura-system-name="{{ name }}"
+                     data-aura-system-version="{{ suluVersion }}"
+                     data-aura-user-locales='{{ translated_locales|keys|json_encode }}'
+                     data-aura-user-locale="{{ user.locale }}"
+                     data-aura-logout-route="{{ path('logout') }}"
+                     data-aura-resize-width="1470"
+                     class="navigation-column">
+                </div>
             </div>
             <div class="content-container">
+                <div id="labels-container" data-aura-component="labels@suluadmin"></div>
                 <div class="content-column fixed">
-                    <div class="sulu-header hidden"
-                         id="sulu-header-container"
-                         data-aura-component="header@suluadmin"></div>
-                    <div class="page">
-                        <main class="grid"
-                              id="content"
-                              data-aura-component="app@suluadmin"
-                              data-aura-user="{{ user| json_encode }}">
-                        </main>
+                    <div class="wrapper">
+                        <div class="page">
+                            <main class="grid" id="content"></main>
+                        </div>
                     </div>
-                    <div id="labels-container" data-aura-component="labels@suluadmin"></div>
                 </div>
 
                 <div class="sidebar-column max">
                     <aside id="sidebar" data-aura-component="sidebar@suluadmin"></aside>
                 </div>
             </div>
+            <div id="overlayContainer" data-aura-component="overlay@suluadmin"></div>
         </div>
-        <div id="overlayContainer" data-aura-component="overlay@suluadmin"></div>
 
         <script type="text/javascript">
             {% autoescape false %}
             var SULU = {
                 debug: false,
-                user: {
-                    id: '{{ user.id }}',
-                    locale: '{{ user.locale is defined ? user.locale : 'en' }}',
-                    settings: {{ user.settings }},
-                    contact: {
-                        id: '{{ user.contact.id }}'
-                    }
-                },
-                sections: {{ config | json_encode }},
-                locales: {{ locales | json_encode }},
-                translatedLocales: {{ translated_locales | json_encode }},
-                translations: {{ translations | json_encode }},
+                user: {{ user|json_encode }},
+                sections: {{ config|json_encode }},
+                locales: {{ locales|json_encode }},
+                translatedLocales: {{ translated_locales|json_encode }},
+                translations: {{ translations|json_encode }},
                 fallbackLocale: '{{ fallback_locale }}'
             };
             {% endautoescape %}
@@ -84,7 +67,6 @@
             var CKEDITOR_BASEPATH = '/bundles/suluadmin/js/vendor/husky/vendor/ckeditor/';
         </script>
 
-        <script data-main="/bundles/suluadmin/dist/app.min.1447339502420" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
-
+        <script data-main="/bundles/suluadmin/dist/app.min.1448983734268" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
     </body>
 </html>

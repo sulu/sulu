@@ -11,9 +11,9 @@
 
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
-use Sulu\Component\Security\Event\PermissionUpdateEvent;
-use Sulu\Component\Security\Event\SecurityEvents;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
@@ -24,6 +24,8 @@ use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface;
 /**
  * An implementation of Sulu's AccessControlManagerInterface, which is using the ACL component of Symfony.
  * Responsible for setting the permissions on a specific object.
+ *
+ * @deprecated will be removed with 1.2
  */
 class SymfonyAccessControlManager implements AccessControlManagerInterface
 {
@@ -60,7 +62,22 @@ class SymfonyAccessControlManager implements AccessControlManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function setPermissions($type, $identifier, $securityIdentity, $permissions)
+    public function setPermissions($type, $identifier, $permissions)
+    {
+        foreach ($permissions as $securityIdentity => $permission) {
+            $this->setPermission($type, $identifier, $securityIdentity, $permission);
+        }
+    }
+
+    /**
+     * Sets the permission for a single security identity.
+     *
+     * @param string $type The type of the object to protect
+     * @param string $identifier The identifier of the object to protect
+     * @param string $securityIdentity The security identity for which the permissions are set
+     * @param array $permissions The permissions to set
+     */
+    private function setPermission($type, $identifier, $securityIdentity, $permissions)
     {
         $oid = new ObjectIdentity($identifier, $type);
         $sid = new RoleSecurityIdentity($securityIdentity);
@@ -91,11 +108,6 @@ class SymfonyAccessControlManager implements AccessControlManagerInterface
         }
 
         $this->aclProvider->updateAcl($acl);
-
-        $this->eventDispatcher->dispatch(
-            SecurityEvents::PERMISSION_UPDATE,
-            new PermissionUpdateEvent($type, $identifier, $securityIdentity, $permissions)
-        );
     }
 
     /**
@@ -120,5 +132,33 @@ class SymfonyAccessControlManager implements AccessControlManagerInterface
         }
 
         return $permissions;
+    }
+
+    /**
+     * Returns the permissions regarding an object and its security context for a given user.
+     *
+     * @param SecurityCondition $securityCondition The condition to check
+     * @param UserInterface $user The user for which the security is returned
+     *
+     * @return array
+     */
+    public function getUserPermissions(SecurityCondition $securityCondition, UserInterface $user)
+    {
+        // This class only exists for BC reasons, so new methods in the interface won't be implemented here
+    }
+
+    /**
+     * Returns the permissions regarding an array of role permissions and its security context for a given user.
+     *
+     * @param string $locale
+     * @param string $securityContext
+     * @param $objectPermissionsByRole
+     * @param UserInterface $user The user for which the security is returned
+     *
+     * @return array
+     */
+    public function getUserPermissionByArray($locale, $securityContext, $objectPermissionsByRole, UserInterface $user)
+    {
+        // This class only exists for BC reasons, so new methods in the interface won't be implemented here
     }
 }

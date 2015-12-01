@@ -12,11 +12,13 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use Sulu\Component\Persistence\Model\AuditableInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 
 /**
  * CollectionInterface.
  */
-interface CollectionInterface extends AuditableInterface
+interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
 {
     /**
      * Get id.
@@ -26,34 +28,48 @@ interface CollectionInterface extends AuditableInterface
     public function getId();
 
     /**
+     * Get key.
+     *
+     * @return string
+     */
+    public function getKey();
+
+    /**
+     * Set key.
+     *
+     * @param string $key
+     */
+    public function setKey($key);
+
+    /**
      * Set changer.
      *
-     * @param \Sulu\Component\Security\Authentication\UserInterface $changer
+     * @param UserInterface $changer
      *
      * @return CollectionInterface
      */
-    public function setChanger(\Sulu\Component\Security\Authentication\UserInterface $changer = null);
+    public function setChanger(UserInterface $changer = null);
 
     /**
      * Get changer.
      *
-     * @return \Sulu\Component\Security\Authentication\UserInterface
+     * @return UserInterface
      */
     public function getChanger();
 
     /**
      * Set creator.
      *
-     * @param \Sulu\Component\Security\Authentication\UserInterface $creator
+     * @param UserInterface $creator
      *
      * @return CollectionInterface
      */
-    public function setCreator(\Sulu\Component\Security\Authentication\UserInterface $creator = null);
+    public function setCreator(UserInterface $creator = null);
 
     /**
      * Get creator.
      *
-     * @return \Sulu\Component\Security\Authentication\UserInterface
+     * @return UserInterface
      */
     public function getCreator();
 
@@ -138,37 +154,37 @@ interface CollectionInterface extends AuditableInterface
     /**
      * Set parent.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\CollectionInterface $parent
+     * @param CollectionInterface $parent
      *
      * @return CollectionInterface
      */
-    public function setParent(\Sulu\Bundle\MediaBundle\Entity\CollectionInterface $parent = null);
+    public function setParent(CollectionInterface $parent = null);
 
     /**
      * Get parent.
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\CollectionInterface
+     * @return CollectionInterface
      */
     public function getParent();
 
     /**
      * Set type.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\CollectionType $type
+     * @param CollectionType $type
      *
      * @return CollectionInterface
      */
-    public function setType(\Sulu\Bundle\MediaBundle\Entity\CollectionType $type);
+    public function setType(CollectionType $type);
 
     /**
      * Get type.
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\CollectionType
+     * @return CollectionType
      */
     public function getType();
 
     /**
-     * @param \Doctrine\Common\Collections\ArrayCollection $children
+     * @param \Doctrine\Common\Collections\Collection $children
      */
     public function setChildren($children);
 }
