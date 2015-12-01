@@ -250,7 +250,7 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                         ->end()
-                        ->arrayNode('typeMap')
+                        ->arrayNode('type_map')
                             ->isRequired()
                             ->useAttributeAsKey('name')
                             ->prototype('scalar')

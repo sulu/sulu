@@ -32,7 +32,7 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
                         'snippet' => 'default',
                     ],
                     'paths' => [],
-                    'typeMap' => [
+                    'type_map' => [
                         'page' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
                         'home' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
                         'snippet' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge',
@@ -62,7 +62,7 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
                         'snippet' => 'barfoo',
                     ],
                     'paths' => [],
-                    'typeMap' => [
+                    'type_map' => [
                         'page' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
                         'home' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
                         'snippet' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge',
@@ -90,7 +90,7 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
                             'snippet' => 'barfoo',
                         ],
                         'paths' => [],
-                        'typeMap' => [
+                        'type_map' => [
                             'page' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
                             'home' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
                             'snippet' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge',
