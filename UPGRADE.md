@@ -1,7 +1,6 @@
 # Upgrade
 
-## dev-develop
-
+## 1.1.0
 
 ### IndexName decorators from MassiveSearchBundle
 
