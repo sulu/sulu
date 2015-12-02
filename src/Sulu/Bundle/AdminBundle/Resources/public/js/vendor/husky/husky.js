@@ -42706,7 +42706,7 @@ define('__component__$overlay@husky',[], function() {
             // emit language-changed-event when language dropdown gets changed
             this.sandbox.on('husky.select.' + this.options.instanceName + '.selected.item', function(localeIndex) {
                 this.sandbox.emit(LANGUAGE_CHANGED.call(this),
-                    this.options.languageChanger.locales[localeIndex], //selected locale
+                    this.slides[this.activeSlide].languageChanger.locales[localeIndex], //selected locale
                     this.activeTab
                 );
             }.bind(this));
