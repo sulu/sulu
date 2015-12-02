@@ -349,6 +349,11 @@ define([
             this.sandbox.once('husky.overlay.media-edit.initialized', function() {
                 this.sandbox.emit('husky.overlay.media-edit.loading.close');
             }.bind(this));
+
+            // change language (single-edit)
+            this.sandbox.on(
+                'husky.overlay.media-edit.language-changed', this.languageChangedSingle.bind(this)
+            );
         },
 
         /**
