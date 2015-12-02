@@ -84,6 +84,7 @@ Feature: Collection management
         And I fill in husky field "title" with "Foto von Dornbirn" in the overlay
         And I confirm
         When I am editing the media collection "Dornbirn"
+        And I expect the "husky.datagrid.loaded" event
         Then I should see "image of Dornbirn"
         # FIXME try to sovle this without reloading the page
         When I reload the page
