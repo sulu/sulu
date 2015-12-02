@@ -179,6 +179,7 @@ define([
                                 el: constants.positionSelector,
                                 instanceName: 'company-position-select',
                                 valueName: 'position',
+                                defaultLabel: this.sandbox.translate('public.please-choose'),
                                 returnValue: 'id',
                                 data: response._embedded.positions,
                                 noNewValues: true,
