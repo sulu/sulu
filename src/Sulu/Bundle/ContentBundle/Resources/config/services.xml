@@ -38,6 +38,13 @@
             <tag name="kernel.event_listener" event="sulu_security.permission_update" method="onPermissionUpdate"/>
         </service>
 
+        <!-- webspace settings -->
+        <service id="sulu_content.webspace_navigation_provider"
+                 class="Sulu\Bundle\ContentBundle\Admin\WebspaceContentNavigationProvider">
+            <tag name="sulu_admin.content_navigation" alias="webspace"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
         <!-- nodes -->
         <service id="sulu_content.node_repository" class="%sulu_content.node_repository.class%">
             <argument type="service" id="sulu.content.mapper"/>

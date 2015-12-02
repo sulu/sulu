@@ -118,6 +118,14 @@ define([
                     return '<div data-aura-component="content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '" data-aura-id="' + id + '" data-aura-preview="true"/>';
                 }
             });
+
+            // show webspace settings
+            sandbox.mvc.routes.push({
+                route: 'content/webspace/edit::id/:content',
+                callback: function(id) {
+                    return '<div data-aura-component="webspace/settings@sulucontent" data-aura-id="' + id + '" data-aura-webspace="' + id + '" />';
+                }
+            });
         }
     };
 });

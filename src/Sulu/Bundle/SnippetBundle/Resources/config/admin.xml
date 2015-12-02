@@ -23,6 +23,12 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
+        <service id="sulu_snippet.webspace_navigation_provider"
+                 class="Sulu\Bundle\SnippetBundle\Admin\WebspaceContentNavigationProvider">
+            <tag name="sulu_admin.content_navigation" alias="webspace"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
         <!-- JsConfig -->
          <service id="sulu_snippet.jsconfig" class="%sulu_snippet.jsconfig.class%">
              <argument type="string">sulu-snippet</argument>
