@@ -84,11 +84,12 @@ Feature: Collection management
         And I fill in husky field "title" with "Foto von Dornbirn" in the overlay
         And I confirm
         When I am editing the media collection "Dornbirn"
-        And I click on the element ".masonry-item .head-image"
         Then I should see "image of Dornbirn"
-        When I select "de" from the husky "language-changer .husky-select"
-        Then I expect the "husky.tabs.overlaymedia-edit.initialized" event
-        And I expect an overlay to appear
-        # FIXME data shows only in overlay title, but not in input field
+        # FIXME try to sovle this without reloading the page
+        When I reload the page
+        Then I expect a data-navigation to appear
+        And I click on the element ".language-changer"
+        And I click on the element "[data-id='de']"
+        And I expect the "husky.datagrid.updated" event
         And I should see "Foto von Dornbirn"
 
