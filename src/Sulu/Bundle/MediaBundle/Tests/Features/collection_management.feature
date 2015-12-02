@@ -73,7 +73,7 @@ Feature: Collection management
     Scenario: Change item language
         Given the file "image1.png" has been uploaded to the "Dornbirn" collection
         And I am on "/admin/#media/collections/root"
-# FIXME bad fix here but data-navigation needs additional time ...
+        # FIXME bad fix here but data-navigation needs additional time ...
         Then I expect a data-navigation to appear
         When I click on the element ".masonry-item .head-image"
         And I expect an overlay to appear
