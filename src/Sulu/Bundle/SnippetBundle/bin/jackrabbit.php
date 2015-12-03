@@ -29,7 +29,7 @@ $workspace = $session->getWorkspace();
 $repo = $session->getRepository();
 
 if (!$repo->getDescriptor(PHPCR\RepositoryInterface::OPTION_WORKSPACE_MANAGEMENT_SUPPORTED)) {
-    echo
+    echo 
         '<error>Your PHPCR implementation does not support ' .
         'workspace management. Please refer to the documentation ' .
         'of your PHPCR implementation to learn how to create a workspace.</error>'
