@@ -34,6 +34,7 @@ class ContactsContentNavigationProvider implements ContentNavigationProviderInte
         if ($this->securityChecker->hasPermission('sulu.security.users', 'view')) {
             $permissions = new ContentNavigationItem('content-navigation.security.permissions');
             $permissions->setAction('permissions');
+            $permissions->setPosition(30);
             $permissions->setComponent('users@sulusecurity');
             $permissions->setDisplay(['edit']);
 

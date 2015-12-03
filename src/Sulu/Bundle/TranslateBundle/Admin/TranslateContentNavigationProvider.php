@@ -20,12 +20,14 @@ class TranslateContentNavigationProvider implements ContentNavigationProviderInt
     {
         $details = new ContentNavigationItem('Details');
         $details->setAction('details');
+        $details->setPosition(10);
         $details->setComponent('packages@sulutranslate');
         $details->setComponentOptions(['display' => 'details']);
         $details->setDisplay(['edit']);
 
         $settings = new ContentNavigationItem('Settings');
         $settings->setAction('settings');
+        $settings->setPosition(20);
         $settings->setComponent('packages@sulutranslate');
         $settings->setComponentOptions(['display' => 'settings']);
 
