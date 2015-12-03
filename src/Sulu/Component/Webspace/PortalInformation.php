@@ -114,6 +114,20 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
+     * Returns the localization for this PortalInformation.
+     *
+     * @return Localization
+     */
+    public function getLocale()
+    {
+        if (null === $this->localization) {
+            return;
+        }
+
+        return $this->localization->getLocalization();
+    }
+
+    /**
      * Sets the portal for this PortalInformation.
      *
      * @param \Sulu\Component\Webspace\Portal $portal
@@ -131,6 +145,18 @@ class PortalInformation implements ArrayableInterface
     public function getPortal()
     {
         return $this->portal;
+    }
+
+    /**
+     * Returns key of portal.
+     */
+    public function getPortalKey()
+    {
+        if (null === $this->portal) {
+            return;
+        }
+
+        return $this->portal->getKey();
     }
 
     /**
@@ -271,6 +297,18 @@ class PortalInformation implements ArrayableInterface
     public function getWebspace()
     {
         return $this->webspace;
+    }
+
+    /**
+     * Returns key of webspace.
+     */
+    public function getWebspaceKey()
+    {
+        if (null === $this->webspace) {
+            return;
+        }
+
+        return $this->webspace->getKey();
     }
 
     /**

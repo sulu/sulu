@@ -36,7 +36,7 @@ define(['text!./skeleton.html'], function(skeleton) {
 
         layout: {
             content: {
-                width: 'max',
+                width: 'fixed',
                 leftSpace: false,
                 rightSpace: false
             }
