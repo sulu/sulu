@@ -56,28 +56,35 @@ class ContentAdmin extends Admin
         $rootNavigationItem = new NavigationItem($title);
 
         $section = new NavigationItem('navigation.webspaces');
+        $section->setPosition(20);
 
         $rootNavigationItem->addChild($section);
+
+        $position = 20;
 
         /** @var Webspace $webspace */
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT_PREFIX . $webspace->getKey(), 'view')) {
                 $webspaceItem = new NavigationItem($webspace->getName());
+                $webspaceItem->setPosition($position++);
                 $webspaceItem->setIcon('bullseye');
 
                 $indexUuid = $this->sessionManager->getContentNode($webspace->getKey())->getIdentifier();
 
                 $indexPageItem = new NavigationItem('navigation.webspaces.index-page');
+                $indexPageItem->setPosition(10);
                 $indexPageItem->setAction(
                     'content/contents/' . $webspace->getKey() . '/edit:' . $indexUuid . '/details'
                 );
                 $webspaceItem->addChild($indexPageItem);
 
                 $contentItem = new NavigationItem('navigation.webspaces.content');
+                $contentItem->setPosition(20);
                 $contentItem->setAction('content/contents/' . $webspace->getKey());
                 $webspaceItem->addChild($contentItem);
 
                 $webspaceSettingsItem = new NavigationItem('navigation.webspaces.settings');
+                $webspaceSettingsItem->setPosition(30);
                 $webspaceSettingsItem->setAction(sprintf('content/webspace/edit:%s/general', $webspace->getKey()));
                 $webspaceItem->addChild($webspaceSettingsItem);
 

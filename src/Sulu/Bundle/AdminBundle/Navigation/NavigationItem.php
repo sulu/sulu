@@ -553,7 +553,19 @@ class NavigationItem implements \Iterator
             ];
         }
 
-        foreach ($this->getChildren() as $key => $child) {
+        $children = $this->getChildren();
+
+        usort(
+            $children,
+            function (NavigationItem $a, NavigationItem $b) {
+                $aPosition = $a->getPosition() ?: PHP_INT_MAX;
+                $bPosition = $b->getPosition() ?: PHP_INT_MAX;
+
+                return $aPosition - $bPosition;
+            }
+        );
+
+        foreach ($children as $key => $child) {
             /* @var NavigationItem $child */
             $array['items'][$key] = $child->toArray();
         }

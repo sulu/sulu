@@ -22,10 +22,12 @@ class SuluSearchAdmin extends Admin
         $rootNavigationItem = new NavigationItem($title);
 
         $section = new NavigationItem('');
+        $section->setPosition(10);
 
         $rootNavigationItem->addChild($section);
 
         $search = new NavigationItem('navigation.search');
+        $search->setPosition(10);
         $search->setIcon('search');
         $search->setEvent('search');
 

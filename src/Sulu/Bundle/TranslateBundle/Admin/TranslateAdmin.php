@@ -24,11 +24,14 @@ class TranslateAdmin extends Admin
         $rootNavigationItem = new NavigationItem($title);
 
         $section = new NavigationItem('');
+        $section->setPosition(10);
 
         $settings = new NavigationItem('navigation.settings');
+        $settings->setPosition(40);
         $settings->setIcon('cogwheels');
 
         $translate = new NavigationItem('navigation.settings.translate');
+        $translate->setPosition(40);
         $translate->setAction('settings/translate');
         $translate->setIcon('book-open');
         $settings->addChild($translate);

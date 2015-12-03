@@ -29,12 +29,15 @@ class CategoryAdmin extends Admin
 
         $rootNavigationItem = new NavigationItem($title);
         $section = new NavigationItem('');
+        $section->setPosition(10);
 
         $settings = new NavigationItem('navigation.settings');
+        $settings->setPosition(40);
         $settings->setIcon('cog');
 
         if ($this->securityChecker->hasPermission('sulu.settings.categories', 'view')) {
             $categories = new NavigationItem('navigation.settings.categories', $settings);
+            $categories->setPosition(20);
             $categories->setAction('settings/categories');
         }
 

@@ -29,12 +29,15 @@ class TagAdmin extends Admin
 
         $rootNavigationItem = new NavigationItem($title);
         $section = new NavigationItem('');
+        $section->setPosition(10);
 
         $settings = new NavigationItem('navigation.settings');
+        $settings->setPosition(40);
         $settings->setIcon('settings');
 
         if ($this->securityChecker->hasPermission('sulu.settings.tags', 'view')) {
             $roles = new NavigationItem('navigation.settings.tags', $settings);
+            $roles->setPosition(30);
             $roles->setAction('settings/tags');
             $roles->setIcon('settings');
         }
