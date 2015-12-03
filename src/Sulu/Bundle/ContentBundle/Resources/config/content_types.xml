@@ -64,5 +64,9 @@
             <argument>%sulu.content.type.multiple_select.template%</argument>
             <tag name="sulu.content.type" alias="multiple_select"/>
         </service>
+        <service id="sulu.content.type.single_select" class="Sulu\Bundle\ContentBundle\Content\Types\SingleSelect">
+            <argument>%sulu.content.type.single_select.template%</argument>
+            <tag name="sulu.content.type" alias="single_select"/>
+        </service>
     </services>
 </container>

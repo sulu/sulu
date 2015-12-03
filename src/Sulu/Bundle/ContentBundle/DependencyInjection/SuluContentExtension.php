@@ -162,6 +162,10 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
             'sulu.content.type.multiple_select.template',
             $config['types']['multiple_select']['template']
         );
+        $container->setParameter(
+            'sulu.content.type.single_select.template',
+            $config['types']['single_select']['template']
+        );
     }
 
     private function processSearch($config, LoaderInterface $loader, ContainerBuilder $container)
