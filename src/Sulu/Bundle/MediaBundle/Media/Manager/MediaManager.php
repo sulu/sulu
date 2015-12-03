@@ -699,7 +699,12 @@ class MediaManager implements MediaManagerInterface
     protected function setDataToMedia(Media $media, $data, $user)
     {
         foreach ($data as $attribute => $value) {
-            if ($value || ($attribute === 'tags' && $value !== null) || ($attribute === 'size' && $value !== null)) {
+            if ($value ||
+                ($attribute === 'tags' && $value !== null) ||
+                ($attribute === 'size' && $value !== null) ||
+                ($attribute === 'description' && $value !== null) ||
+                ($attribute === 'copyright' && $value !== null)
+            ) {
                 switch ($attribute) {
                     case 'size':
                         $media->setSize($value);
