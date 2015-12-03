@@ -29,12 +29,15 @@ class SecurityAdmin extends Admin
 
         $rootNavigationItem = new NavigationItem($title);
         $section = new NavigationItem('');
+        $section->setPosition(10);
 
         $settings = new NavigationItem('navigation.settings');
+        $settings->setPosition(40);
         $settings->setIcon('gear');
 
         if ($this->securityChecker->hasPermission('sulu.security.roles', 'view')) {
             $roles = new NavigationItem('security.roles.title', $settings);
+            $roles->setPosition(10);
             $roles->setAction('settings/roles');
             $roles->setIcon('gear');
         }

@@ -30,12 +30,15 @@ class MediaAdmin extends Admin
 
         $rootNavigationItem = new NavigationItem($title);
         $section = new NavigationItem('');
+        $section->setPosition(10);
 
         $media = new NavigationItem('navigation.media');
+        $media->setPosition(30);
         $media->setIcon('image');
 
         if ($this->securityChecker->hasPermission('sulu.media.collections', 'view')) {
             $collections = new DataNavigationItem('navigation.media.collections', '/admin/api/collections?sortBy=title', $media);
+            $collections->setPosition(10);
             $collections->setId('collections-edit');
             $collections->setAction('media/collections/root');
             $collections->setInstanceName('collections');

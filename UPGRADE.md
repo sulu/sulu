@@ -2,10 +2,10 @@
 
 ## dev-develop
 
-### ContentNavigation
+### ContentNavigation & Navigation
 
-The ContentNavigationItems will be sorted by their position. If there is no position is set the item will be placed
-behind all other items.
+The ContentNavigationItems & NavigationItems will be sorted by their position. If there is no position is set the item
+will be placed behind all other items.
 
 ## 1.1.0
 
