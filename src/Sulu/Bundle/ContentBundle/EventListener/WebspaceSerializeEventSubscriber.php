@@ -74,7 +74,7 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
         // FIXME dirty hack to avoid same "id" for datagrid
         $i = 0;
         $portalInformation = array_map(
-            function ($item) use(&$i) {
+            function ($item) use (&$i) {
                 $item['id'] = ++$i;
 
                 return $item;
