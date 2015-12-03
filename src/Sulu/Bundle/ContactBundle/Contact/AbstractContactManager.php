@@ -273,6 +273,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
     {
         if (is_array($data) && array_key_exists('id', $data)) {
             return $this->em->getRepository(self::$positionEntityName)->find($data['id']);
+        } elseif (is_numeric($data)) {
+            return $this->em->getRepository(self::$positionEntityName)->find($data);
         }
 
         return;
