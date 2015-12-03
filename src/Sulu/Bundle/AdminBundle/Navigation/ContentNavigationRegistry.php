@@ -47,6 +47,16 @@ class ContentNavigationRegistry extends ContainerAware implements ContentNavigat
             );
         }
 
+        usort(
+            $navigationItems,
+            function (ContentNavigationItem $a, ContentNavigationItem $b) {
+                $aPosition = $a->getPosition() ?: PHP_INT_MAX;
+                $bPosition = $b->getPosition() ?: PHP_INT_MAX;
+
+                return $aPosition - $bPosition;
+            }
+        );
+
         return $navigationItems;
     }
 

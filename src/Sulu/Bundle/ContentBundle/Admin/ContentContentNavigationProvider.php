@@ -45,23 +45,27 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
     {
         $content = new ContentNavigationItem('content-navigation.contents.content');
         $content->setId('tab-content');
+        $content->setPosition(10);
         $content->setAction('content');
         $content->setComponent('content/form@sulucontent');
 
         $seo = new ContentNavigationItem('content-navigation.contents.seo');
         $seo->setId('tab-seo');
+        $seo->setPosition(20);
         $seo->setAction('seo');
         $seo->setComponent('content/seo@sulucontent');
         $seo->setDisplay(['edit']);
 
         $excerpt = new ContentNavigationItem('content-navigation.contents.excerpt');
         $excerpt->setId('tab-excerpt');
+        $excerpt->setPosition(30);
         $excerpt->setAction('excerpt');
         $excerpt->setComponent('content/excerpt@sulucontent');
         $excerpt->setDisplay(['edit']);
 
         $settings = new ContentNavigationItem('content-navigation.contents.settings');
         $settings->setId('tab-settings');
+        $settings->setPosition(40);
         $settings->setAction('settings');
         $settings->setComponent('content/settings@sulucontent');
         $settings->setDisplay(['edit']);
@@ -73,6 +77,7 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
         if ($this->enabledSecurity && $this->securityChecker->hasPermission($securityContext, 'security')) {
             $permissions = new ContentNavigationItem('Permissions');
             $permissions->setAction('permissions');
+            $permissions->setPosition(50);
             $permissions->setDisplay(['edit']);
             $permissions->setComponent('permission-tab@sulusecurity');
             $permissions->setComponentOptions(

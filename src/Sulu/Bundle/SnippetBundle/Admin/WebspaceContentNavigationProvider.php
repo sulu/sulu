@@ -24,7 +24,7 @@ class WebspaceContentNavigationProvider implements ContentNavigationProviderInte
         $snippets = new ContentNavigationItem('content-navigation.webspace.snippets');
         $snippets->setId('tab-snippets');
         $snippets->setAction('snippets');
-        $snippets->setPosition(3);
+        $snippets->setPosition(25);
         $snippets->setComponent('webspace/settings/snippets@sulusnippet');
 
         return [$snippets];

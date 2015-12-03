@@ -1,5 +1,17 @@
 # Upgrade
 
+## dev-develop
+
+### ContentNavigation
+
+The ContentNavigationItems will be sorted by their position. If there is no position is set the item will be placed
+behind all other items.
+
+```php
+$item = new ContentNavigationItem('content-navigation.entry');
+$item->setPosition(10);
+```
+
 ## dev-master
 
 ### Reindex-Command
