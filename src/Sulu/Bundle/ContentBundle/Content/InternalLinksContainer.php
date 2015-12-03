@@ -175,7 +175,7 @@ class InternalLinksContainer implements ArrayableInterface
      */
     public function __isset($name)
     {
-        return ($name == 'data');
+        return $name == 'data';
     }
 
     /**

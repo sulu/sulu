@@ -918,7 +918,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         if (!is_null($contactAddresses)) {
             /** @var ContactAddress $contactAddress */
             foreach ($contactAddresses as $contactAddress) {
-                if (!!$contactAddress->getMain()) {
+                if ((bool) $contactAddress->getMain()) {
                     return $contactAddress->getAddress();
                 }
             }
