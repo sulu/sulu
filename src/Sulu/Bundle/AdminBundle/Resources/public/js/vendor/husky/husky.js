@@ -30339,6 +30339,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         initialize: function(context, options) {
             // store context of the datagrid-component
             this.datagrid = context;
+            this.keys = {id: this.datagrid.options.idKey};
 
             // make sandbox available in this-context
             this.sandbox = this.datagrid.sandbox;
@@ -30663,7 +30664,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 $overrideElement = (!!this.table.rows[record.id]) ? this.table.rows[record.id].$el : null,
                 hasParent = this.hasParent(record);
 
-            record.id = (!!record.id) ? record.id : constants.newRecordId;
+            record.id = (!!record[this.keys.id]) ? record[this.keys.id] : constants.newRecordId;
             this.sandbox.dom.data($row, 'id', record.id);
 
             // render the parents before rendering the children
@@ -32748,6 +32749,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
  * @param {Function} [options.clickCallback] callback for clicking an item - first parameter item id, second parameter the dataset of the clicked item
  * @param {Function} [options.actionCallback] action callback. E.g. executed on double-click in table-view - first parameter item id, second parameter the dataset of the clicked item
  * @param {Function} [options.idKey] the name of the id property
+ * @param {Function} [options.childrenKey] the name of the children property
  */
 (function() {
 
@@ -32796,7 +32798,8 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 viewSpacingBottom: 110,
                 clickCallback: null,
                 actionCallback: null,
-                idKey: 'id'
+                idKey: 'id',
+                childrenKey: 'children'
             },
 
             types = {
@@ -33422,9 +33425,9 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                     this.sandbox.logger.log('load data from array');
                     this.data = {};
                     if (!!this.options.resultKey && !!this.options.data[this.options.resultKey]) {
-                        this.data.embedded = this.options.data[this.options.resultKey];
+                        this.data.embedded = this.parseEmbedded(this.options.data[this.options.resultKey]);
                     } else {
-                        this.data.embedded = this.options.data;
+                        this.data.embedded = this.parseEmbedded(this.options.data);
                     }
 
                     this.renderView();
@@ -33788,11 +33791,42 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
             parseData: function(data) {
                 this.data = {};
                 this.data.links = this.parseLinks(data._links);
-                this.data.embedded = data._embedded[this.options.resultKey];
+                this.data.embedded = this.parseEmbedded(data._embedded[this.options.resultKey]);
                 this.data.total = data.total;
                 this.data.page = data.page;
                 this.data.pages = data.pages;
                 this.data.limit = data.limit;
+            },
+
+            /**
+             * Parses data and returns normalized embedded items.
+             *
+             * @param data
+             * @param parent
+             */
+            parseEmbedded: function(data, parent) {
+                var embedded = [];
+                for (var i = 0, len = data.length; i < len; i++) {
+                    var children = [];
+                    if (!!parent) {
+                        data[i].parent = parent;
+                    }
+
+                    data[i].id = data[i][this.options.idKey];
+                    if (!data[i][this.options.childrenPropertyName]) {
+                        data[i][this.options.childrenPropertyName] = false;
+                    }
+
+                    if (data[i].hasOwnProperty(this.options.childrenKey)) {
+                        children = this.parseEmbedded(data[i][this.options.childrenKey], data[i].id);
+                        data[i][this.options.childrenPropertyName] = (children.length > 0);
+                    }
+
+                    embedded.push(data[i]);
+                    embedded = embedded.concat(children);
+                }
+
+                return embedded;
             },
 
             /**

@@ -78,7 +78,7 @@ class ContentAdmin extends Admin
                 $webspaceItem->addChild($contentItem);
 
                 $webspaceSettingsItem = new NavigationItem('navigation.webspaces.settings');
-                $webspaceSettingsItem->setAction(sprintf('content/webspace/%s/general', $webspace->getKey()));
+                $webspaceSettingsItem->setAction(sprintf('content/webspace/edit:%s/general', $webspace->getKey()));
                 $webspaceItem->addChild($webspaceSettingsItem);
 
                 $section->addChild($webspaceItem);

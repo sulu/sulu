@@ -7,11 +7,41 @@
  * with this source code in the file LICENSE.
  */
 
-define([], function() {
+define(['text!./skeleton.html'], function(skeleton) {
 
     'use strict';
 
+    var defaults = {
+        templates: {
+            skeleton: skeleton
+        },
+        translations: {
+            nameKey: 'public.name',
+            localizationKey: 'content.webspace.settings.localization',
+            localizationsKey: 'content.webspace.settings.localizations',
+            themeKey: 'content.webspace.settings.theme',
+            urlKey: 'content.webspace.settings.url',
+            urlsKey: 'content.webspace.settings.urls',
+            mainKey: 'content.webspace.settings.main'
+        }
+    };
+
     return {
+
+        defaults: defaults,
+
+        tabOptions: {
+            noTitle: true
+        },
+
+        layout: {
+            content: {
+                width: 'max',
+                leftSpace: false,
+                rightSpace: false
+            }
+        },
+
         initialize: function() {
             this.data = this.options.data();
 
@@ -20,7 +50,14 @@ define([], function() {
         },
 
         render: function() {
-            this.html(this.data.title);
+            this.html(
+                this.templates.skeleton(
+                    {
+                        webspace: this.data,
+                        translations: this.translations
+                    }
+                )
+            );
         },
 
         bindCustomEvents: function() {

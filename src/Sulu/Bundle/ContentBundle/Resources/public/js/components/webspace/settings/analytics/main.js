@@ -20,7 +20,8 @@ define([], function() {
         },
 
         render: function() {
-            this.html(this.data.title);
+            this.html(this.data.name);
+            this.html(this.data.name);
         },
 
         bindCustomEvents: function() {

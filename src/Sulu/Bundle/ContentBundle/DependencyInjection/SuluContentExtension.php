@@ -56,6 +56,10 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                             'path' => __DIR__ . '/../Resources/config/serializer',
                             'namespace_prefix' => 'Sulu\Component\Content',
                         ],
+                        [
+                            'path' => __DIR__ . '/../Resources/config/serializer',
+                            'namespace_prefix' => 'Sulu\Component\Webspace',
+                        ],
                     ],
                 ],
             ]);
