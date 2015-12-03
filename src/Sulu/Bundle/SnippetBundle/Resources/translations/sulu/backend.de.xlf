@@ -54,6 +54,10 @@
                 <source>search-overlay.index.snippet.title</source>
                 <target>Snippets</target>
             </trans-unit>
+            <trans-unit id="15" resname="content-navigation.webspace.snippets">
+                <source>content-navigation.webspace.general</source>
+                <target>Schnipsel</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

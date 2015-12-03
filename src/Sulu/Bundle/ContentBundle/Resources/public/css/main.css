@@ -513,3 +513,31 @@
   width: 5%;
   text-align: center;
 }
+
+/* line 2, ../scss/modules/webspace-settings.scss */
+.webspace-settings.general p.label {
+  display: block;
+  font-size: 14px;
+  color: #999;
+  white-space: nowrap;
+}
+/* line 9, ../scss/modules/webspace-settings.scss */
+.webspace-settings.general p.value {
+  color: #999;
+  font-size: 14px;
+}
+/* line 13, ../scss/modules/webspace-settings.scss */
+.webspace-settings.general p.value.big {
+  font-size: 24px;
+  line-height: 40px;
+  height: 40px;
+}
+/* line 19, ../scss/modules/webspace-settings.scss */
+.webspace-settings.general p.value.bold {
+  font-weight: bolder;
+}
+/* line 24, ../scss/modules/webspace-settings.scss */
+.webspace-settings.general .webspace-name {
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
