@@ -27,7 +27,6 @@ define(['underscore'], function(_) {
                     return this.data.name;
                 }.bind(this),
 
-                noBack: true,
                 tabs: {
                     url: '/admin/content-navigations?alias=webspace',
                     options: {
@@ -59,6 +58,12 @@ define(['underscore'], function(_) {
             });
 
             return deferred.promise();
+        },
+
+        initialize: function() {
+            this.sandbox.on('sulu.header.back', function() {
+                this.sandbox.logger.log('TODO back');
+            }.bind(this));
         }
     };
 });
