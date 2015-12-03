@@ -11,20 +11,22 @@ define([], function() {
 
     'use strict';
 
+    var defaults = {};
+
     return {
+
+        defaults: defaults,
+
+        layout: {
+            content: {
+                width: 'fixed',
+                leftSpace: true,
+                rightSpace: true
+            }
+        },
+
         initialize: function() {
             this.data = this.options.data();
-
-            this.render();
-            this.bindCustomEvents();
-        },
-
-        render: function() {
-            this.html(this.data.name);
-            this.html(this.data.name);
-        },
-
-        bindCustomEvents: function() {
         }
     };
 });

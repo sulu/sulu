@@ -14,10 +14,11 @@
             <p class="label"><%= translations.localizationsKey %></p>
 
             <div data-aura-component="datagrid@husky"
-                 data-aura-data='<%= JSON.stringify(webspace.localizations) %>'
-                 data-aura-matchings='[{"attribute": "localization", "content": "<%= translations.localizationKey %>"}]'
                  data-aura-id-key="localization"
-                 data-aura-view-options='{"table": {"selectItem": false}}'></div>
+                 data-aura-children-property-name="hasChildren"
+                 data-aura-view-options='{"table": {"selectItem": false}}'
+                 data-aura-matchings='[{"attribute": "localization", "content": "<%= translations.localizationKey %>"}]'
+                 data-aura-data='<%= JSON.stringify(webspace.localizations) %>'></div>
         </div>
 
         <div class="form-group theme-key">
@@ -30,10 +31,10 @@
             <p class="label"><%= translations.urlsKey %></p>
 
             <div data-aura-component="datagrid@husky"
-                 data-aura-data='<%= JSON.stringify([]) %>'
-                 data-aura-matchings='[{"attribute": "url", "content": "<%= translations.urlKey %>"},{"attribute": "localization", "content": "<%= translations.localizationKey %>"},{"attribute": "main", "content": "<%= translations.mainKey %>"}]'
-                 data-aura-id-key="localization"
-                 data-aura-view-options='{"table": {"selectItem": false}}'></div>
+                 data-aura-children-property-name="hasChildren"
+                 data-aura-view-options='{"table": {"selectItem": false}}'
+                 data-aura-matchings='[{"attribute": "url", "content": "<%= translations.urlKey %>"},{"attribute": "locale", "content": "<%= translations.localizationKey %>"},{"attribute": "main", "content": "<%= translations.mainKey %>"}]'
+                 data-aura-data='<%= JSON.stringify(webspace.portalInformation) %>'></div>
         </div>
     </div>
 </div>
