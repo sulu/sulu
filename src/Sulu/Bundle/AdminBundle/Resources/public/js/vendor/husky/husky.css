@@ -8348,25 +8348,20 @@ a.btn-black, a.btn-highlight {
 }
 /* line 55, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .show-elements .text {
+  color: #999;
   padding-right: 5px;
 }
-/* line 58, ../scss/modules/pagination.scss */
-.pagination-wrapper.dropdowns .show-elements .dropdown-trigger {
-  border: none;
-  background: #fff;
+/* line 60, ../scss/modules/pagination.scss */
+.pagination-wrapper.dropdowns .show-elements .dropdown {
+  background-color: #fff;
 }
-/* line 62, ../scss/modules/pagination.scss */
-.pagination-wrapper.dropdowns .show-elements .dropdown-menu {
-  width: 120px;
-}
-/* line 67, ../scss/modules/pagination.scss */
+/* line 65, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .pagination {
   height: 30px;
   float: right;
 }
-/* line 71, ../scss/modules/pagination.scss */
+/* line 69, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .pagination .pagination-main {
-  margin: 0;
   display: inline-block;
   list-style: none;
   border: 1px solid #ccc;
@@ -8375,7 +8370,7 @@ a.btn-black, a.btn-highlight {
   height: 30px;
   margin: 0 2px;
 }
-/* line 81, ../scss/modules/pagination.scss */
+/* line 78, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .pagination .pagination-prev {
   padding: 0 13px 0 8px;
   border: 1px solid #ccc;
@@ -8383,14 +8378,16 @@ a.btn-black, a.btn-highlight {
   line-height: 32px;
   height: 30px;
   text-align: center;
+  background-color: #fff;
+  border-left: 0px;
 }
-/* line 89, ../scss/modules/pagination.scss */
+/* line 88, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .pagination .pagination-prev::after {
   content: "";
   display: inline-block;
   font-size: 16px;
 }
-/* line 96, ../scss/modules/pagination.scss */
+/* line 95, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .pagination .pagination-next {
   padding: 0 13px 0 8px;
   border: 1px solid #ccc;
@@ -8398,6 +8395,7 @@ a.btn-black, a.btn-highlight {
   line-height: 32px;
   height: 30px;
   text-align: center;
+  background-color: #fff;
 }
 /* line 104, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .pagination .pagination-next::after {
@@ -8405,30 +8403,41 @@ a.btn-black, a.btn-highlight {
   display: inline-block;
   font-size: 16px;
 }
-/* line 111, ../scss/modules/pagination.scss */
-.pagination-wrapper.dropdowns .pagination .dropdown-menu {
-  width: 200px;
-}
-/* line 117, ../scss/modules/pagination.scss */
+/* line 114, ../scss/modules/pagination.scss */
 .pagination-wrapper.showall {
   cursor: pointer;
   margin-top: 0;
   padding-left: 10px;
   display: inline-block;
 }
-/* line 123, ../scss/modules/pagination.scss */
+/* line 120, ../scss/modules/pagination.scss */
 .pagination-wrapper.showall .square {
   width: 50px;
   height: 50px;
   border: 1px dashed #ccc;
   float: left;
 }
-/* line 129, ../scss/modules/pagination.scss */
+/* line 126, ../scss/modules/pagination.scss */
 .pagination-wrapper.showall .text {
   display: inline-block;
   padding-left: 10px;
   line-height: 50px;
   float: left;
+}
+/* line 134, ../scss/modules/pagination.scss */
+.pagination-wrapper .page-label {
+  color: #999;
+  line-height: 30px;
+  margin-right: 20px;
+}
+/* line 139, ../scss/modules/pagination.scss */
+.pagination-wrapper .page-label .form-element, .pagination-wrapper .page-label .husky-input {
+  width: 50px;
+  min-width: 50px;
+  max-width: 150px;
+  text-align: center;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 /* line 8, ../scss/modules/avatar.scss */
