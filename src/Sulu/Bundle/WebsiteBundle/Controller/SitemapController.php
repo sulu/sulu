@@ -38,7 +38,7 @@ class SitemapController extends WebsiteController
         $sitemapXMLGenerator = $this->get('sulu_website.sitemap_xml_generator');
 
         $sitemap = $this->get('sulu_content.content_repository')->findAll(
-            'en', // TODO X-Default
+            $requestAnalyzer->getWebspace()->getXDefaultLocalization()->getLocalization(),
             $requestAnalyzer->getWebspace()->getKey(),
             MappingBuilder::create()
                 ->addProperties(['changed'])
@@ -55,13 +55,10 @@ class SitemapController extends WebsiteController
                     },
                     $requestAnalyzer->getWebspace()->getAllLocalizations()
                 ),
-                'defaultLocalization' => $requestAnalyzer->getWebspace()->getDefaultLocalization(),
+                'defaultLocalization' => $requestAnalyzer->getWebspace()->getXDefaultLocalization()->getLocalization(),
                 'sitemap' => $sitemap,
             ]
         ];
-
-        // TODO X-DEFAULT
-        // TODO PUBLISHED
 
         $preferredDomain = $request->getHttpHost();
 
