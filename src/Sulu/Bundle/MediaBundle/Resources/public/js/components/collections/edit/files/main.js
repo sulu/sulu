@@ -236,7 +236,6 @@ define([
             if (SecurityChecker.hasPermission(this.data, 'add')) {
                 buttons.add = {
                     options: {
-                        class: null,
                         callback: function() {
                             this.sandbox.emit('sulu.list-toolbar.add');
                         }.bind(this)
