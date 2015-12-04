@@ -21,6 +21,7 @@ use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Compat\StructureType;
 use Sulu\Component\Content\Document\RedirectType;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Repository\Mapping\MappingInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\Localization\Localization;
@@ -427,7 +428,7 @@ class ContentRepository implements ContentRepositoryInterface
                         $this->propertyEncoder->localizedSystemName('state', $locale)
                     ),
                     '=',
-                    $this->qomFactory->literal(Structure::STATE_PUBLISHED)
+                    $this->qomFactory->literal(WorkflowStage::PUBLISHED)
                 )
             );
         }
