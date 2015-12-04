@@ -306,17 +306,6 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testLoadWithoutDefaultLocalization()
-    {
-        $this->setExpectedException(
-            '\Sulu\Component\Webspace\Loader\Exception\PortalDefaultLocalizationNotFoundException'
-        );
-
-        $this->loader->load(
-            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/invalid/massiveart_withoutDefaultLocalization.xml'
-        );
-    }
-
     public function testLoadWithoutDefaultSegment()
     {
         $this->setExpectedException(
