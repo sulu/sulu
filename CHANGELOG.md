@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-master
     * BUGFIX      #1855 [ContactBundle]   Fixed displaying correct position when adding new person to organisation
     * HOTFIX      #1856 [MediaBundle]     Fixed delete copyright from media
+    * HOTFIX      #1856 [All]             Changed datagrid-pagination to input field to avoid performance leaks 
 
 * 1.1.0 (2015-12-02)
     * BUGFIX      #1849 [MediaBundle]     Fixed media-edit-overlay language changer

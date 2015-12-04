@@ -32305,9 +32305,9 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
          */
         bindDomEvents: function() {
             var $element = this.sandbox.dom.find('input.' + constants.inputClass, this.$el),
-                fontSize = parseInt($element.css('font-size')),
-                minWidth = parseInt($element.css('min-width')),
-                maxWidth = parseInt($element.css('max-width'));
+                fontSize = parseInt($element.css('font-size'), 10),
+                minWidth = parseInt($element.css('min-width'), 10),
+                maxWidth = parseInt($element.css('max-width'), 10);
 
             // next page
             this.sandbox.dom.on(
@@ -32349,7 +32349,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
 
         inputHandler: function(event) {
             var $element = this.sandbox.dom.find(event.currentTarget),
-                page = parseInt($element.val());
+                page = parseInt($element.val(), 10);
 
             if (isNaN(page)) {
                 $element.val(this.data.page);
