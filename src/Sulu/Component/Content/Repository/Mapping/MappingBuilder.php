@@ -78,6 +78,34 @@ class MappingBuilder
     }
 
     /**
+     * Enable resolve url.
+     *
+     * @param bool $enable
+     *
+     * @return $this
+     */
+    public function setResolveUrl($enable)
+    {
+        $this->mapping->setResolveUrl($enable);
+
+        return $this;
+    }
+
+    /**
+     * Enable only published.
+     *
+     * @param bool $enable
+     *
+     * @return $this
+     */
+    public function setOnlyPublished($enable)
+    {
+        $this->mapping->setOnlyPublished($enable);
+
+        return $this;
+    }
+
+    /**
      * Add properties to load.
      *
      * @param string[] $properties

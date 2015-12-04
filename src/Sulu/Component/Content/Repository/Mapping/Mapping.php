@@ -34,6 +34,16 @@ class Mapping implements MappingInterface
     private $hydrateGhost = true;
 
     /**
+     * @var bool
+     */
+    private $resolveUrl = false;
+
+    /**
+     * @var bool
+     */
+    private $onlyPublished = false;
+
+    /**
      * @var Collection
      */
     private $properties;
@@ -89,6 +99,38 @@ class Mapping implements MappingInterface
     public function setHydrateGhost($hydrateGhost)
     {
         $this->hydrateGhost = $hydrateGhost;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function resolveUrl()
+    {
+        return $this->resolveUrl;
+    }
+
+    /**
+     * @param boolean $resolveUrl
+     */
+    public function setResolveUrl($resolveUrl)
+    {
+        $this->resolveUrl = $resolveUrl;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function onlyPublished()
+    {
+        return $this->onlyPublished;
+    }
+
+    /**
+     * @param boolean $onlyPublished
+     */
+    public function setOnlyPublished($onlyPublished)
+    {
+        $this->onlyPublished = $onlyPublished;
     }
 
     /**

@@ -97,6 +97,16 @@ class Content implements \ArrayAccess
      */
     private $localizationType;
 
+    /**
+     * @var string
+     */
+    private $url;
+
+    /**
+     * @var string[]
+     */
+    private $urls;
+
     public function __construct(
         $locale,
         $webspaceKey,
@@ -226,9 +236,44 @@ class Content implements \ArrayAccess
         return $this->children;
     }
 
+    /**
+     * @return string[]
+     */
     public function getMapping()
     {
         return implode(',', array_keys($this->data));
+    }
+
+    /**
+     * @return \string[]
+     */
+    public function getUrls()
+    {
+        return $this->urls;
+    }
+
+    /**
+     * @param \string[] $urls
+     */
+    public function setUrls(array $urls)
+    {
+        $this->urls = $urls;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param string $url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
     }
 
     /**
