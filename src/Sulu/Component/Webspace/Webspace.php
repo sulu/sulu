@@ -214,6 +214,10 @@ class Webspace implements ArrayableInterface
      */
     public function getDefaultLocalization()
     {
+        if (!$this->defaultLocalization) {
+            return $this->localizations[0];
+        }
+
         return $this->defaultLocalization;
     }
 
@@ -224,6 +228,10 @@ class Webspace implements ArrayableInterface
      */
     public function getXDefaultLocalization()
     {
+        if (!$this->xDefaultLocalization) {
+            return $this->localizations[0];
+        }
+
         return $this->xDefaultLocalization;
     }
 

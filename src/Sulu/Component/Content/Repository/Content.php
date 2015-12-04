@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Repository;
 use Hateoas\Configuration\Annotation\Embedded;
 use Hateoas\Configuration\Annotation\Relation;
 use Hateoas\Configuration\Annotation\Route;
+use Jackalope\Query\Row;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use Sulu\Component\Content\Compat\StructureType;
@@ -106,6 +107,11 @@ class Content implements \ArrayAccess
      * @var string[]
      */
     private $urls;
+
+    /**
+     * @var Row
+     */
+    private $row;
 
     public function __construct(
         $locale,
@@ -234,6 +240,22 @@ class Content implements \ArrayAccess
     public function getChildren()
     {
         return $this->children;
+    }
+
+    /**
+     * @return Row
+     */
+    public function getRow()
+    {
+        return $this->row;
+    }
+
+    /**
+     * @param Row $row
+     */
+    public function setRow(Row $row)
+    {
+        $this->row = $row;
     }
 
     /**

@@ -366,6 +366,7 @@ class ContentRepository implements ContentRepositoryInterface
 
         $this->appendSingleMapping($queryBuilder, 'template', $locales);
         $this->appendSingleMapping($queryBuilder, 'shadow-on', $locales);
+        $this->appendSingleMapping($queryBuilder, 'state', $locales);
 
         if (null !== $user) {
             foreach ($user->getRoleObjects() as $role) {
@@ -560,6 +561,7 @@ class ContentRepository implements ContentRepositoryInterface
             $this->resolvePermissions($row, $user),
             $type
         );
+        $content->setRow($row);
 
         if ($mapping->resolveUrl()) {
             $url = $this->resolveUrl($row, $locale);
@@ -676,6 +678,10 @@ class ContentRepository implements ContentRepositoryInterface
      */
     private function resolveUrl(Row $row, $locale)
     {
+        if ($this->resolveProperty($row, 'state', $locale) !== WorkflowStage::PUBLISHED) {
+            return;
+        }
+
         $template = $this->resolveProperty($row, 'template', $locale);
 
         if (empty($template)) {

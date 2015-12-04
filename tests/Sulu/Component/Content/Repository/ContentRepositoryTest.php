@@ -767,7 +767,8 @@ class ContentRepositoryTest extends SuluTestCase
             [
                 'path' => $this->sessionManager->getContentPath('sulu_io') . '/test-2',
                 'auto_create' => true,
-            ]);
+            ]
+        );
         $this->documentManager->flush();
 
         $result = $this->contentRepository->findByWebspaceRoot(
