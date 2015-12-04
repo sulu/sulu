@@ -240,7 +240,7 @@
             </trans-unit>
             <trans-unit id="ba94026d08c4e74cc8d19436f7838a95" resname="pagination.page">
                 <source>pagination.page</source>
-                <target>Page</target>
+                <target>Page:</target>
             </trans-unit>
             <trans-unit id="dc473bd06017432f7b455dc710046d13" resname="pagination.of">
                 <source>pagination.of</source>
