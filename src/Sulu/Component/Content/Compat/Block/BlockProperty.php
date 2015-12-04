@@ -142,7 +142,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
     public function initProperties($index, $typeName)
     {
         $type = $this->getType($typeName);
-        $this->properties[$index] = clone($type);
+        $this->properties[$index] = clone $type;
 
         return $this->properties[$index];
     }
@@ -309,7 +309,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
 
         $clone->types = [];
         foreach ($this->types as $type) {
-            $clone->addType(clone($type));
+            $clone->addType(clone $type);
         }
 
         $clone->setValue($this->getValue());

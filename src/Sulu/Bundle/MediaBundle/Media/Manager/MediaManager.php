@@ -558,7 +558,7 @@ class MediaManager implements MediaManagerInterface
             ];
             $data['version'] = $version;
 
-            $fileVersion = clone($currentFileVersion);
+            $fileVersion = clone $currentFileVersion;
             $this->em->persist($fileVersion);
 
             $fileVersion->setChanged(new \DateTime());

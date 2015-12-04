@@ -596,7 +596,7 @@ abstract class Structure implements StructureInterface
      */
     public function getPublishedState()
     {
-        return ($this->nodeState === StructureInterface::STATE_PUBLISHED);
+        return $this->nodeState === StructureInterface::STATE_PUBLISHED;
     }
 
     /**

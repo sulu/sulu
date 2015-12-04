@@ -632,6 +632,6 @@ class ContentRepository implements ContentRepositoryInterface
 
         $result = $queryBuilder->execute();
 
-        return (count(iterator_to_array($result->getRows())) > 0);
+        return count(iterator_to_array($result->getRows())) > 0;
     }
 }

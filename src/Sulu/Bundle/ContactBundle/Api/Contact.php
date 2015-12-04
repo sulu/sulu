@@ -969,7 +969,7 @@ class Contact extends ApiWrapper
         if (!is_null($contactAddresses)) {
             /** @var ContactAddressEntity $contactAddress */
             foreach ($contactAddresses as $contactAddress) {
-                if (!!$contactAddress->getMain()) {
+                if ((bool) $contactAddress->getMain()) {
                     return $contactAddress->getAddress();
                 }
             }

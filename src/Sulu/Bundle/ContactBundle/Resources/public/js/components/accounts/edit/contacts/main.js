@@ -100,11 +100,15 @@ define([
         },
 
         /**
-         * Takes a contact and returns a flat version
+         * Takes a contact and returns a flat version.
+         *
          * @param contact {Object} the contact to create a flat version for
+         *
+         * @returns {Object}
          */
         toFlat = function(contact) {
             contact.position = contact.position.position;
+
             return contact;
         },
 
@@ -241,15 +245,22 @@ define([
             });
         },
 
-    // adds a new contact relation
+        /**
+         * Adds a new contact relation.
+         */
         addContactRelation = function() {
             var contactInput = this.sandbox.dom.find(constants.contactSelector + ' input', constants.relationFormSelector),
                 id = this.sandbox.dom.data(contactInput, 'id');
             if (!!id) {
-                AccountManager.addAccountContact(this.data.id, id, this.companyPosition);
-                ContactManager.loadOrNew(id).then(function(contact) {
-                    this.sandbox.emit('husky.datagrid.record.add', toFlat(contact));
-                }.bind(this));
+                AccountManager.addAccountContact(this.data.id, id, this.companyPosition)
+                    .then(function(response) {
+                        ContactManager.loadOrNew(id).then(function(contact) {
+                            if (response.position) {
+                                contact.position = response.position;
+                            }
+                            this.sandbox.emit('husky.datagrid.record.add', contact);
+                        }.bind(this));
+                    }.bind(this));
             }
         };
 
