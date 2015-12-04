@@ -14,6 +14,7 @@ use PHPCR\SessionInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\LocalizationFinderInterface;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
@@ -62,6 +63,11 @@ class ContentRepositoryTest extends SuluTestCase
     private $localizationFinder;
 
     /**
+     * @var StructureManagerInterface
+     */
+    private $structureManager;
+
+    /**
      * @var SuluNodeHelper
      */
     private $nodeHelper;
@@ -74,6 +80,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->propertyEncoder = $this->getContainer()->get('sulu_document_manager.property_encoder');
         $this->webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
         $this->localizationFinder = $this->getContainer()->get('sulu.content.localization_finder');
+        $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
         $this->nodeHelper = $this->getContainer()->get('sulu.util.node_helper');
 
         $this->contentRepository = new ContentRepository(
@@ -81,6 +88,7 @@ class ContentRepositoryTest extends SuluTestCase
             $this->propertyEncoder,
             $this->webspaceManager,
             $this->localizationFinder,
+            $this->structureManager,
             $this->nodeHelper
         );
     }
@@ -704,6 +712,29 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals($page2->getUuid(), $result[2]->getId());
         $this->assertFalse($result[2]->hasChildren());
         $this->assertEmpty($result[2]->getChildren());
+    }
+
+    public function testFindAll()
+    {
+        $this->initPhpcr();
+
+        $page1 = $this->createPage('test-1', 'de');
+        $page11 = $this->createPage('test-1-1', 'de', [], $page1);
+        $page2 = $this->createPage('test-2', 'de');
+        $page3 = $this->createPage('test-3', 'de');
+
+        $result = $this->contentRepository->findAll(
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->addProperties(['title'])->getMapping()
+        );
+
+        $this->assertCount(5, $result);
+        $this->assertEquals('/', $result[0]->getPath());
+        $this->assertEquals('/test-1', $result[1]->getPath());
+        $this->assertEquals('/test-1/test-1-1', $result[2]->getPath());
+        $this->assertEquals('/test-2', $result[3]->getPath());
+        $this->assertEquals('/test-3', $result[4]->getPath());
     }
 
     /**

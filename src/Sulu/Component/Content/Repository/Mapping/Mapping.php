@@ -110,7 +110,7 @@ class Mapping implements MappingInterface
     }
 
     /**
-     * @param boolean $resolveUrl
+     * @param bool $resolveUrl
      */
     public function setResolveUrl($resolveUrl)
     {
@@ -118,7 +118,7 @@ class Mapping implements MappingInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function onlyPublished()
     {
@@ -126,7 +126,7 @@ class Mapping implements MappingInterface
     }
 
     /**
-     * @param boolean $onlyPublished
+     * @param bool $onlyPublished
      */
     public function setOnlyPublished($onlyPublished)
     {

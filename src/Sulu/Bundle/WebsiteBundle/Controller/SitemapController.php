@@ -57,7 +57,7 @@ class SitemapController extends WebsiteController
                 ),
                 'defaultLocalization' => $requestAnalyzer->getWebspace()->getXDefaultLocalization()->getLocalization(),
                 'sitemap' => $sitemap,
-            ]
+            ],
         ];
 
         $preferredDomain = $request->getHttpHost();
@@ -74,9 +74,7 @@ class SitemapController extends WebsiteController
 
         $response->headers->set('Content-Type', 'text/xml');
 
-        $this->get('debug.stopwatch')->start('test');
         $response->setContent($sitemapXMLGenerator->generate($webspaceSitemaps, $preferredDomain));
-        $this->get('debug.stopwatch')->stop('test');
 
         // Generate XML
         return $response;
