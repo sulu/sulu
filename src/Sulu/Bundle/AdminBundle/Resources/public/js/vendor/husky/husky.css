@@ -8378,16 +8378,19 @@ a.btn-black, a.btn-highlight {
   line-height: 32px;
   height: 30px;
   text-align: center;
-  background-color: #fff;
   border-left: 0px;
 }
-/* line 88, ../scss/modules/pagination.scss */
+/* line 87, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .pagination .pagination-prev::after {
   content: "";
   display: inline-block;
   font-size: 16px;
 }
-/* line 95, ../scss/modules/pagination.scss */
+/* line 94, ../scss/modules/pagination.scss */
+.pagination-wrapper.dropdowns .pagination .pagination-prev:hover {
+  background-color: #ddd;
+}
+/* line 98, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .pagination .pagination-next {
   padding: 0 13px 0 8px;
   border: 1px solid #ccc;
@@ -8395,47 +8398,54 @@ a.btn-black, a.btn-highlight {
   line-height: 32px;
   height: 30px;
   text-align: center;
-  background-color: #fff;
 }
-/* line 104, ../scss/modules/pagination.scss */
+/* line 106, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .pagination .pagination-next::after {
   content: "";
   display: inline-block;
   font-size: 16px;
 }
-/* line 112, ../scss/modules/pagination.scss */
+/* line 113, ../scss/modules/pagination.scss */
+.pagination-wrapper.dropdowns .pagination .pagination-next:hover {
+  background-color: #ddd;
+}
+/* line 118, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .pagination .disabled {
-  color: #efefef;
+  color: #ccc;
   cursor: default;
 }
-/* line 119, ../scss/modules/pagination.scss */
+/* line 122, ../scss/modules/pagination.scss */
+.pagination-wrapper.dropdowns .pagination .disabled:hover {
+  background-color: #efefef;
+}
+/* line 129, ../scss/modules/pagination.scss */
 .pagination-wrapper.showall {
   cursor: pointer;
   margin-top: 0;
   padding-left: 10px;
   display: inline-block;
 }
-/* line 125, ../scss/modules/pagination.scss */
+/* line 135, ../scss/modules/pagination.scss */
 .pagination-wrapper.showall .square {
   width: 50px;
   height: 50px;
   border: 1px dashed #ccc;
   float: left;
 }
-/* line 131, ../scss/modules/pagination.scss */
+/* line 141, ../scss/modules/pagination.scss */
 .pagination-wrapper.showall .text {
   display: inline-block;
   padding-left: 10px;
   line-height: 50px;
   float: left;
 }
-/* line 139, ../scss/modules/pagination.scss */
+/* line 149, ../scss/modules/pagination.scss */
 .pagination-wrapper .page-label {
   color: #999;
   line-height: 30px;
   margin-right: 20px;
 }
-/* line 144, ../scss/modules/pagination.scss */
+/* line 154, ../scss/modules/pagination.scss */
 .pagination-wrapper .page-label .form-element, .pagination-wrapper .page-label .husky-input {
   width: 50px;
   min-width: 50px;
