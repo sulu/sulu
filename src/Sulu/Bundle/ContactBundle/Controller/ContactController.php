@@ -488,7 +488,7 @@ class ContactController extends RestController implements ClassResourceInterface
      */
     public function fieldsAction(Request $request)
     {
-        if (!!$request->get('accountContacts')) {
+        if ((bool) $request->get('accountContacts')) {
             return $this->handleView($this->view(array_values($this->getAccountContactFieldDescriptors()), 200));
         }
 

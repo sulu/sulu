@@ -156,7 +156,7 @@ class MediaSelectionContainer implements ArrayableInterface
 
     public function __isset($name)
     {
-        return ($name == 'data' || $name == 'config' || $name == 'ids' || $name == 'displayOption' || $name == 'types');
+        return $name == 'data' || $name == 'config' || $name == 'ids' || $name == 'displayOption' || $name == 'types';
     }
 
     /**
