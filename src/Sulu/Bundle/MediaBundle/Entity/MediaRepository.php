@@ -272,47 +272,43 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         $offset = null,
         $select = 'media.id'
     ) {
-        $subQueryBuilder = $this->createQueryBuilder('media')->select($select);
+        $queryBuilder = $this->createQueryBuilder('media')->select($select);
 
-        if ($collection !== null) {
-            $subQueryBuilder->leftJoin('media.collection', 'collection');
-            $subQueryBuilder->andWhere('collection.id = :collection');
+        if (!empty($collection)) {
+            $queryBuilder->innerJoin('media.collection', 'collection');
+            $queryBuilder->andWhere('collection.id = :collection');
+            $queryBuilder->setParameter('collection', $collection);
         }
-        if ($types !== null) {
-            $subQueryBuilder->leftJoin('media.type', 'type');
-            $subQueryBuilder->andWhere('type.name IN (:types)');
+
+        if (!empty($types)) {
+            $queryBuilder->innerJoin('media.type', 'type');
+            $queryBuilder->andWhere('type.name IN (:types)');
+            $queryBuilder->setParameter('types', $types);
         }
-        if ($search !== null) {
-            $subQueryBuilder
+
+        if (!empty($search)) {
+            $queryBuilder
                 ->innerJoin('media.files', 'file')
                 ->innerJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version')
                 ->leftJoin('fileVersion.meta', 'fileVersionMeta');
 
-            $subQueryBuilder->andWhere('fileVersionMeta.title LIKE :search');
+            $queryBuilder->andWhere('fileVersionMeta.title LIKE :search');
+            $queryBuilder->setParameter('search', '%' . $search . '%');
         }
+
         if ($offset) {
-            $subQueryBuilder->setFirstResult($offset);
+            $queryBuilder->setFirstResult($offset);
         }
+
         if ($limit) {
-            $subQueryBuilder->setMaxResults($limit);
-        }
-        if ($orderBy !== null) {
-            $subQueryBuilder->addOrderBy($orderBy, $orderSort);
+            $queryBuilder->setMaxResults($limit);
         }
 
-        $subQuery = $subQueryBuilder->getQuery();
-
-        if ($collection !== null) {
-            $subQuery->setParameter('collection', $collection);
-        }
-        if ($types !== null) {
-            $subQuery->setParameter('types', $types);
-        }
-        if ($search !== null) {
-            $subQuery->setParameter('search', '%' . $search . '%');
+        if (!empty($orderBy)) {
+            $queryBuilder->addOrderBy($orderBy, $orderSort);
         }
 
-        return $subQuery;
+        return $queryBuilder->getQuery();
     }
 
     /**
