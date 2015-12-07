@@ -48,6 +48,7 @@ class PHPCRInitCommand extends ContainerAwareCommand
         $output->writeln('Register namespace');
         $workspace->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
         $workspace->getNamespaceRegistry()->registerNamespace('sec', 'http://sulu.io/phpcr/sec');
+        $workspace->getNamespaceRegistry()->registerNamespace('settings', 'http://sulu.io/phpcr/settings');
         $workspace->getNamespaceRegistry()->registerNamespace(
             $this->getContainer()->getParameter('sulu.content.language.namespace'),
             'http://sulu.io/phpcr/locale'
