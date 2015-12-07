@@ -2,9 +2,10 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
-    * BUGFIX      #1857 [ContentBundle]   Fixed open ghost overlay
-    * BUGFIX      #1857 [WebsiteBundle]   Fixed sitemap xml generation to improve performance
-    * BUGFIX      #1855 [ContactBundle]   Fixed displaying correct position when adding new person to organisation
+    * HOTFIX      #1857 [ContentBundle]   Fixed open ghost overlay
+    * HOTFIX      #1857 [WebsiteBundle]   Fixed sitemap xml generation to improve performance
+    * HOTFIX      #1859 [MediaBundle]     Fixed media-query if no search isset
+    * HOTFIX      #1855 [ContactBundle]   Fixed displaying correct position when adding new person to organisation
     * HOTFIX      #1856 [MediaBundle]     Fixed delete copyright from media
     * HOTFIX      #1856 [All]             Changed datagrid-pagination to input field to avoid performance leaks 
 
