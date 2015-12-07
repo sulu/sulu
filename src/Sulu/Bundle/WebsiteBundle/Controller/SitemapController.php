@@ -43,7 +43,6 @@ class SitemapController extends WebsiteController
             MappingBuilder::create()
                 ->addProperties(['changed'])
                 ->setResolveUrl(true)
-                ->setOnlyPublished(true)
                 ->getMapping()
         );
 
