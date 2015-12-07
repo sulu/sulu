@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.1.1 (2015-12-07)
     * HOTFIX      #1857 [ContentBundle]   Fixed open ghost overlay
     * HOTFIX      #1857 [WebsiteBundle]   Fixed sitemap xml generation to improve performance
     * HOTFIX      #1859 [MediaBundle]     Fixed media-query if no search isset
