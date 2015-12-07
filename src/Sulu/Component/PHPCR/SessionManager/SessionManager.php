@@ -90,6 +90,26 @@ class SessionManager implements SessionManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function getWebspaceNode($webspaceKey)
+    {
+        return $this->getSession()->getNode($this->getWebspacePath($webspaceKey));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getWebspacePath($webspaceKey)
+    {
+        return sprintf(
+            '/%s/%s',
+            $this->nodeNames['base'],
+            $webspaceKey
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getSnippetNode($templateKey = null)
     {
         $snippetPath = '/' . $this->nodeNames['base'] . '/' . $this->nodeNames['snippet'];
