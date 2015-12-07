@@ -755,6 +755,22 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals(['en' => null, 'en_us' => null, 'de' => '/test-1', 'de_at' => null], $result->getUrls());
     }
 
+    public function testFindUrls()
+    {
+        $this->initPhpcr();
+
+        $page1 = $this->createShadowPage('test-1', 'de', 'en');
+
+        $result = $this->contentRepository->find(
+            $page1->getUuid(),
+            'de_at',
+            'sulu_io',
+            MappingBuilder::create()->setResolveUrl(true)->getMapping()
+        );
+
+        $this->assertEquals(['en' => '/test-1', 'en_us' => null, 'de' => '/test-1', 'de_at' => null], $result->getUrls());
+    }
+
     public function testFindByWebspaceRootPublished()
     {
         $this->initPhpcr();

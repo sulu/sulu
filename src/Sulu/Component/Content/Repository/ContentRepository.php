@@ -685,7 +685,7 @@ class ContentRepository implements ContentRepositoryInterface
      */
     private function resolveUrl(Row $row, $locale)
     {
-        if ($this->resolveProperty($row, 'state', $locale) !== WorkflowStage::PUBLISHED) {
+        if ($this->resolveProperty($row, $locale . 'State', $locale) !== WorkflowStage::PUBLISHED) {
             return;
         }
 
