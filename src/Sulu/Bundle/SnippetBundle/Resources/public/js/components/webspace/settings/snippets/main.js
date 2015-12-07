@@ -28,6 +28,10 @@ define(['text!./form.html'], function(form) {
 
         defaults: defaults,
 
+        ids: {
+            datagrid: 'snippet-types'
+        },
+
         tabOptions: function() {
             return {
                 title: this.data.webspace.title
@@ -48,8 +52,47 @@ define(['text!./form.html'], function(form) {
         render: function() {
             this.html(this.templates.form({
                 translations: this.translations,
-                data: this.data
+                ids: this.ids
             }));
+
+            this.startDatagrid();
+        },
+
+        startDatagrid: function() {
+            this.sandbox.start([
+                {
+                    name: 'datagrid@husky',
+                    options: {
+                        el: this.$find('#' + this.ids.datagrid),
+                        idKey: 'template',
+                        viewOptions: {
+                            table: {
+                                selectItem: false,
+                                icons: [
+                                    {
+                                        icon: 'plus-circle',
+                                        column: 'default',
+                                        callback: function(item) {
+                                            // TODO open overlay and select snippet
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        matchings: [
+                            {
+                                attribute: 'title',
+                                content: this.translations.snippetType
+                            },
+                            {
+                                attribute: 'default',
+                                content: this.translations.defaultSnippet
+                            }
+                        ],
+                        data: this.data.types
+                    }
+                }
+            ]);
         },
 
         loadComponentData: function() {
