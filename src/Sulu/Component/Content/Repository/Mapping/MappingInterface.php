@@ -51,6 +51,13 @@ interface MappingInterface
     public function onlyPublished();
 
     /**
+     * Indicates if content-repository returns concrete-locales.
+     *
+     * @return bool
+     */
+    public function resolveConcreteLocales();
+
+    /**
      * Returns list of properties.
      *
      * @return string[]

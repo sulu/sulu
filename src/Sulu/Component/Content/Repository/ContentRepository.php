@@ -577,6 +577,11 @@ class ContentRepository implements ContentRepositoryInterface
             $content->setUrls($urls);
         }
 
+        if ($mapping->resolveConcreteLocales()) {
+            $locales = $this->resolveAvailableLocales($row);
+            $content->setConcreteLanguages($locales);
+        }
+
         return $content;
     }
 
@@ -591,7 +596,9 @@ class ContentRepository implements ContentRepositoryInterface
     {
         $locales = [];
         foreach ($row->getValues() as $key => $value) {
-            if (preg_match('/^node.([a-zA-Z_]*?)Template/', $key, $matches) && '' !== $value) {
+            if (preg_match('/^node.([a-zA-Z_]*?)Template/', $key, $matches) && '' !== $value
+                && !$row->getValue(sprintf('node.%sShadow_on', $matches[1]))
+            ) {
                 $locales[] = $matches[1];
             }
         }

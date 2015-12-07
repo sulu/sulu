@@ -106,6 +106,20 @@ class MappingBuilder
     }
 
     /**
+     * Enable resolve concrete locales.
+     *
+     * @param bool $enable
+     *
+     * @return $this
+     */
+    public function setResolveConcreteLocales($enable)
+    {
+        $this->mapping->setResolveConcreteLocales($enable);
+
+        return $this;
+    }
+
+    /**
      * Add properties to load.
      *
      * @param string[] $properties

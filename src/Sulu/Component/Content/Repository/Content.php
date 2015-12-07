@@ -109,6 +109,13 @@ class Content implements \ArrayAccess
     private $urls;
 
     /**
+     * @var string[]
+     *
+     * @Expose
+     */
+    private $concreteLanguages;
+
+    /**
      * @var Row
      */
     private $row;
@@ -296,6 +303,22 @@ class Content implements \ArrayAccess
     public function setUrl($url)
     {
         $this->url = $url;
+    }
+
+    /**
+     * @return \string[]
+     */
+    public function getConcreteLanguages()
+    {
+        return $this->concreteLanguages;
+    }
+
+    /**
+     * @param \string[] $concreteLanguages
+     */
+    public function setConcreteLanguages($concreteLanguages)
+    {
+        $this->concreteLanguages = $concreteLanguages;
     }
 
     /**

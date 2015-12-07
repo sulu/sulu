@@ -781,6 +781,22 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('/test-1', $result[0]->getPath());
     }
 
+    public function testFindConcreteLanguages()
+    {
+        $this->initPhpcr();
+
+        $page = $this->createShadowPage('test', 'de', 'en');
+
+        $result = $this->contentRepository->find(
+            $page->getUuid(),
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->setResolveConcreteLocales(true)->getMapping()
+        );
+
+        $this->assertEquals(['de'], $result->getConcreteLanguages());
+    }
+
     /**
      * @param string $title
      * @param string $locale

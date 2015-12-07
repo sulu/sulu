@@ -44,6 +44,11 @@ class Mapping implements MappingInterface
     private $onlyPublished = false;
 
     /**
+     * @var bool
+     */
+    private $resolveConcreteLocales;
+
+    /**
      * @var Collection
      */
     private $properties;
@@ -118,7 +123,7 @@ class Mapping implements MappingInterface
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function onlyPublished()
     {
@@ -131,6 +136,22 @@ class Mapping implements MappingInterface
     public function setOnlyPublished($onlyPublished)
     {
         $this->onlyPublished = $onlyPublished;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function resolveConcreteLocales()
+    {
+        return $this->resolveConcreteLocales;
+    }
+
+    /**
+     * @param bool $resolveConcreteLocales
+     */
+    public function setResolveConcreteLocales($resolveConcreteLocales)
+    {
+        $this->resolveConcreteLocales = $resolveConcreteLocales;
     }
 
     /**
