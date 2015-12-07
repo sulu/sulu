@@ -244,9 +244,9 @@ class ContentRepository implements ContentRepositoryInterface
             $content->setChildren(array_values($childrenByPath[$content->getPath()]));
         }
 
-        ksort($childrenByPath['/']);
+        ksort($childrenByPath[DIRECTORY_SEPARATOR]);
 
-        return array_values($childrenByPath['/']);
+        return array_values($childrenByPath[DIRECTORY_SEPARATOR]);
     }
 
     /**
