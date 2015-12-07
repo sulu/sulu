@@ -52,7 +52,7 @@ class SnippettypesController extends Controller implements ClassResourceInterfac
             if ($defaults) {
                 $default = $this->get('sulu_core.webspace.settings_manager')->load(
                     $webspaceKey,
-                    'snippets.' . $type->getKey()
+                    'snippets-' . $type->getKey()
                 );
 
                 $template['default'] = !$default ? null : $default->getIdentifier();
@@ -80,7 +80,7 @@ class SnippettypesController extends Controller implements ClassResourceInterfac
 
         $this->get('sulu_core.webspace.settings_manager')->save(
             $webspaceKey,
-            'snippets.' . $key,
+            'snippets-' . $key,
             $node
         );
 

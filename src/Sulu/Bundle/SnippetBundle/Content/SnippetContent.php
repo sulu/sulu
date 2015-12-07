@@ -21,6 +21,7 @@ use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Webspace\Settings\SettingsManagerInterface;
 
 /**
  * ContentType for Snippets.
@@ -48,16 +49,20 @@ class SnippetContent extends ComplexContentType
     private $snippetCache = [];
 
     /**
-     * Constructor.
+     * @var SettingsManagerInterface
      */
+    private $settingsManager;
+
     public function __construct(
         ContentMapperInterface $contentMapper,
         StructureResolverInterface $structureResolver,
+        SettingsManagerInterface $settingsManager,
         $template
     ) {
         $this->contentMapper = $contentMapper;
         $this->structureResolver = $structureResolver;
         $this->template = $template;
+        $this->settingsManager = $settingsManager;
     }
 
     /**
@@ -205,6 +210,15 @@ class SnippetContent extends ComplexContentType
 
         $refs = $property->getValue();
         $ids = $this->getUuids($refs);
+
+        if (empty($ids) && array_key_exists('snippetType', $property->getParams())) {
+            $ids = [
+                $this->settingsManager->load(
+                    $webspaceKey,
+                    'snippets-' . $property->getParams()['snippetType']->getValue()
+                )->getIdentifier()
+            ];
+        }
 
         $contentData = [];
         foreach ($this->loadSnippets($ids, $webspaceKey, $locale, $shadowLocale) as $snippet) {
