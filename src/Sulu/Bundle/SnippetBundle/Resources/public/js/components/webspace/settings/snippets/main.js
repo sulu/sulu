@@ -7,23 +7,61 @@
  * with this source code in the file LICENSE.
  */
 
-define([], function() {
+define(['text!./form.html'], function(form) {
 
     'use strict';
 
-    return {
-        initialize: function() {
-            this.data = this.options.data();
+    var defaults = {
+        options: {
+            snippetsUrl: '/admin/api/snippet/types?defaults=true&webspace=<%= webspace %>'
+        },
+        templates: {
+            form: form
+        },
+        translations: {
+            snippetType: 'snippets.defaults.type',
+            defaultSnippet: 'snippets.defaults.default'
+        }
+    };
 
+    return {
+
+        defaults: defaults,
+
+        tabOptions: function() {
+            return {
+                title: this.data.webspace.title
+            };
+        },
+
+        layout: {
+            content: {
+                leftSpace: true,
+                rightSpace: true
+            }
+        },
+
+        initialize: function() {
             this.render();
-            this.bindCustomEvents();
         },
 
         render: function() {
-            this.html(this.data.title);
+            this.html(this.templates.form({
+                translations: this.translations,
+                data: this.data
+            }));
         },
 
-        bindCustomEvents: function() {
+        loadComponentData: function() {
+            var deferred = this.sandbox.data.deferred();
+
+            this.sandbox.util.load(
+                _.template(this.options.snippetsUrl, {webspace: this.options.webspace})
+            ).then(function(data) {
+                deferred.resolve({webspace: this.options.data(), types: data._embedded});
+            }.bind(this));
+
+            return deferred.promise();
         }
     };
 });

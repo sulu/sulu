@@ -36,17 +36,13 @@ define(['text!./skeleton.html'], function(skeleton) {
 
         layout: {
             content: {
-                width: 'fixed',
                 leftSpace: false,
                 rightSpace: false
             }
         },
 
         initialize: function() {
-            this.data = this.options.data();
-
             this.render();
-            this.bindCustomEvents();
         },
 
         render: function() {
@@ -60,7 +56,8 @@ define(['text!./skeleton.html'], function(skeleton) {
             );
         },
 
-        bindCustomEvents: function() {
+        loadComponentData: function() {
+            return this.options.data();
         }
     };
 });
