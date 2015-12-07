@@ -37,6 +37,27 @@ interface MappingInterface
     public function shouldHydrateGhost();
 
     /**
+     * Indicates if content-repository should resolve url.
+     *
+     * @return bool
+     */
+    public function resolveUrl();
+
+    /**
+     * Indicates if content-repository only returns published pages.
+     *
+     * @return bool
+     */
+    public function onlyPublished();
+
+    /**
+     * Indicates if content-repository returns concrete-locales.
+     *
+     * @return bool
+     */
+    public function resolveConcreteLocales();
+
+    /**
      * Returns list of properties.
      *
      * @return string[]

@@ -11,9 +11,10 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
-use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapGeneratorInterface;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapXMLGeneratorInterface;
+use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 use Sulu\Component\HttpCache\HttpCache;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,20 +34,31 @@ class SitemapController extends WebsiteController
         /** @var RequestAnalyzerInterface $requestAnalyzer */
         $requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer');
 
-        /** @var SitemapGeneratorInterface $sitemapGenerator */
-        $sitemapGenerator = $this->get('sulu_website.sitemap');
-
         /** @var SitemapXMLGeneratorInterface $sitemapXMLGenerator */
         $sitemapXMLGenerator = $this->get('sulu_website.sitemap_xml_generator');
 
-        $flatSitemap = true;
+        $sitemap = $this->get('sulu_content.content_repository')->findAll(
+            $requestAnalyzer->getWebspace()->getXDefaultLocalization()->getLocalization(),
+            $requestAnalyzer->getWebspace()->getKey(),
+            MappingBuilder::create()
+                ->addProperties(['changed'])
+                ->setResolveUrl(true)
+                ->getMapping()
+        );
 
         $webspaceSitemaps = [
-            $sitemapGenerator->generateAllLocals(
-                $requestAnalyzer->getWebspace()->getKey(),
-                $flatSitemap
-            ),
+            [
+                'localizations' => array_map(
+                    function (Localization $localization) {
+                        return $localization->getLocalization();
+                    },
+                    $requestAnalyzer->getWebspace()->getAllLocalizations()
+                ),
+                'defaultLocalization' => $requestAnalyzer->getWebspace()->getXDefaultLocalization()->getLocalization(),
+                'sitemap' => $sitemap,
+            ],
         ];
+
         $preferredDomain = $request->getHttpHost();
 
         // XML Response
@@ -60,6 +72,7 @@ class SitemapController extends WebsiteController
         );
 
         $response->headers->set('Content-Type', 'text/xml');
+
         $response->setContent($sitemapXMLGenerator->generate($webspaceSitemaps, $preferredDomain));
 
         // Generate XML

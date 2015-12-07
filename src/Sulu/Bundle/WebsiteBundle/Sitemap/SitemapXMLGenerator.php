@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 
 /**
- * Class SitemapXMLGenerator
  * Generate the Sitemap XML based on one or several WebspaceSitemaps.
  */
 class SitemapXMLGenerator implements SitemapXMLGeneratorInterface

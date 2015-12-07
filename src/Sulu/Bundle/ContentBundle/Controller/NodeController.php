@@ -166,6 +166,7 @@ class NodeController extends RestController
         $mapping = MappingBuilder::create()
             ->setHydrateGhost(!$excludeGhosts)
             ->setHydrateShadow(!$excludeShadows)
+            ->setResolveConcreteLocales(true)
             ->addProperties($properties)
             ->getMapping();
 
@@ -471,6 +472,7 @@ class NodeController extends RestController
         $mapping = MappingBuilder::create()
             ->setHydrateGhost(!$excludeGhosts)
             ->setHydrateShadow(!$excludeShadows)
+            ->setResolveConcreteLocales(true)
             ->addProperties($properties)
             ->getMapping();
 
