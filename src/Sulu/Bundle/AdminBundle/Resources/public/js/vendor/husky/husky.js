@@ -34619,7 +34619,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
              */
             updateRecord: function(record) {
                 for (var i = -1, length = this.data.embedded.length; ++i < length;) {
-                    if (record.id === this.data.embedded[i].id) {
+                    if (record[this.options.idKey] === this.data.embedded[i].id) {
                         this.data.embedded[i] = record;
                         return true;
                     }
@@ -34633,9 +34633,9 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
              * @returns {Boolean} returns true if changed successfully
              */
             changeRecord: function(record) {
-                if (!!record.id) {
+                if (!!record[this.options.idKey]) {
                     for (var i = -1, length = this.data.embedded.length; ++i < length;) {
-                        if (record.id === this.data.embedded[i].id) {
+                        if (record[this.options.idKey] === this.data.embedded[i].id) {
                             this.data.embedded[i] = this.sandbox.util.extend(true, {}, this.data.embedded[i], record);
                             return true;
                         }

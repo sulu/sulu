@@ -2,6 +2,15 @@
 
 ## dev-develop
 
+### Webspace Settings
+
+A new phpcr namespace was added. To register it run following command:
+
+```bash
+app/console sulu:phpcr:init
+```
+
+
 ### ContentNavigation & Navigation
 
 The ContentNavigationItems & NavigationItems will be sorted by their position. If there is no position is set the item

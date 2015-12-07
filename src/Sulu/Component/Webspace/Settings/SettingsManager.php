@@ -40,7 +40,9 @@ class SettingsManager implements SettingsManagerInterface
             $value = json_encode($data);
         }
 
-        $this->sessionManager->getContentNode($webspaceKey)->setProperty($propertyName, $value);
+        $this->sessionManager->getWebspaceNode($webspaceKey)->setProperty($propertyName, $value);
+
+        $this->sessionManager->getSession()->save();
     }
 
     /**
@@ -50,7 +52,7 @@ class SettingsManager implements SettingsManagerInterface
     {
         $propertyName = $this->propertyName($key);
 
-        $value = $this->sessionManager->getContentNode($webspaceKey)->getPropertyValueWithDefault(
+        $value = $this->sessionManager->getWebspaceNode($webspaceKey)->getPropertyValueWithDefault(
             $propertyName,
             'null'
         );

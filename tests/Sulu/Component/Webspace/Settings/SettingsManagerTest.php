@@ -11,6 +11,7 @@
 namespace Sulu\Component\Webspace\Settings;
 
 use PHPCR\NodeInterface;
+use PHPCR\SessionInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
 class SettingsManagerTest extends \PHPUnit_Framework_TestCase
@@ -33,11 +34,15 @@ class SettingsManagerTest extends \PHPUnit_Framework_TestCase
     {
         $sessionManager = $this->prophesize(SessionManagerInterface::class);
         $node = $this->prophesize(NodeInterface::class);
+        $session = $this->prophesize(SessionInterface::class);
 
-        $sessionManager->getContentNode($webspaceKey)->willReturn($node->reveal());
+        $sessionManager->getWebspaceNode($webspaceKey)->willReturn($node->reveal());
+        $sessionManager->getSession()->willReturn($session->reveal());
 
         $node->setProperty('settings:' . $key, (!($data instanceof NodeInterface) ? json_encode($data) : $data))
             ->shouldBeCalledTimes(1);
+
+        $session->save()->shouldBeCalledTimes(1);
 
         $manager = new SettingsManager($sessionManager->reveal());
 
@@ -52,7 +57,7 @@ class SettingsManagerTest extends \PHPUnit_Framework_TestCase
         $sessionManager = $this->prophesize(SessionManagerInterface::class);
         $node = $this->prophesize(NodeInterface::class);
 
-        $sessionManager->getContentNode($webspaceKey)->willReturn($node->reveal());
+        $sessionManager->getWebspaceNode($webspaceKey)->willReturn($node->reveal());
 
         $node->getPropertyValueWithDefault('settings:' . $key, json_encode(null))
             ->shouldBeCalledTimes(1)

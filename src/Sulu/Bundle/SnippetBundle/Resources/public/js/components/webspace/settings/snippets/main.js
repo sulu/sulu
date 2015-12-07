@@ -7,20 +7,34 @@
  * with this source code in the file LICENSE.
  */
 
-define(['text!./form.html'], function(form) {
+define(['app-config'], function(AppConfig) {
 
     'use strict';
 
     var defaults = {
         options: {
-            snippetsUrl: '/admin/api/snippet/types?defaults=true&webspace=<%= webspace %>'
+            snippetTypesUrl: '/admin/api/snippettypes?defaults=true&webspace=<%= webspace %>',
+            snippetTypeDefaultUrl: '/admin/api/snippettypes/<%= type %>/default?webspace=<%= webspace %>',
+            snippetsUrl: '/admin/api/snippets?type=<%= type %>&language=<%= locale %>'
         },
         templates: {
-            form: form
+            datagrid: '<div id="<%= ids.datagrid %>"></div><div id="<%= ids.overlayContainer %>"></div>',
+            overlay: [
+                '<div class="grid">',
+                '   <div class="grid-row search-row">',
+                '       <div class="grid-col-8"/>',
+                '       <div class="grid-col-4" id="<%= ids.overlayDatagridSearch %>"/>',
+                '   </div>',
+                '   <div class="grid-row">',
+                '       <div class="grid-col-12" id="<%= ids.overlayDatagrid %>"/>',
+                '   </div>',
+                '</div>'
+            ].join('')
         },
         translations: {
             snippetType: 'snippets.defaults.type',
-            defaultSnippet: 'snippets.defaults.default'
+            defaultSnippet: 'snippets.defaults.default',
+            overlayTitle: 'snippets.defaults.default'
         }
     };
 
@@ -29,7 +43,10 @@ define(['text!./form.html'], function(form) {
         defaults: defaults,
 
         ids: {
-            datagrid: 'snippet-types'
+            datagrid: 'snippet-types',
+            overlayContainer: 'overlay',
+            overlayDatagrid: 'snippets',
+            overlayDatagridSearch: 'snippets-search'
         },
 
         tabOptions: function() {
@@ -50,8 +67,7 @@ define(['text!./form.html'], function(form) {
         },
 
         render: function() {
-            this.html(this.templates.form({
-                translations: this.translations,
+            this.html(this.templates.datagrid({
                 ids: this.ids
             }));
 
@@ -64,6 +80,7 @@ define(['text!./form.html'], function(form) {
                     name: 'datagrid@husky',
                     options: {
                         el: this.$find('#' + this.ids.datagrid),
+                        instanceName: 'snippets',
                         idKey: 'template',
                         viewOptions: {
                             table: {
@@ -72,9 +89,7 @@ define(['text!./form.html'], function(form) {
                                     {
                                         icon: 'plus-circle',
                                         column: 'default',
-                                        callback: function(item) {
-                                            // TODO open overlay and select snippet
-                                        }
+                                        callback: this.openOverlay.bind(this)
                                     }
                                 ]
                             }
@@ -95,11 +110,97 @@ define(['text!./form.html'], function(form) {
             ]);
         },
 
+        openOverlay: function(type) {
+            var $container = $('<div/>');
+
+            this.$find('#' + this.ids.overlayContainer).append($container);
+
+            this.sandbox.start([{
+                name: 'overlay@husky',
+                options: {
+                    el: $container,
+                    instanceName: 'snippets',
+                    openOnStart: true,
+                    slides: [
+                        {
+                            title: this.translations.overlayTitle,
+                            data: this.templates.overlay({ids: this.ids}),
+                            buttons: [
+                                {type: 'cancel', align: 'center'}
+                            ]
+                        }
+                    ]
+                }
+            }]).then(function() {
+                this.startSnippetDatagrid(type);
+            }.bind(this));
+        },
+
+        startSnippetDatagrid: function(type) {
+            this.sandbox.start(
+                [
+                    {
+                        name: 'search@husky',
+                        options: {
+                            el: this.$find('#' + this.ids.overlayDatagridSearch),
+                            appearance: 'white small',
+                            instanceName: this.ids.overlayDatagridSearch
+                        }
+                    },
+                    {
+                        name: 'datagrid@husky',
+                        options: {
+                            el: this.$find('#' + this.ids.overlayDatagrid),
+                            url: _.template(this.options.snippetsUrl, {type: type, locale: AppConfig.getUser().locale}),
+                            resultKey: 'snippets',
+                            sortable: false,
+                            searchInstanceName: this.ids.overlayDatagridSearch,
+                            viewOptions: {
+                                table: {
+                                    selectItem: false,
+                                    icons: [
+                                        {
+                                            icon: 'check-circle',
+                                            column: 'title',
+                                            callback: function(item) {
+                                                this.selectDefault(type, item);
+                                            }.bind(this)
+                                        }
+                                    ]
+                                }
+                            },
+                            matchings: [
+                                {
+                                    content: 'Title',
+                                    type: 'title',
+                                    width: '100%',
+                                    name: 'title',
+                                    editable: true,
+                                    sortable: true
+                                }
+                            ]
+                        }
+                    }
+                ]
+            );
+        },
+
+        selectDefault: function(type, id) {
+            var url = _.template(this.options.snippetTypeDefaultUrl, {type: type, webspace: this.options.webspace});
+
+            this.sandbox.util.save(url, 'PUT', {default: id}).then(function(data) {
+                this.sandbox.emit('husky.overlay.snippets.close');
+                this.sandbox.emit('husky.datagrid.snippets.records.change', data);
+
+                this.sandbox.emit('sulu.labels.success.show', 'labels.success.content-save-desc', 'labels.success');
+            }.bind(this));
+        },
+
         loadComponentData: function() {
             var deferred = this.sandbox.data.deferred();
 
             this.sandbox.util.load(
-                _.template(this.options.snippetsUrl, {webspace: this.options.webspace})
+                _.template(this.options.snippetTypesUrl, {webspace: this.options.webspace})
             ).then(function(data) {
                 deferred.resolve({webspace: this.options.data(), types: data._embedded});
             }.bind(this));

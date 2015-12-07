@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * handles snippet template.
  */
-class SnippetTypesController extends Controller implements ClassResourceInterface
+class SnippettypesController extends Controller implements ClassResourceInterface
 {
     use RequestParametersTrait;
 
@@ -33,6 +33,8 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
      */
     public function cgetAction(Request $request)
     {
+        // TODO convert uuid into title (localized)
+
         $defaults = $this->getBooleanRequestParameter($request, 'defaults');
         $webspaceKey = $this->getRequestParameter($request, 'webspace', $defaults);
 
@@ -65,5 +67,29 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
         ];
 
         return new JsonResponse($data);
+    }
+
+    public function putDefaultAction($key, Request $request)
+    {
+        $default = $request->get('default');
+        $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
+
+        $type = $this->get('sulu.content.structure_manager')->getStructure($key, Structure::TYPE_SNIPPET);
+
+        $node = $this->get('sulu_document_manager.node_manager')->find($default);
+
+        $this->get('sulu_core.webspace.settings_manager')->save(
+            $webspaceKey,
+            'snippets.' . $key,
+            $node
+        );
+
+        return new JsonResponse(
+            [
+                'template' => $type->getKey(),
+                'title' => $type->getLocalizedTitle($this->getUser()->getLocale()),
+                'default' => $default,
+            ]
+        );
     }
 }
