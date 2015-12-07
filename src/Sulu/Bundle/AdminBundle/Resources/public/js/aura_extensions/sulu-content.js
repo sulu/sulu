@@ -381,7 +381,15 @@ define(function() {
         app.components.before('initialize', function() {
             //load view data before rendering tabs
             var dataLoaded = $.Deferred(),
-                afterData = $.Deferred();
+                afterData = $.Deferred(),
+                resolveData = function(data) {
+                    if (!!data) {
+                        this.data = data;
+                    }
+                    executeAfterDataHandler.call(this).then(function() {
+                        afterData.resolve();
+                    }.bind(this));
+                };
 
             executeBeforeDataHandler.call(this);
 
@@ -391,14 +399,11 @@ define(function() {
                 dataLoaded.resolve();
             }
 
-            dataLoaded.then(function(data) {
-                if (!!data) {
-                    this.data = data;
-                }
-                executeAfterDataHandler.call(this).then(function() {
-                    afterData.resolve();
-                }.bind(this));
-            }.bind(this));
+            if (!!dataLoaded.then) {
+                dataLoaded.then(resolveData.bind(this));
+            } else {
+                resolveData.call(this, dataLoaded);
+            }
 
             return $.when(dataLoaded, afterData);
         });

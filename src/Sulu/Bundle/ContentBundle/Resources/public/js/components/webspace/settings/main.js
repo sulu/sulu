@@ -27,6 +27,8 @@ define(['underscore'], function(_) {
                     return this.data.name;
                 }.bind(this),
 
+                noBack: true,
+
                 tabs: {
                     url: '/admin/content-navigations?alias=webspace',
                     options: {
