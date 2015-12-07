@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * BUGFIX      #1857 [ContentBundle]   Fixed open ghost overlay
     * BUGFIX      #1857 [WebsiteBundle]   Fixed sitemap xml generation to improve performance
     * BUGFIX      #1855 [ContactBundle]   Fixed displaying correct position when adding new person to organisation
 
