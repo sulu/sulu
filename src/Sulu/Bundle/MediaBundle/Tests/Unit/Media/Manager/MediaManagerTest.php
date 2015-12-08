@@ -224,7 +224,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
             'delete'
         )->shouldBeCalled();
 
-        $this->storage->remove(json_encode(['segment' => '01', 'fileName' => 'test.jpg']))->shouldBeCalled();
+        $this->storageManager->remove(json_encode(['segment' => '01', 'fileName' => 'test.jpg']))->shouldBeCalled();
 
         $this->mediaManager->delete(1, true);
     }
@@ -245,7 +245,15 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $this->userRepository->findUserById(1)->willReturn($user);
 
         $this->pathCleaner->cleanup(Argument::exact($cleanUpArgument))->shouldBeCalled();
-        $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'my title'], 1);
+        $this->mediaManager->save(
+            $uploadedFile->reveal(),
+            [
+                'locale' => 'en',
+                'title' => 'my title',
+                'collection' =>
+            ],
+            1
+        );
     }
 
     public function provideGetByIds()

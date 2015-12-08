@@ -57,7 +57,8 @@ class CollectionManagerTest extends \PHPUnit_Framework_TestCase
             $entityManager->reveal(),
             null,
             '50x50',
-            []
+            [],
+            'local'
         );
 
         $entities = [

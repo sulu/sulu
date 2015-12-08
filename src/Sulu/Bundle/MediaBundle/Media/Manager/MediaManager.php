@@ -640,15 +640,16 @@ class MediaManager implements MediaManagerInterface
         $this->validator->validate($uploadedFile);
 
         $fileName = $this->getNormalizedFileName($uploadedFile->getClientOriginalName());
+        $collectionId = isset($data['collection']) ? $data['collection'] : null;
 
         $data['storageOptions'] = $this->storageManager->save(
             $uploadedFile->getPathname(),
             $fileName,
             null,
-            $this->getCollectionDefaultStorageName($data['collection'])
+            $this->getCollectionDefaultStorageName($collectionId)
         );
 
-        $data['storageName'] = $this->getCollectionDefaultStorageName($data['collection']);
+        $data['storageName'] = $this->getCollectionDefaultStorageName($collectionId);
         $data['name'] = $uploadedFile->getClientOriginalName();
         $data['size'] = $uploadedFile->getSize();
         $data['mimeType'] = $uploadedFile->getMimeType();
