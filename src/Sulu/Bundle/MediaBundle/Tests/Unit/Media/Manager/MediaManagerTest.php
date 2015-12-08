@@ -225,7 +225,10 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
             'delete'
         )->shouldBeCalled();
 
-        $this->storageManager->remove(json_encode(['segment' => '01', 'fileName' => 'test.jpg']))->shouldBeCalled();
+        $this->storageManager->remove(
+            json_encode(['segment' => '01', 'fileName' => 'test.jpg']),
+            'local'
+        )->shouldBeCalled();
 
         $this->mediaManager->delete(1, true);
     }
