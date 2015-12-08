@@ -11,12 +11,13 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Storage;
 
-use Sulu\Bundle\MediaBundle\Media\Exception\FilenameAlreadyExistsException;
-use Symfony\Component\Filesystem\Exception\IOException;
-use Symfony\Component\Filesystem\Filesystem;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Sulu\Bundle\MediaBundle\Media\Exception\FilenameAlreadyExistsException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidStorageOptionsException;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
+
 
 class LocalStorage extends AbstractStorage
 {
@@ -40,11 +41,11 @@ class LocalStorage extends AbstractStorage
      */
     protected $logger;
 
-    public function __construct($uploadPath, $segments, Filesystem $filesystem, $logger = null)
+    public function __construct($uploadPath, $segments, $logger = null)
     {
         $this->uploadPath = $uploadPath;
         $this->segments = $segments;
-        $this->filesystem = $filesystem;
+        $this->filesystem = new Filesystem();
         $this->logger = $logger ?: new NullLogger();
     }
 
