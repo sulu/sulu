@@ -249,8 +249,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
             $uploadedFile->reveal(),
             [
                 'locale' => 'en',
-                'title' => 'my title',
-                'collection' =>
+                'title' => 'my title'
             ],
             1
         );
