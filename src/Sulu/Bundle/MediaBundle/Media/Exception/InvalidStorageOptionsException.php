@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the Sulu.
  *
@@ -11,6 +10,9 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Exception;
 
+/**
+ * Exception which is thrown when a file has invalid storage options.
+ */
 class InvalidStorageOptionsException extends MediaException
 {
     /**

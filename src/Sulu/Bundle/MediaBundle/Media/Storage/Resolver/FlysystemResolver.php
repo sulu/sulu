@@ -15,6 +15,9 @@ use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\Resolver\Flysystem\ResolverInterface;
 
+/**
+ * Extends the flysystem adapter to get the url from specific adapters.
+ */
 class FlysystemResolver implements FlysystemResolverInterface
 {
     /**

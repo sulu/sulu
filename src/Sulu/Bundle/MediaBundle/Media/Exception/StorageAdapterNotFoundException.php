@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\Exception;
 
 /**
+ * Exception which is thrown when a Storage adapter was not found or configured.
  */
 class StorageAdapterNotFoundException extends MediaException
 {

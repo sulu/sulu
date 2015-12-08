@@ -16,7 +16,6 @@ use Sulu\Bundle\MediaBundle\Media\Exception\StorageNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 
 /**
- * Class StorageManager
  * Manage the Media Storages.
  */
 class StorageManager implements StorageManagerInterface

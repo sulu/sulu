@@ -171,51 +171,53 @@ class StorageCompilerPass implements CompilerPassInterface
         $resolverHelpers = []
     ) {
         // This will create the services only when they exists
-        if (class_exists($managerClass)) {
-            $adapterClassParameter = 'sulu_media.storage.adapter.' . $key . '.class';
-            $container->setParameter($adapterClassParameter, 'Sulu\Bundle\MediaBundle\Media\Storage\\' . ucfirst($key) . 'Storage');
-
-            // create resolver
-            $resolverService = 'sulu_media.storage.adapter.resolver.'  . $key;
-            $resolverClassParameter = $resolverService . '.class';
-            $container->setParameter($resolverClassParameter, $resolverClass);
-            $resolver = new Definition('%' . $resolverClassParameter . '%');
-            $container->setDefinition($resolverService, $resolver);
-
-            // create resolver helper classes
-            foreach ($resolverHelpers as $resolverKey => $resolverData) {
-                $resolverHelperClass = $resolverData['class'];
-                $tag = $resolverData['tag'];
-                $resolverHelperService = 'sulu_media.storage.adapter.resolver.'  . $key . '.' . $resolverKey;
-                $resolverClassParameter = $resolverHelperService . '.class';
-                $container->setParameter($resolverClassParameter, $resolverHelperClass);
-                $resolverHelper = new Definition('%' . $resolverClassParameter . '%');
-                $resolverHelper->addTag('sulu_media.storage.resolver.'  . $key, ['alias' => $tag]);
-                $container->setDefinition($resolverHelperService, $resolverHelper);
-            }
-
-            $resolverDefinition = $container->getDefinition($resolverService);
-            $taggedServices = $container->findTaggedServiceIds('sulu_media.storage.resolver.'  . $key);
-            foreach ($taggedServices as $id => $tags) {
-                foreach ($tags as $attributes) {
-                    $resolverDefinition->addMethodCall(
-                        'add',
-                        [new Reference($id), $attributes['alias']]
-                    );
-                }
-            }
-
-            // create storage
-            $storage = new Definition('%' . $adapterClassParameter . '%');
-            $storage->addArgument(''); // type
-            $storage->addArgument(new Reference($managerService));
-            $storage->addArgument(new Reference($resolverService));
-            $storage->addArgument(new Reference('logger'));
-            $storage->setAbstract(true);
-            $storage->setPublic(false);
-            $storage->addTag('sulu_media.storage_adapter', ['alias' => $key]);
-
-            $container->setDefinition('sulu_media.storage.adapter.' . $key, $storage);
+        if (!class_exists($managerClass)) {
+            return;
         }
+
+        $adapterClassParameter = 'sulu_media.storage.adapter.' . $key . '.class';
+        $container->setParameter($adapterClassParameter, 'Sulu\Bundle\MediaBundle\Media\Storage\\' . ucfirst($key) . 'Storage');
+
+        // create resolver
+        $resolverService = 'sulu_media.storage.adapter.resolver.'  . $key;
+        $resolverClassParameter = $resolverService . '.class';
+        $container->setParameter($resolverClassParameter, $resolverClass);
+        $resolver = new Definition('%' . $resolverClassParameter . '%');
+        $container->setDefinition($resolverService, $resolver);
+
+        // create resolver helper classes
+        foreach ($resolverHelpers as $resolverKey => $resolverData) {
+            $resolverHelperClass = $resolverData['class'];
+            $tag = $resolverData['tag'];
+            $resolverHelperService = 'sulu_media.storage.adapter.resolver.'  . $key . '.' . $resolverKey;
+            $resolverClassParameter = $resolverHelperService . '.class';
+            $container->setParameter($resolverClassParameter, $resolverHelperClass);
+            $resolverHelper = new Definition('%' . $resolverClassParameter . '%');
+            $resolverHelper->addTag('sulu_media.storage.resolver.'  . $key, ['alias' => $tag]);
+            $container->setDefinition($resolverHelperService, $resolverHelper);
+        }
+
+        $resolverDefinition = $container->getDefinition($resolverService);
+        $taggedServices = $container->findTaggedServiceIds('sulu_media.storage.resolver.'  . $key);
+        foreach ($taggedServices as $id => $tags) {
+            foreach ($tags as $attributes) {
+                $resolverDefinition->addMethodCall(
+                    'add',
+                    [new Reference($id), $attributes['alias']]
+                );
+            }
+        }
+
+        // create storage
+        $storage = new Definition('%' . $adapterClassParameter . '%');
+        $storage->addArgument(''); // type
+        $storage->addArgument(new Reference($managerService));
+        $storage->addArgument(new Reference($resolverService));
+        $storage->addArgument(new Reference('logger'));
+        $storage->setAbstract(true);
+        $storage->setPublic(false);
+        $storage->addTag('sulu_media.storage_adapter', ['alias' => $key]);
+
+        $container->setDefinition('sulu_media.storage.adapter.' . $key, $storage);
     }
 }

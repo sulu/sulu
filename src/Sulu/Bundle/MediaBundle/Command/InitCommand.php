@@ -38,7 +38,7 @@ class InitCommand extends ContainerAwareCommand
         $adapters = $this->getContainer()->getParameter('sulu_media.storage.adapters');
 
         foreach ($adapters as $config) {
-            if (isset($config['type']) && $config['type'] == 'local' && isset($config['uploadPath'])) {
+            if (isset($config['type']) && $config['type'] === 'local' && isset($config['uploadPath'])) {
                 $uploadDir = $config['uploadPath'];
                 $output->writeln('Create Upload dir in ' . $uploadDir);
 

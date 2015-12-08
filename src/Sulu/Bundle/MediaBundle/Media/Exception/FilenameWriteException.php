@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\Exception;
 
 /**
+ * Exception which is thrown when a file with this name exists.
  */
 class FilenameWriteException extends MediaException
 {

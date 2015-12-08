@@ -12,6 +12,9 @@ namespace Sulu\Bundle\MediaBundle\Media\Storage\Resolver\Flysystem;
 
 use League\Flysystem\AdapterInterface;
 
+/**
+ * Defines resolver interface to extend flysystem adapters.
+ */
 interface ResolverInterface
 {
     /**
