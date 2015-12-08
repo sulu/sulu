@@ -87,4 +87,13 @@ interface CollectionRepositoryInterface
      * @return Collection[]
      */
     public function findTree($id, $locale);
+
+    /**
+     * Finds a collection by id.
+     *
+     * @param $id
+     *
+     * @return Collection
+     */
+    public function find($id);
 }
