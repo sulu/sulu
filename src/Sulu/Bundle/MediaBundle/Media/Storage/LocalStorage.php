@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the Sulu.
  *
@@ -17,7 +16,6 @@ use Sulu\Bundle\MediaBundle\Media\Exception\FilenameAlreadyExistsException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidStorageOptionsException;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
-
 
 class LocalStorage extends AbstractStorage
 {
