@@ -192,7 +192,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('at', $portal->getLocalizations()[0]->getCountry());
         $this->assertEquals('', $portal->getLocalizations()[0]->getShadow());
 
-        $this->assertEquals(2, count($portal->getEnvironments()));
+        $this->assertEquals(3, count($portal->getEnvironments()));
 
         $environmentProd = $portal->getEnvironment('prod');
         $this->assertEquals('prod', $environmentProd->getType());
@@ -221,7 +221,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('at', $portal->getLocalizations()[0]->getCountry());
         $this->assertEquals('', $portal->getLocalizations()[0]->getShadow());
 
-        $this->assertCount(2, $portal->getEnvironments());
+        $this->assertCount(3, $portal->getEnvironments());
 
         $environmentProd = $portal->getEnvironment('prod');
         $this->assertEquals('prod', $environmentProd->getType());
@@ -281,7 +281,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('at', $portal->getLocalizations()[0]->getCountry());
         $this->assertEquals('', $portal->getLocalizations()[0]->getShadow());
 
-        $this->assertCount(2, $portal->getEnvironments());
+        $this->assertCount(3, $portal->getEnvironments());
 
         $environmentProd = $portal->getEnvironment('prod');
         $this->assertEquals('prod', $environmentProd->getType());
@@ -326,7 +326,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('at', $portal->getLocalizations()[0]->getCountry());
         $this->assertEquals('', $portal->getLocalizations()[0]->getShadow());
 
-        $this->assertEquals(2, count($portal->getEnvironments()));
+        $this->assertEquals(3, count($portal->getEnvironments()));
 
         $environmentProd = $portal->getEnvironment('prod');
         $this->assertEquals('prod', $environmentProd->getType());
@@ -528,6 +528,28 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'de_at', 'sulu_io', null, 'https');
         $this->assertEquals(['https://sulu.lo/test'], $result);
+    }
+
+    public function testFindUrlByResourceLocator()
+    {
+        $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'dev', 'de_at', 'sulu_io');
+        $this->assertEquals('http://sulu.lo/test', $result);
+
+        $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'main', 'de_at', 'sulu_io');
+        $this->assertEquals('http://sulu.at/test', $result);
+
+        $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'main', 'de_at', 'sulu_io', 'sulu.lo');
+        $this->assertEquals('http://sulu.lo/test', $result);
+
+        $result = $this->webspaceManager->findUrlByResourceLocator(
+            '/test',
+            'main',
+            'de_at',
+            'sulu_io',
+            'sulu.lo',
+            'https'
+        );
+        $this->assertEquals('https://sulu.lo/test', $result);
     }
 
     public function testGetPortals()

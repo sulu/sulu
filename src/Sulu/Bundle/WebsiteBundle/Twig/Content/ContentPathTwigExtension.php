@@ -72,7 +72,7 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
             $webspaceKey !== null &&
             $this->requestAnalyzer
         ) {
-            $portalUrls = $this->webspaceManager->findUrlsByResourceLocator(
+            return $this->webspaceManager->findUrlByResourceLocator(
                 $url,
                 $this->environment,
                 $locale ?: $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
@@ -80,9 +80,6 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
                 $domain,
                 $scheme
             );
-            if (count($portalUrls) > 0) {
-                return rtrim($portalUrls[0], '/');
-            }
         } elseif (strpos($url, '/') === 0 && $this->requestAnalyzer) {
             return rtrim($this->requestAnalyzer->getResourceLocatorPrefix() . $url, '/');
         }

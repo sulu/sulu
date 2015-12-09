@@ -54,9 +54,9 @@ class PortalInformationTest extends \PHPUnit_Framework_TestCase
             'portal' => 'portal_key',
             'webspace' => 'my_webspace',
             'url' => 'http://example.emp',
-            'portal' => 'portal',
             'localization' => ['foo'],
             'redirect' => true,
+            'main' => false,
         ];
 
         $this->portal->getKey()->willReturn($expected['portal']);

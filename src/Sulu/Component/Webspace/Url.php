@@ -51,6 +51,13 @@ class Url implements ArrayableInterface
     private $redirect;
 
     /**
+     * Indicate the main url.
+     *
+     * @var bool
+     */
+    private $main;
+
+    /**
      * The analytics key for the given url.
      *
      * @var string
@@ -158,6 +165,26 @@ class Url implements ArrayableInterface
     }
 
     /**
+     * Return main flag.
+     *
+     * @return bool
+     */
+    public function isMain()
+    {
+        return $this->main;
+    }
+
+    /**
+     * Sets main flag.
+     *
+     * @param bool $main
+     */
+    public function setMain($main)
+    {
+        $this->main = $main;
+    }
+
+    /**
      * Sets the analytics key for this url.
      *
      * @param string $analyticsKey
@@ -188,6 +215,7 @@ class Url implements ArrayableInterface
         $res['country'] = $this->getCountry();
         $res['segment'] = $this->getSegment();
         $res['redirect'] = $this->getRedirect();
+        $res['main'] = $this->isMain();
         $res['analyticsKey'] = $this->getAnalyticsKey();
 
         return $res;

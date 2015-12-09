@@ -56,7 +56,7 @@
                 <environment type="prod">
                     <urls>
                         <url language="de" country="at">sulu.at</url>
-                        <url redirect="sulu.at">www.sulu.at</url>
+                        <url redirect="sulu.at" main="true">www.sulu.at</url>
                     </urls>
                 </environment>
                 <environment type="dev">
