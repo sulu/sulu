@@ -33,7 +33,7 @@ class SettingsManager implements SettingsManagerInterface
      */
     public function save($webspaceKey, $key, $data)
     {
-        $propertyName = $this->propertyName($key);
+        $propertyName = $this->getPropertyName($key);
 
         $value = $data;
         if (!($data instanceof NodeInterface)) {
@@ -50,7 +50,7 @@ class SettingsManager implements SettingsManagerInterface
      */
     public function remove($webspaceKey, $key)
     {
-        $propertyName = $this->propertyName($key);
+        $propertyName = $this->getPropertyName($key);
         if (!$this->sessionManager->getWebspaceNode($webspaceKey)->hasProperty($propertyName)) {
             return;
         }
@@ -66,7 +66,7 @@ class SettingsManager implements SettingsManagerInterface
      */
     public function load($webspaceKey, $key)
     {
-        $propertyName = $this->propertyName($key);
+        $propertyName = $this->getPropertyName($key);
 
         $value = $this->sessionManager->getWebspaceNode($webspaceKey)->getPropertyValueWithDefault(
             $propertyName,
@@ -81,7 +81,7 @@ class SettingsManager implements SettingsManagerInterface
      */
     public function loadString($webspaceKey, $key)
     {
-        $propertyName = $this->propertyName($key);
+        $propertyName = $this->getPropertyName($key);
         $property = $this->sessionManager->getWebspaceNode($webspaceKey)->getProperty($propertyName);
 
         if (!$property) {
@@ -97,7 +97,7 @@ class SettingsManager implements SettingsManagerInterface
     public function loadByWildcard($webspaceKey, $wildcard)
     {
         $properties = $this->sessionManager->getWebspaceNode($webspaceKey)->getProperties(
-            $this->propertyName($wildcard)
+            $this->getPropertyName($wildcard)
         );
 
         $data = [];
@@ -115,7 +115,7 @@ class SettingsManager implements SettingsManagerInterface
     {
         $webspaceNode = $this->sessionManager->getWebspaceNode($webspaceKey);
 
-        $properties = $webspaceNode->getProperties($this->propertyName($wildcard));
+        $properties = $webspaceNode->getProperties($this->getPropertyName($wildcard));
 
         $data = [];
         foreach ($properties as $property) {
@@ -148,7 +148,7 @@ class SettingsManager implements SettingsManagerInterface
      *
      * @return string
      */
-    private function propertyName($key)
+    private function getPropertyName($key)
     {
         return sprintf('settings:%s', $key);
     }

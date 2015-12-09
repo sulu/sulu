@@ -63,7 +63,7 @@ interface SettingsManagerInterface
     public function loadByWildcard($webspaceKey, $wildcard);
 
     /**
-     * Load webspace settings by wildcard.
+     * Load webspace settings as strings by wildcard.
      *
      * @param $webspaceKey
      * @param $wildcard

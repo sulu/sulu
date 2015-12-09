@@ -15,6 +15,9 @@ use Sulu\Bundle\ContentBundle\Admin\ContentAdmin;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\SecuredControllerInterface;
 
+/**
+ * Provides webspace rest-endpoint.
+ */
 class WebspaceController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
     /**

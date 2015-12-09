@@ -118,7 +118,6 @@ class ContentNavigationRegistryTest extends \PHPUnit_Framework_TestCase
 
             $items = array_map(
                 function ($item) {
-
                     $navigationItem = new ContentNavigationItem($item[0]);
                     $navigationItem->setAction($item[0]);
                     $navigationItem->setPosition(isset($item[1]) ? $item[1] : null);

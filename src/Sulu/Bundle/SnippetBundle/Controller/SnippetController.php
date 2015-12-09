@@ -480,7 +480,7 @@ class SnippetController implements SecuredControllerInterface
         $data = [
             'structures' => [],
             'other' => [],
-            'isDefault' => $this->defaultSnippetManager->isDefault($uuid)
+            'isDefault' => $this->defaultSnippetManager->isDefault($uuid),
         ];
 
         foreach ($references as $reference) {

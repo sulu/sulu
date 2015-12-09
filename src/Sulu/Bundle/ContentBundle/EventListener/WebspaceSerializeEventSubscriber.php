@@ -15,9 +15,11 @@ use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\JsonSerializationVisitor;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 
+/**
+ * Extends webspace serialization process.
+ */
 class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
 {
     /**
@@ -60,28 +62,12 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $portalInformation = $this->webspaceManager->getPortalInformations($this->environment);
-
-        $portalInformation = $event->getContext()->accept(
-            array_filter(
-                array_values($portalInformation),
-                function (PortalInformation $information) use ($webspace) {
-                    return $information->getWebspaceKey() === $webspace->getKey();
-                }
-            )
+        $portalInformation = $this->webspaceManager->getPortalInformationsByWebspaceKey(
+            $this->environment,
+            $webspace->getKey()
         );
 
-        // FIXME dirty hack to avoid same "id" for datagrid
-        $i = 0;
-        $portalInformation = array_map(
-            function ($item) use (&$i) {
-                $item['id'] = ++$i;
-
-                return $item;
-            },
-            $portalInformation
-        );
-
+        $portalInformation = $event->getContext()->accept(array_values($portalInformation));
         $visitor->addData('portalInformation', $portalInformation);
     }
 }

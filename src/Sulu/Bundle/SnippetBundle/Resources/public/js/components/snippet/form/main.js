@@ -60,7 +60,7 @@ define([
                     template: {
                         options: {
                             dropdownOptions: {
-                                url: '/admin/api/snippettypes',
+                                url: '/admin/api/snippet-types',
                                 callback: function(item) {
                                     if (!!this.template) {
                                         this.setHeaderBar(false);
