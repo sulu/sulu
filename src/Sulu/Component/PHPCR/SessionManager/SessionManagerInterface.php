@@ -71,7 +71,7 @@ interface SessionManagerInterface
      *
      * @param string$webspaceKey
      *
-     * @return string
+     * @return NodeInterface
      */
     public function getWebspaceNode($webspaceKey);
 

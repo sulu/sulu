@@ -11,6 +11,7 @@
 namespace Sulu\Component\Webspace\Settings;
 
 use PHPCR\NodeInterface;
+use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
@@ -49,6 +50,36 @@ class SettingsManagerTest extends \PHPUnit_Framework_TestCase
         $manager->save($webspaceKey, $key, $data);
     }
 
+    public function removeDataProvider()
+    {
+        return [
+            ['sulu_io', 'test-1'],
+        ];
+    }
+
+    /**
+     * @dataProvider removeDataProvider
+     */
+    public function testRemove($webspaceKey, $key)
+    {
+        $sessionManager = $this->prophesize(SessionManagerInterface::class);
+        $node = $this->prophesize(NodeInterface::class);
+        $property = $this->prophesize(PropertyInterface::class);
+        $session = $this->prophesize(SessionInterface::class);
+
+        $sessionManager->getWebspaceNode($webspaceKey)->willReturn($node->reveal());
+        $sessionManager->getSession()->willReturn($session->reveal());
+
+        $node->getProperty('settings:' . $key)->shouldBeCalledTimes(1)->willReturn($property->reveal());
+        $property->remove()->shouldBeCalledTimes(1);
+
+        $session->save()->shouldBeCalledTimes(1);
+
+        $manager = new SettingsManager($sessionManager->reveal());
+
+        $manager->remove($webspaceKey, $key);
+    }
+
     /**
      * @dataProvider dataProvider
      */
@@ -68,5 +99,37 @@ class SettingsManagerTest extends \PHPUnit_Framework_TestCase
         $result = $manager->load($webspaceKey, $key);
 
         $this->assertEquals($data, $result);
+    }
+
+    public function loadStringDataProvider()
+    {
+        return [
+            ['sulu_io', 'test-1', '123-123-123', true],
+            ['sulu_io', 'test-1', '123-123-123', false],
+        ];
+    }
+
+    /**
+     * @dataProvider loadStringDataProvider
+     */
+    public function testLoadString($webspaceKey, $key, $data, $exists)
+    {
+        $sessionManager = $this->prophesize(SessionManagerInterface::class);
+        $node = $this->prophesize(NodeInterface::class);
+        $property = $this->prophesize(PropertyInterface::class);
+
+        $sessionManager->getWebspaceNode($webspaceKey)->willReturn($node->reveal());
+
+        $node->getProperty('settings:' . $key)
+            ->shouldBeCalledTimes(1)
+            ->willReturn($exists ? $property->reveal() : null);
+
+        $property->getString()->willReturn($data);
+
+        $manager = new SettingsManager($sessionManager->reveal());
+
+        $result = $manager->loadString($webspaceKey, $key);
+
+        $this->assertEquals($exists ? $data : null, $result);
     }
 }

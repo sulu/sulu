@@ -88,8 +88,13 @@ define(['app-config'], function(AppConfig) {
                                 icons: [
                                     {
                                         icon: 'plus-circle',
-                                        column: 'default',
+                                        column: 'defaultTitle',
                                         callback: this.openOverlay.bind(this)
+                                    },
+                                    {
+                                        icon: 'trash-o',
+                                        column: 'defaultTitle',
+                                        callback: this.removeDefault.bind(this)
                                     }
                                 ]
                             }
@@ -100,7 +105,7 @@ define(['app-config'], function(AppConfig) {
                                 content: this.translations.snippetType
                             },
                             {
-                                attribute: 'default',
+                                attribute: 'defaultTitle',
                                 content: this.translations.defaultSnippet
                             }
                         ],
@@ -163,7 +168,7 @@ define(['app-config'], function(AppConfig) {
                                             icon: 'check-circle',
                                             column: 'title',
                                             callback: function(item) {
-                                                this.selectDefault(type, item);
+                                                this.saveDefault(type, item);
                                             }.bind(this)
                                         }
                                     ]
@@ -185,11 +190,21 @@ define(['app-config'], function(AppConfig) {
             );
         },
 
-        selectDefault: function(type, id) {
+        saveDefault: function(type, id) {
             var url = _.template(this.options.snippetTypeDefaultUrl, {type: type, webspace: this.options.webspace});
 
             this.sandbox.util.save(url, 'PUT', {default: id}).then(function(data) {
                 this.sandbox.emit('husky.overlay.snippets.close');
+                this.sandbox.emit('husky.datagrid.snippets.records.change', data);
+
+                this.sandbox.emit('sulu.labels.success.show', 'labels.success.content-save-desc', 'labels.success');
+            }.bind(this));
+        },
+
+        removeDefault: function(type, id) {
+            var url = _.template(this.options.snippetTypeDefaultUrl, {type: type, webspace: this.options.webspace});
+
+            this.sandbox.util.save(url, 'DELETE', {default: id}).then(function(data) {
                 this.sandbox.emit('husky.datagrid.snippets.records.change', data);
 
                 this.sandbox.emit('sulu.labels.success.show', 'labels.success.content-save-desc', 'labels.success');

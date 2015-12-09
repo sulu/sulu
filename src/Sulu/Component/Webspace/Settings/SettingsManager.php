@@ -48,6 +48,22 @@ class SettingsManager implements SettingsManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function remove($webspaceKey, $key)
+    {
+        $propertyName = $this->propertyName($key);
+        if (!$this->sessionManager->getWebspaceNode($webspaceKey)->hasProperty($propertyName)) {
+            return;
+        }
+
+        $property = $this->sessionManager->getWebspaceNode($webspaceKey)->getProperty($propertyName);
+        $property->remove();
+
+        $this->sessionManager->getSession()->save();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function load($webspaceKey, $key)
     {
         $propertyName = $this->propertyName($key);
@@ -62,6 +78,21 @@ class SettingsManager implements SettingsManagerInterface
         }
 
         return json_decode($value, true);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function loadString($webspaceKey, $key)
+    {
+        $propertyName = $this->propertyName($key);
+        $property = $this->sessionManager->getWebspaceNode($webspaceKey)->getProperty($propertyName);
+
+        if (!$property) {
+            return;
+        }
+
+        return $property->getString();
     }
 
     /**

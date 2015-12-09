@@ -58,6 +58,14 @@
                 <source>content-navigation.webspace.general</source>
                 <target>Schnipsel</target>
             </trans-unit>
+            <trans-unit id="16" resname="snippets.defaults.default">
+                <source>snippets.defaults.default</source>
+                <target>Standard</target>
+            </trans-unit>
+            <trans-unit id="17" resname="snippets.defaults.type">
+                <source>snippets.defaults.type</source>
+                <target>Typ</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

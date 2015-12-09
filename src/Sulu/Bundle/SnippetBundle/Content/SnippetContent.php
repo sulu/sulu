@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SnippetBundle\Content;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
 use PHPCR\Util\UUIDHelper;
+use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
@@ -21,7 +22,6 @@ use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Webspace\Settings\SettingsManagerInterface;
 
 /**
  * ContentType for Snippets.
@@ -49,20 +49,20 @@ class SnippetContent extends ComplexContentType
     private $snippetCache = [];
 
     /**
-     * @var SettingsManagerInterface
+     * @var DefaultSnippetManagerInterface
      */
-    private $settingsManager;
+    private $defaultSnippetManager;
 
     public function __construct(
         ContentMapperInterface $contentMapper,
         StructureResolverInterface $structureResolver,
-        SettingsManagerInterface $settingsManager,
+        DefaultSnippetManagerInterface $defaultSnippetManager,
         $template
     ) {
         $this->contentMapper = $contentMapper;
         $this->structureResolver = $structureResolver;
         $this->template = $template;
-        $this->settingsManager = $settingsManager;
+        $this->defaultSnippetManager = $defaultSnippetManager;
     }
 
     /**
@@ -84,7 +84,7 @@ class SnippetContent extends ComplexContentType
     /**
      * Set data to given property.
      *
-     * @param array             $data
+     * @param array $data
      * @param PropertyInterface $property
      */
     protected function setData($data, PropertyInterface $property)
@@ -172,32 +172,31 @@ class SnippetContent extends ComplexContentType
      */
     public function getViewData(PropertyInterface $property)
     {
-        /** @var PageBridge $page */
-        $page = $property->getStructure();
-        $webspaceKey = $page->getWebspaceKey();
-        $locale = $page->getLanguageCode();
-        $shadowLocale = null;
-        if ($page->getIsShadow()) {
-            $shadowLocale = $page->getShadowBaseLanguage();
+        $viewData = [];
+        foreach ($this->getSnippets($property) as $snippet) {
+            $viewData[] = $snippet['view'];
         }
 
-        $refs = $property->getValue();
-
-        $contentData = [];
-
-        $ids = $this->getUuids($refs);
-
-        foreach ($this->loadSnippets($ids, $webspaceKey, $locale, $shadowLocale) as $snippet) {
-            $contentData[] = $snippet['view'];
-        }
-
-        return $contentData;
+        return $viewData;
     }
 
     /**
      * {@inheritdoc}
      */
     public function getContentData(PropertyInterface $property)
+    {
+        $contentData = [];
+        foreach ($this->getSnippets($property) as $snippet) {
+            $contentData[] = $snippet['content'];
+        }
+
+        return $contentData;
+    }
+
+    /**
+     * Returns snippets with given property value.
+     */
+    private function getSnippets(PropertyInterface $property)
     {
         /** @var PageBridge $page */
         $page = $property->getStructure();
@@ -213,19 +212,17 @@ class SnippetContent extends ComplexContentType
 
         if (empty($ids) && array_key_exists('snippetType', $property->getParams())) {
             $ids = [
-                $this->settingsManager->load(
+                $this->defaultSnippetManager->loadIdentifier(
                     $webspaceKey,
-                    'snippets-' . $property->getParams()['snippetType']->getValue()
-                )->getIdentifier()
+                    $property->getParams()['snippetType']->getValue()
+                ),
             ];
+
+            // to filter null default snippet
+            $ids = array_filter($ids);
         }
 
-        $contentData = [];
-        foreach ($this->loadSnippets($ids, $webspaceKey, $locale, $shadowLocale) as $snippet) {
-            $contentData[] = $snippet['content'];
-        }
-
-        return $contentData;
+        return $this->loadSnippets($ids, $webspaceKey, $locale, $shadowLocale);
     }
 
     /**
