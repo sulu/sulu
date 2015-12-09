@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Snippet;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Settings\SettingsManagerInterface;
 
 /**
@@ -20,6 +21,11 @@ use Sulu\Component\Webspace\Settings\SettingsManagerInterface;
  */
 class DefaultSnippetManager implements DefaultSnippetManagerInterface
 {
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
     /**
      * @var SettingsManagerInterface
      */
@@ -38,10 +44,12 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
     public function __construct(
         SettingsManagerInterface $settingsManager,
         DocumentManagerInterface $documentManager,
+        WebspaceManagerInterface $webspaceManager,
         DocumentRegistry $registry
     ) {
         $this->settingsManager = $settingsManager;
         $this->documentManager = $documentManager;
+        $this->webspaceManager = $webspaceManager;
         $this->registry = $registry;
     }
 
@@ -98,6 +106,22 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         }
 
         return $document;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isDefault($uuid)
+    {
+        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
+            $settings = $this->settingsManager->loadStringByWildcard($webspace->getKey(), 'snippets-*');
+
+            if (in_array($uuid, $settings)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

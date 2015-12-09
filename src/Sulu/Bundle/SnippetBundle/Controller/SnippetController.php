@@ -15,6 +15,7 @@ use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use PHPCR\NodeInterface;
+use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
@@ -73,13 +74,19 @@ class SnippetController implements SecuredControllerInterface
      */
     protected $languageCode;
 
+    /**
+     * @var DefaultSnippetManagerInterface
+     */
+    protected $defaultSnippetManager;
+
     public function __construct(
         ViewHandler $viewHandler,
         ContentMapper $contentMapper,
         StructureManagerInterface $structureManager,
         SnippetRepository $snippetRepository,
         SecurityContext $securityContext,
-        UrlGeneratorInterface $urlGenerator
+        UrlGeneratorInterface $urlGenerator,
+        DefaultSnippetManagerInterface $defaultSnippetManager
     ) {
         $this->viewHandler = $viewHandler;
         $this->contentMapper = $contentMapper;
@@ -87,6 +94,7 @@ class SnippetController implements SecuredControllerInterface
         $this->snippetRepository = $snippetRepository;
         $this->securityContext = $securityContext;
         $this->urlGenerator = $urlGenerator;
+        $this->defaultSnippetManager = $defaultSnippetManager;
     }
 
     /**
@@ -246,7 +254,7 @@ class SnippetController implements SecuredControllerInterface
             if ($force) {
                 $this->contentMapper->delete($uuid, $webspaceKey, true);
             } else {
-                return $this->getReferentialIntegrityResponse($webspaceKey, $references);
+                return $this->getReferentialIntegrityResponse($webspaceKey, $references, $uuid);
             }
         } else {
             $this->contentMapper->delete($uuid, $webspaceKey);
@@ -463,14 +471,16 @@ class SnippetController implements SecuredControllerInterface
      *
      * @param string $webspace
      * @param NodeInterface[] $references
+     * @param string $uuid
      *
      * @return Response
      */
-    private function getReferentialIntegrityResponse($webspace, $references)
+    private function getReferentialIntegrityResponse($webspace, $references, $uuid)
     {
         $data = [
             'structures' => [],
             'other' => [],
+            'isDefault' => $this->defaultSnippetManager->isDefault($uuid)
         ];
 
         foreach ($references as $reference) {

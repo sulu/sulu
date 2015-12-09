@@ -66,6 +66,10 @@
                 <source>snippets.defaults.type</source>
                 <target>Type</target>
             </trans-unit>
+            <trans-unit id="18" resname="snippet.delete-confirm-default-text">
+                <source>snippet.delete-confirm-default-text</source>
+                <target>This Snippet is used as webspace-default.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

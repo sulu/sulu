@@ -66,6 +66,10 @@
                 <source>snippets.defaults.type</source>
                 <target>Typ</target>
             </trans-unit>
+            <trans-unit id="18" resname="snippet.delete-confirm-default-text">
+                <source>snippet.delete-confirm-default-text</source>
+                <target>Dieses Schipsel wird als Webspace-Standard verwendet.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

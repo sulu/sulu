@@ -22,23 +22,32 @@ define([
         translationKeys = {
             deleteReferencedByFollowing: 'snippet.delete-referenced-by-following',
             deleteConfirmText: 'snippet.delete-confirm-text',
+            deleteConfirmDefaultText: 'snippet.delete-confirm-default-text',
             deleteConfirmTitle: 'snippet.delete-confirm-title',
             deleteDoIt: 'snippet.delete-do-it',
             deleteNoSnippetsSelected: 'snippet.delete-no-snippets-selected'
         },
 
         templates = {
-            referentialIntegrityMessage: function(pageTitles) {
+            referentialIntegrityMessage: function(pageTitles, isDefault) {
                 var message = [];
 
-                message.push('<p>', this.sandbox.translate(translationKeys.deleteReferencedByFollowing), '</p>');
-                message.push('<ul>');
+                if (pageTitles.length > 0) {
+                    message.push('<p>', this.sandbox.translate(translationKeys.deleteReferencedByFollowing), '</p>');
 
-                this.sandbox.util.foreach(pageTitles, function(pageTitle) {
-                    message.push('<li>', pageTitle, '</li>');
-                });
+                    message.push('<ul>');
 
-                message.push('</ul>');
+                    this.sandbox.util.foreach(pageTitles, function(pageTitle) {
+                        message.push('<li>', pageTitle, '</li>');
+                    });
+
+                    message.push('</ul>');
+                }
+
+                if (!!isDefault) {
+                    message.push('<p>', this.sandbox.translate(translationKeys.deleteConfirmDefaultText), '</p>');
+                }
+
                 message.push('<p>', this.sandbox.translate(translationKeys.deleteConfirmText), '</p>');
 
                 return message.join('');
@@ -130,7 +139,7 @@ define([
                         el: $element,
                         openOnStart: true,
                         title: this.sandbox.translate(translationKeys.deleteConfirmTitle),
-                        message: templates.referentialIntegrityMessage.call(this, pageTitles),
+                        message: templates.referentialIntegrityMessage.call(this, pageTitles, data.isDefault),
                         okDefaultText: this.sandbox.translate(translationKeys.deleteDoIt),
                         type: 'alert',
                         closeCallback: function() {
