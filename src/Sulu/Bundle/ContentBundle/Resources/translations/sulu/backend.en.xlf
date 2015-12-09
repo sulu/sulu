@@ -591,6 +591,10 @@
                 <source>content-navigation.webspace.urls</source>
                 <target>Custom URLs</target>
             </trans-unit>
+            <trans-unit id="22" resname="navigation.webspaces.settings">
+                <source>navigation.webspaces.settings</source>
+                <target>Settings</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

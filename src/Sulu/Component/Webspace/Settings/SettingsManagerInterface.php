@@ -25,6 +25,14 @@ interface SettingsManagerInterface
     public function save($webspaceKey, $key, $data);
 
     /**
+     * Remove webspace settings value.
+     *
+     * @param string $webspaceKey
+     * @param string $key
+     */
+    public function remove($webspaceKey, $key);
+
+    /**
      * Load webspace settings value.
      *
      * @param string $webspaceKey
@@ -33,4 +41,14 @@ interface SettingsManagerInterface
      * @return mixed
      */
     public function load($webspaceKey, $key);
+
+    /**
+     * Load webspace settings value and return it as a string.
+     *
+     * @param string $webspaceKey
+     * @param string $key
+     *
+     * @return string
+     */
+    public function loadString($webspaceKey, $key);
 }

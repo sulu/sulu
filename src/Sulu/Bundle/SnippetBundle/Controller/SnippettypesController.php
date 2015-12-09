@@ -1,7 +1,6 @@
 <?php
-
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,7 +19,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * handles snippet template.
+ * Handles snippet types and defaults.
  */
 class SnippettypesController extends Controller implements ClassResourceInterface
 {
@@ -33,10 +32,10 @@ class SnippettypesController extends Controller implements ClassResourceInterfac
      */
     public function cgetAction(Request $request)
     {
-        // TODO convert uuid into title (localized)
-
         $defaults = $this->getBooleanRequestParameter($request, 'defaults');
         $webspaceKey = $this->getRequestParameter($request, 'webspace', $defaults);
+
+        $defaultSnippetManager = $this->get('sulu_snippet.default_snippet.manager');
 
         /** @var StructureManagerInterface $structureManager */
         $structureManager = $this->get('sulu.content.structure_manager');
@@ -50,12 +49,10 @@ class SnippettypesController extends Controller implements ClassResourceInterfac
             ];
 
             if ($defaults) {
-                $default = $this->get('sulu_core.webspace.settings_manager')->load(
-                    $webspaceKey,
-                    'snippets-' . $type->getKey()
-                );
+                $default = $defaultSnippetManager->load($webspaceKey, $type->getKey(), $this->getUser()->getLocale());
 
-                $template['default'] = !$default ? null : $default->getIdentifier();
+                $template['defaultUuid'] = !$default ? null : $default->getUuid();
+                $template['defaultTitle'] = !$default ? null : $default->getTitle();
             }
 
             $templates[] = $template;
@@ -69,26 +66,58 @@ class SnippettypesController extends Controller implements ClassResourceInterfac
         return new JsonResponse($data);
     }
 
+    /**
+     * Save default snippet for given key.
+     *
+     * @param string $key
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function putDefaultAction($key, Request $request)
     {
         $default = $request->get('default');
         $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
 
         $type = $this->get('sulu.content.structure_manager')->getStructure($key, Structure::TYPE_SNIPPET);
-
-        $node = $this->get('sulu_document_manager.node_manager')->find($default);
-
-        $this->get('sulu_core.webspace.settings_manager')->save(
+        $defaultSnippet = $this->get('sulu_snippet.default_snippet.manager')->save(
             $webspaceKey,
-            'snippets-' . $key,
-            $node
+            $key,
+            $default,
+            $this->getUser()->getLocale()
         );
 
         return new JsonResponse(
             [
                 'template' => $type->getKey(),
                 'title' => $type->getLocalizedTitle($this->getUser()->getLocale()),
-                'default' => $default,
+                'defaultUuid' => !$defaultSnippet ? null : $defaultSnippet->getUuid(),
+                'defaultTitle' => !$defaultSnippet ? null : $defaultSnippet->getTitle(),
+            ]
+        );
+    }
+
+    /**
+     * Remove default snippet for given key.
+     *
+     * @param string $key
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function deleteDefaultAction($key, Request $request)
+    {
+        $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
+
+        $type = $this->get('sulu.content.structure_manager')->getStructure($key, Structure::TYPE_SNIPPET);
+        $this->get('sulu_snippet.default_snippet.manager')->remove($webspaceKey, $key);
+
+        return new JsonResponse(
+            [
+                'template' => $type->getKey(),
+                'title' => $type->getLocalizedTitle($this->getUser()->getLocale()),
+                'defaultUuid' => null,
+                'defaultTitle' => null,
             ]
         );
     }
