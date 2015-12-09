@@ -16,6 +16,7 @@
         <service id="sulu_snippet.default_snippet.manager" class="Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManager">
             <argument type="service" id="sulu_core.webspace.settings_manager"/>
             <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu_document_manager.document_registry"/>
         </service>
     </services>

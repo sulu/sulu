@@ -18,7 +18,9 @@ use Sulu\Bundle\SnippetBundle\Snippet\SnippetNotFoundException;
 use Sulu\Bundle\SnippetBundle\Snippet\WrongSnippetTypeException;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Settings\SettingsManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 
 class DefaultSnippetManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,10 +41,11 @@ class DefaultSnippetManagerTest extends \PHPUnit_Framework_TestCase
     {
         $settingsManager = $this->prophesize(SettingsManagerInterface::class);
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
+        $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $registry = $this->prophesize(DocumentRegistry::class);
 
         $manager = new DefaultSnippetManager(
-            $settingsManager->reveal(), $documentManager->reveal(), $registry->reveal()
+            $settingsManager->reveal(), $documentManager->reveal(), $webspaceManager->reveal(), $registry->reveal()
         );
 
         $document = null;
@@ -76,10 +79,11 @@ class DefaultSnippetManagerTest extends \PHPUnit_Framework_TestCase
     {
         $settingsManager = $this->prophesize(SettingsManagerInterface::class);
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
+        $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $registry = $this->prophesize(DocumentRegistry::class);
 
         $manager = new DefaultSnippetManager(
-            $settingsManager->reveal(), $documentManager->reveal(), $registry->reveal()
+            $settingsManager->reveal(), $documentManager->reveal(), $webspaceManager->reveal(), $registry->reveal()
         );
 
         $settingsManager->remove('sulu_io', 'snippets-test')->shouldBeCalledTimes(1);
@@ -104,10 +108,11 @@ class DefaultSnippetManagerTest extends \PHPUnit_Framework_TestCase
     {
         $settingsManager = $this->prophesize(SettingsManagerInterface::class);
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
+        $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $registry = $this->prophesize(DocumentRegistry::class);
 
         $manager = new DefaultSnippetManager(
-            $settingsManager->reveal(), $documentManager->reveal(), $registry->reveal()
+            $settingsManager->reveal(), $documentManager->reveal(), $webspaceManager->reveal(), $registry->reveal()
         );
 
         $document = null;
@@ -143,10 +148,11 @@ class DefaultSnippetManagerTest extends \PHPUnit_Framework_TestCase
     {
         $settingsManager = $this->prophesize(SettingsManagerInterface::class);
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
+        $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $registry = $this->prophesize(DocumentRegistry::class);
 
         $manager = new DefaultSnippetManager(
-            $settingsManager->reveal(), $documentManager->reveal(), $registry->reveal()
+            $settingsManager->reveal(), $documentManager->reveal(), $webspaceManager->reveal(), $registry->reveal()
         );
 
         $settingsManager->loadString('sulu_io', 'snippets-test')
@@ -155,5 +161,33 @@ class DefaultSnippetManagerTest extends \PHPUnit_Framework_TestCase
         $uuid = $manager->loadIdentifier('sulu_io', 'test');
 
         $this->assertEquals('123-123-123', $uuid);
+    }
+
+    public function testIsDefault()
+    {
+        $settingsManager = $this->prophesize(SettingsManagerInterface::class);
+        $documentManager = $this->prophesize(DocumentManagerInterface::class);
+        $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
+        $registry = $this->prophesize(DocumentRegistry::class);
+
+        $manager = new DefaultSnippetManager(
+            $settingsManager->reveal(), $documentManager->reveal(), $webspaceManager->reveal(), $registry->reveal()
+        );
+
+        $webspace1 = new Webspace();
+        $webspace1->setKey('test-1');
+        $webspace2 = new Webspace();
+        $webspace2->setKey('test-2');
+
+        $webspaceManager->getWebspaceCollection()->willReturn([$webspace1, $webspace2]);
+        $settingsManager->loadStringByWildcard('test-1', 'snippets-*')->willReturn(
+            ['test-1' => '123', 'test-2' => '456']
+        );
+        $settingsManager->loadStringByWildcard('test-2', 'snippets-*')->willReturn(
+            ['test-1' => '123-123-123', 'test-2' => '456']
+        );
+
+        $this->assertTrue($manager->isDefault('123-123-123'));
+        $this->assertFalse($manager->isDefault('321-123-123'));
     }
 }

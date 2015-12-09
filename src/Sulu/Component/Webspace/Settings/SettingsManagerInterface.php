@@ -51,4 +51,24 @@ interface SettingsManagerInterface
      * @return string
      */
     public function loadString($webspaceKey, $key);
+
+    /**
+     * Load webspace settings by wildcard.
+     *
+     * @param $webspaceKey
+     * @param $wildcard
+     *
+     * @return mixed[]
+     */
+    public function loadByWildcard($webspaceKey, $wildcard);
+
+    /**
+     * Load webspace settings by wildcard.
+     *
+     * @param $webspaceKey
+     * @param $wildcard
+     *
+     * @return string[]
+     */
+    public function loadStringByWildcard($webspaceKey, $wildcard);
 }

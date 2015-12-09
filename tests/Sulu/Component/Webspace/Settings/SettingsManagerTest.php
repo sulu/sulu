@@ -70,6 +70,7 @@ class SettingsManagerTest extends \PHPUnit_Framework_TestCase
         $sessionManager->getWebspaceNode($webspaceKey)->willReturn($node->reveal());
         $sessionManager->getSession()->willReturn($session->reveal());
 
+        $node->hasProperty('settings:' . $key)->shouldBeCalledTimes(1)->willReturn(true);
         $node->getProperty('settings:' . $key)->shouldBeCalledTimes(1)->willReturn($property->reveal());
         $property->remove()->shouldBeCalledTimes(1);
 
@@ -131,5 +132,31 @@ class SettingsManagerTest extends \PHPUnit_Framework_TestCase
         $result = $manager->loadString($webspaceKey, $key);
 
         $this->assertEquals($exists ? $data : null, $result);
+    }
+
+    public function testLoadByWildcard()
+    {
+        $referencedNode = $this->prophesize(NodeInterface::class);
+
+        $sessionManager = $this->prophesize(SessionManagerInterface::class);
+        $node = $this->prophesize(NodeInterface::class);
+        $property1 = $this->prophesize(PropertyInterface::class);
+        $property1->getName()->willReturn('settings:test-1');
+        $property1->getValue()->willReturn($referencedNode->reveal());
+        $property2 = $this->prophesize(PropertyInterface::class);
+        $property2->getName()->willReturn('settings:test-2');
+        $property2->getValue()->willReturn(json_encode(['test1' => 'test1']));
+
+        $sessionManager->getWebspaceNode('sulu_io')->willReturn($node->reveal());
+
+        $node->getProperties('settings:test-*')->willReturn([$property1->reveal(), $property2->reveal()]);
+
+        $manager = new SettingsManager($sessionManager->reveal());
+
+        $settings = $manager->loadByWildcard('sulu_io', 'test-*');
+
+        $this->assertCount(2, $settings);
+        $this->assertEquals($referencedNode->reveal(), $settings['test-1']);
+        $this->assertEquals(['test1' => 'test1'], $settings['test-2']);
     }
 }

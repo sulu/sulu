@@ -73,11 +73,7 @@ class SettingsManager implements SettingsManagerInterface
             'null'
         );
 
-        if ($value instanceof NodeInterface) {
-            return $value;
-        }
-
-        return json_decode($value, true);
+        return $this->decodeValue($value);
     }
 
     /**
@@ -93,6 +89,56 @@ class SettingsManager implements SettingsManagerInterface
         }
 
         return $property->getString();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function loadByWildcard($webspaceKey, $wildcard)
+    {
+        $properties = $this->sessionManager->getWebspaceNode($webspaceKey)->getProperties(
+            $this->propertyName($wildcard)
+        );
+
+        $data = [];
+        foreach ($properties as $property) {
+            $data[substr($property->getName(), 9)] = $this->decodeValue($property->getValue());
+        }
+
+        return $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function loadStringByWildcard($webspaceKey, $wildcard)
+    {
+        $webspaceNode = $this->sessionManager->getWebspaceNode($webspaceKey);
+
+        $properties = $webspaceNode->getProperties($this->propertyName($wildcard));
+
+        $data = [];
+        foreach ($properties as $property) {
+            $data[substr($property->getName(), 9)] = $property->getString();
+        }
+
+        return $data;
+    }
+
+    /**
+     * Returns decoded value.
+     *
+     * @param mixed $value
+     *
+     * @return mixed
+     */
+    private function decodeValue($value)
+    {
+        if ($value instanceof NodeInterface) {
+            return $value;
+        }
+
+        return json_decode($value, true);
     }
 
     /**

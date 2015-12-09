@@ -61,4 +61,13 @@ interface DefaultSnippetManagerInterface
      * @return string
      */
     public function loadIdentifier($webspaceKey, $type);
+
+    /**
+     * Returns true if given uuid is a default snippet.
+     *
+     * @param string $uuid
+     *
+     * @return bool
+     */
+    public function isDefault($uuid);
 }
