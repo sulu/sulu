@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #1863 [Content]             Fluent Query Builder for documents and structures.
     * ENHANCEMENT #1999 [SnippetBundle]       Snippet controller now uses DocumentManager and Serializer.
     * FEATURE     #2001 [MediaBundle]         Clear local image cache via cache clear service and command
     * BUGFIX      #1986 [All]                 Fixed naming of serializer properties
