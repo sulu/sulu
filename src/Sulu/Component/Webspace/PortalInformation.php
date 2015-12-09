@@ -73,6 +73,11 @@ class PortalInformation implements ArrayableInterface
      */
     private $redirect;
 
+    /**
+     * @var bool
+     */
+    private $main;
+
     public function __construct(
         $type,
         Webspace $webspace = null,
@@ -81,7 +86,8 @@ class PortalInformation implements ArrayableInterface
         $url,
         Segment $segment = null,
         $redirect = null,
-        $analyticsKey = null
+        $analyticsKey = null,
+        $main = false
     ) {
         $this->setType($type);
         $this->setWebspace($webspace);
@@ -91,6 +97,7 @@ class PortalInformation implements ArrayableInterface
         $this->setUrl($url);
         $this->setRedirect($redirect);
         $this->setAnalyticsKey($analyticsKey);
+        $this->setMain($main);
     }
 
     /**
@@ -312,6 +319,22 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isMain()
+    {
+        return $this->main;
+    }
+
+    /**
+     * @param bool $main
+     */
+    public function setMain($main)
+    {
+        $this->main = $main;
+    }
+
+    /**
      * Calculate the length of the host part of the URL.
      *
      * @return int
@@ -333,6 +356,7 @@ class PortalInformation implements ArrayableInterface
         $res['type'] = $this->getType();
         $res['webspace'] = $this->getWebspace()->getKey();
         $res['url'] = $this->getUrl();
+        $res['main'] = $this->isMain();
 
         $portal = $this->getPortal();
 

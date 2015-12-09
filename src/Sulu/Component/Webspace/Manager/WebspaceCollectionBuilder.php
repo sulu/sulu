@@ -185,7 +185,14 @@ class WebspaceCollectionBuilder
                 $this->buildUrls($portal, $environment, $url, $segments, $urlAddress, $urlAnalyticsKey);
             } else {
                 // create the redirect
-                $this->buildUrlRedirect($portal->getWebspace(), $environment, $urlAddress, $urlRedirect, $urlAnalyticsKey);
+                $this->buildUrlRedirect(
+                    $portal->getWebspace(),
+                    $environment,
+                    $urlAddress,
+                    $urlRedirect,
+                    $urlAnalyticsKey,
+                    $url->isMain()
+                );
             }
         }
     }
@@ -197,8 +204,14 @@ class WebspaceCollectionBuilder
      * @param string      $urlRedirect
      * @param string      $urlAnalyticsKey
      */
-    private function buildUrlRedirect(Webspace $webspace, Environment $environment, $urlAddress, $urlRedirect, $urlAnalyticsKey)
-    {
+    private function buildUrlRedirect(
+        Webspace $webspace,
+        Environment $environment,
+        $urlAddress,
+        $urlRedirect,
+        $urlAnalyticsKey,
+        $main
+    ) {
         $this->portalInformations[$environment->getType()][$urlAddress] = new PortalInformation(
             RequestAnalyzerInterface::MATCH_TYPE_REDIRECT,
             $webspace,
@@ -207,7 +220,8 @@ class WebspaceCollectionBuilder
             $urlAddress,
             null,
             $urlRedirect,
-            $urlAnalyticsKey
+            $urlAnalyticsKey,
+            $main
         );
     }
 
@@ -227,7 +241,8 @@ class WebspaceCollectionBuilder
         $replacers,
         $urlAddress,
         Localization $localization,
-        $urlAnalyticsKey
+        $urlAnalyticsKey,
+        $main
     ) {
         if (!empty($segments)) {
             foreach ($segments as $segment) {
@@ -241,7 +256,8 @@ class WebspaceCollectionBuilder
                     $urlResult,
                     $segment,
                     null,
-                    $urlAnalyticsKey
+                    $urlAnalyticsKey,
+                    $main
                 );
             }
         } else {
@@ -254,7 +270,8 @@ class WebspaceCollectionBuilder
                 $urlResult,
                 null,
                 null,
-                $urlAnalyticsKey
+                $urlAnalyticsKey,
+                $main
             );
         }
     }
@@ -265,8 +282,13 @@ class WebspaceCollectionBuilder
      * @param string      $urlAddress
      * @param string      $urlAnalyticsKey
      */
-    private function buildUrlPartialMatch(Portal $portal, Environment $environment, $urlAddress, $urlAnalyticsKey)
-    {
+    private function buildUrlPartialMatch(
+        Portal $portal,
+        Environment $environment,
+        $urlAddress,
+        $urlAnalyticsKey,
+        $main
+    ) {
         $replacers = [
             self::REPLACER_LANGUAGE => $portal->getDefaultLocalization()->getLanguage(),
             self::REPLACER_COUNTRY => $portal->getDefaultLocalization()->getCountry(),
@@ -290,7 +312,8 @@ class WebspaceCollectionBuilder
                 $urlResult,
                 $portal->getWebspace()->getDefaultSegment(),
                 $urlRedirect,
-                $urlAnalyticsKey
+                $urlAnalyticsKey,
+                $main
             );
         }
     }
@@ -319,7 +342,8 @@ class WebspaceCollectionBuilder
                 [],
                 $urlAddress,
                 $portal->getLocalization($locale),
-                $urlAnalyticsKey
+                $urlAnalyticsKey,
+                $url->isMain()
             );
         } else {
             // create all the urls for every localization/segment combination
@@ -333,9 +357,24 @@ class WebspaceCollectionBuilder
                     self::REPLACER_LOCALIZATION => $localization->getLocalization('-'),
                 ];
 
-                $this->buildUrlFullMatch($portal, $environment, $segments, $replacers, $urlAddress, $localization, $urlAnalyticsKey);
+                $this->buildUrlFullMatch(
+                    $portal,
+                    $environment,
+                    $segments,
+                    $replacers,
+                    $urlAddress,
+                    $localization,
+                    $urlAnalyticsKey,
+                    $url->isMain()
+                );
             }
-            $this->buildUrlPartialMatch($portal, $environment, $urlAddress, $urlAnalyticsKey);
+            $this->buildUrlPartialMatch(
+                $portal,
+                $environment,
+                $urlAddress,
+                $urlAnalyticsKey,
+                $url->isMain()
+            );
         }
     }
 

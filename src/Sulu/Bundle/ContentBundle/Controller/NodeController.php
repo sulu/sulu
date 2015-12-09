@@ -46,8 +46,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * handles content nodes.
  */
-class NodeController extends RestController
-    implements ClassResourceInterface, SecuredControllerInterface, SecuredObjectControllerInterface
+class NodeController extends RestController implements ClassResourceInterface, SecuredControllerInterface, SecuredObjectControllerInterface
 {
     use RequestParametersTrait;
 

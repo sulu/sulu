@@ -28,6 +28,11 @@ class Environment
     private $urls;
 
     /**
+     * @var Url
+     */
+    private $mainUrl;
+
+    /**
      * Sets the tye of this environment.
      *
      * @param string $type
@@ -55,6 +60,35 @@ class Environment
     public function addUrl(Url $url)
     {
         $this->urls[] = $url;
+
+        if ($url->isMain() || !$this->mainUrl) {
+            $this->setMainUrl($url);
+        }
+    }
+
+    /**
+     * Sets the main url.
+     *
+     * @param Url $url
+     */
+    private function setMainUrl(Url $url)
+    {
+        if (null !== $this->mainUrl) {
+            $this->mainUrl->setMain(false);
+        }
+
+        $this->mainUrl = $url;
+        $this->mainUrl->setMain(true);
+    }
+
+    /**
+     * Returns main url.
+     *
+     * @return Url
+     */
+    public function getMainUrl()
+    {
+        return $this->mainUrl;
     }
 
     /**

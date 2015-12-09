@@ -10,5 +10,6 @@
         <property name="type" type="integer" expose="true"/>
         <property name="segment" type="string" expose="true"/>
         <property name="redirect" type="string" expose="true"/>
+        <property name="main" type="string" expose="true"/>
     </class>
 </serializer>

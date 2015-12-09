@@ -78,7 +78,7 @@ class WebspaceManager implements WebspaceManagerInterface
     /**
      * Returns the portal with the given url (which has not necessarily to be the main url).
      *
-     * @param string $url         The url to search for
+     * @param string $url The url to search for
      * @param string $environment The environment in which the url should be searched
      *
      * @return array|null
@@ -98,18 +98,15 @@ class WebspaceManager implements WebspaceManagerInterface
     }
 
     /**
-     * Returns all possible urls for resourcelocator.
-     *
-     * @param string      $resourceLocator
-     * @param string      $environment
-     * @param string      $languageCode
-     * @param null|string $webspaceKey
-     * @param null|string $domain
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    public function findUrlsByResourceLocator($resourceLocator, $environment, $languageCode, $webspaceKey = null, $domain = null)
-    {
+    public function findUrlsByResourceLocator(
+        $resourceLocator,
+        $environment,
+        $languageCode,
+        $webspaceKey = null,
+        $domain = null
+    ) {
         $urls = [];
         $portals = $this->getWebspaceCollection()->getPortalInformations($environment);
         foreach ($portals as $url => $portalInformation) {
@@ -123,6 +120,35 @@ class WebspaceManager implements WebspaceManagerInterface
         }
 
         return $urls;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findUrlByResourceLocator(
+        $resourceLocator,
+        $environment,
+        $languageCode,
+        $webspaceKey = null,
+        $domain = null
+    ) {
+        $urls = [];
+        $portals = $this->getWebspaceCollection()->getPortalInformations($environment);
+        foreach ($portals as $url => $portalInformation) {
+            $sameLocalization = $portalInformation->getLocalization()->getLocalization() === $languageCode;
+            $sameWebspace = $webspaceKey === null || $portalInformation->getWebspace()->getKey() === $webspaceKey;
+            // TODO protocol
+            $url = rtrim('http://' . $url . $resourceLocator, '/');
+            if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {
+                if ($portalInformation->isMain()) {
+                    array_unshift($urls, $url);
+                } else {
+                    $urls[] = $url;
+                }
+            }
+        }
+
+        return reset($urls);
     }
 
     /**

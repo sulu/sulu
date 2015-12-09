@@ -444,20 +444,21 @@ class XmlFileLoader extends FileLoader
             $url->setCountry($this->getOptionalNodeAttribute($urlNode, 'country'));
             $url->setSegment($this->getOptionalNodeAttribute($urlNode, 'segment'));
             $url->setRedirect($this->getOptionalNodeAttribute($urlNode, 'redirect'));
+            $url->setMain($this->getOptionalNodeAttribute($urlNode, 'main', false));
             $url->setAnalyticsKey($this->getOptionalNodeAttribute($urlNode, 'analytics-key'));
 
             $environment->addUrl($url);
         }
     }
 
-    private function getOptionalNodeAttribute(\DOMNode $node, $name)
+    private function getOptionalNodeAttribute(\DOMNode $node, $name, $default = null)
     {
         $attribute = $node->attributes->getNamedItem($name);
         if ($attribute) {
             return $attribute->nodeValue;
         }
 
-        return;
+        return $default;
     }
 
     /**
