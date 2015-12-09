@@ -12,30 +12,51 @@ namespace Sulu\Bundle\SnippetBundle\Snippet;
 
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 
+/**
+ * Indicates wrong snippet type.
+ */
 class WrongSnippetTypeException extends \Exception
 {
     /**
      * @var string
      */
-    private $key;
+    private $expected;
+
+    /**
+     * @var string
+     */
+    private $actual;
 
     /**
      * @var SnippetDocument
      */
     private $document;
 
-    public function __construct($key, SnippetDocument $document)
+    public function __construct($actual, $expected, SnippetDocument $document)
     {
-        $this->key = $key;
+        parent::__construct(
+            sprintf('Wrong snippet type were detected (actual: "", expected: "").', $actual, $expected)
+        );
+
+        $this->actual = $actual;
+        $this->expected = $expected;
         $this->document = $document;
     }
 
     /**
      * @return string
      */
-    public function getKey()
+    public function getActual()
     {
-        return $this->key;
+        return $this->actual;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExpected()
+    {
+        return $this->expected;
     }
 
     /**

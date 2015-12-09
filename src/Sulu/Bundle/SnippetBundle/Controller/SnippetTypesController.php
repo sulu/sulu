@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\SnippetBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
@@ -20,8 +21,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Handles snippet types and defaults.
+ *
+ * @RouteResource("snippet-types")
  */
-class SnippettypesController extends Controller implements ClassResourceInterface
+class SnippetTypesController extends Controller implements ClassResourceInterface
 {
     use RequestParametersTrait;
 
@@ -51,8 +54,8 @@ class SnippettypesController extends Controller implements ClassResourceInterfac
             if ($defaults) {
                 $default = $defaultSnippetManager->load($webspaceKey, $type->getKey(), $this->getUser()->getLocale());
 
-                $template['defaultUuid'] = !$default ? null : $default->getUuid();
-                $template['defaultTitle'] = !$default ? null : $default->getTitle();
+                $template['defaultUuid'] = $default ? $default->getUuid() : null;
+                $template['defaultTitle'] = $default ? $default->getTitle() : null;
             }
 
             $templates[] = $template;
@@ -91,8 +94,8 @@ class SnippettypesController extends Controller implements ClassResourceInterfac
             [
                 'template' => $type->getKey(),
                 'title' => $type->getLocalizedTitle($this->getUser()->getLocale()),
-                'defaultUuid' => !$defaultSnippet ? null : $defaultSnippet->getUuid(),
-                'defaultTitle' => !$defaultSnippet ? null : $defaultSnippet->getTitle(),
+                'defaultUuid' => $defaultSnippet ? $defaultSnippet->getUuid() : null,
+                'defaultTitle' => $defaultSnippet ? $defaultSnippet->getTitle() : null,
             ]
         );
     }

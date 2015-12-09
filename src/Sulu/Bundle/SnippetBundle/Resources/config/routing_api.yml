@@ -4,7 +4,7 @@ sulu_snippet.snippet:
 
 sulu_snippet.snippet-types:
     type: rest
-    resource: Sulu\Bundle\SnippetBundle\Controller\SnippettypesController
+    resource: Sulu\Bundle\SnippetBundle\Controller\SnippetTypesController
 
 sulu_snippet.languages:
     type: rest

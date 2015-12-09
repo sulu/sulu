@@ -14,6 +14,7 @@ namespace Sulu\Component\Webspace\Manager;
 use Psr\Log\LoggerInterface;
 use Sulu\Component\Webspace\Manager\Dumper\PhpWebspaceCollectionDumper;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -149,6 +150,19 @@ class WebspaceManager implements WebspaceManagerInterface
     public function getPortalInformations($environment)
     {
         return $this->getWebspaceCollection()->getPortalInformations($environment);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPortalInformationsByWebspaceKey($environment, $webspaceKey)
+    {
+        return array_filter(
+            $this->getWebspaceCollection()->getPortalInformations($environment),
+            function (PortalInformation $portal) use ($webspaceKey) {
+                return $portal->getWebspaceKey() === $webspaceKey;
+            }
+        );
     }
 
     /**

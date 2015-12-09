@@ -60,12 +60,6 @@ define(['underscore'], function(_) {
             });
 
             return deferred.promise();
-        },
-
-        initialize: function() {
-            this.sandbox.on('sulu.header.back', function() {
-                this.sandbox.logger.log('TODO back');
-            }.bind(this));
         }
     };
 });

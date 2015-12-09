@@ -96,6 +96,15 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
     public function getPortalInformations($environment);
 
     /**
+     * Returns the portal informations for given webspace managed by this WebspaceManger.
+     *
+     * @param string $environment
+     *
+     * @return PortalInformation[]
+     */
+    public function getPortalInformationsByWebspaceKey($environment, $webspaceKey);
+
+    /**
      * Returns all the webspaces managed by this specific instance.
      *
      * @return WebspaceCollection

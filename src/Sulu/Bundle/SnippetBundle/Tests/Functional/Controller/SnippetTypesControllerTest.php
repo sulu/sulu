@@ -16,7 +16,7 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 /**
  * Handles snippet types and defaults.
  */
-class SnippettypesControllerTest extends BaseFunctionalTestCase
+class SnippetTypesControllerTest extends BaseFunctionalTestCase
 {
     /**
      * @var ContentMapperInterface
@@ -34,7 +34,7 @@ class SnippettypesControllerTest extends BaseFunctionalTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/snippettypes');
+        $client->request('GET', '/snippet-types');
         $response = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals(2, $response['total']);
@@ -54,7 +54,7 @@ class SnippettypesControllerTest extends BaseFunctionalTestCase
 
         $client->request(
             'PUT',
-            '/snippettypes/car/default',
+            '/snippet-types/car/default',
             ['webspace' => 'sulu_io', 'default' => $this->car1->getUuid()]
         );
 
@@ -65,7 +65,7 @@ class SnippettypesControllerTest extends BaseFunctionalTestCase
         $this->assertEquals($this->car1->getUuid(), $response['defaultUuid']);
         $this->assertEquals($this->car1->getTitle(), $response['defaultTitle']);
 
-        $client->request('GET', '/snippettypes?defaults=true&webspace=sulu_io');
+        $client->request('GET', '/snippet-types?defaults=true&webspace=sulu_io');
         $response = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals(2, $response['total']);
@@ -88,7 +88,7 @@ class SnippettypesControllerTest extends BaseFunctionalTestCase
 
         $client->request(
             'DELETE',
-            '/snippettypes/car/default',
+            '/snippet-types/car/default',
             ['webspace' => 'sulu_io', 'default' => $this->car1->getUuid()]
         );
 
@@ -99,7 +99,7 @@ class SnippettypesControllerTest extends BaseFunctionalTestCase
         $this->assertEquals(null, $response['defaultUuid']);
         $this->assertEquals(null, $response['defaultTitle']);
 
-        $client->request('GET', '/snippettypes?defaults=true&webspace=sulu_io');
+        $client->request('GET', '/snippet-types?defaults=true&webspace=sulu_io');
         $response = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals(2, $response['total']);

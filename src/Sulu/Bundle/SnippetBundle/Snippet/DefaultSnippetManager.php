@@ -102,7 +102,7 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         $document = $this->documentManager->find($uuid, $locale, ['rehydrate' => true]);
 
         if (null !== $document && $document->getStructureType() !== $type) {
-            throw new WrongSnippetTypeException($type, $document);
+            throw new WrongSnippetTypeException($document->getStructureType(), $type, $document);
         }
 
         return $document;

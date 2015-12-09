@@ -13,8 +13,8 @@ define(['app-config'], function(AppConfig) {
 
     var defaults = {
         options: {
-            snippetTypesUrl: '/admin/api/snippettypes?defaults=true&webspace=<%= webspace %>',
-            snippetTypeDefaultUrl: '/admin/api/snippettypes/<%= type %>/default?webspace=<%= webspace %>',
+            snippetTypesUrl: '/admin/api/snippet-types?defaults=true&webspace=<%= webspace %>',
+            snippetTypeDefaultUrl: '/admin/api/snippet-types/<%= type %>/default?webspace=<%= webspace %>',
             snippetsUrl: '/admin/api/snippets?type=<%= type %>&language=<%= locale %>'
         },
         templates: {
