@@ -30,8 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Makes media available through a REST API.
  */
-class MediaController extends AbstractMediaController
-    implements ClassResourceInterface, SecuredControllerInterface, SecuredObjectControllerInterface
+class MediaController extends AbstractMediaController implements ClassResourceInterface, SecuredControllerInterface, SecuredObjectControllerInterface
 {
     use RequestParametersTrait;
 

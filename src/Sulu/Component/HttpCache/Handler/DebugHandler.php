@@ -20,8 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Adds some debug information.
  */
-class DebugHandler implements
-    HandlerUpdateResponseInterface
+class DebugHandler implements HandlerUpdateResponseInterface
 {
     const HEADER_HANDLERS = 'X-Sulu-Handlers';
     const HEADER_CLIENT_NAME = 'X-Sulu-Proxy-Client';

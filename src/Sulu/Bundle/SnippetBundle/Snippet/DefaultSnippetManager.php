@@ -66,7 +66,7 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         }
 
         if ($document->getStructureType() !== $type) {
-            throw new WrongSnippetTypeException($type, $document);
+            throw new WrongSnippetTypeException($document->getStructureType(), $type, $document);
         }
 
         $this->settingsManager->save(

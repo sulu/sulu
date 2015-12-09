@@ -21,8 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Set standard cache settings on the response.
  * Includes the TTL of the structure.
  */
-class PublicHandler implements
-    HandlerUpdateResponseInterface
+class PublicHandler implements HandlerUpdateResponseInterface
 {
     /**
      * @var int

@@ -22,9 +22,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 /**
  * Invalidate all the paths (i.e. old and new) for a Sulu Structure.
  */
-class PathsHandler implements
-    HandlerFlushInterface,
-    HandlerInvalidateStructureInterface
+class PathsHandler implements HandlerFlushInterface, HandlerInvalidateStructureInterface
 {
     /**
      * @var WebspaceManagerInterface

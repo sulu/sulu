@@ -15,6 +15,11 @@ use Sulu\Component\Webspace\Url;
 
 class UrlTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Url
+     */
+    private $url;
+
     public function setUp()
     {
         parent::setUp();
@@ -30,6 +35,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
             'segment' => 'def',
             'redirect' => 'def',
             'url' => 'foo',
+            'main' => true,
             'analyticsKey' => 'analytics',
         ];
 
@@ -38,6 +44,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         $this->url->setCountry($expected['country']);
         $this->url->setSegment($expected['segment']);
         $this->url->setRedirect($expected['redirect']);
+        $this->url->setMain($expected['main']);
         $this->url->setAnalyticsKey($expected['analyticsKey']);
 
         $this->assertEquals($expected, $this->url->toArray());
