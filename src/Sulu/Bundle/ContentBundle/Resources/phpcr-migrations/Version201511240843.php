@@ -16,10 +16,9 @@ use PHPCR\SessionInterface;
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
-use Sulu\Component\Content\Document\RedirectType;
-use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
@@ -27,9 +26,11 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Upgrades URLs within block properties.
+ * Upgrades date values within block properties.
+ *
+ * Created: 2015-12-10 10:04
  */
-class Version201511240844 implements VersionInterface, ContainerAwareInterface
+class Version201511240843 implements VersionInterface, ContainerAwareInterface
 {
     /**
      * @var SessionInterface
@@ -68,6 +69,7 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
         $this->localizationManager = $container->get('sulu.core.localization_manager');
         $this->documentManager = $container->get('sulu_document_manager.document_manager');
         $this->documentInspector = $container->get('sulu_document_manager.document_inspector');
+        $this->propertyFactory = $container->get('sulu_content.compat.structure.legacy_property_factory');
     }
 
     /**
@@ -79,7 +81,6 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
     {
         $this->session = $session;
         $this->iterateStructures(true);
-        $this->upgradeExternalLinks(true);
     }
 
     /**
@@ -91,53 +92,18 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
     {
         $this->session = $session;
         $this->iterateStructures(false);
-        $this->upgradeExternalLinks(false);
-    }
-
-    /**
-     * External links are easily updated by fetching all nodes with the external redirect type, and add or remove the
-     * scheme to the external property.
-     *
-     * @param bool $addScheme Adds the scheme to URLs if true, removes the scheme otherwise
-     */
-    private function upgradeExternalLinks($addScheme)
-    {
-        foreach ($this->localizationManager->getLocalizations() as $localization) {
-            $rows = $this->session->getWorkspace()->getQueryManager()->createQuery(
-                sprintf(
-                    'SELECT * FROM [nt:unstructured] WHERE [%s] = "%s"',
-                    $this->propertyEncoder->localizedSystemName('nodeType', $localization->getLocalization()),
-                    RedirectType::EXTERNAL
-                ),
-                'JCR-SQL2'
-            )->execute();
-
-            $name = $this->propertyEncoder->localizedSystemName('external', $localization->getLocalization());
-            foreach ($rows->getNodes() as $node) {
-                /** @var NodeInterface $node */
-                $value = $node->getPropertyValue($name);
-
-                if ($addScheme) {
-                    $this->upgradeUrl($value);
-                } else {
-                    $this->downgradeUrl($value);
-                }
-
-                $node->setProperty($name, $value);
-            }
-        }
     }
 
     /**
      * Structures are updated according to their xml definition.
      *
-     * @param bool $addScheme Adds the scheme to URLs if true, removes the scheme otherwise
+     * @param bool $up
      */
-    private function iterateStructures($addScheme)
+    private function iterateStructures($up)
     {
         $properties = [];
 
-        // find templates containing URL fields
+        // find templates containing date fields
         $structureMetadatas = array_merge(
             $this->structureMetadataFactory->getStructures('page'),
             $this->structureMetadataFactory->getStructures('snippet')
@@ -147,7 +113,7 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
             $structureMetadatas,
             function (StructureMetadata $structureMetadata) use (&$properties) {
                 $structureName = $structureMetadata->getName();
-                $this->findUrlProperties($structureMetadata, $properties);
+                $this->findDateProperties($structureMetadata, $properties);
 
                 return !empty($properties[$structureName]) || !empty($blockProperties[$structureName]);
             }
@@ -157,7 +123,7 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
             $this->iterateStructureNodes(
                 $structureMetadata,
                 $properties[$structureMetadata->getName()],
-                $addScheme
+                $up
             );
         }
 
@@ -165,37 +131,37 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
     }
 
     /**
-     * Returns all properties which are a URL field.
+     * Returns all properties which are a date field.
      *
-     * @param StructureMetadata $structureMetadata The metadata in which the URL fields are searched
-     * @param array $properties The properties which are URL fields are added to this array
+     * @param StructureMetadata $structureMetadata The metadata in which the date fields are searched
+     * @param array $properties The properties which are date fields are added to this array
      */
-    private function findUrlProperties(StructureMetadata $structureMetadata, array &$properties)
+    private function findDateProperties(StructureMetadata $structureMetadata, array &$properties)
     {
         $structureName = $structureMetadata->getName();
         foreach ($structureMetadata->getProperties() as $property) {
-            if ($property->getType() === 'url') {
+            if ($property->getType() === 'date') {
                 $properties[$structureName][] = ['property' => $property];
             } elseif ($property instanceof BlockMetadata) {
-                $this->findUrlBlockProperties($property, $structureName, $properties);
+                $this->findDateBlockProperties($property, $structureName, $properties);
             }
         }
     }
 
     /**
-     * Adds the block property to the list, if it contains a URL field.
+     * Adds the block property to the list, if it contains a date field.
      *
      * @param BlockMetadata $property The block property to check
      * @param string $structureName The name of the structure the property belongs to
-     * @param array $properties The list of properties, to which the block is added if it is a URL field
+     * @param array $properties The list of properties, to which the block is added if it is a date field
      */
-    private function findUrlBlockProperties(BlockMetadata $property, $structureName, array &$properties)
+    private function findDateBlockProperties(BlockMetadata $property, $structureName, array &$properties)
     {
         $result = ['property' => $property, 'components' => []];
         foreach ($property->getComponents() as $component) {
             $componentResult = ['component' => $component, 'children' => []];
             foreach ($component->getChildren() as $childProperty) {
-                if ($childProperty->getType() === 'url') {
+                if ($childProperty->getType() === 'date') {
                     $componentResult['children'][$childProperty->getName()] = $childProperty;
                 }
             }
@@ -214,10 +180,10 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
      * Iterates over all nodes of the given type, and upgrades them.
      *
      * @param StructureMetadata $structureMetadata The structure metadata, whose pages have to be upgraded
-     * @param array $properties The properties which are or contain URL fields
-     * @param bool $addScheme Adds the scheme to URLs if true, removes the scheme otherwise
+     * @param array $properties The properties which are or contain date fields
+     * @param bool $up
      */
-    private function iterateStructureNodes(StructureMetadata $structureMetadata, array $properties, $addScheme)
+    private function iterateStructureNodes(StructureMetadata $structureMetadata, array $properties, $up)
     {
         foreach ($this->localizationManager->getLocalizations() as $localization) {
             $rows = $this->session->getWorkspace()->getQueryManager()->createQuery(
@@ -232,20 +198,20 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
             )->execute();
 
             foreach ($rows->getNodes() as $node) {
-                $this->upgradeNode($node, $localization->getLocalization(), $properties, $addScheme);
+                $this->upgradeNode($node, $localization->getLocalization(), $properties, $up);
             }
         }
     }
 
     /**
-     * Upgrades the node to new URL representation.
+     * Upgrades the node to new date representation.
      *
      * @param NodeInterface $node The node to be upgraded
      * @param string $locale The locale of the node to be upgraded
-     * @param array $properties The properties which are or contain URL fields
-     * @param bool $addScheme Adds the scheme to URLs if true, removes the scheme otherwise
+     * @param array $properties The properties which are or contain date fields
+     * @param bool $up
      */
-    private function upgradeNode(NodeInterface $node, $locale, array $properties, $addScheme)
+    private function upgradeNode(NodeInterface $node, $locale, array $properties, $up)
     {
         /** @var BasePageDocument $document */
         $document = $this->documentManager->find($node->getIdentifier(), $locale);
@@ -256,12 +222,10 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
         }
 
         foreach ($properties as $property) {
-            $propertyValue = $document->getStructure()->getProperty($property['property']->getName());
-
             if ($property['property'] instanceof BlockMetadata) {
-                $this->upgradeBlockProperty($property['property'], $property['components'], $propertyValue, $addScheme);
+                $this->upgradeBlockProperty($property['property'], $property['components'], $node, $locale, $up);
             } else {
-                $this->upgradeProperty($propertyValue, $addScheme);
+                $this->upgradeProperty($property['property'], $node, $locale, $up);
             }
         }
 
@@ -269,18 +233,20 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
     }
 
     /**
-     * Upgrades the given block property to the new URL representation.
+     * Upgrades the given block property to the new date representation.
      *
      * @param BlockMetadata $blockProperty
      * @param array $components
-     * @param PropertyValue $propertyValue
-     * @param bool $addScheme
+     * @param NodeInterface $node
+     * @param string $locale
+     * @param bool $up
      */
     private function upgradeBlockProperty(
         BlockMetadata $blockProperty,
         array $components,
-        PropertyValue $propertyValue,
-        $addScheme
+        NodeInterface $node,
+        $locale,
+        $up
     ) {
         $componentNames = array_map(
             function ($item) {
@@ -289,81 +255,88 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
             $components
         );
 
-        $value = $propertyValue->getValue();
-        foreach ($value as &$item) {
-            if (!in_array($item['type'], $componentNames)) {
+        $lengthName = sprintf('i18n:%s-%s-length', $locale, $blockProperty->getName());
+        $length = $node->getPropertyValue($lengthName);
+
+        for ($i = 0; $i < $length; ++$i) {
+            $type = $node->getPropertyValue(sprintf('i18n:%s-%s-type#%s', $locale, $blockProperty->getName(), $i));
+
+            if (!in_array($type, $componentNames)) {
                 continue;
             }
 
-            foreach ($components[$item['type']]['children'] as $child) {
-                if (!isset($item[$child->getName()])) {
+            foreach ($components[$type]['children'] as $child) {
+                $name = sprintf('i18n:%s-%s-%s#%s', $locale, $blockProperty->getName(), $child->getName(), $i);
+                if (!$node->hasProperty($name)) {
                     continue;
                 }
 
-                if ($addScheme) {
-                    $item[$child->getName()] = $this->upgradeUrl($item[$child->getName()]);
+                $value = $node->getPropertyValue($name);
+
+                if ($up) {
+                    $value = $this->upgradeDate($value);
                 } else {
-                    $item[$child->getName()] = $this->downgradeUrl($item[$child->getName()]);
+                    $value = $this->downgradeDate($value);
                 }
+
+                $node->setProperty($name, $value);
             }
         }
-
-        $propertyValue->setValue($value);
     }
 
     /**
-     * Upgrades the given property to the new URL representation.
+     * Upgrades the given property to the new date representation.
      *
-     * @param PropertyValue $property The current property value, which will be updated
-     * @param bool $addScheme Adds the scheme to URLs if true, removes the scheme otherwise
+     * @param PropertyMetadata $property
+     * @param NodeInterface $node
+     * @param bool $up
      */
-    private function upgradeProperty(PropertyValue $property, $addScheme)
+    private function upgradeProperty(PropertyMetadata $property, NodeInterface $node, $locale, $up)
     {
-        $value = $property->getValue();
-        if ($addScheme) {
-            $this->upgradeUrl($value);
-        } else {
-            $this->downgradeUrl($value);
+        $name = sprintf('i18n:%s-%s', $locale, $property->getName());
+        if (!$node->hasProperty($name)) {
+            return;
         }
 
-        $property->setValue($value);
+        $value = $node->getPropertyValue($name);
+
+        if ($up) {
+            $value = $this->upgradeDate($value);
+        } else {
+            $value = $this->downgradeDate($value);
+        }
+
+        $node->setProperty($name, $value);
     }
 
     /**
-     * Upgrades the given URL to the new representation.
+     * Upgrades the given date to the new representation.
      *
-     * @param string $value The url to change
+     * @param string $value The date to change
      *
      * @return string
      */
-    private function upgradeUrl(&$value)
+    private function upgradeDate(&$value)
     {
-        if (!empty($value)
-            && strpos($value, 'http://') === false
-            && strpos($value, 'https://') === false
-            && strpos($value, 'ftp://') === false
-            && strpos($value, 'ftps://') === false
-            && strpos($value, 'mailto:') === false
-            && strpos($value, '//') === false
-        ) {
-            $value = 'http://' . $value;
+        if ($value instanceof \DateTime) {
+            return $value;
         }
+
+        $value = \DateTime::createFromFormat('Y-m-d', $value);
 
         return $value;
     }
 
     /**
-     * Downgrades the given URl to the old representation.
+     * Downgrades the given date to the old representation.
      *
-     * @param string $value The url to change
+     * @param string $value The date to change
      *
      * @return string
      */
-    private function downgradeUrl(&$value)
+    private function downgradeDate(&$value)
     {
-        if (strpos($value, 'http://') === 0) {
-            $value = substr($value, 7);
-        }
+        $value = $value->format('Y-m-d');
 
         return $value;
     }
