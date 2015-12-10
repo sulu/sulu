@@ -511,6 +511,25 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['http://sulu.lo/test'], $result);
     }
 
+    public function testFindUrlsByResourceLocatorWithScheme()
+    {
+        $result = $this->webspaceManager->findUrlsByResourceLocator(
+            '/test',
+            'dev',
+            'en_us',
+            'massiveart',
+            null,
+            'https'
+        );
+
+        $this->assertCount(2, $result);
+        $this->assertContains('https://massiveart.lo/en-us/w/test', $result);
+        $this->assertContains('https://massiveart.lo/en-us/s/test', $result);
+
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'de_at', 'sulu_io', null, 'https');
+        $this->assertEquals(['https://sulu.lo/test'], $result);
+    }
+
     public function testGetPortals()
     {
         $portals = $this->webspaceManager->getPortals();

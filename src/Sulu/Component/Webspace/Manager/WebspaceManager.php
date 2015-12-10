@@ -97,25 +97,22 @@ class WebspaceManager implements WebspaceManagerInterface
     }
 
     /**
-     * Returns all possible urls for resourcelocator.
-     *
-     * @param string      $resourceLocator
-     * @param string      $environment
-     * @param string      $languageCode
-     * @param null|string $webspaceKey
-     * @param null|string $domain
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    public function findUrlsByResourceLocator($resourceLocator, $environment, $languageCode, $webspaceKey = null, $domain = null)
-    {
+    public function findUrlsByResourceLocator(
+        $resourceLocator,
+        $environment,
+        $languageCode,
+        $webspaceKey = null,
+        $domain = null,
+        $scheme = 'http'
+    ) {
         $urls = [];
         $portals = $this->getWebspaceCollection()->getPortalInformations($environment);
         foreach ($portals as $url => $portalInformation) {
             $sameLocalization = $portalInformation->getLocalization()->getLocalization() === $languageCode;
             $sameWebspace = $webspaceKey === null || $portalInformation->getWebspace()->getKey() === $webspaceKey;
-            // TODO protocol
-            $url = rtrim('http://' . $url . $resourceLocator, '/');
+            $url = rtrim(sprintf('%s://%s%s', $scheme, $url, $resourceLocator), '/');
             if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {
                 $urls[] = $url;
             }
