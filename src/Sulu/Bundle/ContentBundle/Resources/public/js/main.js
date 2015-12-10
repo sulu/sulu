@@ -121,7 +121,7 @@ define([
 
             // show webspace settings
             sandbox.mvc.routes.push({
-                route: 'content/webspace/edit::id/:content',
+                route: 'content/webspace/settings::id/:content',
                 callback: function(id) {
                     return '<div data-aura-component="webspace/settings@sulucontent" data-aura-id="' + id + '" data-aura-webspace="' + id + '" />';
                 }

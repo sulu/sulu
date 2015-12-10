@@ -83,7 +83,10 @@ define(function() {
             }
 
             if (!!id) {
-                var strSearch = 'edit:' + id;
+                var regex = new RegExp("\\w*:" + id),
+                    result = regex.exec(url),
+                    strSearch = result[0];
+
                 url = url.substr(0, url.indexOf(strSearch) + strSearch.length);
             }
 
