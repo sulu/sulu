@@ -1,1 +1,0 @@
-define([],function(){"use strict";var a={};return{defaults:a,layout:{content:{width:"fixed",leftSpace:!0,rightSpace:!0}},initialize:function(){this.data=this.options.data()}}});
