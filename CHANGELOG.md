@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-master
     * HOTFIX      #1799 [ContentBundle]   Added 'published' field to be indexed
     * HOTFIX      #1866 [WebsiteBundle]   Added scheme to sitemap url generation
+    * HOTFIX      #1861 [ContentBundle]   Added upgrade script which removes non-translated properties
 
 * 1.1.1 (2015-12-07)
     * HOTFIX      #1857 [ContentBundle]   Fixed open ghost overlay
