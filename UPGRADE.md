@@ -1,5 +1,11 @@
 # Upgrade
 
+## dev-master
+
+### Reindex-Command
+
+Run the migrate command (`app/console phpcr:migrations:migrate`) to fix translated properties with non locale.
+
 ## 1.1.0
 
 ### IndexName decorators from MassiveSearchBundle
