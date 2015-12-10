@@ -73,7 +73,9 @@ class SitemapController extends WebsiteController
 
         $response->headers->set('Content-Type', 'text/xml');
 
-        $response->setContent($sitemapXMLGenerator->generate($webspaceSitemaps, $preferredDomain));
+        $response->setContent(
+            $sitemapXMLGenerator->generate($webspaceSitemaps, $preferredDomain, $request->getScheme())
+        );
 
         // Generate XML
         return $response;
