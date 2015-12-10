@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #1799 [ContentBundle]   Added 'published' field to be indexed
+
 * 1.1.1 (2015-12-07)
     * HOTFIX      #1857 [ContentBundle]   Fixed open ghost overlay
     * HOTFIX      #1857 [WebsiteBundle]   Fixed sitemap xml generation to improve performance
