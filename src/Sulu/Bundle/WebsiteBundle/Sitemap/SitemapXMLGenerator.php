@@ -37,7 +37,7 @@ class SitemapXMLGenerator implements SitemapXMLGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function generate($webspaceSitemaps, $domain = null, $renderFile = null)
+    public function generate($webspaceSitemaps, $domain = null, $scheme = 'http', $renderFile = null)
     {
         $renderFile = $renderFile ?: $this->renderFile;
 
@@ -46,6 +46,7 @@ class SitemapXMLGenerator implements SitemapXMLGeneratorInterface
             [
                 'webspaceSitemaps' => $webspaceSitemaps,
                 'domain' => $domain,
+                'scheme' => $scheme,
             ]
         );
     }
