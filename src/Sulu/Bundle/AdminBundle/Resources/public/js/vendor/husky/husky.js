@@ -30153,7 +30153,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             cssClass: '',
             thumbnailFormat: '50x50',
             showHead: true,
-            hideChildrenAtBeginning: false,
+            hideChildrenAtBeginning: true,
             openChildId: null,
             highlightSelected: false,
             icons: [],
@@ -30164,7 +30164,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             actionIcon: 'pencil',
             actionIconColumn: null,
             croppedMaxLength: 35,
-            openPathToSelectedChildren: false,
+            openPathToSelectedChildren: true,
             cropContents: true
         },
 
@@ -31741,6 +31741,20 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             );
         },
 
+        /**
+         * Collapses all child nodes.
+         */
+        collapseAllChildren: function() {
+            for (var i = 0, length = this.data.embedded.length; i < length; i++) {
+                this.hideChildren(this.data.embedded[i].id);
+            }
+        },
+
+        /**
+         * Show only selected items.
+         *
+         * @param {Boolean} show
+         */
         showSelected: function(show) {
             // TODO this is a really basic implementation
             // - here should all selected be loaded
@@ -31751,6 +31765,11 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 $items.hide();
             } else {
                 $items.show();
+
+                this.collapseAllChildren();
+                if (!!this.options.openPathToSelectedChildren) {
+                    this.openPathToSelectedChildren();
+                }
             }
         }
     };
@@ -34373,7 +34392,6 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                     if (!!this.gridViews[this.viewId] && !!this.gridViews[this.viewId].showSelected &&
                         this.getSelectedItemIds().length === 0
                     ) {
-                        this.gridViews[this.viewId].showSelected(false);
                         this.show = false;
                     }
 
