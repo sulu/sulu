@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-master
+## 0.1.2
 
 ### Reindex-Command & Date Content-Type
 
