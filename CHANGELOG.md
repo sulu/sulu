@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #1868 [ContentBundle]   Added date upgrade script for blocks
     * HOTFIX      #1799 [ContentBundle]   Added 'published' field to be indexed
     * HOTFIX      #1866 [WebsiteBundle]   Added scheme to sitemap url generation
     * HOTFIX      #1861 [ContentBundle]   Added upgrade script which removes non-translated properties
