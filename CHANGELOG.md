@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #1872 [ContentBundle]   Fixed sql generation for user roles in ContentRepository
+
 * 1.1.2 (2015-12-11)
     * HOTFIX      #1831 [MediaBundle]     Fixed query for retrieving entities to index
     * HOTFIX      #1868 [ContentBundle]   Added date upgrade script for blocks
