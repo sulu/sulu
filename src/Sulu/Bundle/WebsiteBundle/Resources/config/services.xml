@@ -172,5 +172,33 @@
             <argument type="service" id="sulu.content.mapper" />
             <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
         </service>
+
+        <!-- analytic keys -->
+        <service id="sulu_website.webspace_navigation_provider"
+                 class="Sulu\Bundle\WebsiteBundle\Admin\WebspaceContentNavigationProvider">
+            <tag name="sulu_admin.content_navigation" alias="webspace"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_website.analytic_keys.keys_repository"
+                 class="Sulu\Bundle\WebsiteBundle\Entity\AnalyticKeyRepository"
+                 factory-service="doctrine.orm.entity_manager"
+                 factory-method="getRepository">
+            <argument type="string">SuluWebsiteBundle:AnalyticKey</argument>
+        </service>
+
+        <service id="sulu_website.analytic_keys.domains_repository"
+                 class="Doctrine\ORM\EntityRepository"
+                 factory-service="doctrine.orm.entity_manager"
+                 factory-method="getRepository">
+            <argument type="string">SuluWebsiteBundle:AnalyticKeyDomain</argument>
+        </service>
+
+        <service id="sulu_website.analytic_keys.manager"
+                 class="Sulu\Bundle\WebsiteBundle\AnalyticKeys\AnalyticKeyManager">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="sulu_website.analytic_keys.keys_repository" />
+            <argument type="service" id="sulu_website.analytic_keys.domains_repository" />
+        </service>
     </services>
 </container>
