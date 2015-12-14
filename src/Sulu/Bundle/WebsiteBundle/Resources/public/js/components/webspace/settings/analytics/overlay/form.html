@@ -1,0 +1,32 @@
+<form id="analytics-form" class="grid">
+    <div class="form-group grid-row">
+        <label for="analytics-title"><%= translations.title %></label>
+        <input type="text" id="analytics-title" name="title" class="form-element input-bold"
+               data-mapper-property="title" data-validation-required="true"/>
+    </div>
+
+    <!-- TODO datagrid -->
+
+    <div class="form-group grid-row">
+        <label for="analytics-all-domains"><%= translations.allDomains %></label>
+
+        <div class="custom-checkbox" style="display: inline-block;">
+            <input type="checkbox" id="analytics-all-domains" name="all-domains" class="form-element"
+                   data-mapper-property="allDomains"/>
+            <span class="icon"></span>
+        </div>
+    </div>
+
+    <div class="form-group grid-row">
+        <label for="analytics-type"><%= translations.type %></label>
+
+        <div id="analytics-type" data-type="husky-select" data-type-label="title" data-mapper-property="type"
+             data-mapper-return-value="id"></div>
+    </div>
+
+    <div class="form-group grid-row">
+        <label for="analytics-content"><%= translations.content %></label>
+        <textarea id="analytics-content" name="content" class="form-element" data-mapper-property="content"
+                  data-validation-required="true"></textarea>
+    </div>
+</form>
