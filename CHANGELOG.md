@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * BUGIFX      #1871 [ContentBundle]   Fixed url-generation and save button
+    * BUGFIX      #1873 [ContactBundle]   Fixed remove title and position
     * BUGFIX      #1873 [ContactBundle]   Fixed remove contact birthday
 
 * 1.1.2 (2015-12-11)
