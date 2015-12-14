@@ -441,11 +441,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             this.dfdListenForResourceLocator.then(function() {
                 if (this.sandbox.form.validate(this.formId)) {
                     var data = this.sandbox.form.getData(this.formId);
-
                     data.navigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
-
-                    this.sandbox.logger.log('data', data);
-
                     this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
 
                     this.sandbox.emit('sulu.content.contents.save', data, action);
