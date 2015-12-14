@@ -47,13 +47,13 @@ class AnalyticKeyRepository extends EntityRepository
     public function findById($id)
     {
         $queryBuilder = $this->createQueryBuilder('a')
-            ->select('domains')
+            ->addSelect('domains')
             ->leftJoin('a.domains', 'domains')
             ->where('a.id = :id');
 
         $query = $queryBuilder->getQuery();
         $query->setParameter('id', $id);
 
-        return $query->getResult();
+        return $query->getSingleResult();
     }
 }

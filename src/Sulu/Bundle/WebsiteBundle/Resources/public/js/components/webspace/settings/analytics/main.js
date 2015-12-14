@@ -105,6 +105,25 @@ define(['underscore', 'text!./skeleton.html'], function(_, skeleton) {
         },
 
         editAnalytics: function(id) {
+            this.sandbox.start([
+                {
+                    name: 'webspace/settings/analytics/overlay@suluwebsite',
+                    options: {
+                        el: '#webspace-analytics-form-overlay',
+                        id: id,
+                        webspaceKey: this.data.key,
+                        saveCallback: this.save.bind(this)
+                    }
+                }
+            ])
+        },
+
+        save: function(id, data) {
+            this.sandbox.util.save(
+                this.templates.url({webspace: this.data, id: id, domain: null}), !!id ? 'PUT' : 'POST', data
+            ).then(function(response) {
+                // TODO update table
+            });
         },
 
         loadComponentData: function() {
