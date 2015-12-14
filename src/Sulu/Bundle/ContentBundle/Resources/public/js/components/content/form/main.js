@@ -417,11 +417,9 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
         },
 
         listenForChange: function() {
-            this.dfdListenForResourceLocator.then(function() {
-                this.sandbox.dom.on(this.$el, 'keyup change', _.debounce(function() {
-                    this.setHeaderBar(false);
-                }.bind(this), 10), '.trigger-save-button');
-            }.bind(this));
+            this.sandbox.dom.on(this.$el, 'keyup change', _.debounce(function() {
+                this.setHeaderBar(false);
+            }.bind(this), 10), '.trigger-save-button');
 
             this.sandbox.on('sulu.content.changed', function() {
                 this.setHeaderBar(false);
@@ -439,18 +437,16 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
         },
 
         submit: function(action) {
-            var data;
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
+            this.dfdListenForResourceLocator.then(function() {
+                if (this.sandbox.form.validate(this.formId)) {
+                    var data = this.sandbox.form.getData(this.formId);
+                    data.navigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
+                    this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
 
-            if (this.sandbox.form.validate(this.formId)) {
-                data = this.sandbox.form.getData(this.formId);
-
-                data.navigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
-
-                this.sandbox.logger.log('data', data);
-
-                this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
-                this.sandbox.emit('sulu.content.contents.save', data, action);
-            }
+                    this.sandbox.emit('sulu.content.contents.save', data, action);
+                }
+            }.bind(this));
         }
     };
 });

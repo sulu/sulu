@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * BUGIFX      #1871 [ContentBundle]   Fixed url-generation and save button
+
 * 1.1.2 (2015-12-11)
     * HOTFIX      #1831 [MediaBundle]     Fixed query for retrieving entities to index
     * HOTFIX      #1868 [ContentBundle]   Added date upgrade script for blocks
