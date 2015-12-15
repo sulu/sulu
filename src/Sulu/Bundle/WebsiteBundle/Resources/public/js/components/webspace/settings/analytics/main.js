@@ -14,13 +14,15 @@ define(['underscore', 'text!./skeleton.html'], function(_, skeleton) {
     var defaults = {
         templates: {
             skeleton: skeleton,
-            url: '/admin/api/webspaces/<%= webspace.key %>/analytic-keys<% if (!!id) { %>/<%= id %><% } %><% if (!!domain) { %>?domain=<%= domain %><% } %>'
+            url: '/admin/api/webspaces/<%= webspace.key %>/analytic-keys<% if (!!id) { %>/<%= id %><% } %>'
         },
         translations: {
             title: 'public.title',
             type: 'public.type',
             domains: 'website.webspace.settings.domains',
-            allDomains: 'website.webspace.settings.all-domains'
+            allDomains: 'website.webspace.settings.all-domains',
+            successLabel: 'labels.success',
+            successMessage: 'labels.success.save-desc'
         }
     };
 
@@ -43,6 +45,12 @@ define(['underscore', 'text!./skeleton.html'], function(_, skeleton) {
 
         initialize: function() {
             this.render();
+
+            this.bindCustomEvents();
+        },
+
+        bindCustomEvents: function() {
+            this.sandbox.on('sulu.toolbar.add', this.editAnalytics.bind(this));
         },
 
         render: function() {
@@ -65,7 +73,7 @@ define(['underscore', 'text!./skeleton.html'], function(_, skeleton) {
                     name: 'datagrid@husky',
                     options: {
                         el: '#webspace-analytics-list',
-                        url: this.templates.url({webspace: this.data, id: null, domain: null}),
+                        url: this.templates.url({webspace: this.data, id: null}),
                         resultKey: 'analytic-keys',
                         instanceName: 'analytics',
                         actionCallback: this.editAnalytics.bind(this),
@@ -112,7 +120,8 @@ define(['underscore', 'text!./skeleton.html'], function(_, skeleton) {
                         el: '#webspace-analytics-form-overlay',
                         id: id,
                         webspaceKey: this.data.key,
-                        saveCallback: this.save.bind(this)
+                        saveCallback: this.save.bind(this),
+                        translations: this.translations
                     }
                 }
             ])
@@ -120,10 +129,16 @@ define(['underscore', 'text!./skeleton.html'], function(_, skeleton) {
 
         save: function(id, data) {
             this.sandbox.util.save(
-                this.templates.url({webspace: this.data, id: id, domain: null}), !!id ? 'PUT' : 'POST', data
+                this.templates.url({webspace: this.data, id: id}), !!id ? 'PUT' : 'POST', data
             ).then(function(response) {
-                // TODO update table
-            });
+                var event = 'husky.datagrid.analytics.record.add';
+                if (!!id) {
+                    event = 'husky.datagrid.analytics.records.change';
+                }
+
+                this.sandbox.emit(event, response);
+                this.sandbox.emit('sulu.labels.success.show', this.translations.successMessage, this.translations.successLabel);
+            }.bind(this));
         },
 
         loadComponentData: function() {
