@@ -130,7 +130,7 @@ class AnalyticKeyManager implements AnalyticKeyManagerInterface
     {
         $domainEntity = $this->domainRepository->find($domain['url']);
 
-        if (!$domainEntity) {
+        if (null !== $domainEntity) {
             return $domainEntity;
         }
 

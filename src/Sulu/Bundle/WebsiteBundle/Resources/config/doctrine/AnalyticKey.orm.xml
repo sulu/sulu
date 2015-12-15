@@ -17,7 +17,7 @@
         <many-to-many target-entity="Sulu\Bundle\WebsiteBundle\Entity\AnalyticKeyDomain" field="domains">
             <join-table name="we_analytickeys_domains">
                 <join-columns>
-                    <join-column name="key" referenced-column-name="id" />
+                    <join-column name="analytic_key" referenced-column-name="id" />
                 </join-columns>
                 <inverse-join-columns>
                     <join-column name="domain" referenced-column-name="url" />

@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['text!./form.html'], function(form) {
+define(['jquery', 'underscore', 'text!./form.html'], function($, _, form) {
 
     'use strict';
 
@@ -24,11 +24,13 @@ define(['text!./form.html'], function(form) {
         translations: {
             overlayTitle: 'website.webspace.settings.edit.title',
             content: 'website.webspace.settings.content',
-            useForAllDomains: 'website.webspace.settings.use-for-all-domains',
 
-            google: 'public.google',
-            piwik: 'public.piwik',
-            custom: 'public.custom'
+            google: 'website.webspace.settings.type.google',
+            piwik: 'website.webspace.settings.type.piwik',
+            custom: 'website.webspace.settings.type.custom',
+
+            domain: 'website.webspace.settings.edit.domain',
+            environment: 'website.webspace.settings.edit.environment'
         }
     };
 
@@ -51,7 +53,11 @@ define(['text!./form.html'], function(form) {
                                 title: this.translations.title,
                                 data: this.templates.form({translations: this.translations}),
                                 okCallback: function() {
-                                    this.options.saveCallback(this.options.id, this.sandbox.form.getData('#analytics-form'));
+                                    if (this.sandbox.form.validate('#analytics-form')) {
+                                        this.options.saveCallback(this.options.id, this.getData());
+                                    } else {
+                                        return false;
+                                    }
                                 }.bind(this)
                             }
                         ]
@@ -64,8 +70,28 @@ define(['text!./form.html'], function(form) {
             }.bind(this));
         },
 
+        getData: function() {
+            var data = this.sandbox.form.getData('#analytics-form'),
+                domains = $('#analytics-domains').data('selected');
+            data.domains = _.map(domains, this.findDomainByUrl.bind(this));
+
+            return data;
+        },
+
+        findDomainByUrl: function(url) {
+            return _.find(this.options.urls, function(item) {
+                return item['url'] === url;
+            });
+        },
+
         initializeFormComponents: function() {
-            // TODO init datagrid
+            var preselected = [];
+
+            if (!!this.data.domains) {
+                preselected = _.map(this.data.domains, function(item) {
+                    return item.url;
+                });
+            }
 
             this.sandbox.start([
                 {
@@ -79,6 +105,19 @@ define(['text!./form.html'], function(form) {
                             {id: 'google', title: this.translations.google},
                             {id: 'piwik', title: this.translations.piwik},
                             {id: 'custom', title: this.translations.custom}
+                        ]
+                    }
+                },
+                {
+                    name: 'datagrid@husky',
+                    options: {
+                        el: '#analytics-domains',
+                        data: this.options.urls,
+                        idKey: 'url',
+                        preselected: preselected,
+                        matchings: [
+                            {attribute: 'url', content: this.translations.domain},
+                            {attribute: 'environment', content: this.translations.environment}
                         ]
                     }
                 }

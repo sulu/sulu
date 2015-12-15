@@ -2,10 +2,15 @@
     <div class="form-group grid-row">
         <label for="analytics-title"><%= translations.title %></label>
         <input type="text" id="analytics-title" name="title" class="form-element input-bold"
-               data-mapper-property="title" data-validation-required="true"/>
+               data-mapper-property="title" data-validation-required="true"
+               data-validation-min-length="3"/>
     </div>
 
-    <!-- TODO datagrid -->
+    <div class="form-group grid-row">
+        <label for="analytics-domains"><%= translations.domains %></label>
+
+        <div id="analytics-domains" class="domains"></div>
+    </div>
 
     <div class="form-group grid-row">
         <label for="analytics-all-domains"><%= translations.allDomains %></label>
@@ -27,6 +32,6 @@
     <div class="form-group grid-row">
         <label for="analytics-content"><%= translations.content %></label>
         <textarea id="analytics-content" name="content" class="form-element" data-mapper-property="content"
-                  data-validation-required="true"></textarea>
+                  data-validation-required="true" data-validation-min-length="3"></textarea>
     </div>
 </form>
