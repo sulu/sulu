@@ -56,4 +56,24 @@ class AnalyticKeyRepository extends EntityRepository
 
         return $query->getSingleResult();
     }
+
+    /**
+     * Returns analytic-key by url.
+     *
+     * @param string $urlExpression
+     *
+     * @return AnalyticKey[]
+     */
+    public function findByUrl($urlExpression)
+    {
+        $queryBuilder = $this->createQueryBuilder('a')
+            ->addSelect('domains')
+            ->leftJoin('a.domains', 'domains')
+            ->where('domains.url= :url');
+
+        $query = $queryBuilder->getQuery();
+        $query->setParameter('url', $urlExpression);
+
+        return $query->getResult();
+    }
 }

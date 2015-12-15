@@ -160,9 +160,9 @@ class {{ cache_class }} extends {{ base_class }}
             false,
 {% endif %}
 {% if portalInformation.urlExpression %}
-            '{{ portalInformation.urlExpression }}',
+            '{{ portalInformation.urlExpression }}'
 {% else %}
-            null,
+            null
 {% endif %}
         );
 

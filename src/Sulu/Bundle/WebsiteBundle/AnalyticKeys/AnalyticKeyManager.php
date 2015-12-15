@@ -112,6 +112,8 @@ class AnalyticKeyManager implements AnalyticKeyManagerInterface
         $analyticKey->setAllDomains($this->getValue($data, 'allDomains', false));
         $analyticKey->setWebspaceKey($webspaceKey);
 
+        $analyticKey->clearDomains();
+
         foreach ($this->getValue($data, 'domains', []) as $domain) {
             $domainEntity = $this->findOrCreateNewDomain($domain);
             $analyticKey->addDomain($domainEntity);

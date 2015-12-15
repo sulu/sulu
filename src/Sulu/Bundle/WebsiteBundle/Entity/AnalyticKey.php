@@ -217,6 +217,14 @@ class AnalyticKey
     }
 
     /**
+     * Removes all domains.
+     */
+    public function clearDomains()
+    {
+        $this->domains->clear();
+    }
+
+    /**
      * Get domains.
      *
      * @return Collection
