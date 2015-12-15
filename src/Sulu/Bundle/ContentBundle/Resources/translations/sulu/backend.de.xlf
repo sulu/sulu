@@ -505,7 +505,7 @@
             </trans-unit>
             <trans-unit id="487f946d51783a9899fa59d31dcfc3e8" resname="labels.success.content-save-desc">
                 <source>labels.success.content-save-desc</source>
-                <target>Node erfolgreich gespeichert.</target>
+                <target>Seite erfolgreich gespeichert.</target>
             </trans-unit>
             <trans-unit id="e4b14069a8a085ede2092hf51234dh40" resname="smart-content.categories.label">
                 <source>smart-content.categories.label</source>

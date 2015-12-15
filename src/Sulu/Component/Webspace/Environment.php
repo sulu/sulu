@@ -61,6 +61,8 @@ class Environment
     {
         $this->urls[] = $url;
 
+        $url->setEnvironment($this->getType());
+
         if ($url->isMain() || !$this->mainUrl) {
             $this->setMainUrl($url);
         }

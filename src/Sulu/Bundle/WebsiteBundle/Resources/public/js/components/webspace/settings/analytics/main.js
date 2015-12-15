@@ -38,6 +38,7 @@ define(['underscore', 'text!./skeleton.html'], function(_, skeleton) {
 
         layout: {
             content: {
+                width: 'max',
                 leftSpace: true,
                 rightSpace: true
             }
@@ -120,6 +121,7 @@ define(['underscore', 'text!./skeleton.html'], function(_, skeleton) {
                         el: '#webspace-analytics-form-overlay',
                         id: id,
                         webspaceKey: this.data.key,
+                        urls: this.data.urls,
                         saveCallback: this.save.bind(this),
                         translations: this.translations
                     }
