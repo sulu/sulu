@@ -153,7 +153,6 @@
         <service id="sulu_website.resolver.request_analyzer" class="%sulu_website.resolver.request_analyzer.class%">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="request_stack"/>
-            <argument type="service" id="sulu_website.analytics.repository" />
             <argument>%kernel.environment%</argument>
             <argument type="collection">
                 <argument type="string" key="analyticsKey">%sulu_website.preview_defaults.analytics_key%</argument>
@@ -200,6 +199,16 @@
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="sulu_website.analytics.repository" />
             <argument type="service" id="sulu_website.domains.repository" />
+        </service>
+
+        <service id="sulu_wesite.analytics.reponse_listener" class="Sulu\Bundle\WebsiteBundle\EventListener\AppendAnalyticsListener">
+            <argument type="service" id="templating"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument type="service" id="sulu_website.analytics.repository"/>
+            <argument>%kernel.environment%</argument>
+
+            <tag name="sulu.context" context="website"/>
+            <tag name="kernel.event_listener" event="kernel.response" method="onResponse"/>
         </service>
     </services>
 </container>

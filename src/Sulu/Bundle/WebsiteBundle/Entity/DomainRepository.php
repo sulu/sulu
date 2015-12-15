@@ -39,7 +39,7 @@ class DomainRepository extends EntityRepository
         try {
             return $query->getSingleResult();
         } catch (NoResultException $ex) {
-            return null;
+            return;
         }
     }
 }

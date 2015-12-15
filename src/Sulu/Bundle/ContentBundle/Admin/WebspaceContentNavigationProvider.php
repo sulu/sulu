@@ -14,6 +14,9 @@ namespace Sulu\Bundle\ContentBundle\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 
+/**
+ * Provides tabs for webspace settings.
+ */
 class WebspaceContentNavigationProvider implements ContentNavigationProviderInterface
 {
     /**

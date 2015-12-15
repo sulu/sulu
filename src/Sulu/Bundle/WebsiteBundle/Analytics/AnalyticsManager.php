@@ -12,8 +12,8 @@ namespace Sulu\Bundle\WebsiteBundle\Analytics;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\WebsiteBundle\Entity\Analytic;
-use Sulu\Bundle\WebsiteBundle\Entity\Domain;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticRepository;
+use Sulu\Bundle\WebsiteBundle\Entity\Domain;
 use Sulu\Bundle\WebsiteBundle\Entity\DomainRepository;
 
 /**
