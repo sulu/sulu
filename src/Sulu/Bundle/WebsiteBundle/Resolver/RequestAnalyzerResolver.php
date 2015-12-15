@@ -11,9 +11,9 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Resolver;
 
+use Sulu\Bundle\WebsiteBundle\Entity\AnalyticKeyRepository;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -39,12 +39,22 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
      * @var RequestStack
      */
     private $requestStack;
+    /**
+     * @var AnalyticKeyRepository
+     */
+    private $analyticKeyRepository;
 
-    public function __construct(WebspaceManagerInterface $webspaceManager, RequestStack $requestStack, $environment, $previewDefaults = [])
-    {
-        $this->environment = $environment;
+    public function __construct(
+        WebspaceManagerInterface $webspaceManager,
+        RequestStack $requestStack,
+        AnalyticKeyRepository $analyticKeyRepository,
+        $environment,
+        $previewDefaults = []
+    ) {
         $this->webspaceManager = $webspaceManager;
         $this->requestStack = $requestStack;
+        $this->analyticKeyRepository = $analyticKeyRepository;
+        $this->environment = $environment;
 
         $this->previewDefaults = array_merge(['analyticsKey' => ''], $previewDefaults);
     }
@@ -58,6 +68,8 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
         $defaultLocalization = $requestAnalyzer->getPortal()->getDefaultLocalization();
         $defaultLocale = $defaultLocalization ? $defaultLocalization->getLocalization() : null;
 
+        $urlExpression = $requestAnalyzer->getPortalInformation()->getUrlExpression();
+
         return [
             'request' => [
                 'webspaceKey' => $requestAnalyzer->getWebspace()->getKey(),
@@ -69,6 +81,7 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
                 'get' => $requestAnalyzer->getGetParameters(),
                 'post' => $requestAnalyzer->getPostParameters(),
                 'analyticsKey' => $requestAnalyzer->getAnalyticsKey(),
+                'analyticKeys' => $this->analyticKeyRepository->findByUrl($urlExpression),
             ],
         ];
     }
@@ -93,6 +106,7 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
                 'get' => $this->requestStack->getCurrentRequest()->query->all(),
                 'post' => $this->requestStack->getCurrentRequest()->request->all(),
                 'analyticsKey' => $this->previewDefaults['analyticsKey'],
+                'analyticKeys' => [],
             ],
         ];
     }
