@@ -23,11 +23,7 @@ define(['text!./form.html'], function(form) {
         },
         translations: {
             overlayTitle: 'website.webspace.settings.edit.title',
-            title: 'public.title',
-            type: 'public.type',
-            domains: 'website.webspace.settings.domains',
             content: 'website.webspace.settings.content',
-            allDomains: 'website.webspace.settings.all-domains',
             useForAllDomains: 'website.webspace.settings.use-for-all-domains',
 
             google: 'public.google',
