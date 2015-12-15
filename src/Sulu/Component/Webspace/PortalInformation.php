@@ -78,6 +78,11 @@ class PortalInformation implements ArrayableInterface
      */
     private $main;
 
+    /**
+     * @var string
+     */
+    private $urlExpression;
+
     public function __construct(
         $type,
         Webspace $webspace = null,
@@ -87,7 +92,8 @@ class PortalInformation implements ArrayableInterface
         Segment $segment = null,
         $redirect = null,
         $analyticsKey = null,
-        $main = false
+        $main = false,
+        $urlExpression = null
     ) {
         $this->setType($type);
         $this->setWebspace($webspace);
@@ -98,6 +104,7 @@ class PortalInformation implements ArrayableInterface
         $this->setRedirect($redirect);
         $this->setAnalyticsKey($analyticsKey);
         $this->setMain($main);
+        $this->setUrlExpression($urlExpression);
     }
 
     /**
@@ -319,6 +326,8 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
+     * Returns true if url is main.
+     *
      * @return bool
      */
     public function isMain()
@@ -327,11 +336,33 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
+     * Sets true if url is main.
+     *
      * @param bool $main
      */
     public function setMain($main)
     {
         $this->main = $main;
+    }
+
+    /**
+     * Returns expression for url.
+     *
+     * @return string
+     */
+    public function getUrlExpression()
+    {
+        return $this->urlExpression;
+    }
+
+    /**
+     * Sets expression for url.
+     *
+     * @param string $urlExpression
+     */
+    public function setUrlExpression($urlExpression)
+    {
+        $this->urlExpression = $urlExpression;
     }
 
     /**
@@ -352,36 +383,39 @@ class PortalInformation implements ArrayableInterface
      */
     public function toArray($depth = null)
     {
-        $res = [];
-        $res['type'] = $this->getType();
-        $res['webspace'] = $this->getWebspace()->getKey();
-        $res['url'] = $this->getUrl();
-        $res['main'] = $this->isMain();
+        $result = [];
+        $result['type'] = $this->getType();
+        $result['webspace'] = $this->getWebspace()->getKey();
+        $result['url'] = $this->getUrl();
+        $result['main'] = $this->isMain();
 
         $portal = $this->getPortal();
-
         if ($portal) {
-            $res['portal'] = $portal->getKey();
+            $result['portal'] = $portal->getKey();
         }
 
         $localization = $this->getLocalization();
-
         if ($localization) {
-            $res['localization'] = $localization->toArray();
+            $result['localization'] = $localization->toArray();
         }
 
-        $res['redirect'] = $this->getRedirect();
+        $result['redirect'] = $this->getRedirect();
 
         $segment = $this->getSegment();
         if ($segment) {
-            $res['segment'] = $segment->getKey();
+            $result['segment'] = $segment->getKey();
         }
 
         $analyticsKey = $this->getAnalyticsKey();
         if ($analyticsKey) {
-            $res['analyticsKey'] = $analyticsKey;
+            $result['analyticsKey'] = $analyticsKey;
         }
 
-        return $res;
+        $urlExpression = $this->getUrlExpression();
+        if($urlExpression){
+            $result['urlExpression'] = $urlExpression;
+        }
+
+        return $result;
     }
 }

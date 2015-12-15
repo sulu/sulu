@@ -155,9 +155,14 @@ class {{ cache_class }} extends {{ base_class }}
             null,
 {% endif %}
 {% if portalInformation.main %}
-            true
+            true,
 {% else %}
-            false
+            false,
+{% endif %}
+{% if portalInformation.urlExpression %}
+            '{{ portalInformation.urlExpression }}',
+{% else %}
+            null,
 {% endif %}
         );
 
