@@ -8,94 +8,54 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\WebsiteBundle\Analytics;
+namespace Functional;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManagerInterface;
 use Sulu\Bundle\WebsiteBundle\Entity\Analytic;
-use Sulu\Bundle\WebsiteBundle\Entity\AnalyticRepository;
 use Sulu\Bundle\WebsiteBundle\Entity\Domain;
 use Sulu\Bundle\WebsiteBundle\Entity\DomainRepository;
 
-/**
- * Manages analytics.
- */
-class AnalyticsManager implements AnalyticsManagerInterface
+class BaseFunctional extends SuluTestCase
 {
+    /**
+     * @var AnalyticsManagerInterface
+     */
+    protected $analyticsManager;
+
     /**
      * @var EntityManagerInterface
      */
-    private $entityManager;
-
-    /**
-     * @var AnalyticRepository
-     */
-    private $repository;
+    protected $entityManager;
 
     /**
      * @var DomainRepository
      */
-    private $domainRepository;
+    protected $domainRepository;
 
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        AnalyticRepository $repository,
-        DomainRepository $domainRepository
-    ) {
-        $this->entityManager = $entityManager;
-        $this->repository = $repository;
-        $this->domainRepository = $domainRepository;
+    public function setUp()
+    {
+        $this->entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $this->analyticsManager = $this->getContainer()->get('sulu_website.analytics.manager');
+        $this->domainRepository = $this->getContainer()->get('sulu_website.domains.repository');
     }
 
     /**
-     * {@inheritdoc}
+     * Create new analytic.
+     *
+     * @param string $webspaceKey
+     * @param array $data
+     *
+     * @return Analytic
      */
-    public function findAll($webspaceKey)
+    protected function create($webspaceKey, array $data)
     {
-        return $this->repository->findByWebspaceKey($webspaceKey);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function find($id)
-    {
-        return $this->repository->findById($id);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function create($webspaceKey, $data)
-    {
-        $entity = new Analytic();
-        $this->setData($entity, $webspaceKey, $data);
-
+        $entity = $this->setData(new Analytic(), $webspaceKey, $data);
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
 
         return $entity;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function update($id, $data)
-    {
-        $entity = $this->find($id);
-        $this->setData($entity, $entity->getWebspaceKey(), $data);
-
-        $this->entityManager->flush();
-
-        return $entity;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function remove($id)
-    {
-        $this->entityManager->remove($this->entityManager->getReference(Analytic::class, $id));
-        $this->entityManager->flush();
     }
 
     /**
@@ -104,8 +64,10 @@ class AnalyticsManager implements AnalyticsManagerInterface
      * @param Analytic $analytic
      * @param string $webspaceKey
      * @param array $data
+     *
+     * @return Analytic
      */
-    private function setData(Analytic $analytic, $webspaceKey, $data)
+    protected function setData(Analytic $analytic, $webspaceKey, array $data)
     {
         $analytic->setTitle($this->getValue($data, 'title'));
         $analytic->setType($this->getValue($data, 'type'));
@@ -119,6 +81,8 @@ class AnalyticsManager implements AnalyticsManagerInterface
             $domainEntity = $this->findOrCreateNewDomain($domain);
             $analytic->addDomain($domainEntity);
         }
+
+        return $analytic;
     }
 
     /**
@@ -129,7 +93,7 @@ class AnalyticsManager implements AnalyticsManagerInterface
      *
      * @return Domain
      */
-    private function findOrCreateNewDomain(array $domain)
+    protected function findOrCreateNewDomain(array $domain)
     {
         $domainEntity = $this->domainRepository->findByUrlAndEnvironment($domain['url'], $domain['environment']);
 
@@ -150,13 +114,13 @@ class AnalyticsManager implements AnalyticsManagerInterface
      * Returns property of data with given name.
      * If this property does not exists this function returns given default.
      *
-     * @param string $data
+     * @param array $data
      * @param string $name
      * @param mixed $default
      *
      * @return mixed
      */
-    private function getValue($data, $name, $default = null)
+    protected function getValue(array $data, $name, $default = null)
     {
         if (!array_key_exists($name, $data)) {
             return $default;

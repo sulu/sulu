@@ -103,7 +103,7 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
      */
     public function deleteAction($webspaceKey, $id)
     {
-        $this->get('sulu_website.analytic s.manager')->remove($id);
+        $this->get('sulu_website.analytics.manager')->remove($id);
 
         return $this->handleView($this->view(null, 204));
     }

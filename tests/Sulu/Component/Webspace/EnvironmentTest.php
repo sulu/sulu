@@ -98,6 +98,7 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase
             }
         );
         $url->toArray()->willReturn($toArrayResult);
+        $url->setEnvironment(Argument::any())->willReturn(true);
 
         return $url->reveal();
     }

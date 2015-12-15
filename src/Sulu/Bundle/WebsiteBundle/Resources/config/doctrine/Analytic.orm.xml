@@ -6,7 +6,7 @@
             repository-class="Sulu\Bundle\WebsiteBundle\Entity\AnalyticRepository"
             name="Sulu\Bundle\WebsiteBundle\Entity\Analytic">
         <indexes>
-            <index columns="allDomains"/>
+            <index columns="all_domains"/>
         </indexes>
 
         <id name="id" type="integer" column="id">
