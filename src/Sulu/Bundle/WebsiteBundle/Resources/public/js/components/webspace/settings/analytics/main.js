@@ -14,7 +14,7 @@ define(['underscore', 'text!./skeleton.html'], function(_, skeleton) {
     var defaults = {
         templates: {
             skeleton: skeleton,
-            url: '/admin/api/webspaces/<%= webspace.key %>/analytic-keys<% if (!!id) { %>/<%= id %><% } %>'
+            url: '/admin/api/webspaces/<%= webspace.key %>/analytics<% if (!!id) { %>/<%= id %><% } %>'
         },
         translations: {
             title: 'public.title',
@@ -75,7 +75,7 @@ define(['underscore', 'text!./skeleton.html'], function(_, skeleton) {
                     options: {
                         el: '#webspace-analytics-list',
                         url: this.templates.url({webspace: this.data, id: null}),
-                        resultKey: 'analytic-keys',
+                        resultKey: 'analytics',
                         instanceName: 'analytics',
                         actionCallback: this.editAnalytics.bind(this),
                         pagination: 'infinite-scroll',

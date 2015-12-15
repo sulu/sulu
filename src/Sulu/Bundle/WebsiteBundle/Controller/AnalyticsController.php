@@ -21,16 +21,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Provides webspace analytic keys rest-endpoint.
- *
- * @RouteResource("analytic-keys")
+ * Provides webspace analytic rest-endpoint.
  */
-class AnalyticKeysController extends RestController implements ClassResourceInterface, SecuredControllerInterface
+class AnalyticsController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
-    const RESULT_KEY = 'analytic-keys';
+    const RESULT_KEY = 'analytics';
 
     /**
-     * Returns webspace analytic keys by webspace key.
+     * Returns webspace analytics by webspace key.
      *
      * @param Request $request
      * @param string $webspaceKey
@@ -39,11 +37,11 @@ class AnalyticKeysController extends RestController implements ClassResourceInte
      */
     public function cgetAction(Request $request, $webspaceKey)
     {
-        $entities = $this->get('sulu_website.analytic_keys.manager')->findAll($webspaceKey);
+        $entities = $this->get('sulu_website.analytics.manager')->findAll($webspaceKey);
 
         $list = new RouteAwareRepresentation(
             new CollectionRepresentation($entities, self::RESULT_KEY),
-            'cget_webspace_analytic-keys',
+            'cget_webspace_analytics',
             array_merge($request->request->all(), ['webspaceKey' => $webspaceKey])
         );
 
@@ -60,7 +58,7 @@ class AnalyticKeysController extends RestController implements ClassResourceInte
      */
     public function getAction($webspaceKey, $id)
     {
-        $entity = $this->get('sulu_website.analytic_keys.manager')->find($id);
+        $entity = $this->get('sulu_website.analytics.manager')->find($id);
 
         return $this->handleView($this->view($entity, 200));
     }
@@ -75,7 +73,7 @@ class AnalyticKeysController extends RestController implements ClassResourceInte
      */
     public function postAction(Request $request, $webspaceKey)
     {
-        $entity = $this->get('sulu_website.analytic_keys.manager')->create($webspaceKey, $request->request->all());
+        $entity = $this->get('sulu_website.analytics.manager')->create($webspaceKey, $request->request->all());
 
         return $this->handleView($this->view($entity, 200));
     }
@@ -91,7 +89,7 @@ class AnalyticKeysController extends RestController implements ClassResourceInte
      */
     public function putAction(Request $request, $webspaceKey, $id)
     {
-        $entity = $this->get('sulu_website.analytic_keys.manager')->update($id, $request->request->all());
+        $entity = $this->get('sulu_website.analytics.manager')->update($id, $request->request->all());
 
         return $this->handleView($this->view($entity, 200));
     }
@@ -106,7 +104,7 @@ class AnalyticKeysController extends RestController implements ClassResourceInte
      */
     public function deleteAction($webspaceKey, $id)
     {
-        $this->get('sulu_website.analytic_keys.manager')->remove($id);
+        $this->get('sulu_website.analytic s.manager')->remove($id);
 
         return $this->handleView($this->view(null, 204));
     }

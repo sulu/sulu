@@ -19,7 +19,7 @@ define(['jquery', 'underscore', 'text!./form.html'], function($, _, form) {
         templates: {
             form: form,
             skeleton: '<div id="webspace-analytics-overlay"/>',
-            url: '/admin/api/webspaces/<%= webspaceKey %>/analytic-keys<% if (!!id) { %>/<%= id %><% } %>'
+            url: '/admin/api/webspaces/<%= webspaceKey %>/analytics<% if (!!id) { %>/<%= id %><% } %>'
         },
         translations: {
             overlayTitle: 'website.webspace.settings.edit.title',
@@ -116,8 +116,7 @@ define(['jquery', 'underscore', 'text!./form.html'], function($, _, form) {
                         idKey: 'url',
                         preselected: preselected,
                         matchings: [
-                            {attribute: 'url', content: this.translations.domain},
-                            {attribute: 'environment', content: this.translations.environment}
+                            {attribute: 'url', content: this.translations.domain}
                         ]
                     }
                 }

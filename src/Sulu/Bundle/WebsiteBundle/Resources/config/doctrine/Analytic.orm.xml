@@ -2,9 +2,9 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity table="we_analytic_keys"
-            repository-class="Sulu\Bundle\WebsiteBundle\Entity\AnalyticKeyRepository"
-            name="Sulu\Bundle\WebsiteBundle\Entity\AnalyticKey">
+    <entity table="we_analytics"
+            repository-class="Sulu\Bundle\WebsiteBundle\Entity\AnalyticRepository"
+            name="Sulu\Bundle\WebsiteBundle\Entity\Analytic">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
@@ -14,13 +14,13 @@
         <field name="content" type="text" column="content"/>
         <field name="type" type="string" column="type" length="6"/>
 
-        <many-to-many target-entity="Sulu\Bundle\WebsiteBundle\Entity\AnalyticKeyDomain" field="domains">
-            <join-table name="we_analytickeys_domains">
+        <many-to-many target-entity="Sulu\Bundle\WebsiteBundle\Entity\Domain" field="domains">
+            <join-table name="we_analytics_domains">
                 <join-columns>
-                    <join-column name="analytic_key" referenced-column-name="id" />
+                    <join-column name="analytic" referenced-column-name="id" />
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="domain" referenced-column-name="url" />
+                    <join-column name="domain" referenced-column-name="id" />
                 </inverse-join-columns>
             </join-table>
         </many-to-many>

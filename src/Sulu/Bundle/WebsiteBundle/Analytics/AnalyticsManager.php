@@ -8,18 +8,18 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\WebsiteBundle\AnalyticKeys;
+namespace Sulu\Bundle\WebsiteBundle\Analytics;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
-use Sulu\Bundle\WebsiteBundle\Entity\AnalyticKey;
-use Sulu\Bundle\WebsiteBundle\Entity\AnalyticKeyDomain;
-use Sulu\Bundle\WebsiteBundle\Entity\AnalyticKeyRepository;
+use Sulu\Bundle\WebsiteBundle\Entity\Analytic;
+use Sulu\Bundle\WebsiteBundle\Entity\Domain;
+use Sulu\Bundle\WebsiteBundle\Entity\AnalyticRepository;
+use Sulu\Bundle\WebsiteBundle\Entity\DomainRepository;
 
 /**
- * Manages analytic keys.
+ * Manages analytics.
  */
-class AnalyticKeyManager implements AnalyticKeyManagerInterface
+class AnalyticsManager implements AnalyticsManagerInterface
 {
     /**
      * @var EntityManagerInterface
@@ -27,19 +27,19 @@ class AnalyticKeyManager implements AnalyticKeyManagerInterface
     private $entityManager;
 
     /**
-     * @var AnalyticKeyRepository
+     * @var AnalyticRepository
      */
     private $repository;
 
     /**
-     * @var EntityRepository
+     * @var DomainRepository
      */
     private $domainRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        AnalyticKeyRepository $repository,
-        EntityRepository $domainRepository
+        AnalyticRepository $repository,
+        DomainRepository $domainRepository
     ) {
         $this->entityManager = $entityManager;
         $this->repository = $repository;
@@ -67,7 +67,7 @@ class AnalyticKeyManager implements AnalyticKeyManagerInterface
      */
     public function create($webspaceKey, $data)
     {
-        $entity = new AnalyticKey();
+        $entity = new Analytic();
         $this->setData($entity, $webspaceKey, $data);
 
         $this->entityManager->persist($entity);
@@ -94,29 +94,29 @@ class AnalyticKeyManager implements AnalyticKeyManagerInterface
      */
     public function remove($id)
     {
-        $this->entityManager->remove($this->entityManager->getReference(AnalyticKey::class, $id));
+        $this->entityManager->remove($this->entityManager->getReference(Analytic::class, $id));
     }
 
     /**
      * Set data to given key.
      *
-     * @param AnalyticKey $analyticKey
+     * @param Analytic $analytic
      * @param string $webspaceKey
      * @param array $data
      */
-    private function setData(AnalyticKey $analyticKey, $webspaceKey, $data)
+    private function setData(Analytic $analytic, $webspaceKey, $data)
     {
-        $analyticKey->setTitle($this->getValue($data, 'title'));
-        $analyticKey->setType($this->getValue($data, 'type'));
-        $analyticKey->setContent($this->getValue($data, 'content', ''));
-        $analyticKey->setAllDomains($this->getValue($data, 'allDomains', false));
-        $analyticKey->setWebspaceKey($webspaceKey);
+        $analytic->setTitle($this->getValue($data, 'title'));
+        $analytic->setType($this->getValue($data, 'type'));
+        $analytic->setContent($this->getValue($data, 'content', ''));
+        $analytic->setAllDomains($this->getValue($data, 'allDomains', false));
+        $analytic->setWebspaceKey($webspaceKey);
 
-        $analyticKey->clearDomains();
+        $analytic->clearDomains();
 
         foreach ($this->getValue($data, 'domains', []) as $domain) {
             $domainEntity = $this->findOrCreateNewDomain($domain);
-            $analyticKey->addDomain($domainEntity);
+            $analytic->addDomain($domainEntity);
         }
     }
 
@@ -126,18 +126,19 @@ class AnalyticKeyManager implements AnalyticKeyManagerInterface
      *
      * @param array $domain
      *
-     * @return AnalyticKeyDomain
+     * @return Domain
      */
     private function findOrCreateNewDomain(array $domain)
     {
-        $domainEntity = $this->domainRepository->find($domain['url']);
+        $domainEntity = $this->domainRepository->findByUrlAndEnvironment($domain['url'], $domain['environment']);
 
         if (null !== $domainEntity) {
             return $domainEntity;
         }
 
-        $domainEntity = new AnalyticKeyDomain();
+        $domainEntity = new Domain();
         $domainEntity->setUrl($domain['url']);
+        $domainEntity->setEnvironment($domain['environment']);
 
         $this->entityManager->persist($domainEntity);
 

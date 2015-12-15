@@ -13,16 +13,16 @@ namespace Sulu\Bundle\WebsiteBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 
 /**
- * Repository for analytic keys.
+ * Repository for analytics.
  */
-class AnalyticKeyRepository extends EntityRepository
+class AnalyticRepository extends EntityRepository
 {
     /**
-     * Returns list of analytic-keys.
+     * Returns list of analytics.
      *
      * @param $webspaceKey
      *
-     * @return AnalyticKey[]
+     * @return Analytic[]
      */
     public function findByWebspaceKey($webspaceKey)
     {
@@ -42,7 +42,7 @@ class AnalyticKeyRepository extends EntityRepository
      *
      * @param int $id
      *
-     * @return AnalyticKey
+     * @return Analytic
      */
     public function findById($id)
     {
@@ -62,14 +62,15 @@ class AnalyticKeyRepository extends EntityRepository
      *
      * @param string $urlExpression
      *
-     * @return AnalyticKey[]
+     * @return Analytic[]
      */
     public function findByUrl($urlExpression)
     {
         $queryBuilder = $this->createQueryBuilder('a')
             ->addSelect('domains')
             ->leftJoin('a.domains', 'domains')
-            ->where('domains.url= :url');
+            ->where('a.allDomains = 1')
+            ->orwhere('domains.url= :url');
 
         $query = $queryBuilder->getQuery();
         $query->setParameter('url', $urlExpression);
