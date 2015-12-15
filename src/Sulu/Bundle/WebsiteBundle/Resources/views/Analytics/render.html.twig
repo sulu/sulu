@@ -1,0 +1,3 @@
+{% for analytic in analytics %}
+    {% include 'SuluWebsiteBundle:Analytics/type:' ~ analytic.type ~ '.html.twig' with {analytic: analytic} %}
+{% endfor %}

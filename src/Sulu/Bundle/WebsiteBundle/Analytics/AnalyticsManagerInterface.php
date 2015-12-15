@@ -8,21 +8,21 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\WebsiteBundle\AnalyticKeys;
+namespace Sulu\Bundle\WebsiteBundle\Analytics;
 
-use Sulu\Bundle\WebsiteBundle\Entity\AnalyticKey;
+use Sulu\Bundle\WebsiteBundle\Entity\Analytic;
 
 /**
- * Manages analytic keys.
+ * Manages analytics.
  */
-interface AnalyticKeyManagerInterface
+interface AnalyticsManagerInterface
 {
     /**
-     * Returns all keys for given repository.
+     * Returns all analytics for given webspace.
      *
      * @param string $webspaceKey
      *
-     * @return AnalyticKey[]
+     * @return Analytic[]
      */
     public function findAll($webspaceKey);
 
@@ -31,7 +31,7 @@ interface AnalyticKeyManagerInterface
      *
      * @param int $id
      *
-     * @return AnalyticKey
+     * @return Analytic
      */
     public function find($id);
 
@@ -41,7 +41,7 @@ interface AnalyticKeyManagerInterface
      * @param string $webspaceKey
      * @param array $data
      *
-     * @return AnalyticKey
+     * @return Analytic
      */
     public function create($webspaceKey, $data);
 
@@ -51,7 +51,7 @@ interface AnalyticKeyManagerInterface
      * @param int $id
      * @param array $data
      *
-     * @return AnalyticKey
+     * @return Analytic
      */
     public function update($id, $data);
 

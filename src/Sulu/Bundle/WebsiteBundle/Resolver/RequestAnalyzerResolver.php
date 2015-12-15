@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Resolver;
 
-use Sulu\Bundle\WebsiteBundle\Entity\AnalyticKeyRepository;
+use Sulu\Bundle\WebsiteBundle\Entity\AnalyticRepository;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -35,25 +35,27 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
      * @var array
      */
     private $previewDefaults;
+
     /**
      * @var RequestStack
      */
     private $requestStack;
+
     /**
-     * @var AnalyticKeyRepository
+     * @var AnalyticRepository
      */
-    private $analyticKeyRepository;
+    private $analyticRepository;
 
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
         RequestStack $requestStack,
-        AnalyticKeyRepository $analyticKeyRepository,
+        AnalyticRepository $analyticRepository,
         $environment,
         $previewDefaults = []
     ) {
         $this->webspaceManager = $webspaceManager;
         $this->requestStack = $requestStack;
-        $this->analyticKeyRepository = $analyticKeyRepository;
+        $this->analyticRepository = $analyticRepository;
         $this->environment = $environment;
 
         $this->previewDefaults = array_merge(['analyticsKey' => ''], $previewDefaults);
@@ -81,7 +83,7 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
                 'get' => $requestAnalyzer->getGetParameters(),
                 'post' => $requestAnalyzer->getPostParameters(),
                 'analyticsKey' => $requestAnalyzer->getAnalyticsKey(),
-                'analyticKeys' => $this->analyticKeyRepository->findByUrl($urlExpression),
+                'analytics' => $this->analyticRepository->findByUrl($urlExpression),
             ],
         ];
     }
@@ -106,7 +108,7 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
                 'get' => $this->requestStack->getCurrentRequest()->query->all(),
                 'post' => $this->requestStack->getCurrentRequest()->request->all(),
                 'analyticsKey' => $this->previewDefaults['analyticsKey'],
-                'analyticKeys' => [],
+                'analytics' => [],
             ],
         ];
     }

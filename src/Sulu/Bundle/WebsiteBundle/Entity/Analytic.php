@@ -14,9 +14,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 /**
- * AnalyticKey.
+ * Analytic.
  */
-class AnalyticKey
+class Analytic
 {
     /**
      * @var int
@@ -73,7 +73,7 @@ class AnalyticKey
      *
      * @param string $title
      *
-     * @return AnalyticKey
+     * @return Analytic
      */
     public function setTitle($title)
     {
@@ -97,7 +97,7 @@ class AnalyticKey
      *
      * @param bool $allDomains
      *
-     * @return AnalyticKey
+     * @return Analytic
      */
     public function setAllDomains($allDomains)
     {
@@ -121,7 +121,7 @@ class AnalyticKey
      *
      * @param string $content
      *
-     * @return AnalyticKey
+     * @return Analytic
      */
     public function setContent($content)
     {
@@ -145,7 +145,7 @@ class AnalyticKey
      *
      * @param string $type
      *
-     * @return AnalyticKey
+     * @return Analytic
      */
     public function setType($type)
     {
@@ -169,7 +169,7 @@ class AnalyticKey
      *
      * @param string $webspaceKey
      *
-     * @return AnalyticKey
+     * @return Analytic
      */
     public function setWebspaceKey($webspaceKey)
     {
@@ -191,11 +191,11 @@ class AnalyticKey
     /**
      * Add domain.
      *
-     * @param AnalyticKeyDomain $domain
+     * @param Domain $domain
      *
-     * @return AnalyticKey
+     * @return Analytic
      */
-    public function addDomain(AnalyticKeyDomain $domain)
+    public function addDomain(Domain $domain)
     {
         if ($this->domains->contains($domain)) {
             return $this;
@@ -209,9 +209,9 @@ class AnalyticKey
     /**
      * Remove domain.
      *
-     * @param AnalyticKeyDomain $domain
+     * @param Domain $domain
      */
-    public function removeDomain(AnalyticKeyDomain $domain)
+    public function removeDomain(Domain $domain)
     {
         $this->domains->removeElement($domain);
     }
