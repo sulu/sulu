@@ -5,6 +5,10 @@
     <entity table="we_analytics"
             repository-class="Sulu\Bundle\WebsiteBundle\Entity\AnalyticRepository"
             name="Sulu\Bundle\WebsiteBundle\Entity\Analytic">
+        <indexes>
+            <index columns="allDomains"/>
+        </indexes>
+
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>

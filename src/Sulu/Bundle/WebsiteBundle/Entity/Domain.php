@@ -16,7 +16,7 @@ namespace Sulu\Bundle\WebsiteBundle\Entity;
 class Domain
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -33,7 +33,7 @@ class Domain
     /**
      * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Hateoas\Representation\RouteAwareRepresentation;

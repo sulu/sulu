@@ -412,7 +412,7 @@ class PortalInformation implements ArrayableInterface
         }
 
         $urlExpression = $this->getUrlExpression();
-        if($urlExpression){
+        if ($urlExpression) {
             $result['urlExpression'] = $urlExpression;
         }
 
