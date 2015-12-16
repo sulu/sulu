@@ -82,13 +82,12 @@ class SettingsManager implements SettingsManagerInterface
     public function loadString($webspaceKey, $key)
     {
         $propertyName = $this->getPropertyName($key);
-        $property = $this->sessionManager->getWebspaceNode($webspaceKey)->getProperty($propertyName);
-
-        if (!$property) {
+        $webspaceNode = $this->sessionManager->getWebspaceNode($webspaceKey);
+        if (!$webspaceNode->hasProperty($propertyName)) {
             return;
         }
 
-        return $property->getString();
+        return $webspaceNode->getProperty($propertyName)->getString();
     }
 
     /**

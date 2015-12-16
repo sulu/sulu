@@ -1,7 +1,6 @@
 <?php
-
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -70,9 +69,8 @@ class SnippetContentTest extends BaseFunctionalTestCase
 
         $this->structureResolver = $this->getContainer()->get('sulu_website.resolver.structure');
         $this->contentType = new SnippetContent(
-            $this->contentMapper,
-            $this->structureResolver,
             $this->defaultSnippetManager->reveal(),
+            $this->getContainer()->get('sulu_snippet.resolver'),
             'SomeTemplate.html.twig'
         );
     }
@@ -203,6 +201,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $property->getParams()->willReturn(
             [
                 'snippetType' => new PropertyParameter('snippetType', 'test'),
+                'fallback' => new PropertyParameter('fallback', true),
             ]
         );
 
@@ -225,6 +224,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $property->getParams()->willReturn(
             [
                 'snippetType' => new PropertyParameter('snippetType', 'test'),
+                'fallback' => new PropertyParameter('fallback', true),
             ]
         );
 
@@ -234,5 +234,50 @@ class SnippetContentTest extends BaseFunctionalTestCase
 
         $data = $this->contentType->getContentData($property->reveal());
         $this->assertCount(1, $data);
+    }
+
+    public function testGetContentDataDefaultFallbackNotSet()
+    {
+        $structure = $this->prophesize(PageBridge::class);
+        $structure->getWebspaceKey()->willReturn('sulu_io');
+        $structure->getLanguageCode()->willReturn('de_at');
+        $structure->getIsShadow()->willReturn(false);
+
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getValue()->willReturn([]);
+        $property->getStructure()->willReturn($structure->reveal());
+        $property->getParams()->willReturn(
+            [
+                'snippetType' => new PropertyParameter('snippetType', 'test'),
+            ]
+        );
+
+        $this->defaultSnippetManager->loadIdentifier(Argument::any(), Argument::any())->shouldNotBeCalled();
+
+        $data = $this->contentType->getContentData($property->reveal());
+        $this->assertCount(0, $data);
+    }
+
+    public function testGetContentDataDefaultFallbackFalse()
+    {
+        $structure = $this->prophesize(PageBridge::class);
+        $structure->getWebspaceKey()->willReturn('sulu_io');
+        $structure->getLanguageCode()->willReturn('de_at');
+        $structure->getIsShadow()->willReturn(false);
+
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getValue()->willReturn([]);
+        $property->getStructure()->willReturn($structure->reveal());
+        $property->getParams()->willReturn(
+            [
+                'snippetType' => new PropertyParameter('snippetType', 'test'),
+                'fallback' => new PropertyParameter('fallback', false),
+            ]
+        );
+
+        $this->defaultSnippetManager->loadIdentifier(Argument::any(), Argument::any())->shouldNotBeCalled();
+
+        $data = $this->contentType->getContentData($property->reveal());
+        $this->assertCount(0, $data);
     }
 }
