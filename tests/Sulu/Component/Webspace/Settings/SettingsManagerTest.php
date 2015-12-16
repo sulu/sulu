@@ -121,8 +121,9 @@ class SettingsManagerTest extends \PHPUnit_Framework_TestCase
 
         $sessionManager->getWebspaceNode($webspaceKey)->willReturn($node->reveal());
 
+        $node->hasProperty('settings:' . $key)->willReturn($exists);
         $node->getProperty('settings:' . $key)
-            ->shouldBeCalledTimes(1)
+            ->shouldBeCalledTimes($exists ? 1 : 0)
             ->willReturn($exists ? $property->reveal() : null);
 
         $property->getString()->willReturn($data);

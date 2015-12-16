@@ -71,6 +71,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->contentType = new SnippetContent(
             $this->defaultSnippetManager->reveal(),
             $this->getContainer()->get('sulu_snippet.resolver'),
+            true,
             'SomeTemplate.html.twig'
         );
     }

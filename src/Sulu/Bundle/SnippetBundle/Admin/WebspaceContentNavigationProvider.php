@@ -17,10 +17,24 @@ use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 class WebspaceContentNavigationProvider implements ContentNavigationProviderInterface
 {
     /**
+     * @var bool
+     */
+    private $fallbackEnabled;
+
+    public function __construct($fallbackEnabled)
+    {
+        $this->fallbackEnabled = $fallbackEnabled;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getNavigationItems(array $options = [])
     {
+        if ($this->fallbackEnabled === false) {
+            return [];
+        }
+
         $snippets = new ContentNavigationItem('content-navigation.webspace.snippets');
         $snippets->setId('tab-snippets');
         $snippets->setAction('snippets');
