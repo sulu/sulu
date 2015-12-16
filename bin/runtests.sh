@@ -46,7 +46,7 @@ function show_help {
 
 function init_dbal {
     info "Creating database"
-    php vendor/symfony-cmf/testing/bin/console doctrine:database:create &> /dev/null
+    php vendor/symfony-cmf/testing/bin/console doctrine:database:create
 
     if [[ $? != 0 ]]; then
         comment "Database already exists"
