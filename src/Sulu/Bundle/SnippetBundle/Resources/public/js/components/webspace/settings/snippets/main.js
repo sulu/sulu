@@ -89,11 +89,21 @@ define(['app-config'], function(AppConfig) {
                                     {
                                         icon: 'plus-circle',
                                         column: 'defaultTitle',
+                                        align: 'right',
+                                        cssClass: 'no-hover',
+                                        disableCallback: function(record) {
+                                            return !record.defaultUuid;
+                                        },
                                         callback: this.openOverlay.bind(this)
                                     },
                                     {
-                                        icon: 'trash-o',
+                                        icon: 'times',
                                         column: 'defaultTitle',
+                                        align: 'right',
+                                        cssClass: 'no-hover simple',
+                                        disableCallback: function(record) {
+                                            return !!record.defaultUuid;
+                                        },
                                         callback: this.removeDefault.bind(this)
                                     }
                                 ]

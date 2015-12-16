@@ -30118,6 +30118,7 @@ define('__component__$column-options@husky',[],function() {
  * @param {String} [options.icons[].icon] the actual icon which sould be displayed
  * @param {String} [options.icons[].column] the id of the column in which the icon should be displayed
  * @param {String} [options.icons[].align] the align of the icon. 'left' org 'right'
+ * @param {String} [options.icons[].disableCallback] callback to determine if icon is displayed
  * @param {Function} [options.icons.callback] a callback to execute if the icon got clicked. Gets the id of the data-record as first argument
  * @param {Boolean} [options.hideChildrenAtBeginning] if true children get hidden, if all children are loaded at the beginning
  * @param {String|Number|Null} [options.openChildId] the id of the children to open all parents for. (only relevant in a child-list)
@@ -30252,7 +30253,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             childWrapper: '<div class="' + constants.childWrapperClass + '"></div>',
             toggleIcon: '<span class="' + constants.toggleIconClass + '"></span>',
             icon: [
-                '<span class="' + constants.gridIconClass + ' <%= align %>" data-icon-index="<%= index %>">',
+                '<span class="', constants.gridIconClass, ' <%= cssClass %> <%= align %>" data-icon-index="<%= index %>">',
                 '   <span class="fa-<%= icon %>"></span>',
                 '</span>'
             ].join(''),
@@ -30864,7 +30865,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             }
 
             if (!!this.icons) {
-                content = this.addIconsToCellContent(content, column, $cell);
+                content = this.addIconsToCellContent(content, column, $cell, record);
             }
 
             if (!!this.badges) {
@@ -30934,15 +30935,17 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param content {String|Object} html or a dom object. If its a string icons get added to the string, if its an object it gets appended
          * @param column {Object} the column data object
          * @param $cell {Object} the cell-dom-element
+         * @param record {Object} the record object
          * @returns content {String|Object} html or a dom object
          */
-        addIconsToCellContent: function(content, column, $cell) {
+        addIconsToCellContent: function(content, column, $cell, record) {
             var iconStr;
             this.sandbox.util.foreach(this.icons, function(icon, index) {
-                if (icon.column === column.attribute) {
+                if (icon.column === column.attribute && (!icon.disableCallback || icon.disableCallback(record))) {
                     iconStr = this.sandbox.util.template(templates.icon)({
                         icon: icon.icon,
                         align: icon.align,
+                        cssClass: icon.cssClass,
                         index: index
                     });
                     if (typeof content === 'object') {
@@ -33461,7 +33464,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                         this.data.embedded = this.parseEmbedded(this.options.data);
                     }
 
-                    this.renderView();
+                    this.render();
                     if (!!this.paginations[this.paginationId]) {
                         this.paginations[this.paginationId].render(this.data, this.$element);
                     }
@@ -34105,7 +34108,9 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
              * @returns {String} the manipulated content
              */
             manipulateContent: function(content, type, argument, columnName) {
-                if (filters.hasOwnProperty(type)) {
+                if (typeof type === 'function') {
+                    return type(content, argument, columnName);
+                } else if (filters.hasOwnProperty(type)) {
                     return filters[type].call(this, content, argument, columnName);
                 }
                 return content;

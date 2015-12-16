@@ -10422,7 +10422,16 @@ a.btn-black, a.btn-highlight {
 .husky-datagrid tbody .grid-icon.right {
   float: right;
 }
-/* line 234, ../scss/modules/datagrid.scss */
+/* line 233, ../scss/modules/datagrid.scss */
+.husky-datagrid tbody .grid-icon.no-hover {
+  opacity: 1 !important;
+}
+/* line 237, ../scss/modules/datagrid.scss */
+.husky-datagrid tbody .grid-icon.simple {
+  background: transparent;
+  color: #000;
+}
+/* line 243, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .grid-image {
   position: relative;
   width: 50px;
@@ -10430,68 +10439,68 @@ a.btn-black, a.btn-highlight {
   text-align: center;
   line-height: 50px;
 }
-/* line 241, ../scss/modules/datagrid.scss */
+/* line 250, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .grid-image img {
   position: absolute;
   top: 0;
   left: 0;
 }
-/* line 247, ../scss/modules/datagrid.scss */
+/* line 256, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .grid-image [class^=fa-] {
   color: #ccc;
   font-size: 1.6em;
 }
-/* line 254, ../scss/modules/datagrid.scss */
+/* line 263, ../scss/modules/datagrid.scss */
 .husky-datagrid .table-container {
   width: 100%;
   overflow: auto;
   border-radius: 3px;
 }
-/* line 260, ../scss/modules/datagrid.scss */
+/* line 269, ../scss/modules/datagrid.scss */
 .husky-datagrid .table-container.no-head thead {
   display: none;
 }
-/* line 264, ../scss/modules/datagrid.scss */
+/* line 273, ../scss/modules/datagrid.scss */
 .husky-datagrid .table-container.no-head tbody tr:last-child {
   border-bottom: none;
 }
-/* line 271, ../scss/modules/datagrid.scss */
+/* line 280, ../scss/modules/datagrid.scss */
 .husky-datagrid .datagrid-loader {
   position: absolute;
   top: 50%;
   left: 50%;
   margin: -50px 0 0 -50px;
 }
-/* line 278, ../scss/modules/datagrid.scss */
+/* line 287, ../scss/modules/datagrid.scss */
 .husky-datagrid .dropdown-menu {
   margin-top: 5px;
 }
-/* line 281, ../scss/modules/datagrid.scss */
+/* line 290, ../scss/modules/datagrid.scss */
 .husky-datagrid .dropdown-toggle::after {
   margin-left: 12px;
 }
-/* line 285, ../scss/modules/datagrid.scss */
+/* line 294, ../scss/modules/datagrid.scss */
 .husky-datagrid.loading {
   min-height: 150px;
 }
-/* line 289, ../scss/modules/datagrid.scss */
+/* line 298, ../scss/modules/datagrid.scss */
 .husky-datagrid .empty-list {
   text-align: center;
   color: #ccc;
   padding: 20px 0;
   background: #fff;
 }
-/* line 295, ../scss/modules/datagrid.scss */
+/* line 304, ../scss/modules/datagrid.scss */
 .husky-datagrid .empty-list .icon {
   display: block;
   font-size: 50px;
   padding-bottom: 5px;
 }
-/* line 300, ../scss/modules/datagrid.scss */
+/* line 309, ../scss/modules/datagrid.scss */
 .husky-datagrid .empty-list span {
   display: block;
 }
-/* line 305, ../scss/modules/datagrid.scss */
+/* line 314, ../scss/modules/datagrid.scss */
 .husky-datagrid .selected-elements {
   display: block;
   height: 20px;
@@ -10501,34 +10510,34 @@ a.btn-black, a.btn-highlight {
   transition: height 200ms;
   overflow: hidden;
 }
-/* line 310, ../scss/modules/datagrid.scss */
+/* line 319, ../scss/modules/datagrid.scss */
 .husky-datagrid .selected-elements.indent {
   padding-left: 60px;
 }
-/* line 313, ../scss/modules/datagrid.scss */
+/* line 322, ../scss/modules/datagrid.scss */
 .husky-datagrid .selected-elements.invisible {
   visibility: visible;
   height: 0px;
 }
-/* line 318, ../scss/modules/datagrid.scss */
+/* line 327, ../scss/modules/datagrid.scss */
 .husky-datagrid .selected-elements .show-selected {
   color: #000;
   cursor: pointer;
 }
-/* line 324, ../scss/modules/datagrid.scss */
+/* line 333, ../scss/modules/datagrid.scss */
 .husky-datagrid .medium-loader {
   overflow: hidden;
   height: 0px;
   transition: all 200ms;
   margin-top: 0px;
 }
-/* line 330, ../scss/modules/datagrid.scss */
+/* line 339, ../scss/modules/datagrid.scss */
 .husky-datagrid .medium-loader.show {
   height: 70px;
   margin-top: 10px;
 }
 
-/* line 339, ../scss/modules/datagrid.scss */
+/* line 348, ../scss/modules/datagrid.scss */
 .editable .husky-validate-error .husky-input input {
   height: 30px;
   margin-top: -30px;

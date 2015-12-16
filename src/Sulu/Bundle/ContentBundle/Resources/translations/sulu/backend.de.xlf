@@ -603,6 +603,10 @@
                 <source>navigation.webspaces.settings</source>
                 <target>Einstellungen</target>
             </trans-unit>
+            <trans-unit id="23" resname="content.webspace.settings.redirect">
+                <source>content.webspace.settings.redirect</source>
+                <target>Weiterleitung</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -87,7 +87,7 @@ class SnippetResolverTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals(
                 [
                     'content' => ['title' => 'test'],
-                    'view' => ['title' => [], 'template' => 'test', 'uuid' => $item['view']['uuid']]
+                    'view' => ['title' => [], 'template' => 'test', 'uuid' => $item['view']['uuid']],
                 ],
                 $item
             );

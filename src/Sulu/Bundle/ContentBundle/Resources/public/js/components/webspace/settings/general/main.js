@@ -22,7 +22,8 @@ define(['text!./skeleton.html'], function(skeleton) {
             themeKey: 'content.webspace.settings.theme',
             urlKey: 'content.webspace.settings.url',
             urlsKey: 'content.webspace.settings.urls',
-            mainKey: 'content.webspace.settings.main'
+            mainKey: 'content.webspace.settings.main',
+            redirectKey: 'content.webspace.settings.redirect'
         }
     };
 
