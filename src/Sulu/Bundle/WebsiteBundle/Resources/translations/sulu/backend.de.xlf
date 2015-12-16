@@ -66,6 +66,14 @@
                 <source>website.webspace.settings.edit.environment</source>
                 <target>Environment</target>
             </trans-unit>
+            <trans-unit id="10" resname="website.webspace.settings.key">
+                <source>website.webspace.settings.key</source>
+                <target>Key</target>
+            </trans-unit>
+            <trans-unit id="11" resname="website.webspace.settings.script">
+                <source>website.webspace.settings.script</source>
+                <target>Script</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

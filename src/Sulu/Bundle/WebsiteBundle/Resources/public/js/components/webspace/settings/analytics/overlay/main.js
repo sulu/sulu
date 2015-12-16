@@ -11,23 +11,50 @@ define(['jquery', 'underscore', 'text!./form.html'], function($, _, form) {
 
     'use strict';
 
+    const formSelector = '#analytics-form',
+        contentSelector = '#analytics-content';
+
     var defaults = {
         options: {
             saveCallback: function() {
-            }
+            },
+            types: [
+                {
+                    id: 'google',
+                    title: 'website.webspace.settings.type.google',
+                    input: 'input',
+                    label: 'website.webspace.settings.key'
+                },
+                {
+                    id: 'piwik',
+                    title: 'website.webspace.settings.type.piwik',
+                    input: 'input',
+                    label: 'website.webspace.settings.key'
+                },
+                {
+                    id: 'custom',
+                    title: 'website.webspace.settings.type.custom',
+                    input: 'textarea',
+                    label: 'website.webspace.settings.script'
+                }
+            ]
         },
         templates: {
             form: form,
             skeleton: '<div id="webspace-analytics-overlay"/>',
-            url: '/admin/api/webspaces/<%= webspaceKey %>/analytics<% if (!!id) { %>/<%= id %><% } %>'
+            url: '/admin/api/webspaces/<%= webspaceKey %>/analytics<% if (!!id) { %>/<%= id %><% } %>',
+            input: [
+                '<input id="analytics-content" type="text" name="content" class="form-element"',
+                'data-mapper-property="content" data-validation-required="true" data-validation-min-length="3"/>'
+            ].join(''),
+            textarea: [
+                '<textarea id="analytics-content" name="content" class="form-element" data-mapper-property="content"',
+                'data-validation-required="true" data-validation-min-length="3"></textarea>'
+            ].join('')
         },
         translations: {
             overlayTitle: 'website.webspace.settings.edit.title',
-            content: 'website.webspace.settings.content',
-
-            google: 'website.webspace.settings.type.google',
-            piwik: 'website.webspace.settings.type.piwik',
-            custom: 'website.webspace.settings.type.custom',
+            script: 'website.webspace.settings.script',
 
             domain: 'website.webspace.settings.edit.domain',
             environment: 'website.webspace.settings.edit.environment'
@@ -41,6 +68,10 @@ define(['jquery', 'underscore', 'text!./form.html'], function($, _, form) {
         initialize: function() {
             this.$el.html(this.templates.skeleton);
 
+            this.startOverlay();
+        },
+
+        startOverlay: function() {
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
@@ -50,10 +81,10 @@ define(['jquery', 'underscore', 'text!./form.html'], function($, _, form) {
                         removeOnClose: true,
                         slides: [
                             {
-                                title: this.translations.title,
+                                title: this.translations.overlayTitle,
                                 data: this.templates.form({translations: this.translations}),
                                 okCallback: function() {
-                                    if (this.sandbox.form.validate('#analytics-form')) {
+                                    if (this.sandbox.form.validate(formSelector)) {
                                         this.options.saveCallback(this.options.id, this.getData());
                                     } else {
                                         return false;
@@ -64,14 +95,14 @@ define(['jquery', 'underscore', 'text!./form.html'], function($, _, form) {
                     }
                 }
             ]).then(function() {
-                this.sandbox.form.create('#analytics-form').initialized.then(function() {
-                    this.sandbox.form.setData('#analytics-form', this.data).then(this.initializeFormComponents.bind(this));
+                this.sandbox.form.create(formSelector).initialized.then(function() {
+                    this.sandbox.form.setData(formSelector, this.data).then(this.initializeFormComponents.bind(this));
                 }.bind(this));
             }.bind(this));
         },
 
         getData: function() {
-            var data = this.sandbox.form.getData('#analytics-form'),
+            var data = this.sandbox.form.getData(formSelector),
                 domains = $('#analytics-domains').data('selected');
             data.domains = _.map(domains, this.findDomainByUrl.bind(this));
 
@@ -101,11 +132,8 @@ define(['jquery', 'underscore', 'text!./form.html'], function($, _, form) {
                         multipleSelect: false,
                         valueName: 'title',
                         instanceName: 'analytics-overlay',
-                        data: [
-                            {id: 'google', title: this.translations.google},
-                            {id: 'piwik', title: this.translations.piwik},
-                            {id: 'custom', title: this.translations.custom}
-                        ]
+                        data: this.options.types,
+                        selectCallback: this.changeType.bind(this)
                     }
                 },
                 {
@@ -121,6 +149,31 @@ define(['jquery', 'underscore', 'text!./form.html'], function($, _, form) {
                     }
                 }
             ]);
+
+            this.changeType(this.data.type, this.data);
+        },
+
+        changeType: function(typeId, data) {
+            var type = _.find(this.options.types, function(type) {
+                return type.id === typeId;
+            });
+
+            if (!type) {
+                return;
+            }
+
+            if (!data) {
+                data = this.getData();
+            }
+
+            this.sandbox.form.removeField(formSelector, contentSelector);
+            $(contentSelector).remove();
+
+            $('.analytics-content-wrapper').append($(this.templates[type.input]()));
+            $('#analytics-content-label').text(this.sandbox.translate(type.label));
+            this.sandbox.form.addField(formSelector, contentSelector).initialized.then(function() {
+                this.sandbox.form.setData(formSelector, data);
+            }.bind(this));
         },
 
         loadComponentData: function() {
