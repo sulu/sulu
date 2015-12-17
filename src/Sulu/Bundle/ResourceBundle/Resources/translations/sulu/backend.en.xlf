@@ -58,6 +58,10 @@
                 <source>resource.filter.private</source>
                 <target>Private</target>
             </trans-unit>
+            <trans-unit id="15" resname="resource.filter.error-loading">
+                <source>resource.filter.error-loading</source>
+                <target>Filter could not be assigned.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
