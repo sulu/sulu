@@ -56,6 +56,7 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\LocationBundle\SuluLocationBundle(),
             new \Sulu\Bundle\DocumentManagerBundle\SuluDocumentManagerBundle(),
             new \Sulu\Bundle\ResourceBundle\SuluResourceBundle(),
+            new \Sulu\Bundle\TranslateBundle\SuluTranslateBundle(),
         ];
 
         return $bundles;

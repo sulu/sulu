@@ -13,13 +13,4 @@ use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 
 class AppKernel extends SuluTestKernel
 {
-    public function registerBundles()
-    {
-        return array_merge(
-            parent::registerBundles(),
-            [
-                new \Sulu\Bundle\TranslateBundle\SuluTranslateBundle(),
-            ]
-        );
-    }
 }
