@@ -59,6 +59,10 @@
                 <source>resource.filter.private</source>
                 <target>Privat</target>
             </trans-unit>
+            <trans-unit id="15" resname="resource.filter.error-loading">
+                <source>resource.filter.error-loading</source>
+                <target>Filter konnte nicht angewendet werden.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

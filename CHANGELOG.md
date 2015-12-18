@@ -7,6 +7,7 @@ CHANGELOG for Sulu
     * HOTFIX      #1872 [ContentBundle]   Fixed sql generation for user roles in ContentRepository
     * HOTFIX      #1888 [ContentBundle]   used auto_name in phpcr migrations
     * HOTFIX      #1899 [ContentBundle]   Fixed directory separator for windows
+    * HOTFIX      #1895 [ResourceBundle]  Fixed error handling of filters.
 
 * 1.1.2 (2015-12-11)
     * HOTFIX      #1831 [MediaBundle]     Fixed query for retrieving entities to index

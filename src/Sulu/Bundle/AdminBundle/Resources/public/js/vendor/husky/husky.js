@@ -33077,14 +33077,30 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
             },
 
             /**
-             * raised when save of data failed
+             * Raised when save of data failed.
+             *
              * @event husky.datagrid.data.save.failed
+             *
+             * @param {String} jqXHR status
+             * @param {String} text status
+             * @param {String} error thrown
+             */
+            DATA_SAVE_FAILED = function() {
+                return this.createEventName('data.save.failed');
+            },
+
+            /**
+             * Raised when loading of data failed.
+             *
+             * @event husky.datagrid.loading.failed
+             *
+             * @param {String} jqXHR
              * @param {String} text status
              * @param {String} error thrown
              *
              */
-            DATA_SAVE_FAILED = function() {
-                return this.createEventName('data.save.failed');
+            LOADING_FAILED = function() {
+                return this.createEventName('loading.failed');
             },
 
             /**
@@ -33495,8 +33511,8 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                             params.success(response);
                         }
                     }.bind(this))
-                    .fail(function(status, error) {
-                        this.sandbox.logger.error(status, error);
+                    .fail(function(jqXHR, textStatus, error) {
+                        this.sandbox.emit(LOADING_FAILED.call(this), jqXHR, textStatus, error);
                     }.bind(this));
             },
 
@@ -33667,8 +33683,8 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                             params.success(response);
                         }
                     }.bind(this))
-                    .fail(function(status, error) {
-                        this.sandbox.logger.error(status, error);
+                    .fail(function(jqXHR, textStatus, error) {
+                        this.sandbox.emit(LOADING_FAILED.call(this), jqXHR, textStatus, error);
                     }.bind(this));
             },
 
