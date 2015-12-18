@@ -602,10 +602,10 @@ class ContentRepositoryTest extends SuluTestCase
 
         $role1 = $this->prophesize(RoleInterface::class);
         $role1->getId()->willReturn(1);
-        $role1->getIdentifier()->willReturn('ROLE_1');
+        $role1->getIdentifier()->willReturn('ROLE_SULU_ROLE 1');
         $role2 = $this->prophesize(RoleInterface::class);
         $role2->getId()->willReturn(2);
-        $role2->getIdentifier()->willReturn('ROLE_2');
+        $role2->getIdentifier()->willReturn('ROLE_SULU_ROLE-2');
 
         $user = $this->prophesize(UserInterface::class);
         $user->getRoleObjects()->willReturn([$role1->reveal(), $role2->reveal()]);
