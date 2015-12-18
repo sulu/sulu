@@ -7,6 +7,7 @@ CHANGELOG for Sulu
 
 * dev-master
     * HOTFIX      #1888 [ContentBundle]   used auto_name in phpcr migrations
+    * HOTFIX      #1900 [ContentBundle]   Prohibited to link page to itself
 
 * 1.1.2 (2015-12-11)
     * HOTFIX      #1831 [MediaBundle]     Fixed query for retrieving entities to index
