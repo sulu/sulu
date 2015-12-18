@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.1.3 (2015-12-18)
     * HOTFIX      #1903 [ContentBundle]   Prohibited to follow empty or self internal link
     * HOTFIX      #1900 [ContentBundle]   Prohibited to link page to itself
     * HOTFIX      #1898 [MediaBundle]     Fixed dangling events of media-overlay
