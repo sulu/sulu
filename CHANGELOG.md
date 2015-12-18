@@ -7,12 +7,15 @@ CHANGELOG for Sulu
     * BUGFIX      #1931 [ContentBundle]   Fixed form deprecation messages   
     * BUGFIX      #1930 [ContentBundle]   Fixed updating values in combination
                                           with template change
+    * FEATURE     #1912 [WebsiteBundle]   Added analytics to webspace settings
     * FEATURE     #1906 [All]             Added PHP 7 support
     * FEATURE     #1922 [ContentBundle]   Added parameter to show toggler instead of checkbox
     * BUGFIX      #1874 [ContentBundle]   Fixed preview selector for blocks
     * FEATURE     #1777 [ContentBundle]   Added selection content types
     * BUGFIX      #1911 [SecurityBundle]  Fixed default locale user builder
     * BUGFIX      #1915 [All]             Removed deprecations of initial admin request
+    * FEATURE     #1851 [SnippetBundle]   Added default snippets webspace-settings
+    * FEATURE     #1851 [ContentBundle]   Added webspace-settings
     * FEATURE     #1905 [All]             Added french translation
     * BUGFIX      #1893 [ContentBundle]   Fixed resource locator deferred for edit
     * BUGIFX      #1871 [ContentBundle]   Fixed url-generation and save button

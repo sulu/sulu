@@ -7,12 +7,19 @@
  * with this source code in the file LICENSE.
  */
 
-define(['jquery', 'underscore', 'text!./form.html'], function($, _, form) {
+define([
+    'jquery',
+    'underscore',
+    'text!./form.html',
+    'text!./input.html',
+    'text!./textarea.html',
+    'text!./piwik.html'
+], function($, _, form, input, textarea, piwik) {
 
     'use strict';
 
     const formSelector = '#analytics-form',
-        contentSelector = '#analytics-content';
+        contentSelector = '.analytics-content-wrapper';
 
     var defaults = {
         options: {
@@ -23,34 +30,29 @@ define(['jquery', 'underscore', 'text!./form.html'], function($, _, form) {
                     id: 'google',
                     title: 'website.webspace.settings.type.google',
                     input: 'input',
-                    label: 'website.webspace.settings.key'
+                    labels: ['website.webspace.settings.key'],
+                    inputTemplate: input
                 },
                 {
                     id: 'piwik',
                     title: 'website.webspace.settings.type.piwik',
                     input: 'input',
-                    label: 'website.webspace.settings.key'
+                    labels: ['public.url', 'website.webspace.settings.site-id'],
+                    inputTemplate: piwik
                 },
                 {
                     id: 'custom',
                     title: 'website.webspace.settings.type.custom',
                     input: 'textarea',
-                    label: 'website.webspace.settings.script'
+                    labels: ['website.webspace.settings.script'],
+                    inputTemplate: textarea
                 }
             ]
         },
         templates: {
             form: form,
             skeleton: '<div id="webspace-analytics-overlay"/>',
-            url: '/admin/api/webspaces/<%= webspaceKey %>/analytics<% if (!!id) { %>/<%= id %><% } %>',
-            input: [
-                '<input id="analytics-content" type="text" name="content" class="form-element"',
-                'data-mapper-property="content" data-validation-required="true" data-validation-min-length="3"/>'
-            ].join(''),
-            textarea: [
-                '<textarea id="analytics-content" name="content" class="form-element" data-mapper-property="content"',
-                'data-validation-required="true" data-validation-min-length="3"></textarea>'
-            ].join('')
+            url: '/admin/api/webspaces/<%= webspaceKey %>/analytics<% if (!!id) { %>/<%= id %><% } %>'
         },
         translations: {
             overlayTitle: 'website.webspace.settings.edit.title',
@@ -168,11 +170,23 @@ define(['jquery', 'underscore', 'text!./form.html'], function($, _, form) {
             }
 
             this.sandbox.form.removeField(formSelector, contentSelector);
-            $(contentSelector).remove();
+            $(contentSelector).children().remove();
 
-            $('.analytics-content-wrapper').append($(this.templates[type.input]()));
-            $('#analytics-content-label').text(this.sandbox.translate(type.label));
-            this.sandbox.form.addField(formSelector, contentSelector).initialized.then(function() {
+            $(contentSelector).html(
+                _.template(type.inputTemplate, {
+                        labels: _.map(type.labels, function(item) {
+                            return this.sandbox.translate(item);
+                        }.bind(this))
+                    }
+                )
+            );
+
+            var defs = [];
+            $(contentSelector).find('*[data-mapper-property]').each(function(index, item){
+                defs.push(this.sandbox.form.addField(formSelector, $(item)).initialized);
+            }.bind(this));
+
+            $.when(defs).then(function() {
                 this.sandbox.form.setData(formSelector, data);
             }.bind(this));
         },
