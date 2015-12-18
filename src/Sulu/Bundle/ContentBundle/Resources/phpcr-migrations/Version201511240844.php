@@ -265,7 +265,7 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
             }
         }
 
-        $this->documentManager->persist($document, $locale);
+        $this->documentManager->persist($document, $locale, ['auto_name' => false]);
     }
 
     /**
