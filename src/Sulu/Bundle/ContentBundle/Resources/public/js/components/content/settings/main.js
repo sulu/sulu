@@ -220,6 +220,28 @@ define([
                 this.startComponents();
                 this.sandbox.start(this.$el, {reset: true});
 
+                this.sandbox.start([
+                    {
+                        name: 'single-internal-link@sulucontent',
+                        options: {
+                            el: '#internal-link',
+                            instanceName: 'internal-link',
+                            resultKey: 'nodes',
+                            url: [
+                                '/admin/api/nodes{/uuid}?depth=1&webspace=', this.options.webspace,
+                                '&language=', this.options.language,
+                                '&webspace-node=true'
+                            ].join(''),
+                            columnNavigationUrl: [
+                                '/admin/api/nodes?{id=uuid&}tree=true&webspace=', this.options.webspace,
+                                '&language=', this.options.language,
+                                '&webspace-node=true'
+                            ].join(''),
+                            disabledIds: [this.data.id]
+                        }
+                    }
+                ]);
+
                 this.updateTabVisibilityForShadowCheckbox(true);
 
                 this.updateChangelog(data);
