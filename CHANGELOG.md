@@ -5,6 +5,8 @@ CHANGELOG for Sulu
     * HOTFIX      #1900 [ContentBundle]   Prohibited to link page to itself
     * HOTFIX      #1898 [MediaBundle]     Fixed dangling events of media-overlay
     * HOTFIX      #1872 [ContentBundle]   Fixed sql generation for user roles in ContentRepository
+    * HOTFIX      #1888 [ContentBundle]   used auto_name in phpcr migrations
+    * HOTFIX      #1899 [ContentBundle]   Fixed directory separator for windows
 
 * 1.1.2 (2015-12-11)
     * HOTFIX      #1831 [MediaBundle]     Fixed query for retrieving entities to index
