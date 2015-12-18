@@ -370,7 +370,11 @@ class ContentRepository implements ContentRepositoryInterface
 
         if (null !== $user) {
             foreach ($user->getRoleObjects() as $role) {
-                $queryBuilder->addSelect('node', sprintf('sec:%s', 'role-' . $role->getId()), $role->getIdentifier());
+                $queryBuilder->addSelect(
+                    'node',
+                    sprintf('sec:%s', 'role-' . $role->getId()),
+                    sprintf('role%s', $role->getId())
+                );
             }
         }
 
@@ -731,7 +735,7 @@ class ContentRepository implements ContentRepositoryInterface
         $permissions = [];
         if (null !== $user) {
             foreach ($user->getRoleObjects() as $role) {
-                foreach (array_filter(explode(' ', $row->getValue($role->getIdentifier()))) as $permission) {
+                foreach (array_filter(explode(' ', $row->getValue(sprintf('role%s', $role->getId())))) as $permission) {
                     $permissions[$role->getId()][$permission] = true;
                 }
             }
