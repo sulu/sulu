@@ -11,7 +11,6 @@
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use Prophecy\Argument;
-use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
@@ -25,7 +24,7 @@ class RedirectTypeSubscriberTest extends SubscriberTestCase
     private $subscriber;
 
     /**
-     * @var NavigationContextBehavior
+     * @var RedirectTypeBehavior
      */
     private $document;
 
@@ -41,12 +40,29 @@ class RedirectTypeSubscriberTest extends SubscriberTestCase
 
     public function setUp()
     {
+        parent::setUp();
+
         $this->document = $this->prophesize(RedirectTypeBehavior::class);
+        $this->persistEvent->getDocument()->willReturn($this->document->reveal());
         $this->metadata = $this->prophesize(Metadata::class);
         $this->event = $this->prophesize(MetadataLoadEvent::class);
         $this->subscriber = new RedirectTypeSubscriber($this->encoder->reveal());
 
         $this->event->getMetadata()->willReturn($this->metadata);
+    }
+
+    public function testHandlePersist()
+    {
+        $this->document->setRedirectTarget(new \stdClass());
+        $this->subscriber->handlePersist($this->persistEvent->reveal());
+    }
+
+    public function testHandlePersistSelf()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->document->getRedirectTarget()->willReturn($this->document->reveal());
+
+        $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 
     public function testLoadMetadata()
