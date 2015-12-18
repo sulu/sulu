@@ -48,7 +48,7 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
     }
 
     /**
-     * Returns a single analytics key by id.
+     * Returns a single analytics by id.
      *
      * @param string $webspaceKey
      * @param int $id
@@ -63,7 +63,7 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
     }
 
     /**
-     * Creates a analytics key for given webspace.
+     * Creates a analytics for given webspace.
      *
      * @param Request $request
      * @param string $webspaceKey
@@ -78,7 +78,7 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
     }
 
     /**
-     * Updates analytics key with given id.
+     * Updates analytics with given id.
      *
      * @param Request $request
      * @param string $webspaceKey
@@ -94,7 +94,7 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
     }
 
     /**
-     * Removes given analytics key.
+     * Removes given analytics.
      *
      * @param string $webspaceKey
      * @param int $id
@@ -104,6 +104,23 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
     public function deleteAction($webspaceKey, $id)
     {
         $this->get('sulu_website.analytics.manager')->remove($id);
+
+        return $this->handleView($this->view(null, 204));
+    }
+
+    /**
+     * Removes a list of analytics.
+     *
+     * @param Request $request
+     * @param $webspaceKey
+     *
+     * @return Response
+     */
+    public function cdeleteAction(Request $request, $webspaceKey)
+    {
+        $ids = array_filter(explode(',', $request->get('ids', '')));
+
+        $this->get('sulu_website.analytics.manager')->removeMultiple($ids);
 
         return $this->handleView($this->view(null, 204));
     }

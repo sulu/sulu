@@ -276,4 +276,19 @@ class AnalyticsManagerTest extends BaseFunctional
             )
         );
     }
+
+    public function testRemoveMultiple()
+    {
+        $ids = [$this->entities[0]->getId(), $this->entities[1]->getId()];
+        $this->analyticsManager->removeMultiple($ids);
+
+        $this->assertEmpty(
+            array_filter(
+                $this->analyticsManager->findAll('sulu_io'),
+                function (Analytic $analytic) use ($ids) {
+                    return in_array($analytic->getId(), $ids);
+                }
+            )
+        );
+    }
 }

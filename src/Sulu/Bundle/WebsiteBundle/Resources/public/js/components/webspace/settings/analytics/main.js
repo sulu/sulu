@@ -14,7 +14,7 @@ define(['underscore', 'text!./skeleton.html'], function(_, skeleton) {
     var defaults = {
         templates: {
             skeleton: skeleton,
-            url: '/admin/api/webspaces/<%= webspace.key %>/analytics<% if (!!id) { %>/<%= id %><% } %>'
+            url: '/admin/api/webspaces/<%= webspace.key %>/analytics<% if (!!id) { %>/<%= id %><% } %><% if (!!ids) { %>?ids=<%= ids.join(",") %><% } %>'
         },
         translations: {
             title: 'public.title',
@@ -52,6 +52,7 @@ define(['underscore', 'text!./skeleton.html'], function(_, skeleton) {
 
         bindCustomEvents: function() {
             this.sandbox.on('sulu.toolbar.add', this.editAnalytics.bind(this));
+            this.sandbox.on('sulu.toolbar.delete', this.deleteAnalytics.bind(this));
         },
 
         render: function() {
@@ -66,7 +67,7 @@ define(['underscore', 'text!./skeleton.html'], function(_, skeleton) {
                         hasSearch: false,
                         template: this.sandbox.sulu.buttons.get({
                             add: {},
-                            delete: {}
+                            deleteSelected: {}
                         })
                     }
                 },
@@ -74,9 +75,8 @@ define(['underscore', 'text!./skeleton.html'], function(_, skeleton) {
                     name: 'datagrid@husky',
                     options: {
                         el: '#webspace-analytics-list',
-                        url: this.templates.url({webspace: this.data, id: null}),
+                        url: this.templates.url({webspace: this.data, id: null, ids: null}),
                         resultKey: 'analytics',
-                        instanceName: 'analytics',
                         actionCallback: this.editAnalytics.bind(this),
                         pagination: 'infinite-scroll',
                         viewOptions: {
@@ -97,7 +97,9 @@ define(['underscore', 'text!./skeleton.html'], function(_, skeleton) {
                                 attribute: 'domains',
                                 content: this.translations.domains,
                                 type: function(content) {
-                                    var urls = _.map(content, function(item){return item['url'];});
+                                    var urls = _.map(content, function(item) {
+                                        return item['url'];
+                                    });
 
                                     return urls.join(', ');
                                 }
@@ -131,15 +133,32 @@ define(['underscore', 'text!./skeleton.html'], function(_, skeleton) {
 
         save: function(id, data) {
             this.sandbox.util.save(
-                this.templates.url({webspace: this.data, id: id}), !!id ? 'PUT' : 'POST', data
+                this.templates.url({webspace: this.data, id: id, ids: null}), !!id ? 'PUT' : 'POST', data
             ).then(function(response) {
-                var event = 'husky.datagrid.analytics.record.add';
+                var event = 'husky.datagrid.record.add';
                 if (!!id) {
-                    event = 'husky.datagrid.analytics.records.change';
+                    event = 'husky.datagrid.records.change';
                 }
 
                 this.sandbox.emit(event, response);
                 this.sandbox.emit('sulu.labels.success.show', this.translations.successMessage, this.translations.successLabel);
+            }.bind(this));
+        },
+
+        deleteAnalytics: function() {
+            var ids = JSON.parse(JSON.stringify($('#webspace-analytics-list').data('selected')));
+
+            this.sandbox.sulu.showDeleteDialog(function(confirmed) {
+                if (!!confirmed) {
+                    this.sandbox.util.save(
+                        this.templates.url({webspace: this.data, id: null, ids: ids}), 'DELETE'
+                    ).then(function() {
+                        for (var i = 0, length = ids.length; i < length; i++) {
+                            var id = ids[i];
+                            this.sandbox.emit('husky.datagrid.record.remove', id);
+                        }
+                    }.bind(this));
+                }
             }.bind(this));
         },
 
