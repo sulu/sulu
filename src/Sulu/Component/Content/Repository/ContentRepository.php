@@ -15,6 +15,7 @@ use Jackalope\Query\Row;
 use PHPCR\ItemNotFoundException;
 use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 use PHPCR\SessionInterface;
+use PHPCR\Util\PathHelper;
 use PHPCR\Util\QOM\QueryBuilder;
 use Sulu\Component\Content\Compat\LocalizationFinderInterface;
 use Sulu\Component\Content\Compat\Structure;
@@ -185,7 +186,7 @@ class ContentRepository implements ContentRepositoryInterface
             ->where($this->qomFactory->childNode('node', $path));
 
         while ($path !== $contentPath) {
-            $path = dirname($path);
+            $path = PathHelper::getParentPath($path);
             $queryBuilder->orWhere($this->qomFactory->childNode('node', $path));
         }
 
@@ -248,7 +249,7 @@ class ContentRepository implements ContentRepositoryInterface
         $childrenByPath = [];
 
         foreach ($contents as $content) {
-            $path = dirname($content->getPath());
+            $path = PathHelper::getParentPath($content->getPath());
             if (!isset($childrenByPath[$path])) {
                 $childrenByPath[$path] = [];
             }
