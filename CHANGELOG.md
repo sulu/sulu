@@ -11,6 +11,7 @@ CHANGELOG for Sulu
     * HOTFIX      #1898 [MediaBundle]     Fixed dangling events of media-overlay
     * HOTFIX      #1899 [ContentBundle]   Fixed directory separator for windows
     * HOTFIX      #1872 [ContentBundle]   Fixed sql generation for user roles in ContentRepository
+    * HOTFIX      #1903 [ContentBundle]   Prohibited to follow empty or self internal link
     * HOTFIX      #1895 [ResourceBundle]  Fixed error handling of filters.
 
 * 1.1.2 (2015-12-11)
