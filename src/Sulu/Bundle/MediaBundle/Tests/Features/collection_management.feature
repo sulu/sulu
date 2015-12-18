@@ -83,12 +83,7 @@ Feature: Collection management
         Then I expect the "husky.tabs.overlaymedia-edit.initialized" event
         And I fill in husky field "title" with "Foto von Dornbirn" in the overlay
         And I confirm
-        When I am editing the media collection "Dornbirn"
-        And I expect the "husky.datagrid.loaded" event
         Then I should see "image of Dornbirn"
-        # FIXME try to sovle this without reloading the page
-        When I reload the page
-        Then I expect a data-navigation to appear
         And I click on the element ".language-changer"
         And I click on the element "[data-id='de']"
         And I expect the "husky.datagrid.updated" event
