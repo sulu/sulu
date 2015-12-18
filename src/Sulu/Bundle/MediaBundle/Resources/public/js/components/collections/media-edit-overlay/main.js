@@ -357,6 +357,14 @@ define([
         },
 
         /**
+         * Removes events related to the single-edit overlay
+         */
+        unbindSingleOverlayEvents: function() {
+            this.sandbox.off('husky.overlay.media-edit.language-changed');
+            this.sandbox.off('husky.tabs.overlaymedia-edit.item.select');
+        },
+
+        /**
          * Handles the changing of the language in the single-edit overlay by saving current data
          * and restarting the overlay component with the new locale
          * @param locale
@@ -365,6 +373,9 @@ define([
             this.saveSingleMedia().then(function() {
                 this.sandbox.stop(this.$find('*'));
                 this.options.locale = locale;
+
+                this.unbindSingleOverlayEvents();
+
                 this.initialize();
             }.bind(this));
         },
@@ -541,6 +552,9 @@ define([
             this.saveMultipleMedia().then(function() {
                 this.sandbox.stop(this.$find('*'));
                 this.options.locale = locale;
+
+                this.unbindMultipleOverlayEvents();
+
                 this.initialize();
             }.bind(this));
         },
@@ -580,6 +594,13 @@ define([
             this.sandbox.on(
                 'husky.overlay.media-multiple-edit.language-changed', this.languageChangedMultiple.bind(this)
             );
+        },
+
+        /**
+         * Binds events related to the multiple-edit overlay
+         */
+        unbindMultipleOverlayEvents: function() {
+            this.sandbox.off('husky.overlay.media-multiple-edit.language-changed');
         },
 
         /**
