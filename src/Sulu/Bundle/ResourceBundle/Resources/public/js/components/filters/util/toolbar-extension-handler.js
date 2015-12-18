@@ -93,7 +93,6 @@ define(['app-config', 'config'], function(AppConfig, Config) {
                 'labels.error',
                 ''
             );
-            //updateFilterResult.call(this, {total: 0});
 
             this.sandbox.emit('husky.datagrid.' + this.datagridInstance + '.url.update', {filter: ''});
 
