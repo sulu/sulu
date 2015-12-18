@@ -545,6 +545,31 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-1', $result['title']);
     }
 
+    public function testFindWithEmptyInternalLink()
+    {
+        $this->initPhpcr();
+
+        $link = $this->createPage('test-1', 'de');
+        $page = $this->createInternalLinkPage('test-2', 'de', $link);
+
+        $node = $this->session->getNodeByIdentifier($page->getUuid());
+        $node->getProperty('i18n:de-internal_link')->remove();
+        $this->session->save();
+
+        // should load content with requested node and not try to follow internal link
+
+        $result = $this->contentRepository->find(
+            $page->getUuid(),
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->addProperties(['title'])->getMapping()
+        );
+
+        $this->assertEquals($page->getUuid(), $result->getId());
+        $this->assertEquals('/test-2', $result->getPath());
+        $this->assertEquals('test-2', $result['title']);
+    }
+
     public function testFindWithInternalLinkAndShadow()
     {
         $this->initPhpcr();

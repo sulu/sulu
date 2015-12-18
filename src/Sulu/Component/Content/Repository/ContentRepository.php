@@ -539,7 +539,10 @@ class ContentRepository implements ContentRepositoryInterface
             $type = StructureType::getGhost($locale);
         }
 
-        if ($row->getValue('nodeType') === RedirectType::INTERNAL && $mapping->followInternalLink()) {
+        if (
+            $row->getValue('nodeType') === RedirectType::INTERNAL
+            && $mapping->followInternalLink()
+            && $row->getValue('internalLink') !== '') {
             // TODO collect all internal link contents and query once
             return $this->resolveInternalLinkContent($row, $locale, $webspaceKey, $mapping, $type, $user);
         }
