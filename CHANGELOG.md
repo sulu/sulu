@@ -2,7 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
-    * HOTFIX      #---  [ContentBundle]   Prohibited to follow empty internal link
+    * HOTFIX      #1903 [ContentBundle]   Prohibited to follow empty or self internal link
     * HOTFIX      #1900 [ContentBundle]   Prohibited to link page to itself
     * HOTFIX      #1898 [MediaBundle]     Fixed dangling events of media-overlay
     * HOTFIX      #1872 [ContentBundle]   Fixed sql generation for user roles in ContentRepository
