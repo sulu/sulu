@@ -12,7 +12,7 @@ app/console sulu:phpcr:init
 
 ### ContentNavigation & Navigation
 
-The ContentNavigationItems & NavigationItems will be sorted by their position. If there is no position is set the item
+The ContentNavigationItems & NavigationItems will be sorted by their position. If there is no position set, the item
 will be placed behind all other items.
 
 ```php
