@@ -542,7 +542,9 @@ class ContentRepository implements ContentRepositoryInterface
         if (
             $row->getValue('nodeType') === RedirectType::INTERNAL
             && $mapping->followInternalLink()
-            && $row->getValue('internalLink') !== '') {
+            && $row->getValue('internalLink') !== ''
+            && $row->getValue('internalLink') !== $row->getValue('uuid')
+        ) {
             // TODO collect all internal link contents and query once
             return $this->resolveInternalLinkContent($row, $locale, $webspaceKey, $mapping, $type, $user);
         }
