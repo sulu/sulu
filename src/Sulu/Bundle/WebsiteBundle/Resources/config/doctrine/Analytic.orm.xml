@@ -15,7 +15,7 @@
         <field name="title" type="string" column="title" length="255"/>
         <field name="webspaceKey" type="string" column="webspace_key" length="255"/>
         <field name="allDomains" type="boolean" column="all_domains"/>
-        <field name="content" type="text" column="content"/>
+        <field name="content" type="json_array" column="content"/>
         <field name="type" type="string" column="type" length="6"/>
 
         <many-to-many target-entity="Sulu\Bundle\WebsiteBundle\Entity\Domain" field="domains">

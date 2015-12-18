@@ -10,7 +10,9 @@
 require.config({
     paths: {
         suluwebsite: '../../suluwebsite/js',
-        suluwebsitecss: '../../suluwebsite/css'
+        suluwebsitecss: '../../suluwebsite/css',
+
+        "type/piwik": '../../suluwebsite/js/validation/piwik'
     }
 });
 
