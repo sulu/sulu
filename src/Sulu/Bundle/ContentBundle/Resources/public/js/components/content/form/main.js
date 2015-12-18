@@ -38,8 +38,10 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             this.sandbox.emit('husky.toolbar.header.item.enable', 'template', false);
 
             this.preview = new Preview();
-
             this.dfdListenForResourceLocator = $.Deferred();
+
+            this.add = true;
+
             this.load();
         },
 
@@ -56,7 +58,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             }, this);
         },
 
-        bindDomEvents: function() {
+        initializeResourceLocator: function() {
             this.startListening = false;
             this.getDomElementsForTagName('sulu.rlp', function(property) {
                 var element = property.$el.data('element');
@@ -65,7 +67,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
                 }
             }.bind(this));
 
-            if (this.startListening) {
+            if (!!this.add || this.startListening) {
                 this.sandbox.dom.one(this.getDomElementsForTagName('sulu.rlp.part'), 'focusout', this.setResourceLocator.bind(this));
             } else {
                 this.dfdListenForResourceLocator.resolve();
@@ -74,9 +76,7 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
 
         load: function() {
             // get content data
-            this.sandbox.emit('sulu.content.contents.get-data', function(data) {
-                this.render(data);
-            }.bind(this));
+            this.sandbox.emit('sulu.content.contents.get-data', this.render.bind(this));
         },
 
         render: function(data) {
@@ -84,6 +84,10 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             this.listenForChange();
 
             this.data = data;
+            if (!!this.data.id) {
+                // the form is in edit mode, if and ID is given, and therefore the page has already existed
+                this.add = false;
+            }
 
             if (!!this.data.template) {
                 this.checkRenderTemplate(this.data.template);
@@ -160,21 +164,20 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
         },
 
         renderFormTemplate: function(template) {
-            var data = this.initData(),
-                defaults = {
+            var defaults = {
                     translate: this.sandbox.translate,
-                    content: data,
+                    content: this.data,
                     options: this.options
                 },
                 context = this.sandbox.util.extend({}, defaults),
                 tpl = this.sandbox.util.template(template, context);
 
             this.sandbox.dom.html(this.formId, tpl);
-            this.setStateDropdown(data);
+            this.setStateDropdown(this.data);
 
             this.propertyConfiguration = {};
-            this.createForm(data).then(function() {
-                this.bindDomEvents();
+            this.createForm(this.data).then(function() {
+                this.initializeResourceLocator();
                 this.changeTemplateDropdownHandler();
             }.bind(this));
         },
@@ -369,10 +372,6 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             this.sandbox.emit('sulu.content.contents.set-state', data);
         },
 
-        initData: function() {
-            return this.data;
-        },
-
         setResourceLocator: function() {
             if (this.dfdListenForResourceLocator.state() !== 'pending') {
                 return;
@@ -433,7 +432,9 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', this.animateTemplateDropdown);
             this.animateTemplateDropdown = false;
 
-            this.dfdListenForResourceLocator = $.Deferred();
+            if (!!this.add) {
+                this.dfdListenForResourceLocator = $.Deferred();
+            }
         },
 
         submit: function(action) {
