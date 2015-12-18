@@ -99,6 +99,18 @@ class AnalyticsManager implements AnalyticsManagerInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function removeMultiple($ids)
+    {
+        foreach ($ids as $id) {
+            $this->entityManager->remove($this->entityManager->getReference(Analytic::class, $id));
+        }
+
+        $this->entityManager->flush();
+    }
+
+    /**
      * Set data to given key.
      *
      * @param Analytic $analytic

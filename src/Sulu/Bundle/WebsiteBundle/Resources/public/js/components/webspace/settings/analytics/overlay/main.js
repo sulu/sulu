@@ -140,6 +140,7 @@ define(['jquery', 'underscore', 'text!./form.html'], function($, _, form) {
                     name: 'datagrid@husky',
                     options: {
                         el: '#analytics-domains',
+                        instanceName: 'analytics-overlay',
                         data: this.options.urls,
                         idKey: 'url',
                         preselected: preselected,

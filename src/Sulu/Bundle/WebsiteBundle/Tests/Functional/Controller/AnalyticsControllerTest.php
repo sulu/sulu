@@ -163,10 +163,30 @@ class AnalyticsControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('DELETE', '/api/webspaces/sulu_io/analytics/' . $this->entities[3]->getId());
+        $client->request('DELETE', '/api/webspaces/test_io/analytics/' . $this->entities[3]->getId());
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
 
-        $client->request('GET', '/api/webspaces/test/analytics');
+        $client->request('GET', '/api/webspaces/test_io/analytics');
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEmpty($response['_embedded']['analytics']);
+    }
+
+    public function testDeleteMultiple()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $ids = [
+            $this->entities[0]->getId(),
+            $this->entities[1]->getId(),
+            $this->entities[2]->getId(),
+        ];
+
+        $client->request('DELETE', '/api/webspaces/sulu_io/analytics?ids=' . implode(',', $ids));
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+
+        $client->request('GET', '/api/webspaces/sulu_io/analytics');
         $response = json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
