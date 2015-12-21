@@ -47,7 +47,7 @@
         "matthiasnoback/symfony-dependency-injection-test": "v0.7.3",
         "phpunit/phpunit": "~4.5.0",
         "sensio/framework-extra-bundle": "~3.0",
-        "symfony-cmf/testing": "~1.2",
+        "symfony-cmf/testing": "dev-master",
         "symfony/monolog-bundle": "2.4.*",
         "twig/twig": "~1.11",
         "zendframework/zend-stdlib": "~2.3",
