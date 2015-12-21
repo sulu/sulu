@@ -109,8 +109,7 @@ class WebspaceManager implements WebspaceManagerInterface
         $webspaceKey = null,
         $domain = null,
         $scheme = 'http'
-    )
-    {
+    ) {
         $urls = [];
         $portals = $this->getWebspaceCollection()->getPortalInformations($environment);
         foreach ($portals as $url => $portalInformation) {
