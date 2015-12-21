@@ -3,7 +3,7 @@ sudo: false
 language: php
 
 php:
-  - 5.5
+  - 7.0
 
 env:
   - SULU_ORM=mysql SULU_PHPCR=jackrabbit
