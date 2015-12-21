@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="95f5d305ecefcbf58dcdd387ba6bce6c" resname="navigation.media">
+                <source>navigation.media</source>
+                <target>Assets</target>
+            </trans-unit>
+            <trans-unit id="3fd1f800bd2ecfb6af0abf749b716788" resname="navigation.media.collections">
+                <source>navigation.media.collections</source>
+                <target>Collections</target>
+            </trans-unit>
+            <trans-unit id="3fd1f800bd2ecfb7af0abf749b716788" resname="smart-content.media.all-collections">
+                <source>navigation.media.collections</source>
+                <target>Toutes les collections</target>
+            </trans-unit>
+            <trans-unit id="3fd1f800bd2ecfb6af0abf750b716788" resname="navigation.media.collections.search">
+                <source>navigation.media.collections.search</source>
+                <target>Filtrer les collections...</target>
+            </trans-unit>
+            <trans-unit id="ed961112240c7d99faeacb57a28aa6f6" resname="content-navigation.media.files">
+                <source>content-navigation.media.files</source>
+                <target>Fichiers</target>
+            </trans-unit>
+            <trans-unit id="2f58801f9b542aed46820bf42ee5cd53" resname="media.media.description">
+                <source>media.media.description</source>
+                <target>Description</target>
+            </trans-unit>
+            <trans-unit id="3c8f1c7c02abd468cc0794e987e2b2cf" resname="media.media.size">
+                <source>media.media.size</source>
+                <target>Taille du fichier</target>
+            </trans-unit>
+            <trans-unit id="6f5e8f5b65fd4e7ae7ec509e742cc85f" resname="media.media.thumbnails">
+                <source>media.media.thumbnails</source>
+                <target>Vignette</target>
+            </trans-unit>
+            <trans-unit id="6f2c89027621ffebd6cfbe33bdf16455" resname="sulu.media.new-collection">
+                <source>sulu.media.new-collection</source>
+                <target>Nouvelle collection</target>
+            </trans-unit>
+            <trans-unit id="71491ef900232b8755bf0842292e1ff4" resname="sulu.media.add-collection">
+                <source>sulu.media.add-collection</source>
+                <target>Ajouter une nouvelle collection</target>
+            </trans-unit>
+            <trans-unit id="90a2264459ba0f52ef7a4d3c0298d50" resname="content-navigation.media.settings">
+                <source>content-navigation.media.settings</source>
+                <target>Paramètres</target>
+            </trans-unit>
+            <trans-unit id="642c992f1929652633a5ce2178d2219f" resname="sulu.media.multiple-edit.title">
+                <source>sulu.media.multiple-edit.title</source>
+                <target>Editer le media</target>
+            </trans-unit>
+            <trans-unit id="643c99ff1964652633a5ca2178d2219f" resname="labels.success.media-save-desc">
+                <source>labels.success.media-save-desc</source>
+                <target>Média enregistré avec succès</target>
+            </trans-unit>
+            <trans-unit id="643c99ff2964652633a5ca2169f22236" resname="labels.success.media-upload-desc">
+                <source>labels.success.media-upload-desc</source>
+                <target>Media uploadé avec succès</target>
+            </trans-unit>
+            <trans-unit id="c50af521ac121350142c0b4720e29a8a" resname="media-selection.collections">
+                <source>media-selection.collections</source>
+                <target>Collections</target>
+            </trans-unit>
+            <trans-unit id="2ed2e1bec2480b32fd6f8022a857c080" resname="media.collections.title">
+                <source>media.collections.title</source>
+                <target>Collections</target>
+            </trans-unit>
+            <trans-unit id="90a3264459ba0f52ef7a4d3c0298d5d" resname="media.collection.title">
+                <source>media.collection.title</source>
+                <target>Titre de la collection</target>
+            </trans-unit>
+            <trans-unit id="90a3264459ba0f52ef7a4d3c0298d5f" resname="labels.success.collection-save-desc">
+                <source>labels.success.collection-save-desc</source>
+                <target>Collection enregistrée avec succès</target>
+            </trans-unit>
+            <trans-unit id="90a3272459ba0f52ef7a4d3c0298d5f" resname="labels.success.collection-deleted-desc">
+                <source>labels.success.collection-deleted-desc</source>
+                <target>Collection supprimée avec succès</target>
+            </trans-unit>
+            <trans-unit id="90a3272459ba0f52ef7a4d3c0298d5c" resname="sulu.collections.delete-collection">
+                <source>sulu.collections.delete-collection</source>
+                <target>Supprimer collection</target>
+            </trans-unit>
+            <trans-unit id="80a3272459ba0f52ef7a4d3c0298d5f" resname="media-selection.new-collection">
+                <source>media-selection.new-collection</source>
+                <target>Nouvelle collection</target>
+            </trans-unit>
+            <trans-unit id="90a3273459ba0f52ef7a4d3c0298d5f" resname="media-selection.create-new-collection">
+                <source>media-selection.create-new-collection</source>
+                <target>Créer nouvelle collection</target>
+            </trans-unit>
+            <trans-unit id="90a9272459ba0f52ef7a4d3c0298d5f" resname="media-selection.upload-to-collection">
+                <source>media-selection.upload-to-collection</source>
+                <target>Upload à la collection</target>
+            </trans-unit>
+            <trans-unit id="90a9272459ba0f52ef7a4d3c0298d5d" resname="media-selection.upload-new">
+                <source>media-selection.upload-new</source>
+                <target>Upload Nouveau</target>
+            </trans-unit>
+            <trans-unit id="c50af528fc121350142c0b4720e29a8a" resname="media-selection.add-images">
+                <source>media-selection.add-images</source>
+                <target>Ajouter des images</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22254" resname="media-selection.nomedia-selected">
+                <source>media-selection.nomedia-selected</source>
+                <target>Pas de médias sélectionnés</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22255" resname="sulu.media.move">
+                <source>sulu.media.move</source>
+                <target>Déplacer les médias</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22256" resname="sulu.media.move.overlay-title">
+                <source>sulu.media.move.overlay-title</source>
+                <target>Choisissez nouvelle collection</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22257" resname="labels.success.media-move-desc">
+                <source>labels.success.media-move-desc</source>
+                <target>Média déplacé avec succès</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652123a5ca2169f22257" resname="labels.success.collection-move-desc">
+                <source>labels.success.collection-move-desc</source>
+                <target>Collection déplacée avec succès</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633a5ca2169f22257" resname="sulu.media.edit.loading">
+                <source>sulu.media.edit.loading</source>
+                <target>Chargement du Media</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22258" resname="sulu.collection.move">
+                <source>sulu.collection.move</source>
+                <target>Déplacer collection</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22259" resname="navigation.media.collections.empty">
+                <source>navigation.media.collections.empty</source>
+                <target>Pas de collections</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22250" resname="navigation.media.collections.add">
+                <source>navigation.media.collections.add</source>
+                <target>Ajouter</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22260" resname="sulu.collection.move.overlay-title">
+                <source>sulu.collection.move.overlay-title</source>
+                <target>Déplacer la collection</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22345" resname="media-selection.overlay.all-medias">
+                <source>media-selection.overlay.all-medias</source>
+                <target>Tous les Medias</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22261" resname="sulu.media.all">
+                <source>sulu.media.all</source>
+                <target>Tous les media</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633a5ca2169f22258" resname="sulu.media.history">
+                <source>sulu.media.history</source>
+                <target>Historique</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633a5ca2169f22259" resname="sulu.media.version">
+                <source>sulu.media.version</source>
+                <target>Version</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633a5ca2169f22260" resname="sulu.media.version.active">
+                <source>sulu.media.version.active</source>
+                <target>active</target>
+            </trans-unit>
+            <trans-unit id="e4b1428ja8a085edecjsgtf5acb2d39e" resname="search-overlay.index.media.title">
+                <source>search-overlay.index.media.title</source>
+                <target>Media</target>
+            </trans-unit>
+            <trans-unit id="c28342a4fe2011e4a3221697f925ec7b" resname="media-selection.overlay.selected-image-label">
+                <source>media-selection.overlay.selected-image-label</source>
+                <target>image sélectionnée</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633a5ca2169f22456" resname="media-selection.overlay.selected-images-label">
+                <source>media-selection.overlay.selected-images-label</source>
+                <target>images sélectionnées</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633a5ca2169f27623" resname="media-selection.list-toolbar.upload-info">
+                <source>media-selection.list-toolbar.upload-info</source>
+                <target>Cliquez ou Drag'n'Drop</target>
+            </trans-unit>
+            <trans-unit id="243d88fse564652633a5ca2169f22407" resname="sulu.media.edit-collection">
+                <source>sulu.media.edit-collection</source>
+                <target>Editer la collection</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633a5cr443gf22407" resname="sulu.media.upload-new-version">
+                <source>sulu.media.upload-new-version</source>
+                <target>Upload une nouvelle version</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64gs7533a5ca2169f22407" resname="labels.success.media-deleted-desc">
+                <source>labels.success.media-deleted-desc</source>
+                <target>Média supprimé avec succès</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633778k2169f22407" resname="sulu.toolbar.masonry">
+                <source>sulu.toolbar.masonry</source>
+                <target>Masonry</target>
+            </trans-unit>
+            <trans-unit id="243d88440f24652633778k2169f22407" resname="sulu.header.edit-collection">
+                <source>sulu.header.edit-collection</source>
+                <target>Editer la collection</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f646526337ls55369f22407" resname="sulu.header.delete-collection">
+                <source>sulu.header.delete-collection</source>
+                <target>Supprimer la collection</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f646526337ls55369f22417" resname="husky.upload.error.file-to-big">
+                <source>husky.upload.error.file-to-big</source>
+                <target>Maximum taille du fichier ({{filesize}}mb) atteinte</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f646526337ls55369f22427" resname="sulu.dropzone.error.file-to-big.title">
+                <source>sulu.dropzone.error.file-to-big.title</source>
+                <target>Fichier {{filename}}</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f646526337ls55369f22437" resname="sulu.dropzone.error.title">
+                <source>sulu.dropzone.error.title</source>
+                <target>Fichier {{filename}}</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f646526337ls55369f12437" resname="sulu.dropzone.error.message">
+                <source>sulu.dropzone.error.message</source>
+                <target>Une erreur inconnue s'est produite</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f646526337ls55369f22123" resname="sulu.media.copyright">
+                <source>sulu.media.copyright</source>
+                <target>Copyright</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f646526337ls55369f22124" resname="sulu.media.copyright-information">
+                <source>sulu.media.copyright-information</source>
+                <target>Copyright information</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f646526727ls55369f22124" resname="sulu.media.play-video.loading">
+                <source>sulu.media.play-video.loading</source>
+                <target>Chargement video</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f643526337ls55369f22124" resname="sulu.media.preview-tab">
+                <source>sulu.media.preview</source>
+                <target>Aperçu en image</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f643526337js55369f22124" resname="sulu.media.reset-preview-image">
+                <source>sulu.media.reset-preview-image</source>
+                <target>Réinitialiser l'aperçu de l'image</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f22124" resname="sulu.media.upload-new-preview">
+                <source>sulu.media.upload-new-preview</source>
+                <target>Transférer une nouvelle image d'aperçu</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
