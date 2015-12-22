@@ -3,9 +3,12 @@ sudo: false
 language: php
 
 php:
+  - 5.5
   - 7.0
 
 env:
+  global:
+    - SYMFONY_DEPRECATIONS_HELPER: weak
   - SULU_ORM=mysql SULU_PHPCR=jackrabbit
 #  - SULU_ORM=postgres SULU_PHPCR=jackrabbit
 #  - SULU_ORM=mysql SULU_PHPCR=doctrine_dbal
