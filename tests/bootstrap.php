@@ -19,4 +19,5 @@ if (!file_exists($file)) {
 $loader = require_once $file;
 
 AnnotationRegistry::registerLoader([$loader, 'loadClass']);
+
 return $loader;
