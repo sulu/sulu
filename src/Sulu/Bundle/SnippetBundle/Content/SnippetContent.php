@@ -40,7 +40,7 @@ class SnippetContent extends ComplexContentType
     /**
      * @var bool
      */
-    protected $fallbackEnabled;
+    protected $defaultEnabled;
 
     /**
      * @var DefaultSnippetManagerInterface
@@ -50,12 +50,12 @@ class SnippetContent extends ComplexContentType
     public function __construct(
         DefaultSnippetManagerInterface $defaultSnippetManager,
         SnippetResolverInterface $snippetResolver,
-        $fallbackEnabled,
+        $defaultEnabled,
         $template
     ) {
         $this->snippetResolver = $snippetResolver;
         $this->defaultSnippetManager = $defaultSnippetManager;
-        $this->fallbackEnabled = $fallbackEnabled;
+        $this->defaultEnabled = $defaultEnabled;
         $this->template = $template;
     }
 
@@ -205,9 +205,9 @@ class SnippetContent extends ComplexContentType
         $ids = $this->getUuids($refs);
 
         $snippetType = $this->getParameterValue($property->getParams(), 'snippetType');
-        $fallbackEnabled = $this->getParameterValue($property->getParams(), 'fallback', false);
+        $default = $this->getParameterValue($property->getParams(), 'default', false);
 
-        if (empty($ids) && $snippetType && $fallbackEnabled && $this->fallbackEnabled) {
+        if (empty($ids) && $snippetType && $default && $this->defaultEnabled) {
             $ids = [
                 $this->defaultSnippetManager->loadIdentifier($webspaceKey, $snippetType),
             ];

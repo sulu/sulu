@@ -202,7 +202,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $property->getParams()->willReturn(
             [
                 'snippetType' => new PropertyParameter('snippetType', 'test'),
-                'fallback' => new PropertyParameter('fallback', true),
+                'default' => new PropertyParameter('default', true),
             ]
         );
 
@@ -225,7 +225,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $property->getParams()->willReturn(
             [
                 'snippetType' => new PropertyParameter('snippetType', 'test'),
-                'fallback' => new PropertyParameter('fallback', true),
+                'default' => new PropertyParameter('default', true),
             ]
         );
 
@@ -237,7 +237,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->assertCount(1, $data);
     }
 
-    public function testGetContentDataDefaultFallbackNotSet()
+    public function testGetContentDataDefaultDefaultNotSet()
     {
         $structure = $this->prophesize(PageBridge::class);
         $structure->getWebspaceKey()->willReturn('sulu_io');
@@ -259,7 +259,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->assertCount(0, $data);
     }
 
-    public function testGetContentDataDefaultFallbackFalse()
+    public function testGetContentDataDefaultDefaultFalse()
     {
         $structure = $this->prophesize(PageBridge::class);
         $structure->getWebspaceKey()->willReturn('sulu_io');
@@ -272,7 +272,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $property->getParams()->willReturn(
             [
                 'snippetType' => new PropertyParameter('snippetType', 'test'),
-                'fallback' => new PropertyParameter('fallback', false),
+                'default' => new PropertyParameter('default', false),
             ]
         );
 

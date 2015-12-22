@@ -25,7 +25,7 @@
 
         <service id="sulu_snippet.webspace_navigation_provider"
                  class="Sulu\Bundle\SnippetBundle\Admin\WebspaceContentNavigationProvider">
-            <argument>%sulu_snippet.content-type.fallback_enabled%</argument>
+            <argument>%sulu_snippet.content-type.default_enabled%</argument>
 
             <tag name="sulu_admin.content_navigation" alias="webspace"/>
             <tag name="sulu.context" context="admin"/>

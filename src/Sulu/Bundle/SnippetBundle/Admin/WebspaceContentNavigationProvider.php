@@ -19,11 +19,11 @@ class WebspaceContentNavigationProvider implements ContentNavigationProviderInte
     /**
      * @var bool
      */
-    private $fallbackEnabled;
+    private $defaultEnabled;
 
-    public function __construct($fallbackEnabled)
+    public function __construct($defaultEnabled)
     {
-        $this->fallbackEnabled = $fallbackEnabled;
+        $this->defaultEnabled = $defaultEnabled;
     }
 
     /**
@@ -31,7 +31,7 @@ class WebspaceContentNavigationProvider implements ContentNavigationProviderInte
      */
     public function getNavigationItems(array $options = [])
     {
-        if ($this->fallbackEnabled === false) {
+        if ($this->defaultEnabled === false) {
             return [];
         }
 

@@ -45,8 +45,8 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
             $config['types']['snippet']['template']
         );
         $container->setParameter(
-            'sulu_snippet.content-type.fallback_enabled',
-            $config['types']['snippet']['fallback_enabled']
+            'sulu_snippet.content-type.default_enabled',
+            $config['types']['snippet']['default_enabled']
         );
         $container->setParameter(
             'sulu_snippet.twig.snippet.cache_lifetime',
