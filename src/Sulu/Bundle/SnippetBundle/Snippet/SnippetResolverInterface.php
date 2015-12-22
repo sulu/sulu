@@ -16,7 +16,7 @@ namespace Sulu\Bundle\SnippetBundle\Snippet;
 interface SnippetResolverInterface
 {
     /**
-     * Load snippet and reolves them by UUID.
+     * Load snippet and resolves them by UUID.
      *
      * @param string[] $uuids
      * @param string $webspaceKey
