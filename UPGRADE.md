@@ -1,5 +1,25 @@
 # Upgrade
 
+## dev-develop
+
+### Webspace Settings
+
+A new phpcr namespace was added. To register it run following command:
+
+```bash
+app/console sulu:phpcr:init
+```
+
+### ContentNavigation & Navigation
+
+The ContentNavigationItems & NavigationItems will be sorted by their position. If there is no position set, the item
+will be placed behind all other items.
+
+```php
+$item = new ContentNavigationItem('content-navigation.entry');
+$item->setPosition(10);
+```
+
 ## 1.1.2
 
 ### Reindex-Command & Date Content-Type

@@ -99,11 +99,11 @@ class NavigationTest extends \PHPUnit_Framework_TestCase
         $array = $this->navigation1->toArray();
 
         $this->assertEquals('Root', $array['title']);
-        $this->assertEquals('Portals', $array['items'][0]['title']);
-        $this->assertEquals('DE', $array['items'][0]['items'][0]['title']);
-        $this->assertEquals('AT', $array['items'][0]['items'][1]['title']);
-        $this->assertEquals('COM', $array['items'][0]['items'][2]['title']);
-        $this->assertEquals('Settings', $array['items'][1]['title']);
-        $this->assertEquals('Translate', $array['items'][1]['items'][0]['title']);
+        $this->assertEquals('Settings', $array['items'][0]['title']);
+        $this->assertEquals('Translate', $array['items'][0]['items'][0]['title']);
+        $this->assertEquals('Portals', $array['items'][1]['title']);
+        $this->assertEquals('COM', $array['items'][1]['items'][0]['title']);
+        $this->assertEquals('AT', $array['items'][1]['items'][1]['title']);
+        $this->assertEquals('DE', $array['items'][1]['items'][2]['title']);
     }
 }

@@ -165,4 +165,30 @@ class WebspaceCollectionBuilderTest extends \PHPUnit_Framework_TestCase
 
         $webspaceCollection = $webspaceCollectionBuilder->build();
     }
+
+    public function testBuildWithMainUrl()
+    {
+        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
+            $this->loader,
+            $this->logger,
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/main'
+        );
+
+        $webspaceCollection = $webspaceCollectionBuilder->build();
+
+        $webspace = $webspaceCollection->getWebspaces()[0];
+        $this->assertEquals('sulu_io', $webspace->getKey());
+
+        $dev = $webspace->getPortals()[0]->getEnvironment('dev');
+        $prod = $webspace->getPortals()[0]->getEnvironment('prod');
+        $main = $webspace->getPortals()[0]->getEnvironment('main');
+
+        $this->assertCount(1, $dev->getUrls());
+        $this->assertCount(2, $prod->getUrls());
+        $this->assertCount(3, $main->getUrls());
+
+        $this->assertEquals('sulu.lo', $dev->getMainUrl()->getUrl());
+        $this->assertEquals('www.sulu.at', $prod->getMainUrl()->getUrl());
+        $this->assertEquals('sulu.at', $main->getMainUrl()->getUrl());
+    }
 }

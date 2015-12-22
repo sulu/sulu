@@ -33,6 +33,7 @@ class Configuration implements ConfigurationInterface
                                 ->scalarNode('template')
                                     ->defaultValue('SuluSnippetBundle:Template:content-types/snippet.html.twig')
                                 ->end()
+                                ->booleanNode('default_enabled')->defaultValue(false)->end()
                             ->end()
                         ->end()
                     ->end()

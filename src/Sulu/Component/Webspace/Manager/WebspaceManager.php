@@ -14,6 +14,7 @@ namespace Sulu\Component\Webspace\Manager;
 use Psr\Log\LoggerInterface;
 use Sulu\Component\Webspace\Manager\Dumper\PhpWebspaceCollectionDumper;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -77,7 +78,7 @@ class WebspaceManager implements WebspaceManagerInterface
     /**
      * Returns the portal with the given url (which has not necessarily to be the main url).
      *
-     * @param string $url         The url to search for
+     * @param string $url The url to search for
      * @param string $environment The environment in which the url should be searched
      *
      * @return array|null
@@ -124,6 +125,35 @@ class WebspaceManager implements WebspaceManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function findUrlByResourceLocator(
+        $resourceLocator,
+        $environment,
+        $languageCode,
+        $webspaceKey = null,
+        $domain = null,
+        $scheme = 'http'
+    ) {
+        $urls = [];
+        $portals = $this->getWebspaceCollection()->getPortalInformations($environment);
+        foreach ($portals as $url => $portalInformation) {
+            $sameLocalization = $portalInformation->getLocalization()->getLocalization() === $languageCode;
+            $sameWebspace = $webspaceKey === null || $portalInformation->getWebspace()->getKey() === $webspaceKey;
+            $url = rtrim(sprintf('%s://%s%s', $scheme, $url, $resourceLocator), '/');
+            if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {
+                if ($portalInformation->isMain()) {
+                    array_unshift($urls, $url);
+                } else {
+                    $urls[] = $url;
+                }
+            }
+        }
+
+        return reset($urls);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getPortals()
     {
         return $this->getWebspaceCollection()->getPortals();
@@ -149,6 +179,19 @@ class WebspaceManager implements WebspaceManagerInterface
     public function getPortalInformations($environment)
     {
         return $this->getWebspaceCollection()->getPortalInformations($environment);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPortalInformationsByWebspaceKey($environment, $webspaceKey)
+    {
+        return array_filter(
+            $this->getWebspaceCollection()->getPortalInformations($environment),
+            function (PortalInformation $portal) use ($webspaceKey) {
+                return $portal->getWebspaceKey() === $webspaceKey;
+            }
+        );
     }
 
     /**

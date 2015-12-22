@@ -73,6 +73,11 @@ class PortalInformation implements ArrayableInterface
      */
     private $redirect;
 
+    /**
+     * @var bool
+     */
+    private $main;
+
     public function __construct(
         $type,
         Webspace $webspace = null,
@@ -81,7 +86,8 @@ class PortalInformation implements ArrayableInterface
         $url,
         Segment $segment = null,
         $redirect = null,
-        $analyticsKey = null
+        $analyticsKey = null,
+        $main = false
     ) {
         $this->setType($type);
         $this->setWebspace($webspace);
@@ -91,6 +97,7 @@ class PortalInformation implements ArrayableInterface
         $this->setUrl($url);
         $this->setRedirect($redirect);
         $this->setAnalyticsKey($analyticsKey);
+        $this->setMain($main);
     }
 
     /**
@@ -114,6 +121,20 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
+     * Returns the localization for this PortalInformation.
+     *
+     * @return Localization
+     */
+    public function getLocale()
+    {
+        if (null === $this->localization) {
+            return;
+        }
+
+        return $this->localization->getLocalization();
+    }
+
+    /**
      * Sets the portal for this PortalInformation.
      *
      * @param \Sulu\Component\Webspace\Portal $portal
@@ -131,6 +152,18 @@ class PortalInformation implements ArrayableInterface
     public function getPortal()
     {
         return $this->portal;
+    }
+
+    /**
+     * Returns key of portal.
+     */
+    public function getPortalKey()
+    {
+        if (null === $this->portal) {
+            return;
+        }
+
+        return $this->portal->getKey();
     }
 
     /**
@@ -274,6 +307,34 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
+     * Returns key of webspace.
+     */
+    public function getWebspaceKey()
+    {
+        if (null === $this->webspace) {
+            return;
+        }
+
+        return $this->webspace->getKey();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMain()
+    {
+        return $this->main;
+    }
+
+    /**
+     * @param bool $main
+     */
+    public function setMain($main)
+    {
+        $this->main = $main;
+    }
+
+    /**
      * Calculate the length of the host part of the URL.
      *
      * @return int
@@ -295,6 +356,7 @@ class PortalInformation implements ArrayableInterface
         $res['type'] = $this->getType();
         $res['webspace'] = $this->getWebspace()->getKey();
         $res['url'] = $this->getUrl();
+        $res['main'] = $this->isMain();
 
         $portal = $this->getPortal();
 

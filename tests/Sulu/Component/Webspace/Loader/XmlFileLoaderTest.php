@@ -61,17 +61,19 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('de_at', $webspace->getPortals()[0]->getDefaultLocalization()->getLocalization());
 
-        $this->assertEquals(2, count($webspace->getPortals()[0]->getEnvironments()));
+        $this->assertEquals(3, count($webspace->getPortals()[0]->getEnvironments()));
 
         $environmentProd = $webspace->getPortals()[0]->getEnvironment('prod');
         $this->assertEquals('prod', $environmentProd->getType());
         $this->assertEquals(2, count($environmentProd->getUrls()));
         $this->assertEquals('sulu.at', $environmentProd->getUrls()[0]->getUrl());
+        $this->assertTrue($environmentProd->getUrls()[0]->isMain());
         $this->assertEquals('de', $environmentProd->getUrls()[0]->getLanguage());
         $this->assertEquals(null, $environmentProd->getUrls()[0]->getSegment());
         $this->assertEquals('at', $environmentProd->getUrls()[0]->getCountry());
         $this->assertEquals(null, $environmentProd->getUrls()[0]->getRedirect());
         $this->assertEquals('www.sulu.at', $environmentProd->getUrls()[1]->getUrl());
+        $this->assertFalse($environmentProd->getUrls()[1]->isMain());
         $this->assertEquals(null, $environmentProd->getUrls()[1]->getLanguage());
         $this->assertEquals(null, $environmentProd->getUrls()[1]->getSegment());
         $this->assertEquals(null, $environmentProd->getUrls()[1]->getCountry());
@@ -81,6 +83,17 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('dev', $environmentDev->getType());
         $this->assertEquals(1, count($environmentDev->getUrls()));
         $this->assertEquals('sulu.lo', $environmentDev->getUrls()[0]->getUrl());
+        $this->assertTrue($environmentProd->getUrls()[0]->isMain());
+
+        $environmentMain = $webspace->getPortals()[0]->getEnvironment('main');
+        $this->assertEquals('main', $environmentMain->getType());
+        $this->assertEquals(3, count($environmentMain->getUrls()));
+        $this->assertEquals('sulu.lo', $environmentMain->getUrls()[0]->getUrl());
+        $this->assertFalse($environmentMain->getUrls()[0]->isMain());
+        $this->assertEquals('sulu.at', $environmentMain->getUrls()[1]->getUrl());
+        $this->assertTrue($environmentMain->getUrls()[1]->isMain());
+        $this->assertEquals('at.sulu.de', $environmentMain->getUrls()[2]->getUrl());
+        $this->assertFalse($environmentMain->getUrls()[2]->isMain());
 
         $webspace = $this->loader->load(
             __DIR__ . '/../../../../Resources/DataFixtures/Webspace/valid/massiveart.xml'

@@ -37,6 +37,7 @@ class MediaContentNavigationProvider implements ContentNavigationProviderInterfa
     {
         $files = new ContentNavigationItem('content-navigation.media.files');
         $files->setAction('files');
+        $files->setPosition(10);
         $files->setComponent('collections/edit/files@sulumedia');
 
         return [$files];

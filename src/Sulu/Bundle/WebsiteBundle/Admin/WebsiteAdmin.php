@@ -21,13 +21,16 @@ class WebsiteAdmin extends Admin
     {
         $rootNavigationItem = new NavigationItem($title);
         $section = new NavigationItem('');
+        $section->setPosition(10);
 
         $settings = new NavigationItem('navigation.settings');
+        $settings->setPosition(40);
         $settings->setIcon('gear');
 
-        $roles = new NavigationItem('navigation.settings.cache', $settings);
-        $roles->setAction('settings/cache');
-        $roles->setIcon('hdd-o');
+        $cache = new NavigationItem('navigation.settings.cache', $settings);
+        $cache->setPosition(50);
+        $cache->setAction('settings/cache');
+        $cache->setIcon('hdd-o');
 
         $section->addChild($settings);
         $rootNavigationItem->addChild($section);

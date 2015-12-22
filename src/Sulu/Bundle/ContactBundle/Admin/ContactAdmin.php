@@ -29,12 +29,15 @@ class ContactAdmin extends Admin
 
         $rootNavigationItem = new NavigationItem($title);
         $section = new NavigationItem('');
+        $section->setPosition(10);
 
         $contacts = new NavigationItem('navigation.contacts');
+        $contacts->setPosition(20);
         $contacts->setIcon('user');
 
         if ($this->securityChecker->hasPermission('sulu.contact.people', 'view')) {
             $people = new NavigationItem('navigation.contacts.people');
+            $people->setPosition(10);
             $people->setIcon('users');
             $people->setAction('contacts/contacts');
             $contacts->addChild($people);
@@ -42,6 +45,7 @@ class ContactAdmin extends Admin
 
         if ($this->securityChecker->hasPermission('sulu.contact.organizations', 'view')) {
             $companies = new NavigationItem('navigation.contacts.companies');
+            $companies->setPosition(20);
             $companies->setIcon('building');
             $companies->setAction('contacts/accounts');
             $contacts->addChild($companies);

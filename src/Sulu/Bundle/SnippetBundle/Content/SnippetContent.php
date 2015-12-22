@@ -1,7 +1,6 @@
 <?php
-
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -14,13 +13,14 @@ namespace Sulu\Bundle\SnippetBundle\Content;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
 use PHPCR\Util\UUIDHelper;
-use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
+use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
+use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 
 /**
  * ContentType for Snippets.
@@ -28,9 +28,9 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 class SnippetContent extends ComplexContentType
 {
     /**
-     * @var ContentMapperInterface
+     * @var SnippetResolverInterface
      */
-    protected $contentMapper;
+    private $snippetResolver;
 
     /**
      * @var string
@@ -38,25 +38,24 @@ class SnippetContent extends ComplexContentType
     protected $template;
 
     /**
-     * @var StructureResolverInterface
+     * @var bool
      */
-    protected $structureResolver;
+    protected $defaultEnabled;
 
     /**
-     * @var array
+     * @var DefaultSnippetManagerInterface
      */
-    private $snippetCache = [];
+    private $defaultSnippetManager;
 
-    /**
-     * Constructor.
-     */
     public function __construct(
-        ContentMapperInterface $contentMapper,
-        StructureResolverInterface $structureResolver,
+        DefaultSnippetManagerInterface $defaultSnippetManager,
+        SnippetResolverInterface $snippetResolver,
+        $defaultEnabled,
         $template
     ) {
-        $this->contentMapper = $contentMapper;
-        $this->structureResolver = $structureResolver;
+        $this->snippetResolver = $snippetResolver;
+        $this->defaultSnippetManager = $defaultSnippetManager;
+        $this->defaultEnabled = $defaultEnabled;
         $this->template = $template;
     }
 
@@ -79,7 +78,7 @@ class SnippetContent extends ComplexContentType
     /**
      * Set data to given property.
      *
-     * @param array             $data
+     * @param array $data
      * @param PropertyInterface $property
      */
     protected function setData($data, PropertyInterface $property)
@@ -167,26 +166,12 @@ class SnippetContent extends ComplexContentType
      */
     public function getViewData(PropertyInterface $property)
     {
-        /** @var PageBridge $page */
-        $page = $property->getStructure();
-        $webspaceKey = $page->getWebspaceKey();
-        $locale = $page->getLanguageCode();
-        $shadowLocale = null;
-        if ($page->getIsShadow()) {
-            $shadowLocale = $page->getShadowBaseLanguage();
+        $viewData = [];
+        foreach ($this->getSnippets($property) as $snippet) {
+            $viewData[] = $snippet['view'];
         }
 
-        $refs = $property->getValue();
-
-        $contentData = [];
-
-        $ids = $this->getUuids($refs);
-
-        foreach ($this->loadSnippets($ids, $webspaceKey, $locale, $shadowLocale) as $snippet) {
-            $contentData[] = $snippet['view'];
-        }
-
-        return $contentData;
+        return $viewData;
     }
 
     /**
@@ -194,6 +179,19 @@ class SnippetContent extends ComplexContentType
      */
     public function getContentData(PropertyInterface $property)
     {
+        $contentData = [];
+        foreach ($this->getSnippets($property) as $snippet) {
+            $contentData[] = $snippet['content'];
+        }
+
+        return $contentData;
+    }
+
+    /**
+     * Returns snippets with given property value.
+     */
+    private function getSnippets(PropertyInterface $property)
+    {
         /** @var PageBridge $page */
         $page = $property->getStructure();
         $webspaceKey = $page->getWebspaceKey();
@@ -206,40 +204,19 @@ class SnippetContent extends ComplexContentType
         $refs = $property->getValue();
         $ids = $this->getUuids($refs);
 
-        $contentData = [];
-        foreach ($this->loadSnippets($ids, $webspaceKey, $locale, $shadowLocale) as $snippet) {
-            $contentData[] = $snippet['content'];
+        $snippetType = $this->getParameterValue($property->getParams(), 'snippetType');
+        $default = $this->getParameterValue($property->getParams(), 'default', false);
+
+        if (empty($ids) && $snippetType && $default && $this->defaultEnabled) {
+            $ids = [
+                $this->defaultSnippetManager->loadIdentifier($webspaceKey, $snippetType),
+            ];
+
+            // to filter null default snippet
+            $ids = array_filter($ids);
         }
 
-        return $contentData;
-    }
-
-    /**
-     * load snippet and serialize them.
-     *
-     * additionally cache it by id in this class
-     */
-    private function loadSnippets($ids, $webspaceKey, $locale, $shadowLocale = null)
-    {
-        $snippets = [];
-        foreach ($ids as $i => $ref) {
-            if (!array_key_exists($ref, $this->snippetCache)) {
-                $snippet = $this->contentMapper->load($ref, $webspaceKey, $locale);
-
-                if (!$snippet->getHasTranslation() && $shadowLocale !== null) {
-                    $snippet = $this->contentMapper->load($ref, $webspaceKey, $shadowLocale);
-                }
-
-                $resolved = $this->structureResolver->resolve($snippet);
-                $resolved['view']['template'] = $snippet->getKey();
-
-                $this->snippetCache[$ref] = $resolved;
-            }
-
-            $snippets[] = $this->snippetCache[$ref];
-        }
-
-        return $snippets;
+        return $this->snippetResolver->resolve($ids, $webspaceKey, $locale, $shadowLocale);
     }
 
     /**
@@ -260,5 +237,24 @@ class SnippetContent extends ComplexContentType
         $ids = is_array($data) ? $data : [];
 
         return $ids;
+    }
+
+    /**
+     * Returns value of parameter.
+     * If parameter not exists the default will be returned.
+     *
+     * @param PropertyParameter[] $parameter
+     * @param string $name
+     * @param mixed $default
+     *
+     * @return mixed
+     */
+    private function getParameterValue(array $parameter, $name, $default = null)
+    {
+        if (!array_key_exists($name, $parameter)) {
+            return $default;
+        }
+
+        return $parameter[$name]->getValue();
     }
 }
