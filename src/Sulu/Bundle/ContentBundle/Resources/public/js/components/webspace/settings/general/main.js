@@ -31,8 +31,10 @@ define(['text!./skeleton.html'], function(skeleton) {
 
         defaults: defaults,
 
-        tabOptions: {
-            noTitle: true
+        tabOptions: function() {
+            return {
+                title: this.data.webspace.title
+            };
         },
 
         layout: {
