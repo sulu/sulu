@@ -17,6 +17,7 @@ use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\ContactBundle\Contact\ContactManager;
 use Sulu\Bundle\ContactBundle\Util\IndexComparatorInterface;
+use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -751,8 +752,9 @@ class ContactController extends RestController implements ClassResourceInterface
      */
     protected function getContactsByUserSystem()
     {
+        /** @var UserRepository $repo */
         $repo = $this->get('sulu_security.user_repository');
-        $users = $repo->getUserInSystem();
+        $users = $repo->getUserInSystem(['contact.firstName' => 'ASC', 'contact.lastName' => 'ASC']);
         $contacts = [];
 
         foreach ($users as $user) {

@@ -410,9 +410,13 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     }
 
     /**
-     * returns all users within the defined system including their contacts.
+     * Returns all users within the defined system including their contacts.
+     *
+     * @param array $sortBy
+     *
+     * @return array
      */
-    public function getUserInSystem()
+    public function getUserInSystem($sortBy = [])
     {
         $qb = $this->createQueryBuilder('user')
             ->select('user', 'contact')
@@ -420,6 +424,8 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             ->leftJoin('user.contact', 'contact')
             ->leftJoin('userRoles.role', 'role')
             ->where('role.system=:system');
+
+        $this->addOrderBy($qb, 'user', $sortBy);
 
         $query = $qb->getQuery();
         $query->setParameter('system', $this->getSystem());
