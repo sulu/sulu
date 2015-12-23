@@ -5,6 +5,8 @@ CHANGELOG for Sulu
     * FEATURE     #1905 [All]             Added french translation
     * BUGFIX      #1893 [ContentBundle]   Fixed resource locator deferred for edit
     * BUGIFX      #1871 [ContentBundle]   Fixed url-generation and save button
+    * BUGFIX      #1873 [ContactBundle]   Fixed remove title and position
+    * BUGFIX      #1873 [ContactBundle]   Fixed remove contact birthday
 
 * dev-master
     * HOTFIX      #1888 [ContentBundle]   used auto_name in phpcr migrations
