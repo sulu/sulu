@@ -79,7 +79,7 @@ class ContentNavigationRegistryTest extends \PHPUnit_Framework_TestCase
                     'service3' => [['tab4']],
                 ],
                 [
-                    'alias1' => [['tab3'], ['tab2'], ['tab1']],
+                    'alias1' => [['tab1'], ['tab2'], ['tab3']],
                     'alias2' => [['tab4']],
                 ],
             ],
@@ -113,14 +113,17 @@ class ContentNavigationRegistryTest extends \PHPUnit_Framework_TestCase
             }
         }
 
+        $pos = 1;
         foreach ($contentNavigationData as $service => $items) {
             $contentNavigationProvider = $this->prophesize(ContentNavigationProviderInterface::class);
 
             $items = array_map(
-                function ($item) {
+                function ($item) use (&$pos) {
                     $navigationItem = new ContentNavigationItem($item[0]);
                     $navigationItem->setAction($item[0]);
-                    $navigationItem->setPosition(isset($item[1]) ? $item[1] : null);
+                    $navigationItem->setPosition(isset($item[1]) ? $item[1] : $pos);
+
+                    ++$pos;
 
                     return $navigationItem;
                 },

@@ -38,11 +38,13 @@ class NavigationTest extends \PHPUnit_Framework_TestCase
         //Setup first navigation
         $this->root1 = new NavigationItem('Root');
         $item1_1 = new NavigationItem('Portals', $this->root1);
-        new NavigationItem('DE', $item1_1);
-        new NavigationItem('AT', $item1_1);
-        new NavigationItem('COM', $item1_1);
+        $item1_1->setPosition(1);
+        (new NavigationItem('DE', $item1_1))->setPosition(1);
+        (new NavigationItem('AT', $item1_1))->setPosition(2);
+        (new NavigationItem('COM', $item1_1))->setPosition(3);
         $item1_2 = new NavigationItem('Settings', $this->root1);
-        new NavigationItem('Translate', $item1_2);
+        $item1_2->setPosition(2);
+        (new NavigationItem('Translate', $item1_2))->setPosition(1);
 
         $this->navigation1 = new Navigation($this->root1);
 
@@ -99,11 +101,11 @@ class NavigationTest extends \PHPUnit_Framework_TestCase
         $array = $this->navigation1->toArray();
 
         $this->assertEquals('Root', $array['title']);
-        $this->assertEquals('Settings', $array['items'][0]['title']);
-        $this->assertEquals('Translate', $array['items'][0]['items'][0]['title']);
-        $this->assertEquals('Portals', $array['items'][1]['title']);
-        $this->assertEquals('COM', $array['items'][1]['items'][0]['title']);
-        $this->assertEquals('AT', $array['items'][1]['items'][1]['title']);
-        $this->assertEquals('DE', $array['items'][1]['items'][2]['title']);
+        $this->assertEquals('Portals', $array['items'][0]['title']);
+        $this->assertEquals('DE', $array['items'][0]['items'][0]['title']);
+        $this->assertEquals('AT', $array['items'][0]['items'][1]['title']);
+        $this->assertEquals('COM', $array['items'][0]['items'][2]['title']);
+        $this->assertEquals('Settings', $array['items'][1]['title']);
+        $this->assertEquals('Translate', $array['items'][1]['items'][0]['title']);
     }
 }
