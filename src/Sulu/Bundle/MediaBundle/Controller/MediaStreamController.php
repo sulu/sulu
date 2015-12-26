@@ -135,7 +135,7 @@ class MediaStreamController extends Controller
             // 404 when resourcePath is empty
             return new Response('File not found.', 404);
         } else {
-            $response = new BinaryResourceResponse($resourcePath, 200, array(), $fileSize, $mimeType);
+            $response = new BinaryResourceResponse($resourcePath, 200, [], $fileSize, $mimeType);
         }
 
         // Prepare headers

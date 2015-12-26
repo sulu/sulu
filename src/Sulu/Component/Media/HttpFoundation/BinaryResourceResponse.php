@@ -34,7 +34,7 @@ class BinaryResourceResponse extends Response
     protected $resource;
 
     /**
-     * @var $filePath
+     * @var string
      */
     protected $filePath;
 
@@ -73,7 +73,7 @@ class BinaryResourceResponse extends Response
      * @param string              $mimeType           The resource mimeType
      * @param bool                $public             Files are public by default
      */
-    public function __construct($resource, $status = 200, $headers = array(), $size = null, $mimeType = null, $public = true)
+    public function __construct($resource, $status = 200, $headers = [], $size = null, $mimeType = null, $public = true)
     {
         $this->setResource($resource, $size, $mimeType);
         parent::__construct(null, $status, $headers);
@@ -119,7 +119,7 @@ class BinaryResourceResponse extends Response
     public static function create(
         $resource = null,
         $status = 200,
-        $headers = array(),
+        $headers = [],
         $size = null,
         $mimeType = null,
         $public = true
@@ -168,7 +168,7 @@ class BinaryResourceResponse extends Response
                         $location = trim($mapping[1]);
 
                         if (substr($path, 0, strlen($pathPrefix)) == $pathPrefix) {
-                            $path = $location.substr($path, strlen($pathPrefix));
+                            $path = $location . substr($path, strlen($pathPrefix));
                             break;
                         }
                     }
@@ -182,7 +182,7 @@ class BinaryResourceResponse extends Response
                 $range = $request->headers->get('Range');
                 $fileSize = $this->size;
 
-                list($start, $end) = explode('-', substr($range, 6), 2) + array(0);
+                list($start, $end) = explode('-', substr($range, 6), 2) + [0];
 
                 $end = ('' === $end) ? $fileSize - 1 : (int) $end;
 
@@ -270,6 +270,7 @@ class BinaryResourceResponse extends Response
     /**
      * If this is set to true, the file will be unlinked after the request is send
      * Note: If the X-Sendfile header is used, the deleteFileAfterSend setting will not be used.
+     * 
      * @param bool $shouldDelete
      *
      * @return BinaryResourceResponse
