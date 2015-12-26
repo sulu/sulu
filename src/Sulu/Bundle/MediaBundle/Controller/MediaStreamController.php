@@ -26,7 +26,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class MediaStreamController extends Controller
 {
@@ -133,7 +132,7 @@ class MediaStreamController extends Controller
         $resourcePath = $this->getStorageManager()->load($storageOptions, $storageName);
 
         if (is_resource($resourcePath)) {
-            $response = new BinaryResourceResponse($resourcePath, $fileSize, $mimeType);
+            $response = new BinaryResourceResponse($resourcePath, 200, array(), $fileSize, $mimeType);
         } elseif (empty($resourcePath)) {
             // 404 when resourcePath is empty
             return new Response('File not found.', 404);

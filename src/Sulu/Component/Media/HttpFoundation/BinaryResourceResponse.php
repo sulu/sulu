@@ -47,13 +47,13 @@ class BinaryResourceResponse extends Response
      * Constructor.
      *
      * @param resource            $resource           The resource to stream
-     * @param int                 $size               The resource size
-     * @param string              $mimeType           The resource mimeType
      * @param int                 $status             The response status code
      * @param array               $headers            An array of response headers
+     * @param int                 $size               The resource size
+     * @param string              $mimeType           The resource mimeType
      * @param bool                $public             Files are public by default
      */
-    public function __construct($resource, $size, $mimeType, $status = 200, $headers = array(), $public = true)
+    public function __construct($resource, $status = 200, $headers = array(), $size, $mimeType, $public = true)
     {
         $this->setResource($resource, $size, $mimeType);
         parent::__construct(null, $status, $headers);
@@ -77,16 +77,22 @@ class BinaryResourceResponse extends Response
 
     /**
      * @param resource            $resource           The file to stream
-     * @param int                 $size               The resource size
-     * @param string              $mimeType           The resource mimeType
      * @param int                 $status             The response status code
      * @param array               $headers            An array of response headers
      * @param bool                $public             Files are public by default
+     * @param int                 $size               The resource size
+     * @param string              $mimeType           The resource mimeType
      *
      * @return BinaryResourceResponse The created response
      */
-    public static function create($resource, $size, $mimeType, $status = 200, $headers = array(), $public = true)
-    {
+    public static function create(
+        $resource = null,
+        $status = 200,
+        $headers = array(),
+        $size = null,
+        $mimeType = null,
+        $public = true
+    ) {
         return new static($resource, $size, $mimeType, $status, $headers, $public);
     }
 
