@@ -19,6 +19,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\StorageManager\StorageManagerInterface;
+use Sulu\Component\Media\HttpFoundation\BinaryResourceResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -132,16 +133,7 @@ class MediaStreamController extends Controller
         $resourcePath = $this->getStorageManager()->load($storageOptions, $storageName);
 
         if (is_resource($resourcePath)) {
-            $handle = $resourcePath;
-            $response = new StreamedResponse(function () use ($handle) {
-                flush(); // send headers
-                while (!feof($handle)) {
-                    $buffer = fread($handle, 1024);
-                    echo $buffer;
-                    flush(); // buffered output
-                }
-                fclose($handle);
-            });
+            $response = new BinaryResourceResponse($resourcePath, $fileSize, $mimeType);
         } elseif (empty($resourcePath)) {
             // 404 when resourcePath is empty
             return new Response('File not found.', 404);
