@@ -36,7 +36,7 @@ interface StorageManagerInterface
      * @param int $storageOptions
      * @param string $storageName
      *
-     * @return resource|string
+     * @return resource
      */
     public function load($storageOptions, $storageName = null);
 

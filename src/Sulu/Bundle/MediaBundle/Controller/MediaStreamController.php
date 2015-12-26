@@ -131,13 +131,11 @@ class MediaStreamController extends Controller
 
         $resourcePath = $this->getStorageManager()->load($storageOptions, $storageName);
 
-        if (is_resource($resourcePath)) {
-            $response = new BinaryResourceResponse($resourcePath, 200, array(), $fileSize, $mimeType);
-        } elseif (empty($resourcePath)) {
+        if (empty($resourcePath)) {
             // 404 when resourcePath is empty
             return new Response('File not found.', 404);
         } else {
-            $response = new BinaryFileResponse($resourcePath);
+            $response = new BinaryResourceResponse($resourcePath, 200, array(), $fileSize, $mimeType);
         }
 
         // Prepare headers

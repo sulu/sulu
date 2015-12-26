@@ -101,7 +101,7 @@ class LocalStorage extends AbstractStorage
             throw new InvalidStorageOptionsException('Media storage "segment" or "filename" not found.');
         }
 
-        return $this->uploadPath . '/' . $segment . '/' . $fileName;
+        return fopen($this->uploadPath . '/' . $segment . '/' . $fileName, 'r');
     }
 
     /**

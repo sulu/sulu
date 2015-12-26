@@ -33,7 +33,7 @@ interface StorageInterface
      *
      * @param $storageOptions
      *
-     * @return resource|string
+     * @return resource
      */
     public function load($storageOptions);
 

@@ -19,14 +19,34 @@ use Symfony\Component\HttpFoundation\Response;
 class BinaryResourceResponse extends Response
 {
     /**
+     * @var bool
+     */
+    protected static $trustXSendfileTypeHeader = false;
+
+    /**
+     * @var bool
+     */
+    protected $deleteFileAfterSend = false;
+
+    /**
      * @var resource
      */
     protected $resource;
 
     /**
+     * @var $filePath
+     */
+    protected $filePath;
+
+    /**
      * @var string
      */
     protected $mimeType;
+
+    /**
+     * @var string
+     */
+    protected $file;
 
     /**
      * @var int
@@ -53,7 +73,7 @@ class BinaryResourceResponse extends Response
      * @param string              $mimeType           The resource mimeType
      * @param bool                $public             Files are public by default
      */
-    public function __construct($resource, $status = 200, $headers = array(), $size, $mimeType, $public = true)
+    public function __construct($resource, $status = 200, $headers = array(), $size = null, $mimeType = null, $public = true)
     {
         $this->setResource($resource, $size, $mimeType);
         parent::__construct(null, $status, $headers);
@@ -73,6 +93,17 @@ class BinaryResourceResponse extends Response
         $this->resource = $resource;
         $this->mimeType = $mimeType;
         $this->size = $size;
+
+        $meta_data = stream_get_meta_data($this->resource);
+        if (isset($meta_data['uri'])) {
+            $this->filePath = $meta_data['uri'];
+            if (!$this->mimeType) {
+                $this->mimeType = mime_content_type($meta_data['uri']);
+            }
+            if (!$this->size) {
+                $this->size = filesize($meta_data['uri']);
+            }
+        }
     }
 
     /**
@@ -121,7 +152,31 @@ class BinaryResourceResponse extends Response
         $this->offset = 0;
         $this->maxlen = -1;
 
-        if ($request->headers->has('Range')) {
+        // if filepath exist and x-sendfile use x-sendfile
+        if ($this->filePath && self::$trustXSendfileTypeHeader && $request->headers->has('X-Sendfile-Type')) {
+            // Use X-Sendfile, do not send any content.
+            $type = $request->headers->get('X-Sendfile-Type');
+            $path = $this->filePath;
+            if (strtolower($type) == 'x-accel-redirect') {
+                // Do X-Accel-Mapping substitutions.
+                // @link http://wiki.nginx.org/X-accel#X-Accel-Redirect
+                foreach (explode(',', $request->headers->get('X-Accel-Mapping', '')) as $mapping) {
+                    $mapping = explode('=', $mapping, 2);
+
+                    if (2 == count($mapping)) {
+                        $pathPrefix = trim($mapping[0]);
+                        $location = trim($mapping[1]);
+
+                        if (substr($path, 0, strlen($pathPrefix)) == $pathPrefix) {
+                            $path = $location.substr($path, strlen($pathPrefix));
+                            break;
+                        }
+                    }
+                }
+            }
+            $this->headers->set($type, $path);
+            $this->maxlen = 0;
+        } elseif ($request->headers->has('Range')) {
             // Process the range headers.
             if (!$request->headers->has('If-Range') || $this->getEtag() == $request->headers->get('If-Range')) {
                 $range = $request->headers->get('Range');
@@ -176,6 +231,10 @@ class BinaryResourceResponse extends Response
         stream_copy_to_stream($this->resource, $out, $this->maxlen, $this->offset);
 
         fclose($out);
+
+        if ($this->filePath && $this->deleteFileAfterSend) {
+            unlink($this->filePath);
+        }
     }
 
     /**
@@ -198,5 +257,27 @@ class BinaryResourceResponse extends Response
     public function getContent()
     {
         return false;
+    }
+
+    /**
+     * Trust X-Sendfile-Type header.
+     */
+    public static function trustXSendfileTypeHeader()
+    {
+        self::$trustXSendfileTypeHeader = true;
+    }
+
+    /**
+     * If this is set to true, the file will be unlinked after the request is send
+     * Note: If the X-Sendfile header is used, the deleteFileAfterSend setting will not be used.
+     * @param bool $shouldDelete
+     *
+     * @return BinaryResourceResponse
+     */
+    public function deleteFileAfterSend($shouldDelete)
+    {
+        $this->deleteFileAfterSend = $shouldDelete;
+
+        return $this;
     }
 }
