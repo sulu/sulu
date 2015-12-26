@@ -14,6 +14,9 @@ use League\Flysystem\AdapterInterface;
 use League\Flysystem\FilesystemInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\Resolver\Flysystem\ResolverInterface;
 
+/**
+ * Interface to define the methods to extend flysystem adapters.
+ */
 interface FlysystemResolverInterface
 {
     /**
