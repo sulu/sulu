@@ -80,7 +80,7 @@ class TypeManagerTest extends SuluTestCase
             'text/html' => 'document',
             // images
             'image/jpg' => 'image',
-            'image/jepg' => 'image',
+            'image/jpeg' => 'image',
             'image/gif' => 'image',
             'image/png' => 'image',
             'image/vnd.adobe.photoshop' => 'image',
