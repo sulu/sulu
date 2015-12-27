@@ -15,7 +15,7 @@ use Sulu\Bundle\MediaBundle\Media\StorageManager\StorageManager;
 
 class StorageManagerTest extends \PHPUnit_Framework_TestCase
 {
-    public function defaultTest()
+    public function testDefault()
     {
         $storage1 = $this->prophesize(StorageInterface::class);
         $storage2 = $this->prophesize(StorageInterface::class);
@@ -30,7 +30,7 @@ class StorageManagerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function default2Test()
+    public function testDefault2()
     {
         $storage1 = $this->prophesize(StorageInterface::class);
         $storage2 = $this->prophesize(StorageInterface::class);
@@ -45,7 +45,7 @@ class StorageManagerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function getNamesTest()
+    public function testGetNames()
     {
         $storage1 = $this->prophesize(StorageInterface::class);
         $storage2 = $this->prophesize(StorageInterface::class);
@@ -63,7 +63,7 @@ class StorageManagerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function loadTest()
+    public function testLoad()
     {
         $storage1 = $this->prophesize(StorageInterface::class);
         $storage1->load('{"filename":"file.txt"}')->willReturn('/path/to/file.txt');
@@ -74,7 +74,7 @@ class StorageManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/path/to/file.txt', $storageManager->load('{"filename":"file.txt"}'));
     }
 
-    public function load2Test()
+    public function testLoad2()
     {
         $storage1 = $this->prophesize(StorageInterface::class);
         $storage1->load('{"filename":"file.txt"}')->willReturn('/path/to/file.txt');
@@ -89,7 +89,7 @@ class StorageManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/path/to/file2.txt', $storageManager->load('{"filename":"file.txt"}', 'storage2'));
     }
 
-    public function saveTest()
+    public function testSave()
     {
         $storage1 = $this->prophesize(StorageInterface::class);
         $storage1->save('/path/to/file.txt', 'file.txt', '{"filename":"file.txt"}')
@@ -104,7 +104,7 @@ class StorageManagerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function save2Test()
+    public function testSave2()
     {
         $storage1 = $this->prophesize(StorageInterface::class);
         $storage1->save('/path/to/file.txt', 'file.txt', '{"filename":"file.txt"}')
@@ -124,7 +124,7 @@ class StorageManagerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function getDownloadUrlTest()
+    public function testGetDownloadUrl()
     {
         $storage1 = $this->prophesize(StorageInterface::class);
         $storage1->getDownloadUrl('{"filename":"file.txt"}')->willReturn('http://www.test.com/file.txt');
@@ -138,7 +138,7 @@ class StorageManagerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function getDownloadUrl2Test()
+    public function testGetDownloadUrl2()
     {
         $storage1 = $this->prophesize(StorageInterface::class);
         $storage1->getDownloadUrl('{"filename":"file.txt"}')->willReturn('http://www.test.com/file.txt');
@@ -156,7 +156,7 @@ class StorageManagerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function removeTest()
+    public function testRemove()
     {
         $storage1 = $this->prophesize(StorageInterface::class);
         $storage1->remove('{"filename":"file.txt"}')->willReturn('done');
@@ -170,7 +170,7 @@ class StorageManagerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function remove2Test()
+    public function testRemove2()
     {
         $storage1 = $this->prophesize(StorageInterface::class);
         $storage1->remove('{"filename":"file.txt"}')->willReturn('done');
