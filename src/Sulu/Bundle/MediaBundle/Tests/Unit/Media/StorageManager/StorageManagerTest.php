@@ -21,8 +21,8 @@ class StorageManagerTest extends \PHPUnit_Framework_TestCase
         $storage2 = $this->prophesize(StorageInterface::class);
 
         $storageManager = new StorageManager('storage1');
-        $storageManager->add($storage1, 'storage1');
-        $storageManager->add($storage2, 'storage2');
+        $storageManager->add($storage1->reveal(), 'storage1');
+        $storageManager->add($storage2->reveal(), 'storage2');
 
         $this->assertEquals(
             'storage1',
@@ -36,8 +36,8 @@ class StorageManagerTest extends \PHPUnit_Framework_TestCase
         $storage2 = $this->prophesize(StorageInterface::class);
 
         $storageManager = new StorageManager('storage2');
-        $storageManager->add($storage1, 'storage1');
-        $storageManager->add($storage2, 'storage2');
+        $storageManager->add($storage1->reveal(), 'storage1');
+        $storageManager->add($storage2->reveal(), 'storage2');
 
         $this->assertEquals(
             'storage2',
@@ -51,8 +51,8 @@ class StorageManagerTest extends \PHPUnit_Framework_TestCase
         $storage2 = $this->prophesize(StorageInterface::class);
 
         $storageManager = new StorageManager('storage1');
-        $storageManager->add($storage1, 'storage1');
-        $storageManager->add($storage2, 'storage2');
+        $storageManager->add($storage1->reveal(), 'storage1');
+        $storageManager->add($storage2->reveal(), 'storage2');
 
         $this->assertEquals(
             [
@@ -69,7 +69,7 @@ class StorageManagerTest extends \PHPUnit_Framework_TestCase
         $storage1->load('{"filename":"file.txt"}')->willReturn('/path/to/file.txt');
 
         $storageManager = new StorageManager('storage1');
-        $storageManager->add($storage1, 'storage1');
+        $storageManager->add($storage1->reveal(), 'storage1');
 
         $this->assertEquals('/path/to/file.txt', $storageManager->load('{"filename":"file.txt"}'));
     }
@@ -83,8 +83,8 @@ class StorageManagerTest extends \PHPUnit_Framework_TestCase
         $storage2->load('{"filename":"file.txt"}')->willReturn('/path/to/file2.txt');
 
         $storageManager = new StorageManager('storage1');
-        $storageManager->add($storage1, 'storage1');
-        $storageManager->add($storage2, 'storage2');
+        $storageManager->add($storage1->reveal(), 'storage1');
+        $storageManager->add($storage2->reveal(), 'storage2');
 
         $this->assertEquals('/path/to/file2.txt', $storageManager->load('{"filename":"file.txt"}', 'storage2'));
     }
@@ -96,7 +96,7 @@ class StorageManagerTest extends \PHPUnit_Framework_TestCase
             ->willReturn('{"filename":"file2.txt"}');
 
         $storageManager = new StorageManager('storage1');
-        $storageManager->add($storage1, 'storage1');
+        $storageManager->add($storage1->reveal(), 'storage1');
 
         $this->assertEquals(
             '{"filename":"file2.txt"}',
@@ -115,8 +115,8 @@ class StorageManagerTest extends \PHPUnit_Framework_TestCase
             ->willReturn('{"filename":"file4.txt"}');
 
         $storageManager = new StorageManager('storage1');
-        $storageManager->add($storage1, 'storage1');
-        $storageManager->add($storage2, 'storage2');
+        $storageManager->add($storage1->reveal(), 'storage1');
+        $storageManager->add($storage2->reveal(), 'storage2');
 
         $this->assertEquals(
             '{"filename":"file4.txt"}',
@@ -130,7 +130,7 @@ class StorageManagerTest extends \PHPUnit_Framework_TestCase
         $storage1->getDownloadUrl('{"filename":"file.txt"}')->willReturn('http://www.test.com/file.txt');
 
         $storageManager = new StorageManager('storage1');
-        $storageManager->add($storage1, 'storage1');
+        $storageManager->add($storage1->reveal(), 'storage1');
 
         $this->assertEquals(
             'http://www.test.com/file.txt',
@@ -147,8 +147,8 @@ class StorageManagerTest extends \PHPUnit_Framework_TestCase
         $storage2->getDownloadUrl('{"filename":"file.txt"}')->willReturn('http://www.test.com/file2.txt');
 
         $storageManager = new StorageManager('storage1');
-        $storageManager->add($storage1, 'storage1');
-        $storageManager->add($storage2, 'storage2');
+        $storageManager->add($storage1->reveal(), 'storage1');
+        $storageManager->add($storage2->reveal(), 'storage2');
 
         $this->assertEquals(
             'http://www.test.com/file2.txt',
@@ -162,7 +162,7 @@ class StorageManagerTest extends \PHPUnit_Framework_TestCase
         $storage1->remove('{"filename":"file.txt"}')->willReturn('done');
 
         $storageManager = new StorageManager('storage1');
-        $storageManager->add($storage1, 'storage1');
+        $storageManager->add($storage1->reveal(), 'storage1');
 
         $this->assertEquals(
             'done',
@@ -179,8 +179,8 @@ class StorageManagerTest extends \PHPUnit_Framework_TestCase
         $storage2->remove('{"filename":"file.txt"}')->willReturn('done2');
 
         $storageManager = new StorageManager('storage1');
-        $storageManager->add($storage1, 'storage1');
-        $storageManager->add($storage2, 'storage2');
+        $storageManager->add($storage1->reveal(), 'storage1');
+        $storageManager->add($storage2->reveal(), 'storage2');
 
         $this->assertEquals(
             'done2',
