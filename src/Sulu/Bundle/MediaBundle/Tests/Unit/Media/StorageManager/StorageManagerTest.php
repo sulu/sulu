@@ -15,7 +15,6 @@ use Sulu\Bundle\MediaBundle\Media\StorageManager\StorageManager;
 
 class StorageManagerTest extends \PHPUnit_Framework_TestCase
 {
-
     public function defaultTest()
     {
         $storage1 = $this->prophesize(StorageInterface::class);
