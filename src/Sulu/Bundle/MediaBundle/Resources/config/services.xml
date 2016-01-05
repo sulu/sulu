@@ -24,8 +24,17 @@
         <parameter key="sulu_media.entity.file_version_meta">SuluMediaBundle:FileVersionMeta</parameter>
         <parameter key="sulu_media.twig_extension.disposition_type.class">Sulu\Bundle\MediaBundle\Twig\DispositionTypeTwigExtension</parameter>
         <parameter key="sulu_media.twig_extension.media.class">Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension</parameter>
-        <parameter key="tmp">Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension</parameter>
         <parameter key="sulu_media.video_thumbnail_generator.class">Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailService</parameter>
+        <parameter key="sulu_media.file_version_meta_repository.class">Sulu\Bundle\MediaBundle\Entity\FileVersionMetaRepository</parameter>
+        <parameter key="sulu_media.storage.file_system.class">Symfony\Component\Filesystem\Filesystem</parameter>
+        <parameter key="sulu_media.permission_listener.class">Sulu\Bundle\MediaBundle\Search\EventListener\PermissionListener</parameter>
+        <parameter key="sulu_media.js_config.class">Sulu\Bundle\AdminBundle\Admin\JsConfig</parameter>
+        <parameter key="sulu_media.security_context.class">Sulu\Component\Security\Authorization\SecurityCondition</parameter>
+        <parameter key="sulu_media.smart_content.data_provider.media.repository.class">Sulu\Bundle\MediaBundle\Entity\MediaDataProviderRepository</parameter>
+        <parameter key="sulu_media.smart_content.data_provider.media.class">Sulu\Component\Media\SmartContent\MediaDataProvider</parameter>
+        <parameter key="sulu_media.system_collections.cache.class">Sulu\Component\Cache\DataCache</parameter>
+        <parameter key="sulu_media.system_collections.manager.class">Sulu\Component\Media\SystemCollections\SystemCollectionManager</parameter>
+        <parameter key="sulu_media.system_collections.builder.class">Sulu\Component\Media\SystemCollections\SystemCollectionBuilder</parameter>
 
     </parameters>
 
@@ -54,12 +63,12 @@
             <argument>%sulu_media.collection_entity%</argument>
         </service>
         <service id="sulu_media.file_version_meta_repository"
-                 class="Sulu\Bundle\MediaBundle\Entity\FileVersionMetaRepository"
+                 class="%sulu_media.file_version_meta_repository.class%"
                  factory-service="doctrine.orm.entity_manager"
                  factory-method="getRepository">
             <argument>%sulu_media.entity.file_version_meta%</argument>
         </service>
-        <service id="sulu_media.storage.file_system" class="Symfony\Component\Filesystem\Filesystem"/>
+        <service id="sulu_media.storage.file_system" class="%sulu_media.storage.file_system%"/>
         <service id="sulu_media.storage" class="%sulu_media.storage.class%">
             <argument>%sulu_media.media.storage.local.path%</argument>
             <argument>%sulu_media.media.storage.local.segments%</argument>
@@ -163,13 +172,13 @@
             <argument type="service" id="dubture_ffmpeg.ffmpeg"/>
         </service>
 
-        <service id="sulu_media.permission_listener" class="Sulu\Bundle\MediaBundle\Search\EventListener\PermissionListener">
+        <service id="sulu_media.permission_listener" class="%sulu_media.permission_listener.class%">
             <argument type="service" id="sulu_media.file_version_meta_repository"/>
             <argument type="service" id="massive_search.search_manager"/>
             <tag name="kernel.event_listener" event="sulu_security.permission_update" method="onPermissionUpdate"/>
         </service>
 
-        <service id="sulu_media.js_config" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">
+        <service id="sulu_media.js_config" class="%sulu_media.js_config.class%">
             <argument>sulu-media</argument>
             <argument type="collection">
                 <argument key="permissions" type="expression">
@@ -185,18 +194,18 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
-        <service id="sulu_media.security_context" class="Sulu\Component\Security\Authorization\SecurityCondition">
+        <service id="sulu_media.security_context" class="%sulu_media.security_context.class%">
             <argument>sulu.media.collections</argument>
         </service>
 
-        <service id="sulu_media.smart_content.data_provider.media.repository" class="Sulu\Bundle\MediaBundle\Entity\MediaDataProviderRepository">
+        <service id="sulu_media.smart_content.data_provider.media.repository" class="%sulu_media.smart_content.data_provider.media.repository.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_media.media_manager"/>
             <argument type="string">%sulu_media.media_entity%</argument>
             <argument type="string">%sulu_media.collection_entity%</argument>
         </service>
 
-        <service id="sulu_media.smart_content.data_provider.media" class="Sulu\Component\Media\SmartContent\MediaDataProvider">
+        <service id="sulu_media.smart_content.data_provider.media" class="%sulu_media.smart_content.data_provider.media.class%">
             <argument type="service" id="sulu_media.smart_content.data_provider.media.repository"/>
             <argument type="service" id="sulu_media.collection_manager"/>
             <argument type="service" id="serializer"/>
@@ -205,11 +214,11 @@
             <tag name="sulu.smart_content.data_provider" alias="media"/>
         </service>
 
-        <service id="sulu_media.system_collections.cache" class="Sulu\Component\Cache\DataCache">
+        <service id="sulu_media.system_collections.cache" class="%sulu_media.system_collections.cache.class%">
             <argument>%sulu.cache_dir%/system_collection.cache</argument>
         </service>
 
-        <service id="sulu_media.system_collections.manager" class="Sulu\Component\Media\SystemCollections\SystemCollectionManager">
+        <service id="sulu_media.system_collections.manager" class="%sulu_media.system_collections.manager.class%">
             <argument>%sulu_media.system_collections%</argument>
             <argument type="service" id="sulu_media.collection_manager"/>
             <argument type="service" id="doctrine.orm.entity_manager" />
@@ -218,7 +227,7 @@
             <argument>%kernel.default_locale%</argument>
         </service>
 
-        <service id="sulu_media.system_collections.builder" class="Sulu\Component\Media\SystemCollections\SystemCollectionBuilder">
+        <service id="sulu_media.system_collections.builder" class="%sulu_media.system_collections.builder.class%">
             <tag name="massive_build.builder" />
         </service>
     </services>
