@@ -29,6 +29,7 @@
         <parameter key="sulu.cache.warmer.structure.class">Sulu\Bundle\CoreBundle\Cache\StructureWarmer</parameter>
 
         <parameter key="sulu.util.node_helper.class">Sulu\Component\Util\SuluNodeHelper</parameter>
+        <parameter key="sulu.content.localization_finder.class">Sulu\Component\Content\Compat\LocalizationFinder</parameter>
     </parameters>
 
     <services>
@@ -149,7 +150,7 @@
             </argument>
         </service>
 
-        <service id="sulu.content.localization_finder" class="Sulu\Component\Content\Compat\LocalizationFinder">
+        <service id="sulu.content.localization_finder" class="%sulu.content.localization_finder.class%">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
         </service>
     </services>

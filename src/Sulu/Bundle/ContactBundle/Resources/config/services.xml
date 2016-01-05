@@ -22,6 +22,7 @@
         <parameter key="sulu_contact.smart_content.data_provider.account.class">Sulu\Component\Contact\SmartContent\AccountDataProvider</parameter>
         <parameter key="sulu_contact.util.index_comparator.class">Sulu\Bundle\ContactBundle\Util\IndexComparator</parameter>
         <parameter key="sulu_contact.util.id_converter.class">Sulu\Bundle\ContactBundle\Util\CustomerIdConverter</parameter>
+        <parameter key="sulu_contact.js_config.class">Sulu\Bundle\ContactBundle\Admin\JsConfigAvatarCollection</parameter>
     </parameters>
     <services>
         <service id="sulu_contact.admin" class="%sulu_contact.admin.class%">
@@ -104,7 +105,7 @@
         <service id="sulu_contact.util.index_comparator" class="%sulu_contact.util.index_comparator.class%" public="false"/>
         <service id="sulu_contact.util.id_converter" class="%sulu_contact.util.id_converter.class%" public="false"/>
 
-        <service id="sulu_contact.js_config" class="Sulu\Bundle\ContactBundle\Admin\JsConfigAvatarCollection">
+        <service id="sulu_contact.js_config" class="%sulu_contact.js_config.class%">
             <argument type="service" id="sulu_media.system_collections.manager"/>
 
             <tag name="sulu.js_config"/>

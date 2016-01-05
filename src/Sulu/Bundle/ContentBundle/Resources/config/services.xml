@@ -4,12 +4,17 @@
     <parameters>
         <parameter key="sulu_content.admin.class">Sulu\Bundle\ContentBundle\Admin\ContentAdmin</parameter>
         <parameter key="sulu_content.twig_extension.class">Sulu\Bundle\ContentBundle\Twig\ContentTwigExtension</parameter>
+        <parameter key="sulu_content.permission_listener.class">Sulu\Bundle\ContentBundle\Search\EventListener\PermissionListener</parameter>
         <parameter key="sulu_content.content_navigation_provider.class">Sulu\Bundle\ContentBundle\Admin\ContentContentNavigationProvider</parameter>
         <parameter key="sulu_content.node_repository.class">Sulu\Bundle\ContentBundle\Repository\NodeRepository</parameter>
         <parameter key="sulu_content.rl_repository.class">Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepository</parameter>
         <parameter key="sulu_content.extension.seo.class">Sulu\Bundle\ContentBundle\Content\Structure\SeoStructureExtension</parameter>
         <parameter key="sulu_content.extension.excerpt.class">Sulu\Bundle\ContentBundle\Content\Structure\ExcerptStructureExtension</parameter>
         <parameter key="sulu_content.jsconfig.class">Sulu\Bundle\AdminBundle\Admin\JsConfig</parameter>
+        <parameter key="sulu_content.content_repository.class">Sulu\Component\Content\Repository\ContentRepository</parameter>
+        <parameter key="sulu_content.content_repository.event_subscriber.class">Sulu\Component\Content\Repository\Serializer\SerializerEventListener</parameter>
+        <parameter key="sulu_content.webspace_navigation_provider.class">Sulu\Bundle\ContentBundle\Admin\WebspaceContentNavigationProvider</parameter>
+        <parameter key="sulu_content.webspace.serializer.event_subscriber.class">Sulu\Bundle\ContentBundle\EventListener\WebspaceSerializeEventSubscriber</parameter>
     </parameters>
     <services>
         <!-- admin class -->
@@ -32,20 +37,18 @@
             <tag name="twig.extension"/>
             <argument type="service" id="sulu.content.type_manager"/>
         </service>
-        <service id="sulu_content.permission_listener" class="Sulu\Bundle\ContentBundle\Search\EventListener\PermissionListener">
+        <service id="sulu_content.permission_listener" class="%sulu_content.permission_listener.class%">
             <argument type="service" id="sulu_document_manager.document_manager"/>
             <argument type="service" id="massive_search.search_manager"/>
             <tag name="kernel.event_listener" event="sulu_security.permission_update" method="onPermissionUpdate"/>
         </service>
 
         <!-- webspace settings -->
-        <service id="sulu_content.webspace_navigation_provider"
-                 class="Sulu\Bundle\ContentBundle\Admin\WebspaceContentNavigationProvider">
+        <service id="sulu_content.webspace_navigation_provider" class="%sulu_content.webspace_navigation_provider.class%">
             <tag name="sulu_admin.content_navigation" alias="webspace"/>
             <tag name="sulu.context" context="admin"/>
         </service>
-        <service id="sulu_content.webspace.serializer.event_subscriber"
-                 class="Sulu\Bundle\ContentBundle\EventListener\WebspaceSerializeEventSubscriber">
+        <service id="sulu_content.webspace.serializer.event_subscriber" class="%sulu_content.webspace.serializer.event_subscriber.class%">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="string">%kernel.environment%</argument>
 
@@ -99,7 +102,7 @@
         </service>
 
         <!-- Content Repository -->
-        <service id="sulu_content.content_repository" class="Sulu\Component\Content\Repository\ContentRepository">
+        <service id="sulu_content.content_repository" class="%sulu_content.content_repository.class%">
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="sulu_document_manager.property_encoder"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
@@ -107,8 +110,7 @@
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu.util.node_helper"/>
         </service>
-        <service id="sulu_content.content_repository.event_subscriber"
-                 class="Sulu\Component\Content\Repository\Serializer\SerializerEventListener">
+        <service id="sulu_content.content_repository.event_subscriber" class="%sulu_content.content_repository.event_subscriber.class%">
             <argument type="service" id="sulu_security.access_control_manager"/>
             <argument type="service" id="security.token_storage"/>
 

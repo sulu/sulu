@@ -7,6 +7,7 @@
         <parameter key="sulu_search.controller.search.class">Sulu\Bundle\SearchBundle\Controller\SearchController</parameter>
         <parameter key="sulu_search.search.factory.class">Sulu\Bundle\SearchBundle\Search\Factory</parameter>
         <parameter key="sulu_search.admin.class">Sulu\Bundle\SearchBundle\Admin\SuluSearchAdmin</parameter>
+        <parameter key="sulu_search.index_configuration_provider.class">Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfigurationProvider</parameter>
     </parameters>
 
     <services>
@@ -21,7 +22,7 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
-        <service id="sulu_search.index_configuration_provider" class="Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfigurationProvider">
+        <service id="sulu_search.index_configuration_provider" class="%sulu_search.index_configuration_provider.class%">
             <argument>%sulu_search.indexes%</argument>
         </service>
 
