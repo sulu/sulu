@@ -120,6 +120,13 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
      */
     private $analyticsKey;
 
+    /**
+     * Portalinformation of request.
+     *
+     * @var PortalInformation
+     */
+    private $portalInformation;
+
     public function __construct(WebspaceManagerInterface $webspaceManager, $environment)
     {
         $this->webspaceManager = $webspaceManager;
@@ -140,6 +147,8 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
             $url,
             $this->environment
         );
+
+        $this->portalInformation = $portalInformation;
 
         $this->getParameter = $request->query->all();
         $this->postParameter = $request->request->all();
@@ -291,6 +300,16 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     public function getGetParameters()
     {
         return $this->getParameter;
+    }
+
+    /**
+     * Returns portal information of request.
+     *
+     * @return PortalInformation
+     */
+    public function getPortalInformation()
+    {
+        return $this->portalInformation;
     }
 
     /**

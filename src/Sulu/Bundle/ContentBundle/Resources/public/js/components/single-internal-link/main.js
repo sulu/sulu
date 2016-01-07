@@ -27,6 +27,7 @@ define([], function() {
             idKey: 'id',
             titleKey: 'title',
             resultKey: '',
+            disabledIds: [],
             translations: {
                 overlayTitle: 'single-internal-link.title',
                 noTitle: 'public.no-title'
@@ -191,7 +192,8 @@ define([], function() {
                             showStatus: false,
                             responsive: false,
                             sortable: false,
-                            skin: 'fixed-height-small'
+                            skin: 'fixed-height-small',
+                            disableIds: this.options.disabledIds
                         }
                     }
                 ]

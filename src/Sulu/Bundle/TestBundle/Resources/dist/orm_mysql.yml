@@ -7,3 +7,4 @@ doctrine:
         user:     "%database_mysql_user%"
         password: "%database_mysql_password%"
         charset:  UTF8
+        server_version: 5.5

@@ -172,5 +172,43 @@
             <argument type="service" id="sulu.content.mapper" />
             <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
         </service>
+
+        <!-- analytics -->
+        <service id="sulu_website.webspace_navigation_provider"
+                 class="Sulu\Bundle\WebsiteBundle\Admin\WebspaceContentNavigationProvider">
+            <tag name="sulu_admin.content_navigation" alias="webspace"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_website.analytics.repository"
+                 class="Sulu\Bundle\WebsiteBundle\Entity\AnalyticRepository"
+                 factory-service="doctrine.orm.entity_manager"
+                 factory-method="getRepository">
+            <argument type="string">SuluWebsiteBundle:Analytic</argument>
+        </service>
+
+        <service id="sulu_website.domains.repository"
+                 class="Sulu\Bundle\WebsiteBundle\Entity\DomainRepository"
+                 factory-service="doctrine.orm.entity_manager"
+                 factory-method="getRepository">
+            <argument type="string">SuluWebsiteBundle:Domain</argument>
+        </service>
+
+        <service id="sulu_website.analytics.manager"
+                 class="Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManager">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="sulu_website.analytics.repository" />
+            <argument type="service" id="sulu_website.domains.repository" />
+        </service>
+
+        <service id="sulu_wesite.analytics.reponse_listener" class="Sulu\Bundle\WebsiteBundle\EventListener\AppendAnalyticsListener">
+            <argument type="service" id="templating"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument type="service" id="sulu_website.analytics.repository"/>
+            <argument>%kernel.environment%</argument>
+
+            <tag name="sulu.context" context="website"/>
+            <tag name="kernel.event_listener" event="kernel.response" method="onResponse"/>
+        </service>
     </services>
 </container>

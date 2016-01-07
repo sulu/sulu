@@ -1,7 +1,26 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * FEATURE     #1905 [All]             Added french translation
+    * BUGFIX      #1893 [ContentBundle]   Fixed resource locator deferred for edit
+    * BUGIFX      #1871 [ContentBundle]   Fixed url-generation and save button
+    * BUGFIX      #1873 [ContactBundle]   Fixed remove title and position
+    * BUGFIX      #1873 [ContactBundle]   Fixed remove contact birthday
+
 * dev-master
+    * HOTFIX      #1888 [ContentBundle]   used auto_name in phpcr migrations
+    * HOTFIX      #1900 [ContentBundle]   Prohibited to link page to itself
+    * HOTFIX      #1898 [MediaBundle]     Fixed dangling events of media-overlay
+    * HOTFIX      #1899 [ContentBundle]   Fixed directory separator for windows
+    * HOTFIX      #1872 [ContentBundle]   Fixed sql generation for user roles in ContentRepository
+    * HOTFIX      #1903 [ContentBundle]   Prohibited to follow empty or self internal link
+    * HOTFIX      #1895 [ResourceBundle]  Fixed error handling of filters.
+
+* 1.1.2 (2015-12-11)
+    * HOTFIX      #1831 [MediaBundle]     Fixed query for retrieving entities to index
+    * HOTFIX      #1868 [ContentBundle]   Added date upgrade script for blocks
+    * HOTFIX      #1869 [CategoryBundle]  Fixed opened category tree on startup
     * HOTFIX      #1799 [ContentBundle]   Added 'published' field to be indexed
     * HOTFIX      #1866 [WebsiteBundle]   Added scheme to sitemap url generation
     * HOTFIX      #1861 [ContentBundle]   Added upgrade script which removes non-translated properties

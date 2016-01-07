@@ -15,6 +15,7 @@ use Jackalope\Query\Row;
 use PHPCR\ItemNotFoundException;
 use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 use PHPCR\SessionInterface;
+use PHPCR\Util\PathHelper;
 use PHPCR\Util\QOM\QueryBuilder;
 use Sulu\Component\Content\Compat\LocalizationFinderInterface;
 use Sulu\Component\Content\Compat\Structure;
@@ -185,7 +186,7 @@ class ContentRepository implements ContentRepositoryInterface
             ->where($this->qomFactory->childNode('node', $path));
 
         while ($path !== $contentPath) {
-            $path = dirname($path);
+            $path = PathHelper::getParentPath($path);
             $queryBuilder->orWhere($this->qomFactory->childNode('node', $path));
         }
 
@@ -248,7 +249,7 @@ class ContentRepository implements ContentRepositoryInterface
         $childrenByPath = [];
 
         foreach ($contents as $content) {
-            $path = dirname($content->getPath());
+            $path = PathHelper::getParentPath($content->getPath());
             if (!isset($childrenByPath[$path])) {
                 $childrenByPath[$path] = [];
             }
@@ -370,7 +371,11 @@ class ContentRepository implements ContentRepositoryInterface
 
         if (null !== $user) {
             foreach ($user->getRoleObjects() as $role) {
-                $queryBuilder->addSelect('node', sprintf('sec:%s', 'role-' . $role->getId()), $role->getIdentifier());
+                $queryBuilder->addSelect(
+                    'node',
+                    sprintf('sec:%s', 'role-' . $role->getId()),
+                    sprintf('role%s', $role->getId())
+                );
             }
         }
 
@@ -534,7 +539,12 @@ class ContentRepository implements ContentRepositoryInterface
             $type = StructureType::getGhost($locale);
         }
 
-        if ($row->getValue('nodeType') === RedirectType::INTERNAL && $mapping->followInternalLink()) {
+        if (
+            $row->getValue('nodeType') === RedirectType::INTERNAL
+            && $mapping->followInternalLink()
+            && $row->getValue('internalLink') !== ''
+            && $row->getValue('internalLink') !== $row->getValue('uuid')
+        ) {
             // TODO collect all internal link contents and query once
             return $this->resolveInternalLinkContent($row, $locale, $webspaceKey, $mapping, $type, $user);
         }
@@ -731,7 +741,7 @@ class ContentRepository implements ContentRepositoryInterface
         $permissions = [];
         if (null !== $user) {
             foreach ($user->getRoleObjects() as $role) {
-                foreach (array_filter(explode(' ', $row->getValue($role->getIdentifier()))) as $permission) {
+                foreach (array_filter(explode(' ', $row->getValue(sprintf('role%s', $role->getId())))) as $permission) {
                     $permissions[$role->getId()][$permission] = true;
                 }
             }

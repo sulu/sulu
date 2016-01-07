@@ -473,6 +473,8 @@ define([
             data.avatar = {
                 id: this.sandbox.dom.data(constants.avatarImageId, 'mediaId')
             };
+            data.position = this.sandbox.form.element.getValue('#contact-position');
+            data.title = this.sandbox.form.element.getValue('#contact-title');
 
             // FIXME auto complete in mapper
             // only get id, if auto-complete is not empty:

@@ -13,6 +13,7 @@ namespace Sulu\Component\Webspace\Analyzer;
 
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
@@ -136,4 +137,11 @@ interface RequestAnalyzerInterface
      * @return string
      */
     public function getAnalyticsKey();
+
+    /**
+     * Returns portal-information of request.
+     *
+     * @return PortalInformation
+     */
+    public function getPortalInformation();
 }

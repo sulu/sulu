@@ -67,7 +67,7 @@ module.exports = function (grunt) {
             // TODO: options: { banner: '<%= meta.banner %>' },
             compress: {
                 files: {
-                    'dist/main.min.css': ['Resources/public/css/']
+                    'Resources/public/css/main.min.css': ['Resources/public/css/main.css']
                 }
             }
         },
@@ -97,9 +97,19 @@ module.exports = function (grunt) {
         }
     });
 
+    grunt.registerTask('build:css', [
+        'compass:dev',
+        'cssmin'
+    ]);
+
+    grunt.registerTask('build:js', [
+        'replace:build',
+        'uglify'
+    ]);
+
     grunt.registerTask('build', [
-        'uglify',
-        'replace:build'
+        'build:js',
+        'build:css'
     ]);
 
     grunt.registerTask('default', [

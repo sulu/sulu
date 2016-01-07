@@ -30154,7 +30154,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             cssClass: '',
             thumbnailFormat: '50x50',
             showHead: true,
-            hideChildrenAtBeginning: false,
+            hideChildrenAtBeginning: true,
             openChildId: null,
             highlightSelected: false,
             icons: [],
@@ -30165,7 +30165,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             actionIcon: 'pencil',
             actionIconColumn: null,
             croppedMaxLength: 35,
-            openPathToSelectedChildren: false,
+            openPathToSelectedChildren: true,
             cropContents: true
         },
 
@@ -31745,6 +31745,20 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             );
         },
 
+        /**
+         * Collapses all child nodes.
+         */
+        collapseAllChildren: function() {
+            for (var i = 0, length = this.data.embedded.length; i < length; i++) {
+                this.hideChildren(this.data.embedded[i].id);
+            }
+        },
+
+        /**
+         * Show only selected items.
+         *
+         * @param {Boolean} show
+         */
         showSelected: function(show) {
             // TODO this is a really basic implementation
             // - here should all selected be loaded
@@ -31755,6 +31769,11 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 $items.hide();
             } else {
                 $items.show();
+
+                this.collapseAllChildren();
+                if (!!this.options.openPathToSelectedChildren) {
+                    this.openPathToSelectedChildren();
+                }
             }
         }
     };
@@ -33095,14 +33114,30 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
             },
 
             /**
-             * raised when save of data failed
+             * Raised when save of data failed.
+             *
              * @event husky.datagrid.data.save.failed
+             *
+             * @param {String} jqXHR status
+             * @param {String} text status
+             * @param {String} error thrown
+             */
+            DATA_SAVE_FAILED = function() {
+                return this.createEventName('data.save.failed');
+            },
+
+            /**
+             * Raised when loading of data failed.
+             *
+             * @event husky.datagrid.loading.failed
+             *
+             * @param {String} jqXHR
              * @param {String} text status
              * @param {String} error thrown
              *
              */
-            DATA_SAVE_FAILED = function() {
-                return this.createEventName('data.save.failed');
+            LOADING_FAILED = function() {
+                return this.createEventName('loading.failed');
             },
 
             /**
@@ -33513,8 +33548,8 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                             params.success(response);
                         }
                     }.bind(this))
-                    .fail(function(status, error) {
-                        this.sandbox.logger.error(status, error);
+                    .fail(function(jqXHR, textStatus, error) {
+                        this.sandbox.emit(LOADING_FAILED.call(this), jqXHR, textStatus, error);
                     }.bind(this));
             },
 
@@ -33685,8 +33720,8 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                             params.success(response);
                         }
                     }.bind(this))
-                    .fail(function(status, error) {
-                        this.sandbox.logger.error(status, error);
+                    .fail(function(jqXHR, textStatus, error) {
+                        this.sandbox.emit(LOADING_FAILED.call(this), jqXHR, textStatus, error);
                     }.bind(this));
             },
 
@@ -34443,7 +34478,6 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                     if (!!this.gridViews[this.viewId] && !!this.gridViews[this.viewId].showSelected &&
                         this.getSelectedItemIds().length === 0
                     ) {
-                        this.gridViews[this.viewId].showSelected(false);
                         this.show = false;
                     }
 

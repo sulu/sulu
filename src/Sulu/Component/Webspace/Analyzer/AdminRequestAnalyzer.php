@@ -14,6 +14,7 @@ namespace Sulu\Component\Webspace\Analyzer;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
@@ -211,5 +212,15 @@ class AdminRequestAnalyzer implements RequestAnalyzerInterface
     public function getAnalyticsKey()
     {
         return '';
+    }
+
+    /**
+     * Returns portal-information of request.
+     *
+     * @return PortalInformation
+     */
+    public function getPortalInformation()
+    {
+        return;
     }
 }

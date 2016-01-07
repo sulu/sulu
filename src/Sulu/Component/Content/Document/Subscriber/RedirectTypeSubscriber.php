@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Document\Subscriber;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
+use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -27,7 +28,21 @@ class RedirectTypeSubscriber implements EventSubscriberInterface
     {
         return [
             Events::METADATA_LOAD => 'handleMetadataLoad',
+            Events::PERSIST => 'handlePersist',
         ];
+    }
+
+    public function handlePersist(PersistEvent $event)
+    {
+        $document = $event->getDocument();
+
+        if (!$document instanceof RedirectTypeBehavior) {
+            return;
+        }
+
+        if ($document->getRedirectTarget() === $document) {
+            throw new \InvalidArgumentException('You are not allowed to link a page to itself!');
+        }
     }
 
     public function handleMetadataLoad(MetadataLoadEvent $event)

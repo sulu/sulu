@@ -195,4 +195,14 @@ abstract class SuluTestCase extends BaseTestCase
             $em->getConnection()->executeUpdate('SET foreign_key_checks = 1;');
         }
     }
+
+    /**
+     * Shuts the kernel down if it was used in the test.
+     */
+    protected static function ensureKernelShutdown()
+    {
+        if (null !== static::$kernel) {
+            static::$kernel->shutdown();
+        }
+    }
 }

@@ -20,11 +20,18 @@ $item = new ContentNavigationItem('content-navigation.entry');
 $item->setPosition(10);
 ```
 
-## dev-master
+## 1.1.2
 
-### Reindex-Command
+### Reindex-Command & Date Content-Type
 
-Run the migrate command (`app/console phpcr:migrations:migrate`) to fix translated properties with non locale.
+First remove the version node `201511240844` with following command:
+
+```bash
+app/console doctrine:phpcr:node:remove /jcr:versions/201511240844
+```
+
+Then run the migrate command (`app/console phpcr:migrations:migrate`) to remove translated properties with non locale
+and upgrade date-values within blocks.
 
 ## 1.1.0
 

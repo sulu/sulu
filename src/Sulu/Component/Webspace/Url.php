@@ -65,6 +65,11 @@ class Url implements ArrayableInterface
     private $analyticsKey;
 
     /**
+     * @var string
+     */
+    private $environment;
+
+    /**
      * Sets the url.
      *
      * @param string $url
@@ -205,6 +210,26 @@ class Url implements ArrayableInterface
     }
 
     /**
+     * Returns the environment.
+     *
+     * @return string
+     */
+    public function getEnvironment()
+    {
+        return $this->environment;
+    }
+
+    /**
+     * Sets the environment.
+     *
+     * @param string $environment
+     */
+    public function setEnvironment($environment)
+    {
+        $this->environment = $environment;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function toArray($depth = null)
@@ -217,6 +242,7 @@ class Url implements ArrayableInterface
         $res['redirect'] = $this->getRedirect();
         $res['main'] = $this->isMain();
         $res['analyticsKey'] = $this->getAnalyticsKey();
+        $res['environment'] = $this->getEnvironment();
 
         return $res;
     }
