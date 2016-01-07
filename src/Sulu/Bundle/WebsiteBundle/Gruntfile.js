@@ -21,6 +21,11 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         copy: {
+            templates: {
+                files: [
+                    {expand: true, cwd: srcpath, src: ['**/*.html'], dest: destpath}
+                ]
+            },
             hooks: {
                 files: [
                     {
@@ -104,6 +109,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build:js', [
         'replace:build',
+        'copy:templates',
         'uglify'
     ]);
 

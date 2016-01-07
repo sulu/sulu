@@ -73,6 +73,12 @@ define([
             this.startOverlay();
         },
 
+        bindDomEvents: function() {
+            this.sandbox.dom.on('#analytics-all-domains', 'change', function() {
+                $('#analytics-domains-container').toggle();
+            });
+        },
+
         startOverlay: function() {
             this.sandbox.start([
                 {
@@ -99,6 +105,7 @@ define([
             ]).then(function() {
                 this.sandbox.form.create(formSelector).initialized.then(function() {
                     this.sandbox.form.setData(formSelector, this.data).then(this.initializeFormComponents.bind(this));
+                    this.bindDomEvents();
                 }.bind(this));
             }.bind(this));
         },
@@ -131,6 +138,7 @@ define([
                     name: 'select@husky',
                     options: {
                         el: '#analytics-type',
+                        isNative: true,
                         multipleSelect: false,
                         valueName: 'title',
                         instanceName: 'analytics-overlay',
@@ -154,6 +162,10 @@ define([
             ]);
 
             this.changeType(this.data.type, this.data);
+
+            if (!!this.data.allDomains) {
+                $('#analytics-domains-container').hide();
+            }
         },
 
         changeType: function(typeId, data) {
@@ -169,7 +181,9 @@ define([
                 data = this.getData();
             }
 
-            data.content = null;
+            if (data.content !== this.data.content) {
+                data.content = null;
+            }
 
             this.sandbox.form.removeField(formSelector, contentSelector);
             $(contentSelector).children().remove();
@@ -184,7 +198,7 @@ define([
             );
 
             var defs = [];
-            $(contentSelector).find('*[data-mapper-property]').each(function(index, item){
+            $(contentSelector).find('*[data-mapper-property]').each(function(index, item) {
                 defs.push(this.sandbox.form.addField(formSelector, $(item)).initialized);
             }.bind(this));
 
