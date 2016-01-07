@@ -74,7 +74,7 @@ class SnippetRepository
      *
      * @return SnippetBridge[]
      */
-    public function getSnippetsByUuids(array $uuids = [], $languageCode, $loadGhostContent = false)
+    public function getSnippetsByUuids(array $uuids, $languageCode, $loadGhostContent = false)
     {
         $snippets = [];
 
