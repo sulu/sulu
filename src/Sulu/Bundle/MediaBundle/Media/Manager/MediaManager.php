@@ -541,15 +541,13 @@ class MediaManager implements MediaManagerInterface
             ++$version;
             $this->validator->validate($uploadedFile);
 
-            $fileName = $this->getNormalizedFileName($uploadedFile->getClientOriginalName());
-
             $data['storageOptions'] = $this->storage->save(
                 $uploadedFile->getPathname(),
-                $fileName,
+                $this->getNormalizedFileName($uploadedFile->getClientOriginalName()),
                 $version,
                 $currentFileVersion->getStorageOptions()
             );
-            $data['name'] = $fileName;
+            $data['name'] = $uploadedFile->getClientOriginalName();
             $data['size'] = intval($uploadedFile->getSize());
             $data['mimeType'] = $uploadedFile->getMimeType();
             $data['properties'] = $this->getProperties($uploadedFile);
@@ -622,15 +620,13 @@ class MediaManager implements MediaManagerInterface
 
         $this->validator->validate($uploadedFile);
 
-        $fileName = $this->getNormalizedFileName($uploadedFile->getClientOriginalName());
-
         $data['storageOptions'] = $this->storage->save(
             $uploadedFile->getPathname(),
-            $fileName,
+            $this->getNormalizedFileName($uploadedFile->getClientOriginalName()),
             1
         );
 
-        $data['name'] = $fileName;
+        $data['name'] = $uploadedFile->getClientOriginalName();
         $data['size'] = $uploadedFile->getSize();
         $data['mimeType'] = $uploadedFile->getMimeType();
         $data['properties'] = $this->getProperties($uploadedFile);
