@@ -1,14 +1,17 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #1917 [MediaBundle]     Changed version name to original filename
+
 * 1.1.3 (2015-12-18)
     * HOTFIX      #1903 [ContentBundle]   Prohibited to follow empty or self internal link
     * HOTFIX      #1900 [ContentBundle]   Prohibited to link page to itself
     * HOTFIX      #1898 [MediaBundle]     Fixed dangling events of media-overlay
     * HOTFIX      #1872 [ContentBundle]   Fixed sql generation for user roles in ContentRepository
-    * HOTFIX      #1888 [ContentBundle]   used auto_name in phpcr migrations
+    * HOTFIX      #1888 [ContentBundle]   Used auto_name in phpcr migrations
     * HOTFIX      #1899 [ContentBundle]   Fixed directory separator for windows
-    * HOTFIX      #1895 [ResourceBundle]  Fixed error handling of filters.
+    * HOTFIX      #1895 [ResourceBundle]  Fixed error handling of filters
 
 * 1.1.2 (2015-12-11)
     * HOTFIX      #1831 [MediaBundle]     Fixed query for retrieving entities to index
