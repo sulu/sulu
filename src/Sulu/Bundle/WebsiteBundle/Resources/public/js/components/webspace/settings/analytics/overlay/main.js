@@ -37,7 +37,7 @@ define([
                     id: 'piwik',
                     title: 'website.webspace.settings.type.piwik',
                     input: 'input',
-                    labels: ['public.url', 'website.webspace.settings.site-id'],
+                    labels: ['website.webspace.settings.url', 'website.webspace.settings.site-id'],
                     inputTemplate: piwik
                 },
                 {
@@ -168,6 +168,8 @@ define([
             if (!data) {
                 data = this.getData();
             }
+
+            data.content = null;
 
             this.sandbox.form.removeField(formSelector, contentSelector);
             $(contentSelector).children().remove();

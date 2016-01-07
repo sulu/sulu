@@ -21,8 +21,12 @@ define([
 
             subType = {
                 setValue: function(value) {
-                    this.$el.find('#analytics-content-url').val(value.url);
-                    this.$el.find('#analytics-content-site-id').val(value.siteId);
+                    if (value === null) {
+                        value = {};
+                    }
+
+                    this.$el.find('#analytics-content-url').val(value.url || '');
+                    this.$el.find('#analytics-content-site-id').val(value.siteId || '');
                 },
 
                 getValue: function() {

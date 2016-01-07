@@ -557,7 +557,7 @@
             </trans-unit>
             <trans-unit id="13" resname="content.webspace.settings.localizations">
                 <source>content.webspace.settings.localizations</source>
-                <target>Localizations</target>
+                <target>Available Localizations</target>
             </trans-unit>
             <trans-unit id="14" resname="content.webspace.settings.localization">
                 <source>content.webspace.settings.localization</source>
@@ -569,7 +569,7 @@
             </trans-unit>
             <trans-unit id="16" resname="content.webspace.settings.urls">
                 <source>content.webspace.settings.urls</source>
-                <target>Domains / URLs</target>
+                <target>Configured Domains / URLs</target>
             </trans-unit>
             <trans-unit id="17" resname="content.webspace.settings.url">
                 <source>content.webspace.settings.url</source>

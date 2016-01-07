@@ -555,6 +555,50 @@
                 <source>content.delete-do-it</source>
                 <target>Oui, je suis sûr</target>
             </trans-unit>
+            <trans-unit id="13" resname="content.webspace.settings.localizations">
+                <source>content.webspace.settings.localizations</source>
+                <target>Traductions disponibles</target>
+            </trans-unit>
+            <trans-unit id="14" resname="content.webspace.settings.localization">
+                <source>content.webspace.settings.localization</source>
+                <target>Localisation</target>
+            </trans-unit>
+            <trans-unit id="15" resname="content.webspace.settings.theme">
+                <source>content.webspace.settings.theme</source>
+                <target>Thème</target>
+            </trans-unit>
+            <trans-unit id="16" resname="content.webspace.settings.urls">
+                <source>content.webspace.settings.urls</source>
+                <target>Domaines / URL configurés</target>
+            </trans-unit>
+            <trans-unit id="17" resname="content.webspace.settings.url">
+                <source>content.webspace.settings.url</source>
+                <target>Domaine (URL)</target>
+            </trans-unit>
+            <trans-unit id="18" resname="content.webspace.settings.main">
+                <source>content.webspace.settings.main</source>
+                <target>Dominant</target>
+            </trans-unit>
+            <trans-unit id="19" resname="content-navigation.webspace.general">
+                <source>content-navigation.webspace.general</source>
+                <target>Général</target>
+            </trans-unit>
+            <trans-unit id="20" resname="content-navigation.webspace.analytics">
+                <source>content-navigation.webspace.analytics</source>
+                <target>Analytics</target>
+            </trans-unit>
+            <trans-unit id="21" resname="content-navigation.webspace.urls">
+                <source>content-navigation.webspace.urls</source>
+                <target>Custome URLs</target>
+            </trans-unit>
+            <trans-unit id="22" resname="navigation.webspaces.settings">
+                <source>navigation.webspaces.settings</source>
+                <target>Paramètres</target>
+            </trans-unit>
+            <trans-unit id="23" resname="content.webspace.settings.redirect">
+                <source>content.webspace.settings.redirect</source>
+                <target>Réorienter</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
