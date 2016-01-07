@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1915 [All]             Removed deprecations of initial admin request
     * FEATURE     #1905 [All]             Added french translation
     * BUGFIX      #1893 [ContentBundle]   Fixed resource locator deferred for edit
     * BUGIFX      #1871 [ContentBundle]   Fixed url-generation and save button

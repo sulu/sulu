@@ -18,14 +18,16 @@ use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManager;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\StructureMetadata as NewStructure;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * generates subclasses of structure to match template definitions.
  * this classes will be cached in Symfony cache.
  */
-class StructureManager extends ContainerAware implements StructureManagerInterface
+class StructureManager implements StructureManagerInterface
 {
+    use ContainerAwareTrait;
+
     private $structureFactory;
     private $extensionManager;
     private $inspector;
