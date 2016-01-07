@@ -62,8 +62,7 @@ class SearchResultRepresentation extends PaginatedRepresentation
             $pageParameterName,
             $limitParameterName,
             $absolute,
-            $total,
-            $time
+            $total
         );
 
         $this->totals = $totals;
