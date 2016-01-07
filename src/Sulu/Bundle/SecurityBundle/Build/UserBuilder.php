@@ -71,7 +71,7 @@ class UserBuilder extends SuluBuilder
             sprintf('Created role "<comment>%s</comment>" in system "<comment>%s</comment>"', $roleName, $system)
         );
 
-        //locale choosen doesn't exist, fallback
+        // locale choosen doesn't exist, fallback
         if (!in_array($locale, $userLocales)) {
             $locale = array_shift($userLocales);
         }
