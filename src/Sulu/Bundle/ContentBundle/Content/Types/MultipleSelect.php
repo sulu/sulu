@@ -12,6 +12,9 @@ namespace Sulu\Bundle\ContentBundle\Content\Types;
 
 use Sulu\Component\Content\SimpleContentType;
 
+/**
+ * ContentType for a multiple select. Currently only support for checkboxes.
+ */
 class MultipleSelect extends SimpleContentType
 {
     /**

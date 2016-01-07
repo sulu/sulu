@@ -12,6 +12,9 @@ namespace Sulu\Bundle\ContentBundle\Content\Types;
 
 use Sulu\Component\Content\SimpleContentType;
 
+/**
+ * ContentType for single selects. Currently only supports radios.
+ */
 class SingleSelect extends SimpleContentType
 {
     /**
