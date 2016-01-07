@@ -7,13 +7,14 @@
     </div>
 
     <div class="form-group grid-row">
-        <label for="analytics-all-domains"><%= translations.allDomains %></label>
-
-        <div class="custom-checkbox" style="display: inline-block;">
-            <input type="checkbox" id="analytics-all-domains" name="all-domains" class="form-element"
-                   data-mapper-property="allDomains"/>
-            <span class="icon"></span>
-        </div>
+        <label for="analytics-all-domains">
+            <div class="custom-checkbox" style="display: inline-block;">
+                <input type="checkbox" id="analytics-all-domains" name="all-domains" class="form-element"
+                       data-mapper-property="allDomains"/>
+                <span class="icon"></span>
+            </div>
+            <%= translations.allDomains %>
+        </label>
     </div>
 
     <div class="form-group grid-row" id="analytics-domains-container">

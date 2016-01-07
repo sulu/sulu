@@ -201,7 +201,7 @@
             <argument type="service" id="sulu_website.domains.repository" />
         </service>
 
-        <service id="sulu_wesite.analytics.reponse_listener" class="Sulu\Bundle\WebsiteBundle\EventListener\AppendAnalyticsListener">
+        <service id="sulu_wesite.analytics.response_listener" class="Sulu\Bundle\WebsiteBundle\EventListener\AppendAnalyticsListener">
             <argument type="service" id="templating"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument type="service" id="sulu_website.analytics.repository"/>
@@ -209,6 +209,12 @@
 
             <tag name="sulu.context" context="website"/>
             <tag name="kernel.event_listener" event="kernel.response" method="onResponse"/>
+        </service>
+
+        <service id="sulu_wesite.analytics.event_subscriber"
+                 class="Sulu\Bundle\WebsiteBundle\EventListener\AnalyticSerializeEventSubscriber">
+            <tag name="jms_serializer.event_subscriber" />
+            <tag name="sulu.context" context="admin"/>
         </service>
     </services>
 </container>

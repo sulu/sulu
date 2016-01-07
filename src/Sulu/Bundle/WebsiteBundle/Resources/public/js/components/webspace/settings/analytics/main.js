@@ -97,17 +97,16 @@ define(['underscore', 'text!./skeleton.html'], function(_, skeleton) {
                                 attribute: 'domains',
                                 content: this.translations.domains,
                                 type: function(content) {
+                                    if (content === true) {
+                                        return this.translations.allDomains;
+                                    }
+
                                     var urls = _.map(content, function(item) {
                                         return item['url'];
                                     });
 
                                     return urls.join(', ');
-                                }
-                            },
-                            {
-                                attribute: 'allDomains',
-                                content: this.translations.allDomains,
-                                type: 'checkbox_readonly'
+                                }.bind(this)
                             }
                         ]
                     }
