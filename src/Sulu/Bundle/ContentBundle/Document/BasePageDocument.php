@@ -72,20 +72,22 @@ class BasePageDocument implements
     protected $created;
 
     /**
-     * Datetime of update document.
+     * Changed date of page.
      *
      * @var \DateTime
      */
     protected $changed;
 
     /**
-     * Datetime of creator.
+     * User ID of creator.
      *
-     * @var \DateTime
+     * @var int
      */
     protected $creator;
 
     /**
+     * User ID of changer.
+     *
      * @var int
      */
     protected $changer;
@@ -201,7 +203,7 @@ class BasePageDocument implements
     protected $children;
 
     /**
-     * Document's path.
+     * Path of Document.
      *
      * @var string
      */
