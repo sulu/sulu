@@ -10,6 +10,8 @@
 
 namespace Sulu\Bundle\ContentBundle\Content\Types;
 
+use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\SimpleContentType;
 
 /**
@@ -29,12 +31,20 @@ class MultipleSelect extends SimpleContentType
     }
 
     /**
-     * Returns a template to render a form.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getTemplate()
     {
         return $this->template;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultParams(PropertyInterface $property = null)
+    {
+        return [
+            'values' => new PropertyParameter('values', [], 'collection'),
+        ];
     }
 }
