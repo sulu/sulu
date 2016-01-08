@@ -13,11 +13,11 @@
                 {% set params = sulu_get_params(child) %}
 
                 {% if child.contentTypeName == 'block' %}
-                    {% include type.template with {'property': child, 'params': params, 'type': type, 'id': child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
+                    {% include type.template with {'property': child, 'params': params, 'type': type, 'id': child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale, 'uuid': uuid} only %}
                 {% elseif child is multiple %}
-                    {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': child, 'params': params, 'type': type, 'id': child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
+                    {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': child, 'params': params, 'type': type, 'id': child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale, 'uuid': uuid} only %}
                 {% else %}
-                    {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': child, 'params': params, 'type': type, 'id': child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
+                    {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': child, 'params': params, 'type': type, 'id': child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale, 'uuid': uuid} only %}
                 {% endif %}
             {% endfor %}
         </div>

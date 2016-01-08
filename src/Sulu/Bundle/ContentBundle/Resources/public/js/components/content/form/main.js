@@ -359,6 +359,10 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             }
             url += '?webspace=' + this.options.webspace + '&language=' + this.options.language;
 
+            if (!!this.data.id) {
+                url += '&uuid=' + this.data.id;
+            }
+
             return url;
         },
 

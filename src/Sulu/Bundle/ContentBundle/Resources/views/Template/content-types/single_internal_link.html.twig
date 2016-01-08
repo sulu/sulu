@@ -7,6 +7,7 @@
      data-aura-component="single-internal-link@sulucontent"
      data-aura-instance-name="{{ id|raw }}"
      data-aura-result-key="nodes"
+     data-aura-disabled-ids='["{{ uuid|default('') }}"]'
      data-aura-url="/admin/api/nodes{/uuid}?depth=1{% if webspaceKey != '' %}&webspace={{ webspaceKey }}{% endif %}&language={{ languageCode }}&webspace-node=true"
      data-aura-column-navigation-url="/admin/api/nodes?{id=uuid&}tree=true{% if webspaceKey != '' %}&webspace={{ webspaceKey }}{% endif %}&language={{ languageCode }}&webspace-node=true">
 </div>

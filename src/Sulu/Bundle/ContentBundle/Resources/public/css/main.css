@@ -541,3 +541,49 @@
   padding-top: 50px;
   padding-bottom: 50px;
 }
+
+/* line 2, ../scss/modules/single-internal-link.scss */
+.single-internal-link.container {
+  position: relative;
+  width: 100%;
+  height: 32px;
+  border: 1px solid #ddd;
+  padding: 0 5px;
+  font-size: 14px;
+  border-radius: 3px;
+  background: #fff;
+}
+/* line 14, ../scss/modules/single-internal-link.scss */
+.single-internal-link .choose {
+  position: absolute;
+  padding: 0 8px;
+  margin-top: 5px;
+  font-size: 12px;
+  line-height: 20px;
+  vertical-align: middle;
+  text-decoration: none;
+  border-radius: 2px;
+  color: #fff;
+  background: #52B6CA;
+}
+/* line 29, ../scss/modules/single-internal-link.scss */
+.single-internal-link .clear {
+  position: absolute;
+  right: 10px;
+  font-size: 16px;
+  line-height: 30px;
+  vertical-align: middle;
+  margin: auto;
+  padding-left: 3px;
+  text-decoration: none;
+  color: #3e3e3e;
+}
+/* line 42, ../scss/modules/single-internal-link.scss */
+.single-internal-link input {
+  background-color: #fff;
+  padding-left: 40px;
+  padding-right: 10px;
+  border: 0;
+  margin: 0;
+  color: #3e3e3e;
+}
