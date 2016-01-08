@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* 1.0.15(2016-01-8)
+* 1.0.15 (2016-01-08)
     * HOTFIX      #1919 [MediaBundle]    Fixed remove image description
     * ENHANCEMENT #1919 [LocationBundle] Added de and ch to google maps selection
 
