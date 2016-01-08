@@ -101,11 +101,21 @@ define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config
                 if (!!this.data.id && !!this.initiated) {
                     var $element = $(e.currentTarget),
                         element = this.sandbox.dom.data($element, 'element'),
-                        sequence = this.getSequence($element);
+                        elementGroup = this.sandbox.dom.data($element, 'elementGroup'),
+                        sequence = this.getSequence($element),
+                        value;
 
-                    if (!!sequence) {
-                        update.call(this, sequence, element.getValue());
+                    if (!sequence || (!element && !elementGroup)) {
+                        return;
                     }
+
+                    if (!!elementGroup) {
+                        value  = elementGroup.getValue();
+                    } else if (!!element) {
+                        value = element.getValue();
+                    }
+
+                    update.call(this, sequence, value);
                 }
             },
 
