@@ -41,15 +41,15 @@ class SearchResultRepresentation extends PaginatedRepresentation
     public function __construct(
         $inline,
         $route,
-        array $parameters = [],
+        array $parameters,
         $page,
         $limit,
         $pages,
-        $pageParameterName = null,
-        $limitParameterName = null,
-        $absolute = false,
-        $total = null,
-        $totals = [],
+        $pageParameterName,
+        $limitParameterName,
+        $absolute,
+        $total,
+        $totals,
         $time
     ) {
         parent::__construct(

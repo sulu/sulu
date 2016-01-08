@@ -224,7 +224,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideSpecialCharacterFileName
      */
-    public function testSpecialCharacterFileName($fileName, $cleanUpArgument)
+    public function testSpecialCharacterFileName($fileName, $cleanUpArgument, $cleanUpResult, $extension)
     {
         /** @var UploadedFile $uploadedFile */
         $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith(['', 1, null, null, 1, true]);
@@ -236,8 +236,12 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $user = $this->prophesize(User::class)->willImplement(UserInterface::class);
         $this->userRepository->findUserById(1)->willReturn($user);
 
-        $this->pathCleaner->cleanup(Argument::exact($cleanUpArgument))->shouldBeCalled();
-        $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'my title'], 1);
+        $this->storage->save('', $cleanUpResult . $extension, 1)->shouldBeCalled();
+
+        $this->pathCleaner->cleanup(Argument::exact($cleanUpArgument))->shouldBeCalled()->willReturn($cleanUpResult);
+        $media = $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'my title'], 1);
+
+        $this->assertEquals($fileName, $media->getName());
     }
 
     public function provideGetByIds()
@@ -256,8 +260,8 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
     public function provideSpecialCharacterFileName()
     {
         return [
-            ['aäüßa', 'aäüßa'],
-            ['aäüßa.mp4', 'aäüßa'],
+            ['aäüßa', 'aäüßa', 'aaeuesa', ''],
+            ['aäüßa.mp4', 'aäüßa', 'aaeuesa', '.mp4'],
         ];
     }
 
