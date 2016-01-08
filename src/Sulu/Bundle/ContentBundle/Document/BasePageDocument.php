@@ -58,28 +58,28 @@ class BasePageDocument implements
     SecurityBehavior
 {
     /**
-     * The name of this node
+     * The name of this node.
      *
      * @var string
      */
     protected $nodeName;
 
     /**
-     * Datetime of create document
+     * Datetime of create document.
      *
      * @var \DateTime
      */
     protected $created;
 
     /**
-     * Datetime of update document
+     * Datetime of update document.
      *
      * @var \DateTime
      */
     protected $changed;
 
     /**
-     * Datetime of creator
+     * Datetime of creator.
      *
      * @var \DateTime
      */
@@ -91,21 +91,21 @@ class BasePageDocument implements
     protected $changer;
 
     /**
-     * Document's parent
+     * Document's parent.
      *
      * @var object
      */
     protected $parent;
 
     /**
-     * Title of document
+     * Title of document.
      *
      * @var string
      */
     protected $title;
 
     /**
-     * Segment
+     * Segment.
      *
      * @var string
      */
@@ -117,91 +117,91 @@ class BasePageDocument implements
     protected $navigationContexts = [];
 
     /**
-     * Type of redirection
+     * Type of redirection.
      *
      * @var int
      */
     protected $redirectType;
 
     /**
-     * The target of redirection
+     * The target of redirection.
      *
      * @var object
      */
     protected $redirectTarget;
 
     /**
-     * The External redirect
+     * The External redirect.
      *
      * @var string
      */
     protected $redirectExternal;
 
     /**
-     * Workflow Stage currently Test or Published
+     * Workflow Stage currently Test or Published.
      *
      * @var int
      */
     protected $workflowStage;
 
     /**
-     * Is Document is published
+     * Is Document is published.
      *
      * @var bool
      */
     protected $published;
 
     /**
-     * Shadow locale is enabled
+     * Shadow locale is enabled.
      *
      * @var bool
      */
     protected $shadowLocaleEnabled = false;
 
     /**
-     * Shadow locale
+     * Shadow locale.
      *
      * @var string
      */
     protected $shadowLocale;
 
     /**
-     * Universal Identifier
+     * Universal Identifier.
      *
      * @var string
      */
     protected $uuid;
 
     /**
-     * Document's type of structure ie default, complex, ...
+     * Document's type of structure ie default, complex...
      *
      * @var string
      */
     protected $structureType;
 
     /**
-     * Structure
+     * Structure.
      *
      * @var StructureInterface
      */
     protected $structure;
 
     /**
-     * Document's locale
+     * Document's locale.
      *
      * @var string
      */
     protected $locale;
 
     /**
-     * Document's children
+     * Document's children.
      *
      * @var ChildrenCollection
      */
     protected $children;
 
     /**
-     * Document's path
+     * Document's path.
      *
      * @var string
      */
@@ -215,21 +215,21 @@ class BasePageDocument implements
     protected $extensions;
 
     /**
-     * Document's webspace name
+     * Document's webspace name.
      *
      * @var string
      */
     protected $webspaceName;
 
     /**
-     * Document's order
+     * Document's order.
      *
      * @var int
      */
     protected $suluOrder;
 
     /**
-     * List of permissions
+     * List of permissions.
      *
      * @var array
      */
