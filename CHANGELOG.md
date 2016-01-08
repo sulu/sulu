@@ -231,6 +231,10 @@ CHANGELOG for Sulu
     * BUGFIX      #1136 [MediaBundle]     Fixed image scale forceRatio parameter for none squared image formats
     * BUGFIX      #1785 [ContentBundle]   Fixed data returned for internal link in settings tab
     
+* 1.0.15(2016-01-8)
+    * HOTFIX      #1919 [MediaBundle]    Fixed remove image description
+    * ENHANCEMENT #1919 [LocationBundle] Added de and ch to google maps selection
+
 * 1.0.14 (2015-11-13)
     * BUGFIX      #1191 [AdminBundle]    Fixed unique Navigation ID
 

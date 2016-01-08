@@ -75,6 +75,8 @@ class LocationContentType extends ComplexContentType
                 [
                     'at' => new PropertyParameter('at', 'Austria'),
                     'fr' => new PropertyParameter('fr', 'France'),
+                    'ch' => new PropertyParameter('ch', 'Switzerland'),
+                    'de' => new PropertyParameter('de', 'Germany'),
                     'gb' => new PropertyParameter('gb', 'Great Britain'),
                 ],
                 'collection'
