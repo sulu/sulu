@@ -324,7 +324,7 @@ class ContentRepository implements ContentRepositoryInterface
         QueryBuilder $queryBuilder,
         $locale,
         $locales,
-        $webspaceKey = null,
+        $webspaceKey,
         MappingInterface $mapping,
         UserInterface $user = null
     ) {

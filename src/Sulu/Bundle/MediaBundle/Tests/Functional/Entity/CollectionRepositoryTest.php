@@ -79,7 +79,7 @@ class CollectionRepositoryTest extends SuluTestCase
         $this->em->flush();
     }
 
-    private function createCollection($name, $parent = null, $collectionType)
+    private function createCollection($name, $parent, $collectionType)
     {
         $collection = new Collection();
         $collectionMeta = new CollectionMeta();
