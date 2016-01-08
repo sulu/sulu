@@ -75,4 +75,14 @@ class Checkbox extends SimpleContentType
     {
         return $this->template;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultParams(PropertyInterface $property = null)
+    {
+        return [
+            'type' => 'checkbox',
+        ];
+    }
 }
