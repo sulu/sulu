@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1917 [MediaBundle]     Changed version name to original filename
     * BUGFIX      #1911 [SecurityBundle]  Fixed default locale user builder
     * FEATURE     #1905 [All]             Added french translation
     * BUGFIX      #1893 [ContentBundle]   Fixed resource locator deferred for edit
