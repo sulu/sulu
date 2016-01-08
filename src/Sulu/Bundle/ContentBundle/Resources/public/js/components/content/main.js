@@ -994,7 +994,7 @@ define([
                     before = sequence[item];
                     filter += ' *[property="' + sequence[item] + '"]';
                 } else {
-                    filter += ' *[rel="' + before + '"]:nth-child(' + (parseInt(sequence[item]) + 1) + ')';
+                    filter += ' *[rel="' + before + '"]:eq(' + (parseInt(sequence[item])) + ')';
                 }
             }
 
@@ -1023,7 +1023,7 @@ define([
 
         handle: function(content, selector, validate) {
             var i = 0,
-                elements = this.getPreviewDocument().querySelectorAll(selector),
+                elements = $(this.getPreviewDocument()).find(selector),
                 nodeArray = [].slice.call(elements);
 
             nodeArray.forEach(function(element) {
