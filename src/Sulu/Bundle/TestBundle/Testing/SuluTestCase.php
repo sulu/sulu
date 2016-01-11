@@ -32,6 +32,19 @@ abstract class SuluTestCase extends BaseTestCase
     protected static $currentKernel = 'admin';
 
     /**
+     * {@inheritdoc}
+     */
+    public static function setUpBeforeClass()
+    {
+        // enables garbage collector because symfony/phpunit-bridge disables it. see:
+        //  * https://github.com/symfony/symfony/pull/13398/files#diff-81bfee6017752d99d3119f4ddb1a09edR1
+        //  * https://github.com/symfony/symfony/pull/13398 (feature list)
+        if (!gc_enabled()) {
+            gc_enable();
+        }
+    }
+
+    /**
      * Create a new SuluTestKernel and pass the sulu.context to it.
      *
      * {@inheritdoc}
