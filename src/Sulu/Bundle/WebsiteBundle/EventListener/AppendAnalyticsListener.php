@@ -68,7 +68,7 @@ class AppendAnalyticsListener
             $this->environment
         );
 
-        $content = $this->engine->render('SuluWebsiteBundle:Analytics:render.html.twig', ['analytics' => $analytics]);
+        $content = $this->engine->render('SuluWebsiteBundle:Analytics:website.html.twig', ['analytics' => $analytics]);
 
         $response = $event->getResponse();
         $responseContent = $response->getContent();

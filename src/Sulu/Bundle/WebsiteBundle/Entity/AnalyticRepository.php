@@ -60,12 +60,12 @@ class AnalyticRepository extends EntityRepository
     /**
      * Returns analytic-key by url.
      *
-     * @param string $urlExpression
+     * @param string $url
      * @param string $environment
      *
      * @return Analytic[]
      */
-    public function findByUrl($urlExpression, $environment)
+    public function findByUrl($url, $environment)
     {
         $queryBuilder = $this->createQueryBuilder('a')
             ->addSelect('domains')
@@ -74,7 +74,7 @@ class AnalyticRepository extends EntityRepository
             ->orWhere('domains.url = :url AND domains.environment = :environment');
 
         $query = $queryBuilder->getQuery();
-        $query->setParameter('url', $urlExpression);
+        $query->setParameter('url', $url);
         $query->setParameter('environment', $environment);
 
         return $query->getResult();

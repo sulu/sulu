@@ -29,7 +29,7 @@ class AnalyticsManager implements AnalyticsManagerInterface
     /**
      * @var AnalyticRepository
      */
-    private $repository;
+    private $analyticRepository;
 
     /**
      * @var DomainRepository
@@ -38,11 +38,11 @@ class AnalyticsManager implements AnalyticsManagerInterface
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        AnalyticRepository $repository,
+        AnalyticRepository $analyticRepository,
         DomainRepository $domainRepository
     ) {
         $this->entityManager = $entityManager;
-        $this->repository = $repository;
+        $this->analyticRepository = $analyticRepository;
         $this->domainRepository = $domainRepository;
     }
 
@@ -51,7 +51,7 @@ class AnalyticsManager implements AnalyticsManagerInterface
      */
     public function findAll($webspaceKey)
     {
-        return $this->repository->findByWebspaceKey($webspaceKey);
+        return $this->analyticRepository->findByWebspaceKey($webspaceKey);
     }
 
     /**
@@ -59,7 +59,7 @@ class AnalyticsManager implements AnalyticsManagerInterface
      */
     public function find($id)
     {
-        return $this->repository->findById($id);
+        return $this->analyticRepository->findById($id);
     }
 
     /**
@@ -71,7 +71,6 @@ class AnalyticsManager implements AnalyticsManagerInterface
         $this->setData($entity, $webspaceKey, $data);
 
         $this->entityManager->persist($entity);
-        $this->entityManager->flush();
 
         return $entity;
     }
@@ -84,8 +83,6 @@ class AnalyticsManager implements AnalyticsManagerInterface
         $entity = $this->find($id);
         $this->setData($entity, $entity->getWebspaceKey(), $data);
 
-        $this->entityManager->flush();
-
         return $entity;
     }
 
@@ -95,19 +92,16 @@ class AnalyticsManager implements AnalyticsManagerInterface
     public function remove($id)
     {
         $this->entityManager->remove($this->entityManager->getReference(Analytic::class, $id));
-        $this->entityManager->flush();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function removeMultiple($ids)
+    public function removeMultiple(array $ids)
     {
         foreach ($ids as $id) {
             $this->entityManager->remove($this->entityManager->getReference(Analytic::class, $id));
         }
-
-        $this->entityManager->flush();
     }
 
     /**

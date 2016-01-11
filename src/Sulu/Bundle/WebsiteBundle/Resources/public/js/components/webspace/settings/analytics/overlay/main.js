@@ -197,12 +197,12 @@ define([
                 )
             );
 
-            var defs = [];
+            var deferreds = [];
             $(contentSelector).find('*[data-mapper-property]').each(function(index, item) {
-                defs.push(this.sandbox.form.addField(formSelector, $(item)).initialized);
+                deferreds.push(this.sandbox.form.addField(formSelector, $(item)).initialized);
             }.bind(this));
 
-            $.when(defs).then(function() {
+            $.when(deferreds).then(function() {
                 this.sandbox.form.setData(formSelector, data);
             }.bind(this));
         },

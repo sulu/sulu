@@ -145,12 +145,13 @@ define(['underscore', 'text!./skeleton.html'], function(_, skeleton) {
         },
 
         deleteAnalytics: function() {
-            var ids = JSON.parse(JSON.stringify($('#webspace-analytics-list').data('selected')));
+            var ids = this.sandbox.util.deepCopy($('#webspace-analytics-list').data('selected'));
 
             this.sandbox.sulu.showDeleteDialog(function(confirmed) {
                 if (!!confirmed) {
                     this.sandbox.util.save(
-                        this.templates.url({webspace: this.data, id: null, ids: ids}), 'DELETE'
+                        this.templates.url({webspace: this.data, id: null, ids: ids}),
+                        'DELETE'
                     ).then(function() {
                         for (var i = 0, length = ids.length; i < length; i++) {
                             var id = ids[i];

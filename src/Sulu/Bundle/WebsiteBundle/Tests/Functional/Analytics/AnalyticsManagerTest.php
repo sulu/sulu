@@ -153,6 +153,7 @@ class AnalyticsManagerTest extends BaseFunctional
     public function testCreate($webspaceKey, array $data)
     {
         $result = $this->analyticsManager->create($webspaceKey, $data);
+        $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
 
         $accessor = PropertyAccess::createPropertyAccessor();
         foreach ($data as $key => $value) {
@@ -184,6 +185,7 @@ class AnalyticsManagerTest extends BaseFunctional
     public function testUpdate($webspaceKey, array $data)
     {
         $result = $this->analyticsManager->update($this->entities[0]->getId(), $data);
+        $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
 
         $accessor = PropertyAccess::createPropertyAccessor();
         foreach ($data as $key => $value) {
@@ -223,6 +225,7 @@ class AnalyticsManagerTest extends BaseFunctional
                 ],
             ]
         );
+        $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
 
         $this->assertCount(1, $this->domainRepository->findBy(['url' => 'www.sulu.at', 'environment' => 'prod']));
         $this->assertCount(
@@ -250,6 +253,7 @@ class AnalyticsManagerTest extends BaseFunctional
                 ],
             ]
         );
+        $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
 
         $this->assertCount(1, $this->domainRepository->findBy(['url' => 'www.sulu.at', 'environment' => 'prod']));
         $this->assertCount(
@@ -266,6 +270,7 @@ class AnalyticsManagerTest extends BaseFunctional
     public function testRemove()
     {
         $this->analyticsManager->remove($this->entities[0]->getId());
+        $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
 
         $this->assertEmpty(
             array_filter(
@@ -281,6 +286,7 @@ class AnalyticsManagerTest extends BaseFunctional
     {
         $ids = [$this->entities[0]->getId(), $this->entities[1]->getId()];
         $this->analyticsManager->removeMultiple($ids);
+        $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
 
         $this->assertEmpty(
             array_filter(

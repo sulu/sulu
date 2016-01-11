@@ -181,16 +181,16 @@
         </service>
 
         <service id="sulu_website.analytics.repository"
-                 class="Sulu\Bundle\WebsiteBundle\Entity\AnalyticRepository"
-                 factory-service="doctrine.orm.entity_manager"
-                 factory-method="getRepository">
+                 class="Sulu\Bundle\WebsiteBundle\Entity\AnalyticRepository">
+            <factory service="doctrine.orm.entity_manager" method="getRepository" />
+
             <argument type="string">SuluWebsiteBundle:Analytic</argument>
         </service>
 
         <service id="sulu_website.domains.repository"
-                 class="Sulu\Bundle\WebsiteBundle\Entity\DomainRepository"
-                 factory-service="doctrine.orm.entity_manager"
-                 factory-method="getRepository">
+                 class="Sulu\Bundle\WebsiteBundle\Entity\DomainRepository">
+            <factory service="doctrine.orm.entity_manager" method="getRepository" />
+
             <argument type="string">SuluWebsiteBundle:Domain</argument>
         </service>
 

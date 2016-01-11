@@ -82,7 +82,7 @@ class AppendAnalyticsListenerTest extends \PHPUnit_Framework_TestCase
         $response = $this->prophesize(Response::class);
         $event->getResponse()->willReturn($response->reveal());
 
-        $engine->render('SuluWebsiteBundle:Analytics:render.html.twig', ['analytics' => ['test' => 1]])
+        $engine->render('SuluWebsiteBundle:Analytics:website.html.twig', ['analytics' => ['test' => 1]])
             ->shouldBeCalled()->willReturn('<script>var i = 0;</script>');
         $response->getContent()->willReturn('<html><head><title>Test</title></head><body><h1>Title</h1></body></html>');
         $response->setContent(

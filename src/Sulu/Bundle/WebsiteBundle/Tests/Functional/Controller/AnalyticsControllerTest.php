@@ -240,5 +240,7 @@ class AnalyticsControllerTest extends SuluTestCase
                 ],
             ]
         );
+
+        $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
     }
 }

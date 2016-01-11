@@ -43,7 +43,7 @@ class AnalyticSerializeEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if ($analytic->getAllDomains()) {
+        if ($analytic->isAllDomains()) {
             $metadata = new PropertyMetadata($event->getType()['name'], 'domains');
             $value = new \stdClass();
             $value->domains = true;

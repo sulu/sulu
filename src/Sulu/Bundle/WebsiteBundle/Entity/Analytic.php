@@ -111,7 +111,7 @@ class Analytic
      *
      * @return bool
      */
-    public function getAllDomains()
+    public function isAllDomains()
     {
         return $this->allDomains;
     }

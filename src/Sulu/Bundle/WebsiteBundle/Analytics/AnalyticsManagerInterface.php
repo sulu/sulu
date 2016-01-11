@@ -61,4 +61,11 @@ interface AnalyticsManagerInterface
      * @param int $id
      */
     public function remove($id);
+
+    /**
+     * Removes key with given id.
+     *
+     * @param int[] $ids
+     */
+    public function removeMultiple(array $ids);
 }

@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Provides webspace analytic rest-endpoint.
+ * Provides webspace analytics rest-endpoint.
  */
 class AnalyticsController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
@@ -73,6 +73,7 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
     public function postAction(Request $request, $webspaceKey)
     {
         $entity = $this->get('sulu_website.analytics.manager')->create($webspaceKey, $request->request->all());
+        $this->get('doctrine.orm.entity_manager')->flush();
 
         return $this->handleView($this->view($entity, 200));
     }
@@ -89,6 +90,7 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
     public function putAction(Request $request, $webspaceKey, $id)
     {
         $entity = $this->get('sulu_website.analytics.manager')->update($id, $request->request->all());
+        $this->get('doctrine.orm.entity_manager')->flush();
 
         return $this->handleView($this->view($entity, 200));
     }
@@ -104,6 +106,7 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
     public function deleteAction($webspaceKey, $id)
     {
         $this->get('sulu_website.analytics.manager')->remove($id);
+        $this->get('doctrine.orm.entity_manager')->flush();
 
         return $this->handleView($this->view(null, 204));
     }
@@ -121,6 +124,7 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
         $ids = array_filter(explode(',', $request->get('ids', '')));
 
         $this->get('sulu_website.analytics.manager')->removeMultiple($ids);
+        $this->get('doctrine.orm.entity_manager')->flush();
 
         return $this->handleView($this->view(null, 204));
     }
