@@ -59,9 +59,7 @@ class StructureBridgeSerializationTest extends SuluTestCase
 
         $this->assertInstanceOf(StructureBridge::class, $managedPage);
 
-        $result = $this->serializer->serialize($managedPage, 'json');
-
-        return $result;
+        return $this->serializer->serialize($managedPage, 'json');
     }
 
     /**

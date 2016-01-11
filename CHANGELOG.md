@@ -9,6 +9,7 @@ CHANGELOG for Sulu
                                           with template change
     * FEATURE     #1906 [All]             Added PHP 7 support
     * FEATURE     #1922 [ContentBundle]   Added parameter to show toggler instead of checkbox
+    * BUGFIX      #1926 [ContentBundle]   Fixed preview for non-standard page document
     * BUGFIX      #1874 [ContentBundle]   Fixed preview selector for blocks
     * FEATURE     #1777 [ContentBundle]   Added selection content types
     * BUGFIX      #1911 [SecurityBundle]  Fixed default locale user builder

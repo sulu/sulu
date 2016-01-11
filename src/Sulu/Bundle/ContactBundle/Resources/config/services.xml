@@ -39,16 +39,16 @@
             <tag name="sulu_admin.content_navigation" alias="account"/>
             <tag name="sulu.context" context="admin"/>
         </service>
-        <service id="sulu_contact.account_repository" class="%sulu_contact.account_repository.class%"
-                 factory-method="getRepository" factory-service="doctrine">
+        <service id="sulu_contact.account_repository" class="%sulu_contact.account_repository.class%">
+            <factory method="getRepository" service="doctrine"/>
             <argument>%sulu_contact.account.entity%</argument>
         </service>
-        <service id="sulu_contact.contact_repository" class="%sulu_contact.contact_repository.class%"
-                 factory-method="getRepository" factory-service="doctrine">
+        <service id="sulu_contact.contact_repository" class="%sulu_contact.contact_repository.class%">
+            <factory method="getRepository" service="doctrine"/>
             <argument>%sulu_contact.contact.entity%</argument>
         </service>
-        <service id="sulu_contact.contact_title_repository" class="%sulu_contact.contact_title_repository.class%"
-                 factory-method="getRepository" factory-service="doctrine">
+        <service id="sulu_contact.contact_title_repository" class="%sulu_contact.contact_title_repository.class%">
+            <factory method="getRepository" service="doctrine"/>
             <argument>%sulu_contact.contact_title.entity%</argument>
         </service>
         <service id="sulu_contact.account_listener" class="%sulu_contact.account_listener.class%">

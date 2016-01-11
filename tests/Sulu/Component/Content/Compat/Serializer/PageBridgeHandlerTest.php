@@ -16,6 +16,7 @@ use JMS\Serializer\GraphNavigator;
 use JMS\Serializer\Handler\HandlerRegistryInterface;
 use JMS\Serializer\VisitorInterface;
 use Metadata\MetadataFactoryInterface;
+use PHPCR\NodeInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
@@ -41,6 +42,9 @@ class PageBridgeHandlerTest extends \PHPUnit_Framework_TestCase
 
         $structure->getName()->willReturn('test');
 
+        $node = $this->prophesize(NodeInterface::class);
+        $node->getIdentifier()->willReturn('123-123-123');
+
         $pageBridgeHandler = new PageBridgeHandler(
             $documentInspector->reveal(),
             $propertyFactory->reveal(),
@@ -55,6 +59,7 @@ class PageBridgeHandlerTest extends \PHPUnit_Framework_TestCase
         $context->accept(
             [
                 'document' => $document->reveal(),
+                'documentClass' => get_class($document->reveal()),
                 'structure' => 'test',
             ]
         )->shouldBeCalledTimes(1);
@@ -96,6 +101,7 @@ class PageBridgeHandlerTest extends \PHPUnit_Framework_TestCase
             $visitor->reveal(),
             [
                 'document' => 'serialized document',
+                'documentClass' => PageDocument::class,
                 'structure' => 'test',
             ],
             ['name' => PageBridge::class],

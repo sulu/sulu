@@ -41,22 +41,17 @@
             <tag name="sulu_admin.content_navigation" alias="media"/>
             <tag name="sulu.context" context="admin"/>
         </service>
-        <service id="sulu_media.media_repository"
-                 class="%sulu_media.media_repository.class%"
-                 factory-service="doctrine.orm.entity_manager"
-                 factory-method="getRepository">
+        <service id="sulu_media.media_repository" class="%sulu_media.media_repository.class%">
+            <factory service="doctrine.orm.entity_manager" method="getRepository"/>
             <argument>%sulu_media.media_entity%</argument>
         </service>
-        <service id="sulu_media.collection_repository"
-                 class="%sulu_media.collection_repository.class%"
-                 factory-service="doctrine.orm.entity_manager"
-                 factory-method="getRepository">
+        <service id="sulu_media.collection_repository" class="%sulu_media.collection_repository.class%">
+            <factory service="doctrine.orm.entity_manager" method="getRepository"/>
             <argument>%sulu_media.collection_entity%</argument>
         </service>
         <service id="sulu_media.file_version_meta_repository"
-                 class="Sulu\Bundle\MediaBundle\Entity\FileVersionMetaRepository"
-                 factory-service="doctrine.orm.entity_manager"
-                 factory-method="getRepository">
+                 class="Sulu\Bundle\MediaBundle\Entity\FileVersionMetaRepository">
+            <factory service="doctrine.orm.entity_manager" method="getRepository"/>
             <argument>%sulu_media.entity.file_version_meta%</argument>
         </service>
         <service id="sulu_media.storage.file_system" class="Symfony\Component\Filesystem\Filesystem"/>
