@@ -146,10 +146,10 @@ class NavigationItemTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('logo', $array['header']['logo']);
         $this->assertEquals('title', $array['header']['title']);
 
-        $this->assertEquals('Portals', $array['items'][1]['title']);
+        $this->assertContains('Portals', [$array['items'][0]['title'], $array['items'][1]['title']]);
         $this->assertEquals(null, $array['items'][1]['action']);
 
-        $this->assertEquals('Settings', $array['items'][0]['title']);
+        $this->assertContains('Settings', [$array['items'][0]['title'], $array['items'][1]['title']]);
         $this->assertEquals(null, $array['items'][0]['action']);
 
         $array = $this->item2->toArray();

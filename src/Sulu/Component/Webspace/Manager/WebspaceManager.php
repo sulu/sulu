@@ -89,7 +89,9 @@ class WebspaceManager implements WebspaceManagerInterface
             $this->getWebspaceCollection()->getPortalInformations($environment) as $portalUrl => $portalInformation
         ) {
             $nextChar = substr($url, strlen($portalUrl), 1);
-            if (strpos($url, $portalUrl) === 0 && ($nextChar === '/' || $nextChar === '.' || $nextChar === false)) {
+            if (strpos($url, $portalUrl) === 0 &&
+                ($nextChar === '/' || $nextChar === '.' || $nextChar === false || $nextChar === '')
+            ) {
                 return $portalInformation;
             }
         }
