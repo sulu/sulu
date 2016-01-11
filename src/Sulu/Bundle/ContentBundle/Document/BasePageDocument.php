@@ -58,41 +58,57 @@ class BasePageDocument implements
     SecurityBehavior
 {
     /**
+     * The name of this node.
+     *
      * @var string
      */
     protected $nodeName;
 
     /**
+     * Datetime of create document.
+     *
      * @var \DateTime
      */
     protected $created;
 
     /**
+     * Changed date of page.
+     *
      * @var \DateTime
      */
     protected $changed;
 
     /**
-     * @var \DateTime
+     * User ID of creator.
+     *
+     * @var int
      */
     protected $creator;
 
     /**
+     * User ID of changer.
+     *
      * @var int
      */
     protected $changer;
 
     /**
+     * Document's parent.
+     *
      * @var object
      */
     protected $parent;
 
     /**
+     * Title of document.
+     *
      * @var string
      */
     protected $title;
 
     /**
+     * Segment.
+     *
      * @var string
      */
     protected $resourceSegment;
@@ -103,86 +119,120 @@ class BasePageDocument implements
     protected $navigationContexts = [];
 
     /**
+     * Type of redirection.
+     *
      * @var int
      */
     protected $redirectType;
 
     /**
+     * The target of redirection.
+     *
      * @var object
      */
     protected $redirectTarget;
 
     /**
+     * The External redirect.
+     *
      * @var string
      */
     protected $redirectExternal;
 
     /**
+     * Workflow Stage currently Test or Published.
+     *
      * @var int
      */
     protected $workflowStage;
 
     /**
+     * Is Document is published.
+     *
      * @var bool
      */
     protected $published;
 
     /**
+     * Shadow locale is enabled.
+     *
      * @var bool
      */
     protected $shadowLocaleEnabled = false;
 
     /**
+     * Shadow locale.
+     *
      * @var string
      */
     protected $shadowLocale;
 
     /**
+     * Universal Identifier.
+     *
      * @var string
      */
     protected $uuid;
 
     /**
+     * Document's type of structure ie default, complex...
+     *
      * @var string
      */
     protected $structureType;
 
     /**
+     * Structure.
+     *
      * @var StructureInterface
      */
     protected $structure;
 
     /**
+     * Document's locale.
+     *
      * @var string
      */
     protected $locale;
 
     /**
+     * Document's children.
+     *
      * @var ChildrenCollection
      */
     protected $children;
 
     /**
+     * Path of Document.
+     *
      * @var string
      */
     protected $path;
 
     /**
+     * Document's extensions ie seo, ...
+     *
      * @var ExtensionContainer
      */
     protected $extensions;
 
     /**
+     * Document's webspace name.
+     *
      * @var string
      */
     protected $webspaceName;
 
     /**
+     * Document's order.
+     *
      * @var int
      */
     protected $suluOrder;
 
     /**
+     * List of permissions.
+     *
      * @var array
      */
     protected $permissions;
