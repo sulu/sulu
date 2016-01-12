@@ -14,12 +14,12 @@ use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\Metadata\PropertyMetadata;
-use Sulu\Bundle\WebsiteBundle\Entity\Analytic;
+use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
 
 /**
  * Extends analytics serialization process.
  */
-class AnalyticSerializeEventSubscriber implements EventSubscriberInterface
+class AnalyticsSerializeEventSubscriber implements EventSubscriberInterface
 {
     /**
      * {@inheritdoc}
@@ -39,7 +39,7 @@ class AnalyticSerializeEventSubscriber implements EventSubscriberInterface
     {
         $analytic = $event->getObject();
 
-        if (!($analytic instanceof Analytic)) {
+        if (!($analytic instanceof Analytics)) {
             return;
         }
 

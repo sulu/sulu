@@ -3,8 +3,8 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity table="we_analytics"
-            repository-class="Sulu\Bundle\WebsiteBundle\Entity\AnalyticRepository"
-            name="Sulu\Bundle\WebsiteBundle\Entity\Analytic">
+            repository-class="Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepository"
+            name="Sulu\Bundle\WebsiteBundle\Entity\Analytics">
         <indexes>
             <index columns="all_domains"/>
         </indexes>

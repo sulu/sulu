@@ -12,7 +12,7 @@ namespace Functional\Controller;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManagerInterface;
-use Sulu\Bundle\WebsiteBundle\Entity\Analytic;
+use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
 
 class AnalyticsControllerTest extends SuluTestCase
 {
@@ -22,7 +22,7 @@ class AnalyticsControllerTest extends SuluTestCase
     private $analyticsManager;
 
     /**
-     * @var Analytic[]
+     * @var Analytics[]
      */
     private $entities = [];
 

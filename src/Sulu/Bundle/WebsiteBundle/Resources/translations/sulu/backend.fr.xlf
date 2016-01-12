@@ -40,7 +40,7 @@
             </trans-unit>
             <trans-unit id="3" resname="website.webspace.settings.edit.title">
                 <source>website.webspace.settings.edit.title</source>
-                <target>Analytic Key</target>
+                <target>Analytics</target>
             </trans-unit>
             <trans-unit id="4" resname="website.webspace.settings.content">
                 <source>website.webspace.settings.content</source>

@@ -15,14 +15,14 @@ use Doctrine\ORM\EntityRepository;
 /**
  * Repository for analytics.
  */
-class AnalyticRepository extends EntityRepository
+class AnalyticsRepository extends EntityRepository
 {
     /**
      * Returns list of analytics.
      *
      * @param $webspaceKey
      *
-     * @return Analytic[]
+     * @return Analytics[]
      */
     public function findByWebspaceKey($webspaceKey)
     {
@@ -42,7 +42,7 @@ class AnalyticRepository extends EntityRepository
      *
      * @param int $id
      *
-     * @return Analytic
+     * @return Analytics
      */
     public function findById($id)
     {
@@ -63,7 +63,7 @@ class AnalyticRepository extends EntityRepository
      * @param string $url
      * @param string $environment
      *
-     * @return Analytic[]
+     * @return Analytics[]
      */
     public function findByUrl($url, $environment)
     {

@@ -14,9 +14,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 /**
- * Analytic.
+ * Analytics.
  */
-class Analytic
+class Analytics
 {
     /**
      * @var int
@@ -73,7 +73,7 @@ class Analytic
      *
      * @param string $title
      *
-     * @return Analytic
+     * @return Analytics
      */
     public function setTitle($title)
     {
@@ -97,7 +97,7 @@ class Analytic
      *
      * @param bool $allDomains
      *
-     * @return Analytic
+     * @return Analytics
      */
     public function setAllDomains($allDomains)
     {
@@ -121,7 +121,7 @@ class Analytic
      *
      * @param string $content
      *
-     * @return Analytic
+     * @return Analytics
      */
     public function setContent($content)
     {
@@ -145,7 +145,7 @@ class Analytic
      *
      * @param string $type
      *
-     * @return Analytic
+     * @return Analytics
      */
     public function setType($type)
     {
@@ -169,7 +169,7 @@ class Analytic
      *
      * @param string $webspaceKey
      *
-     * @return Analytic
+     * @return Analytics
      */
     public function setWebspaceKey($webspaceKey)
     {
@@ -193,7 +193,7 @@ class Analytic
      *
      * @param Domain $domain
      *
-     * @return Analytic
+     * @return Analytics
      */
     public function addDomain(Domain $domain)
     {

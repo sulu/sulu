@@ -11,8 +11,8 @@
 namespace Sulu\Bundle\WebsiteBundle\Analytics;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Bundle\WebsiteBundle\Entity\Analytic;
-use Sulu\Bundle\WebsiteBundle\Entity\AnalyticRepository;
+use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
+use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepository;
 use Sulu\Bundle\WebsiteBundle\Entity\Domain;
 use Sulu\Bundle\WebsiteBundle\Entity\DomainRepository;
 
@@ -27,7 +27,7 @@ class AnalyticsManager implements AnalyticsManagerInterface
     private $entityManager;
 
     /**
-     * @var AnalyticRepository
+     * @var AnalyticsRepository
      */
     private $analyticRepository;
 
@@ -38,7 +38,7 @@ class AnalyticsManager implements AnalyticsManagerInterface
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        AnalyticRepository $analyticRepository,
+        AnalyticsRepository $analyticRepository,
         DomainRepository $domainRepository
     ) {
         $this->entityManager = $entityManager;
@@ -67,7 +67,7 @@ class AnalyticsManager implements AnalyticsManagerInterface
      */
     public function create($webspaceKey, $data)
     {
-        $entity = new Analytic();
+        $entity = new Analytics();
         $this->setData($entity, $webspaceKey, $data);
 
         $this->entityManager->persist($entity);
@@ -91,7 +91,7 @@ class AnalyticsManager implements AnalyticsManagerInterface
      */
     public function remove($id)
     {
-        $this->entityManager->remove($this->entityManager->getReference(Analytic::class, $id));
+        $this->entityManager->remove($this->entityManager->getReference(Analytics::class, $id));
     }
 
     /**
@@ -100,18 +100,18 @@ class AnalyticsManager implements AnalyticsManagerInterface
     public function removeMultiple(array $ids)
     {
         foreach ($ids as $id) {
-            $this->entityManager->remove($this->entityManager->getReference(Analytic::class, $id));
+            $this->entityManager->remove($this->entityManager->getReference(Analytics::class, $id));
         }
     }
 
     /**
      * Set data to given key.
      *
-     * @param Analytic $analytic
+     * @param Analytics $analytic
      * @param string $webspaceKey
      * @param array $data
      */
-    private function setData(Analytic $analytic, $webspaceKey, $data)
+    private function setData(Analytics $analytic, $webspaceKey, $data)
     {
         $analytic->setTitle($this->getValue($data, 'title'));
         $analytic->setType($this->getValue($data, 'type'));

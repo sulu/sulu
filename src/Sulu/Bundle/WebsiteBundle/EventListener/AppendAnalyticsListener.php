@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\EventListener;
 
-use Sulu\Bundle\WebsiteBundle\Entity\AnalyticRepository;
+use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepository;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\Templating\EngineInterface;
@@ -31,7 +31,7 @@ class AppendAnalyticsListener
     private $requestAnalyzer;
 
     /**
-     * @var AnalyticRepository
+     * @var AnalyticsRepository
      */
     private $analyticRepository;
 
@@ -43,7 +43,7 @@ class AppendAnalyticsListener
     public function __construct(
         EngineInterface $engine,
         RequestAnalyzerInterface $requestAnalyzer,
-        AnalyticRepository $analyticRepository,
+        AnalyticsRepository $analyticRepository,
         $environment
     ) {
         $this->engine = $engine;

@@ -11,14 +11,14 @@
 namespace Functional\Entity;
 
 use Functional\BaseFunctional;
-use Sulu\Bundle\WebsiteBundle\Entity\AnalyticRepository;
+use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepository;
 
 require_once __DIR__ . '/../BaseFunctional.php';
 
-class AnalyticRepositoryTest extends BaseFunctional
+class AnalyticsRepositoryTest extends BaseFunctional
 {
     /**
-     * @var AnalyticRepository
+     * @var AnalyticsRepository
      */
     private $analyticRepository;
 

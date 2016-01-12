@@ -13,7 +13,7 @@ namespace Functional;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManagerInterface;
-use Sulu\Bundle\WebsiteBundle\Entity\Analytic;
+use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
 use Sulu\Bundle\WebsiteBundle\Entity\Domain;
 use Sulu\Bundle\WebsiteBundle\Entity\DomainRepository;
 
@@ -47,11 +47,11 @@ class BaseFunctional extends SuluTestCase
      * @param string $webspaceKey
      * @param array $data
      *
-     * @return Analytic
+     * @return Analytics
      */
     protected function create($webspaceKey, array $data)
     {
-        $entity = $this->setData(new Analytic(), $webspaceKey, $data);
+        $entity = $this->setData(new Analytics(), $webspaceKey, $data);
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
 
@@ -61,13 +61,13 @@ class BaseFunctional extends SuluTestCase
     /**
      * Set data to given key.
      *
-     * @param Analytic $analytic
+     * @param Analytics $analytic
      * @param string $webspaceKey
      * @param array $data
      *
-     * @return Analytic
+     * @return Analytics
      */
-    protected function setData(Analytic $analytic, $webspaceKey, array $data)
+    protected function setData(Analytics $analytic, $webspaceKey, array $data)
     {
         $analytic->setTitle($this->getValue($data, 'title'));
         $analytic->setType($this->getValue($data, 'type'));

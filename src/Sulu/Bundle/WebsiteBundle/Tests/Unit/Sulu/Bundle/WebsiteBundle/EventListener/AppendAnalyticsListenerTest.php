@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sulu\Bundle\WebsiteBundle\EventListener;
 
 use Prophecy\Argument;
-use Sulu\Bundle\WebsiteBundle\Entity\AnalyticRepository;
+use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepository;
 use Sulu\Bundle\WebsiteBundle\EventListener\AppendAnalyticsListener;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\PortalInformation;
@@ -36,7 +36,7 @@ class AppendAnalyticsListenerTest extends \PHPUnit_Framework_TestCase
     {
         $engine = $this->prophesize(EngineInterface::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $analyticRepository = $this->prophesize(AnalyticRepository::class);
+        $analyticRepository = $this->prophesize(AnalyticsRepository::class);
         $listener = new AppendAnalyticsListener(
             $engine->reveal(),
             $requestAnalyzer->reveal(),
@@ -61,7 +61,7 @@ class AppendAnalyticsListenerTest extends \PHPUnit_Framework_TestCase
     {
         $engine = $this->prophesize(EngineInterface::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $analyticRepository = $this->prophesize(AnalyticRepository::class);
+        $analyticRepository = $this->prophesize(AnalyticsRepository::class);
 
         $portalInformation = $this->prophesize(PortalInformation::class);
         $portalInformation->getUrlExpression()->willReturn('sulu.lo/{localization}');

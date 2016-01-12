@@ -11,7 +11,7 @@
 namespace Functional\Analytics;
 
 use Functional\BaseFunctional;
-use Sulu\Bundle\WebsiteBundle\Entity\Analytic;
+use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 require_once __DIR__ . '/../BaseFunctional.php';
@@ -19,7 +19,7 @@ require_once __DIR__ . '/../BaseFunctional.php';
 class AnalyticsManagerTest extends BaseFunctional
 {
     /**
-     * @var Analytic[]
+     * @var Analytics[]
      */
     private $entities = [];
 
@@ -172,7 +172,7 @@ class AnalyticsManagerTest extends BaseFunctional
             1,
             array_filter(
                 $this->analyticsManager->findAll($webspaceKey),
-                function (Analytic $analytic) use ($result) {
+                function (Analytics $analytic) use ($result) {
                     return $analytic->getId() === $result->getId();
                 }
             )
@@ -204,7 +204,7 @@ class AnalyticsManagerTest extends BaseFunctional
             1,
             array_filter(
                 $this->analyticsManager->findAll('sulu_io'),
-                function (Analytic $analytic) use ($result) {
+                function (Analytics $analytic) use ($result) {
                     return $analytic->getTitle() === $result->getTitle();
                 }
             )
@@ -275,7 +275,7 @@ class AnalyticsManagerTest extends BaseFunctional
         $this->assertEmpty(
             array_filter(
                 $this->analyticsManager->findAll('sulu_io'),
-                function (Analytic $analytic) {
+                function (Analytics $analytic) {
                     return $analytic->getId() === $this->entities[0]->getId();
                 }
             )
@@ -291,7 +291,7 @@ class AnalyticsManagerTest extends BaseFunctional
         $this->assertEmpty(
             array_filter(
                 $this->analyticsManager->findAll('sulu_io'),
-                function (Analytic $analytic) use ($ids) {
+                function (Analytics $analytic) use ($ids) {
                     return in_array($analytic->getId(), $ids);
                 }
             )
