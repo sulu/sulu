@@ -170,7 +170,7 @@ define([
             }
             this.model.set(data);
 
-            this.model.fullSave(this.template, this.options.language, null, {}, {
+            this.model.fullSave(this.options.language, null, {}, {
                 // on success save contacts id
                 success: function(response) {
                     var data = response.toJSON();

@@ -22,8 +22,8 @@ define([
             return this.fetch.call(this, options);
         },
 
-        fullSave: function(template, language, state, attributes, options) {
-            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?language=' + language + '&template=' + template + (!!state ? '&state=' + state : '')});
+        fullSave: function(language, state, attributes, options) {
+            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?language=' + language + (!!state ? '&state=' + state : '')});
 
             return this.save.call(this, attributes, options);
         }
