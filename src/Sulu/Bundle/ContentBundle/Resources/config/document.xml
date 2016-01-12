@@ -101,6 +101,16 @@
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
+        <service id="sulu_document_manager.document.subscriber.target"
+                 class="Sulu\Component\Content\Document\Subscriber\TargetSubscriber">
+            <tag name="sulu_document_manager.event_subscriber" />
+        </service>
+
+        <service id="sulu_document_manager.document.subscriber.robot"
+                 class="Sulu\Component\Content\Document\Subscriber\RobotSubscriber">
+            <tag name="sulu_document_manager.event_subscriber" />
+        </service>
+
         <!-- Compat -->
         <service id="sulu_document_manager.document.subscriber.compat.content_mapper"
                  class="Sulu\Component\Content\Document\Subscriber\Compat\ContentMapperSubscriber">

@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use Sulu\Component\Content\Document\Behavior\BlameBehavior;
+use Sulu\Component\Content\Document\Behavior\LocalizedBlameBehavior;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -59,9 +60,11 @@ class BlameSubscriber implements EventSubscriberInterface
      */
     public function configureOptions(ConfigureOptionsEvent $event)
     {
-        $event->getOptions()->setDefaults([
-            'user' => null,
-        ]);
+        $event->getOptions()->setDefaults(
+            [
+                'user' => null,
+            ]
+        );
     }
 
     /**
@@ -73,18 +76,27 @@ class BlameSubscriber implements EventSubscriberInterface
     {
         $metadata = $event->getMetadata();
 
-        if (!$metadata->getReflectionClass()->isSubclassOf(BlameBehavior::class)) {
+        if (!$metadata->getReflectionClass()->isSubclassOf(LocalizedBlameBehavior::class)) {
             return;
         }
 
-        $metadata->addFieldMapping('creator', [
-            'encoding' => 'system_localized',
-            'type' => 'date',
-        ]);
-        $metadata->addFieldMapping('changer', [
-            'encoding' => 'system_localized',
-            'type' => 'date',
-        ]);
+        $encoding = 'system_localized';
+        if ($metadata->getReflectionClass()->isSubclassOf(BlameBehavior::class)) {
+            $encoding = 'system';
+        }
+
+        $metadata->addFieldMapping(
+            'creator',
+            [
+                'encoding' => $encoding,
+            ]
+        );
+        $metadata->addFieldMapping(
+            'changer',
+            [
+                'encoding' => $encoding,
+            ]
+        );
     }
 
     /**
@@ -96,7 +108,7 @@ class BlameSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
 
-        if (!$document instanceof BlameBehavior) {
+        if (!$document instanceof LocalizedBlameBehavior) {
             return;
         }
 
@@ -143,10 +155,12 @@ class BlameSubscriber implements EventSubscriberInterface
         $user = $token->getUser();
 
         if (!$user instanceof UserInterface) {
-            throw new \InvalidArgumentException(sprintf(
-                'User must implement the Sulu UserInterface, got "%s"',
-                is_object($user) ? get_class($user) : gettype($user)
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'User must implement the Sulu UserInterface, got "%s"',
+                    is_object($user) ? get_class($user) : gettype($user)
+                )
+            );
         }
 
         return $user->getId();

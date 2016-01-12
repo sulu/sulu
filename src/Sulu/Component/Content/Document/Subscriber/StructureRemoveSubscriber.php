@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Document\Subscriber;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use Sulu\Bundle\ContentBundle\Document\RouteDocument;
+use Sulu\Component\Content\Document\Behavior\RoutableBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;
 use Sulu\Component\DocumentManager\DocumentInspector;
@@ -57,19 +58,19 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
 
     public function removeDocument($document)
     {
-        // TODO: This is not a good indicator. There should be a RoutableBehavior here.
-        if (!$document instanceof StructureBehavior) {
-            return;
-        }
-
         if ($document instanceof ChildrenBehavior) {
             foreach ($document->getChildren() as $child) {
                 $this->removeDocument($child);
             }
         }
 
-        $this->removeReferences($document);
-        $this->recursivelyRemoveRoutes($document);
+        if ($document instanceof StructureBehavior) {
+            $this->removeReferences($document);
+        }
+
+        if ($document instanceof RoutableBehavior) {
+            $this->recursivelyRemoveRoutes($document);
+        }
     }
 
     private function recursivelyRemoveRoutes($document)
@@ -107,7 +108,7 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
      * Remove the given property, or the value which references the node (when
      * multi-valued).
      *
-     * @param NodeInterface     $node
+     * @param NodeInterface $node
      * @param PropertyInterface $property
      */
     private function dereferenceProperty(NodeInterface $node, PropertyInterface $property)

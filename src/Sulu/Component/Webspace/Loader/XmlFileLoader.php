@@ -12,6 +12,7 @@
 namespace Sulu\Component\Webspace\Loader;
 
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Loader\Exception\ExpectedDefaultTemplatesNotFound;
 use Sulu\Component\Webspace\Loader\Exception\InvalidAmountOfDefaultErrorTemplateException;
@@ -64,9 +65,7 @@ class XmlFileLoader extends FileLoader
         $path = $this->getLocator()->locate($resource);
 
         // load data in path
-        $webspace = $this->parseXml($path);
-
-        return $webspace;
+        return $this->parseXml($path);
     }
 
     /**
@@ -415,6 +414,7 @@ class XmlFileLoader extends FileLoader
             $environment->setType($environmentNode->attributes->getNamedItem('type')->nodeValue);
 
             $this->generateUrls($environmentNode, $environment);
+            $this->generateCustomUrls($environmentNode, $environment);
 
             $portal->addEnvironment($environment);
         }
@@ -446,8 +446,31 @@ class XmlFileLoader extends FileLoader
             $url->setRedirect($this->getOptionalNodeAttribute($urlNode, 'redirect'));
             $url->setMain($this->getOptionalNodeAttribute($urlNode, 'main', false));
             $url->setAnalyticsKey($this->getOptionalNodeAttribute($urlNode, 'analytics-key'));
+            $url->setCustomUrl($this->getOptionalNodeAttribute($urlNode, 'custom-url', false));
 
             $environment->addUrl($url);
+
+            if ($url->isCustomUrl()) {
+                $environment->addCustomUrl(new CustomUrl($url->getUrl()));
+            }
+        }
+    }
+
+    /**
+     * @param \DOMNode $environmentNode
+     * @param Environment $environment
+     *
+     * @throws Exception\InvalidUrlDefinitionException
+     */
+    private function generateCustomUrls(\DOMNode $environmentNode, Environment $environment)
+    {
+        foreach ($this->xpath->query('x:custom-urls/x:custom-url', $environmentNode) as $urlNode) {
+            /** @var \DOMNode $urlNode */
+            $url = new CustomUrl();
+
+            $url->setUrl(rtrim($urlNode->nodeValue, '/'));
+
+            $environment->addCustomUrl($url);
         }
     }
 

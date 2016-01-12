@@ -16,6 +16,8 @@ use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use InvalidArgumentException;
+use PHPCR\SessionInterface;
+use PHPCR\Util\NodeHelper;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Sulu\Component\Content\Document\WorkflowStage;
@@ -32,6 +34,11 @@ abstract class SuluTestCase extends BaseTestCase
     protected static $currentKernel = 'admin';
 
     /**
+     * @var PHPCRImporter
+     */
+    protected $importer;
+
+    /**
      * {@inheritdoc}
      */
     public static function setUpBeforeClass()
@@ -42,6 +49,13 @@ abstract class SuluTestCase extends BaseTestCase
         if (!gc_enabled()) {
             gc_enable();
         }
+    }
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->importer = new PHPCRImporter($this->getContainer()->get('sulu.phpcr.session')->getSession());
     }
 
     /**
@@ -65,10 +79,12 @@ abstract class SuluTestCase extends BaseTestCase
         );
 
         if (!$kernel instanceof SuluTestKernel) {
-            throw new \InvalidArgumentException(sprintf(
-                'All Sulu testing Kernel classes must extend SuluTestKernel, "%s" does not',
-                get_class($kernel)
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'All Sulu testing Kernel classes must extend SuluTestKernel, "%s" does not',
+                    get_class($kernel)
+                )
+            );
         }
 
         return $kernel;
@@ -132,10 +148,12 @@ abstract class SuluTestCase extends BaseTestCase
      */
     protected function createWebsiteClient()
     {
-        return $this->createClient([
-            'sulu_context' => 'website',
-            'environment' => 'dev',
-        ]);
+        return $this->createClient(
+            [
+                'sulu_context' => 'website',
+                'environment' => 'dev',
+            ]
+        );
     }
 
     /**
@@ -152,10 +170,18 @@ abstract class SuluTestCase extends BaseTestCase
         $session = $this->db('PHPCR')->getOm()->getPhpcrSession();
 
         if ($session->nodeExists('/cmf')) {
-            $session->getNode('/cmf')->remove();
+            NodeHelper::purgeWorkspace($session);
+            $session->save();
         }
 
-        $this->createHomeDocument('sulu_io', ['de', 'de_at', 'en', 'en_us', 'fr']);
+        if (!$this->importer) {
+            $this->importer = new PHPCRImporter($session);
+        }
+
+        // to update this file use following command
+        // php vendor/symfony-cmf/testing/bin/console doctrine:phpcr:workspace:export -p /cmf \
+        // src/Sulu/Bundle/TestBundle/Resources/dump/initial-state.xml
+        $this->importer->import(__DIR__ . '/../Resources/dump/initial-state.xml');
     }
 
     /**

@@ -148,6 +148,7 @@
     <xs:complexType name="environmentType">
         <xs:sequence>
             <xs:element type="urlsType" name="urls"/>
+            <xs:element type="customUrlsType" name="custom-urls" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute type="xs:string" name="type" use="optional"/>
     </xs:complexType>
@@ -165,8 +166,14 @@
                 <xs:attribute type="xs:string" name="redirect" use="optional"/>
                 <xs:attribute type="xs:boolean" name="main" use="optional"/>
                 <xs:attribute type="xs:string" name="analytics-key" use="optional"/>
+                <xs:attribute type="xs:boolean" name="custom-url" use="optional"/>
             </xs:extension>
         </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="customUrlsType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="custom-url" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
     </xs:complexType>
 
     <xs:element name="webspace" type="webspaceType"/>

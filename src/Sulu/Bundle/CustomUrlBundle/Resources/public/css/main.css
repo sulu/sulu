@@ -1,0 +1,20 @@
+/*----------------------------------------*/
+/* line 2, ../scss/modules/custom-url.scss */
+.custom-url-input .form-element {
+  width: 100px;
+  margin: 0 5px;
+}
+/* line 7, ../scss/modules/custom-url.scss */
+.custom-url-input .form-element.prefix {
+  margin-left: 0;
+}
+/* line 11, ../scss/modules/custom-url.scss */
+.custom-url-input .domain-part {
+  color: #999;
+}
+
+/* line 17, ../scss/modules/custom-url.scss */
+.target-input div.husky-validate-error {
+  border-color: #EA524E;
+  border-width: 2px;
+}

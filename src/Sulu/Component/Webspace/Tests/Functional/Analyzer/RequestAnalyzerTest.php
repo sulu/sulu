@@ -12,6 +12,7 @@
 namespace Sulu\Component\Webspace\Tests\Functional\Analyzer;
 
 use PHPUnit_Framework_MockObject_MockObject;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\Attributes\WebsiteRequestProcessor;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
@@ -33,6 +34,11 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
      */
     private $webspaceManager;
 
+    /**
+     * @var ContentMapperInterface
+     */
+    private $contentMapper;
+
     public function setUp()
     {
         $this->webspaceManager = $this->getMockForAbstractClass(
@@ -42,11 +48,13 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
             true,
             true,
             true,
-            ['findPortalInformationByUrl']
+            ['findPortalInformationsByUrl']
         );
 
+        $this->contentMapper = $this->prophesize(ContentMapperInterface::class);
+
         $this->requestAnalyzer = new RequestAnalyzer(
-            [new WebsiteRequestProcessor($this->webspaceManager, 'prod')]
+            [new WebsiteRequestProcessor($this->webspaceManager, $this->contentMapper->reveal(), 'prod')]
         );
     }
 
@@ -55,8 +63,8 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
      */
     protected function prepareWebspaceManager($portalInformation)
     {
-        $this->webspaceManager->expects($this->any())->method('findPortalInformationByUrl')->will(
-            $this->returnValue($portalInformation)
+        $this->webspaceManager->expects($this->any())->method('findPortalInformationsByUrl')->will(
+            $this->returnValue([$portalInformation])
         );
     }
 

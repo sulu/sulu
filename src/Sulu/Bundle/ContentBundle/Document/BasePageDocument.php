@@ -11,13 +11,14 @@
 
 namespace Sulu\Bundle\ContentBundle\Document;
 
-use Sulu\Component\Content\Document\Behavior\AuditableBehavior;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
+use Sulu\Component\Content\Document\Behavior\LocalizedAuditableBehavior;
 use Sulu\Component\Content\Document\Behavior\LocalizedStructureBehavior;
 use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
+use Sulu\Component\Content\Document\Behavior\RoutableBehavior;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
@@ -53,7 +54,8 @@ class BasePageDocument implements
     OrderBehavior,
     WebspaceBehavior,
     SecurityBehavior,
-    AuditableBehavior
+    LocalizedAuditableBehavior,
+    RoutableBehavior
 {
     /**
      * The name of this node.

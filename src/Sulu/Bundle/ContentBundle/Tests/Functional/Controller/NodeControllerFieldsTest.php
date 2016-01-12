@@ -342,8 +342,6 @@ class NodeControllerFieldsTest extends SuluTestCase
 
     public function testCGetActionSingleWebspaceNodes()
     {
-        $this->createHomeDocument('test_io', ['de']);
-
         $page1 = $this->createPage('test-1', 'de');
         $page2 = $this->createPage('test-2', 'de');
         $this->createPage('test-1-1', 'de', [], $page1);
@@ -379,8 +377,6 @@ class NodeControllerFieldsTest extends SuluTestCase
 
     public function testCGetActionAllWebspaceNodes()
     {
-        $this->createHomeDocument('test_io', ['de']);
-
         $page1 = $this->createPage('test-1', 'de');
         $page2 = $this->createPage('test-2', 'de');
         $this->createPage('test-1-1', 'de', [], $page1);
@@ -420,8 +416,6 @@ class NodeControllerFieldsTest extends SuluTestCase
 
     public function testGetTreeActionSingleWebspaceNodes()
     {
-        $this->createHomeDocument('test_io', ['de']);
-
         $page1 = $this->createPage('test-1', 'de');
         $page2 = $this->createPage('test-2', 'de');
         $page11 = $this->createPage('test-1-1', 'de', [], $page1);
@@ -470,8 +464,6 @@ class NodeControllerFieldsTest extends SuluTestCase
 
     public function testGetTreeActionAllWebspaceNodes()
     {
-        $this->createHomeDocument('test_io', ['de']);
-
         $page1 = $this->createPage('test-1', 'de');
         $page2 = $this->createPage('test-2', 'de');
         $page11 = $this->createPage('test-1-1', 'de', [], $page1);

@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\Compat;
 
+use Sulu\Component\Content\Metadata\StructureMetadata;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 /**
@@ -36,4 +37,14 @@ interface StructureManagerInterface extends ContainerAwareInterface
      * @return StructureInterface[]
      */
     public function getStructures($type = Structure::TYPE_PAGE);
+
+    /**
+     * Wrap the given Structure with a legacy (bridge) structure.
+     *
+     * @param string $type
+     * @param StructureMetadata $structure
+     *
+     * @return StructureInterface
+     */
+    public function wrapStructure($type, StructureMetadata $structure);
 }

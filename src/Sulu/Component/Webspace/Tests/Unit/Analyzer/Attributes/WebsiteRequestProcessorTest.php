@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Webspace\Tests\Unit\Analyzer\Attributes;
 
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\Attributes\WebsiteRequestProcessor;
@@ -35,6 +36,11 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
      */
     private $webspaceManager;
 
+    /**
+     * @var ContentMapperInterface
+     */
+    private $contentMapper;
+
     public function setUp()
     {
         $this->webspaceManager = $this->getMockForAbstractClass(
@@ -47,7 +53,9 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
             ['findPortalInformationByUrl']
         );
 
-        $this->provider = new WebsiteRequestProcessor($this->webspaceManager, 'prod');
+        $this->contentMapper = $this->prophesize(ContentMapperInterface::class);
+
+        $this->provider = new WebsiteRequestProcessor($this->webspaceManager, $this->contentMapper->reveal(), 'prod');
     }
 
     public function provideAnalyze()
@@ -183,7 +191,7 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
 
-        $attributes = $this->provider->process($request);
+        $attributes = $this->provider->process($request, new RequestAttributes());
 
         $this->assertEquals('de_at', $attributes->getAttribute('localization'));
         $this->assertEquals('sulu', $attributes->getAttribute('webspace')->getKey());
@@ -231,7 +239,7 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
 
-        $attributes = $this->provider->process($request);
+        $attributes = $this->provider->process($request, new RequestAttributes());
 
         $this->assertEquals('de_at', $attributes->getAttribute('localization'));
         $this->assertEquals('sulu', $attributes->getAttribute('webspace')->getKey());
@@ -278,8 +286,8 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
      */
     protected function prepareWebspaceManager($portalInformation)
     {
-        $this->webspaceManager->expects($this->any())->method('findPortalInformationByUrl')->will(
-            $this->returnValue($portalInformation)
+        $this->webspaceManager->expects($this->any())->method('findPortalInformationsByUrl')->will(
+            $this->returnValue([$portalInformation])
         );
     }
 }

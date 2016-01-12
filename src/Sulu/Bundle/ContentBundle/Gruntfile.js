@@ -32,6 +32,11 @@ module.exports = function (grunt) {
                         dest: '.git/hooks/'
                     }
                 ]
+            },
+            templates: {
+                files: [
+                    {expand: true, cwd: srcpath, src: ['**/*.html'], dest: destpath}
+                ]
             }
         },
 
@@ -151,7 +156,8 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build:js', [
         'uglify',
-        'replace:build'
+        'replace:build',
+        'copy:templates'
     ]);
 
     grunt.registerTask('build', [

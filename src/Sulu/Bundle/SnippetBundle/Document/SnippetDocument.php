@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\SnippetBundle\Document;
 
-use Sulu\Component\Content\Document\Behavior\AuditableBehavior;
+use Sulu\Component\Content\Document\Behavior\LocalizedAuditableBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureTypeFilingBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
@@ -28,7 +28,7 @@ use Sulu\Component\DocumentManager\Behavior\Path\AutoNameBehavior;
  */
 class SnippetDocument implements
     NodeNameBehavior,
-    AuditableBehavior,
+    LocalizedAuditableBehavior,
     AutoNameBehavior,
     AliasFilingBehavior,
     StructureTypeFilingBehavior,

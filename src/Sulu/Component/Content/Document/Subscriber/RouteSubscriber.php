@@ -21,7 +21,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class RouteSubscriber implements EventSubscriberInterface
 {
-    const DOCUMENT_TARGET_FIELD = 'content';
+    const DOCUMENT_HISTORY_FIELD = 'history';
 
     public static function getSubscribedEvents()
     {
@@ -38,10 +38,12 @@ class RouteSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $metadata->addFieldMapping('targetDocument', [
-            'encoding' => 'system',
-            'property' => self::DOCUMENT_TARGET_FIELD,
-            'type' => 'reference',
-        ]);
+        $metadata->addFieldMapping(
+            'history',
+            [
+                'encoding' => 'system',
+                'property' => self::DOCUMENT_HISTORY_FIELD,
+            ]
+        );
     }
 }

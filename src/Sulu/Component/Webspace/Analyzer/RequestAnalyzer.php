@@ -167,7 +167,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     {
         $attributes = new RequestAttributes();
         foreach ($this->requestProcessors as $provider) {
-            $attributes = $attributes->merge($provider->process($request));
+            $attributes = $attributes->merge($provider->process($request, $attributes));
         }
 
         foreach ($this->requestProcessors as $provider) {

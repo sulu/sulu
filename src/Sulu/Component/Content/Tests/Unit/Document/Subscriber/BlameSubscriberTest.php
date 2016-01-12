@@ -13,7 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use PHPCR\NodeInterface;
 use stdClass;
-use Sulu\Component\Content\Document\Behavior\BlameBehavior;
+use Sulu\Component\Content\Document\Behavior\LocalizedBlameBehavior;
 use Sulu\Component\Content\Document\Subscriber\BlameSubscriber;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
@@ -76,7 +76,7 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
     private $tokenStorage;
 
     /**
-     * @var BlameTestDocument
+     * @var LocalizedBlameTestDocument
      */
     private $document;
 
@@ -97,7 +97,7 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->notUser = new \stdClass();
         $this->token = $this->prophesize(TokenInterface::class);
         $this->tokenStorage = $this->prophesize(TokenStorage::class);
-        $this->document = new BlameTestDocument();
+        $this->document = new LocalizedBlameTestDocument();
 
         $this->subscriber = new BlameSubscriber(
             $this->tokenStorage->reveal()
@@ -178,7 +178,7 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
     public function testPersistCreatorWhenNull()
     {
         $locale = 'fr';
-        $document = new BlameTestDocument();
+        $document = new LocalizedBlameTestDocument();
 
         $this->persistEvent->getLocale()->willReturn($locale);
         $this->persistEvent->getDocument()->willReturn($document);
@@ -199,7 +199,7 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
     public function testPersistChanger()
     {
         $locale = 'fr';
-        $document = new BlameTestDocument($this->user->reveal());
+        $document = new LocalizedBlameTestDocument($this->user->reveal());
 
         $this->tokenStorage->getToken()->willReturn($this->token->reveal());
         $this->token->getUser()->willReturn($this->user->reveal());
@@ -213,7 +213,7 @@ class BlameSubscriberTest extends \PHPUnit_Framework_TestCase
     }
 }
 
-class BlameTestDocument implements BlameBehavior
+class LocalizedBlameTestDocument implements LocalizedBlameBehavior
 {
     private $creator;
     private $changer;

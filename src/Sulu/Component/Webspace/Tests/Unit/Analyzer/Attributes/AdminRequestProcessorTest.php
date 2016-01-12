@@ -56,7 +56,7 @@ class AdminRequestProcessorTest extends \PHPUnit_Framework_TestCase
         }
         $webspaceManager->findWebspaceByKey($webspaceKey)->willReturn($webspaceKey ? $webspace->reveal() : null);
 
-        $result = $provider->process($request->reveal());
+        $result = $provider->process($request->reveal(), new RequestAttributes());
 
         foreach ($expected as $key => $value) {
             $this->assertEquals($value, $result->getAttribute($key));

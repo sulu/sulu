@@ -13,9 +13,8 @@ namespace Sulu\Component\Content\Compat;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
-use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
-use Sulu\Component\Content\Metadata\StructureMetadata as NewStructure;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
@@ -73,19 +72,18 @@ class StructureManager implements StructureManagerInterface
     }
 
     /**
-     * Wrap the given Structure with a legacy (bridge) structure.
-     *
-     * @param Structure
-     *
-     * @return StructureBridge
+     * {@inheritdoc}
      */
-    public function wrapStructure($type, NewStructure $structure)
+    public function wrapStructure($type, StructureMetadata $structure)
     {
         if (!isset($this->typeMap[$type])) {
-            throw new \InvalidArgumentException(sprintf(
-                'Invalid legacy type "%s", known types: "%s"',
-                $type, implode('", "', array_keys($this->typeMap))
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Invalid legacy type "%s", known types: "%s"',
+                    $type,
+                    implode('", "', array_keys($this->typeMap))
+                )
+            );
         }
 
         $class = $this->typeMap[$type];

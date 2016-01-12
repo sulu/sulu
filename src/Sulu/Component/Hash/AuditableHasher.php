@@ -10,7 +10,7 @@
 
 namespace Sulu\Component\Hash;
 
-use Sulu\Component\Content\Document\Behavior\AuditableBehavior;
+use Sulu\Component\Content\Document\Behavior\LocalizedAuditableBehavior;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
@@ -30,7 +30,7 @@ class AuditableHasher implements HasherInterface
             );
         }
 
-        if ($object instanceof AuditableBehavior) {
+        if ($object instanceof LocalizedAuditableBehavior) {
             return md5($object->getChanger() . ($object->getChanged() ? $object->getChanged()->getTimestamp() : ''));
         }
 
