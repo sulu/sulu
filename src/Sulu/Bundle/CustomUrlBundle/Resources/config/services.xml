@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="sulu_custom_urls.repository" class="Sulu\Component\CustomUrl\Repository\CustomUrlRepository">
+            <argument type="service" id="sulu.phpcr.session"/>
+        </service>
+
+        <service id="sulu_custom_urls.manager" class="Sulu\Component\CustomUrl\Manager\CustomUrlManager">
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu_custom_urls.repository"/>
+            <argument type="service" id="sulu.phpcr.session"/>
+        </service>
+    </services>
+</container>
