@@ -75,7 +75,6 @@ abstract class BasePageDocumentType extends AbstractStructureBehaviorType
         $builder->add('shadowLocaleEnabled', 'checkbox');
         $builder->add('shadowLocale', 'text'); // TODO: Should be choice of available shadow locales
         $builder->setAttribute('webspace_key', $options['webspace_key']);
-        $builder->setAttribute('clear_missing_content', $options['clear_missing_content']);
 
         $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'postSubmitDocumentParent']);
     }

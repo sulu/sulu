@@ -98,11 +98,13 @@ class StructureSubscriber implements EventSubscriberInterface
         $options->setDefaults(
             [
                 'load_ghost_content' => true,
+                'clear_missing_content' => false,
             ]
         );
         $options->setAllowedTypes(
             [
                 'load_ghost_content' => 'bool',
+                'clear_missing_content' => 'bool',
             ]
         );
     }
@@ -186,6 +188,8 @@ class StructureSubscriber implements EventSubscriberInterface
 
         $node = $event->getNode();
         $locale = $event->getLocale();
+
+        $document->getStructure()->commitStagedData($event->getOption('clear_missing_content'));
 
         $this->mapContentToNode($document, $node, $locale);
 
