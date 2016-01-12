@@ -26,5 +26,14 @@
             <argument type="service" id="sulu_custom_urls.repository"/>
             <argument type="service" id="sulu.phpcr.session"/>
         </service>
+
+        <service id="sulu_custom_urls.initializer" class="Sulu\Component\CustomUrl\Document\Initializer\CustomUrlInitializer">
+            <argument type="service" id="sulu_document_manager.node_manager" />
+            <argument type="service" id="sulu_document_manager.path_builder" />
+            <argument type="service" id="sulu_core.webspace.webspace_manager" />
+            <argument type="service" id="sulu.phpcr.session" />
+
+            <tag name="sulu_document_manager.initializer"/>
+        </service>
     </services>
 </container>

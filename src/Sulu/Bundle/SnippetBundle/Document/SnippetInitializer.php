@@ -11,11 +11,12 @@
 
 namespace Sulu\Bundle\SnippetBundle\Document;
 
+use Sulu\Bundle\DocumentManagerBundle\Initializer\InitializerInterface;
 use Sulu\Component\DocumentManager\NodeManager;
 use Sulu\Component\DocumentManager\PathBuilder;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class SnippetInitializer
+class SnippetInitializer implements InitializerInterface
 {
     private $nodeManager;
     private $pathBuilder;

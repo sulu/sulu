@@ -14,10 +14,12 @@ define(['text!./skeleton.html'], function(skeleton) {
     var defaults = {
         templates: {
             skeleton: skeleton,
-            url: '/admin/api/webspaces/<%= webspace.key %>/custom-urls'
+            url: '/admin/api/webspaces/<%= webspace.key %>/custom-urls<% if (!!id) { %>/<%= id %><% } %>'
         },
         translations: {
-            title: 'public.title'
+            title: 'public.title',
+            successLabel: 'labels.success',
+            successMessage: 'labels.success.save-desc'
         }
     };
 
@@ -59,7 +61,9 @@ define(['text!./skeleton.html'], function(skeleton) {
                         instanceName: 'custom-url',
                         hasSearch: false,
                         template: this.sandbox.sulu.buttons.get({
-                            add: {},
+                            add: {
+                                options: {callback: this.edit.bind(this)}
+                            },
                             deleteSelected: {}
                         })
                     }
@@ -68,7 +72,7 @@ define(['text!./skeleton.html'], function(skeleton) {
                     name: 'datagrid@husky',
                     options: {
                         el: '#webspace-custom-url-list',
-                        url: this.templates.url({webspace: this.data}),
+                        url: this.templates.url({webspace: this.data, id: null}),
                         resultKey: 'custom-urls',
                         actionCallback: this.edit.bind(this),
                         pagination: 'infinite-scroll',
@@ -88,7 +92,33 @@ define(['text!./skeleton.html'], function(skeleton) {
             ]);
         },
 
-        edit: function() {
+        edit: function(id) {
+            this.sandbox.start([
+                {
+                    name: 'webspace/settings/custom-url/overlay@sulucustomurl',
+                    options: {
+                        el: '#webspace-custom-url-form-overlay',
+                        id: id,
+                        webspaceKey: this.data.key,
+                        saveCallback: this.save.bind(this),
+                        translations: this.translations
+                    }
+                }
+            ]);
+        },
+
+        save: function(id, data) {
+            this.sandbox.util.save(
+                this.templates.url({webspace: this.data, id: id}), !!id ? 'PUT' : 'POST', data
+            ).then(function(response) {
+                var event = 'husky.datagrid.record.add';
+                if (!!id) {
+                    event = 'husky.datagrid.records.change';
+                }
+
+                this.sandbox.emit(event, response);
+                this.sandbox.emit('sulu.labels.success.show', this.translations.successMessage, this.translations.successLabel);
+            }.bind(this));
         },
 
         loadComponentData: function() {

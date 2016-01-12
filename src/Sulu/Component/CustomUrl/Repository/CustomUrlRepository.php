@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Component\CustomUrl\Repository;
 
@@ -52,11 +60,6 @@ class CustomUrlRepository
         $query = $queryBuilder->getQuery();
         $result = $query->execute();
 
-        return array_map(
-            function (RowInterface $row) {
-                return $row->getValues();
-            },
-            iterator_to_array($result->getRows())
-        );
+        return new RowsIterator($result->getRows(), $result->getColumnNames());
     }
 }

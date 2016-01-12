@@ -10,6 +10,8 @@
 
 namespace Sulu\Bundle\CustomUrlBundle;
 
+use Sulu\Bundle\CustomUrlBundle\DependencyInjection\CompilerPass\PathSegmentCompilerPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -17,4 +19,11 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class SuluCustomUrlBundle extends Bundle
 {
+    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
+
+        $container->addCompilerPass(new PathSegmentCompilerPass());
+    }
+
 }

@@ -14,21 +14,21 @@ use PHPCR\NodeInterface;
 use Sulu\Component\DocumentManager\Behavior\Audit\BlameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
-use Sulu\Component\DocumentManager\Behavior\Path\AutoNameBehavior;
 
 /**
  * Contains information about custom-urls and the relations to the routes.
  */
 class CustomUrlDocument implements
-CustomUrlInterface,
+    CustomUrlInterface,
     NodeNameBehavior,
     TimestampBehavior,
     BlameBehavior,
-    AutoNameBehavior,
     UuidBehavior,
-    PathBehavior
+    PathBehavior,
+    ParentBehavior
 {
     /**
      * @var string
@@ -39,11 +39,6 @@ CustomUrlInterface,
      * @var string
      */
     protected $title;
-
-    /**
-     * @var string
-     */
-    protected $nodeName;
 
     /**
      * @var \DateTime
@@ -74,6 +69,11 @@ CustomUrlInterface,
      * @var string
      */
     protected $path;
+
+    /**
+     * @var string
+     */
+    protected $nodeName;
 
     /**
      * {@inheritdoc}

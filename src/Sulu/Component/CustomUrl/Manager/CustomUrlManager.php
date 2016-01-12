@@ -10,7 +10,8 @@
 
 namespace Sulu\Component\CustomUrl\Manager;
 
-use Sulu\Component\CustomUrl\Document\CustomUrl;
+use Ferrandini\Urlizer;
+use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Repository\CustomUrlRepository;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -47,10 +48,17 @@ class CustomUrlManager
 
     public function create($webspaceKey, $data)
     {
-        $document = new CustomUrl();
+        $document = new CustomUrlDocument();
         $document->setTitle($data['title']);
 
-        $this->documentManager->persist($document, null, ['path' => $this->getItemsPath($webspaceKey)]);
+        $this->documentManager->persist(
+            $document,
+            null,
+            [
+                'parent_path' => $this->getItemsPath($webspaceKey),
+                'node_name' => Urlizer::urlize($document->getTitle())
+            ]
+        );
 
         return $document;
     }
