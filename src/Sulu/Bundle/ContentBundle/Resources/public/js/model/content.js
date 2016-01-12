@@ -22,14 +22,13 @@ define([
             return this.save.call(this, attributes, options);
         },
 
-        fullSave: function(template, webspace, language, parent, state, type, attributes, options) {
+        fullSave: function(webspace, language, parent, state, type, attributes, options) {
             options = _.defaults(
                 (options || {}),
                 {
                     url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '')
                         + '?webspace=' + webspace
                         + '&language=' + language
-                        + '&template=' + template
                         + (!!type ? '&type=' + type : '')
                         + (!!parent ? '&parent=' + parent : '')
                         + (!!state ? '&state=' + state : '')

@@ -566,16 +566,21 @@ define([
 
             var def = this.sandbox.data.deferred();
 
+            if (!!this.template) {
+                data.template = this.template;
+            }
+
             if (!!this.content) {
                 this.content.set(data);
             } else {
                 this.content = new Content(data);
             }
+
             if (!!this.options.id) {
                 this.content.set({id: this.options.id});
             }
+
             this.content.fullSave(
-                this.template,
                 this.options.webspace,
                 this.options.language,
                 this.options.parent,
