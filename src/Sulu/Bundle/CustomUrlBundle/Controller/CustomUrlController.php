@@ -12,6 +12,7 @@ namespace Sulu\Bundle\CustomUrlBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use Hateoas\Representation\CollectionRepresentation;
+use Hateoas\Representation\RouteAwareRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,19 +28,21 @@ class CustomUrlController extends RestController
 
     private static $relationName = 'custom-urls';
 
-    public function cgetAction(Request $request)
+    public function cgetAction($webspaceKey, Request $request)
     {
-        $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
+        $result = $this->get('sulu_custom_urls.manager')->readList($webspaceKey);
 
-        $list = $this->get('sulu_custom_urls.manager')->readList($webspaceKey);
+        $list = new RouteAwareRepresentation(
+            new CollectionRepresentation($result, self::$relationName),
+            'cget_webspace_custom-urls',
+            array_merge($request->request->all(), ['webspaceKey' => $webspaceKey])
+        );
 
-        return $this->handleView($this->view(new CollectionRepresentation($list, self::$relationName)));
+        return $this->handleView($this->view($list));
     }
 
-    public function postAction(Request $request)
+    public function postAction($webspaceKey, Request $request)
     {
-        $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
-
         $document = $this->get('sulu_custom_urls.manager')->create($webspaceKey, $request->request->all());
         $this->get('sulu_document_manager.document_manager')->flush();
 

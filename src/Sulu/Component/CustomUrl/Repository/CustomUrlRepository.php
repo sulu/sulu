@@ -32,8 +32,8 @@ class CustomUrlRepository
         $qomFactory = $queryManager->getQOMFactory();
         $queryBuilder = new QueryBuilder($qomFactory);
 
-        $queryBuilder->select('a', 'jcr:uuid');
-        $queryBuilder->addSelect('a', 'title');
+        $queryBuilder->select('a', 'jcr:uuid', 'uuid');
+        $queryBuilder->addSelect('a', 'title', 'title');
 
         $queryBuilder->from(
             $queryBuilder->qomf()->selector('a', 'nt:unstructured')
