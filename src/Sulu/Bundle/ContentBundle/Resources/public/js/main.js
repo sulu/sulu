@@ -18,6 +18,7 @@ require.config({
         "type/internalLinks": '../../sulucontent/js/validation/types/internalLinks',
         "type/singleInternalLink": '../../sulucontent/js/validation/types/singleInternalLink',
         "type/block": '../../sulucontent/js/validation/types/block',
+        "type/toggler": '../../sulucontent/js/validation/types/toggler',
         "extensions/sulu-buttons-contentbundle": '../../sulucontent/js/extensions/sulu-buttons'
     }
 });

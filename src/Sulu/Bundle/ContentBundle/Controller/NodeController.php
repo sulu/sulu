@@ -582,18 +582,19 @@ class NodeController extends RestController implements ClassResourceInterface, S
     {
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
-        $template = $this->getRequestParameter($request, 'template', true);
         $isShadow = $this->getRequestParameter($request, 'shadowOn', false);
         $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
 
         $state = $this->getRequestParameter($request, 'state');
-        $type = $request->query->get('type') ?: 'page';
+        $type = $request->query->get('type', 'page');
 
         if ($state !== null) {
             $state = intval($state);
         }
 
         $data = $request->request->all();
+
+        $template = isset($data['template']) ? $data['template'] : null;
 
         try {
             $mapperRequest = ContentMapperRequest::create()
@@ -629,7 +630,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
         try {
             $language = $this->getLanguage($request);
             $webspace = $this->getWebspace($request);
-            $template = $this->getRequestParameter($request, 'template', true);
             $isShadow = $this->getRequestParameter($request, 'isShadow', false);
             $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
             $parent = $this->getRequestParameter($request, 'parent');
@@ -640,6 +640,8 @@ class NodeController extends RestController implements ClassResourceInterface, S
             $type = $request->query->get('type', Structure::TYPE_PAGE);
 
             $data = $request->request->all();
+
+            $template = isset($data['template']) ? $data['template'] : null;
 
             $mapperRequest = ContentMapperRequest::create()
                 ->setType($type)

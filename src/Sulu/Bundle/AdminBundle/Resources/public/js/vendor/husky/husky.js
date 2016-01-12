@@ -43963,7 +43963,6 @@ define('__component__$toggler@husky',[], function() {
 
     var defaults = {
             instanceName: 'undefined',
-            checked: false,
             hiddenCheckbox: true,
             outline: false
         },
@@ -43980,13 +43979,13 @@ define('__component__$toggler@husky',[], function() {
          * namespace for events
          * @type {string}
          */
-            eventNamespace = 'husky.toggler.',
+        eventNamespace = 'husky.toggler.',
 
         /**
          * raised after initialization process
          * @event husky.toggler.<instance-name>.initialize
          */
-            INITIALIZED = function() {
+        INITIALIZED = function() {
             return createEventName.call(this, 'initialized');
         },
 
@@ -43995,7 +43994,7 @@ define('__component__$toggler@husky',[], function() {
          * @event husky.toggler.<instance-name>.changed
          * @param {boolean} on True if button is on
          */
-            CHANGED = function() {
+        CHANGED = function() {
             return createEventName.call(this, 'changed');
         },
 
@@ -44004,12 +44003,12 @@ define('__component__$toggler@husky',[], function() {
          * @event husky.toggler.<instance-name>.change
          * @param {boolean} on To turn the button on or off
          */
-            CHANGE = function() {
+        CHANGE = function() {
             return createEventName.call(this, 'change');
         },
 
         /** returns normalized event names */
-            createEventName = function(postFix) {
+        createEventName = function(postFix) {
             return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
         };
 
@@ -44023,7 +44022,6 @@ define('__component__$toggler@husky',[], function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             this.hasId = false;
-            this.checked = !!this.options.checked;
             this.$checkbox = null;
             this.$wrapper = null;
 
@@ -44031,7 +44029,9 @@ define('__component__$toggler@husky',[], function() {
             this.bindDomEvents();
             this.bindCustomEvents();
 
-            this.setData();
+            if (this.$el.data('checked') === undefined) {
+                this.setData(false);
+            }
 
             this.sandbox.emit(INITIALIZED.call(this));
         },
@@ -44052,16 +44052,16 @@ define('__component__$toggler@husky',[], function() {
             }
 
             //wrapper to insert all content into
-            this.$wrapper = this.sandbox.dom.createElement('<div class="'+ constants.wrapperClass +'"/>');
+            this.$wrapper = this.sandbox.dom.createElement('<div class="' + constants.wrapperClass + '"/>');
             this.sandbox.dom.html(this.$el, this.$wrapper);
 
             this.generateHiddenCheckbox();
 
-            if (this.checked === true) {
+            if (this.getData() === true) {
                 this.setChecked(false);
             }
 
-            this.sandbox.dom.append(this.$wrapper, this.sandbox.dom.createElement('<div class="'+ constants.switchClass +'"/>'));
+            this.sandbox.dom.append(this.$wrapper, this.sandbox.dom.createElement('<div class="' + constants.switchClass + '"/>'));
         },
 
         /**
@@ -44069,12 +44069,12 @@ define('__component__$toggler@husky',[], function() {
          */
         bindDomEvents: function() {
             this.sandbox.dom.on(this.$el, 'click', function() {
-               this.toggleButton();
+                this.toggleButton();
             }.bind(this));
 
             //if toggler has id enable clicks on labels
             if (this.hasId === true) {
-                this.sandbox.dom.on('label[for="'+ this.options.instanceName +'"]', 'click', function() {
+                this.sandbox.dom.on('label[for="' + this.options.instanceName + '"]', 'click', function() {
                     this.toggleButton();
                 }.bind(this));
             }
@@ -44085,7 +44085,7 @@ define('__component__$toggler@husky',[], function() {
          */
         bindCustomEvents: function() {
             this.sandbox.on(CHANGE.call(this), function(checked) {
-                if (this.checked !== checked) {
+                if (this.getData() !== checked) {
                     if (checked === true) {
                         this.setChecked(true);
                     } else {
@@ -44099,7 +44099,7 @@ define('__component__$toggler@husky',[], function() {
          * Toggles the button state
          */
         toggleButton: function() {
-            if (this.checked === true) {
+            if (this.getData() === true) {
                 this.unsetChecked(true);
             } else {
                 this.setChecked(true);
@@ -44111,9 +44111,8 @@ define('__component__$toggler@husky',[], function() {
          */
         setChecked: function(emit) {
             this.sandbox.dom.addClass(this.$el, constants.checkedClass);
-            this.checked = true;
-            this.setData();
-            this.updateCheckbox(this.checked);
+            this.setData(true);
+            this.updateCheckbox(this.getData());
 
             if (emit !== false) {
                 this.sandbox.emit(CHANGED.call(this), true);
@@ -44125,9 +44124,8 @@ define('__component__$toggler@husky',[], function() {
          */
         unsetChecked: function(emit) {
             this.sandbox.dom.removeClass(this.$el, constants.checkedClass);
-            this.checked = false;
-            this.setData();
-            this.updateCheckbox(this.checked);
+            this.setData(false);
+            this.updateCheckbox(this.getData());
 
             if (emit !== false) {
                 this.sandbox.emit(CHANGED.call(this), false);
@@ -44139,7 +44137,7 @@ define('__component__$toggler@husky',[], function() {
          */
         generateHiddenCheckbox: function() {
             if (this.options.hiddenCheckbox === true) {
-                this.$checkbox = this.sandbox.dom.createElement('<input type="checkbox" name="'+ this.options.instanceName +'"/>');
+                this.$checkbox = this.sandbox.dom.createElement('<input type="checkbox" name="' + this.options.instanceName + '"/>');
                 this.sandbox.dom.append(this.$wrapper, this.$checkbox);
             }
         },
@@ -44157,11 +44155,18 @@ define('__component__$toggler@husky',[], function() {
         /**
          * Sets the data-checked attribute for the toggler
          */
-        setData: function() {
-            this.sandbox.dom.data(this.$el, 'checked', (!!this.checked) ? 'checked' : '');
+        setData: function(isChecked) {
+            this.$el.data('checked', !!isChecked);
+        },
+
+        /**
+         * Returns the data-checked attribute for the toggler
+         * @returns {boolean}
+         */
+        getData: function() {
+            return this.$el.data('checked');
         }
     };
-
 });
 
 /**

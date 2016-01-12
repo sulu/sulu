@@ -107,6 +107,7 @@ class PreviewControllerTest extends SuluTestCase
 
         $data = [
             'title' => 'Testtitle',
+            'template' => 'default',
             'tags' => [
                 'tag1',
                 'tag2',
@@ -115,7 +116,7 @@ class PreviewControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
-        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
+        $client->request('POST', '/api/nodes?&webspace=sulu_io&language=en', $data);
         $response = json_decode($client->getResponse()->getContent());
 
         $client->request('GET', '/content/preview/' . $response->id . '/start?webspace=sulu_io&language=en');
@@ -132,6 +133,7 @@ class PreviewControllerTest extends SuluTestCase
 
         $data = [
             'title' => 'Testtitle',
+            'template' => 'html5',
             'tags' => [
                 'tag1',
                 'tag2',
@@ -140,7 +142,7 @@ class PreviewControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
-        $client->request('POST', '/api/nodes?template=html5&webspace=sulu_io&language=en', $data);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data);
         $response = json_decode($client->getResponse()->getContent());
 
         $client->request('GET', '/content/preview/' . $response->id . '/render?webspace=sulu_io&language=en');
@@ -158,6 +160,7 @@ class PreviewControllerTest extends SuluTestCase
 
         $data = [
             'title' => 'Testtitle',
+            'template' => 'invalidhtml',
             'tags' => [
                 'tag1',
                 'tag2',
@@ -166,7 +169,7 @@ class PreviewControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
-        $client->request('POST', '/api/nodes?template=invalidhtml&webspace=sulu_io&language=en', $data);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data);
         $response = json_decode($client->getResponse()->getContent());
 
         $client->request('GET', '/content/preview/' . $response->id . '/start?webspace=sulu_io&language=en');
