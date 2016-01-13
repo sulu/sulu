@@ -33,7 +33,7 @@ class RowsIterator extends \IteratorIterator
         $result = [];
 
         foreach ($this->columns as $column) {
-            $result[$column] = $row->getValue($column);
+            $result[str_replace('a.', '', $column)] = $row->getValue($column);
         }
 
         return $result;

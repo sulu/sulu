@@ -35,5 +35,9 @@
 
             <tag name="sulu_document_manager.initializer"/>
         </service>
+
+        <service id="sulu_custom_urls.subscriber" class="Sulu\Component\CustomUrl\Document\Subscriber\CustomUrlSubscriber">
+            <tag name="sulu_document_manager.event_subscriber" />
+        </service>
     </services>
 </container>

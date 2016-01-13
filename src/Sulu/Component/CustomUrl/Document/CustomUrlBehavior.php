@@ -13,7 +13,7 @@ namespace Sulu\Component\CustomUrl\Document;
 /**
  * Interface for custom-url data-class.
  */
-interface CustomUrlInterface
+interface CustomUrlBehavior
 {
     /**
      * Returns title of custom-url.

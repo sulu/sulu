@@ -22,7 +22,7 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
  * Contains information about custom-urls and the relations to the routes.
  */
 class CustomUrlDocument implements
-    CustomUrlInterface,
+    CustomUrlBehavior,
     NodeNameBehavior,
     TimestampBehavior,
     BlameBehavior,
