@@ -95,7 +95,7 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
 
     /**
      * Extract custom-url and add them to serialization.
-
+     *
      * @param Webspace $webspace
      * @param Context $context
      * @param JsonSerializationVisitor $visitor

@@ -83,19 +83,20 @@ define(['text!./form.html'], function(form) {
         },
 
         loadComponentData: function() {
-
+            var deferred = this.sandbox.data.deferred();
             if (!this.options.id) {
-                var deferred = this.sandbox.data.deferred();
                 deferred.resolve({});
 
                 return deferred.promise();
             }
 
-            return this.sandbox.util.load(
+            this.sandbox.util.load(
                 this.templates.url(this.options)
             ).then(function(data) {
                 deferred.resolve(data);
             });
+
+            return deferred;
         }
     };
 });

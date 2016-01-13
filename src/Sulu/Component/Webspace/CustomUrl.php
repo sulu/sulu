@@ -49,7 +49,6 @@ class CustomUrl implements ArrayableInterface
         $this->url = $url;
     }
 
-
     /**
      * {@inheritdoc}
      */

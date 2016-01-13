@@ -238,7 +238,7 @@ class Url implements ArrayableInterface
     /**
      * Returns custom-url flag.
      *
-     * @return boolean
+     * @return bool
      */
     public function isCustomUrl()
     {
@@ -248,7 +248,7 @@ class Url implements ArrayableInterface
     /**
      * Sets custom-url flag.
      *
-     * @param boolean $customUrl
+     * @param bool $customUrl
      */
     public function setCustomUrl($customUrl)
     {

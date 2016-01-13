@@ -19,7 +19,7 @@ use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 /**
  * Manages custom-url documents and their routes.
  */
-class CustomUrlManager
+class CustomUrlManager implements CustomUrlManagerInterface
 {
     /**
      * @var DocumentManagerInterface
@@ -46,7 +46,10 @@ class CustomUrlManager
         $this->sessionManager = $sessionManager;
     }
 
-    public function create($webspaceKey, $data)
+    /**
+     * {@inheritdoc}
+     */
+    public function create($webspaceKey, array $data)
     {
         $document = new CustomUrlDocument();
         $document->setTitle($data['title']);
@@ -63,6 +66,9 @@ class CustomUrlManager
         return $document;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function readList($webspaceKey)
     {
         // TODO pagination
@@ -70,6 +76,38 @@ class CustomUrlManager
         return $this->customUrlRepository->findList($this->getItemsPath($webspaceKey));
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function read($uuid)
+    {
+        return $this->documentManager->find($uuid);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function update($uuid, array $data)
+    {
+        $document = $this->read($uuid);
+        $document->setTitle($data['title']);
+
+        $this->documentManager->persist($document);
+
+        return $document;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function delete($uuid)
+    {
+        $this->documentManager->remove($this->read($uuid));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     private function getItemsPath($webspaceKey)
     {
         return sprintf('%s/custom-urls/items', $this->sessionManager->getWebspacePath($webspaceKey));

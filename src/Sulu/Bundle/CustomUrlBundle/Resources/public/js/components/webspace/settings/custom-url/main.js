@@ -14,7 +14,7 @@ define(['text!./skeleton.html'], function(skeleton) {
     var defaults = {
         templates: {
             skeleton: skeleton,
-            url: '/admin/api/webspaces/<%= webspace.key %>/custom-urls<% if (!!id) { %>/<%= id %><% } %>'
+            url: '/admin/api/webspaces/<%= webspace.key %>/custom-urls<% if (!!id) { %>/<%= id %><% } %><% if (!!ids) { %>?ids=<%= ids.join(",") %><% } %>'
         },
         translations: {
             title: 'public.title',
@@ -43,11 +43,6 @@ define(['text!./skeleton.html'], function(skeleton) {
 
         initialize: function() {
             this.render();
-
-            this.bindCustomEvents();
-        },
-
-        bindCustomEvents: function() {
         },
 
         render: function() {
@@ -64,7 +59,9 @@ define(['text!./skeleton.html'], function(skeleton) {
                             add: {
                                 options: {callback: this.edit.bind(this)}
                             },
-                            deleteSelected: {}
+                            deleteSelected: {
+                                options: {callback: this.delete.bind(this)}
+                            }
                         })
                     }
                 },
@@ -72,10 +69,11 @@ define(['text!./skeleton.html'], function(skeleton) {
                     name: 'datagrid@husky',
                     options: {
                         el: '#webspace-custom-url-list',
-                        url: this.templates.url({webspace: this.data, id: null}),
+                        url: this.templates.url({webspace: this.data, id: null, ids: null}),
                         resultKey: 'custom-urls',
                         actionCallback: this.edit.bind(this),
                         pagination: 'infinite-scroll',
+                        idKey: 'uuid',
                         viewOptions: {
                             table: {
                                 actionIconColumn: 'title'
@@ -107,9 +105,27 @@ define(['text!./skeleton.html'], function(skeleton) {
             ]);
         },
 
+        delete: function() {
+            var ids = this.sandbox.util.deepCopy($('#webspace-custom-url-list').data('selected'));
+
+            this.sandbox.sulu.showDeleteDialog(function(confirmed) {
+                if (!!confirmed) {
+                    this.sandbox.util.save(
+                        this.templates.url({webspace: this.data, id: null, ids: ids}),
+                        'DELETE'
+                    ).then(function() {
+                        for (var i = 0, length = ids.length; i < length; i++) {
+                            var id = ids[i];
+                            this.sandbox.emit('husky.datagrid.record.remove', id);
+                        }
+                    }.bind(this));
+                }
+            }.bind(this));
+        },
+
         save: function(id, data) {
             this.sandbox.util.save(
-                this.templates.url({webspace: this.data, id: id}), !!id ? 'PUT' : 'POST', data
+                this.templates.url({webspace: this.data, id: id, ids: null}), !!id ? 'PUT' : 'POST', data
             ).then(function(response) {
                 var event = 'husky.datagrid.record.add';
                 if (!!id) {
