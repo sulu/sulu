@@ -2,6 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1930 [ContentBundle]   Fixed updating values in combination
+                                          with template change
     * FEATURE     #1906 [All]             Added PHP 7 support
     * FEATURE     #1922 [ContentBundle]   Added parameter to show toggler instead of checkbox
     * BUGFIX      #1874 [ContentBundle]   Fixed preview selector for blocks

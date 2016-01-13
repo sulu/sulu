@@ -477,6 +477,44 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($data[1]['title'], $response->_embedded->nodes[1]->title);
     }
 
+    public function testPutWithTemplateChange()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $data = [
+            [
+                'template' => 'simple',
+                'title' => 'test1',
+                'url' => '/test1',
+            ],
+        ];
+
+        $data = $this->setUpContent($data);
+
+        $data[0]['template'] = 'default';
+        $data[0]['article'] = 'article test';
+
+        $client->request(
+            'PUT',
+            '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en',
+            $data[0]
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('default', $response->template);
+        $this->assertEquals('article test', $response->article);
+
+        $client->request('GET', '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en');
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals('default', $response->template);
+        $this->assertEquals('article test', $response->article);
+    }
+
     private function buildTree()
     {
         $data = [

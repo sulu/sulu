@@ -80,6 +80,8 @@ class StructureSubscriber implements EventSubscriberInterface
             Events::PERSIST => [
                 // persist should happen before content is mapped
                 ['handlePersist', 0],
+                // staged properties must be commited before title subscriber
+                ['handlePersistStagedProperties', 50],
                 // setting the structure should happen very early
                 ['handlePersistStructureType', 100],
             ],
@@ -98,11 +100,13 @@ class StructureSubscriber implements EventSubscriberInterface
         $options->setDefaults(
             [
                 'load_ghost_content' => true,
+                'clear_missing_content' => false,
             ]
         );
         $options->setAllowedTypes(
             [
                 'load_ghost_content' => 'bool',
+                'clear_missing_content' => 'bool',
             ]
         );
     }
@@ -117,7 +121,7 @@ class StructureSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
 
-        if (!$document instanceof StructureBehavior) {
+        if (!$this->supportsBehavior($document)) {
             return;
         }
 
@@ -130,13 +134,29 @@ class StructureSubscriber implements EventSubscriberInterface
     }
 
     /**
+     * Commit the properties, which are only staged on the structure yet.
+     *
+     * @param PersistEvent $event
+     */
+    public function handlePersistStagedProperties(PersistEvent $event)
+    {
+        $document = $event->getDocument();
+
+        if (!$this->supportsBehavior($document)) {
+            return;
+        }
+
+        $document->getStructure()->commitStagedData($event->getOption('clear_missing_content'));
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handleHydrate(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();
 
-        if (!$document instanceof StructureBehavior) {
+        if (!$this->supportsBehavior($document)) {
             return;
         }
 
@@ -172,7 +192,7 @@ class StructureSubscriber implements EventSubscriberInterface
         // Set the structure type
         $document = $event->getDocument();
 
-        if (!$document instanceof StructureBehavior) {
+        if (!$this->supportsBehavior($document)) {
             return;
         }
 
@@ -193,6 +213,11 @@ class StructureSubscriber implements EventSubscriberInterface
             $this->getStructureTypePropertyName($document, $locale),
             $document->getStructureType()
         );
+    }
+
+    private function supportsBehavior($document)
+    {
+        return $document instanceof StructureBehavior;
     }
 
     private function getStructureTypePropertyName($document, $locale)

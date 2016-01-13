@@ -219,10 +219,6 @@ class ContentMapper implements ContentMapperInterface
             ));
         }
 
-        $options = [
-            'clear_missing_content' => !$partialUpdate,
-        ];
-
         // We eventually handle this from the controller, in which case we will not
         // have to deal with not knowing what sort of form we will have.
         if ($document instanceof WebspaceBehavior) {
@@ -234,8 +230,8 @@ class ContentMapper implements ContentMapperInterface
 
         $form = $this->formFactory->create($documentAlias, $document, $options);
 
-        $clearMissing = false;
-        $form->submit($data, $clearMissing);
+        $clearMissingContent = false;
+        $form->submit($data, $clearMissingContent);
 
         if (!$form->isValid()) {
             throw new InvalidFormException($form);
@@ -243,6 +239,7 @@ class ContentMapper implements ContentMapperInterface
 
         $this->documentManager->persist($document, $locale, [
             'user' => $userId,
+            'clear_missing_content' => !$partialUpdate,
         ]);
 
         $this->documentManager->flush();
