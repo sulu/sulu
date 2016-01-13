@@ -239,7 +239,7 @@ class ContentMapper implements ContentMapperInterface
 
         $this->documentManager->persist($document, $locale, [
             'user' => $userId,
-            'clear_missing_content' => $clearMissingContent,
+            'clear_missing_content' => !$partialUpdate,
         ]);
 
         $this->documentManager->flush();

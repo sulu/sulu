@@ -17,6 +17,7 @@ use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
+use Sulu\Component\Content\Document\Structure\ManagedStructure;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
@@ -58,7 +59,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     private $structureMetadata;
 
     /**
-     * @var Structure
+     * @var ManagedStructure
      */
     private $structure;
 
@@ -71,6 +72,11 @@ class StructureSubscriberTest extends SubscriberTestCase
      * @var DocumentInspector
      */
     private $inspector;
+
+    /**
+     * @var StructureBehavior
+     */
+    private $document;
 
     /**
      * @var StructureSubscriber
@@ -87,9 +93,15 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->propertyValue = $this->prophesize(PropertyValue::class);
         $this->legacyProperty = $this->prophesize(TranslatedProperty::class);
         $this->structureMetadata = $this->prophesize(StructureMetadata::class);
-        $this->structure = $this->prophesize(Structure::class);
+        $this->structure = $this->prophesize(ManagedStructure::class);
         $this->propertyFactory = $this->prophesize(LegacyPropertyFactory::class);
+        $this->document = $this->prophesize(StructureBehavior::class);
         $this->inspector = $this->prophesize(DocumentInspector::class);
+
+        $this->document->getStructure()->willReturn($this->structure->reveal());
+        $this->document->getStructureType()->willReturn('foobar');
+        $this->inspector->getStructureMetadata(Argument::any())->willReturn($this->structureMetadata);
+        $this->persistEvent->getLocale()->willReturn('en');
 
         $this->subscriber = new StructureSubscriber(
             $this->encoder->reveal(),
@@ -97,6 +109,22 @@ class StructureSubscriberTest extends SubscriberTestCase
             $this->inspector->reveal(),
             $this->propertyFactory->reveal()
         );
+    }
+
+    public function testPersistStructureType()
+    {
+        $this->persistEvent->getDocument()->willReturn($this->document->reveal());
+        $this->structure->setStructureMetadata($this->structureMetadata->reveal())->shouldBeCalled();
+
+        $this->subscriber->handlePersistStructureType($this->persistEvent->reveal());
+    }
+
+    public function testPersistStagedProperties()
+    {
+        $this->persistEvent->getDocument()->willReturn($this->document->reveal());
+        $this->persistEvent->getOption('clear_missing_content')->willReturn(true);
+        $this->structure->commitStagedData(Argument::any())->shouldBeCalled();
+        $this->subscriber->handlePersistStagedProperties($this->persistEvent->reveal());
     }
 
     /**
@@ -113,10 +141,8 @@ class StructureSubscriberTest extends SubscriberTestCase
      */
     public function testPersistNoStructureType()
     {
-        $document = new TestContentDocument($this->structure->reveal());
-
-        // map the structure type
-        $this->persistEvent->getDocument()->willReturn($document);
+        $this->document->getStructureType()->willReturn(null);
+        $this->persistEvent->getDocument()->willReturn($this->document->reveal());
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 
@@ -125,9 +151,8 @@ class StructureSubscriberTest extends SubscriberTestCase
      */
     public function testPersistNoLocale()
     {
-        $document = new TestContentDocument($this->structure->reveal());
         $this->persistEvent->getLocale()->willReturn(null);
-        $this->persistEvent->getDocument()->willReturn($document);
+        $this->persistEvent->getDocument()->willReturn($this->document->reveal());
 
         $this->subscriber->handlePersist($this->persistEvent->reveal());
 
@@ -139,9 +164,7 @@ class StructureSubscriberTest extends SubscriberTestCase
      */
     public function testPersist()
     {
-        $document = new TestContentDocument($this->structure->reveal());
-        $document->setStructureType('foobar');
-        $this->persistEvent->getDocument()->willReturn($document);
+        $this->persistEvent->getDocument()->willReturn($this->document->reveal());
 
         // map the structure type
         $this->persistEvent->getLocale()->willReturn('fr');
@@ -149,8 +172,8 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->node->setProperty('i18n:fr-template', 'foobar')->shouldBeCalled();
 
         // map the content
-        $this->inspector->getStructureMetadata($document)->willReturn($this->structureMetadata->reveal());
-        $this->inspector->getWebspace($document)->willReturn('webspace');
+        $this->inspector->getStructureMetadata($this->document->reveal())->willReturn($this->structureMetadata->reveal());
+        $this->inspector->getWebspace($this->document->reveal())->willReturn('webspace');
         $this->structureMetadata->getProperties()->willReturn([
             'prop1' => $this->structureProperty->reveal(),
         ]);
@@ -188,16 +211,14 @@ class StructureSubscriberTest extends SubscriberTestCase
      */
     public function testThrowExceptionPropertyRequired()
     {
-        $document = new TestContentDocument($this->structure->reveal());
-        $document->setStructureType('foobar');
-        $this->persistEvent->getDocument()->willReturn($document);
+        $this->persistEvent->getDocument()->willReturn($this->document->reveal());
 
         // map the structure type
         $this->persistEvent->getLocale()->willReturn('fr');
 
         // map the content
-        $this->inspector->getStructureMetadata($document)->willReturn($this->structureMetadata->reveal());
-        $this->inspector->getWebspace($document)->willReturn('webspace');
+        $this->inspector->getStructureMetadata($this->document->reveal())->willReturn($this->structureMetadata->reveal());
+        $this->inspector->getWebspace($this->document->reveal())->willReturn('webspace');
         $this->structureMetadata->getProperties()->willReturn([
             'prop1' => $this->structureProperty->reveal(),
         ]);
@@ -224,8 +245,7 @@ class StructureSubscriberTest extends SubscriberTestCase
      */
     public function testHydrate()
     {
-        $document = new TestContentDocument();
-        $this->hydrateEvent->getDocument()->willReturn($document);
+        $this->hydrateEvent->getDocument()->willReturn($this->document->reveal());
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
         $this->hydrateEvent->getLocale()->willReturn('fr');
         $this->hydrateEvent->getOption('load_ghost_content', false)->willReturn(true);
@@ -234,46 +254,10 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->encoder->contentName('template')->willReturn('i18n:fr-template');
         $this->node->getPropertyValueWithDefault('i18n:fr-template', null)->willReturn('foobar');
 
+        $this->document->setStructureType('foobar')->shouldBeCalled();
+
         // set the property container
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
-        $this->assertEquals('foobar', $document->getStructureType());
         $this->accessor->set('structure', Argument::type(Structure::class))->shouldHaveBeenCalled();
-    }
-}
-
-class TestContentDocument implements StructureBehavior
-{
-    private $structureType;
-    private $structure;
-    private $locale;
-
-    public function __construct(Structure $structure = null)
-    {
-        $this->structure = $structure;
-    }
-
-    public function getStructureType()
-    {
-        return $this->structureType;
-    }
-
-    public function setStructureType($structureType)
-    {
-        $this->structureType = $structureType;
-    }
-
-    public function getStructure()
-    {
-        return $this->structure;
-    }
-
-    public function getLocale()
-    {
-        return $this->locale;
-    }
-
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
     }
 }
