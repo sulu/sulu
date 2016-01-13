@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\EventListener;
 
+use JMS\Serializer\Context;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
@@ -55,19 +56,32 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
     public function onPostSerialize(ObjectEvent $event)
     {
         $webspace = $event->getObject();
-        /** @var JsonSerializationVisitor $visitor */
         $visitor = $event->getVisitor();
+        $context = $event->getContext();
 
         if (!($webspace instanceof Webspace)) {
             return;
         }
 
+        $this->appendPortalInformation($webspace, $context, $visitor);
+        $this->appendCustomUrls($webspace, $context, $visitor);
+    }
+
+    /**
+     * Extract portal-information and add them to serialization.
+     *
+     * @param Webspace $webspace
+     * @param Context $context
+     * @param JsonSerializationVisitor $visitor
+     */
+    private function appendPortalInformation(Webspace $webspace, Context $context, JsonSerializationVisitor $visitor)
+    {
         $portalInformation = $this->webspaceManager->getPortalInformationsByWebspaceKey(
             $this->environment,
             $webspace->getKey()
         );
 
-        $portalInformation = $event->getContext()->accept(array_values($portalInformation));
+        $portalInformation = $context->accept(array_values($portalInformation));
         $visitor->addData('portalInformation', $portalInformation);
 
         $urls = [];
@@ -77,5 +91,23 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
         }
         $urls = $event->getContext()->accept($urls);
         $visitor->addData('urls', $urls);
+    }
+
+    /**
+     * Extract custom-url and add them to serialization.
+
+     * @param Webspace $webspace
+     * @param Context $context
+     * @param JsonSerializationVisitor $visitor
+     */
+    private function appendCustomUrls(Webspace $webspace, Context $context, JsonSerializationVisitor $visitor)
+    {
+        $customUrls = [];
+        foreach ($webspace->getPortals() as $portal) {
+            $customUrls = array_merge($customUrls, $portal->getEnvironment($this->environment)->getCustomUrls());
+        }
+
+        $customUrls = $context->accept($customUrls);
+        $visitor->addData('customUrls', $customUrls);
     }
 }

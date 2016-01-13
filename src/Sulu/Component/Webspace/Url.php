@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Sulu.
  *
@@ -68,6 +67,13 @@ class Url implements ArrayableInterface
      * @var string
      */
     private $environment;
+
+    /**
+     * Indicates that this url will be used as custom-url.
+     *
+     * @var bool
+     */
+    private $customUrl;
 
     /**
      * Sets the url.
@@ -230,6 +236,26 @@ class Url implements ArrayableInterface
     }
 
     /**
+     * Returns custom-url flag.
+     *
+     * @return boolean
+     */
+    public function isCustomUrl()
+    {
+        return $this->customUrl;
+    }
+
+    /**
+     * Sets custom-url flag.
+     *
+     * @param boolean $customUrl
+     */
+    public function setCustomUrl($customUrl)
+    {
+        $this->customUrl = $customUrl;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function toArray($depth = null)
@@ -243,6 +269,7 @@ class Url implements ArrayableInterface
         $res['main'] = $this->isMain();
         $res['analyticsKey'] = $this->getAnalyticsKey();
         $res['environment'] = $this->getEnvironment();
+        $res['customUrl'] = $this->isCustomUrl();
 
         return $res;
     }

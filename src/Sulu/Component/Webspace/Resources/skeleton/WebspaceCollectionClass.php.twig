@@ -8,6 +8,7 @@ use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Security;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Url;
+use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
@@ -109,7 +110,11 @@ class {{ cache_class }} extends {{ base_class }}
         $url->setRedirect('{{ url.redirect }}');
         $url->setMain({{ url.main?'true':'false' }});
         $url->setAnalyticsKey('{{ url.analyticsKey }}');
+        $url->setCustomUrl({{ url.customUrl?'true':'false' }});
         $environment->addUrl($url);
+{% endfor %}
+{% for customUrl in environment.customUrls %}
+        $environment->addCustomUrl(new CustomUrl('{{ customUrl.url }}'));
 {% endfor %}
 
         $portal->addEnvironment($environment);
