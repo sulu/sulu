@@ -25,5 +25,4 @@ class SuluCustomUrlBundle extends Bundle
 
         $container->addCompilerPass(new PathSegmentCompilerPass());
     }
-
 }

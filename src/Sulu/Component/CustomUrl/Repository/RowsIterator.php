@@ -27,7 +27,6 @@ class RowsIterator extends \IteratorIterator
         $this->columns = $columns;
     }
 
-
     public function current()
     {
         $row = parent::current();
@@ -39,5 +38,4 @@ class RowsIterator extends \IteratorIterator
 
         return $result;
     }
-
 }

@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Sulu.
  *
@@ -16,6 +15,9 @@ use Sulu\Component\DocumentManager\NodeManager;
 use Sulu\Component\DocumentManager\PathBuilder;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Initializes phpcr-nodes for snippets.
+ */
 class SnippetInitializer implements InitializerInterface
 {
     private $nodeManager;

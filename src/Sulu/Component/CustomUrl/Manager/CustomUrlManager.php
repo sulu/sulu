@@ -56,7 +56,7 @@ class CustomUrlManager
             null,
             [
                 'parent_path' => $this->getItemsPath($webspaceKey),
-                'node_name' => Urlizer::urlize($document->getTitle())
+                'node_name' => Urlizer::urlize($document->getTitle()),
             ]
         );
 

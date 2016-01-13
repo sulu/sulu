@@ -6,6 +6,9 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
+/**
+ * Includes custom-url-bundle into sulu admin.
+ */
 class CustomUrlAdmin extends Admin
 {
     public function __construct($title)
@@ -14,6 +17,7 @@ class CustomUrlAdmin extends Admin
 
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
+
     /**
      * {@inheritdoc}
      */

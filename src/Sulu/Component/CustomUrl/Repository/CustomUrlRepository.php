@@ -11,7 +11,6 @@
 namespace Sulu\Component\CustomUrl\Repository;
 
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
-use PHPCR\Query\RowInterface;
 use PHPCR\Util\QOM\QueryBuilder;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 

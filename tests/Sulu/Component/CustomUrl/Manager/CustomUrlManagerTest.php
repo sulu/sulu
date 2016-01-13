@@ -1,11 +1,22 @@
 <?php
+/*
+ * This file is part of Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Component\CustomUrl\Manager;
 
-use Doctrine\ODM\PHPCR\DocumentManagerInterface;
 use Sulu\Component\CustomUrl\Repository\CustomUrlRepository;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
+/**
+ * Provides testcases for custom-url-manager.
+ */
 class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreate()
