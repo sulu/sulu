@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ContentBundle\Collaboration;
 
 use Ratchet\ConnectionInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * Represents a user, which is currently editing an entity.
@@ -18,7 +19,7 @@ use Ratchet\ConnectionInterface;
 class Collaborator
 {
     /**
-     * @var int
+     * @var UserInterface
      */
     private $user;
 
@@ -27,7 +28,7 @@ class Collaborator
      */
     private $connection;
 
-    public function __construct($user, ConnectionInterface $connection)
+    public function __construct(UserInterface $user, ConnectionInterface $connection)
     {
         $this->user = $user;
         $this->connection = $connection;
@@ -36,7 +37,7 @@ class Collaborator
     /**
      * Returns the user for this collaboration.
      *
-     * @return int
+     * @return UserInterface
      */
     public function getUser()
     {

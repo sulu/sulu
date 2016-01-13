@@ -11,6 +11,8 @@
 namespace Sulu\Bundle\ContentBundle\Collaboration;
 
 use Ratchet\ConnectionInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Websocket\Exception\MissingParameterException;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerException;
@@ -27,11 +29,21 @@ use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerInterface;
 class CollaborationMessageHandler implements MessageHandlerInterface
 {
     /**
+     * @var UserRepositoryInterface
+     */
+    private $userRepository;
+
+    /**
      * An array which contains all the collaborators for a certain identifier (representing a page, product, ...).
      *
      * @var Collaborator[][]
      */
     private $collaborators = [];
+
+    public function __construct($userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
 
     /**
      * {@inheritdoc}
@@ -98,13 +110,17 @@ class CollaborationMessageHandler implements MessageHandlerInterface
      */
     private function enter(ConnectionInterface $conn, MessageHandlerContext $context, $msg)
     {
-        // TODO check msg keys
         $identifier = $this->getUniqueCollaborationIdentifier($msg);
-        $this->addCollaborator($conn, $identifier, $msg['userId']);
+        $user = $this->userRepository->findUserById($msg['userId']);
+        $this->addCollaborator($conn, $identifier, $user);
 
         $users = array_map(
             function (Collaborator $collaborator) {
-                return $collaborator->getUser();
+                return [
+                    'id' => $collaborator->getUser()->getId(),
+                    'username' => $collaborator->getUser()->getUsername(),
+                    'fullName' => $collaborator->getUser()->getFullName(),
+                ];
             },
             $this->collaborators[$identifier]
         );
@@ -146,7 +162,11 @@ class CollaborationMessageHandler implements MessageHandlerInterface
 
         $users = array_map(
             function (Collaborator $collaborator) {
-                return $collaborator->getUser();
+                return [
+                    'id' => $collaborator->getUser()->getId(),
+                    'username' => $collaborator->getUser()->getUsername(),
+                    'fullName' => $collaborator->getUser()->getFullName(),
+                ];
             },
             $this->collaborators[$identifier]
         );
@@ -166,14 +186,14 @@ class CollaborationMessageHandler implements MessageHandlerInterface
         }
     }
 
-    private function addCollaborator(ConnectionInterface $conn, $identifier, $user)
+    private function addCollaborator(ConnectionInterface $conn, $identifier, UserInterface $user)
     {
         if (!array_key_exists($identifier, $this->collaborators)) {
             $this->collaborators[$identifier] = [];
         }
 
-        if (!array_key_exists($user, $this->collaborators[$identifier])) {
-            $this->collaborators[$identifier][$user] = new Collaborator($user, $conn);
+        if (!array_key_exists($user->getId(), $this->collaborators[$identifier])) {
+            $this->collaborators[$identifier][$user->getId()] = new Collaborator($user, $conn);
         }
     }
 

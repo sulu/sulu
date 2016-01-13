@@ -80,6 +80,7 @@
         </service>
 
         <service id="sulu_content.collaboration" class="Sulu\Bundle\ContentBundle\Collaboration\CollaborationMessageHandler">
+            <argument type="service" id="sulu_security.user_repository"/>
             <tag name="sulu.websocket.message.handler" dispatcher="admin" alias="sulu_content.collaboration" />
         </service>
 
