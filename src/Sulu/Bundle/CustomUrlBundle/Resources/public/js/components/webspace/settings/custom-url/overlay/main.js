@@ -80,6 +80,16 @@ define(['text!./form.html'], function(form) {
         },
 
         initializeFormComponents: function() {
+            this.sandbox.start(
+                [
+                    {
+                        name: 'toggler@husky',
+                        options: {
+                            el: '#custom-url-published'
+                        }
+                    }
+                ]
+            )
         },
 
         loadComponentData: function() {

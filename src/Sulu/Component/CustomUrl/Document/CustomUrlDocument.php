@@ -41,6 +41,11 @@ class CustomUrlDocument implements
     protected $title;
 
     /**
+     * @var bool
+     */
+    protected $published;
+
+    /**
      * @var \DateTime
      */
     protected $created;
@@ -97,6 +102,24 @@ class CustomUrlDocument implements
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isPublished()
+    {
+        return $this->published;
+    }
+
+    /**
+     * Set published state.
+     *
+     * @param boolean $published
+     */
+    public function setPublished($published)
+    {
+        $this->published = $published;
     }
 
     /**

@@ -21,4 +21,11 @@ interface CustomUrlBehavior
      * @return string
      */
     public function getTitle();
+
+    /**
+     * Returns state of custom-url.
+     *
+     * @return string
+     */
+    public function isPublished();
 }

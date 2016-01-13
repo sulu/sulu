@@ -41,6 +41,7 @@ class CustomUrlRepository
 
         $queryBuilder->select('a', 'jcr:uuid', 'uuid');
         $queryBuilder->addSelect('a', 'title', 'title');
+        $queryBuilder->addSelect('a', 'published', 'published');
 
         $queryBuilder->from(
             $queryBuilder->qomf()->selector('a', 'nt:unstructured')

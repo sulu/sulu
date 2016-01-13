@@ -61,4 +61,11 @@ interface CustomUrlManagerInterface
      * @param string $uuid
      */
     public function delete($uuid);
+
+    /**
+     * Returns existing fields in document.
+     *
+     * @return string[]
+     */
+    public function getFields();
 }

@@ -18,6 +18,7 @@ define(['text!./skeleton.html'], function(skeleton) {
         },
         translations: {
             title: 'public.title',
+            published: 'public.published',
             successLabel: 'labels.success',
             successMessage: 'labels.success.save-desc'
         }
@@ -83,6 +84,11 @@ define(['text!./skeleton.html'], function(skeleton) {
                             {
                                 attribute: 'title',
                                 content: this.translations.title
+                            },
+                            {
+                                attribute: 'published',
+                                content: this.translations.published,
+                                type: 'checkbox_readonly'
                             }
                         ]
                     }

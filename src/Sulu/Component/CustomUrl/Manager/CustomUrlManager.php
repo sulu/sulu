@@ -14,7 +14,9 @@ use Ferrandini\Urlizer;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Repository\CustomUrlRepository;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\DocumentManager\PathBuilder;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
  * Manages custom-url documents and their routes.
@@ -32,18 +34,18 @@ class CustomUrlManager implements CustomUrlManagerInterface
     private $customUrlRepository;
 
     /**
-     * @var SessionManagerInterface
+     * @var PathBuilder
      */
-    private $sessionManager;
+    private $pathBuilder;
 
     public function __construct(
         DocumentManagerInterface $documentManager,
         CustomUrlRepository $customUrlRepository,
-        SessionManagerInterface $sessionManager
+        PathBuilder $pathBuilder
     ) {
         $this->documentManager = $documentManager;
         $this->customUrlRepository = $customUrlRepository;
-        $this->sessionManager = $sessionManager;
+        $this->pathBuilder = $pathBuilder;
     }
 
     /**
@@ -51,8 +53,8 @@ class CustomUrlManager implements CustomUrlManagerInterface
      */
     public function create($webspaceKey, array $data)
     {
-        $document = new CustomUrlDocument();
-        $document->setTitle($data['title']);
+        $document = $this->documentManager->create('custom_urls');
+        $this->bind($document, $data);
 
         $this->documentManager->persist(
             $document,
@@ -90,7 +92,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
     public function update($uuid, array $data)
     {
         $document = $this->read($uuid);
-        $document->setTitle($data['title']);
+        $this->bind($document, $data);
 
         $this->documentManager->persist($document);
 
@@ -108,8 +110,31 @@ class CustomUrlManager implements CustomUrlManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function getFields()
+    {
+        return ['title', 'published'];
+    }
+
+    /**
+     * Bind data array to given document.
+     *
+     * @param CustomUrlDocument $document
+     * @param array $data
+     */
+    private function bind(CustomUrlDocument $document, $data)
+    {
+        $accessor = PropertyAccess::createPropertyAccessor();
+
+        foreach ($this->getFields() as $field) {
+            $accessor->setValue($document, $field, $data[$field]);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     private function getItemsPath($webspaceKey)
     {
-        return sprintf('%s/custom-urls/items', $this->sessionManager->getWebspacePath($webspaceKey));
+        return $this->pathBuilder->build(['%base%', $webspaceKey, '%custom-urls%', '%custom-urls-items%']);
     }
 }

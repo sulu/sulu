@@ -11,6 +11,7 @@
 namespace Sulu\Component\CustomUrl\Document\Subscriber;
 
 use Sulu\Component\CustomUrl\Document\CustomUrlBehavior;
+use Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface;
 use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -20,7 +21,16 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class CustomUrlSubscriber implements EventSubscriberInterface
 {
-    const TITLE_FIELD_NAME = 'title';
+    /**
+     * @var CustomUrlManagerInterface
+     */
+    private $customUrlManager;
+
+    public function __construct(CustomUrlManagerInterface $customUrlManager)
+    {
+        $this->customUrlManager = $customUrlManager;
+    }
+
 
     /**
      * {@inheritdoc}
@@ -44,11 +54,8 @@ class CustomUrlSubscriber implements EventSubscriberInterface
         }
 
         $metadata = $event->getMetadata();
-        $metadata->addFieldMapping(
-            self::TITLE_FIELD_NAME,
-            [
-                'property' => self::TITLE_FIELD_NAME,
-            ]
-        );
+        foreach ($this->customUrlManager->getFields() as $fieldName) {
+            $metadata->addFieldMapping($fieldName, ['property' => $fieldName]);
+        }
     }
 }
