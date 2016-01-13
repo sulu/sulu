@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContentBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 
@@ -26,8 +27,8 @@ abstract class AbstractStructureBehaviorType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('title', 'text');
-        $builder->add('structureType', 'text');
+        $builder->add('title', TextType::class);
+        $builder->add('structureType', TextType::class);
         $builder->add('structure', 'text', ['property_path' => 'structure.stagedData']);
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, ['Sulu\Component\Content\Compat\DataNormalizer', 'normalize']);

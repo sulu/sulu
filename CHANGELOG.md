@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1931 [ContentBundle]   Fixed form deprecation messages   
     * BUGFIX      #1930 [ContentBundle]   Fixed updating values in combination
                                           with template change
     * FEATURE     #1906 [All]             Added PHP 7 support
