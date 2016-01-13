@@ -29,7 +29,7 @@ class AnalyticsManager implements AnalyticsManagerInterface
     /**
      * @var AnalyticsRepository
      */
-    private $analyticRepository;
+    private $analyticsRepository;
 
     /**
      * @var DomainRepository
@@ -38,11 +38,11 @@ class AnalyticsManager implements AnalyticsManagerInterface
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        AnalyticsRepository $analyticRepository,
+        AnalyticsRepository $analyticsRepository,
         DomainRepository $domainRepository
     ) {
         $this->entityManager = $entityManager;
-        $this->analyticRepository = $analyticRepository;
+        $this->analyticsRepository = $analyticsRepository;
         $this->domainRepository = $domainRepository;
     }
 
@@ -51,7 +51,7 @@ class AnalyticsManager implements AnalyticsManagerInterface
      */
     public function findAll($webspaceKey)
     {
-        return $this->analyticRepository->findByWebspaceKey($webspaceKey);
+        return $this->analyticsRepository->findByWebspaceKey($webspaceKey);
     }
 
     /**
@@ -59,7 +59,7 @@ class AnalyticsManager implements AnalyticsManagerInterface
      */
     public function find($id)
     {
-        return $this->analyticRepository->findById($id);
+        return $this->analyticsRepository->findById($id);
     }
 
     /**
@@ -107,23 +107,23 @@ class AnalyticsManager implements AnalyticsManagerInterface
     /**
      * Set data to given key.
      *
-     * @param Analytics $analytic
+     * @param Analytics $analytics
      * @param string $webspaceKey
      * @param array $data
      */
-    private function setData(Analytics $analytic, $webspaceKey, $data)
+    private function setData(Analytics $analytics, $webspaceKey, $data)
     {
-        $analytic->setTitle($this->getValue($data, 'title'));
-        $analytic->setType($this->getValue($data, 'type'));
-        $analytic->setContent($this->getValue($data, 'content', ''));
-        $analytic->setAllDomains($this->getValue($data, 'allDomains', false));
-        $analytic->setWebspaceKey($webspaceKey);
+        $analytics->setTitle($this->getValue($data, 'title'));
+        $analytics->setType($this->getValue($data, 'type'));
+        $analytics->setContent($this->getValue($data, 'content', ''));
+        $analytics->setAllDomains($this->getValue($data, 'allDomains', false));
+        $analytics->setWebspaceKey($webspaceKey);
 
-        $analytic->clearDomains();
+        $analytics->clearDomains();
 
         foreach ($this->getValue($data, 'domains', []) as $domain) {
             $domainEntity = $this->findOrCreateNewDomain($domain);
-            $analytic->addDomain($domainEntity);
+            $analytics->addDomain($domainEntity);
         }
     }
 

@@ -33,7 +33,7 @@ class AppendAnalyticsListener
     /**
      * @var AnalyticsRepository
      */
-    private $analyticRepository;
+    private $analyticsRepository;
 
     /**
      * @var string
@@ -43,12 +43,12 @@ class AppendAnalyticsListener
     public function __construct(
         EngineInterface $engine,
         RequestAnalyzerInterface $requestAnalyzer,
-        AnalyticsRepository $analyticRepository,
+        AnalyticsRepository $analyticsRepository,
         $environment
     ) {
         $this->engine = $engine;
         $this->requestAnalyzer = $requestAnalyzer;
-        $this->analyticRepository = $analyticRepository;
+        $this->analyticsRepository = $analyticsRepository;
         $this->environment = $environment;
     }
 
@@ -63,7 +63,7 @@ class AppendAnalyticsListener
             return;
         }
 
-        $analytics = $this->analyticRepository->findByUrl(
+        $analytics = $this->analyticsRepository->findByUrl(
             $this->requestAnalyzer->getPortalInformation()->getUrlExpression(),
             $this->environment
         );

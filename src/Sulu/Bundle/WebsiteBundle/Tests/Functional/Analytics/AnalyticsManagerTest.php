@@ -172,8 +172,8 @@ class AnalyticsManagerTest extends BaseFunctional
             1,
             array_filter(
                 $this->analyticsManager->findAll($webspaceKey),
-                function (Analytics $analytic) use ($result) {
-                    return $analytic->getId() === $result->getId();
+                function (Analytics $analytics) use ($result) {
+                    return $analytics->getId() === $result->getId();
                 }
             )
         );
@@ -204,8 +204,8 @@ class AnalyticsManagerTest extends BaseFunctional
             1,
             array_filter(
                 $this->analyticsManager->findAll('sulu_io'),
-                function (Analytics $analytic) use ($result) {
-                    return $analytic->getTitle() === $result->getTitle();
+                function (Analytics $analytics) use ($result) {
+                    return $analytics->getTitle() === $result->getTitle();
                 }
             )
         );
@@ -275,8 +275,8 @@ class AnalyticsManagerTest extends BaseFunctional
         $this->assertEmpty(
             array_filter(
                 $this->analyticsManager->findAll('sulu_io'),
-                function (Analytics $analytic) {
-                    return $analytic->getId() === $this->entities[0]->getId();
+                function (Analytics $analytics) {
+                    return $analytics->getId() === $this->entities[0]->getId();
                 }
             )
         );
@@ -291,8 +291,8 @@ class AnalyticsManagerTest extends BaseFunctional
         $this->assertEmpty(
             array_filter(
                 $this->analyticsManager->findAll('sulu_io'),
-                function (Analytics $analytic) use ($ids) {
-                    return in_array($analytic->getId(), $ids);
+                function (Analytics $analytics) use ($ids) {
+                    return in_array($analytics->getId(), $ids);
                 }
             )
         );

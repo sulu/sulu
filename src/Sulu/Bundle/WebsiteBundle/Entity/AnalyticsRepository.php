@@ -38,7 +38,7 @@ class AnalyticsRepository extends EntityRepository
     }
 
     /**
-     * Returns analytic-key by id.
+     * Returns analytics by id.
      *
      * @param int $id
      *
@@ -58,7 +58,7 @@ class AnalyticsRepository extends EntityRepository
     }
 
     /**
-     * Returns analytic-key by url.
+     * Returns analytics by url.
      *
      * @param string $url
      * @param string $environment

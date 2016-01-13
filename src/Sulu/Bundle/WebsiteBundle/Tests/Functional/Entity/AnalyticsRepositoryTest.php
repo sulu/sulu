@@ -20,13 +20,13 @@ class AnalyticsRepositoryTest extends BaseFunctional
     /**
      * @var AnalyticsRepository
      */
-    private $analyticRepository;
+    private $analyticsRepository;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->analyticRepository = $this->getContainer()->get('sulu_website.analytics.repository');
+        $this->analyticsRepository = $this->getContainer()->get('sulu_website.analytics.repository');
     }
 
     public function testFindByWebspaceKey()
@@ -51,13 +51,13 @@ class AnalyticsRepositoryTest extends BaseFunctional
             ]
         );
 
-        $result = $this->analyticRepository->findByWebspaceKey('sulu_io');
+        $result = $this->analyticsRepository->findByWebspaceKey('sulu_io');
         $this->assertCount(2, $result);
 
         $this->assertEquals('test-1', $result[0]->getTitle());
         $this->assertEquals('test-2', $result[1]->getTitle());
 
-        $result = $this->analyticRepository->findByWebspaceKey('test_io');
+        $result = $this->analyticsRepository->findByWebspaceKey('test_io');
         $this->assertEmpty($result);
     }
 
@@ -73,7 +73,7 @@ class AnalyticsRepositoryTest extends BaseFunctional
             ]
         );
 
-        $result = $this->analyticRepository->findById($entity->getId());
+        $result = $this->analyticsRepository->findById($entity->getId());
         $this->assertEquals('test-1', $result->getTitle());
     }
 
@@ -101,18 +101,18 @@ class AnalyticsRepositoryTest extends BaseFunctional
             ]
         );
 
-        $result = $this->analyticRepository->findByUrl('www.sulu.io/{localization}', 'prod');
+        $result = $this->analyticsRepository->findByUrl('www.sulu.io/{localization}', 'prod');
         $this->assertCount(2, $result);
 
         $this->assertEquals('test-1', $result[0]->getTitle());
         $this->assertEquals('test-2', $result[1]->getTitle());
 
-        $result = $this->analyticRepository->findByUrl('www.sulu.io/{localization}', 'dev');
+        $result = $this->analyticsRepository->findByUrl('www.sulu.io/{localization}', 'dev');
         $this->assertCount(1, $result);
 
         $this->assertEquals('test-2', $result[0]->getTitle());
 
-        $result = $this->analyticRepository->findByUrl('www.sulu.ud', 'stage');
+        $result = $this->analyticsRepository->findByUrl('www.sulu.ud', 'stage');
         $this->assertCount(1, $result);
 
         $this->assertEquals('test-2', $result[0]->getTitle());

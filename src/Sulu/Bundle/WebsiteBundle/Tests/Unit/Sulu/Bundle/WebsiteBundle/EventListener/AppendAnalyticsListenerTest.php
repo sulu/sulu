@@ -36,11 +36,11 @@ class AppendAnalyticsListenerTest extends \PHPUnit_Framework_TestCase
     {
         $engine = $this->prophesize(EngineInterface::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $analyticRepository = $this->prophesize(AnalyticsRepository::class);
+        $analyticsRepository = $this->prophesize(AnalyticsRepository::class);
         $listener = new AppendAnalyticsListener(
             $engine->reveal(),
             $requestAnalyzer->reveal(),
-            $analyticRepository->reveal(),
+            $analyticsRepository->reveal(),
             'prod'
         );
 
@@ -61,17 +61,17 @@ class AppendAnalyticsListenerTest extends \PHPUnit_Framework_TestCase
     {
         $engine = $this->prophesize(EngineInterface::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $analyticRepository = $this->prophesize(AnalyticsRepository::class);
+        $analyticsRepository = $this->prophesize(AnalyticsRepository::class);
 
         $portalInformation = $this->prophesize(PortalInformation::class);
         $portalInformation->getUrlExpression()->willReturn('sulu.lo/{localization}');
         $requestAnalyzer->getPortalInformation()->willReturn($portalInformation->reveal());
 
-        $analyticRepository->findByUrl('sulu.lo/{localization}', 'prod')->willReturn(['test' => 1]);
+        $analyticsRepository->findByUrl('sulu.lo/{localization}', 'prod')->willReturn(['test' => 1]);
         $listener = new AppendAnalyticsListener(
             $engine->reveal(),
             $requestAnalyzer->reveal(),
-            $analyticRepository->reveal(),
+            $analyticsRepository->reveal(),
             'prod'
         );
 

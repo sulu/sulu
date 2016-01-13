@@ -37,13 +37,13 @@ class AnalyticsSerializeEventSubscriber implements EventSubscriberInterface
 
     public function onPostSerialize(ObjectEvent $event)
     {
-        $analytic = $event->getObject();
+        $analytics = $event->getObject();
 
-        if (!($analytic instanceof Analytics)) {
+        if (!($analytics instanceof Analytics)) {
             return;
         }
 
-        if ($analytic->isAllDomains()) {
+        if ($analytics->isAllDomains()) {
             $metadata = new PropertyMetadata($event->getType()['name'], 'domains');
             $value = new \stdClass();
             $value->domains = true;

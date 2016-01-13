@@ -21,7 +21,7 @@
         <many-to-many target-entity="Sulu\Bundle\WebsiteBundle\Entity\Domain" field="domains">
             <join-table name="we_analytics_domains">
                 <join-columns>
-                    <join-column name="analytic" referenced-column-name="id" />
+                    <join-column name="analytics" referenced-column-name="id" />
                 </join-columns>
                 <inverse-join-columns>
                     <join-column name="domain" referenced-column-name="id" />

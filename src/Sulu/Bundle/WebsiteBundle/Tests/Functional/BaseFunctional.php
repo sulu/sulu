@@ -42,7 +42,7 @@ class BaseFunctional extends SuluTestCase
     }
 
     /**
-     * Create new analytic.
+     * Create new analytics.
      *
      * @param string $webspaceKey
      * @param array $data
@@ -61,28 +61,28 @@ class BaseFunctional extends SuluTestCase
     /**
      * Set data to given key.
      *
-     * @param Analytics $analytic
+     * @param Analytics $analytics
      * @param string $webspaceKey
      * @param array $data
      *
      * @return Analytics
      */
-    protected function setData(Analytics $analytic, $webspaceKey, array $data)
+    protected function setData(Analytics $analytics, $webspaceKey, array $data)
     {
-        $analytic->setTitle($this->getValue($data, 'title'));
-        $analytic->setType($this->getValue($data, 'type'));
-        $analytic->setContent($this->getValue($data, 'content', ''));
-        $analytic->setAllDomains($this->getValue($data, 'allDomains', false));
-        $analytic->setWebspaceKey($webspaceKey);
+        $analytics->setTitle($this->getValue($data, 'title'));
+        $analytics->setType($this->getValue($data, 'type'));
+        $analytics->setContent($this->getValue($data, 'content', ''));
+        $analytics->setAllDomains($this->getValue($data, 'allDomains', false));
+        $analytics->setWebspaceKey($webspaceKey);
 
-        $analytic->clearDomains();
+        $analytics->clearDomains();
 
         foreach ($this->getValue($data, 'domains', []) as $domain) {
             $domainEntity = $this->findOrCreateNewDomain($domain);
-            $analytic->addDomain($domainEntity);
+            $analytics->addDomain($domainEntity);
         }
 
-        return $analytic;
+        return $analytics;
     }
 
     /**
