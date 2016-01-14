@@ -87,6 +87,12 @@ define(['text!./form.html'], function(form) {
                         options: {
                             el: '#custom-url-published'
                         }
+                    },
+                    {
+                        name: 'webspace/settings/custom-url/input@sulucustomurl',
+                        options: {
+                            el: '#custom-url-input'
+                        }
                     }
                 ]
             )
