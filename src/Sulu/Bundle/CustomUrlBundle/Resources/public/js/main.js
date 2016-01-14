@@ -9,7 +9,8 @@
 
 require.config({
     paths: {
-        sulucustomurl: '../../sulucustomurl/js'
+        sulucustomurl: '../../sulucustomurl/js',
+        'type/custom-url': '../../sulucustomurl/js/components/webspace/settings/custom-url/input/custom-url'
     }
 });
 

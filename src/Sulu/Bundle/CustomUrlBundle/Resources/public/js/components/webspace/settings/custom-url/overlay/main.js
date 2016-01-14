@@ -92,7 +92,8 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                     {
                         name: 'webspace/settings/custom-url/input@sulucustomurl',
                         options: {
-                            el: '#custom-url-input'
+                            el: '#custom-url-input',
+                            baseDomain: this.data.baseDomain
                         }
                     },
                     {
@@ -104,11 +105,8 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                                 return item.url;
                             }),
                             defaultLabel: this.translations.customUrlDefaultValue,
-                            selectCallback: function(index) {
-                                this.sandbox.emit(
-                                    'sulu.webspace-settings.custom-url.set-base-domain',
-                                    this.options.webspace.customUrls[index].url
-                                );
+                            selectCallback: function(item) {
+                                this.sandbox.emit('sulu.webspace-settings.custom-url.set-base-domain', item);
                             }.bind(this)
                         }
                     }

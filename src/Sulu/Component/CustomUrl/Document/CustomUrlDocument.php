@@ -46,6 +46,16 @@ class CustomUrlDocument implements
     protected $published;
 
     /**
+     * @var string
+     */
+    protected $baseDomain;
+
+    /**
+     * @var array
+     */
+    protected $domainParts;
+
+    /**
      * @var \DateTime
      */
     protected $created;
@@ -120,6 +130,42 @@ class CustomUrlDocument implements
     public function setPublished($published)
     {
         $this->published = $published;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBaseDomain()
+    {
+        return $this->baseDomain;
+    }
+
+    /**
+     * Set base domain.
+     *
+     * @param string $baseDomain
+     */
+    public function setBaseDomain($baseDomain)
+    {
+        $this->baseDomain = $baseDomain;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDomainParts()
+    {
+        return $this->domainParts;
+    }
+
+    /**
+     * Set domain parts.
+     *
+     * @param array $domainParts
+     */
+    public function setDomainParts($domainParts)
+    {
+        $this->domainParts = $domainParts;
     }
 
     /**

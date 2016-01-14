@@ -53,8 +53,8 @@ class CustomUrlSubscriber implements EventSubscriberInterface
         }
 
         $metadata = $event->getMetadata();
-        foreach ($this->customUrlManager->getFields() as $fieldName) {
-            $metadata->addFieldMapping($fieldName, ['property' => $fieldName]);
+        foreach ($this->customUrlManager->getFields() as $fieldName => $mapping) {
+            $metadata->addFieldMapping($fieldName, $mapping);
         }
     }
 }

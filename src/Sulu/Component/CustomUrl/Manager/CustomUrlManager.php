@@ -111,7 +111,12 @@ class CustomUrlManager implements CustomUrlManagerInterface
      */
     public function getFields()
     {
-        return ['title', 'published'];
+        return [
+            'title' => ['property' => 'title'],
+            'published' => ['property' => 'published'],
+            'baseDomain' => ['property' => 'baseDomain'],
+            'domainParts' => ['property' => 'domainParts', 'type' => 'json_array'],
+        ];
     }
 
     /**
@@ -124,8 +129,8 @@ class CustomUrlManager implements CustomUrlManagerInterface
     {
         $accessor = PropertyAccess::createPropertyAccessor();
 
-        foreach ($this->getFields() as $field) {
-            $accessor->setValue($document, $field, $data[$field]);
+        foreach ($this->getFields() as $fieldName => $mapping) {
+            $accessor->setValue($document, $fieldName, $data[$fieldName]);
         }
     }
 

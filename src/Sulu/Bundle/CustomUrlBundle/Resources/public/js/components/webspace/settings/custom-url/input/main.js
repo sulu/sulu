@@ -22,9 +22,6 @@ define(['underscore'], function(_) {
     //  - *.sulu.io/*/*
 
     var defaults = {
-        options: {
-            baseDomain: null
-        },
         templates: {
             input: '<input type="text" data-index="<%=index%>" <% if (index === 0) { %>data-prefix="true"<% } else { %>data-suffix="true"<% } %>/>',
             text: '<span><%=text%></span>'
@@ -89,11 +86,16 @@ define(['underscore'], function(_) {
          */
         initialize: function() {
             this.render(this.options.baseDomain);
+            this.setDomData(this.$el.data('custom-url-data'));
 
-            this.events.setBaseDomain(function(baseDomain) {
-                var data = this.getData();
-                this.render(baseDomain);
-                this.setDomData(data);
+            this.events.setBaseDomain(this.setBaseDomain.bind(this));
+
+            this.$el.on('data-changed', function() {
+                this.setBaseDomain(this.$el.data('custom-url-data'));
+            }.bind(this));
+
+            this.$el.on('change', 'input', function() {
+                this.$el.data('custom-url-data', this.getData());
             }.bind(this));
         },
 
@@ -128,6 +130,12 @@ define(['underscore'], function(_) {
                 default:
                     return this.templates.text({text: domainPart});
             }
+        },
+
+        setBaseDomain: function(baseDomain) {
+            var data = this.getData();
+            this.render(baseDomain);
+            this.setDomData(data);
         },
 
         getData: function() {

@@ -28,4 +28,18 @@ interface CustomUrlBehavior
      * @return string
      */
     public function isPublished();
+
+    /**
+     * Returns base domain of custom-url.
+     *
+     * @return string
+     */
+    public function getBaseDomain();
+
+    /**
+     * Returns domain parts of custom-url.
+     *
+     * @return array
+     */
+    public function getDomainParts();
 }
