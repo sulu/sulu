@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #1933 [AdminBundle]     Fixed password reset twig template
+
 * 1.1.4 (2016-01-08)
     * HOTFIX      #1917 [MediaBundle]     Changed version name to original filename
 
