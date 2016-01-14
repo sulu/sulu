@@ -16,14 +16,25 @@ use Sulu\Component\Websocket\ConnectionContext\ConnectionContextInterface;
 use Sulu\Component\Websocket\Exception\HandlerNotFoundException;
 
 /**
- * Class MessageDispatcher.
+ * Responsible for taking messages and meta information from a MessageComponentInterface, passing this data to a
+ * MessageHandler, and returning the new message to the MessageComponentInterface.
  */
 class MessageDispatcher implements MessageDispatcherInterface
 {
     /**
+     * @var MessageBuilderInterface
+     */
+    private $messageBuilder;
+
+    /**
      * @var MessageHandlerInterface[]
      */
     private $handler = [];
+
+    public function __construct(MessageBuilderInterface $messageBuilder)
+    {
+        $this->messageBuilder = $messageBuilder;
+    }
 
     /**
      * {@inheritdoc}
@@ -55,12 +66,7 @@ class MessageDispatcher implements MessageDispatcherInterface
             $error = true;
         }
 
-        return [
-            'handler' => $name,
-            'message' => $message,
-            'options' => $options,
-            'error' => $error,
-        ];
+        return $this->messageBuilder->build($name, $message, $options, $error);
     }
 
     /**

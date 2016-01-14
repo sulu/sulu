@@ -10,9 +10,11 @@
 
 namespace Sulu\Bundle\ContentBundle\Collaboration;
 
+use Prophecy\Argument;
 use Ratchet\ConnectionInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
+use Sulu\Component\Websocket\MessageDispatcher\MessageBuilderInterface;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext;
 
 class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
@@ -48,6 +50,11 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
     private $context;
 
     /**
+     * @var MessageBuilderInterface
+     */
+    private $messageBuilder;
+
+    /**
      * @var CollaborationMessageHandler
      */
     private $collaborationMessageHandler;
@@ -75,13 +82,30 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
         $this->userRepository->findUserById(1)->willReturn($this->user1);
         $this->userRepository->findUserById(2)->willReturn($this->user2);
 
-        $this->collaborationMessageHandler = new CollaborationMessageHandler($this->userRepository->reveal());
+        $this->messageBuilder = $this->prophesize(MessageBuilderInterface::class);
+        $this->messageBuilder->build(Argument::any(), Argument::any(), Argument::any(), Argument::any())->will(
+            function ($arguments) {
+                return json_encode(
+                    [
+                        'handler' => $arguments[0],
+                        'message' => $arguments[1],
+                        'options' => $arguments[2],
+                        'error' => false,
+                    ]
+                );
+            }
+        );
+
+        $this->collaborationMessageHandler = new CollaborationMessageHandler(
+            $this->messageBuilder->reveal(),
+            $this->userRepository->reveal()
+        );
     }
 
     public function testHandleEnterAndLeave()
     {
         $this->connection1->send(
-            '{"handler":"sulu_content.collaboration","message":{"command":"update","id":"a","userId":1,"users":[{"id":1,"username":"max","fullName":"Max Mustermann"}]}}'
+            '{"handler":"sulu_content.collaboration","message":{"command":"update","id":"a","userId":1,"users":[{"id":1,"username":"max","fullName":"Max Mustermann"}]},"options":[],"error":false}'
         )->shouldBeCalled();
 
         $this->collaborationMessageHandler->handle(
@@ -90,16 +114,16 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
                 'command' => 'enter',
                 'id' => 'a',
                 'userId' => 1,
-                'type' => 'page'
+                'type' => 'page',
             ],
             $this->context->reveal()
         );
 
         $this->connection1->send(
-            '{"handler":"sulu_content.collaboration","message":{"command":"update","id":"a","userId":2,"users":[{"id":1,"username":"max","fullName":"Max Mustermann"},{"id":2,"username":"john","fullName":"John Doe"}]}}'
+            '{"handler":"sulu_content.collaboration","message":{"command":"update","id":"a","userId":2,"users":[{"id":1,"username":"max","fullName":"Max Mustermann"},{"id":2,"username":"john","fullName":"John Doe"}]},"options":[],"error":false}'
         )->shouldBeCalled();
         $this->connection2->send(
-            '{"handler":"sulu_content.collaboration","message":{"command":"update","id":"a","userId":2,"users":[{"id":1,"username":"max","fullName":"Max Mustermann"},{"id":2,"username":"john","fullName":"John Doe"}]}}'
+            '{"handler":"sulu_content.collaboration","message":{"command":"update","id":"a","userId":2,"users":[{"id":1,"username":"max","fullName":"Max Mustermann"},{"id":2,"username":"john","fullName":"John Doe"}]},"options":[],"error":false}'
         )->shouldBeCalled();
 
         $this->collaborationMessageHandler->handle(
@@ -108,13 +132,13 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
                 'command' => 'enter',
                 'id' => 'a',
                 'userId' => 2,
-                'type' => 'page'
+                'type' => 'page',
             ],
             $this->context->reveal()
         );
 
         $this->connection1->send(
-            '{"handler":"sulu_content.collaboration","message":{"command":"update","id":"a","userId":2,"users":[{"id":1,"username":"max","fullName":"Max Mustermann"}]}}'
+            '{"handler":"sulu_content.collaboration","message":{"command":"update","id":"a","userId":2,"users":[{"id":1,"username":"max","fullName":"Max Mustermann"}]},"options":[],"error":false}'
         )->shouldBeCalled();
 
         $this->collaborationMessageHandler->handle(
