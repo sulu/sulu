@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['text!./form.html'], function(form) {
+define(['underscore', 'text!./form.html'], function(_, form) {
 
     'use strict';
 
@@ -24,7 +24,8 @@ define(['text!./form.html'], function(form) {
             url: '/admin/api/webspaces/<%= webspaceKey %>/custom-urls<% if (!!id) { %>/<%= id %><% } %>'
         },
         translations: {
-            overlayTitle: 'custom-urls.webspace.settings.edit.title'
+            overlayTitle: 'custom-urls.webspace.settings.edit.title',
+            customUrlDefaultValue: 'custom-urls.custom-url.default-value'
         }
     };
 
@@ -93,6 +94,23 @@ define(['text!./form.html'], function(form) {
                         options: {
                             el: '#custom-url-input'
                         }
+                    },
+                    {
+                        name: 'select@husky',
+                        options: {
+                            el: '#custom-url-base-domain',
+                            isNative: true,
+                            data: _.map(this.options.webspace.customUrls, function(item) {
+                                return item.url;
+                            }),
+                            defaultLabel: this.translations.customUrlDefaultValue,
+                            selectCallback: function(index) {
+                                this.sandbox.emit(
+                                    'sulu.webspace-settings.custom-url.set-base-domain',
+                                    this.options.webspace.customUrls[index].url
+                                );
+                            }.bind(this)
+                        }
                     }
                 ]
             )
@@ -107,7 +125,7 @@ define(['text!./form.html'], function(form) {
             }
 
             this.sandbox.util.load(
-                this.templates.url(this.options)
+                this.templates.url({webspaceKey: this.options.webspace.key, id: this.options.id})
             ).then(function(data) {
                 deferred.resolve(data);
             });

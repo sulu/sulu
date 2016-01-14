@@ -19,7 +19,8 @@ define(['text!./skeleton.html'], function(skeleton) {
         translations: {
             title: 'public.title',
             published: 'public.published',
-            customUrl: 'custom-url.custom-url',
+            baseDomain: 'public.base-domain',
+            customUrl: 'custom-urls.custom-url',
             successLabel: 'labels.success',
             successMessage: 'labels.success.save-desc'
         }
@@ -104,7 +105,7 @@ define(['text!./skeleton.html'], function(skeleton) {
                     options: {
                         el: '#webspace-custom-url-form-overlay',
                         id: id,
-                        webspaceKey: this.data.key,
+                        webspace: this.data,
                         saveCallback: this.save.bind(this),
                         translations: this.translations
                     }
