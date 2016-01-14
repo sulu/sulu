@@ -36,26 +36,16 @@ class SecurityController extends Controller
             $session->remove(SecurityContext::AUTHENTICATION_ERROR);
         }
 
+        $template = 'SuluAdminBundle:Security:login.html.dist.twig';
         if ($this->get('kernel')->getEnvironment() === 'dev') {
             $template = 'SuluAdminBundle:Security:login.html.twig';
-        } else {
-            $template = 'SuluAdminBundle:Security:login.html.dist.twig';
         }
 
-        return $this->render(
-            $template,
-            [
-                'name' => $this->container->getParameter('sulu_admin.name'),
-                'locales' => $this->container->getParameter('sulu_core.locales'),
-                'translated_locales' => $this->container->getParameter('sulu_core.translated_locales'),
-                'translations' => $this->container->getParameter('sulu_core.translations'),
-                'fallback_locale' => $this->container->getParameter('sulu_core.fallback_locale'),
-            ]
-        );
+        return $this->render($template, $this->getParameters());
     }
 
     /**
-     * Renderes the reset-password template.
+     * Renders the reset-password template.
      *
      * @param string $token the reset token
      *
@@ -63,13 +53,27 @@ class SecurityController extends Controller
      */
     public function resetAction($token)
     {
-        return $this->render(
-            'SuluAdminBundle:Security:login.html.twig',
-            [
-                'name' => $this->container->getParameter('sulu_admin.name'),
-                'locales' => $this->container->getParameter('sulu_core.locales'),
-                'token' => $token,
-            ]
-        );
+        $template = 'SuluAdminBundle:Security:login.html.dist.twig';
+        if ($this->get('kernel')->getEnvironment() === 'dev') {
+            $template = 'SuluAdminBundle:Security:login.html.twig';
+        }
+
+        return $this->render($template, array_merge($this->getParameters(), ['token' => $token]));
+    }
+
+    /**
+     * Returns twig parameters.
+     *
+     * @return array
+     */
+    private function getParameters()
+    {
+        return [
+            'name' => $this->container->getParameter('sulu_admin.name'),
+            'locales' => $this->container->getParameter('sulu_core.locales'),
+            'translated_locales' => $this->container->getParameter('sulu_core.translated_locales'),
+            'translations' => $this->container->getParameter('sulu_core.translations'),
+            'fallback_locale' => $this->container->getParameter('sulu_core.fallback_locale'),
+        ];
     }
 }
