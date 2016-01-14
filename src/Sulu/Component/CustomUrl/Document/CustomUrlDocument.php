@@ -115,7 +115,7 @@ class CustomUrlDocument implements
     /**
      * Set published state.
      *
-     * @param boolean $published
+     * @param bool $published
      */
     public function setPublished($published)
     {

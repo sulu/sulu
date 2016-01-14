@@ -10,9 +10,10 @@
 
 namespace Sulu\Component\CustomUrl\Manager;
 
+use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Repository\CustomUrlRepository;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\DocumentManager\PathBuilder;
 
 /**
  * Provides testcases for custom-url-manager.
@@ -23,36 +24,50 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
     {
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
         $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
-        $sessionManager = $this->prophesize(SessionManagerInterface::class);
+        $pathBuilder = $this->prophesize(PathBuilder::class);
+
+        $testDocument = new CustomUrlDocument();
+        $documentManager->create('custom_urls')->willReturn($testDocument);
+        $documentManager->persist(
+            $testDocument,
+            null,
+            ['parent_path' => '/cmf/sulu_io/custom_urls/items', 'node_name' => 'test']
+        )
+            ->shouldBeCalledTimes(1);
+
+        $pathBuilder->build(['%base%', 'sulu_io', '%custom-urls%', '%custom-urls-items%'])
+            ->willReturn('/cmf/sulu_io/custom_urls/items');
 
         $manager = new CustomUrlManager(
             $documentManager->reveal(),
             $customUrlRepository->reveal(),
-            $sessionManager->reveal()
+            $pathBuilder->reveal()
         );
 
-        $document = $manager->create(['title' => 'Test']);
+        $result = $manager->create('sulu_io', ['title' => 'Test', 'published' => true]);
 
-        $document->persist($document)->shouldBeCalledTimes(1);
-
-        $this->assertEquals('Test', $document->getTitle());
+        $this->assertEquals($testDocument, $result);
+        $this->assertEquals('Test', $result->getTitle());
+        $this->assertEquals(true, $result->isPublished());
     }
 
     public function testReadList()
     {
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
         $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
-        $sessionManager = $this->prophesize(SessionManagerInterface::class);
+        $pathBuilder = $this->prophesize(PathBuilder::class);
+
+        $pathBuilder->build(['%base%', 'sulu_io', '%custom-urls%', '%custom-urls-items%'])
+            ->willReturn('/cmf/sulu_io/custom_urls/items');
 
         $manager = new CustomUrlManager(
             $documentManager->reveal(),
             $customUrlRepository->reveal(),
-            $sessionManager->reveal()
+            $pathBuilder->reveal()
         );
 
-        $customUrlRepository->findList('/cmf/sulu_io/custom-urls/items')->willReturn(
-            [['title' => 'Test-1'], ['title' => 'Test-2']]
-        );
+        $customUrlRepository->findList('/cmf/sulu_io/custom_urls/items')
+            ->willReturn([['title' => 'Test-1'], ['title' => 'Test-2']]);
 
         $result = $manager->readList('sulu_io');
 

@@ -16,7 +16,6 @@ use Sulu\Component\CustomUrl\Repository\CustomUrlRepository;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\PathBuilder;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
  * Manages custom-url documents and their routes.

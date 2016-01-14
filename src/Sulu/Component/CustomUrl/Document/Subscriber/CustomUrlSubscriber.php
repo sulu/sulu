@@ -31,7 +31,6 @@ class CustomUrlSubscriber implements EventSubscriberInterface
         $this->customUrlManager = $customUrlManager;
     }
 
-
     /**
      * {@inheritdoc}
      */
