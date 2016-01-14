@@ -2,3 +2,5 @@ sulu_contact:
     resource: "@SuluAdminBundle/Resources/config/routing.yml"
     prefix: /admin
 
+sulu_security:
+    resource: "@SuluSecurityBundle/Resources/config/routing.xml"
