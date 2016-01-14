@@ -79,8 +79,8 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
 
         $this->context = $this->prophesize(MessageHandlerContext::class);
 
-        $this->userRepository->findUserById(1)->willReturn($this->user1);
-        $this->userRepository->findUserById(2)->willReturn($this->user2);
+        $this->userRepository->findUserById(1)->willReturn($this->user1->reveal());
+        $this->userRepository->findUserById(2)->willReturn($this->user2->reveal());
 
         $this->messageBuilder = $this->prophesize(MessageBuilderInterface::class);
         $this->messageBuilder->build(Argument::any(), Argument::any(), Argument::any(), Argument::any())->will(
@@ -105,7 +105,7 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
     public function testHandleEnterAndLeave()
     {
         $this->connection1->send(
-            '{"handler":"sulu_content.collaboration","message":{"command":"update","id":"a","userId":1,"users":[{"id":1,"username":"max","fullName":"Max Mustermann"}]},"options":[],"error":false}'
+            '{"handler":"sulu_content.collaboration","message":{"command":"update","type":"page","id":"a","users":[{"id":1,"username":"max","fullName":"Max Mustermann"}]},"options":[],"error":false}'
         )->shouldBeCalled();
 
         $this->collaborationMessageHandler->handle(
@@ -120,10 +120,10 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->connection1->send(
-            '{"handler":"sulu_content.collaboration","message":{"command":"update","id":"a","userId":2,"users":[{"id":1,"username":"max","fullName":"Max Mustermann"},{"id":2,"username":"john","fullName":"John Doe"}]},"options":[],"error":false}'
+            '{"handler":"sulu_content.collaboration","message":{"command":"update","type":"page","id":"a","users":[{"id":1,"username":"max","fullName":"Max Mustermann"},{"id":2,"username":"john","fullName":"John Doe"}]},"options":[],"error":false}'
         )->shouldBeCalled();
         $this->connection2->send(
-            '{"handler":"sulu_content.collaboration","message":{"command":"update","id":"a","userId":2,"users":[{"id":1,"username":"max","fullName":"Max Mustermann"},{"id":2,"username":"john","fullName":"John Doe"}]},"options":[],"error":false}'
+            '{"handler":"sulu_content.collaboration","message":{"command":"update","type":"page","id":"a","users":[{"id":1,"username":"max","fullName":"Max Mustermann"},{"id":2,"username":"john","fullName":"John Doe"}]},"options":[],"error":false}'
         )->shouldBeCalled();
 
         $this->collaborationMessageHandler->handle(
@@ -138,7 +138,7 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->connection1->send(
-            '{"handler":"sulu_content.collaboration","message":{"command":"update","id":"a","userId":2,"users":[{"id":1,"username":"max","fullName":"Max Mustermann"}]},"options":[],"error":false}'
+            '{"handler":"sulu_content.collaboration","message":{"command":"update","type":"page","id":"a","users":[{"id":1,"username":"max","fullName":"Max Mustermann"}]},"options":[],"error":false}'
         )->shouldBeCalled();
 
         $this->collaborationMessageHandler->handle(
@@ -151,5 +151,86 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
             ],
             $this->context->reveal()
         );
+    }
+
+    public function testClose()
+    {
+        $connection3 = $this->prophesize(ConnectionInterface::class);
+        $user3 = $this->prophesize(UserInterface::class);
+        $user3->getId()->willReturn(3);
+        $user3->getUsername()->willReturn('erika');
+        $user3->getFullName()->willReturn('Erika Mustermann');
+
+        $this->userRepository->findUserById(3)->willReturn($user3->reveal());
+
+        $this->connection1->send(
+            '{"handler":"sulu_content.collaboration","message":{"command":"update","type":"page","id":"a","users":[{"id":1,"username":"max","fullName":"Max Mustermann"}]},"options":[],"error":false}'
+        )->shouldBeCalled();
+
+        $this->collaborationMessageHandler->handle(
+            $this->connection1->reveal(),
+            [
+                'command' => 'enter',
+                'id' => 'a',
+                'userId' => 1,
+                'type' => 'page',
+            ],
+            $this->context->reveal()
+        );
+
+        $this->connection1->send(
+            '{"handler":"sulu_content.collaboration","message":{"command":"update","type":"page","id":"b","users":[{"id":1,"username":"max","fullName":"Max Mustermann"}]},"options":[],"error":false}'
+        )->shouldBeCalled();
+
+        $this->collaborationMessageHandler->handle(
+            $this->connection1->reveal(),
+            [
+                'command' => 'enter',
+                'id' => 'b',
+                'userId' => 1,
+                'type' => 'page',
+            ],
+            $this->context->reveal()
+        );
+
+        $this->connection1->send(
+            '{"handler":"sulu_content.collaboration","message":{"command":"update","type":"page","id":"a","users":[{"id":1,"username":"max","fullName":"Max Mustermann"},{"id":2,"username":"john","fullName":"John Doe"}]},"options":[],"error":false}'
+        )->shouldBeCalled();
+        $this->connection2->send(
+            '{"handler":"sulu_content.collaboration","message":{"command":"update","type":"page","id":"a","users":[{"id":1,"username":"max","fullName":"Max Mustermann"},{"id":2,"username":"john","fullName":"John Doe"}]},"options":[],"error":false}'
+        )->shouldBeCalled();
+
+        $this->collaborationMessageHandler->handle(
+            $this->connection2->reveal(),
+            [
+                'command' => 'enter',
+                'id' => 'a',
+                'userId' => 2,
+                'type' => 'page',
+            ],
+            $this->context->reveal()
+        );
+
+        $this->connection1->send(
+            '{"handler":"sulu_content.collaboration","message":{"command":"update","type":"page","id":"b","users":[{"id":1,"username":"max","fullName":"Max Mustermann"},{"id":3,"username":"erika","fullName":"Erika Mustermann"}]},"options":[],"error":false}'
+        )->shouldBeCalled();
+        $connection3->send(
+            '{"handler":"sulu_content.collaboration","message":{"command":"update","type":"page","id":"b","users":[{"id":1,"username":"max","fullName":"Max Mustermann"},{"id":3,"username":"erika","fullName":"Erika Mustermann"}]},"options":[],"error":false}'
+        )->shouldBeCalled();
+        $this->collaborationMessageHandler->handle(
+            $connection3->reveal(),
+            [
+                'command' => 'enter',
+                'id' => 'b',
+                'userId' => 3,
+                'type' => 'page',
+            ],
+            $this->context->reveal()
+        );
+
+        $this->connection1->send(
+            '{"handler":"sulu_content.collaboration","message":{"command":"update","type":"page","id":"b","users":[{"id":1,"username":"max","fullName":"Max Mustermann"}]},"options":[],"error":false}'
+        )->shouldBeCalled();
+        $this->collaborationMessageHandler->onClose($connection3->reveal(), $this->context->reveal());
     }
 }

@@ -28,10 +28,22 @@ class Collaborator
      */
     private $connection;
 
-    public function __construct(UserInterface $user, ConnectionInterface $connection)
+    /**
+     * @var string
+     */
+    private $type;
+
+    /**
+     * @var mixed
+     */
+    private $id;
+
+    public function __construct(UserInterface $user, ConnectionInterface $connection, $type, $id)
     {
         $this->user = $user;
         $this->connection = $connection;
+        $this->type = $type;
+        $this->id = $id;
     }
 
     /**
@@ -52,5 +64,25 @@ class Collaborator
     public function getConnection()
     {
         return $this->connection;
+    }
+
+    /**
+     * Returns the type of the entity the user is collaborating on.
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Returns the id of the entity the user collaborating on.
+     *
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }

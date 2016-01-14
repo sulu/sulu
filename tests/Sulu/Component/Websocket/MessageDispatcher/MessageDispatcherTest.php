@@ -13,6 +13,7 @@ namespace Sulu\Component\Websocket\MessageDispatcher;
 
 use Prophecy\Argument;
 use Ratchet\ConnectionInterface;
+use Sulu\Component\Websocket\ConnectionContext\ConnectionContextInterface;
 
 class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
 {
@@ -52,7 +53,7 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
         $handler = $this->prophesize('Sulu\Component\Websocket\MessageDispatcher\MessageHandlerInterface');
 
         $reflectionClass = new \ReflectionClass($this->messageDispatcher);
-        $reflectionProp = $reflectionClass->getProperty('handler');
+        $reflectionProp = $reflectionClass->getProperty('handlers');
         $reflectionProp->setAccessible(true);
 
         $handlers = $reflectionProp->getValue($this->messageDispatcher);
@@ -217,14 +218,14 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
 
     public function testOnClose()
     {
-        $context = $this->prophesize(MessageHandlerContext::class);
+        $context = $this->prophesize(ConnectionContextInterface::class);
         $conn = $this->prophesize(ConnectionInterface::class);
 
         $handler1 = $this->prophesize(MessageHandlerInterface::class);
-        $handler1->onClose($conn->reveal(), $context->reveal())->shouldBeCalled();
+        $handler1->onClose($conn->reveal(), new MessageHandlerContext($context->reveal(), 'test-1'))->shouldBeCalled();
 
         $handler2 = $this->prophesize(MessageHandlerInterface::class);
-        $handler2->onClose($conn->reveal(), $context->reveal())->shouldBeCalled();
+        $handler2->onClose($conn->reveal(), new MessageHandlerContext($context->reveal(), 'test-2'))->shouldBeCalled();
 
         $this->messageDispatcher->add('test-1', $handler1->reveal());
         $this->messageDispatcher->add('test-2', $handler2->reveal());

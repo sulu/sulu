@@ -42,7 +42,7 @@ class CollaborationMessageHandler implements MessageHandlerInterface
     /**
      * An array which contains all the collaborators for a certain identifier (representing a page, product, ...).
      *
-     * @var Collaborator[][]
+     * @var Collaborator[][][]
      */
     private $collaborators = [];
 
@@ -69,7 +69,20 @@ class CollaborationMessageHandler implements MessageHandlerInterface
      */
     public function onClose(ConnectionInterface $conn, MessageHandlerContext $context)
     {
-        $this->leave($conn, $context, ['command' => 'leave']);
+        foreach ($this->collaborators as $type => $typeCollaborators) {
+            foreach ($typeCollaborators as $id => $collaborators) {
+                $oldCollaborators = $collaborators;
+                foreach ($collaborators as $userId => $collaborator) {
+                    if ($collaborator->getConnection() === $conn) {
+                        unset($this->collaborators[$type][$id][$userId]);
+                    }
+                }
+
+                if ($oldCollaborators !== $this->collaborators[$type][$id]) {
+                    $this->sendUpdate($type, $id, $this->getUsersInformation($type, $id));
+                }
+            }
+        }
     }
 
     /**
@@ -117,13 +130,12 @@ class CollaborationMessageHandler implements MessageHandlerInterface
      */
     private function enter(ConnectionInterface $conn, MessageHandlerContext $context, array $msg)
     {
-        $identifier = $this->getUniqueCollaborationIdentifier($msg);
         $user = $this->userRepository->findUserById($msg['userId']);
-        $this->addCollaborator($conn, $identifier, $user);
+        $this->addCollaborator($conn, $msg['type'], $msg['id'], $user);
 
-        $users = $this->getUsersInformation($identifier);
+        $users = $this->getUsersInformation($msg['type'], $msg['id']);
 
-        $this->sendUpdate($msg, $users, $identifier);
+        $this->sendUpdate($msg['type'], $msg['id'], $users);
 
         return [
             'type' => $msg['type'],
@@ -143,12 +155,11 @@ class CollaborationMessageHandler implements MessageHandlerInterface
      */
     private function leave(ConnectionInterface $conn, MessageHandlerContext $context, array $msg)
     {
-        $identifier = $this->getUniqueCollaborationIdentifier($msg);
-        $this->removeCollaborator($this->getUniqueCollaborationIdentifier($msg), $msg['userId']);
+        $this->removeCollaborator($msg['type'], $msg['id'], $msg['userId']);
 
-        $users = $this->getUsersInformation($identifier);
+        $users = $this->getUsersInformation($msg['type'], $msg['id']);
 
-        $this->sendUpdate($msg, $users, $identifier);
+        $this->sendUpdate($msg['type'], $msg['id'], $users);
 
         return [
             'type' => $msg['type'],
@@ -161,66 +172,62 @@ class CollaborationMessageHandler implements MessageHandlerInterface
      * Adds the collaborator with the given connection and user to the entity with the specified identifier.
      *
      * @param ConnectionInterface $conn The connection of the user
-     * @param mixed $identifier The unique identifier of the entity
+     * @param string $type The type of the entity
+     * @param mixed $id The id of the entitiy
      * @param UserInterface $user The user being added as collaborator
      */
-    private function addCollaborator(ConnectionInterface $conn, $identifier, UserInterface $user)
+    private function addCollaborator(ConnectionInterface $conn, $type, $id, UserInterface $user)
     {
-        if (!array_key_exists($identifier, $this->collaborators)) {
-            $this->collaborators[$identifier] = [];
+        if (!array_key_exists($type, $this->collaborators)) {
+            $this->collaborators[$type] = [];
         }
 
-        if (!array_key_exists($user->getId(), $this->collaborators[$identifier])) {
-            $this->collaborators[$identifier][$user->getId()] = new Collaborator($user, $conn);
+        if (!array_key_exists($id, $this->collaborators[$type])) {
+            $this->collaborators[$type][$id] = [];
+        }
+
+        if (!array_key_exists($user->getId(), $this->collaborators[$type][$id])) {
+            $this->collaborators[$type][$id][$user->getId()] = new Collaborator($user, $conn, $type, $id);
         }
     }
 
     /**
      * Removes the collaborator with the given userId from the entity with the given identifier.
      *
-     * @param mixed $identifier The unique identifier of the entitiy
+     * @param string $type The type of the entity
+     * @param mixed $id The id of the entitiy
      * @param int $userId The id of the user to remove
      */
-    private function removeCollaborator($identifier, $userId)
+    private function removeCollaborator($type, $id, $userId)
     {
-        if (array_key_exists($userId, $this->collaborators[$identifier])) {
-            unset($this->collaborators[$identifier][$userId]);
+        if (array_key_exists($id, $this->collaborators[$type])
+            && array_key_exists($userId, $this->collaborators[$type][$id])
+        ) {
+            unset($this->collaborators[$type][$id][$userId]);
         }
-    }
-
-    /**
-     * Returns a unique identifier for the entity passed in the message.
-     *
-     * @param array $msg The passed message
-     *
-     * @return string
-     */
-    private function getUniqueCollaborationIdentifier(array $msg)
-    {
-        return $msg['type'] . '_' . $msg['id'];
     }
 
     /**
      * Sends an update with the new collaborators to every collaborator.
      *
-     * @param array $msg The passed message
-     * @param Collaborator[] $users The users currently working on the entitiy with the given identity
-     * @param mixed $identifier The identifier of the entity
+     * @param string $type The type of the entity
+     * @param mixed $id The id of the entity
+     * @param Collaborator[] $users The users currently working on the entity with the given identity
      */
-    private function sendUpdate(array $msg, $users, $identifier)
+    private function sendUpdate($type, $id, $users)
     {
         $message = $this->messageBuilder->build(
             'sulu_content.collaboration',
             [
                 'command' => 'update',
-                'id' => $msg['id'],
-                'userId' => $msg['userId'],
+                'type' => $type,
+                'id' => $id,
                 'users' => $users,
             ],
             []
         );
 
-        foreach ($this->collaborators[$identifier] as $user) {
+        foreach ($this->collaborators[$type][$id] as $user) {
             $user->getConnection()->send($message);
         }
     }
@@ -228,11 +235,12 @@ class CollaborationMessageHandler implements MessageHandlerInterface
     /**
      * Returns the required information about the collaborator's users for returning in the messages.
      *
-     * @param mixed $identifier The identifier of the entity
+     * @param string $type The type of the entity
+     * @param mixed $id The id of the entity
      *
      * @return array
      */
-    private function getUsersInformation($identifier)
+    private function getUsersInformation($type, $id)
     {
         return array_values(
             array_map(
@@ -243,7 +251,7 @@ class CollaborationMessageHandler implements MessageHandlerInterface
                         'fullName' => $collaborator->getUser()->getFullName(),
                     ];
                 },
-                $this->collaborators[$identifier]
+                $this->collaborators[$type][$id]
             )
         );
     }

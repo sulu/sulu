@@ -29,7 +29,7 @@ class MessageDispatcher implements MessageDispatcherInterface
     /**
      * @var MessageHandlerInterface[]
      */
-    private $handler = [];
+    private $handlers = [];
 
     public function __construct(MessageBuilderInterface $messageBuilder)
     {
@@ -41,7 +41,7 @@ class MessageDispatcher implements MessageDispatcherInterface
      */
     public function add($name, MessageHandlerInterface $handler)
     {
-        $this->handler[$name] = $handler;
+        $this->handlers[$name] = $handler;
     }
 
     /**
@@ -54,13 +54,13 @@ class MessageDispatcher implements MessageDispatcherInterface
         array $options,
         ConnectionContextInterface $context
     ) {
-        if (!array_key_exists($name, $this->handler)) {
+        if (!array_key_exists($name, $this->handlers)) {
             throw new HandlerNotFoundException($name);
         }
 
         $error = false;
         try {
-            $message = $this->handler[$name]->handle($conn, $message, $context);
+            $message = $this->handlers[$name]->handle($conn, $message, $context);
         } catch (MessageHandlerException $ex) {
             $message = $ex->getResponseMessage();
             $error = true;
@@ -76,8 +76,8 @@ class MessageDispatcher implements MessageDispatcherInterface
         ConnectionInterface $conn,
         ConnectionContextInterface $context
     ) {
-        foreach ($this->handler as $handler) {
-            $handler->onClose($conn, $context);
+        foreach ($this->handlers as $name => $handler) {
+            $handler->onClose($conn, new MessageHandlerContext($context, $name));
         }
     }
 }
