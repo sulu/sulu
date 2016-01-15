@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.1.5 (2016-01-15)
     * HOTFIX      #1933 [AdminBundle]     Fixed password reset twig template
 
 * 1.1.4 (2016-01-08)
