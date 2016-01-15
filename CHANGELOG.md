@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1936 [Webspace]        Cleanup of WebsiteRequestAnalyzer
     * BUGFIX      #1931 [ContentBundle]   Fixed form deprecation messages   
     * BUGFIX      #1930 [ContentBundle]   Fixed updating values in combination
                                           with template change

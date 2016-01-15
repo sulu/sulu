@@ -2,6 +2,12 @@
 
 ## dev-develop
 
+### WebsiteRequestAnalyzer
+
+The `Current`-part of all setters have been removed, because they have already
+been removed from the getters. This only affects you if you have overridden the
+`WebsiteRequestAnalyzer` and have called or overridden these methods.
+
 ### Webspace Settings
 
 A new phpcr namespace was added. To register it run following command:
