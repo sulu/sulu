@@ -79,9 +79,18 @@
             <tag name="sulu.structure.extension"/>
         </service>
 
+        <!-- collaboration -->
+        <service id="sulu_content.collaboration.collaborations_entity_cache" class="Doctrine\Common\Cache\FilesystemCache">
+            <argument type="string">%sulu.cache_dir%/collaborations/entities</argument>
+        </service>
+        <service id="sulu_content.collaboration.collaborations_connection_cache" class="Doctrine\Common\Cache\FilesystemCache">
+            <argument type="string">%sulu.cache_dir%/collaborations/connections</argument>
+        </service>
         <service id="sulu_content.collaboration" class="Sulu\Bundle\ContentBundle\Collaboration\CollaborationMessageHandler">
             <argument type="service" id="sulu_websocket.admin.message_builder"/>
             <argument type="service" id="sulu_security.user_repository"/>
+            <argument type="service" id="sulu_content.collaboration.collaborations_entity_cache"/>
+            <argument type="service" id="sulu_content.collaboration.collaborations_connection_cache"/>
             <tag name="sulu.websocket.message.handler" dispatcher="admin" alias="sulu_content.collaboration" />
         </service>
 

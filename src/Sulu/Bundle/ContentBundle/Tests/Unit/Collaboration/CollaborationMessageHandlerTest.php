@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Collaboration;
 
+use Doctrine\Common\Cache\ArrayCache;
 use Prophecy\Argument;
 use Ratchet\ConnectionInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -35,6 +36,11 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
     private $user1;
 
     /**
+     * @var MessageHandlerContext
+     */
+    private $context1;
+
+    /**
      * @var ConnectionInterface
      */
     private $connection2;
@@ -47,7 +53,7 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * @var MessageHandlerContext
      */
-    private $context;
+    private $context2;
 
     /**
      * @var MessageBuilderInterface
@@ -70,14 +76,16 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
         $this->user1->getId()->willReturn(1);
         $this->user1->getUsername()->willReturn('max');
         $this->user1->getFullName()->willReturn('Max Mustermann');
+        $this->context1 = $this->prophesize(MessageHandlerContext::class);
+        $this->context1->getId()->willReturn(1);
 
         $this->connection2 = $this->prophesize(ConnectionInterface::class);
         $this->user2 = $this->prophesize(UserInterface::class);
         $this->user2->getId()->willReturn(2);
         $this->user2->getUsername()->willReturn('john');
         $this->user2->getFullName()->willReturn('John Doe');
-
-        $this->context = $this->prophesize(MessageHandlerContext::class);
+        $this->context2 = $this->prophesize(MessageHandlerContext::class);
+        $this->context2->getId()->willReturn(2);
 
         $this->userRepository->findUserById(1)->willReturn($this->user1->reveal());
         $this->userRepository->findUserById(2)->willReturn($this->user2->reveal());
@@ -98,7 +106,9 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
 
         $this->collaborationMessageHandler = new CollaborationMessageHandler(
             $this->messageBuilder->reveal(),
-            $this->userRepository->reveal()
+            $this->userRepository->reveal(),
+            new ArrayCache(),
+            new ArrayCache()
         );
     }
 
@@ -116,7 +126,7 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
                 'userId' => 1,
                 'type' => 'page',
             ],
-            $this->context->reveal()
+            $this->context1->reveal()
         );
 
         $this->connection1->send(
@@ -134,7 +144,7 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
                 'userId' => 2,
                 'type' => 'page',
             ],
-            $this->context->reveal()
+            $this->context2->reveal()
         );
 
         $this->connection1->send(
@@ -149,7 +159,7 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
                 'userId' => 2,
                 'type' => 'page',
             ],
-            $this->context->reveal()
+            $this->context2->reveal()
         );
     }
 
@@ -160,6 +170,8 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
         $user3->getId()->willReturn(3);
         $user3->getUsername()->willReturn('erika');
         $user3->getFullName()->willReturn('Erika Mustermann');
+        $context3 = $this->prophesize(MessageHandlerContext::class);
+        $context3->getId()->willReturn(3);
 
         $this->userRepository->findUserById(3)->willReturn($user3->reveal());
 
@@ -175,7 +187,7 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
                 'userId' => 1,
                 'type' => 'page',
             ],
-            $this->context->reveal()
+            $this->context1->reveal()
         );
 
         $this->connection1->send(
@@ -190,7 +202,7 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
                 'userId' => 1,
                 'type' => 'page',
             ],
-            $this->context->reveal()
+            $this->context1->reveal()
         );
 
         $this->connection1->send(
@@ -208,7 +220,7 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
                 'userId' => 2,
                 'type' => 'page',
             ],
-            $this->context->reveal()
+            $this->context2->reveal()
         );
 
         $this->connection1->send(
@@ -225,12 +237,12 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
                 'userId' => 3,
                 'type' => 'page',
             ],
-            $this->context->reveal()
+            $context3->reveal()
         );
 
         $this->connection1->send(
             '{"handler":"sulu_content.collaboration","message":{"command":"update","type":"page","id":"b","users":[{"id":1,"username":"max","fullName":"Max Mustermann"}]},"options":[],"error":false}'
         )->shouldBeCalled();
-        $this->collaborationMessageHandler->onClose($connection3->reveal(), $this->context->reveal());
+        $this->collaborationMessageHandler->onClose($connection3->reveal(), $context3->reveal());
     }
 }

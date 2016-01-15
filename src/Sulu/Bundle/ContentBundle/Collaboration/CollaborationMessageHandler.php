@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Collaboration;
 
+use Doctrine\Common\Cache\Cache;
 use Ratchet\ConnectionInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
@@ -40,16 +41,25 @@ class CollaborationMessageHandler implements MessageHandlerInterface
     private $userRepository;
 
     /**
-     * An array which contains all the collaborators for a certain identifier (representing a page, product, ...).
-     *
-     * @var Collaborator[][][]
+     * @var Cache
      */
-    private $collaborators = [];
+    private $collaborationsEntityCache;
 
-    public function __construct(MessageBuilderInterface $messageBuilder, UserRepositoryInterface $userRepository)
-    {
+    /**
+     * @var Cache
+     */
+    private $collaborationsConnectionCache;
+
+    public function __construct(
+        MessageBuilderInterface $messageBuilder,
+        UserRepositoryInterface $userRepository,
+        Cache $collaborationsEntityCache,
+        Cache $collaborationsConnectionCache
+    ) {
         $this->messageBuilder = $messageBuilder;
         $this->userRepository = $userRepository;
+        $this->collaborationsEntityCache = $collaborationsEntityCache;
+        $this->collaborationsConnectionCache = $collaborationsConnectionCache;
     }
 
     /**
@@ -69,19 +79,16 @@ class CollaborationMessageHandler implements MessageHandlerInterface
      */
     public function onClose(ConnectionInterface $conn, MessageHandlerContext $context)
     {
-        foreach ($this->collaborators as $type => $typeCollaborators) {
-            foreach ($typeCollaborators as $id => $collaborators) {
-                $oldCollaborators = $collaborators;
-                foreach ($collaborators as $userId => $collaborator) {
-                    if ($collaborator->getConnection() === $conn) {
-                        unset($this->collaborators[$type][$id][$userId]);
-                    }
-                }
+        $connectionId = $context->getId();
 
-                if ($oldCollaborators !== $this->collaborators[$type][$id]) {
-                    $this->sendUpdate($type, $id, $this->getUsersInformation($type, $id));
-                }
-            }
+        foreach ($this->collaborationsConnectionCache->fetch($connectionId) as $connectionCollaboration) {
+            /** @var Collaboration $connectionCollaboration */
+            $type = $connectionCollaboration->getType();
+            $id = $connectionCollaboration->getId();
+
+            $this->removeCollaborator($type, $id, $connectionId, $connectionCollaboration->getUserId());
+
+            $this->sendUpdate($type, $id, $this->getUsersInformation($type, $id));
         }
     }
 
@@ -109,7 +116,7 @@ class CollaborationMessageHandler implements MessageHandlerInterface
                 $result = $this->enter($conn, $context, $msg);
                 break;
             case 'leave':
-                $result = $this->leave($conn, $context, $msg);
+                $result = $this->leave($context, $msg);
                 break;
             default:
                 throw new \InvalidArgumentException(sprintf('Command "%s" not known', $command));
@@ -131,7 +138,7 @@ class CollaborationMessageHandler implements MessageHandlerInterface
     private function enter(ConnectionInterface $conn, MessageHandlerContext $context, array $msg)
     {
         $user = $this->userRepository->findUserById($msg['userId']);
-        $this->addCollaborator($conn, $msg['type'], $msg['id'], $user);
+        $this->addCollaborator($conn, $msg['type'], $msg['id'], $context->getId(), $user);
 
         $users = $this->getUsersInformation($msg['type'], $msg['id']);
 
@@ -147,15 +154,14 @@ class CollaborationMessageHandler implements MessageHandlerInterface
     /**
      * Called when the user has left the page.
      *
-     * @param ConnectionInterface $conn
      * @param MessageHandlerContext $context
-     * @param $msg
+     * @param array $msg
      *
      * @return array
      */
-    private function leave(ConnectionInterface $conn, MessageHandlerContext $context, array $msg)
+    private function leave(MessageHandlerContext $context, array $msg)
     {
-        $this->removeCollaborator($msg['type'], $msg['id'], $msg['userId']);
+        $this->removeCollaborator($msg['type'], $msg['id'], $context->getId(), $msg['userId']);
 
         $users = $this->getUsersInformation($msg['type'], $msg['id']);
 
@@ -173,21 +179,34 @@ class CollaborationMessageHandler implements MessageHandlerInterface
      *
      * @param ConnectionInterface $conn The connection of the user
      * @param string $type The type of the entity
-     * @param mixed $id The id of the entitiy
+     * @param mixed $id The id of the entity
+     * @param string $connectionId The id of the connection of the user
      * @param UserInterface $user The user being added as collaborator
      */
-    private function addCollaborator(ConnectionInterface $conn, $type, $id, UserInterface $user)
+    private function addCollaborator(ConnectionInterface $conn, $type, $id, $connectionId, UserInterface $user)
     {
-        if (!array_key_exists($type, $this->collaborators)) {
-            $this->collaborators[$type] = [];
+        $identifier = $this->getUniqueCollaborationKey($type, $id);
+        $userId = $user->getId();
+
+        $collaboration = new Collaboration(
+            $conn,
+            $userId,
+            $user->getUsername(),
+            $user->getFullName(),
+            $type,
+            $id
+        );
+
+        $entityCollaborations = $this->collaborationsEntityCache->fetch($identifier) ?: [];
+        if (!array_key_exists($identifier, $entityCollaborations)) {
+            $entityCollaborations[$userId] = $collaboration;
+            $this->collaborationsEntityCache->save($identifier, $entityCollaborations);
         }
 
-        if (!array_key_exists($id, $this->collaborators[$type])) {
-            $this->collaborators[$type][$id] = [];
-        }
-
-        if (!array_key_exists($user->getId(), $this->collaborators[$type][$id])) {
-            $this->collaborators[$type][$id][$user->getId()] = new Collaborator($user, $conn, $type, $id);
+        $connectionCollaborations = $this->collaborationsConnectionCache->fetch($connectionId) ?: [];
+        if (!array_key_exists($connectionId, $connectionCollaborations)) {
+            $connectionCollaborations[$identifier] = $collaboration;
+            $this->collaborationsConnectionCache->save($connectionId, $connectionCollaborations);
         }
     }
 
@@ -195,15 +214,30 @@ class CollaborationMessageHandler implements MessageHandlerInterface
      * Removes the collaborator with the given userId from the entity with the given identifier.
      *
      * @param string $type The type of the entity
-     * @param mixed $id The id of the entitiy
+     * @param mixed $id The id of the entity
+     * @param string $connectionId The id of the connection of the user
      * @param int $userId The id of the user to remove
      */
-    private function removeCollaborator($type, $id, $userId)
+    private function removeCollaborator($type, $id, $connectionId, $userId)
     {
-        if (array_key_exists($id, $this->collaborators[$type])
-            && array_key_exists($userId, $this->collaborators[$type][$id])
-        ) {
-            unset($this->collaborators[$type][$id][$userId]);
+        $identifier = $this->getUniqueCollaborationKey($type, $id);
+
+        $entityCollaborations = $this->collaborationsEntityCache->fetch($identifier) ?: [];
+        if (array_key_exists($userId, $entityCollaborations)) {
+            unset($entityCollaborations[$userId]);
+        }
+
+        $this->collaborationsEntityCache->save($identifier, $entityCollaborations);
+
+        $connectionCollaborations = $this->collaborationsConnectionCache->fetch($connectionId) ?: [];
+        if (array_key_exists($identifier, $connectionCollaborations)) {
+            unset($connectionCollaborations[$identifier]);
+        }
+
+        if (empty($connectionCollaborations)) {
+            $this->collaborationsConnectionCache->delete($connectionId);
+        } else {
+            $this->collaborationsConnectionCache->save($connectionId, $connectionCollaborations);
         }
     }
 
@@ -212,10 +246,12 @@ class CollaborationMessageHandler implements MessageHandlerInterface
      *
      * @param string $type The type of the entity
      * @param mixed $id The id of the entity
-     * @param Collaborator[] $users The users currently working on the entity with the given identity
+     * @param Collaboration[] $users The users currently working on the entity with the given identity
      */
     private function sendUpdate($type, $id, $users)
     {
+        $identifier = $this->getUniqueCollaborationKey($type, $id);
+
         $message = $this->messageBuilder->build(
             'sulu_content.collaboration',
             [
@@ -227,8 +263,9 @@ class CollaborationMessageHandler implements MessageHandlerInterface
             []
         );
 
-        foreach ($this->collaborators[$type][$id] as $user) {
-            $user->getConnection()->send($message);
+        foreach ($this->collaborationsEntityCache->fetch($identifier) as $collaboration) {
+            /** @var $collaboration Collaboration */
+            $collaboration->getConnection()->send($message);
         }
     }
 
@@ -244,15 +281,20 @@ class CollaborationMessageHandler implements MessageHandlerInterface
     {
         return array_values(
             array_map(
-                function (Collaborator $collaborator) {
+                function (Collaboration $collaboration) {
                     return [
-                        'id' => $collaborator->getUser()->getId(),
-                        'username' => $collaborator->getUser()->getUsername(),
-                        'fullName' => $collaborator->getUser()->getFullName(),
+                        'id' => $collaboration->getUserId(),
+                        'username' => $collaboration->getUsername(),
+                        'fullName' => $collaboration->getFullName(),
                     ];
                 },
-                $this->collaborators[$type][$id]
+                $this->collaborationsEntityCache->fetch($this->getUniqueCollaborationKey($type, $id))
             )
         );
+    }
+
+    private function getUniqueCollaborationKey($type, $id)
+    {
+        return $type . '_' . $id;
     }
 }
