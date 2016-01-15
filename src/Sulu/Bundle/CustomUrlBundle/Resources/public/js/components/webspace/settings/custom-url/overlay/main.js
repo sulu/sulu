@@ -26,7 +26,9 @@ define(['underscore', 'text!./form.html'], function(_, form) {
         translations: {
             overlayTitle: 'custom-urls.webspace.settings.edit.title',
             customUrlDefaultValue: 'custom-urls.custom-url.default-value',
-            localeDefaultValue: 'custom-urls.locale.default-value'
+            localeDefaultValue: 'custom-urls.locale.default-value',
+            chooseTarget: 'custom-urls.choose-target',
+            chooseTargetCancel: 'custom-urls.choose-target.cancel'
         }
     };
 
@@ -44,6 +46,10 @@ define(['underscore', 'text!./form.html'], function(_, form) {
             this.sandbox.dom.on('#analytics-all-domains', 'change', function() {
                 $('#analytics-domains-container').toggle();
             });
+
+            this.sandbox.dom.on(this.$el, 'click', function() {
+                this.sandbox.emit('husky.overlay.custom-urls.slide-to', 1);
+            }.bind(this), '#custom-url-target-button');
         },
 
         startOverlay: function() {
@@ -52,6 +58,7 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                     name: 'overlay@husky',
                     options: {
                         el: '#webspace-custom-urls-overlay',
+                        instanceName: 'custom-urls',
                         openOnStart: true,
                         removeOnClose: true,
                         slides: [
@@ -64,6 +71,24 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                                     } else {
                                         return false;
                                     }
+                                }.bind(this)
+                            },
+                            {
+                                title: this.translations.overlayTitle,
+                                data: '<div id="target-select" class="data-source-content"/>',
+                                cssClass: 'data-source-slide',
+                                okInactive: true,
+                                buttons: [
+                                    {
+                                        type: 'cancel',
+                                        text: this.translations.chooseTargetCancel,
+                                        align: 'center'
+                                    }
+                                ],
+                                cancelCallback: function() {
+                                    this.sandbox.emit('husky.overlay.custom-urls.slide-to', 0);
+
+                                    return false;
                                 }.bind(this)
                             }
                         ]
@@ -78,7 +103,10 @@ define(['underscore', 'text!./form.html'], function(_, form) {
         },
 
         getData: function() {
-            return this.sandbox.form.getData(formSelector);
+            var data = this.sandbox.form.getData(formSelector);
+            data.target = this.target;
+
+            return data;
         },
 
         initializeFormComponents: function() {
@@ -139,6 +167,26 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                         name: 'toggler@husky',
                         options: {
                             el: '#custom-url-redirect'
+                        }
+                    },
+                    {
+                        name: 'content-datasource@sulucontent',
+                        options: {
+
+                            el: '#target-select',
+                            selected: this.data.target,
+                            webspace: this.options.webspace.key,
+                            locale: 'de', // FIXME which locale? user? when user-locale not in webspace?
+                            instanceName: 'custom-urls',
+                            rootUrl: '/admin/api/nodes?webspace={webspace}&language={locale}&fields=title,order&webspace-nodes=single',
+                            selectedUrl: '/admin/api/nodes/{datasource}?tree=true&webspace={webspace}&language={locale}&fields=title,order&webspace-nodes=single',
+                            resultKey: 'nodes',
+                            selectCallback: function(id, fullQualifiedTitle) {
+                                $('#custom-url-target-value').html(this.sandbox.translate(fullQualifiedTitle));
+
+                                this.target = id;
+                                this.sandbox.emit('husky.overlay.custom-urls.slide-to', 0);
+                            }.bind(this)
                         }
                     }
                 ]

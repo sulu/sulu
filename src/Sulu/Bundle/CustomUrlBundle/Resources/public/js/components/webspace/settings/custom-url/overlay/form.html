@@ -29,7 +29,7 @@
         </label>
 
         <div id="custom-url-base-domain" data-form="true" data-type="husky-select"
-             data-mapper-property="baseDomain" data-mapper-return-value="value"></div>
+             data-mapper-property="baseDomain" data-mapper-return-value="value" data-validation-required="true"></div>
     </div>
 
     <div class="grid-row" id="custom-url-input-container" style="display: none;">
@@ -38,6 +38,18 @@
         </label>
 
         <div id="custom-url-input" data-form="true" data-type="custom-url" data-mapper-property="domainParts"></div>
+    </div>
+
+    <div class="grid-row" id="custom-url-target-container">
+        <label for="custom-url-target-button">
+            <%= translations.target %>
+        </label>
+
+        <div class="btn action fit" id="custom-url-target-button">
+            <%= translations.chooseTarget %>
+        </div>
+
+        <span class="target"><%= translations.target %>:</span> <span class="target" id="custom-url-target-value"></span>
     </div>
 
     <div class="grid-row">

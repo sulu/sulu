@@ -125,6 +125,8 @@ class CustomUrlManager implements CustomUrlManagerInterface
     /**
      * Bind data array to given document.
      *
+     * TODO find document for target (type reference) and set it to custom-url.
+     *
      * @param CustomUrlDocument $document
      * @param array $data
      */

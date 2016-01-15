@@ -21,6 +21,7 @@ define(['text!./skeleton.html'], function(skeleton) {
             published: 'public.published',
             baseDomain: 'custom-urls.base-domain',
             customUrl: 'custom-urls.custom-url',
+            target: 'custom-urls.target',
             locale: 'custom-urls.locale',
             multilingual: 'custom-urls.multilingual',
             canonical: 'custom-urls.canonical',
