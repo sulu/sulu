@@ -17,6 +17,9 @@ CHANGELOG for Sulu
     * BUGFIX      #1873 [ContactBundle]   Fixed remove title and position
     * BUGFIX      #1873 [ContactBundle]   Fixed remove contact birthday
 
+* 1.1.5 (2016-01-15)
+    * HOTFIX      #1933 [AdminBundle]     Fixed password reset twig template
+
 * 1.1.4 (2016-01-08)
     * HOTFIX      #1917 [MediaBundle]     Changed version name to original filename
 
