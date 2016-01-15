@@ -56,6 +56,21 @@ class CustomUrlDocument implements
     protected $domainParts;
 
     /**
+     * @var bool
+     */
+    protected $multilingual;
+
+    /**
+     * @var bool
+     */
+    protected $canonical;
+
+    /**
+     * @var bool
+     */
+    protected $redirect;
+
+    /**
      * @var \DateTime
      */
     protected $created;
@@ -166,6 +181,60 @@ class CustomUrlDocument implements
     public function setDomainParts($domainParts)
     {
         $this->domainParts = $domainParts;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isMultilingual()
+    {
+        return $this->multilingual;
+    }
+
+    /**
+     * Return true if multilingual is enabled.
+     *
+     * @param boolean $multilingual
+     */
+    public function setMultilingual($multilingual)
+    {
+        $this->multilingual = $multilingual;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isCanonical()
+    {
+        return $this->canonical;
+    }
+
+    /**
+     * Return true if canonicle is enabled.
+     *
+     * @param boolean $canonical
+     */
+    public function setCanonical($canonical)
+    {
+        $this->canonical = $canonical;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isRedirect()
+    {
+        return $this->redirect;
+    }
+
+    /**
+     * Return true if redirect is enabled.
+     *
+     * @param boolean $redirect
+     */
+    public function setRedirect($redirect)
+    {
+        $this->redirect = $redirect;
     }
 
     /**

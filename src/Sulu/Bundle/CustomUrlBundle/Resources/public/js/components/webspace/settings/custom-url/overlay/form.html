@@ -32,11 +32,59 @@
              data-mapper-property="baseDomain" data-mapper-return-value="value"></div>
     </div>
 
-    <div class="grid-row">
+    <div class="grid-row" id="custom-url-input-container" style="display: none;">
         <label for="custom-url-input">
             <%= translations.customUrl %>
         </label>
 
         <div id="custom-url-input" data-form="true" data-type="custom-url" data-mapper-property="domainParts"></div>
+    </div>
+
+    <div class="grid-row">
+        <label for="custom-url-locale">
+            <%= translations.locale %>
+        </label>
+
+        <div id="custom-url-locale" data-form="true" data-type="husky-select"
+             data-mapper-property="locale" data-mapper-return-value="value"></div>
+    </div>
+
+    <div class="grid-row">
+        <span class="content">
+            <div data-form="true"
+                 id="custom-url-multilingual"
+                 data-type="toggler"
+                 data-mapper-property="multilingual"></div>
+        </span>
+
+        <label for="custom-url-multilingual" style="display: inline;">
+            <%= translations.multilingual %>
+        </label>
+    </div>
+
+    <div class="grid-row">
+        <span class="content">
+            <div data-form="true"
+                 id="custom-url-canonical"
+                 data-type="toggler"
+                 data-mapper-property="canonical"></div>
+        </span>
+
+        <label for="custom-url-canonical" style="display: inline;">
+            <%= translations.canonical %>
+        </label>
+    </div>
+
+    <div class="grid-row">
+        <span class="content">
+            <div data-form="true"
+                 id="custom-url-redirect"
+                 data-type="toggler"
+                 data-mapper-property="redirect"></div>
+        </span>
+
+        <label for="custom-url-redirect" style="display: inline;">
+            <%= translations.redirect %>
+        </label>
     </div>
 </form>

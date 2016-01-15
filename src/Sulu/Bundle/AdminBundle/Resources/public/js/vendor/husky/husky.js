@@ -39408,7 +39408,8 @@ define('__component__$select@husky',[], function() {
             showToolTip: false,
             translations: translations,
             isNative: false,
-            defaultValue: null
+            defaultValue: null,
+            emitPreSelect: true
         },
 
         constants = {
@@ -40431,14 +40432,18 @@ define('__component__$select@husky',[], function() {
 
             // callback, if defined
             if (!!this.options.selectCallback) {
-                this.options.selectCallback.call(this, key);
+                this.options.selectCallback.call(this, key, selectedValue);
             } else {
-                this.sandbox.emit(EVENT_SELECTED_ITEM.call(this), key);
+                this.sandbox.emit(EVENT_SELECTED_ITEM.call(this), key, selectedValue);
             }
         },
 
         // triggers select callback or emits event
         triggerPreSelect: function(key) {
+            if (!this.options.emitPreSelect) {
+                return;
+            }
+
             // callback, if defined
             if (!!this.options.selectCallback) {
                 this.options.selectCallback.call(this, key);

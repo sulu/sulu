@@ -19,8 +19,12 @@ define(['text!./skeleton.html'], function(skeleton) {
         translations: {
             title: 'public.title',
             published: 'public.published',
-            baseDomain: 'public.base-domain',
+            baseDomain: 'custom-urls.base-domain',
             customUrl: 'custom-urls.custom-url',
+            locale: 'custom-urls.locale',
+            multilingual: 'custom-urls.multilingual',
+            canonical: 'custom-urls.canonical',
+            redirect: 'custom-urls.redirect',
             successLabel: 'labels.success',
             successMessage: 'labels.success.save-desc'
         }

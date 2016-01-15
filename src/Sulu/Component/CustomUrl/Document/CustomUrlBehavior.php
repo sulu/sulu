@@ -42,4 +42,25 @@ interface CustomUrlBehavior
      * @return array
      */
     public function getDomainParts();
+
+    /**
+     * Returns true if multilingual is enabled.
+     *
+     * @return bool
+     */
+    public function isMultilingual();
+
+    /**
+     * Returns true if canonical is enabled.
+     *
+     * @return bool
+     */
+    public function isCanonical();
+
+    /**
+     * Returns true if redirect is enabled.
+     *
+     * @return bool
+     */
+    public function isRedirect();
 }

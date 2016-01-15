@@ -116,6 +116,9 @@ class CustomUrlManager implements CustomUrlManagerInterface
             'published' => ['property' => 'published'],
             'baseDomain' => ['property' => 'baseDomain'],
             'domainParts' => ['property' => 'domainParts', 'type' => 'json_array'],
+            'multilingual' => ['property' => 'multilingual'],
+            'canonical' => ['property' => 'canonical'],
+            'redirect' => ['property' => 'redirect'],
         ];
     }
 

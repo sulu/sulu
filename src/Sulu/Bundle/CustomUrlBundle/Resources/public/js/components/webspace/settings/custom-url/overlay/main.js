@@ -25,7 +25,8 @@ define(['underscore', 'text!./form.html'], function(_, form) {
         },
         translations: {
             overlayTitle: 'custom-urls.webspace.settings.edit.title',
-            customUrlDefaultValue: 'custom-urls.custom-url.default-value'
+            customUrlDefaultValue: 'custom-urls.custom-url.default-value',
+            localeDefaultValue: 'custom-urls.locale.default-value'
         }
     };
 
@@ -105,13 +106,47 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                                 return item.url;
                             }),
                             defaultLabel: this.translations.customUrlDefaultValue,
-                            selectCallback: function(item) {
+                            selectCallback: function(key, item) {
+                                $('#custom-url-input-container').show();
                                 this.sandbox.emit('sulu.webspace-settings.custom-url.set-base-domain', item);
                             }.bind(this)
                         }
+                    },
+                    {
+                        name: 'select@husky',
+                        options: {
+                            el: '#custom-url-locale',
+                            isNative: true,
+                            data: _.map(this.options.webspace.localizations, function(item) {
+                                return item.localization;
+                            }),
+                            defaultLabel: this.translations.localeDefaultValue
+                        }
+                    },
+                    {
+                        name: 'toggler@husky',
+                        options: {
+                            el: '#custom-url-multilingual'
+                        }
+                    },
+                    {
+                        name: 'toggler@husky',
+                        options: {
+                            el: '#custom-url-canonical'
+                        }
+                    },
+                    {
+                        name: 'toggler@husky',
+                        options: {
+                            el: '#custom-url-redirect'
+                        }
                     }
                 ]
-            )
+            );
+
+            if (!!this.data.baseDomain) {
+                $('#custom-url-input-container').show();
+            }
         },
 
         loadComponentData: function() {

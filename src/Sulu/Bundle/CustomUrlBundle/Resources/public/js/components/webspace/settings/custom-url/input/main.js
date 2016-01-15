@@ -38,6 +38,10 @@ define(['underscore'], function(_) {
          * @returns {Array}
          */
         parseBaseDomain = function(baseDomain) {
+            if (!baseDomain) {
+                return [];
+            }
+
             var domainParts = baseDomain.split('*');
 
             // add a empty element between the items ('*') except the part is empty or the part before is empty
@@ -86,7 +90,7 @@ define(['underscore'], function(_) {
          */
         initialize: function() {
             this.render(this.options.baseDomain);
-            this.setDomData(this.$el.data('custom-url-data'));
+            this.setDomData(this.$el.data('custom-url-data') || {});
 
             this.events.setBaseDomain(this.setBaseDomain.bind(this));
 
