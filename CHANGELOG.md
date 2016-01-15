@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * ENHANCEMENT #1936 [Webspace]        Cleanup of WebsiteRequestAnalyzer
+    * ENHANCEMENT #1937 [WebsiteBundle]   Removed unnecessary ob_clean in WebsiteController
     * BUGFIX      #1931 [ContentBundle]   Fixed form deprecation messages   
     * BUGFIX      #1930 [ContentBundle]   Fixed updating values in combination
                                           with template change
