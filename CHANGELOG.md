@@ -1,7 +1,10 @@
 CHANGELOG for Sulu
 ==================
 
-    * BUGFIX      #1938 [ContactBundle]   Added missing namespace declerations
+* dev-master
+    * HOTFIX      #1938 [ContactBundle]   Added missing namespace declerations for fixtures
+    * HOTFIX      #1938 [MediaBundle]     Added missing namespace declerations for fixtures
+    * HOTFIX      #1938 [SecurityBundle]  Added missing namespace declerations for fixtures
 
 * 1.1.5 (2016-01-15)
     * HOTFIX      #1933 [AdminBundle]     Fixed password reset twig template
