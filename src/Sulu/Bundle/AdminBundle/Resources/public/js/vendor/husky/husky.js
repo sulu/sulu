@@ -43695,7 +43695,7 @@ define('__component__$label@husky',[],function() {
      */
     templates = {
         basic: ['<div class="' + constants.textClass + '">',
-                '   <strong><%= title %></strong>',
+                '   <% if (!!title) { %><strong><%= title %></strong><% } %>',
                 '   <span><%= description %></span>',
                 '   <div class="' + constants.counterClass + '"><span><%= counter %></span></div>',
                 '</div>'].join(''),

@@ -10,9 +10,8 @@
 define([
     'app-config', 
     'config', 
-    'websocket-manager',
-    'text!./collaborator-list.html'
-    ], function(AppConfig, Config, WebsocketManager, collaboratorListTemplate) {
+    'websocket-manager'
+    ], function(AppConfig, Config, WebsocketManager) {
 
     'use strict';
 
@@ -70,7 +69,7 @@ define([
          * @param {Object} message
          */
         onEnterResponse: function(handlerName, message) {
-            this.renderCollaborators(message.users);
+            this.showCollaboratorLabel(message.users);
         },
 
         /**
@@ -87,23 +86,40 @@ define([
 
         /**
          * @method onUpdate
-         * @param {Object} data
+         * @param {Object} message
          */
-        onUpdate: function(data) {
-            this.renderCollaborators(data.users);
+        onUpdate: function(message) {
+            this.showCollaboratorLabel(message.users);
         },
 
         /**
-         * @method renderCollaborators
+         * @method showCollaboratorLabel
          * @param {Array} collaborators
          */
-        renderCollaborators: function(collaborators) {
-            var template = this.sandbox.util.template(collaboratorListTemplate, {
-                collaborators: collaborators,
-                authUserId: this.options.userId
-            });
+        showCollaboratorLabel: function(collaborators) {
+            if (collaborators.length <= 1) {
+                return;
+            }
 
-            this.$el.html(template);
+            var message = this.sandbox.translate('content.collaboration.warning')
+                .replace(
+                    '%s',
+                    collaborators.map(
+                        function(collaborator) {
+                            if (collaborator.id === this.options.userId) {
+                                return null;
+                            }
+
+                            return collaborator.username;
+                        }.bind(this)
+                    ).filter(
+                        function(collaborator) {
+                            return collaborator != null;
+                        }
+                    ).join(', ')
+                );
+
+            this.sandbox.emit('sulu.labels.warning.show', message, '');
         }
     };
 });
