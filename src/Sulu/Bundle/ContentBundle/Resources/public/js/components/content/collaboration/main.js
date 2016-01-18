@@ -36,6 +36,7 @@ define([
          */
         bindEvents: function() {
             this.sandbox.on('sulu.router.navigate', this.sendLeaveMessage.bind(this));
+            $(window).unload(this.sendLeaveMessage.bind(this));
         },
 
         /**
