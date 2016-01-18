@@ -92,7 +92,7 @@ class CollaborationMessageHandler implements MessageHandlerInterface
             $type = $connectionCollaboration->getType();
             $id = $connectionCollaboration->getId();
 
-            $this->removeCollaborator($type, $id, $connectionId, $connectionCollaboration->getUserId());
+            $this->removeCollaborator($type, $id, $connectionId);
 
             if (isset($this->connections[$connectionId])) {
                 unset($this->connections[$connectionId]);
@@ -171,7 +171,7 @@ class CollaborationMessageHandler implements MessageHandlerInterface
      */
     private function leave(MessageHandlerContext $context, array $msg)
     {
-        $this->removeCollaborator($msg['type'], $msg['id'], $context->getId(), $msg['userId']);
+        $this->removeCollaborator($msg['type'], $msg['id'], $context->getId());
 
         $users = $this->getUsersInformation($msg['type'], $msg['id']);
 
@@ -230,18 +230,21 @@ class CollaborationMessageHandler implements MessageHandlerInterface
      * @param string $type The type of the entity
      * @param mixed $id The id of the entity
      * @param string $connectionId The id of the connection of the user
-     * @param int $userId The id of the user to remove
      */
-    private function removeCollaborator($type, $id, $connectionId, $userId)
+    private function removeCollaborator($type, $id, $connectionId)
     {
         $identifier = $this->getUniqueCollaborationKey($type, $id);
 
         $entityCollaborations = $this->collaborationsEntityCache->fetch($identifier) ?: [];
-        if (array_key_exists($userId, $entityCollaborations)) {
-            unset($entityCollaborations[$userId]);
+        if (array_key_exists($connectionId, $entityCollaborations)) {
+            unset($entityCollaborations[$connectionId]);
         }
 
-        $this->collaborationsEntityCache->save($identifier, $entityCollaborations);
+        if (empty($entityCollaborations)) {
+            $this->collaborationsEntityCache->delete($identifier);
+        } else {
+            $this->collaborationsEntityCache->save($identifier, $entityCollaborations);
+        }
 
         $connectionCollaborations = $this->collaborationsConnectionCache->fetch($connectionId) ?: [];
         if (array_key_exists($identifier, $connectionCollaborations)) {
@@ -277,7 +280,8 @@ class CollaborationMessageHandler implements MessageHandlerInterface
             []
         );
 
-        foreach ($this->collaborationsEntityCache->fetch($identifier) as $collaboration) {
+        $entityCollaborations = $this->collaborationsEntityCache->fetch($identifier) ?: [];
+        foreach ($entityCollaborations as $collaboration) {
             /** @var $collaboration Collaboration */
             if (!array_key_exists($collaboration->getConnectionId(), $this->connections)) {
                 // necessary because it has also to work with the ajax fallback, which does not store connections
@@ -298,6 +302,8 @@ class CollaborationMessageHandler implements MessageHandlerInterface
      */
     private function getUsersInformation($type, $id)
     {
+        $entityCollaborations = $this->collaborationsEntityCache->fetch($this->getUniqueCollaborationKey($type, $id)) ?: [];
+
         return array_values(
             array_map(
                 function (Collaboration $collaboration) {
@@ -307,7 +313,7 @@ class CollaborationMessageHandler implements MessageHandlerInterface
                         'fullName' => $collaboration->getFullName(),
                     ];
                 },
-                $this->collaborationsEntityCache->fetch($this->getUniqueCollaborationKey($type, $id))
+                $entityCollaborations
             )
         );
     }

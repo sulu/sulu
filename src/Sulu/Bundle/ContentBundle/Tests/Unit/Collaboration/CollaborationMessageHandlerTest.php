@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ContentBundle\Collaboration;
 
 use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\Cache;
 use Prophecy\Argument;
 use Ratchet\ConnectionInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -65,6 +66,16 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
      */
     private $collaborationMessageHandler;
 
+    /**
+     * @var Cache
+     */
+    private $collaborationsEntityCache;
+
+    /**
+     * @var Cache
+     */
+    private $collaborationsConnectionCache;
+
     public function setUp()
     {
         parent::setUp();
@@ -104,11 +115,13 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
             }
         );
 
+        $this->collaborationsEntityCache = new ArrayCache();
+        $this->collaborationsConnectionCache = new ArrayCache();
         $this->collaborationMessageHandler = new CollaborationMessageHandler(
             $this->messageBuilder->reveal(),
             $this->userRepository->reveal(),
-            new ArrayCache(),
-            new ArrayCache()
+            $this->collaborationsEntityCache,
+            $this->collaborationsConnectionCache
         );
     }
 
@@ -244,5 +257,60 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
             '{"handler":"sulu_content.collaboration","message":{"command":"update","type":"page","id":"b","users":[{"id":1,"username":"max","fullName":"Max Mustermann"}]},"options":[],"error":false}'
         )->shouldBeCalled();
         $this->collaborationMessageHandler->onClose($connection3->reveal(), $context3->reveal());
+    }
+
+    public function testHandleEnterAndLeaveClearCache()
+    {
+        $this->collaborationMessageHandler->handle(
+            $this->connection1->reveal(),
+            [
+                'command' => 'enter',
+                'id' => 'a',
+                'userId' => 1,
+                'type' => 'page',
+            ],
+            $this->context1->reveal()
+        );
+
+        $this->collaborationMessageHandler->handle(
+            $this->connection2->reveal(),
+            [
+                'command' => 'enter',
+                'id' => 'a',
+                'userId' => 2,
+                'type' => 'page',
+            ],
+            $this->context2->reveal()
+        );
+
+        $this->assertTrue($this->collaborationsConnectionCache->contains(1));
+        $this->assertTrue($this->collaborationsConnectionCache->contains(2));
+        $this->assertTrue($this->collaborationsEntityCache->contains('page_a'));
+
+        $this->collaborationMessageHandler->handle(
+            $this->connection1->reveal(),
+            [
+                'command' => 'leave',
+                'id' => 'a',
+                'userId' => 1,
+                'type' => 'page',
+            ],
+            $this->context1->reveal()
+        );
+
+        $this->collaborationMessageHandler->handle(
+            $this->connection2->reveal(),
+            [
+                'command' => 'leave',
+                'id' => 'a',
+                'userId' => 2,
+                'type' => 'page',
+            ],
+            $this->context2->reveal()
+        );
+
+        $this->assertFalse($this->collaborationsConnectionCache->contains(1));
+        $this->assertFalse($this->collaborationsConnectionCache->contains(2));
+        $this->assertFalse($this->collaborationsEntityCache->contains('page_a'));
     }
 }
