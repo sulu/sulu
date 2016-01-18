@@ -10,18 +10,11 @@
 
 namespace Sulu\Bundle\ContentBundle\Collaboration;
 
-use Ratchet\ConnectionInterface;
-
 /**
  * Represents a user, which is currently editing an entity.
  */
 class Collaboration
 {
-    /**
-     * @var ConnectionInterface
-     */
-    private $connection;
-
     /**
      * @var int
      */
@@ -47,24 +40,13 @@ class Collaboration
      */
     private $id;
 
-    public function __construct(ConnectionInterface $connection, $userId, $username, $fullName, $type, $id)
+    public function __construct($userId, $username, $fullName, $type, $id)
     {
-        $this->connection = $connection;
         $this->userId = $userId;
         $this->username = $username;
         $this->fullName = $fullName;
         $this->type = $type;
         $this->id = $id;
-    }
-
-    /**
-     * Returns the connection for the user in this collaboration.
-     *
-     * @return ConnectionInterface
-     */
-    public function getConnection()
-    {
-        return $this->connection;
     }
 
     /**

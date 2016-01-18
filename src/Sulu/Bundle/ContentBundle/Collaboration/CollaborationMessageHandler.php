@@ -50,6 +50,11 @@ class CollaborationMessageHandler implements MessageHandlerInterface
      */
     private $collaborationsConnectionCache;
 
+    /**
+     * @var ConnectionInterface[]
+     */
+    private $connections = [];
+
     public function __construct(
         MessageBuilderInterface $messageBuilder,
         UserRepositoryInterface $userRepository,
@@ -188,8 +193,11 @@ class CollaborationMessageHandler implements MessageHandlerInterface
         $identifier = $this->getUniqueCollaborationKey($type, $id);
         $userId = $user->getId();
 
+        if (!array_key_exists($userId, $this->connections)) {
+            $this->connections[$userId] = $conn;
+        }
+
         $collaboration = new Collaboration(
-            $conn,
             $userId,
             $user->getUsername(),
             $user->getFullName(),
@@ -265,7 +273,12 @@ class CollaborationMessageHandler implements MessageHandlerInterface
 
         foreach ($this->collaborationsEntityCache->fetch($identifier) as $collaboration) {
             /** @var $collaboration Collaboration */
-            $collaboration->getConnection()->send($message);
+            if (!array_key_exists($collaboration->getUserId(), $this->connections)) {
+                // necessary because it has also to work with the ajax fallback, which does not store connections
+                continue;
+            }
+
+            $this->connections[$collaboration->getUserId()]->send($message);
         }
     }
 
