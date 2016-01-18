@@ -18,6 +18,11 @@ class Collaboration
     /**
      * @var int
      */
+    private $connectionId;
+
+    /**
+     * @var int
+     */
     private $userId;
 
     /**
@@ -40,13 +45,24 @@ class Collaboration
      */
     private $id;
 
-    public function __construct($userId, $username, $fullName, $type, $id)
+    public function __construct($connectionId, $userId, $username, $fullName, $type, $id)
     {
+        $this->connectionId = $connectionId;
         $this->userId = $userId;
         $this->username = $username;
         $this->fullName = $fullName;
         $this->type = $type;
         $this->id = $id;
+    }
+
+    /**
+     * Returns the connectionId for the user in this collaboration.
+     *
+     * @return int
+     */
+    public function getConnectionId()
+    {
+        return $this->connectionId;
     }
 
     /**
