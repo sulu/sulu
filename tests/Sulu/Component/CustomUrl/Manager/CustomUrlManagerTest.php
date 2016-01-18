@@ -14,6 +14,8 @@ use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Repository\CustomUrlRepository;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\DocumentManager\Metadata;
+use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\PathBuilder;
 
 /**
@@ -21,12 +23,32 @@ use Sulu\Component\DocumentManager\PathBuilder;
  */
 class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
 {
+    private function getMapping()
+    {
+        return [
+            'title' => ['property' => 'title'],
+            'published' => ['property' => 'published'],
+            'baseDomain' => ['property' => 'baseDomain'],
+            'domainParts' => ['property' => 'domainParts', 'type' => 'json_array'],
+            'target' => ['property' => 'target', 'type' => 'reference'],
+            'multilingual' => ['property' => 'multilingual'],
+            'canonical' => ['property' => 'canonical'],
+            'redirect' => ['property' => 'redirect'],
+            'targetLocale' => ['property' => 'targetLocale'],
+        ];
+    }
+
     public function testCreate()
     {
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
         $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
+        $metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $pathBuilder = $this->prophesize(PathBuilder::class);
         $targetDocument = $this->prophesize(PageDocument::class)->reveal();
+
+        $metadata = $this->prophesize(Metadata::class);
+        $metadata->getFieldMappings()->willReturn($this->getMapping());
+        $metadataFactory->getMetadataForAlias('custom_urls')->willReturn($metadata);
 
         $testDocument = new CustomUrlDocument();
         $documentManager->create('custom_urls')->willReturn($testDocument);
@@ -44,6 +66,7 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $manager = new CustomUrlManager(
             $documentManager->reveal(),
             $customUrlRepository->reveal(),
+            $metadataFactory->reveal(),
             $pathBuilder->reveal()
         );
 
@@ -80,6 +103,7 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
     {
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
         $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
+        $metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $pathBuilder = $this->prophesize(PathBuilder::class);
 
         $pathBuilder->build(['%base%', 'sulu_io', '%custom-urls%', '%custom-urls-items%'])
@@ -88,6 +112,7 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $manager = new CustomUrlManager(
             $documentManager->reveal(),
             $customUrlRepository->reveal(),
+            $metadataFactory->reveal(),
             $pathBuilder->reveal()
         );
 
@@ -103,12 +128,14 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
     {
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
         $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
+        $metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $pathBuilder = $this->prophesize(PathBuilder::class);
         $document = $this->prophesize(CustomUrlDocument::class);
 
         $manager = new CustomUrlManager(
             $documentManager->reveal(),
             $customUrlRepository->reveal(),
+            $metadataFactory->reveal(),
             $pathBuilder->reveal()
         );
 
@@ -123,13 +150,19 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
     {
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
         $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
+        $metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $pathBuilder = $this->prophesize(PathBuilder::class);
         $document = $this->prophesize(CustomUrlDocument::class);
         $targetDocument = $this->prophesize(PageDocument::class);
 
+        $metadata = $this->prophesize(Metadata::class);
+        $metadata->getFieldMappings()->willReturn($this->getMapping());
+        $metadataFactory->getMetadataForAlias('custom_urls')->willReturn($metadata);
+
         $manager = new CustomUrlManager(
             $documentManager->reveal(),
             $customUrlRepository->reveal(),
+            $metadataFactory->reveal(),
             $pathBuilder->reveal()
         );
 

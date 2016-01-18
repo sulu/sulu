@@ -14,6 +14,7 @@ use Ferrandini\Urlizer;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Repository\CustomUrlRepository;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\PathBuilder;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
@@ -33,6 +34,11 @@ class CustomUrlManager implements CustomUrlManagerInterface
     private $customUrlRepository;
 
     /**
+     * @var MetadataFactoryInterface
+     */
+    private $metadataFactory;
+
+    /**
      * @var PathBuilder
      */
     private $pathBuilder;
@@ -40,10 +46,12 @@ class CustomUrlManager implements CustomUrlManagerInterface
     public function __construct(
         DocumentManagerInterface $documentManager,
         CustomUrlRepository $customUrlRepository,
+        MetadataFactoryInterface $metadataFactory,
         PathBuilder $pathBuilder
     ) {
         $this->documentManager = $documentManager;
         $this->customUrlRepository = $customUrlRepository;
+        $this->metadataFactory = $metadataFactory;
         $this->pathBuilder = $pathBuilder;
     }
 
@@ -108,24 +116,6 @@ class CustomUrlManager implements CustomUrlManagerInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getFields()
-    {
-        return [
-            'title' => ['property' => 'title'],
-            'published' => ['property' => 'published'],
-            'baseDomain' => ['property' => 'baseDomain'],
-            'domainParts' => ['property' => 'domainParts', 'type' => 'json_array'],
-            'target' => ['property' => 'target', 'type' => 'reference'],
-            'multilingual' => ['property' => 'multilingual'],
-            'canonical' => ['property' => 'canonical'],
-            'redirect' => ['property' => 'redirect'],
-            'targetLocale' => ['property' => 'targetLocale'],
-        ];
-    }
-
-    /**
      * Bind data array to given document.
      *
      * TODO this logic have to be extracted in a proper way.
@@ -136,9 +126,11 @@ class CustomUrlManager implements CustomUrlManagerInterface
      */
     private function bind(CustomUrlDocument $document, $data, $locale)
     {
+        $metadata = $this->metadataFactory->getMetadataForAlias('custom_urls');
+
         $accessor = PropertyAccess::createPropertyAccessor();
 
-        foreach ($this->getFields() as $fieldName => $mapping) {
+        foreach ($metadata->getFieldMappings() as $fieldName => $mapping) {
             $value = $data[$fieldName];
             if (array_key_exists('type', $mapping) && $mapping['type'] === 'reference') {
                 $value = $this->documentManager->find($value['uuid'], $locale, ['load_ghost_content' => true]);
