@@ -10,10 +10,7 @@
 
 namespace Sulu\Component\CustomUrl\Document\Subscriber;
 
-use Sulu\Component\CustomUrl\Document\CustomUrlBehavior;
 use Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface;
-use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
-use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -37,24 +34,6 @@ class CustomUrlSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            Events::METADATA_LOAD => 'handleMetadataLoad',
         ];
-    }
-
-    /**
-     * Load the class data, mapping the custom-url fields.
-     *
-     * @param MetadataLoadEvent $event
-     */
-    public function handleMetadataLoad(MetadataLoadEvent $event)
-    {
-        if (!$event->getMetadata()->getReflectionClass()->isSubclassOf(CustomUrlBehavior::class)) {
-            return;
-        }
-
-        $metadata = $event->getMetadata();
-        foreach ($this->customUrlManager->getFields() as $fieldName => $mapping) {
-            $metadata->addFieldMapping($fieldName, $mapping);
-        }
     }
 }

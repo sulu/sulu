@@ -128,6 +128,8 @@ class CustomUrlManager implements CustomUrlManagerInterface
     /**
      * Bind data array to given document.
      *
+     * TODO this logic have to be extracted in a proper way.
+     *
      * @param CustomUrlDocument $document
      * @param array $data
      * @param string $locale

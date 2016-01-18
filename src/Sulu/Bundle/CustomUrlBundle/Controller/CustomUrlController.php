@@ -64,7 +64,9 @@ class CustomUrlController extends RestController
     {
         $document = $this->get('sulu_custom_urls.manager')->read($uuid, $this->getLocale($request));
         // FIXME without this target-document will not be loaded (for serialization)
-        $document->getTarget()->getTitle();
+        if (null !== $document->getTarget()) {
+            $document->getTarget()->getTitle();
+        }
 
         return $this->handleView($this->view($document));
     }
