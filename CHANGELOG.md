@@ -1,6 +1,8 @@
 CHANGELOG for Sulu
 ==================
 
+    * BUGFIX      #1938 [ContactBundle]   Added missing namespace declerations
+
 * 1.1.5 (2016-01-15)
     * HOTFIX      #1933 [AdminBundle]     Fixed password reset twig template
 
