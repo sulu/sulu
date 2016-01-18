@@ -9,6 +9,8 @@
  * with this source code in the file LICENSE.
  */
 
+namespace Sulu\Bundle\ContactBundle\DataFixtures\ORM;
+
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
