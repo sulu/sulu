@@ -10,6 +10,8 @@
 
 namespace Sulu\Component\CustomUrl\Document;
 
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
+
 /**
  * Interface for custom-url data-class.
  */
@@ -42,6 +44,20 @@ interface CustomUrlBehavior
      * @return array
      */
     public function getDomainParts();
+
+    /**
+     * Returns target for custom-url.
+     *
+     * @return PageDocument
+     */
+    public function getTarget();
+
+    /**
+     * Returns locale for target.
+     *
+     * @return string
+     */
+    public function getTargetLocale();
 
     /**
      * Returns true if multilingual is enabled.

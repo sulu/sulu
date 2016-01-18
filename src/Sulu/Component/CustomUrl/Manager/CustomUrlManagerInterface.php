@@ -22,10 +22,11 @@ interface CustomUrlManagerInterface
      *
      * @param string $webspaceKey
      * @param array $data
+     * @param string|null $locale
      *
      * @return CustomUrlDocument
      */
-    public function create($webspaceKey, array $data);
+    public function create($webspaceKey, array $data, $locale = null);
 
     /**
      * Returns a list of custom-url data (in a assoc-array).
@@ -40,20 +41,22 @@ interface CustomUrlManagerInterface
      * Returns a single custom-url object identified by uuid.
      *
      * @param string $uuid
+     * @param string|null $locale
      *
      * @return CustomUrlDocument
      */
-    public function read($uuid);
+    public function read($uuid, $locale = null);
 
     /**
      * Update a single custom-url object identified by uuid with given data.
      *
      * @param string $uuid
      * @param array $data
+     * @param string|null $locale
      *
      * @return CustomUrlDocument
      */
-    public function update($uuid, array $data);
+    public function update($uuid, array $data, $locale = null);
 
     /**
      * Delete custom-url identified by uuid.

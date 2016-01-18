@@ -103,8 +103,10 @@ define(['underscore', 'text!./form.html'], function(_, form) {
         },
 
         getData: function() {
-            var data = this.sandbox.form.getData(formSelector);
-            data.target = this.target;
+            var data = this.sandbox.form.getData(formSelector),
+                targetUuid = this.target || this.data.target.uuid;
+
+            data.target = !!targetUuid ? {uuid: targetUuid} : null;
 
             return data;
         },
@@ -134,16 +136,16 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                                 return item.url;
                             }),
                             defaultLabel: this.translations.customUrlDefaultValue,
-                            selectCallback: function(key, item) {
+                            selectCallback: function(key) {
                                 $('#custom-url-input-container').show();
-                                this.sandbox.emit('sulu.webspace-settings.custom-url.set-base-domain', item);
+                                this.sandbox.emit('sulu.webspace-settings.custom-url.set-base-domain', key);
                             }.bind(this)
                         }
                     },
                     {
                         name: 'select@husky',
                         options: {
-                            el: '#custom-url-locale',
+                            el: '#custom-url-target-locale',
                             isNative: true,
                             data: _.map(this.options.webspace.localizations, function(item) {
                                 return item.localization;
@@ -174,15 +176,15 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                         options: {
 
                             el: '#target-select',
-                            selected: this.data.target,
+                            selected: (!!this.data.target ? this.data.target.uuid : null),
                             webspace: this.options.webspace.key,
-                            locale: 'de', // FIXME which locale? user? when user-locale not in webspace?
+                            locale: this.data.locale,
                             instanceName: 'custom-urls',
                             rootUrl: '/admin/api/nodes?webspace={webspace}&language={locale}&fields=title,order&webspace-nodes=single',
                             selectedUrl: '/admin/api/nodes/{datasource}?tree=true&webspace={webspace}&language={locale}&fields=title,order&webspace-nodes=single',
                             resultKey: 'nodes',
-                            selectCallback: function(id, fullQualifiedTitle) {
-                                $('#custom-url-target-value').html(this.sandbox.translate(fullQualifiedTitle));
+                            selectCallback: function(id, path, title) {
+                                $('#custom-url-target-value').html(title);
 
                                 this.target = id;
                                 this.sandbox.emit('husky.overlay.custom-urls.slide-to', 0);
@@ -194,6 +196,10 @@ define(['underscore', 'text!./form.html'], function(_, form) {
 
             if (!!this.data.baseDomain) {
                 $('#custom-url-input-container').show();
+            }
+
+            if (!!this.data.target) {
+                $('#custom-url-target-value').html(this.data.target.title);
             }
         },
 

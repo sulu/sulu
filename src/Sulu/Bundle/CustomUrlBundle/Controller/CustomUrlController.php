@@ -60,9 +60,13 @@ class CustomUrlController extends RestController
      *
      * @return Response
      */
-    public function getAction($webspaceKey, $uuid)
+    public function getAction($webspaceKey, $uuid, Request $request)
     {
-        return $this->handleView($this->view($this->get('sulu_custom_urls.manager')->read($uuid)));
+        $document = $this->get('sulu_custom_urls.manager')->read($uuid, $this->getLocale($request));
+        // FIXME without this target-document will not be loaded (for serialization)
+        $document->getTarget()->getTitle();
+
+        return $this->handleView($this->view($document));
     }
 
     /**
@@ -75,7 +79,11 @@ class CustomUrlController extends RestController
      */
     public function postAction($webspaceKey, Request $request)
     {
-        $document = $this->get('sulu_custom_urls.manager')->create($webspaceKey, $request->request->all());
+        $document = $this->get('sulu_custom_urls.manager')->create(
+            $webspaceKey,
+            $request->request->all(),
+            $this->getLocale($request)
+        );
         $this->get('sulu_document_manager.document_manager')->flush();
 
         return $this->handleView($this->view($document));
@@ -92,7 +100,11 @@ class CustomUrlController extends RestController
      */
     public function putAction($webspaceKey, $uuid, Request $request)
     {
-        $document = $this->get('sulu_custom_urls.manager')->update($uuid, $request->request->all());
+        $document = $this->get('sulu_custom_urls.manager')->update(
+            $uuid,
+            $request->request->all(),
+            $this->getLocale($request)
+        );
         $this->get('sulu_document_manager.document_manager')->flush();
 
         return $this->handleView($this->view($document));

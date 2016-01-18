@@ -50,17 +50,18 @@ class CustomUrlManager implements CustomUrlManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function create($webspaceKey, array $data)
+    public function create($webspaceKey, array $data, $locale = null)
     {
         $document = $this->documentManager->create('custom_urls');
-        $this->bind($document, $data);
+        $this->bind($document, $data, $locale);
 
         $this->documentManager->persist(
             $document,
-            null,
+            $locale,
             [
                 'parent_path' => $this->getItemsPath($webspaceKey),
                 'node_name' => Urlizer::urlize($document->getTitle()),
+                'load_ghost_content' => false,
             ]
         );
 
@@ -80,20 +81,20 @@ class CustomUrlManager implements CustomUrlManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function read($uuid)
+    public function read($uuid, $locale = null)
     {
-        return $this->documentManager->find($uuid);
+        return $this->documentManager->find($uuid, $locale, ['load_ghost_content' => false]);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function update($uuid, array $data)
+    public function update($uuid, array $data, $locale = null)
     {
         $document = $this->read($uuid);
-        $this->bind($document, $data);
+        $this->bind($document, $data, $locale);
 
-        $this->documentManager->persist($document);
+        $this->documentManager->persist($document, $locale);
 
         return $document;
     }
@@ -116,27 +117,35 @@ class CustomUrlManager implements CustomUrlManagerInterface
             'published' => ['property' => 'published'],
             'baseDomain' => ['property' => 'baseDomain'],
             'domainParts' => ['property' => 'domainParts', 'type' => 'json_array'],
+            'target' => ['property' => 'target', 'type' => 'reference'],
             'multilingual' => ['property' => 'multilingual'],
             'canonical' => ['property' => 'canonical'],
             'redirect' => ['property' => 'redirect'],
+            'targetLocale' => ['property' => 'targetLocale'],
         ];
     }
 
     /**
      * Bind data array to given document.
      *
-     * TODO find document for target (type reference) and set it to custom-url.
-     *
      * @param CustomUrlDocument $document
      * @param array $data
+     * @param string $locale
      */
-    private function bind(CustomUrlDocument $document, $data)
+    private function bind(CustomUrlDocument $document, $data, $locale)
     {
         $accessor = PropertyAccess::createPropertyAccessor();
 
         foreach ($this->getFields() as $fieldName => $mapping) {
-            $accessor->setValue($document, $fieldName, $data[$fieldName]);
+            $value = $data[$fieldName];
+            if (array_key_exists('type', $mapping) && $mapping['type'] === 'reference') {
+                $value = $this->documentManager->find($value['uuid'], $locale, ['load_ghost_content' => false]);
+            }
+
+            $accessor->setValue($document, $fieldName, $value);
         }
+
+        $document->setLocale($locale);
     }
 
     /**

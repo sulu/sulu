@@ -271,6 +271,10 @@ class ContentRepository implements ContentRepositoryInterface
             $content->setChildren(array_values($childrenByPath[$content->getPath()]));
         }
 
+        if (!array_key_exists('/', $childrenByPath) || !is_array($childrenByPath['/'])) {
+            return [];
+        }
+
         ksort($childrenByPath['/']);
 
         return array_values($childrenByPath['/']);

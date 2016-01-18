@@ -11,8 +11,10 @@
 namespace Sulu\Component\CustomUrl\Document;
 
 use PHPCR\NodeInterface;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Component\DocumentManager\Behavior\Audit\BlameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
@@ -28,7 +30,8 @@ class CustomUrlDocument implements
     BlameBehavior,
     UuidBehavior,
     PathBehavior,
-    ParentBehavior
+    ParentBehavior,
+    LocaleBehavior
 {
     /**
      * @var string
@@ -54,6 +57,21 @@ class CustomUrlDocument implements
      * @var array
      */
     protected $domainParts;
+
+    /**
+     * @var PageDocument
+     */
+    protected $target;
+
+    /**
+     * @var string
+     */
+    protected $locale;
+
+    /**
+     * @var string
+     */
+    protected $targetLocale;
 
     /**
      * @var bool
@@ -122,7 +140,7 @@ class CustomUrlDocument implements
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $title
      */
     public function setTitle($title)
     {
@@ -186,15 +204,61 @@ class CustomUrlDocument implements
     /**
      * {@inheritdoc}
      */
+    public function getTarget()
+    {
+        return $this->target;
+    }
+
+    /**
+     * @param PageDocument $target
+     */
+    public function setTarget($target)
+    {
+        $this->target = $target;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTargetLocale()
+    {
+        return $this->targetLocale;
+    }
+
+    /**
+     * @param string $targetLocale
+     */
+    public function setTargetLocale($targetLocale)
+    {
+        $this->targetLocale = $targetLocale;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isMultilingual()
     {
         return $this->multilingual;
     }
 
     /**
-     * Return true if multilingual is enabled.
-     *
-     * @param boolean $multilingual
+     * @param bool $multilingual
      */
     public function setMultilingual($multilingual)
     {
@@ -210,9 +274,7 @@ class CustomUrlDocument implements
     }
 
     /**
-     * Return true if canonicle is enabled.
-     *
-     * @param boolean $canonical
+     * @param bool $canonical
      */
     public function setCanonical($canonical)
     {
@@ -228,9 +290,7 @@ class CustomUrlDocument implements
     }
 
     /**
-     * Return true if redirect is enabled.
-     *
-     * @param boolean $redirect
+     * @param bool $redirect
      */
     public function setRedirect($redirect)
     {
