@@ -10,7 +10,10 @@
 
 namespace Sulu\Component\CustomUrl\Document\Subscriber;
 
-use Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface;
+use Sulu\Component\CustomUrl\Document\CustomUrlBehavior;
+use Sulu\Component\CustomUrl\Generator\GeneratorInterface;
+use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -19,13 +22,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class CustomUrlSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var CustomUrlManagerInterface
+     * @var GeneratorInterface
      */
-    private $customUrlManager;
+    private $generator;
 
-    public function __construct(CustomUrlManagerInterface $customUrlManager)
+    public function __construct(GeneratorInterface $generator)
     {
-        $this->customUrlManager = $customUrlManager;
+        $this->generator = $generator;
     }
 
     /**
@@ -33,7 +36,19 @@ class CustomUrlSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return [
-        ];
+        return [Events::PERSIST => 'handlePersist'];
+    }
+
+    public function handlePersist(PersistEvent $event)
+    {
+        $document = $event->getDocument();
+        if (!($document instanceof CustomUrlBehavior)) {
+            return;
+        }
+
+        // TODO localization if multilingual is true
+
+        $domains = $this->generator->generate($document->getBaseDomain(), $document->getDomainParts());
+
     }
 }
