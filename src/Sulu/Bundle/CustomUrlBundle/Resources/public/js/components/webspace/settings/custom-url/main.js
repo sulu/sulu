@@ -49,13 +49,25 @@ define(['text!./skeleton.html'], function(skeleton) {
             }
         },
 
+        /**
+         * Initializes component.
+         */
         initialize: function() {
             this.render();
         },
 
+        /**
+         * Render component skeleton.
+         */
         render: function() {
             this.html(this.templates.skeleton());
+            this.startDatagrid();
+        },
 
+        /**
+         * Start datagrid and toolbar.
+         */
+        startDatagrid: function(){
             this.sandbox.start([
                 {
                     name: 'list-toolbar@suluadmin',
@@ -103,6 +115,11 @@ define(['text!./skeleton.html'], function(skeleton) {
             ]);
         },
 
+        /**
+         * Start edit overlay for given id.
+         *
+         * @param {Integer} id
+         */
         edit: function(id) {
             this.sandbox.start([
                 {
@@ -118,6 +135,9 @@ define(['text!./skeleton.html'], function(skeleton) {
             ]);
         },
 
+        /**
+         * Deletes selected records from datagrid after asking for confirmation.
+         */
         delete: function() {
             var ids = this.sandbox.util.deepCopy($('#webspace-custom-url-list').data('selected'));
 
@@ -136,6 +156,13 @@ define(['text!./skeleton.html'], function(skeleton) {
             }.bind(this));
         },
 
+        /**
+         * Save record identified by id with given data.
+         * If id is null a new record will be created.
+         *
+         * @param {Integer} id
+         * @param {{}} data
+         */
         save: function(id, data) {
             this.sandbox.util.save(
                 this.templates.url({webspace: this.data, id: id, ids: null}), !!id ? 'PUT' : 'POST', data
@@ -150,6 +177,11 @@ define(['text!./skeleton.html'], function(skeleton) {
             }.bind(this));
         },
 
+        /**
+         * Load data.
+         *
+         * @returns {{}}
+         */
         loadComponentData: function() {
             var deferred = this.sandbox.data.deferred();
 

@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\CustomUrl\Manager;
 
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Repository\CustomUrlRepository;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
@@ -25,15 +26,17 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
         $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
         $pathBuilder = $this->prophesize(PathBuilder::class);
+        $targetDocument = $this->prophesize(PageDocument::class)->reveal();
 
         $testDocument = new CustomUrlDocument();
         $documentManager->create('custom_urls')->willReturn($testDocument);
         $documentManager->persist(
             $testDocument,
-            null,
-            ['parent_path' => '/cmf/sulu_io/custom_urls/items', 'node_name' => 'test']
-        )
-            ->shouldBeCalledTimes(1);
+            'en',
+            ['parent_path' => '/cmf/sulu_io/custom_urls/items', 'node_name' => 'test', 'load_ghost_content' => true]
+        )->shouldBeCalledTimes(1);
+        $documentManager->find('123-123-123', 'en', ['load_ghost_content' => true])
+            ->willReturn($targetDocument);
 
         $pathBuilder->build(['%base%', 'sulu_io', '%custom-urls%', '%custom-urls-items%'])
             ->willReturn('/cmf/sulu_io/custom_urls/items');
@@ -44,11 +47,33 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
             $pathBuilder->reveal()
         );
 
-        $result = $manager->create('sulu_io', ['title' => 'Test', 'published' => true]);
+        $result = $manager->create(
+            'sulu_io',
+            [
+                'title' => 'Test',
+                'published' => true,
+                'baseDomain' => '*.sulu.io',
+                'domainParts' => ['prefix' => 'test-1', 'postfix' => ['test-1', 'test-2']],
+                'target' => ['uuid' => '123-123-123'],
+                'multilingual' => true,
+                'canonical' => true,
+                'redirect' => true,
+                'targetLocale' => 'de',
+            ],
+            'en'
+        );
 
         $this->assertEquals($testDocument, $result);
         $this->assertEquals('Test', $result->getTitle());
-        $this->assertEquals(true, $result->isPublished());
+        $this->assertEquals('en', $result->getLocale());
+        $this->assertEquals('de', $result->getTargetLocale());
+        $this->assertEquals('*.sulu.io', $result->getBaseDomain());
+        $this->assertEquals(['prefix' => 'test-1', 'postfix' => ['test-1', 'test-2']], $result->getDomainParts());
+        $this->assertEquals($targetDocument, $result->getTarget());
+        $this->assertTrue($result->isPublished());
+        $this->assertTrue($result->isMultilingual());
+        $this->assertTrue($result->isCanonical());
+        $this->assertTrue($result->isRedirect());
     }
 
     public function testReadList()
@@ -72,5 +97,75 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $result = $manager->readList('sulu_io');
 
         $this->assertEquals([['title' => 'Test-1'], ['title' => 'Test-2']], $result);
+    }
+
+    public function testRead()
+    {
+        $documentManager = $this->prophesize(DocumentManagerInterface::class);
+        $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
+        $pathBuilder = $this->prophesize(PathBuilder::class);
+        $document = $this->prophesize(CustomUrlDocument::class);
+
+        $manager = new CustomUrlManager(
+            $documentManager->reveal(),
+            $customUrlRepository->reveal(),
+            $pathBuilder->reveal()
+        );
+
+        $documentManager->find('123-123-123', 'de', ['load_ghost_content' => true])->willReturn($document->reveal());
+
+        $result = $manager->read('123-123-123', 'de');
+
+        $this->assertEquals($document->reveal(), $result);
+    }
+
+    public function testUpdate()
+    {
+        $documentManager = $this->prophesize(DocumentManagerInterface::class);
+        $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
+        $pathBuilder = $this->prophesize(PathBuilder::class);
+        $document = $this->prophesize(CustomUrlDocument::class);
+        $targetDocument = $this->prophesize(PageDocument::class);
+
+        $manager = new CustomUrlManager(
+            $documentManager->reveal(),
+            $customUrlRepository->reveal(),
+            $pathBuilder->reveal()
+        );
+
+        $documentManager->find('312-312-312', 'en', ['load_ghost_content' => true])->willReturn($document->reveal());
+        $documentManager->find('123-123-123', 'en', ['load_ghost_content' => true])->willReturn(
+            $targetDocument->reveal()
+        );
+        $documentManager->persist($document, 'en')->shouldBeCalledTimes(1);
+
+        $result = $manager->update(
+            '312-312-312',
+            [
+                'title' => 'Test',
+                'published' => true,
+                'baseDomain' => '*.sulu.io',
+                'domainParts' => ['prefix' => 'test-1', 'postfix' => ['test-1', 'test-2']],
+                'target' => ['uuid' => '123-123-123'],
+                'multilingual' => true,
+                'canonical' => true,
+                'redirect' => true,
+                'targetLocale' => 'de',
+            ],
+            'en'
+        );
+
+        $document->setTitle('Test')->shouldBeCalled();
+        $document->setPublished(true)->shouldBeCalled();
+        $document->setMultilingual(true)->shouldBeCalled();
+        $document->setRedirect(true)->shouldBeCalled();
+        $document->setCanonical(true)->shouldBeCalled();
+        $document->setLocale('en')->shouldBeCalled();
+        $document->setTargetLocale('de')->shouldBeCalled();
+        $document->setBaseDomain('*.sulu.io')->shouldBeCalled();
+        $document->setDomainParts(['prefix' => 'test-1', 'postfix' => ['test-1', 'test-2']])->shouldBeCalled();
+        $document->setTarget($targetDocument->reveal())->shouldBeCalled();
+
+        $this->assertEquals($document->reveal(), $result);
     }
 }

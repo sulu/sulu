@@ -140,6 +140,8 @@ class CustomUrlDocument implements
     }
 
     /**
+     * Set title.
+     *
      * @param string $title
      */
     public function setTitle($title)
@@ -210,6 +212,8 @@ class CustomUrlDocument implements
     }
 
     /**
+     * Set target document.
+     *
      * @param PageDocument $target
      */
     public function setTarget($target)
@@ -242,6 +246,8 @@ class CustomUrlDocument implements
     }
 
     /**
+     * Set target locale.
+     *
      * @param string $targetLocale
      */
     public function setTargetLocale($targetLocale)
@@ -258,6 +264,8 @@ class CustomUrlDocument implements
     }
 
     /**
+     * Set multilingual.
+     *
      * @param bool $multilingual
      */
     public function setMultilingual($multilingual)
@@ -274,6 +282,8 @@ class CustomUrlDocument implements
     }
 
     /**
+     * Set canonical.
+     *
      * @param bool $canonical
      */
     public function setCanonical($canonical)
@@ -290,6 +300,8 @@ class CustomUrlDocument implements
     }
 
     /**
+     * Set redirect.
+     *
      * @param bool $redirect
      */
     public function setRedirect($redirect)

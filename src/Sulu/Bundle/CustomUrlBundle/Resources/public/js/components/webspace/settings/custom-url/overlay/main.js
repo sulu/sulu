@@ -14,34 +14,44 @@ define(['underscore', 'text!./form.html'], function(_, form) {
     const formSelector = '#custom-url-form';
 
     var defaults = {
-        options: {
-            saveCallback: function() {
+            options: {
+                saveCallback: function() {
+                }
+            },
+            templates: {
+                form: form,
+                skeleton: '<div id="webspace-custom-urls-overlay"/>',
+                url: '/admin/api/webspaces/<%= webspaceKey %>/custom-urls<% if (!!id) { %>/<%= id %><% } %>'
+            },
+            translations: {
+                overlayTitle: 'custom-urls.webspace.settings.edit.title',
+                customUrlDefaultValue: 'custom-urls.custom-url.default-value',
+                localeDefaultValue: 'custom-urls.locale.default-value',
+                chooseTarget: 'custom-urls.choose-target',
+                chooseTargetCancel: 'custom-urls.choose-target.cancel'
             }
         },
-        templates: {
-            form: form,
-            skeleton: '<div id="webspace-custom-urls-overlay"/>',
-            url: '/admin/api/webspaces/<%= webspaceKey %>/custom-urls<% if (!!id) { %>/<%= id %><% } %>'
-        },
-        translations: {
-            overlayTitle: 'custom-urls.webspace.settings.edit.title',
-            customUrlDefaultValue: 'custom-urls.custom-url.default-value',
-            localeDefaultValue: 'custom-urls.locale.default-value',
-            chooseTarget: 'custom-urls.choose-target',
-            chooseTargetCancel: 'custom-urls.choose-target.cancel'
-        }
-    };
+        constants = {
+            targetRootUrl: '/admin/api/nodes?webspace={webspace}&language={locale}&fields=title,order&webspace-nodes=single',
+            targetSelectedUrl: '/admin/api/nodes/{datasource}?tree=true&webspace={webspace}&language={locale}&fields=title,order&webspace-nodes=single'
+        };
 
     return {
 
         defaults: defaults,
 
+        /**
+         * Initializes component.
+         */
         initialize: function() {
             this.$el.html(this.templates.skeleton);
 
             this.startOverlay();
         },
 
+        /**
+         * Bind dom event.
+         */
         bindDomEvents: function() {
             this.sandbox.dom.on('#analytics-all-domains', 'change', function() {
                 $('#analytics-domains-container').toggle();
@@ -52,6 +62,9 @@ define(['underscore', 'text!./form.html'], function(_, form) {
             }.bind(this), '#custom-url-target-button');
         },
 
+        /**
+         * Start overlay container for form.
+         */
         startOverlay: function() {
             this.sandbox.start([
                 {
@@ -102,6 +115,11 @@ define(['underscore', 'text!./form.html'], function(_, form) {
             }.bind(this));
         },
 
+        /**
+         * Return data received from form.
+         *
+         * @returns {{}}
+         */
         getData: function() {
             var data = this.sandbox.form.getData(formSelector),
                 targetUuid = this.target || this.data.target.uuid;
@@ -111,6 +129,9 @@ define(['underscore', 'text!./form.html'], function(_, form) {
             return data;
         },
 
+        /**
+         * Initializes sub-components.
+         */
         initializeFormComponents: function() {
             this.sandbox.start(
                 [
@@ -180,8 +201,8 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                             webspace: this.options.webspace.key,
                             locale: this.data.locale,
                             instanceName: 'custom-urls',
-                            rootUrl: '/admin/api/nodes?webspace={webspace}&language={locale}&fields=title,order&webspace-nodes=single',
-                            selectedUrl: '/admin/api/nodes/{datasource}?tree=true&webspace={webspace}&language={locale}&fields=title,order&webspace-nodes=single',
+                            rootUrl: constants.targetRootUrl,
+                            selectedUrl: constants.targetSelectedUrl,
                             resultKey: 'nodes',
                             selectCallback: function(id, path, title) {
                                 $('#custom-url-target-value').html(title);
@@ -203,6 +224,11 @@ define(['underscore', 'text!./form.html'], function(_, form) {
             }
         },
 
+        /**
+         * Load data.
+         *
+         * @returns {{}}
+         */
         loadComponentData: function() {
             var deferred = this.sandbox.data.deferred();
             if (!this.options.id) {

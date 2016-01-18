@@ -61,7 +61,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
             [
                 'parent_path' => $this->getItemsPath($webspaceKey),
                 'node_name' => Urlizer::urlize($document->getTitle()),
-                'load_ghost_content' => false,
+                'load_ghost_content' => true,
             ]
         );
 
@@ -83,7 +83,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
      */
     public function read($uuid, $locale = null)
     {
-        return $this->documentManager->find($uuid, $locale, ['load_ghost_content' => false]);
+        return $this->documentManager->find($uuid, $locale, ['load_ghost_content' => true]);
     }
 
     /**
@@ -91,7 +91,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
      */
     public function update($uuid, array $data, $locale = null)
     {
-        $document = $this->read($uuid);
+        $document = $this->read($uuid, $locale);
         $this->bind($document, $data, $locale);
 
         $this->documentManager->persist($document, $locale);
@@ -139,7 +139,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
         foreach ($this->getFields() as $fieldName => $mapping) {
             $value = $data[$fieldName];
             if (array_key_exists('type', $mapping) && $mapping['type'] === 'reference') {
-                $value = $this->documentManager->find($value['uuid'], $locale, ['load_ghost_content' => false]);
+                $value = $this->documentManager->find($value['uuid'], $locale, ['load_ghost_content' => true]);
             }
 
             $accessor->setValue($document, $fieldName, $value);

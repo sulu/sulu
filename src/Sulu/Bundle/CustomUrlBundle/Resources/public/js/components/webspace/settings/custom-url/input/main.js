@@ -22,11 +22,10 @@ define(['underscore'], function(_) {
     //  - *.sulu.io/*/*
 
     var defaults = {
-        templates: {
-            input: '<input type="text" data-index="<%=index%>" <% if (index === 0) { %>data-prefix="true"<% } else { %>data-suffix="true"<% } %>/>',
-            text: '<span><%=text%></span>'
-        },
-        translations: {}
+            templates: {
+                input: '<input type="text" data-index="<%=index%>" <% if (index === 0) { %>data-prefix="true"<% } else { %>data-suffix="true"<% } %>/>',
+                text: '<span><%=text%></span>'
+            }
         },
 
         /**
@@ -92,8 +91,21 @@ define(['underscore'], function(_) {
             this.render(this.options.baseDomain);
             this.setDomData(this.$el.data('custom-url-data') || {});
 
-            this.events.setBaseDomain(this.setBaseDomain.bind(this));
+            this.bindDomEvents();
+            this.bindCustomEvents();
+        },
 
+        /**
+         * Bind aura events.
+         */
+        bindCustomEvents: function() {
+            this.events.setBaseDomain(this.setBaseDomain.bind(this));
+        },
+
+        /**
+         * Bind events to dom-elements.
+         */
+        bindDomEvents: function() {
             this.$el.on('data-changed', function() {
                 this.setBaseDomain(this.$el.data('custom-url-data'));
             }.bind(this));
@@ -136,12 +148,22 @@ define(['underscore'], function(_) {
             }
         },
 
+        /**
+         * Set base-domain and rerender input with existing data.
+         *
+         * @param {String} baseDomain
+         */
         setBaseDomain: function(baseDomain) {
             var data = this.getData();
             this.render(baseDomain);
             this.setDomData(data);
         },
 
+        /**
+         * Returns data from input elements.
+         *
+         * @returns {{prefix: String, suffix: Array}}
+         */
         getData: function() {
             var prefix = $('input[data-prefix="true"]').val() || '',
                 suffix = _.map($('input[data-suffix="true"]'), function(item) {
@@ -151,6 +173,11 @@ define(['underscore'], function(_) {
             return {prefix: prefix, suffix: suffix};
         },
 
+        /**
+         * Set data to dom elements.
+         *
+         * @param {{prefix: String, suffix: Array}} data
+         */
         setDomData: function(data) {
             $('input[data-prefix="true"]').val(data.prefix || '');
             _.map($('input[data-suffix="true"]'), function(item, index) {
