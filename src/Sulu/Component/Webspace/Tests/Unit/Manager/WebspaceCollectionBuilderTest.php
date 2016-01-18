@@ -14,6 +14,7 @@ namespace Sulu\Component\Webspace\Tests\Unit;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Loader\XmlFileLoader;
 use Sulu\Component\Webspace\Manager\WebspaceCollectionBuilder;
+use Sulu\Component\Webspace\Url\ReplacerFactory;
 
 class WebspaceCollectionBuilderTest extends WebspaceTestCase
 {
@@ -40,6 +41,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
     {
         $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
             $this->loader,
+        new ReplacerFactory(),
             $this->logger,
             $this->getResourceDirectory() . '/DataFixtures/Webspace/both'
         );
@@ -135,6 +137,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
     {
         $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
             $this->loader,
+            new ReplacerFactory(),
             $this->logger,
             $this->getResourceDirectory() . '/DataFixtures/Webspace/multiple-localization-urls'
         );
@@ -159,6 +162,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
     {
         $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
             $this->loader,
+            new ReplacerFactory(),
             $this->logger,
             $this->getResourceDirectory() . '/DataFixtures/Webspace/not-valid'
         );
@@ -170,6 +174,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
     {
         $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
             $this->loader,
+            new ReplacerFactory(),
             $this->logger,
             $this->getResourceDirectory() . '/DataFixtures/Webspace/main'
         );

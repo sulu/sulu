@@ -15,6 +15,7 @@ use Psr\Log\LoggerInterface;
 use Sulu\Component\Webspace\Manager\Dumper\PhpWebspaceCollectionDumper;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
+use Sulu\Component\Webspace\Url\ReplacerFactoryInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -44,9 +45,19 @@ class WebspaceManager implements WebspaceManagerInterface
      */
     private $logger;
 
-    public function __construct(LoaderInterface $loader, LoggerInterface $logger, $options = [])
-    {
+    /**
+     * @var ReplacerFactoryInterface
+     */
+    private $urlReplacerFactory;
+
+    public function __construct(
+        LoaderInterface $loader,
+        ReplacerFactoryInterface $urlReplacerFactory,
+        LoggerInterface $logger,
+        $options = []
+    ) {
         $this->loader = $loader;
+        $this->urlReplacerFactory = $urlReplacerFactory;
         $this->logger = $logger;
         $this->setOptions($options);
     }
@@ -230,6 +241,7 @@ class WebspaceManager implements WebspaceManagerInterface
             if (!$cache->isFresh()) {
                 $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
                     $this->loader,
+                    $this->urlReplacerFactory,
                     $this->logger,
                     $this->options['config_dir']
                 );

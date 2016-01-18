@@ -16,10 +16,12 @@
             <argument type="service" id="file_locator"/>
         </service>
 
+        <service id="sulu_core.webspace.webspace_manager.url_replacer_factory" class="Sulu\Component\Webspace\Url\ReplacerFactory"/>
+
         <service id="sulu_core.webspace.webspace_manager" class="%sulu_core.webspace.webspace_manager.class%">
-            <tag name="sulu.localization_provider"/>
             <!-- TODO use delegating loader -->
             <argument type="service" id="sulu_core.webspace.loader.xml"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager.url_replacer_factory"/>
             <argument type="service" id="logger"/>
             <argument type="collection">
                 <argument key="config_dir">%sulu_core.webspace.config_dir%</argument>
@@ -28,6 +30,8 @@
                 <argument key="cache_class">%sulu_core.webspace.cache_class%</argument>
                 <argument key="base_class">%sulu_core.webspace.base_class%</argument>
             </argument>
+
+            <tag name="sulu.localization_provider"/>
         </service>
 
         <service id="sulu_core.webspace.document_manager.webspace_initializer" class="%sulu_core.webspace.document_manager.webspace_initializer.class%">

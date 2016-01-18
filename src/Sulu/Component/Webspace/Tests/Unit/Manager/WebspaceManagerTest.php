@@ -14,6 +14,7 @@ namespace Sulu\Component\Webspace\Tests\Unit;
 use Psr\Log\LoggerInterface;
 use Sulu\Component\Webspace\Loader\XmlFileLoader;
 use Sulu\Component\Webspace\Manager\WebspaceManager;
+use Sulu\Component\Webspace\Url\ReplacerFactory;
 use Symfony\Component\Filesystem\Filesystem;
 
 class WebspaceManagerTest extends WebspaceTestCase
@@ -50,6 +51,7 @@ class WebspaceManagerTest extends WebspaceTestCase
 
         $this->webspaceManager = new WebspaceManager(
             $this->loader,
+            new ReplacerFactory(),
             $this->logger,
             [
                 'cache_dir' => $this->cacheDir,
@@ -419,6 +421,7 @@ class WebspaceManagerTest extends WebspaceTestCase
 
         $this->webspaceManager = new WebspaceManager(
             $this->loader,
+            new ReplacerFactory(),
             $this->logger,
             [
                 'cache_dir' => $this->getResourceDirectory() . '/cache',

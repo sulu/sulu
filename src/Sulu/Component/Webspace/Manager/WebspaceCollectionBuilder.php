@@ -21,6 +21,8 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Url;
+use Sulu\Component\Webspace\Url\ReplacerFactoryInterface;
+use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
@@ -29,24 +31,17 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class WebspaceCollectionBuilder
 {
-    const REPLACER_LANGUAGE = '{language}';
-    const REPLACER_COUNTRY = '{country}';
-    const REPLACER_LOCALIZATION = '{localization}';
-    const REPLACER_SEGMENT = '{segment}';
-
-    private $replacers = [
-        self::REPLACER_LANGUAGE,
-        self::REPLACER_COUNTRY,
-        self::REPLACER_LOCALIZATION,
-        self::REPLACER_SEGMENT,
-    ];
-
     /**
      * The loader for the xml config files.
      *
      * @var LoaderInterface
      */
     private $loader;
+
+    /**
+     * @var ReplacerFactoryInterface
+     */
+    private $urlRplacerFactory;
 
     /**
      * Logger for logging the warnings.
@@ -85,12 +80,14 @@ class WebspaceCollectionBuilder
 
     /**
      * @param LoaderInterface $loader The loader for the xml config files
+     * @param ReplacerFactoryInterface $urlReplacerFactory Factory for url-replacers
      * @param LoggerInterface $logger For logging the warnings
      * @param $path string The path to the xml config files
      */
-    public function __construct(LoaderInterface $loader, LoggerInterface $logger, $path)
+    public function __construct(LoaderInterface $loader, ReplacerFactoryInterface $urlReplacerFactory, LoggerInterface $logger, $path)
     {
         $this->loader = $loader;
+        $this->urlRplacerFactory = $urlReplacerFactory;
         $this->logger = $logger;
         $this->path = $path;
     }
@@ -249,7 +246,7 @@ class WebspaceCollectionBuilder
     ) {
         if (!empty($segments)) {
             foreach ($segments as $segment) {
-                $replacers[self::REPLACER_SEGMENT] = $segment->getKey();
+                $replacers[ReplacerInterface::REPLACER_SEGMENT] = $segment->getKey();
                 $urlResult = $this->generateUrlAddress($urlAddress, $replacers);
                 $this->portalInformations[$environment->getType()][$urlResult] = new PortalInformation(
                     RequestAnalyzerInterface::MATCH_TYPE_FULL,
@@ -296,14 +293,14 @@ class WebspaceCollectionBuilder
         Url $url
     ) {
         $replacers = [
-            self::REPLACER_LANGUAGE => $portal->getDefaultLocalization()->getLanguage(),
-            self::REPLACER_COUNTRY => $portal->getDefaultLocalization()->getCountry(),
-            self::REPLACER_LOCALIZATION => $portal->getDefaultLocalization()->getLocalization('-'),
+            ReplacerInterface::REPLACER_LANGUAGE => $portal->getDefaultLocalization()->getLanguage(),
+            ReplacerInterface::REPLACER_COUNTRY => $portal->getDefaultLocalization()->getCountry(),
+            ReplacerInterface::REPLACER_LOCALIZATION => $portal->getDefaultLocalization()->getLocalization('-'),
         ];
 
         $defaultSegment = $portal->getWebspace()->getDefaultSegment();
         if ($defaultSegment) {
-            $replacers[self::REPLACER_SEGMENT] = $defaultSegment->getKey();
+            $replacers[ReplacerInterface::REPLACER_SEGMENT] = $defaultSegment->getKey();
         }
 
         $urlResult = $this->removeUrlPlaceHolders($urlAddress);
@@ -359,9 +356,9 @@ class WebspaceCollectionBuilder
                 $country = $url->getCountry() ? $url->getCountry() : $localization->getCountry();
 
                 $replacers = [
-                    self::REPLACER_LANGUAGE => $language,
-                    self::REPLACER_COUNTRY => $country,
-                    self::REPLACER_LOCALIZATION => $localization->getLocalization('-'),
+                    ReplacerInterface::REPLACER_LANGUAGE => $language,
+                    ReplacerInterface::REPLACER_COUNTRY => $country,
+                    ReplacerInterface::REPLACER_LOCALIZATION => $localization->getLocalization('-'),
                 ];
 
                 $this->buildUrlFullMatch(
@@ -410,11 +407,13 @@ class WebspaceCollectionBuilder
      */
     private function generateUrlAddress($pattern, $replacers)
     {
+        $urlReplacer = $this->urlRplacerFactory->create($pattern);
+
         foreach ($replacers as $replacer => $value) {
-            $pattern = str_replace($replacer, $value, $pattern);
+            $urlReplacer->replace($replacer, $value);
         }
 
-        return $pattern;
+        return $urlReplacer->get();
     }
 
     /**
@@ -422,17 +421,10 @@ class WebspaceCollectionBuilder
      *
      * @param $pattern
      *
-     * @return mixed|string
+     * @return string
      */
     private function removeUrlPlaceHolders($pattern)
     {
-        foreach ($this->replacers as $replacer) {
-            $pattern = str_replace($replacer, '', $pattern);
-        }
-
-        $pattern = ltrim($pattern, '.');
-        $pattern = rtrim($pattern, '/');
-
-        return $pattern;
+        return $this->urlRplacerFactory->create($pattern)->cleanup()->get();
     }
 }
