@@ -121,7 +121,9 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
             $this->messageBuilder->reveal(),
             $this->userRepository->reveal(),
             $this->collaborationsEntityCache,
-            $this->collaborationsConnectionCache
+            $this->collaborationsConnectionCache,
+            10,
+            1
         );
     }
 
@@ -353,5 +355,50 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertGreaterThan($oldCollaboration1->getChanged(), $collaboration1->getChanged());
         $this->assertGreaterThan($oldCollaboration2->getChanged(), $collaboration2->getChanged());
+    }
+
+    public function testHandleEnterWithOutdatedCollaborations()
+    {
+        $this->connection1->send(
+            '{"handler":"sulu_content.collaboration","message":{"command":"update","type":"page","id":"a","users":[{"id":1,"username":"max","fullName":"Max Mustermann"}]},"options":[],"error":false}'
+        )->shouldBeCalled();
+        $this->collaborationMessageHandler->handle(
+            $this->connection1->reveal(),
+            [
+                'command' => 'enter',
+                'id' => 'a',
+                'userId' => 1,
+                'type' => 'page',
+            ],
+            $this->context1->reveal()
+        );
+
+        /** @var Collaboration[] $connectionCollaborations */
+        $connectionCollaborations = $this->collaborationsConnectionCache->fetch(1);
+        $connectionCollaborations['page_a']->setChanged(time() - 20);
+        $this->collaborationsConnectionCache->save(1, $connectionCollaborations);
+
+        /** @var Collaboration[] $entityCollaborations */
+        $entityCollaborations = $this->collaborationsEntityCache->fetch('page_a');
+        $entityCollaborations[1]->setChanged(time() - 20);
+        $this->collaborationsEntityCache->save(1, $entityCollaborations);
+
+        $this->connection2->send(
+            '{"handler":"sulu_content.collaboration","message":{"command":"update","type":"page","id":"a","users":[{"id":2,"username":"john","fullName":"John Doe"}]},"options":[],"error":false}'
+        )->shouldBeCalled();
+
+        $this->collaborationMessageHandler->handle(
+            $this->connection2->reveal(),
+            [
+                'command' => 'enter',
+                'id' => 'a',
+                'userId' => 2,
+                'type' => 'page',
+            ],
+            $this->context2->reveal()
+        );
+
+        $this->assertFalse($this->collaborationsConnectionCache->contains(1));
+        $this->assertArrayNotHasKey(1, $this->collaborationsEntityCache->fetch('page_a'));
     }
 }

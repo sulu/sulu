@@ -51,6 +51,16 @@ class CollaborationMessageHandler implements MessageHandlerInterface
     private $collaborationsConnectionCache;
 
     /**
+     * @var int
+     */
+    private $interval;
+
+    /**
+     * @var int
+     */
+    private $threshold;
+
+    /**
      * @var ConnectionInterface[]
      */
     private $connections = [];
@@ -59,12 +69,16 @@ class CollaborationMessageHandler implements MessageHandlerInterface
         MessageBuilderInterface $messageBuilder,
         UserRepositoryInterface $userRepository,
         Cache $collaborationsEntityCache,
-        Cache $collaborationsConnectionCache
+        Cache $collaborationsConnectionCache,
+        $interval,
+        $threshold
     ) {
         $this->messageBuilder = $messageBuilder;
         $this->userRepository = $userRepository;
         $this->collaborationsEntityCache = $collaborationsEntityCache;
         $this->collaborationsConnectionCache = $collaborationsConnectionCache;
+        $this->interval = $interval;
+        $this->threshold = $threshold;
     }
 
     /**
@@ -326,6 +340,8 @@ class CollaborationMessageHandler implements MessageHandlerInterface
     /**
      * Returns the required information about the collaborator's users for returning in the messages.
      *
+     * Also removes the collaboration from the caches if they are outdated.
+     *
      * @param string $type The type of the entity
      * @param mixed $id The id of the entity
      *
@@ -333,18 +349,34 @@ class CollaborationMessageHandler implements MessageHandlerInterface
      */
     private function getUsersInformation($type, $id)
     {
-        $entityCollaborations = $this->collaborationsEntityCache->fetch($this->getUniqueCollaborationKey($type, $id)) ?: [];
+        $entityCollaborations = $this->collaborationsEntityCache->fetch(
+            $this->getUniqueCollaborationKey($type, $id)
+        ) ?: [];
+
+        $time = time() - ($this->interval / 1000) - ($this->threshold / 1000);
 
         return array_values(
-            array_map(
-                function (Collaboration $collaboration) {
-                    return [
-                        'id' => $collaboration->getUserId(),
-                        'username' => $collaboration->getUsername(),
-                        'fullName' => $collaboration->getFullName(),
-                    ];
-                },
-                $entityCollaborations
+            array_filter(
+                array_map(
+                    function (Collaboration $collaboration) use ($time) {
+                        if ($collaboration->getChanged() < $time) {
+                            $this->removeCollaboration(
+                                $collaboration->getType(),
+                                $collaboration->getId(),
+                                $collaboration->getConnectionId()
+                            );
+
+                            return;
+                        }
+
+                        return [
+                            'id' => $collaboration->getUserId(),
+                            'username' => $collaboration->getUsername(),
+                            'fullName' => $collaboration->getFullName(),
+                        ];
+                    },
+                    $entityCollaborations
+                )
             )
         );
     }

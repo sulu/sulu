@@ -91,6 +91,8 @@
             <argument type="service" id="sulu_security.user_repository"/>
             <argument type="service" id="sulu_content.collaboration.collaborations_entity_cache"/>
             <argument type="service" id="sulu_content.collaboration.collaborations_connection_cache"/>
+            <argument>%sulu.content.collaboration.interval%</argument>
+            <argument>%sulu.content.collaboration.threshold%</argument>
             <tag name="sulu.websocket.message.handler" dispatcher="admin" alias="sulu_content.collaboration" />
         </service>
 

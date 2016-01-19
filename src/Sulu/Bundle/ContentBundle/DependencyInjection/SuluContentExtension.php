@@ -116,6 +116,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
     private function processCollaboration(ContainerBuilder $container, $config)
     {
         $container->setParameter('sulu.content.collaboration.interval', $config['collaboration']['interval']);
+        $container->setParameter('sulu.content.collaboration.threshold', $config['collaboration']['threshold']);
     }
 
     private function processTemplates(ContainerBuilder $container, $config)
