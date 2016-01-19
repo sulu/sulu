@@ -45,24 +45,27 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         }
 
         if ($container->hasExtension('jms_serializer')) {
-            $container->prependExtensionConfig('jms_serializer', [
-                'metadata' => [
-                    'directories' => [
-                        [
-                            'path' => __DIR__ . '/../Resources/config/serializer',
-                            'namespace_prefix' => 'Sulu\Bundle\ContentBundle',
-                        ],
-                        [
-                            'path' => __DIR__ . '/../Resources/config/serializer',
-                            'namespace_prefix' => 'Sulu\Component\Content',
-                        ],
-                        [
-                            'path' => __DIR__ . '/../Resources/config/serializer',
-                            'namespace_prefix' => 'Sulu\Component\Webspace',
+            $container->prependExtensionConfig(
+                'jms_serializer',
+                [
+                    'metadata' => [
+                        'directories' => [
+                            [
+                                'path' => __DIR__ . '/../Resources/config/serializer',
+                                'namespace_prefix' => 'Sulu\Bundle\ContentBundle',
+                            ],
+                            [
+                                'path' => __DIR__ . '/../Resources/config/serializer',
+                                'namespace_prefix' => 'Sulu\Component\Content',
+                            ],
+                            [
+                                'path' => __DIR__ . '/../Resources/config/serializer',
+                                'namespace_prefix' => 'Sulu\Component\Webspace',
+                            ],
                         ],
                     ],
-                ],
-            ]);
+                ]
+            );
         }
     }
 
@@ -117,6 +120,12 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
     {
         $container->setParameter('sulu.content.collaboration.interval', $config['collaboration']['interval']);
         $container->setParameter('sulu.content.collaboration.threshold', $config['collaboration']['threshold']);
+
+        $container->setAlias('sulu.content.collaboration.entity_cache', $config['collaboration']['entity_cache']);
+        $container->setAlias(
+            'sulu.content.collaboration.connection_cache',
+            $config['collaboration']['connection_cache']
+        );
     }
 
     private function processTemplates(ContainerBuilder $container, $config)
