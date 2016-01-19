@@ -16,7 +16,8 @@ define([
     'use strict';
 
     var WEBSOCKET_APP_NAME = 'admin',
-        MESSAGE_HANDLER_NAME = 'sulu_content.collaboration';
+        MESSAGE_HANDLER_NAME = 'sulu_content.collaboration',
+        LABEL_ID = 'collaboration';
 
     return {
         /**
@@ -92,6 +93,7 @@ define([
          */
         sendLeaveMessage: function() {
             clearInterval(this.keepInterval);
+            this.sandbox.emit('sulu.labels.label.remove', LABEL_ID);
 
             return this.client.send(MESSAGE_HANDLER_NAME, {
                 command: 'leave',
@@ -115,6 +117,7 @@ define([
          */
         showCollaboratorLabel: function(collaborators) {
             if (collaborators.length <= 1) {
+                this.sandbox.emit('sulu.labels.label.remove', LABEL_ID);
                 return;
             }
 
@@ -136,7 +139,7 @@ define([
                     ).join(', ')
                 );
 
-            this.sandbox.emit('sulu.labels.warning.show', message, '');
+            this.sandbox.emit('sulu.labels.warning.show', message, '', LABEL_ID, false);
         }
     };
 });
