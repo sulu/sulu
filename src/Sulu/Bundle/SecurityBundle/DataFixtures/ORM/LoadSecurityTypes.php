@@ -29,10 +29,10 @@ class LoadSecurityTypes extends ContainerAware implements FixtureInterface, Orde
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
 
         $file = $this->container->getParameter('sulu_security.security_types.fixture');
-        $doc = new DOMDocument();
+        $doc = new \DOMDocument();
         $doc->load($file);
 
-        $xpath = new DOMXpath($doc);
+        $xpath = new \DOMXpath($doc);
         $elements = $xpath->query('/security-types/security-type');
 
         if (!is_null($elements)) {
