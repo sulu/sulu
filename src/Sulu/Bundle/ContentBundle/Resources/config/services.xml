@@ -108,6 +108,9 @@
             <argument type="string">sulu-content</argument>
             <argument type="collection">
                 <argument key="locales" type="expression">service('sulu_core.webspace.webspace_manager').getAllLocalizations()</argument>
+                <argument key="collaboration" type="collection">
+                    <argument key="interval">%sulu.content.collaboration.interval%</argument>
+                </argument>
             </argument>
 
             <tag name="sulu.js_config"/>

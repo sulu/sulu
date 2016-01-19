@@ -37,6 +37,8 @@ define([
         bindEvents: function() {
             this.sandbox.on('sulu.router.navigate', this.sendLeaveMessage.bind(this));
             $(window).unload(this.sendLeaveMessage.bind(this));
+
+            this.keepInterval = setInterval(this.sendKeepMessage.bind(this), Config.get('sulu-content').collaboration.interval);
         },
 
         /**
@@ -74,9 +76,23 @@ define([
         },
 
         /**
+         * @method sendKeepMessage
+         */
+        sendKeepMessage: function() {
+            return this.client.send(MESSAGE_HANDLER_NAME, {
+                command: 'keep',
+                id: this.options.id,
+                userId: this.options.userId,
+                type: this.options.type
+            });
+        },
+
+        /**
          * @method sendLeaveMessage
          */
         sendLeaveMessage: function() {
+            clearInterval(this.keepInterval);
+
             return this.client.send(MESSAGE_HANDLER_NAME, {
                 command: 'leave',
                 id: this.options.id,

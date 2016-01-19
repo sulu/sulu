@@ -80,6 +80,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
 
         $this->processTemplates($container, $config);
         $this->processPreview($container, $config);
+        $this->processCollaboration($container, $config);
 
         if (isset($bundles['SuluSearchBundle'])) {
             $this->processSearch($config, $loader, $container);
@@ -110,6 +111,11 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
             'sulu.content.preview.error_template',
             $errorTemplate
         );
+    }
+
+    private function processCollaboration(ContainerBuilder $container, $config)
+    {
+        $container->setParameter('sulu.content.collaboration.interval', $config['collaboration']['interval']);
     }
 
     private function processTemplates(ContainerBuilder $container, $config)

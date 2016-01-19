@@ -313,4 +313,45 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->collaborationsConnectionCache->contains(2));
         $this->assertFalse($this->collaborationsEntityCache->contains('page_a'));
     }
+
+    public function testHandleChangedTime()
+    {
+        $this->collaborationMessageHandler->handle(
+            $this->connection1->reveal(),
+            [
+                'command' => 'enter',
+                'id' => 'a',
+                'userId' => 1,
+                'type' => 'page',
+            ],
+            $this->context1->reveal()
+        );
+
+        /** @var Collaboration $oldCollaboration1 */
+        $oldCollaboration1 = $this->collaborationsConnectionCache->fetch(1)['page_a'];
+        /** @var Collaboration $oldCollaboration2 */
+        $oldCollaboration2 = $this->collaborationsEntityCache->fetch('page_a')[1];
+
+        // Required to test if the changed date has really changed
+        sleep(1);
+
+        $this->collaborationMessageHandler->handle(
+            $this->connection1->reveal(),
+            [
+                'command' => 'keep',
+                'id' => 'a',
+                'userId' => 1,
+                'type' => 'page',
+            ],
+            $this->context1->reveal()
+        );
+
+        /** @var Collaboration $collaboration1 */
+        $collaboration1 = $this->collaborationsConnectionCache->fetch(1)['page_a'];
+        /** @var Collaboration $collaboration2 */
+        $collaboration2 = $this->collaborationsEntityCache->fetch('page_a')[1];
+
+        $this->assertGreaterThan($oldCollaboration1->getChanged(), $collaboration1->getChanged());
+        $this->assertGreaterThan($oldCollaboration2->getChanged(), $collaboration2->getChanged());
+    }
 }

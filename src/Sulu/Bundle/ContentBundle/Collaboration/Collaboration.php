@@ -45,6 +45,11 @@ class Collaboration
      */
     private $id;
 
+    /**
+     * @var int
+     */
+    private $changed;
+
     public function __construct($connectionId, $userId, $username, $fullName, $type, $id)
     {
         $this->connectionId = $connectionId;
@@ -53,6 +58,7 @@ class Collaboration
         $this->fullName = $fullName;
         $this->type = $type;
         $this->id = $id;
+        $this->changed = time();
     }
 
     /**
@@ -113,5 +119,25 @@ class Collaboration
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Returns the timestamp for the last interaction.
+     *
+     * @return int
+     */
+    public function getChanged()
+    {
+        return $this->changed;
+    }
+
+    /**
+     * Sets the timestamp for the last interaction.
+     *
+     * @param int $changed
+     */
+    public function setChanged($changed)
+    {
+        $this->changed = $changed;
     }
 }
