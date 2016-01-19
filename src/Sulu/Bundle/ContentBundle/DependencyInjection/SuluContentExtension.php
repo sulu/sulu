@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContentBundle\DependencyInjection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -99,6 +100,10 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         $loader->load('compat.xml');
         $loader->load('document.xml');
         $loader->load('serializer.xml');
+
+        if ($container->getParameter('sulu.content.collaboration.enabled')) {
+            $loader->load('collaboration.xml');
+        }
     }
 
     private function processPreview(ContainerBuilder $container, $config)
@@ -118,14 +123,27 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
 
     private function processCollaboration(ContainerBuilder $container, $config)
     {
+        $container->setParameter('sulu.content.collaboration.enabled', $config['collaboration']['enabled']);
+
         $container->setParameter('sulu.content.collaboration.interval', $config['collaboration']['interval']);
         $container->setParameter('sulu.content.collaboration.threshold', $config['collaboration']['threshold']);
 
-        $container->setAlias('sulu.content.collaboration.entity_cache', $config['collaboration']['entity_cache']);
-        $container->setAlias(
-            'sulu.content.collaboration.connection_cache',
-            $config['collaboration']['connection_cache']
-        );
+        if ($config['collaboration']['enabled']) {
+            if (!isset($config['collaboration']['entity_cache'])) {
+                throw new InvalidArgumentException('The entity cache service for the collaboration must be configured');
+            }
+            $container->setAlias('sulu.content.collaboration.entity_cache', $config['collaboration']['entity_cache']);
+
+            if (!isset($config['collaboration']['connection_cache'])) {
+                throw new InvalidArgumentException(
+                    'The connection cache service for the collaboration must be configured'
+                );
+            }
+            $container->setAlias(
+                'sulu.content.collaboration.connection_cache',
+                $config['collaboration']['connection_cache']
+            );
+        }
     }
 
     private function processTemplates(ContainerBuilder $container, $config)

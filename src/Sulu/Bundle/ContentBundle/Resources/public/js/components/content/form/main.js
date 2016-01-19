@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['app-config', 'sulucontent/components/content/preview/main'], function(AppConfig, Preview) {
+define(['app-config', 'config', 'sulucontent/components/content/preview/main'], function(AppConfig, Config, Preview) {
 
     'use strict';
 
@@ -180,7 +180,9 @@ define(['app-config', 'sulucontent/components/content/preview/main'], function(A
                 this.initializeResourceLocator();
                 this.changeTemplateDropdownHandler();
 
-                this.startCollaborationComponent();
+                if (!!Config.get('sulu-content').collaboration.enabled) {
+                    this.startCollaborationComponent();
+                }
             }.bind(this));
         },
 

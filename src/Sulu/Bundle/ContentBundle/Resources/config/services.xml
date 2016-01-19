@@ -79,17 +79,6 @@
             <tag name="sulu.structure.extension"/>
         </service>
 
-        <!-- collaboration -->
-        <service id="sulu_content.collaboration" class="Sulu\Bundle\ContentBundle\Collaboration\CollaborationMessageHandler">
-            <argument type="service" id="sulu_websocket.admin.message_builder"/>
-            <argument type="service" id="sulu_security.user_repository"/>
-            <argument type="service" id="sulu.content.collaboration.entity_cache"/>
-            <argument type="service" id="sulu.content.collaboration.connection_cache"/>
-            <argument>%sulu.content.collaboration.interval%</argument>
-            <argument>%sulu.content.collaboration.threshold%</argument>
-            <tag name="sulu.websocket.message.handler" dispatcher="admin" alias="sulu_content.collaboration" />
-        </service>
-
         <!-- structure extension -->
         <service id="sulu_content.extension.excerpt" class="%sulu_content.extension.excerpt.class%">
             <argument type="service" id="sulu.content.structure_manager"/>
@@ -105,6 +94,7 @@
             <argument type="collection">
                 <argument key="locales" type="expression">service('sulu_core.webspace.webspace_manager').getAllLocalizations()</argument>
                 <argument key="collaboration" type="collection">
+                    <argument key="enabled">%sulu.content.collaboration.enabled%</argument>
                     <argument key="interval">%sulu.content.collaboration.interval%</argument>
                 </argument>
             </argument>
