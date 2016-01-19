@@ -59,7 +59,9 @@ define([
             script: 'website.webspace.settings.script',
 
             domain: 'website.webspace.settings.edit.domain',
-            environment: 'website.webspace.settings.edit.environment'
+            environment: 'website.webspace.settings.edit.environment',
+
+            pleaseChoose: 'dropdown.please-choose'
         }
     };
 
@@ -142,6 +144,7 @@ define([
                         multipleSelect: false,
                         valueName: 'title',
                         instanceName: 'analytics-overlay',
+                        defaultLabel: this.translations.pleaseChoose,
                         data: this.options.types,
                         selectCallback: this.changeType.bind(this)
                     }

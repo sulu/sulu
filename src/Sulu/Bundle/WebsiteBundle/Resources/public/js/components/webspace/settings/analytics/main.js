@@ -86,14 +86,17 @@ define(['underscore', 'text!./skeleton.html'], function(_, skeleton) {
                         },
                         matchings: [
                             {
+                                name: 'title',
                                 attribute: 'title',
                                 content: this.translations.title
                             },
                             {
+                                name: 'type',
                                 attribute: 'type',
                                 content: this.translations.type
                             },
                             {
+                                name: 'domains',
                                 attribute: 'domains',
                                 content: this.translations.domains,
                                 type: function(content) {

@@ -1,7 +1,6 @@
 <?php
-
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,29 +11,21 @@
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * Handles http cache actions.
  */
 class CacheController extends Controller
 {
+    /**
+     * Clear the whole http_cache for website.
+     *
+     * @return JsonResponse
+     */
     public function clearAction()
     {
-        /** @var Filesystem $filesystem */
-        $filesystem = $this->get('filesystem');
-
-        /** @var Kernel $kernel */
-        $kernel = $this->get('kernel');
-        $kernelPath = $kernel->getRootDir();
-        $kernelEnvironment = $kernel->getEnvironment();
-        $path = sprintf('%s/cache/website/%s/http_cache', $kernelPath, $kernelEnvironment);
-
-        if ($filesystem->exists($path)) {
-            $filesystem->remove($path);
-        }
+        $this->get('sulu_website.http_cache.clearer')->clear();
 
         return new JsonResponse([], 200);
     }

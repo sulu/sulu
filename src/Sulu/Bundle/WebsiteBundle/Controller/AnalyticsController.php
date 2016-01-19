@@ -74,6 +74,7 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
     {
         $entity = $this->get('sulu_website.analytics.manager')->create($webspaceKey, $request->request->all());
         $this->get('doctrine.orm.entity_manager')->flush();
+        $this->get('sulu_website.http_cache.clearer')->clear();
 
         return $this->handleView($this->view($entity, 200));
     }
@@ -91,6 +92,7 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
     {
         $entity = $this->get('sulu_website.analytics.manager')->update($id, $request->request->all());
         $this->get('doctrine.orm.entity_manager')->flush();
+        $this->get('sulu_website.http_cache.clearer')->clear();
 
         return $this->handleView($this->view($entity, 200));
     }
@@ -107,6 +109,7 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
     {
         $this->get('sulu_website.analytics.manager')->remove($id);
         $this->get('doctrine.orm.entity_manager')->flush();
+        $this->get('sulu_website.http_cache.clearer')->clear();
 
         return $this->handleView($this->view(null, 204));
     }
@@ -125,6 +128,7 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
 
         $this->get('sulu_website.analytics.manager')->removeMultiple($ids);
         $this->get('doctrine.orm.entity_manager')->flush();
+        $this->get('sulu_website.http_cache.clearer')->clear();
 
         return $this->handleView($this->view(null, 204));
     }
