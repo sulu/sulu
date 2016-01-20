@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Document\Subscriber;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use Sulu\Bundle\ContentBundle\Document\RouteDocument;
+use Sulu\Component\Content\Document\Behavior\RoutableBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;
 use Sulu\Component\DocumentManager\DocumentInspector;
@@ -57,9 +58,8 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
 
     public function removeDocument($document)
     {
-        // TODO: This is not a good indicator. There should be a RoutableBehavior here.
-        if (!$document instanceof StructureBehavior) {
-            return;
+        if ($document instanceof RoutableBehavior) {
+            $this->recursivelyRemoveRoutes($document);
         }
 
         if ($document instanceof ChildrenBehavior) {
@@ -68,8 +68,9 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
             }
         }
 
-        $this->removeReferences($document);
-        $this->recursivelyRemoveRoutes($document);
+        if ($document instanceof StructureBehavior) {
+            $this->removeReferences($document);
+        }
     }
 
     private function recursivelyRemoveRoutes($document)

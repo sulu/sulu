@@ -171,7 +171,8 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                             data: _.map(this.options.webspace.localizations, function(item) {
                                 return item.localization;
                             }),
-                            defaultLabel: this.translations.localeDefaultValue
+                            defaultLabel: this.translations.localeDefaultValue,
+                            emitPreSelect: false
                         }
                     },
                     {
@@ -209,7 +210,8 @@ define(['underscore', 'text!./form.html'], function(_, form) {
 
                                 this.target = id;
                                 this.sandbox.emit('husky.overlay.custom-urls.slide-to', 0);
-                            }.bind(this)
+                            }.bind(this),
+                            emitPreSelect: false
                         }
                     }
                 ]

@@ -34,7 +34,7 @@ class Generator implements GeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function generate($baseDomain, $domainParts, array $locales = null)
+    public function generate($baseDomain, $domainParts, Localization $locale = null)
     {
         $domain = $baseDomain;
         if (preg_match(self::PREFIX_REGEX, $baseDomain)) {
@@ -50,39 +50,34 @@ class Generator implements GeneratorInterface
             $domain = str_replace('*', $suffix, $domain, $count);
         }
 
-        if ($locales) {
-            return $this->localizeDomain($domainParts, $locales);
+        if ($locale) {
+            return $this->localizeDomain($domain, $locale);
         }
 
-        return [$domain];
+        return $domain;
     }
 
     /**
      * Localize given domain.
      *
      * @param string $domain
-     * @param array $locales
+     * @param Localization $locale
      *
      * @return string[]
      */
-    protected function localizeDomain($domain, array $locales)
+    protected function localizeDomain($domain, Localization $locale)
     {
-        return array_map(
-            function (Localization $localization) use ($domain) {
-                $replacer = $this->urlReplacerFactory->create($domain);
+        $replacer = $this->urlReplacerFactory->create($domain);
 
-                if (!$replacer->hasLocalizationReplacer() && !$replacer->hasLanguageReplacer()) {
-                    $replacer->appendLocalizationReplacer();
-                }
+        if (!$replacer->hasLocalizationReplacer() && !$replacer->hasLanguageReplacer()) {
+            $replacer->appendLocalizationReplacer();
+        }
 
-                return $replacer
-                    ->replaceLanguage($localization->getLanguage())
-                    ->replaceCountry($localization->getCountry())
-                    ->replaceLocalization($localization->getLocalization())
-                    ->cleanup()
-                    ->get();
-            },
-            $locales
-        );
+        return $replacer
+            ->replaceLanguage($locale->getLanguage())
+            ->replaceCountry($locale->getCountry())
+            ->replaceLocalization($locale->getLocalization())
+            ->cleanup()
+            ->get();
     }
 }

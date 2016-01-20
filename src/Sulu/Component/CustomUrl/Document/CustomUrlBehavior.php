@@ -11,6 +11,7 @@
 namespace Sulu\Component\CustomUrl\Document;
 
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Bundle\ContentBundle\Document\RouteDocument;
 
 /**
  * Interface for custom-url data-class.
@@ -79,4 +80,18 @@ interface CustomUrlBehavior
      * @return bool
      */
     public function isRedirect();
+
+    /**
+     * Returns list of existing routes.
+     *
+     * @return RouteDocument[]
+     */
+    public function getRoutes();
+
+    /**
+     * Set list of routes.
+     *
+     * @param RouteDocument[] $routes
+     */
+    public function setRoutes(array $routes);
 }

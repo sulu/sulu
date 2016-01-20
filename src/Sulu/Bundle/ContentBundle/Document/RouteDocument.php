@@ -52,6 +52,11 @@ class RouteDocument implements
     private $targetDocument;
 
     /**
+     * @var string
+     */
+    private $locale;
+
+    /**
      * {@inheritdoc}
      */
     public function getNodeName()
@@ -89,5 +94,21 @@ class RouteDocument implements
     public function setTargetDocument($targetDocument)
     {
         $this->targetDocument = $targetDocument;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
     }
 }

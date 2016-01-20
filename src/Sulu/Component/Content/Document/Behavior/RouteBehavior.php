@@ -31,4 +31,18 @@ interface RouteBehavior
      * @param object $targetDocument
      */
     public function setTargetDocument($targetDocument);
+
+    /**
+     * Returns locale.
+     *
+     * @return string
+     */
+    public function getLocale();
+
+    /**
+     * Sets locale.
+     *
+     * @param string $locale
+     */
+    public function setLocale($locale);
 }

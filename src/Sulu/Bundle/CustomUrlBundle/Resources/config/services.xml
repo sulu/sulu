@@ -41,6 +41,8 @@
             <argument type="service" id="sulu_custom_urls.domain_generator"/>
             <argument type="service" id="sulu_document_manager.document_manager"/>
             <argument type="service" id="sulu_document_manager.path_builder"/>
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
 
             <tag name="sulu_document_manager.event_subscriber" />
         </service>

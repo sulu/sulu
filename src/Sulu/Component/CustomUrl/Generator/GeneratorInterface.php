@@ -13,7 +13,7 @@ namespace Sulu\Component\CustomUrl\Generator;
 use Sulu\Component\Localization\Localization;
 
 /**
- * Generates urls for custom-urls.
+ * Generates domain for custom-urls.
  */
 interface GeneratorInterface
 {
@@ -23,9 +23,9 @@ interface GeneratorInterface
      *
      * @param $baseDomain
      * @param $domainParts
-     * @param Localization[] $locales
+     * @param Localization $locale
      *
-     * @return string[]
+     * @return string
      */
-    public function generate($baseDomain, $domainParts, array $locales = null);
+    public function generate($baseDomain, $domainParts, Localization $locale = null);
 }

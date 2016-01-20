@@ -12,6 +12,8 @@ namespace Sulu\Component\CustomUrl\Document;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Bundle\ContentBundle\Document\RouteDocument;
+use Sulu\Component\Content\Document\Behavior\RoutableBehavior;
 use Sulu\Component\DocumentManager\Behavior\Audit\BlameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
@@ -31,7 +33,8 @@ class CustomUrlDocument implements
     UuidBehavior,
     PathBehavior,
     ParentBehavior,
-    LocaleBehavior
+    LocaleBehavior,
+    RoutableBehavior
 {
     /**
      * @var string
@@ -87,6 +90,11 @@ class CustomUrlDocument implements
      * @var bool
      */
     protected $redirect;
+
+    /**
+     * @var RouteDocument
+     */
+    protected $routes;
 
     /**
      * @var \DateTime
@@ -307,6 +315,22 @@ class CustomUrlDocument implements
     public function setRedirect($redirect)
     {
         $this->redirect = $redirect;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRoutes()
+    {
+        return $this->routes;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setRoutes(array $routes)
+    {
+        $this->routes = $routes;
     }
 
     /**

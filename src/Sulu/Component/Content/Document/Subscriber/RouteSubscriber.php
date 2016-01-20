@@ -22,6 +22,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class RouteSubscriber implements EventSubscriberInterface
 {
     const DOCUMENT_TARGET_FIELD = 'content';
+    const DOCUMENT_LOCALE_FIELD = 'locale';
 
     public static function getSubscribedEvents()
     {
@@ -42,6 +43,10 @@ class RouteSubscriber implements EventSubscriberInterface
             'encoding' => 'system',
             'property' => self::DOCUMENT_TARGET_FIELD,
             'type' => 'reference',
+        ]);
+        $metadata->addFieldMapping('locale', [
+            'encoding' => 'system',
+            'property' => self::DOCUMENT_LOCALE_FIELD,
         ]);
     }
 }
