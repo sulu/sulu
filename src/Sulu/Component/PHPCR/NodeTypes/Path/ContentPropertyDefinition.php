@@ -201,7 +201,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      */
     public function getRequiredType()
     {
-        return PropertyType::REFERENCE;
+        return PropertyType::TYPENAME_REFERENCE;
     }
 
     /**

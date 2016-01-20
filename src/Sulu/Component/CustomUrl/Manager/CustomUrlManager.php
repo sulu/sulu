@@ -131,6 +131,10 @@ class CustomUrlManager implements CustomUrlManagerInterface
         $accessor = PropertyAccess::createPropertyAccessor();
 
         foreach ($metadata->getFieldMappings() as $fieldName => $mapping) {
+            if (!array_key_exists($fieldName, $data)) {
+                continue;
+            }
+
             $value = $data[$fieldName];
             if (array_key_exists('type', $mapping) && $mapping['type'] === 'reference') {
                 $value = $this->documentManager->find($value['uuid'], $locale, ['load_ghost_content' => true]);

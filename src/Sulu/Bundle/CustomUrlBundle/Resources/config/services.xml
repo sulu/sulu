@@ -38,9 +38,15 @@
         </service>
 
         <service id="sulu_custom_urls.subscriber" class="Sulu\Component\CustomUrl\Document\Subscriber\CustomUrlSubscriber">
-            <argument type="service" id="sulu_custom_urls.manager"/>
+            <argument type="service" id="sulu_custom_urls.domain_generator"/>
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu_document_manager.path_builder"/>
 
             <tag name="sulu_document_manager.event_subscriber" />
+        </service>
+
+        <service id="sulu_custom_urls.domain_generator" class="Sulu\Component\CustomUrl\Generator\Generator">
+            <argument type="service" id="sulu_core.webspace.webspace_manager.url_replacer_factory"/>
         </service>
     </services>
 </container>

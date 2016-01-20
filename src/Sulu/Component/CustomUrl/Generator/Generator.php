@@ -19,7 +19,7 @@ use Sulu\Component\Webspace\Url\ReplacerFactoryInterface;
 class Generator implements GeneratorInterface
 {
     const PREFIX_REGEX = '/^([^\/]*)(\*)(.*)$/';
-    const POSTFIX_REGEX = '/^.*\/.*\*.*/$';
+    const POSTFIX_REGEX = '/^.*\/.*\*.*$/';
 
     /**
      * @var ReplacerFactoryInterface
@@ -45,9 +45,9 @@ class Generator implements GeneratorInterface
             $domain = rtrim($domain, '/') . '/*';
         }
 
-        foreach ($domainParts['postfix'] as $postfix) {
+        foreach ($domainParts['suffix'] as $suffix) {
             $count = 1;
-            $domain = str_replace('*', $postfix, $domain, $count);
+            $domain = str_replace('*', $suffix, $domain, $count);
         }
 
         if ($locales) {
