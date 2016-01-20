@@ -178,6 +178,15 @@ class CollaborationMessageHandler implements MessageHandlerInterface
         ];
     }
 
+    /**
+     * Sends a keep message, to tell the server that the connection is still working.
+     *
+     * @param ConnectionInterface $conn
+     * @param MessageHandlerContext $context
+     * @param array $msg
+     *
+     * @return array
+     */
     private function keep(ConnectionInterface $conn, MessageHandlerContext $context, array $msg)
     {
         $user = $this->userRepository->findUserById($msg['userId']);

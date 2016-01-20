@@ -8,10 +8,10 @@
  */
 
 define([
-    'app-config', 
-    'config', 
+    'app-config',
+    'config',
     'websocket-manager'
-    ], function(AppConfig, Config, WebsocketManager) {
+], function(AppConfig, Config, WebsocketManager) {
 
     'use strict';
 
@@ -20,6 +20,12 @@ define([
         LABEL_ID = 'collaboration';
 
     return {
+        defaults: {
+            translations: {
+                collaborationWarning: 'content.collaboration.warning'
+            }
+        },
+
         /**
          * @method initialize
          */
@@ -121,23 +127,22 @@ define([
                 return;
             }
 
-            var message = this.sandbox.translate('content.collaboration.warning')
-                .replace(
-                    '%s',
-                    collaborators.map(
-                        function(collaborator) {
-                            if (collaborator.id === this.options.userId) {
-                                return null;
-                            }
-
-                            return collaborator.username;
-                        }.bind(this)
-                    ).filter(
-                        function(collaborator) {
-                            return collaborator != null;
+            var message = this.translations.collaborationWarning.replace(
+                '%s',
+                collaborators.map(
+                    function(collaborator) {
+                        if (collaborator.id === this.options.userId) {
+                            return null;
                         }
-                    ).join(', ')
-                );
+
+                        return collaborator.username;
+                    }.bind(this)
+                ).filter(
+                    function(collaborator) {
+                        return collaborator != null;
+                    }
+                ).join(', ')
+            );
 
             this.sandbox.emit('sulu.labels.warning.show', message, '', LABEL_ID, false);
         }
