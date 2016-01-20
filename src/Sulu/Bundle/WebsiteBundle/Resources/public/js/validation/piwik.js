@@ -37,13 +37,11 @@ define([
                 },
 
                 needsValidation: function() {
-                    return true;
+                    return false;
                 },
 
                 validate: function() {
-                    var content = this.getValue();
-
-                    return (content.url.length >= 3 && content.siteId !== '' && !isNaN(parseFloat(content.siteId)));
+                    return true;
                 }
             };
 
