@@ -40558,7 +40558,12 @@ define('__component__$select@husky',[], function() {
                     '<div class="husky-select-container">',
                     '   <div class="dropdown-label pointer">',
                     '       <% if (isNative) { %>',
-                    '           <select class="' + constants.listClass + '"></select>',
+                    '           <select class="' + constants.listClass + '">',
+                    (
+                        this.options.preSelectedElements.length === 0 ?
+                        '           <option selected="true" disabled="true">' + defaultLabel + '</option>' : ''
+                    ),
+                    '           </select>',
                     '       <% } %>',
                     '       <div class="checkbox">',
                                 iconSpan,

@@ -172,5 +172,12 @@
             <argument type="service" id="sulu.content.mapper" />
             <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
         </service>
+
+        <!-- cache clearer -->
+        <service id="sulu_website.http_cache.clearer" class="Sulu\Bundle\WebsiteBundle\Cache\CacheClearer">
+            <argument type="string">%kernel.root_dir%</argument>
+            <argument type="string">%kernel.environment%</argument>
+            <argument type="service" id="filesystem"/>
+        </service>
     </services>
 </container>

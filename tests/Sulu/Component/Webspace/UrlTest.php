@@ -37,6 +37,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
             'url' => 'foo',
             'main' => true,
             'analyticsKey' => 'analytics',
+            'environment' => null,
         ];
 
         $this->url->setUrl($expected['url']);

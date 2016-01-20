@@ -53,6 +53,10 @@ class SuluWebsiteExtension extends Extension
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 
+        if ($config['analytics']['enabled']) {
+            $loader->load('analytics.xml');
+        }
+
         if (SuluKernel::CONTEXT_WEBSITE == $container->getParameter('sulu.context')) {
             $loader->load('website.xml');
         }

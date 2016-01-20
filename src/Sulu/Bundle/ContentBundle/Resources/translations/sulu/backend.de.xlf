@@ -505,7 +505,7 @@
             </trans-unit>
             <trans-unit id="487f946d51783a9899fa59d31dcfc3e8" resname="labels.success.content-save-desc">
                 <source>labels.success.content-save-desc</source>
-                <target>Node erfolgreich gespeichert.</target>
+                <target>Seite erfolgreich gespeichert.</target>
             </trans-unit>
             <trans-unit id="e4b14069a8a085ede2092hf51234dh40" resname="smart-content.categories.label">
                 <source>smart-content.categories.label</source>
@@ -565,7 +565,7 @@
             </trans-unit>
             <trans-unit id="13" resname="content.webspace.settings.localizations">
                 <source>content.webspace.settings.localizations</source>
-                <target>Lokalisierungen</target>
+                <target>Verfügbare Lokalisierungen</target>
             </trans-unit>
             <trans-unit id="14" resname="content.webspace.settings.localization">
                 <source>content.webspace.settings.localization</source>
@@ -577,7 +577,7 @@
             </trans-unit>
             <trans-unit id="16" resname="content.webspace.settings.urls">
                 <source>content.webspace.settings.urls</source>
-                <target>Domains / URLs</target>
+                <target>Konfigurierte Domains / URLs</target>
             </trans-unit>
             <trans-unit id="17" resname="content.webspace.settings.url">
                 <source>content.webspace.settings.url</source>

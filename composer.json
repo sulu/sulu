@@ -45,7 +45,7 @@
         "massive/build-bundle": "0.2.*",
         "matthiasnoback/symfony-config-test": "v0.1.1",
         "matthiasnoback/symfony-dependency-injection-test": "v0.7.3",
-        "phpunit/phpunit": "~4.5.0",
+        "phpunit/phpunit": ">=4.8.0",
         "sensio/framework-extra-bundle": "~3.0",
         "symfony-cmf/testing": "dev-master",
         "symfony/monolog-bundle": "2.4.*",
@@ -73,7 +73,6 @@
         "sensio/framework-extra-bundle": "~3.0",
         "doctrine/doctrine-bundle": "1.2.*",
         "symfony/monolog-bundle": "2.4.*",
-        "phpunit/phpunit": "3.7.*",
         "zendframework/zend-stdlib": "Needed (as in require dev) in addition to zendsearch",
         "zendframework/zendsearch": "To use the PHP based Zend Search library (based on Lucene)",
         "massive/build-bundle": "0.2.*"

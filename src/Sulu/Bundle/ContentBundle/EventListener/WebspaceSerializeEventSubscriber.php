@@ -69,5 +69,13 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
 
         $portalInformation = $event->getContext()->accept(array_values($portalInformation));
         $visitor->addData('portalInformation', $portalInformation);
+
+        $urls = [];
+        foreach ($webspace->getPortals() as $portal) {
+            $environment = $portal->getEnvironment($this->environment);
+            $urls = array_merge($urls, $environment->getUrls());
+        }
+        $urls = $event->getContext()->accept($urls);
+        $visitor->addData('urls', $urls);
     }
 }

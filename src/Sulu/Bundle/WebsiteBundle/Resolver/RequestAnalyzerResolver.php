@@ -13,7 +13,6 @@ namespace Sulu\Bundle\WebsiteBundle\Resolver;
 
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -35,16 +34,21 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
      * @var array
      */
     private $previewDefaults;
+
     /**
      * @var RequestStack
      */
     private $requestStack;
 
-    public function __construct(WebspaceManagerInterface $webspaceManager, RequestStack $requestStack, $environment, $previewDefaults = [])
-    {
-        $this->environment = $environment;
+    public function __construct(
+        WebspaceManagerInterface $webspaceManager,
+        RequestStack $requestStack,
+        $environment,
+        $previewDefaults = []
+    ) {
         $this->webspaceManager = $webspaceManager;
         $this->requestStack = $requestStack;
+        $this->environment = $environment;
 
         $this->previewDefaults = array_merge(['analyticsKey' => ''], $previewDefaults);
     }

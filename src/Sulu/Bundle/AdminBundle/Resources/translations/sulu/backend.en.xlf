@@ -920,6 +920,14 @@
                 <source>public.show-all</source>
                 <target>Show all</target>
             </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23cdb" resname="public.type">
+                <source>public.type</source>
+                <target>Type</target>
+            </trans-unit>
+            <trans-unit id="c129c52dae1354cc4123c0b4820e23cdb" resname="labels.success.save-desc">
+                <source>labels.success.save-desc</source>
+                <target>Sucessfully saved</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
