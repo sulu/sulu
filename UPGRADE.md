@@ -2,6 +2,14 @@
 
 ## dev-develop
 
+### Preview
+
+Clear the preview cache to avoid wrong cached data.
+
+```bash
+app/console cache:clear
+```
+
 ### WebsiteRequestAnalyzer
 
 The `Current`-part of all setters have been removed, because they have already

@@ -15,6 +15,7 @@ use Sulu\Component\Content\Form\Type\DocumentObjectType;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -34,14 +35,8 @@ abstract class BasePageDocumentType extends AbstractStructureBehaviorType
      */
     private $documentManager;
 
-    /**
-     * @param SessionManagerInterface $sessionManager
-     * @param DocumentManager         $documentManager
-     */
-    public function __construct(
-        SessionManagerInterface $sessionManager,
-        DocumentManager $documentManager
-    ) {
+    public function __construct(SessionManagerInterface $sessionManager, DocumentManager $documentManager)
+    {
         $this->sessionManager = $sessionManager;
         $this->documentManager = $documentManager;
     }
@@ -52,9 +47,11 @@ abstract class BasePageDocumentType extends AbstractStructureBehaviorType
     public function setDefaultOptions(OptionsResolverInterface $options)
     {
         parent::setDefaultOptions($options);
-        $options->setRequired([
-            'webspace_key',
-        ]);
+        $options->setRequired(
+            [
+                'webspace_key',
+            ]
+        );
     }
 
     /**
@@ -67,11 +64,15 @@ abstract class BasePageDocumentType extends AbstractStructureBehaviorType
         $builder->add('parent', DocumentObjectType::class);
         $builder->add('extensions', TextType::class, ['property_path' => 'extensionsData']);
         $builder->add('resourceSegment', TextType::class);
-        $builder->add('navigationContexts', 'collection', [
-            'type' => TextType::class,
-            'allow_add' => true,
-            'allow_delete' => true,
-        ]);
+        $builder->add(
+            'navigationContexts',
+            CollectionType::class,
+            [
+                'type' => TextType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+            ]
+        );
         $builder->add('redirectType', IntegerType::class);
         $builder->add('redirectTarget', DocumentObjectType::class);
         $builder->add('redirectExternal', TextType::class);
@@ -102,11 +103,13 @@ abstract class BasePageDocumentType extends AbstractStructureBehaviorType
         $parent = $this->documentManager->find($this->sessionManager->getContentPath($webspaceKey));
 
         if (null === $parent) {
-            throw new \InvalidArgumentException(sprintf(
-                'Could not determine parent for document with title "%s" in webspace "%s"',
-                $document->getTitle(),
-                $webspaceKey
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Could not determine parent for document with title "%s" in webspace "%s"',
+                    $document->getTitle(),
+                    $webspaceKey
+                )
+            );
         }
 
         $document->setParent($parent);

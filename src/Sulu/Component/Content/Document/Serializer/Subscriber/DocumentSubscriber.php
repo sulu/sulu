@@ -14,12 +14,10 @@ namespace Sulu\Component\Content\Document\Serializer\Subscriber;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
-use PHPCR\ItemNotFoundException;
-use PHPCR\SessionInterface;
-use Sulu\Bundle\ContentBundle\Document\PageDocument;
-use Sulu\Component\Content\Compat\Structure\Document;
-use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\DocumentRegistry;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
+use Sulu\Component\DocumentManager\MetadataFactoryInterface;
+use Sulu\Component\DocumentManager\NodeManager;
 
 /**
  * Handle document re-registration upon deserialization.
@@ -27,9 +25,8 @@ use Sulu\Component\DocumentManager\DocumentRegistry;
  * Documents must implement the UuidBehavior.
  *
  * TODO: Remove this class if at all possible. The document should contain all the fields needed by the preview.
- * TODO: This class is hard-coded to the bundles PageDocument
  */
-class PageDocumentSubscriber implements EventSubscriberInterface
+class DocumentSubscriber implements EventSubscriberInterface
 {
     /**
      * @var DocumentRegistry
@@ -37,20 +34,23 @@ class PageDocumentSubscriber implements EventSubscriberInterface
     private $registry;
 
     /**
-     * @var SessionInterface
+     * @var NodeManager
      */
-    private $session;
+    private $nodeManager;
 
     /**
-     * @param DocumentRegistry $registry
-     * @param SessionInterface $session
+     * @var MetadataFactoryInterface
      */
+    private $metadataFactory;
+
     public function __construct(
         DocumentRegistry $registry,
-        SessionInterface $session
+        NodeManager $nodeManager,
+        MetadataFactoryInterface $metadataFactory
     ) {
         $this->registry = $registry;
-        $this->session = $session;
+        $this->nodeManager = $nodeManager;
+        $this->metadataFactory = $metadataFactory;
     }
 
     /**
@@ -73,7 +73,8 @@ class PageDocumentSubscriber implements EventSubscriberInterface
     {
         $document = $event->getObject();
 
-        if (!$document instanceof PageDocument) {
+        // only register documents
+        if (!$this->metadataFactory->hasMetadataForClass(get_class($document))) {
             return;
         }
 
@@ -82,8 +83,8 @@ class PageDocumentSubscriber implements EventSubscriberInterface
         }
 
         try {
-            $node = $this->session->getNodeByIdentifier($document->getUuid());
-        } catch (ItemNotFoundException $e) {
+            $node = $this->nodeManager->find($document->getUuid());
+        } catch (DocumentNotFoundException $e) {
             return;
         }
 
@@ -93,6 +94,8 @@ class PageDocumentSubscriber implements EventSubscriberInterface
         }
 
         // TODO use the original locale somehow
-        $this->registry->registerDocument($document, $node, $document->getLocale());
+        if (!$this->registry->hasDocument($document)) {
+            $this->registry->registerDocument($document, $node, $document->getLocale());
+        }
     }
 }
