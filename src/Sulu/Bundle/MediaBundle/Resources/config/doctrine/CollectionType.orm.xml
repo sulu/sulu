@@ -3,10 +3,6 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity name="Sulu\Bundle\MediaBundle\Entity\CollectionType" table="me_collection_types">
-        <indexes>
-            <index name="key_idx" columns="collection_type_key" />
-        </indexes>
-
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
