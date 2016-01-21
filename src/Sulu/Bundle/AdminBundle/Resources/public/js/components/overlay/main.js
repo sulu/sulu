@@ -18,65 +18,19 @@ define(function() {
 
     'use strict';
 
-    var createEventName = function(postfix) {
-            return 'sulu.overlay.' + postfix;
-        },
-
-        /**
-         * trigger after initialization has finished
-         *
-         * @event sulu.overlay.initialized
-         */
-            INITIALIZED = function() {
-            return createEventName.call(this, 'initialized');
-        },
-
-        /**
-         * triggered in the cancel-default-callback
-         *
-         * @event sulu.overlay.canceled
-         */
-            CANCELED = function() {
-            return createEventName.call(this, 'canceled');
-        },
-
-        /**
-         * triggered in the ok-default-callback
-         *
-         * @event sulu.overlay.canceled
-         */
-            CONFIRMED = function() {
-            return createEventName.call(this, 'confirmed');
-        },
-
-        /**
-         * listens on and shows an error overlay
-         *
-         * @event sulu.overlay.show-error
-         * @param {String} title of the the overlay
-         * @param {String} message of the overlay
-         * @param {String} callback for cancel-button
-         * @param {Object} overlay-options object - optional
-         */
-            SHOW_ERROR = function() {
-            return createEventName.call(this, 'show-error');
-        },
-
-        /**
-         * listens on and shows an warning overlay (ok/cancel)
-         *
-         * @event sulu.overlay.show-warning
-         * @param {String} title of the the overlay
-         * @param {String} message of the overlay
-         * @param {String} callback for cancel-button
-         * @param {String} callback for ok-button
-         * @param {Object} overlay-options object - optional
-         */
-            SHOW_WARNING = function() {
-            return createEventName.call(this, 'show-warning');
-        };
-
     return {
+
+        events: {
+            names: {
+                initialized: { postFix: 'initialized' },
+                canceled: { postFix: 'canceled'},
+                confirmed: { postFix: 'confirmed'},
+                show: { postFix: 'show', type: 'on'},
+                showError: { postFix: 'show-error', type: 'on' },
+                showWarning: { postFix: 'show-warning', type: 'on' }
+            },
+            namespace: 'sulu.overlay.'
+        },
 
         /**
          * Initialize the component
@@ -84,15 +38,16 @@ define(function() {
         initialize: function() {
             this.bindCustomEvents();
 
-            this.sandbox.emit(INITIALIZED.call(this));
+            this.events.initialized();
         },
 
         /**
          * Bind custom-related Events
          */
         bindCustomEvents: function() {
-            this.sandbox.on(SHOW_ERROR.call(this), this.showError.bind(this));
-            this.sandbox.on(SHOW_WARNING.call(this), this.showWarning.bind(this));
+            this.events.show(this.startOverlay.bind(this));
+            this.events.showError(this.showError.bind(this));
+            this.events.showWarning(this.showWarning.bind(this));
         },
 
         /**
@@ -131,11 +86,13 @@ define(function() {
             // default options for the overlay
             defaultOptions = {
                 el: $element,
+                openOnStart: true,
+                removeOnClose: true,
                 cancelCallback: function() {
-                    this.sandbox.emit(CANCELED.call(this));
+                    this.events.canceled();
                 }.bind(this),
                 okCallback: function() {
-                    this.sandbox.emit(CONFIRMED.call(this));
+                    this.events.confirmed();
                 }.bind(this)
             };
 
