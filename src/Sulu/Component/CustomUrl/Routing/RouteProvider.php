@@ -95,9 +95,6 @@ class RouteProvider implements RouteProviderInterface
             )
         );
 
-        // TODO External Link
-        // TODO Internal Link
-
         return $collection;
     }
 
