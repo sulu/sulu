@@ -51,6 +51,14 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager.url_replacer_factory"/>
         </service>
 
+        <service id="sulu_custom_urls.canonical.response_listener"
+                 class="Sulu\Bundle\CustomUrlBundle\EventListener\AppendCanonicalListener">
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+
+            <tag name="sulu.context" context="website"/>
+            <tag name="kernel.event_listener" event="kernel.response" method="onResponse"/>
+        </service>
+
         <service id="sulu_custom_urls.routing.provider" class="Sulu\Component\CustomUrl\Routing\RouteProvider">
             <argument type="service" id="sulu_custom_urls.manager"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>

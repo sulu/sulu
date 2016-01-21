@@ -235,7 +235,9 @@ define(['underscore', 'text!./form.html'], function(_, form) {
         loadComponentData: function() {
             var deferred = this.sandbox.data.deferred();
             if (!this.options.id) {
-                deferred.resolve({});
+                deferred.resolve({
+                    canonical: true
+                });
 
                 return deferred.promise();
             }
