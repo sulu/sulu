@@ -20,6 +20,7 @@ use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PathBuilder;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -90,28 +91,48 @@ class CustomUrlSubscriber implements EventSubscriberInterface
         // TODO if history exists link them to new nodes
 
         $webspaceKey = $this->inspector->getWebspace($document);
-        $locales = null;
         if ($document->isMultilingual()) {
-            $locales = $this->webspaceManager->findWebspaceByKey($webspaceKey)->getAllLocalizations();
+            $this->createMultilingualDomains($webspaceKey, $document, $event->getLocale());
+        } else {
+            $domain = $this->generator->generate($document->getBaseDomain(), $document->getDomainParts());
+            $locale = $this->webspaceManager->findWebspaceByKey($webspaceKey)->getLocalization(
+                $document->getTargetLocale()
+            );
+            $this->createDomain($domain, $document, $locale, $event->getLocale(), $this->getRoutesPath($webspaceKey));
         }
+    }
+
+    private function createMultilingualDomains($webspaceKey, CustomUrlBehavior $document, $persistedLocale)
+    {
+        $locales = $this->webspaceManager->findWebspaceByKey($webspaceKey)->getAllLocalizations();
 
         foreach ($locales as $locale) {
             $domain = $this->generator->generate($document->getBaseDomain(), $document->getDomainParts(), $locale);
 
-            /** @var RouteDocument $routeDocument */
-            $routeDocument = $this->documentManager->create('route');
-            $routeDocument->setTargetDocument($document);
-            $routeDocument->setLocale($locale->getLocalization());
-
-            $this->documentManager->persist(
-                $routeDocument,
-                $event->getLocale(),
-                [
-                    'path' => sprintf('%s/%s', $this->getRoutesPath($webspaceKey), $domain),
-                    'auto_create' => true,
-                ]
-            );
+            $this->createDomain($domain, $document, $locale, $persistedLocale, $this->getRoutesPath($webspaceKey));
         }
+    }
+
+    private function createDomain(
+        $domain,
+        CustomUrlBehavior $document,
+        Localization $locale,
+        $persistedLocale,
+        $routesPath
+    ) {
+        /** @var RouteDocument $routeDocument */
+        $routeDocument = $this->documentManager->create('route');
+        $routeDocument->setTargetDocument($document);
+        $routeDocument->setLocale($locale->getLocalization());
+
+        $this->documentManager->persist(
+            $routeDocument,
+            $persistedLocale,
+            [
+                'path' => sprintf('%s/%s', $routesPath, $domain),
+                'auto_create' => true,
+            ]
+        );
     }
 
     /**

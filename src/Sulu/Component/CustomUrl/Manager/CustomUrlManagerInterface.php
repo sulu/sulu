@@ -48,6 +48,17 @@ interface CustomUrlManagerInterface
     public function read($uuid, $locale = null);
 
     /**
+     * Returns a single custom-url object identified by url.
+     *
+     * @param string $url
+     * @param string $webspaceKey
+     * @param string $locale
+     *
+     * @return CustomUrlDocument
+     */
+    public function readByUrl($url, $webspaceKey, $locale);
+
+    /**
      * Update a single custom-url object identified by uuid with given data.
      *
      * @param string $uuid

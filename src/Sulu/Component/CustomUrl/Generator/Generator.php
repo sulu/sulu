@@ -38,7 +38,7 @@ class Generator implements GeneratorInterface
     {
         $domain = $baseDomain;
         if (preg_match(self::PREFIX_REGEX, $baseDomain)) {
-            $domain = preg_replace(self::PREFIX_REGEX, '$1' . $domainParts['prefix'] . '$3', $domain);
+            $domain = preg_replace('/\*/', $domainParts['prefix'], $domain, 1);
         }
 
         if (!preg_match(self::POSTFIX_REGEX, $baseDomain)) {
@@ -51,10 +51,10 @@ class Generator implements GeneratorInterface
         }
 
         if ($locale) {
-            return $this->localizeDomain($domain, $locale);
+            $domain = $this->localizeDomain($domain, $locale);
         }
 
-        return $domain;
+        return rtrim($domain, '/');
     }
 
     /**

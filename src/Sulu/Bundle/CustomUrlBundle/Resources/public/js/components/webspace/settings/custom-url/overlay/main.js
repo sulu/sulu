@@ -160,7 +160,8 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                             selectCallback: function(key, item) {
                                 $('#custom-url-input-container').show();
                                 this.sandbox.emit('sulu.webspace-settings.custom-url.set-base-domain', item);
-                            }.bind(this)
+                            }.bind(this),
+                            emitPreSelect: false
                         }
                     },
                     {

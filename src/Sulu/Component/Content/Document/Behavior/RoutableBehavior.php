@@ -15,5 +15,4 @@ namespace Sulu\Component\Content\Document\Behavior;
  */
 interface RoutableBehavior
 {
-
 }

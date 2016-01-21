@@ -29,6 +29,13 @@ class CustomUrlRepository
         $this->sessionManager = $sessionManager;
     }
 
+    /**
+     * Returns list of custom-url data-arrays.
+     *
+     * @param string $path
+     *
+     * @return \Iterator
+     */
     public function findList($path)
     {
         // TODO pagination

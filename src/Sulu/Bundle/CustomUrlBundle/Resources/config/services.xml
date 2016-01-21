@@ -50,5 +50,65 @@
         <service id="sulu_custom_urls.domain_generator" class="Sulu\Component\CustomUrl\Generator\Generator">
             <argument type="service" id="sulu_core.webspace.webspace_manager.url_replacer_factory"/>
         </service>
+
+        <service id="sulu_custom_urls.routing.provider" class="Sulu\Component\CustomUrl\Routing\RouteProvider">
+            <argument type="service" id="sulu_custom_urls.manager"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="string">%kernel.environment%</argument>
+
+            <tag name="sulu.context" context="website"/>
+        </service>
+        <service id="sulu_custom_urls.routing.generator" class="Symfony\Cmf\Component\Routing\ProviderBasedGenerator">
+            <argument type="service" id="sulu_custom_urls.routing.provider"/>
+
+            <tag name="sulu.context" context="website"/>
+        </service>
+        <service id="cmf_sulu_custom_urls.final_matcher" class="Symfony\Cmf\Component\Routing\NestedMatcher\UrlMatcher">
+            <argument type="service" id="cmf_routing.matcher.dummy_collection"/>
+            <argument type="service" id="cmf_routing.matcher.dummy_context"/>
+
+            <tag name="sulu.context" context="website"/>
+        </service>
+        <service id="sulu_custom_urls.routing.nested_matcher" class="%cmf_routing.nested_matcher.class%">
+            <argument type="service" id="sulu_custom_urls.routing.provider"/>
+            <argument type="service" id="cmf_sulu_custom_urls.final_matcher"/>
+
+            <tag name="sulu.context" context="website"/>
+        </service>
+
+        <service id="sulu_custom_urls.routing.route_enhancers.trailing_slash"
+                 class="Sulu\Component\CustomUrl\Routing\Enhancers\TrailingSlashEnhancer">
+            <tag name="sulu.context" context="website"/>
+        </service>
+        <service id="sulu_custom_urls.routing.route_enhancers.redirect"
+                 class="Sulu\Component\CustomUrl\Routing\Enhancers\RedirectEnhancer">
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+
+            <tag name="sulu.context" context="website"/>
+        </service>
+
+        <service id="sulu_custom_urls.routing.router" class="Symfony\Cmf\Bundle\RoutingBundle\Routing\DynamicRouter">
+            <argument type="service" id="router.request_context"/>
+            <argument type="service" id="sulu_custom_urls.routing.nested_matcher"/>
+            <argument type="service" id="sulu_custom_urls.routing.generator"/>
+            <argument>%cmf_routing.uri_filter_regexp%</argument>
+            <argument type="service" id="event_dispatcher" on-invalid="ignore"/>
+            <argument type="service" id="sulu_custom_urls.routing.provider"/>
+            <call method="setRequest">
+                <argument type="service" id="request" on-invalid="null" strict="false"/>
+            </call>
+            <call method="addRouteEnhancer">
+                <argument type="service" id="sulu_custom_urls.routing.route_enhancers.trailing_slash"/>
+                <argument>100</argument>
+            </call>
+            <call method="addRouteEnhancer">
+                <argument type="service" id="sulu_custom_urls.routing.route_enhancers.redirect"/>
+                <argument>90</argument>
+            </call>
+
+            <tag name="sulu.context" context="website"/>
+            <tag name="router" priority="110"/>
+        </service>
     </services>
 </container>

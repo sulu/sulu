@@ -11,9 +11,11 @@
 namespace Sulu\Component\CustomUrl\Manager;
 
 use Ferrandini\Urlizer;
+use Sulu\Bundle\ContentBundle\Document\RouteDocument;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Repository\CustomUrlRepository;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\PathBuilder;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -97,6 +99,29 @@ class CustomUrlManager implements CustomUrlManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function readByUrl($url, $webspaceKey, $locale)
+    {
+        try {
+            /** @var RouteDocument $routeDocument */
+            $routeDocument = $this->documentManager->find(
+                sprintf('%s/%s', $this->getRoutesPath($webspaceKey), $url),
+                $locale,
+                ['load_ghost_content' => true]
+            );
+        } catch (DocumentNotFoundException $ex) {
+            return null;
+        }
+
+        if (!$routeDocument instanceof RouteDocument) {
+            return null;
+        }
+
+        return $routeDocument->getTargetDocument();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function update($uuid, array $data, $locale = null)
     {
         $document = $this->read($uuid, $locale);
@@ -147,10 +172,22 @@ class CustomUrlManager implements CustomUrlManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Returns path to custom-url documents.
+     *
+     * @return string
      */
     private function getItemsPath($webspaceKey)
     {
         return $this->pathBuilder->build(['%base%', $webspaceKey, '%custom-urls%', '%custom-urls-items%']);
+    }
+
+    /**
+     * Returns base path to custom-url routes.
+     *
+     * @return string
+     */
+    private function getRoutesPath($webspaceKey)
+    {
+        return $this->pathBuilder->build(['%base%', $webspaceKey, '%custom-urls%', '%custom-urls-routes%']);
     }
 }
