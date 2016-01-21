@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * BUGFIX      #1944 [MediaBundle]     Removed wrong definition of indices
+    * FEATURE     #1921 [ContentBundle]   Added unset single internal link
     * ENHANCEMENT #1936 [Webspace]        Cleanup of WebsiteRequestAnalyzer
     * ENHANCEMENT #1937 [WebsiteBundle]   Removed unnecessary ob_clean in WebsiteController
     * BUGFIX      #1931 [ContentBundle]   Fixed form deprecation messages   

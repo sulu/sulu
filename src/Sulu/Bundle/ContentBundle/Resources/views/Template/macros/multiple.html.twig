@@ -21,7 +21,7 @@
                                  class="fa-times options-remove mapper-remove-{{ property.name }}"></div>
                         </div>
 
-                        {% include type.template with {'property': property, 'params':params, 'type': type, 'id': id ~ '-' ~ property.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
+                        {% include type.template with {'property': property, 'params':params, 'type': type, 'id': id ~ '-' ~ property.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale, 'uuid': uuid} only %}
                     </div>
                 </div>
             </script>

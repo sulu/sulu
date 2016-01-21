@@ -16,7 +16,8 @@
                         'webspaceKey': webspaceKey,
                         'languageCode': languageCode,
                         'userLocale': userLocale,
-                        'title': false
+                        'title': false,
+                        'uuid':uuid
                         } only %}
                     </div>
                 </div>
@@ -38,7 +39,8 @@
                 'webspaceKey': webspaceKey,
                 'languageCode': languageCode,
                 'userLocale': userLocale,
-                'title': true
+                'title': true,
+                'uuid':uuid
                 } only %}
             {% else %}
                 {# get type for property #}
@@ -52,7 +54,8 @@
                     'id': property.name,
                     'webspaceKey': webspaceKey,
                     'languageCode': languageCode,
-                    'userLocale': userLocale
+                    'userLocale': userLocale,
+                    'uuid':uuid
                     } only %}
                 {% elseif property is multiple %}
                     {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {
@@ -62,7 +65,8 @@
                     'id': property.name,
                     'webspaceKey': webspaceKey,
                     'languageCode': languageCode,
-                    'userLocale': userLocale
+                    'userLocale': userLocale,
+                    'uuid':uuid
                     } only %}
                 {% else %}
                     {% include 'SuluContentBundle:Template:macros/single.html.twig' with {
@@ -72,7 +76,8 @@
                     'id': property.name,
                     'webspaceKey': webspaceKey,
                     'languageCode': languageCode,
-                    'userLocale': userLocale
+                    'userLocale': userLocale,
+                    'uuid':uuid
                     } only %}
                 {% endif %}
             {% endif %}
