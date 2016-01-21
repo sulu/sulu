@@ -81,10 +81,25 @@
                  class="Sulu\Component\CustomUrl\Routing\Enhancers\TrailingSlashEnhancer">
             <tag name="sulu.context" context="website"/>
         </service>
+        <service id="sulu_custom_urls.routing.route_enhancers.trailing_html"
+                 class="Sulu\Component\CustomUrl\Routing\Enhancers\TrailingHtmlEnhancer">
+            <tag name="sulu.context" context="website"/>
+        </service>
         <service id="sulu_custom_urls.routing.route_enhancers.redirect"
                  class="Sulu\Component\CustomUrl\Routing\Enhancers\RedirectEnhancer">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
 
+            <tag name="sulu.context" context="website"/>
+        </service>
+        <service id="sulu_custom_urls.routing.route_enhancers.content"
+                 class="Sulu\Component\CustomUrl\Routing\Enhancers\ContentEnhancer">
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
+            <argument type="service" id="sulu.content.structure_manager"/>
+
+            <tag name="sulu.context" context="website"/>
+        </service>
+        <service id="sulu_custom_urls.routing.route_enhancers.structure"
+                 class="Sulu\Component\CustomUrl\Routing\Enhancers\StructureEnhancer">
             <tag name="sulu.context" context="website"/>
         </service>
 
@@ -103,8 +118,20 @@
                 <argument>100</argument>
             </call>
             <call method="addRouteEnhancer">
-                <argument type="service" id="sulu_custom_urls.routing.route_enhancers.redirect"/>
+                <argument type="service" id="sulu_custom_urls.routing.route_enhancers.trailing_html"/>
                 <argument>90</argument>
+            </call>
+            <call method="addRouteEnhancer">
+                <argument type="service" id="sulu_custom_urls.routing.route_enhancers.redirect"/>
+                <argument>80</argument>
+            </call>
+            <call method="addRouteEnhancer">
+                <argument type="service" id="sulu_custom_urls.routing.route_enhancers.content"/>
+                <argument>70</argument>
+            </call>
+            <call method="addRouteEnhancer">
+                <argument type="service" id="sulu_custom_urls.routing.route_enhancers.structure"/>
+                <argument>60</argument>
             </call>
 
             <tag name="sulu.context" context="website"/>

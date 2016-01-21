@@ -19,6 +19,7 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\DocumentManager\PathBuilder;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -120,8 +121,8 @@ class CustomUrlSubscriber implements EventSubscriberInterface
         $persistedLocale,
         $routesPath
     ) {
-        /** @var RouteDocument $routeDocument */
-        $routeDocument = $this->documentManager->create('route');
+        $path = sprintf('%s/%s', $routesPath, $domain);
+        $routeDocument = $this->findOrCreateRoute($path, $persistedLocale);
         $routeDocument->setTargetDocument($document);
         $routeDocument->setLocale($locale->getLocalization());
 
@@ -129,10 +130,25 @@ class CustomUrlSubscriber implements EventSubscriberInterface
             $routeDocument,
             $persistedLocale,
             [
-                'path' => sprintf('%s/%s', $routesPath, $domain),
+                'path' => $path,
                 'auto_create' => true,
             ]
         );
+    }
+
+    /**
+     * @param $path
+     * @param $locale
+     *
+     * @return RouteDocument
+     */
+    private function findOrCreateRoute($path, $locale)
+    {
+        try {
+            return $this->documentManager->find($path, $locale);
+        } catch (DocumentNotFoundException $ex) {
+            return $this->documentManager->create('route');
+        }
     }
 
     /**

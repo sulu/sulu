@@ -65,8 +65,13 @@ class RouteProvider implements RouteProviderInterface
 
         $collection = new RouteCollection();
 
+        $resourceLocator = rtrim(sprintf('%s%s', $request->getHost(), $request->getRequestUri()), '/');
+        if (substr($resourceLocator, -5, 5) === '.html') {
+            $resourceLocator = substr($resourceLocator, 0, -5);
+        }
+
         $customUrlDocument = $this->customUrlManager->readByUrl(
-            rtrim(sprintf('%s%s', $request->getHost(), $request->getRequestUri()), '/'),
+            $resourceLocator,
             $this->requestAnalyzer->getWebspace()->getKey(),
             $this->requestAnalyzer->getCurrentLocalization()->getLocalization()
         );
@@ -89,6 +94,9 @@ class RouteProvider implements RouteProviderInterface
                 ]
             )
         );
+
+        // TODO External Link
+        // TODO Internal Link
 
         return $collection;
     }

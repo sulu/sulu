@@ -16,9 +16,9 @@ use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Redirects to a non trailing slash uri.
+ * Redirects to a non html uri.
  */
-class TrailingSlashEnhancer extends AbstractEnhancer
+class TrailingHtmlEnhancer extends AbstractEnhancer
 {
     /**
      * {@inheritdoc}
@@ -29,14 +29,14 @@ class TrailingSlashEnhancer extends AbstractEnhancer
         array $defaults,
         Request $request
     ) {
-        if (substr($request->getRequestUri(), -1, 1) !== '/') {
+        if (substr($request->getRequestUri(), -5, 5) !== '.html') {
             return [];
         }
 
         return [
             '_finalized' => true,
             '_controller' => 'SuluWebsiteBundle:Default:redirect',
-            'url' => substr($request->getUri(), 0, -1),
+            'url' => substr($request->getUri(), 0, -5),
         ];
     }
 }
