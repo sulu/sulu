@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * BUGFIX      #1510 [Persistence]     Fetch user only if an entity with UserBlameInterface is detected
+    * FEATURE     #1233 [CollaborationBundle] Showing current collaborators of pages
     * BUGFIX      #1944 [MediaBundle]     Removed wrong definition of indices
     * FEATURE     #1921 [ContentBundle]   Added unset single internal link
     * FEATURE     #1233 [ContentBundle]   Showing current collaborators of pages

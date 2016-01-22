@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Collaboration;
+namespace Sulu\Component\Collaboration;
 
 /**
  * Represents a user, which is currently editing an entity.

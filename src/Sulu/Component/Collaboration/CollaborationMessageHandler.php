@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Collaboration;
+namespace Sulu\Component\Collaboration;
 
 use Doctrine\Common\Cache\Cache;
 use Ratchet\ConnectionInterface;
@@ -324,7 +324,7 @@ class CollaborationMessageHandler implements MessageHandlerInterface
         $identifier = $this->getUniqueCollaborationKey($type, $id);
 
         $message = $this->messageBuilder->build(
-            'sulu_content.collaboration',
+            'sulu_collaboration',
             [
                 'command' => 'update',
                 'type' => $type,

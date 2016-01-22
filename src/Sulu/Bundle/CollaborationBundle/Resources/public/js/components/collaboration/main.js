@@ -1,5 +1,5 @@
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,13 +16,13 @@ define([
     'use strict';
 
     var WEBSOCKET_APP_NAME = 'admin',
-        MESSAGE_HANDLER_NAME = 'sulu_content.collaboration',
+        MESSAGE_HANDLER_NAME = 'sulu_collaboration',
         LABEL_ID = 'collaboration';
 
     return {
         defaults: {
             translations: {
-                collaborationWarning: 'content.collaboration.warning'
+                collaborationWarning: 'collaboration.warning'
             }
         },
 
@@ -45,7 +45,7 @@ define([
             this.sandbox.on('sulu.router.navigate', this.sendLeaveMessage.bind(this));
             $(window).unload(this.sendLeaveMessage.bind(this));
 
-            this.keepInterval = setInterval(this.sendKeepMessage.bind(this), Config.get('sulu-content').collaboration.interval);
+            this.keepInterval = setInterval(this.sendKeepMessage.bind(this), Config.get('sulu-collaboration').interval);
         },
 
         /**

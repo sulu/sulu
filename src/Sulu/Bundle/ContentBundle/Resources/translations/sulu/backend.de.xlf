@@ -607,15 +607,6 @@
                 <source>content.webspace.settings.redirect</source>
                 <target>Weiterleitung</target>
             </trans-unit>
-            <trans-unit id="24" resname="content.collaboration.warning">
-                <source>content.collaboration.warning</source>
-                <target>
-                    <![CDATA[
-                    Diese Seite wird momentan benutzt von: <strong>%s</strong><br/>
-                    Ihre Änderungen könnten verloren gehen und Sie könnten die Arbeit von anderen Editoren überschreiben.
-                    ]]>
-                </target>
-            </trans-unit>
         </body>
     </file>
 </xliff>

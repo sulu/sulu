@@ -180,7 +180,7 @@ define(['app-config', 'config', 'sulucontent/components/content/preview/main'], 
                 this.initializeResourceLocator();
                 this.changeTemplateDropdownHandler();
 
-                if (!!Config.get('sulu-content').collaboration.enabled) {
+                if (!!Config.has('sulu-collaboration')) {
                     this.startCollaborationComponent();
                 }
             }.bind(this));
@@ -464,7 +464,7 @@ define(['app-config', 'config', 'sulucontent/components/content/preview/main'], 
 
             this.sandbox.start([
                 {
-                    name: 'content/collaboration@sulucontent',
+                    name: 'collaboration@sulucollaboration',
                     options: {
                         el: $container,
                         id: this.options.id,
