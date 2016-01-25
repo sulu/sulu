@@ -127,7 +127,7 @@ class UserBlameSubscriber implements EventSubscriber
             return;
         }
 
-        $user = $this->getUser($token);
+        $user = null;
         $manager = $event->getEntityManager();
         $unitOfWork = $manager->getUnitOfWork();
 
@@ -139,6 +139,10 @@ class UserBlameSubscriber implements EventSubscriber
         foreach ($entities as $blameEntity) {
             if (!$blameEntity instanceof UserBlameInterface) {
                 continue;
+            }
+
+            if (null === $user) {
+                $user = $this->getUser($token);
             }
 
             $meta = $manager->getClassMetadata(get_class($blameEntity));
