@@ -12,7 +12,6 @@ namespace Sulu\Component\CustomUrl\Routing\Enhancers;
 
 use Sulu\Component\CustomUrl\Document\CustomUrlBehavior;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

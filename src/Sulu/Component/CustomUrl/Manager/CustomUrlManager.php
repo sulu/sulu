@@ -109,11 +109,11 @@ class CustomUrlManager implements CustomUrlManagerInterface
                 ['load_ghost_content' => true]
             );
         } catch (DocumentNotFoundException $ex) {
-            return null;
+            return;
         }
 
         if (!$routeDocument instanceof RouteDocument) {
-            return null;
+            return;
         }
 
         return $routeDocument->getTargetDocument();

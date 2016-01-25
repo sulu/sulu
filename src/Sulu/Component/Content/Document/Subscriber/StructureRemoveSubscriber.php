@@ -58,10 +58,6 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
 
     public function removeDocument($document)
     {
-        if ($document instanceof RoutableBehavior) {
-            $this->recursivelyRemoveRoutes($document);
-        }
-
         if ($document instanceof ChildrenBehavior) {
             foreach ($document->getChildren() as $child) {
                 $this->removeDocument($child);
@@ -70,6 +66,10 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
 
         if ($document instanceof StructureBehavior) {
             $this->removeReferences($document);
+        }
+
+        if ($document instanceof RoutableBehavior) {
+            $this->recursivelyRemoveRoutes($document);
         }
     }
 
@@ -108,7 +108,7 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
      * Remove the given property, or the value which references the node (when
      * multi-valued).
      *
-     * @param NodeInterface     $node
+     * @param NodeInterface $node
      * @param PropertyInterface $property
      */
     private function dereferenceProperty(NodeInterface $node, PropertyInterface $property)

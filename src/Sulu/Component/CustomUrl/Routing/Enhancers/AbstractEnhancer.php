@@ -47,7 +47,7 @@ abstract class AbstractEnhancer implements RouteEnhancerInterface
      *
      * @return array
      */
-    protected abstract function doEnhance(
+    abstract protected function doEnhance(
         CustomUrlBehavior $customUrl,
         Webspace $webspace,
         array $defaults,

@@ -61,7 +61,6 @@ class ContentEnhancer extends AbstractEnhancer
         return !$customUrl->isRedirect();
     }
 
-
     /**
      * Return a structure bridge corresponding to the given document.
      *

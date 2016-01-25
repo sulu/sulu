@@ -46,8 +46,7 @@ class Generator implements GeneratorInterface
         }
 
         foreach ($domainParts['suffix'] as $suffix) {
-            $count = 1;
-            $domain = str_replace('*', $suffix, $domain, $count);
+            $domain = preg_replace('/\*/', $suffix, $domain, 1);
         }
 
         if ($locale) {
