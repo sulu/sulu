@@ -88,7 +88,7 @@ class PortalInformation implements ArrayableInterface
         Webspace $webspace = null,
         Portal $portal = null,
         Localization $localization = null,
-        $url,
+        $url = null,
         Segment $segment = null,
         $redirect = null,
         $analyticsKey = null,

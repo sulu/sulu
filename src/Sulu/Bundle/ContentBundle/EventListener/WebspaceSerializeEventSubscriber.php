@@ -64,6 +64,7 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
         }
 
         $this->appendPortalInformation($webspace, $context, $visitor);
+        $this->appendUrls($webspace, $context, $visitor);
         $this->appendCustomUrls($webspace, $context, $visitor);
     }
 
@@ -83,7 +84,17 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
 
         $portalInformation = $context->accept(array_values($portalInformation));
         $visitor->addData('portalInformation', $portalInformation);
+    }
 
+    /**
+     * Extract urls and add them to serialization.
+     *
+     * @param Webspace $webspace
+     * @param Context $context
+     * @param JsonSerializationVisitor $visitor
+     */
+    private function appendUrls(Webspace $webspace, Context $context, JsonSerializationVisitor $visitor)
+    {
         $urls = [];
         foreach ($webspace->getPortals() as $portal) {
             $environment = $portal->getEnvironment($this->environment);
