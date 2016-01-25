@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #1948 [AdminBundle]     Updated husky for required validation fix
     * HOTFIX      #1938 [ContactBundle]   Added missing namespace declerations for fixtures
     * HOTFIX      #1938 [MediaBundle]     Added missing namespace declerations for fixtures
     * HOTFIX      #1938 [SecurityBundle]  Added missing namespace declerations for fixtures
