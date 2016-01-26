@@ -1,9 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.1.7 (2016-01-26)
     * HOTFIX      #1952 [PersistenceBundle] Fixed mapped superclass inheritance
-    * HOTFIX      #1950 [Rest]            Added possibility to disable the GROUP BY clause     
+    * HOTFIX      #1950 [Rest]              Added possibility to disable the GROUP BY clause     
 
 * 1.1.6 (2016-01-26)
     * HOTFIX      #1948 [AdminBundle]     Updated husky for required validation fix
