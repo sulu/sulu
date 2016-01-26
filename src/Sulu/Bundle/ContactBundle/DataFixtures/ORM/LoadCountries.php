@@ -9,6 +9,8 @@
  * with this source code in the file LICENSE.
  */
 
+namespace Sulu\Bundle\ContactBundle\DataFixtures\ORM;
+
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -27,10 +29,10 @@ class LoadCountries implements FixtureInterface, OrderedFixtureInterface
 
         $i = 1;
         $file = dirname(__FILE__) . '/../countries.xml';
-        $doc = new DOMDocument();
+        $doc = new \DOMDocument();
         $doc->load($file);
 
-        $xpath = new DOMXpath($doc);
+        $xpath = new \DOMXpath($doc);
         $elements = $xpath->query('/Countries/Country');
 
         if (!is_null($elements)) {

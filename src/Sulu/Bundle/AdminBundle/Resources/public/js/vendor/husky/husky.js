@@ -19090,40 +19090,32 @@ define('validator/required',[
         var defaults = { },
 
             result = $.extend(new Default($el, form, defaults, options, 'required'), {
-                validate: function(value, recursion) {
-                    if (recursion && !value) {
-                        return false;
-                    }
+                validate: function() {
                     if (!!this.data.required) {
-                        var val = value || this.data.element.getValue(), i;
-                        // for checkboxes and select multiples.
-                        // check there is at least one required value
-                        if ('object' === typeof val) {
-                            for (i in val) {
-                                if (val.hasOwnProperty(i)) {
-                                    if (this.validate(val[i], true)) {
-                                        return true;
-                                    }
-                                }
-                            }
-                            return false;
+                        var val = this.data.element.getValue();
+
+                        if (typeof val === 'number') {
+                            return true;
                         }
 
-                        if(typeof val === 'undefined'){
-                            return false;
+                        if (!!_.isString(val)) {
+                            val = val.trim();
                         }
-
-                        // the following condition works only for strings
-                        val = val.toString();
 
                         // notNull && notBlank && not undefined
-                        return val.length > 0 && '' !== val.replace(/^\s+/g, '').replace(/\s+$/g, '');
+                        if (!val) {
+                            return false;
+                        }
+
+                        // not empty array, object and string
+                        return _.size(val) > 0;
                     }
                     return true;
                 }
             });
 
         result.initialize();
+
         return result;
     };
 
