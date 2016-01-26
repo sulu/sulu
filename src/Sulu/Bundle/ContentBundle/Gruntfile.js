@@ -150,8 +150,8 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('build:js', [
-        'replace:build',
-        'uglify'
+        'uglify',
+        'replace:build'
     ]);
 
     grunt.registerTask('build', [

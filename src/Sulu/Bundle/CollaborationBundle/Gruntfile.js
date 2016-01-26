@@ -27,7 +27,7 @@ module.exports = function (grunt) {
             build: {
                 options: {
                     variables: {
-                        'sulutag/js': 'sulutag/dist'
+                        'sulucollaboration/js': 'sulucollaboration/dist'
                     },
                     prefix: ''
                 },

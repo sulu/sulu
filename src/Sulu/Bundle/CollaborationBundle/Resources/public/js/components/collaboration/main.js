@@ -26,9 +26,6 @@ define([
             }
         },
 
-        /**
-         * @method initialize
-         */
         initialize: function() {
             this.client = WebsocketManager.getClient(WEBSOCKET_APP_NAME, true);
 
@@ -38,9 +35,10 @@ define([
                 .then(this.onEnterResponse.bind(this));
         },
 
-        /**
-         * @method bindEvents
-         */
+        destroy: function() {
+            this.sandbox.emit('sulu.labels.label.remove', LABEL_ID);
+        },
+
         bindEvents: function() {
             this.sandbox.on('sulu.router.navigate', this.sendLeaveMessage.bind(this));
             $(window).unload(this.sendLeaveMessage.bind(this));
@@ -48,9 +46,6 @@ define([
             this.keepInterval = setInterval(this.sendKeepMessage.bind(this), Config.get('sulu-collaboration').interval);
         },
 
-        /**
-         * @method bindMessageHandler
-         */
         bindMessageHandler: function() {
             this.client.addHandler(MESSAGE_HANDLER_NAME, function(data) {
                 switch (data.command) {
@@ -61,9 +56,6 @@ define([
             }.bind(this));
         },
 
-        /**
-         * @method sendEnterMessage
-         */
         sendEnterMessage: function() {
             return this.client.send(MESSAGE_HANDLER_NAME, {
                 command: 'enter',
@@ -74,7 +66,6 @@ define([
         },
 
         /**
-         * @method onEnterResponse
          * @param {String} handlerName
          * @param {Object} message
          */
@@ -82,9 +73,6 @@ define([
             this.showCollaboratorLabel(message.users);
         },
 
-        /**
-         * @method sendKeepMessage
-         */
         sendKeepMessage: function() {
             return this.client.send(MESSAGE_HANDLER_NAME, {
                 command: 'keep',
@@ -94,12 +82,8 @@ define([
             });
         },
 
-        /**
-         * @method sendLeaveMessage
-         */
         sendLeaveMessage: function() {
             clearInterval(this.keepInterval);
-            this.sandbox.emit('sulu.labels.label.remove', LABEL_ID);
 
             return this.client.send(MESSAGE_HANDLER_NAME, {
                 command: 'leave',
@@ -110,7 +94,6 @@ define([
         },
 
         /**
-         * @method onUpdate
          * @param {Object} message
          */
         onUpdate: function(message) {
@@ -118,7 +101,6 @@ define([
         },
 
         /**
-         * @method showCollaboratorLabel
          * @param {Array} collaborators
          */
         showCollaboratorLabel: function(collaborators) {
