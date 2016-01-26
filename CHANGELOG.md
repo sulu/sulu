@@ -26,6 +26,10 @@ CHANGELOG for Sulu
     * BUGFIX      #1873 [ContactBundle]   Fixed remove title and position
     * BUGFIX      #1873 [ContactBundle]   Fixed remove contact birthday
 
+* 1.1.7 (2016-01-26)
+    * HOTFIX      #1952 [PersistenceBundle] Fixed mapped superclass inheritance
+    * HOTFIX      #1950 [Rest]              Added possibility to disable the GROUP BY clause     
+
 * 1.1.6 (2016-01-26)
     * HOTFIX      #1948 [AdminBundle]     Updated husky for required validation fix
     * HOTFIX      #1938 [ContactBundle]   Added missing namespace declerations for fixtures
