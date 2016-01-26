@@ -72,12 +72,20 @@ class RouteProvider implements RouteProviderInterface
 
         $customUrlDocument = $this->customUrlManager->readByUrl(
             $resourceLocator,
-            $this->requestAnalyzer->getWebspace()->getKey(),
-            $this->requestAnalyzer->getCurrentLocalization()->getLocalization()
+            $this->requestAnalyzer->getWebspace()->getKey()
         );
 
-        if (null === $customUrlDocument
-            || false === $customUrlDocument->isPublished()
+        if (null === $customUrlDocument) {
+            return $collection;
+        }
+
+        $customUrlDocument = $this->customUrlManager->readByUrl(
+            $resourceLocator,
+            $this->requestAnalyzer->getWebspace()->getKey(),
+            $customUrlDocument->getTargetLocale()
+        );
+
+        if (false === $customUrlDocument->isPublished()
             || $customUrlDocument->getTarget()->getWorkflowStage() !== WorkflowStage::PUBLISHED
         ) {
             return $collection;

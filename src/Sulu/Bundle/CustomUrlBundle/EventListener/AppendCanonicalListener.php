@@ -34,7 +34,7 @@ class AppendCanonicalListener
      *
      * @param FilterResponseEvent $event
      */
-    public function onResponse(FilterResponseEvent $event)
+    public function onKernelResponse(FilterResponseEvent $event)
     {
         $request = $event->getRequest();
         $attributes = $request->attributes->all();

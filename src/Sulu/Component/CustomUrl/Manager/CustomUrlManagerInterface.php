@@ -56,7 +56,7 @@ interface CustomUrlManagerInterface
      *
      * @return CustomUrlDocument
      */
-    public function readByUrl($url, $webspaceKey, $locale);
+    public function readByUrl($url, $webspaceKey, $locale = null);
 
     /**
      * Update a single custom-url object identified by uuid with given data.

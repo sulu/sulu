@@ -30,9 +30,7 @@ class CustomUrl implements ArrayableInterface
     }
 
     /**
-     * Returns the url.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getUrl()
     {

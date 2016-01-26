@@ -96,13 +96,15 @@ class WebspaceManager implements WebspaceManagerInterface
      */
     public function findPortalInformationByUrl($url, $environment)
     {
-        foreach (
-            $this->getWebspaceCollection()->getPortalInformations($environment) as $portalUrl => $portalInformation
-        ) {
-            $nextChar = substr($url, strlen($portalUrl), 1);
-            if (strpos($url, $portalUrl) === 0 &&
-                ($nextChar === '/' || $nextChar === '.' || $nextChar === false || $nextChar === '')
-            ) {
+        $portalInformations = $this->getWebspaceCollection()->getPortalInformations($environment);
+        foreach ($portalInformations as $portalUrl => $portalInformation) {
+            $patternUrl = rtrim($portalUrl, '/');
+            $patternUrl = preg_quote($patternUrl);
+            $patternUrl = str_replace('/', '\/', $patternUrl);
+            $patternUrl = str_replace('\*', '[^\/.]+', $patternUrl);
+            $regexp = sprintf('/^%s($|([\/].*)|([.].*))$/', $patternUrl);
+
+            if (preg_match($regexp, $url)) {
                 return $portalInformation;
             }
         }
@@ -149,7 +151,10 @@ class WebspaceManager implements WebspaceManagerInterface
         $urls = [];
         $portals = $this->getWebspaceCollection()->getPortalInformations($environment);
         foreach ($portals as $url => $portalInformation) {
-            $sameLocalization = $portalInformation->getLocalization()->getLocalization() === $languageCode;
+            $sameLocalization = (
+                $portalInformation->getLocalization() === null
+                || $portalInformation->getLocalization()->getLocalization() === $languageCode
+            );
             $sameWebspace = $webspaceKey === null || $portalInformation->getWebspace()->getKey() === $webspaceKey;
             $url = rtrim(sprintf('%s://%s%s', $scheme, $url, $resourceLocator), '/');
             if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {

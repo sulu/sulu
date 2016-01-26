@@ -80,6 +80,14 @@ class AdminRequestAnalyzer implements RequestAnalyzerInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function updateLocale($locale, Request $request)
+    {
+        // do nothing
+    }
+
+    /**
      * set webspace for current request.
      *
      * @param string $webspaceKey

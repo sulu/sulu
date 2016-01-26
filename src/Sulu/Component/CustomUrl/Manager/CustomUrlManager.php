@@ -99,7 +99,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function readByUrl($url, $webspaceKey, $locale)
+    public function readByUrl($url, $webspaceKey, $locale = null)
     {
         try {
             /** @var RouteDocument $routeDocument */

@@ -28,7 +28,10 @@ class SuluCustomUrlExtension extends Extension implements PrependExtensionInterf
     public function load(array $configs, ContainerBuilder $container)
     {
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.xml');
+        $loader->load('admin.xml');
+        $loader->load('document.xml');
+        $loader->load('routing.xml');
+        $loader->load('event_listener.xml');
     }
 
     /**

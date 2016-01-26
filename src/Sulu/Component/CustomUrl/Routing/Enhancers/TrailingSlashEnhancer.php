@@ -28,7 +28,7 @@ class TrailingSlashEnhancer extends AbstractEnhancer
         array $defaults,
         Request $request
     ) {
-        if (substr($request->getRequestUri(), -1, 1) !== '/') {
+        if ($request->getRequestUri() === '/' || substr($request->getRequestUri(), -1, 1) !== '/') {
             return [];
         }
 

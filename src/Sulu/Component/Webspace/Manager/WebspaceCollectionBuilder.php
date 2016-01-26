@@ -192,6 +192,39 @@ class WebspaceCollectionBuilder
                 );
             }
         }
+
+        foreach ($environment->getCustomUrls() as $customUrl) {
+            $urlAddress = $customUrl->getUrl();
+
+            if (strpos('*', $urlAddress) >= 0) {
+                $this->portalInformations[$environment->getType()][$urlAddress] = new PortalInformation(
+                    RequestAnalyzerInterface::MATCH_TYPE_FULL,
+                    $portal->getWebspace(),
+                    $portal,
+                    null,
+                    $urlAddress,
+                    null,
+                    null,
+                    null,
+                    false,
+                    $urlAddress
+                );
+            }
+
+            $urlAddress = rtrim($urlAddress, '/') . '/*';
+            $this->portalInformations[$environment->getType()][$urlAddress] = new PortalInformation(
+                RequestAnalyzerInterface::MATCH_TYPE_FULL,
+                $portal->getWebspace(),
+                $portal,
+                null,
+                $urlAddress,
+                null,
+                null,
+                null,
+                false,
+                $urlAddress
+            );
+        }
     }
 
     /**

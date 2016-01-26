@@ -55,6 +55,14 @@ interface RequestAnalyzerInterface
     public function analyze(Request $request);
 
     /**
+     * Update localization in this class and given request.
+     *
+     * @param string $locale
+     * @param Request $request
+     */
+    public function updateLocale($locale, Request $request);
+
+    /**
      * Returns the current match type for this request.
      *
      * @return int

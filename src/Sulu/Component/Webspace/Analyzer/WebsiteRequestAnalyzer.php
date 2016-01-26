@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Sulu.
  *
@@ -174,7 +173,10 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
         $this->setWebspace($portalInformation->getWebspace());
         $this->setSegment($portalInformation->getSegment());
 
-        $request->setLocale($portalInformation->getLocalization()->getLocalization());
+        // TODO who set the locale to the request
+        if ($portalInformation->getLocalization() !== null) {
+            $request->setLocale($portalInformation->getLocalization()->getLocalization());
+        }
 
         list($resourceLocator, $format) = $this->getResourceLocatorFromRequest(
             $portalInformation,
@@ -197,6 +199,19 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function updateLocale($locale, Request $request)
+    {
+        $localization = $this->getWebspace()->getLocalization($locale);
+        $this->setLocalization($localization);
+        $request->setLocale($localization->getLocalization());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getMatchType()
     {
         return $this->matchType;
