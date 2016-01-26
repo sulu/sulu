@@ -23,7 +23,7 @@
 
         <service id="sulu.persistence.event_subscriber.orm.metadata" class="%sulu.persistence.event_subscriber.orm.metadata.class%">
             <argument>%sulu.persistence.objects%</argument>
-            <tag name="doctrine.event_subscriber"/>
+            <tag name="doctrine.event_subscriber" priority="8000" />
         </service>
 
     </services>
