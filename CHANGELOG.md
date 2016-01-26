@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* master
+    * HOTFIX      #1952 [PersistenceBundle] Fixed mapped superclass inheritance
+
 * 1.1.6 (2016-01-26)
     * HOTFIX      #1948 [AdminBundle]     Updated husky for required validation fix
     * HOTFIX      #1938 [ContactBundle]   Added missing namespace declerations for fixtures
