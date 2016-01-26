@@ -92,6 +92,16 @@ class CustomUrlDocument implements
     protected $redirect;
 
     /**
+     * @var bool
+     */
+    protected $noFollow;
+
+    /**
+     * @var bool
+     */
+    protected $noIndex;
+
+    /**
      * @var RouteDocument
      */
     protected $routes;
@@ -315,6 +325,38 @@ class CustomUrlDocument implements
     public function setRedirect($redirect)
     {
         $this->redirect = $redirect;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isNoFollow()
+    {
+        return $this->noFollow;
+    }
+
+    /**
+     * @param boolean $noFollow
+     */
+    public function setNoFollow($noFollow)
+    {
+        $this->noFollow = $noFollow;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isNoIndex()
+    {
+        return $this->noIndex;
+    }
+
+    /**
+     * @param boolean $noIndex
+     */
+    public function setNoIndex($noIndex)
+    {
+        $this->noIndex = $noIndex;
     }
 
     /**

@@ -195,6 +195,18 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                         }
                     },
                     {
+                        name: 'toggler@husky',
+                        options: {
+                            el: '#custom-url-no-index'
+                        }
+                    },
+                    {
+                        name: 'toggler@husky',
+                        options: {
+                            el: '#custom-url-no-follow'
+                        }
+                    },
+                    {
                         name: 'content-datasource@sulucontent',
                         options: {
 

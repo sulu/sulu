@@ -12,6 +12,7 @@ namespace Sulu\Bundle\WebsiteBundle\Twig\Seo;
 
 use Sulu\Bundle\WebsiteBundle\Twig\Content\ContentPathInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * This twig extension provides support for the SEO functionality provided by Sulu.
@@ -28,11 +29,20 @@ class SeoTwigExtension extends \Twig_Extension
      */
     private $contentPath;
 
-    public function __construct(RequestAnalyzerInterface $requestAnalyzer, ContentPathInterface $contentPath)
-    {
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    public function __construct(
+        RequestAnalyzerInterface $requestAnalyzer,
+        ContentPathInterface $contentPath,
+        RequestStack $requestStack
+    ) {
         $this->requestAnalyzer = $requestAnalyzer;
         // FIXME Should not use another twig extension here, that is not the intended use case of twig extensions
         $this->contentPath = $contentPath;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -65,6 +75,10 @@ class SeoTwigExtension extends \Twig_Extension
      */
     public function renderSeoTags(array $seoExtension, array $content, array $urls, $shadowBaseLocale)
     {
+        $request = $this->requestStack->getCurrentRequest();
+        $requestSeo = $request->get('_seo', []);
+        $seoExtension = array_merge($seoExtension, $requestSeo);
+
         $html = '';
         // FIXME this is only necessary because we have to set a default parameter
         $webspace = $this->requestAnalyzer->getWebspace();

@@ -57,6 +57,8 @@ class SuluCustomUrlExtension extends Extension implements PrependExtensionInterf
                                 'canonical' => ['property' => 'canonical'],
                                 'redirect' => ['property' => 'redirect'],
                                 'targetLocale' => ['property' => 'targetLocale'],
+                                'noFollow' => ['property' => 'noFollow'],
+                                'noIndex' => ['property' => 'noIndex'],
                             ],
                         ],
                     ],

@@ -63,6 +63,11 @@
                  class="Sulu\Component\CustomUrl\Routing\Enhancers\ExternalLinkEnhancer">
             <tag name="sulu.context" context="website"/>
         </service>
+        <service id="sulu_custom_urls.routing.route_enhancers.seo"
+                 class="Sulu\Component\CustomUrl\Routing\Enhancers\SeoEnhancer">
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <tag name="sulu.context" context="website"/>
+        </service>
 
         <service id="sulu_custom_urls.routing.router" class="Symfony\Cmf\Bundle\RoutingBundle\Routing\DynamicRouter">
             <argument type="service" id="router.request_context"/>
@@ -87,20 +92,24 @@
                 <argument>80</argument>
             </call>
             <call method="addRouteEnhancer">
-                <argument type="service" id="sulu_custom_urls.routing.route_enhancers.content"/>
+                <argument type="service" id="sulu_custom_urls.routing.route_enhancers.seo"/>
                 <argument>70</argument>
             </call>
             <call method="addRouteEnhancer">
-                <argument type="service" id="sulu_custom_urls.routing.route_enhancers.internal_link"/>
+                <argument type="service" id="sulu_custom_urls.routing.route_enhancers.content"/>
                 <argument>60</argument>
             </call>
             <call method="addRouteEnhancer">
-                <argument type="service" id="sulu_custom_urls.routing.route_enhancers.structure"/>
+                <argument type="service" id="sulu_custom_urls.routing.route_enhancers.internal_link"/>
                 <argument>50</argument>
             </call>
             <call method="addRouteEnhancer">
-                <argument type="service" id="sulu_custom_urls.routing.route_enhancers.external_link"/>
+                <argument type="service" id="sulu_custom_urls.routing.route_enhancers.structure"/>
                 <argument>40</argument>
+            </call>
+            <call method="addRouteEnhancer">
+                <argument type="service" id="sulu_custom_urls.routing.route_enhancers.external_link"/>
+                <argument>30</argument>
             </call>
 
             <tag name="sulu.context" context="website"/>

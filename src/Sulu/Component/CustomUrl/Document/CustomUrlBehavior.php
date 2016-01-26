@@ -82,6 +82,20 @@ interface CustomUrlBehavior
     public function isRedirect();
 
     /**
+     * Returns true if no-follow is enabled.
+     *
+     * @return bool
+     */
+    public function isNoFollow();
+
+    /**
+     * Returns true if no-index is enabled.
+     *
+     * @return bool
+     */
+    public function isNoIndex();
+
+    /**
      * Returns list of existing routes.
      *
      * @return RouteDocument[]

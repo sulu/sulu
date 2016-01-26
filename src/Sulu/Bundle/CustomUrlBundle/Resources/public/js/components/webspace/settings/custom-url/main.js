@@ -26,6 +26,8 @@ define(['text!./skeleton.html'], function(skeleton) {
             multilingual: 'custom-urls.multilingual',
             canonical: 'custom-urls.canonical',
             redirect: 'custom-urls.redirect',
+            noIndex: 'custom-urls.no-index',
+            noFollow: 'custom-urls.no-follow',
             successLabel: 'labels.success',
             successMessage: 'labels.success.save-desc'
         }
