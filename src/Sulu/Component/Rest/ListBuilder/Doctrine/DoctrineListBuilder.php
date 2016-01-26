@@ -279,7 +279,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         $addJoins = $this->getNecessaryJoins($entityNames);
 
         // create querybuilder and add select
-        return $this->createQueryBuilder($addJoins)
+        return $this->createQueryBuilder($addJoins, false)
             ->select($select);
     }
 
@@ -358,10 +358,11 @@ class DoctrineListBuilder extends AbstractListBuilder
      * Creates Querybuilder.
      *
      * @param array|null $joins Define which joins should be made
+     * @param bool|true $groupBy Defines if the GROUP BY clause should be added
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    protected function createQueryBuilder($joins = null)
+    protected function createQueryBuilder($joins = null, $groupBy = true)
     {
         $this->queryBuilder = $this->em->createQueryBuilder()
             ->from($this->entityName, $this->entityName);
@@ -376,7 +377,9 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         // group by
-        $this->assignGroupBy($this->queryBuilder);
+        if (true === $groupBy) {
+            $this->assignGroupBy($this->queryBuilder);
+        }
 
         if ($this->search != null) {
             $searchParts = [];
