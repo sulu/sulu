@@ -45,11 +45,11 @@
             <%= translations.target %>
         </label>
 
-        <div class="btn action fit" id="custom-url-target-button">
-            <%= translations.chooseTarget %>
+        <div class="single-internal-link custom-url-target container form-element" id="custom-url-target-input">
+            <a class="fa-link icon action choose" href="#" id="custom-url-target-button"></a>
+            <a class="fa-times-circle clear" href="#" id="custom-url-target-button-clear" style="display: none;"></a>
+            <input type="text" class="form-element preview-update trigger-save-button" readonly="readonly" id="custom-url-target-value"/>
         </div>
-
-        <span class="target"><%= translations.target %>:</span> <span class="target" id="custom-url-target-value"></span>
     </div>
 
     <div class="grid-row">

@@ -27,7 +27,6 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                 overlayTitle: 'custom-urls.webspace.settings.edit.title',
                 customUrlDefaultValue: 'custom-urls.custom-url.default-value',
                 localeDefaultValue: 'custom-urls.locale.default-value',
-                chooseTarget: 'custom-urls.choose-target',
                 chooseTargetCancel: 'custom-urls.choose-target.cancel'
             }
         },
@@ -59,7 +58,17 @@ define(['underscore', 'text!./form.html'], function(_, form) {
 
             this.sandbox.dom.on(this.$el, 'click', function() {
                 this.sandbox.emit('husky.overlay.custom-urls.slide-to', 1);
-            }.bind(this), '#custom-url-target-button');
+
+                return false;
+            }.bind(this), '.custom-url-target, #custom-url-target-button');
+
+            this.sandbox.dom.on(this.$el, 'click', function() {
+                this.target = null;
+                $('#custom-url-target-button-clear').hide();
+                $('#custom-url-target-value').val('');
+
+                return false;
+            }.bind(this), '#custom-url-target-button-clear');
         },
 
         /**
@@ -213,7 +222,8 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                             selectedUrl: constants.targetSelectedUrl,
                             resultKey: 'nodes',
                             selectCallback: function(id, path, title) {
-                                $('#custom-url-target-value').html(title);
+                                $('#custom-url-target-value').val(title);
+                                $('#custom-url-target-button-clear').show();
 
                                 this.target = id;
                                 this.sandbox.emit('husky.overlay.custom-urls.slide-to', 0);
@@ -229,7 +239,8 @@ define(['underscore', 'text!./form.html'], function(_, form) {
             }
 
             if (!!this.data.target) {
-                $('#custom-url-target-value').html(this.data.target.title);
+                $('#custom-url-target-value').val(this.data.target.title);
+                $('#custom-url-target-button-clear').show();
             }
         },
 
