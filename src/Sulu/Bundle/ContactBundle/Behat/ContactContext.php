@@ -113,7 +113,7 @@ class ContactContext extends BaseContext implements SnippetAcceptingContext
     public function iClickOnTheEditIconInTheRowContaining($text)
     {
         $this->waitForText($text);
-        $script = <<<EOT
+        $script = <<<'EOT'
             var f = function () {
                 var cards = document.querySelectorAll(".card-item .head-name");
 
