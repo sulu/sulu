@@ -10,8 +10,11 @@
 
 namespace Sulu\Component\CustomUrl\Routing;
 
+use PHPCR\Util\PathHelper;
+use Sulu\Bundle\ContentBundle\Document\RouteDocument;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface;
+use Sulu\Component\DocumentManager\PathBuilder;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
@@ -40,6 +43,11 @@ class RouteProvider implements RouteProviderInterface
     private $webspaceManager;
 
     /**
+     * @var PathBuilder
+     */
+    private $pathBuilder;
+
+    /**
      * @var string
      */
     private $environment;
@@ -48,11 +56,13 @@ class RouteProvider implements RouteProviderInterface
         CustomUrlManagerInterface $customUrlManager,
         RequestAnalyzerInterface $requestAnalyzer,
         WebspaceManagerInterface $webspaceManager,
+        PathBuilder $pathBuilder,
         $environment
     ) {
         $this->customUrlManager = $customUrlManager;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->webspaceManager = $webspaceManager;
+        $this->pathBuilder = $pathBuilder;
         $this->environment = $environment;
     }
 
@@ -70,19 +80,28 @@ class RouteProvider implements RouteProviderInterface
             $resourceLocator = substr($resourceLocator, 0, -5);
         }
 
-        $customUrlDocument = $this->customUrlManager->readByUrl(
+        $routeDocument = $this->customUrlManager->readRouteByUrl(
             $resourceLocator,
             $this->requestAnalyzer->getWebspace()->getKey()
         );
 
-        if (null === $customUrlDocument) {
+        if (null === $routeDocument) {
             return $collection;
+        }
+
+        if ($routeDocument->isHistory()) {
+            return $this->addHistoryRoute(
+                $request,
+                $routeDocument,
+                $collection,
+                $this->requestAnalyzer->getWebspace()->getKey()
+            );
         }
 
         $customUrlDocument = $this->customUrlManager->readByUrl(
             $resourceLocator,
             $this->requestAnalyzer->getWebspace()->getKey(),
-            $customUrlDocument->getTargetLocale()
+            $routeDocument->getTargetDocument()->getTargetLocale()
         );
 
         if (false === $customUrlDocument->isPublished()
@@ -93,7 +112,7 @@ class RouteProvider implements RouteProviderInterface
         }
 
         $collection->add(
-            uniqid('custom_url_route', true),
+            uniqid('custom_url_route_', true),
             new Route(
                 $request->getPathInfo(),
                 [
@@ -121,5 +140,55 @@ class RouteProvider implements RouteProviderInterface
     public function getRoutesByNames($names)
     {
         return [];
+    }
+
+    /**
+     * Add redirect to current custom-url.
+     *
+     * @param Request $request
+     * @param RouteDocument $routeDocument
+     * @param RouteCollection $collection
+     * @param string $webspaceKey
+     *
+     * @return RouteCollection
+     */
+    private function addHistoryRoute(
+        Request $request,
+        RouteDocument $routeDocument,
+        RouteCollection $collection,
+        $webspaceKey
+    ) {
+        $resourceSegment = PathHelper::relativizePath(
+            $routeDocument->getTargetDocument()->getPath(),
+            $this->getRoutesPath($webspaceKey)
+        );
+
+        $url = sprintf('%s://%s', $request->getScheme(), $resourceSegment);
+
+        $collection->add(
+            uniqid('custom_url_route_', true),
+            new Route(
+                $request->getPathInfo(),
+                [
+                    '_controller' => 'SuluWebsiteBundle:Default:redirect',
+                    '_finalized' => true,
+                    'url' => $url,
+                ]
+            )
+        );
+
+        return $collection;
+    }
+
+    /**
+     * Return routes path for custom-url in given webspace.
+     *
+     * @param string $webspaceKey
+     *
+     * @return string
+     */
+    private function getRoutesPath($webspaceKey)
+    {
+        return $this->pathBuilder->build(['%base%', $webspaceKey, '%custom-urls%', '%custom-urls-routes%']);
     }
 }

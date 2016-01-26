@@ -53,7 +53,6 @@ class SuluCustomUrlExtension extends Extension implements PrependExtensionInterf
                                 'baseDomain' => ['property' => 'baseDomain'],
                                 'domainParts' => ['property' => 'domainParts', 'type' => 'json_array'],
                                 'target' => ['property' => 'target', 'type' => 'reference'],
-                                'multilingual' => ['property' => 'multilingual'],
                                 'canonical' => ['property' => 'canonical'],
                                 'redirect' => ['property' => 'redirect'],
                                 'targetLocale' => ['property' => 'targetLocale'],

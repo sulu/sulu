@@ -61,13 +61,6 @@ interface CustomUrlBehavior
     public function getTargetLocale();
 
     /**
-     * Returns true if multilingual is enabled.
-     *
-     * @return bool
-     */
-    public function isMultilingual();
-
-    /**
      * Returns true if canonical is enabled.
      *
      * @return bool

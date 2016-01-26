@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\CustomUrl\Manager;
 
+use Sulu\Bundle\ContentBundle\Document\RouteDocument;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 
 /**
@@ -57,6 +58,18 @@ interface CustomUrlManagerInterface
      * @return CustomUrlDocument
      */
     public function readByUrl($url, $webspaceKey, $locale = null);
+
+    /**
+     * Returns route for a custom-url object.
+     *
+     * @param string $url
+     * @param string $webspaceKey
+     * @param string $locale
+     *
+     * @return RouteDocument
+     */
+    public function readRouteByUrl($url, $webspaceKey, $locale = null);
+
 
     /**
      * Update a single custom-url object identified by uuid with given data.

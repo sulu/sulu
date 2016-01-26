@@ -8,6 +8,7 @@
             <argument type="service" id="sulu_custom_urls.manager"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu_document_manager.path_builder"/>
             <argument type="string">%kernel.environment%</argument>
 
             <tag name="sulu.context" context="website"/>

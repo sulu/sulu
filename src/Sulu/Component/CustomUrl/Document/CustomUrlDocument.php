@@ -79,11 +79,6 @@ class CustomUrlDocument implements
     /**
      * @var bool
      */
-    protected $multilingual;
-
-    /**
-     * @var bool
-     */
     protected $canonical;
 
     /**
@@ -140,6 +135,11 @@ class CustomUrlDocument implements
      * @var string
      */
     protected $nodeName;
+
+    public function __construct()
+    {
+        $this->routes = [];
+    }
 
     /**
      * {@inheritdoc}
@@ -271,24 +271,6 @@ class CustomUrlDocument implements
     public function setTargetLocale($targetLocale)
     {
         $this->targetLocale = $targetLocale;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isMultilingual()
-    {
-        return $this->multilingual;
-    }
-
-    /**
-     * Set multilingual.
-     *
-     * @param bool $multilingual
-     */
-    public function setMultilingual($multilingual)
-    {
-        $this->multilingual = $multilingual;
     }
 
     /**

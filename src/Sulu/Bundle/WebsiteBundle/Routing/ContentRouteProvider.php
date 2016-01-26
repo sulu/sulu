@@ -19,7 +19,6 @@ use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -60,6 +59,11 @@ class ContentRouteProvider implements RouteProviderInterface
     public function getRouteCollectionForRequest(Request $request)
     {
         $collection = new RouteCollection();
+
+        // no portal information without localization supported
+        if ($this->requestAnalyzer->getCurrentLocalization() === null) {
+            return $collection;
+        }
 
         $htmlExtension = '.html';
         $resourceLocator = $this->requestAnalyzer->getResourceLocator();

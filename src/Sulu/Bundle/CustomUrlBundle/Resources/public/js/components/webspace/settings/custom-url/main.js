@@ -23,7 +23,6 @@ define(['text!./skeleton.html'], function(skeleton) {
             customUrl: 'custom-urls.custom-url',
             target: 'custom-urls.target',
             locale: 'custom-urls.locale',
-            multilingual: 'custom-urls.multilingual',
             canonical: 'custom-urls.canonical',
             redirect: 'custom-urls.redirect',
             noIndex: 'custom-urls.no-index',

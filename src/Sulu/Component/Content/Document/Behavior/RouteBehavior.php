@@ -45,4 +45,18 @@ interface RouteBehavior
      * @param string $locale
      */
     public function setLocale($locale);
+
+    /**
+     * Returns history flag
+     *
+     * @return bool
+     */
+    public function isHistory();
+
+    /**
+     * Set history flag.
+     *
+     * @param bool $history
+     */
+    public function setHistory($history);
 }

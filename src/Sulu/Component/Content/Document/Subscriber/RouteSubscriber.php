@@ -23,6 +23,7 @@ class RouteSubscriber implements EventSubscriberInterface
 {
     const DOCUMENT_TARGET_FIELD = 'content';
     const DOCUMENT_LOCALE_FIELD = 'locale';
+    const DOCUMENT_HISTORY_FIELD = 'history';
 
     public static function getSubscribedEvents()
     {
@@ -47,6 +48,10 @@ class RouteSubscriber implements EventSubscriberInterface
         $metadata->addFieldMapping('locale', [
             'encoding' => 'system',
             'property' => self::DOCUMENT_LOCALE_FIELD,
+        ]);
+        $metadata->addFieldMapping('history', [
+            'encoding' => 'system',
+            'property' => self::DOCUMENT_HISTORY_FIELD,
         ]);
     }
 }

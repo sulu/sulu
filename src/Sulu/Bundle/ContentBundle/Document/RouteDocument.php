@@ -57,6 +57,11 @@ class RouteDocument implements
     private $locale;
 
     /**
+     * @var bool
+     */
+    private $history;
+
+    /**
      * {@inheritdoc}
      */
     public function getNodeName()
@@ -110,5 +115,21 @@ class RouteDocument implements
     public function setLocale($locale)
     {
         $this->locale = $locale;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isHistory()
+    {
+        return $this->history;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setHistory($history)
+    {
+        $this->history = $history;
     }
 }

@@ -89,28 +89,32 @@ class CustomUrlSubscriber implements EventSubscriberInterface
             return;
         }
 
-        // TODO if history exists link them to new nodes
+        $oldRoutes = $document->getRoutes();
 
         $webspaceKey = $this->inspector->getWebspace($document);
-        if ($document->isMultilingual()) {
-            $this->createMultilingualDomains($webspaceKey, $document, $event->getLocale());
-        } else {
-            $domain = $this->generator->generate($document->getBaseDomain(), $document->getDomainParts());
-            $locale = $this->webspaceManager->findWebspaceByKey($webspaceKey)->getLocalization(
-                $document->getTargetLocale()
+        $domain = $this->generator->generate($document->getBaseDomain(), $document->getDomainParts());
+        $locale = $this->webspaceManager->findWebspaceByKey($webspaceKey)->getLocalization(
+            $document->getTargetLocale()
+        );
+        $route = $this->createDomain(
+            $domain,
+            $document,
+            $locale,
+            $event->getLocale(),
+            $this->getRoutesPath($webspaceKey)
+        );
+
+        foreach ($oldRoutes as $oldRoute) {
+            $oldRoute->setTargetDocument($route);
+            $oldRoute->setHistory(true);
+            $this->documentManager->persist(
+                $oldRoute,
+                $event->getLocale(),
+                [
+                    'path' => $oldRoute->getPath(),
+                    'auto_create' => true,
+                ]
             );
-            $this->createDomain($domain, $document, $locale, $event->getLocale(), $this->getRoutesPath($webspaceKey));
-        }
-    }
-
-    private function createMultilingualDomains($webspaceKey, CustomUrlBehavior $document, $persistedLocale)
-    {
-        $locales = $this->webspaceManager->findWebspaceByKey($webspaceKey)->getAllLocalizations();
-
-        foreach ($locales as $locale) {
-            $domain = $this->generator->generate($document->getBaseDomain(), $document->getDomainParts(), $locale);
-
-            $this->createDomain($domain, $document, $locale, $persistedLocale, $this->getRoutesPath($webspaceKey));
         }
     }
 
@@ -125,6 +129,7 @@ class CustomUrlSubscriber implements EventSubscriberInterface
         $routeDocument = $this->findOrCreateRoute($path, $persistedLocale);
         $routeDocument->setTargetDocument($document);
         $routeDocument->setLocale($locale->getLocalization());
+        $routeDocument->setHistory(false);
 
         $this->documentManager->persist(
             $routeDocument,
@@ -134,6 +139,8 @@ class CustomUrlSubscriber implements EventSubscriberInterface
                 'auto_create' => true,
             ]
         );
+
+        return $routeDocument;
     }
 
     /**
@@ -164,18 +171,26 @@ class CustomUrlSubscriber implements EventSubscriberInterface
         }
 
         $webspaceKey = $this->inspector->getWebspace($document);
+        $document->setRoutes($this->findReferrer($document, $webspaceKey));
+    }
+
+    public function findReferrer($document, $webspaceKey)
+    {
         $routes = [];
         $referrers = $this->inspector->getReferrers($document);
         foreach ($referrers as $routeDocument) {
             if ($routeDocument instanceof RouteDocument) {
-                $routes[$routeDocument->getLocale()] = PathHelper::relativizePath(
+                $path = PathHelper::relativizePath(
                     $routeDocument->getPath(),
                     $this->getRoutesPath($webspaceKey)
                 );
+
+                $routes[$path] = $routeDocument;
+                $routes = array_merge($routes, $this->findReferrer($routeDocument, $webspaceKey));
             }
         }
 
-        $document->setRoutes($routes);
+        return $routes;
     }
 
     /**

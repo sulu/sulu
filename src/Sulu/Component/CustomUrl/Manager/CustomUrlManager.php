@@ -101,6 +101,20 @@ class CustomUrlManager implements CustomUrlManagerInterface
      */
     public function readByUrl($url, $webspaceKey, $locale = null)
     {
+        $routeDocument = $this->readRouteByUrl($url, $webspaceKey, $locale);
+
+        if ($routeDocument === null) {
+            return null;
+        }
+
+        return $routeDocument->getTargetDocument();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function readRouteByUrl($url, $webspaceKey, $locale = null)
+    {
         try {
             /** @var RouteDocument $routeDocument */
             $routeDocument = $this->documentManager->find(
@@ -116,7 +130,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
             return;
         }
 
-        return $routeDocument->getTargetDocument();
+        return $routeDocument;
     }
 
     /**
