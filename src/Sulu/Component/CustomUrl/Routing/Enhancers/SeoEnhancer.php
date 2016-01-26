@@ -56,4 +56,12 @@ class SeoEnhancer extends AbstractEnhancer
 
         return ['_seo' => $seo];
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function supports(CustomUrlBehavior $customUrl)
+    {
+        return $customUrl->getTarget() !== null;
+    }
 }

@@ -336,7 +336,7 @@ class CustomUrlDocument implements
     }
 
     /**
-     * @param boolean $noFollow
+     * @param bool $noFollow
      */
     public function setNoFollow($noFollow)
     {
@@ -352,7 +352,7 @@ class CustomUrlDocument implements
     }
 
     /**
-     * @param boolean $noIndex
+     * @param bool $noIndex
      */
     public function setNoIndex($noIndex)
     {

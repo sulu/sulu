@@ -86,7 +86,8 @@ class RouteProvider implements RouteProviderInterface
         );
 
         if (false === $customUrlDocument->isPublished()
-            || $customUrlDocument->getTarget()->getWorkflowStage() !== WorkflowStage::PUBLISHED
+            || ($customUrlDocument->getTarget() !== null
+                && $customUrlDocument->getTarget()->getWorkflowStage() !== WorkflowStage::PUBLISHED)
         ) {
             return $collection;
         }

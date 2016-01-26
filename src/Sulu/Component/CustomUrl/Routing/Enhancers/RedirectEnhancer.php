@@ -39,8 +39,13 @@ class RedirectEnhancer extends AbstractEnhancer
         array $defaults,
         Request $request
     ) {
+        $resourceSegment = '/';
+        if ($customUrl->getTarget() !== null) {
+            $resourceSegment = $customUrl->getTarget()->getResourceSegment();
+        }
+
         $url = $this->webspaceManager->findUrlByResourceLocator(
-            $customUrl->getTarget()->getResourceSegment(),
+            $resourceSegment,
             $defaults['_environment'],
             $customUrl->getTargetLocale(),
             $defaults['_webspace']->getKey()
@@ -57,6 +62,6 @@ class RedirectEnhancer extends AbstractEnhancer
      */
     protected function supports(CustomUrlBehavior $customUrl)
     {
-        return $customUrl->isRedirect();
+        return $customUrl->isRedirect() || $customUrl->getTarget() === null;
     }
 }
