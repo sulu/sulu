@@ -27,13 +27,19 @@ define(['underscore', 'text!./form.html'], function(_, form) {
             },
             translations: {
                 overlayTitle: 'custom-urls.webspace.settings.edit.title',
-                customUrlDefaultValue: 'custom-urls.custom-url.default-value',
-                localeDefaultValue: 'custom-urls.locale.default-value',
                 chooseTargetCancel: 'custom-urls.choose-target.cancel',
+
+                customUrlDefaultValue: 'custom-urls.custom-url.default-value',
+                localeDefaultValue: 'public.please-choose',
 
                 titleDetails: 'public.details',
                 titleUrls: 'custom-urls.urls-title',
-                history: 'custom-urls.history'
+                history: 'custom-urls.history',
+
+                descriptionCanonical: 'custom-urls.canonical.description',
+                descriptionRedirect: 'custom-urls.redirect.description',
+                descriptionNoIndex: 'custom-urls.no-index.description',
+                descriptionNoFollow: 'custom-urls.no-follow.description'
             }
         },
         constants = {
@@ -102,7 +108,7 @@ define(['underscore', 'text!./form.html'], function(_, form) {
 
             if (!!this.data.routes && _.size(this.data.routes) > 0) {
                 tabs.push({
-                    title: this.translations.overlayTitle,
+                    title: this.translations.titleUrls,
                     data: this.templates.urlList({translations: this.translations})
                 });
             }

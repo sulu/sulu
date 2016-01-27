@@ -18,17 +18,19 @@ define(['text!./skeleton.html'], function(skeleton) {
         },
         translations: {
             title: 'public.title',
-            published: 'public.published',
+            published: 'custom-urls.activated',
             baseDomain: 'custom-urls.base-domain',
             customUrl: 'custom-urls.custom-url',
             target: 'custom-urls.target',
-            locale: 'custom-urls.locale',
+            locale: 'custom-urls.target-locale',
             canonical: 'custom-urls.canonical',
             redirect: 'custom-urls.redirect',
             noIndex: 'custom-urls.no-index',
             noFollow: 'custom-urls.no-follow',
             successLabel: 'labels.success',
-            successMessage: 'labels.success.save-desc'
+            successMessage: 'labels.success.save-desc',
+
+            targetTitle: 'custom-urls.target-title'
         }
     };
 
@@ -111,6 +113,16 @@ define(['text!./skeleton.html'], function(skeleton) {
                                 name: 'published',
                                 content: this.translations.published,
                                 type: 'checkbox_readonly'
+                            },
+                            {
+                                attribute: 'customUrl',
+                                name: 'customUrl',
+                                content: this.translations.customUrl
+                            },
+                            {
+                                attribute: 'targetTitle',
+                                name: 'targetTitle',
+                                content: this.translations.targetTitle
                             }
                         ]
                     }

@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Repository;
 use Jackalope\Query\QOM\PropertyValue;
 use Jackalope\Query\Row;
 use PHPCR\ItemNotFoundException;
+use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
 use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
@@ -213,6 +214,32 @@ class ContentRepository implements ContentRepositoryInterface
         foreach ($paths as $path) {
             $queryBuilder->orWhere(
                 $this->qomFactory->sameNode('node', $path)
+            );
+        }
+        $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
+
+        return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, null, $mapping, $user);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findByUuids(
+        array $uuids,
+        $locale,
+        MappingInterface $mapping,
+        UserInterface $user = null
+    ) {
+        $locales = $this->getLocales();
+        $queryBuilder = $this->getQueryBuilder($locale, $locales, $user);
+
+        foreach ($uuids as $uuid) {
+            $queryBuilder->orWhere(
+                $this->qomFactory->comparison(
+                    $queryBuilder->qomf()->propertyValue('node', 'jcr:uuid'),
+                    QueryObjectModelConstantsInterface::JCR_OPERATOR_EQUAL_TO,
+                    $queryBuilder->qomf()->literal($uuid)
+                )
             );
         }
         $this->appendMapping($queryBuilder, $mapping, $locale, $locales);

@@ -82,11 +82,11 @@ class CustomUrlManager implements CustomUrlManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function readList($webspaceKey)
+    public function readList($webspaceKey, $locale)
     {
         // TODO pagination
 
-        return $this->customUrlRepository->findList($this->getItemsPath($webspaceKey));
+        return $this->customUrlRepository->findList($this->getItemsPath($webspaceKey), $locale);
     }
 
     /**

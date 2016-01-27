@@ -30764,7 +30764,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             if (!!this.options.selectItem && !!this.options.selectItem.type) {
                 var $cell = this.sandbox.dom.createElement(templates.headerCell);
                 this.sandbox.dom.addClass($cell, constants.checkboxCellClass);
-                if (this.options.selectItem.type === selectItems.CHECKBOX && this.options.disabledItems.length > 0) {
+                if (this.options.selectItem.type === selectItems.CHECKBOX && this.options.disabledItems.length === 0) {
                     this.sandbox.dom.html($cell, templates.checkbox);
                 }
                 this.sandbox.dom.prepend(this.table.header.$row, $cell);

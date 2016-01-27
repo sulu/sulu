@@ -4,6 +4,14 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <service id="sulu_custom_urls.serializer.event_subscriber"
+                 class="Sulu\Bundle\CustomUrlBundle\EventListener\CustomUrlSerializeEventSubscriber">
+            <argument type="service" id="sulu_custom_urls.domain_generator"/>
+
+            <tag name="jms_serializer.event_subscriber" />
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
         <service id="sulu_custom_urls.update_localization.request_listener"
                  class="Sulu\Bundle\CustomUrlBundle\EventListener\UpdateLocalizationListener">
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>

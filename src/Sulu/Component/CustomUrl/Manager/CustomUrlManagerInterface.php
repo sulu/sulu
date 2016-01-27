@@ -36,7 +36,7 @@ interface CustomUrlManagerInterface
      *
      * @return array
      */
-    public function readList($webspaceKey);
+    public function readList($webspaceKey, $locale);
 
     /**
      * Returns a single custom-url object identified by uuid.

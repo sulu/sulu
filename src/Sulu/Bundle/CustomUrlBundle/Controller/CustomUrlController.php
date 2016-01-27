@@ -42,7 +42,7 @@ class CustomUrlController extends RestController
     {
         // TODO pagination
 
-        $result = $this->get('sulu_custom_urls.manager')->readList($webspaceKey);
+        $result = $this->get('sulu_custom_urls.manager')->readList($webspaceKey, $this->getLocale($request));
 
         $list = new RouteAwareRepresentation(
             new CollectionRepresentation($result, self::$relationName),

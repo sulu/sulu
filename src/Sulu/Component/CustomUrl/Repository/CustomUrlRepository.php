@@ -10,8 +10,12 @@
 
 namespace Sulu\Component\CustomUrl\Repository;
 
+use Jackalope\Query\Row;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
 use PHPCR\Util\QOM\QueryBuilder;
+use Sulu\Component\Content\Repository\ContentRepositoryInterface;
+use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
+use Sulu\Component\CustomUrl\Generator\GeneratorInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
 /**
@@ -24,19 +28,35 @@ class CustomUrlRepository
      */
     private $sessionManager;
 
-    public function __construct(SessionManagerInterface $sessionManager)
-    {
+    /**
+     * @var ContentRepositoryInterface
+     */
+    private $contentRepository;
+
+    /**
+     * @var GeneratorInterface
+     */
+    private $generator;
+
+    public function __construct(
+        SessionManagerInterface $sessionManager,
+        ContentRepositoryInterface $contentRepository,
+        GeneratorInterface $generator
+    ) {
         $this->sessionManager = $sessionManager;
+        $this->contentRepository = $contentRepository;
+        $this->generator = $generator;
     }
 
     /**
      * Returns list of custom-url data-arrays.
      *
      * @param string $path
+     * @param string $locale
      *
      * @return \Iterator
      */
-    public function findList($path)
+    public function findList($path, $locale)
     {
         // TODO pagination
 
@@ -49,10 +69,14 @@ class CustomUrlRepository
         $queryBuilder->select('a', 'jcr:uuid', 'uuid');
         $queryBuilder->addSelect('a', 'title', 'title');
         $queryBuilder->addSelect('a', 'published', 'published');
+        $queryBuilder->addSelect('a', 'domainParts', 'domainParts');
+        $queryBuilder->addSelect('a', 'baseDomain', 'baseDomain');
+        $queryBuilder->addSelect('a', 'target', 'target');
 
         $queryBuilder->from(
             $queryBuilder->qomf()->selector('a', 'nt:unstructured')
         );
+
         $queryBuilder->where(
             $queryBuilder->qomf()->comparison(
                 $queryBuilder->qomf()->propertyValue('a', 'jcr:mixinTypes'),
@@ -67,6 +91,20 @@ class CustomUrlRepository
         $query = $queryBuilder->getQuery();
         $result = $query->execute();
 
-        return new RowsIterator($result->getRows(), $result->getColumnNames());
+
+        $uuids = array_map(
+            function (Row $item) {
+                return $item->getValue('a.target');
+            },
+            iterator_to_array($result->getRows())
+        );
+
+        $targets = $this->contentRepository->findByUuids(
+            array_unique($uuids),
+            $locale,
+            MappingBuilder::create()->addProperties(['title'])->getMapping()
+        );
+
+        return new RowsIterator($result->getRows(), $result->getColumnNames(), $targets, $this->generator);
     }
 }

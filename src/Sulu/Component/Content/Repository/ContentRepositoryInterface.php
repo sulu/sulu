@@ -81,7 +81,7 @@ interface ContentRepositoryInterface
     );
 
     /**
-     * Find content array which given UUIDs.
+     * Find content array which given paths.
      *
      * @param string[] $paths
      * @param string $locale
@@ -92,6 +92,23 @@ interface ContentRepositoryInterface
      */
     public function findByPaths(
         array $paths,
+        $locale,
+        MappingInterface $mapping,
+        UserInterface $user = null
+    );
+
+    /**
+     * Find content array which given UUIDs.
+     *
+     * @param string[] $uuids
+     * @param string $locale
+     * @param MappingInterface $mapping Includes array of property names.
+     * @param UserInterface $user
+     *
+     * @return Content[]
+     */
+    public function findByUuids(
+        array $uuids,
         $locale,
         MappingInterface $mapping,
         UserInterface $user = null
