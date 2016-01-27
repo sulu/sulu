@@ -30,7 +30,8 @@ define(['text!./skeleton.html'], function(skeleton) {
             successLabel: 'labels.success',
             successMessage: 'labels.success.save-desc',
 
-            targetTitle: 'custom-urls.target-title'
+            targetTitle: 'custom-urls.target-title',
+            noTarget: 'custom-urls.no-target'
         }
     };
 
@@ -122,7 +123,14 @@ define(['text!./skeleton.html'], function(skeleton) {
                             {
                                 attribute: 'targetTitle',
                                 name: 'targetTitle',
-                                content: this.translations.targetTitle
+                                content: this.translations.targetTitle,
+                                type: function(content) {
+                                    if (content === '') {
+                                        return this.translations.noTarget;
+                                    }
+
+                                    return content;
+                                }.bind(this)
                             }
                         ]
                     }

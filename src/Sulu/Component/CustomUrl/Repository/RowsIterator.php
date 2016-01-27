@@ -55,7 +55,10 @@ class RowsIterator extends \IteratorIterator
             $result[str_replace('a.', '', $column)] = $row->getValue($column);
         }
 
-        $result['targetTitle'] = $this->targets[$result['target']]['title'];
+        $result['targetTitle'] = '';
+        if (!empty($result['target'])) {
+            $result['targetTitle'] = $this->targets[$result['target']]['title'];
+        }
         $result['customUrl'] = $this->generator->generate(
             $result['baseDomain'],
             json_decode($result['domainParts'], true)

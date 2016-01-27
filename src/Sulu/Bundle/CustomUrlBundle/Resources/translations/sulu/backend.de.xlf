@@ -78,6 +78,10 @@
                 <source>custom-urls.target-title</source>
                 <target>Zielseite (Titel)</target>
             </trans-unit>
+            <trans-unit id="20" resname="custom-urls.no-target">
+                <source>custom-urls.no-target</source>
+                <target>Keine Zielseite vorhanden</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
