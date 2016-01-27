@@ -4,7 +4,7 @@
         margin: 0 5px;
     }
 
-    .form-element:first-child {
+    .form-element[data-prefix="true"] {
         margin-left: 0px;
     }
 

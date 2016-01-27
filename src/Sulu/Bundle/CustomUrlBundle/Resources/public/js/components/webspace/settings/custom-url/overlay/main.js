@@ -169,7 +169,11 @@ define(['underscore', 'text!./form.html'], function(_, form) {
          */
         getData: function() {
             var data = this.sandbox.form.getData(formSelector),
-                targetUuid = this.target || this.data.target.uuid;
+                targetUuid = this.target || null;
+
+            if (!!targetUuid && !!this.data.target) {
+                targetUuid = this.data.target.uuid;
+            }
 
             data.target = !!targetUuid ? {uuid: targetUuid} : null;
 

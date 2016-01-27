@@ -7,13 +7,13 @@
  * with this source code in the file LICENSE.
  */
 
-define(['underscore'], function(_) {
+define(['underscore', 'jquery', 'services/husky/util'], function(_, $, util) {
 
     'use strict';
 
     // Tested base-domains:
-    //  - *.sulu.io/test/*/{localization}
-    //  - sulu.io/test/*/{localization}
+    //  - *.sulu.io/test/*/test
+    //  - sulu.io/test/*/test
     //  - *.sulu.io/test/*
     //  - *.sulu.io/test
     //  - sulu.io/test
@@ -23,8 +23,7 @@ define(['underscore'], function(_) {
 
     var defaults = {
             templates: {
-                input: '<input type="text" class="form-element" data-index="<%=index%>" <% if (index === 0) { %>data-prefix="true"<% } else { %>data-suffix="true"<% } %>/>',
-                text: '<span class="domain-part"><%=text%></span>'
+                input: '<input type="text" class="form-element" <% if (!!prefix) { %>data-prefix="true"<% } else { %>data-suffix="true"<% } %>/>'
             }
         },
 
@@ -34,33 +33,20 @@ define(['underscore'], function(_) {
          *
          * @param {String} baseDomain
          *
-         * @returns {Array}
+         * @returns {String}
          */
         parseBaseDomain = function(baseDomain) {
             if (!baseDomain) {
                 return [];
             }
 
-            var domainParts = baseDomain.split('*');
-
-            // add a empty element between the items ('*') except the part is empty or the part before is empty
-            for (var i = domainParts.length - (baseDomain.charAt(baseDomain.length - 1) === '*' ? 2 : 1); i >= 1; i = i - 2) {
-                if (domainParts[i] !== '' && domainParts[i - 1] !== '') {
-                    domainParts.splice(i, 0, '');
-                }
+            if (baseDomain.indexOf('*', baseDomain.length - 1) === -1) {
+                baseDomain += '/*';
             }
 
-            var preparedBaseDomain = baseDomain.concat('/');
-
-            // if no '*' exists in the right part of the domain appen a '/' to the last and add an empty element
-            if (preparedBaseDomain.substring(preparedBaseDomain.indexOf('/')).indexOf('*') === -1) {
-                domainParts[domainParts.length - 1] = domainParts[domainParts.length - 1].concat('/');
-
-                // no * found in the right part of the domain
-                domainParts.push('');
-            }
-
-            return domainParts;
+            return baseDomain
+                .replace(/^([^/]*)(\*)([^/]+)(.*)$/, '<span class="domain-part">$1</span>' + this.templates.input({prefix: true}) + '<span class="domain-part">$3</span><span class="domain-part">$4</span>')
+                .replace(/\*/g, '</span>' + this.templates.input({prefix: false}) + '<span class="domain-part">');
         },
 
         /**
@@ -127,25 +113,15 @@ define(['underscore'], function(_) {
                 return;
             }
 
-            this.domainParts = parseBaseDomain(this.baseDomain);
-            this.html(_.map(this.domainParts, this.renderDomainPart.bind(this)))
-        },
+            this.html(parseBaseDomain.call(this, this.baseDomain));
 
-        /**
-         * Renders a single domain part.
-         * If the domain part is empty an input will be displayed.
-         *
-         * @param {String} domainPart
-         * @param {Integer} index
-         * @returns {String}
-         */
-        renderDomainPart: function(domainPart, index) {
-            switch (domainPart) {
-                case '':
-                    return this.templates.input({index: index});
-                default:
-                    return this.templates.text({text: this.sandbox.util.cropMiddle(domainPart, 15)});
-            }
+            this.$find('.domain-part').each(function() {
+                var text = $(this).text();
+
+                if (text.length > 15) {
+                    $(this).text(util.cropMiddle(text, 15));
+                }
+            });
         },
 
         /**
