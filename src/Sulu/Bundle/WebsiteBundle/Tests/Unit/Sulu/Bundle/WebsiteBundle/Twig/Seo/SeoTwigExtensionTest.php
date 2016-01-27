@@ -16,6 +16,8 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
 {
@@ -34,11 +36,25 @@ class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
      */
     private $contentPath;
 
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
     public function setUp()
     {
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->contentPath = $this->prophesize(ContentPathInterface::class);
-        $this->seoTwigExtension = new SeoTwigExtension($this->requestAnalyzer->reveal(), $this->contentPath->reveal());
+        $this->requestStack = $this->prophesize(RequestStack::class);
+        $this->seoTwigExtension = new SeoTwigExtension(
+            $this->requestAnalyzer->reveal(),
+            $this->contentPath->reveal(),
+            $this->requestStack->reveal()
+        );
+
+        $request = $this->prophesize(Request::class);
+        $request->get('_seo', [])->willReturn([]);
+        $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
     }
 
     public function testGetFunctions()

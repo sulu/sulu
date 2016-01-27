@@ -11,6 +11,7 @@
 namespace Sulu\Component\CustomUrl\Manager;
 
 use Ferrandini\Urlizer;
+use PHPCR\Util\PathHelper;
 use Sulu\Bundle\ContentBundle\Document\RouteDocument;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Repository\CustomUrlRepository;
@@ -104,7 +105,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
         $routeDocument = $this->readRouteByUrl($url, $webspaceKey, $locale);
 
         if ($routeDocument === null) {
-            return null;
+            return;
         }
 
         return $routeDocument->getTargetDocument();
@@ -134,6 +135,24 @@ class CustomUrlManager implements CustomUrlManagerInterface
     }
 
     /**
+     * Read route of custom-url identified by uuid.
+     *
+     * @param string $uuid
+     *
+     * @return RouteDocument
+     */
+    protected function readRoute($uuid)
+    {
+        $document = $this->documentManager->find($uuid);
+
+        if (!$document instanceof RouteDocument) {
+            return;
+        }
+
+        return $document;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function update($uuid, array $data, $locale = null)
@@ -152,6 +171,22 @@ class CustomUrlManager implements CustomUrlManagerInterface
     public function delete($uuid)
     {
         $this->documentManager->remove($this->read($uuid));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function deleteRoute($webspaceKey, $uuid)
+    {
+        $routeDocument = $this->readRoute($uuid);
+
+        if (!$routeDocument->isHistory()) {
+            $route = PathHelper::relativizePath($routeDocument->getPath(), $this->getRoutesPath($webspaceKey));
+
+            throw new CannotDeleteCurrentRouteException($route, $routeDocument, $routeDocument->getTargetDocument());
+        }
+
+        $this->documentManager->remove($routeDocument);
     }
 
     /**

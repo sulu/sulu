@@ -13,6 +13,7 @@ namespace Sulu\Bundle\CustomUrlBundle\Controller;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use Hateoas\Representation\CollectionRepresentation;
 use Hateoas\Representation\RouteAwareRepresentation;
+use Sulu\Component\CustomUrl\Manager\CannotDeleteCurrentRouteException;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,6 +58,7 @@ class CustomUrlController extends RestController
      *
      * @param string $webspaceKey
      * @param string $uuid
+     * @param Request $request
      *
      * @return Response
      */
@@ -143,6 +145,32 @@ class CustomUrlController extends RestController
         $manager = $this->get('sulu_custom_urls.manager');
         foreach ($uuids as $uuid) {
             $manager->delete($uuid);
+        }
+        $this->get('sulu_document_manager.document_manager')->flush();
+
+        return $this->handleView($this->view());
+    }
+
+    /**
+     * Deletes a lst of custom-urls identified by a list of uuids.
+     *
+     * @param $webspaceKey
+     * @param string $customUrlUuid
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function cdeleteRoutesAction($webspaceKey, $customUrlUuid, Request $request)
+    {
+        $uuids = array_filter(explode(',', $request->get('ids', '')));
+
+        $manager = $this->get('sulu_custom_urls.manager');
+        foreach ($uuids as $uuid) {
+            try {
+                $manager->deleteRoute($webspaceKey, $uuid);
+            } catch (CannotDeleteCurrentRouteException $ex) {
+                return $this->handleView($this->view($ex->toArray(), 400));
+            }
         }
         $this->get('sulu_document_manager.document_manager')->flush();
 

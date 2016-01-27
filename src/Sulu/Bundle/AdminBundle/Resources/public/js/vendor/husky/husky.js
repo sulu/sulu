@@ -30353,6 +30353,7 @@ define('__component__$column-options@husky',[],function() {
  * @param {Function} [onResize] function which gets automatically executed on window resize
  * @param {Function} [unbindCustomEvents] function to unbind the custom events of this object
  * @param {Boolean} [cropContents] Define if cell contents should be cropped, when options.croppedMaxSize is exceeded
+ * @param {Array} [disabledItems] Ids which cannot be selected
  */
 define('husky_components/datagrid/decorators/table-view',[],function() {
 
@@ -30383,7 +30384,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             actionIconColumn: null,
             croppedMaxLength: 35,
             openPathToSelectedChildren: true,
-            cropContents: true
+            cropContents: true,
+            disabledItems: []
         },
 
         constants = {
@@ -30762,7 +30764,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             if (!!this.options.selectItem && !!this.options.selectItem.type) {
                 var $cell = this.sandbox.dom.createElement(templates.headerCell);
                 this.sandbox.dom.addClass($cell, constants.checkboxCellClass);
-                if (this.options.selectItem.type === selectItems.CHECKBOX) {
+                if (this.options.selectItem.type === selectItems.CHECKBOX && this.options.disabledItems.length > 0) {
                     this.sandbox.dom.html($cell, templates.checkbox);
                 }
                 this.sandbox.dom.prepend(this.table.header.$row, $cell);
@@ -30852,7 +30854,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 return '';
             }
             if (!!this.options.selectItem && !!this.options.selectItem.type &&
-                (this.options.selectItem.inFirstCell === false || norender === true)) {
+                (this.options.selectItem.inFirstCell === false || norender === true)
+            ) {
                 var $cell = this.sandbox.dom.createElement(templates.cell);
                 this.sandbox.dom.addClass($cell, constants.cellFitClass);
                 if (this.options.selectItem.type === selectItems.CHECKBOX) {
@@ -30862,6 +30865,11 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                         name: 'datagrid-' + this.datagrid.options.instanceName
                     }));
                 }
+
+                if (_.indexOf(this.options.disabledItems, id) > -1) {
+                    $cell.find('input').attr('readonly', 'readonly');
+                }
+
                 if (norender === true) {
                     return this.sandbox.dom.html($cell);
                 }

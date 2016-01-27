@@ -70,7 +70,6 @@ interface CustomUrlManagerInterface
      */
     public function readRouteByUrl($url, $webspaceKey, $locale = null);
 
-
     /**
      * Update a single custom-url object identified by uuid with given data.
      *
@@ -88,4 +87,14 @@ interface CustomUrlManagerInterface
      * @param string $uuid
      */
     public function delete($uuid);
+
+    /**
+     * Delete route of a custom-url.
+     *
+     * @param string $uuid
+     * @param string $webspaceKey
+     *
+     * @throws CannotDeleteCurrentRouteException
+     */
+    public function deleteRoute($webspaceKey, $uuid);
 }

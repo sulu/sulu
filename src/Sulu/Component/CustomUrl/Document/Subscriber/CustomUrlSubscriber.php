@@ -105,6 +105,10 @@ class CustomUrlSubscriber implements EventSubscriberInterface
         );
 
         foreach ($oldRoutes as $oldRoute) {
+            if ($oldRoute->getPath() === $route->getPath()) {
+                continue;
+            }
+
             $oldRoute->setTargetDocument($route);
             $oldRoute->setHistory(true);
             $this->documentManager->persist(
@@ -186,7 +190,8 @@ class CustomUrlSubscriber implements EventSubscriberInterface
                 );
 
                 $routes[$path] = $routeDocument;
-                $routes = array_merge($routes, $this->findReferrer($routeDocument, $webspaceKey));
+                $tmp = $this->findReferrer($routeDocument, $webspaceKey);
+                $routes = array_merge($routes, $tmp);
             }
         }
 

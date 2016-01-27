@@ -47,7 +47,7 @@ interface RouteBehavior
     public function setLocale($locale);
 
     /**
-     * Returns history flag
+     * Returns history flag.
      *
      * @return bool
      */

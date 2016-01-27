@@ -71,8 +71,6 @@ class RouteProvider implements RouteProviderInterface
      */
     public function getRouteCollectionForRequest(Request $request)
     {
-        // TODO check url for existing "custom-url" template
-
         $collection = new RouteCollection();
 
         $resourceLocator = rtrim(sprintf('%s%s', $request->getHost(), $request->getRequestUri()), '/');

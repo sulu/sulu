@@ -103,10 +103,12 @@ define(['text!./skeleton.html'], function(skeleton) {
                         matchings: [
                             {
                                 attribute: 'title',
+                                name: 'title',
                                 content: this.translations.title
                             },
                             {
                                 attribute: 'published',
+                                name: 'published',
                                 content: this.translations.published,
                                 type: 'checkbox_readonly'
                             }

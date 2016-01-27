@@ -20,14 +20,20 @@ define(['underscore', 'text!./form.html'], function(_, form) {
             },
             templates: {
                 form: form,
+                urlList: '<div><div id="webspace-custom-urls-url-list-toolbar"/><div id="webspace-custom-urls-url-list"/></div>',
                 skeleton: '<div id="webspace-custom-urls-overlay"/>',
-                url: '/admin/api/webspaces/<%= webspaceKey %>/custom-urls<% if (!!id) { %>/<%= id %><% } %>'
+                url: '/admin/api/webspaces/<%= webspaceKey %>/custom-urls<% if (!!id) { %>/<%= id %><% } %>',
+                routeUrl: '/admin/api/webspaces/<%= webspaceKey %>/custom-urls/<%= id %>/routes?ids=<%= ids.join(",") %>'
             },
             translations: {
                 overlayTitle: 'custom-urls.webspace.settings.edit.title',
                 customUrlDefaultValue: 'custom-urls.custom-url.default-value',
                 localeDefaultValue: 'custom-urls.locale.default-value',
-                chooseTargetCancel: 'custom-urls.choose-target.cancel'
+                chooseTargetCancel: 'custom-urls.choose-target.cancel',
+
+                titleDetails: 'public.details',
+                titleUrls: 'custom-urls.urls-title',
+                history: 'custom-urls.history'
             }
         },
         constants = {
@@ -43,13 +49,25 @@ define(['underscore', 'text!./form.html'], function(_, form) {
          * Initializes component.
          */
         initialize: function() {
+            this.bindCustomEvents();
+
             this.$el.html(this.templates.skeleton);
 
             this.startOverlay();
         },
 
         /**
-         * Bind dom event.
+         * Bind sandbox events.
+         */
+        bindCustomEvents: function() {
+            this.sandbox.on('husky.datagrid.custom-urls-overlay.number.selections', function(selection) {
+                var action = selection > 0 ? 'enable' : 'disable';
+                this.sandbox.emit('husky.toolbar.custom-urls-overlay.item.' + action, 'delete', false);
+            }.bind(this));
+        },
+
+        /**
+         * Bind dom events.
          */
         bindDomEvents: function() {
             this.sandbox.dom.on('#analytics-all-domains', 'change', function() {
@@ -75,6 +93,20 @@ define(['underscore', 'text!./form.html'], function(_, form) {
          * Start overlay container for form.
          */
         startOverlay: function() {
+            var tabs = [
+                {
+                    title: this.translations.titleDetails,
+                    data: this.templates.form({translations: this.translations})
+                }
+            ];
+
+            if (!!this.data.routes && _.size(this.data.routes) > 0) {
+                tabs.push({
+                    title: this.translations.overlayTitle,
+                    data: this.templates.urlList({translations: this.translations})
+                });
+            }
+
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
@@ -86,7 +118,7 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                         slides: [
                             {
                                 title: this.translations.overlayTitle,
-                                data: this.templates.form({translations: this.translations}),
+                                tabs: tabs,
                                 okCallback: function() {
                                     if (this.sandbox.form.validate(formSelector)) {
                                         this.options.saveCallback(this.options.id, this.getData());
@@ -142,6 +174,15 @@ define(['underscore', 'text!./form.html'], function(_, form) {
          * Initializes sub-components.
          */
         initializeFormComponents: function() {
+            var routeDisabledItems = [],
+                routeData = _.map(this.data.routes, function(routeDocument, route) {
+                    if (!routeDocument.history) {
+                        routeDisabledItems.push(routeDocument.uuid);
+                    }
+
+                    return {uuid: routeDocument.uuid, route: route, history: routeDocument.history};
+                });
+
             this.sandbox.start(
                 [
                     {
@@ -230,6 +271,49 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                             }.bind(this),
                             emitPreSelect: false
                         }
+                    },
+                    {
+                        name: 'list-toolbar@suluadmin',
+                        options: {
+                            el: '#webspace-custom-urls-url-list-toolbar',
+                            hasSearch: false,
+                            instanceName: 'custom-urls-overlay',
+                            template: this.sandbox.sulu.buttons.get({
+                                delete: {
+                                    options: {disabled: true, callback: this.deleteUrl.bind(this)}
+                                }
+                            })
+                        }
+                    },
+                    {
+                        name: 'datagrid@husky',
+                        options: {
+                            el: '#webspace-custom-urls-url-list',
+                            instanceName: 'custom-urls-overlay',
+                            data: routeData,
+                            idKey: 'uuid',
+                            viewOptions: {
+                                table: {
+                                    selectItem: {
+                                        type: 'checkbox',
+                                        inFirstCell: false,
+                                        header: false
+                                    },
+                                    disabledItems: routeDisabledItems
+                                }
+                            },
+                            matchings: [
+                                {
+                                    content: this.translations.customUrl,
+                                    attribute: 'route'
+                                },
+                                {
+                                    content: this.translations.history,
+                                    attribute: 'history',
+                                    type: 'checkbox_readonly'
+                                }
+                            ]
+                        }
                     }
                 ]
             );
@@ -242,6 +326,33 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                 $('#custom-url-target-value').val(this.data.target.title);
                 $('#custom-url-target-button-clear').show();
             }
+        },
+
+        /**
+         * Delete custom-url-route.
+         */
+        deleteUrl: function() {
+            var ids = this.sandbox.util.deepCopy($('#webspace-custom-urls-url-list').data('selected'));
+
+            // TODO how to handle overlays in overlays? error and question?
+
+            this.sandbox.sulu.showDeleteDialog(function(confirmed) {
+                if (!!confirmed) {
+                    this.sandbox.util.save(
+                        this.templates.routeUrl({
+                            webspaceKey: this.options.webspace.key,
+                            id: this.options.id,
+                            ids: ids
+                        }),
+                        'DELETE'
+                    ).done(function() {
+                        for (var i = 0, length = ids.length; i < length; i++) {
+                            var id = ids[i];
+                            this.sandbox.emit('husky.datagrid.custom-urls-overlay.record.remove', id);
+                        }
+                    }.bind(this));
+                }
+            }.bind(this));
         },
 
         /**
