@@ -1,0 +1,1 @@
+require.config({paths:{sulucustomurl:"../../sulucustomurl/dist","type/custom-url":"../../sulucustomurl/dist/components/webspace/settings/custom-url/input/custom-url"}}),define(function(){"use strict";return{name:"SuluCustomUrl",initialize:function(a){a.components.addSource("sulucustomurl","/bundles/sulucustomurl/dist/components")}}});
