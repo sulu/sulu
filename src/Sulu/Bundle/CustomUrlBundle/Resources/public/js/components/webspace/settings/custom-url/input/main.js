@@ -23,8 +23,8 @@ define(['underscore'], function(_) {
 
     var defaults = {
             templates: {
-                input: '<input type="text" data-index="<%=index%>" <% if (index === 0) { %>data-prefix="true"<% } else { %>data-suffix="true"<% } %>/>',
-                text: '<span><%=text%></span>'
+                input: '<input type="text" class="form-element" data-index="<%=index%>" <% if (index === 0) { %>data-prefix="true"<% } else { %>data-suffix="true"<% } %>/>',
+                text: '<span class="domain-part"><%=text%></span>'
             }
         },
 
@@ -144,7 +144,7 @@ define(['underscore'], function(_) {
                 case '':
                     return this.templates.input({index: index});
                 default:
-                    return this.templates.text({text: domainPart});
+                    return this.templates.text({text: this.sandbox.util.cropMiddle(domainPart, 15)});
             }
         },
 

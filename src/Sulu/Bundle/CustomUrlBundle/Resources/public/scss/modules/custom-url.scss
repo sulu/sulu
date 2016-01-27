@@ -1,0 +1,14 @@
+.custom-url-input {
+    .form-element {
+        width: 100px;
+        margin: 0 5px;
+    }
+
+    .form-element:first-child {
+        margin-left: 0px;
+    }
+
+    .domain-part {
+        color: $grayLight;
+    }
+}

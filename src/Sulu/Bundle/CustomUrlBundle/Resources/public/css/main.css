@@ -1,0 +1,14 @@
+/*----------------------------------------*/
+/* line 2, ../scss/modules/custom-url.scss */
+.custom-url-input .form-element {
+  width: 100px;
+  margin: 0 5px;
+}
+/* line 7, ../scss/modules/custom-url.scss */
+.custom-url-input .form-element:first-child {
+  margin-left: 0px;
+}
+/* line 11, ../scss/modules/custom-url.scss */
+.custom-url-input .domain-part {
+  color: #999;
+}

@@ -57,7 +57,10 @@ class CustomUrlSerializeEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $visitor->addData('targetTitle', $customUrl->getTarget()->getTitle());
+        if ($customUrl->getTarget() !== null) {
+            $visitor->addData('targetTitle', $customUrl->getTarget()->getTitle());
+        }
+
         $visitor->addData(
             'customUrl',
             $this->generator->generate($customUrl->getBaseDomain(), $customUrl->getDomainParts())

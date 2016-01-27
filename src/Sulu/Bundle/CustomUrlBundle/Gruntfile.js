@@ -44,6 +44,23 @@ module.exports = function(grunt) {
                     {src: ['Resources/public/dist/main.js'], dest: 'Resources/public/dist/main.js'}
                 ]
             }
+        },
+        compass: {
+            main: {
+                options: {
+                    sassDir: 'Resources/public/scss/',
+                    specify: ['Resources/public/scss/main.scss'],
+                    cssDir: 'Resources/public/css/',
+                    relativeAssets: false
+                }
+            }
+        },
+        cssmin: {
+            compress: {
+                files: {
+                    'Resources/public/css/main.min.css': ['Resources/public/css/main.css']
+                }
+            }
         }
     });
 
@@ -53,8 +70,14 @@ module.exports = function(grunt) {
         'replace:build'
     ]);
 
+    grunt.registerTask('build:css', [
+        'compass',
+        'cssmin'
+    ]);
+
     grunt.registerTask('build', [
-        'build:js'
+        'build:js',
+        'build:css'
     ]);
 
     grunt.registerTask('default', [
