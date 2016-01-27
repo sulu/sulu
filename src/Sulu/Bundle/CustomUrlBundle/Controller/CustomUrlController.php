@@ -14,6 +14,7 @@ use FOS\RestBundle\Controller\Annotations\RouteResource;
 use Hateoas\Representation\CollectionRepresentation;
 use Hateoas\Representation\RouteAwareRepresentation;
 use Sulu\Component\CustomUrl\Manager\CannotDeleteCurrentRouteException;
+use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
@@ -83,12 +84,16 @@ class CustomUrlController extends RestController
      */
     public function postAction($webspaceKey, Request $request)
     {
-        $document = $this->get('sulu_custom_urls.manager')->create(
-            $webspaceKey,
-            $request->request->all(),
-            $this->getLocale($request)
-        );
-        $this->get('sulu_document_manager.document_manager')->flush();
+        try {
+            $document = $this->get('sulu_custom_urls.manager')->create(
+                $webspaceKey,
+                $request->request->all(),
+                $this->getLocale($request)
+            );
+            $this->get('sulu_document_manager.document_manager')->flush();
+        } catch (RestException $ex) {
+            return $this->handleView($this->view($ex->toArray(), 400));
+        }
 
         return $this->handleView($this->view($document));
     }
@@ -104,12 +109,16 @@ class CustomUrlController extends RestController
      */
     public function putAction($webspaceKey, $uuid, Request $request)
     {
-        $document = $this->get('sulu_custom_urls.manager')->update(
-            $uuid,
-            $request->request->all(),
-            $this->getLocale($request)
-        );
-        $this->get('sulu_document_manager.document_manager')->flush();
+        try {
+            $document = $this->get('sulu_custom_urls.manager')->update(
+                $uuid,
+                $request->request->all(),
+                $this->getLocale($request)
+            );
+            $this->get('sulu_document_manager.document_manager')->flush();
+        } catch (RestException $ex) {
+            return $this->handleView($this->view($ex->toArray(), 400));
+        }
 
         return $this->handleView($this->view($document));
     }

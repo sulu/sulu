@@ -25,6 +25,8 @@ interface CustomUrlManagerInterface
      * @param array $data
      * @param string|null $locale
      *
+     * @throws TitleExistsException
+     *
      * @return CustomUrlDocument
      */
     public function create($webspaceKey, array $data, $locale = null);

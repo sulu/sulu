@@ -15,6 +15,7 @@ use Sulu\Bundle\ContentBundle\Document\RouteDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\CustomUrl\Document\CustomUrlBehavior;
 use Sulu\Component\CustomUrl\Generator\GeneratorInterface;
+use Sulu\Component\CustomUrl\Manager\RouteAlreadyExistsException;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -130,7 +131,7 @@ class CustomUrlSubscriber implements EventSubscriberInterface
         $routesPath
     ) {
         $path = sprintf('%s/%s', $routesPath, $domain);
-        $routeDocument = $this->findOrCreateRoute($path, $persistedLocale);
+        $routeDocument = $this->findOrCreateRoute($path, $persistedLocale, $document, $domain);
         $routeDocument->setTargetDocument($document);
         $routeDocument->setLocale($locale->getLocalization());
         $routeDocument->setHistory(false);
@@ -148,18 +149,29 @@ class CustomUrlSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param $path
-     * @param $locale
+     * @param string $path
+     * @param string $locale
+     * @param CustomUrlBehavior $document
+     * @param string $route
      *
      * @return RouteDocument
+     *
+     * @throws RouteAlreadyExistsException
      */
-    private function findOrCreateRoute($path, $locale)
+    private function findOrCreateRoute($path, $locale, CustomUrlBehavior $document, $route)
     {
         try {
-            return $this->documentManager->find($path, $locale);
+            /** @var RouteDocument $routeDocument */
+            $routeDocument = $this->documentManager->find($path, $locale);
         } catch (DocumentNotFoundException $ex) {
             return $this->documentManager->create('route');
         }
+
+        if ($routeDocument->getTargetDocument()->getUuid() !== $document->getUuid()) {
+            throw new RouteAlreadyExistsException($route);
+        }
+
+        return $routeDocument;
     }
 
     /**

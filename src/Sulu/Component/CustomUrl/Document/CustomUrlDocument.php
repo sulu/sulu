@@ -30,8 +30,6 @@ class CustomUrlDocument implements
     NodeNameBehavior,
     TimestampBehavior,
     BlameBehavior,
-    UuidBehavior,
-    PathBehavior,
     ParentBehavior,
     LocaleBehavior,
     RoutableBehavior

@@ -11,6 +11,7 @@
 namespace Sulu\Component\CustomUrl\Manager;
 
 use Ferrandini\Urlizer;
+use PHPCR\ItemExistsException;
 use PHPCR\Util\PathHelper;
 use Sulu\Bundle\ContentBundle\Document\RouteDocument;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
@@ -66,15 +67,20 @@ class CustomUrlManager implements CustomUrlManagerInterface
         $document = $this->documentManager->create('custom_urls');
         $this->bind($document, $data, $locale);
 
-        $this->documentManager->persist(
-            $document,
-            $locale,
-            [
-                'parent_path' => $this->getItemsPath($webspaceKey),
-                'node_name' => Urlizer::urlize($document->getTitle()),
-                'load_ghost_content' => true,
-            ]
-        );
+        try {
+            $this->documentManager->persist(
+                $document,
+                $locale,
+                [
+                    'parent_path' => $this->getItemsPath($webspaceKey),
+                    'node_name' => Urlizer::urlize($document->getTitle()),
+                    'load_ghost_content' => true,
+                ]
+
+            );
+        } catch (ItemExistsException $ex) {
+            throw new TitleExistsException($document->getTitle());
+        }
 
         return $document;
     }
@@ -159,8 +165,20 @@ class CustomUrlManager implements CustomUrlManagerInterface
     {
         $document = $this->read($uuid, $locale);
         $this->bind($document, $data, $locale);
-
-        $this->documentManager->persist($document, $locale);
+        
+        try {
+            $this->documentManager->persist(
+                $document,
+                $locale,
+                [
+                    'parent_path' => PathHelper::getParentPath($document->getPath()),
+                    'node_name' => Urlizer::urlize($document->getTitle()),
+                    'load_ghost_content' => true,
+                ]
+            );
+        } catch (ItemExistsException $ex) {
+            throw new TitleExistsException($document->getTitle());
+        }
 
         return $document;
     }

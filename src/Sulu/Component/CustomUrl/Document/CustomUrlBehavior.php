@@ -12,11 +12,13 @@ namespace Sulu\Component\CustomUrl\Document;
 
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\ContentBundle\Document\RouteDocument;
+use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 
 /**
  * Interface for custom-url data-class.
  */
-interface CustomUrlBehavior
+interface CustomUrlBehavior extends UuidBehavior, PathBehavior
 {
     /**
      * Returns title of custom-url.

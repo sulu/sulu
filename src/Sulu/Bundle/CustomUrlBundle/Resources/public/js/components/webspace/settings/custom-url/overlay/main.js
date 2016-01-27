@@ -127,10 +127,24 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                                 tabs: tabs,
                                 okCallback: function() {
                                     if (this.sandbox.form.validate(formSelector)) {
-                                        this.options.saveCallback(this.options.id, this.getData());
-                                    } else {
-                                        return false;
+                                        this.options.saveCallback(this.options.id, this.getData()).done(function() {
+                                            this.sandbox.emit('husky.overlay.custom-urls.close');
+                                        }.bind(this)).fail(function(a) {
+                                            switch (a.responseJSON.code) {
+                                                case 9001:
+                                                    var $title = $('#custom-url-title');
+                                                    $title.parent().addClass('husky-validate-error');
+                                                    $title.focus();
+                                                    break;
+                                                case 9002:
+                                                    var $customUrl = $('#custom-url-input');
+                                                    $customUrl.parent().addClass('husky-validate-error');
+                                                    break;
+                                            }
+                                        }.bind(this));
                                     }
+
+                                    return false;
                                 }.bind(this)
                             },
                             {

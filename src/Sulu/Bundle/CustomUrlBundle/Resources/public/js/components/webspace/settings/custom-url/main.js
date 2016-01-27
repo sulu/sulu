@@ -187,7 +187,7 @@ define(['text!./skeleton.html'], function(skeleton) {
          * @param {{}} data
          */
         save: function(id, data) {
-            this.sandbox.util.save(
+            return this.sandbox.util.save(
                 this.templates.url({webspace: this.data, id: id, ids: null}), !!id ? 'PUT' : 'POST', data
             ).then(function(response) {
                 var event = 'husky.datagrid.record.add';
