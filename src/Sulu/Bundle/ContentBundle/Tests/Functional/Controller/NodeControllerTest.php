@@ -255,6 +255,95 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($data[0]['tags'], $response['tags']);
         $this->assertEquals($data[0]['url'], $response['url']);
         $this->assertEquals($data[0]['article'], $response['article']);
+
+        $this->assertEquals('/admin/api/nodes/' . $data[0]['id'], $response['_links']['self']['href']);
+        $this->assertEquals(
+            '/admin/api/nodes?parent=' . $data[0]['id'] . '&depth=1&webspace=sulu_io&language=en',
+            $response['_links']['children']['href']
+        );
+    }
+
+    public function testGetLocalized()
+    {
+        $data = [
+            'en' => [
+                'template' => 'default',
+                'title' => 'test_en',
+                'tags' => [
+                    'tag1',
+                    'tag2',
+                ],
+                'url' => '/test_en',
+                'article' => 'Test English',
+            ],
+            'de' => [
+                'template' => 'default',
+                'title' => 'test_de',
+                'tags' => [
+                    'tag1',
+                    'tag2',
+                ],
+                'url' => '/test_de',
+                'article' => 'Test German',
+            ],
+        ];
+        $mapper = $this->getMapper();
+
+        $englishStructure = $mapper->save($data['en'], 'default', 'sulu_io', 'en', 1);
+        $germanStructure = $mapper->save(
+            $data['de'],
+            'default',
+            'sulu_io',
+            'de',
+            1,
+            true,
+            $englishStructure->getUuid()
+        );
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('GET', '/api/nodes/' . $englishStructure->getUuid() . '?language=en');
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals($data['en']['title'], $response['title']);
+
+        $client->request('GET', '/api/nodes/' . $germanStructure->getUuid() . '?language=de');
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals($data['de']['title'], $response['title']);
+    }
+
+    public function testGetGhostContent()
+    {
+        $data = [
+            'en' => [
+                'template' => 'default',
+                'title' => 'test_en',
+                'tags' => [
+                    'tag1',
+                    'tag2',
+                ],
+                'url' => '/test_en',
+                'article' => 'Test English',
+            ],
+        ];
+        $mapper = $this->getMapper();
+
+        $englishStructure = $mapper->save($data['en'], 'default', 'sulu_io', 'en', 1);
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('GET', '/api/nodes/' . $englishStructure->getUuid() . '?language=de&ghost-content=true');
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals($data['en']['title'], $response['title']);
+        $this->assertEquals(['name' => 'ghost', 'value' => 'en'], $response['type']);
+
+        $client->request('GET', '/api/nodes/' . $englishStructure->getUuid() . '?language=de');
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals('', $response['title']);
+        $this->assertArrayNotHasKey('type', $response);
     }
 
     public function testGetInternalLink()
@@ -460,10 +549,10 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($this->getTestUserId(), $response->creator);
         $this->assertEquals($this->getTestUserId(), $response->creator);
 
-        $this->assertEquals(2, count((array) $response->ext));
+        $this->assertEquals(2, count((array)$response->ext));
 
-        $this->assertEquals(7, count((array) $response->ext->seo));
-        $this->assertEquals(7, count((array) $response->ext->excerpt));
+        $this->assertEquals(7, count((array)$response->ext->seo));
+        $this->assertEquals(7, count((array)$response->ext->excerpt));
 
         $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
 
@@ -589,59 +678,59 @@ class NodeControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
         $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data[0]);
-        $data[0] = (array) json_decode($client->getResponse()->getContent(), true);
+        $data[0] = (array)json_decode($client->getResponse()->getContent(), true);
 
         $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data[1]);
-        $data[1] = (array) json_decode($client->getResponse()->getContent(), true);
+        $data[1] = (array)json_decode($client->getResponse()->getContent(), true);
         $client->request(
             'POST',
             '/api/nodes?webspace=sulu_io&language=en&parent=' . $data[1]['id'],
             $data[2]
         );
-        $data[2] = (array) json_decode($client->getResponse()->getContent(), true);
+        $data[2] = (array)json_decode($client->getResponse()->getContent(), true);
         $client->request(
             'POST',
             '/api/nodes?webspace=sulu_io&language=en&parent=' . $data[1]['id'],
             $data[3]
         );
-        $data[3] = (array) json_decode($client->getResponse()->getContent(), true);
+        $data[3] = (array)json_decode($client->getResponse()->getContent(), true);
         $client->request(
             'POST',
             '/api/nodes?webspace=sulu_io&language=en&parent=' . $data[3]['id'],
             $data[4]
         );
-        $data[4] = (array) json_decode($client->getResponse()->getContent(), true);
+        $data[4] = (array)json_decode($client->getResponse()->getContent(), true);
 
         $client->request(
             'PUT',
             '/api/nodes/' . $data[0]['id'] . '?state=2&webspace=sulu_io&language=en',
             $data[0]
         );
-        $data[0] = (array) json_decode($client->getResponse()->getContent(), true);
+        $data[0] = (array)json_decode($client->getResponse()->getContent(), true);
         $client->request(
             'PUT',
             '/api/nodes/' . $data[1]['id'] . '?state=2&webspace=sulu_io&language=en',
             $data[1]
         );
-        $data[1] = (array) json_decode($client->getResponse()->getContent(), true);
+        $data[1] = (array)json_decode($client->getResponse()->getContent(), true);
         $client->request(
             'PUT',
             '/api/nodes/' . $data[2]['id'] . '?state=2&webspace=sulu_io&language=en',
             $data[2]
         );
-        $data[2] = (array) json_decode($client->getResponse()->getContent(), true);
+        $data[2] = (array)json_decode($client->getResponse()->getContent(), true);
         $client->request(
             'PUT',
             '/api/nodes/' . $data[3]['id'] . '?state=2&webspace=sulu_io&language=en',
             $data[3]
         );
-        $data[3] = (array) json_decode($client->getResponse()->getContent(), true);
+        $data[3] = (array)json_decode($client->getResponse()->getContent(), true);
         $client->request(
             'PUT',
             '/api/nodes/' . $data[4]['id'] . '?state=2&webspace=sulu_io&language=en',
             $data[4]
         );
-        $data[4] = (array) json_decode($client->getResponse()->getContent(), true);
+        $data[4] = (array)json_decode($client->getResponse()->getContent(), true);
 
         return $data;
     }
@@ -995,6 +1084,17 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals('Homepage', $response['breadcrumb'][0]['title']);
         $this->assertEquals('test2', $response['breadcrumb'][1]['title']);
         $this->assertEquals('test4', $response['breadcrumb'][2]['title']);
+
+        $client->request('GET', '/api/nodes/' . $data[4]['id'] . '?breadcrumb=false&webspace=sulu_io&language=en');
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals($data[4]['title'], $response['title']);
+        $this->assertEquals($data[4]['url'], $response['url']);
+        $this->assertEquals($data[4]['article'], $response['article']);
+
+        $this->assertArrayNotHasKey('breadcrumb', $response);
     }
 
     public function testSmallResponse()
@@ -1031,7 +1131,19 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent(), true);
 
+        $this->assertArrayHasKey('id', $response);
         $this->assertArrayHasKey('title', $response);
+        $this->assertArrayHasKey('path', $response);
+        $this->assertArrayHasKey('nodeType', $response);
+        $this->assertArrayHasKey('nodeState', $response);
+        $this->assertArrayHasKey('internal', $response);
+        $this->assertArrayHasKey('concreteLanguages', $response);
+        $this->assertArrayHasKey('hasSub', $response);
+        $this->assertArrayHasKey('order', $response);
+        $this->assertArrayHasKey('linked', $response);
+        $this->assertArrayHasKey('publishedState', $response);
+        $this->assertArrayHasKey('published', $response);
+        $this->assertArrayHasKey('navContexts', $response);
         $this->assertArrayNotHasKey('article', $response);
         $this->assertArrayNotHasKey('tags', $response);
         $this->assertArrayNotHasKey('ext', $response);
@@ -1515,7 +1627,7 @@ class NodeControllerTest extends SuluTestCase
     private function setUpContent($data)
     {
         /** @var ContentMapperInterface $mapper */
-        $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
+        $mapper = $this->getMapper();
 
         $mapper->save(
             ['title' => 'Start Page'],
@@ -1536,9 +1648,17 @@ class NodeControllerTest extends SuluTestCase
 
         for ($i = 0; $i < count($data); ++$i) {
             $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data[$i]);
-            $data[$i] = (array) json_decode($client->getResponse()->getContent(), true);
+            $data[$i] = (array)json_decode($client->getResponse()->getContent(), true);
         }
 
         return $data;
+    }
+
+    /**
+     * @return ContentMapperInterface
+     */
+    private function getMapper()
+    {
+        return self::$kernel->getContainer()->get('sulu.content.mapper');
     }
 }
