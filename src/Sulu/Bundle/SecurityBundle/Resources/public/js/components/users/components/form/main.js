@@ -384,8 +384,7 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
         prepareTableHeader: function() {
             return this.template.tableHead(
                 this.sandbox.translate('security.permission.role.title'),
-                this.sandbox.translate('security.permission.role.language'),
-                this.sandbox.translate('security.permission.role.permissions')
+                this.sandbox.translate('security.permission.role.language')
             );
         },
 
@@ -415,7 +414,7 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
         },
 
         template: {
-            tableHead: function(thLabel1, thLabel2, thLabel3) {
+            tableHead: function(thLabel1, thLabel2) {
                 return [
                     '<thead>',
                     '   <tr>',
@@ -425,9 +424,8 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                     '               <span class="icon"></span>',
                     '           </div>',
                     '       </th>',
-                    '       <th width="30%">', thLabel1, '</th>',
-                    '       <th width="45%">', thLabel2, '</th>',
-                    '       <th width="20%">', thLabel3, '</th>',
+                    '       <th width="40%">', thLabel1, '</th>',
+                    '       <th width="55%">', thLabel2, '</th>',
                     '   </tr>',
                     '</thead>'
                 ].join('');
@@ -448,7 +446,6 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                         '   </td>',
                         '   <td>', title, '</td>',
                         '   <td class="m-top-15" id="languageSelector', id, '"></td>',
-                        '   <td></td>',
                         '</tr>'
                     ].join('');
                 } else {
@@ -462,7 +459,6 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                         '   </td>',
                         '   <td>', title, '</td>',
                         '   <td class="m-top-15" id="languageSelector', id, '"></td>',
-                        '   <td></td>',
                         '</tr>'
                     ].join('');
                 }
