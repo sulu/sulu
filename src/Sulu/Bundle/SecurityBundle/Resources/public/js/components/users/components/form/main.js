@@ -245,6 +245,7 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
 
             this.sandbox.on('sulu.user.activated', function() {
                 this.sandbox.emit('sulu.header.toolbar.item.hide', 'enable', true);
+                this.sandbox.emit('sulu.labels.success.show', 'labels.success.user.activated');
             }.bind(this))
         },
 

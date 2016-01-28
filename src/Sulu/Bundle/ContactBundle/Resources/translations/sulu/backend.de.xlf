@@ -626,7 +626,11 @@
             </trans-unit>
             <trans-unit id="235b14f26g712345e44gs2e9335a8d52" resname="user.enable">
                 <source>user.enable</source>
-                <target>User Aktivieren</target>
+                <target>Kontakt aktivieren</target>
+            </trans-unit>
+            <trans-unit id="235b14f26g712345e44gs2e9335a8d53" resname="labels.success.user.activated">
+                <source>labels.success.user.activated</source>
+                <target>Kontakt aktiviert</target>
             </trans-unit>
         </body>
     </file>
