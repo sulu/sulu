@@ -90,6 +90,9 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
 
             this.sandbox.emit('husky.toggler.sulu-toolbar.change', this.user.locked);
             this.sandbox.emit('sulu.header.toolbar.item.show', 'disabler');
+            if (!this.user.enabled) {
+                this.sandbox.emit('sulu.header.toolbar.item.show', 'enable');
+            }
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/security/template/permission/form', {
                 user: !!this.user ? this.user : null,
                 headline: headline
@@ -100,6 +103,7 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
 
         destroy: function() {
             this.sandbox.emit('sulu.header.toolbar.item.hide', 'disabler');
+            this.sandbox.emit('sulu.header.toolbar.item.hide', 'enable');
         },
 
         /**
@@ -231,6 +235,17 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                 this.user.locked = value;
                 this.sandbox.emit('sulu.tab.dirty');
             }.bind(this));
+
+            this.sandbox.on('husky.toolbar.header.item.select', function(object) {
+                if (object.id === 'enable') {
+                    this.sandbox.emit('sulu.user.activate');
+                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'enable');
+                }
+            }.bind(this));
+
+            this.sandbox.on('sulu.user.activated', function() {
+                this.sandbox.emit('sulu.header.toolbar.item.hide', 'enable', true);
+            }.bind(this))
         },
 
         save: function(action) {
@@ -243,7 +258,8 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                         email: this.sandbox.dom.val('#email'),
                         contact: this.contact,
                         locale: this.systemLanguage,
-                        locked: this.user.locked
+                        locked: this.user.locked,
+                        enabled: this.user.enabled
                     },
 
                     selectedRolesAndConfig: this.getSelectedRolesAndLanguages(),

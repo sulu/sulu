@@ -624,6 +624,10 @@
                 <source>contact-selection.add</source>
                 <target>Kontakt auswählen</target>
             </trans-unit>
+            <trans-unit id="235b14f26g712345e44gs2e9335a8d52" resname="user.enable">
+                <source>user.enable</source>
+                <target>User Aktivieren</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
