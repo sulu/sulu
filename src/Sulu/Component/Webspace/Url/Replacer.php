@@ -10,6 +10,9 @@
 
 namespace Sulu\Component\Webspace\Url;
 
+/**
+ * Helper class to replace localization information in urls.
+ */
 class Replacer implements ReplacerInterface
 {
     private $replacers = [

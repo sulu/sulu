@@ -77,7 +77,7 @@ class SeoTwigExtension extends \Twig_Extension
     {
         $request = $this->requestStack->getCurrentRequest();
         $requestSeo = $request->get('_seo', []);
-        $seoExtension = array_merge($requestSeo, $seoExtension);
+        $seoExtension = array_merge($seoExtension, $requestSeo);
 
         $html = '';
         // FIXME this is only necessary because we have to set a default parameter

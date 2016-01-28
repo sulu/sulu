@@ -34,9 +34,12 @@ class ExternalLinkEnhancer implements RouteEnhancerInterface
         /** @var PageBridge $structure */
         $structure = $defaults['_structure'];
 
-        return [
-            '_controller' => 'SuluWebsiteBundle:Default:redirect',
-            'url' => $structure->getResourceLocator(),
-        ];
+        return array_merge(
+            $defaults,
+            [
+                '_controller' => 'SuluWebsiteBundle:Default:redirect',
+                'url' => $structure->getResourceLocator(),
+            ]
+        );
     }
 }

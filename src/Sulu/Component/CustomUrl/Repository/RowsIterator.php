@@ -56,12 +56,13 @@ class RowsIterator extends \IteratorIterator
         }
 
         $result['targetTitle'] = '';
-        if (!empty($result['target'])) {
+        if (!empty($result['target']) && array_key_exists($result['target'], $this->targets)) {
             $result['targetTitle'] = $this->targets[$result['target']]['title'];
         }
+        $result['domainParts'] = json_decode($result['domainParts'], true);
         $result['customUrl'] = $this->generator->generate(
             $result['baseDomain'],
-            json_decode($result['domainParts'], true)
+            $result['domainParts']
         );
 
         return $result;

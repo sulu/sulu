@@ -755,15 +755,54 @@ class ContentRepositoryTest extends SuluTestCase
         );
 
         $this->assertCount(3, $result);
-        $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $result[0]->getId());
-        $this->assertTrue($result[0]->hasChildren());
-        $this->assertEmpty($result[0]->getChildren());
-        $this->assertEquals($page1->getUuid(), $result[1]->getId());
-        $this->assertTrue($result[1]->hasChildren());
-        $this->assertEmpty($result[1]->getChildren());
-        $this->assertEquals($page2->getUuid(), $result[2]->getId());
-        $this->assertFalse($result[2]->hasChildren());
-        $this->assertEmpty($result[2]->getChildren());
+
+        $items = array_map(
+            function (Content $content) {
+                return [
+                    'uuid' => $content->getId(),
+                    'hasChildren' => $content->hasChildren(),
+                    'children' => $content->getChildren(),
+                ];
+            },
+            $result
+        );
+
+        $homepageUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
+        $this->assertContains(['uuid' => $homepageUuid, 'hasChildren' => true, 'children' => []], $items);
+        $this->assertContains(['uuid' => $page1->getUuid(), 'hasChildren' => true, 'children' => []], $items);
+        $this->assertContains(['uuid' => $page2->getUuid(), 'hasChildren' => false, 'children' => []], $items);
+    }
+
+    public function testFindByUuids()
+    {
+        $this->initPhpcr();
+
+        $page1 = $this->createPage('test-1', 'de');
+        $page11 = $this->createPage('test-1/test-1', 'de', [], $page1);
+        $page2 = $this->createPage('test-2', 'de');
+        $page3 = $this->createPage('test-3', 'de');
+
+        $result = $this->contentRepository->findByUuids(
+            [$page1->getUuid(), $page2->getUuid()],
+            'de',
+            MappingBuilder::create()->addProperties(['title'])->getMapping()
+        );
+
+        $this->assertCount(2, $result);
+
+        $items = array_map(
+            function (Content $content) {
+                return [
+                    'uuid' => $content->getId(),
+                    'hasChildren' => $content->hasChildren(),
+                    'children' => $content->getChildren(),
+                ];
+            },
+            $result
+        );
+
+        $this->assertContains(['uuid' => $page1->getUuid(), 'hasChildren' => true, 'children' => []], $items);
+        $this->assertContains(['uuid' => $page2->getUuid(), 'hasChildren' => false, 'children' => []], $items);
     }
 
     public function testFindAll()
@@ -782,11 +821,41 @@ class ContentRepositoryTest extends SuluTestCase
         );
 
         $this->assertCount(5, $result);
-        $this->assertEquals('/', $result[0]->getPath());
-        $this->assertEquals('/test-1', $result[1]->getPath());
-        $this->assertEquals('/test-1/test-1-1', $result[2]->getPath());
-        $this->assertEquals('/test-2', $result[3]->getPath());
-        $this->assertEquals('/test-3', $result[4]->getPath());
+
+        $paths = array_map(
+            function (Content $content) {
+                return $content->getPath();
+            },
+            $result
+        );
+
+        $this->assertContains('/', $paths);
+        $this->assertContains('/test-1', $paths);
+        $this->assertContains('/test-1/test-1-1', $paths);
+        $this->assertContains('/test-2', $paths);
+        $this->assertContains('/test-3', $paths);
+    }
+
+    public function testFindAllNoPage()
+    {
+        $this->initPhpcr();
+
+        $result = $this->contentRepository->findAll(
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->addProperties(['title'])->getMapping()
+        );
+
+        $this->assertCount(1, $result);
+
+        $paths = array_map(
+            function (Content $content) {
+                return $content->getPath();
+            },
+            $result
+        );
+
+        $this->assertContains('/', $paths);
     }
 
     public function testFindUrl()

@@ -75,6 +75,11 @@ class Url implements ArrayableInterface
      */
     private $customUrl;
 
+    public function __construct($url = null)
+    {
+        $this->url = $url;
+    }
+
     /**
      * Sets the url.
      *

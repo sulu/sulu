@@ -137,8 +137,8 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                                                     $title.focus();
                                                     break;
                                                 case 9002:
-                                                    var $customUrl = $('#custom-url-input');
-                                                    $customUrl.parent().addClass('husky-validate-error');
+                                                case 9003:
+                                                    $('#custom-url-input').parent().addClass('husky-validate-error');
                                                     break;
                                             }
                                         }.bind(this));

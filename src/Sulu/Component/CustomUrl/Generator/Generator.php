@@ -41,12 +41,22 @@ class Generator implements GeneratorInterface
             $domain = preg_replace('/\*/', $domainParts['prefix'], $domain, 1);
         }
 
+        $optionalSuffix = false;
         if (!preg_match(self::POSTFIX_REGEX, $baseDomain)) {
             $domain = rtrim($domain, '/') . '/*';
+            $optionalSuffix = true;
         }
 
         foreach ($domainParts['suffix'] as $suffix) {
             $domain = preg_replace('/\*/', $suffix, $domain, 1);
+        }
+
+        if ($optionalSuffix) {
+            $domain = rtrim($domain, '/*');
+        }
+
+        if (strpos($domain, '*') > -1) {
+            throw new MissingDomainPartException($baseDomain, $domainParts, $domain);
         }
 
         if ($locale) {

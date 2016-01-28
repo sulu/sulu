@@ -14,6 +14,7 @@ use FOS\RestBundle\Controller\Annotations\RouteResource;
 use Hateoas\Representation\CollectionRepresentation;
 use Hateoas\Representation\RouteAwareRepresentation;
 use Sulu\Component\CustomUrl\Manager\CannotDeleteCurrentRouteException;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
@@ -65,7 +66,12 @@ class CustomUrlController extends RestController
      */
     public function getAction($webspaceKey, $uuid, Request $request)
     {
-        $document = $this->get('sulu_custom_urls.manager')->read($uuid, $this->getLocale($request));
+        try {
+            $document = $this->get('sulu_custom_urls.manager')->read($uuid, $this->getLocale($request));
+        } catch (DocumentNotFoundException $ex) {
+            return $this->handleView($this->view(null, 404));
+        }
+
         // FIXME without this target-document will not be loaded (for serialization)
         if (null !== $document->getTarget()) {
             $document->getTarget()->getTitle();

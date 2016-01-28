@@ -10,7 +10,9 @@
 
 namespace Sulu\Component\CustomUrl\Manager;
 
+use PHPCR\ItemExistsException;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Bundle\ContentBundle\Document\RouteDocument;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Repository\CustomUrlRepository;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
@@ -31,7 +33,6 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
             'baseDomain' => ['property' => 'baseDomain'],
             'domainParts' => ['property' => 'domainParts', 'type' => 'json_array'],
             'target' => ['property' => 'target', 'type' => 'reference'],
-            'multilingual' => ['property' => 'multilingual'],
             'canonical' => ['property' => 'canonical'],
             'redirect' => ['property' => 'redirect'],
             'targetLocale' => ['property' => 'targetLocale'],
@@ -78,7 +79,6 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
                 'baseDomain' => '*.sulu.io',
                 'domainParts' => ['prefix' => 'test-1', 'postfix' => ['test-1', 'test-2']],
                 'target' => ['uuid' => '123-123-123'],
-                'multilingual' => true,
                 'canonical' => true,
                 'redirect' => true,
                 'targetLocale' => 'de',
@@ -86,15 +86,14 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
             'en'
         );
 
-        $this->assertEquals($testDocument, $result);
-        $this->assertEquals('Test', $result->getTitle());
-        $this->assertEquals('en', $result->getLocale());
-        $this->assertEquals('de', $result->getTargetLocale());
-        $this->assertEquals('*.sulu.io', $result->getBaseDomain());
-        $this->assertEquals(['prefix' => 'test-1', 'postfix' => ['test-1', 'test-2']], $result->getDomainParts());
-        $this->assertEquals($targetDocument, $result->getTarget());
+        self::assertEquals($testDocument, $result);
+        self::assertEquals('Test', $result->getTitle());
+        self::assertEquals('en', $result->getLocale());
+        self::assertEquals('de', $result->getTargetLocale());
+        self::assertEquals('*.sulu.io', $result->getBaseDomain());
+        self::assertEquals(['prefix' => 'test-1', 'postfix' => ['test-1', 'test-2']], $result->getDomainParts());
+        self::assertEquals($targetDocument, $result->getTarget());
         $this->assertTrue($result->isPublished());
-        $this->assertTrue($result->isMultilingual());
         $this->assertTrue($result->isCanonical());
         $this->assertTrue($result->isRedirect());
     }
@@ -116,12 +115,12 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
             $pathBuilder->reveal()
         );
 
-        $customUrlRepository->findList('/cmf/sulu_io/custom_urls/items')
+        $customUrlRepository->findList('/cmf/sulu_io/custom_urls/items', 'de')
             ->willReturn([['title' => 'Test-1'], ['title' => 'Test-2']]);
 
-        $result = $manager->readList('sulu_io');
+        $result = $manager->readList('sulu_io', 'de');
 
-        $this->assertEquals([['title' => 'Test-1'], ['title' => 'Test-2']], $result);
+        self::assertEquals([['title' => 'Test-1'], ['title' => 'Test-2']], $result);
     }
 
     public function testRead()
@@ -143,7 +142,62 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
 
         $result = $manager->read('123-123-123', 'de');
 
-        $this->assertEquals($document->reveal(), $result);
+        self::assertEquals($document->reveal(), $result);
+    }
+
+    public function testReadByUrl()
+    {
+        $documentManager = $this->prophesize(DocumentManagerInterface::class);
+        $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
+        $metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
+        $pathBuilder = $this->prophesize(PathBuilder::class);
+        $routeDocument = $this->prophesize(RouteDocument::class);
+        $customUrlDocument = $this->prophesize(CustomUrlDocument::class);
+
+        $routeDocument->getTargetDocument()->willReturn($customUrlDocument->reveal());
+
+        $pathBuilder->build(['%base%', 'sulu_io', '%custom-urls%', '%custom-urls-routes%'])
+            ->willReturn('/cmf/sulu_io/custom_urls/routes');
+
+        $manager = new CustomUrlManager(
+            $documentManager->reveal(),
+            $customUrlRepository->reveal(),
+            $metadataFactory->reveal(),
+            $pathBuilder->reveal()
+        );
+
+        $documentManager->find('/cmf/sulu_io/custom_urls/routes/sulu.io/test', 'de', ['load_ghost_content' => true])
+            ->willReturn($routeDocument->reveal());
+
+        $result = $manager->readByUrl('sulu.io/test', 'sulu_io', 'de');
+
+        self::assertEquals($customUrlDocument->reveal(), $result);
+    }
+
+    public function testReadRouteByUrl()
+    {
+        $documentManager = $this->prophesize(DocumentManagerInterface::class);
+        $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
+        $metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
+        $pathBuilder = $this->prophesize(PathBuilder::class);
+        $routeDocument = $this->prophesize(RouteDocument::class);
+
+        $pathBuilder->build(['%base%', 'sulu_io', '%custom-urls%', '%custom-urls-routes%'])
+            ->willReturn('/cmf/sulu_io/custom_urls/routes');
+
+        $manager = new CustomUrlManager(
+            $documentManager->reveal(),
+            $customUrlRepository->reveal(),
+            $metadataFactory->reveal(),
+            $pathBuilder->reveal()
+        );
+
+        $documentManager->find('/cmf/sulu_io/custom_urls/routes/sulu.io/test', 'de', ['load_ghost_content' => true])
+            ->willReturn($routeDocument->reveal());
+
+        $result = $manager->readRouteByUrl('sulu.io/test', 'sulu_io', 'de');
+
+        self::assertEquals($routeDocument->reveal(), $result);
     }
 
     public function testUpdate()
@@ -154,6 +208,19 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $pathBuilder = $this->prophesize(PathBuilder::class);
         $document = $this->prophesize(CustomUrlDocument::class);
         $targetDocument = $this->prophesize(PageDocument::class);
+
+        $document->getPath()->willReturn('/cmf/sulu_io/custom_urls/items/test');
+        $document->getTitle()->willReturn('Test-1');
+
+        $document->setTitle('Test')->shouldBeCalled();
+        $document->setPublished(true)->shouldBeCalled();
+        $document->setRedirect(true)->shouldBeCalled();
+        $document->setCanonical(true)->shouldBeCalled();
+        $document->setLocale('en')->shouldBeCalled();
+        $document->setTargetLocale('de')->shouldBeCalled();
+        $document->setBaseDomain('*.sulu.io')->shouldBeCalled();
+        $document->setDomainParts(['prefix' => 'test-1', 'postfix' => ['test-1', 'test-2']])->shouldBeCalled();
+        $document->setTarget($targetDocument->reveal())->shouldBeCalled();
 
         $metadata = $this->prophesize(Metadata::class);
         $metadata->getFieldMappings()->willReturn($this->getMapping());
@@ -170,7 +237,11 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $documentManager->find('123-123-123', 'en', ['load_ghost_content' => true])->willReturn(
             $targetDocument->reveal()
         );
-        $documentManager->persist($document, 'en')->shouldBeCalledTimes(1);
+        $documentManager->persist(
+            $document,
+            'en',
+            ['parent_path' => '/cmf/sulu_io/custom_urls/items', 'node_name' => 'test-1', 'load_ghost_content' => true]
+        )->shouldBeCalledTimes(1);
 
         $result = $manager->update(
             '312-312-312',
@@ -180,7 +251,6 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
                 'baseDomain' => '*.sulu.io',
                 'domainParts' => ['prefix' => 'test-1', 'postfix' => ['test-1', 'test-2']],
                 'target' => ['uuid' => '123-123-123'],
-                'multilingual' => true,
                 'canonical' => true,
                 'redirect' => true,
                 'targetLocale' => 'de',
@@ -188,9 +258,23 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
             'en'
         );
 
+        self::assertEquals($document->reveal(), $result);
+    }
+
+    public function testUpdateItemExists()
+    {
+        $documentManager = $this->prophesize(DocumentManagerInterface::class);
+        $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
+        $metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
+        $pathBuilder = $this->prophesize(PathBuilder::class);
+        $document = $this->prophesize(CustomUrlDocument::class);
+        $targetDocument = $this->prophesize(PageDocument::class);
+
+        $document->getPath()->willReturn('/cmf/sulu_io/custom_urls/items/test');
+        $document->getTitle()->willReturn('Test-1');
+
         $document->setTitle('Test')->shouldBeCalled();
         $document->setPublished(true)->shouldBeCalled();
-        $document->setMultilingual(true)->shouldBeCalled();
         $document->setRedirect(true)->shouldBeCalled();
         $document->setCanonical(true)->shouldBeCalled();
         $document->setLocale('en')->shouldBeCalled();
@@ -199,6 +283,118 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $document->setDomainParts(['prefix' => 'test-1', 'postfix' => ['test-1', 'test-2']])->shouldBeCalled();
         $document->setTarget($targetDocument->reveal())->shouldBeCalled();
 
-        $this->assertEquals($document->reveal(), $result);
+        $metadata = $this->prophesize(Metadata::class);
+        $metadata->getFieldMappings()->willReturn($this->getMapping());
+        $metadataFactory->getMetadataForAlias('custom_urls')->willReturn($metadata);
+
+        $manager = new CustomUrlManager(
+            $documentManager->reveal(),
+            $customUrlRepository->reveal(),
+            $metadataFactory->reveal(),
+            $pathBuilder->reveal()
+        );
+
+        $documentManager->find('312-312-312', 'en', ['load_ghost_content' => true])->willReturn($document->reveal());
+        $documentManager->find('123-123-123', 'en', ['load_ghost_content' => true])->willReturn(
+            $targetDocument->reveal()
+        );
+        $documentManager->persist(
+            $document,
+            'en',
+            ['parent_path' => '/cmf/sulu_io/custom_urls/items', 'node_name' => 'test-1', 'load_ghost_content' => true]
+        )->willThrow(new ItemExistsException());
+
+        self::setExpectedException(TitleExistsException::class);
+
+        $manager->update(
+            '312-312-312',
+            [
+                'title' => 'Test',
+                'published' => true,
+                'baseDomain' => '*.sulu.io',
+                'domainParts' => ['prefix' => 'test-1', 'postfix' => ['test-1', 'test-2']],
+                'target' => ['uuid' => '123-123-123'],
+                'canonical' => true,
+                'redirect' => true,
+                'targetLocale' => 'de',
+            ],
+            'en'
+        );
+    }
+
+    public function testDelete()
+    {
+        $documentManager = $this->prophesize(DocumentManagerInterface::class);
+        $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
+        $metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
+        $pathBuilder = $this->prophesize(PathBuilder::class);
+        $document = $this->prophesize(CustomUrlDocument::class);
+
+        $documentManager->find('123-123-123', null, ['load_ghost_content' => true])->willReturn($document->reveal());
+        $documentManager->remove($document->reveal())->shouldBeCalled();
+
+        $manager = new CustomUrlManager(
+            $documentManager->reveal(),
+            $customUrlRepository->reveal(),
+            $metadataFactory->reveal(),
+            $pathBuilder->reveal()
+        );
+
+        $manager->delete('123-123-123');
+    }
+
+    public function testDeleteRoute()
+    {
+        $documentManager = $this->prophesize(DocumentManagerInterface::class);
+        $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
+        $metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
+        $pathBuilder = $this->prophesize(PathBuilder::class);
+        $document = $this->prophesize(RouteDocument::class);
+
+        $document->isHistory()->willReturn(true);
+        $document->getPath()->willReturn('/cmf/sulu_io/custom_urls/routes/sulu.io/test');
+
+        $documentManager->find('123-123-123')->willReturn($document->reveal());
+        $documentManager->remove($document->reveal())->shouldBeCalled();
+
+        $manager = new CustomUrlManager(
+            $documentManager->reveal(),
+            $customUrlRepository->reveal(),
+            $metadataFactory->reveal(),
+            $pathBuilder->reveal()
+        );
+
+        $manager->deleteRoute('sulu_io', '123-123-123');
+    }
+
+    public function testDeleteHistory()
+    {
+        self::setExpectedException(CannotDeleteCurrentRouteException::class);
+
+        $documentManager = $this->prophesize(DocumentManagerInterface::class);
+        $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
+        $metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
+        $pathBuilder = $this->prophesize(PathBuilder::class);
+        $document = $this->prophesize(RouteDocument::class);
+        $customUrlDocument = $this->prophesize(CustomUrlDocument::class);
+
+        $document->isHistory()->willReturn(false);
+        $document->getPath()->willReturn('/cmf/sulu_io/custom_urls/routes/sulu.io/test');
+        $document->getTargetDocument()->willReturn($customUrlDocument->reveal());
+
+        $documentManager->find('123-123-123')->willReturn($document->reveal());
+        $documentManager->remove($document->reveal())->shouldNotBeCalled();
+
+        $pathBuilder->build(['%base%', 'sulu_io', '%custom-urls%', '%custom-urls-routes%'])
+            ->willReturn('/cmf/sulu_io/custom_urls/routes');
+
+        $manager = new CustomUrlManager(
+            $documentManager->reveal(),
+            $customUrlRepository->reveal(),
+            $metadataFactory->reveal(),
+            $pathBuilder->reveal()
+        );
+
+        $manager->deleteRoute('sulu_io', '123-123-123');
     }
 }

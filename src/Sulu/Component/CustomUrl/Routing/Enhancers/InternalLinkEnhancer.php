@@ -34,8 +34,11 @@ class InternalLinkEnhancer implements RouteEnhancerInterface
         /** @var PageBridge $structure */
         $structure = $defaults['_structure'];
 
-        return array_merge($defaults, [
-            '_structure' => $structure->getInternalLinkContent(),
-        ]);
+        return array_merge(
+            $defaults,
+            [
+                '_structure' => $structure->getInternalLinkContent(),
+            ]
+        );
     }
 }

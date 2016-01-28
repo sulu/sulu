@@ -173,7 +173,6 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
         $this->setWebspace($portalInformation->getWebspace());
         $this->setSegment($portalInformation->getSegment());
 
-        // TODO who set the locale to the request
         if ($portalInformation->getLocalization() !== null) {
             $request->setLocale($portalInformation->getLocalization()->getLocalization());
         }

@@ -103,4 +103,12 @@ interface CustomUrlBehavior extends UuidBehavior, PathBehavior
      * @param RouteDocument[] $routes
      */
     public function setRoutes(array $routes);
+
+    /**
+     * Add a route to document.
+     *
+     * @param string $route
+     * @param RouteDocument $routeDocument
+     */
+    public function addRoute($route, RouteDocument $routeDocument);
 }

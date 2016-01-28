@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Compat;
 
 use Sulu\Component\Content\Extension\ExtensionInterface;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 /**
@@ -41,8 +42,8 @@ interface StructureManagerInterface extends ContainerAwareInterface
     /**
      * add dynamically an extension to structures.
      *
-     * @param StructureExtensionInterface $extension
-     * @param string                      $template  default is all templates
+     * @param ExtensionInterface $extension
+     * @param string $template default is all templates
      */
     public function addExtension(ExtensionInterface $extension, $template = 'all');
 
@@ -51,7 +52,7 @@ interface StructureManagerInterface extends ContainerAwareInterface
      *
      * @param string $key
      *
-     * @return StructureExtensionInterface[]
+     * @return ExtensionInterface[]
      */
     public function getExtensions($key);
 
@@ -71,7 +72,17 @@ interface StructureManagerInterface extends ContainerAwareInterface
      * @param string $key
      * @param string $name
      *
-     * @return StructureExtensionInterface
+     * @return ExtensionInterface
      */
     public function getExtension($key, $name);
+
+    /**
+     * Wrap the given Structure with a legacy (bridge) structure.
+     *
+     * @param string $type
+     * @param StructureMetadata $structure
+     *
+     * @return StructureInterface
+     */
+    public function wrapStructure($type, StructureMetadata $structure);
 }

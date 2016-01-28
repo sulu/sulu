@@ -22,7 +22,7 @@ class CustomUrlNodeType implements NodeTypeDefinitionInterface
      */
     public function getName()
     {
-        return 'sulu:custom-url';
+        return 'sulu:customurl';
     }
 
     /**

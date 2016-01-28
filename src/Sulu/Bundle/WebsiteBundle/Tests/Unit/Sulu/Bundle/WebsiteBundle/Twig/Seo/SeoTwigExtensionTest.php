@@ -41,6 +41,11 @@ class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
      */
     private $requestStack;
 
+    /**
+     * @var Request
+     */
+    private $request;
+
     public function setUp()
     {
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
@@ -52,9 +57,8 @@ class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
             $this->requestStack->reveal()
         );
 
-        $request = $this->prophesize(Request::class);
-        $request->get('_seo', [])->willReturn([]);
-        $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
+        $this->request = $this->prophesize(Request::class);
+        $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
     }
 
     public function testGetFunctions()
@@ -79,8 +83,11 @@ class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $xDefaultLocale,
         $expectedResults,
         $unexpectedResults = [],
-        $resourceLocator = '/test'
+        $resourceLocator = '/test',
+        $requestSeoData = []
     ) {
+        $this->request->get('_seo', [])->willReturn($requestSeoData);
+
         /** @var Localization $localization */
         $localization = $this->prophesize(Localization::class);
         $localization->getLocalization()->willReturn($xDefaultLocale ?: $defaultLocale);
@@ -119,6 +126,7 @@ class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testRenderSeoTagsWithoutPortal()
     {
+        $this->request->get('_seo', [])->willReturn([]);
         $this->seoTwigExtension->renderSeoTags([], [], [], null);
     }
 
@@ -346,6 +354,44 @@ class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
                 ],
                 [],
                 false,
+            ],
+            [
+                [
+                    'title' => 'SEO title',
+                    'description' => 'SEO description',
+                    'keywords' => 'SEO keywords',
+                    'canonicalUrl' => '/canonical-url',
+                    'noIndex' => true,
+                    'noFollow' => true,
+                    'hideInSitemap' => true,
+                ],
+                [
+                    'title' => 'Content title',
+                ],
+                [
+                    'en' => '/url-en',
+                    'de' => '/url-de',
+                ],
+                'en',
+                'en',
+                null,
+                [
+                    '<title>SEO title</title>',
+                    '<meta name="description" content="SEO description"/>',
+                    '<meta name="keywords" content="SEO keywords"/>',
+                    '<meta name="robots" content="index,follow"/>',
+                    '<link rel="alternate" href="/en/url-en" hreflang="x-default"/>',
+                    '<link rel="alternate" href="/en/url-en" hreflang="en"/>',
+                    '<link rel="alternate" href="/de/url-de" hreflang="de"/>',
+                    '<link rel="canonical" href="/test-url"/>',
+                ],
+                [],
+                false,
+                [
+                    'canonicalUrl' => '/test-url',
+                    'noIndex' => false,
+                    'noFollow' => false,
+                ],
             ],
         ];
     }

@@ -17,8 +17,8 @@ use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use InvalidArgumentException;
 use PHPCR\SessionInterface;
+use PHPCR\Util\NodeHelper;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
-use Sulu\Component\Content\Document\WorkflowStage;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Cmf\Bundle\RoutingBundle\Tests\Functional\BaseTestCase;
 use Symfony\Component\Security\Core\Tests\Authentication\Token\TestUser;
@@ -65,10 +65,12 @@ abstract class SuluTestCase extends BaseTestCase
         );
 
         if (!$kernel instanceof SuluTestKernel) {
-            throw new \InvalidArgumentException(sprintf(
-                'All Sulu testing Kernel classes must extend SuluTestKernel, "%s" does not',
-                get_class($kernel)
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'All Sulu testing Kernel classes must extend SuluTestKernel, "%s" does not',
+                    get_class($kernel)
+                )
+            );
         }
 
         return $kernel;
@@ -132,10 +134,12 @@ abstract class SuluTestCase extends BaseTestCase
      */
     protected function createWebsiteClient()
     {
-        return $this->createClient([
-            'sulu_context' => 'website',
-            'environment' => 'dev',
-        ]);
+        return $this->createClient(
+            [
+                'sulu_context' => 'website',
+                'environment' => 'dev',
+            ]
+        );
     }
 
     /**
@@ -148,40 +152,11 @@ abstract class SuluTestCase extends BaseTestCase
         $session = $this->db('PHPCR')->getOm()->getPhpcrSession();
 
         if ($session->nodeExists('/cmf')) {
-            $session->getNode('/cmf')->remove();
+            NodeHelper::purgeWorkspace($session);
+            $session->save();
         }
 
-        $session->save();
-
-        $cmf = $session->getRootNode()->addNode('cmf');
-
-        // we should use the doctrinephpcrbundle repository initializer to do this.
-        $webspace = $cmf->addNode('sulu_io');
-        $webspace->addMixin('mix:referenceable');
-
-        $content = $webspace->addNode('contents');
-        $content->setProperty('i18n:en-template', 'default');
-        $content->setProperty('i18n:en-creator', 1);
-        $content->setProperty('i18n:en-created', new \DateTime());
-        $content->setProperty('i18n:en-changer', 1);
-        $content->setProperty('i18n:en-changed', new \DateTime());
-        $content->setProperty('i18n:en-title', 'Homepage');
-        $content->setProperty('i18n:en-state', WorkflowStage::PUBLISHED);
-        $content->setProperty('i18n:en-published', new \DateTime());
-        $content->setProperty('i18n:en-url', '/');
-        $content->addMixin('sulu:home');
-
-        $webspace->addNode('temp');
-
-        $session->save();
-        $nodes = $webspace->addNode('routes');
-        foreach (['de', 'de_at', 'en', 'en_us', 'fr'] as $locale) {
-            $localeNode = $nodes->addNode($locale);
-            $localeNode->setProperty('sulu:content', $content);
-            $localeNode->setProperty('sulu:history', false);
-            $localeNode->addMixin('sulu:path');
-        }
-
+        $this->getContainer()->get('sulu_document_manager.initializer')->initialize();
         $session->save();
     }
 

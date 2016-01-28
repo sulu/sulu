@@ -19,8 +19,6 @@ use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
-use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
-use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 
 /**
  * Contains information about custom-urls and the relations to the routes.
@@ -353,6 +351,14 @@ class CustomUrlDocument implements
     public function setRoutes(array $routes)
     {
         $this->routes = $routes;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addRoute($route, RouteDocument $routeDocument)
+    {
+        $this->routes[$route] = $routeDocument;
     }
 
     /**

@@ -46,7 +46,7 @@ class SuluCustomUrlExtension extends Extension implements PrependExtensionInterf
                     'mapping' => [
                         'custom_urls' => [
                             'class' => CustomUrlDocument::class,
-                            'phpcr_type' => 'sulu:custom-url',
+                            'phpcr_type' => 'sulu:customurl',
                             'mapping' => [
                                 'title' => ['property' => 'title'],
                                 'published' => ['property' => 'published'],

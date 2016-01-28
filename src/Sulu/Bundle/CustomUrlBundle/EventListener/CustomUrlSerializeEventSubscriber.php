@@ -46,6 +46,8 @@ class CustomUrlSerializeEventSubscriber implements EventSubscriberInterface
     }
 
     /**
+     * Add information to serialized custom-url document.
+     *
      * @param ObjectEvent $event
      */
     public function onPostSerialize(ObjectEvent $event)

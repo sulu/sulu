@@ -23,7 +23,7 @@ define(['underscore', 'jquery', 'services/husky/util'], function(_, $, util) {
 
     var defaults = {
             templates: {
-                input: '<input type="text" class="form-element" <% if (!!prefix) { %>data-prefix="true"<% } else { %>data-suffix="true"<% } %>/>'
+                input: '<input type="text" class="form-element<% if (!!prefix) { %> prefix" data-prefix="true"<% } else { %>" data-suffix="true"<% } %>/>'
             }
         },
 

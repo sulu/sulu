@@ -72,6 +72,10 @@ class CustomUrlRepository
         $queryBuilder->addSelect('a', 'domainParts', 'domainParts');
         $queryBuilder->addSelect('a', 'baseDomain', 'baseDomain');
         $queryBuilder->addSelect('a', 'target', 'target');
+        $queryBuilder->addSelect('a', 'created', 'created');
+        $queryBuilder->addSelect('a', 'creator', 'creator');
+        $queryBuilder->addSelect('a', 'changed', 'changed');
+        $queryBuilder->addSelect('a', 'changer', 'changer');
 
         $queryBuilder->from(
             $queryBuilder->qomf()->selector('a', 'nt:unstructured')
@@ -81,7 +85,7 @@ class CustomUrlRepository
             $queryBuilder->qomf()->comparison(
                 $queryBuilder->qomf()->propertyValue('a', 'jcr:mixinTypes'),
                 QueryObjectModelConstantsInterface::JCR_OPERATOR_EQUAL_TO,
-                $queryBuilder->qomf()->literal('sulu:custom-url')
+                $queryBuilder->qomf()->literal('sulu:customurl')
             )
         );
         $queryBuilder->andWhere(
@@ -90,7 +94,6 @@ class CustomUrlRepository
 
         $query = $queryBuilder->getQuery();
         $result = $query->execute();
-
 
         $uuids = array_map(
             function (Row $item) {

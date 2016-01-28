@@ -29,12 +29,13 @@ define([
                 },
 
                 needsValidation: function() {
-                    // TODO validation
+                    // validation will be done asynchronous when save.
+                    // should be added here when husky-validation is able to handle asynchronous validation.
+
                     return false;
                 },
 
                 validate: function() {
-                    // TODO validation
                     return true;
                 }
             };

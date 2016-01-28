@@ -165,7 +165,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
     {
         $document = $this->read($uuid, $locale);
         $this->bind($document, $data, $locale);
-        
+
         try {
             $this->documentManager->persist(
                 $document,

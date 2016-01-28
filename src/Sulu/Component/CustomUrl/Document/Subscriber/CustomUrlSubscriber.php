@@ -105,6 +105,10 @@ class CustomUrlSubscriber implements EventSubscriberInterface
             $this->getRoutesPath($webspaceKey)
         );
 
+        if (!array_key_exists($domain, $oldRoutes)) {
+            $document->addRoute($domain, $route);
+        }
+
         foreach ($oldRoutes as $oldRoute) {
             if ($oldRoute->getPath() === $route->getPath()) {
                 continue;
@@ -167,7 +171,9 @@ class CustomUrlSubscriber implements EventSubscriberInterface
             return $this->documentManager->create('route');
         }
 
-        if ($routeDocument->getTargetDocument()->getUuid() !== $document->getUuid()) {
+        if (!$routeDocument instanceof RouteDocument
+            || $routeDocument->getTargetDocument()->getUuid() !== $document->getUuid()
+        ) {
             throw new RouteAlreadyExistsException($route);
         }
 

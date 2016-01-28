@@ -48,9 +48,7 @@ class ContentEnhancer extends AbstractEnhancer
         array $defaults,
         Request $request
     ) {
-        return [
-            '_structure' => $this->documentToStructure($customUrl->getTarget()),
-        ];
+        return ['_structure' => $this->documentToStructure($customUrl->getTarget())];
     }
 
     /**
@@ -68,7 +66,7 @@ class ContentEnhancer extends AbstractEnhancer
      *
      * @return PageBridge
      */
-    private function documentToStructure(BasePageDocument $document)
+    protected function documentToStructure(BasePageDocument $document)
     {
         $structure = $this->inspector->getStructureMetadata($document);
         $documentAlias = $this->inspector->getMetadata($document)->getAlias();

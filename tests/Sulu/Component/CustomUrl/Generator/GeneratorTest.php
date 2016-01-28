@@ -102,16 +102,43 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
                 $locales[0],
                 'test-1.sulu.io/at/test-2/de/test-3',
             ],
+            [
+                '*.sulu.io/at/*',
+                ['prefix' => 'test-1', 'suffix' => ['test-2']],
+                null,
+                'test-1.sulu.io/at/test-2',
+            ],
+            [
+                '*.sulu.io/at',
+                ['prefix' => 'test-1', 'suffix' => []],
+                null,
+                'test-1.sulu.io/at',
+            ],
+            [
+                '*.sulu.io/at/*',
+                ['prefix' => 'test-1', 'suffix' => []],
+                null,
+                null,
+                MissingDomainPartException::class,
+            ],
         ];
     }
 
     /**
      * @dataProvider provideGenerateData
      */
-    public function testGenerate($baseDomain, $domainParts, $locales, $expected)
+    public function testGenerate($baseDomain, $domainParts, $locales, $expected, $exception = null)
     {
+        if ($exception) {
+            self::setExpectedException($exception);
+        }
+
         $generator = new Generator(new ReplacerFactory());
         $result = $generator->generate($baseDomain, $domainParts, $locales);
+
+        if ($expected === null) {
+            return;
+        }
 
         self::assertEquals($expected, $result);
     }

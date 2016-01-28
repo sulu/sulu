@@ -10,6 +10,9 @@
 
 namespace Sulu\Component\Webspace\Url;
 
+/**
+ * Interface for localization placeholder replacer.
+ */
 interface ReplacerInterface
 {
     const REPLACER_LANGUAGE = '{language}';

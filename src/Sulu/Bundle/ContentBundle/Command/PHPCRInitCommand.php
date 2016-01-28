@@ -45,6 +45,7 @@ class PHPCRInitCommand extends ContainerAwareCommand
         $workspace = $session->getWorkspace();
 
         // init node namespace and types
+        // TODO move this to initializer
         $output->writeln('Register namespace');
         $workspace->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
         $workspace->getNamespaceRegistry()->registerNamespace('sec', 'http://sulu.io/phpcr/sec');
