@@ -161,7 +161,7 @@ abstract class BaseContext extends RawMinkContext implements Context, KernelAwar
      */
     protected function clickByTitle($selector, $itemTitle, $type = 'click')
     {
-        $script = <<<EOT
+        $script = <<<'EOT'
 var f = function () {
     var event = new MouseEvent('%s', {
         'view': window,
@@ -303,7 +303,7 @@ EOT;
      */
     protected function fillSelector($selector, $value)
     {
-        $this->getSession()->executeScript(sprintf(<<<EOT
+        $this->getSession()->executeScript(sprintf(<<<'EOT'
 var els = document.querySelectorAll("%s");
 for (var i in els) {
     var el = els[i];

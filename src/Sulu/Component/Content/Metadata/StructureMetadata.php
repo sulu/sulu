@@ -158,7 +158,7 @@ class StructureMetadata extends ItemMetadata
      */
     public function hasPropertyWithTagName($tagName)
     {
-        return (boolean) count($this->getPropertiesByTagName($tagName));
+        return (bool) count($this->getPropertiesByTagName($tagName));
     }
 
     /**
