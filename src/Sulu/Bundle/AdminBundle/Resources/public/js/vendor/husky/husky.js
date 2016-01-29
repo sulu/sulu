@@ -33122,6 +33122,19 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 },
 
                 /**
+                 * Brings a datetime into the right format
+                 * @param date {String} the date to parse
+                 * @returns {String}
+                 */
+                datetime: function(date) {
+                    var parsedDate = this.sandbox.date.format(date, true);
+                    if (parsedDate !== null) {
+                        return parsedDate;
+                    }
+                    return date;
+                },
+
+                /**
                  * Translates a string
                  * @param val {String} the string to translate
                  * @returns {String}

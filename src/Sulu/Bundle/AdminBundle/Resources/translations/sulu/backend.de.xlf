@@ -298,9 +298,17 @@
                 <source>public.changed</source>
                 <target>Zuletzt geändert</target>
             </trans-unit>
+            <trans-unit id="da7c493010f2c3545706919e142d0749" resname="public.changer">
+                <source>public.changer</source>
+                <target>Zuletzt geändert von</target>
+            </trans-unit>
             <trans-unit id="892cc3ad5bdba41fcf1b98298a4aee6a" resname="public.created">
                 <source>public.created</source>
                 <target>Erstellt am</target>
+            </trans-unit>
+            <trans-unit id="892cc3ad5bdba41f2f1b98298a4aee6a" resname="public.creator">
+                <source>public.creator</source>
+                <target>Erstellt von</target>
             </trans-unit>
             <trans-unit id="4ea635d980999da6a15ef3782d251878" resname="public.title">
                 <source>public.title</source>

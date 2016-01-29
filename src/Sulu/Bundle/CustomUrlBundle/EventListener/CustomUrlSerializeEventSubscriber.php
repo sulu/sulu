@@ -13,6 +13,7 @@ namespace Sulu\Bundle\CustomUrlBundle\EventListener;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
+use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Generator\GeneratorInterface;
 
@@ -26,9 +27,15 @@ class CustomUrlSerializeEventSubscriber implements EventSubscriberInterface
      */
     private $generator;
 
-    public function __construct(GeneratorInterface $generator)
+    /**
+     * @var UserManagerInterface
+     */
+    private $userManager;
+
+    public function __construct(GeneratorInterface $generator, UserManagerInterface $userManager)
     {
         $this->generator = $generator;
+        $this->userManager = $userManager;
     }
 
     /**
@@ -67,5 +74,8 @@ class CustomUrlSerializeEventSubscriber implements EventSubscriberInterface
             'customUrl',
             $this->generator->generate($customUrl->getBaseDomain(), $customUrl->getDomainParts())
         );
+
+        $visitor->addData('creatorFullName', $this->userManager->getFullNameByUserId($customUrl->getCreator()));
+        $visitor->addData('changerFullName', $this->userManager->getFullNameByUserId($customUrl->getChanger()));
     }
 }

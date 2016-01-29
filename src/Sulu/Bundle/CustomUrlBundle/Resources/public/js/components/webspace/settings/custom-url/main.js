@@ -30,6 +30,11 @@ define(['text!./skeleton.html'], function(skeleton) {
             successLabel: 'labels.success',
             successMessage: 'labels.success.save-desc',
 
+            created: 'public.created',
+            creator: 'public.creator',
+            changed: 'public.changed',
+            changer: 'public.changer',
+
             targetTitle: 'custom-urls.target-title',
             noTarget: 'custom-urls.no-target'
         }
@@ -131,6 +136,28 @@ define(['text!./skeleton.html'], function(skeleton) {
 
                                     return content;
                                 }.bind(this)
+                            },
+                            {
+                                attribute: 'changed',
+                                name: 'changed',
+                                content: this.translations.changed,
+                                type: 'datetime'
+                            },
+                            {
+                                attribute: 'changerFullName',
+                                name: 'changerFullName',
+                                content: this.translations.changer
+                            },
+                            {
+                                attribute: 'created',
+                                name: 'created',
+                                content: this.translations.created,
+                                type: 'datetime'
+                            },
+                            {
+                                attribute: 'creatorFullName',
+                                name: 'creatorFullName',
+                                content: this.translations.creator
                             }
                         ]
                     }

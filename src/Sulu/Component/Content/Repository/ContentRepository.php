@@ -230,6 +230,10 @@ class ContentRepository implements ContentRepositoryInterface
         MappingInterface $mapping,
         UserInterface $user = null
     ) {
+        if (count($uuids) === 0) {
+            return [];
+        }
+
         $locales = $this->getLocales();
         $queryBuilder = $this->getQueryBuilder($locale, $locales, $user);
 

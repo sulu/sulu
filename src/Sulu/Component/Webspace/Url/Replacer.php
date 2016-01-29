@@ -99,6 +99,16 @@ class Replacer implements ReplacerInterface
     /**
      * {@inheritdoc}
      */
+    public function replace($replacer, $value)
+    {
+        $this->url = str_replace($replacer, $value, $this->url);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function cleanup()
     {
         foreach ($this->replacers as $replacer) {
@@ -140,20 +150,5 @@ class Replacer implements ReplacerInterface
     protected function hasReplacer($replacer)
     {
         return strpos($this->url, $replacer) > -1;
-    }
-
-    /**
-     * Replace replacer with given value.
-     *
-     * @param string $replacer
-     * @param string $value
-     *
-     * @return $this
-     */
-    protected function replace($replacer, $value)
-    {
-        $this->url = str_replace($replacer, $value, $this->url);
-
-        return $this;
     }
 }

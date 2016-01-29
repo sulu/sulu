@@ -14,8 +14,8 @@ use PHPCR\NodeInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\ContentBundle\Document\RouteDocument;
 use Sulu\Component\Content\Document\Behavior\RoutableBehavior;
-use Sulu\Component\DocumentManager\Behavior\Audit\BlameBehavior;
-use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
+use Sulu\Component\DocumentManager\Behavior\Audit\NonLocalizedBlameBehavior;
+use Sulu\Component\DocumentManager\Behavior\Audit\NonLocalizedTimestampBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
@@ -26,8 +26,8 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 class CustomUrlDocument implements
     CustomUrlBehavior,
     NodeNameBehavior,
-    TimestampBehavior,
-    BlameBehavior,
+    NonLocalizedTimestampBehavior,
+    NonLocalizedBlameBehavior,
     ParentBehavior,
     LocaleBehavior,
     RoutableBehavior

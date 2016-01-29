@@ -1,6 +1,6 @@
 <form id="custom-url-form" class="grid">
     <div class="form-group grid-row">
-        <label for="custom-url-title"><%= translations.title %></label>
+        <label for="custom-url-title" class="required"><%= translations.title %></label>
         <input type="text"
                id="custom-url-title"
                name="title"
@@ -24,7 +24,7 @@
     </div>
 
     <div class="grid-row form-group">
-        <label for="custom-url-base-domain">
+        <label for="custom-url-base-domain" class="required">
             <%= translations.baseDomain %>
         </label>
 
@@ -33,7 +33,7 @@
     </div>
 
     <div class="grid-row form-group" id="custom-url-input-container" style="display: none;">
-        <label for="custom-url-input">
+        <label for="custom-url-input" class="required">
             <%= translations.customUrl %>
         </label>
 
@@ -56,7 +56,7 @@
             </div>
         </div>
         <div class="grid-col-3 form-group">
-            <label for="custom-url-target-locale">
+            <label for="custom-url-target-locale" class="required">
                 <%= translations.locale %>
             </label>
 

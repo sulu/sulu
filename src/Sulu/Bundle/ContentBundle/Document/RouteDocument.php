@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContentBundle\Document;
 
 use Sulu\Component\Content\Document\Behavior\RouteBehavior;
+use Sulu\Component\DocumentManager\Behavior\Audit\NonLocalizedTimestampBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
@@ -29,7 +30,8 @@ class RouteDocument implements
     NodeNameBehavior,
     PathBehavior,
     UuidBehavior,
-    RouteBehavior
+    RouteBehavior,
+    NonLocalizedTimestampBehavior
 {
     /**
      * @var string
@@ -60,6 +62,16 @@ class RouteDocument implements
      * @var bool
      */
     private $history;
+
+    /**
+     * @var \DateTime
+     */
+    private $created;
+
+    /**
+     * @var \DateTime
+     */
+    private $changed;
 
     /**
      * {@inheritdoc}
@@ -131,5 +143,37 @@ class RouteDocument implements
     public function setHistory($history)
     {
         $this->history = $history;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * @param \DateTime $created
+     */
+    public function setCreated(\DateTime $created)
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChanged()
+    {
+        return $this->changed;
+    }
+
+    /**
+     * @param \DateTime $changed
+     */
+    public function setChanged(\DateTime $changed)
+    {
+        $this->changed = $changed;
     }
 }

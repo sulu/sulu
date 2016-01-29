@@ -292,15 +292,23 @@
             </trans-unit>
             <trans-unit id="414427d622e07cebcb5f315c2e926b53" resname="tags.changed">
                 <source>tags.changed</source>
-                <target>Dernier changement</target>
+                <target>Dernière changement</target>
             </trans-unit>
             <trans-unit id="da7c493010f2c3545706969e142d0749" resname="public.changed">
                 <source>public.changed</source>
-                <target>Dernier changement</target>
+                <target>Dernière changement</target>
+            </trans-unit>
+            <trans-unit id="da7c493010f2c3545706919e142d0749" resname="public.changer">
+                <source>public.changer</source>
+                <target>Dernière changement par</target>
             </trans-unit>
             <trans-unit id="892cc3ad5bdba41fcf1b98298a4aee6a" resname="public.created">
                 <source>public.created</source>
                 <target>Créer le</target>
+            </trans-unit>
+            <trans-unit id="892cc3ad5bdba41f2f1b98298a4aee6a" resname="public.creator">
+                <source>public.creator</source>
+                <target>Créé par</target>
             </trans-unit>
             <trans-unit id="4ea635d980999da6a15ef3782d251878" resname="public.title">
                 <source>public.title</source>

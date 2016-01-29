@@ -14,6 +14,7 @@ use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\JsonSerializationVisitor;
 use Prophecy\Argument;
+use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\CustomUrlBundle\EventListener\CustomUrlSerializeEventSubscriber;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
@@ -24,7 +25,8 @@ class CustomUrlSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
     public function testGetSubscribedEvents()
     {
         $generator = $this->prophesize(GeneratorInterface::class);
-        $subscriber = new CustomUrlSerializeEventSubscriber($generator->reveal());
+        $userManager = $this->prophesize(UserManagerInterface::class);
+        $subscriber = new CustomUrlSerializeEventSubscriber($generator->reveal(), $userManager->reveal());
 
         $events = $subscriber->getSubscribedEvents();
 
@@ -43,7 +45,8 @@ class CustomUrlSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
     public function testOnPostSerialize()
     {
         $generator = $this->prophesize(GeneratorInterface::class);
-        $subscriber = new CustomUrlSerializeEventSubscriber($generator->reveal());
+        $userManager = $this->prophesize(UserManagerInterface::class);
+        $subscriber = new CustomUrlSerializeEventSubscriber($generator->reveal(), $userManager->reveal());
 
         $event = $this->prophesize(ObjectEvent::class);
         $document = $this->prophesize(CustomUrlDocument::class);
@@ -53,6 +56,11 @@ class CustomUrlSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
         $document->getTarget()->willReturn($pageDocument->reveal());
         $document->getBaseDomain()->willReturn('*.sulu.io');
         $document->getDomainParts()->willReturn(['prefix' => 'test', 'suffix' => []]);
+        $document->getCreator()->willReturn(1);
+        $document->getChanger()->willReturn(2);
+
+        $userManager->getFullNameByUserId(1)->willReturn('test1');
+        $userManager->getFullNameByUserId(2)->willReturn('test2');
 
         $generator->generate('*.sulu.io', ['prefix' => 'test', 'suffix' => []])->willReturn('test.sulu.io');
 
@@ -63,6 +71,8 @@ class CustomUrlSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $visitor->addData('targetTitle', 'test')->shouldBeCalled();
         $visitor->addData('customUrl', 'test.sulu.io')->shouldBeCalled();
+        $visitor->addData('creatorFullName', 'test1')->shouldBeCalled();
+        $visitor->addData('changerFullName', 'test2')->shouldBeCalled();
     }
 
     public function testOnPostSerializeWrongDocument()

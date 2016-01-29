@@ -198,14 +198,18 @@ define(['underscore', 'text!./form.html'], function(_, form) {
          * Initializes sub-components.
          */
         initializeFormComponents: function() {
-            var routeDisabledItems = [],
-                routeData = _.map(this.data.routes, function(routeDocument, route) {
+            var routeData = _.filter(
+                _.map(this.data.routes, function(routeDocument, route) {
                     if (!routeDocument.history) {
-                        routeDisabledItems.push(routeDocument.uuid);
+                        return null;
                     }
 
-                    return {uuid: routeDocument.uuid, route: route, history: routeDocument.history};
-                });
+                    return {uuid: routeDocument.uuid, route: route, created: routeDocument.created};
+                }),
+                function(route) {
+                    return route !== null;
+                }
+            );
 
             this.sandbox.start(
                 [
@@ -320,10 +324,8 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                                 table: {
                                     selectItem: {
                                         type: 'checkbox',
-                                        inFirstCell: false,
-                                        header: false
-                                    },
-                                    disabledItems: routeDisabledItems
+                                        inFirstCell: false
+                                    }
                                 }
                             },
                             matchings: [
@@ -332,9 +334,9 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                                     attribute: 'route'
                                 },
                                 {
-                                    content: this.translations.history,
-                                    attribute: 'history',
-                                    type: 'checkbox_readonly'
+                                    content: this.translations.created,
+                                    attribute: 'created',
+                                    type: 'datetime'
                                 }
                             ]
                         }

@@ -12,7 +12,7 @@
             </trans-unit>
             <trans-unit id="3" resname="custom-urls.urls-title">
                 <source>custom-urls.urls-title</source>
-                <target>URLs</target>
+                <target>URL Verlauf</target>
             </trans-unit>
             <trans-unit id="4" resname="custom-urls.activated">
                 <source>custom-urls.activated</source>
@@ -68,7 +68,7 @@
             </trans-unit>
             <trans-unit id="17" resname="custom-urls.history">
                 <source>custom-urls.history</source>
-                <target>??? custom-urls.history ???</target>
+                <target>Verlauf</target>
             </trans-unit>
             <trans-unit id="18" resname="custom-urls.choose-target.cancel">
                 <source>custom-urls.choose-target.cancel</source>

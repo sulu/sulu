@@ -85,6 +85,16 @@ interface ReplacerInterface
     public function replaceSegment($segment);
 
     /**
+     * Replace replacer with given value.
+     *
+     * @param string $replacer
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function replace($replacer, $value);
+
+    /**
      * Removes all replacers.
      *
      * @return $this

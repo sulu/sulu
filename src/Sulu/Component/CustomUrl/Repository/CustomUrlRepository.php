@@ -13,6 +13,7 @@ namespace Sulu\Component\CustomUrl\Repository;
 use Jackalope\Query\Row;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
 use PHPCR\Util\QOM\QueryBuilder;
+use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Component\Content\Repository\ContentRepositoryInterface;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 use Sulu\Component\CustomUrl\Generator\GeneratorInterface;
@@ -38,14 +39,21 @@ class CustomUrlRepository
      */
     private $generator;
 
+    /**
+     * @var UserManagerInterface
+     */
+    private $userManager;
+
     public function __construct(
         SessionManagerInterface $sessionManager,
         ContentRepositoryInterface $contentRepository,
-        GeneratorInterface $generator
+        GeneratorInterface $generator,
+        UserManagerInterface $userManager
     ) {
         $this->sessionManager = $sessionManager;
         $this->contentRepository = $contentRepository;
         $this->generator = $generator;
+        $this->userManager = $userManager;
     }
 
     /**
@@ -72,10 +80,10 @@ class CustomUrlRepository
         $queryBuilder->addSelect('a', 'domainParts', 'domainParts');
         $queryBuilder->addSelect('a', 'baseDomain', 'baseDomain');
         $queryBuilder->addSelect('a', 'target', 'target');
-        $queryBuilder->addSelect('a', 'created', 'created');
-        $queryBuilder->addSelect('a', 'creator', 'creator');
-        $queryBuilder->addSelect('a', 'changed', 'changed');
-        $queryBuilder->addSelect('a', 'changer', 'changer');
+        $queryBuilder->addSelect('a', 'sulu:created', 'created');
+        $queryBuilder->addSelect('a', 'sulu:creator', 'creator');
+        $queryBuilder->addSelect('a', 'sulu:changed', 'changed');
+        $queryBuilder->addSelect('a', 'sulu:changer', 'changer');
 
         $queryBuilder->from(
             $queryBuilder->qomf()->selector('a', 'nt:unstructured')
@@ -108,6 +116,12 @@ class CustomUrlRepository
             MappingBuilder::create()->addProperties(['title'])->getMapping()
         );
 
-        return new RowsIterator($result->getRows(), $result->getColumnNames(), $targets, $this->generator);
+        return new RowsIterator(
+            $result->getRows(),
+            $result->getColumnNames(),
+            $targets,
+            $this->generator,
+            $this->userManager
+        );
     }
 }

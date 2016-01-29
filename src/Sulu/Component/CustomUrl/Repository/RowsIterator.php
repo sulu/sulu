@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\CustomUrl\Repository;
 
+use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\CustomUrl\Generator\GeneratorInterface;
 
@@ -33,12 +34,24 @@ class RowsIterator extends \IteratorIterator
      */
     private $generator;
 
-    public function __construct(\Traversable $iterator, array $columns, array $targets, GeneratorInterface $generator)
+    /**
+     * @var UserManagerInterface
+     */
+    private $userManager;
+
+    public function __construct(
+        \Traversable $iterator,
+        array $columns,
+        array $targets,
+        GeneratorInterface $generator,
+        UserManagerInterface $userManager
+    )
     {
         parent::__construct($iterator);
 
         $this->columns = $columns;
         $this->generator = $generator;
+        $this->userManager = $userManager;
 
         $this->targets = [];
         foreach ($targets as $target) {
@@ -64,6 +77,9 @@ class RowsIterator extends \IteratorIterator
             $result['baseDomain'],
             $result['domainParts']
         );
+
+        $result['creatorFullName'] = $this->userManager->getFullNameByUserId($result['creator']);
+        $result['changerFullName'] = $this->userManager->getFullNameByUserId($result['changer']);
 
         return $result;
     }
