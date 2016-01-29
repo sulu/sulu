@@ -45,24 +45,27 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         }
 
         if ($container->hasExtension('jms_serializer')) {
-            $container->prependExtensionConfig('jms_serializer', [
-                'metadata' => [
-                    'directories' => [
-                        [
-                            'path' => __DIR__ . '/../Resources/config/serializer',
-                            'namespace_prefix' => 'Sulu\Bundle\ContentBundle',
-                        ],
-                        [
-                            'path' => __DIR__ . '/../Resources/config/serializer',
-                            'namespace_prefix' => 'Sulu\Component\Content',
-                        ],
-                        [
-                            'path' => __DIR__ . '/../Resources/config/serializer',
-                            'namespace_prefix' => 'Sulu\Component\Webspace',
+            $container->prependExtensionConfig(
+                'jms_serializer',
+                [
+                    'metadata' => [
+                        'directories' => [
+                            [
+                                'path' => __DIR__ . '/../Resources/config/serializer',
+                                'namespace_prefix' => 'Sulu\Bundle\ContentBundle',
+                            ],
+                            [
+                                'path' => __DIR__ . '/../Resources/config/serializer',
+                                'namespace_prefix' => 'Sulu\Component\Content',
+                            ],
+                            [
+                                'path' => __DIR__ . '/../Resources/config/serializer',
+                                'namespace_prefix' => 'Sulu\Component\Webspace',
+                            ],
                         ],
                     ],
-                ],
-            ]);
+                ]
+            );
         }
     }
 

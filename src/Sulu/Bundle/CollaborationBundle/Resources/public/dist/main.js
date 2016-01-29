@@ -1,0 +1,1 @@
+require.config({paths:{sulucollaboration:"../../sulucollaboration/dist"}}),define(function(){"use strict";return{name:"SuluCollaborationBundle",initialize:function(a){a.components.addSource("sulucollaboration","/bundles/sulucollaboration/dist/components")}}});

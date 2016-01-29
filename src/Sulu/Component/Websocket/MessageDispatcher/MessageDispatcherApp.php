@@ -58,10 +58,6 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
         try {
             $result = $this->dispatch($from, $context, $msg);
 
-            if (!is_string($result)) {
-                $result = json_encode($result);
-            }
-
             if ($result !== null) {
                 $from->send($result);
             }

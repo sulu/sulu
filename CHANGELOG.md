@@ -5,8 +5,10 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1956 [All]             Removed Admin command registration
     * ENHANCEMENT #1956 [TranslateBundle] Removed entry in admin navigation
     * BUGFIX      #1510 [Persistence]     Fetch user only if an entity with UserBlameInterface is detected
+    * FEATURE     #1233 [CollaborationBundle] Showing current collaborators of pages
     * BUGFIX      #1944 [MediaBundle]     Removed wrong definition of indices
     * FEATURE     #1921 [ContentBundle]   Added unset single internal link
+    * FEATURE     #1233 [ContentBundle]   Showing current collaborators of pages
     * ENHANCEMENT #1936 [Webspace]        Cleanup of WebsiteRequestAnalyzer
     * ENHANCEMENT #1937 [WebsiteBundle]   Removed unnecessary ob_clean in WebsiteController
     * BUGFIX      #1931 [ContentBundle]   Fixed form deprecation messages   

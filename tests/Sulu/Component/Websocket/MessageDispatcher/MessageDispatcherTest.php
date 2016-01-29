@@ -11,31 +11,57 @@
 
 namespace Sulu\Component\Websocket\MessageDispatcher;
 
+use Prophecy\Argument;
 use Ratchet\ConnectionInterface;
+use Sulu\Component\Websocket\ConnectionContext\ConnectionContextInterface;
 
 class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var MessageBuilderInterface
+     */
+    private $messageBuilder;
+
+    /**
+     * @var MessageDispatcherInterface
+     */
+    private $messageDispatcher;
+
     protected function setUp()
     {
         parent::setUp();
+
+        $this->messageBuilder = $this->prophesize(MessageBuilderInterface::class);
+        $this->messageBuilder->build(Argument::any(), Argument::any(), Argument::any(), Argument::any())->will(
+            function ($arguments) {
+                return json_encode(
+                    [
+                        'handler' => $arguments[0],
+                        'message' => $arguments[1],
+                        'options' => $arguments[2],
+                        'error' => $arguments[3],
+                    ]
+                );
+            }
+        );
+
+        $this->messageDispatcher = new MessageDispatcher($this->messageBuilder->reveal());
     }
 
     public function testAdd()
     {
         $handler = $this->prophesize('Sulu\Component\Websocket\MessageDispatcher\MessageHandlerInterface');
 
-        $dispatcher = new MessageDispatcher();
-
-        $reflectionClass = new \ReflectionClass($dispatcher);
-        $reflectionProp = $reflectionClass->getProperty('handler');
+        $reflectionClass = new \ReflectionClass($this->messageDispatcher);
+        $reflectionProp = $reflectionClass->getProperty('handlers');
         $reflectionProp->setAccessible(true);
 
-        $handlers = $reflectionProp->getValue($dispatcher);
+        $handlers = $reflectionProp->getValue($this->messageDispatcher);
         $this->assertEmpty($handlers);
 
-        $dispatcher->add('test', $handler->reveal());
+        $this->messageDispatcher->add('test', $handler->reveal());
 
-        $handlers = $reflectionProp->getValue($dispatcher);
+        $handlers = $reflectionProp->getValue($this->messageDispatcher);
 
         $this->assertNotEmpty($handlers);
         $this->assertArrayHasKey('test', $handlers);
@@ -51,10 +77,18 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
         $handler = $this->prophesize('Sulu\Component\Websocket\MessageDispatcher\MessageHandlerInterface');
         $handler->handle($conn->reveal(), $message, $context->reveal())->willReturn(['test' => 2]);
 
-        $dispatcher = new MessageDispatcher();
-        $dispatcher->add('test', $handler->reveal());
+        $this->messageDispatcher->add('test', $handler->reveal());
 
-        $result = $dispatcher->dispatch($conn->reveal(), 'test', $message, ['id' => 'test'], $context->reveal());
+        $result = json_decode(
+            $this->messageDispatcher->dispatch(
+                $conn->reveal(),
+                'test',
+                $message,
+                ['id' => 'test'],
+                $context->reveal()
+            ),
+            true
+        );
 
         $this->assertEquals(
             [
@@ -78,17 +112,19 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
         $message = ['test' => '1'];
 
         $handler = $this->prophesize('Sulu\Component\Websocket\MessageDispatcher\MessageHandlerInterface');
-        $handler->handle($conn->reveal(), $message, $context->reveal());
+        $handler->handle($conn->reveal(), $message, $context->reveal())->willReturn(['test' => 2]);
 
-        $dispatcher = new MessageDispatcher();
-        $dispatcher->add('test', $handler->reveal());
+        $this->messageDispatcher->add('test', $handler->reveal());
 
-        $result = $dispatcher->dispatch($conn->reveal(), 'test', $message, ['id' => 'test'], $context->reveal());
+        $result = json_decode(
+            $this->messageDispatcher->dispatch($conn->reveal(), 'test', $message, ['id' => 'test'], $context->reveal()),
+            true
+        );
 
         $this->assertEquals(
             [
                 'handler' => 'test',
-                'message' => null,
+                'message' => ['test' => 2],
                 'options' => [
                     'id' => 'test',
                 ],
@@ -109,10 +145,18 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
         $handler = $this->prophesize('Sulu\Component\Websocket\MessageDispatcher\MessageHandlerInterface');
         $handler->handle($conn->reveal(), $message, $context->reveal())->willThrow(new MessageHandlerException($ex));
 
-        $dispatcher = new MessageDispatcher();
-        $dispatcher->add('test', $handler->reveal());
+        $this->messageDispatcher->add('test', $handler->reveal());
 
-        $result = $dispatcher->dispatch($conn->reveal(), 'test', $message, ['id' => 'test'], $context->reveal());
+        $result = json_decode(
+            $this->messageDispatcher->dispatch(
+                $conn->reveal(),
+                'test',
+                $message,
+                ['id' => 'test'],
+                $context->reveal()
+            ),
+            true
+        );
 
         $this->assertEquals(
             [
@@ -142,9 +186,7 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
         $conn = $this->prophesize('Ratchet\ConnectionInterface');
         $message = ['test' => '1'];
 
-        $dispatcher = new MessageDispatcher();
-
-        $dispatcher->dispatch($conn->reveal(), 'test', $message, ['id' => 'test'], $context->reveal());
+        $this->messageDispatcher->dispatch($conn->reveal(), 'test', $message, ['id' => 'test'], $context->reveal());
     }
 
     public function testDispatchWrongHandler()
@@ -161,29 +203,33 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
         $handler = $this->prophesize('Sulu\Component\Websocket\MessageDispatcher\MessageHandlerInterface');
         $handler->handle($conn->reveal(), $message, $context->reveal());
 
-        $dispatcher = new MessageDispatcher();
-        $dispatcher->add('test', $handler->reveal());
+        $this->messageDispatcher->add('test', $handler->reveal());
 
-        $result = $dispatcher->dispatch($conn->reveal(), 'test-2', $message, ['id' => 'test'], $context->reveal());
+        $result = $this->messageDispatcher->dispatch(
+            $conn->reveal(),
+            'test-2',
+            $message,
+            ['id' => 'test'],
+            $context->reveal()
+        );
 
         $this->assertEquals(null, $result);
     }
 
     public function testOnClose()
     {
-        $context = $this->prophesize(MessageHandlerContext::class);
+        $context = $this->prophesize(ConnectionContextInterface::class);
         $conn = $this->prophesize(ConnectionInterface::class);
 
         $handler1 = $this->prophesize(MessageHandlerInterface::class);
-        $handler1->onClose($conn->reveal(), $context->reveal())->shouldBeCalled();
+        $handler1->onClose($conn->reveal(), new MessageHandlerContext($context->reveal(), 'test-1'))->shouldBeCalled();
 
         $handler2 = $this->prophesize(MessageHandlerInterface::class);
-        $handler2->onClose($conn->reveal(), $context->reveal())->shouldBeCalled();
+        $handler2->onClose($conn->reveal(), new MessageHandlerContext($context->reveal(), 'test-2'))->shouldBeCalled();
 
-        $dispatcher = new MessageDispatcher();
-        $dispatcher->add('test-1', $handler1->reveal());
-        $dispatcher->add('test-2', $handler2->reveal());
+        $this->messageDispatcher->add('test-1', $handler1->reveal());
+        $this->messageDispatcher->add('test-2', $handler2->reveal());
 
-        $dispatcher->onClose($conn->reveal(), $context->reveal());
+        $this->messageDispatcher->onClose($conn->reveal(), $context->reveal());
     }
 }

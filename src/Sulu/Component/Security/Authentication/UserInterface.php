@@ -38,4 +38,11 @@ interface UserInterface extends BaseUserInterface
      * @return RoleInterface[]
      */
     public function getRoleObjects();
+
+    /**
+     * Returns the full name of the user.
+     *
+     * @return string
+     */
+    public function getFullName();
 }
