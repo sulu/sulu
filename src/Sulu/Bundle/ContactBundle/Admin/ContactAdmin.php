@@ -62,14 +62,6 @@ class ContactAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    public function getCommands()
-    {
-        return [];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getJsBundleName()
     {
         return 'sulucontact';

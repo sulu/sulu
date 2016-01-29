@@ -26,7 +26,7 @@ class SnippetContext extends BaseStructureContext implements SnippetAcceptingCon
      */
     public function thereExistsASnippetTemplateWithTheFollowingPropertyConfiguration($name, PyStringNode $string)
     {
-        $template = <<<EOT
+        $template = <<<'EOT'
 <?xml version="1.0" ?>
 
 <template xmlns="http://schemas.sulu.io/template/template"

@@ -125,7 +125,7 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
     public function iClickOnTheRowContaining($text)
     {
         $this->waitForText($text);
-        $script = <<<EOT
+        $script = <<<'EOT'
 var f = function () {
     var items = document.querySelectorAll("td span.cell-content");
 
@@ -150,7 +150,7 @@ EOT;
     public function iClickOnTheEditIconInTheRowContaining($text)
     {
         $this->waitForText($text);
-        $script = <<<EOT
+        $script = <<<'EOT'
             var f = function () {
                 var items = document.querySelectorAll("td span.cell-content");
 
@@ -227,7 +227,7 @@ EOT;
      */
     public function iSelectFromTheHusky($itemValue, $selectListClass)
     {
-        $script = <<<EOT
+        $script = <<<'EOT'
 var selector = '%s';
 var items = $("div." + selector + " .husky-select-list .item-value");
 if (items.length == 0) {
@@ -427,7 +427,7 @@ EOT;
                      'data-aura-instance-name',
                      'data-mapper-property',
                  ] as $propertyName) {
-            $script = <<<EOT
+            $script = <<<'EOT'
 var el = $('%s[%s="%s"]').data('element');
 
 if (el !== null) {

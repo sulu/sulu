@@ -136,7 +136,7 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
     public function iPressEnterOn($selector)
     {
         $this->clickSelector($selector);
-        $script = <<<EOT
+        $script = <<<'EOT'
 var e = $.Event("keypress");
 e.which = 13;
 e.keyCode = 13;
@@ -152,7 +152,7 @@ EOT;
      */
     public function iExpectTheAjaxRequest()
     {
-        $active = (integer) $this->getSession()->evaluateScript('$.active');
+        $active = (int) $this->getSession()->evaluateScript('$.active');
 
         if ($active === 0) {
             $this->getSession()->wait(1000, '$.active > 0');

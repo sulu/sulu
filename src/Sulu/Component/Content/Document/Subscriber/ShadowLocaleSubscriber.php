@@ -207,7 +207,7 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
 
     private function getShadowLocaleEnabled(NodeInterface $node, $locale)
     {
-        return (boolean) $node->getPropertyValueWithDefault(
+        return (bool) $node->getPropertyValueWithDefault(
             $this->encoder->localizedSystemName(self::SHADOW_ENABLED_FIELD, $locale),
             false
         );

@@ -2,6 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1956 [All]             Removed Admin command registration
+    * ENHANCEMENT #1956 [TranslateBundle] Removed entry in admin navigation
     * BUGFIX      #1510 [Persistence]     Fetch user only if an entity with UserBlameInterface is detected
     * BUGFIX      #1944 [MediaBundle]     Removed wrong definition of indices
     * FEATURE     #1921 [ContentBundle]   Added unset single internal link

@@ -66,20 +66,6 @@ class AdminPool
         return $navigation;
     }
 
-    /**
-     * Returns all the commands of all admins for registration in app/console.
-     */
-    public function getCommands()
-    {
-        $commands = [];
-        foreach ($this->pool as $admin) {
-            /* @var Admin $admin */
-            $commands = array_merge($commands, $admin->getCommands());
-        }
-
-        return $commands;
-    }
-
     public function getSecurityContexts()
     {
         $contexts = [];

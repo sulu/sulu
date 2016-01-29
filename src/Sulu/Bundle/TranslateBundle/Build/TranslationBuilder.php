@@ -15,6 +15,16 @@ use Sulu\Bundle\CoreBundle\Build\SuluBuilder;
 
 class TranslationBuilder extends SuluBuilder
 {
+    /**
+     * @var string[]
+     */
+    private $locales;
+
+    public function __construct($locales)
+    {
+        $this->locales = $locales;
+    }
+
     public function getName()
     {
         return 'translations';
@@ -27,7 +37,7 @@ class TranslationBuilder extends SuluBuilder
 
     public function build()
     {
-        foreach (['en', 'de'] as $locale) {
+        foreach ($this->locales as $locale) {
             $this->execCommand('Translations', 'sulu:translate:import', ['locale' => $locale]);
             $this->execCommand('Translations', 'sulu:translate:export', ['locale' => $locale]);
         }

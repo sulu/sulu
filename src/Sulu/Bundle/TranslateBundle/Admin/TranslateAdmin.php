@@ -14,8 +14,6 @@ namespace Sulu\Bundle\TranslateBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
-use Sulu\Bundle\TranslateBundle\Command\ExportCommand;
-use Sulu\Bundle\TranslateBundle\Command\ImportCommand;
 
 class TranslateAdmin extends Admin
 {
@@ -39,17 +37,6 @@ class TranslateAdmin extends Admin
         $section->addChild($settings);
         $rootNavigationItem->addChild($section);
         $this->setNavigation(new Navigation($rootNavigationItem));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCommands()
-    {
-        return [
-            new ImportCommand(),
-            new ExportCommand(),
-        ];
     }
 
     /**

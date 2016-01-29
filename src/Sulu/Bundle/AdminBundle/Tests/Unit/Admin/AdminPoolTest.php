@@ -120,11 +120,6 @@ class AdminPoolTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Child2', $navigation->getRoot()->getChildren()[1]->getName());
     }
 
-    public function testCommands()
-    {
-        $this->assertEquals($this->command, $this->adminPool->getCommands()[0]);
-    }
-
     public function testSecurityContexts()
     {
         $contexts = $this->adminPool->getSecurityContexts();

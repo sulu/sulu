@@ -48,7 +48,7 @@ class Version201504281842 implements VersionInterface, ContainerAwareInterface
             foreach ($webspace->getAllLocalizations() as $localization) {
                 $locale = $localization->getLocalization();
 
-                $sql = <<<EOT
+                $sql = <<<'EOT'
 SELECT * FROM [nt:unstructured] WHERE %s = 2
 EOT;
 
