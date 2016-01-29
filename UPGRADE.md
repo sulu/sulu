@@ -2,6 +2,13 @@
 
 ## dev-develop
 
+### Admin Commands
+
+The method `getCommands` on the Admin has been removed, because Symfony can
+autodetect Commands in the `Command` directory of each bundle anyway. This only
+affects you, if you have not followed the Symfony standards and located your
+commands somewhere else.
+
 ### Preview
 
 Clear the preview cache to avoid wrong cached data.

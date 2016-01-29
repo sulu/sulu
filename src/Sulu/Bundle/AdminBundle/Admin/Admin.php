@@ -56,18 +56,6 @@ abstract class Admin
     }
 
     /**
-     * Returns all the commands available in a concrete admin.
-     * An empty array is the default value (no commands available), and the concrete class
-     * can override this method, to add all the available commands.
-     *
-     * @return array
-     */
-    public function getCommands()
-    {
-        return [];
-    }
-
-    /**
      * Returns all the security contexts, which are available in the concrete bundle.
      *
      * @return array

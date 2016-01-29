@@ -23,14 +23,6 @@ class LocationAdmin extends Admin
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getCommands()
-    {
-        return [];
-    }
-
     public function getJsBundleName()
     {
         return 'sululocation';

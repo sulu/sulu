@@ -44,17 +44,6 @@ class TranslateAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    public function getCommands()
-    {
-        return [
-            new ImportCommand(),
-            new ExportCommand(),
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getJsBundleName()
     {
         return 'sulutranslate';
