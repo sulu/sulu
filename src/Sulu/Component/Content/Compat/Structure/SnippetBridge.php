@@ -13,4 +13,45 @@ namespace Sulu\Component\Content\Compat\Structure;
 
 class SnippetBridge extends StructureBridge
 {
+    /**
+     * @var boolean
+     */
+    private $isShadow;
+
+    /**
+     * @var string
+     */
+    private $shadowBaseLanguage;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIsShadow()
+    {
+        return $this->isShadow;
+    }
+
+    /**
+     * @param boolean $isShadow
+     */
+    public function setIsShadow($isShadow)
+    {
+        $this->isShadow = $isShadow;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getShadowBaseLanguage()
+    {
+        return $this->shadowBaseLanguage;
+    }
+
+    /**
+     * @param string $shadowBaseLanguage
+     */
+    public function setShadowBaseLanguage($shadowBaseLanguage)
+    {
+        $this->shadowBaseLanguage = $shadowBaseLanguage;
+    }
 }

@@ -167,13 +167,12 @@ class SnippetContent extends ComplexContentType
      */
     public function getViewData(PropertyInterface $property)
     {
-        /** @var PageBridge $page */
-        $page = $property->getStructure();
-        $webspaceKey = $page->getWebspaceKey();
-        $locale = $page->getLanguageCode();
+        $structure = $property->getStructure();
+        $webspaceKey = $structure->getWebspaceKey();
+        $locale = $structure->getLanguageCode();
         $shadowLocale = null;
-        if ($page->getIsShadow()) {
-            $shadowLocale = $page->getShadowBaseLanguage();
+        if ($structure->getIsShadow()) {
+            $shadowLocale = $structure->getShadowBaseLanguage();
         }
 
         $refs = $property->getValue();
@@ -194,13 +193,12 @@ class SnippetContent extends ComplexContentType
      */
     public function getContentData(PropertyInterface $property)
     {
-        /** @var PageBridge $page */
-        $page = $property->getStructure();
-        $webspaceKey = $page->getWebspaceKey();
-        $locale = $page->getLanguageCode();
+        $structure = $property->getStructure();
+        $webspaceKey = $structure->getWebspaceKey();
+        $locale = $structure->getLanguageCode();
         $shadowLocale = null;
-        if ($page->getIsShadow()) {
-            $shadowLocale = $page->getShadowBaseLanguage();
+        if ($structure->getIsShadow()) {
+            $shadowLocale = $structure->getShadowBaseLanguage();
         }
 
         $refs = $property->getValue();
@@ -224,11 +222,15 @@ class SnippetContent extends ComplexContentType
         $snippets = [];
         foreach ($ids as $i => $ref) {
             if (!array_key_exists($ref, $this->snippetCache)) {
+                /** @var SnippetBridge $snippet */
                 $snippet = $this->contentMapper->load($ref, $webspaceKey, $locale);
 
                 if (!$snippet->getHasTranslation() && $shadowLocale !== null) {
                     $snippet = $this->contentMapper->load($ref, $webspaceKey, $shadowLocale);
                 }
+
+                $snippet->setIsShadow($shadowLocale !== null);
+                $snippet->setShadowBaseLanguage($shadowLocale);
 
                 $resolved = $this->structureResolver->resolve($snippet);
                 $resolved['view']['template'] = $snippet->getKey();
@@ -257,8 +259,6 @@ class SnippetContent extends ComplexContentType
      */
     private function getUuids($data)
     {
-        $ids = is_array($data) ? $data : [];
-
-        return $ids;
+        return is_array($data) ? $data : [];
     }
 }
