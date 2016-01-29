@@ -127,7 +127,20 @@ class CustomUrlSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function createDomain(
+    /**
+     * Create route-document for given domain.
+     *
+     * @param string $domain
+     * @param CustomUrlBehavior $document
+     * @param Localization $locale
+     * @param string $persistedLocale
+     * @param string $routesPath
+     *
+     * @return RouteDocument
+     *
+     * @throws RouteAlreadyExistsException
+     */
+    protected function createDomain(
         $domain,
         CustomUrlBehavior $document,
         Localization $locale,
@@ -153,6 +166,8 @@ class CustomUrlSubscriber implements EventSubscriberInterface
     }
 
     /**
+     * Find or create route-document for given path.
+     *
      * @param string $path
      * @param string $locale
      * @param CustomUrlBehavior $document
@@ -162,7 +177,7 @@ class CustomUrlSubscriber implements EventSubscriberInterface
      *
      * @throws RouteAlreadyExistsException
      */
-    private function findOrCreateRoute($path, $locale, CustomUrlBehavior $document, $route)
+    protected function findOrCreateRoute($path, $locale, CustomUrlBehavior $document, $route)
     {
         try {
             /** @var RouteDocument $routeDocument */
@@ -196,7 +211,15 @@ class CustomUrlSubscriber implements EventSubscriberInterface
         $document->setRoutes($this->findReferrer($document, $webspaceKey));
     }
 
-    public function findReferrer($document, $webspaceKey)
+    /**
+     * Returns all route-document which referees given document.
+     *
+     * @param $document
+     * @param $webspaceKey
+     *
+     * @return array
+     */
+    protected function findReferrer($document, $webspaceKey)
     {
         $routes = [];
         $referrers = $this->inspector->getReferrers($document);
@@ -223,7 +246,7 @@ class CustomUrlSubscriber implements EventSubscriberInterface
      *
      * @return string
      */
-    private function getRoutesPath($webspaceKey)
+    protected function getRoutesPath($webspaceKey)
     {
         return $this->pathBuilder->build(['%base%', $webspaceKey, '%custom-urls%', '%custom-urls-routes%']);
     }

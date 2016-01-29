@@ -92,16 +92,6 @@ interface ReplacerInterface
     public function cleanup();
 
     /**
-     * Replace replacer with given value.
-     *
-     * @param string $replacer
-     * @param string $value
-     *
-     * @return $this
-     */
-    public function replace($replacer, $value);
-
-    /**
      * Appends localization replacer to url.
      *
      * @return $this

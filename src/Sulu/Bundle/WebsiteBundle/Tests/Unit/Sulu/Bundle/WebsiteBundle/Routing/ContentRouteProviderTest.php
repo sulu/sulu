@@ -124,6 +124,37 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $routes->getIterator()->current()->getDefaults()['structure']->getUuid());
     }
 
+    public function testGetCollectionForRequestNoLocalization()
+    {
+        // Set up test
+        $path = '';
+        $prefix = '/de';
+        $uuid = 1;
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $theme = new Theme();
+        $theme->setKey('theme');
+        $webspace = new Webspace();
+        $webspace->setTheme($theme);
+        $portal->setWebspace($webspace);
+
+        $structure = $this->getStructureMock($uuid);
+        $requestAnalyzer = $this->getRequestAnalyzerMock($portal, $path, $prefix);
+        $activeTheme = $this->getActiveThemeMock();
+
+        $contentMapper = $this->getContentMapperMock();
+        $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue($structure));
+
+        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
+
+        $request = $this->getRequestMock($path);
+
+        // Test the route provider
+        $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
+
+        $this->assertCount(0, $routes);
+    }
+
     public function testGetCollectionForRequestSlashOnly()
     {
         // Set up test
@@ -222,7 +253,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $portal,
             $path,
             $prefix,
-            null,
+            new Localization(),
             RequestAnalyzerInterface::MATCH_TYPE_PARTIAL,
             'sulu.lo',
             'sulu.lo/en-us'
@@ -300,7 +331,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $portal,
             $path,
             $prefix,
-            null,
+            new Localization(),
             RequestAnalyzerInterface::MATCH_TYPE_REDIRECT,
             'sulu-redirect.lo',
             'sulu.lo'

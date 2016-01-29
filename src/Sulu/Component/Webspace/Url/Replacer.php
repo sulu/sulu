@@ -107,24 +107,7 @@ class Replacer implements ReplacerInterface
 
         $this->url = ltrim($this->url, '.');
         $this->url = rtrim($this->url, '/');
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasReplacer($replacer)
-    {
-        return strpos($this->url, $replacer);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function replace($replacer, $value)
-    {
-        $this->url = str_replace($replacer, $value, $this->url);
+        $this->url = str_replace('//', '/', $this->url);
 
         return $this;
     }
@@ -145,5 +128,32 @@ class Replacer implements ReplacerInterface
     public function get()
     {
         return $this->url;
+    }
+
+    /**
+     * Returns true if given replacer exists.
+     *
+     * @param string $replacer
+     *
+     * @return $this
+     */
+    protected function hasReplacer($replacer)
+    {
+        return strpos($this->url, $replacer) > -1;
+    }
+
+    /**
+     * Replace replacer with given value.
+     *
+     * @param string $replacer
+     * @param string $value
+     *
+     * @return $this
+     */
+    protected function replace($replacer, $value)
+    {
+        $this->url = str_replace($replacer, $value, $this->url);
+
+        return $this;
     }
 }

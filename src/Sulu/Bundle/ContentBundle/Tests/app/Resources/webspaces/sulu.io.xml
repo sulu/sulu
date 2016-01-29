@@ -10,6 +10,7 @@
         <localization language="en" shadow="auto">
             <localization language="en" country="us" shadow="auto"/>
         </localization>
+        <localization language="fr"/>
         <localization language="de">
             <localization language="de" country="at"/>
         </localization>
@@ -47,6 +48,7 @@
             </resource-locator>
 
             <localizations>
+                <localization language="fr"/>
                 <localization language="de" country="at" default="true"/>
             </localizations>
 

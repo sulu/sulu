@@ -3,6 +3,10 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
+    <parameters>
+        <parameter key="sulu_custom_urls.uri_filter_regexp">null</parameter>
+    </parameters>
+
     <services>
         <service id="sulu_custom_urls.routing.provider" class="Sulu\Component\CustomUrl\Routing\RouteProvider">
             <argument type="service" id="sulu_custom_urls.manager"/>
@@ -24,7 +28,8 @@
 
             <tag name="sulu.context" context="website"/>
         </service>
-        <service id="sulu_custom_urls.routing.nested_matcher" class="%cmf_routing.nested_matcher.class%">
+        <service id="sulu_custom_urls.routing.nested_matcher"
+                 class="Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher">
             <argument type="service" id="sulu_custom_urls.routing.provider"/>
             <argument type="service" id="cmf_sulu_custom_urls.final_matcher"/>
 
@@ -74,7 +79,7 @@
             <argument type="service" id="router.request_context"/>
             <argument type="service" id="sulu_custom_urls.routing.nested_matcher"/>
             <argument type="service" id="sulu_custom_urls.routing.generator"/>
-            <argument>%cmf_routing.uri_filter_regexp%</argument>
+            <argument>%sulu_custom_urls.uri_filter_regexp%</argument>
             <argument type="service" id="event_dispatcher" on-invalid="ignore"/>
             <argument type="service" id="sulu_custom_urls.routing.provider"/>
             <call method="setRequest">
