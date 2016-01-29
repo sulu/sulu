@@ -21,6 +21,7 @@ use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * ContentType for Snippets.
@@ -46,6 +47,10 @@ class SnippetContent extends ComplexContentType
      * @var array
      */
     private $snippetCache = [];
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
 
     /**
      * Constructor.
@@ -53,10 +58,12 @@ class SnippetContent extends ComplexContentType
     public function __construct(
         ContentMapperInterface $contentMapper,
         StructureResolverInterface $structureResolver,
+        RequestStack $requestStack,
         $template
     ) {
         $this->contentMapper = $contentMapper;
         $this->structureResolver = $structureResolver;
+        $this->requestStack = $requestStack;
         $this->template = $template;
     }
 
@@ -194,8 +201,11 @@ class SnippetContent extends ComplexContentType
      */
     public function getContentData(PropertyInterface $property)
     {
+        // to determine current localization state we have to use the "uppest" structure
+        // which we currently only get over the request
+        $request = $this->requestStack->getCurrentRequest();
         /** @var PageBridge $page */
-        $page = $property->getStructure();
+        $page = $request->get('structure');
         $webspaceKey = $page->getWebspaceKey();
         $locale = $page->getLanguageCode();
         $shadowLocale = null;
