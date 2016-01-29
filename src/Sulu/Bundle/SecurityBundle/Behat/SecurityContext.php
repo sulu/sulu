@@ -166,7 +166,6 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
 
         $this->visitPath('/admin/#contacts/contacts/edit:' . $user->getContact()->getId() . '/permissions');
         $this->getSession()->wait(5000, '$("#permissions-grid").length');
-        sleep(1); // wait one more second to avoid flaky tests
     }
 
 
