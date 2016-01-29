@@ -622,6 +622,14 @@
                 <source>contact-selection.add</source>
                 <target>Choose contact</target>
             </trans-unit>
+            <trans-unit id="235b14f26g712345e44gs2e9335a8d52" resname="user.enable">
+                <source>user.enable</source>
+                <target>Enable user</target>
+            </trans-unit>
+            <trans-unit id="235b14f26g712345e44gs2e9335a8d53" resname="labels.success.user.activated">
+                <source>labels.success.user.activated</source>
+                <target>User enable</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
