@@ -15,6 +15,7 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\TableNode;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TestBundle\Behat\BaseContext;
 
 /**
@@ -32,7 +33,7 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
             'username' => $username,
             'firstName' => 'Adam',
             'lastName' => 'Ministrator',
-            'email' => 'admin@example.com',
+            'email' => $username . '@example.com',
             'locale' => 'en',
             'password' => $password,
             'role' => 'User',
@@ -105,6 +106,31 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
     }
 
     /**
+     * @Given the not enabled user :username exists with password :password
+     */
+    public function theNotEnabledUserExistsWithPassword($username, $password)
+    {
+        $this->getOrCreateRole('User', 'Sulu');
+        $this->execCommand('sulu:security:user:create', [
+            'username' => $username,
+            'firstName' => 'Adam',
+            'lastName' => 'Ministrator',
+            'email' => $username . '@example.com',
+            'locale' => 'en',
+            'password' => $password,
+            'role' => 'User',
+        ]);
+
+        $user = $this->getEntityManager()
+            ->getRepository('SuluSecurityBundle:User')->findOneBy([
+                'username' => $username,
+            ]);
+        $user->setEnabled(false);
+
+        $this->getEntityManager()->flush();
+    }
+
+    /**
      * @Given I am logged in as an administrator
      */
     public function iAmLoggedInAsAnAdministrator()
@@ -127,7 +153,24 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
         $this->getSession()->wait(5000, "document.querySelector('.navigation')");
     }
 
-    private function getOrCreateRole($name, $system)
+    /**
+     * @Given I am editing the permission of a user with username :username
+     */
+    public function iAmEditingThePermissionsOfAUser($username)
+    {
+        /** @var User $user */
+        $user = $this->getEntityManager()
+            ->getRepository('SuluSecurityBundle:User')->findOneBy(
+                ['username' => $username]
+            );
+
+        $this->visitPath('/admin/#contacts/contacts/edit:' . $user->getContact()->getId() . '/permissions');
+        $this->getSession()->wait(5000, '$("#permissions-grid").length');
+        sleep(1); // wait one more second to avoid flaky tests
+    }
+
+
+        private function getOrCreateRole($name, $system)
     {
         $role = $this->getEntityManager()
             ->getRepository('Sulu\Bundle\SecurityBundle\Entity\Role')
