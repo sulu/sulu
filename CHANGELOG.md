@@ -10,6 +10,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * ENHANCEMENT #1973 [All]             Moved tests from /tests to component directories.
+    * FEATURE     #1927 [CustomUrlBundle] Added custom-url feature
     * ENHANCEMENT #1956 [All]             Removed Admin command registration
     * ENHANCEMENT #1956 [TranslateBundle] Removed entry in admin navigation
     * BUGFIX      #1510 [Persistence]     Fetch user only if an entity with UserBlameInterface is detected

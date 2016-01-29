@@ -2,6 +2,15 @@
 
 ## dev-develop
 
+### Custom-URLS
+
+Additional system nodes added by the custom-url feature. Run following command to add
+them.
+
+```bash
+app/console sf sulu:webspaces:init
+```
+
 ### Admin Commands
 
 The method `getCommands` on the Admin has been removed, because Symfony can

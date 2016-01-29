@@ -78,7 +78,8 @@ class CustomUrlSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
     public function testOnPostSerializeWrongDocument()
     {
         $generator = $this->prophesize(GeneratorInterface::class);
-        $subscriber = new CustomUrlSerializeEventSubscriber($generator->reveal());
+        $userManager = $this->prophesize(UserManagerInterface::class);
+        $subscriber = new CustomUrlSerializeEventSubscriber($generator->reveal(), $userManager->reveal());
 
         $event = $this->prophesize(ObjectEvent::class);
         $document = $this->prophesize(\stdClass::class);
@@ -96,7 +97,8 @@ class CustomUrlSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
     public function testOnPostSerializeNoTarget()
     {
         $generator = $this->prophesize(GeneratorInterface::class);
-        $subscriber = new CustomUrlSerializeEventSubscriber($generator->reveal());
+        $userManager = $this->prophesize(UserManagerInterface::class);
+        $subscriber = new CustomUrlSerializeEventSubscriber($generator->reveal(), $userManager->reveal());
 
         $event = $this->prophesize(ObjectEvent::class);
         $document = $this->prophesize(CustomUrlDocument::class);
@@ -104,6 +106,11 @@ class CustomUrlSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
         $document->getTarget()->willReturn(null);
         $document->getBaseDomain()->willReturn('*.sulu.io');
         $document->getDomainParts()->willReturn(['prefix' => 'test', 'suffix' => []]);
+        $document->getCreator()->willReturn(1);
+        $document->getChanger()->willReturn(2);
+
+        $userManager->getFullNameByUserId(1)->willReturn('test1');
+        $userManager->getFullNameByUserId(2)->willReturn('test2');
 
         $generator->generate('*.sulu.io', ['prefix' => 'test', 'suffix' => []])->willReturn('test.sulu.io');
 
@@ -114,5 +121,8 @@ class CustomUrlSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $visitor->addData('targetTitle', Argument::any())->shouldNotBeCalled();
         $visitor->addData('customUrl', 'test.sulu.io')->shouldBeCalled();
+        $visitor->addData('creatorFullName', 'test1')->shouldBeCalled();
+        $visitor->addData('changerFullName', 'test2')->shouldBeCalled();
+
     }
 }

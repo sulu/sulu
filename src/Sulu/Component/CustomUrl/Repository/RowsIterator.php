@@ -45,8 +45,7 @@ class RowsIterator extends \IteratorIterator
         array $targets,
         GeneratorInterface $generator,
         UserManagerInterface $userManager
-    )
-    {
+    ) {
         parent::__construct($iterator);
 
         $this->columns = $columns;
