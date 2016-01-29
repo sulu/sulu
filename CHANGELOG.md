@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #1953 [SecurityBundle]  Added UI to enable user in sulu admin
+    
 * 1.1.7 (2016-01-26)
     * HOTFIX      #1952 [PersistenceBundle] Fixed mapped superclass inheritance
     * HOTFIX      #1950 [Rest]              Added possibility to disable the GROUP BY clause     
