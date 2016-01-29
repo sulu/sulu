@@ -58,10 +58,13 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\ResourceBundle\SuluResourceBundle(),
             new \Sulu\Bundle\TranslateBundle\SuluTranslateBundle(),
             new \Sulu\Bundle\CustomUrlBundle\SuluCustomUrlBundle(),
-
-            // smyfony-cmf
-            new \Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle(),
         ];
+
+        if ($this->getContext() === self::CONTEXT_WEBSITE) {
+            // smyfony-cmf
+            $bundles[] = new \Symfony\Cmf\Bundle\CoreBundle\CmfCoreBundle();
+            $bundles[] = new \Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle();
+        }
 
         return $bundles;
     }

@@ -175,8 +175,6 @@ class NodeRepositoryTest extends SuluTestCase
 
     public function testGetWebspaceNodes()
     {
-        $this->createWebspaceRoot('test_io');
-
         $result = $this->nodeRepository->getWebspaceNodes('en');
 
         $this->assertEquals('Sulu CMF', $result['_embedded']['nodes'][0]['title']);
@@ -1056,46 +1054,6 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals($data['en']->getPropertyValue('url'), $result['url']);
         $this->assertContains('de', $result['concreteLanguages']);
         $this->assertContains('en', $result['concreteLanguages']);
-    }
-
-    /**
-     * Create webspace root.
-     *
-     * @param string $key
-     */
-    private function createWebspaceRoot($key)
-    {
-        $session = $this->sessionManager->getSession();
-        $cmf = $session->getNode('/cmf');
-
-        // we should use the doctrinephpcrbundle repository initializer to do this.
-        $webspace = $cmf->addNode($key);
-        $webspace->addMixin('mix:referenceable');
-
-        $content = $webspace->addNode('contents');
-        $content->setProperty('i18n:en-template', 'default');
-        $content->setProperty('i18n:en-creator', 1);
-        $content->setProperty('i18n:en-created', new \DateTime());
-        $content->setProperty('i18n:en-changer', 1);
-        $content->setProperty('i18n:en-changed', new \DateTime());
-        $content->setProperty('i18n:en-title', 'Homepage');
-        $content->setProperty('i18n:en-state', WorkflowStage::PUBLISHED);
-        $content->setProperty('i18n:en-published', new \DateTime());
-        $content->setProperty('i18n:en-url', '/');
-        $content->addMixin('sulu:home');
-
-        $webspace->addNode('temp');
-
-        $session->save();
-        $nodes = $webspace->addNode('routes');
-        foreach (['de', 'de_at', 'en', 'en_us', 'fr'] as $locale) {
-            $localeNode = $nodes->addNode($locale);
-            $localeNode->setProperty('sulu:content', $content);
-            $localeNode->setProperty('sulu:history', false);
-            $localeNode->addMixin('sulu:path');
-        }
-
-        $session->save();
     }
 }
 
