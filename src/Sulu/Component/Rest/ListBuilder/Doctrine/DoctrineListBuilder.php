@@ -381,10 +381,10 @@ class DoctrineListBuilder extends AbstractListBuilder
             $this->assignGroupBy($this->queryBuilder);
         }
 
-        if ($this->search != null) {
+        if ($this->search !== null) {
             $searchParts = [];
             foreach ($this->searchFields as $searchField) {
-                $searchParts[] = $searchField->getSelect() . ' LIKE :search';
+                $searchParts[] = $searchField->getSearch();
             }
 
             $this->queryBuilder->andWhere('(' . implode(' OR ', $searchParts) . ')');
