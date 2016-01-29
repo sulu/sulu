@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #1962 [ContactBundle]     Fixed contact birthday trigger save-button
+
 * 1.1.7 (2016-01-26)
     * HOTFIX      #1952 [PersistenceBundle] Fixed mapped superclass inheritance
     * HOTFIX      #1950 [Rest]              Added possibility to disable the GROUP BY clause     
