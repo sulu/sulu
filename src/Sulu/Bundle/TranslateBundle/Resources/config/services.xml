@@ -8,20 +8,13 @@
         <parameter key="sulu.translate.build.builder.translation.class">Sulu\Bundle\TranslateBundle\Build\TranslationBuilder</parameter>
     </parameters>
     <services>
-        <service id="sulu_translate.admin" class="%sulu_translate.admin.class%">
-            <tag name="sulu.admin"/>
-            <tag name="sulu.context" context="admin"/>
-            <argument>%sulu_admin.name%</argument>
-        </service>
+        <!-- TODO introduce admin and content navigation class as service again, as soon as everything is working -->
         <service id="sulu_translate.import" class="%sulu_translate.import.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="kernel"/>
         </service>
         <service id="sulu_translate.export" class="%sulu_translate.export.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
-        </service>
-        <service id="sulu_translate.content_navigation_provider" class="%sulu_translate.content_navigation_provider.class%">
-            <tag name="sulu_admin.content_navigation" alias="translate"/>
         </service>
         <service id="sulu.translate.build.builder.translation" class="%sulu.translate.build.builder.translation.class%">
             <tag name="massive_build.builder"/>
