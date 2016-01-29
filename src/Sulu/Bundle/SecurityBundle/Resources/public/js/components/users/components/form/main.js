@@ -90,7 +90,7 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
 
             this.sandbox.emit('husky.toggler.sulu-toolbar.change', this.user.locked);
             this.sandbox.emit('sulu.header.toolbar.item.show', 'disabler');
-            if (!this.user.enabled) {
+            if (this.user.enabled === false) {
                 this.sandbox.emit('sulu.header.toolbar.item.show', 'enable');
             }
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/security/template/permission/form', {
