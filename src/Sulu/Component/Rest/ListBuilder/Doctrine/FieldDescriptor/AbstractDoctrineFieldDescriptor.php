@@ -26,6 +26,16 @@ abstract class AbstractDoctrineFieldDescriptor extends AbstractFieldDescriptor
     abstract public function getSelect();
 
     /**
+     * Returns the where statement for search.
+     *
+     * @return string
+     */
+    public function getSearch()
+    {
+        return sprintf('%s LIKE :search', $this->getSelect());
+    }
+
+    /**
      * Returns all the joins required for this field.
      *
      * @return DoctrineJoinDescriptor[]
