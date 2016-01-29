@@ -17,6 +17,7 @@
             <argument type="service" id="doctrine.orm.entity_manager"/>
         </service>
         <service id="sulu.translate.build.builder.translation" class="%sulu.translate.build.builder.translation.class%">
+            <argument>%sulu_core.locales%</argument>
             <tag name="massive_build.builder"/>
         </service>
     </services>
