@@ -159,5 +159,11 @@
             <tag name="jms_serializer.event_subscriber" />
             <tag name="sulu.context" context="admin"/>
         </service>
+
+        <service id="sulu_security.doctrine_subscriber.soft_delete"
+                 class="Sulu\Bundle\SecurityBundle\EventListener\SoftDeleteableListener">
+            <argument type="string">%sulu.model.user.class%</argument>
+            <tag name="doctrine.event_subscriber"/>
+        </service>
     </services>
 </container>
