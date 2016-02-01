@@ -28,6 +28,7 @@ use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 use Sulu\Component\Content\Repository\Mapping\MappingInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingParameterChoiceException;
@@ -246,37 +247,40 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * @param string  $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @deprecated this will be removed when the content-repository is able to solve all requirements.
      */
     private function getSingleNode(Request $request, $uuid)
     {
         $language = $this->getLanguage($request);
-        $webspace = $this->getWebspace($request, false);
         $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
         $complete = $this->getBooleanRequestParameter($request, 'complete', false, true);
         $ghostContent = $this->getBooleanRequestParameter($request, 'ghost-content', false, false);
 
         $view = $this->responseGetById(
             $uuid,
-            function ($id) use ($language, $webspace, $breadcrumb, $complete, $ghostContent) {
+            function ($id) use ($language, $ghostContent) {
                 try {
-                    return $this->getRepository()->getNode(
-                        $id,
-                        $webspace,
-                        $language,
-                        $breadcrumb,
-                        $complete,
-                        $ghostContent
-                    );
+                    return $this->getDocumentManager()->find($id, $language, [
+                        'load_ghost_content' => $ghostContent,
+                    ]);
                 } catch (DocumentNotFoundException $ex) {
                     return;
                 }
             }
         );
 
+        $groups = [];
+        if (!$complete) {
+            $groups[] = 'smallPage';
+        } else {
+            $groups[] = 'defaultPage';
+        }
+
+        if ($breadcrumb) {
+            $groups[] = 'breadcrumbPage';
+        }
+
         // preview needs also null value to work correctly
-        $view->setSerializationContext(SerializationContext::create()->setSerializeNull(true));
+        $view->setSerializationContext(SerializationContext::create()->setSerializeNull(true)->setGroups($groups));
 
         return $this->handleView($view);
     }
@@ -788,6 +792,14 @@ class NodeController extends RestController implements ClassResourceInterface, S
         }
 
         return $this->handleView($view);
+    }
+
+    /**
+     * @return DocumentManagerInterface
+     */
+    protected function getDocumentManager()
+    {
+        return $this->get('sulu_document_manager.document_manager');
     }
 
     /**

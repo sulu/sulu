@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Document\Serializer\Subscriber;
+namespace Sulu\Bundle\DocumentManagerBundle\Bridge\Serializer\Subscriber;
 
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;

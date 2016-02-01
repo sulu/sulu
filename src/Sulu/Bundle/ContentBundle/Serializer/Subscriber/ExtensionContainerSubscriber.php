@@ -9,17 +9,17 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Document\Serializer\Subscriber;
+namespace Sulu\Bundle\ContentBundle\Serializer\Subscriber;
 
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\PreSerializeEvent;
-use Sulu\Component\Content\Document\Structure\Structure;
+use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 
 /**
- * Normalize ManagedStructure instances to the Structure type.
+ * Normalize ManagedExtensionContainer instances to the ExtensionContainer type.
  */
-class StructureSubscriber implements EventSubscriberInterface
+class ExtensionContainerSubscriber implements EventSubscriberInterface
 {
     /**
      * {@inheritdoc}
@@ -41,8 +41,8 @@ class StructureSubscriber implements EventSubscriberInterface
     {
         $object = $event->getObject();
 
-        if ($object instanceof Structure) {
-            $event->setType(Structure::class);
+        if ($object instanceof ExtensionContainer) {
+            $event->setType(ExtensionContainer::class);
         }
     }
 }

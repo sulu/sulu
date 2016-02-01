@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Document\Serializer\Handler;
+namespace Sulu\Bundle\ContentBundle\Serializer\Handler;
 
 use JMS\Serializer\Context;
 use JMS\Serializer\GraphNavigator;
@@ -19,7 +19,7 @@ use JMS\Serializer\JsonSerializationVisitor;
 use Sulu\Component\Content\Document\Structure\Structure;
 
 /**
- * Handle serializeation and deserialization of document content.
+ * Handle serialization and deserialization of document content.
  */
 class StructureHandler implements SubscribingHandlerInterface
 {
@@ -46,26 +46,30 @@ class StructureHandler implements SubscribingHandlerInterface
 
     /**
      * @param JsonSerializationVisitor $visitor
-     * @param NodeInterface            $nodeInterface
-     * @param array                    $type
-     * @param Context                  $context
+     * @param Structure $structure
+     * @param array $type
+     * @param Context $context
+     *
+     * @return mixed
      */
     public function doSerialize(
         JsonSerializationVisitor $visitor,
-        Structure $container,
+        Structure $structure,
         array $type,
         Context $context
     ) {
-        $array = $container->toArray();
+        $array = $structure->toArray();
 
         return $context->accept($array);
     }
 
     /**
-     * @param JsonSerializationVisitor $visitor
-     * @param NodeInterface            $nodeInterface
-     * @param array                    $type
-     * @param Context                  $context
+     * @param JsonDeserializationVisitor $visitor
+     * @param array $data
+     * @param array $type
+     * @param Context $context
+     *
+     * @return Structure
      */
     public function doDeserialize(
         JsonDeserializationVisitor $visitor,
@@ -73,12 +77,12 @@ class StructureHandler implements SubscribingHandlerInterface
         array $type,
         Context $context
     ) {
-        $container = new Structure();
+        $structure = new Structure();
 
         foreach ($data as $key => $value) {
-            $container->getProperty($key)->setValue($value);
+            $structure->getProperty($key)->setValue($value);
         }
 
-        return $container;
+        return $structure;
     }
 }

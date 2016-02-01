@@ -11,8 +11,6 @@
 
 namespace Sulu\Component\Content\Document\Structure;
 
-use Sulu\Component\Content\Compat\Property;
-
 /**
  * Lazy loading container for content properties.
  */

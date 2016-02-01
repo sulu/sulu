@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Document\Serializer\Handler;
+namespace Sulu\Bundle\ContentBundle\Serializer\Handler;
 
 use JMS\Serializer\Context;
 use JMS\Serializer\GraphNavigator;
@@ -43,9 +43,11 @@ class ExtensionContainerHandler implements SubscribingHandlerInterface
 
     /**
      * @param JsonSerializationVisitor $visitor
-     * @param NodeInterface            $nodeInterface
-     * @param array                    $type
-     * @param Context                  $context
+     * @param ExtensionContainer $container
+     * @param array $type
+     * @param Context $context
+     *
+     * @return mixed
      */
     public function doSerialize(
         JsonSerializationVisitor $visitor,
@@ -57,10 +59,12 @@ class ExtensionContainerHandler implements SubscribingHandlerInterface
     }
 
     /**
-     * @param JsonSerializationVisitor $visitor
-     * @param NodeInterface            $nodeInterface
-     * @param array                    $type
-     * @param Context                  $context
+     * @param JsonDeserializationVisitor $visitor
+     * @param array $data
+     * @param array $type
+     * @param Context $context
+     *
+     * @return ExtensionContainer
      */
     public function doDeserialize(
         JsonDeserializationVisitor $visitor,

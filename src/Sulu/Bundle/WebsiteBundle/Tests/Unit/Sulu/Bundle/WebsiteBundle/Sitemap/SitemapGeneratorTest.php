@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 
 use PHPCR\NodeInterface;
+use PHPCR\SessionInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure;
@@ -19,9 +20,13 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Extension\AbstractExtension;
+use Sulu\Component\Content\Extension\ExtensionManagerInterface;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Theme;
@@ -49,6 +54,36 @@ class SitemapGeneratorTest extends SuluTestCase
      */
     private $sitemapGenerator;
 
+    /**
+     * @var ContentMapperInterface
+     */
+    private $mapper;
+
+    /**
+     * @var SessionInterface
+     */
+    private $session;
+
+    /**
+     * @var SessionManagerInterface
+     */
+    private $sessionManager;
+
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
+     * @var StructureManagerInterface
+     */
+    private $structureManager;
+
+    /**
+     * @var ExtensionManagerInterface
+     */
+    private $extensionManager;
+
     protected function setUp()
     {
         $this->initPhpcr();
@@ -57,6 +92,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
         $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
+        $this->extensionManager = $this->getContainer()->get('sulu_content.extension.manager');
         $this->languageNamespace = $this->getContainer()->getParameter('sulu.content.language.namespace');
 
         $this->dataEn = $this->prepareTestData();
@@ -76,7 +112,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->sitemapGenerator = new SitemapGenerator(
             $contentQuery,
             $this->webspaceManager,
-            new SitemapContentQueryBuilder($this->structureManager, $this->languageNamespace)
+            new SitemapContentQueryBuilder($this->structureManager, $this->extensionManager, $this->languageNamespace)
         );
     }
 

@@ -14,8 +14,6 @@ namespace Sulu\Component\Content\Compat;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
-use Sulu\Component\Content\Extension\ExtensionInterface;
-use Sulu\Component\Content\Extension\ExtensionManager;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\StructureMetadata as NewStructure;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -29,27 +27,23 @@ class StructureManager implements StructureManagerInterface
     use ContainerAwareTrait;
 
     private $structureFactory;
-    private $extensionManager;
     private $inspector;
     private $propertyFactory;
     private $typeMap;
 
     /**
      * @param StructureMetadataFactory $structureFactory
-     * @param ExtensionManager $extensionManager
      * @param DocumentInspector $inspector
      * @param LegacyPropertyFactory $propertyFactory
      * @param array $typeMap
      */
     public function __construct(
         StructureMetadataFactory $structureFactory,
-        ExtensionManager $extensionManager,
         DocumentInspector $inspector,
         LegacyPropertyFactory $propertyFactory,
         array $typeMap
     ) {
         $this->structureFactory = $structureFactory;
-        $this->extensionManager = $extensionManager;
         $this->inspector = $inspector;
         $this->propertyFactory = $propertyFactory;
         $this->typeMap = $typeMap;
@@ -76,38 +70,6 @@ class StructureManager implements StructureManagerInterface
         }
 
         return $wrappedStructures;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addExtension(ExtensionInterface $extension, $template = 'all')
-    {
-        $this->extensionManager->addExtension($extension, $template);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getExtensions($key)
-    {
-        return $this->extensionManager->getExtensions($key);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasExtension($key, $name)
-    {
-        return $this->extensionManager->hasExtension($key, $name);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getExtension($key, $name)
-    {
-        return $this->extensionManager->getExtension($key, $name);
     }
 
     /**

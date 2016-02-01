@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Content\Compat;
 
-use Sulu\Component\Content\Extension\ExtensionInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 /**
@@ -37,41 +36,4 @@ interface StructureManagerInterface extends ContainerAwareInterface
      * @return StructureInterface[]
      */
     public function getStructures($type = Structure::TYPE_PAGE);
-
-    /**
-     * add dynamically an extension to structures.
-     *
-     * @param StructureExtensionInterface $extension
-     * @param string                      $template  default is all templates
-     */
-    public function addExtension(ExtensionInterface $extension, $template = 'all');
-
-    /**
-     * Returns extensions for structure.
-     *
-     * @param string $key
-     *
-     * @return StructureExtensionInterface[]
-     */
-    public function getExtensions($key);
-
-    /**
-     * Indicates that the structure has a extension.
-     *
-     * @param string $key
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function hasExtension($key, $name);
-
-    /**
-     * Returns a extension.
-     *
-     * @param string $key
-     * @param string $name
-     *
-     * @return StructureExtensionInterface
-     */
-    public function getExtension($key, $name);
 }

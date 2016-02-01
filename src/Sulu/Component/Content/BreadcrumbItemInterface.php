@@ -13,6 +13,8 @@ namespace Sulu\Component\Content;
 
 /**
  * Item for breadcrumb.
+ *
+ * @deprecated
  */
 interface BreadcrumbItemInterface
 {

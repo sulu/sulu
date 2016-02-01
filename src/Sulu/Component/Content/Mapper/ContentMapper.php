@@ -41,7 +41,7 @@ use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Exception\InvalidOrderPositionException;
 use Sulu\Component\Content\Exception\TranslatedNodeNotFoundException;
 use Sulu\Component\Content\Extension\ExtensionInterface;
-use Sulu\Component\Content\Extension\ExtensionManager;
+use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Form\Exception\InvalidFormException;
 use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
@@ -67,9 +67,14 @@ class ContentMapper implements ContentMapperInterface
     private $contentTypeManager;
 
     /**
-     * @var ExtensionManager
+     * @var StructureManagerInterface
      */
     private $structureManager;
+
+    /**
+     * @var ExtensionManagerInterface
+     */
+    private $extensionManager;
 
     /**
      * @var SessionManagerInterface
@@ -128,6 +133,7 @@ class ContentMapper implements ContentMapperInterface
         DocumentInspector $inspector,
         PropertyEncoder $encoder,
         StructureManagerInterface $structureManager,
+        ExtensionManagerInterface $extensionManager,
         ContentTypeManagerInterface $contentTypeManager,
         SessionManagerInterface $sessionManager,
         EventDispatcherInterface $eventDispatcher,
@@ -136,6 +142,7 @@ class ContentMapper implements ContentMapperInterface
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
+        $this->extensionManager = $extensionManager;
         $this->sessionManager = $sessionManager;
         $this->webspaceManager = $webspaceManager;
         $this->documentManager = $documentManager;
@@ -284,7 +291,7 @@ class ContentMapper implements ContentMapperInterface
         }
 
         // save data of extensions
-        $extension = $this->structureManager->getExtension($document->getStructureType(), $extensionName);
+        $extension = $this->extensionManager->getExtension($document->getStructureType(), $extensionName);
         $node = $this->inspector->getNode($document);
 
         $extension->save($node, $data, $webspaceKey, $locale);
