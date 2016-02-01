@@ -12,7 +12,7 @@
 namespace Sulu\Component\Rest\ListBuilder\Expression\Doctrine;
 
 use Doctrine\ORM\QueryBuilder;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\AbstractDoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Expression\InExpressionInterface;
 
 /**
@@ -23,7 +23,7 @@ class DoctrineInExpression extends AbstractDoctrineExpression implements InExpre
     /**
      * Field descriptor used for comparison.
      *
-     * @var AbstractDoctrineFieldDescriptor
+     * @var DoctrineFieldDescriptorInterface
      */
     protected $field;
 
@@ -37,10 +37,10 @@ class DoctrineInExpression extends AbstractDoctrineExpression implements InExpre
     /**
      * DoctrineInExpression constructor.
      *
-     * @param AbstractDoctrineFieldDescriptor $field
+     * @param DoctrineFieldDescriptorInterface $field
      * @param array $values
      */
-    public function __construct(AbstractDoctrineFieldDescriptor $field, array $values)
+    public function __construct(DoctrineFieldDescriptorInterface $field, array $values)
     {
         $this->values = $values;
         $this->field = $field;

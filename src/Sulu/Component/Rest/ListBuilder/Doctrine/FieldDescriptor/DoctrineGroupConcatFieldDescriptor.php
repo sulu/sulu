@@ -1,7 +1,6 @@
 <?php
-
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -23,7 +22,7 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
     /**
      * The field descriptor which will be group concatenated.
      *
-     * @var AbstractDoctrineFieldDescriptor
+     * @var DoctrineFieldDescriptorInterface
      */
     private $fieldDescriptor;
 
@@ -33,7 +32,7 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
     private $glue;
 
     public function __construct(
-        AbstractDoctrineFieldDescriptor $fieldDescriptor,
+        DoctrineFieldDescriptorInterface $fieldDescriptor,
         $name,
         $translation = null,
         $glue = ',',
