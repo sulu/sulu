@@ -276,6 +276,22 @@ EOT;
     }
 
     /**
+     * Assert that the given selector is hidden.
+     *
+     * @param string $selector
+     */
+    protected function assertSelectorIsHidden($selector)
+    {
+        $res = $this->getSession()->evaluateScript('$("' . $selector . '").css("display") === "none"');
+        if (!$res) {
+            throw new \Exception(sprintf(
+                'Asserting selector "%s" is not hidden on page',
+                $selector
+            ));
+        }
+    }
+
+    /**
      * Assert that at least one of the given selectors is present.
      *
      * @param array $selectors Array of selectors

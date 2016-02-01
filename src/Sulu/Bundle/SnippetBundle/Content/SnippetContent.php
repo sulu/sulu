@@ -234,9 +234,7 @@ class SnippetContent extends ComplexContentType
      */
     private function getUuids($data)
     {
-        $ids = is_array($data) ? $data : [];
-
-        return $ids;
+        return is_array($data) ? $data : [];
     }
 
     /**

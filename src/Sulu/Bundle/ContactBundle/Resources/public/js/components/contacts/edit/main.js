@@ -53,6 +53,12 @@ define([
                         hidden: true
                     }
                 };
+                config.toolbar.buttons.enable = {
+                    options: {
+                        title: 'user.enable',
+                        hidden: true
+                    }
+                };
             }
             return config;
         },

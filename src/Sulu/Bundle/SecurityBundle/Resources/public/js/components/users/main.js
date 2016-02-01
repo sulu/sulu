@@ -218,6 +218,7 @@ define([
             this.sandbox.util.save(url, 'POST', {})
                 .then(function(response) {
                     this.sandbox.logger.log('successfully enabled user', response);
+                    this.sandbox.emit('sulu.user.activated');
                     this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + this.user.attributes.contact.id + '/permissions', true, false, true);
                     dfd.resolve();
                 }.bind(this))

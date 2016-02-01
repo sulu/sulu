@@ -414,6 +414,16 @@ EOT;
     }
 
     /**
+     * @Given I expect the toolbar item ":id" to be hidden
+     */
+    public function iExpectTheToolbarItemToBeHidden($id)
+    {
+        $script = "li[data-id='" . $id . "']";
+
+        $this->assertSelectorIsHidden($script);
+    }
+
+    /**
      * Fill in the named husky field. Husky fields may not use standard HTML
      * inputs, so they need some special handling.
      *

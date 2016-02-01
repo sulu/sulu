@@ -55,6 +55,9 @@ class SnippetResolver implements SnippetResolverInterface
                     $snippet = $this->contentMapper->load($uuid, $webspaceKey, $shadowLocale);
                 }
 
+                $snippet->setIsShadow($shadowLocale !== null);
+                $snippet->setShadowBaseLanguage($shadowLocale);
+
                 $resolved = $this->structureResolver->resolve($snippet);
                 $resolved['view']['template'] = $snippet->getKey();
                 $resolved['view']['uuid'] = $snippet->getUuid();

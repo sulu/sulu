@@ -64,9 +64,7 @@ class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
     }
 
     /**
-     * Returns the full name of the field, including the entity.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getSelect()
     {
