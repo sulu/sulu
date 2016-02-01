@@ -19,6 +19,7 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\PathBuilder;
+use Sulu\Component\HttpCache\HandlerInvalidatePathInterface;
 
 /**
  * Provides testcases for custom-url-manager.
@@ -45,6 +46,7 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
         $metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $pathBuilder = $this->prophesize(PathBuilder::class);
+        $cacheHandler = $this->prophesize(HandlerInvalidatePathInterface::class);
         $targetDocument = $this->prophesize(PageDocument::class)->reveal();
 
         $metadata = $this->prophesize(Metadata::class);
@@ -68,7 +70,8 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
             $documentManager->reveal(),
             $customUrlRepository->reveal(),
             $metadataFactory->reveal(),
-            $pathBuilder->reveal()
+            $pathBuilder->reveal(),
+            $cacheHandler->reveal()
         );
 
         $result = $manager->create(
@@ -93,9 +96,9 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         self::assertEquals('*.sulu.io', $result->getBaseDomain());
         self::assertEquals(['prefix' => 'test-1', 'postfix' => ['test-1', 'test-2']], $result->getDomainParts());
         self::assertEquals($targetDocument, $result->getTarget());
-        $this->assertTrue($result->isPublished());
-        $this->assertTrue($result->isCanonical());
-        $this->assertTrue($result->isRedirect());
+        self::assertTrue($result->isPublished());
+        self::assertTrue($result->isCanonical());
+        self::assertTrue($result->isRedirect());
     }
 
     public function testReadList()
@@ -104,6 +107,7 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
         $metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $pathBuilder = $this->prophesize(PathBuilder::class);
+        $cacheHandler = $this->prophesize(HandlerInvalidatePathInterface::class);
 
         $pathBuilder->build(['%base%', 'sulu_io', '%custom-urls%', '%custom-urls-items%'])
             ->willReturn('/cmf/sulu_io/custom_urls/items');
@@ -112,7 +116,8 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
             $documentManager->reveal(),
             $customUrlRepository->reveal(),
             $metadataFactory->reveal(),
-            $pathBuilder->reveal()
+            $pathBuilder->reveal(),
+            $cacheHandler->reveal()
         );
 
         $customUrlRepository->findList('/cmf/sulu_io/custom_urls/items', 'de')
@@ -129,13 +134,15 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
         $metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $pathBuilder = $this->prophesize(PathBuilder::class);
+        $cacheHandler = $this->prophesize(HandlerInvalidatePathInterface::class);
         $document = $this->prophesize(CustomUrlDocument::class);
 
         $manager = new CustomUrlManager(
             $documentManager->reveal(),
             $customUrlRepository->reveal(),
             $metadataFactory->reveal(),
-            $pathBuilder->reveal()
+            $pathBuilder->reveal(),
+            $cacheHandler->reveal()
         );
 
         $documentManager->find('123-123-123', 'de', ['load_ghost_content' => true])->willReturn($document->reveal());
@@ -151,6 +158,7 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
         $metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $pathBuilder = $this->prophesize(PathBuilder::class);
+        $cacheHandler = $this->prophesize(HandlerInvalidatePathInterface::class);
         $routeDocument = $this->prophesize(RouteDocument::class);
         $customUrlDocument = $this->prophesize(CustomUrlDocument::class);
 
@@ -163,7 +171,8 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
             $documentManager->reveal(),
             $customUrlRepository->reveal(),
             $metadataFactory->reveal(),
-            $pathBuilder->reveal()
+            $pathBuilder->reveal(),
+            $cacheHandler->reveal()
         );
 
         $documentManager->find('/cmf/sulu_io/custom_urls/routes/sulu.io/test', 'de', ['load_ghost_content' => true])
@@ -180,6 +189,7 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
         $metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $pathBuilder = $this->prophesize(PathBuilder::class);
+        $cacheHandler = $this->prophesize(HandlerInvalidatePathInterface::class);
         $routeDocument = $this->prophesize(RouteDocument::class);
 
         $pathBuilder->build(['%base%', 'sulu_io', '%custom-urls%', '%custom-urls-routes%'])
@@ -189,7 +199,8 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
             $documentManager->reveal(),
             $customUrlRepository->reveal(),
             $metadataFactory->reveal(),
-            $pathBuilder->reveal()
+            $pathBuilder->reveal(),
+            $cacheHandler->reveal()
         );
 
         $documentManager->find('/cmf/sulu_io/custom_urls/routes/sulu.io/test', 'de', ['load_ghost_content' => true])
@@ -206,6 +217,7 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
         $metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $pathBuilder = $this->prophesize(PathBuilder::class);
+        $cacheHandler = $this->prophesize(HandlerInvalidatePathInterface::class);
         $document = $this->prophesize(CustomUrlDocument::class);
         $targetDocument = $this->prophesize(PageDocument::class);
 
@@ -230,7 +242,8 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
             $documentManager->reveal(),
             $customUrlRepository->reveal(),
             $metadataFactory->reveal(),
-            $pathBuilder->reveal()
+            $pathBuilder->reveal(),
+            $cacheHandler->reveal()
         );
 
         $documentManager->find('312-312-312', 'en', ['load_ghost_content' => true])->willReturn($document->reveal());
@@ -267,6 +280,7 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
         $metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $pathBuilder = $this->prophesize(PathBuilder::class);
+        $cacheHandler = $this->prophesize(HandlerInvalidatePathInterface::class);
         $document = $this->prophesize(CustomUrlDocument::class);
         $targetDocument = $this->prophesize(PageDocument::class);
 
@@ -291,7 +305,8 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
             $documentManager->reveal(),
             $customUrlRepository->reveal(),
             $metadataFactory->reveal(),
-            $pathBuilder->reveal()
+            $pathBuilder->reveal(),
+            $cacheHandler->reveal()
         );
 
         $documentManager->find('312-312-312', 'en', ['load_ghost_content' => true])->willReturn($document->reveal());
@@ -328,6 +343,7 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
         $metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $pathBuilder = $this->prophesize(PathBuilder::class);
+        $cacheHandler = $this->prophesize(HandlerInvalidatePathInterface::class);
         $document = $this->prophesize(CustomUrlDocument::class);
 
         $documentManager->find('123-123-123', null, ['load_ghost_content' => true])->willReturn($document->reveal());
@@ -337,7 +353,8 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
             $documentManager->reveal(),
             $customUrlRepository->reveal(),
             $metadataFactory->reveal(),
-            $pathBuilder->reveal()
+            $pathBuilder->reveal(),
+            $cacheHandler->reveal()
         );
 
         $manager->delete('123-123-123');
@@ -349,10 +366,13 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
         $metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $pathBuilder = $this->prophesize(PathBuilder::class);
+        $cacheHandler = $this->prophesize(HandlerInvalidatePathInterface::class);
         $document = $this->prophesize(RouteDocument::class);
+        $customUrlDocument = $this->prophesize(CustomUrlDocument::class);
 
         $document->isHistory()->willReturn(true);
         $document->getPath()->willReturn('/cmf/sulu_io/custom_urls/routes/sulu.io/test');
+        $document->getTargetDocument()->willReturn($customUrlDocument->reveal());
 
         $documentManager->find('123-123-123')->willReturn($document->reveal());
         $documentManager->remove($document->reveal())->shouldBeCalled();
@@ -361,10 +381,12 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
             $documentManager->reveal(),
             $customUrlRepository->reveal(),
             $metadataFactory->reveal(),
-            $pathBuilder->reveal()
+            $pathBuilder->reveal(),
+            $cacheHandler->reveal()
         );
 
-        $manager->deleteRoute('sulu_io', '123-123-123');
+        $result = $manager->deleteRoute('sulu_io', '123-123-123');
+        self::assertEquals($customUrlDocument->reveal(), $result);
     }
 
     public function testDeleteHistory()
@@ -375,6 +397,7 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
         $metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $pathBuilder = $this->prophesize(PathBuilder::class);
+        $cacheHandler = $this->prophesize(HandlerInvalidatePathInterface::class);
         $document = $this->prophesize(RouteDocument::class);
         $customUrlDocument = $this->prophesize(CustomUrlDocument::class);
 
@@ -392,9 +415,40 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
             $documentManager->reveal(),
             $customUrlRepository->reveal(),
             $metadataFactory->reveal(),
-            $pathBuilder->reveal()
+            $pathBuilder->reveal(),
+            $cacheHandler->reveal()
         );
 
         $manager->deleteRoute('sulu_io', '123-123-123');
+    }
+
+    public function testInvalidate()
+    {
+        $documentManager = $this->prophesize(DocumentManagerInterface::class);
+        $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
+        $metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
+        $pathBuilder = $this->prophesize(PathBuilder::class);
+        $cacheHandler = $this->prophesize(HandlerInvalidatePathInterface::class);
+        $document = $this->prophesize(CustomUrlDocument::class);
+
+        $document->getRoutes()->willReturn(
+            [
+                'sulu.io/en' => $this->prophesize(RouteDocument::class)->reveal(),
+                'sulu.io/de' => $this->prophesize(RouteDocument::class)->reveal(),
+            ]
+        );
+
+        $manager = new CustomUrlManager(
+            $documentManager->reveal(),
+            $customUrlRepository->reveal(),
+            $metadataFactory->reveal(),
+            $pathBuilder->reveal(),
+            $cacheHandler->reveal()
+        );
+
+        $manager->invalidate($document->reveal());
+
+        $cacheHandler->invalidatePath('sulu.io/en')->shouldBeCalled();
+        $cacheHandler->invalidatePath('sulu.io/de')->shouldBeCalled();
     }
 }

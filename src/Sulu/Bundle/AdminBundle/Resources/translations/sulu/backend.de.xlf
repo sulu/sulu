@@ -452,9 +452,7 @@
             </trans-unit>
             <trans-unit id="d5f4a99d54bb05a92a78146053c828d9" resname="sulu.overlay.delete-desc">
                 <source>sulu.overlay.delete-desc</source>
-                <target>Die Operation die Sie machen möchten löscht Daten und lässt sich nicht rückgängig machen. Bitte
-                    denken Sie genau darüber nach und akzeptieren Sie oder brechen Sie ab.
-                </target>
+                <target>Diese Operation löscht Daten und kann nicht rückgängig gemacht werden. Wollen Sie wirklich fortfahren?</target>
             </trans-unit>
             <trans-unit id="d5f4a99d54bb05a92a781460534528d9" resname="sulu.overlay.unsaved-changes-confirm">
                 <source>sulu.overlay.unsaved-changes-confirm</source>

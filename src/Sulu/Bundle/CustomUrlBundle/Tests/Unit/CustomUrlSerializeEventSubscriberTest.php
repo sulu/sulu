@@ -123,6 +123,5 @@ class CustomUrlSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
         $visitor->addData('customUrl', 'test.sulu.io')->shouldBeCalled();
         $visitor->addData('creatorFullName', 'test1')->shouldBeCalled();
         $visitor->addData('changerFullName', 'test2')->shouldBeCalled();
-
     }
 }

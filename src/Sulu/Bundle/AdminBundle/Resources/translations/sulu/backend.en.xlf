@@ -452,9 +452,7 @@
             </trans-unit>
             <trans-unit id="d5f4a99d54bb05a92a78146053c828d9" resname="sulu.overlay.delete-desc">
                 <source>sulu.overlay.delete-desc</source>
-                <target>The operation you are about to do will delete data. This is not undoable! Please think about it
-                    and accept or decline.
-                </target>
+                <target>This operation deletes data and cannot be undone. Do you really wish to proceed?</target>
             </trans-unit>
             <trans-unit id="d5f4a99d54bb05a92a781460534528d9" resname="sulu.overlay.unsaved-changes-confirm">
                 <source>sulu.overlay.unsaved-changes-confirm</source>

@@ -115,12 +115,15 @@ class CustomUrlController extends RestController
      */
     public function putAction($webspaceKey, $uuid, Request $request)
     {
+        $manager = $this->get('sulu_custom_urls.manager');
+
         try {
-            $document = $this->get('sulu_custom_urls.manager')->update(
+            $document = $manager->update(
                 $uuid,
                 $request->request->all(),
                 $this->getLocale($request)
             );
+            $manager->invalidate($document);
             $this->get('sulu_document_manager.document_manager')->flush();
         } catch (RestException $ex) {
             return $this->handleView($this->view($ex->toArray(), 400));
@@ -139,7 +142,9 @@ class CustomUrlController extends RestController
      */
     public function deleteAction($webspaceKey, $uuid)
     {
-        $this->get('sulu_custom_urls.manager')->delete($uuid);
+        $manager = $this->get('sulu_custom_urls.manager');
+        $document = $manager->delete($uuid);
+        $manager->invalidate($document);
         $this->get('sulu_document_manager.document_manager')->flush();
 
         return $this->handleView($this->view());
@@ -159,7 +164,8 @@ class CustomUrlController extends RestController
 
         $manager = $this->get('sulu_custom_urls.manager');
         foreach ($uuids as $uuid) {
-            $manager->delete($uuid);
+            $document = $manager->delete($uuid);
+            $manager->invalidate($document);
         }
         $this->get('sulu_document_manager.document_manager')->flush();
 
@@ -182,7 +188,8 @@ class CustomUrlController extends RestController
         $manager = $this->get('sulu_custom_urls.manager');
         foreach ($uuids as $uuid) {
             try {
-                $manager->deleteRoute($webspaceKey, $uuid);
+                $document = $manager->deleteRoute($webspaceKey, $uuid);
+                $manager->invalidate($document);
             } catch (CannotDeleteCurrentRouteException $ex) {
                 return $this->handleView($this->view($ex->toArray(), 400));
             }

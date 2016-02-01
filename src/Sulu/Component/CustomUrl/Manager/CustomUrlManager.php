@@ -16,10 +16,12 @@ use PHPCR\Util\PathHelper;
 use Sulu\Bundle\ContentBundle\Document\RouteDocument;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Repository\CustomUrlRepository;
+use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\PathBuilder;
+use Sulu\Component\HttpCache\HandlerInvalidatePathInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
@@ -47,16 +49,23 @@ class CustomUrlManager implements CustomUrlManagerInterface
      */
     private $pathBuilder;
 
+    /**
+     * @var HandlerInvalidatePathInterface
+     */
+    private $cacheHandler;
+
     public function __construct(
         DocumentManagerInterface $documentManager,
         CustomUrlRepository $customUrlRepository,
         MetadataFactoryInterface $metadataFactory,
-        PathBuilder $pathBuilder
+        PathBuilder $pathBuilder,
+        HandlerInvalidatePathInterface $cacheHandler
     ) {
         $this->documentManager = $documentManager;
         $this->customUrlRepository = $customUrlRepository;
         $this->metadataFactory = $metadataFactory;
         $this->pathBuilder = $pathBuilder;
+        $this->cacheHandler = $cacheHandler;
     }
 
     /**
@@ -115,6 +124,21 @@ class CustomUrlManager implements CustomUrlManagerInterface
         }
 
         return $routeDocument->getTargetDocument();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function readByPage(UuidBehavior $page)
+    {
+        $query = $this->documentManager->createQuery(
+            sprintf(
+                'SELECT * FROM [nt:unstructured] AS a WHERE a.[jcr:mixinTypes] = "sulu:customurl" AND a.[sulu:target] = "%s"',
+                $page->getUuid()
+            )
+        );
+
+        return $query->execute();
     }
 
     /**
@@ -188,7 +212,10 @@ class CustomUrlManager implements CustomUrlManagerInterface
      */
     public function delete($uuid)
     {
-        $this->documentManager->remove($this->read($uuid));
+        $document = $this->read($uuid);
+        $this->documentManager->remove($document);
+
+        return $document;
     }
 
     /**
@@ -205,6 +232,18 @@ class CustomUrlManager implements CustomUrlManagerInterface
         }
 
         $this->documentManager->remove($routeDocument);
+
+        return $routeDocument->getTargetDocument();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function invalidate(CustomUrlDocument $document)
+    {
+        foreach ($document->getRoutes() as $route => $routeDocument) {
+            $this->cacheHandler->invalidatePath($route);
+        }
     }
 
     /**

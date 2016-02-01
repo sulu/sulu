@@ -22,14 +22,9 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class FlushSubscriber implements EventSubscriberInterface
 {
     /**
-     * {@inheritdoc}
+     * @var HandlerFlushInterface
      */
-    public static function getSubscribedEvents()
-    {
-        return [
-            KernelEvents::TERMINATE => 'onTerminate',
-        ];
-    }
+    private $handler;
 
     /**
      * @param HandlerFlushInterface $handler
@@ -37,6 +32,16 @@ class FlushSubscriber implements EventSubscriberInterface
     public function __construct(HandlerFlushInterface $handler)
     {
         $this->handler = $handler;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedEvents()
+    {
+        return [
+            KernelEvents::TERMINATE => 'onTerminate',
+        ];
     }
 
     /**

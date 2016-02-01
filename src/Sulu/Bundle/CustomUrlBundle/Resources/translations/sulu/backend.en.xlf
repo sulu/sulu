@@ -60,7 +60,7 @@
             </trans-unit>
             <trans-unit id="15" resname="custom-urls.no-follow">
                 <source>custom-urls.no-follow</source>
-                <target>No Index</target>
+                <target>No Follow</target>
             </trans-unit>
             <trans-unit id="16" resname="custom-urls.no-follow.description">
                 <source>custom-urls.no-follow.description</source>

@@ -12,6 +12,7 @@ namespace Sulu\Component\CustomUrl\Manager;
 
 use Sulu\Bundle\ContentBundle\Document\RouteDocument;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
+use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 
 /**
  * Interface for custom-url manager.
@@ -62,6 +63,15 @@ interface CustomUrlManagerInterface
     public function readByUrl($url, $webspaceKey, $locale = null);
 
     /**
+     * Returns a list of custom-url documents which targeting the given page.
+     *
+     * @param UuidBehavior $page
+     *
+     * @return CustomUrlDocument[]
+     */
+    public function readByPage(UuidBehavior $page);
+
+    /**
      * Returns route for a custom-url object.
      *
      * @param string $url
@@ -87,6 +97,8 @@ interface CustomUrlManagerInterface
      * Delete custom-url identified by uuid.
      *
      * @param string $uuid
+     *
+     * @return CustomUrlDocument
      */
     public function delete($uuid);
 
@@ -97,6 +109,15 @@ interface CustomUrlManagerInterface
      * @param string $webspaceKey
      *
      * @throws CannotDeleteCurrentRouteException
+     *
+     * @return CustomUrlDocument
      */
     public function deleteRoute($webspaceKey, $uuid);
+
+    /**
+     * Invalidate http-cache for given document.
+     *
+     * @param CustomUrlDocument $document
+     */
+    public function invalidate(CustomUrlDocument $document);
 }
