@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -168,8 +168,7 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
         $this->getSession()->wait(5000, '$("#permissions-grid").length');
     }
 
-
-        private function getOrCreateRole($name, $system)
+    private function getOrCreateRole($name, $system)
     {
         $role = $this->getEntityManager()
             ->getRepository('Sulu\Bundle\SecurityBundle\Entity\Role')

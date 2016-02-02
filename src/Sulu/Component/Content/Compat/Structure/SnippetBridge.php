@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -14,7 +14,7 @@ namespace Sulu\Component\Content\Compat\Structure;
 class SnippetBridge extends StructureBridge
 {
     /**
-     * @var boolean
+     * @var bool
      */
     private $isShadow;
 
@@ -32,7 +32,7 @@ class SnippetBridge extends StructureBridge
     }
 
     /**
-     * @param boolean $isShadow
+     * @param bool $isShadow
      */
     public function setIsShadow($isShadow)
     {

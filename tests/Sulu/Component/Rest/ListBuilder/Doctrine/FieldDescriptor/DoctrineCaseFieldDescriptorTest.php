@@ -21,7 +21,7 @@ class DoctrineCaseFieldDescriptorTest extends \PHPUnit_Framework_TestCase
                 new DoctrineDescriptor('entity2', 'field2'),
                 '(CASE WHEN entity1.field1 IS NOT NULL THEN entity1.field1 ELSE entity2.field2 END)',
                 [],
-                'entity1.field1 LIKE :search OR (entity1.field1 is NULL AND entity2.field2 LIKE :search)'
+                'entity1.field1 LIKE :search OR (entity1.field1 is NULL AND entity2.field2 LIKE :search)',
             ],
             [
                 'test',
@@ -29,7 +29,7 @@ class DoctrineCaseFieldDescriptorTest extends \PHPUnit_Framework_TestCase
                 new DoctrineDescriptor('test3', 'test4'),
                 '(CASE WHEN test1.test2 IS NOT NULL THEN test1.test2 ELSE test3.test4 END)',
                 [],
-                'test1.test2 LIKE :search OR (test1.test2 is NULL AND test3.test4 LIKE :search)'
+                'test1.test2 LIKE :search OR (test1.test2 is NULL AND test3.test4 LIKE :search)',
             ],
             [
                 'test',
@@ -51,7 +51,7 @@ class DoctrineCaseFieldDescriptorTest extends \PHPUnit_Framework_TestCase
                         'entity.relation'
                     ),
                 ],
-                'test1.test2 LIKE :search OR (test1.test2 is NULL AND test3.test4 LIKE :search)'
+                'test1.test2 LIKE :search OR (test1.test2 is NULL AND test3.test4 LIKE :search)',
             ],
             [
                 'test',
@@ -76,7 +76,7 @@ class DoctrineCaseFieldDescriptorTest extends \PHPUnit_Framework_TestCase
                         'entity.relation'
                     ),
                 ],
-                'test1.test2 LIKE :search OR (test1.test2 is NULL AND test3.test4 LIKE :search)'
+                'test1.test2 LIKE :search OR (test1.test2 is NULL AND test3.test4 LIKE :search)',
             ],
             [
                 'test',
@@ -111,7 +111,7 @@ class DoctrineCaseFieldDescriptorTest extends \PHPUnit_Framework_TestCase
                         'test10'
                     ),
                 ],
-                'test1.test2 LIKE :search OR (test1.test2 is NULL AND test3.test4 LIKE :search)'
+                'test1.test2 LIKE :search OR (test1.test2 is NULL AND test3.test4 LIKE :search)',
             ],
         ];
     }
