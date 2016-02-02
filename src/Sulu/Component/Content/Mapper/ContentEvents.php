@@ -11,6 +11,9 @@
 
 namespace Sulu\Component\Content\Mapper;
 
+/**
+ * @deprecated use events of DocumentManager instead
+ */
 final class ContentEvents
 {
     /**

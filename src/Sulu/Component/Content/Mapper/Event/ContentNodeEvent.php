@@ -17,6 +17,8 @@ use Symfony\Component\EventDispatcher\Event;
 
 /**
  * An instance of this class is thrown along with the sulu.content.node.save event.
+ *
+ * @deprecated use events of DocumentManager instead
  */
 class ContentNodeEvent extends Event
 {

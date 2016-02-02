@@ -19,6 +19,8 @@ use Symfony\Component\EventDispatcher\Event;
 
 /**
  * This event is thrown when a node is deleted.
+ *
+ * @deprecated use events of DocumentManager instead
  */
 class ContentNodeDeleteEvent extends Event
 {

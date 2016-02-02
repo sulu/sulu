@@ -623,6 +623,14 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($data[1]['title'], $response->_embedded->nodes[1]->title);
     }
 
+    public function testPutNotExisting()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('PUT', '/api/nodes/not-existing-id?language=de', []);
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+    }
+
     public function testPutWithTemplateChange()
     {
         $client = $this->createAuthenticatedClient();
@@ -723,7 +731,6 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals('en', $response['shadowBaseLanguage']);
         $this->assertEquals('shadow', $response['type']['name']);
         $this->assertEquals('en', $response['type']['value']);
-
 
         $client->request(
             'PUT',
@@ -1480,10 +1487,6 @@ class NodeControllerTest extends SuluTestCase
         unset($response['changed']);
         unset($data[0]['linked']);
         unset($response['linked']);
-
-        // required in the old serialization process shadowBaseLanguage can be null, which is not serialized by the
-        // serializer on default
-        unset($response['shadowBaseLanguage']);
 
         // required because the links in the old serialization process are not generated using the symfony router
         unset($response['_links']);

@@ -17,6 +17,8 @@ namespace Sulu\Component\Content\Mapper;
  * This is either the best long term solution or a temporary
  * short-term solution to fix the argument problem on the content
  * mapper ->save() method, which currently has 11 arguments.
+ *
+ * @deprecated
  */
 class ContentMapperRequest
 {
