@@ -11,18 +11,18 @@
 namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Content;
 
 use Sulu\Bundle\SnippetBundle\Content\SnippetContent;
-use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
+use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
+use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 
 class SnippetContentTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetContentData()
     {
-        $contentMapper = $this->prophesize(ContentMapperInterface::class);
-        $structureResolver = $this->prophesize(StructureResolverInterface::class);
+        $defaultSnippetManager = $this->prophesize(DefaultSnippetManagerInterface::class);
+        $structureResolver = $this->prophesize(SnippetResolverInterface::class);
 
         $property = $this->prophesize(PropertyInterface::class);
         $structure = $this->prophesize(StructureBridge::class);
@@ -39,8 +39,8 @@ class SnippetContentTest extends \PHPUnit_Framework_TestCase
         $referenceDe->getHasTranslation()->willReturn(false);
         $referenceEn->getHasTranslation()->willReturn(true);
 
-        $contentMapper->load('123-123-123', 'sulu_io', 'de')->willReturn($referenceDe->reveal());
-        $contentMapper->load('123-123-123', 'sulu_io', 'en')->willReturn($referenceEn->reveal());
+        $defaultSnippetManager->load('123-123-123', 'sulu_io', 'de')->willReturn($referenceDe->reveal());
+        $defaultSnippetManager->load('123-123-123', 'sulu_io', 'en')->willReturn($referenceEn->reveal());
 
         $referenceEn->setIsShadow(true)->shouldBeCalled();
         $referenceEn->setShadowBaseLanguage('en')->shouldBeCalled();
@@ -50,7 +50,7 @@ class SnippetContentTest extends \PHPUnit_Framework_TestCase
             ['content' => ['title' => 'test-1'], 'view' => ['title' => 'test-2']]
         );
 
-        $type = new SnippetContent($contentMapper->reveal(), $structureResolver->reveal(), '');
+        $type = new SnippetContent($defaultSnippetManager->reveal(), $structureResolver->reveal(), false, '');
 
         $result = $type->getContentData($property->reveal());
 
@@ -59,8 +59,8 @@ class SnippetContentTest extends \PHPUnit_Framework_TestCase
 
     public function testGetViewData()
     {
-        $contentMapper = $this->prophesize(ContentMapperInterface::class);
-        $structureResolver = $this->prophesize(StructureResolverInterface::class);
+        $defaultSnippetManager = $this->prophesize(DefaultSnippetManagerInterface::class);
+        $structureResolver = $this->prophesize(SnippetResolverInterface::class);
 
         $property = $this->prophesize(PropertyInterface::class);
         $structure = $this->prophesize(StructureBridge::class);
@@ -77,8 +77,8 @@ class SnippetContentTest extends \PHPUnit_Framework_TestCase
         $referenceDe->getHasTranslation()->willReturn(false);
         $referenceEn->getHasTranslation()->willReturn(true);
 
-        $contentMapper->load('123-123-123', 'sulu_io', 'de')->willReturn($referenceDe->reveal());
-        $contentMapper->load('123-123-123', 'sulu_io', 'en')->willReturn($referenceEn->reveal());
+        $defaultSnippetManager->load('123-123-123', 'sulu_io', 'de')->willReturn($referenceDe->reveal());
+        $defaultSnippetManager->load('123-123-123', 'sulu_io', 'en')->willReturn($referenceEn->reveal());
 
         $referenceEn->setIsShadow(true)->shouldBeCalled();
         $referenceEn->setShadowBaseLanguage('en')->shouldBeCalled();
@@ -88,7 +88,7 @@ class SnippetContentTest extends \PHPUnit_Framework_TestCase
             ['content' => ['title' => 'test-1'], 'view' => ['title' => 'test-2']]
         );
 
-        $type = new SnippetContent($contentMapper->reveal(), $structureResolver->reveal(), '');
+        $type = new SnippetContent($defaultSnippetManager->reveal(), $structureResolver->reveal(), false, '');
 
         $result = $type->getViewData($property->reveal());
 

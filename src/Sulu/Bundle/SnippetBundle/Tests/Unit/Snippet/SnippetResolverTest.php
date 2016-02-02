@@ -8,11 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Functional\Snippet;
+namespace Sulu\Bundle\SnippetBundle\Snippet;
 
 use Prophecy\Argument;
-use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolver;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
+use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 
@@ -45,11 +45,13 @@ class SnippetResolverTest extends \PHPUnit_Framework_TestCase
         $structureResolver = $this->prophesize(StructureResolverInterface::class);
 
         $structures = [];
-        foreach ($uuids as $uuid) {
-            $structure = $this->prophesize(StructureInterface::class);
+        foreach (array_unique($uuids) as $uuid) {
+            $structure = $this->prophesize(SnippetBridge::class);
             $structure->getUuid()->willReturn($uuid);
             $structure->getKey()->willReturn('test');
             $structure->getHasTranslation()->willReturn(true);
+            $structure->setIsShadow(false)->shouldBeCalled();
+            $structure->setShadowBaseLanguage(null)->shouldBeCalled();
 
             $structures[$uuid] = $structure->reveal();
         }
@@ -99,15 +101,17 @@ class SnippetResolverTest extends \PHPUnit_Framework_TestCase
         $contentMapper = $this->prophesize(ContentMapperInterface::class);
         $structureResolver = $this->prophesize(StructureResolverInterface::class);
 
-        $structure1 = $this->prophesize(StructureInterface::class);
+        $structure1 = $this->prophesize(SnippetBridge::class);
         $structure1->getUuid()->willReturn('123-123-123');
         $structure1->getKey()->willReturn('test');
         $structure1->getHasTranslation()->willReturn(false);
 
-        $structure2 = $this->prophesize(StructureInterface::class);
+        $structure2 = $this->prophesize(SnippetBridge::class);
         $structure2->getUuid()->willReturn('123-123-123');
         $structure2->getKey()->willReturn('test');
         $structure2->getHasTranslation()->willReturn(false);
+        $structure2->setIsShadow(true)->shouldBeCalled();
+        $structure2->setShadowBaseLanguage('en')->shouldBeCalled();
 
         $resolver = new SnippetResolver($contentMapper->reveal(), $structureResolver->reveal());
 
