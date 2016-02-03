@@ -233,7 +233,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
 
         $this->documentManager->remove($routeDocument);
 
-        return $routeDocument->getTargetDocument();
+        return $routeDocument;
     }
 
     /**
@@ -244,6 +244,16 @@ class CustomUrlManager implements CustomUrlManagerInterface
         foreach ($document->getRoutes() as $route => $routeDocument) {
             $this->cacheHandler->invalidatePath($route);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function invalidateRoute($webspaceKey, RouteDocument $routeDocument)
+    {
+        $this->cacheHandler->invalidatePath(
+            PathHelper::relativizePath($routeDocument->getPath(), $this->getRoutesPath($webspaceKey))
+        );
     }
 
     /**

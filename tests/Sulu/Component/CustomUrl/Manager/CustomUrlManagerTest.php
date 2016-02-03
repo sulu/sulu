@@ -386,7 +386,7 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         );
 
         $result = $manager->deleteRoute('sulu_io', '123-123-123');
-        self::assertEquals($customUrlDocument->reveal(), $result);
+        self::assertEquals($document->reveal(), $result);
     }
 
     public function testDeleteHistory()
@@ -450,5 +450,31 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
 
         $cacheHandler->invalidatePath('sulu.io/en')->shouldBeCalled();
         $cacheHandler->invalidatePath('sulu.io/de')->shouldBeCalled();
+    }
+
+    public function testInvalidateRoute()
+    {
+        $documentManager = $this->prophesize(DocumentManagerInterface::class);
+        $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
+        $metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
+        $pathBuilder = $this->prophesize(PathBuilder::class);
+        $cacheHandler = $this->prophesize(HandlerInvalidatePathInterface::class);
+        $document = $this->prophesize(RouteDocument::class);
+
+        $document->getPath()->willReturn('/cmf/sulu_io/custom_urls/routes/sulu.io/en');
+        $pathBuilder->build(['%base%', 'sulu_io', '%custom-urls%', '%custom-urls-routes%'])
+            ->willReturn('/cmf/sulu_io/custom_urls/routes');
+
+        $manager = new CustomUrlManager(
+            $documentManager->reveal(),
+            $customUrlRepository->reveal(),
+            $metadataFactory->reveal(),
+            $pathBuilder->reveal(),
+            $cacheHandler->reveal()
+        );
+
+        $manager->invalidateRoute('sulu_io', $document->reveal());
+
+        $cacheHandler->invalidatePath('sulu.io/en')->shouldBeCalled();
     }
 }

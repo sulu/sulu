@@ -189,7 +189,7 @@ class CustomUrlController extends RestController
         foreach ($uuids as $uuid) {
             try {
                 $document = $manager->deleteRoute($webspaceKey, $uuid);
-                $manager->invalidate($document);
+                $manager->invalidateRoute($webspaceKey, $document);
             } catch (CannotDeleteCurrentRouteException $ex) {
                 return $this->handleView($this->view($ex->toArray(), 400));
             }

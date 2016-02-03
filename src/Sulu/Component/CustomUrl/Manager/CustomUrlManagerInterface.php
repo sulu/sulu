@@ -120,4 +120,12 @@ interface CustomUrlManagerInterface
      * @param CustomUrlDocument $document
      */
     public function invalidate(CustomUrlDocument $document);
+
+    /**
+     * Invalidate http-cache for given route-document.
+     *
+     * @param string $webspaceKey
+     * @param RouteDocument $routeDocument
+     */
+    public function invalidateRoute($webspaceKey, RouteDocument $routeDocument);
 }
