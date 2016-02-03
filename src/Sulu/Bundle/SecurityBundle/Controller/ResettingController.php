@@ -34,6 +34,7 @@ class ResettingController extends Controller
     protected static $emailSubjectKey = 'security.reset.mail-subject';
     protected static $emailMessageKey = 'security.reset.mail-message';
     protected static $translationDomain = 'backend';
+    protected static $resetRouteId = 'sulu_admin.reset';
     const MAX_NUMBER_EMAILS = 3;
 
     /**
@@ -253,7 +254,7 @@ class ResettingController extends Controller
             ->setTo($to)
             ->setBody(
                 $translator->trans(static::$emailMessageKey, [], static::$translationDomain) . PHP_EOL .
-                $this->generateUrl('sulu_admin.reset', ['token' => $user->getPasswordResetToken()], true)
+                $this->generateUrl(static::$resetRouteId, ['token' => $user->getPasswordResetToken()], true)
             );
         $mailer->send($message);
         $user->setPasswordResetTokenEmailsSent($user->getPasswordResetTokenEmailsSent() + 1);
