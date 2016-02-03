@@ -33454,7 +33454,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                         this.data.embedded = this.options.data;
                     }
 
-                    this.renderView();
+                    this.render();
                     if (!!this.paginations[this.paginationId]) {
                         this.paginations[this.paginationId].render(this.data, this.$element);
                     }
