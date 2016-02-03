@@ -40,7 +40,7 @@
             </trans-unit>
             <trans-unit id="10" resname="custom-urls.canonical.description">
                 <source>custom-urls.canonical.description</source>
-                <target>Wird die Canonical URL aktiviert, so wird nur die Zielseite zur Indexierung durch eine Suchmaschine herangezogen.</target>
+                <target>En cas que l'adresse URL canoniqe est activée,  seulement la page cible ( landing page ) est utilisée pour l'indexation par le chercheur web.</target>
             </trans-unit>
             <trans-unit id="11" resname="custom-urls.redirect">
                 <source>custom-urls.redirect</source>
@@ -48,7 +48,7 @@
             </trans-unit>
             <trans-unit id="12" resname="custom-urls.redirect.description">
                 <source>custom-urls.redirect.description</source>
-                <target>Die Seite wird direkt auf die Ziel-URL weitergeleitet.</target>
+                <target>La page est directement transmise  å l'adresse URL cible.</target>
             </trans-unit>
             <trans-unit id="13" resname="custom-urls.no-index">
                 <source>custom-urls.no-index</source>
@@ -56,7 +56,7 @@
             </trans-unit>
             <trans-unit id="14" resname="custom-urls.no-index.description">
                 <source>custom-urls.no-index.description</source>
-                <target>Seite nicht durch Suchmaschinen indexieren.</target>
+                <target>Ne pas indexer cette page par le chercheur web.</target>
             </trans-unit>
             <trans-unit id="15" resname="custom-urls.no-follow">
                 <source>custom-urls.no-follow</source>
@@ -64,7 +64,7 @@
             </trans-unit>
             <trans-unit id="16" resname="custom-urls.no-follow.description">
                 <source>custom-urls.no-follow.description</source>
-                <target>Die in der Seite enthaltenen Links werden von Suchmaschinen nicht verfolgt.</target>
+                <target>Les liens inclus à cette page ne vont pas être poursuivis par des chercheurs web.</target>
             </trans-unit>
             <trans-unit id="17" resname="custom-urls.history">
                 <source>custom-urls.history</source>
@@ -80,7 +80,7 @@
             </trans-unit>
             <trans-unit id="20" resname="custom-urls.no-target">
                 <source>custom-urls.no-target</source>
-                <target>Keine Zielseite vorhanden</target>
+                <target>Il n'existe pas de page cible</target>
             </trans-unit>
         </body>
     </file>
