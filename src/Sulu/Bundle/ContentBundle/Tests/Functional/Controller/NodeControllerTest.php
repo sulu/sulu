@@ -623,6 +623,37 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($data[1]['title'], $response->_embedded->nodes[1]->title);
     }
 
+    public function testPutHome()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $data = [
+            'template' => 'default',
+            'title' => 'Test',
+        ];
+
+        $client->request('GET', '/api/nodes?webspace=sulu_io&language=en');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $client->request(
+            'PUT',
+            '/api/nodes/' . $response->id . '?type=home&webspace=sulu_io&language=en',
+            $data
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals($data['title'], $response->title);
+
+        $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals($data['title'], $response->title);
+    }
+
     public function testPutNotExisting()
     {
         $client = $this->createAuthenticatedClient();

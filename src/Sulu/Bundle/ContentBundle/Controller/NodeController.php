@@ -22,11 +22,14 @@ use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Exception\MandatoryPropertyException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
 use Sulu\Component\Content\Form\Exception\InvalidFormException;
+use Sulu\Component\Content\Mapper\ContentEvents;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
+use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
 use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 use Sulu\Component\Content\Repository\Mapping\MappingInterface;
@@ -590,12 +593,13 @@ class NodeController extends RestController implements ClassResourceInterface, S
     public function putAction(Request $request, $uuid)
     {
         $language = $this->getLanguage($request);
+        $type = $request->get('type', 'page');
 
         try {
             $document = $this->getDocumentManager()->find(
                 $uuid,
                 $language,
-                ['type' => 'page', 'load_ghost_content' => false]
+                ['type' => $type, 'load_ghost_content' => false]
             );
         } catch (DocumentNotFoundException $e) {
             $e = new EntityNotFoundException(PageDocument::class, $uuid, $e);
@@ -616,7 +620,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
             'webspace_key' => $webspace,
         ];
 
-        $form = $this->createForm('page', $document, $options);
+        $form = $this->createForm($type, $document, $options);
         $form->submit($data, false);
 
         if (!$form->isValid()) {
