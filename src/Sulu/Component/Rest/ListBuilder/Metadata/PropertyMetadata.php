@@ -2,7 +2,6 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Metadata;
 
-use Metadata\MergeableInterface;
 use Metadata\PropertyMetadata as BasePropertyMetadata;
 
 class PropertyMetadata extends BasePropertyMetadata
@@ -37,5 +36,15 @@ class PropertyMetadata extends BasePropertyMetadata
     public function get($name)
     {
         return $this->metadata[$name];
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function has($name)
+    {
+        return array_key_exists($name, $this->metadata);
     }
 }

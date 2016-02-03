@@ -7,9 +7,32 @@
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="lastName" translation="contact.contacts.lastName" disabled="false" default="true" type="string">
+        <property name="lastName" translation="contact.contacts.lastName" disabled="false" default="true"
+                  type="thumbnails" sortable="false">
             <orm:field-name>lastName</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        </property>
+
+        <property name="avatar" translation="public.avatar" disabled="false" default="true" type="string">
+            <orm:field-name>avatar</orm:field-name>
+            <orm:entity-name>SuluMediaBundle:Media</orm:entity-name>
+
+            <orm:joins>
+                <orm:join>
+                    <orm:entity-name>SuluMediaBundle:Media</orm:entity-name>
+                    <orm:field-name>%sulu.model.contact.class%.avatar</orm:field-name>
+                </orm:join>
+            </orm:joins>
+        </property>
+
+        <property name="fullName">
+            <concatenation>
+                <property name="firstName">
+                    <orm:field-name>firstName</orm:field-name>
+                    <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+                </property>
+                <property-ref name="lastName"/>
+            </concatenation>
         </property>
     </properties>
 </class>

@@ -2,9 +2,9 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Metadata\General;
 
-use Metadata\PropertyMetadata;
+use Metadata\PropertyMetadata as BasePropertyMetadata;
 
-class GeneralPropertyMetadata extends PropertyMetadata
+class PropertyMetadata extends BasePropertyMetadata
 {
     /**
      * @var string

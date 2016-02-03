@@ -6,6 +6,7 @@ use Metadata\Driver\AbstractFileDriver;
 use Metadata\Driver\DriverInterface;
 use Metadata\Driver\FileLocatorInterface;
 use Metadata\MergeableClassMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\DoctrineJoinMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\DoctrinePropertyMetadata;
 use Sulu\Component\Util\XmlUtil;
 use Symfony\Component\Config\Util\XmlUtils;
@@ -41,7 +42,7 @@ class DoctrineXmlDriver extends AbstractFileDriver implements DriverInterface
         $xpath->registerNamespace('x', 'http://schemas.sulu.io/class/general');
         $xpath->registerNamespace('orm', 'http://schemas.sulu.io/class/doctrine');
 
-        foreach ($xpath->query('/x:class/x:properties/x:*') as $propertyNode) {
+        foreach ($xpath->query('/x:class/x:properties/x:property') as $propertyNode) {
             $classMetadata->addPropertyMetadata($this->getPropertyMetadata($xpath, $propertyNode, $class->getName()));
         }
 
@@ -49,7 +50,7 @@ class DoctrineXmlDriver extends AbstractFileDriver implements DriverInterface
     }
 
     /**
-     * Extracts attributes from dom-node to create a new property-metadata object.
+     * Extracts data from dom-node to create a new property-metadata object.
      *
      * @param \DOMXPath $xpath
      * @param \DOMElement $propertyNode
@@ -62,17 +63,54 @@ class DoctrineXmlDriver extends AbstractFileDriver implements DriverInterface
         $name = XmlUtil::getValueFromXPath('@name', $xpath, $propertyNode);
         $propertyMetadata = new DoctrinePropertyMetadata($className, $name);
 
-        $fieldNameList = $propertyNode->getElementsByTagName('field-name');
-        if ($fieldNameList->length > 0) {
-            $propertyMetadata->setFieldName($this->resolveParameter($fieldNameList->item(0)->nodeValue));
+        if (($fieldName = XmlUtil::getValueFromXPath('orm:field-name', $xpath, $propertyNode)) !== null) {
+            $propertyMetadata->setFieldName($this->resolveParameter($fieldName));
         }
 
-        $entityNameList = $propertyNode->getElementsByTagName('entity-name');
-        if ($entityNameList->length > 0) {
-            $propertyMetadata->setEntityName($this->resolveParameter($entityNameList->item(0)->nodeValue));
+        if (($entityName = XmlUtil::getValueFromXPath('orm:entity-name', $xpath, $propertyNode)) !== null) {
+            $propertyMetadata->setEntityName($this->resolveParameter($entityName));
+        }
+
+        foreach ($xpath->query('orm:joins/orm:join', $propertyNode) as $joinNode) {
+            $propertyMetadata->addJoin($this->getJoinMetadata($xpath, $joinNode));
         }
 
         return $propertyMetadata;
+    }
+
+    /**
+     * Extracts data from dom-node to create a new join-metadata object.
+     *
+     * @param \DOMXPath $xpath
+     * @param \DOMElement $joinNode
+     *
+     * @return DoctrineJoinMetadata
+     */
+    protected function getJoinMetadata(\DOMXPath $xpath, \DOMElement $joinNode)
+    {
+        $joinMetadata = new DoctrineJoinMetadata();
+
+        if (($fieldName = XmlUtil::getValueFromXPath('orm:field-name', $xpath, $joinNode)) !== null) {
+            $joinMetadata->setEntityField($this->resolveParameter($fieldName));
+        }
+
+        if (($entityName = XmlUtil::getValueFromXPath('orm:entity-name', $xpath, $joinNode)) !== null) {
+            $joinMetadata->setEntityName($this->resolveParameter($entityName));
+        }
+
+        if (($condition = XmlUtil::getValueFromXPath('orm:condition', $xpath, $joinNode)) !== null) {
+            $joinMetadata->setCondition($condition);
+        }
+
+        if (($conditionMethod = XmlUtil::getValueFromXPath('orm:condition-method', $xpath, $joinNode)) !== null) {
+            $joinMetadata->setConditionMethod($conditionMethod);
+        }
+
+        if (($method = XmlUtil::getValueFromXPath('orm:method', $xpath, $joinNode)) !== null) {
+            $joinMetadata->setMethod($method);
+        }
+
+        return $joinMetadata;
     }
 
     /**
