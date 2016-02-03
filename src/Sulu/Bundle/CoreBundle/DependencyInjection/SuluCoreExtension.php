@@ -111,6 +111,8 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $this->initFields($config['fields_defaults'], $container);
         }
 
+        $this->initListBuilder($container, $loader);
+
         $loader->load('rest.xml');
         $loader->load('build.xml');
         $loader->load('localization.xml');
@@ -224,5 +226,53 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('sulu_core.cache.memoize.default_lifetime', $cache['memoize']['default_lifetime']);
 
         $loader->load('cache.xml');
+    }
+
+    /**
+     * Initializes list builder.
+     *
+     * @param ContainerBuilder $container
+     * @param Loader\XmlFileLoader $loader
+     */
+    private function initListBuilder(ContainerBuilder $container, Loader\XmlFileLoader $loader)
+    {
+        $loader->load('list_builder.xml');
+
+        $metadataPaths = $this->getBundleMappingPaths($container->getParameter('kernel.bundles'), 'list-builder');
+        $fileLocator = $container->getDefinition('sulu_core.list_builder.metadata.file_locator');
+        $fileLocator->replaceArgument(0, $metadataPaths);
+    }
+
+    /**
+     * Returns list of bundle config paths.
+     *
+     * @param string[] $bundles
+     * @param string $dir
+     *
+     * @return array
+     */
+    private function getBundleMappingPaths($bundles, $dir)
+    {
+        $metadataPaths = [];
+        foreach ($bundles as $bundle) {
+            $refl = new \ReflectionClass($bundle);
+            $path = dirname($refl->getFilename());
+
+            foreach (['Entity', 'Document', 'Model'] as $entityNamespace) {
+                if (!file_exists($path . '/' . $entityNamespace)) {
+                    continue;
+                }
+
+                $namespace = $refl->getNamespaceName() . '\\' . $entityNamespace;
+                $finalPath = implode('/', [$path, 'Resources', 'config', $dir]);
+                if (!file_exists($finalPath)) {
+                    continue;
+                }
+
+                $metadataPaths[$namespace] = $finalPath;
+            }
+        }
+
+        return $metadataPaths;
     }
 }

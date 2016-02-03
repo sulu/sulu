@@ -16,6 +16,7 @@ use Hateoas\Configuration\Exclusion;
 use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\ContactBundle\Contact\ContactManager;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Util\IndexComparatorInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
@@ -103,7 +104,9 @@ class ContactController extends RestController implements ClassResourceInterface
 
     private function initFieldDescriptors()
     {
-        $this->fieldDescriptors = [];
+        $this->fieldDescriptors = $this->get(
+            'sulu_core.list_builder.field_descriptor_factory'
+        )->getFieldDescriptorForClass(Contact::class);
 
         $contactAddressJoin = [
             self::$contactAddressEntityName => new DoctrineJoinDescriptor(
@@ -159,30 +162,6 @@ class ContactController extends RestController implements ClassResourceInterface
             '',
             '',
             false
-        );
-
-        $this->fieldDescriptors['firstName'] = new DoctrineFieldDescriptor(
-            'firstName',
-            'firstName',
-            $this->container->getParameter('sulu.model.contact.class'),
-            'contact.contacts.firstName',
-            [],
-            false,
-            true,
-            'string',
-            ''
-        );
-
-        $this->fieldDescriptors['lastName'] = new DoctrineFieldDescriptor(
-            'lastName',
-            'lastName',
-            $this->container->getParameter('sulu.model.contact.class'),
-            'contact.contacts.lastName',
-            [],
-            false,
-            true,
-            'string',
-            ''
         );
 
         $this->fieldDescriptors['mainEmail'] = new DoctrineFieldDescriptor(
