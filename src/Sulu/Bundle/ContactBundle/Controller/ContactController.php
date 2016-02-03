@@ -121,25 +121,6 @@ class ContactController extends RestController implements ClassResourceInterface
             ),
         ];
 
-        $this->fieldDescriptors['avatar'] = new DoctrineFieldDescriptor(
-            'id',
-            'avatar',
-            self::$mediaEntityName,
-            'public.avatar',
-            [
-                self::$mediaEntityName => new DoctrineJoinDescriptor(
-                    self::$mediaEntityName,
-                    $this->container->getParameter('sulu.model.contact.class') . '.avatar'
-                ),
-            ],
-            false,
-            true,
-            'thumbnails',
-            '',
-            '',
-            false
-        );
-
         $this->fieldDescriptors['fullName'] = new DoctrineConcatenationFieldDescriptor(
             [
                 new DoctrineFieldDescriptor(

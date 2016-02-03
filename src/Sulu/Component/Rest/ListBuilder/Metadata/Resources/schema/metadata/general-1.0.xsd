@@ -3,6 +3,7 @@
            targetNamespace="http://schemas.sulu.io/class/general"
            xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns="http://schemas.sulu.io/class/general">
+
     <xs:complexType name="classType">
         <xs:sequence>
             <xs:element type="propertiesType" name="properties"/>
@@ -10,18 +11,42 @@
     </xs:complexType>
 
     <xs:complexType name="propertiesType">
+        <xs:group ref="propertiesGroup"/>
+    </xs:complexType>
+
+    <xs:group name="propertiesGroup">
         <xs:sequence>
             <xs:element type="propertyType" name="property" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="concatenationPropertyType" name="concatenation-property" maxOccurs="unbounded"
+                        minOccurs="0"/>
         </xs:sequence>
-    </xs:complexType>
+    </xs:group>
 
     <xs:complexType name="propertyType">
         <xs:group ref="propertyGroup"/>
         <xs:attributeGroup ref="propertyAttributeGroup"/>
     </xs:complexType>
 
+    <xs:complexType name="propertyRefType">
+        <xs:attribute name="name" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="concatenationPropertyType">
+        <xs:group ref="concatenationPropertyGroup"/>
+        <xs:attributeGroup ref="propertyAttributeGroup"/>
+    </xs:complexType>
+
     <xs:group name="propertyGroup">
         <xs:sequence>
+            <xs:any minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:group>
+
+    <xs:group name="concatenationPropertyGroup">
+        <xs:sequence>
+            <xs:element type="propertyType" name="property" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="propertyRefType" name="property-ref" maxOccurs="unbounded" minOccurs="0"/>
+
             <xs:any minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:group>

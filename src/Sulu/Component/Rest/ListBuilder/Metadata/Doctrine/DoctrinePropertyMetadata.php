@@ -17,6 +17,11 @@ class DoctrinePropertyMetadata extends PropertyMetadata
     private $entityName;
 
     /**
+     * @var DoctrineJoinMetadata[]
+     */
+    private $joins = [];
+
+    /**
      * @return string
      */
     public function getFieldName()
@@ -46,5 +51,29 @@ class DoctrinePropertyMetadata extends PropertyMetadata
     public function setEntityName($entityName)
     {
         $this->entityName = $entityName;
+    }
+
+    /**
+     * @return DoctrineJoinMetadata[]
+     */
+    public function getJoins()
+    {
+        return $this->joins;
+    }
+
+    /**
+     * @param DoctrineJoinMetadata[] $joins
+     */
+    public function setJoins(array $joins)
+    {
+        $this->joins = $joins;
+    }
+
+    /**
+     * @param DoctrineJoinMetadata $join
+     */
+    public function addJoin(DoctrineJoinMetadata $join)
+    {
+        $this->joins[] = $join;
     }
 }

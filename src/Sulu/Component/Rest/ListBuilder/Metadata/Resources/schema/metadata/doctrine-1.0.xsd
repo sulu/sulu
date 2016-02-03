@@ -11,9 +11,9 @@
     <xs:complexType name="joinType">
         <xs:sequence>
             <xs:element type="xs:string" name="entity-name"/>
-            <xs:element type="xs:string" name="field"/>
-            <xs:element type="xs:string" name="condition"/>
-            <xs:element type="xs:string" name="method"/>
+            <xs:element type="xs:string" name="field-name"/>
+            <xs:element type="xs:string" name="condition" minOccurs="0"/>
+            <xs:element type="xs:string" name="method" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
