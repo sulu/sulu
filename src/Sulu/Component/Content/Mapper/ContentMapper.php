@@ -251,12 +251,7 @@ class ContentMapper implements ContentMapperInterface
 
         $this->documentManager->flush();
 
-        $structure = $this->documentToStructure($document);
-
-        $event = new ContentNodeEvent($this->inspector->getNode($document), $structure);
-        $this->eventDispatcher->dispatch(ContentEvents::NODE_POST_SAVE, $event);
-
-        return $structure;
+        return $this->documentToStructure($document);
     }
 
     /**
