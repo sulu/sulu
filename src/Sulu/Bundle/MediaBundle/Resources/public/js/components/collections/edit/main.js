@@ -21,15 +21,26 @@ define([
 
     return {
         header: function() {
-            var buttons = {};
+            var buttons = {
+                edit: {
+                    options: {
+                        title: 'sulu.header.edit-collection',
+                        dropdownItems: {}
+                    }
+                }
+            };
 
             if (SecurityChecker.hasPermission(this.data, 'edit') && !this.data.locked) {
-                buttons.editCollection = {};
+                buttons.edit.options.dropdownItems.editCollection = {};
                 buttons.moveCollection = {};
             }
 
             if (SecurityChecker.hasPermission(this.data, 'delete') && !this.data.locked) {
-                buttons.deleteCollection = {};
+                buttons.edit.options.dropdownItems.deleteCollection = {};
+            }
+
+            if (this.sandbox.util.isEmpty(buttons.edit.options.dropdownItems)) {
+                delete buttons.edit;
             }
 
             if (SecurityChecker.hasPermission(this.data, 'security') && !this.data.locked) {
@@ -173,7 +184,7 @@ define([
                 if (!!confirmed) {
                     CollectionManager.delete(this.data.id);
                 }
-            }.bind(this));
+            }.bind(this), 'sulu.header.delete-collection');
         },
 
         /**
