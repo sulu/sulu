@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://schemas.sulu.io/class/doctrine"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://schemas.sulu.io/class/doctrine">
+    <xs:complexType name="joinsType">
+        <xs:sequence>
+            <xs:element type="joinType" name="join" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="joinType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="entity-name"/>
+            <xs:element type="xs:string" name="field"/>
+            <xs:element type="xs:string" name="condition"/>
+            <xs:element type="xs:string" name="method"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element type="xs:string" name="field-name"/>
+    <xs:element type="xs:string" name="entity-name"/>
+
+    <xs:element type="joinsType" name="joins"/>
+</xs:schema>

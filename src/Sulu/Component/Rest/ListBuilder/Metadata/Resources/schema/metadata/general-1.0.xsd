@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           targetNamespace="http://schemas.sulu.io/class/general"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://schemas.sulu.io/class/general">
+    <xs:complexType name="classType">
+        <xs:sequence>
+            <xs:element type="propertiesType" name="properties"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="propertiesType">
+        <xs:sequence>
+            <xs:element type="propertyType" name="property" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="propertyType">
+        <xs:group ref="propertyGroup"/>
+        <xs:attributeGroup ref="propertyAttributeGroup"/>
+    </xs:complexType>
+
+    <xs:group name="propertyGroup">
+        <xs:sequence>
+            <xs:any minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:group>
+
+    <xs:attributeGroup name="propertyAttributeGroup">
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="translation"/>
+        <xs:attribute type="xs:boolean" name="disabled" default="false"/>
+        <xs:attribute type="xs:boolean" name="default" default="false"/>
+        <xs:attribute type="xs:string" name="type" default="string"/>
+        <xs:attribute type="xs:string" name="width"/>
+        <xs:attribute type="xs:string" name="min-width"/>
+        <xs:attribute type="xs:boolean" name="sortable" default="true"/>
+        <xs:attribute type="xs:boolean" name="editable" default="false"/>
+        <xs:attribute type="xs:string" name="css-class"/>
+    </xs:attributeGroup>
+
+    <xs:element name="class" type="classType"/>
+</xs:schema>

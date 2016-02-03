@@ -1,0 +1,15 @@
+<class xmlns="http://schemas.sulu.io/class/general"
+       xmlns:orm="http://schemas.sulu.io/class/doctrine">
+    <properties>
+        <property name="firstName" translation="contact.contacts.firstName" disabled="false" default="true"
+                  type="string">
+            <orm:field-name>firstName</orm:field-name>
+            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        </property>
+
+        <property name="lastName" translation="contact.contacts.lastName" disabled="false" default="true" type="string">
+            <orm:field-name>lastName</orm:field-name>
+            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        </property>
+    </properties>
+</class>
