@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * ENHANCEMENT #XXXX [SecurityBundle]    Made url for resetting password configurable via static variable
+
 * 1.1.7 (2016-01-26)
     * HOTFIX      #1952 [PersistenceBundle] Fixed mapped superclass inheritance
     * HOTFIX      #1950 [Rest]              Added possibility to disable the GROUP BY clause     
