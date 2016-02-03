@@ -17,6 +17,9 @@ use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;
 
+/**
+ * Adds information about the workflow stage to the serialized version of the document.
+ */
 class WorkflowStageSubscriber implements EventSubscriberInterface
 {
     /**
@@ -33,6 +36,11 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * Adds the published state to the serialization.
+     *
+     * @param ObjectEvent $event
+     */
     public function onPostSerialize(ObjectEvent $event)
     {
         /** @var RedirectTypeBehavior $document */

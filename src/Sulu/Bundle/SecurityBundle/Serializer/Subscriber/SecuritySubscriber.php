@@ -60,7 +60,7 @@ class SecuritySubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Add data for serialization of content objects.
+     * Adds the permissions for the current user to the serialization.
      *
      * @param ObjectEvent $event
      */

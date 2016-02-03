@@ -17,6 +17,9 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 
+/**
+ * Adds information about the shadow to the serialized document.
+ */
 class ShadowLocaleSubscriber implements EventSubscriberInterface
 {
     /**
@@ -49,6 +52,11 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * Adds the enabled shadow languages to the serialization.
+     *
+     * @param ObjectEvent $event
+     */
     public function onPostSerialize(ObjectEvent $event)
     {
         $document = $event->getObject();

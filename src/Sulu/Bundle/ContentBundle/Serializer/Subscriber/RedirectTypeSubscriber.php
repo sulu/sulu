@@ -16,6 +16,9 @@ use JMS\Serializer\EventDispatcher\ObjectEvent;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\RedirectType;
 
+/**
+ * Adds information about the redirects to the serialized document.
+ */
 class RedirectTypeSubscriber implements EventSubscriberInterface
 {
     /**
@@ -32,6 +35,11 @@ class RedirectTypeSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * Adds the type of redirect and the redirect location to the serialization.
+     *
+     * @param ObjectEvent $event
+     */
     public function onPostSerialize(ObjectEvent $event)
     {
         /** @var RedirectTypeBehavior $document */

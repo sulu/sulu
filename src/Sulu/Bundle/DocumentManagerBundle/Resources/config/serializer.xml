@@ -17,7 +17,7 @@
         </service>
 
         <service id="sulu_document_manager.serializer.subscriber.children_behavior"
-                 class="Sulu\Bundle\DocumentManagerBundle\Bridge\Serializer\Subscriber\ChildrenBehaviorSubscriber">
+                 class="Sulu\Bundle\DocumentManagerBundle\Bridge\Serializer\Subscriber\ChildrenSubscriber">
             <argument type="service" id="sulu_document_manager.document_inspector"/>
             <argument type="service" id="sulu_document_manager.document_registry"/>
             <tag name="jms_serializer.event_subscriber"/>

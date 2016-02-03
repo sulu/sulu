@@ -17,6 +17,7 @@ use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\EventDispatcher\PreSerializeEvent;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
+use Sulu\Component\Content\Document\Structure\ManagedStructure;
 use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
@@ -64,6 +65,11 @@ class StructureSubscriber implements EventSubscriberInterface
         }
     }
 
+    /**
+     * Adds all the structure specific data (template, structure properties and breadcrumb) to the serialization.
+     *
+     * @param ObjectEvent $event
+     */
     public function onPostSerialize(ObjectEvent $event)
     {
         $document = $event->getObject();
@@ -80,9 +86,9 @@ class StructureSubscriber implements EventSubscriberInterface
         $visitor->addData('internal', false);
 
         if (array_search('defaultPage', $context->attributes->get('groups')->getOrElse([])) !== false) {
+            /** @var ManagedStructure $structure */
             $structure = $document->getStructure();
             // TODO get the structure metadata in a better, documented way
-            /** @var StructureMetadata $structureMetadata */
             $structureMetadata = $structure->getStructureMetadata();
             foreach ($structure->toArray() as $name => $value) {
                 if ($name === 'title') {

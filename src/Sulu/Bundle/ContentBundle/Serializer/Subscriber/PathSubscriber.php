@@ -17,6 +17,9 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 
+/**
+ * Adds the relative path to the serialization of a document.
+ */
 class PathSubscriber implements EventSubscriberInterface
 {
     /**
@@ -49,6 +52,11 @@ class PathSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * Adds the relative path to the serialization.
+     *
+     * @param ObjectEvent $event
+     */
     public function onPostSerialize(ObjectEvent $event)
     {
         $visitor = $event->getVisitor();

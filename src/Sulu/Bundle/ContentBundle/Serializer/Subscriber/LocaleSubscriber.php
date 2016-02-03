@@ -18,6 +18,9 @@ use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 
+/**
+ * Adds information about the localization to the serialized information of a Document.
+ */
 class LocaleSubscriber implements EventSubscriberInterface
 {
     /**
@@ -50,6 +53,10 @@ class LocaleSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * Adds the concrete languages available and the type (ghost or shadow) of the document to the serialization.
+     * @param ObjectEvent $event
+     */
     public function onPostSerialize(ObjectEvent $event)
     {
         $document = $event->getObject();

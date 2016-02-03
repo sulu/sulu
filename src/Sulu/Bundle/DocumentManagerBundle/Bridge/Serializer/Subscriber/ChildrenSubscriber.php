@@ -17,7 +17,10 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 
-class ChildrenBehaviorSubscriber implements EventSubscriberInterface
+/**
+ * Adds information about the children to the serialized document.
+ */
+class ChildrenSubscriber implements EventSubscriberInterface
 {
     /**
      * @var DocumentInspector
@@ -49,6 +52,11 @@ class ChildrenBehaviorSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * Adds a flag to indicate if the document has children.
+     *
+     * @param ObjectEvent $event
+     */
     public function onPostSerialize(ObjectEvent $event)
     {
         $document = $event->getObject();
@@ -58,7 +66,6 @@ class ChildrenBehaviorSubscriber implements EventSubscriberInterface
         }
 
         $visitor = $event->getVisitor();
-
         $visitor->addData('hasSub', $this->documentInspector->hasChildren($document));
     }
 }
