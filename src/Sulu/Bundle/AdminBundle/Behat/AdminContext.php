@@ -181,11 +181,11 @@ EOT;
     }
 
     /**
-     * @Given I click delete from the drop down
+     * @Given I click :button from the drop down
      */
-    public function iClickDelete()
+    public function iClick($button)
     {
-        $script = "$(\"li[data-id='delete']\")";
+        $script = "$(\"li[data-id='" . $button . "']\")";
 
         $this->waitForAuraEvents(
             [
@@ -427,8 +427,8 @@ EOT;
      * Fill in the named husky field. Husky fields may not use standard HTML
      * inputs, so they need some special handling.
      *
-     * @param string $name           Name of field to fill in
-     * @param string $value          Value to fill in
+     * @param string $name Name of field to fill in
+     * @param string $value Value to fill in
      * @param string $parentSelector Optional parent selector
      */
     private function fillInHuskyField($name, $value, $parentSelector = '')

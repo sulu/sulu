@@ -1,5 +1,12 @@
 CHANGELOG for Sulu
 ==================
+    
+* dev-master
+    * ENHANCEMENT #1978 [SecurityBundle]    Made url for resetting password configurable via static variable
+
+* dev-master
+    * HOTFIX      #1976 [MediaBundle]       Moved delete collection to drop-down to avoid misunderstandings
+    * HOTFIX      #---  [AdminBundle]       Updated husky to fix rendering preselected bug
 
 * dev-develop
     * ENHANCEMENT #1956 [All]             Removed Admin command registration
@@ -35,7 +42,7 @@ CHANGELOG for Sulu
     * HOTFIX      #1962 [ContactBundle]     Fixed contact birthday trigger save-button
     * HOTFIX      #1958 [SnippetBundle]     Fixed bug with snippet in snippet
     * HOTFIX      #1953 [SecurityBundle]    Added UI to enable user in sulu admin
-    
+
 * 1.1.7 (2016-01-26)
     * HOTFIX      #1952 [PersistenceBundle] Fixed mapped superclass inheritance
     * HOTFIX      #1950 [Rest]              Added possibility to disable the GROUP BY clause     
