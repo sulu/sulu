@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Document\Subscriber\Compat;
+namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber\Compat;
 
 use PHPCR\NodeInterface;
 use Prophecy\Argument;

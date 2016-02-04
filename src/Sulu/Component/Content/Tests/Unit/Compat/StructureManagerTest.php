@@ -15,6 +15,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\Compat\StructureManager;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\StructureMetadata;
