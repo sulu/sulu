@@ -9,6 +9,7 @@ CHANGELOG for Sulu
     * HOTFIX      #---  [AdminBundle]       Updated husky to fix rendering preselected bug
 
 * dev-develop
+    * ENHANCEMENT #1973 [All]             Moved tests from /tests to component directories.
     * ENHANCEMENT #1956 [All]             Removed Admin command registration
     * ENHANCEMENT #1956 [TranslateBundle] Removed entry in admin navigation
     * BUGFIX      #1510 [Persistence]     Fetch user only if an entity with UserBlameInterface is detected

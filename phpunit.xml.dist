@@ -2,17 +2,22 @@
 <phpunit bootstrap="./tests/bootstrap.php" colors="true">
 
     <testsuites>
-        <testsuite name="Sulu Test Suite">
-            <directory suffix="Test.php">./tests</directory>
+        <testsuite name="unit">
+            <directory suffix="Test.php">./src/Sulu/Component/*/Tests/Unit</directory>
+        </testsuite>
+        <testsuite name="functional">
+            <directory suffix="Test.php">./src/Sulu/Component/*/Tests/Functional</directory>
         </testsuite>
     </testsuites>
 
+    <!-- Code coverage filter -->
     <filter>
         <whitelist>
             <directory>./</directory>
             <exclude>
                 <directory>./tests</directory>
                 <directory>./vendor</directory>
+                <directory>./src/Sulu/Component/*/Tests</directory>
             </exclude>
         </whitelist>
     </filter>
