@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\CustomUrl\Routing\Enhancers;
+namespace Sulu\Component\CustomUrl\Tests\Unit\Routing\Enhancers;
 
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
@@ -16,6 +16,7 @@ use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
+use Sulu\Component\CustomUrl\Routing\Enhancers\ContentEnhancer;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;

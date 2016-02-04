@@ -8,7 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Webspace\Url;
+namespace Sulu\Component\Webspace\Tests\Unit\Url;
+
+use Sulu\Component\Webspace\Url\Replacer;
 
 class ReplacerTest extends \PHPUnit_Framework_TestCase
 {

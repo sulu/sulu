@@ -8,7 +8,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Webspace\Url;
+namespace Sulu\Component\Webspace\Tests\Unit\Url;
+
+use Sulu\Component\Webspace\Url\ReplacerFactory;
+use Sulu\Component\Webspace\Url\ReplacerInterface;
 
 class ReplacerFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -16,6 +19,6 @@ class ReplacerFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $factory = new ReplacerFactory();
 
-        $this->assertInstanceOf(ReplacerInterface::class, $factory->create('test'));
+        self::assertInstanceOf(ReplacerInterface::class, $factory->create('test'));
     }
 }

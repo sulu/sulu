@@ -8,10 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\CustomUrl\Routing\Enhancers;
+namespace Sulu\Component\CustomUrl\Tests\Unit\Routing\Enhancers;
 
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
+use Sulu\Component\CustomUrl\Routing\Enhancers\SeoEnhancer;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;

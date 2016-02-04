@@ -8,10 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\CustomUrl\Routing\Enhancers;
+namespace Sulu\Component\CustomUrl\Tests\Unit\Routing\Enhancers;
 
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
+use Sulu\Component\CustomUrl\Routing\Enhancers\InternalLinkEnhancer;
 use Symfony\Component\HttpFoundation\Request;
 
 class InternalLinkEnhancerTest extends \PHPUnit_Framework_TestCase

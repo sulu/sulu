@@ -8,10 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\CustomUrl\Document\Subscriber;
+namespace Sulu\Component\CustomUrl\Tests\Unit\Document\Subscriber;
 
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
+use Sulu\Component\CustomUrl\Document\Subscriber\InvalidateSubscriber;
 use Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 

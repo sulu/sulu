@@ -8,13 +8,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\CustomUrl\Routing;
+namespace Sulu\Component\CustomUrl\Tests\Unit\Routing;
 
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\ContentBundle\Document\RouteDocument;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface;
+use Sulu\Component\CustomUrl\Routing\RouteProvider;
 use Sulu\Component\DocumentManager\PathBuilder;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;

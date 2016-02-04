@@ -8,12 +8,15 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\CustomUrl\Manager;
+namespace Sulu\Component\CustomUrl\Tests\Unit\Manager;
 
 use PHPCR\ItemExistsException;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\ContentBundle\Document\RouteDocument;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
+use Sulu\Component\CustomUrl\Manager\CannotDeleteCurrentRouteException;
+use Sulu\Component\CustomUrl\Manager\CustomUrlManager;
+use Sulu\Component\CustomUrl\Manager\TitleExistsException;
 use Sulu\Component\CustomUrl\Repository\CustomUrlRepository;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Metadata;

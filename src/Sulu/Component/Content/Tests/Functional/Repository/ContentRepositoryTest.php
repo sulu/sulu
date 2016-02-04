@@ -17,6 +17,7 @@ use Sulu\Component\Content\Compat\LocalizationFinderInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Content\Repository\ContentRepository;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;

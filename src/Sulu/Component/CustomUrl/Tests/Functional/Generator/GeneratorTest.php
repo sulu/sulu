@@ -8,8 +8,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\CustomUrl\Generator;
+namespace Sulu\Component\CustomUrl\Tests\Functional\Generator;
 
+use Sulu\Component\CustomUrl\Generator\Generator;
+use Sulu\Component\CustomUrl\Generator\MissingDomainPartException;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Url\ReplacerFactory;
 
