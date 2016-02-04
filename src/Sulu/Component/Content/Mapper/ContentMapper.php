@@ -199,14 +199,14 @@ class ContentMapper implements ContentMapperInterface
         // map explicit arguments to data
         $data['parent'] = $parentUuid;
         $data['workflowStage'] = $state;
-        $data['structureType'] = $structureType;
+        $data['template'] = $structureType;
 
         if ($isShadow) {
-            $data['shadowLocaleEnabled'] = true;
+            $data['shadowOn'] = true;
         }
 
         if ($shadowBaseLanguage) {
-            $data['shadowLocale'] = $shadowBaseLanguage;
+            $data['shadowBaseLanguage'] = $shadowBaseLanguage;
         }
 
         if ($uuid) {

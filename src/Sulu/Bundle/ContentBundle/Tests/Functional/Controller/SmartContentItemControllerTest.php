@@ -206,7 +206,7 @@ class SmartContentItemControllerTest extends SuluTestCase
     {
         $data = array_merge(
             [
-                'structureType' => $template,
+                'template' => $template,
                 'parent' => $parent,
                 'workflowStage' => 2,
                 'webspace_key' => 'sulu_io',

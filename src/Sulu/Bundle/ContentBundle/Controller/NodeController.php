@@ -590,7 +590,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
     public function putAction(Request $request, $uuid)
     {
         $language = $this->getLanguage($request);
-        $type = $request->get('type', 'page');
+        $type = $request->query->get('type', 'page');
 
         try {
             $document = $this->getDocumentManager()->find(
@@ -604,20 +604,14 @@ class NodeController extends RestController implements ClassResourceInterface, S
             return $this->handleView($this->view($e->toArray(), 404));
         }
 
-        $webspace = $this->getWebspace($request);
         $data = $request->request->all();
-        $data['structureType'] = $data['template'];
-        $data['shadowLocaleEnabled'] = $this->getRequestParameter($request, 'shadowOn', false);
-        $data['shadowLocale'] = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
         $data['workflowStage'] = $this->getRequestParameter($request, 'state');
 
-        // disable csrf protection, since we can't produce a token, because the form is cached on the client
-        $options = [
+        $form = $this->createForm($type, $document, [
+            // disable csrf protection, since we can't produce a token, because the form is cached on the client
             'csrf_protection' => false,
-            'webspace_key' => $webspace,
-        ];
-
-        $form = $this->createForm($type, $document, $options);
+            'webspace_key' => $this->getWebspace($request),
+        ]);
         $form->submit($data, false);
 
         if (!$form->isValid()) {
