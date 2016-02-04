@@ -28,7 +28,7 @@ use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 
 /**
- * @deprecated
+ * @deprecated Should be replaced by a proper StructureInterface implementation
  */
 class StructureBridge implements StructureInterface
 {

@@ -98,6 +98,11 @@ class ContentMapperSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * Dispatches the deprecated pre remove event.
+     *
+     * @param RemoveEvent $event
+     */
     public function handlePreRemove(RemoveEvent $event)
     {
         $document = $event->getDocument();
@@ -114,6 +119,11 @@ class ContentMapperSubscriber implements EventSubscriberInterface
         );
     }
 
+    /**
+     * Dispatches the deprected post remove event.
+     *
+     * @param RemoveEvent $event
+     */
     public function handlePostRemove(RemoveEvent $event)
     {
         $document = $event->getDocument();
@@ -133,6 +143,11 @@ class ContentMapperSubscriber implements EventSubscriberInterface
         unset($this->deleteEvents[$oid]);
     }
 
+    /**
+     * Saves all persisted documents to dispatch the deprecated post save event later when flushed.
+     *
+     * @param PersistEvent $event
+     */
     public function handlePersist(PersistEvent $event)
     {
         if (!$this->supports($event->getDocument())) {
@@ -142,6 +157,11 @@ class ContentMapperSubscriber implements EventSubscriberInterface
         $this->persistEvents[] = $event;
     }
 
+    /**
+     * Dispatches the deprecated post save event for every persisted document.
+     *
+     * @param FlushEvent $event
+     */
     public function handleFlush(FlushEvent $event)
     {
         foreach ($this->persistEvents as $persistEvent) {

@@ -55,6 +55,7 @@ class LocaleSubscriber implements EventSubscriberInterface
 
     /**
      * Adds the concrete languages available and the type (ghost or shadow) of the document to the serialization.
+     *
      * @param ObjectEvent $event
      */
     public function onPostSerialize(ObjectEvent $event)

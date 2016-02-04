@@ -18,7 +18,7 @@ namespace Sulu\Component\Content\Mapper;
  * short-term solution to fix the argument problem on the content
  * mapper ->save() method, which currently has 11 arguments.
  *
- * @deprecated
+ * @deprecated This class is only used by the ContentMapper, which will be replaced by the DocumentManager
  */
 class ContentMapperRequest
 {

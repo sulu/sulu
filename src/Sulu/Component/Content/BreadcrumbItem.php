@@ -14,7 +14,7 @@ namespace Sulu\Component\Content;
 /**
  * Item for breadcrumb.
  *
- * @deprecated
+ * @deprecated This class was only used for an array generation, which is now done in a serializer subscriber
  */
 class BreadcrumbItem implements BreadcrumbItemInterface
 {

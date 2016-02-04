@@ -15,11 +15,11 @@ use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\EventDispatcher\PreSerializeEvent;
+use JMS\Serializer\VisitorInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Structure\ManagedStructure;
 use Sulu\Component\Content\Document\Structure\Structure;
-use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 
 /**
@@ -86,47 +86,68 @@ class StructureSubscriber implements EventSubscriberInterface
         $visitor->addData('internal', false);
 
         if (array_search('defaultPage', $context->attributes->get('groups')->getOrElse([])) !== false) {
-            /** @var ManagedStructure $structure */
-            $structure = $document->getStructure();
-            // TODO get the structure metadata in a better, documented way
-            $structureMetadata = $structure->getStructureMetadata();
-            foreach ($structure->toArray() as $name => $value) {
-                if ($name === 'title') {
-                    continue;
-                }
-
-                if ($structureMetadata->getProperty($name)->hasTag('sulu.rlp')) {
-                    continue;
-                }
-
-                $visitor->addData($name, $value);
-            }
+            $this->addStructureProperties($document, $visitor);
         }
 
         // create bread crumbs
         if (array_search('breadcrumbPage', $context->attributes->get('groups')->getOrElse([])) !== false) {
-            $items = [];
-            $parentDocument = $this->inspector->getParent($document);
-            while ($parentDocument instanceof StructureBehavior) {
-                $item = [];
-                if ($parentDocument instanceof UuidBehavior) {
-                    $item['uuid'] = $parentDocument->getUuid();
-                }
+            $this->addBreadcrumb($document, $visitor);
+        }
+    }
 
-                $item['title'] = $parentDocument->getStructure()->getProperty('title')->getValue();
-
-                $items[] = $item;
-
-                $parentDocument = $this->inspector->getParent($parentDocument);
+    /**
+     * Adds the properties of the structure to the serialization.
+     *
+     * @param StructureBehavior $document
+     * @param VisitorInterface $visitor
+     */
+    protected function addStructureProperties(StructureBehavior $document, VisitorInterface $visitor)
+    {
+        /** @var ManagedStructure $structure */
+        $structure = $document->getStructure();
+        $structureMetadata = $structure->getStructureMetadata();
+        foreach ($structure->toArray() as $name => $value) {
+            if ($name === 'title') {
+                continue;
             }
 
-            $items = array_reverse($items);
+            if ($structureMetadata->getProperty($name)->hasTag('sulu.rlp')) {
+                continue;
+            }
 
-            array_walk($items, function (&$item, $index) {
-                $item['depth'] = $index;
-            });
-
-            $visitor->addData('breadcrumb', $items);
+            $visitor->addData($name, $value);
         }
+    }
+
+    /**
+     * Adds the breadcrumb to the serialization.
+     *
+     * @param StructureBehavior $document
+     * @param VisitorInterface $visitor
+     */
+    protected function addBreadcrumb(StructureBehavior $document, VisitorInterface $visitor)
+    {
+        $items = [];
+        $parentDocument = $this->inspector->getParent($document);
+        while ($parentDocument instanceof StructureBehavior) {
+            $item = [];
+            if ($parentDocument instanceof UuidBehavior) {
+                $item['uuid'] = $parentDocument->getUuid();
+            }
+
+            $item['title'] = $parentDocument->getStructure()->getProperty('title')->getValue();
+
+            $items[] = $item;
+
+            $parentDocument = $this->inspector->getParent($parentDocument);
+        }
+
+        $items = array_reverse($items);
+
+        array_walk($items, function (&$item, $index) {
+            $item['depth'] = $index;
+        });
+
+        $visitor->addData('breadcrumb', $items);
     }
 }
