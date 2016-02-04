@@ -4,6 +4,10 @@ CHANGELOG for Sulu
 * dev-master
     * ENHANCEMENT #1978 [SecurityBundle]    Made url for resetting password configurable via static variable
 
+* dev-master
+    * HOTFIX      #1976 [MediaBundle]       Moved delete collection to drop-down to avoid misunderstandings
+    * HOTFIX      #---  [AdminBundle]       Updated husky to fix rendering preselected bug
+
 * 1.1.8 (2016-02-01)
     * HOTFIX      #1962 [ListBuilder]       Fixed search generation with case-field descriptors
     * HOTFIX      #1962 [ContactBundle]     Fixed contact birthday trigger save-button

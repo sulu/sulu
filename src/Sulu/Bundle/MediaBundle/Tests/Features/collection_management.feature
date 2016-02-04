@@ -29,7 +29,7 @@ Feature: Collection management
         Given the media collection "Foobar" exists
         And I am on the settings page for the media collection
         And I expect a data-navigation to appear
-        When I click the toolbar button "Delete collection"
+        When I click deleteCollection from the drop down
         And I expect a confirmation dialog to appear
         And I confirm
         Then I expect a success notification to appear
