@@ -109,11 +109,11 @@ class CollaborationMessageHandler implements MessageHandlerInterface
 
             $this->removeCollaboration($type, $id, $connectionId);
 
-            if (isset($this->connections[$connectionId])) {
-                unset($this->connections[$connectionId]);
-            }
-
             $this->sendUpdate($type, $id, $this->getUsersInformation($type, $id));
+        }
+
+        if (isset($this->connections[$connectionId])) {
+            unset($this->connections[$connectionId]);
         }
     }
 

@@ -402,4 +402,33 @@ class CollaborationMessageHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->collaborationsConnectionCache->contains(1));
         $this->assertArrayNotHasKey(1, $this->collaborationsEntityCache->fetch('page_a'));
     }
+
+    public function testHandleEnterAndLeaveAndClose()
+    {
+        $this->collaborationMessageHandler->handle(
+            $this->connection1->reveal(),
+            [
+                'command' => 'enter',
+                'id' => 'a',
+                'userId' => 1,
+                'type' => 'page',
+            ],
+            $this->context1->reveal()
+        );
+        $this->collaborationMessageHandler->handle(
+            $this->connection1->reveal(),
+            [
+                'command' => 'leave',
+                'id' => 'a',
+                'userId' => 1,
+                'type' => 'page',
+            ],
+            $this->context1->reveal()
+        );
+        $this->collaborationMessageHandler->onClose($this->connection1->reveal(), $this->context1->reveal());
+
+        $connectionsReflection = new \ReflectionProperty(CollaborationMessageHandler::class, 'connections');
+        $connectionsReflection->setAccessible(true);
+        $this->assertEmpty($connectionsReflection->getValue($this->collaborationMessageHandler));
+    }
 }

@@ -2,35 +2,36 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * ENHANCEMENT #1973 [All]             Moved tests from /tests to component directories.
-    * ENHANCEMENT #1970 [ContentBundle]   Changed get and put from NodeController to use DocumentManager
-    * ENHANCEMENT #1956 [All]             Removed Admin command registration
-    * ENHANCEMENT #1956 [TranslateBundle] Removed entry in admin navigation
-    * BUGFIX      #1510 [Persistence]     Fetch user only if an entity with UserBlameInterface is detected
+    * BUGFIX      #1985 [CollaborationBundle] Removed leaking connections
+    * ENHANCEMENT #1973 [All]                 Moved tests from /tests to component directories.
+    * ENHANCEMENT #1970 [ContentBundle]       Changed get and put from NodeController to use DocumentManager
+    * ENHANCEMENT #1956 [All]                 Removed Admin command registration
+    * ENHANCEMENT #1956 [TranslateBundle]     Removed entry in admin navigation
+    * BUGFIX      #1510 [Persistence]         Fetch user only if an entity with UserBlameInterface is detected
     * FEATURE     #1233 [CollaborationBundle] Showing current collaborators of pages
-    * BUGFIX      #1944 [MediaBundle]     Removed wrong definition of indices
-    * FEATURE     #1921 [ContentBundle]   Added unset single internal link
-    * FEATURE     #1233 [ContentBundle]   Showing current collaborators of pages
-    * ENHANCEMENT #1936 [Webspace]        Cleanup of WebsiteRequestAnalyzer
-    * ENHANCEMENT #1937 [WebsiteBundle]   Removed unnecessary ob_clean in WebsiteController
-    * BUGFIX      #1931 [ContentBundle]   Fixed form deprecation messages   
-    * BUGFIX      #1930 [ContentBundle]   Fixed updating values in combination
-                                          with template change
-    * FEATURE     #1912 [WebsiteBundle]   Added analytics to webspace settings
-    * FEATURE     #1906 [All]             Added PHP 7 support
-    * FEATURE     #1922 [ContentBundle]   Added parameter to show toggler instead of checkbox
-    * BUGFIX      #1926 [ContentBundle]   Fixed preview for non-standard page document
-    * BUGFIX      #1874 [ContentBundle]   Fixed preview selector for blocks
-    * FEATURE     #1777 [ContentBundle]   Added selection content types
-    * BUGFIX      #1911 [SecurityBundle]  Fixed default locale user builder
-    * BUGFIX      #1915 [All]             Removed deprecations of initial admin request
-    * FEATURE     #1851 [SnippetBundle]   Added default snippets webspace-settings
-    * FEATURE     #1851 [ContentBundle]   Added webspace-settings
-    * FEATURE     #1905 [All]             Added french translation
-    * BUGFIX      #1893 [ContentBundle]   Fixed resource locator deferred for edit
-    * BUGIFX      #1871 [ContentBundle]   Fixed url-generation and save button
-    * BUGFIX      #1873 [ContactBundle]   Fixed remove title and position
-    * BUGFIX      #1873 [ContactBundle]   Fixed remove contact birthday
+    * BUGFIX      #1944 [MediaBundle]         Removed wrong definition of indices
+    * FEATURE     #1921 [ContentBundle]       Added unset single internal link
+    * FEATURE     #1233 [ContentBundle]       Showing current collaborators of pages
+    * ENHANCEMENT #1936 [Webspace]            Cleanup of WebsiteRequestAnalyzer
+    * ENHANCEMENT #1937 [WebsiteBundle]       Removed unnecessary ob_clean in WebsiteController
+    * BUGFIX      #1931 [ContentBundle]       Fixed form deprecation messages   
+    * BUGFIX      #1930 [ContentBundle]       Fixed updating values in combination
+                                              with template change
+    * FEATURE     #1912 [WebsiteBundle]       Added analytics to webspace settings
+    * FEATURE     #1906 [All]                 Added PHP 7 support
+    * FEATURE     #1922 [ContentBundle]       Added parameter to show toggler instead of checkbox
+    * BUGFIX      #1926 [ContentBundle]       Fixed preview for non-standard page document
+    * BUGFIX      #1874 [ContentBundle]       Fixed preview selector for blocks
+    * FEATURE     #1777 [ContentBundle]       Added selection content types
+    * BUGFIX      #1911 [SecurityBundle]      Fixed default locale user builder
+    * BUGFIX      #1915 [All]                 Removed deprecations of initial admin request
+    * FEATURE     #1851 [SnippetBundle]       Added default snippets webspace-settings
+    * FEATURE     #1851 [ContentBundle]       Added webspace-settings
+    * FEATURE     #1905 [All]                 Added french translation
+    * BUGFIX      #1893 [ContentBundle]       Fixed resource locator deferred for edit
+    * BUGIFX      #1871 [ContentBundle]       Fixed url-generation and save button
+    * BUGFIX      #1873 [ContactBundle]       Fixed remove title and position
+    * BUGFIX      #1873 [ContactBundle]       Fixed remove contact birthday
     
 * 1.1.9 (2016-02-05)
     * ENHANCEMENT #1978 [SecurityBundle]    Made url for resetting password configurable via static variable
