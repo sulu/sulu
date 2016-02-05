@@ -4,7 +4,7 @@ namespace Sulu\Component\Rest\ListBuilder\Metadata;
 
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\DoctrinePropertyMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\PropertyMetadata as DoctrinePropertyMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata as GeneralPropertyMetadata;
 
 class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
@@ -41,8 +41,8 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
             $generalMetadata = $propertyMetadata->get(GeneralPropertyMetadata::class);
 
             $joins = [];
-            foreach ($doctrineMetadata->getJoins() as $joinMetadata) {
-                $joins[] = new DoctrineJoinDescriptor(
+            foreach ($doctrineMetadata->getType()->getField()->getJoins() as $joinMetadata) {
+                $joins[$joinMetadata->getEntityName()] = new DoctrineJoinDescriptor(
                     $joinMetadata->getEntityName(),
                     $joinMetadata->getEntityField(),
                     $joinMetadata->getCondition(),
@@ -51,10 +51,10 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
                 );
             }
 
-            $fieldDescriptor[] = new DoctrineFieldDescriptor(
-                $doctrineMetadata->getFieldName(),
+            $fieldDescriptor[$generalMetadata->getName()] = new DoctrineFieldDescriptor(
+                $doctrineMetadata->getType()->getField()->getName(),
                 $generalMetadata->getName(),
-                $doctrineMetadata->getEntityName(),
+                $doctrineMetadata->getType()->getField()->getEntityName(),
                 $generalMetadata->getTranslation(),
                 $joins,
                 $generalMetadata->isDisabled(),

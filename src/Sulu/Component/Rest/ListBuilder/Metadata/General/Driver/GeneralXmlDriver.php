@@ -5,9 +5,7 @@ namespace Sulu\Component\Rest\ListBuilder\Metadata\General\Driver;
 use Metadata\Driver\AbstractFileDriver;
 use Metadata\Driver\DriverInterface;
 use Metadata\MergeableClassMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\General\ConcatenationPropertyMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyReferenceMetadata;
 use Sulu\Component\Util\XmlUtil;
 use Symfony\Component\Config\Util\XmlUtils;
 
@@ -29,19 +27,7 @@ class GeneralXmlDriver extends AbstractFileDriver implements DriverInterface
         $xpath->registerNamespace('x', 'http://schemas.sulu.io/class/general');
 
         foreach ($xpath->query('/x:class/x:properties/x:*') as $propertyNode) {
-            $propertyMetadata = null;
-            switch ($propertyNode->nodeName) {
-                case 'concatenation-property':
-                    $propertyMetadata = $this->getConcatenationPropertyMetadata($xpath, $propertyNode, $class->getName());
-                    break;
-                case 'property-ref':
-                    $propertyMetadata = $this->getReferencePropertyMetadata($xpath, $propertyNode, $class->getName());
-                    break;
-                default:
-                    $propertyMetadata = $this->getPropertyMetadata($xpath, $propertyNode, $class->getName());
-                    break;
-            }
-            $classMetadata->addPropertyMetadata($propertyMetadata);
+            $classMetadata->addPropertyMetadata($this->getPropertyMetadata($xpath, $propertyNode, $class->getName()));
         }
 
         return $classMetadata;
@@ -60,52 +46,6 @@ class GeneralXmlDriver extends AbstractFileDriver implements DriverInterface
     {
         $name = XmlUtil::getValueFromXPath('@name', $xpath, $propertyNode);
         $propertyMetadata = new PropertyMetadata($className, $name);
-
-        return $this->setDefaultData($propertyMetadata, $xpath, $propertyNode);
-    }
-
-    /**
-     * Extracts data from dom-node to create a new reference-property-metadata object.
-     *
-     * @param \DOMXPath $xpath
-     * @param \DOMNode $propertyNode
-     * @param string $className
-     *
-     * @return PropertyMetadata
-     */
-    protected function getReferencePropertyMetadata(\DOMXPath $xpath, \DOMNode $propertyNode, $className)
-    {
-        $name = XmlUtil::getValueFromXPath('@name', $xpath, $propertyNode);
-
-        return $this->setDefaultData(new PropertyReferenceMetadata($className, $name), $xpath, $propertyNode);
-    }
-
-    /**
-     * Extracts attributes from dom-node to create a new concatenation-property-metadata object.
-     *
-     * @param \DOMXPath $xpath
-     * @param \DOMNode $propertyNode
-     * @param string $className
-     *
-     * @return PropertyMetadata
-     */
-    protected function getConcatenationPropertyMetadata(\DOMXPath $xpath, \DOMNode $propertyNode, $className)
-    {
-        $name = XmlUtil::getValueFromXPath('@name', $xpath, $propertyNode);
-        $propertyMetadata = new ConcatenationPropertyMetadata($className, $name);
-
-        foreach ($xpath->query('x:*', $propertyNode) as $childPropertyNode) {
-            $childPropertyMetadata = null;
-            switch ($childPropertyNode->nodeName) {
-                case 'property-ref':
-                    $childPropertyMetadata = $this->getReferencePropertyMetadata($xpath, $childPropertyNode, $className);
-                    break;
-                default:
-                    $childPropertyMetadata = $this->getPropertyMetadata($xpath, $childPropertyNode, $className);
-                    break;
-            }
-            $propertyMetadata->addPropertyMetadata($childPropertyMetadata);
-        }
 
         return $this->setDefaultData($propertyMetadata, $xpath, $propertyNode);
     }

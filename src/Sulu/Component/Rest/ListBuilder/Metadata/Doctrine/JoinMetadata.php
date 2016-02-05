@@ -2,7 +2,7 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Metadata\Doctrine;
 
-class DoctrineJoinMetadata
+class JoinMetadata
 {
     const JOIN_METHOD_LEFT = 'LEFT';
     const JOIN_METHOD_INNER = 'INNER';
