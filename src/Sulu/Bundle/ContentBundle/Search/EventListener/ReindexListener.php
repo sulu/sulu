@@ -56,7 +56,7 @@ class ReindexListener
     private $baseMetadataFactory;
 
     /**
-     * @var RebuildResumeManager
+     * @var ResumeManager
      */
     private $resumeManager;
 
@@ -121,7 +121,6 @@ class ReindexListener
         //   1. Jackalope does not need to hydrate all of the PHPCR nodes from the query.
         //   2. We can clear the document manager registry periodically.
         do {
-            $this->resumeManager->setCheckpoint(self::CHECKPOINT_NAME, $offset);
             $query->setMaxResults($batchSize);
             $query->setFirstResult($offset);
             $documents = $query->execute();
@@ -143,6 +142,7 @@ class ReindexListener
             if (null !== $batchLimit && $batchCount > $batchLimit) {
                 break;
             }
+            $this->resumeManager->setCheckpoint(self::CHECKPOINT_NAME, $offset);
         } while($result !== false);
 
         $output->write(PHP_EOL);
@@ -154,11 +154,21 @@ class ReindexListener
         $progress = new ProgressHelper();
         $progress->start($output, count($documents));
 
-        $document = $documents->current();
+        while ($documents->valid()) {
+            try {
+                $document = $documents->current();
+            } catch (\Exception $e) {
+               $this->logError($output, sprintf(
+                   'Error when hydrating document: %s',
+                   $e->getMessage()
+               ));
+               $documents->next();
+               $progress->advance();
+               continue;
+            }
 
-        do {
-            $error = null;
             if ($document instanceof SecurityBehavior && !empty($document->getPermissions())) {
+                $documents->next();
                 $progress->advance();
                 continue;
             }
@@ -177,11 +187,15 @@ class ReindexListener
 
                         $this->searchManager->index($document, $locale);
                     } catch (\Exception $e) {
-                        $error = $e;
+                        $this->logError($output, sprintf(
+                            'Error indexing locale "%s"',
+                            $locale,
+                            $e->getMessage()
+                        ));
                     }
                 }
             } catch (\Exception $e) {
-                $error = '<error>Error indexing or de-indexing page</error>';
+                $this->logError($output, 'Error indexing page: ' . $e->getMessage());
             }
 
             $progress->advance();
@@ -191,23 +205,11 @@ class ReindexListener
             if ($document instanceof TitleBehavior) {
                 $output->write(' Title: ' . $document->getTitle(). "\x1B[0J");
             } else {
-                $output->write(' OID: ' . spl_object_hash($document->getTitle()). "\x1B[0J");
+                $output->write(' OID: ' . spl_object_hash($document). "\x1B[0J");
             }
 
-            try {
-                $documents->next();
-                if ($documents->valid()) {
-                    $document = $documents->current();
-                } else {
-                    $document = false;
-                }
-            } catch (\Exception $e) {
-                $this->logError($output, sprintf(
-                    'Error when hydrating document: %s',
-                    $e->getMessage()
-                ));
-            }
-        } while ($document);
+            $documents->next();
+        };
 
         return true;
     }
