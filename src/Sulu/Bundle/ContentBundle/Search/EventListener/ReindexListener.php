@@ -18,6 +18,9 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Metadata\BaseMetadataFactory;
 use Symfony\Component\Console\Helper\ProgressHelper;
+use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
+use Massive\Bundle\SearchBundle\Search\Reindex\ResumeManager;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Listen to for new hits. If document instance of structure
@@ -25,6 +28,8 @@ use Symfony\Component\Console\Helper\ProgressHelper;
  */
 class ReindexListener
 {
+    const CHECKPOINT_NAME = 'Sulu Structure';
+
     /**
      * @var SearchManagerInterface
      */
@@ -50,11 +55,17 @@ class ReindexListener
      */
     private $baseMetadataFactory;
 
+    /**
+     * @var RebuildResumeManager
+     */
+    private $resumeManager;
+
     public function __construct(
         DocumentManager $documentManager,
         DocumentInspector $inspector,
         SearchManagerInterface $searchManager,
         BaseMetadataFactory $baseMetadataFactory,
+        ResumeManager $resumeManager,
         array $mapping = []
     ) {
         $this->searchManager = $searchManager;
@@ -62,6 +73,7 @@ class ReindexListener
         $this->documentManager = $documentManager;
         $this->inspector = $inspector;
         $this->baseMetadataFactory = $baseMetadataFactory;
+        $this->resumeManager = $resumeManager;
     }
 
     /**
@@ -71,9 +83,14 @@ class ReindexListener
      */
     public function onIndexRebuild(IndexRebuildEvent $event)
     {
-        $output = $event->getOutput();
-        $filter = $event->getFilter();
+        $this->doIndexRebuild(
+            $event->getOutput(),
+            $event->getFilter()
+        );
+    }
 
+    private function doIndexRebuild($output, $filter)
+    {
         $output->writeln('<info>Rebuilding content index</info>');
 
         $typeMap = $this->baseMetadataFactory->getPhpcrTypeMap();
@@ -94,59 +111,114 @@ class ReindexListener
             'SELECT * FROM [nt:unstructured] AS a WHERE ' . $condition
         );
 
-        $count = [];
+        $batchSize = 50;
+        $offset = $this->resumeManager->getCheckpoint(self::CHECKPOINT_NAME, 0);
+        $batchLimit = 4;
+        $batchCount = 0;
 
-        $documents = $query->execute();
+        // index in batches: indexing in batches means:
+        //
+        //   1. Jackalope does not need to hydrate all of the PHPCR nodes from the query.
+        //   2. We can clear the document manager registry periodically.
+        do {
+            $this->resumeManager->setCheckpoint(self::CHECKPOINT_NAME, $offset);
+            $query->setMaxResults($batchSize);
+            $query->setFirstResult($offset);
+            $documents = $query->execute();
+
+            if ($documents->count() === 0) {
+                break;
+            }
+
+            $output->write(PHP_EOL);
+            $output->writeln(' <info>offset</info> ' . $offset);
+            $result = $this->indexBatch($output, $filter, $documents);
+            $output->write(PHP_EOL);
+
+            // this reduces overall memory usage by 1% in one experiment, so is not essential
+            $this->documentManager->clear();
+            $offset += $batchSize;
+            $batchCount++;
+
+            if (null !== $batchLimit && $batchCount > $batchLimit) {
+                break;
+            }
+        } while($result !== false);
+
+        $output->write(PHP_EOL);
+        $this->resumeManager->removeCheckpoint(self::CHECKPOINT_NAME);
+    }
+
+    private function indexBatch($output, $filter, $documents)
+    {
         $progress = new ProgressHelper();
         $progress->start($output, count($documents));
 
-        foreach ($documents as $document) {
+        $document = $documents->current();
+
+        do {
+            $error = null;
             if ($document instanceof SecurityBehavior && !empty($document->getPermissions())) {
                 $progress->advance();
                 continue;
             }
 
-            $locales = $this->inspector->getLocales($document);
+            try {
+                $locales = $this->inspector->getLocales($document);
 
-            foreach ($locales as $locale) {
-                try {
-                    $this->documentManager->find($document->getUuid(), $locale);
-                    $documentClass = get_class($document);
+                foreach ($locales as $locale) {
+                    try {
+                        $this->documentManager->find($document->getUuid(), $locale);
+                        $documentClass = get_class($document);
 
-                    if ($filter && !preg_match('{' . $filter . '}', $documentClass)) {
-                        continue;
+                        if ($filter && !preg_match('{' . $filter . '}', $documentClass)) {
+                            continue;
+                        }
+
+                        $this->searchManager->index($document, $locale);
+                    } catch (\Exception $e) {
+                        $error = $e;
                     }
-
-                    $this->searchManager->index($document, $locale);
-                    if (!isset($count[$documentClass])) {
-                        $count[$documentClass] = 0;
-                    }
-                    ++$count[$documentClass];
-                } catch (\Exception $e) {
-                    $output->writeln(sprintf(
-                        '<error>Error indexing or de-indexing page (path: %s locale: %s)</error>: %s',
-                        $this->inspector->getPath($document),
-                        $locale,
-                        $e->getMessage()
-                    ));
                 }
+            } catch (\Exception $e) {
+                $error = '<error>Error indexing or de-indexing page</error>';
             }
 
             $progress->advance();
-        }
 
-        $output->writeln('');
+            $output->write(' Mem: ' . number_format(memory_get_usage()) . 'b');
 
-        foreach ($count as $className => $count) {
-            if ($count == 0) {
-                continue;
+            if ($document instanceof TitleBehavior) {
+                $output->write(' Title: ' . $document->getTitle(). "\x1B[0J");
+            } else {
+                $output->write(' OID: ' . spl_object_hash($document->getTitle()). "\x1B[0J");
             }
 
-            $output->writeln(sprintf(
-                '<comment>Content</comment>: %s <info>%s</info> indexed',
-                $className,
-                $count
-            ));
-        }
+            try {
+                $documents->next();
+                if ($documents->valid()) {
+                    $document = $documents->current();
+                } else {
+                    $document = false;
+                }
+            } catch (\Exception $e) {
+                $this->logError($output, sprintf(
+                    'Error when hydrating document: %s',
+                    $e->getMessage()
+                ));
+            }
+        } while ($document);
+
+        return true;
+    }
+
+    private function logError(OutputInterface $output, $message)
+    {
+        $output->write(PHP_EOL);
+        $output->write(PHP_EOL);
+        $output->writeln(sprintf(
+            ' <error>%s</error>', $message
+        ));
+        $output->write(PHP_EOL);
     }
 }

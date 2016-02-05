@@ -34,6 +34,7 @@
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="massive_search.search_manager" />
             <argument type="service" id="sulu_document_manager.metadata_factory.base"/>
+            <argument type="service" id="massive_search.reindex.resume_manager"/>
             <argument>%sulu_content.search.mapping%</argument>
             <tag name="kernel.event_listener" event="massive_search.index_rebuild" method="onIndexRebuild" />
         </service>
