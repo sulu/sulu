@@ -38,7 +38,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('debug')
                     ->info('Enable the debug event dispatcher. Logs all document manager events. Very slow.')
-                    ->defaultValue('%kernel.debug%')
+                    ->defaultValue(false)
                 ->end()
                 ->arrayNode('mapping')
                     ->useAttributeAsKey('alias')
