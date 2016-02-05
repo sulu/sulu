@@ -167,6 +167,7 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
     {
         $context = SerializationContext::create();
         $context->setSerializeNull(true);
+        $context->setGroups(['previewPage']);
 
         $data = $this->serializer->serialize($content, $this->serializeType, $context);
 

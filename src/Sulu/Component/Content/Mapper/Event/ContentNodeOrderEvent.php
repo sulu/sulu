@@ -16,6 +16,8 @@ use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Event class for the ContentEvents::NODE_ORDER event.
+ *
+ * @deprecated use events of DocumentManager instead
  */
 class ContentNodeOrderEvent extends Event
 {

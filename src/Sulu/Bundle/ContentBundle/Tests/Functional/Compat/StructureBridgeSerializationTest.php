@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Compat;
 
+use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -59,7 +60,11 @@ class StructureBridgeSerializationTest extends SuluTestCase
 
         $this->assertInstanceOf(StructureBridge::class, $managedPage);
 
-        return $this->serializer->serialize($managedPage, 'json');
+        return $this->serializer->serialize(
+            $managedPage,
+            'json',
+            SerializationContext::create()->setGroups('previewPage')
+        );
     }
 
     /**
@@ -87,12 +92,15 @@ class StructureBridgeSerializationTest extends SuluTestCase
         $page->setResourceSegment('/hello');
         $page->setParent($this->contentDocument);
         $page->setStructureType('internallinks');
-        $page->getStructure()->bind([
-            'title' => 'World',
-            'internalLinks' => [
-                $this->contentDocument->getUuid(),
+        $page->getStructure()->bind(
+            [
+                'title' => 'World',
+                'internalLinks' => [
+                    $this->contentDocument->getUuid(),
+                ],
             ],
-        ], true);
+            true
+        );
 
         $this->documentManager->persist($page, 'fr');
         $this->documentManager->flush();

@@ -9,17 +9,18 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Document\Serializer\Subscriber;
+namespace Sulu\Bundle\DocumentManagerBundle\Bridge\Serializer\Subscriber;
 
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\PreSerializeEvent;
-use Sulu\Component\Content\Document\Extension\ExtensionContainer;
+use ProxyManager\Proxy\LazyLoadingInterface;
+use Sulu\Component\DocumentManager\ClassNameInflector;
 
 /**
- * Normalize ManagedExtensionContainer instances to the ExtensionContainer type.
+ * Normalize proxy object class names.
  */
-class ExtensionContainerSubscriber implements EventSubscriberInterface
+class ProxySubscriber implements EventSubscriberInterface
 {
     /**
      * {@inheritdoc}
@@ -41,9 +42,8 @@ class ExtensionContainerSubscriber implements EventSubscriberInterface
     {
         $object = $event->getObject();
 
-        if ($object instanceof ExtensionContainer) {
-            $event->setType(ExtensionContainer::class);
+        if ($object instanceof LazyLoadingInterface) {
+            $event->setType(ClassNameInflector::getUserClassName(get_class($object)));
         }
     }
 }
-;

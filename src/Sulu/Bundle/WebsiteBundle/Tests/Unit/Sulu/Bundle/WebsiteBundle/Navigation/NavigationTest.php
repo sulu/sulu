@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Navigation;
 
 use PHPCR\NodeInterface;
+use PHPCR\SessionInterface;
 use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\Property;
@@ -21,10 +22,13 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Extension\AbstractExtension;
+use Sulu\Component\Content\Extension\ExtensionManagerInterface;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Navigation;
-use Sulu\Component\Webspace\Webspace;
 
 class NavigationTest extends SuluTestCase
 {
@@ -34,14 +38,44 @@ class NavigationTest extends SuluTestCase
     private $data;
 
     /**
-     * @var Webspace
-     */
-    private $webspace;
-
-    /**
      * @var NavigationMapperInterface
      */
     private $navigation;
+
+    /**
+     * @var ContentMapperInterface
+     */
+    private $mapper;
+
+    /**
+     * @var DocumentManagerInterface
+     */
+    private $documentManager;
+
+    /**
+     * @var SessionInterface
+     */
+    private $session;
+
+    /**
+     * @var StructureManagerInterface
+     */
+    private $structureManager;
+
+    /**
+     * @var ExtensionManagerInterface
+     */
+    private $extensionManager;
+
+    /**
+     * @var SessionManagerInterface
+     */
+    private $sessionManager;
+
+    /**
+     * @var string
+     */
+    private $languageNamespace;
 
     protected function setUp()
     {
@@ -50,6 +84,7 @@ class NavigationTest extends SuluTestCase
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->session = $this->getContainer()->get('doctrine_phpcr.default_session');
         $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
+        $this->extensionManager = $this->getContainer()->get('sulu_content.extension.manager');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->languageNamespace = 'i18n';
         $this->data = $this->prepareTestData();
@@ -59,7 +94,7 @@ class NavigationTest extends SuluTestCase
         $this->navigation = new NavigationMapper(
             $this->mapper,
             $contentQuery,
-            new NavigationQueryBuilder($this->structureManager, $this->languageNamespace),
+            new NavigationQueryBuilder($this->structureManager, $this->extensionManager, $this->languageNamespace),
             $this->sessionManager
         );
     }
@@ -74,7 +109,6 @@ class NavigationTest extends SuluTestCase
                 'title' => 'News',
                 'url' => '/news',
                 'ext' => ['excerpt' => ['title' => 'Excerpt News']],
-                'url' => '/news',
                 'navContexts' => ['footer'],
             ],
             'products' => [

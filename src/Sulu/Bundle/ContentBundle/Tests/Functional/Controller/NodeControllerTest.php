@@ -76,23 +76,7 @@ class NodeControllerTest extends SuluTestCase
         $this->em->flush();
     }
 
-    public function providePost()
-    {
-        return [
-            [
-                [
-                    'template' => 'default',
-                    'webspace' => 'sulu_io',
-                    'language' => 'en',
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider providePost
-     */
-    public function testPost($params)
+    public function testPost()
     {
         $data = [
             'title' => 'Testtitle',
@@ -107,9 +91,7 @@ class NodeControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $params = http_build_query($params);
-
-        $client->request('POST', '/api/nodes?' . $params, $data);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
@@ -250,11 +232,175 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent(), true);
 
+        $this->assertArrayHasKey('seo', $response['ext']);
+        $this->assertArrayHasKey('excerpt', $response['ext']);
+
         $this->assertEquals($data[0]['title'], $response['title']);
         $this->assertEquals($data[0]['path'], $response['path']);
         $this->assertEquals($data[0]['tags'], $response['tags']);
         $this->assertEquals($data[0]['url'], $response['url']);
         $this->assertEquals($data[0]['article'], $response['article']);
+
+        $this->assertEquals('/api/nodes/' . $data[0]['id'] . '?language=en', $response['_links']['self']['href']);
+        $this->assertEquals(
+            '/api/nodes?parent=' . $data[0]['id'] . '&depth=1&webspace=sulu_io&language=en',
+            $response['_links']['children']['href']
+        );
+    }
+
+    public function testGetNotExisting()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('GET', '/api/nodes/not-existing-id?language=en');
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+    }
+
+    public function testGetLocalized()
+    {
+        $data = [
+            'en' => [
+                'template' => 'default',
+                'title' => 'test_en',
+                'tags' => [
+                    'tag1',
+                    'tag2',
+                ],
+                'url' => '/test_en',
+                'article' => 'Test English',
+            ],
+            'de' => [
+                'template' => 'default',
+                'title' => 'test_de',
+                'tags' => [
+                    'tag1',
+                    'tag2',
+                ],
+                'url' => '/test_de',
+                'article' => 'Test German',
+            ],
+        ];
+        $mapper = $this->getMapper();
+
+        $englishStructure = $mapper->save($data['en'], 'default', 'sulu_io', 'en', 1);
+        $germanStructure = $mapper->save(
+            $data['de'],
+            'default',
+            'sulu_io',
+            'de',
+            1,
+            true,
+            $englishStructure->getUuid()
+        );
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('GET', '/api/nodes/' . $englishStructure->getUuid() . '?language=en');
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals($data['en']['title'], $response['title']);
+
+        $client->request('GET', '/api/nodes/' . $germanStructure->getUuid() . '?language=de');
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals($data['de']['title'], $response['title']);
+    }
+
+    public function testGetGhostContent()
+    {
+        $data = [
+            'en' => [
+                'template' => 'default',
+                'title' => 'test_en',
+                'tags' => [
+                    'tag1',
+                    'tag2',
+                ],
+                'url' => '/test_en',
+                'article' => 'Test English',
+            ],
+        ];
+        $mapper = $this->getMapper();
+
+        $englishStructure = $mapper->save($data['en'], 'default', 'sulu_io', 'en', 1);
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('GET', '/api/nodes/' . $englishStructure->getUuid() . '?language=de&ghost-content=true');
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals($data['en']['title'], $response['title']);
+        $this->assertEquals(['name' => 'ghost', 'value' => 'en'], $response['type']);
+
+        $client->request('GET', '/api/nodes/' . $englishStructure->getUuid() . '?language=de');
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals('', $response['title']);
+        $this->assertArrayNotHasKey('type', $response);
+    }
+
+    public function testGetShadowContent()
+    {
+        $data = [
+            'en' => [
+                'template' => 'default',
+                'title' => 'test_en',
+                'tags' => [
+                    'tag1',
+                    'tag2',
+                ],
+                'url' => '/test_en',
+                'article' => 'Test English',
+            ],
+            'de' => [
+                'template' => 'default',
+                'title' => 'test_de',
+                'tags' => [
+                    'tag1',
+                    'tag2',
+                ],
+                'url' => '/test_de',
+                'article' => 'Test German',
+            ],
+        ];
+        $mapper = $this->getMapper();
+
+        $englishStructure = $mapper->save($data['en'], 'default', 'sulu_io', 'en', 1);
+        $germanStructure = $mapper->save(
+            $data['de'],
+            'default',
+            'sulu_io',
+            'de',
+            1,
+            true,
+            $englishStructure->getUuid()
+        );
+
+        $germanStructure = $mapper->save(
+            $data['de'],
+            'default',
+            'sulu_io',
+            'de',
+            1,
+            true,
+            $germanStructure->getUuid(),
+            null,
+            null,
+            true,
+            'en'
+        );
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('GET', '/api/nodes/' . $germanStructure->getUuid() . '?language=de');
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals($data['en']['title'], $response['title']);
+        $this->assertEquals($data['en']['article'], $response['article']);
+        $this->assertEquals('shadow', $response['type']['name']);
+        $this->assertEquals('en', $response['type']['value']);
+        $this->assertEquals(['en' => 'de'], $response['enabledShadowLanguages']);
+        $this->assertEquals(true, $response['shadowOn']);
     }
 
     public function testGetInternalLink()
@@ -477,6 +623,45 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($data[1]['title'], $response->_embedded->nodes[1]->title);
     }
 
+    public function testPutHome()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $data = [
+            'template' => 'default',
+            'title' => 'Test',
+        ];
+
+        $client->request('GET', '/api/nodes?webspace=sulu_io&language=en');
+        $response = json_decode($client->getResponse()->getContent());
+
+        $client->request(
+            'PUT',
+            '/api/nodes/' . $response->id . '?type=home&webspace=sulu_io&language=en',
+            $data
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals($data['title'], $response->title);
+
+        $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals($data['title'], $response->title);
+    }
+
+    public function testPutNotExisting()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('PUT', '/api/nodes/not-existing-id?language=de', []);
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+    }
+
     public function testPutWithTemplateChange()
     {
         $client = $this->createAuthenticatedClient();
@@ -513,6 +698,107 @@ class NodeControllerTest extends SuluTestCase
 
         $this->assertEquals('default', $response->template);
         $this->assertEquals('article test', $response->article);
+    }
+
+    public function testPutWithLanguage()
+    {
+        $data = [
+            'title' => 'Testtitle',
+            'template' => 'default',
+            'url' => '/test',
+        ];
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data);
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $client->request('PUT', '/api/nodes/' . $response['id'] . '?webspace=sulu_io&language=de', [
+            'title' => 'Testtitle DE',
+            'template' => 'default',
+            'url' => '/test-de',
+        ]);
+        $client->request('PUT', '/api/nodes/' . $response['id'] . '?webspace=sulu_io&language=en', [
+            'title' => 'Testtitle EN',
+            'template' => 'default',
+            'url' => '/test-en',
+        ]);
+
+        $client->request('GET', '/api/nodes/' . $response['id'] . '?language=de');
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals('Testtitle DE', $response['title']);
+        $this->assertEquals('/test-de', $response['url']);
+
+        $client->request('GET', '/api/nodes/' . $response['id'] . '?language=en');
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals('Testtitle EN', $response['title']);
+        $this->assertEquals('/test-en', $response['url']);
+    }
+
+    public function testPutShadow()
+    {
+        $data = [
+            'title' => 'Testtitle',
+            'template' => 'default',
+            'url' => '/test',
+        ];
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data);
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $client->request('PUT', '/api/nodes/' . $response['id'] . '?webspace=sulu_io&language=de', $data);
+        $client->request(
+            'PUT',
+            '/api/nodes/' . $response['id'] . '?webspace=sulu_io&language=de',
+            array_merge($data, ['shadowOn' => true, 'shadowBaseLanguage' => 'en'])
+        );
+        $client->request('GET', '/api/nodes/' . $response['id'] . '?language=de');
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(true, $response['shadowOn']);
+        $this->assertEquals('en', $response['shadowBaseLanguage']);
+        $this->assertEquals('shadow', $response['type']['name']);
+        $this->assertEquals('en', $response['type']['value']);
+
+        $client->request(
+            'PUT',
+            '/api/nodes/' . $response['id'] . '?webspace=sulu_io&language=de',
+            array_merge($data, ['shadowOn' => false, 'shadowBaseLanguage' => null])
+        );
+        $client->request('GET', '/api/nodes/' . $response['id'] . '?language=de');
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(false, $response['shadowOn']);
+        $this->assertEquals(null, $response['shadowBaseLanguage']);
+        $this->assertArrayNotHasKey('type', $response);
+        $this->assertArrayNotHasKey('type', $response);
+    }
+
+    public function testPutState()
+    {
+        $data = [
+            'title' => 'Testtitle',
+            'template' => 'default',
+            'url' => '/test',
+        ];
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data);
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(1, $response['nodeState']);
+
+        $client->request('PUT', '/api/nodes/' . $response['id'] . '?webspace=sulu_io&language=en&state=2', $data);
+        $client->request('GET', '/api/nodes/' . $response['id'] . '?language=en', $data);
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(2, $response['nodeState']);
+
+        $client->request('PUT', '/api/nodes/' . $response['id'] . '?webspace=sulu_io&language=en&state=1', $data);
+        $client->request('GET', '/api/nodes/' . $response['id'] . '?language=en', $data);
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(1, $response['nodeState']);
     }
 
     private function buildTree()
@@ -993,8 +1279,22 @@ class NodeControllerTest extends SuluTestCase
 
         $this->assertEquals(3, count($response['breadcrumb']));
         $this->assertEquals('Homepage', $response['breadcrumb'][0]['title']);
+        $this->assertEquals(0, $response['breadcrumb'][0]['depth']);
         $this->assertEquals('test2', $response['breadcrumb'][1]['title']);
+        $this->assertEquals(1, $response['breadcrumb'][1]['depth']);
         $this->assertEquals('test4', $response['breadcrumb'][2]['title']);
+        $this->assertEquals(2, $response['breadcrumb'][2]['depth']);
+
+        $client->request('GET', '/api/nodes/' . $data[4]['id'] . '?breadcrumb=false&webspace=sulu_io&language=en');
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals($data[4]['title'], $response['title']);
+        $this->assertEquals($data[4]['url'], $response['url']);
+        $this->assertEquals($data[4]['article'], $response['article']);
+
+        $this->assertArrayNotHasKey('breadcrumb', $response);
     }
 
     public function testSmallResponse()
@@ -1031,7 +1331,19 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent(), true);
 
+        $this->assertArrayHasKey('id', $response);
         $this->assertArrayHasKey('title', $response);
+        $this->assertArrayHasKey('path', $response);
+        $this->assertArrayHasKey('nodeType', $response);
+        $this->assertArrayHasKey('nodeState', $response);
+        $this->assertArrayHasKey('internal', $response);
+        $this->assertArrayHasKey('concreteLanguages', $response);
+        $this->assertArrayHasKey('hasSub', $response);
+        $this->assertArrayHasKey('order', $response);
+        $this->assertArrayHasKey('linked', $response);
+        $this->assertArrayHasKey('publishedState', $response);
+        $this->assertArrayHasKey('published', $response);
+        $this->assertArrayHasKey('navContexts', $response);
         $this->assertArrayNotHasKey('article', $response);
         $this->assertArrayNotHasKey('tags', $response);
         $this->assertArrayNotHasKey('ext', $response);
@@ -1196,7 +1508,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        // remove extension unececary for this test
+        // remove extension unnecessary for this test
         unset($data[0]['ext']);
         unset($data[0]['tags']);
         unset($response['ext']);
@@ -1206,6 +1518,11 @@ class NodeControllerTest extends SuluTestCase
         unset($response['changed']);
         unset($data[0]['linked']);
         unset($response['linked']);
+
+        // required because the links in the old serialization process are not generated using the symfony router
+        unset($response['_links']);
+        unset($data[0]['_links']);
+        unset($data[0]['_embedded']);
 
         $this->assertEquals($data[0], $response);
     }
@@ -1515,7 +1832,7 @@ class NodeControllerTest extends SuluTestCase
     private function setUpContent($data)
     {
         /** @var ContentMapperInterface $mapper */
-        $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
+        $mapper = $this->getMapper();
 
         $mapper->save(
             ['title' => 'Start Page'],
@@ -1540,5 +1857,13 @@ class NodeControllerTest extends SuluTestCase
         }
 
         return $data;
+    }
+
+    /**
+     * @return ContentMapperInterface
+     */
+    private function getMapper()
+    {
+        return self::$kernel->getContainer()->get('sulu.content.mapper');
     }
 }

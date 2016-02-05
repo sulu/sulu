@@ -17,6 +17,8 @@ use Symfony\Component\EventDispatcher\Event;
 
 /**
  * An instance of this class is thrown along with the sulu.content.node.save event.
+ *
+ * @deprecated use events of DocumentManager instead
  */
 class ContentNodeEvent extends Event
 {
@@ -31,7 +33,7 @@ class ContentNodeEvent extends Event
     protected $structure;
 
     /**
-     * @param NodeInterface      $node
+     * @param NodeInterface $node
      * @param StructureInterface $structure
      */
     public function __construct(NodeInterface $node, StructureInterface $structure)

@@ -34,6 +34,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 /**
  * repository for node objects.
+ *
+ * @deprecated
  */
 class NodeRepository implements NodeRepositoryInterface
 {

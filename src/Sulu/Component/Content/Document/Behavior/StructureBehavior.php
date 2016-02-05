@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Content\Document\Behavior;
 
-use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Document\Structure\StructureInterface;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 
 /**

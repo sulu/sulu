@@ -17,6 +17,7 @@ use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\SerializationContext;
 use PHPCR\ItemNotFoundException;
 use PHPCR\PropertyInterface;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
@@ -24,10 +25,12 @@ use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Exception\MandatoryPropertyException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
+use Sulu\Component\Content\Form\Exception\InvalidFormException;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 use Sulu\Component\Content\Repository\Mapping\MappingInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingParameterChoiceException;
@@ -246,37 +249,40 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * @param string  $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @deprecated this will be removed when the content-repository is able to solve all requirements.
      */
     private function getSingleNode(Request $request, $uuid)
     {
         $language = $this->getLanguage($request);
-        $webspace = $this->getWebspace($request, false);
         $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
         $complete = $this->getBooleanRequestParameter($request, 'complete', false, true);
         $ghostContent = $this->getBooleanRequestParameter($request, 'ghost-content', false, false);
 
         $view = $this->responseGetById(
             $uuid,
-            function ($id) use ($language, $webspace, $breadcrumb, $complete, $ghostContent) {
+            function ($id) use ($language, $ghostContent) {
                 try {
-                    return $this->getRepository()->getNode(
-                        $id,
-                        $webspace,
-                        $language,
-                        $breadcrumb,
-                        $complete,
-                        $ghostContent
-                    );
+                    return $this->getDocumentManager()->find($id, $language, [
+                        'load_ghost_content' => $ghostContent,
+                    ]);
                 } catch (DocumentNotFoundException $ex) {
                     return;
                 }
             }
         );
 
+        $groups = [];
+        if (!$complete) {
+            $groups[] = 'smallPage';
+        } else {
+            $groups[] = 'defaultPage';
+        }
+
+        if ($breadcrumb) {
+            $groups[] = 'breadcrumbPage';
+        }
+
         // preview needs also null value to work correctly
-        $view->setSerializationContext(SerializationContext::create()->setSerializeNull(true));
+        $view->setSerializationContext(SerializationContext::create()->setSerializeNull(true)->setGroups($groups));
 
         return $this->handleView($view);
     }
@@ -574,48 +580,64 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * saves node with given uuid and data.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param string                                    $uuid
+     * @param string $uuid
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     *
+     * @throws InvalidFormException
+     * @throws MissingParameterException
      */
     public function putAction(Request $request, $uuid)
     {
         $language = $this->getLanguage($request);
-        $webspace = $this->getWebspace($request);
-        $isShadow = $this->getRequestParameter($request, 'shadowOn', false);
-        $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
-
-        $state = $this->getRequestParameter($request, 'state');
         $type = $request->query->get('type', 'page');
 
-        if ($state !== null) {
-            $state = intval($state);
+        try {
+            $document = $this->getDocumentManager()->find(
+                $uuid,
+                $language,
+                ['type' => $type, 'load_ghost_content' => false]
+            );
+        } catch (DocumentNotFoundException $e) {
+            $e = new EntityNotFoundException(PageDocument::class, $uuid, $e);
+
+            return $this->handleView($this->view($e->toArray(), 404));
         }
 
         $data = $request->request->all();
+        $data['workflowStage'] = $this->getRequestParameter($request, 'state');
 
-        $template = isset($data['template']) ? $data['template'] : null;
+        $form = $this->createForm($type, $document, [
+            // disable csrf protection, since we can't produce a token, because the form is cached on the client
+            'csrf_protection' => false,
+            'webspace_key' => $this->getWebspace($request),
+        ]);
+        $form->submit($data, false);
 
-        try {
-            $mapperRequest = ContentMapperRequest::create()
-                ->setType($type)
-                ->setTemplateKey($template)
-                ->setWebspaceKey($webspace)
-                ->setUserId($this->getUser()->getId())
-                ->setState($state)
-                ->setIsShadow($isShadow)
-                ->setShadowBaseLanguage($shadowBaseLanguage)
-                ->setLocale($language)
-                ->setUuid($uuid)
-                ->setData($data);
-            $result = $this->getRepository()->saveNodeRequest($mapperRequest);
-        } catch (MandatoryPropertyException $ex) {
-            return $this->handleView($this->view($ex->getMessage(), 400));
+        if (!$form->isValid()) {
+            throw new InvalidFormException($form);
         }
 
-        return $this->handleView(
-            $this->view($result)
+        try {
+            $this->getDocumentManager()->persist(
+                $document,
+                $language,
+                [
+                    'user' => $this->getUser()->getId(),
+                    'clear_missing_content' => false,
+                ]
+            );
+            $this->getDocumentManager()->flush();
+        } catch (MandatoryPropertyException $e) {
+            return $this->handleView($this->view($e->getMessage(), 400));
+        }
+
+        $view = $this->view($document);
+        $view->setSerializationContext(
+            SerializationContext::create()->setSerializeNull(true)->setGroups(['defaultPage'])
         );
+
+        return $this->handleView($view);
     }
 
     /**
@@ -788,6 +810,14 @@ class NodeController extends RestController implements ClassResourceInterface, S
         }
 
         return $this->handleView($view);
+    }
+
+    /**
+     * @return DocumentManagerInterface
+     */
+    protected function getDocumentManager()
+    {
+        return $this->get('sulu_document_manager.document_manager');
     }
 
     /**

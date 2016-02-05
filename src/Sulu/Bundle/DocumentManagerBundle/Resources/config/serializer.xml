@@ -1,15 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <container xmlns="http://symfony.com/schema/dic/services"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-
     <services>
-
-        <service id="sulu_document_manager.serializer.subscriber.proxy" class="Sulu\Bundle\DocumentManagerBundle\Bridge\Serializer\ProxySubscriber" >
+        <service id="sulu_document_manager.serializer.subscriber.proxy"
+                 class="Sulu\Bundle\DocumentManagerBundle\Bridge\Serializer\Subscriber\ProxySubscriber">
             <tag name="jms_serializer.event_subscriber" />
         </service>
 
+        <service id="sulu_document_manager.serializer.subscriber.document"
+                 class="Sulu\Bundle\DocumentManagerBundle\Bridge\Serializer\Subscriber\DocumentSubscriber">
+            <argument type="service" id="sulu_document_manager.document_registry" />
+            <argument type="service" id="sulu_document_manager.node_manager" />
+            <argument type="service" id="sulu_document_manager.metadata_factory" />
+            <tag name="jms_serializer.event_subscriber"/>
+        </service>
+
+        <service id="sulu_document_manager.serializer.subscriber.children_behavior"
+                 class="Sulu\Bundle\DocumentManagerBundle\Bridge\Serializer\Subscriber\ChildrenSubscriber">
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
+            <argument type="service" id="sulu_document_manager.document_registry"/>
+            <tag name="jms_serializer.event_subscriber"/>
+        </service>
+
+        <service id="sulu_document_manager.serializer.handler.children_collection"
+                 class="Sulu\Bundle\DocumentManagerBundle\Bridge\Serializer\Handler\ChildrenCollectionHandler">
+            <tag name="jms_serializer.subscribing_handler"/>
+        </service>
     </services>
 </container>
 
