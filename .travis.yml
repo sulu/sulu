@@ -18,11 +18,13 @@ env:
 before_script:
   - composer self-update
   - composer install
-  - ./bin/jackrabbit.sh
+  - . bin/jackrabbit.sh
+  - pwd
+  - cd ..
   - php bin/jackrabbit.php
 
 script: 
-  - time ./bin/runtests.sh -i -a
+  - time ./bin/runtests.sh $JACKRABBIT_PID -i -a
   - phpunit
 
 notifications:

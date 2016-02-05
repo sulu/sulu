@@ -14,6 +14,7 @@ if [ ! -f "$DIR/$JAR" ]; then
 fi
 
 java -jar $DIR/$JAR&
+JACKRABBIT_PID=$!
 
 echo "Waiting until Jackrabbit is ready on port 8080"
 while [[ -z `curl -s 'http://localhost:8080' ` ]]
