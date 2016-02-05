@@ -1,2 +1,0 @@
-# This setting forces a union merge, lines will be taken from both sides.
-CHANGELOG.md merge=union
