@@ -12,7 +12,25 @@ class ConcatenationType extends PropertyType
     private $fields = [];
 
     /**
-     * @return FieldMetadata
+     * @var string
+     */
+    private $glue;
+
+    public function __construct($glue = ' ')
+    {
+        $this->glue = $glue;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGlue()
+    {
+        return $this->glue;
+    }
+
+    /**
+     * @return FieldMetadata[]
      */
     public function getFields()
     {
