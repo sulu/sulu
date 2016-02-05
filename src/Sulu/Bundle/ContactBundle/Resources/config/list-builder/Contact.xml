@@ -1,6 +1,35 @@
 <class xmlns="http://schemas.sulu.io/class/general"
        xmlns:orm="http://schemas.sulu.io/class/doctrine">
     <properties>
+        <property name="id" translation="public.id" disabled="true" default="false" type="integer">
+            <orm:field-name>id</orm:field-name>
+            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        </property>
+
+        <property name="title" translation="public.title" disabled="true" default="false" type="string">
+            <orm:field-name>title</orm:field-name>
+            <orm:entity-name>SuluContactBundle:ContactTitle</orm:entity-name>
+
+            <orm:joins>
+                <orm:join>
+                    <orm:entity-name>SuluContactBundle:ContactTitle</orm:entity-name>
+                    <orm:field-name>%sulu.model.contact.class%.title</orm:field-name>
+                </orm:join>
+            </orm:joins>
+        </property>
+
+        <property name="salutation" translation="contact.contacts.salutation" disabled="true" default="false"
+                  type="string">
+            <orm:field-name>salutation</orm:field-name>
+            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        </property>
+
+        <property name="formOfAddress" translation="contact.contacts.formOfAddress" disabled="true" default="false"
+                  type="string">
+            <orm:field-name>formOfAddress</orm:field-name>
+            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        </property>
+
         <property name="firstName" translation="contact.contacts.firstName" disabled="false" default="true"
                   type="string">
             <orm:field-name>firstName</orm:field-name>
@@ -8,12 +37,13 @@
         </property>
 
         <property name="lastName" translation="contact.contacts.lastName" disabled="false" default="true"
-                  type="thumbnails" sortable="false">
+                  type="string">
             <orm:field-name>lastName</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="avatar" translation="public.avatar" disabled="false" default="true" type="string">
+        <property name="avatar" translation="public.avatar" disabled="false" default="true" type="thumbnails"
+                  sortable="false">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>SuluMediaBundle:Media</orm:entity-name>
 
@@ -25,14 +55,83 @@
             </orm:joins>
         </property>
 
-        <property name="fullName">
-            <concatenation>
-                <property name="firstName">
-                    <orm:field-name>firstName</orm:field-name>
-                    <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
-                </property>
-                <property-ref name="lastName"/>
-            </concatenation>
+        <concatenation-property name="fullName" orm:glue=" " translation="public.name" disabled="true" default="false"
+                                type="string" sortable="false">
+            <orm:field name="firstName">
+                <orm:field-name>firstName</orm:field-name>
+                <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+            </orm:field>
+            <orm:field property-ref="lastName"/>
+        </concatenation-property>
+
+        <property name="mainEmail" translation="public.email" disabled="false" default="true" type="string">
+            <orm:field-name>mainEmail</orm:field-name>
+            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        </property>
+
+        <property name="mainPhone" translation="public.phone" disabled="false" default="true" type="string">
+            <orm:field-name>mainPhone</orm:field-name>
+            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        </property>
+
+        <property name="mainFax" translation="public.fax" disabled="true" default="false" type="string">
+            <orm:field-name>mainFax</orm:field-name>
+            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        </property>
+
+        <property name="mainUrl" translation="public.url" disabled="true" default="false" type="string">
+            <orm:field-name>mainUrl</orm:field-name>
+            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        </property>
+
+        <property name="account" translation="contact.contacts.company" disabled="false" default="true" type="string">
+            <orm:field-name>name</orm:field-name>
+            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+
+            <orm:joins>
+                <orm:join>
+                    <orm:entity-name>SuluContactBundle:AccountContact</orm:entity-name>
+                    <orm:field-name>%sulu.model.contact.class%.accountContacts</orm:field-name>
+                    <orm:method>LEFT</orm:method>
+                    <orm:condition>SuluContactBundle:AccountContact.main = true</orm:condition>
+                </orm:join>
+                <orm:join>
+                    <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+                    <orm:field-name>SuluContactBundle:AccountContact.account</orm:field-name>
+                </orm:join>
+            </orm:joins>
+        </property>
+
+        <property name="position" translation="contact.contacts.position" disabled="true" default="false" type="string"
+                  sortable="false">
+            <orm:field-name>position</orm:field-name>
+            <orm:entity-name>SuluContactBundle:Position</orm:entity-name>
+
+            <orm:joins>
+                <orm:join>
+                    <orm:entity-name>SuluContactBundle:AccountContact</orm:entity-name>
+                    <orm:field-name>%sulu.model.contact.class%.accountContacts</orm:field-name>
+                </orm:join>
+                <orm:join>
+                    <orm:entity-name>SuluContactBundle:Position</orm:entity-name>
+                    <orm:field-name>SuluContactBundle:AccountContact.position</orm:field-name>
+                </orm:join>
+            </orm:joins>
+        </property>
+
+        <property name="birthday" translation="contact.contacts.birthday" disabled="true" default="false" type="date">
+            <orm:field-name>birthday</orm:field-name>
+            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        </property>
+
+        <property name="created" translation="public.created" disabled="true" default="false" type="datetime">
+            <orm:field-name>created</orm:field-name>
+            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        </property>
+
+        <property name="changed" translation="public.changed" disabled="true" default="false" type="datetime">
+            <orm:field-name>changed</orm:field-name>
+            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
     </properties>
 </class>

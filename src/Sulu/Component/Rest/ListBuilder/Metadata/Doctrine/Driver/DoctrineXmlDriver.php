@@ -9,6 +9,7 @@ use Metadata\MergeableClassMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\JoinMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\PropertyMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationType;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleType;
 use Sulu\Component\Util\XmlUtil;
 use Symfony\Component\Config\Util\XmlUtils;
@@ -65,21 +66,79 @@ class DoctrineXmlDriver extends AbstractFileDriver implements DriverInterface
      */
     protected function getPropertyMetadata(\DOMXPath $xpath, \DOMElement $propertyNode, $className)
     {
-        if (($fieldName = XmlUtil::getValueFromXPath('orm:field-name', $xpath, $propertyNode)) === null
-            || ($entityName = XmlUtil::getValueFromXPath('orm:entity-name', $xpath, $propertyNode)) === null
+        if (($type = $this->getType($xpath, $propertyNode)) === null) {
+            return;
+        }
+
+        return new PropertyMetadata($className, XmlUtil::getValueFromXPath('@name', $xpath, $propertyNode), $type);
+    }
+
+    protected function getType(\DOMXPath $xpath, \DOMElement $propertyNode)
+    {
+        switch ($propertyNode->nodeName) {
+            case 'concatenation-property':
+                return $this->getConcatenationType($xpath, $propertyNode);
+            default:
+                return $this->getSingleType($xpath, $propertyNode);
+        }
+    }
+
+    protected function getSingleType(\DOMXPath $xpath, \DOMElement $propertyNode)
+    {
+        if (($field = $this->getField($xpath, $propertyNode)) === null) {
+            return;
+        }
+
+        return new SingleType($field);
+    }
+
+    protected function getConcatenationType(\DOMXPath $xpath, \DOMElement $propertyNode)
+    {
+        $type = new ConcatenationType(XmlUtil::getValueFromXPath('@orm:glue', $xpath, $propertyNode, ' '));
+        foreach ($xpath->query('orm:field', $propertyNode) as $fieldNode) {
+            if (($field = $this->getField($xpath, $fieldNode)) === null) {
+                continue;
+            }
+
+            $type->addField($field);
+        }
+
+        return $type;
+    }
+
+    /**
+     * Extracts data from dom-node to create a new field object.
+     *
+     * @param \DOMXPath $xpath
+     * @param \DOMElement $fieldNode
+     *
+     * @return FieldMetadata
+     */
+    protected function getField(\DOMXPath $xpath, \DOMElement $fieldNode)
+    {
+        if (($reference = XmlUtil::getValueFromXPath('@property-ref', $xpath, $fieldNode)) !== null) {
+            $nodeList = $xpath->query(sprintf('/x:class/x:properties/x:*[@name="%s"]', $reference));
+
+            if ($nodeList->length === 0) {
+                return;
+            }
+
+            return $this->getField($xpath, $nodeList->item(0));
+        }
+
+        if (($fieldName = XmlUtil::getValueFromXPath('orm:field-name', $xpath, $fieldNode)) === null
+            || ($entityName = XmlUtil::getValueFromXPath('orm:entity-name', $xpath, $fieldNode)) === null
         ) {
             return;
         }
 
-        $name = XmlUtil::getValueFromXPath('@name', $xpath, $propertyNode);
         $field = new FieldMetadata($this->resolveParameter($fieldName), $this->resolveParameter($entityName));
-        $propertyMetadata = new PropertyMetadata($className, $name, new SingleType($field));
 
-        foreach ($xpath->query('orm:joins/orm:join', $propertyNode) as $joinNode) {
+        foreach ($xpath->query('orm:joins/orm:join', $fieldNode) as $joinNode) {
             $field->addJoin($this->getJoinMetadata($xpath, $joinNode));
         }
 
-        return $propertyMetadata;
+        return $field;
     }
 
     /**
