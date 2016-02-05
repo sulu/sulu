@@ -1,10 +1,8 @@
 CHANGELOG for Sulu
 ==================
     
-* dev-master
+* 1.1.9 (2016-02-05)
     * ENHANCEMENT #1978 [SecurityBundle]    Made url for resetting password configurable via static variable
-
-* dev-master
     * HOTFIX      #1976 [MediaBundle]       Moved delete collection to drop-down to avoid misunderstandings
     * HOTFIX      #---  [AdminBundle]       Updated husky to fix rendering preselected bug
 
