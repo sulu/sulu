@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Component\Rest\ListBuilder\Metadata\General\Driver;
 
@@ -9,6 +17,9 @@ use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
 use Sulu\Component\Util\XmlUtil;
 use Symfony\Component\Config\Util\XmlUtils;
 
+/**
+ * Parses data from xml and returns doctrine-metadata.
+ */
 class XmlDriver extends AbstractFileDriver implements DriverInterface
 {
     const SCHEME_PATH = '/../../Resources/schema/metadata/general-1.0.xsd';
