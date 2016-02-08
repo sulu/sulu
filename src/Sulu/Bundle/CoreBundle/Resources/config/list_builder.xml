@@ -38,7 +38,7 @@
         </service>
 
         <service id="sulu_core.list_builder.metadata.provider.general.driver.xml"
-                 class="Sulu\Component\Rest\ListBuilder\Metadata\General\Driver\GeneralXmlDriver">
+                 class="Sulu\Component\Rest\ListBuilder\Metadata\General\Driver\XmlDriver">
             <argument type="service" id="sulu_core.list_builder.metadata.file_locator"/>
         </service>
 
@@ -64,7 +64,7 @@
         </service>
 
         <service id="sulu_core.list_builder.metadata.provider.doctrine.driver.xml"
-                 class="Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Driver\DoctrineXmlDriver">
+                 class="Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Driver\XmlDriver">
             <argument type="service" id="sulu_core.list_builder.metadata.file_locator"/>
             <argument type="service" id="sulu_core.list_builder.metadata.parameter_bag"/>
         </service>

@@ -5,6 +5,7 @@
     <xs:complexType name="classType">
         <xs:sequence>
             <xs:element type="propertiesType" name="properties"/>
+            <xs:any minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 

@@ -9,7 +9,7 @@ use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
 use Sulu\Component\Util\XmlUtil;
 use Symfony\Component\Config\Util\XmlUtils;
 
-class GeneralXmlDriver extends AbstractFileDriver implements DriverInterface
+class XmlDriver extends AbstractFileDriver implements DriverInterface
 {
     const SCHEME_PATH = '/../../Resources/schema/metadata/general-1.0.xsd';
 
