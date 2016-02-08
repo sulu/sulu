@@ -12,17 +12,18 @@
 namespace Sulu\Bundle\ContentBundle\Search\EventListener;
 
 use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
-use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Massive\Bundle\SearchBundle\Search\ReIndex\ResumeManager;
+use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
+use Prophecy\Argument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Metadata\BaseMetadataFactory;
 use Sulu\Component\DocumentManager\Query\Query;
-use Symfony\Component\Console\Output\OutputInterface;
-use Prophecy\Argument;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 class ReindexListenerTest extends \PHPUnit_Framework_TestCase
 {
@@ -80,16 +81,216 @@ class ReindexListenerTest extends \PHPUnit_Framework_TestCase
             $this->resumeManager->reveal(),
             $this->mapping
         );
+
+        $this->output = new BufferedOutput();
     }
 
     /**
-     * It should index documents
+     * It should index documents.
      */
-    public function testSkipSecuredDocuments()
+    public function testIndexDocuments()
     {
-        $document = $this->prophesize(StructureBehavior::class);
-        $document->willImplement(UuidBehavior::class);
-        $document->getUuid()->shouldBeCalled()->willReturn('1');
+        $this->configureListener([
+            'documents' => [
+                '1' => [
+                    'behaviors' => [UuidBehavior::class],
+                ],
+                '2' => [
+                    'behaviors' => [UuidBehavior::class],
+                ],
+            ],
+            'documents_to_index' => [1, 2],
+        ]);
+
+        $this->reindexListener->onIndexRebuild($this->event->reveal());
+    }
+
+    /**
+     * It should skip documents with permissions.
+     */
+    public function testSkipDocumensWithPermisions()
+    {
+        $this->configureListener([
+            'documents' => [
+                '1' => [
+                    'behaviors' => [UuidBehavior::class],
+                ],
+                '2' => [
+                    'behaviors' => [UuidBehavior::class, SecurityBehavior::class],
+                    'permissions' => [],
+                ],
+                '3' => [
+                    'behaviors' => [UuidBehavior::class, SecurityBehavior::class],
+                    'permissions' => ['one', 'two'],
+                ],
+                '4' => [
+                    'behaviors' => [UuidBehavior::class],
+                    'permissions' => null,
+                ],
+            ],
+            'documents_to_index' => [1, 2, 4],
+        ]);
+
+        $this->reindexListener->onIndexRebuild($this->event->reveal());
+    }
+
+    /**
+     * It should exclude document classes which do not match the filter string.
+     */
+    public function testFilterDocumentsNotMatch()
+    {
+        $this->configureListener([
+            'documents' => [
+                '1' => [
+                    'behaviors' => [UuidBehavior::class],
+                ],
+            ],
+            'documents_to_index' => [],
+            'filter' => 'IAmNotAStructure',
+        ]);
+
+        $this->reindexListener->onIndexRebuild($this->event->reveal());
+    }
+
+    /**
+     * It should include document classes which match the filter string.
+     */
+    public function testFilterDocuments()
+    {
+        $this->configureListener([
+            'documents' => [
+                '1' => [
+                    'behaviors' => [UuidBehavior::class],
+                ],
+            ],
+            'documents_to_index' => [1],
+            'filter' => 'Structure',
+        ]);
+
+        $this->reindexListener->onIndexRebuild($this->event->reveal());
+    }
+
+    /**
+     * It should show the title for structures implementing the title interface.
+     */
+    public function testShowTitle()
+    {
+        $this->configureListener([
+            'documents' => [
+                '1' => [
+                    'behaviors' => [UuidBehavior::class, TitleBehavior::class],
+                    'title' => 'Hello World',
+                ],
+            ],
+            'documents_to_index' => [1],
+            'filter' => 'Structure',
+        ]);
+
+        $this->reindexListener->onIndexRebuild($this->event->reveal());
+        $output = $this->output->fetch();
+        $this->assertRegExp('/Hello World/', $output);
+    }
+
+    /**
+     * It should show the OID for structures not implementing the TitleBehavior.
+     */
+    public function testShowOud()
+    {
+        $this->configureListener([
+            'documents' => [
+                '1' => [
+                    'behaviors' => [UuidBehavior::class],
+                ],
+            ],
+            'documents_to_index' => [1],
+        ]);
+
+        $this->reindexListener->onIndexRebuild($this->event->reveal());
+        $output = $this->output->fetch();
+        $this->assertRegExp('/OID: /', $output);
+    }
+
+    /**
+     * It should log an error if getting locales throws an exception.
+     */
+    public function testLogErrorLocales()
+    {
+        $this->configureListener([
+            'documents' => [
+                '1' => [
+                    'behaviors' => [UuidBehavior::class],
+                ],
+            ],
+            'documents_to_index' => [1],
+            'locales_exception' => 'Foobar',
+        ]);
+
+        $this->reindexListener->onIndexRebuild($this->event->reveal());
+        $output = $this->output->fetch();
+        $this->assertRegExp('/Error indexing page/', $output);
+    }
+
+    /**
+     * It should log an error if exception encountered when indexing.
+     */
+    public function testLogErrorIndexing()
+    {
+        $this->configureListener([
+            'documents' => [
+                '1' => [
+                    'behaviors' => [UuidBehavior::class],
+                ],
+            ],
+            'documents_to_index' => [1],
+            'index_exception' => 'Foobar',
+        ]);
+
+        $this->reindexListener->onIndexRebuild($this->event->reveal());
+        $output = $this->output->fetch();
+        $this->assertRegExp('/Error indexing locale/', $output);
+    }
+
+    private function configureListener(array $options)
+    {
+        $options = array_merge([
+            'documents' => [],
+            'documents_to_index' => [],
+            'locales' => ['de', 'en'],
+            'filter' => null,
+            'locales_exception' => null,
+            'index_exception' => null,
+        ], $options);
+
+        $this->event = $this->prophesize(IndexRebuildEvent::class);
+        $this->event->getOutput()->willReturn($this->output);
+        $this->event->getFilter()->willReturn($options['filter']);
+
+        $documents = [];
+
+        foreach ($options['documents'] as $uuid => $documentOptions) {
+            $documentOptions = array_merge([
+                'behaviors' => [UuidBehavior::class],
+                'permissions' => null,
+                'title' => null,
+            ], $documentOptions);
+
+            $document = $this->prophesize(StructureBehavior::class);
+            foreach ($documentOptions['behaviors'] as $behavior) {
+                $document->willImplement($behavior);
+            }
+
+            $document->getUuid()->willReturn($uuid);
+
+            if (null !== $documentOptions['permissions']) {
+                $document->getPermissions()->willReturn($documentOptions['permissions']);
+            }
+
+            if (null !== $documentOptions['title']) {
+                $document->getTitle()->willReturn($documentOptions['title']);
+            }
+
+            $documents[$uuid] = $document->reveal();
+        }
 
         $typemap = [
             ['phpcr_type' => 'page'],
@@ -108,92 +309,38 @@ class ReindexListenerTest extends \PHPUnit_Framework_TestCase
         $query->setMaxResults(50)->shouldBeCalled();
 
         $query->execute()->shouldBeCalled()->willReturn(
-            new \ArrayIterator([$document->reveal(), $document->reveal(), $document->reveal()]),
+            new \ArrayIterator($documents),
             new \ArrayIterator([])
         );
         $this->documentManager->clear()->shouldBeCalled();
         $this->resumeManager->setCheckpoint(ReindexListener::CHECKPOINT_NAME, 50)->shouldBeCalled();
 
-        $this->inspector->getLocales($document->reveal())->shouldBeCalled()->willReturn(['de', 'en']);
+        foreach ($documents as $uuid => $document) {
+            if ($options['locales_exception']) {
+                $this->inspector->getLocales()->willThrow(new \Exception($options['locales_exception']));
+                continue;
+            }
 
-        $this->documentManager->find('1', 'en')->shouldBeCalled();
-        $this->documentManager->find('1', 'de')->shouldBeCalled();
+            $this->inspector->getLocales($document)->willReturn($options['locales']);
 
-        $this->searchManager->index($document->reveal(), 'en')->shouldBeCalled();
-        $this->searchManager->index($document->reveal(), 'de')->shouldBeCalled();
+            foreach ($options['locales'] as $locale) {
+                if (in_array($uuid, $options['documents_to_index'])) {
+                    $this->documentManager->find($uuid, $locale)->shouldBeCalled();
+
+                    if ($options['index_exception']) {
+                        $this->searchManager->index($document, $locale)->willThrow(new \Exception($options['index_exception']));
+                        continue;
+                    }
+
+                    $this->searchManager->index($document, $locale)->shouldBeCalled();
+                    continue;
+                }
+
+                $this->documentManager->find($uuid, $locale)->shouldNotBeCalled();
+                $this->searchManager->index($document, $locale)->shouldNotBeCalled();
+            }
+        }
 
         $this->resumeManager->removeCheckpoint(ReindexListener::CHECKPOINT_NAME)->shouldBeCalled();
-
-        $output = $this->prophesize(OutputInterface::class);
-        $event = $this->prophesize(IndexRebuildEvent::class);
-        $event->getOutput()->willReturn($output->reveal());
-        $event->getFilter()->shouldBeCalled();
-
-        $this->reindexListener->onIndexRebuild($event->reveal());
-    }
-
-    /**
-     * It should skip documents with permissions
-     */
-
-    /**
-     * It should skip secured documents
-     */
-
-    public function footestOnIndexRebuild()
-    {
-        $event = $this->prophesize(IndexRebuildEvent::class);
-        $document = $this->prophesize(StructureBehavior::class);
-        $document->willImplement(UuidBehavior::class);
-        $securableDocument = $this->prophesize(StructureBehavior::class);
-        $securableDocument->willImplement(SecurityBehavior::class);
-        $securableDocument->willImplement(UuidBehavior::class);
-        $securableDocument->getPermissions()->willReturn([]);
-        $securedDocument = $this->prophesize(StructureBehavior::class);
-        $securedDocument->willImplement(SecurityBehavior::class);
-        $securedDocument->willImplement(UuidBehavior::class);
-        $securedDocument->getPermissions()->willReturn(['some' => 'permissions']);
-
-        $typemap = [
-            ['phpcr_type' => 'page'],
-            ['phpcr_type' => 'home'],
-            ['phpcr_type' => 'snippet'],
-        ];
-
-        $output = $this->prophesize(OutputInterface::class);
-        $event->getOutput()->willReturn($output->reveal());
-        $event->getFilter()->shouldBeCalled();
-
-        $this->baseMetadataFactory->getPhpcrTypeMap()->shouldBeCalled()->willReturn($typemap);
-
-        $this->documentManager->createQuery(
-            'SELECT * FROM [nt:unstructured] AS a WHERE [jcr:mixinTypes] = "page" or [jcr:mixinTypes] = "home" or [jcr:mixinTypes] = "snippet"'
-        )->shouldBeCalled()->willReturn($query->reveal());
-
-        $query->setMaxResults(50)->shouldBeCalled();
-        $query->setFirstResult(null)->shouldBeCalled();
-        $query->execute()->shouldBeCalled()->willReturn(
-            new \ArrayIterator([$document->reveal(), $securableDocument->reveal(), $securedDocument->reveal()]),
-            new \ArrayIterator([])
-        );
-
-        $this->inspector->getLocales($document->reveal())->shouldBeCalled()->willReturn(['de', 'en']);
-        $document->getUuid()->shouldBeCalled()->willReturn('1');
-        $this->documentManager->find('1', 'en')->shouldBeCalled();
-        $this->searchManager->index($document->reveal(), 'en')->shouldBeCalled();
-        $this->documentManager->find('1', 'de')->shouldBeCalled();
-        $this->searchManager->index($document->reveal(), 'de')->shouldBeCalled();
-
-        $this->inspector->getLocales($securableDocument->reveal())->shouldBeCalled()->willReturn(['de']);
-        $securableDocument->getUuid()->willReturn('2');
-        $this->documentManager->find('2', 'de')->shouldBeCalled();
-        $this->searchManager->index($securableDocument->reveal(), 'de')->shouldBeCalled();
-
-        $securedDocument->getUuid()->willReturn('3');
-        $this->documentManager->find('3', 'de')->shouldNotBeCalled();
-        $this->documentManager->clear()->shouldBeCalled();
-        $this->searchManager->index($securedDocument->reveal(), 'de')->shouldNotBeCalled();
-
-        $this->reindexListener->onIndexRebuild($event->reveal());
     }
 }
