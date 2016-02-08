@@ -40,6 +40,11 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
         $user->setPassword('foo');
         $user->setLocale('fr');
         $user->setSalt('saltz');
+        $contact = new Contact();
+        $contact->setFirstName('Daniel');
+        $contact->setLastName('Leech');
+        $user->setContact($contact);
+        $this->db('ORM')->getOm()->persist($contact);
         $this->db('ORM')->getOm()->persist($user);
         $this->db('ORM')->getOm()->flush();
         $token->setUser($user);

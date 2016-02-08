@@ -57,6 +57,16 @@ Sulu Content component. Documents which implemented
 `Sulu\Component\DocumentManager\Behavior\Audit\BlameBehavior` should now
 implement `Sulu\Component\Content\Document\Behavior\BlameBehavior` instead.
 
+### Contact Entity is required for User
+
+When you create new `User` entities in your application it is required now
+that this user has a `Contact` entity. The following SQL will return you
+all users which have no contact entity. You need to update them manually.
+
+```sql
+SELECT * FROM se_users WHERE se_users.idContacts IS NULL 
+```
+
 ### Admin Commands
 
 The method `getCommands` on the Admin has been removed, because Symfony can

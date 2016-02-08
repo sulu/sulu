@@ -14,6 +14,7 @@ CHANGELOG for Sulu
     * FEATURE     #2001 [MediaBundle]         Clear local image cache via cache clear service and command
     * BUGFIX      #1986 [All]                 Fixed naming of serializer properties
     * BUGFIX      #2006 [ContentBundle]       Show loading button after validating form
+    * ENHANCEMENT #1987 [SecurityBundle]      Contact entity is required in User entity
     * BUGFIX      #1985 [CollaborationBundle] Removed leaking connections
     * ENHANCEMENT #1973 [All]                 Moved tests from /tests to component directories.
     * ENHANCEMENT #1970 [ContentBundle]       Changed get and put from NodeController to use DocumentManager

@@ -5,7 +5,7 @@
     <mapped-superclass name="Sulu\Bundle\SecurityBundle\Entity\User" table="se_users">
 
         <one-to-one field="contact" target-entity="Sulu\Component\Contact\Model\ContactInterface">
-            <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE"/>
+            <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
         </one-to-one>
 
         <one-to-many field="userRoles" target-entity="Sulu\Bundle\SecurityBundle\Entity\UserRole" mapped-by="user"/>
