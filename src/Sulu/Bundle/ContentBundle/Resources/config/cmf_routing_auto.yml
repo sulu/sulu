@@ -1,0 +1,5 @@
+# src/Acme/ForumBundle/Resources/config/cmf_routing_auto.yml
+Sulu\Bundle\ContentBundle\Document\PageDocument:
+    uri_schema: /{resource}
+    token_providers:
+        resource: [content_method, { method: getResourceSegment }]

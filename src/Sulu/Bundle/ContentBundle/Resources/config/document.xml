@@ -96,9 +96,20 @@
         </service>
 
         <service id="sulu_document_manager.document.subscriber.route"
-                 class="Sulu\Component\Content\Document\Subscriber\RouteSubscriber">
+            class="Sulu\Component\Content\Document\Subscriber\RouteSubscriber">
+            <argument type="service" id="cmf_routing_auto.auto_route_manager" />
+            <argument type="service" id="sulu_document_manager.document_manager" />
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
+
+        <!-- Routing Auto Adapter -->
+        <service id="sulu_content.routing.auto.adapter.sulu" class="Sulu\Component\Routing\Auto\SuluAdapter">
+            <argument type="service" id="sulu_document_manager.document_inspector" />
+            <argument type="service" id="sulu_document_manager.document_manager" />
+            <argument type="service" id="sulu_document_manager.path_builder" />
+            <tag name="cmf_routing_auto.adapter" alias="sulu" />
+        </service>
+
 
         <!-- Compat -->
         <service id="sulu_document_manager.document.subscriber.compat.content_mapper"

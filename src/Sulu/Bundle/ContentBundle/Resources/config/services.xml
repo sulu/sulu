@@ -66,14 +66,6 @@
             <argument type="service" id="logger"/>
         </service>
 
-        <!-- resource locator -->
-        <service id="sulu_content.rl_repository" class="%sulu_content.rl_repository.class%">
-            <argument type="service" id="sulu.content.rlp.strategy.tree"/>
-            <argument type="service" id="sulu.content.structure_manager"/>
-            <argument type="service" id="sulu.content.type.resource_locator"/>
-            <argument type="service" id="sulu.content.mapper"/>
-        </service>
-
         <!-- structure extension -->
         <service id="sulu_content.extension.seo" class="%sulu_content.extension.seo.class%">
             <tag name="sulu.structure.extension"/>
@@ -115,5 +107,6 @@
             <tag name="jms_serializer.event_subscriber" />
             <tag name="sulu.context" context="admin"/>
         </service>
+
     </services>
 </container>

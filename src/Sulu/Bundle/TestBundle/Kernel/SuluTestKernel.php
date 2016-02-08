@@ -33,6 +33,7 @@ class SuluTestKernel extends SuluKernel
             new \Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new \Symfony\Bundle\TwigBundle\TwigBundle(),
             new \Dubture\FFmpegBundle\DubtureFFmpegBundle(),
+            new \Symfony\Cmf\Bundle\RoutingAutoBundle\CmfRoutingAutoBundle(),
 
             // Massive
             new \Massive\Bundle\SearchBundle\MassiveSearchBundle(),

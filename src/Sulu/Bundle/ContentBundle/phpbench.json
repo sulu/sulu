@@ -1,0 +1,7 @@
+{
+    "bootstrap": "Tests/bootstrap.php",
+    "path": "Tests/Benchmarks",
+    "extensions": [
+        "PhpBench\\Extensions\\XDebug\\XDebugExtension"
+    ]
+}

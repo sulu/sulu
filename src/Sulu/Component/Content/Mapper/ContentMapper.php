@@ -46,7 +46,6 @@ use Sulu\Component\Content\Form\Exception\InvalidFormException;
 use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
-use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -97,11 +96,6 @@ class ContentMapper implements ContentMapperInterface
     private $extensionDataCache;
 
     /**
-     * @var RlpStrategyInterface
-     */
-    private $strategy;
-
-    /**
      * @Var DocumentManager
      */
     private $documentManager;
@@ -137,7 +131,6 @@ class ContentMapper implements ContentMapperInterface
         ContentTypeManagerInterface $contentTypeManager,
         SessionManagerInterface $sessionManager,
         EventDispatcherInterface $eventDispatcher,
-        RlpStrategyInterface $strategy,
         NamespaceRegistry $namespaceRegistry
     ) {
         $this->contentTypeManager = $contentTypeManager;
@@ -153,7 +146,6 @@ class ContentMapper implements ContentMapperInterface
 
         // deprecated
         $this->eventDispatcher = $eventDispatcher;
-        $this->strategy = $strategy;
     }
 
     /**
@@ -747,17 +739,6 @@ class ContentMapper implements ContentMapperInterface
             if ($document->getRedirectType() !== RedirectType::NONE) {
                 continue;
             }
-
-            $strategy = $this->getResourceLocator()->getStrategy();
-            $nodeName = PathHelper::getNodeName($document->getResourceSegment());
-            $newResourceLocator = $strategy->generate(
-                $nodeName,
-                $parentDocument->getResourceSegment(),
-                $webspaceKey,
-                $locale
-            );
-
-            $document->setResourceSegment($newResourceLocator);
 
             $this->documentManager->persist($document, $locale, [
                 'user' => $userId,
