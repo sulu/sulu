@@ -15,7 +15,10 @@ use Sulu\Component\Util\XmlUtil;
 use Symfony\Component\Config\Util\XmlUtils;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-class DoctrineXmlDriver extends AbstractFileDriver implements DriverInterface
+/**
+ * Parses data from xml and returns doctrine-metadata.
+ */
+class XmlDriver extends AbstractFileDriver implements DriverInterface
 {
     const SCHEME_PATH = '/../../Resources/schema/metadata/general-1.0.xsd';
 
@@ -73,6 +76,14 @@ class DoctrineXmlDriver extends AbstractFileDriver implements DriverInterface
         return new PropertyMetadata($className, XmlUtil::getValueFromXPath('@name', $xpath, $propertyNode), $type);
     }
 
+    /**
+     * Extracts type from property-node.
+     *
+     * @param \DOMXPath $xpath
+     * @param \DOMElement $propertyNode
+     *
+     * @return ConcatenationType|SingleType
+     */
     protected function getType(\DOMXPath $xpath, \DOMElement $propertyNode)
     {
         switch ($propertyNode->nodeName) {
@@ -83,6 +94,14 @@ class DoctrineXmlDriver extends AbstractFileDriver implements DriverInterface
         }
     }
 
+    /**
+     * Extracts single-type for property-node.
+     *
+     * @param \DOMXPath $xpath
+     * @param \DOMElement $propertyNode
+     *
+     * @return SingleType
+     */
     protected function getSingleType(\DOMXPath $xpath, \DOMElement $propertyNode)
     {
         if (($field = $this->getField($xpath, $propertyNode)) === null) {
@@ -92,6 +111,14 @@ class DoctrineXmlDriver extends AbstractFileDriver implements DriverInterface
         return new SingleType($field);
     }
 
+    /**
+     * Extracts concatenation-type for property-node.
+     *
+     * @param \DOMXPath $xpath
+     * @param \DOMElement $propertyNode
+     *
+     * @return SingleType
+     */
     protected function getConcatenationType(\DOMXPath $xpath, \DOMElement $propertyNode)
     {
         $type = new ConcatenationType(XmlUtil::getValueFromXPath('@orm:glue', $xpath, $propertyNode, ' '));
@@ -134,11 +161,36 @@ class DoctrineXmlDriver extends AbstractFileDriver implements DriverInterface
 
         $field = new FieldMetadata($this->resolveParameter($fieldName), $this->resolveParameter($entityName));
 
-        foreach ($xpath->query('orm:joins/orm:join', $fieldNode) as $joinNode) {
-            $field->addJoin($this->getJoinMetadata($xpath, $joinNode));
+        $joinsNodeList = $xpath->query('orm:joins', $fieldNode);
+        if ($joinsNodeList->length > 0) {
+            $this->getJoinsMetadata($xpath, $joinsNodeList->item(0), $field);
         }
 
         return $field;
+    }
+
+    /**
+     * Extracts data from dom-node to create all join-metadata.
+     *
+     * @param \DOMXPath $xpath
+     * @param \DOMElement $joinsNode
+     * @param FieldMetadata $field
+     */
+    protected function getJoinsMetadata(\DOMXPath $xpath, \DOMElement $joinsNode, FieldMetadata $field)
+    {
+        if (($reference = XmlUtil::getValueFromXPath('@ref', $xpath, $joinsNode)) !== null) {
+            $nodeList = $xpath->query(sprintf('/x:class/orm:joins[@name="%s"]', $reference));
+
+            if ($nodeList->length === 0) {
+                return;
+            }
+
+            $this->getJoinsMetadata($xpath, $nodeList->item(0), $field);
+        }
+
+        foreach ($xpath->query('orm:join', $joinsNode) as $joinNode) {
+            $field->addJoin($this->getJoinMetadata($xpath, $joinNode));
+        }
     }
 
     /**
