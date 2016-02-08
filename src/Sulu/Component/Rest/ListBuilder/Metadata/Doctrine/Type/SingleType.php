@@ -1,9 +1,20 @@
 <?php
+/*
+ * This file is part of Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type;
 
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
 
+/**
+ * Describes a normal field.
+ */
 class SingleType extends PropertyType
 {
     /**
@@ -17,6 +28,8 @@ class SingleType extends PropertyType
     }
 
     /**
+     * Returns metadata for field.
+     *
      * @return FieldMetadata
      */
     public function getField()

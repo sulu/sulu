@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Component\Rest\ListBuilder\Metadata;
 
@@ -10,6 +18,9 @@ use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\PropertyMetadata as Doctri
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationType;
 use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata as GeneralPropertyMetadata;
 
+/**
+ * Creates legacy field-descriptors for metadata.
+ */
 class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
 {
     /**
@@ -64,6 +75,14 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
         return $fieldDescriptors;
     }
 
+    /**
+     * Returns field-descriptor for given general metadata.
+     *
+     * @param GeneralPropertyMetadata $generalMetadata
+     * @param FieldMetadata $fieldMetadata
+     *
+     * @return DoctrineFieldDescriptor
+     */
     protected function getFieldDescriptor(GeneralPropertyMetadata $generalMetadata, FieldMetadata $fieldMetadata)
     {
         $joins = [];
@@ -94,6 +113,14 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
         );
     }
 
+    /**
+     * Returns concatenation field-descriptor for given general metadata.
+     *
+     * @param GeneralPropertyMetadata $generalMetadata
+     * @param ConcatenationType $type
+     *
+     * @return DoctrineFieldDescriptor
+     */
     protected function getConcatenationFieldDescriptor(
         GeneralPropertyMetadata $generalMetadata,
         ConcatenationType $type
