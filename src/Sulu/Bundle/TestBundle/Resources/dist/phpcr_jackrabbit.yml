@@ -6,3 +6,10 @@ sulu_core:
         workspace: test
         username: "%phpcr_username%"
         password: "%phpcr_password%"
+
+doctrine_phpcr:
+    session:
+        backend:
+            curl_options:
+                FORBID_REUSE: 1
+                FRESH_CONNECT: 1

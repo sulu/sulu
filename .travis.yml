@@ -18,9 +18,7 @@ env:
 before_script:
   - composer self-update
   - composer install
-  - . bin/jackrabbit.sh
-  - pwd
-  - cd ..
+  - ./bin/jackrabbit.sh
   - php bin/jackrabbit.php
 
 script: 

@@ -142,10 +142,6 @@ for BUNDLE in $BUNDLES; do
     if [ $? -ne 0 ]; then
         echo $BUNDLE_NAME >> /tmp/failed.tests
     fi
-
-    kill $JACKRABBIT_PID
-    . bin/jackrabbit.sh
-    cd -
 done
 
 check_failed_tests
