@@ -28,6 +28,10 @@ CHANGELOG for Sulu
 * 1.1.4 (2016-01-08)
     * HOTFIX      #1917 [MediaBundle]     Changed version name to original filename
 
+* dev-master
+    * FEATURE     #1908 [SecurityBundle]  Added sort function to getUserBySystem function in userRepository
+    * ENHANCEMENT #1908 [ContactBundle]   Sorting accounts responsible user alphabetically
+
 * 1.1.3 (2015-12-18)
     * HOTFIX      #1903 [ContentBundle]   Prohibited to follow empty or self internal link
     * HOTFIX      #1900 [ContentBundle]   Prohibited to link page to itself

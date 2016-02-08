@@ -22,6 +22,7 @@ trait OrderByTrait
      * Function adds order-by to querybuilder based on $sortBy-data given.
      *
      * @param QueryBuilder $queryBuilder
+     * @param string $alias
      * @param array $sortBy
      */
     protected function addOrderBy(QueryBuilder $queryBuilder, $alias, array $sortBy = [])
