@@ -16,6 +16,14 @@ use Sulu\Bundle\CoreBundle\DependencyInjection\SuluCoreExtension;
 
 class SuluCoreExtensionTest extends AbstractExtensionTestCase
 {
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->container->setParameter('kernel.bundles', []);
+    }
+
+
     protected function getContainerExtensions()
     {
         return [

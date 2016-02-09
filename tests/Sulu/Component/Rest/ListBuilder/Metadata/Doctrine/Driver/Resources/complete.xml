@@ -1,0 +1,64 @@
+<class xmlns="http://schemas.sulu.io/class/general"
+       xmlns:orm="http://schemas.sulu.io/class/doctrine">
+
+    <orm:joins name="address">
+        <orm:join>
+            <orm:entity-name>SuluContactBundle:ContactAddress</orm:entity-name>
+            <orm:field-name>%sulu.model.contact.class%.contactAddresses</orm:field-name>
+            <orm:method>LEFT</orm:method>
+            <orm:condition>SuluContactBundle:ContactAddress.main = TRUE</orm:condition>
+        </orm:join>
+        <orm:join>
+            <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
+            <orm:field-name>SuluContactBundle:ContactAddress.address</orm:field-name>
+        </orm:join>
+    </orm:joins>
+
+    <properties>
+        <property name="id" translation="public.id" disabled="true" default="false" type="integer">
+            <orm:field-name>id</orm:field-name>
+            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        </property>
+
+        <property name="firstName" translation="contact.contacts.firstName" disabled="false" default="true"
+                  type="string">
+            <orm:field-name>firstName</orm:field-name>
+            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        </property>
+
+        <property name="lastName" translation="contact.contacts.lastName" disabled="false" default="true"
+                  type="string">
+            <orm:field-name>lastName</orm:field-name>
+            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        </property>
+
+        <property name="avatar" translation="public.avatar" disabled="false" default="true" type="thumbnails"
+                  sortable="false">
+            <orm:field-name>id</orm:field-name>
+            <orm:entity-name>SuluMediaBundle:Media</orm:entity-name>
+
+            <orm:joins>
+                <orm:join>
+                    <orm:entity-name>SuluMediaBundle:Media</orm:entity-name>
+                    <orm:field-name>%sulu.model.contact.class%.avatar</orm:field-name>
+                </orm:join>
+            </orm:joins>
+        </property>
+
+        <concatenation-property name="fullName" orm:glue=" " translation="public.name" disabled="true" default="false"
+                                type="string" sortable="false">
+            <orm:field name="firstName">
+                <orm:field-name>firstName</orm:field-name>
+                <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+            </orm:field>
+            <orm:field property-ref="lastName"/>
+        </concatenation-property>
+
+        <property name="city" translation="contact.address.city" disabled="false" default="true" type="string">
+            <orm:field-name>city</orm:field-name>
+            <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
+
+            <orm:joins ref="address"/>
+        </property>
+    </properties>
+</class>
