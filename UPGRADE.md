@@ -49,6 +49,13 @@ If these adaptions are not done, it will be handled as if the permission types
 Write permissions for the webserver must be set on `web/uploads` instead of
 `web/uploads/media` alone to support simple cache clearing.
 
+### BlameSubscriber
+
+The BlameBehavior has been moved from the DocumentManager component to the
+Sulu Content component. Documents which implemented
+`Sulu\Component\DocumentManager\Behavior\Audit\BlameBehavior` should now
+implement `Sulu\Component\Content\Document\Behavior\BlameBehavior` instead.
+
 ### Admin Commands
 
 The method `getCommands` on the Admin has been removed, because Symfony can
