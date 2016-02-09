@@ -100,4 +100,36 @@ class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
     {
         return $this->joins;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serialize()
+    {
+        return serialize(
+            [
+                'parent' => $this->toArray(),
+                'self' => [
+                    $this->fieldName,
+                    $this->entityName,
+                    $this->joins,
+                ]
+            ]
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unserialize($serialized)
+    {
+        $array = unserialize($serialized);
+
+        $this->fromArray($array['parent']);
+        list(
+            $this->fieldName,
+            $this->entityName,
+            $this->joins,
+            ) = $array['self'];
+    }
 }
