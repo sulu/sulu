@@ -21,6 +21,6 @@ class MetadataProviderTest extends \PHPUnit_Framework_TestCase
 
         $provider = new MetadataProvider($factory->reveal());
 
-        self::assertTrue($provider->getMetadataForClass(self::class));
+        $this->assertTrue($provider->getMetadataForClass(self::class));
     }
 }

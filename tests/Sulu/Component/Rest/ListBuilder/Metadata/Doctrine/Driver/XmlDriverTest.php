@@ -13,181 +13,233 @@ namespace Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Driver;
 use Metadata\ClassMetadata;
 use Metadata\Driver\FileLocatorInterface;
 use Prophecy\Argument;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\JoinMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\PropertyMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationType;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleType;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class XmlDriverTest extends \PHPUnit_Framework_TestCase
 {
-    public function testLoadMetadataFromFileComplete()
-    {
-        $locator = $this->prophesize(FileLocatorInterface::class);
-        $parameterBag = $this->prophesize(ParameterBagInterface::class);
+    /**
+     * @var FileLocatorInterface
+     */
+    private $locator;
 
-        $parameterBag->resolveValue('%sulu.model.contact.class%')->willReturn('SuluContactBundle:Contact');
-        $parameterBag->resolveValue('%sulu.model.contact.class%.avatar')->willReturn(
+    /**
+     * @var ParameterBagInterface
+     */
+    private $parameterBag;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->locator = $this->prophesize(FileLocatorInterface::class);
+        $this->parameterBag = $this->prophesize(ParameterBagInterface::class);
+
+        $this->parameterBag->resolveValue('%sulu.model.contact.class%')->willReturn('SuluContactBundle:Contact');
+        $this->parameterBag->resolveValue('%sulu.model.contact.class%.avatar')->willReturn(
             'SuluContactBundle:Contact.avatar'
         );
-        $parameterBag->resolveValue('%sulu.model.contact.class%.contactAddresses')->willReturn(
+        $this->parameterBag->resolveValue('%sulu.model.contact.class%.contactAddresses')->willReturn(
             'SuluContactBundle:Contact.contactAddresses'
         );
-        $parameterBag->resolveValue(Argument::any())->willReturnArgument(0);
+        $this->parameterBag->resolveValue(Argument::any())->willReturnArgument(0);
+    }
 
-        $driver = new XmlDriver($locator->reveal(), $parameterBag->reveal());
+    protected function loadMetadataFromFile(XmlDriver $driver, $file)
+    {
 
         $reflectionMethod = new \ReflectionMethod(get_class($driver), 'loadMetadataFromFile');
         $reflectionMethod->setAccessible(true);
 
-        $result = $reflectionMethod->invokeArgs(
+        return $reflectionMethod->invokeArgs(
             $driver,
-            [new \ReflectionClass(new \stdClass()), __DIR__ . '/Resources/complete.xml']
+            [new \ReflectionClass(new \stdClass()), __DIR__ . '/Resources/'.$file.'.xml']
+        );
+    }
+
+    protected function assertSingleMetadata(array $expected, PropertyMetadata $metadata)
+    {
+        $this->assertInstanceOf(SingleType::class, $metadata->getType());
+        $this->assertField($expected, $metadata->getType()->getField());
+    }
+
+    protected function assertField(array $expected, FieldMetadata $metadata)
+    {
+        $expected = array_merge(
+            array(
+                'name' => null,
+                'entityName' => null,
+                'joins' => []
+            ),
+            $expected
         );
 
-        self::assertInstanceOf(ClassMetadata::class, $result);
-        self::assertEquals('stdClass', $result->name);
-        self::assertCount(6, $result->propertyMetadata);
+        $this->assertEquals($expected['name'], $metadata->getName());
+        $this->assertEquals($expected['entityName'], $metadata->getEntityName());
+        $this->assertCount(count($expected['joins']), $metadata->getJoins());
 
-        self::assertEquals(
+        $i = 0;
+        foreach ($expected['joins'] as $joinExpected) {
+            $this->assertJoin($joinExpected, $metadata->getJoins()[$i]);
+            $i++;
+        }
+    }
+
+    protected function assertJoin(array $expected, JoinMetadata $metadata)
+    {
+        $expected = array_merge(
+            [
+                'entityName' => null,
+                'entityField' => null,
+                'condition' => null,
+                'conditionMethod' => 'WITH',
+                'method' => 'LEFT',
+            ],
+            $expected
+        );
+
+        $this->assertEquals($expected['entityName'], $metadata->getEntityName());
+        $this->assertEquals($expected['entityField'], $metadata->getEntityField());
+        $this->assertEquals($expected['condition'], $metadata->getCondition());
+        $this->assertEquals($expected['conditionMethod'], $metadata->getConditionMethod());
+        $this->assertEquals($expected['method'], $metadata->getMethod());
+    }
+
+    protected function assertConcatenationType($expected, PropertyMetadata $metadata)
+    {
+        $expected = array_merge(
+            array(
+                'glue' => null,
+                'fields' => [],
+            ),
+            $expected
+        );
+
+        $this->assertInstanceOf(ConcatenationType::class, $metadata->getType());
+
+        $this->assertEquals($expected['glue'], $metadata->getType()->getGlue());
+        $this->assertCount(count($expected['fields']), $metadata->getType()->getFields());
+
+        $i = 0;
+        foreach ($expected['fields'] as $fieldExpected) {
+            $this->assertField($fieldExpected, $metadata->getType()->getFields()[$i]);
+            $i++;
+        }
+    }
+
+    public function testLoadMetadataFromFileComplete()
+    {
+        $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
+        $result = $this->loadMetadataFromFile($driver, 'complete');
+
+        $this->assertInstanceOf(ClassMetadata::class, $result);
+        $this->assertEquals('stdClass', $result->name);
+        $this->assertCount(6, $result->propertyMetadata);
+
+        $this->assertEquals(
             ['id', 'firstName', 'lastName', 'avatar', 'fullName', 'city'],
             array_keys($result->propertyMetadata)
         );
 
-        self::assertEquals('id', $result->propertyMetadata['id']->getType()->getField()->getName());
-        self::assertEquals(
-            'SuluContactBundle:Contact',
-            $result->propertyMetadata['id']->getType()->getField()->getEntityName()
+        $this->assertSingleMetadata(
+            ['name' => 'id', 'entityName' => 'SuluContactBundle:Contact'],
+            $result->propertyMetadata['id']
         );
-        self::assertEmpty($result->propertyMetadata['id']->getType()->getField()->getJoins());
-
-        self::assertEquals('firstName', $result->propertyMetadata['firstName']->getType()->getField()->getName());
-        self::assertEquals(
-            'SuluContactBundle:Contact',
-            $result->propertyMetadata['firstName']->getType()->getField()->getEntityName()
+        $this->assertSingleMetadata(
+            ['name' => 'firstName', 'entityName' => 'SuluContactBundle:Contact'],
+            $result->propertyMetadata['firstName']
         );
-        self::assertEmpty($result->propertyMetadata['id']->getType()->getField()->getJoins());
-
-        self::assertEquals('lastName', $result->propertyMetadata['lastName']->getType()->getField()->getName());
-        self::assertEquals(
-            'SuluContactBundle:Contact',
-            $result->propertyMetadata['lastName']->getType()->getField()->getEntityName()
+        $this->assertSingleMetadata(
+            ['name' => 'lastName', 'entityName' => 'SuluContactBundle:Contact'],
+            $result->propertyMetadata['lastName']
         );
-        self::assertEmpty($result->propertyMetadata['lastName']->getType()->getField()->getJoins());
-
-        self::assertEquals('id', $result->propertyMetadata['avatar']->getType()->getField()->getName());
-        self::assertEquals(
-            'SuluMediaBundle:Media',
-            $result->propertyMetadata['avatar']->getType()->getField()->getEntityName()
+        $this->assertSingleMetadata(
+            [
+                'name' => 'id',
+                'entityName' => 'SuluMediaBundle:Media',
+                'joins' => [
+                    [
+                        'entityName' => 'SuluMediaBundle:Media',
+                        'entityField' => 'SuluContactBundle:Contact.avatar',
+                    ],
+                ]
+            ],
+            $result->propertyMetadata['avatar']
         );
-        self::assertCount(1, $result->propertyMetadata['avatar']->getType()->getField()->getJoins());
-        $join = $result->propertyMetadata['avatar']->getType()->getField()->getJoins()[0];
-        self::assertEquals('SuluMediaBundle:Media', $join->getEntityName());
-        self::assertEquals('SuluContactBundle:Contact.avatar', $join->getEntityField());
-        self::assertNull($join->getCondition());
-        self::assertEquals('WITH', $join->getConditionMethod());
-        self::assertEquals('LEFT', $join->getMethod());
 
-        self::assertInstanceOf(ConcatenationType::class, $result->propertyMetadata['fullName']->getType());
-        self::assertEquals(' ', $result->propertyMetadata['fullName']->getType()->getGlue());
-        self::assertCount(2, $result->propertyMetadata['fullName']->getType()->getFields());
-
-        $field = $result->propertyMetadata['fullName']->getType()->getFields()[0];
-        self::assertEquals('firstName', $field->getName());
-        self::assertEquals(
-            'SuluContactBundle:Contact',
-            $field->getEntityName()
+        $this->assertConcatenationType(
+            [
+                'glue' => ' ',
+                'fields' => [
+                    [
+                        'name' => 'firstName',
+                        'entityName' => 'SuluContactBundle:Contact',
+                    ],
+                    [
+                        'name' => 'lastName',
+                        'entityName' => 'SuluContactBundle:Contact',
+                    ],
+                ],
+            ],
+            $result->propertyMetadata['fullName']
         );
-        self::assertEmpty($field->getJoins());
 
-        $field = $result->propertyMetadata['fullName']->getType()->getFields()[1];
-        self::assertEquals('lastName', $field->getName());
-        self::assertEquals(
-            'SuluContactBundle:Contact',
-            $field->getEntityName()
+        $this->assertSingleMetadata(
+            [
+                'name' => 'city',
+                'entityName' => 'SuluContactBundle:Address',
+                'joins' => [
+                    [
+                        'entityName' => 'SuluContactBundle:ContactAddress',
+                        'entityField' => 'SuluContactBundle:Contact.contactAddresses',
+                        'condition' => 'SuluContactBundle:ContactAddress.main = TRUE',
+                    ],
+                    [
+                        'entityName' => 'SuluContactBundle:Address',
+                        'entityField' => 'SuluContactBundle:ContactAddress.address',
+                    ],
+                ]
+            ],
+            $result->propertyMetadata['city']
         );
-        self::assertEmpty($field->getJoins());
-
-        self::assertEquals('city', $result->propertyMetadata['city']->getType()->getField()->getName());
-        self::assertEquals(
-            'SuluContactBundle:Address',
-            $result->propertyMetadata['city']->getType()->getField()->getEntityName()
-        );
-        self::assertCount(2, $result->propertyMetadata['city']->getType()->getField()->getJoins());
-
-        $join = $result->propertyMetadata['city']->getType()->getField()->getJoins()[0];
-        self::assertEquals('SuluContactBundle:ContactAddress', $join->getEntityName());
-        self::assertEquals('SuluContactBundle:Contact.contactAddresses', $join->getEntityField());
-        self::assertEquals('SuluContactBundle:ContactAddress.main = TRUE', $join->getCondition());
-        self::assertEquals('WITH', $join->getConditionMethod());
-        self::assertEquals('LEFT', $join->getMethod());
-
-        $join = $result->propertyMetadata['city']->getType()->getField()->getJoins()[1];
-        self::assertEquals('SuluContactBundle:Address', $join->getEntityName());
-        self::assertEquals('SuluContactBundle:ContactAddress.address', $join->getEntityField());
-        self::assertNull($join->getCondition());
-        self::assertEquals('WITH', $join->getConditionMethod());
-        self::assertEquals('LEFT', $join->getMethod());
     }
 
     public function testLoadMetadataFromFileEmpty()
     {
-        $locator = $this->prophesize(FileLocatorInterface::class);
-        $parameterBag = $this->prophesize(ParameterBagInterface::class);
+        $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
+        $result = $this->loadMetadataFromFile($driver, 'empty');
 
-        $parameterBag->resolveValue(Argument::any())->willReturnArgument(0);
-
-        $driver = new XmlDriver($locator->reveal(), $parameterBag->reveal());
-
-        $reflectionMethod = new \ReflectionMethod(get_class($driver), 'loadMetadataFromFile');
-        $reflectionMethod->setAccessible(true);
-
-        $result = $reflectionMethod->invokeArgs(
-            $driver,
-            [new \ReflectionClass(new \stdClass()), __DIR__ . '/Resources/empty.xml']
-        );
-
-        self::assertInstanceOf(ClassMetadata::class, $result);
-        self::assertEquals('stdClass', $result->name);
-        self::assertCount(0, $result->propertyMetadata);
+        $this->assertInstanceOf(ClassMetadata::class, $result);
+        $this->assertEquals('stdClass', $result->name);
+        $this->assertCount(0, $result->propertyMetadata);
     }
 
     public function testLoadMetadataFromFileMinimal()
     {
-        $locator = $this->prophesize(FileLocatorInterface::class);
-        $parameterBag = $this->prophesize(ParameterBagInterface::class);
+        $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
+        $result = $this->loadMetadataFromFile($driver, 'minimal');
 
-        $parameterBag->resolveValue(Argument::any())->willReturnArgument(0);
+        $this->assertInstanceOf(ClassMetadata::class, $result);
+        $this->assertEquals('stdClass', $result->name);
+        $this->assertCount(3, $result->propertyMetadata);
 
-        $driver = new XmlDriver($locator->reveal(), $parameterBag->reveal());
+        $this->assertEquals(['id', 'firstName', 'lastName'], array_keys($result->propertyMetadata));
 
-        $reflectionMethod = new \ReflectionMethod(get_class($driver), 'loadMetadataFromFile');
-        $reflectionMethod->setAccessible(true);
-
-        $result = $reflectionMethod->invokeArgs(
-            $driver,
-            [new \ReflectionClass(new \stdClass()), __DIR__ . '/Resources/minimal.xml']
+        $this->assertSingleMetadata(
+            ['name' => 'id', 'entityName' => 'SuluContactBundle:Contact'],
+            $result->propertyMetadata['id']
         );
-
-        self::assertInstanceOf(ClassMetadata::class, $result);
-        self::assertEquals('stdClass', $result->name);
-        self::assertCount(3, $result->propertyMetadata);
-
-        self::assertEquals(['id', 'firstName', 'lastName'], array_keys($result->propertyMetadata));
-
-        self::assertEquals('id', $result->propertyMetadata['id']->getType()->getField()->getName());
-        self::assertEquals(
-            '%sulu.model.contact.class%',
-            $result->propertyMetadata['id']->getType()->getField()->getEntityName()
+        $this->assertSingleMetadata(
+            ['name' => 'firstName', 'entityName' => 'SuluContactBundle:Contact'],
+            $result->propertyMetadata['firstName']
         );
-
-        self::assertEquals('firstName', $result->propertyMetadata['firstName']->getType()->getField()->getName());
-        self::assertEquals(
-            '%sulu.model.contact.class%',
-            $result->propertyMetadata['firstName']->getType()->getField()->getEntityName()
-        );
-
-        self::assertEquals('lastName', $result->propertyMetadata['lastName']->getType()->getField()->getName());
-        self::assertEquals(
-            '%sulu.model.contact.class%',
-            $result->propertyMetadata['lastName']->getType()->getField()->getEntityName()
+        $this->assertSingleMetadata(
+            ['name' => 'lastName', 'entityName' => 'SuluContactBundle:Contact'],
+            $result->propertyMetadata['lastName']
         );
     }
 }

@@ -110,34 +110,4 @@ class DoctrineJoinDescriptor
     {
         return $this->joinMethod;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function serialize()
-    {
-        return serialize(
-            [
-                $this->entityName,
-                $this->join,
-                $this->joinCondition,
-                $this->joinConditionMethod,
-                $this->joinMethod,
-            ]
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function unserialize($serialized)
-    {
-        list(
-            $this->entityName,
-            $this->join,
-            $this->joinCondition,
-            $this->joinConditionMethod,
-            $this->joinMethod,
-            ) = unserialize($serialized);
-    }
 }

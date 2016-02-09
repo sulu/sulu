@@ -34,14 +34,26 @@ class ClassMetadata extends BaseClassMetadata implements MergeableInterface
 
         foreach ($object->propertyMetadata as $name => $propertyMetadata) {
             if (!array_key_exists($name, $this->propertyMetadata)) {
-                if ($this->reflection->hasProperty($name)) {
-                    $this->addPropertyMetadata(new PropertyMetadata($this->name, $name));
-                } else {
-                    $this->addPropertyMetadata(new VirtualPropertyMetadata($this->name, $name));
-                }
+                $this->addPropertyMetadata($this->getProperty($name));
             }
 
             $this->propertyMetadata[$name]->addMetadata(get_class($propertyMetadata), $propertyMetadata);
         }
+    }
+
+    /**
+     * Returns new property-metadata for given name.
+     *
+     * @param string $name
+     *
+     * @return PropertyMetadata
+     */
+    protected function getProperty($name)
+    {
+        if ($this->reflection->hasProperty($name)) {
+            return new PropertyMetadata($this->name, $name);
+        }
+
+        return new VirtualPropertyMetadata($this->name, $name);
     }
 }

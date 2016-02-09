@@ -13,7 +13,7 @@ namespace Sulu\Component\Rest\ListBuilder\Metadata\Doctrine;
 /**
  * Container for join-metadata.
  */
-class JoinMetadata implements \Serializable
+class JoinMetadata
 {
     const JOIN_METHOD_LEFT = 'LEFT';
     const JOIN_METHOD_INNER = 'INNER';
@@ -134,35 +134,5 @@ class JoinMetadata implements \Serializable
     public function setMethod($method)
     {
         $this->method = $method;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function serialize()
-    {
-        return serialize(
-            [
-                $this->entityName,
-                $this->entityField,
-                $this->condition,
-                $this->conditionMethod,
-                $this->method,
-            ]
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function unserialize($serialized)
-    {
-        list(
-            $this->entityName,
-            $this->entityField,
-            $this->condition,
-            $this->conditionMethod,
-            $this->method,
-            ) = unserialize($serialized);
     }
 }

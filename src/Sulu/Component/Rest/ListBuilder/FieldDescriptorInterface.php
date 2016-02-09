@@ -13,7 +13,7 @@ namespace Sulu\Component\Rest\ListBuilder;
 /**
  * Interface for all field-descriptors.
  */
-interface FieldDescriptorInterface extends \Serializable
+interface FieldDescriptorInterface
 {
     /**
      * Returns the name of the field.

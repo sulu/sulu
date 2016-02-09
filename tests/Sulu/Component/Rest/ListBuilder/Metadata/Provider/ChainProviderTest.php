@@ -31,11 +31,11 @@ class ChainProviderTest extends \PHPUnit_Framework_TestCase
         $provider = new ChainProvider($chain);
 
         $result = $provider->getMetadataForClass(self::class);
-        self::assertInstanceOf(ClassMetadata::class, $result);
+        $this->assertInstanceOf(ClassMetadata::class, $result);
 
-        self::assertEquals(['test', 'test1'], array_keys($result->propertyMetadata));
-        self::assertInstanceOf(PropertyMetadata::class, $result->propertyMetadata['test']);
-        self::assertInstanceOf(VirtualPropertyMetadata::class, $result->propertyMetadata['test1']);
+        $this->assertEquals(['test', 'test1'], array_keys($result->propertyMetadata));
+        $this->assertInstanceOf(PropertyMetadata::class, $result->propertyMetadata['test']);
+        $this->assertInstanceOf(VirtualPropertyMetadata::class, $result->propertyMetadata['test1']);
     }
 
     protected function getProviderMock()

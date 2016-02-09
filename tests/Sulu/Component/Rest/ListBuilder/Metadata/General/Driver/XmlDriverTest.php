@@ -18,127 +18,175 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class XmlDriverTest extends \PHPUnit_Framework_TestCase
 {
-    public function testLoadMetadataFromFileComplete()
+    /**
+     * @var FileLocatorInterface
+     */
+    private $locator;
+
+    /**
+     * @var ParameterBagInterface
+     */
+    private $parameterBag;
+
+    protected function setUp()
     {
-        $locator = $this->prophesize(FileLocatorInterface::class);
-        $parameterBag = $this->prophesize(ParameterBagInterface::class);
+        parent::setUp();
 
-        $driver = new XmlDriver($locator->reveal(), $parameterBag->reveal());
+        $this->locator = $this->prophesize(FileLocatorInterface::class);
+        $this->parameterBag = $this->prophesize(ParameterBagInterface::class);
+    }
 
+    protected function loadMetadataFromFile(XmlDriver $driver, $file)
+    {
         $reflectionMethod = new \ReflectionMethod(get_class($driver), 'loadMetadataFromFile');
         $reflectionMethod->setAccessible(true);
 
-        $result = $reflectionMethod->invokeArgs(
+        return $reflectionMethod->invokeArgs(
             $driver,
-            [new \ReflectionClass(new \stdClass()), __DIR__ . '/Resources/complete.xml']
+            [new \ReflectionClass(new \stdClass()), __DIR__ . '/Resources/' . $file . '.xml']
         );
+    }
 
-        self::assertInstanceOf(ClassMetadata::class, $result);
-        self::assertEquals('stdClass', $result->name);
-        self::assertCount(5, $result->propertyMetadata);
+    public function testLoadMetadataFromFileComplete()
+    {
+        $driver = new XmlDriver($this->locator->reveal());
+        $result = $this->loadMetadataFromFile($driver, 'complete');
 
-        self::assertEquals(
+        $this->assertInstanceOf(ClassMetadata::class, $result);
+        $this->assertEquals('stdClass', $result->name);
+        $this->assertCount(5, $result->propertyMetadata);
+
+        $this->assertEquals(
             ['id', 'firstName', 'lastName', 'avatar', 'fullName'],
             array_keys($result->propertyMetadata)
         );
 
-        $this->metadataTest($result->propertyMetadata['id'], 'public.id', true, false, 'integer');
-        $this->metadataTest($result->propertyMetadata['firstName'], 'contact.contacts.firstName', false, true);
-        $this->metadataTest($result->propertyMetadata['lastName'], 'contact.contacts.lastName', false, true);
-        $this->metadataTest(
-            $result->propertyMetadata['avatar'],
-            'public.avatar',
-            false,
-            true,
-            'thumbnails',
-            '',
-            '',
-            false
+        $this->assertMetadata(
+            [
+                'name' => 'id',
+                'translation' => 'public.id',
+                'disabled' => true,
+                'type' => 'integer',
+            ],
+            $result->propertyMetadata['id']
         );
-        $this->metadataTest(
-            $result->propertyMetadata['fullName'],
-            'public.name',
-            true,
-            false,
-            'string',
-            '100px',
-            '50px',
-            false,
-            false,
-            'test-class'
+        $this->assertMetadata(
+            [
+                'name' => 'firstName',
+                'translation' => 'contact.contacts.firstName',
+                'default' => true,
+            ],
+            $result->propertyMetadata['firstName']
+        );
+        $this->assertMetadata(
+            [
+                'name' => 'lastName',
+                'translation' => 'contact.contacts.lastName',
+                'default' => true,
+            ],
+            $result->propertyMetadata['lastName']
+        );
+        $this->assertMetadata(
+            [
+                'name' => 'avatar',
+                'translation' => 'public.avatar',
+                'default' => true,
+                'type' => 'thumbnails',
+                'sortable' => false,
+            ],
+            $result->propertyMetadata['avatar']
+        );
+        $this->assertMetadata(
+            [
+                'name' => 'fullName',
+                'translation' => 'public.name',
+                'disabled' => true,
+                'width' => '100px',
+                'minWidth' => '50px',
+                'sortable' => false,
+                'class' => 'test-class'
+            ],
+            $result->propertyMetadata['fullName']
         );
     }
 
     public function testLoadMetadataFromFileEmpty()
     {
-        $locator = $this->prophesize(FileLocatorInterface::class);
-        $parameterBag = $this->prophesize(ParameterBagInterface::class);
+        $driver = new XmlDriver($this->locator->reveal());
+        $result = $this->loadMetadataFromFile($driver, 'empty');
 
-        $parameterBag->resolveValue(Argument::any())->willReturnArgument(0);
-
-        $driver = new XmlDriver($locator->reveal(), $parameterBag->reveal());
-
-        $reflectionMethod = new \ReflectionMethod(get_class($driver), 'loadMetadataFromFile');
-        $reflectionMethod->setAccessible(true);
-
-        $result = $reflectionMethod->invokeArgs(
-            $driver,
-            [new \ReflectionClass(new \stdClass()), __DIR__ . '/Resources/empty.xml']
-        );
-
-        self::assertInstanceOf(ClassMetadata::class, $result);
-        self::assertEquals('stdClass', $result->name);
-        self::assertCount(0, $result->propertyMetadata);
+        $this->assertInstanceOf(ClassMetadata::class, $result);
+        $this->assertEquals('stdClass', $result->name);
+        $this->assertCount(0, $result->propertyMetadata);
     }
 
     public function testLoadMetadataFromFileMinimal()
     {
-        $locator = $this->prophesize(FileLocatorInterface::class);
-        $parameterBag = $this->prophesize(ParameterBagInterface::class);
+        $driver = new XmlDriver($this->locator->reveal());
+        $result = $this->loadMetadataFromFile($driver, 'minimal');
 
-        $parameterBag->resolveValue(Argument::any())->willReturnArgument(0);
+        $this->assertInstanceOf(ClassMetadata::class, $result);
+        $this->assertEquals('stdClass', $result->name);
+        $this->assertCount(3, $result->propertyMetadata);
 
-        $driver = new XmlDriver($locator->reveal(), $parameterBag->reveal());
+        $this->assertEquals(['id', 'firstName', 'lastName'], array_keys($result->propertyMetadata));
 
-        $reflectionMethod = new \ReflectionMethod(get_class($driver), 'loadMetadataFromFile');
-        $reflectionMethod->setAccessible(true);
-
-        $result = $reflectionMethod->invokeArgs(
-            $driver,
-            [new \ReflectionClass(new \stdClass()), __DIR__ . '/Resources/minimal.xml']
+        $this->assertMetadata(
+            [
+                'name' => 'id',
+                'translation' => 'public.id',
+                'disabled' => true,
+                'type' => 'integer',
+            ],
+            $result->propertyMetadata['id']
         );
-
-        self::assertInstanceOf(ClassMetadata::class, $result);
-        self::assertEquals('stdClass', $result->name);
-        self::assertCount(3, $result->propertyMetadata);
-
-        self::assertEquals(['id', 'firstName', 'lastName'], array_keys($result->propertyMetadata));
-
-        $this->metadataTest($result->propertyMetadata['id'], 'public.id', true, false, 'integer');
-        $this->metadataTest($result->propertyMetadata['firstName'], 'contact.contacts.firstName', false, true);
-        $this->metadataTest($result->propertyMetadata['lastName'], 'contact.contacts.lastName', false, true);
+        $this->assertMetadata(
+            [
+                'name' => 'firstName',
+                'translation' => 'contact.contacts.firstName',
+                'default' => true,
+            ],
+            $result->propertyMetadata['firstName']
+        );
+        $this->assertMetadata(
+            [
+                'name' => 'lastName',
+                'translation' => 'contact.contacts.lastName',
+                'default' => true,
+            ],
+            $result->propertyMetadata['lastName']
+        );
     }
 
-    protected function metadataTest(
-        PropertyMetadata $metadata,
-        $translation,
-        $disabled = false,
-        $default = false,
-        $type = 'string',
-        $width = '',
-        $minWith = '',
-        $sortable = true,
-        $editable = false,
-        $cssClass = ''
-    ) {
-        self::assertEquals($translation, $metadata->getTranslation());
-        self::assertEquals($disabled, $metadata->isDisabled());
-        self::assertEquals($default, $metadata->isDefault());
-        self::assertEquals($type, $metadata->getType());
-        self::assertEquals($width, $metadata->getWidth());
-        self::assertEquals($minWith, $metadata->getMinWidth());
-        self::assertEquals($sortable, $metadata->isSortable());
-        self::assertEquals($editable, $metadata->isEditable());
-        self::assertEquals($cssClass, $metadata->getCssClass());
+    protected function assertMetadata($expected, PropertyMetadata $metadata)
+    {
+        $expected = array_merge(
+            [
+                'instance' => PropertyMetadata::class,
+                'name' => null,
+                'translation' => null,
+                'disabled' => false,
+                'default' => false,
+                'type' => 'string',
+                'width' => '',
+                'minWidth' => '',
+                'sortable' => true,
+                'editable' => false,
+                'class' => '',
+            ],
+            $expected
+        );
+
+        $this->assertInstanceOf($expected['instance'], $metadata);
+        $this->assertEquals($expected['name'], $metadata->getName());
+        $this->assertEquals($expected['translation'], $metadata->getTranslation());
+        $this->assertEquals($expected['disabled'], $metadata->isDisabled());
+        $this->assertEquals($expected['default'], $metadata->isDefault());
+        $this->assertEquals($expected['type'], $metadata->getType());
+        $this->assertEquals($expected['width'], $metadata->getWidth());
+        $this->assertEquals($expected['minWidth'], $metadata->getMinWidth());
+        $this->assertEquals($expected['sortable'], $metadata->isSortable());
+        $this->assertEquals($expected['editable'], $metadata->isEditable());
+        $this->assertEquals($expected['class'], $metadata->getCssClass());
     }
 }

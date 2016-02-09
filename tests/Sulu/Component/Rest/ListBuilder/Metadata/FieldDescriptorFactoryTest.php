@@ -14,6 +14,7 @@ use Metadata\Driver\FileLocatorInterface;
 use Metadata\MetadataFactory;
 use Prophecy\Argument;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Driver\XmlDriver as DoctrineXmlDriver;
 use Sulu\Component\Rest\ListBuilder\Metadata\General\Driver\XmlDriver as GeneralXmlDriver;
@@ -24,11 +25,26 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
 {
-    public function testGetFieldDescriptorForClassComplete()
+    /**
+     * @var ConfigCache
+     */
+    private $configCache;
+
+    /**
+     * @var FileLocatorInterface
+     */
+    private $locator;
+
+    /**
+     * @var ProviderInterface[]
+     */
+    private $chain;
+
+    public function setup()
     {
-        $locator = $this->prophesize(FileLocatorInterface::class);
-        $locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
-            ->willReturn(__DIR__ . '/Resources/complete.xml');
+        parent::setUp();
+
+        $this->locator = $this->prophesize(FileLocatorInterface::class);
 
         $parameterBag = $this->prophesize(ParameterBagInterface::class);
         $parameterBag->resolveValue('%sulu.model.contact.class%')->willReturn('SuluContactBundle:Contact');
@@ -40,162 +56,128 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
         );
         $parameterBag->resolveValue(Argument::any())->willReturnArgument(0);
 
-        $configCache = $this->prophesize(ConfigCache::class);
-        $configCache->isFresh()->willReturn(false);
-        $configCache->write(Argument::any(), null)->willReturn(null);
+        $this->configCache = $this->prophesize(ConfigCache::class);
+        $this->configCache->isFresh()->willReturn(false);
+        $this->configCache->write(Argument::any(), null)->willReturn(null);
 
-        $chain = [
+        $this->chain = [
             new MetadataProvider(
-                new MetadataFactory(new DoctrineXmlDriver($locator->reveal(), $parameterBag->reveal()))
+                new MetadataFactory(new DoctrineXmlDriver($this->locator->reveal(), $parameterBag->reveal()))
             ),
-            new MetadataProvider(new MetadataFactory(new GeneralXmlDriver($locator->reveal()))),
+            new MetadataProvider(new MetadataFactory(new GeneralXmlDriver($this->locator->reveal()))),
         ];
-        $provider = new ChainProvider($chain);
-        $factory = new FieldDescriptorFactory($provider, $configCache->reveal());
+    }
+
+    public function testGetFieldDescriptorForClassComplete()
+    {
+        $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
+            ->willReturn(__DIR__ . '/Resources/complete.xml');
+
+        $provider = new ChainProvider($this->chain);
+        $factory = new FieldDescriptorFactory($provider, $this->configCache->reveal());
         $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
 
-        self::assertEquals(['id', 'firstName', 'lastName', 'avatar', 'fullName', 'city'], array_keys($fieldDescriptor));
+        $this->assertEquals(
+            ['id', 'firstName', 'lastName', 'avatar', 'fullName', 'city'],
+            array_keys($fieldDescriptor)
+        );
 
-        $this->fieldDescriptorTest($fieldDescriptor['id'], 'id', 'public.id', true, false, 'integer');
-        $this->fieldDescriptorTest(
-            $fieldDescriptor['firstName'],
-            'firstName',
-            'contact.contacts.firstName',
-            false,
-            true
-        );
-        $this->fieldDescriptorTest($fieldDescriptor['lastName'], 'lastName', 'contact.contacts.lastName', false, true);
-        $this->fieldDescriptorTest(
-            $fieldDescriptor['avatar'],
-            'avatar',
-            'public.avatar',
-            false,
-            true,
-            'thumbnails',
-            '',
-            '',
-            false
-        );
-        $this->fieldDescriptorTest(
-            $fieldDescriptor['fullName'],
-            'fullName',
-            'public.name',
-            true,
-            false,
-            'string',
-            '100px',
-            '50px',
-            false,
-            false,
-            'test-class'
-        );
-        $this->fieldDescriptorTest($fieldDescriptor['city'], 'city', 'contact.address.city', false, true);
+        $expected = [
+            'id' => ['name' => 'id', 'translation' => 'public.id', 'disabled' => true, 'type' => 'integer'],
+            'firstName' => ['name' => 'firstName', 'translation' => 'contact.contacts.firstName', 'default' => true],
+            'lastName' => ['name' => 'lastName', 'translation' => 'contact.contacts.lastName', 'default' => true],
+            'avatar' => [
+                'name' => 'avatar',
+                'translation' => 'public.avatar',
+                'default' => true,
+                'type' => 'thumbnails',
+                'sortable' => false
+            ],
+            'fullName' => [
+                'instance' => DoctrineConcatenationFieldDescriptor::class,
+                'name' => 'fullName',
+                'translation' => 'public.name',
+                'disabled' => true,
+                'sortable' => false,
+                'class' => 'test-class',
+                'minWidth' => '50px',
+                'width' => '100px',
+                'select' => 'CONCAT(SuluContactBundle:Contact.firstName, CONCAT(\' \', SuluContactBundle:Contact.lastName))'
+            ],
+            'city' => ['name' => 'city', 'translation' => 'contact.address.city', 'default' => true],
+        ];
 
-        self::assertInstanceOf(DoctrineConcatenationFieldDescriptor::class, $fieldDescriptor['fullName']);
-        self::assertEquals(
-            'CONCAT(SuluContactBundle:Contact.firstName, CONCAT(\' \', SuluContactBundle:Contact.lastName))',
-            $fieldDescriptor['fullName']->getSelect()
-        );
+        $this->assertFieldDescriptors($expected, $fieldDescriptor);
     }
 
     public function testGetFieldDescriptorForClassMinimal()
     {
-        $locator = $this->prophesize(FileLocatorInterface::class);
-        $locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
+        $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
             ->willReturn(__DIR__ . '/Resources/minimal.xml');
 
-        $parameterBag = $this->prophesize(ParameterBagInterface::class);
-        $parameterBag->resolveValue('%sulu.model.contact.class%')->willReturn('SuluContactBundle:Contact');
-        $parameterBag->resolveValue('%sulu.model.contact.class%.avatar')->willReturn(
-            'SuluContactBundle:Contact.avatar'
-        );
-        $parameterBag->resolveValue('%sulu.model.contact.class%.contactAddresses')->willReturn(
-            'SuluContactBundle:Contact.contactAddresses'
-        );
-        $parameterBag->resolveValue(Argument::any())->willReturnArgument(0);
-
-        $configCache = $this->prophesize(ConfigCache::class);
-        $configCache->isFresh()->willReturn(false);
-        $configCache->write(Argument::any(), null)->willReturn(null);
-
-        $chain = [
-            new MetadataProvider(
-                new MetadataFactory(new DoctrineXmlDriver($locator->reveal(), $parameterBag->reveal()))
-            ),
-            new MetadataProvider(new MetadataFactory(new GeneralXmlDriver($locator->reveal()))),
-        ];
-        $provider = new ChainProvider($chain);
-        $factory = new FieldDescriptorFactory($provider, $configCache->reveal());
+        $provider = new ChainProvider($this->chain);
+        $factory = new FieldDescriptorFactory($provider, $this->configCache->reveal());
         $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
 
-        self::assertEquals(['id', 'firstName', 'lastName'], array_keys($fieldDescriptor));
+        $this->assertEquals(['id', 'firstName', 'lastName'], array_keys($fieldDescriptor));
 
-        $this->fieldDescriptorTest($fieldDescriptor['id'], 'id', 'public.id', true, false, 'integer');
-        $this->fieldDescriptorTest(
-            $fieldDescriptor['firstName'],
-            'firstName',
-            'contact.contacts.firstName',
-            false,
-            true
-        );
-        $this->fieldDescriptorTest($fieldDescriptor['lastName'], 'lastName', 'contact.contacts.lastName', false, true);
+        $expected = [
+            'id' => ['name' => 'id', 'translation' => 'public.id', 'disabled' => true, 'type' => 'integer'],
+            'firstName' => ['name' => 'firstName', 'translation' => 'contact.contacts.firstName', 'default' => true],
+            'lastName' => ['name' => 'lastName', 'translation' => 'contact.contacts.lastName', 'default' => true],
+        ];
+
+        $this->assertFieldDescriptors($expected, $fieldDescriptor);
     }
 
     public function testGetFieldDescriptorForClassEmpty()
     {
-        $locator = $this->prophesize(FileLocatorInterface::class);
-        $locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
+        $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
             ->willReturn(__DIR__ . '/Resources/empty.xml');
 
-        $parameterBag = $this->prophesize(ParameterBagInterface::class);
-        $parameterBag->resolveValue('%sulu.model.contact.class%')->willReturn('SuluContactBundle:Contact');
-        $parameterBag->resolveValue('%sulu.model.contact.class%.avatar')->willReturn(
-            'SuluContactBundle:Contact.avatar'
-        );
-        $parameterBag->resolveValue('%sulu.model.contact.class%.contactAddresses')->willReturn(
-            'SuluContactBundle:Contact.contactAddresses'
-        );
-        $parameterBag->resolveValue(Argument::any())->willReturnArgument(0);
-
-        $configCache = $this->prophesize(ConfigCache::class);
-        $configCache->isFresh()->willReturn(false);
-        $configCache->write(Argument::any(), null)->willReturn(null);
-
-        $chain = [
-            new MetadataProvider(
-                new MetadataFactory(new DoctrineXmlDriver($locator->reveal(), $parameterBag->reveal()))
-            ),
-            new MetadataProvider(new MetadataFactory(new GeneralXmlDriver($locator->reveal()))),
-        ];
-        $provider = new ChainProvider($chain);
-        $factory = new FieldDescriptorFactory($provider, $configCache->reveal());
+        $provider = new ChainProvider($this->chain);
+        $factory = new FieldDescriptorFactory($provider, $this->configCache->reveal());
         $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
 
-        self::assertEmpty($fieldDescriptor);
+        $this->assertEmpty($fieldDescriptor);
     }
 
-    protected function fieldDescriptorTest(
-        FieldDescriptorInterface $fieldDescriptor,
-        $name,
-        $translation,
-        $disabled = false,
-        $default = false,
-        $type = 'string',
-        $width = '',
-        $minWith = '',
-        $sortable = true,
-        $editable = false,
-        $class = ''
-    ) {
-        self::assertEquals($name, $fieldDescriptor->getName());
-        self::assertEquals($translation, $fieldDescriptor->getTranslation());
-        self::assertEquals($disabled, $fieldDescriptor->getDisabled());
-        self::assertEquals($default, $fieldDescriptor->getDefault());
-        self::assertEquals($type, $fieldDescriptor->getType());
-        self::assertEquals($width, $fieldDescriptor->getWidth());
-        self::assertEquals($minWith, $fieldDescriptor->getMinWidth());
-        self::assertEquals($sortable, $fieldDescriptor->getSortable());
-        self::assertEquals($editable, $fieldDescriptor->getEditable());
-        self::assertEquals($class, $fieldDescriptor->getClass());
+    protected function assertFieldDescriptors(array $expected, array $fieldDescriptors)
+    {
+        foreach ($expected as $name => $expectedData) {
+            $this->assertFieldDescriptor($expectedData, $fieldDescriptors[$name]);
+        }
+    }
+
+    protected function assertFieldDescriptor(array $expected, FieldDescriptorInterface $fieldDescriptor)
+    {
+        $expected = array_merge(
+            [
+                'instance' => DoctrineFieldDescriptor::class,
+                'name' => null,
+                'translation' => null,
+                'disabled' => false,
+                'default' => false,
+                'type' => 'string',
+                'width' => '',
+                'minWidth' => '',
+                'sortable' => true,
+                'editable' => false,
+                'class' => '',
+            ],
+            $expected
+        );
+
+        $this->assertInstanceOf($expected['instance'], $fieldDescriptor);
+        $this->assertEquals($expected['name'], $fieldDescriptor->getName());
+        $this->assertEquals($expected['translation'], $fieldDescriptor->getTranslation());
+        $this->assertEquals($expected['disabled'], $fieldDescriptor->getDisabled());
+        $this->assertEquals($expected['default'], $fieldDescriptor->getDefault());
+        $this->assertEquals($expected['type'], $fieldDescriptor->getType());
+        $this->assertEquals($expected['width'], $fieldDescriptor->getWidth());
+        $this->assertEquals($expected['minWidth'], $fieldDescriptor->getMinWidth());
+        $this->assertEquals($expected['sortable'], $fieldDescriptor->getSortable());
+        $this->assertEquals($expected['editable'], $fieldDescriptor->getEditable());
+        $this->assertEquals($expected['class'], $fieldDescriptor->getClass());
     }
 }
