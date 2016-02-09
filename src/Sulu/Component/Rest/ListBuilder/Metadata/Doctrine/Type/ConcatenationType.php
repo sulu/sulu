@@ -15,7 +15,7 @@ use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
 /**
  * Describes a field which is concatenated from other fields.
  */
-class ConcatenationType extends PropertyType
+class ConcatenationType extends PropertyType implements \Serializable
 {
     /**
      * @var FieldMetadata[]
@@ -60,5 +60,21 @@ class ConcatenationType extends PropertyType
     public function addField(FieldMetadata $field)
     {
         $this->fields[] = $field;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serialize()
+    {
+        return serialize([$this->fields, $this->glue]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unserialize($serialized)
+    {
+        list($this->fields, $this->glue) = unserialize($serialized);
     }
 }
