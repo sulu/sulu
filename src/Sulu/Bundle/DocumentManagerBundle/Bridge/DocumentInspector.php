@@ -151,13 +151,18 @@ class DocumentInspector extends BaseDocumentInspector
     }
 
     /**
-     * Return the locale for the given document.
+     * Return the locale for the given document or null
+     * if the document is not managed.
      *
-     * @return string
+     * @return string|null
      */
     public function getLocale($document)
     {
-        return $this->documentRegistry->getLocaleForDocument($document);
+        if ($this->documentRegistry->hasDocument($document)) {
+            return $this->documentRegistry->getLocaleForDocument($document);
+        }
+
+        return;
     }
 
     /**
@@ -180,7 +185,7 @@ class DocumentInspector extends BaseDocumentInspector
      *
      * @return array
      */
-    public function getLocales(StructureBehavior $document)
+    public function getLocales($document)
     {
         $locales = [];
         $node = $this->getNode($document);
@@ -208,9 +213,15 @@ class DocumentInspector extends BaseDocumentInspector
      *
      * @return array
      */
-    public function getConcreteLocales(ShadowLocaleBehavior $document)
+    public function getConcreteLocales($document)
     {
-        return array_diff($this->getLocales($document), $this->getShadowLocales($document));
+        $locales = $this->getLocales($document);
+
+        if ($document instanceof ShadowLocaleBehavior) {
+            $locales = array_diff($locales, $this->getShadowLocales($document));
+        }
+
+        return $locales;
     }
 
     /**

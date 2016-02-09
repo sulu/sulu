@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<serializer>
+    <class name="Sulu\Bundle\SnippetBundle\Document\SnippetDocument" xmlns:h="https://github.com/willdurand/Hateoas">
+        <h:relation rel="self">
+            <h:href route="get_snippet">
+                <h:parameter name="uuid" value="expr(object.getUuid())"/>
+                <h:parameter name="language" value="expr(object.getLocale())"/>
+            </h:href>
+        </h:relation>
+
+        <h:relation rel="delete">
+            <h:href route="delete_snippet">
+                <h:parameter name="uuid" value="expr(object.getUuid())"/>
+            </h:href>
+        </h:relation>
+
+        <h:relation rel="update">
+            <h:href route="put_snippet">
+                <h:parameter name="uuid" value="expr(object.getUuid())"/>
+            </h:href>
+        </h:relation>
+
+        <h:relation rel="new">
+            <h:href route="post_snippet" />
+        </h:relation>
+
+        <property name="nodeName" type="string"/>
+        <property name="title" type="string"/>
+        <property name="creator" type="integer"/>
+        <property name="changer" type="integer"/>
+        <property name="created" type="DateTime"/>
+        <property name="published" type="DateTime"/>
+        <property name="changed" type="DateTime"/>
+        <property name="workflowStage" type="integer" serialized-name="nodeState"/>
+        <property name="uuid" type="string" serialized-name="id"/>
+        <property name="structureType" type="string"/>
+        <property name="locale" type="string"/>
+        <property name="path" type="string" exclude="true"/>
+        <property name="structure" inline="true" type="Sulu\Component\Content\Document\Structure\Structure"/>
+        <property name="parent" exclude="true"/>
+    </class>
+</serializer>

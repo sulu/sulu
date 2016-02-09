@@ -131,6 +131,31 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * It should return the locale for a document.
+     */
+    public function testGetLocale()
+    {
+        $document = new \stdClass();
+        $this->documentRegistry->hasDocument($document)->willReturn(true);
+        $this->documentRegistry->getLocaleForDocument($document)->willReturn('fr');
+        $locale = $this->documentInspector->getLocale($document);
+
+        $this->assertEquals('fr', $locale);
+    }
+
+    /**
+     * It should return the locale for a document.
+     */
+    public function testGetLocaleNotRegistered()
+    {
+        $document = new \stdClass();
+        $this->documentRegistry->hasDocument($document)->willReturn(false);
+        $locale = $this->documentInspector->getLocale($document);
+
+        $this->assertNull($locale);
+    }
+
+    /**
      * It should return the webspace name for a given node.
      *
      * @dataProvider provideWebspace
