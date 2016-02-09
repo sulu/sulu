@@ -72,41 +72,30 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      */
     protected function setDefaultData(PropertyMetadata $propertyMetadata, \DOMXPath $xpath, \DOMNode $propertyNode)
     {
-        if (($translation = XmlUtil::getValueFromXPath('@translation', $xpath, $propertyNode)) !== null) {
+        if (null !== $translation = XmlUtil::getValueFromXPath('@translation', $xpath, $propertyNode)) {
             $propertyMetadata->setTranslation($translation);
         }
 
-        if (($disabled = XmlUtil::getValueFromXPath('@disabled', $xpath, $propertyNode)) !== null) {
-            $propertyMetadata->setDisabled($disabled);
-        }
-
-        if (($default = XmlUtil::getValueFromXPath('@default', $xpath, $propertyNode)) !== null) {
-            $propertyMetadata->setDefault($default);
-        }
-
-        if (($type = XmlUtil::getValueFromXPath('@type', $xpath, $propertyNode)) !== null) {
+        if (null !== $type = XmlUtil::getValueFromXPath('@type', $xpath, $propertyNode)) {
             $propertyMetadata->setType($type);
         }
 
-        if (($width = XmlUtil::getValueFromXPath('@width', $xpath, $propertyNode)) !== null) {
+        if (null !== $width = XmlUtil::getValueFromXPath('@width', $xpath, $propertyNode)) {
             $propertyMetadata->setWidth($width);
         }
 
-        if (($minWidth = XmlUtil::getValueFromXPath('@min-width', $xpath, $propertyNode)) !== null) {
+        if (null !== $minWidth = XmlUtil::getValueFromXPath('@min-width', $xpath, $propertyNode)) {
             $propertyMetadata->setMinWidth($minWidth);
         }
 
-        if (($sortable = XmlUtil::getValueFromXPath('@sortable', $xpath, $propertyNode)) !== null) {
-            $propertyMetadata->setSortable($sortable);
-        }
-
-        if (($editable = XmlUtil::getValueFromXPath('@editable', $xpath, $propertyNode)) !== null) {
-            $propertyMetadata->setEditable($editable);
-        }
-
-        if (($cssClass = XmlUtil::getValueFromXPath('@css-class', $xpath, $propertyNode)) !== null) {
+        if (null !== $cssClass = XmlUtil::getValueFromXPath('@css-class', $xpath, $propertyNode)) {
             $propertyMetadata->setCssClass($cssClass);
         }
+
+        $propertyMetadata->setDisabled(XmlUtil::getBooleanValueFromXPath('@disabled', $xpath, $propertyNode, false));
+        $propertyMetadata->setDefault(XmlUtil::getBooleanValueFromXPath('@default', $xpath, $propertyNode, false));
+        $propertyMetadata->setSortable(XmlUtil::getBooleanValueFromXPath('@sortable', $xpath, $propertyNode, true));
+        $propertyMetadata->setEditable(XmlUtil::getBooleanValueFromXPath('@editable', $xpath, $propertyNode, false));
 
         return $propertyMetadata;
     }

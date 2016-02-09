@@ -16,6 +16,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -259,13 +260,11 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
      */
     protected function createOrGetFolder($directory, ContainerBuilder $container)
     {
+        $filesystem = new Filesystem();
+
         $directory = $container->getParameterBag()->resolveValue($directory);
         if (!file_exists($directory)) {
-            if (!@mkdir($directory, 0777, true)) {
-                throw new \RuntimeException(
-                    sprintf('Could not create cache directory "%s".', $directory)
-                );
-            }
+            $filesystem->mkdir($directory);
         }
 
         return $directory;

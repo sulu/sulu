@@ -13,7 +13,7 @@ namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 /**
  * This class describes a doctrine case.
  */
-class DoctrineDescriptor implements \Serializable
+class DoctrineDescriptor
 {
     /**
      * @var string
@@ -55,31 +55,5 @@ class DoctrineDescriptor implements \Serializable
     public function getJoins()
     {
         return $this->joins;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function serialize()
-    {
-        return serialize(
-            [
-                $this->entityName,
-                $this->fieldName,
-                $this->joins,
-            ]
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function unserialize($serialized)
-    {
-        list(
-            $this->entityName,
-            $this->fieldName,
-            $this->joins,
-            ) = unserialize($serialized);
     }
 }

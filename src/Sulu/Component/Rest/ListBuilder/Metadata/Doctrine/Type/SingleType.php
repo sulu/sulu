@@ -15,7 +15,7 @@ use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
 /**
  * Describes a normal field.
  */
-class SingleType extends PropertyType implements \Serializable
+class SingleType extends PropertyType
 {
     /**
      * @var FieldMetadata
@@ -35,21 +35,5 @@ class SingleType extends PropertyType implements \Serializable
     public function getField()
     {
         return $this->field;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function serialize()
-    {
-        return serialize([$this->field]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function unserialize($serialized)
-    {
-        list($this->field) = unserialize($serialized);
     }
 }

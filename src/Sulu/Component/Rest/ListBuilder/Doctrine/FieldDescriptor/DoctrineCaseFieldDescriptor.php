@@ -92,34 +92,4 @@ class DoctrineCaseFieldDescriptor extends AbstractDoctrineFieldDescriptor
     {
         return array_merge($this->case1->getJoins(), $this->case2->getJoins());
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function serialize()
-    {
-        return serialize(
-            [
-                'parent' => $this->toArray(),
-                'self' => [
-                    $this->case1,
-                    $this->case2,
-                ]
-            ]
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function unserialize($serialized)
-    {
-        $array = unserialize($serialized);
-
-        $this->fromArray($array['parent']);
-        list(
-            $this->case1,
-            $this->case2,
-            ) = $array['self'];
-    }
 }

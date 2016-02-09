@@ -58,7 +58,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
 
         foreach ($xpath->query('/x:class/x:properties/x:*') as $propertyNode) {
             $propertyMetadata = $this->getPropertyMetadata($xpath, $propertyNode, $class->getName());
-            if ($propertyMetadata !== null) {
+            if (null !== $propertyMetadata) {
                 $classMetadata->addPropertyMetadata($propertyMetadata);
             }
         }
@@ -77,7 +77,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      */
     protected function getPropertyMetadata(\DOMXPath $xpath, \DOMElement $propertyNode, $className)
     {
-        if (($type = $this->getType($xpath, $propertyNode)) === null) {
+        if (null === $type = $this->getType($xpath, $propertyNode)) {
             return;
         }
 
@@ -112,7 +112,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      */
     protected function getSingleType(\DOMXPath $xpath, \DOMElement $propertyNode)
     {
-        if (($field = $this->getField($xpath, $propertyNode)) === null) {
+        if (null === $field = $this->getField($xpath, $propertyNode)) {
             return;
         }
 
@@ -131,7 +131,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     {
         $type = new ConcatenationType(XmlUtil::getValueFromXPath('@orm:glue', $xpath, $propertyNode, ' '));
         foreach ($xpath->query('orm:field', $propertyNode) as $fieldNode) {
-            if (($field = $this->getField($xpath, $fieldNode)) === null) {
+            if (null === $field = $this->getField($xpath, $fieldNode)) {
                 continue;
             }
 
@@ -151,7 +151,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      */
     protected function getField(\DOMXPath $xpath, \DOMElement $fieldNode)
     {
-        if (($reference = XmlUtil::getValueFromXPath('@property-ref', $xpath, $fieldNode)) !== null) {
+        if (null !== $reference = XmlUtil::getValueFromXPath('@property-ref', $xpath, $fieldNode)) {
             $nodeList = $xpath->query(sprintf('/x:class/x:properties/x:*[@name="%s"]', $reference));
 
             if ($nodeList->length === 0) {
@@ -161,8 +161,8 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             return $this->getField($xpath, $nodeList->item(0));
         }
 
-        if (($fieldName = XmlUtil::getValueFromXPath('orm:field-name', $xpath, $fieldNode)) === null
-            || ($entityName = XmlUtil::getValueFromXPath('orm:entity-name', $xpath, $fieldNode)) === null
+        if (null === ($fieldName = XmlUtil::getValueFromXPath('orm:field-name', $xpath, $fieldNode))
+            || null === ($entityName = XmlUtil::getValueFromXPath('orm:entity-name', $xpath, $fieldNode))
         ) {
             return;
         }
@@ -186,7 +186,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      */
     protected function getJoinsMetadata(\DOMXPath $xpath, \DOMElement $joinsNode, FieldMetadata $field)
     {
-        if (($reference = XmlUtil::getValueFromXPath('@ref', $xpath, $joinsNode)) !== null) {
+        if (null !== $reference = XmlUtil::getValueFromXPath('@ref', $xpath, $joinsNode)) {
             $nodeList = $xpath->query(sprintf('/x:class/orm:joins[@name="%s"]', $reference));
 
             if ($nodeList->length === 0) {
@@ -213,23 +213,23 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
     {
         $joinMetadata = new JoinMetadata();
 
-        if (($fieldName = XmlUtil::getValueFromXPath('orm:field-name', $xpath, $joinNode)) !== null) {
+        if (null !== $fieldName = XmlUtil::getValueFromXPath('orm:field-name', $xpath, $joinNode)) {
             $joinMetadata->setEntityField($this->resolveParameter($fieldName));
         }
 
-        if (($entityName = XmlUtil::getValueFromXPath('orm:entity-name', $xpath, $joinNode)) !== null) {
+        if (null !== $entityName = XmlUtil::getValueFromXPath('orm:entity-name', $xpath, $joinNode)) {
             $joinMetadata->setEntityName($this->resolveParameter($entityName));
         }
 
-        if (($condition = XmlUtil::getValueFromXPath('orm:condition', $xpath, $joinNode)) !== null) {
+        if (null !== $condition = XmlUtil::getValueFromXPath('orm:condition', $xpath, $joinNode)) {
             $joinMetadata->setCondition($condition);
         }
 
-        if (($conditionMethod = XmlUtil::getValueFromXPath('orm:condition-method', $xpath, $joinNode)) !== null) {
+        if (null !== $conditionMethod = XmlUtil::getValueFromXPath('orm:condition-method', $xpath, $joinNode)) {
             $joinMetadata->setConditionMethod($conditionMethod);
         }
 
-        if (($method = XmlUtil::getValueFromXPath('orm:method', $xpath, $joinNode)) !== null) {
+        if (null !== $method = XmlUtil::getValueFromXPath('orm:method', $xpath, $joinNode)) {
             $joinMetadata->setMethod($method);
         }
 
