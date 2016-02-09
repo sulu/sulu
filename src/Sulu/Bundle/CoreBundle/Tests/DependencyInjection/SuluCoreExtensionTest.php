@@ -21,6 +21,7 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
         parent::setUp();
 
         $this->container->setParameter('kernel.bundles', []);
+        $this->container->setParameter('kernel.cache_dir', __DIR__);
     }
 
 
