@@ -37,4 +37,30 @@ class PropertyMetadata extends BasePropertyMetadata
     {
         return $this->type;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serialize()
+    {
+        return serialize(
+            [
+                $this->class,
+                $this->name,
+                $this->type,
+            ]
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unserialize($str)
+    {
+        list(
+            $this->class,
+            $this->name,
+            $this->type,
+            ) = unserialize($str);
+    }
 }

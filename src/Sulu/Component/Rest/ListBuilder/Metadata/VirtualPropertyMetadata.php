@@ -20,4 +20,25 @@ class VirtualPropertyMetadata extends PropertyMetadata
         $this->class = $class;
         $this->name = $name;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serialize()
+    {
+        return serialize(
+            [
+                $this->class,
+                $this->name,
+            ]
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unserialize($str)
+    {
+        list($this->class, $this->name) = unserialize($str);
+    }
 }

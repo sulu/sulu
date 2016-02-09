@@ -222,4 +222,46 @@ class PropertyMetadata extends BasePropertyMetadata
     {
         $this->cssClass = $cssClass;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serialize()
+    {
+        return serialize(
+            [
+                $this->class,
+                $this->name,
+                $this->translation,
+                $this->disabled,
+                $this->default,
+                $this->type,
+                $this->width,
+                $this->minWidth,
+                $this->sortable,
+                $this->editable,
+                $this->cssClass,
+            ]
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unserialize($str)
+    {
+        list(
+            $this->class,
+            $this->name,
+            $this->translation,
+            $this->disabled,
+            $this->default,
+            $this->type,
+            $this->width,
+            $this->minWidth,
+            $this->sortable,
+            $this->editable,
+            $this->cssClass,
+            ) = unserialize($str);
+    }
 }

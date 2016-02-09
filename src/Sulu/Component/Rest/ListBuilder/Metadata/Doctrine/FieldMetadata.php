@@ -13,7 +13,7 @@ namespace Sulu\Component\Rest\ListBuilder\Metadata\Doctrine;
 /**
  * Container for field-metadata.
  */
-class FieldMetadata
+class FieldMetadata implements \Serializable
 {
     /**
      * @var string
@@ -74,5 +74,31 @@ class FieldMetadata
     public function addJoin(JoinMetadata $join)
     {
         $this->joins[] = $join;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serialize()
+    {
+        return serialize(
+            [
+                $this->name,
+                $this->entityName,
+                $this->joins,
+            ]
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unserialize($serialized)
+    {
+        list(
+            $this->name,
+            $this->entityName,
+            $this->joins
+            ) = unserialize($serialized);
     }
 }
