@@ -197,4 +197,46 @@ abstract class AbstractFieldDescriptor implements FieldDescriptorInterface
     {
         return $this->class;
     }
+
+    /**
+     * Return array of properties.
+     *
+     * @return array
+     */
+    protected function toArray()
+    {
+        return [
+            $this->name,
+            $this->translation,
+            $this->disabled,
+            $this->default,
+            $this->sortable,
+            $this->type,
+            $this->width,
+            $this->minWidth,
+            $this->editable,
+            $this->class,
+        ];
+    }
+
+    /**
+     * Set array to properties.
+     *
+     * @param array $array
+     */
+    protected function fromArray(array $array)
+    {
+        list(
+            $this->name,
+            $this->translation,
+            $this->disabled,
+            $this->default,
+            $this->sortable,
+            $this->type,
+            $this->width,
+            $this->minWidth,
+            $this->editable,
+            $this->class,
+            ) = $array;
+    }
 }

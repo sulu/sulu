@@ -19,6 +19,7 @@ use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Driver\XmlDriver as Doctri
 use Sulu\Component\Rest\ListBuilder\Metadata\General\Driver\XmlDriver as GeneralXmlDriver;
 use Sulu\Component\Rest\ListBuilder\Metadata\Provider\ChainProvider;
 use Sulu\Component\Rest\ListBuilder\Metadata\Provider\MetadataProvider;
+use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
@@ -39,6 +40,10 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
         );
         $parameterBag->resolveValue(Argument::any())->willReturnArgument(0);
 
+        $configCache = $this->prophesize(ConfigCache::class);
+        $configCache->isFresh()->willReturn(false);
+        $configCache->write(Argument::any(), null)->willReturn(null);
+
         $chain = [
             new MetadataProvider(
                 new MetadataFactory(new DoctrineXmlDriver($locator->reveal(), $parameterBag->reveal()))
@@ -46,7 +51,7 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
             new MetadataProvider(new MetadataFactory(new GeneralXmlDriver($locator->reveal()))),
         ];
         $provider = new ChainProvider($chain);
-        $factory = new FieldDescriptorFactory($provider);
+        $factory = new FieldDescriptorFactory($provider, $configCache->reveal());
         $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
 
         self::assertEquals(['id', 'firstName', 'lastName', 'avatar', 'fullName', 'city'], array_keys($fieldDescriptor));
@@ -109,6 +114,10 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
         );
         $parameterBag->resolveValue(Argument::any())->willReturnArgument(0);
 
+        $configCache = $this->prophesize(ConfigCache::class);
+        $configCache->isFresh()->willReturn(false);
+        $configCache->write(Argument::any(), null)->willReturn(null);
+
         $chain = [
             new MetadataProvider(
                 new MetadataFactory(new DoctrineXmlDriver($locator->reveal(), $parameterBag->reveal()))
@@ -116,7 +125,7 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
             new MetadataProvider(new MetadataFactory(new GeneralXmlDriver($locator->reveal()))),
         ];
         $provider = new ChainProvider($chain);
-        $factory = new FieldDescriptorFactory($provider);
+        $factory = new FieldDescriptorFactory($provider, $configCache->reveal());
         $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
 
         self::assertEquals(['id', 'firstName', 'lastName'], array_keys($fieldDescriptor));
@@ -148,6 +157,10 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
         );
         $parameterBag->resolveValue(Argument::any())->willReturnArgument(0);
 
+        $configCache = $this->prophesize(ConfigCache::class);
+        $configCache->isFresh()->willReturn(false);
+        $configCache->write(Argument::any(), null)->willReturn(null);
+
         $chain = [
             new MetadataProvider(
                 new MetadataFactory(new DoctrineXmlDriver($locator->reveal(), $parameterBag->reveal()))
@@ -155,7 +168,7 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
             new MetadataProvider(new MetadataFactory(new GeneralXmlDriver($locator->reveal()))),
         ];
         $provider = new ChainProvider($chain);
-        $factory = new FieldDescriptorFactory($provider);
+        $factory = new FieldDescriptorFactory($provider, $configCache->reveal());
         $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
 
         self::assertEmpty($fieldDescriptor);

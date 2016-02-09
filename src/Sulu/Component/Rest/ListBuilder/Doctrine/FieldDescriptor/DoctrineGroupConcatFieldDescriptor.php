@@ -69,4 +69,34 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
     {
         return $this->fieldDescriptor->getJoins();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serialize()
+    {
+        return serialize(
+            [
+                'parent' => $this->toArray(),
+                'self' => [
+                    $this->fieldDescriptor,
+                    $this->glue,
+                ]
+            ]
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unserialize($serialized)
+    {
+        $array = unserialize($serialized);
+
+        $this->fromArray($array['parent']);
+        list(
+            $this->fieldDescriptor,
+            $this->glue,
+            ) = $array['self'];
+    }
 }

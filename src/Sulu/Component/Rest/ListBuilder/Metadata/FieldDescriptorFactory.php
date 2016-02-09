@@ -17,6 +17,7 @@ use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\PropertyMetadata as DoctrinePropertyMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationType;
 use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata as GeneralPropertyMetadata;
+use Symfony\Component\Config\ConfigCache;
 
 /**
  * Creates legacy field-descriptors for metadata.
@@ -28,9 +29,15 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
      */
     private $metadataProvider;
 
-    public function __construct(ProviderInterface $metadataProvider)
+    /**
+     * @var ConfigCache
+     */
+    private $cache;
+
+    public function __construct(ProviderInterface $metadataProvider, ConfigCache $cache)
     {
         $this->metadataProvider = $metadataProvider;
+        $this->cache = $cache;
     }
 
     /**
@@ -38,6 +45,10 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
      */
     public function getFieldDescriptorForClass($className)
     {
+        if ($this->cache->isFresh()) {
+            return require $this->cache;
+        }
+
         $metadata = $this->metadataProvider->getMetadataForClass($className);
 
         $fieldDescriptors = [];
@@ -71,6 +82,8 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
 
             $fieldDescriptors[$generalMetadata->getName()] = $fieldDescriptor;
         }
+
+        $this->cache->write('<?php return unserialize(' . var_export(serialize($fieldDescriptors), true) . ');');
 
         return $fieldDescriptors;
     }

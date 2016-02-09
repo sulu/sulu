@@ -4,9 +4,16 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <service id="sulu_core.list_builder.field_descriptor_factory.cache"
+                 class="Symfony\Component\Config\ConfigCache">
+            <argument type="string">%sulu.cache_dir%/field_descriptor</argument>
+            <argument>%kernel.debug%</argument>
+        </service>
+
         <service id="sulu_core.list_builder.field_descriptor_factory"
                  class="Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactory">
             <argument type="service" id="sulu_core.list_builder.metadata.provider.chain"/>
+            <argument type="service" id="sulu_core.list_builder.field_descriptor_factory.cache"/>
         </service>
 
         <service id="sulu_core.list_builder.metadata.provider.chain"
