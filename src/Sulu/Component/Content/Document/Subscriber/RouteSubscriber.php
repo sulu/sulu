@@ -28,6 +28,7 @@ use Sulu\Component\DocumentManager\DocumentManager;
 class RouteSubscriber implements EventSubscriberInterface
 {
     const DOCUMENT_TARGET_FIELD = 'content';
+    const DOCUMENT_LOCALE = 'locale';
 
     private $autoRouteManager;
     private $documentManager;
@@ -63,6 +64,12 @@ class RouteSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $metadata->addFieldMapping('locale', [
+            'encoding' => 'system',
+            'property' => self::DOCUMENT_LOCALE,
+            'type' => 'string',
+        ]);
+
         $metadata->addFieldMapping('targetDocument', [
             'encoding' => 'system',
             'property' => self::DOCUMENT_TARGET_FIELD,
@@ -78,7 +85,8 @@ class RouteSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $this->pending[] = $document;
+        // do not allow duplicates in the queue.
+        $this->pending[spl_object_hash($document)] = $document;
     }
 
     public function handleFlush()
@@ -92,5 +100,7 @@ class RouteSubscriber implements EventSubscriberInterface
             $this->pending = array();
             $this->documentManager->flush();
         }
+
+        $this->autoRouteManager->handleDefunctRoutes();
     }
 }

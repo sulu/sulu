@@ -34,7 +34,9 @@
         "symfony/swiftmailer-bundle": "~2.3",
         "pagerfanta/pagerfanta": "~1.0",
         "evenement/evenement": "2.0.0 as 1.0.0",
-        "pulse00/ffmpeg-bundle": "^0.5.2"
+        "pulse00/ffmpeg-bundle": "^0.5.2",
+        "symfony-cmf/routing-auto": "dev-master",
+        "symfony-cmf/routing-auto-bundle": "dev-master"
     },
     "require-dev": {
         "phpcr/phpcr-shell": "~1.0.0@alpha",

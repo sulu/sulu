@@ -110,6 +110,11 @@
             <tag name="cmf_routing_auto.adapter" alias="sulu" />
         </service>
 
+        <service id="sulu_content.routing.auto.provider.resource_locator" class="Sulu\Component\Routing\Auto\Provider\ResourceLocatorProvider">
+            <argument type="service" id="sulu_document_manager.document_manager" />
+            <argument type="service" id="sulu_document_manager.document_inspector" />
+            <tag name="cmf_routing_auto.token_provider" alias="sulu_resource_locator" />
+        </service>
 
         <!-- Compat -->
         <service id="sulu_document_manager.document.subscriber.compat.content_mapper"

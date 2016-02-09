@@ -31,4 +31,11 @@ interface RouteBehavior
      * @param object $targetDocument
      */
     public function setTargetDocument($targetDocument);
+
+    /**
+     * Return true if the route is a redirect route.
+     *
+     * @return boolean
+     */
+    public function isRedirect();
 }

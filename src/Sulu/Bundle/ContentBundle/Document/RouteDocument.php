@@ -59,9 +59,9 @@ class RouteDocument implements
     private $locale;
 
     /**
-     * @var string
+     * @var boolean
      */
-    private $type;
+    private $redirect = false;
 
     /**
      * @var DateTime
@@ -143,9 +143,7 @@ class RouteDocument implements
     }
 
     /**
-     * Return the auto route tag
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getAutoRouteTag()
     {
@@ -153,22 +151,32 @@ class RouteDocument implements
     }
 
     /**
-     * Set the auto route mode
-     *
-     * Should be one of AutoRouteInterface::TYPE_* constants
-     *
-     * @param string $mode
+     * {@inheritdoc}
      */
-    public function setType($mode)
+    public function setType($type)
     {
-        $this->type = $mode;
+        if ($type === AutoRouteInterface::TYPE_REDIRECT) {
+            $this->redirect = true;
+            return;
+        }
+
+        if ($type === AutoRouteInterface::TYPE_PRIMARY) {
+            $this->redirect = false;
+            return;
+        }
+
+        throw new \InvalidArgumentException(sprintf(
+            'Unknown auto route type "%s"', $type
+        ));
+    }
+
+    public function isRedirect()
+    {
+        return $this->redirect;
     }
 
     /**
-     * For use in the REDIRECT mode, specifies the AutoRoute
-     * that the AutoRoute should redirect to.
-     *
-     * @param AutoRouteInterface AutoRoute to redirect to.
+     * {@inheritdoc}
      */
     public function setRedirectTarget($autoTarget)
     {
@@ -177,6 +185,9 @@ class RouteDocument implements
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getRedirectTarget()
     {
         throw new \BadMethodCallException(

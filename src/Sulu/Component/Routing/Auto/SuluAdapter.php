@@ -50,6 +50,8 @@ class SuluAdapter implements AdapterInterface
     {
         $uuid = $this->inspector->getUuid($object);
         $this->manager->find($uuid, $locale);
+
+        return $object;
     }
 
     /**
@@ -70,13 +72,13 @@ class SuluAdapter implements AdapterInterface
         $uri = $uriContext->getUri();
         $path = $this->getRoutePath($webspace, $locale, $uri);
 
-        $document = new RouteDocument();
-        $document->setTargetDocument($document);
-        $document->setType(AutoRouteInterface::TYPE_PRIMARY);
-        $document->setAutoRouteTag($tag);
+        $route = new RouteDocument();
+        $route->setTargetDocument($document);
+        $route->setType(AutoRouteInterface::TYPE_PRIMARY);
+        $route->setAutoRouteTag($tag);
 
         $this->manager->persist(
-            $document,
+            $route,
             $locale,
             array(
                 'path' => $path,
@@ -84,7 +86,7 @@ class SuluAdapter implements AdapterInterface
             )
         );
 
-        return $document;
+        return $route;
     }
 
     /**
