@@ -813,6 +813,64 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals(1, $response['nodeState']);
     }
 
+    public function testPutWithValidHash()
+    {
+        $data = [
+            'title' => 'Testtitle',
+            'template' => 'default',
+            'url' => '/test',
+        ];
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data);
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $client->request('GET', '/api/nodes/' . $response['id'] . '?language=en', $data);
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $client->request(
+            'PUT',
+            '/api/nodes/' . $response['id'] . '?webspace=sulu_io&language=en&state=2',
+            array_merge(['_hash' => $response['_hash']], $data)
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+    }
+
+    public function testPutWithInvalidHash()
+    {
+        $data = [
+            'title' => 'Testtitle',
+            'template' => 'default',
+            'url' => '/test',
+        ];
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data);
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $id = $response['id'];
+
+        $client->request(
+            'PUT',
+            '/api/nodes/' . $id . '?webspace=sulu_io&language=en&state=2',
+            array_merge(['_hash' => md5('wrong-hash')], $data)
+        );
+
+        $this->assertEquals(409, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(1102, $response['code']);
+
+        $client->request(
+            'PUT',
+            '/api/nodes/' . $id . '?webspace=sulu_io&language=en&state=2&force=true',
+            array_merge(['_hash' => md5('wrong-hash')], $data)
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+    }
+
     private function import($fileName)
     {
         if ($this->session->getRootNode()->hasNode('cmf')) {

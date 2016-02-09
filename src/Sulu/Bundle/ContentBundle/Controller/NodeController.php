@@ -33,6 +33,7 @@ use Sulu\Component\Content\Repository\Mapping\MappingInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\InvalidHashException;
 use Sulu\Component\Rest\Exception\MissingParameterChoiceException;
 use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\ParameterDataTypeException;
@@ -602,6 +603,15 @@ class NodeController extends RestController implements ClassResourceInterface, S
             $e = new EntityNotFoundException(PageDocument::class, $uuid, $e);
 
             return $this->handleView($this->view($e->toArray(), 404));
+        }
+
+        if ($request->query->get('force', false) === false
+            && $request->request->has('_hash')
+            && $this->get('sulu_hash.auditable_hasher')->hash($document) !== $request->request->get('_hash')
+        ) {
+            $e = new InvalidHashException(get_class($document), $document->getUuid());
+
+            return $this->handleView($this->view($e->toArray(), 409));
         }
 
         $data = $request->request->all();

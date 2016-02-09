@@ -26,12 +26,12 @@ class AuditableHasher implements HasherInterface
         if ($object instanceof AuditableInterface) {
             return md5(
                 ($object->getChanger() ? $object->getChanger()->getId() : '')
-                . ($object->getChanged() ? $object->getChanged()->format(DATE_RSS) : '')
+                . ($object->getChanged() ? $object->getChanged()->getTimestamp() : '')
             );
         }
 
         if ($object instanceof AuditableBehavior) {
-            return md5($object->getChanger() . ($object->getChanged() ? $object->getChanged()->format(DATE_RSS) : ''));
+            return md5($object->getChanger() . ($object->getChanged() ? $object->getChanged()->getTimestamp() : ''));
         }
 
         throw new \InvalidArgumentException(
