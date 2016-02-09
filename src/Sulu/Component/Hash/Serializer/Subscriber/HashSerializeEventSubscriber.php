@@ -12,6 +12,7 @@ namespace Sulu\Component\Hash\Serializer\Subscriber;
 
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
+use Sulu\Component\Content\Document\Behavior\AuditableBehavior;
 use Sulu\Component\Hash\HasherInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Rest\ApiWrapper;
@@ -47,13 +48,10 @@ class HashSerializeEventSubscriber implements EventSubscriberInterface
             $object = $object->getEntity();
         }
 
-        if (!$object instanceof AuditableInterface) {
+        if (!$object instanceof AuditableInterface && !$object instanceof AuditableBehavior) {
             return;
         }
 
-        $event->getVisitor()->addData(
-            '_hash',
-            $this->hasher->hash($object)
-        );
+        $event->getVisitor()->addData('_hash', $this->hasher->hash($object));
     }
 }

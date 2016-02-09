@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Hash;
 
+use Sulu\Component\Content\Document\Behavior\AuditableBehavior;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
@@ -25,15 +26,19 @@ class AuditableHasher implements HasherInterface
         if ($object instanceof AuditableInterface) {
             return md5(
                 ($object->getChanger() ? $object->getChanger()->getId() : '')
-                . $object->getChanged()->format(DATE_RSS)
-            );
-        } else {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'The AuditableHasher only supports objects implementing the AuditableInterface, "%s" given.',
-                    get_class($object)
-                )
+                . ($object->getChanged() ? $object->getChanged()->format(DATE_RSS) : '')
             );
         }
+
+        if ($object instanceof AuditableBehavior) {
+            return md5($object->getChanger() . ($object->getChanged() ? $object->getChanged()->format(DATE_RSS) : ''));
+        }
+
+        throw new \InvalidArgumentException(
+            sprintf(
+                'The AuditableHasher only supports objects implementing the AuditableInterface, "%s" given.',
+                get_class($object)
+            )
+        );
     }
 }

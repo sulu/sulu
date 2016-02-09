@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Hash\Tests;
 
+use Sulu\Component\Content\Document\Behavior\AuditableBehavior;
 use Sulu\Component\Hash\AuditableHasher;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -84,6 +85,36 @@ class AuditableHasherTest extends \PHPUnit_Framework_TestCase
         $object = $this->prophesize(AuditableInterface::class);
         $object->getChanger()->willReturn(null);
         $object->getChanged()->willReturn(new \DateTime('2016-02-05'));
+
+        $this->assertInternalType('string', $this->hasher->hash($object->reveal()));
+    }
+
+    public function testHashWithoutDate()
+    {
+        $user = $this->prophesize(UserInterface::class);
+        $user->getId()->willReturn(1);
+
+        $object = $this->prophesize(AuditableInterface::class);
+        $object->getChanger()->willReturn($user);
+        $object->getChanged()->willReturn(null);
+
+        $this->assertInternalType('string', $this->hasher->hash($object->reveal()));
+    }
+
+    public function testHashAuditableBehavior()
+    {
+        $object = $this->prophesize(AuditableBehavior::class);
+        $object->getChanger()->willReturn(1);
+        $object->getChanged()->willReturn(new \DateTime('2016-02-09'));
+
+        $this->assertInternalType('string', $this->hasher->hash($object->reveal()));
+    }
+
+    public function testHashAuditableBehaviorWithoutDate()
+    {
+        $object = $this->prophesize(AuditableBehavior::class);
+        $object->getChanger()->willReturn(1);
+        $object->getChanged()->willReturn(null);
 
         $this->assertInternalType('string', $this->hasher->hash($object->reveal()));
     }
