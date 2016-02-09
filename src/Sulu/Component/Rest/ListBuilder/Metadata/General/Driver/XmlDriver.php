@@ -89,7 +89,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         }
 
         if (($width = XmlUtil::getValueFromXPath('@width', $xpath, $propertyNode)) !== null) {
-            $propertyMetadata->setWith($width);
+            $propertyMetadata->setWidth($width);
         }
 
         if (($minWidth = XmlUtil::getValueFromXPath('@min-width', $xpath, $propertyNode)) !== null) {

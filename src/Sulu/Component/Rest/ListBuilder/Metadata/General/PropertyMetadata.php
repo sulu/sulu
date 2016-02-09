@@ -40,7 +40,7 @@ class PropertyMetadata extends BasePropertyMetadata
     /**
      * @var string
      */
-    private $with = '';
+    private $width = '';
 
     /**
      * @var string
@@ -146,17 +146,17 @@ class PropertyMetadata extends BasePropertyMetadata
     /**
      * @return int
      */
-    public function getWith()
+    public function getWidth()
     {
-        return $this->with;
+        return $this->width;
     }
 
     /**
-     * @param int $with
+     * @param int $width
      */
-    public function setWith($with)
+    public function setWidth($width)
     {
-        $this->with = $with;
+        $this->width = $width;
     }
 
     /**
