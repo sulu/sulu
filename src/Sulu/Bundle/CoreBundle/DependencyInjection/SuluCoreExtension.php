@@ -241,6 +241,34 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $metadataPaths = $this->getBundleMappingPaths($container->getParameter('kernel.bundles'), 'list-builder');
         $fileLocator = $container->getDefinition('sulu_core.list_builder.metadata.file_locator');
         $fileLocator->replaceArgument(0, $metadataPaths);
+
+        $generalMetadataCacheFolder = $this->createOrGetFolder('%sulu.cache_dir%/list-builder/general', $container);
+        $doctrineMetadataCacheFolder = $this->createOrGetFolder('%sulu.cache_dir%/list-builder/doctrine', $container);
+
+        $container->setParameter('sulu_core.list_builder.metadata.provider.general.cache_dir', $generalMetadataCacheFolder);
+        $container->setParameter('sulu_core.list_builder.metadata.provider.doctrine.cache_dir', $doctrineMetadataCacheFolder);
+    }
+
+    /**
+     * Create and return directory.
+     *
+     * @param string $directory
+     * @param ContainerBuilder $container
+     *
+     * @return string
+     */
+    protected function createOrGetFolder($directory, ContainerBuilder $container)
+    {
+        $directory = $container->getParameterBag()->resolveValue($directory);
+        if (!file_exists($directory)) {
+            if (!@mkdir($directory, 0777, true)) {
+                throw new \RuntimeException(
+                    sprintf('Could not create cache directory "%s".', $directory)
+                );
+            }
+        }
+
+        return $directory;
     }
 
     /**

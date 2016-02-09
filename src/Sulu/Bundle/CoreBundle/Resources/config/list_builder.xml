@@ -26,20 +26,26 @@
             <argument type="service" id="sulu_core.list_builder.metadata.provider.general.factory"/>
         </service>
 
+        <service id="sulu_core.list_builder.metadata.provider.general.cache" class="Metadata\Cache\FileCache">
+            <argument type="string">%sulu_core.list_builder.metadata.provider.general.cache_dir%</argument>
+        </service>
+
         <service id="sulu_core.list_builder.metadata.provider.general.factory" class="Metadata\MetadataFactory">
             <argument type="service" id="sulu_core.list_builder.metadata.provider.general.driver.xml"/>
             <argument>Metadata\ClassHierarchyMetadata</argument>
             <argument>%kernel.debug%</argument>
-            <!-- TODO
             <call method="setCache">
-                <argument type="service" id="???" />
+                <argument type="service" id="sulu_core.list_builder.metadata.provider.general.cache" />
             </call>
-            -->
         </service>
 
         <service id="sulu_core.list_builder.metadata.provider.general.driver.xml"
                  class="Sulu\Component\Rest\ListBuilder\Metadata\General\Driver\XmlDriver">
             <argument type="service" id="sulu_core.list_builder.metadata.file_locator"/>
+        </service>
+
+        <service id="sulu_core.list_builder.metadata.provider.doctrine.cache" class="Metadata\Cache\FileCache">
+            <argument type="string">%sulu_core.list_builder.metadata.provider.doctrine.cache_dir%</argument>
         </service>
 
         <service id="sulu_core.list_builder.metadata.provider.doctrine"
@@ -51,11 +57,9 @@
             <argument type="service" id="sulu_core.list_builder.metadata.provider.doctrine.driver.xml"/>
             <argument>Metadata\ClassHierarchyMetadata</argument>
             <argument>%kernel.debug%</argument>
-            <!-- TODO
             <call method="setCache">
-                <argument type="service" id="???" />
+                <argument type="service" id="sulu_core.list_builder.metadata.provider.doctrine.cache" />
             </call>
-            -->
         </service>
 
         <service id="sulu_core.list_builder.metadata.parameter_bag"
