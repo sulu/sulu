@@ -35,7 +35,7 @@ class PropertyMetadata extends BasePropertyMetadata
     /**
      * @var string
      */
-    private $type = '';
+    private $type = 'string';
 
     /**
      * @var string
