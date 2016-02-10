@@ -606,10 +606,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
             return $this->handleView($this->view($e->toArray(), 404));
         }
 
-        if ($request->query->get('force', false) === false
-            && $request->request->has('_hash')
-            && $this->get('sulu_hash.auditable_hasher')->hash($document) !== $request->request->get('_hash')
-        ) {
+        if (!$this->get('sulu_hash.request_hash_checker')->checkHash($request, $document)) {
             $e = new InvalidHashException(get_class($document), $document->getUuid());
 
             return $this->handleView($this->view($e->toArray(), 409));

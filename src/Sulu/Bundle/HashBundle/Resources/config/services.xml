@@ -9,5 +9,9 @@
             <argument type="service" id="sulu_hash.auditable_hasher"/>
             <tag name="jms_serializer.event_subscriber" />
         </service>
+
+        <service id="sulu_hash.request_hash_checker" class="Sulu\Component\Hash\RequestHashChecker">
+            <argument type="service" id="sulu_hash.auditable_hasher"/>
+        </service>
     </services>
 </container>
