@@ -734,7 +734,7 @@ define([], function() {
         fieldChangedEventHandler = function(event) {
             var fieldName = event.target.value,
                 field = this.fields[fieldName],
-                filteredOperators = filterOperatorsByType.call(this, field.type),
+                filteredOperators = filterOperatorsByType.call(this, field['filter:input-type']),
                 $row = this.sandbox.dom.closest(event.target, '.' + constants.conditionRowClass),
                 $operatorSelect = this.sandbox.dom.find('.' + constants.operatorSelectClass, $row)[0],
                 $valueInput = this.sandbox.dom.find('.' + constants.valueInputClass, $row)[0],
@@ -869,7 +869,7 @@ define([], function() {
             var result = {};
 
             fields.forEach(function(field) {
-                if (isSupportedType(field.type)) {
+                if (isSupportedType(field['filter:input-type'])) {
                     result[field.name] = field;
                 }
             }.bind(this));
