@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1986 [All]                 Fixed naming of serializer properties
     * BUGFIX      #1985 [CollaborationBundle] Removed leaking connections
     * ENHANCEMENT #1973 [All]                 Moved tests from /tests to component directories.
     * ENHANCEMENT #1970 [ContentBundle]       Changed get and put from NodeController to use DocumentManager
