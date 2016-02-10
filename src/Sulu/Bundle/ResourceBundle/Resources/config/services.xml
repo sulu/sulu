@@ -80,5 +80,44 @@
             <argument type="service" id="sulu_resource.filter_listbuilder"/>
             <tag name="kernel.event_listener" event="sulu.listbuilder.create" method="onListBuilderCreate"/>
         </service>
+
+        <!-- metadata -->
+        <service id="sulu_resource.list_builder.metadata.provider.filter.driver.xml"
+                 class="Sulu\Bundle\ResourceBundle\Resource\Metadata\Driver\XmlDriver">
+            <argument type="service" id="sulu_core.list_builder.metadata.file_locator"/>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_resource.list_builder.metadata.provider.filter.cache" class="Metadata\Cache\FileCache">
+            <argument type="string">%sulu_resource.list_builder.metadata.provider.filter.cache_dir%</argument>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_resource.list_builder.metadata.provider.filter"
+                 class="Sulu\Component\Rest\ListBuilder\Metadata\Provider\MetadataProvider">
+            <argument type="service" id="sulu_resource.list_builder.metadata.provider.filter.factory"/>
+
+            <tag name="sulu.list-builder.metadata.provider"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_resource.list_builder.metadata.provider.filter.factory" class="Metadata\MetadataFactory">
+            <argument type="service" id="sulu_resource.list_builder.metadata.provider.filter.driver.xml"/>
+            <argument>Metadata\ClassHierarchyMetadata</argument>
+            <argument>%kernel.debug%</argument>
+            <call method="setCache">
+                <argument type="service" id="sulu_resource.list_builder.metadata.provider.filter.cache"/>
+            </call>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_resource.list_builder.metadata.provider.filter.event_subscriber"
+                 class="Sulu\Bundle\ResourceBundle\Resource\Metadata\Listener\FilterMetataSerializeSubscriber">
+            <tag name="jms_serializer.event_subscriber"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
     </services>
 </container>

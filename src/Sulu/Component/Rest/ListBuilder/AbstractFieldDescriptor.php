@@ -10,7 +10,9 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
+use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Expose;
+use Sulu\Component\Rest\ListBuilder\Metadata\PropertyMetadata;
 
 abstract class AbstractFieldDescriptor implements FieldDescriptorInterface
 {
@@ -93,6 +95,12 @@ abstract class AbstractFieldDescriptor implements FieldDescriptorInterface
      * @Expose
      */
     private $class;
+
+    /**
+     * @var PropertyMetadata
+     * @Exclude
+     */
+    private $metadata;
 
     public function __construct(
         $name,
@@ -196,5 +204,23 @@ abstract class AbstractFieldDescriptor implements FieldDescriptorInterface
     public function getClass()
     {
         return $this->class;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMetadata()
+    {
+        return $this->metadata;
+    }
+
+    /**
+     * Sets metadata for property.
+     *
+     * @param PropertyMetadata $metadata
+     */
+    public function setMetadata($metadata)
+    {
+        $this->metadata = $metadata;
     }
 }

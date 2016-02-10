@@ -80,6 +80,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
             }
 
             if (null !== $fieldDescriptor) {
+                $fieldDescriptor->setMetadata($propertyMetadata);
                 $fieldDescriptors[$generalMetadata->getName()] = $fieldDescriptor;
             }
         }

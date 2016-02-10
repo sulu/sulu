@@ -1,5 +1,6 @@
 <class xmlns="http://schemas.sulu.io/class/general"
-       xmlns:orm="http://schemas.sulu.io/class/doctrine">
+       xmlns:orm="http://schemas.sulu.io/class/doctrine"
+       xmlns:filter="http://schemas.sulu.io/class/filter">
 
     <orm:joins name="address">
         <orm:join>
@@ -16,7 +17,7 @@
 
     <properties>
         <property name="avatar" translation="public.avatar" disabled="false" default="true" type="thumbnails"
-                  sortable="false">
+                  sortable="false" filter:input-type="test">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>SuluMediaBundle:Media</orm:entity-name>
 
