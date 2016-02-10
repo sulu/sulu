@@ -31,6 +31,11 @@ define([
             externalLinkNodeType: 4
         },
 
+        errorCodes = {
+            contentChanged: 1102,
+            resourceLocatorAlreadyExists: 1103
+        },
+
         translationKeys = {
             deleteReferencedByFollowing: 'content.delete-referenced-by-following',
             deleteConfirmText: 'content.delete-confirm-text',
@@ -261,20 +266,6 @@ define([
                 this.sandbox.dom.html('li[data-id="' + this.options.language + '"] a', this.options.language);
 
                 this.sandbox.emit('sulu.labels.success.show', 'labels.success.content-save-desc', 'labels.success');
-            }, this);
-
-            // content save-error
-            this.sandbox.on('sulu.content.contents.save-error', function(status) {
-                if (status === 409) {
-                    this.sandbox.emit(
-                        'sulu.labels.error.show',
-                        'labels.error.content-save-resource-locator',
-                        'labels.error'
-                    );
-                } else {
-                    this.sandbox.emit('sulu.labels.error.show', 'labels.error.content-save-desc', 'labels.error');
-                }
-                this.setHeaderBar(false);
             }, this);
 
             // content delete
@@ -561,6 +552,57 @@ define([
             });
         },
 
+        handleErrorContentChanged: function (data) {
+            this.sandbox.emit(
+                'sulu.overlay.show-warning',
+                'content.changed-warning.title',
+                'content.changed-warning.description',
+                function () {
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
+                }.bind(this),
+                function () {
+                    this.saveContent(
+                        data,
+                        {
+                            // on success save contents id
+                            success: function (response) {
+                                var model = response.toJSON();
+                                this.sandbox.emit('sulu.content.contents.saved', model.id, model);
+                                this.setHeaderBar(false);
+                                this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
+                            }.bind(this),
+                            error: function (model, response) {
+                                this.handleError(response.responseJSON.code, data);
+                            }.bind(this)
+                        },
+                        true
+                    );
+                }.bind(this),
+                {
+                    okDefaultText: 'content.changed-warning.ok-button'
+                }
+            );
+        },
+
+        handleError: function (errorCode, data) {
+            switch (errorCode) {
+                case errorCodes.contentChanged:
+                    this.handleErrorContentChanged(data);
+                    break;
+                case errorCodes.resourceLocatorAlreadyExists:
+                    this.sandbox.emit(
+                        'sulu.labels.error.show',
+                        'labels.error.content-save-resource-locator',
+                        'labels.error'
+                    );
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
+                    break;
+                default:
+                    this.sandbox.emit('sulu.labels.error.show', 'labels.error.content-save-desc', 'labels.error');
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
+            }
+        },
+
         save: function(data, action) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
 
@@ -580,13 +622,9 @@ define([
                 this.content.set({id: this.options.id});
             }
 
-            this.content.fullSave(
-                this.options.webspace,
-                this.options.language,
-                this.options.parent,
-                this.state,
-                (isHomeDocument(data) ? 'home' : null),
-                null, {
+            this.saveContent(
+                data,
+                {
                     // on success save contents id
                     success: function(response) {
                         var model = response.toJSON();
@@ -599,13 +637,29 @@ define([
                         def.resolve();
                     }.bind(this),
                     error: function(model, response) {
-                        this.sandbox.logger.log("error while saving profile");
-                        this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
-                        this.sandbox.emit('sulu.content.contents.save-error', response.status);
+                        this.handleError.call(this, response.responseJSON.code, data);
                     }.bind(this)
-                });
+                }
+            );
 
             return def;
+        },
+
+        saveContent: function(data, options, force) {
+            if (typeof force === 'undefined') {
+                force = false;
+            }
+
+            this.content.fullSave(
+                this.options.webspace,
+                this.options.language,
+                this.options.parent,
+                this.state,
+                (isHomeDocument(data) ? 'home' : null),
+                null,
+                options,
+                force
+            );
         },
 
         /**
@@ -1221,7 +1275,7 @@ define([
                         collapsed: true
                     },
                     content: {
-                        shrinkable: (!!this.options.preview) ? true : false
+                        shrinkable: !!this.options.preview
                     },
                     sidebar: (!!this.options.preview) ? 'max' : false
                 };

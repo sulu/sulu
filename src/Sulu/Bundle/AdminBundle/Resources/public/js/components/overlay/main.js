@@ -27,7 +27,7 @@ define(function() {
          *
          * @event sulu.overlay.initialized
          */
-            INITIALIZED = function() {
+        INITIALIZED = function() {
             return createEventName.call(this, 'initialized');
         },
 
@@ -36,7 +36,7 @@ define(function() {
          *
          * @event sulu.overlay.canceled
          */
-            CANCELED = function() {
+        CANCELED = function() {
             return createEventName.call(this, 'canceled');
         },
 
@@ -45,7 +45,7 @@ define(function() {
          *
          * @event sulu.overlay.canceled
          */
-            CONFIRMED = function() {
+        CONFIRMED = function() {
             return createEventName.call(this, 'confirmed');
         },
 
@@ -58,7 +58,7 @@ define(function() {
          * @param {String} callback for cancel-button
          * @param {Object} overlay-options object - optional
          */
-            SHOW_ERROR = function() {
+        SHOW_ERROR = function() {
             return createEventName.call(this, 'show-error');
         },
 
@@ -72,7 +72,7 @@ define(function() {
          * @param {String} callback for ok-button
          * @param {Object} overlay-options object - optional
          */
-            SHOW_WARNING = function() {
+        SHOW_WARNING = function() {
             return createEventName.call(this, 'show-warning');
         };
 

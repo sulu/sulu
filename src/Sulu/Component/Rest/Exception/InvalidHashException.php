@@ -11,6 +11,10 @@
 
 namespace Sulu\Component\Rest\Exception;
 
+/**
+ * Exception, which is thrown when the given hash does not match the hash of the current object. Usually happens when
+ * the data has been changed since it has been loaded.
+ */
 class InvalidHashException extends RestException
 {
     public function __construct($entity, $id)

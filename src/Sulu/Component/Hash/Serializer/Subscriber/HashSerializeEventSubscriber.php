@@ -17,6 +17,9 @@ use Sulu\Component\Hash\HasherInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Rest\ApiWrapper;
 
+/**
+ * Adds the hash of an object to its serialization, if it is auditable.
+ */
 class HashSerializeEventSubscriber implements EventSubscriberInterface
 {
     /**
@@ -39,6 +42,11 @@ class HashSerializeEventSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * Adds the hash of the given object to its serialization.
+     *
+     * @param ObjectEvent $event
+     */
     public function onPostSerialize(ObjectEvent $event)
     {
         $object = $event->getObject();

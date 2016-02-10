@@ -24,6 +24,7 @@ use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Exception\MandatoryPropertyException;
+use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
 use Sulu\Component\Content\Form\Exception\InvalidFormException;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
@@ -640,6 +641,10 @@ class NodeController extends RestController implements ClassResourceInterface, S
             $this->getDocumentManager()->flush();
         } catch (MandatoryPropertyException $e) {
             return $this->handleView($this->view($e->getMessage(), 400));
+        } catch (ResourceLocatorAlreadyExistsException $e) {
+            $restException = new RestException($e->getMessage(), 1103);
+
+            return $this->handleView($this->view($restException->toArray(), 409));
         }
 
         $view = $this->view($document);

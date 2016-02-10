@@ -599,6 +599,18 @@
                 <source>content.webspace.settings.redirect</source>
                 <target>Redirect</target>
             </trans-unit>
+            <trans-unit id="24" resname="content.changed-warning.title">
+                <source>content.changed-warning.title</source>
+                <target>Warning, content will be overwritten!</target>
+            </trans-unit>
+            <trans-unit id="25" resname="content.changed-warning.description">
+                <source>content.changed-warning.description</source>
+                <target>This page has been edited by another user. When you save the page this data will get lost.</target>
+            </trans-unit>
+            <trans-unit id="26" resname="content.changed-warning.ok-button">
+                <source>content.changed-warning.ok-button</source>
+                <target>Save page</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

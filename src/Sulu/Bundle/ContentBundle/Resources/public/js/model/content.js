@@ -22,7 +22,7 @@ define([
             return this.save.call(this, attributes, options);
         },
 
-        fullSave: function(webspace, language, parent, state, type, attributes, options) {
+        fullSave: function(webspace, language, parent, state, type, attributes, options, force) {
             options = _.defaults(
                 (options || {}),
                 {
@@ -32,6 +32,7 @@ define([
                         + (!!type ? '&type=' + type : '')
                         + (!!parent ? '&parent=' + parent : '')
                         + (!!state ? '&state=' + state : '')
+                        + (!!force ? '&force=' + force : '')
                 });
 
             return this.save.call(this, attributes, options);
