@@ -124,4 +124,18 @@
             </value>
         </values>
     </operator>
+
+    <!-- tags -->
+    <operator type="tags" inputType="tags" operator="and">
+        <translations>
+            <translation locale="de">Übereinstimmung mit allen Tags</translation>
+            <translation locale="en">Use records that use ALL tags</translation>
+        </translations>
+    </operator>
+    <operator type="tags" inputType="tags" operator="or">
+        <translations>
+            <translation locale="de">Übereinstimmung mit mind. einem Tag</translation>
+            <translation locale="en">Use records that use ANY tag</translation>
+        </translations>
+    </operator>
 </operators>

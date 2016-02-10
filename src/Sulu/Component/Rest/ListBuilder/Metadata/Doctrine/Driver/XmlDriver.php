@@ -18,6 +18,7 @@ use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\JoinMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\PropertyMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationTypeMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\GroupConcatTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleTypeMetadata;
 use Sulu\Component\Util\XmlUtil;
 use Symfony\Component\Config\Util\XmlUtils;
@@ -97,6 +98,8 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         switch ($propertyNode->nodeName) {
             case 'concatenation-property':
                 return $this->getConcatenationType($xpath, $propertyNode);
+            case 'group-concat-property':
+                return $this->getGroupConcatenationType($xpath, $propertyNode);
             default:
                 return $this->getSingleType($xpath, $propertyNode);
         }
@@ -125,7 +128,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      * @param \DOMXPath $xpath
      * @param \DOMElement $propertyNode
      *
-     * @return SingleTypeMetadata
+     * @return ConcatenationTypeMetadata
      */
     protected function getConcatenationType(\DOMXPath $xpath, \DOMElement $propertyNode)
     {
@@ -139,6 +142,23 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         }
 
         return $type;
+    }
+
+    /**
+     * Extracts group-concatenation-type for property-node.
+     *
+     * @param \DOMXPath $xpath
+     * @param \DOMElement $propertyNode
+     *
+     * @return GroupConcatTypeMetadata
+     */
+    protected function getGroupConcatenationType(\DOMXPath $xpath, \DOMElement $propertyNode)
+    {
+        if (null === $field = $this->getField($xpath, $propertyNode)) {
+            return;
+        }
+
+        return new GroupConcatTypeMetadata($field, XmlUtil::getValueFromXPath('@orm:glue', $xpath, $propertyNode, ' '));
     }
 
     /**

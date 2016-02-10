@@ -143,6 +143,8 @@ class LoadOperators implements FixtureInterface, OrderedFixtureInterface
                 return DataTypes::DATETIME_TYPE;
             case 'boolean':
                 return DataTypes::BOOLEAN_TYPE;
+            case 'tags':
+                return DataTypes::TAGS_TYPE;
             default:
                 return DataTypes::UNDEFINED_TYPE;
         }

@@ -148,9 +148,15 @@ class TagController extends RestController implements ClassResourceInterface, Se
             /** @var DoctrineListBuilderFactory $factory */
             $factory = $this->get('sulu_core.doctrine_list_builder_factory');
 
+            $fieldDescriptors = $this->getManager()->getFieldDescriptors();
             $listBuilder = $factory->create(self::$entityName);
 
-            $restHelper->initializeListBuilder($listBuilder, $this->getManager()->getFieldDescriptors());
+            $ids = array_filter(explode(',', $request->get('ids', '')));
+            if (count($ids) > 0) {
+                $listBuilder->in($fieldDescriptors['id'], $ids);
+            }
+
+            $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
             $list = new ListRepresentation(
                 $listBuilder->execute(),

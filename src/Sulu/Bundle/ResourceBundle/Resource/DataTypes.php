@@ -22,6 +22,7 @@ final class DataTypes
     const NUMBER_TYPE = 2;
     const DATETIME_TYPE = 3;
     const BOOLEAN_TYPE = 4;
+    const TAGS_TYPE = 5;
 
     /**
      * Types constructor.

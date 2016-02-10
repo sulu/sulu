@@ -32,6 +32,7 @@ define([], function() {
         NUMBER_TYPE = 2,
         DATETIME_TYPE = 3,
         BOOLEAN_TYPE = 4,
+        TAGS_TYPE = 5,
 
         defaults = {
             operatorsUrl: null,
@@ -47,13 +48,14 @@ define([], function() {
         },
 
         typeMappings = {
-            'string': STRING_TYPE,
-            'number': NUMBER_TYPE,
-            'integer': NUMBER_TYPE,
-            'float': NUMBER_TYPE,
-            'boolean': BOOLEAN_TYPE,
-            'date': DATETIME_TYPE,
-            'datetime': DATETIME_TYPE
+            string: STRING_TYPE,
+            number: NUMBER_TYPE,
+            integer: NUMBER_TYPE,
+            float: NUMBER_TYPE,
+            boolean: BOOLEAN_TYPE,
+            date: DATETIME_TYPE,
+            datetime: DATETIME_TYPE,
+            tags: TAGS_TYPE
         },
 
         templates = {
@@ -449,9 +451,54 @@ define([], function() {
                 case 'simple':
                     return createSimpleInput.call(this, value, constants.valueInputClass);
                 default:
-                    this.sandbox.logger.error('Input type "' + type + '" is not supported!');
-                    break;
+                    return createGenericInput.call(this, value, constants.valueInputClass, operator);
             }
+        },
+
+        /**
+         * Decides which input should be displayed for the given condition
+         */
+        getInputValue = function(operator, $row) {
+            switch (operator.inputType || '') {
+                case 'date':
+                case 'datepicker':
+                    return this.sandbox.dom.val(this.sandbox.dom.find('.' + constants.valueInputClass + ' input', $row));
+                case '':
+                case 'select':
+                case 'boolean':
+                case 'radio':
+                case 'checkbox':
+                case 'simple':
+                    return this.sandbox.dom.val(this.sandbox.dom.find('.' + constants.valueInputClass, $row));
+                default:
+                    return $('.' + constants.valueInputClass, $row).data('value');
+            }
+        },
+
+        /**
+         * Start a component for given operator.
+         *
+         * @param value
+         * @param cssClass
+         * @param operator
+         *
+         * @returns {*|jQuery|HTMLElement}
+         */
+        createGenericInput = function(value, cssClass, operator) {
+            var $el = $('<div class="' + cssClass + '"/>');
+
+            this.sandbox.start([
+                {
+                    name: 'condition-selection/' + operator.inputType + '@suluresource',
+                    options: {
+                        el: $el,
+                        operator: operator,
+                        value: value
+                    }
+                }
+            ]);
+
+            return $el;
         },
 
         /**
@@ -631,7 +678,7 @@ define([], function() {
             this.sandbox.dom.on(this.$container, 'change', function() {
                 // FIXME Datepicker triggers multiple change events?
                 updateDataAttribute.call(this);
-            }.bind(this), 'select, input');
+            }.bind(this), 'select, input, div');
 
             // update operator data
             this.sandbox.dom.on(this.$container, 'change', function(event) {
@@ -819,11 +866,7 @@ define([], function() {
             conditionId = this.sandbox.dom.data(this.sandbox.dom.find('.' + constants.valueInputClass, $row), 'id');
             operator = getOperatorById.call(this, operatorId);
 
-            if (!!operator && operator.inputType === 'datepicker') {
-                value = this.sandbox.dom.val(this.sandbox.dom.find('.' + constants.valueInputClass + ' input', $row));
-            } else {
-                value = this.sandbox.dom.val(this.sandbox.dom.find('.' + constants.valueInputClass, $row));
-            }
+            value = getInputValue.call(this, operator || {}, $row);
 
             condition = {
                 type: type,

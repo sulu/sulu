@@ -1,5 +1,15 @@
 # Upgrade
 
+## dev-master
+
+### Filter
+
+Update th schema `app/console doctrine:schema:update --force` and run following SQL-Statement:
+ 
+```sql
+TODO
+```
+
 ## 0.1.2
 
 ### Reindex-Command & Date Content-Type
