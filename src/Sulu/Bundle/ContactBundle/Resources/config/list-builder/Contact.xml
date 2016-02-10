@@ -106,7 +106,7 @@
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="id" translation="public.id" disabled="true" type="integer" filter:input-type="string">
+        <property name="id" translation="public.id" disabled="true" type="integer" filter:input-type="integer">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>

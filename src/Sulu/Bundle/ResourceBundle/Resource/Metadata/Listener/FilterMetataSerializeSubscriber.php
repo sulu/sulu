@@ -45,13 +45,14 @@ class FilterMetataSerializeSubscriber implements EventSubscriberInterface
         $fieldDescriptor = $event->getObject();
         $visitor = $event->getVisitor();
 
-        if (!$fieldDescriptor instanceof FieldDescriptorInterface || $fieldDescriptor->getMetadata() === null) {
+        if (!$fieldDescriptor instanceof FieldDescriptorInterface) {
             return;
         }
 
         $metadata = $fieldDescriptor->getMetadata();
-
-        if ($metadata->has(PropertyMetadata::class)) {
+        if ($metadata === null) {
+            $visitor->addData('filter:input-type', $fieldDescriptor->getType());
+        } elseif ($metadata->has(PropertyMetadata::class)) {
             $filterMetadata = $metadata->get(PropertyMetadata::class);
             $visitor->addData('filter:input-type', $filterMetadata->getInputType());
         }
