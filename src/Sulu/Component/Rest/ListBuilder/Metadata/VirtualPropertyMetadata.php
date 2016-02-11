@@ -11,7 +11,7 @@
 namespace Sulu\Component\Rest\ListBuilder\Metadata;
 
 /**
- * Container for virtual-property-metadata.
+ * Describes a property which is not linked to a real property on the class.
  */
 class VirtualPropertyMetadata extends PropertyMetadata
 {

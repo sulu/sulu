@@ -24,7 +24,7 @@ use Symfony\Component\Config\Util\XmlUtils;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
- * Parses data from xml and returns doctrine-metadata.
+ * Parses data from xml and returns list-builder metadata for doctrine entities.
  */
 class XmlDriver extends AbstractFileDriver implements DriverInterface
 {

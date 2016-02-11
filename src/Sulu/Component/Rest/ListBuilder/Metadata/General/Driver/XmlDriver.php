@@ -18,7 +18,7 @@ use Sulu\Component\Util\XmlUtil;
 use Symfony\Component\Config\Util\XmlUtils;
 
 /**
- * Parses data from xml and returns doctrine-metadata.
+ * Parses data from xml and returns general list-builder metadata.
  */
 class XmlDriver extends AbstractFileDriver implements DriverInterface
 {
