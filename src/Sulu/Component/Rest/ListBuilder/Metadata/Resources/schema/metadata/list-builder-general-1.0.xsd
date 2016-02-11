@@ -67,8 +67,15 @@
     <xs:attributeGroup name="propertyAttributeGroup">
         <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute type="xs:string" name="translation"/>
-        <xs:attribute type="xs:boolean" name="disabled" default="false"/>
-        <xs:attribute type="xs:boolean" name="default" default="false"/>
+        <xs:attribute type="xs:string" name="display">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="pounds" />
+                    <xs:enumeration value="euros" />
+                    <xs:enumeration value="dollars" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
         <xs:attribute type="xs:string" name="type" default="string"/>
         <xs:attribute type="xs:string" name="width"/>
         <xs:attribute type="xs:string" name="min-width"/>

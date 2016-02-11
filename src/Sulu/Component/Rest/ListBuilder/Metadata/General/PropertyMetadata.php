@@ -17,20 +17,20 @@ use Metadata\PropertyMetadata as BasePropertyMetadata;
  */
 class PropertyMetadata extends BasePropertyMetadata
 {
+    const VISIBLE_ALWAYS = 'always';
+    const VISIBLE_NEVER = 'never';
+    const VISIBLE_YES = 'yes';
+    const VISIBLE_NO = 'no';
+
     /**
      * @var string
      */
     private $translation;
 
     /**
-     * @var bool
+     * @var string
      */
-    private $disabled = false;
-
-    /**
-     * @var bool
-     */
-    private $default = false;
+    private $display = self::VISIBLE_NO;
 
     /**
      * @var string
@@ -96,35 +96,19 @@ class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
-     * @return boolean
+     * @return string
      */
-    public function isDisabled()
+    public function getDisplay()
     {
-        return $this->disabled;
+        return $this->display;
     }
 
     /**
-     * @param boolean $disabled
+     * @param string $display
      */
-    public function setDisabled($disabled)
+    public function setDisplay($display)
     {
-        $this->disabled = $disabled;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isDefault()
-    {
-        return $this->default;
-    }
-
-    /**
-     * @param boolean $default
-     */
-    public function setDefault($default)
-    {
-        $this->default = $default;
+        $this->display = $display;
     }
 
     /**
@@ -233,8 +217,7 @@ class PropertyMetadata extends BasePropertyMetadata
                 $this->class,
                 $this->name,
                 $this->translation,
-                $this->disabled,
-                $this->default,
+                $this->display,
                 $this->type,
                 $this->width,
                 $this->minWidth,
@@ -254,8 +237,7 @@ class PropertyMetadata extends BasePropertyMetadata
             $this->class,
             $this->name,
             $this->translation,
-            $this->disabled,
-            $this->default,
+            $this->display,
             $this->type,
             $this->width,
             $this->minWidth,

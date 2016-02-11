@@ -22,7 +22,7 @@ use Symfony\Component\Config\Util\XmlUtils;
  */
 class XmlDriver extends AbstractFileDriver implements DriverInterface
 {
-    const SCHEME_PATH = '/../../Resources/schema/metadata/general-1.0.xsd';
+    const SCHEME_PATH = '/../../Resources/schema/metadata/list-builder-general-1.0.xsd';
 
     /**
      * {@inheritdoc}
@@ -92,8 +92,9 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             $propertyMetadata->setCssClass($cssClass);
         }
 
-        $propertyMetadata->setDisabled(XmlUtil::getBooleanValueFromXPath('@disabled', $xpath, $propertyNode, false));
-        $propertyMetadata->setDefault(XmlUtil::getBooleanValueFromXPath('@default', $xpath, $propertyNode, false));
+        $propertyMetadata->setDisplay(
+            XmlUtil::getValueFromXPath('@display', $xpath, $propertyNode, PropertyMetadata::VISIBLE_NO)
+        );
         $propertyMetadata->setSortable(XmlUtil::getBooleanValueFromXPath('@sortable', $xpath, $propertyNode, true));
         $propertyMetadata->setEditable(XmlUtil::getBooleanValueFromXPath('@editable', $xpath, $propertyNode, false));
 
