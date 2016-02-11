@@ -17,6 +17,16 @@ namespace Sulu\Component\Rest\Exception;
  */
 class InvalidHashException extends RestException
 {
+    /**
+     * @var string
+     */
+    private $entity;
+
+    /**
+     * @var mixed
+     */
+    private $id;
+
     public function __construct($entity, $id)
     {
         parent::__construct(
@@ -28,5 +38,25 @@ class InvalidHashException extends RestException
             ),
             1102
         );
+    }
+
+    /**
+     * Returns the entity for which an invalid hash has been passed.
+     *
+     * @return string
+     */
+    public function getEntity()
+    {
+        return $this->entity;
+    }
+
+    /**
+     * Returns the id of the entity for which an invalid hash has been passed.
+     *
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }

@@ -67,6 +67,19 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                 ]
             );
         }
+
+        if ($container->hasExtension('fos_rest')) {
+            $container->prependExtensionConfig(
+                'fos_rest',
+                [
+                    'exception' => [
+                        'codes' => [
+                            'Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException' => 409,
+                        ],
+                    ],
+                ]
+            );
+        }
     }
 
     /**

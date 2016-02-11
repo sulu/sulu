@@ -21,10 +21,11 @@ interface RequestHashCheckerInterface
     /**
      * Returns true if the request contains the correct hash for the given object.
      *
-     * @param Request $request
-     * @param object $object
+     * @param Request $request The request to gather the required data from
+     * @param object $object The object to hash for the check
+     * @param mixed $identifier The identifier of the object, to pass for the error message
      *
      * @return bool
      */
-    public function checkHash(Request $request, $object);
+    public function checkHash(Request $request, $object, $identifier);
 }

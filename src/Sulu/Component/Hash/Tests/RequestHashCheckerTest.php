@@ -13,6 +13,7 @@ namespace Sulu\Component\Hash\Tests;
 
 use Sulu\Component\Hash\HasherInterface;
 use Sulu\Component\Hash\RequestHashChecker;
+use Sulu\Component\Rest\Exception\InvalidHashException;
 use Symfony\Component\HttpFoundation\Request;
 
 class RequestHashCheckerTest extends \PHPUnit_Framework_TestCase
@@ -56,6 +57,14 @@ class RequestHashCheckerTest extends \PHPUnit_Framework_TestCase
 
         $this->hasher->hash($object)->willReturn($realHash);
 
-        $this->assertEquals($valid, $this->requestHashChecker->checkHash($request, $object));
+        if (!$valid) {
+            $this->setExpectedException(InvalidHashException::class);
+        }
+
+        $result = $this->requestHashChecker->checkHash($request, $object, 1);
+
+        if ($valid) {
+            $this->assertEquals($valid, $result);
+        }
     }
 }

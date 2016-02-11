@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Hash;
 
+use Sulu\Component\Rest\Exception\InvalidHashException;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -43,16 +44,15 @@ class RequestHashChecker implements RequestHashCheckerInterface
     /**
      * {@inheritdoc}
      */
-    public function checkHash(Request $request, $object)
+    public function checkHash(Request $request, $object, $identifier)
     {
-        if (!$request->request->has($this->hashParameter)) {
+        if (!$request->request->has($this->hashParameter)
+            || $request->query->get('force', false) === 'true'
+            || $request->request->get($this->hashParameter) == $this->hasher->hash($object)
+        ) {
             return true;
         }
 
-        if ($request->query->get('force', false) === 'true') {
-            return true;
-        }
-
-        return $request->request->get($this->hashParameter) == $this->hasher->hash($object);
+        throw new InvalidHashException(get_class($object), $identifier);
     }
 }

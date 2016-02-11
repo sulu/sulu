@@ -22,16 +22,33 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
     public function prepend(ContainerBuilder $container)
     {
         if ($container->hasExtension('jms_serializer')) {
-            $container->prependExtensionConfig('jms_serializer', [
-                'metadata' => [
-                    'directories' => [
-                        [
-                            'path' => __DIR__ . '/../Resources/config/serializer',
-                            'namespace_prefix' => 'Sulu\Component\DocumentManager',
+            $container->prependExtensionConfig(
+                'jms_serializer',
+                [
+                    'metadata' => [
+                        'directories' => [
+                            [
+                                'path' => __DIR__ . '/../Resources/config/serializer',
+                                'namespace_prefix' => 'Sulu\Component\DocumentManager',
+                            ],
                         ],
                     ],
-                ],
-            ]);
+                ]
+            );
+        }
+
+        if ($container->hasExtension('fos_rest')) {
+            $container->prependExtensionConfig(
+                'fos_rest',
+                [
+                    'exception' => [
+                        'codes' => [
+                            'Sulu\Component\DocumentManager\Exception\DocumentNotFoundException' => 404,
+                            'Sulu\Component\Content\Exception\MandatoryPropertyException' => 400,
+                        ],
+                    ],
+                ]
+            );
         }
     }
 

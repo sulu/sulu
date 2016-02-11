@@ -207,7 +207,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data);
-        $this->assertequals(409, $client->getResponse()->getStatusCode());
+        $this->assertEquals(409, $client->getResponse()->getStatusCode());
     }
 
     public function testGet()
@@ -869,6 +869,34 @@ class NodeControllerTest extends SuluTestCase
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
+    }
+
+    public function testPutWithAlreadyExistingUrl()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $data = [
+            'title' => 'Testtitle',
+            'template' => 'default',
+            'url' => '/test',
+        ];
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data);
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $data['url'] = '/test2';
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data);
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $data['url'] = '/test';
+        $client->request(
+            'PUT',
+            '/api/nodes/' . $response['id'] . '?webspace=sulu_io&language=en&state=2',
+            $data
+        );
+        $this->assertEquals(409, $client->getResponse()->getStatusCode());
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(1103, $response['code']);
     }
 
     private function import($fileName)
