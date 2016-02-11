@@ -145,6 +145,8 @@ class LoadOperators implements FixtureInterface, OrderedFixtureInterface
                 return DataTypes::BOOLEAN_TYPE;
             case 'tags':
                 return DataTypes::TAGS_TYPE;
+            case 'auto-complete':
+                return DataTypes::AUTO_COMPLETE_TYPE;
             default:
                 return DataTypes::UNDEFINED_TYPE;
         }

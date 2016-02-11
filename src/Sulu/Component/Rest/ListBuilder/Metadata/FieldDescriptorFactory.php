@@ -13,11 +13,13 @@ namespace Sulu\Component\Rest\ListBuilder\Metadata;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineGroupConcatFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineIdentityFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\PropertyMetadata as DoctrinePropertyMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\GroupConcatTypeMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\IdentityTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata as GeneralPropertyMetadata;
 use Symfony\Component\Config\ConfigCache;
@@ -76,6 +78,11 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
                 );
             } elseif ($doctrineMetadata->getType() instanceof GroupConcatTypeMetadata) {
                 $fieldDescriptor = $this->getGroupConcatenationFieldDescriptor(
+                    $generalMetadata,
+                    $doctrineMetadata->getType()
+                );
+            } elseif ($doctrineMetadata->getType() instanceof IdentityTypeMetadata) {
+                $fieldDescriptor = $this->getIdentityFieldDescriptor(
                     $generalMetadata,
                     $doctrineMetadata->getType()
                 );
@@ -185,6 +192,46 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
             $generalMetadata->getName(),
             $generalMetadata->getTranslation(),
             $type->getGlue(),
+            $generalMetadata->isDisabled(),
+            $generalMetadata->isDefault(),
+            $generalMetadata->getType(),
+            $generalMetadata->getWidth(),
+            $generalMetadata->getMinWidth(),
+            $generalMetadata->isSortable(),
+            $generalMetadata->isEditable(),
+            $generalMetadata->getCssClass()
+        );
+    }
+
+    /**
+     * Returns identity field-descriptor for given general metadata.
+     *
+     * @param GeneralPropertyMetadata $generalMetadata
+     * @param IdentityTypeMetadata $type
+     *
+     * @return DoctrineFieldDescriptor
+     */
+    private function getIdentityFieldDescriptor(GeneralPropertyMetadata $generalMetadata, IdentityTypeMetadata $type)
+    {
+        $fieldMetadata = $type->getField();
+
+        $joins = [];
+        foreach ($fieldMetadata->getJoins() as $joinMetadata) {
+            $joins[$joinMetadata->getEntityName()] = new DoctrineJoinDescriptor(
+                $joinMetadata->getEntityName(),
+                $joinMetadata->getEntityField(),
+                $joinMetadata->getCondition(),
+                $joinMetadata->getMethod(),
+                $joinMetadata->getConditionMethod()
+            );
+        }
+
+        return new DoctrineIdentityFieldDescriptor(
+            $fieldMetadata->getName(),
+            $generalMetadata->getName(),
+            $fieldMetadata->getEntityName(),
+            $generalMetadata->getTranslation(),
+            $joins,
             $generalMetadata->isDisabled(),
             $generalMetadata->isDefault(),
             $generalMetadata->getType(),

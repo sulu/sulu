@@ -33,6 +33,7 @@ define([], function() {
         DATETIME_TYPE = 3,
         BOOLEAN_TYPE = 4,
         TAGS_TYPE = 5,
+        AUTO_COMPLETE_TYPE = 6,
 
         defaults = {
             operatorsUrl: null,
@@ -55,7 +56,8 @@ define([], function() {
             boolean: BOOLEAN_TYPE,
             date: DATETIME_TYPE,
             datetime: DATETIME_TYPE,
-            tags: TAGS_TYPE
+            tags: TAGS_TYPE,
+            'auto-complete': AUTO_COMPLETE_TYPE
         },
 
         templates = {
@@ -68,7 +70,7 @@ define([], function() {
                     '   <div class="grid-col-3">',
                     '       <div id="', id, '" class="btn action">',
                     '           <span class="fa-plus-circle"></span>',
-                    '           <span class="text">',text,'</span>',
+                    '           <span class="text">', text, '</span>',
                     '       </div>',
                     '   </div>',
                     '</div>'
@@ -359,8 +361,9 @@ define([], function() {
          * @param operator
          * @param gridColClass css class used for the wrapper of the input - should be a grid-col class
          * @param wrap
+         * @param parameters
          */
-        createValueInput = function(conditionGroup, operator, gridColClass, wrap) {
+        createValueInput = function(conditionGroup, operator, gridColClass, wrap, parameters) {
             var $input = null,
                 $wrapper,
                 condition, id;
@@ -370,11 +373,11 @@ define([], function() {
                     this.sandbox.logger.error('Multiple conditions not yet supported!');
                 } else {
                     condition = conditionGroup.conditions[0];
-                    $input = createInputForType.call(this, operator, condition.value);
+                    $input = createInputForType.call(this, operator, condition.value, parameters || {});
                     id = condition.id;
                 }
             } else if (!conditionGroup && !!operator) {
-                $input = createInputForType.call(this, operator, '');
+                $input = createInputForType.call(this, operator, '', parameters || {});
             } else {
                 $input = createSimpleInput.call(this, '', constants.valueInputClass);
             }
@@ -436,8 +439,9 @@ define([], function() {
          * Decides which input should be displayed for the given condition
          * @param operator
          * @param value
+         * @param parameters
          */
-        createInputForType = function(operator, value) {
+        createInputForType = function(operator, value, parameters) {
             switch (operator.inputType) {
                 case 'date':
                 case 'datepicker':
@@ -451,7 +455,7 @@ define([], function() {
                 case 'simple':
                     return createSimpleInput.call(this, value, constants.valueInputClass);
                 default:
-                    return createGenericInput.call(this, value, constants.valueInputClass, operator);
+                    return createGenericInput.call(this, value, constants.valueInputClass, operator, parameters);
             }
         },
 
@@ -481,10 +485,11 @@ define([], function() {
          * @param value
          * @param cssClass
          * @param operator
+         * @param parameters
          *
          * @returns {*|jQuery|HTMLElement}
          */
-        createGenericInput = function(value, cssClass, operator) {
+        createGenericInput = function(value, cssClass, operator, parameters) {
             var $el = $('<div class="' + cssClass + '"/>');
 
             this.sandbox.start([
@@ -493,7 +498,8 @@ define([], function() {
                     options: {
                         el: $el,
                         operator: operator,
-                        value: value
+                        value: value,
+                        parameters: parameters
                     }
                 }
             ]);
@@ -761,7 +767,8 @@ define([], function() {
                 $row = this.sandbox.dom.closest(event.target, '.' + constants.conditionRowClass),
                 operator = getOperatorById.call(this, operatorId),
                 $valueInput = this.sandbox.dom.find('.' + constants.valueInputClass, $row)[0],
-                $valueInputParent = this.sandbox.dom.parent($valueInput);
+                $valueInputParent = this.sandbox.dom.parent($valueInput),
+                field = $row.data('field');
 
             // remove field from validation
             if (!!this.options.validationSelector) {
@@ -770,7 +777,7 @@ define([], function() {
 
             this.sandbox.stop($valueInput);
             this.sandbox.dom.remove($valueInput);
-            $valueInput = createValueInput.call(this, null, operator, null, false);
+            $valueInput = createValueInput.call(this, null, operator, null, false, field['filter:parameters']);
             this.sandbox.dom.append($valueInputParent, $valueInput);
         },
 
@@ -787,6 +794,8 @@ define([], function() {
                 $valueInput = this.sandbox.dom.find('.' + constants.valueInputClass, $row)[0],
                 $operatorSelectParent = this.sandbox.dom.parent($operatorSelect),
                 $valueInputParent = this.sandbox.dom.parent($valueInput);
+
+            $row.data('field', field);
 
             // remove fields from validation
             if (!!this.options.validationSelector) {

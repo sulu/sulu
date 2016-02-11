@@ -15,6 +15,19 @@
         </orm:join>
     </orm:joins>
 
+    <orm:joins name="account">
+        <orm:join>
+            <orm:entity-name>SuluContactBundle:AccountContact</orm:entity-name>
+            <orm:field-name>%sulu.model.contact.class%.accountContacts</orm:field-name>
+            <orm:method>LEFT</orm:method>
+            <orm:condition>SuluContactBundle:AccountContact.main = true</orm:condition>
+        </orm:join>
+        <orm:join>
+            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+            <orm:field-name>SuluContactBundle:AccountContact.account</orm:field-name>
+        </orm:join>
+    </orm:joins>
+
     <properties>
         <property name="avatar" translation="public.avatar" default="true" type="thumbnails" sortable="false">
             <orm:field-name>id</orm:field-name>
@@ -49,22 +62,17 @@
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="account" translation="contact.contacts.company" default="true" filter:input-type="string">
+        <property name="account" translation="contact.contacts.company" default="true" filter:input-type="auto-complete">
             <orm:field-name>name</orm:field-name>
             <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
 
-            <orm:joins>
-                <orm:join>
-                    <orm:entity-name>SuluContactBundle:AccountContact</orm:entity-name>
-                    <orm:field-name>%sulu.model.contact.class%.accountContacts</orm:field-name>
-                    <orm:method>LEFT</orm:method>
-                    <orm:condition>SuluContactBundle:AccountContact.main = true</orm:condition>
-                </orm:join>
-                <orm:join>
-                    <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
-                    <orm:field-name>SuluContactBundle:AccountContact.account</orm:field-name>
-                </orm:join>
-            </orm:joins>
+            <orm:joins ref="account"/>
+
+            <filter:parameters>
+                <filter:parameter key="remoteUrl"><![CDATA[/admin/api/accounts?searchFields=name,number&flat=true&fields=id,number,name,corporation&limit=25]]></filter:parameter>
+                <filter:parameter key="resultKey">accounts</filter:parameter>
+                <filter:parameter key="valueKey">name</filter:parameter>
+            </filter:parameters>
         </property>
 
         <property name="city" translation="contact.address.city" default="true" filter:input-type="string">
@@ -139,7 +147,7 @@
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="title" translation="public.title" disabled="true" filter:input-type="string">
+        <property name="title" translation="public.title" disabled="true">
             <orm:field-name>title</orm:field-name>
             <orm:entity-name>SuluContactBundle:ContactTitle</orm:entity-name>
 
@@ -150,6 +158,17 @@
                 </orm:join>
             </orm:joins>
         </property>
+
+        <identity-property name="titleId" translation="public.title-id" filter:input-type="auto-complete">
+            <orm:field-name>title</orm:field-name>
+            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+
+            <filter:parameters>
+                <filter:parameter key="prefetchUrl"><![CDATA[http://sulu.lo/admin/api/contact/titles]]></filter:parameter>
+                <filter:parameter key="resultKey">contactTitles</filter:parameter>
+                <filter:parameter key="valueKey">title</filter:parameter>
+            </filter:parameters>
+        </identity-property>
 
         <property name="salutation" translation="contact.contacts.salutation" disabled="true"
                   filter:input-type="string">
@@ -180,7 +199,7 @@
             </orm:joins>
         </property>
 
-        <group-concat-property name="tagIds" translation="public.tags" disabled="true"
+        <group-concat-property name="tagIds" translation="public.tag-ids" disabled="true"
                                orm:glue="," filter:input-type="tags">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>SuluTagBundle:Tag</orm:entity-name>

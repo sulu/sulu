@@ -19,6 +19,7 @@ use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\JoinMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\PropertyMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\GroupConcatTypeMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\IdentityTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleTypeMetadata;
 use Sulu\Component\Util\XmlUtil;
 use Symfony\Component\Config\Util\XmlUtils;
@@ -100,6 +101,8 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
                 return $this->getConcatenationType($xpath, $propertyNode);
             case 'group-concat-property':
                 return $this->getGroupConcatenationType($xpath, $propertyNode);
+            case 'identity-property':
+                return $this->getGroupConcatenationType($xpath, $propertyNode);
             default:
                 return $this->getSingleType($xpath, $propertyNode);
         }
@@ -159,6 +162,23 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         }
 
         return new GroupConcatTypeMetadata($field, XmlUtil::getValueFromXPath('@orm:glue', $xpath, $propertyNode, ' '));
+    }
+
+    /**
+     * Extracts identity-type for property-node.
+     *
+     * @param \DOMXPath $xpath
+     * @param \DOMElement $propertyNode
+     *
+     * @return GroupConcatTypeMetadata
+     */
+    protected function getIdentityType(\DOMXPath $xpath, \DOMElement $propertyNode)
+    {
+        if (null === $field = $this->getField($xpath, $propertyNode)) {
+            return;
+        }
+
+        return new IdentityTypeMetadata($field);
     }
 
     /**

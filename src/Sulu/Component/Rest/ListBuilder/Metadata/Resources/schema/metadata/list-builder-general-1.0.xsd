@@ -20,10 +20,17 @@
                         minOccurs="0"/>
             <xs:element type="groupConcatPropertyType" name="group-concat-property" maxOccurs="unbounded"
                         minOccurs="0"/>
+            <xs:element type="identityPropertyType" name="identity-property" maxOccurs="unbounded"
+                        minOccurs="0"/>
         </xs:sequence>
     </xs:group>
 
     <xs:complexType name="propertyType">
+        <xs:group ref="propertyGroup"/>
+        <xs:attributeGroup ref="propertyAttributeGroup"/>
+    </xs:complexType>
+
+    <xs:complexType name="identityPropertyType">
         <xs:group ref="propertyGroup"/>
         <xs:attributeGroup ref="propertyAttributeGroup"/>
     </xs:complexType>
