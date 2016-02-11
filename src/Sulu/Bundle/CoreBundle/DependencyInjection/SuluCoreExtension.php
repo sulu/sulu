@@ -263,7 +263,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $filesystem = new Filesystem();
 
         $directory = $container->getParameterBag()->resolveValue($directory);
-        if (!file_exists($directory)) {
+        if (!$filesystem->exists($directory)) {
             $filesystem->mkdir($directory);
         }
 

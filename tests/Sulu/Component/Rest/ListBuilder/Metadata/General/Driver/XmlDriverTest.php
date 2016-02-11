@@ -36,17 +36,6 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
         $this->parameterBag = $this->prophesize(ParameterBagInterface::class);
     }
 
-    protected function loadMetadataFromFile(XmlDriver $driver, $file)
-    {
-        $reflectionMethod = new \ReflectionMethod(get_class($driver), 'loadMetadataFromFile');
-        $reflectionMethod->setAccessible(true);
-
-        return $reflectionMethod->invokeArgs(
-            $driver,
-            [new \ReflectionClass(new \stdClass()), __DIR__ . '/Resources/' . $file . '.xml']
-        );
-    }
-
     public function testLoadMetadataFromFileComplete()
     {
         $driver = new XmlDriver($this->locator->reveal());
@@ -158,7 +147,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    protected function assertMetadata($expected, PropertyMetadata $metadata)
+    private function assertMetadata($expected, PropertyMetadata $metadata)
     {
         $expected = array_merge(
             [
@@ -188,5 +177,16 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected['sortable'], $metadata->isSortable());
         $this->assertEquals($expected['editable'], $metadata->isEditable());
         $this->assertEquals($expected['class'], $metadata->getCssClass());
+    }
+
+    private function loadMetadataFromFile(XmlDriver $driver, $file)
+    {
+        $reflectionMethod = new \ReflectionMethod(get_class($driver), 'loadMetadataFromFile');
+        $reflectionMethod->setAccessible(true);
+
+        return $reflectionMethod->invokeArgs(
+            $driver,
+            [new \ReflectionClass(new \stdClass()), __DIR__ . '/Resources/' . $file . '.xml']
+        );
     }
 }

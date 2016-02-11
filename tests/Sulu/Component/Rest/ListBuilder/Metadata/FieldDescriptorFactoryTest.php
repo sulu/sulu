@@ -142,14 +142,14 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($fieldDescriptor);
     }
 
-    protected function assertFieldDescriptors(array $expected, array $fieldDescriptors)
+    private function assertFieldDescriptors(array $expected, array $fieldDescriptors)
     {
         foreach ($expected as $name => $expectedData) {
             $this->assertFieldDescriptor($expectedData, $fieldDescriptors[$name]);
         }
     }
 
-    protected function assertFieldDescriptor(array $expected, FieldDescriptorInterface $fieldDescriptor)
+    private function assertFieldDescriptor(array $expected, FieldDescriptorInterface $fieldDescriptor)
     {
         $expected = array_merge(
             [
