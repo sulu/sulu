@@ -15,7 +15,7 @@ use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
 /**
  * Describes a field which is concatenated from other fields.
  */
-class ConcatenationType extends PropertyType
+class ConcatenationTypeMetadata
 {
     /**
      * @var FieldMetadata[]

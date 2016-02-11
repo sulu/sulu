@@ -17,8 +17,8 @@ use Metadata\MergeableClassMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\JoinMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\PropertyMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationType;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleType;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationTypeMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleTypeMetadata;
 use Sulu\Component\Util\XmlUtil;
 use Symfony\Component\Config\Util\XmlUtils;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -90,7 +90,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      * @param \DOMXPath $xpath
      * @param \DOMElement $propertyNode
      *
-     * @return ConcatenationType|SingleType
+     * @return ConcatenationTypeMetadata|SingleTypeMetadata
      */
     protected function getType(\DOMXPath $xpath, \DOMElement $propertyNode)
     {
@@ -108,7 +108,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      * @param \DOMXPath $xpath
      * @param \DOMElement $propertyNode
      *
-     * @return SingleType
+     * @return SingleTypeMetadata
      */
     protected function getSingleType(\DOMXPath $xpath, \DOMElement $propertyNode)
     {
@@ -116,7 +116,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             return;
         }
 
-        return new SingleType($field);
+        return new SingleTypeMetadata($field);
     }
 
     /**
@@ -125,11 +125,11 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
      * @param \DOMXPath $xpath
      * @param \DOMElement $propertyNode
      *
-     * @return SingleType
+     * @return SingleTypeMetadata
      */
     protected function getConcatenationType(\DOMXPath $xpath, \DOMElement $propertyNode)
     {
-        $type = new ConcatenationType(XmlUtil::getValueFromXPath('@orm:glue', $xpath, $propertyNode, ' '));
+        $type = new ConcatenationTypeMetadata(XmlUtil::getValueFromXPath('@orm:glue', $xpath, $propertyNode, ' '));
         foreach ($xpath->query('orm:field', $propertyNode) as $fieldNode) {
             if (null === $field = $this->getField($xpath, $fieldNode)) {
                 continue;
