@@ -180,7 +180,20 @@
             </orm:joins>
         </property>
 
-        <group-concat-property name="tags" filter:input-type="tags">
+        <group-concat-property name="tagIds" translation="public.tags" disabled="true"
+                               orm:glue="," filter:input-type="tags">
+            <orm:field-name>id</orm:field-name>
+            <orm:entity-name>SuluTagBundle:Tag</orm:entity-name>
+
+            <orm:joins>
+                <orm:join>
+                    <orm:entity-name>SuluTagBundle:Tag</orm:entity-name>
+                    <orm:field-name>%sulu.model.contact.class%.tags</orm:field-name>
+                </orm:join>
+            </orm:joins>
+        </group-concat-property>
+
+        <group-concat-property name="tags" orm:glue="," disabled="true">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>SuluTagBundle:Tag</orm:entity-name>
 

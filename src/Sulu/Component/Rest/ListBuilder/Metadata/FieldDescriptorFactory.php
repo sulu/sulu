@@ -12,11 +12,17 @@ namespace Sulu\Component\Rest\ListBuilder\Metadata;
 
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineGroupConcatFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\PropertyMetadata as DoctrinePropertyMetadata;
+<<<<<<< 55aeef5d19a8ac01fbef4160ea0f89b41b86c6ea
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleTypeMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\GroupConcatTypeMetadata;use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleTypeMetadata;
+=======
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationType;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\GroupConcatType;
+>>>>>>> added group-concat to field-descriptor factory
 use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata as GeneralPropertyMetadata;
 use Symfony\Component\Config\ConfigCache;
 
@@ -71,6 +77,11 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
                 $fieldDescriptor = $this->getConcatenationFieldDescriptor(
                     $generalMetadata,
                     $doctrineMetadata->getType()
+                );
+            } elseif ($doctrineMetadata->getType() instanceof GroupConcatTypeMetadata) {
+                $fieldDescriptor = $this->getGroupConcatenationFieldDescriptor(
+                    $generalMetadata,
+                    $doctrineMetadata->getType()->getField()
                 );
             } elseif ($doctrineMetadata->getType() instanceof SingleTypeMetadata) {
                 $fieldDescriptor = $this->getFieldDescriptor(
@@ -147,6 +158,34 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
                 },
                 $type->getFields()
             ),
+            $generalMetadata->getName(),
+            $generalMetadata->getTranslation(),
+            $type->getGlue(),
+            $generalMetadata->isDisabled(),
+            $generalMetadata->isDefault(),
+            $generalMetadata->getType(),
+            $generalMetadata->getWidth(),
+            $generalMetadata->getMinWidth(),
+            $generalMetadata->isSortable(),
+            $generalMetadata->isEditable(),
+            $generalMetadata->getCssClass()
+        );
+    }
+
+    /**
+     * Returns concatenation field-descriptor for given general metadata.
+     *
+     * @param GeneralPropertyMetadata $generalMetadata
+     * @param GroupConcatType $type
+     *
+     * @return DoctrineFieldDescriptor
+     */
+    protected function getGroupConcatenationFieldDescriptor(
+        GeneralPropertyMetadata $generalMetadata,
+        GroupConcatType $type
+    ) {
+        return new DoctrineGroupConcatFieldDescriptor(
+            $this->getFieldDescriptor($generalMetadata, $type->getField()),
             $generalMetadata->getName(),
             $generalMetadata->getTranslation(),
             $type->getGlue(),
