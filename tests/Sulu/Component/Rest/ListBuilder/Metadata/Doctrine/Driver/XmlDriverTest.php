@@ -49,88 +49,6 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
         $this->parameterBag->resolveValue(Argument::any())->willReturnArgument(0);
     }
 
-    protected function loadMetadataFromFile(XmlDriver $driver, $file)
-    {
-
-        $reflectionMethod = new \ReflectionMethod(get_class($driver), 'loadMetadataFromFile');
-        $reflectionMethod->setAccessible(true);
-
-        return $reflectionMethod->invokeArgs(
-            $driver,
-            [new \ReflectionClass(new \stdClass()), __DIR__ . '/Resources/'.$file.'.xml']
-        );
-    }
-
-    protected function assertSingleMetadata(array $expected, PropertyMetadata $metadata)
-    {
-        $this->assertInstanceOf(SingleType::class, $metadata->getType());
-        $this->assertField($expected, $metadata->getType()->getField());
-    }
-
-    protected function assertField(array $expected, FieldMetadata $metadata)
-    {
-        $expected = array_merge(
-            array(
-                'name' => null,
-                'entityName' => null,
-                'joins' => []
-            ),
-            $expected
-        );
-
-        $this->assertEquals($expected['name'], $metadata->getName());
-        $this->assertEquals($expected['entityName'], $metadata->getEntityName());
-        $this->assertCount(count($expected['joins']), $metadata->getJoins());
-
-        $i = 0;
-        foreach ($expected['joins'] as $joinExpected) {
-            $this->assertJoin($joinExpected, $metadata->getJoins()[$i]);
-            $i++;
-        }
-    }
-
-    protected function assertJoin(array $expected, JoinMetadata $metadata)
-    {
-        $expected = array_merge(
-            [
-                'entityName' => null,
-                'entityField' => null,
-                'condition' => null,
-                'conditionMethod' => 'WITH',
-                'method' => 'LEFT',
-            ],
-            $expected
-        );
-
-        $this->assertEquals($expected['entityName'], $metadata->getEntityName());
-        $this->assertEquals($expected['entityField'], $metadata->getEntityField());
-        $this->assertEquals($expected['condition'], $metadata->getCondition());
-        $this->assertEquals($expected['conditionMethod'], $metadata->getConditionMethod());
-        $this->assertEquals($expected['method'], $metadata->getMethod());
-    }
-
-    protected function assertConcatenationType($expected, PropertyMetadata $metadata)
-    {
-        $expected = array_merge(
-            array(
-                'glue' => null,
-                'fields' => [],
-            ),
-            $expected
-        );
-
-        $this->assertInstanceOf(ConcatenationType::class, $metadata->getType());
-
-        $this->assertEquals($expected['glue'], $metadata->getType()->getGlue());
-        $this->assertCount(count($expected['fields']), $metadata->getType()->getFields());
-
-        $i = 0;
-        foreach ($expected['fields'] as $fieldExpected) {
-            $this->assertField($fieldExpected, $metadata->getType()->getFields()[$i]);
-            $i++;
-        }
-    }
-
     public function testLoadMetadataFromFileComplete()
     {
         $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
@@ -241,5 +159,87 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
             ['name' => 'lastName', 'entityName' => 'SuluContactBundle:Contact'],
             $result->propertyMetadata['lastName']
         );
+    }
+
+    private function loadMetadataFromFile(XmlDriver $driver, $file)
+    {
+
+        $reflectionMethod = new \ReflectionMethod(get_class($driver), 'loadMetadataFromFile');
+        $reflectionMethod->setAccessible(true);
+
+        return $reflectionMethod->invokeArgs(
+            $driver,
+            [new \ReflectionClass(new \stdClass()), __DIR__ . '/Resources/'.$file.'.xml']
+        );
+    }
+
+    private function assertSingleMetadata(array $expected, PropertyMetadata $metadata)
+    {
+        $this->assertInstanceOf(SingleType::class, $metadata->getType());
+        $this->assertField($expected, $metadata->getType()->getField());
+    }
+
+    private function assertField(array $expected, FieldMetadata $metadata)
+    {
+        $expected = array_merge(
+            array(
+                'name' => null,
+                'entityName' => null,
+                'joins' => []
+            ),
+            $expected
+        );
+
+        $this->assertEquals($expected['name'], $metadata->getName());
+        $this->assertEquals($expected['entityName'], $metadata->getEntityName());
+        $this->assertCount(count($expected['joins']), $metadata->getJoins());
+
+        $i = 0;
+        foreach ($expected['joins'] as $joinExpected) {
+            $this->assertJoin($joinExpected, $metadata->getJoins()[$i]);
+            $i++;
+        }
+    }
+
+    private function assertJoin(array $expected, JoinMetadata $metadata)
+    {
+        $expected = array_merge(
+            [
+                'entityName' => null,
+                'entityField' => null,
+                'condition' => null,
+                'conditionMethod' => 'WITH',
+                'method' => 'LEFT',
+            ],
+            $expected
+        );
+
+        $this->assertEquals($expected['entityName'], $metadata->getEntityName());
+        $this->assertEquals($expected['entityField'], $metadata->getEntityField());
+        $this->assertEquals($expected['condition'], $metadata->getCondition());
+        $this->assertEquals($expected['conditionMethod'], $metadata->getConditionMethod());
+        $this->assertEquals($expected['method'], $metadata->getMethod());
+    }
+
+    private function assertConcatenationType($expected, PropertyMetadata $metadata)
+    {
+        $expected = array_merge(
+            array(
+                'glue' => null,
+                'fields' => [],
+            ),
+            $expected
+        );
+
+        $this->assertInstanceOf(ConcatenationType::class, $metadata->getType());
+
+        $this->assertEquals($expected['glue'], $metadata->getType()->getGlue());
+        $this->assertCount(count($expected['fields']), $metadata->getType()->getFields());
+
+        $i = 0;
+        foreach ($expected['fields'] as $fieldExpected) {
+            $this->assertField($fieldExpected, $metadata->getType()->getFields()[$i]);
+            $i++;
+        }
     }
 }
