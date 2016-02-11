@@ -598,7 +598,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
             $document = $this->getDocumentManager()->find(
                 $uuid,
                 $language,
-                ['type' => $type, 'load_ghost_content' => false]
+                ['load_ghost_content' => false]
             );
         } catch (DocumentNotFoundException $e) {
             $e = new EntityNotFoundException(PageDocument::class, $uuid, $e);
