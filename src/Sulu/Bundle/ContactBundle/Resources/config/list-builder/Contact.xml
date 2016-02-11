@@ -194,7 +194,7 @@
         </group-concat-property>
 
         <group-concat-property name="tags" orm:glue="," disabled="true">
-            <orm:field-name>id</orm:field-name>
+            <orm:field-name>name</orm:field-name>
             <orm:entity-name>SuluTagBundle:Tag</orm:entity-name>
 
             <orm:joins>

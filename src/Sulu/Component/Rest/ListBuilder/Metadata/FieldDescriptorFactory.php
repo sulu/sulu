@@ -16,13 +16,9 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineGroupConcat
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\PropertyMetadata as DoctrinePropertyMetadata;
-<<<<<<< 55aeef5d19a8ac01fbef4160ea0f89b41b86c6ea
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationTypeMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\GroupConcatTypeMetadata;use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleTypeMetadata;
-=======
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationType;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\GroupConcatType;
->>>>>>> added group-concat to field-descriptor factory
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\GroupConcatTypeMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata as GeneralPropertyMetadata;
 use Symfony\Component\Config\ConfigCache;
 
@@ -176,13 +172,13 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
      * Returns concatenation field-descriptor for given general metadata.
      *
      * @param GeneralPropertyMetadata $generalMetadata
-     * @param GroupConcatType $type
+     * @param GroupConcatTypeMetadata $type
      *
      * @return DoctrineFieldDescriptor
      */
     protected function getGroupConcatenationFieldDescriptor(
         GeneralPropertyMetadata $generalMetadata,
-        GroupConcatType $type
+        GroupConcatTypeMetadata $type
     ) {
         return new DoctrineGroupConcatFieldDescriptor(
             $this->getFieldDescriptor($generalMetadata, $type->getField()),

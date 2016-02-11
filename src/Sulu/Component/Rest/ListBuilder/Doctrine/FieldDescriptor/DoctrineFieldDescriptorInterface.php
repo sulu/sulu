@@ -25,6 +25,13 @@ interface DoctrineFieldDescriptorInterface extends FieldDescriptorInterface
     public function getSelect();
 
     /**
+     * Returns a simple select statement (for where statements as an example).
+     *
+     * @return string
+     */
+    public function getSimpleSelect();
+
+    /**
      * Returns the where statement for search.
      *
      * @return string

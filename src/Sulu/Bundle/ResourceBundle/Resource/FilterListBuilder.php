@@ -191,7 +191,8 @@ class FilterListBuilder implements FilterListBuilderInterface
         switch ($type) {
             case DataTypes::UNDEFINED_TYPE:
             case DataTypes::STRING_TYPE:
-                return $value;
+            case DataTypes::TAGS_TYPE:
+            return $value;
             case DataTypes::NUMBER_TYPE:
                 if (is_numeric($value)) {
                     return floatval($value);
