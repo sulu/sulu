@@ -12,16 +12,30 @@ namespace Sulu\Bundle\ResourceBundle\Resource\Metadata\Driver;
 
 use Metadata\Driver\AbstractFileDriver;
 use Metadata\Driver\DriverInterface;
+use Metadata\Driver\FileLocatorInterface;
 use Metadata\MergeableClassMetadata;
 use Sulu\Bundle\ResourceBundle\Resource\Metadata\PropertyMetadata;
 use Sulu\Component\Util\XmlUtil;
 use Symfony\Component\Config\Util\XmlUtils;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
  * Parses data from xml and returns filter-metadata.
  */
 class XmlDriver extends AbstractFileDriver implements DriverInterface
 {
+    /**
+     * @var ParameterBagInterface
+     */
+    private $parameterBag;
+
+    public function __construct(FileLocatorInterface $locator, ParameterBagInterface $parameterBag)
+    {
+        parent::__construct($locator);
+
+        $this->parameterBag = $parameterBag;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -62,8 +76,13 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         }
 
         $name = XmlUtil::getValueFromXPath('@name', $xpath, $propertyNode);
+        $parameters = [];
+        foreach ($xpath->query('filter:parameters/filter:parameter', $propertyNode) as $parameterNode) {
+            $key = XmlUtil::getValueFromXPath('@key', $xpath, $parameterNode);
+            $parameters[$key] = $this->parameterBag->resolveValue($parameterNode->nodeValue);
+        }
 
-        return new PropertyMetadata($className, $name, $inputType);
+        return new PropertyMetadata($className, $name, $inputType, $parameters);
     }
 
     /**

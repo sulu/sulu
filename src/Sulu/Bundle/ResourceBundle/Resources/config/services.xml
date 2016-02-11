@@ -85,6 +85,7 @@
         <service id="sulu_resource.list_builder.metadata.provider.filter.driver.xml"
                  class="Sulu\Bundle\ResourceBundle\Resource\Metadata\Driver\XmlDriver">
             <argument type="service" id="sulu_core.list_builder.metadata.file_locator"/>
+            <argument type="service" id="sulu_core.list_builder.metadata.parameter_bag"/>
 
             <tag name="sulu.context" context="admin"/>
         </service>

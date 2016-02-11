@@ -22,11 +22,17 @@ class PropertyMetadata extends BasePropertyMetadata
      */
     private $inputType;
 
-    public function __construct($class, $name, $inputType)
+    /**
+     * @var array
+     */
+    private $parameters = [];
+
+    public function __construct($class, $name, $inputType, array $parameters)
     {
         $this->class = $class;
         $this->name = $name;
         $this->inputType = $inputType;
+        $this->parameters = $parameters;
     }
 
     /**
@@ -40,6 +46,14 @@ class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
+     * @return array
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function serialize()
@@ -49,6 +63,7 @@ class PropertyMetadata extends BasePropertyMetadata
                 $this->class,
                 $this->name,
                 $this->inputType,
+                $this->parameters,
             ]
         );
     }
@@ -62,6 +77,7 @@ class PropertyMetadata extends BasePropertyMetadata
             $this->class,
             $this->name,
             $this->inputType,
+            $this->parameters,
             ) = unserialize($str);
     }
 }

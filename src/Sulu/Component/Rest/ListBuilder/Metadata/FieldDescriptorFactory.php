@@ -77,7 +77,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
             } elseif ($doctrineMetadata->getType() instanceof GroupConcatTypeMetadata) {
                 $fieldDescriptor = $this->getGroupConcatenationFieldDescriptor(
                     $generalMetadata,
-                    $doctrineMetadata->getType()->getField()
+                    $doctrineMetadata->getType()
                 );
             } elseif ($doctrineMetadata->getType() instanceof SingleTypeMetadata) {
                 $fieldDescriptor = $this->getFieldDescriptor(
