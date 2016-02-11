@@ -15,7 +15,8 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\PropertyMetadata as DoctrinePropertyMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationType;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationTypeMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata as GeneralPropertyMetadata;
 use Symfony\Component\Config\ConfigCache;
 
@@ -65,22 +66,22 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
             /** @var GeneralPropertyMetadata $generalMetadata */
             $generalMetadata = $propertyMetadata->get(GeneralPropertyMetadata::class);
 
-            switch (get_class($doctrineMetadata->getType())) {
-                case ConcatenationType::class:
-                    $fieldDescriptor = $this->getConcatenationFieldDescriptor(
-                        $generalMetadata,
-                        $doctrineMetadata->getType()
-                    );
-                    break;
-                default:
-                    $fieldDescriptor = $this->getFieldDescriptor(
-                        $generalMetadata,
-                        $doctrineMetadata->getType()->getField()
-                    );
-                    break;
+            $fieldDescriptor = null;
+            if ($doctrineMetadata->getType() instanceof ConcatenationTypeMetadata) {
+                $fieldDescriptor = $this->getConcatenationFieldDescriptor(
+                    $generalMetadata,
+                    $doctrineMetadata->getType()
+                );
+            } elseif ($doctrineMetadata->getType() instanceof SingleTypeMetadata) {
+                $fieldDescriptor = $this->getFieldDescriptor(
+                    $generalMetadata,
+                    $doctrineMetadata->getType()->getField()
+                );
             }
 
-            $fieldDescriptors[$generalMetadata->getName()] = $fieldDescriptor;
+            if (null !== $fieldDescriptor) {
+                $fieldDescriptors[$generalMetadata->getName()] = $fieldDescriptor;
+            }
         }
 
         $this->cache->write('<?php return unserialize(' . var_export(serialize($fieldDescriptors), true) . ');');
@@ -130,13 +131,13 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
      * Returns concatenation field-descriptor for given general metadata.
      *
      * @param GeneralPropertyMetadata $generalMetadata
-     * @param ConcatenationType $type
+     * @param ConcatenationTypeMetadata $type
      *
      * @return DoctrineFieldDescriptor
      */
     protected function getConcatenationFieldDescriptor(
         GeneralPropertyMetadata $generalMetadata,
-        ConcatenationType $type
+        ConcatenationTypeMetadata $type
     ) {
         return new DoctrineConcatenationFieldDescriptor(
             array_map(

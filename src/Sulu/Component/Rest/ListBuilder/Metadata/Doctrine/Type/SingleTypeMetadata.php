@@ -15,7 +15,7 @@ use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
 /**
  * Describes a normal field.
  */
-class SingleType extends PropertyType
+class SingleTypeMetadata
 {
     /**
      * @var FieldMetadata

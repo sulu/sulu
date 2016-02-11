@@ -16,8 +16,8 @@ use Prophecy\Argument;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\JoinMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\PropertyMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationType;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleType;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationTypeMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleTypeMetadata;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class XmlDriverTest extends \PHPUnit_Framework_TestCase
@@ -175,7 +175,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
 
     private function assertSingleMetadata(array $expected, PropertyMetadata $metadata)
     {
-        $this->assertInstanceOf(SingleType::class, $metadata->getType());
+        $this->assertInstanceOf(SingleTypeMetadata::class, $metadata->getType());
         $this->assertField($expected, $metadata->getType()->getField());
     }
 
@@ -231,7 +231,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
             $expected
         );
 
-        $this->assertInstanceOf(ConcatenationType::class, $metadata->getType());
+        $this->assertInstanceOf(ConcatenationTypeMetadata::class, $metadata->getType());
 
         $this->assertEquals($expected['glue'], $metadata->getType()->getGlue());
         $this->assertCount(count($expected['fields']), $metadata->getType()->getFields());

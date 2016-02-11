@@ -11,7 +11,6 @@
 namespace Sulu\Component\Rest\ListBuilder\Metadata\Doctrine;
 
 use Metadata\PropertyMetadata as BasePropertyMetadata;
-use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\PropertyType;
 
 /**
  * Container for property-metadata.
@@ -19,11 +18,11 @@ use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\PropertyType;
 class PropertyMetadata extends BasePropertyMetadata
 {
     /**
-     * @var PropertyType
+     * @var mixed
      */
     private $type;
 
-    public function __construct($class, $name, PropertyType $type)
+    public function __construct($class, $name, $type)
     {
         $this->class = $class;
         $this->name = $name;
@@ -31,7 +30,7 @@ class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
-     * @return PropertyType
+     * @return mixed
      */
     public function getType()
     {
