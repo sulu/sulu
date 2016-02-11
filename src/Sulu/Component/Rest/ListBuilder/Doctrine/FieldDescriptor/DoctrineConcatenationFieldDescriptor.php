@@ -23,7 +23,7 @@ class DoctrineConcatenationFieldDescriptor extends AbstractDoctrineFieldDescript
     /**
      * The field descriptors which will be concatenated.
      *
-     * @var AbstractDoctrineFieldDescriptor[]
+     * @var DoctrineFieldDescriptorInterface[]
      */
     private $fieldDescriptors;
 

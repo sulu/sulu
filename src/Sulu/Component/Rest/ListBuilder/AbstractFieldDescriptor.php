@@ -1,7 +1,6 @@
 <?php
-
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,15 +10,9 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
-use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 
-/**
- * This class contains the values required by all FieldDescriptors.
- *
- * @ExclusionPolicy("all")
- */
-abstract class AbstractFieldDescriptor
+abstract class AbstractFieldDescriptor implements FieldDescriptorInterface
 {
     /**
      * The name of the field in the database.
@@ -126,9 +119,7 @@ abstract class AbstractFieldDescriptor
     }
 
     /**
-     * Returns the name of the field.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -136,9 +127,7 @@ abstract class AbstractFieldDescriptor
     }
 
     /**
-     * Returns whether the field is disabled or not.
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public function getDisabled()
     {
@@ -146,9 +135,7 @@ abstract class AbstractFieldDescriptor
     }
 
     /**
-     * Returns the translation code of the field.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getTranslation()
     {
@@ -156,9 +143,7 @@ abstract class AbstractFieldDescriptor
     }
 
     /**
-     * Returns the type of the field.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getType()
     {
@@ -166,9 +151,7 @@ abstract class AbstractFieldDescriptor
     }
 
     /**
-     * Returns the width of the field.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getWidth()
     {
@@ -176,7 +159,7 @@ abstract class AbstractFieldDescriptor
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function getDefault()
     {
@@ -184,7 +167,7 @@ abstract class AbstractFieldDescriptor
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function getSortable()
     {
@@ -192,7 +175,7 @@ abstract class AbstractFieldDescriptor
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function getEditable()
     {
@@ -200,7 +183,7 @@ abstract class AbstractFieldDescriptor
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getMinWidth()
     {
@@ -208,7 +191,7 @@ abstract class AbstractFieldDescriptor
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getClass()
     {

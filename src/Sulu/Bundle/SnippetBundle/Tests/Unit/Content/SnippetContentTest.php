@@ -54,7 +54,7 @@ class SnippetContentTest extends \PHPUnit_Framework_TestCase
 
         $result = $type->getContentData($property->reveal());
 
-        self::assertEquals([['title' => 'test-1']], $result);
+        $this->assertEquals([['title' => 'test-1']], $result);
     }
 
     public function testGetViewData()
@@ -92,6 +92,6 @@ class SnippetContentTest extends \PHPUnit_Framework_TestCase
 
         $result = $type->getViewData($property->reveal());
 
-        self::assertEquals([['title' => 'test-2', 'template' => 'default']], $result);
+        $this->assertEquals([['title' => 'test-2', 'template' => 'default']], $result);
     }
 }

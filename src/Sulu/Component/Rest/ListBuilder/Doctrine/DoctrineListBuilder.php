@@ -13,10 +13,9 @@ namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
-use Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\AbstractListBuilder;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\AbstractDoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\Event\ListBuilderCreateEvent;
 use Sulu\Component\Rest\ListBuilder\Event\ListBuilderEvents;
@@ -29,6 +28,7 @@ use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineInExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineOrExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineWhereExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Exception\InvalidExpressionArgumentException;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -54,12 +54,12 @@ class DoctrineListBuilder extends AbstractListBuilder
     private $entityName;
 
     /**
-     * @var AbstractDoctrineFieldDescriptor[]
+     * @var DoctrineFieldDescriptorInterface[]
      */
     protected $selectFields = [];
 
     /**
-     * @var AbstractDoctrineFieldDescriptor[]
+     * @var DoctrineFieldDescriptorInterface[]
      */
     protected $searchFields = [];
 
@@ -239,7 +239,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @param bool $onlyReturnFilterFields Define if only filtering FieldDescriptors should be returned
      *
-     * @return AbstractDoctrineFieldDescriptor[]
+     * @return DoctrineFieldDescriptorInterface[]
      */
     protected function getAllFields($onlyReturnFilterFields = false)
     {
@@ -288,7 +288,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @param string[] $necessaryEntityNames
      *
-     * @return AbstractDoctrineFieldDescriptor[]
+     * @return DoctrineFieldDescriptorInterface[]
      */
     protected function getNecessaryJoins($necessaryEntityNames)
     {
@@ -431,9 +431,9 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * {@inheritdoc}
      */
-    public function createWhereExpression(AbstractFieldDescriptor $fieldDescriptor, $value, $comparator)
+    public function createWhereExpression(FieldDescriptorInterface $fieldDescriptor, $value, $comparator)
     {
-        if (!$fieldDescriptor instanceof AbstractDoctrineFieldDescriptor) {
+        if (!$fieldDescriptor instanceof DoctrineFieldDescriptorInterface) {
             throw new InvalidExpressionArgumentException('where', 'fieldDescriptor');
         }
 
@@ -443,9 +443,9 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * {@inheritdoc}
      */
-    public function createInExpression(AbstractFieldDescriptor $fieldDescriptor, array $values)
+    public function createInExpression(FieldDescriptorInterface $fieldDescriptor, array $values)
     {
-        if (!$fieldDescriptor instanceof AbstractDoctrineFieldDescriptor) {
+        if (!$fieldDescriptor instanceof DoctrineFieldDescriptorInterface) {
             throw new InvalidExpressionArgumentException('in', 'fieldDescriptor');
         }
 
@@ -455,9 +455,9 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * {@inheritdoc}
      */
-    public function createBetweenExpression(AbstractFieldDescriptor $fieldDescriptor, array $values)
+    public function createBetweenExpression(FieldDescriptorInterface $fieldDescriptor, array $values)
     {
-        if (!$fieldDescriptor instanceof AbstractDoctrineFieldDescriptor) {
+        if (!$fieldDescriptor instanceof DoctrineFieldDescriptorInterface) {
             throw new InvalidExpressionArgumentException('between', 'fieldDescriptor');
         }
 
