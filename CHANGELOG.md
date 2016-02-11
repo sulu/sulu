@@ -2,7 +2,7 @@ CHANGELOG for Sulu
 ==================
     
 * dev-master
-    * HOTFIX     #1991   [Rest]              Added metadata for field-descriptors
+    * HOTFIX     #1991   [Rest]             Added metadata for field-descriptors
     
 * 1.1.9 (2016-02-05)
     * ENHANCEMENT #1978 [SecurityBundle]    Made url for resetting password configurable via static variable
