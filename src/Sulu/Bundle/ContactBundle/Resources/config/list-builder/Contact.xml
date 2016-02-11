@@ -34,14 +34,12 @@
             <orm:field property-ref="lastName"/>
         </concatenation-property>
 
-        <property name="firstName" translation="contact.contacts.firstName" disabled="false" default="true"
-        >
+        <property name="firstName" translation="contact.contacts.firstName" disabled="false" default="true">
             <orm:field-name>firstName</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="lastName" translation="contact.contacts.lastName" disabled="false" default="true"
-        >
+        <property name="lastName" translation="contact.contacts.lastName" disabled="false" default="true">
             <orm:field-name>lastName</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
@@ -149,14 +147,12 @@
             </orm:joins>
         </property>
 
-        <property name="salutation" translation="contact.contacts.salutation" disabled="true" default="false"
-        >
+        <property name="salutation" translation="contact.contacts.salutation" disabled="true" default="false">
             <orm:field-name>salutation</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
 
-        <property name="formOfAddress" translation="contact.contacts.formOfAddress" disabled="true" default="false"
-        >
+        <property name="formOfAddress" translation="contact.contacts.formOfAddress" disabled="true" default="false">
             <orm:field-name>formOfAddress</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
         </property>
