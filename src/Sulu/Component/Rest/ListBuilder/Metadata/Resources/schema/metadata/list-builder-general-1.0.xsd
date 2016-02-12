@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://schemas.sulu.io/class/general"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:complexType name="classType">
+        <xs:sequence>
+            <xs:element type="propertiesType" name="properties"/>
+            <xs:any minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="propertiesType">
+        <xs:group ref="propertiesGroup"/>
+    </xs:complexType>
+
+    <xs:group name="propertiesGroup">
+        <xs:sequence>
+            <xs:element type="propertyType" name="property" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="concatenationPropertyType" name="concatenation-property" maxOccurs="unbounded"
+                        minOccurs="0"/>
+        </xs:sequence>
+    </xs:group>
+
+    <xs:complexType name="propertyType">
+        <xs:group ref="propertyGroup"/>
+        <xs:attributeGroup ref="propertyAttributeGroup"/>
+    </xs:complexType>
+
+    <xs:complexType name="propertyRefType">
+        <xs:attribute name="name" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="concatenationPropertyType">
+        <xs:group ref="concatenationPropertyGroup"/>
+        <xs:attributeGroup ref="propertyAttributeGroup"/>
+    </xs:complexType>
+
+    <xs:group name="propertyGroup">
+        <xs:sequence>
+            <xs:any minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:group>
+
+    <xs:group name="concatenationPropertyGroup">
+        <xs:sequence>
+            <xs:element type="propertyType" name="property" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="propertyRefType" name="property-ref" maxOccurs="unbounded" minOccurs="0"/>
+
+            <xs:any minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:group>
+
+    <xs:attributeGroup name="propertyAttributeGroup">
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="translation"/>
+        <xs:attribute type="xs:boolean" name="disabled" default="false"/>
+        <xs:attribute type="xs:boolean" name="default" default="false"/>
+        <xs:attribute type="xs:string" name="type" default="string"/>
+        <xs:attribute type="xs:string" name="width"/>
+        <xs:attribute type="xs:string" name="min-width"/>
+        <xs:attribute type="xs:boolean" name="sortable" default="true"/>
+        <xs:attribute type="xs:boolean" name="editable" default="false"/>
+        <xs:attribute type="xs:string" name="css-class"/>
+
+        <xs:anyAttribute/>
+    </xs:attributeGroup>
+
+    <xs:element name="class" type="classType"/>
+</xs:schema>
