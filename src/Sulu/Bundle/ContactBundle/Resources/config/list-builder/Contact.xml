@@ -68,7 +68,9 @@
             </orm:joins>
 
             <filter:parameters>
-                <filter:parameter key="remoteUrl"><![CDATA[/admin/api/accounts?searchFields=name,number&flat=true&fields=id,number,name,corporation&limit=25]]></filter:parameter>
+                <filter:parameter key="remoteUrl">
+                    <![CDATA[/admin/api/accounts?searchFields=name,number&flat=true&fields=id,number,name,corporation&limit=25]]>
+                </filter:parameter>
                 <filter:parameter key="resultKey">accounts</filter:parameter>
                 <filter:parameter key="valueKey">name</filter:parameter>
             </filter:parameters>
@@ -156,13 +158,14 @@
             </orm:joins>
         </property>
 
-        <identity-property name="titleId" translation="public.title" display="never"
-                           filter:input-type="auto-complete">
+        <identity-property name="titleId" translation="public.title" display="never" filter:input-type="auto-complete">
             <orm:field-name>title</orm:field-name>
             <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
 
             <filter:parameters>
-                <filter:parameter key="prefetchUrl"><![CDATA[http://sulu.lo/admin/api/contact/titles]]></filter:parameter>
+                <filter:parameter key="prefetchUrl">
+                    <![CDATA[http://sulu.lo/admin/api/contact/titles]]>
+                </filter:parameter>
                 <filter:parameter key="resultKey">contactTitles</filter:parameter>
                 <filter:parameter key="valueKey">title</filter:parameter>
             </filter:parameters>

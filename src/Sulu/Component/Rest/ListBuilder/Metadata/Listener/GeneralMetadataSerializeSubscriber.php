@@ -8,18 +8,18 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ResourceBundle\Resource\Metadata\Listener;
+namespace Sulu\Component\Rest\ListBuilder\Metadata\Listener;
 
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
-use Sulu\Bundle\ResourceBundle\Resource\Metadata\PropertyMetadata;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
+use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
 
 /**
  * Extends field-descriptor serialization process.
  */
-class FilterMetataSerializeSubscriber implements EventSubscriberInterface
+class GeneralMetadataSerializeSubscriber implements EventSubscriberInterface
 {
     /**
      * {@inheritdoc}
@@ -36,7 +36,7 @@ class FilterMetataSerializeSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Add filter metadata.
+     * Add general metadata which is not present in the field-descriptor.
      *
      * @param ObjectEvent $event
      */
@@ -50,12 +50,11 @@ class FilterMetataSerializeSubscriber implements EventSubscriberInterface
         }
 
         $metadata = $fieldDescriptor->getMetadata();
-        if ($metadata === null) {
-            $visitor->addData('filter:input-type', $fieldDescriptor->getType());
-        } elseif ($metadata->has(PropertyMetadata::class)) {
-            $filterMetadata = $metadata->get(PropertyMetadata::class);
-            $visitor->addData('filter:input-type', $filterMetadata->getInputType());
-            $visitor->addData('filter:parameters', $filterMetadata->getParameters());
+        if (!$metadata->has(PropertyMetadata::class)) {
+            return;
         }
+
+        $filterMetadata = $metadata->get(PropertyMetadata::class);
+        $visitor->addData('display', $filterMetadata->getDisplay());
     }
 }

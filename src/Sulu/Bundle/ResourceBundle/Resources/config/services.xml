@@ -116,7 +116,7 @@
         </service>
 
         <service id="sulu_resource.list_builder.metadata.provider.filter.event_subscriber"
-                 class="Sulu\Bundle\ResourceBundle\Resource\Metadata\Listener\FilterMetataSerializeSubscriber">
+                 class="Sulu\Bundle\ResourceBundle\Resource\Metadata\Listener\FilterMetadataSerializeSubscriber">
             <tag name="jms_serializer.event_subscriber"/>
             <tag name="sulu.context" context="admin"/>
         </service>

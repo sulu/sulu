@@ -51,6 +51,11 @@
             <argument type="service" id="sulu_core.list_builder.metadata.file_locator"/>
         </service>
 
+        <service id="sulu_core.list_builder.metadata.provider.general.event_subscriber"
+                 class="Sulu\Component\Rest\ListBuilder\Metadata\Listener\GeneralMetadataSerializeSubscriber">
+            <tag name="jms_serializer.event_subscriber"/>
+        </service>
+
         <service id="sulu_core.list_builder.metadata.provider.doctrine.cache" class="Metadata\Cache\FileCache">
             <argument type="string">%sulu_core.list_builder.metadata.provider.doctrine.cache_dir%</argument>
         </service>
