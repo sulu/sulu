@@ -39,7 +39,7 @@
             <argument type="service" id="sulu_document_manager.document_strategy" />
         </service>
 
-        <service id="sulu_document_manager.slugifier" class="Symfony\Cmf\Bundle\CoreBundle\Slugifier\CallbackSlugifier" public="false">
+        <service id="sulu_document_manager.slugifier" class="Symfony\Cmf\Api\Slugifier\CallbackSlugifier" public="false">
             <argument>Ferrandini\Urlizer::urlize</argument>
         </service>
 
