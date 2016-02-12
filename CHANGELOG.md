@@ -1,7 +1,8 @@
 CHANGELOG for Sulu
 ==================
-    
+
 * dev-master
+    * HOTFIX      #2003 [ContactBundle]     Fixed rendering of address with null title
     * HOTFIX     #1991   [Rest]             Added metadata for field-descriptors
     
 * 1.1.9 (2016-02-05)
