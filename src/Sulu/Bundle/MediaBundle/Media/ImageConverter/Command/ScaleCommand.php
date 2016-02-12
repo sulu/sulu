@@ -48,7 +48,7 @@ class ScaleCommand implements CommandInterface
         // retina x2
         if ($parameters['retina']) {
             $newWidth = $parameters['x'] * 2;
-            $newHeight = $parameters['x'] * 2;
+            $newHeight = $parameters['y'] * 2;
         }
 
         // calculate height when not set
