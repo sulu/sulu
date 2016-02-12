@@ -8,9 +8,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\ListBuilder\Metadata\Provider;
+namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Metadata\Provider;
 
 use Metadata\MetadataFactoryInterface;
+use Sulu\Component\Rest\ListBuilder\Metadata\Provider\MetadataProvider;
 
 class MetadataProviderTest extends \PHPUnit_Framework_TestCase
 {

@@ -96,7 +96,7 @@ class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isDisabled()
     {
@@ -104,7 +104,7 @@ class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
-     * @param boolean $disabled
+     * @param bool $disabled
      */
     public function setDisabled($disabled)
     {
@@ -112,7 +112,7 @@ class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isDefault()
     {
@@ -120,7 +120,7 @@ class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
-     * @param boolean $default
+     * @param bool $default
      */
     public function setDefault($default)
     {
@@ -176,7 +176,7 @@ class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isSortable()
     {
@@ -184,7 +184,7 @@ class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
-     * @param boolean $sortable
+     * @param bool $sortable
      */
     public function setSortable($sortable)
     {
@@ -192,7 +192,7 @@ class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isEditable()
     {
@@ -200,7 +200,7 @@ class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
-     * @param boolean $editable
+     * @param bool $editable
      */
     public function setEditable($editable)
     {
@@ -261,7 +261,6 @@ class PropertyMetadata extends BasePropertyMetadata
             $this->minWidth,
             $this->sortable,
             $this->editable,
-            $this->cssClass,
-            ) = unserialize($str);
+            $this->cssClass) = unserialize($str);
     }
 }

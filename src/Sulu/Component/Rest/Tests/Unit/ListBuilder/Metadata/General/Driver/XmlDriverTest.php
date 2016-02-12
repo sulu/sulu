@@ -8,11 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\ListBuilder\Metadata\General\Driver;
+namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Metadata\General\Driver;
 
 use Metadata\ClassMetadata;
 use Metadata\Driver\FileLocatorInterface;
-use Prophecy\Argument;
+use Sulu\Component\Rest\ListBuilder\Metadata\General\Driver\XmlDriver;
 use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -93,7 +93,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
                 'width' => '100px',
                 'minWidth' => '50px',
                 'sortable' => false,
-                'class' => 'test-class'
+                'class' => 'test-class',
             ],
             $result->propertyMetadata['fullName']
         );

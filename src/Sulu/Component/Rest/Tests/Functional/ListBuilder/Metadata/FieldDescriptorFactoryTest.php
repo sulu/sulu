@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\ListBuilder\Metadata;
+namespace Sulu\Component\Rest\Tests\Functional\ListBuilder\Metadata;
 
 use Metadata\Driver\FileLocatorInterface;
 use Metadata\MetadataFactory;
@@ -17,9 +17,11 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenati
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Driver\XmlDriver as DoctrineXmlDriver;
+use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactory;
 use Sulu\Component\Rest\ListBuilder\Metadata\General\Driver\XmlDriver as GeneralXmlDriver;
 use Sulu\Component\Rest\ListBuilder\Metadata\Provider\ChainProvider;
 use Sulu\Component\Rest\ListBuilder\Metadata\Provider\MetadataProvider;
+use Sulu\Component\Rest\ListBuilder\Metadata\ProviderInterface;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -91,7 +93,7 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
                 'translation' => 'public.avatar',
                 'default' => true,
                 'type' => 'thumbnails',
-                'sortable' => false
+                'sortable' => false,
             ],
             'fullName' => [
                 'instance' => DoctrineConcatenationFieldDescriptor::class,
@@ -102,7 +104,7 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
                 'class' => 'test-class',
                 'minWidth' => '50px',
                 'width' => '100px',
-                'select' => 'CONCAT(SuluContactBundle:Contact.firstName, CONCAT(\' \', SuluContactBundle:Contact.lastName))'
+                'select' => 'CONCAT(SuluContactBundle:Contact.firstName, CONCAT(\' \', SuluContactBundle:Contact.lastName))',
             ],
             'city' => ['name' => 'city', 'translation' => 'contact.address.city', 'default' => true],
         ];

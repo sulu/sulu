@@ -84,7 +84,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
                         'entityName' => 'SuluMediaBundle:Media',
                         'entityField' => 'SuluContactBundle:Contact.avatar',
                     ],
-                ]
+                ],
             ],
             $result->propertyMetadata['avatar']
         );
@@ -120,7 +120,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
                         'entityName' => 'SuluContactBundle:Address',
                         'entityField' => 'SuluContactBundle:ContactAddress.address',
                     ],
-                ]
+                ],
             ],
             $result->propertyMetadata['city']
         );
@@ -163,13 +163,12 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
 
     private function loadMetadataFromFile(XmlDriver $driver, $file)
     {
-
         $reflectionMethod = new \ReflectionMethod(get_class($driver), 'loadMetadataFromFile');
         $reflectionMethod->setAccessible(true);
 
         return $reflectionMethod->invokeArgs(
             $driver,
-            [new \ReflectionClass(new \stdClass()), __DIR__ . '/Resources/'.$file.'.xml']
+            [new \ReflectionClass(new \stdClass()), __DIR__ . '/Resources/' . $file . '.xml']
         );
     }
 
@@ -182,11 +181,11 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
     private function assertField(array $expected, FieldMetadata $metadata)
     {
         $expected = array_merge(
-            array(
+            [
                 'name' => null,
                 'entityName' => null,
-                'joins' => []
-            ),
+                'joins' => [],
+            ],
             $expected
         );
 
@@ -197,7 +196,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
         $i = 0;
         foreach ($expected['joins'] as $joinExpected) {
             $this->assertJoin($joinExpected, $metadata->getJoins()[$i]);
-            $i++;
+            ++$i;
         }
     }
 
@@ -224,10 +223,10 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
     private function assertConcatenationType($expected, PropertyMetadata $metadata)
     {
         $expected = array_merge(
-            array(
+            [
                 'glue' => null,
                 'fields' => [],
-            ),
+            ],
             $expected
         );
 
@@ -239,7 +238,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
         $i = 0;
         foreach ($expected['fields'] as $fieldExpected) {
             $this->assertField($fieldExpected, $metadata->getType()->getFields()[$i]);
-            $i++;
+            ++$i;
         }
     }
 }

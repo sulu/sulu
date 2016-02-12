@@ -8,11 +8,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\ListBuilder\Metadata\Provider;
+namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Metadata\Provider;
 
 use Metadata\MergeableClassMetadata;
 use Metadata\PropertyMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\ClassMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Provider\ChainProvider;
 use Sulu\Component\Rest\ListBuilder\Metadata\ProviderInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\VirtualPropertyMetadata;
 
