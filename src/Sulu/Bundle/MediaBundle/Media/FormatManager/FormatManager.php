@@ -570,6 +570,14 @@ class FormatManager implements FormatManagerInterface
     }
 
     /**
+     * Clears the format cache.
+     */
+    public function clearCache()
+    {
+        $this->formatCache->clear();
+    }
+
+    /**
      * @param $mimeType
      *
      * @return bool

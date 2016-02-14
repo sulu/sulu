@@ -62,4 +62,9 @@ interface FormatCacheInterface
      * @return array ($id, $format)
      */
     public function analyzedMediaUrl($url);
+
+    /**
+     * Clears the format cache.
+     */
+    public function clear();
 }

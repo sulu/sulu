@@ -99,6 +99,27 @@ class LocalFormatCache implements FormatCacheInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function clear()
+    {
+        $realCacheDir = $this->path;
+        $oldCacheDir = $realCacheDir . '_old';
+
+        if (!is_writable($realCacheDir)) {
+            throw new \RuntimeException(sprintf('Unable to write in the "%s" directory', $realCacheDir));
+        }
+
+        if ($this->filesystem->exists($oldCacheDir)) {
+            $this->filesystem->remove($oldCacheDir);
+        }
+
+        $this->filesystem->rename($realCacheDir, $oldCacheDir);
+        $this->filesystem->mkdir($realCacheDir);
+        $this->filesystem->remove($oldCacheDir);
+    }
+
+    /**
      * @param string $prePath
      * @param int    $id
      * @param string $fileName

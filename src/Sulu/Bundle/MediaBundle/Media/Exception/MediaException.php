@@ -166,6 +166,13 @@ class MediaException extends Exception
     const EXCEPTION_CODE_FILE_NOT_FOUND = 5021;
 
     /**
+     * Format cache is not found.
+     *
+     * @var int
+     */
+    const EXCEPTION_CACHE_NOT_FOUND = 5022;
+
+    /**
      * Systemfile is not found.
      *
      * @var int

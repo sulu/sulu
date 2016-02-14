@@ -59,4 +59,9 @@ interface FormatManagerInterface
      * @return bool
      */
     public function purge($idMedia, $fileName, $options);
+
+    /**
+     * Clears the format cache.
+     */
+    public function clearCache();
 }
