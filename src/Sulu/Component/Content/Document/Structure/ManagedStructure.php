@@ -171,16 +171,6 @@ class ManagedStructure extends Structure
     }
 
     /**
-     * Returns the structure metadata.
-     *
-     * @return StructureMetadata
-     */
-    public function getStructureMetadata()
-    {
-        return $this->structureMetadata;
-    }
-
-    /**
      * Return an array copy of the property data.
      *
      * @return array

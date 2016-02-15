@@ -99,7 +99,6 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->document = $this->prophesize(StructureBehavior::class);
         $this->inspector = $this->prophesize(DocumentInspector::class);
 
-        $this->document->getStructure()->willReturn($this->structure->reveal());
         $this->document->getStructureType()->willReturn('foobar');
         $this->inspector->getStructureMetadata(Argument::any())->willReturn($this->structureMetadata);
         $this->persistEvent->getLocale()->willReturn('en');
@@ -114,6 +113,7 @@ class StructureSubscriberTest extends SubscriberTestCase
 
     public function testPersistStructureType()
     {
+        $this->document->getStructure()->willReturn($this->structure->reveal());
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
         $this->structure->setStructureMetadata($this->structureMetadata->reveal())->shouldBeCalled();
 
@@ -122,6 +122,7 @@ class StructureSubscriberTest extends SubscriberTestCase
 
     public function testPersistStagedProperties()
     {
+        $this->document->getStructure()->willReturn($this->structure->reveal());
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
         $this->persistEvent->getOption('clear_missing_content')->willReturn(true);
         $this->structure->commitStagedData(Argument::any())->shouldBeCalled();
@@ -165,6 +166,7 @@ class StructureSubscriberTest extends SubscriberTestCase
      */
     public function testPersist()
     {
+        $this->document->getStructure()->willReturn($this->structure->reveal());
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
 
         // map the structure type
@@ -212,6 +214,7 @@ class StructureSubscriberTest extends SubscriberTestCase
      */
     public function testThrowExceptionPropertyRequired()
     {
+        $this->document->getStructure()->willReturn($this->structure->reveal());
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
 
         // map the structure type
@@ -242,7 +245,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should set the created and updated fields on the document.
+     * It should create a ManagedStructure when the structure property is set in the node.
      */
     public function testHydrate()
     {
@@ -259,6 +262,51 @@ class StructureSubscriberTest extends SubscriberTestCase
 
         // set the property container
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
+        $this->accessor->set('structure', Argument::type(ManagedStructure::class))->shouldHaveBeenCalled();
+    }
+
+    /**
+     * It should create a new Structure when there is no structure property.
+     */
+    public function testHydrateNewStructure()
+    {
+        $this->hydrateEvent->getDocument()->willReturn($this->document->reveal());
+        $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
+        $this->hydrateEvent->getLocale()->willReturn('fr');
+        $this->hydrateEvent->getOption('load_ghost_content', false)->willReturn(true);
+
+        // set the structure type
+        $this->encoder->contentName('template')->willReturn('i18n:fr-template');
+        $this->node->getPropertyValueWithDefault('i18n:fr-template', null)->willReturn(null);
+
+        $this->document->setStructureType(null)->shouldBeCalled();
+        $this->document->getStructure()->willReturn(null);
+
+        // set the property container
+        $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
         $this->accessor->set('structure', Argument::type(Structure::class))->shouldHaveBeenCalled();
+    }
+
+    /**
+     * If the document already has a structure and there is no structure on the node (i.e.
+     * it is a new document) then use the Structure which is already set.
+     */
+    public function testHydrateNewStructureRehydrate()
+    {
+        $this->hydrateEvent->getDocument()->willReturn($this->document->reveal());
+        $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
+        $this->hydrateEvent->getLocale()->willReturn('fr');
+        $this->hydrateEvent->getOption('load_ghost_content', false)->willReturn(true);
+
+        // set the structure type
+        $this->encoder->contentName('template')->willReturn('i18n:fr-template');
+        $this->node->getPropertyValueWithDefault('i18n:fr-template', null)->willReturn(null);
+
+        $this->document->setStructureType(null)->shouldBeCalled();
+        $this->document->getStructure()->willReturn($this->structure->reveal());
+
+        // set the property container
+        $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
+        $this->accessor->set('structure', $this->structure->reveal())->shouldHaveBeenCalled();
     }
 }

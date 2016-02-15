@@ -21,6 +21,7 @@ use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Document\Property\Property;
 use Sulu\Component\Content\Document\Structure\ManagedStructure;
 use Sulu\Component\Content\Document\Structure\Structure;
+use Sulu\Component\Content\Document\Structure\StructureInterface;
 use Sulu\Component\Content\Exception\MandatoryPropertyException;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
@@ -162,20 +163,16 @@ class StructureSubscriber implements EventSubscriberInterface
 
         $node = $event->getNode();
         $propertyName = $this->getStructureTypePropertyName($document, $event->getLocale());
-        $value = $node->getPropertyValueWithDefault($propertyName, null);
-        $document->setStructureType($value);
+        $structureType = $node->getPropertyValueWithDefault($propertyName, null);
+        $document->setStructureType($structureType);
 
         if (false === $event->getOption('load_ghost_content', false)) {
             if ($this->inspector->getLocalizationState($document) === LocalizationState::GHOST) {
-                $value = null;
+                $structureType = null;
             }
         }
 
-        if ($value) {
-            $container = $this->createStructure($document);
-        } else {
-            $container = new Structure();
-        }
+        $container = $this->getStructure($document, $structureType);
 
         // Set the property container
         $event->getAccessor()->set(
@@ -300,5 +297,31 @@ class StructureSubscriber implements EventSubscriberInterface
                 null
             );
         }
+    }
+
+    /**
+     * Return the a structure for the document.
+     *
+     * - If the Structure already exists on the document, use that.
+     * - If the Structure type is given, then create a ManagedStructure - this
+     *   means that the structure is already persisted on the node and it has data.
+     * - If none of the above applies then create a new, empty, Structure.
+     *
+     * @param object $document
+     * @param string $structureType
+     *
+     * @return StructureInterface
+     */
+    private function getStructure($document, $structureType)
+    {
+        if ($structureType) {
+            return $this->createStructure($document);
+        }
+
+        if ($document->getStructure()) {
+            return $document->getStructure();
+        }
+
+        return new Structure();
     }
 }

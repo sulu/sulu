@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1999 [SnippetBundle]       Snippet controller now uses DocumentManager and Serializer.
     * FEATURE     #2001 [MediaBundle]         Clear local image cache via cache clear service and command
     * BUGFIX      #1986 [All]                 Fixed naming of serializer properties
     * BUGFIX      #1985 [CollaborationBundle] Removed leaking connections

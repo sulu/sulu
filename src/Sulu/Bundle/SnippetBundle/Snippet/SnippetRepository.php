@@ -14,9 +14,11 @@ namespace Sulu\Bundle\SnippetBundle\Snippet;
 use Jackalope\Query\Query;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
 use PHPCR\Util\QOM\QueryBuilder;
+use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\Mapper\ContentMapper;
+use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
 
@@ -24,6 +26,10 @@ use Sulu\Component\PHPCR\SessionManager\SessionManager;
  * Repository class for snippets.
  *
  * Responsible for retrieving snippets from the content repository
+ *
+ * TODO: Remove SessionManager and ContentMapper dependencies.
+ *       - Switch to the DocumentManager query builder;
+ *       - Return referrers from DocumentInspector;
  */
 class SnippetRepository
 {
@@ -38,13 +44,19 @@ class SnippetRepository
     private $contentMapper;
 
     /**
+     * @var DocumentManager
+     */
+    private $documentManager;
+
+    /**
      * @param SessionManager $sessionManager
      * @param ContentMapper  $contentMapper
      */
-    public function __construct(SessionManager $sessionManager, ContentMapper $contentMapper)
+    public function __construct(SessionManager $sessionManager, ContentMapper $contentMapper, DocumentManager $documentManager)
     {
         $this->contentMapper = $contentMapper;
         $this->sessionManager = $sessionManager;
+        $this->documentManager = $documentManager;
     }
 
     /**
@@ -69,18 +81,20 @@ class SnippetRepository
      * UUIDs which fail to resolve to a snippet will be ignored.
      *
      * @param array  $uuids
-     * @param string $languageCode
+     * @param string $locale
      * @param bool $loadGhostContent
      *
-     * @return SnippetBridge[]
+     * @return SnippetDocument
      */
-    public function getSnippetsByUuids(array $uuids, $languageCode, $loadGhostContent = false)
+    public function getSnippetsByUuids(array $uuids, $locale, $loadGhostContent = false)
     {
         $snippets = [];
 
         foreach ($uuids as $uuid) {
             try {
-                $snippet = $this->contentMapper->load($uuid, null, $languageCode, $loadGhostContent);
+                $snippet = $this->documentManager->find($uuid, $locale, [
+                    'load_ghost_content' => $loadGhostContent,
+                ]);
                 $snippets[] = $snippet;
             } catch (DocumentNotFoundException $e) {
                 // ignore not found items
@@ -95,7 +109,7 @@ class SnippetRepository
      *
      * If $type is given then only return the snippets of that type.
      *
-     * @param string $languageCode
+     * @param string $locale
      * @param string $type         Optional snippet type
      * @param int    $offset       Optional offset
      * @param int    $max          Optional max
@@ -108,7 +122,7 @@ class SnippetRepository
      * @return SnippetBridge[]
      */
     public function getSnippets(
-        $languageCode,
+        $locale,
         $type = null,
         $offset = null,
         $max = null,
@@ -116,9 +130,12 @@ class SnippetRepository
         $sortBy = null,
         $sortOrder = null
     ) {
-        $query = $this->getSnippetsQuery($languageCode, $type, $offset, $max, $search, $sortBy, $sortOrder);
+        $query = $this->getSnippetsQuery($locale, $type, $offset, $max, $search, $sortBy, $sortOrder);
+        $documents = $this->documentManager->createQuery($query, $locale, [
+            'load_ghost_content' => true,
+        ])->execute();
 
-        return $this->contentMapper->loadByQuery($query, $languageCode, null, false, true);
+        return $documents;
     }
 
     /**
@@ -126,7 +143,7 @@ class SnippetRepository
      *
      * If $type is given then only return the snippets of that type.
      *
-     * @param string $languageCode
+     * @param string $locale
      * @param string $type         Optional snippet type
      * @param string $search
      * @param string $sortBy
@@ -137,13 +154,13 @@ class SnippetRepository
      * @return SnippetBridge[]
      */
     public function getSnippetsAmount(
-        $languageCode,
+        $locale,
         $type = null,
         $search = null,
         $sortBy = null,
         $sortOrder = null
     ) {
-        $query = $this->getSnippetsQuery($languageCode, $type, null, null, $search, $sortBy, $sortOrder);
+        $query = $this->getSnippetsQuery($locale, $type, null, null, $search, $sortBy, $sortOrder);
         $result = $query->execute();
 
         return count(iterator_to_array($result->getRows()));
@@ -151,6 +168,9 @@ class SnippetRepository
 
     /**
      * Copy snippet from src-locale to dest-locale.
+     *
+     * TODO: We currently need the content mapper to copy the locale, it should be 
+     *       removed, see https://github.com/sulu-io/sulu/issues/1998
      *
      * @param string $uuid
      * @param int $userId
@@ -176,7 +196,7 @@ class SnippetRepository
      *
      * If $type is given then only return the snippets of that type.
      *
-     * @param string $languageCode
+     * @param string $locale
      * @param string $type         Optional snippet type
      * @param int    $offset       Optional offset
      * @param int    $max          Optional max
@@ -187,7 +207,7 @@ class SnippetRepository
      * @return Query
      */
     private function getSnippetsQuery(
-        $languageCode,
+        $locale,
         $type = null,
         $offset = null,
         $max = null,
@@ -241,7 +261,7 @@ class SnippetRepository
             $search = str_replace('*', '%', $search);
             $searchConstraint = $qf->orConstraint(
                 $qf->comparison(
-                    $qf->propertyValue('a', 'i18n:' . $languageCode . '-title'),
+                    $qf->propertyValue('a', 'i18n:' . $locale . '-title'),
                     QueryObjectModelConstantsInterface::JCR_OPERATOR_LIKE,
                     $qf->literal('%' . $search . '%')
                 ),
@@ -261,7 +281,7 @@ class SnippetRepository
         $sortBy = ($sortBy !== null ? $sortBy : 'title');
 
         $qb->orderBy(
-            $qb->qomf()->propertyValue('a', 'i18n:' . $languageCode . '-' . $sortBy),
+            $qb->qomf()->propertyValue('a', 'i18n:' . $locale . '-' . $sortBy),
             $sortOrder !== null ? strtoupper($sortOrder) : 'ASC'
         );
 

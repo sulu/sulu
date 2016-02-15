@@ -14,5 +14,12 @@
                 <title lang="en">Name</title>
             </meta>
         </property>
+
+        <property name="description" type="text_line" mandatory="false">
+            <meta>
+                <title lang="de">Beschreibung</title>
+                <title lang="en">Description</title>
+            </meta>
+        </property>
     </properties>
 </template>

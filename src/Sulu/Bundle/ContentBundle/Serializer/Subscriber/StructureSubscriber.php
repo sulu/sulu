@@ -20,6 +20,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Structure\ManagedStructure;
 use Sulu\Component\Content\Document\Structure\Structure;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 
 /**
@@ -80,13 +81,20 @@ class StructureSubscriber implements EventSubscriberInterface
         }
 
         $visitor = $event->getVisitor();
+        $structureMetadata = $this->inspector->getStructureMetadata($document);
 
         $visitor->addData('template', $document->getStructureType());
         $visitor->addData('originTemplate', $document->getStructureType());
         $visitor->addData('internal', false);
+        $visitor->addData(
+            'localizedTemplate',
+            $structureMetadata->getTitle(
+                $this->inspector->getLocale($document)
+            )
+        );
 
         if (array_search('defaultPage', $context->attributes->get('groups')->getOrElse([])) !== false) {
-            $this->addStructureProperties($document, $visitor);
+            $this->addStructureProperties($structureMetadata, $document, $visitor);
         }
 
         // create bread crumbs
@@ -101,11 +109,10 @@ class StructureSubscriber implements EventSubscriberInterface
      * @param StructureBehavior $document
      * @param VisitorInterface $visitor
      */
-    protected function addStructureProperties(StructureBehavior $document, VisitorInterface $visitor)
+    private function addStructureProperties(StructureMetadata $structureMetadata, StructureBehavior $document, VisitorInterface $visitor)
     {
         /** @var ManagedStructure $structure */
         $structure = $document->getStructure();
-        $structureMetadata = $structure->getStructureMetadata();
         foreach ($structure->toArray() as $name => $value) {
             if ($name === 'title') {
                 continue;
@@ -125,7 +132,7 @@ class StructureSubscriber implements EventSubscriberInterface
      * @param StructureBehavior $document
      * @param VisitorInterface $visitor
      */
-    protected function addBreadcrumb(StructureBehavior $document, VisitorInterface $visitor)
+    private function addBreadcrumb(StructureBehavior $document, VisitorInterface $visitor)
     {
         $items = [];
         $parentDocument = $this->inspector->getParent($document);
