@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-master
     * HOTFIX      #2002 [MediaBundle]       Fixed retina height for image scale command
+    * HOTFIX      #2005 [WebsiteBundle]     Merge Twig globals and add output buffer handling for preview rendering
     * HOTFIX      #2003 [ContactBundle]     Fixed rendering of address with null title
     * HOTFIX     #1991   [Rest]             Added metadata for field-descriptors
     

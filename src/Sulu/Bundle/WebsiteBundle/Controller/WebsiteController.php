@@ -90,8 +90,24 @@ abstract class WebsiteController extends Controller
     protected function renderBlock($template, $block, $attributes = [])
     {
         $twig = $this->get('twig');
+        $attributes = $twig->mergeGlobals($attributes);
+
+        /** @var \Twig_Template $template */
         $template = $twig->loadTemplate($template);
 
-        return $template->renderBlock($block, $attributes);
+        $level = ob_get_level();
+        ob_start();
+        try {
+            $rendered = $template->renderBlock($block, $attributes);
+            ob_end_clean();
+
+            return $rendered;
+        } catch (\Exception $e) {
+            while (ob_get_level() > $level) {
+                ob_end_clean();
+            }
+
+            throw $e;
+        }
     }
 }
