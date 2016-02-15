@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2008 [ContactBundle]       Fixed sorting in contact selection content type
     * FEATURE     #2001 [MediaBundle]         Clear local image cache via cache clear service and command
     * BUGFIX      #1986 [All]                 Fixed naming of serializer properties
     * BUGFIX      #1985 [CollaborationBundle] Removed leaking connections
