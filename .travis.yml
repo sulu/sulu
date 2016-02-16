@@ -29,3 +29,7 @@ notifications:
   slack:
     secure: "Gd3/1e0pBKvJv1UhWpBkWijJpmSWlarg6uPBJO0h4z1IpkZjd++jOjhmOQ7n+yMfuapQuJTcVOK0yIWu7orJoGAKFkBlMEIrLk1xMAG9phjjMLUO0FWgcQ3eVW5mTyfMBtClz4OL5wXckw17ohtXHDK8qnI0Hz9Qj8Rqgf2OZhM="
 
+after_failure:
+  - cat bin/jackrabbit/log/derby.log
+  - cat bin/jackrabbit/log/jetty.log
+  - cat bin/jackrabbit/log/jackrabbit.log
