@@ -46,7 +46,7 @@ class QueryBuilderFunctionalTest extends SuluTestCase
         $builder = $this->manager->createQueryBuilder();
         $builder
             ->setLocale('de')
-            ->useStructure('p', 'overview')
+            ->useStructure('overview', 'p')
             ->from()->document('page', 'p')->end()
             ->where()->eq()->structureField('p.article')->literal('hello');
 
@@ -65,7 +65,7 @@ class QueryBuilderFunctionalTest extends SuluTestCase
         $builder = $this->manager->createQueryBuilder();
         $builder
             ->setLocale('de')
-            ->useStructure('p', 'overview')
+            ->useStructure('overview', 'p')
             ->from()->document('page', 'p')->end()
             ->where()
                 ->eq()->field('p.redirectType')->literal('hello')->end()
@@ -87,7 +87,7 @@ class QueryBuilderFunctionalTest extends SuluTestCase
         $builder = $this->manager->createQueryBuilder();
         $builder
             ->setLocale('de')
-            ->useStructure('p', 'overview')
+            ->useStructure('overview', 'p')
             ->from()->document('page', 'p')->end()
             ->where()
                 ->eq()->field('p.redirectType')->literal('hello')->end()
@@ -160,7 +160,7 @@ class QueryBuilderFunctionalTest extends SuluTestCase
     {
         $builder = $this->manager->createQueryBuilder();
         $where = $builder->setLocale('de')
-            ->useStructure('p', 'overview')
+            ->useStructure('overview', 'p')
             ->from()->document('page', 'p')->end()
             ->where()
                 ->andX()
@@ -182,7 +182,7 @@ class QueryBuilderFunctionalTest extends SuluTestCase
     {
         $builder = $this->manager->createQueryBuilder();
         $builder->setLocale('de')
-            ->useStructure('p', 'overview')
+            ->useStructure('overview', 'p')
             ->from()->document('page', 'p')->end()
             ->orderBy()
                 ->asc()->field('p.redirectType')->end()
@@ -201,7 +201,7 @@ class QueryBuilderFunctionalTest extends SuluTestCase
     {
         $builder = $this->manager->createQueryBuilder();
         $builder->setLocale('de')
-            ->useStructure('p', 'overview')
+            ->useStructure('overview', 'p')
             ->from()->document('page', 'p')->end()
             ->orderBy()
                 ->asc()->field('p.redirectType')->end()
@@ -218,7 +218,7 @@ class QueryBuilderFunctionalTest extends SuluTestCase
     /**
      * It should throw an exception if an unknown structure field is used.
      *
-     * @expectedException InvalidArgumentException 
+     * @expectedException \InvalidArgumentException 
      * @expectedExceptionMessage Unknown model property "foobar", in structure "overview". Known model properties: "title"
      */
     public function testUnknownStructureField()
@@ -226,7 +226,7 @@ class QueryBuilderFunctionalTest extends SuluTestCase
         $builder = $this->manager->createQueryBuilder();
         $builder
             ->setLocale('de')
-            ->useStructure('p', 'overview')
+            ->useStructure('overview', 'p')
             ->from()->document('page', 'p')->end()
             ->where()->eq()->field('p.structure#foobar')->literal('hello');
 
@@ -241,7 +241,7 @@ class QueryBuilderFunctionalTest extends SuluTestCase
         $builder = $this->manager->createQueryBuilder();
         $builder
             ->setLocale('de')
-            ->useStructure('p', 'overview')
+            ->useStructure('overview', 'p')
             ->from()->document('page', 'p')->end()
             ->where()->eq()->field('p.workflowStage')->literal(WorkflowStage::PUBLISHED);
 
@@ -250,6 +250,47 @@ class QueryBuilderFunctionalTest extends SuluTestCase
             'SELECT * FROM [nt:unstructured] AS p WHERE (p.[i18n:de-state] = CAST(\'2\' AS LONG) AND p.[jcr:mixinTypes] = \'sulu:page\')',
             $query->getPhpcrQuery()->getStatement()
         );
+    }
+
+    /**
+     * If no document alias is specified for the structure, but there is only one document.
+     */
+    public function testOmittedDocumentAliasUseStructure()
+    {
+        $builder = $this->manager->createQueryBuilder();
+        $builder
+            ->setLocale('de')
+            ->useStructure('overview')
+            ->from()->document('page', 'p')->end()
+            ->where()->eq()->field('p.workflowStage')->literal(WorkflowStage::PUBLISHED);
+
+        $query = $builder->getQuery();
+        $this->assertEquals(
+            'SELECT * FROM [nt:unstructured] AS p WHERE (p.[i18n:de-state] = CAST(\'2\' AS LONG) AND p.[jcr:mixinTypes] = \'sulu:page\')',
+            $query->getPhpcrQuery()->getStatement()
+        );
+    }
+
+    /**
+     * If no document alias is specified for the structure, but there is only one document.
+     *
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage No structure has been registered for document alias "p"
+     */
+    public function testOmittedDocumentAliasUseStructureMultipleDocuments()
+    {
+        $builder = $this->manager->createQueryBuilder();
+        $builder
+            ->setLocale('de')
+            ->useStructure('overview')
+            ->from('i')
+                ->joinInner()
+                ->left()->document('page', 'p')->end()
+                ->right()->document('page', 'i')->end()
+                ->condition()->equi('p.redirectType', 'p.redirectType');
+        $builder->where()->eq()->structureField('p.article')->literal('hello');
+
+        $builder->getQuery();
     }
 
     protected function assertQuery($queryString, QueryBuilder $builder)

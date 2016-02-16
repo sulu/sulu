@@ -29,6 +29,8 @@ use Sulu\Component\Content\Document\Query\Builder\Where;
  */
 class QueryBuilder extends BaseQueryBuilder
 {
+    const DEFAULT_DOCUMENT_ALIAS = '__default__';
+
     /**
      * @var array
      */
@@ -41,18 +43,18 @@ class QueryBuilder extends BaseQueryBuilder
      *
      * ````
      * $qb->from()->document('foo', 'p');
-     * $qb->useStructure('p', 'overview');
+     * $qb->useStructure('overview');
      * $qb->where()->eq()->structureField('p.field1')->literal('barbar');
      * ````
      *
-     * @param string $documentAlias Document alias to register structure to
      * @param string $structureName Name of the structure to register.
+     * @param string $documentAlias Document alias to register structure to.
      *
      * @throws \InvalidArgumentException If a document with the given alias is already registered.
      *
      * @return self
      */
-    public function useStructure($documentAlias, $structureName)
+    public function useStructure($structureName, $documentAlias = self::DEFAULT_DOCUMENT_ALIAS)
     {
         if (isset($this->structureMap[$documentAlias])) {
             throw new \InvalidArgumentException(sprintf(

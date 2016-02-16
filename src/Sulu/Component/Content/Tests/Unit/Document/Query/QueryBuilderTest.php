@@ -15,6 +15,9 @@ use Sulu\Component\Content\Document\Query\QueryBuilder;
 
 class QueryBuilderTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var QueryBuilder
+     */
     private $queryBuilder;
 
     public function setUp()
@@ -28,9 +31,20 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
      */
     public function testStructure()
     {
-        $this->queryBuilder->useStructure('p', 'overview');
+        $this->queryBuilder->useStructure('overview', 'p');
         $this->assertEquals([
             'p' => 'overview',
+        ], $this->queryBuilder->getStructureMap());
+    }
+
+    /**
+     * It should assign the "default" alias if none is given.
+     */
+    public function testStructureDefaultDocumentAlias()
+    {
+        $this->queryBuilder->useStructure('overview');
+        $this->assertEquals([
+            QueryBuilder::DEFAULT_DOCUMENT_ALIAS => 'overview',
         ], $this->queryBuilder->getStructureMap());
     }
 
@@ -42,7 +56,7 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
      */
     public function testStructureAlreadyAssigned()
     {
-        $this->queryBuilder->useStructure('p', 'overview');
-        $this->queryBuilder->useStructure('p', 'foobar');
+        $this->queryBuilder->useStructure('overview', 'p');
+        $this->queryBuilder->useStructure('foobar', 'p');
     }
 }

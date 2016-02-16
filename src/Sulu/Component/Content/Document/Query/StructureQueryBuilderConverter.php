@@ -109,7 +109,7 @@ class StructureQueryBuilderConverter extends QueryBuilderConverter
     /**
      * Call the parent method with the Doctrine version of the Sulu node.
      *
-     * @see Doctrine\ODM\PHPCR\Query\Builder\ConverterBase::where
+     * @see \Doctrine\ODM\PHPCR\Query\Builder\ConverterBase::where
      */
     public function walkSuluWhere(Sulu\Where $where)
     {
@@ -119,7 +119,7 @@ class StructureQueryBuilderConverter extends QueryBuilderConverter
     /**
      * Call the parent method with the Doctrine version of the Sulu node.
      *
-     * @see Doctrine\ODM\PHPCR\Query\Builder\ConverterBase::whereOr
+     * @see \Doctrine\ODM\PHPCR\Query\Builder\ConverterBase::whereOr
      */
     public function walkSuluWhereOr(Sulu\WhereOr $where)
     {
@@ -129,7 +129,7 @@ class StructureQueryBuilderConverter extends QueryBuilderConverter
     /**
      * Call the parent method with the Doctrine version of the Sulu node.
      *
-     * @see Doctrine\ODM\PHPCR\Query\Builder\ConverterBase::whereAnd
+     * @see \Doctrine\ODM\PHPCR\Query\Builder\ConverterBase::whereAnd
      */
     public function walkSuluWhereAnd(Sulu\WhereAnd $where)
     {
@@ -139,7 +139,7 @@ class StructureQueryBuilderConverter extends QueryBuilderConverter
     /**
      * Call the parent method with the Doctrine version of the Sulu node.
      *
-     * @see Doctrine\ODM\PHPCR\Query\Builder\ConverterBase::ConstraintAndx
+     * @see \Doctrine\ODM\PHPCR\Query\Builder\ConverterBase::ConstraintAndx
      */
     public function walkSuluConstraintAndX(Sulu\ConstraintAndX $node)
     {
@@ -149,7 +149,7 @@ class StructureQueryBuilderConverter extends QueryBuilderConverter
     /**
      * Call the parent method with the Doctrine version of the Sulu node.
      *
-     * @see Doctrine\ODM\PHPCR\Query\Builder\ConverterBase::walkConstraintOrX
+     * @see \Doctrine\ODM\PHPCR\Query\Builder\ConverterBase::walkConstraintOrX
      */
     public function walkSuluConstraintOrX(Sulu\ConstraintOrX $node)
     {
@@ -159,7 +159,7 @@ class StructureQueryBuilderConverter extends QueryBuilderConverter
     /**
      * Call the parent method with the Doctrine version of the Sulu node.
      *
-     * @see Doctrine\ODM\PHPCR\Query\Builder\ConverterBase::walkConstraintNot
+     * @see \Doctrine\ODM\PHPCR\Query\Builder\ConverterBase::walkConstraintNot
      */
     public function walkSuluConstraintNot(Sulu\ConstraintNot $node)
     {
@@ -169,7 +169,7 @@ class StructureQueryBuilderConverter extends QueryBuilderConverter
     /**
      * Call the parent method with the Doctrine version of the Sulu node.
      *
-     * @see Doctrine\ODM\PHPCR\Query\Builder\ConverterBase::walkConstraintComparison
+     * @see \Doctrine\ODM\PHPCR\Query\Builder\ConverterBase::walkConstraintComparison
      */
     public function walkSuluConstraintComparison(Sulu\ConstraintComparison $node)
     {
@@ -179,22 +179,29 @@ class StructureQueryBuilderConverter extends QueryBuilderConverter
     /**
      * Walk the Sulu StructureField contsraint.
      *
-     * @param Sulu\OperandDynamicStructureField $node
+     * @param \Sulu\OperandDynamicStructureField $node
      *
-     * @return PHPCR\Query\QOM\PropertyValue
+     * @return \PHPCR\Query\QOM\PropertyValueInterface
      */
     public function walkOperandDynamicStructureField(Sulu\OperandDynamicStructureField $node)
     {
         $alias = $node->getAlias();
 
         if (!isset($this->structureMap[$alias])) {
-            throw new \InvalidArgumentException(sprintf(
-                'No structure has been registered for document alias "%s". Use ->useStructure(\'%s\', \'structure_name\') to register a structure name. ' .
-                'Registered document aliases: "%s"',
-                $alias,
-                $alias,
-                implode('", "', array_keys($this->documentMetadata))
-            ));
+            // if the structure map does not have the alias, but we have only
+            // one structure registered, then that is fine, otherwise throw an
+            // exception.
+            if (count($this->documentMetadata) !== 1) {
+                throw new \InvalidArgumentException(sprintf(
+                    'No structure has been registered for document alias "%s". Use ->useStructure(\'%s\', \'structure_name\') to register a structure name. ' .
+                    'Registered document aliases: "%s"',
+                    $alias,
+                    $alias,
+                    implode('", "', array_keys($this->documentMetadata))
+                ));
+            }
+
+            $alias = key($this->documentMetadata);
         }
 
         if (!isset($this->documentMetadata[$alias])) {
