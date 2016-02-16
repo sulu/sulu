@@ -29,6 +29,7 @@
             <argument type="service" id="sulu_snippet.default_snippet.manager" />
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="form.factory" />
+            <argument type="service" id="sulu_hash.request_hash_checker"/>
         </service>
 
         <service id="sulu_snippet.twig.snippet" class="%sulu_snippet.twig.snippet.class%">

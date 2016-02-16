@@ -68,7 +68,19 @@
             </trans-unit>
             <trans-unit id="18" resname="snippet.delete-confirm-default-text">
                 <source>snippet.delete-confirm-default-text</source>
-                <target>Dieses Schipsel wird als Webspace-Standard verwendet.</target>
+                <target>Dieses Schnipsel wird als Webspace-Standard verwendet.</target>
+            </trans-unit>
+            <trans-unit id="19" resname="snippet.changed-warning.title">
+                <source>snippet.changed-warning.title</source>
+                <target>Achtung, es werden Inhalte überschrieben!</target>
+            </trans-unit>
+            <trans-unit id="20" resname="snippet.changed-warning.description">
+                <source>snippet.changed-warning.description</source>
+                <target>Dieses Schnipsel wurde zwischenzeitlich von einem anderen Benutzer geändert. Wenn das Schnipsel gespeichert wird, gehen diese Daten verloren.</target>
+            </trans-unit>
+            <trans-unit id="21" resname="snippet.changed-warning.ok-button">
+                <source>snippet.changed-warning.ok-button</source>
+                <target>Schnipsel speichern</target>
             </trans-unit>
         </body>
     </file>

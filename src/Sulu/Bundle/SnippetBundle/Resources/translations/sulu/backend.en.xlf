@@ -70,6 +70,18 @@
                 <source>snippet.delete-confirm-default-text</source>
                 <target>This Snippet is used as webspace-default.</target>
             </trans-unit>
+            <trans-unit id="19" resname="snippet.changed-warning.title">
+                <source>snippet.changed-warning.title</source>
+                <target>Warning, content will be overwritten!</target>
+            </trans-unit>
+            <trans-unit id="20" resname="snippet.changed-warning.description">
+                <source>snippet.changed-warning.description</source>
+                <target>This snippet has been edited by another user. When you save the snippet this data will get lost.</target>
+            </trans-unit>
+            <trans-unit id="21" resname="snippet.changed-warning.ok-button">
+                <source>snippet.changed-warning.ok-button</source>
+                <target>Save snippet</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

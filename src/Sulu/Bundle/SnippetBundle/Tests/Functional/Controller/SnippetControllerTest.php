@@ -403,6 +403,52 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals(StructureInterface::STATE_TEST, $result['nodeState']);
     }
 
+    public function testPutWithValidHash()
+    {
+        $data = [
+            'template' => 'car',
+            'title' => 'My New Car',
+            'description' => 'My car is red.',
+        ];
+
+        $this->client->request('POST', '/snippets?language=de', $data);
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $result = json_decode($response->getContent(), true);
+
+        $this->client->request(
+            'PUT',
+            '/snippets/' . $result['id'] . '?language=de',
+            array_merge(['_hash' => $result['_hash']], $data)
+        );
+
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testPutWithInvalidHash()
+    {
+        $data = [
+            'template' => 'car',
+            'title' => 'My New Car',
+            'description' => 'My car is red.',
+        ];
+
+        $this->client->request('POST', '/snippets?language=de', $data);
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $result = json_decode($response->getContent(), true);
+
+        $this->client->request(
+            'PUT',
+            '/snippets/' . $result['id'] . '?language=de',
+            array_merge(['_hash' => 'wrong-hash'], $data)
+        );
+
+        $this->assertEquals(409, $this->client->getResponse()->getStatusCode());
+    }
+
     public function testDeleteReferenced()
     {
         $page = $this->documentManager->create('page');

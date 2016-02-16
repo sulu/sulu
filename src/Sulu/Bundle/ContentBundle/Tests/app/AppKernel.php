@@ -14,14 +14,6 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 
 class AppKernel extends SuluTestKernel
 {
-    public function registerBundles()
-    {
-        $bundles = parent::registerBundles();
-        $bundles[] = new Sulu\Bundle\HashBundle\SuluHashBundle();
-
-        return $bundles;
-    }
-
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         parent::registerContainerConfiguration($loader);

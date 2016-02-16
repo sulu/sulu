@@ -28,6 +28,10 @@ define([
             deleteNoSnippetsSelected: 'snippet.delete-no-snippets-selected'
         },
 
+        errorCodes = {
+            contentChanged: 1102
+        },
+
         templates = {
             referentialIntegrityMessage: function(pageTitles, isDefault) {
                 var message = [];
@@ -159,6 +163,68 @@ define([
             ]);
         },
 
+        handleErrorContentChanged: function (data, action) {
+            this.sandbox.emit(
+                'sulu.overlay.show-warning',
+                'snippet.changed-warning.title',
+                'snippet.changed-warning.description',
+                function () {
+                    this.sandbox.emit('sulu.snippets.snippet.save-error');
+                }.bind(this),
+                function () {
+                    this.saveSnippet(data, action, true);
+                }.bind(this),
+                {
+                    okDefaultText: 'snippet.changed-warning.ok-button'
+                }
+            );
+        },
+
+        handleError: function(errorCode, data, action) {
+            switch (errorCode) {
+                case errorCodes.contentChanged:
+                    this.handleErrorContentChanged(data, action);
+                    break;
+                default:
+                    this.sandbox.emit('sulu.labels.error.show', 'labels.error.content-save-desc', 'labels.error');
+                    this.sandbox.emit('sulu.snippets.snippet.save-error');
+            }
+        },
+
+        afterSaveAction: function(action, data) {
+            if (action === 'back') {
+                this.sandbox.emit('sulu.snippets.snippet.list');
+            } else if (action === 'new') {
+                this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + this.options.language + '/add', true, true);
+            } else if (!this.data.id) {
+                this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + this.options.language + '/edit:' + data.id);
+            }
+        },
+
+        saveSnippet: function(data, action, force) {
+            this.model.set(data);
+
+            this.model.fullSave(
+                this.options.language,
+                null,
+                {},
+                {
+                    // on success save contacts id
+                    success: function(response) {
+                        var data = response.toJSON();
+                        if (!!this.data.id) {
+                            this.sandbox.emit('sulu.snippets.snippet.saved', data);
+                        }
+                        this.afterSaveAction(action, data);
+                    }.bind(this),
+                    error: function(model, response) {
+                        this.handleError.call(this, response.responseJSON.code, data, action);
+                    }.bind(this)
+                },
+                force
+            );
+        },
+
         save: function(data, action) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
             if (!!this.template) {
@@ -168,28 +234,8 @@ define([
 
                 data.template = config.defaultType;
             }
-            this.model.set(data);
 
-            this.model.fullSave(this.options.language, null, {}, {
-                // on success save contacts id
-                success: function(response) {
-                    var data = response.toJSON();
-                    if (!!this.data.id) {
-                        this.sandbox.emit('sulu.snippets.snippet.saved', data);
-                    }
-                    if (action === 'back') {
-                        this.sandbox.emit('sulu.snippets.snippet.list');
-                    } else if (action === 'new') {
-                        this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + this.options.language + '/add', true, true);
-                    } else if (!this.data.id) {
-                        this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + this.options.language + '/edit:' + data.id);
-                    }
-                }.bind(this),
-                error: function() {
-                    this.sandbox.emit('sulu.snippets.snippet.save-error');
-                    this.sandbox.logger.log('error while saving profile');
-                }.bind(this)
-            });
+            this.saveSnippet(data, action);
         },
 
         load: function(id, language, forceReload) {
