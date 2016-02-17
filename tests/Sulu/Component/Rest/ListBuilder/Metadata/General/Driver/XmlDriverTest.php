@@ -54,7 +54,6 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
             [
                 'name' => 'id',
                 'translation' => 'public.id',
-                'disabled' => true,
                 'type' => 'integer',
             ],
             $result->propertyMetadata['id']
@@ -63,7 +62,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
             [
                 'name' => 'firstName',
                 'translation' => 'contact.contacts.firstName',
-                'default' => true,
+                'display' => PropertyMetadata::DISPLAY_ALWAYS,
             ],
             $result->propertyMetadata['firstName']
         );
@@ -71,7 +70,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
             [
                 'name' => 'lastName',
                 'translation' => 'contact.contacts.lastName',
-                'default' => true,
+                'display' => PropertyMetadata::DISPLAY_ALWAYS,
             ],
             $result->propertyMetadata['lastName']
         );
@@ -79,7 +78,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
             [
                 'name' => 'avatar',
                 'translation' => 'public.avatar',
-                'default' => true,
+                'display' => PropertyMetadata::DISPLAY_ALWAYS,
                 'type' => 'thumbnails',
                 'sortable' => false,
             ],
@@ -89,7 +88,6 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
             [
                 'name' => 'fullName',
                 'translation' => 'public.name',
-                'disabled' => true,
                 'width' => '100px',
                 'minWidth' => '50px',
                 'sortable' => false,
@@ -124,7 +122,6 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
             [
                 'name' => 'id',
                 'translation' => 'public.id',
-                'disabled' => true,
                 'type' => 'integer',
             ],
             $result->propertyMetadata['id']
@@ -133,7 +130,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
             [
                 'name' => 'firstName',
                 'translation' => 'contact.contacts.firstName',
-                'default' => true,
+                'display' => PropertyMetadata::DISPLAY_ALWAYS,
             ],
             $result->propertyMetadata['firstName']
         );
@@ -141,7 +138,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
             [
                 'name' => 'lastName',
                 'translation' => 'contact.contacts.lastName',
-                'default' => true,
+                'display' => PropertyMetadata::DISPLAY_ALWAYS,
             ],
             $result->propertyMetadata['lastName']
         );
@@ -154,8 +151,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
                 'instance' => PropertyMetadata::class,
                 'name' => null,
                 'translation' => null,
-                'disabled' => false,
-                'default' => false,
+                'display' => PropertyMetadata::DISPLAY_NO,
                 'type' => 'string',
                 'width' => '',
                 'minWidth' => '',
@@ -169,8 +165,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf($expected['instance'], $metadata);
         $this->assertEquals($expected['name'], $metadata->getName());
         $this->assertEquals($expected['translation'], $metadata->getTranslation());
-        $this->assertEquals($expected['disabled'], $metadata->isDisabled());
-        $this->assertEquals($expected['default'], $metadata->isDefault());
+        $this->assertEquals($expected['display'], $metadata->getDisplay());
         $this->assertEquals($expected['type'], $metadata->getType());
         $this->assertEquals($expected['width'], $metadata->getWidth());
         $this->assertEquals($expected['minWidth'], $metadata->getMinWidth());

@@ -93,7 +93,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         }
 
         $propertyMetadata->setDisplay(
-            XmlUtil::getValueFromXPath('@display', $xpath, $propertyNode, PropertyMetadata::VISIBLE_NO)
+            XmlUtil::getValueFromXPath('@display', $xpath, $propertyNode, PropertyMetadata::DISPLAY_NO)
         );
         $propertyMetadata->setSortable(XmlUtil::getBooleanValueFromXPath('@sortable', $xpath, $propertyNode, true));
         $propertyMetadata->setEditable(XmlUtil::getBooleanValueFromXPath('@editable', $xpath, $propertyNode, false));

@@ -17,10 +17,10 @@ use Metadata\PropertyMetadata as BasePropertyMetadata;
  */
 class PropertyMetadata extends BasePropertyMetadata
 {
-    const VISIBLE_ALWAYS = 'always';
-    const VISIBLE_NEVER = 'never';
-    const VISIBLE_YES = 'yes';
-    const VISIBLE_NO = 'no';
+    const DISPLAY_ALWAYS = 'always';
+    const DISPLAY_NEVER = 'never';
+    const DISPLAY_YES = 'yes';
+    const DISPLAY_NO = 'no';
 
     /**
      * @var string
@@ -30,7 +30,7 @@ class PropertyMetadata extends BasePropertyMetadata
     /**
      * @var string
      */
-    private $display = self::VISIBLE_NO;
+    private $display = self::DISPLAY_NO;
 
     /**
      * @var string

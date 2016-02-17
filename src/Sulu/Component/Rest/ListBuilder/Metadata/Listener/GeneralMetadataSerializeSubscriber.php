@@ -50,7 +50,7 @@ class GeneralMetadataSerializeSubscriber implements EventSubscriberInterface
         }
 
         $metadata = $fieldDescriptor->getMetadata();
-        if (!$metadata->has(PropertyMetadata::class)) {
+        if (null === $metadata || !$metadata->has(PropertyMetadata::class)) {
             return;
         }
 

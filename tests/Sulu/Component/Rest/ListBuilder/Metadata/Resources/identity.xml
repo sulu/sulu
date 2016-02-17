@@ -1,0 +1,9 @@
+<class xmlns="http://schemas.sulu.io/class/general"
+       xmlns:orm="http://schemas.sulu.io/class/doctrine">
+    <properties>
+        <identity-property name="tags">
+            <orm:field-name>tags</orm:field-name>
+            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        </identity-property>
+    </properties>
+</class>

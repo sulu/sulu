@@ -15,6 +15,8 @@ use Metadata\MetadataFactory;
 use Prophecy\Argument;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineGroupConcatFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineIdentityFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Driver\XmlDriver as DoctrineXmlDriver;
 use Sulu\Component\Rest\ListBuilder\Metadata\General\Driver\XmlDriver as GeneralXmlDriver;
@@ -125,6 +127,52 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
             'id' => ['name' => 'id', 'translation' => 'public.id', 'disabled' => true, 'type' => 'integer'],
             'firstName' => ['name' => 'firstName', 'translation' => 'contact.contacts.firstName', 'default' => true],
             'lastName' => ['name' => 'lastName', 'translation' => 'contact.contacts.lastName', 'default' => true],
+        ];
+
+        $this->assertFieldDescriptors($expected, $fieldDescriptor);
+    }
+
+    public function testGetFieldDescriptorForClassGroupConcat()
+    {
+        $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
+            ->willReturn(__DIR__ . '/Resources/group-concat.xml');
+
+        $provider = new ChainProvider($this->chain);
+        $factory = new FieldDescriptorFactory($provider, $this->configCache->reveal());
+        $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
+
+        $this->assertEquals(['tags'], array_keys($fieldDescriptor));
+
+        $expected = [
+            'tags' => [
+                'name' => 'tags',
+                'translation' => 'Tags',
+                'instance' => DoctrineGroupConcatFieldDescriptor::class,
+                'disabled' => true,
+            ],
+        ];
+
+        $this->assertFieldDescriptors($expected, $fieldDescriptor);
+    }
+
+    public function testGetFieldDescriptorForClassIdentity()
+    {
+        $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
+            ->willReturn(__DIR__ . '/Resources/identity.xml');
+
+        $provider = new ChainProvider($this->chain);
+        $factory = new FieldDescriptorFactory($provider, $this->configCache->reveal());
+        $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
+
+        $this->assertEquals(['tags'], array_keys($fieldDescriptor));
+
+        $expected = [
+            'tags' => [
+                'name' => 'tags',
+                'translation' => 'Tags',
+                'instance' => DoctrineIdentityFieldDescriptor::class,
+                'disabled' => true,
+            ],
         ];
 
         $this->assertFieldDescriptors($expected, $fieldDescriptor);

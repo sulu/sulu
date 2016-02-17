@@ -17,6 +17,8 @@ use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\JoinMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\PropertyMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationTypeMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\GroupConcatTypeMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\IdentityTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleTypeMetadata;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -45,6 +47,9 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
         );
         $this->parameterBag->resolveValue('%sulu.model.contact.class%.contactAddresses')->willReturn(
             'SuluContactBundle:Contact.contactAddresses'
+        );
+        $this->parameterBag->resolveValue('%sulu.model.contact.class%.tags')->willReturn(
+            'SuluContactBundle:Contact.tags'
         );
         $this->parameterBag->resolveValue(Argument::any())->willReturnArgument(0);
     }
@@ -161,21 +166,78 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testLoadMetadataFromFileGroupConcat()
+    {
+        $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
+        $result = $this->loadMetadataFromFile($driver, 'group-concat');
+
+        $this->assertInstanceOf(ClassMetadata::class, $result);
+        $this->assertEquals('stdClass', $result->name);
+        $this->assertCount(1, $result->propertyMetadata);
+
+        $this->assertEquals(['tags'], array_keys($result->propertyMetadata));
+
+        $this->assertGroupConcatMetadata(
+            [
+                'name' => 'name',
+                'entityName' => 'SuluTagBundle:Tag',
+                'joins' => [
+                    [
+                        'entityName' => 'SuluTagBundle:Tag',
+                        'entityField' => 'SuluContactBundle:Contact.tags',
+                    ],
+                ]
+            ],
+            $result->propertyMetadata['tags']
+        );
+    }
+
+    public function testLoadMetadataFromFileIdentity()
+    {
+        $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
+        $result = $this->loadMetadataFromFile($driver, 'identity');
+
+        $this->assertInstanceOf(ClassMetadata::class, $result);
+        $this->assertEquals('stdClass', $result->name);
+        $this->assertCount(1, $result->propertyMetadata);
+
+        $this->assertEquals(['tags'], array_keys($result->propertyMetadata));
+
+        $this->assertIdentityMetadata(
+            [
+                'name' => 'tags',
+                'entityName' => 'SuluContactBundle:Contact',
+            ],
+            $result->propertyMetadata['tags']
+        );
+    }
+
     private function loadMetadataFromFile(XmlDriver $driver, $file)
     {
-
         $reflectionMethod = new \ReflectionMethod(get_class($driver), 'loadMetadataFromFile');
         $reflectionMethod->setAccessible(true);
 
         return $reflectionMethod->invokeArgs(
             $driver,
-            [new \ReflectionClass(new \stdClass()), __DIR__ . '/Resources/'.$file.'.xml']
+            [new \ReflectionClass(new \stdClass()), __DIR__ . '/Resources/' . $file . '.xml']
         );
     }
 
     private function assertSingleMetadata(array $expected, PropertyMetadata $metadata)
     {
         $this->assertInstanceOf(SingleTypeMetadata::class, $metadata->getType());
+        $this->assertField($expected, $metadata->getType()->getField());
+    }
+
+    private function assertGroupConcatMetadata(array $expected, PropertyMetadata $metadata)
+    {
+        $this->assertInstanceOf(GroupConcatTypeMetadata::class, $metadata->getType());
+        $this->assertField($expected, $metadata->getType()->getField());
+    }
+
+    private function assertIdentityMetadata(array $expected, PropertyMetadata $metadata)
+    {
+        $this->assertInstanceOf(IdentityTypeMetadata::class, $metadata->getType());
         $this->assertField($expected, $metadata->getType()->getField());
     }
 

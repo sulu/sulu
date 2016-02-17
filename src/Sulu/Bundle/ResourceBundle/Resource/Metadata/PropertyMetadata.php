@@ -46,6 +46,18 @@ class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
+     * Returns name of property.
+     *
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Returns parameter for input.
+     *
      * @return array
      */
     public function getParameters()

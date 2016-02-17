@@ -103,9 +103,7 @@ class DoctrineIdentityFieldDescriptor extends AbstractDoctrineFieldDescriptor
     }
 
     /**
-     * Returns all the joins which are necessary to access this field.
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getJoins()
     {

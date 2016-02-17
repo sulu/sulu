@@ -30,7 +30,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
  */
 class XmlDriver extends AbstractFileDriver implements DriverInterface
 {
-    const SCHEME_PATH = '/../../Resources/schema/metadata/doctrine-1.0.xsd';
+    const SCHEME_PATH = '/../../Resources/schema/metadata/list-builder-doctrine-1.0.xsd';
 
     /**
      * @var ParameterBagInterface
@@ -102,7 +102,7 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
             case 'group-concat-property':
                 return $this->getGroupConcatenationType($xpath, $propertyNode);
             case 'identity-property':
-                return $this->getGroupConcatenationType($xpath, $propertyNode);
+                return $this->getIdentityType($xpath, $propertyNode);
             default:
                 return $this->getSingleType($xpath, $propertyNode);
         }
