@@ -62,6 +62,16 @@ class PropertyMetadata extends BasePropertyMetadata
      */
     private $cssClass = '';
 
+    /**
+     * @var string
+     */
+    private $filterType;
+
+    /**
+     * @var array
+     */
+    private $filterTypeParameters = [];
+
     public function __construct($class, $name)
     {
         $this->class = $class;
@@ -208,6 +218,38 @@ class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
+     * @return string
+     */
+    public function getFilterType()
+    {
+        return $this->filterType;
+    }
+
+    /**
+     * @param string $filterType
+     */
+    public function setFilterType($filterType)
+    {
+        $this->filterType = $filterType;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFilterTypeParameters()
+    {
+        return $this->filterTypeParameters;
+    }
+
+    /**
+     * @param array $parameters
+     */
+    public function setFilterTypeParameters($parameters)
+    {
+        $this->filterTypeParameters = $parameters;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function serialize()
@@ -224,6 +266,8 @@ class PropertyMetadata extends BasePropertyMetadata
                 $this->sortable,
                 $this->editable,
                 $this->cssClass,
+                $this->filterType,
+                $this->filterTypeParameters,
             ]
         );
     }
@@ -244,6 +288,8 @@ class PropertyMetadata extends BasePropertyMetadata
             $this->sortable,
             $this->editable,
             $this->cssClass,
+            $this->filterType,
+            $this->filterTypeParameters,
             ) = unserialize($str);
     }
 }

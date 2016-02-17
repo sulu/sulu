@@ -51,10 +51,20 @@ class GeneralMetadataSerializeSubscriber implements EventSubscriberInterface
 
         $metadata = $fieldDescriptor->getMetadata();
         if (null === $metadata || !$metadata->has(PropertyMetadata::class)) {
+            // this keeps BC because before this the type was used to determine the input-type.
+            $visitor->addData('filter-type', $fieldDescriptor->getType());
+            $visitor->addData('filter-type-parameters', []);
+
             return;
         }
 
-        $filterMetadata = $metadata->get(PropertyMetadata::class);
-        $visitor->addData('display', $filterMetadata->getDisplay());
+        /** @var PropertyMetadata $propertyMetadata */
+        $propertyMetadata = $metadata->get(PropertyMetadata::class);
+        $visitor->addData('display', $propertyMetadata->getDisplay());
+
+        if (null !== $propertyMetadata->getFilterType()) {
+            $visitor->addData('filter-type', $propertyMetadata->getFilterType());
+            $visitor->addData('filter-type-parameters', $propertyMetadata->getFilterTypeParameters());
+        }
     }
 }

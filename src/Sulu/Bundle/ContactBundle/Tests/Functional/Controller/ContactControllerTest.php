@@ -904,7 +904,7 @@ class ContactControllerTest extends SuluTestCase
         // dont use max here because the user for tests also is called max
 
         $client = $this->createTestClient();
-        $client->request('GET', '/api/contacts?flat=true&search=Erika&searchFields=fullName');
+        $client->request('GET', '/api/contacts?flat=true&search=Erika&searchFields=fullName&fields=fullName');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
@@ -1548,7 +1548,7 @@ class ContactControllerTest extends SuluTestCase
     public function testGetList()
     {
         $client = $this->createTestClient();
-        $client->request('GET', '/api/contacts?flat=true');
+        $client->request('GET', '/api/contacts?flat=true&fields=fullName,title,formOfAddress,salutation');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(2, $response->total);
@@ -1600,7 +1600,7 @@ class ContactControllerTest extends SuluTestCase
         $ids = sprintf('%s,%s,%s', $contact1->getId(), $contact2->getId(), $contact3->getId());
 
         $client = $this->createTestClient();
-        $client->request('GET', '/api/contacts?flat=true&ids=' . $ids);
+        $client->request('GET', '/api/contacts?flat=true&ids=' . $ids . '&fields=id');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(3, $response->total);
@@ -1640,7 +1640,7 @@ class ContactControllerTest extends SuluTestCase
         $ids = sprintf('%s,%s,%s', $contact3->getId(), $contact1->getId(), $contact2->getId());
 
         $client = $this->createTestClient();
-        $client->request('GET', '/api/contacts?flat=true&ids=' . $ids);
+        $client->request('GET', '/api/contacts?flat=true&ids=' . $ids . '&fields=id');
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(3, $response->total);

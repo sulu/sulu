@@ -43,16 +43,18 @@ class GeneralMetadataSerializeSubscriberTest extends \PHPUnit_Framework_TestCase
             [false],
             [true, false],
             [true, true],
+            [true, true, true],
         ];
     }
 
     /**
      * @dataProvider testPostSerializeProvider
      */
-    public function testPostSerialize($hasMetadata, $hasGeneralMetadata = false)
+    public function testPostSerialize($hasMetadata, $hasGeneralMetadata = false, $hasFilterType = false)
     {
         $visitor = $this->prophesize(JsonSerializationVisitor::class);
         $descriptor = $this->prophesize(FieldDescriptorInterface::class);
+        $descriptor->getType()->willReturn('test-type');
 
         if ($hasMetadata) {
             $metadata = $this->prophesize(PropertyMetadata::class);
@@ -60,17 +62,30 @@ class GeneralMetadataSerializeSubscriberTest extends \PHPUnit_Framework_TestCase
 
             if ($hasGeneralMetadata) {
                 $generalMetadata = $this->prophesize(GeneralPropertyMetadata::class);
-                $generalMetadata->getDisplay(GeneralPropertyMetadata::DISPLAY_YES);
+                $generalMetadata->getDisplay()->willReturn(GeneralPropertyMetadata::DISPLAY_YES);
 
                 $metadata->get(GeneralPropertyMetadata::class)->willReturn($generalMetadata->reveal());
-                $visitor->addData('display', GeneralPropertyMetadata::DISPLAY_YES);
+                $visitor->addData('display', GeneralPropertyMetadata::DISPLAY_YES)->shouldBeCalled();
+
+                if ($hasFilterType) {
+                    $generalMetadata->getFilterType()->willReturn('test-input');
+                    $generalMetadata->getFilterTypeParameters()->willReturn([]);
+
+                    $visitor->addData('filter-type', 'test-input')->shouldBeCalled();
+                    $visitor->addData('filter-type-parameters', [])->shouldBeCalled();
+                } else {
+                    $generalMetadata->getFilterType()->willReturn(null);
+                }
             }
 
             $descriptor->getMetadata()->willReturn($metadata->reveal());
+        } else {
+            $descriptor->getMetadata()->willReturn(null);
         }
 
         if (!$hasMetadata || !$hasGeneralMetadata) {
-            $visitor->addData(Argument::any(), Argument::any())->shouldNotBeCalled();
+            $visitor->addData('filter-type', 'test-type')->shouldBeCalled();
+            $visitor->addData('filter-type-parameters', [])->shouldBeCalled();
         }
 
         $event = $this->prophesize(ObjectEvent::class);

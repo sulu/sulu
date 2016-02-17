@@ -34,11 +34,24 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
 
         $this->locator = $this->prophesize(FileLocatorInterface::class);
         $this->parameterBag = $this->prophesize(ParameterBagInterface::class);
+
+        $this->parameterBag->resolveValue('%sulu.model.contact.class%')->willReturn('SuluContactBundle:Contact');
+        $this->parameterBag->resolveValue('%sulu.model.contact.class%.avatar')->willReturn(
+            'SuluContactBundle:Contact.avatar'
+        );
+        $this->parameterBag->resolveValue('%sulu.model.contact.class%.contactAddresses')->willReturn(
+            'SuluContactBundle:Contact.contactAddresses'
+        );
+        $this->parameterBag->resolveValue('%sulu.model.contact.class%.tags')->willReturn(
+            'SuluContactBundle:Contact.tags'
+        );
+        $this->parameterBag->resolveValue('%test-parameter%')->willReturn('test-value');
+        $this->parameterBag->resolveValue(Argument::any())->willReturnArgument(0);
     }
 
     public function testLoadMetadataFromFileComplete()
     {
-        $driver = new XmlDriver($this->locator->reveal());
+        $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
         $result = $this->loadMetadataFromFile($driver, 'complete');
 
         $this->assertInstanceOf(ClassMetadata::class, $result);
@@ -99,7 +112,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadMetadataFromFileEmpty()
     {
-        $driver = new XmlDriver($this->locator->reveal());
+        $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
         $result = $this->loadMetadataFromFile($driver, 'empty');
 
         $this->assertInstanceOf(ClassMetadata::class, $result);
@@ -109,7 +122,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadMetadataFromFileMinimal()
     {
-        $driver = new XmlDriver($this->locator->reveal());
+        $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
         $result = $this->loadMetadataFromFile($driver, 'minimal');
 
         $this->assertInstanceOf(ClassMetadata::class, $result);
@@ -144,6 +157,86 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testLoadMetadataFromFileInputType()
+    {
+        $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
+        $result = $this->loadMetadataFromFile($driver, 'filter-type');
+
+        $this->assertInstanceOf(ClassMetadata::class, $result);
+        $this->assertEquals('stdClass', $result->name);
+        $this->assertCount(1, $result->propertyMetadata);
+
+        $this->assertEquals(
+            ['tags'],
+            array_keys($result->propertyMetadata)
+        );
+
+        $this->assertMetadata(
+            [
+                'name' => 'tags',
+                'translation' => 'Tags',
+                'filter-type' => 'test-input',
+            ],
+            $result->propertyMetadata['tags']
+        );
+    }
+
+    public function testLoadMetadataFromFileParameters()
+    {
+        $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
+        $result = $this->loadMetadataFromFile($driver, 'filter-type-parameters');
+
+        $this->assertInstanceOf(ClassMetadata::class, $result);
+        $this->assertEquals('stdClass', $result->name);
+        $this->assertCount(1, $result->propertyMetadata);
+
+        $this->assertEquals(
+            ['tags'],
+            array_keys($result->propertyMetadata)
+        );
+
+        $this->assertMetadata(
+            [
+                'name' => 'tags',
+                'translation' => 'Tags',
+                'filter-type' => 'test-input',
+                'filter-type-parameters' => [
+                    'test1' => 'test-value',
+                    'test2' => 'test',
+                ],
+            ],
+            $result->propertyMetadata['tags']
+        );
+    }
+
+    public function testLoadMetadataFromFileNoInputType()
+    {
+        $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
+        $result = $this->loadMetadataFromFile($driver, 'filter-type-no-input');
+
+        $this->assertInstanceOf(ClassMetadata::class, $result);
+        $this->assertEquals('stdClass', $result->name);
+        $this->assertCount(1, $result->propertyMetadata);
+
+        $this->assertEquals(
+            ['tags'],
+            array_keys($result->propertyMetadata)
+        );
+
+        $this->assertMetadata(
+            [
+                'name' => 'tags',
+                'translation' => 'Tags',
+                'filter-type' => null,
+                'filter-type-parameters' => [
+                    'test1' => 'test-value',
+                    'test2' => 'test',
+                ],
+            ],
+            $result->propertyMetadata['tags']
+        );
+    }
+
     private function assertMetadata($expected, PropertyMetadata $metadata)
     {
         $expected = array_merge(
@@ -158,6 +251,8 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
                 'sortable' => true,
                 'editable' => false,
                 'class' => '',
+                'filter-type' => null,
+                'filter-type-parameters' => [],
             ],
             $expected
         );
@@ -165,7 +260,10 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf($expected['instance'], $metadata);
         $this->assertEquals($expected['name'], $metadata->getName());
         $this->assertEquals($expected['translation'], $metadata->getTranslation());
+        $this->assertEquals($expected['filter-type'], $metadata->getFilterType());
+        $this->assertEquals($expected['filter-type-parameters'], $metadata->getFilterTypeParameters());
         $this->assertEquals($expected['display'], $metadata->getDisplay());
+
         $this->assertEquals($expected['type'], $metadata->getType());
         $this->assertEquals($expected['width'], $metadata->getWidth());
         $this->assertEquals($expected['minWidth'], $metadata->getMinWidth());

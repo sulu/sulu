@@ -66,7 +66,9 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
             new MetadataProvider(
                 new MetadataFactory(new DoctrineXmlDriver($this->locator->reveal(), $parameterBag->reveal()))
             ),
-            new MetadataProvider(new MetadataFactory(new GeneralXmlDriver($this->locator->reveal()))),
+            new MetadataProvider(
+                new MetadataFactory(new GeneralXmlDriver($this->locator->reveal(), $parameterBag->reveal()))
+            ),
         ];
     }
 

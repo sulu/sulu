@@ -49,6 +49,7 @@
         <service id="sulu_core.list_builder.metadata.provider.general.driver.xml"
                  class="Sulu\Component\Rest\ListBuilder\Metadata\General\Driver\XmlDriver">
             <argument type="service" id="sulu_core.list_builder.metadata.file_locator"/>
+            <argument type="service" id="sulu_core.list_builder.metadata.parameter_bag"/>
         </service>
 
         <service id="sulu_core.list_builder.metadata.provider.general.event_subscriber"
