@@ -209,17 +209,5 @@
                 </orm:join>
             </orm:joins>
         </group-concat-property>
-
-        <group-concat-property name="tags" orm:glue=",">
-            <orm:field-name>name</orm:field-name>
-            <orm:entity-name>SuluTagBundle:Tag</orm:entity-name>
-
-            <orm:joins>
-                <orm:join>
-                    <orm:entity-name>SuluTagBundle:Tag</orm:entity-name>
-                    <orm:field-name>%sulu.model.contact.class%.tags</orm:field-name>
-                </orm:join>
-            </orm:joins>
-        </group-concat-property>
     </properties>
 </class>

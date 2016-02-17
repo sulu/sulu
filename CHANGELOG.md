@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2000 [Filter]            Added filter metadata and new filter input types (tags, auto-complete)
     * ENHANCEMENT #2016 [AdminBundle]       Added loader to indicate loading suggestions
     * HOTFIX      #2002 [MediaBundle]       Fixed retina height for image scale command
     * HOTFIX      #2005 [WebsiteBundle]     Merge Twig globals and add output buffer handling for preview rendering

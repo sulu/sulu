@@ -4,10 +4,10 @@
 
 ### Filter
 
-Update th schema `app/console doctrine:schema:update --force` and run following SQL-Statement:
+Update the schema `app/console doctrine:schema:update --force` and run following SQL-Statement:
  
 ```sql
-TODO
+UPDATE re_conditions SET value = CONCAT('"', value, '"') WHERE value NOT LIKE '"%"'
 ```
 
 ## 0.1.2

@@ -50,5 +50,12 @@
             </orm:field>
             <orm:field property-ref="lastName"/>
         </concatenation-property>
+
+        <property name="city" translation="contact.address.city" display="always">
+            <orm:field-name>city</orm:field-name>
+            <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
+
+            <orm:joins ref="address"/>
+        </property>
     </properties>
 </class>

@@ -881,7 +881,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
     }
 
-    public function testGetListSearch()
+    public function testGetListSearchEmpty()
     {
         $client = $this->createTestClient();
         $client->request('GET', '/api/contacts?flat=true&search=Nothing&searchFields=fullName');
@@ -891,15 +891,27 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals(0, $response->total);
         $this->assertEquals(0, count($response->_embedded->contacts));
+    }
 
-        $client->request('GET', '/api/contacts?flat=true&search=Max&searchFields=fullName');
+    public function testGetListSearch()
+    {
+        $contact1 = new Contact();
+        $contact1->setFirstName('Erika');
+        $contact1->setLastName('Mustermann');
+        $this->em->persist($contact1);
+        $this->em->flush();
+
+        // dont use max here because the user for tests also is called max
+
+        $client = $this->createTestClient();
+        $client->request('GET', '/api/contacts?flat=true&search=Erika&searchFields=fullName');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(2, $response->total);
-        $this->assertEquals(2, count($response->_embedded->contacts));
-        $this->assertEquals('Max Mustermann', $response->_embedded->contacts[0]->fullName);
+        $this->assertEquals(1, $response->total);
+        $this->assertEquals(1, count($response->_embedded->contacts));
+        $this->assertEquals('Erika Mustermann', $response->_embedded->contacts[0]->fullName);
     }
 
     public function testPut()
