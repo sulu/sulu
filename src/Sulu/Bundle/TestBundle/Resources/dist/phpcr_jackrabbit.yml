@@ -11,5 +11,5 @@ doctrine_phpcr:
     session:
         backend:
             curl_options:
-                FORBID_REUSE: 1
-                FRESH_CONNECT: 1
+                CURLOPT_FORBID_REUSE: 1
+                CURLOPT_FRESH_CONNECT: 1
