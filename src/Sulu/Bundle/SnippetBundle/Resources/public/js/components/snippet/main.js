@@ -163,6 +163,10 @@ define([
             ]);
         },
 
+        /**
+         * Asks if the content should be overriden, if the content has been changed on the server.
+         * @param {Object} data
+         */
         handleErrorContentChanged: function (data, action) {
             this.sandbox.emit(
                 'sulu.overlay.show-warning',
@@ -180,6 +184,12 @@ define([
             );
         },
 
+        /**
+         * Handles the error based on its error code.
+         * @param {number} errorCode
+         * @param {Object} data
+         * @param {String} action
+         */
         handleError: function(errorCode, data, action) {
             switch (errorCode) {
                 case errorCodes.contentChanged:

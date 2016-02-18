@@ -64,6 +64,11 @@ class BlameSubscriber implements EventSubscriberInterface
         ]);
     }
 
+    /**
+     * Adds the creator and changer to the metadata for persisting.
+     *
+     * @param MetadataLoadEvent $event
+     */
     public function handleMetadataLoad(MetadataLoadEvent $event)
     {
         $metadata = $event->getMetadata();
@@ -83,6 +88,8 @@ class BlameSubscriber implements EventSubscriberInterface
     }
 
     /**
+     * Persists the data of creator and changer to the Node.
+     *
      * @param PersistEvent $event
      */
     public function handlePersist(PersistEvent $event)
@@ -110,6 +117,13 @@ class BlameSubscriber implements EventSubscriberInterface
         $event->getAccessor()->set(self::CHANGER, $userId);
     }
 
+    /**
+     * Either returns the user id from the options array, or sets the id of the user of the current session.
+     *
+     * @param $options
+     *
+     * @return int
+     */
     private function getUserId($options)
     {
         if (isset($options['user'])) {
