@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2011 [AdminBundle]         Fixed double handling of login via enter
     * ENHANCEMENT #1999 [SnippetBundle]       Snippet controller now uses DocumentManager and Serializer.
     * ENHANCEMENT #2008 [ContactBundle]       Fixed sorting in contact selection content type
     * FEATURE     #2001 [MediaBundle]         Clear local image cache via cache clear service and command
