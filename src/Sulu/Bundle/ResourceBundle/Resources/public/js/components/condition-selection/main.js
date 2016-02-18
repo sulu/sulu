@@ -187,7 +187,8 @@ define([], function() {
                 $operatorSelect,
                 operator,
                 $valueComponent,
-                id = !!conditionGroup ? conditionGroup.id : 'new';
+                id = !!conditionGroup ? conditionGroup.id : 'new',
+                field;
 
             $row = this.sandbox.dom.createElement(templates.row(constants.conditionRowClass, id));
             $deleteButton = this.sandbox.dom.createElement(templates.removeButton(constants.removeButtonClass));
@@ -200,15 +201,26 @@ define([], function() {
                 $fieldSelect = createFieldSelect.call(this, condition.field, true, true);
             }
 
+            field = this.fields[condition.field] || this.usedFields[condition.field] || {};
+
             operator = getOperatorByOperandAndType.call(this, condition.operator, condition.type);
             $operatorSelect = createOperatorSelect.call(this, operator, filteredOperators, false, true);
-            $valueComponent = createValueInput.call(this, conditionGroup, operator, 'grid-col-4', true);
+            $valueComponent = createValueInput.call(
+                this,
+                conditionGroup,
+                operator,
+                'grid-col-4',
+                true,
+                field['filter-type-parameters'] || {}
+            );
 
             this.sandbox.dom.append($row, $deleteButton);
             this.sandbox.dom.append($row, $fieldSelect);
             this.sandbox.dom.append($row, $operatorSelect);
             this.sandbox.dom.append($row, $valueComponent);
             this.sandbox.dom.append(this.$container, $row);
+
+            $row.data('field', field);
         },
 
         /**
@@ -684,7 +696,7 @@ define([], function() {
             this.sandbox.dom.on(this.$container, 'change', function() {
                 // FIXME Datepicker triggers multiple change events?
                 updateDataAttribute.call(this);
-            }.bind(this), 'select, input, div');
+            }.bind(this), 'select, input, div, .pickdate');
 
             // update operator data
             this.sandbox.dom.on(this.$container, 'change', function(event) {

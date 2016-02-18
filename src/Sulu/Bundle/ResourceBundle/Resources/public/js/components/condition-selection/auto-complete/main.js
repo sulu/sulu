@@ -40,7 +40,7 @@ define(['underscore'], function(_) {
                         options: {
                             el: this.$container,
                             instanceName: this.instanceName,
-                            items: this.data,
+                            value: this.data,
                             prefetchUrl: this.options.parameters.prefetchUrl,
                             remoteUrl: this.options.parameters.remoteUrl,
                             getParameter: this.options.parameters.searchParameter || 'search',
@@ -54,13 +54,23 @@ define(['underscore'], function(_) {
             this.sandbox.on('husky.auto-complete.' + this.instanceName + '.select', function(item) {
                 this.value = item.id;
                 this.$el.data('value', this.value);
+                this.$el.trigger('change');
             }.bind(this));
         },
 
         loadComponentData: function() {
             var def = $.Deferred();
 
-            def.resolve([]);
+            if (!this.options.value) {
+                def.resolve();
+
+                return def.promise();
+            }
+
+            this.sandbox.util.load(this.options.parameters.singleUrl.replace('{id}', this.options.value))
+                .then(function(data) {
+                    def.resolve(data);
+                }.bind(this));
 
             return def.promise();
         }
