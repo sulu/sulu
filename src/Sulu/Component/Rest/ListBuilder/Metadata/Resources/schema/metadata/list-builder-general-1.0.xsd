@@ -72,9 +72,10 @@
         <xs:attribute type="xs:string" name="display">
             <xs:simpleType>
                 <xs:restriction base="xs:string">
-                    <xs:enumeration value="pounds" />
-                    <xs:enumeration value="euros" />
-                    <xs:enumeration value="dollars" />
+                    <xs:enumeration value="yes" />
+                    <xs:enumeration value="no" />
+                    <xs:enumeration value="always" />
+                    <xs:enumeration value="none" />
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>

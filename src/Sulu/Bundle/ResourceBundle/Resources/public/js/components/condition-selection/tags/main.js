@@ -11,16 +11,14 @@ define(['underscore'], function(_) {
 
     'use strict';
 
-    var defaults = {
-        options: {
-            value: null,
-            operator: null
-        }
-    };
-
     return {
 
-        defaults: defaults,
+        defaults: {
+            options: {
+                value: null,
+                operator: null
+            }
+        },
 
         tagToId: {},
 

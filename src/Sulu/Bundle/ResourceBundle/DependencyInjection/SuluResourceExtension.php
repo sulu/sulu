@@ -56,7 +56,7 @@ class SuluResourceExtension extends Extension
      *
      * @return string
      */
-    protected function createOrGetFolder($directory, ContainerBuilder $container)
+    private function createOrGetFolder($directory, ContainerBuilder $container)
     {
         $filesystem = new Filesystem();
 
@@ -73,7 +73,7 @@ class SuluResourceExtension extends Extension
      *
      * @param $config
      */
-    protected function setDefaultForFilterConditionsConjunction(&$config)
+    private function setDefaultForFilterConditionsConjunction(&$config)
     {
         if (!array_key_exists('filters', $config) ||
             !array_key_exists('conjunctions', $config['filters']) ||

@@ -11,19 +11,15 @@ define(['underscore'], function(_) {
 
     'use strict';
 
-    var defaults = {
-        options: {
-            value: null,
-            operator: null,
-            parameters: {}
-        }
-    };
-
     return {
 
-        defaults: defaults,
-
-        tagToId: {},
+        defaults: {
+            options: {
+                value: null,
+                operator: null,
+                parameters: {}
+            }
+        },
 
         initialize: function() {
             this.$container = $('<div/>');

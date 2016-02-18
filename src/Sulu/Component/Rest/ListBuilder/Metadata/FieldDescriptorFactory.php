@@ -131,11 +131,8 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
             $fieldMetadata->getEntityName(),
             $generalMetadata->getTranslation(),
             $joins,
-            $generalMetadata->getDisplay() === GeneralPropertyMetadata::DISPLAY_NO,
-            in_array(
-                $generalMetadata->getDisplay(),
-                [GeneralPropertyMetadata::DISPLAY_ALWAYS, GeneralPropertyMetadata::DISPLAY_YES]
-            ),
+            $this->isDisabled($generalMetadata),
+            $this->isDefault($generalMetadata),
             $generalMetadata->getType(),
             $generalMetadata->getWidth(),
             $generalMetadata->getMinWidth(),
@@ -167,11 +164,8 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
             $generalMetadata->getName(),
             $generalMetadata->getTranslation(),
             $type->getGlue(),
-            $generalMetadata->getDisplay() === GeneralPropertyMetadata::DISPLAY_NO,
-            in_array(
-                $generalMetadata->getDisplay(),
-                [GeneralPropertyMetadata::DISPLAY_ALWAYS, GeneralPropertyMetadata::DISPLAY_YES]
-            ),
+            $this->isDisabled($generalMetadata),
+            $this->isDefault($generalMetadata),
             $generalMetadata->getType(),
             $generalMetadata->getWidth(),
             $generalMetadata->getMinWidth(),
@@ -198,11 +192,8 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
             $generalMetadata->getName(),
             $generalMetadata->getTranslation(),
             $type->getGlue(),
-            $generalMetadata->getDisplay() === GeneralPropertyMetadata::DISPLAY_NO,
-            in_array(
-                $generalMetadata->getDisplay(),
-                [GeneralPropertyMetadata::DISPLAY_ALWAYS, GeneralPropertyMetadata::DISPLAY_YES]
-            ),
+            $this->isDisabled($generalMetadata),
+            $this->isDefault($generalMetadata),
             $generalMetadata->getType(),
             $generalMetadata->getWidth(),
             $generalMetadata->getMinWidth(),
@@ -241,17 +232,44 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
             $fieldMetadata->getEntityName(),
             $generalMetadata->getTranslation(),
             $joins,
-            $generalMetadata->getDisplay() === GeneralPropertyMetadata::DISPLAY_NO,
-            in_array(
-                $generalMetadata->getDisplay(),
-                [GeneralPropertyMetadata::DISPLAY_ALWAYS, GeneralPropertyMetadata::DISPLAY_YES]
-            ),
+            $this->isDisabled($generalMetadata),
+            $this->isDefault($generalMetadata),
             $generalMetadata->getType(),
             $generalMetadata->getWidth(),
             $generalMetadata->getMinWidth(),
             $generalMetadata->isSortable(),
             $generalMetadata->isEditable(),
             $generalMetadata->getCssClass()
+        );
+    }
+
+    /**
+     * Determine disabled state.
+     *
+     * @param GeneralPropertyMetadata $generalMetadata
+     *
+     * @return bool
+     */
+    private function isDisabled(GeneralPropertyMetadata $generalMetadata)
+    {
+        return in_array(
+            $generalMetadata->getDisplay(),
+            [GeneralPropertyMetadata::DISPLAY_NEVER, GeneralPropertyMetadata::DISPLAY_NO]
+        );
+    }
+
+    /**
+     * Determine default state.
+     *
+     * @param GeneralPropertyMetadata $generalMetadata
+     *
+     * @return bool
+     */
+    private function isDefault(GeneralPropertyMetadata $generalMetadata)
+    {
+        return in_array(
+            $generalMetadata->getDisplay(),
+            [GeneralPropertyMetadata::DISPLAY_ALWAYS, GeneralPropertyMetadata::DISPLAY_YES]
         );
     }
 }
