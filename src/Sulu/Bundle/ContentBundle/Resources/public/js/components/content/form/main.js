@@ -446,9 +446,9 @@ define(['app-config', 'config', 'sulucontent/components/content/preview/main'], 
         },
 
         submit: function(action) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
             this.dfdListenForResourceLocator.then(function() {
                 if (this.sandbox.form.validate(this.formId)) {
+                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
                     var data = this.sandbox.form.getData(this.formId);
                     data.navigation = this.sandbox.dom.prop('#show-in-navigation', 'checked');
                     this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
