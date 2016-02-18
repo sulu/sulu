@@ -33,7 +33,7 @@ abstract class AbstractDoctrineFieldDescriptor extends AbstractFieldDescriptor i
     /**
      * {@inheritdoc}
      */
-    public function getSimpleSelect()
+    public function getWhere()
     {
         return $this->getSelect();
     }

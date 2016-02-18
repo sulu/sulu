@@ -73,7 +73,7 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
     /**
      * {@inheritdoc}
      */
-    public function getSimpleSelect()
+    public function getWhere()
     {
         return $this->fieldDescriptor->getSelect();
     }

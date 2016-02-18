@@ -67,7 +67,7 @@ class DoctrineWhereExpression extends AbstractDoctrineExpression implements Wher
             $statement = [];
             $value = $this->getValue();
             for ($i = 0, $count = count($value); $i < $count; $i++) {
-                $statement[] = sprintf('%s = :%s%s', $this->field->getSimpleSelect(), $paramName, $i);
+                $statement[] = sprintf('%s = :%s%s', $this->field->getWhere(), $paramName, $i);
                 $queryBuilder->setParameter($paramName . $i, $value[$i]);
             }
 
@@ -76,7 +76,7 @@ class DoctrineWhereExpression extends AbstractDoctrineExpression implements Wher
             $queryBuilder->setParameter($paramName, $this->getValue());
         }
 
-        return $this->field->getSimpleSelect() . ' ' . $this->getComparator() . ' :' . $paramName;
+        return $this->field->getWhere() . ' ' . $this->getComparator() . ' :' . $paramName;
     }
 
     /**

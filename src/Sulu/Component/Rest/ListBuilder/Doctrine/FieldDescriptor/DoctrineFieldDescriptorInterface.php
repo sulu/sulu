@@ -29,7 +29,7 @@ interface DoctrineFieldDescriptorInterface extends FieldDescriptorInterface
      *
      * @return string
      */
-    public function getSimpleSelect();
+    public function getWhere();
 
     /**
      * Returns the where statement for search.
