@@ -182,6 +182,14 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
                 'foobar',
             ],
             [
+                '/cmf/foo-bar/bar',
+                'foo-bar',
+            ],
+            [
+                '/cmf/foo_bar/bar',
+                'foo_bar',
+            ],
+            [
                 '/foo/foo',
                 null,
             ],
