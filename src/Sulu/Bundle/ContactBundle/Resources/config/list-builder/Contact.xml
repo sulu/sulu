@@ -14,7 +14,8 @@
             <orm:field-name>SuluContactBundle:ContactAddress.address</orm:field-name>
         </orm:join>
     </orm:joins>
-    <orm:joins name="account">
+
+    <orm:joins name="accountContact">
         <orm:join>
             <orm:entity-name>SuluContactBundle:AccountContact</orm:entity-name>
             <orm:field-name>%sulu.model.contact.class%.accountContacts</orm:field-name>
@@ -66,7 +67,7 @@
             <orm:field-name>name</orm:field-name>
             <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
 
-            <orm:joins ref="account">
+            <orm:joins ref="accountContact">
                 <orm:join>
                     <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
                     <orm:field-name>SuluContactBundle:AccountContact.account</orm:field-name>
@@ -79,7 +80,7 @@
             <orm:field-name>account</orm:field-name>
             <orm:entity-name>SuluContactBundle:AccountContact</orm:entity-name>
 
-            <orm:joins ref="account"/>
+            <orm:joins ref="accountContact"/>
 
             <filter-type-parameters>
                 <parameter key="singleUrl"><![CDATA[/admin/api/accounts/{id}]]></parameter>
@@ -215,7 +216,7 @@
 
         <group-concat-property name="tagIds" display="never" filter-type="tags"
                                list:translation="public.tags"
-                               orm:glue=",">
+                                orm:glue=",">
             <orm:field-name>id</orm:field-name>
             <orm:entity-name>SuluTagBundle:Tag</orm:entity-name>
 
