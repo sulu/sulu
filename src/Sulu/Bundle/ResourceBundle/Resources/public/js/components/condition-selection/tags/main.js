@@ -48,9 +48,15 @@ define(['underscore'], function(_) {
                 ]
             );
 
-            this.sandbox.on('husky.auto-complete.' + this.instanceName + '.select', this.addTag.bind(this));
+            this.sandbox.on('husky.auto-complete.' + this.instanceName + '.remote-data', this.addTags.bind(this));
             this.sandbox.on('husky.auto-complete-list.' + this.instanceName + '.item-added', this.updateData.bind(this));
             this.sandbox.on('husky.auto-complete-list.' + this.instanceName + '.item-deleted', this.updateData.bind(this));
+        },
+
+        addTags: function(tags) {
+            for (var i = 0, length = tags.length; i < length; i++) {
+                this.addTag(tags[i]);
+            }
         },
 
         addTag: function(tag) {

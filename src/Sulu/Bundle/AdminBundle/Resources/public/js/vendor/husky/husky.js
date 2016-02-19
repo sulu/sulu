@@ -37738,8 +37738,8 @@ define('__component__$auto-complete@husky',[], function() {
                     url: this.options.prefetchUrl,
                     ttl: 1,
                     filter: function(data) {
-                        this.sandbox.emit(PREFETCH_LOAD.call(this));
-                        this.handleData(data);
+                        this.sandbox.emit(PREFETCH_LOAD.call(this), this.handleData(data));
+
                         return this.data;
                     }.bind(this)
                 };
@@ -37755,10 +37755,10 @@ define('__component__$auto-complete@husky',[], function() {
                         }.bind(this)
                     },
                     filter: function(data) {
-                        this.sandbox.emit(REMOTE_RETRIEVE.call(this));
+                        this.sandbox.emit(REMOTE_RETRIEVE.call(this), this.handleData(data));
                         this.hideLoader();
 
-                        return this.handleData(data);
+                        return this.data;
                     }.bind(this)
                 };
             }

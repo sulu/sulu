@@ -7,7 +7,12 @@
 Update the schema `app/console doctrine:schema:update --force` and run following SQL-Statement:
  
 ```sql
-UPDATE re_conditions SET value = CONCAT('"', value, '"') WHERE value NOT LIKE '"%"'
+UPDATE re_conditions SET value = CONCAT('"', value, '"') WHERE value NOT LIKE '"%"';
+INSERT INTO `re_operators` (`id`, `operator`, `type`, `inputType`) VALUES
+    (16, 'and', 5, 'tags'),
+    (17, 'or', 5, 'tags'),
+    (18, '=', 6, 'auto-complete'),
+    (19, '!=', 6, 'auto-complete');
 ```
 
 ## 0.1.2
