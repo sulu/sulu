@@ -2,13 +2,15 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2021 [All]                 Added pull-request template
     * BUGFIX      #2058 [ListBuilder]         Fixed cache for field-descriptor
     * ENHANCEMENT #2034 [ContentBundle]       Improved content-bundle testcases
     * ENHANCEMENT #2036 [SecurityBundle]      Introduced different permission types for different security contexts
     * ENHANCEMENT #2014 [Content]             Allow `-` in webspace name.
     * FEATURE     #1983 [ContentBundle]       Introduces hash check on save
     * FEATURE     #1983 [SnippetBundle]       Introduces hash check on save
-    * ENHANCEMENT #1999 [SnippetBundle]       Snippet controller now uses DocumentManager and Serializer.
+    * ENHANCEMENT #1999 [SnippetBundle]       Snippet controller now uses DocumentManager and Serializer
+    * ENHANCEMENT #1999 [SnippetBundle]       Snippet controller now uses DocumentManager and Serializer
     * ENHANCEMENT #2008 [ContactBundle]       Fixed sorting in contact selection content type
     * ENHANCEMENT #1981 [ContentBundle]       Better search reindexing for structure content.
     * FEATURE     #2001 [MediaBundle]         Clear local image cache via cache clear service and command
