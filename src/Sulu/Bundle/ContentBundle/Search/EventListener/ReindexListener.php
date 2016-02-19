@@ -93,23 +93,6 @@ class ReindexListener
     {
         $output->writeln('<info>Rebuilding content index</info>');
 
-        $typeMap = $this->baseMetadataFactory->getPhpcrTypeMap();
-
-        $phpcrTypes = [];
-        foreach ($typeMap as $type) {
-            $phpcrType = $type['phpcr_type'];
-
-            if ($phpcrType !== 'sulu:path') {
-                $phpcrTypes[] = sprintf('[jcr:mixinTypes] = "%s"', $phpcrType);
-            }
-        }
-
-        $condition = implode(' or ', $phpcrTypes);
-
-        // TODO: We cannot select all contents via. the parent type, see: https://github.com/jackalope/jackalope-doctrine-dbal/issues/217
-        $query = $this->documentManager->createQuery(
-            'SELECT * FROM [nt:unstructured] AS a WHERE ' . $condition
-        );
 
         $batchSize = 50;
         $offset = $this->resumeManager->getCheckpoint(self::CHECKPOINT_NAME, 0);

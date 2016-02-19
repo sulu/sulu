@@ -28,15 +28,11 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
-        <!-- Rebuild structure index on massive:search:index:rebuild -->
-        <service id="sulu_content.search.event_listener.search" class="%sulu_content.search.event_listener.reindex.class%">
+        <service id="sulu_content.search.reindex.structure_provider" class="Sulu\Bundle\ContentBundle\Search\ReIndex\StructureProvider">
             <argument type="service" id="sulu_document_manager.document_manager" />
-            <argument type="service" id="sulu_document_manager.document_inspector" />
-            <argument type="service" id="massive_search.search_manager" />
             <argument type="service" id="sulu_document_manager.metadata_factory.base"/>
-            <argument type="service" id="massive_search.reindex.resume_manager"/>
-            <argument>%sulu_content.search.mapping%</argument>
-            <tag name="kernel.event_listener" event="massive_search.index_rebuild" method="onIndexRebuild" />
+            <argument type="service" id="sulu_content.structure.factory" />
+            <tag name="massive_search.reindex.provider" id="sulu_structure"/>
         </service>
 
         <service id="sulu_content.search.event_subscriber.structure" class="%sulu_content.search.event_subscriber.structure.class%">
