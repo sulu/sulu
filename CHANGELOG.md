@@ -2,11 +2,12 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * ENHANCEMENT #2016 [AdminBundle]       Added loader to indicate loading suggestions
     * HOTFIX      #2002 [MediaBundle]       Fixed retina height for image scale command
     * HOTFIX      #2005 [WebsiteBundle]     Merge Twig globals and add output buffer handling for preview rendering
     * HOTFIX      #2003 [ContactBundle]     Fixed rendering of address with null title
-    * HOTFIX     #1991   [Rest]             Added metadata for field-descriptors
-    * BUGFIX      #1944 [MediaBundle]     Removed wrong definition of indices
+    * HOTFIX      #1991 [Rest]              Added metadata for field-descriptors
+    * BUGFIX      #1944 [MediaBundle]       Removed wrong definition of indices
     
 * 1.1.9 (2016-02-05)
     * ENHANCEMENT #1978 [SecurityBundle]    Made url for resetting password configurable via static variable
