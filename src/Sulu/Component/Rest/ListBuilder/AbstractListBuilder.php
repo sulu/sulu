@@ -12,6 +12,7 @@
 namespace Sulu\Component\Rest\ListBuilder;
 
 use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
+use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
 
 abstract class AbstractListBuilder implements ListBuilderInterface
 {
@@ -88,7 +89,22 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      */
     public function setSelectFields($fieldDescriptors)
     {
-        $this->selectFields = $fieldDescriptors;
+        $this->selectFields = array_filter(
+            $fieldDescriptors,
+            function (FieldDescriptorInterface $fieldDescriptor) {
+                if (null === $fieldDescriptor->getMetadata()
+                    || !$fieldDescriptor->getMetadata()->has(PropertyMetadata::class)
+                ) {
+                    return true;
+                }
+
+                /** @var PropertyMetadata $propertyMetadata */
+                $propertyMetadata = $fieldDescriptor->getMetadata()->get(PropertyMetadata::class);
+
+                return $propertyMetadata->getDisplay() === PropertyMetadata::DISPLAY_YES
+                    || $propertyMetadata->getDisplay() === PropertyMetadata::DISPLAY_ALWAYS;
+            }
+        );
     }
 
     /**

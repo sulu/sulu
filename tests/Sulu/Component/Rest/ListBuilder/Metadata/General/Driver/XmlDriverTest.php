@@ -34,11 +34,24 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
 
         $this->locator = $this->prophesize(FileLocatorInterface::class);
         $this->parameterBag = $this->prophesize(ParameterBagInterface::class);
+
+        $this->parameterBag->resolveValue('%sulu.model.contact.class%')->willReturn('SuluContactBundle:Contact');
+        $this->parameterBag->resolveValue('%sulu.model.contact.class%.avatar')->willReturn(
+            'SuluContactBundle:Contact.avatar'
+        );
+        $this->parameterBag->resolveValue('%sulu.model.contact.class%.contactAddresses')->willReturn(
+            'SuluContactBundle:Contact.contactAddresses'
+        );
+        $this->parameterBag->resolveValue('%sulu.model.contact.class%.tags')->willReturn(
+            'SuluContactBundle:Contact.tags'
+        );
+        $this->parameterBag->resolveValue('%test-parameter%')->willReturn('test-value');
+        $this->parameterBag->resolveValue(Argument::any())->willReturnArgument(0);
     }
 
     public function testLoadMetadataFromFileComplete()
     {
-        $driver = new XmlDriver($this->locator->reveal());
+        $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
         $result = $this->loadMetadataFromFile($driver, 'complete');
 
         $this->assertInstanceOf(ClassMetadata::class, $result);
@@ -54,7 +67,6 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
             [
                 'name' => 'id',
                 'translation' => 'public.id',
-                'disabled' => true,
                 'type' => 'integer',
             ],
             $result->propertyMetadata['id']
@@ -63,7 +75,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
             [
                 'name' => 'firstName',
                 'translation' => 'contact.contacts.firstName',
-                'default' => true,
+                'display' => PropertyMetadata::DISPLAY_ALWAYS,
             ],
             $result->propertyMetadata['firstName']
         );
@@ -71,7 +83,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
             [
                 'name' => 'lastName',
                 'translation' => 'contact.contacts.lastName',
-                'default' => true,
+                'display' => PropertyMetadata::DISPLAY_ALWAYS,
             ],
             $result->propertyMetadata['lastName']
         );
@@ -79,7 +91,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
             [
                 'name' => 'avatar',
                 'translation' => 'public.avatar',
-                'default' => true,
+                'display' => PropertyMetadata::DISPLAY_ALWAYS,
                 'type' => 'thumbnails',
                 'sortable' => false,
             ],
@@ -89,7 +101,6 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
             [
                 'name' => 'fullName',
                 'translation' => 'public.name',
-                'disabled' => true,
                 'width' => '100px',
                 'minWidth' => '50px',
                 'sortable' => false,
@@ -101,7 +112,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadMetadataFromFileEmpty()
     {
-        $driver = new XmlDriver($this->locator->reveal());
+        $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
         $result = $this->loadMetadataFromFile($driver, 'empty');
 
         $this->assertInstanceOf(ClassMetadata::class, $result);
@@ -111,7 +122,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadMetadataFromFileMinimal()
     {
-        $driver = new XmlDriver($this->locator->reveal());
+        $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
         $result = $this->loadMetadataFromFile($driver, 'minimal');
 
         $this->assertInstanceOf(ClassMetadata::class, $result);
@@ -124,7 +135,6 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
             [
                 'name' => 'id',
                 'translation' => 'public.id',
-                'disabled' => true,
                 'type' => 'integer',
             ],
             $result->propertyMetadata['id']
@@ -133,7 +143,7 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
             [
                 'name' => 'firstName',
                 'translation' => 'contact.contacts.firstName',
-                'default' => true,
+                'display' => PropertyMetadata::DISPLAY_ALWAYS,
             ],
             $result->propertyMetadata['firstName']
         );
@@ -141,9 +151,89 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
             [
                 'name' => 'lastName',
                 'translation' => 'contact.contacts.lastName',
-                'default' => true,
+                'display' => PropertyMetadata::DISPLAY_ALWAYS,
             ],
             $result->propertyMetadata['lastName']
+        );
+    }
+
+    public function testLoadMetadataFromFileInputType()
+    {
+        $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
+        $result = $this->loadMetadataFromFile($driver, 'filter-type');
+
+        $this->assertInstanceOf(ClassMetadata::class, $result);
+        $this->assertEquals('stdClass', $result->name);
+        $this->assertCount(1, $result->propertyMetadata);
+
+        $this->assertEquals(
+            ['tags'],
+            array_keys($result->propertyMetadata)
+        );
+
+        $this->assertMetadata(
+            [
+                'name' => 'tags',
+                'translation' => 'Tags',
+                'filter-type' => 'test-input',
+            ],
+            $result->propertyMetadata['tags']
+        );
+    }
+
+    public function testLoadMetadataFromFileParameters()
+    {
+        $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
+        $result = $this->loadMetadataFromFile($driver, 'filter-type-parameters');
+
+        $this->assertInstanceOf(ClassMetadata::class, $result);
+        $this->assertEquals('stdClass', $result->name);
+        $this->assertCount(1, $result->propertyMetadata);
+
+        $this->assertEquals(
+            ['tags'],
+            array_keys($result->propertyMetadata)
+        );
+
+        $this->assertMetadata(
+            [
+                'name' => 'tags',
+                'translation' => 'Tags',
+                'filter-type' => 'test-input',
+                'filter-type-parameters' => [
+                    'test1' => 'test-value',
+                    'test2' => 'test',
+                ],
+            ],
+            $result->propertyMetadata['tags']
+        );
+    }
+
+    public function testLoadMetadataFromFileNoInputType()
+    {
+        $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
+        $result = $this->loadMetadataFromFile($driver, 'filter-type-no-input');
+
+        $this->assertInstanceOf(ClassMetadata::class, $result);
+        $this->assertEquals('stdClass', $result->name);
+        $this->assertCount(1, $result->propertyMetadata);
+
+        $this->assertEquals(
+            ['tags'],
+            array_keys($result->propertyMetadata)
+        );
+
+        $this->assertMetadata(
+            [
+                'name' => 'tags',
+                'translation' => 'Tags',
+                'filter-type' => null,
+                'filter-type-parameters' => [
+                    'test1' => 'test-value',
+                    'test2' => 'test',
+                ],
+            ],
+            $result->propertyMetadata['tags']
         );
     }
 
@@ -154,14 +244,15 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
                 'instance' => PropertyMetadata::class,
                 'name' => null,
                 'translation' => null,
-                'disabled' => false,
-                'default' => false,
+                'display' => PropertyMetadata::DISPLAY_NO,
                 'type' => 'string',
                 'width' => '',
                 'minWidth' => '',
                 'sortable' => true,
                 'editable' => false,
                 'class' => '',
+                'filter-type' => null,
+                'filter-type-parameters' => [],
             ],
             $expected
         );
@@ -169,8 +260,10 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf($expected['instance'], $metadata);
         $this->assertEquals($expected['name'], $metadata->getName());
         $this->assertEquals($expected['translation'], $metadata->getTranslation());
-        $this->assertEquals($expected['disabled'], $metadata->isDisabled());
-        $this->assertEquals($expected['default'], $metadata->isDefault());
+        $this->assertEquals($expected['filter-type'], $metadata->getFilterType());
+        $this->assertEquals($expected['filter-type-parameters'], $metadata->getFilterTypeParameters());
+        $this->assertEquals($expected['display'], $metadata->getDisplay());
+
         $this->assertEquals($expected['type'], $metadata->getType());
         $this->assertEquals($expected['width'], $metadata->getWidth());
         $this->assertEquals($expected['minWidth'], $metadata->getMinWidth());

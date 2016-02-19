@@ -18,10 +18,19 @@
             <xs:element type="propertyType" name="property" maxOccurs="unbounded" minOccurs="0"/>
             <xs:element type="concatenationPropertyType" name="concatenation-property" maxOccurs="unbounded"
                         minOccurs="0"/>
+            <xs:element type="groupConcatPropertyType" name="group-concat-property" maxOccurs="unbounded"
+                        minOccurs="0"/>
+            <xs:element type="identityPropertyType" name="identity-property" maxOccurs="unbounded"
+                        minOccurs="0"/>
         </xs:sequence>
     </xs:group>
 
     <xs:complexType name="propertyType">
+        <xs:group ref="propertyGroup"/>
+        <xs:attributeGroup ref="propertyAttributeGroup"/>
+    </xs:complexType>
+
+    <xs:complexType name="identityPropertyType">
         <xs:group ref="propertyGroup"/>
         <xs:attributeGroup ref="propertyAttributeGroup"/>
     </xs:complexType>
@@ -35,8 +44,15 @@
         <xs:attributeGroup ref="propertyAttributeGroup"/>
     </xs:complexType>
 
+    <xs:complexType name="groupConcatPropertyType">
+        <xs:group ref="propertyGroup"/>
+        <xs:attributeGroup ref="propertyAttributeGroup"/>
+    </xs:complexType>
+
     <xs:group name="propertyGroup">
         <xs:sequence>
+            <xs:element name="filter-type-parameters" type="parametersType"/>
+
             <xs:any minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:group>
@@ -52,18 +68,30 @@
 
     <xs:attributeGroup name="propertyAttributeGroup">
         <xs:attribute type="xs:string" name="name" use="required"/>
-        <xs:attribute type="xs:string" name="translation"/>
-        <xs:attribute type="xs:boolean" name="disabled" default="false"/>
-        <xs:attribute type="xs:boolean" name="default" default="false"/>
-        <xs:attribute type="xs:string" name="type" default="string"/>
-        <xs:attribute type="xs:string" name="width"/>
-        <xs:attribute type="xs:string" name="min-width"/>
-        <xs:attribute type="xs:boolean" name="sortable" default="true"/>
-        <xs:attribute type="xs:boolean" name="editable" default="false"/>
-        <xs:attribute type="xs:string" name="css-class"/>
+        <xs:attribute name="filter-type" type="xs:string"/>
+        <xs:attribute type="xs:string" name="display">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="yes" />
+                    <xs:enumeration value="no" />
+                    <xs:enumeration value="always" />
+                    <xs:enumeration value="none" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
 
         <xs:anyAttribute/>
     </xs:attributeGroup>
+
+    <xs:complexType name="parametersType">
+        <xs:sequence>
+            <xs:element type="parameterType" name="parameter"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="parameterType">
+        <xs:attribute name="key" type="xs:string"/>
+    </xs:complexType>
 
     <xs:element name="class" type="classType"/>
 </xs:schema>

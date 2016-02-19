@@ -17,20 +17,20 @@ use Metadata\PropertyMetadata as BasePropertyMetadata;
  */
 class PropertyMetadata extends BasePropertyMetadata
 {
+    const DISPLAY_ALWAYS = 'always';
+    const DISPLAY_NEVER = 'never';
+    const DISPLAY_YES = 'yes';
+    const DISPLAY_NO = 'no';
+
     /**
      * @var string
      */
     private $translation;
 
     /**
-     * @var bool
+     * @var string
      */
-    private $disabled = false;
-
-    /**
-     * @var bool
-     */
-    private $default = false;
+    private $display = self::DISPLAY_NO;
 
     /**
      * @var string
@@ -61,6 +61,16 @@ class PropertyMetadata extends BasePropertyMetadata
      * @var string
      */
     private $cssClass = '';
+
+    /**
+     * @var string
+     */
+    private $filterType;
+
+    /**
+     * @var array
+     */
+    private $filterTypeParameters = [];
 
     public function __construct($class, $name)
     {
@@ -96,35 +106,19 @@ class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
-     * @return boolean
+     * @return string
      */
-    public function isDisabled()
+    public function getDisplay()
     {
-        return $this->disabled;
+        return $this->display;
     }
 
     /**
-     * @param boolean $disabled
+     * @param string $display
      */
-    public function setDisabled($disabled)
+    public function setDisplay($display)
     {
-        $this->disabled = $disabled;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isDefault()
-    {
-        return $this->default;
-    }
-
-    /**
-     * @param boolean $default
-     */
-    public function setDefault($default)
-    {
-        $this->default = $default;
+        $this->display = $display;
     }
 
     /**
@@ -224,6 +218,38 @@ class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
+     * @return string
+     */
+    public function getFilterType()
+    {
+        return $this->filterType;
+    }
+
+    /**
+     * @param string $filterType
+     */
+    public function setFilterType($filterType)
+    {
+        $this->filterType = $filterType;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFilterTypeParameters()
+    {
+        return $this->filterTypeParameters;
+    }
+
+    /**
+     * @param array $parameters
+     */
+    public function setFilterTypeParameters($parameters)
+    {
+        $this->filterTypeParameters = $parameters;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function serialize()
@@ -233,14 +259,15 @@ class PropertyMetadata extends BasePropertyMetadata
                 $this->class,
                 $this->name,
                 $this->translation,
-                $this->disabled,
-                $this->default,
+                $this->display,
                 $this->type,
                 $this->width,
                 $this->minWidth,
                 $this->sortable,
                 $this->editable,
                 $this->cssClass,
+                $this->filterType,
+                $this->filterTypeParameters,
             ]
         );
     }
@@ -254,14 +281,15 @@ class PropertyMetadata extends BasePropertyMetadata
             $this->class,
             $this->name,
             $this->translation,
-            $this->disabled,
-            $this->default,
+            $this->display,
             $this->type,
             $this->width,
             $this->minWidth,
             $this->sortable,
             $this->editable,
             $this->cssClass,
+            $this->filterType,
+            $this->filterTypeParameters,
             ) = unserialize($str);
     }
 }
