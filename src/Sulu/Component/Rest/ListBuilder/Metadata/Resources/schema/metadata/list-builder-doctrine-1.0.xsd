@@ -6,7 +6,7 @@
             <xs:element type="xs:string" name="field-name"/>
             <xs:element type="xs:string" name="entity-name"/>
 
-            <xs:element type="joinType" name="join" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="joinsType" name="joins" maxOccurs="unbounded" minOccurs="0"/>
         </xs:sequence>
 
         <xs:attribute name="name" type="xs:string"/>

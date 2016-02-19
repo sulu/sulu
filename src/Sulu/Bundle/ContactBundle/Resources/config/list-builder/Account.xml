@@ -1,0 +1,165 @@
+<class xmlns="http://schemas.sulu.io/class/general"
+       xmlns:orm="http://schemas.sulu.io/class/doctrine"
+       xmlns:list="http://schemas.sulu.io/class/list">
+
+    <orm:joins name="address">
+        <orm:join>
+            <orm:entity-name>SuluContactBundle:AccountAddress</orm:entity-name>
+            <orm:field-name>%sulu_contact.account.entity%.accountAddresses</orm:field-name>
+            <orm:method>LEFT</orm:method>
+            <orm:condition>SuluContactBundle:AccountAddress.main = TRUE</orm:condition>
+        </orm:join>
+        <orm:join>
+            <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
+            <orm:field-name>SuluContactBundle:AccountAddress.address</orm:field-name>
+        </orm:join>
+    </orm:joins>
+
+    <orm:joins name="mainContact">
+        <orm:join>
+            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+            <orm:field-name>%sulu_contact.account.entity%.mainContact</orm:field-name>
+        </orm:join>
+    </orm:joins>
+
+    <properties>
+        <property name="logo" display="always"
+                  list:translation="public.logo" list:type="thumbnails" list:sortable="false">
+            <orm:field-name>id</orm:field-name>
+            <orm:entity-name>SuluMediaBundle:Media</orm:entity-name>
+
+            <orm:joins>
+                <orm:join>
+                    <orm:entity-name>SuluMediaBundle:Media</orm:entity-name>
+                    <orm:field-name>%sulu_contact.account.entity%.logo</orm:field-name>
+                </orm:join>
+            </orm:joins>
+        </property>
+
+        <property name="number" filter-type="string"
+                  list:translation="contact.accounts.number" list:width="90px">
+            <orm:field-name>number</orm:field-name>
+            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+        </property>
+
+        <property name="name" display="always" filter-type="string"
+                  list:translation="public.name" list:width="300px">
+            <orm:field-name>name</orm:field-name>
+            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+        </property>
+
+        <property name="corporation" filter-type="string"
+                  list:translation="contact.accounts.corporation">
+            <orm:field-name>corporation</orm:field-name>
+            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+        </property>
+
+        <property name="city" filter-type="string" display="always"
+                  list:translation="contact.address.city">
+            <orm:field-name>city</orm:field-name>
+            <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
+
+            <orm:joins ref="address"/>
+        </property>
+
+        <property name="zip" filter-type="string" display="no"
+                  list:translation="contact.address.zip">
+            <orm:field-name>zip</orm:field-name>
+            <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
+
+            <orm:joins ref="address"/>
+        </property>
+
+        <property name="state" filter-type="string" display="no"
+                  list:translation="contact.address.state">
+            <orm:field-name>state</orm:field-name>
+            <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
+
+            <orm:joins ref="address"/>
+        </property>
+
+        <property name="countryCode" filter-type="string" display="always"
+                  list:translation="contact.address.countryCode">
+            <orm:field-name>code</orm:field-name>
+            <orm:entity-name>SuluContactBundle:Country</orm:entity-name>
+
+            <orm:joins ref="address">
+                <orm:join>
+                    <orm:entity-name>SuluContactBundle:Country</orm:entity-name>
+                    <orm:field-name>SuluContactBundle:Address.country</orm:field-name>
+                </orm:join>
+            </orm:joins>
+        </property>
+        
+        <concatenation-property name="mainContact" filter-type="string"
+                                list:translation="contact.contacts.main-contact" list:sortable="false"
+                                list:width="200px"
+                                orm:glue=" ">
+            <orm:field>
+                <orm:field-name>firstName</orm:field-name>
+                <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+
+                <orm:joins ref="accountContact"/>
+            </orm:field>
+
+            <orm:field>
+                <orm:field-name>lastName</orm:field-name>
+                <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+
+                <orm:joins ref="mainContact"/>
+            </orm:field>
+        </concatenation-property>
+
+        <property name="mainPhone" filter-type="string" list:translation="public.phone">
+            <orm:field-name>mainPhone</orm:field-name>
+            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+        </property>
+
+        <property name="mainEmail" display="always" filter-type="string" list:translation="public.email">
+            <orm:field-name>mainEmail</orm:field-name>
+            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+        </property>
+
+        <property name="mainFax" filter-type="string" list:translation="public.fax">
+            <orm:field-name>mainFax</orm:field-name>
+            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+        </property>
+
+        <property name="mainUrl" filter-type="string" list:translation="public.url">
+            <orm:field-name>mainUrl</orm:field-name>
+            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+        </property>
+
+        <property name="created" filter-type="datetime" list:translation="public.created" list:type="datetime">
+            <orm:field-name>created</orm:field-name>
+            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+        </property>
+
+        <property name="changed" filter-type="datetime" list:translation="public.changed" list:type="datetime">
+            <orm:field-name>changed</orm:field-name>
+            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+        </property>
+
+        <property name="id" filter-type="integer" list:translation="public.id" list:type="integer">
+            <orm:field-name>id</orm:field-name>
+            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+        </property>
+
+        <property name="uid" filter-type="string" list:translation="contact.accounts.uid" list:type="integer">
+            <orm:field-name>uid</orm:field-name>
+            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+        </property>
+
+        <property name="registerNumber" filter-type="string"
+                  list:translation="contact.accounts.registerNumber" list:type="string">
+            <orm:field-name>registerNumber</orm:field-name>
+            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+        </property>
+
+        <property name="placeOfJurisdiction" filter-type="string"
+                  list:translation="contact.accounts.placeOfJurisdiction" list:type="string">
+            <orm:field-name>placeOfJurisdiction</orm:field-name>
+            <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
+        </property>
+    </properties>
+</class>
