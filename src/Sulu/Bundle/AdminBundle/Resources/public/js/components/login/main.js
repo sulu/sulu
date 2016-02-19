@@ -418,7 +418,6 @@ define([], function() {
          */
         bindLoginDomEvents: function() {
             this.sandbox.dom.on(this.dom.$loginForm, 'submit', this.loginFormSubmitHandler.bind(this));
-            this.sandbox.dom.on(this.dom.$loginForm, 'keydown', this.inputFormKeyHandler.bind(this, this.dom.$loginFrame));
             this.sandbox.dom.on(this.dom.$forgotPasswordSwitch, 'click', this.moveToForgotPasswordFrame.bind(this));
             this.sandbox.dom.on(this.dom.$loginButton, 'click', this.loginButtonClickHandler.bind(this));
 
