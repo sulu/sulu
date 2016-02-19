@@ -9,6 +9,7 @@ CHANGELOG for Sulu
     * HOTFIX      #1991 [Rest]              Added metadata for field-descriptors
     * BUGFIX      #1944 [MediaBundle]       Removed wrong definition of indices
     * HOTFIX      #2011 [AdminBundle]       Fixed double handling of login via enter
+    * HOTFIX      #2023 [SecurityBundle]    Set the user language for requests in backend
     
 * 1.1.9 (2016-02-05)
     * ENHANCEMENT #1978 [SecurityBundle]    Made url for resetting password configurable via static variable
