@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2024 [ContactBundle]     Fixed account add-contact-overlay enter bug and search for e-mail
     * HOTFIX      #2000 [Filter]            Added filter metadata and new filter input types (tags, auto-complete)
     * ENHANCEMENT #2016 [AdminBundle]       Added loader to indicate loading suggestions
     * HOTFIX      #2002 [MediaBundle]       Fixed retina height for image scale command

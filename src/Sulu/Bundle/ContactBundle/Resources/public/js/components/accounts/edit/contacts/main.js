@@ -251,17 +251,20 @@ define([
         addContactRelation = function() {
             var contactInput = this.sandbox.dom.find(constants.contactSelector + ' input', constants.relationFormSelector),
                 id = this.sandbox.dom.data(contactInput, 'id');
-            if (!!id) {
-                AccountManager.addAccountContact(this.data.id, id, this.companyPosition)
-                    .then(function(response) {
-                        ContactManager.loadOrNew(id).then(function(contact) {
-                            if (response.position) {
-                                contact.position = response.position;
-                            }
-                            this.sandbox.emit('husky.datagrid.record.add', contact);
-                        }.bind(this));
-                    }.bind(this));
+
+            if (!id) {
+                return false;
             }
+
+            AccountManager.addAccountContact(this.data.id, id, this.companyPosition)
+                .then(function(response) {
+                    ContactManager.loadOrNew(id).then(function(contact) {
+                        if (response.position) {
+                            contact.position = response.position;
+                        }
+                        this.sandbox.emit('husky.datagrid.record.add', contact);
+                    }.bind(this));
+                }.bind(this));
         };
 
     return {
