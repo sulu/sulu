@@ -53,6 +53,7 @@ class StructureProvider implements ReIndexProviderInterface
     public function getCount($classFqn)
     {
         $query = $this->getQuery($classFqn);
+
         return count($query->execute());
     }
 
