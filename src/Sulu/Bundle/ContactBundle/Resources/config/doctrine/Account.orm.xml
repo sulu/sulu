@@ -6,6 +6,10 @@
 
     <entity name="Sulu\Bundle\ContactBundle\Entity\Account" table="co_accounts"
             repository-class="Sulu\Bundle\ContactBundle\Entity\AccountRepository">
+        <indexes>
+            <index columns="name"/>
+        </indexes>
+
         <field name="lft" type="integer" column="lft">
             <gedmo:tree-left/>
         </field>

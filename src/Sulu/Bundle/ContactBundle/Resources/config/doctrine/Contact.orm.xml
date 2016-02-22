@@ -5,6 +5,10 @@
 
     <mapped-superclass name="Sulu\Bundle\ContactBundle\Entity\Contact" table="co_contacts"
             repository-class="Sulu\Bundle\ContactBundle\Entity\ContactRepository">
+        <indexes>
+            <index columns="firstName"/>
+            <index columns="lastName"/>
+        </indexes>
 
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
