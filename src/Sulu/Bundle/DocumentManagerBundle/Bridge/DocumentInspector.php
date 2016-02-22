@@ -331,7 +331,7 @@ class DocumentInspector extends BaseDocumentInspector
     {
         $match = preg_match(
             sprintf(
-                '/^\/%s\/([\w\.]*?)\/.*$/',
+                '/^\/%s\/([\w\.-]*?)\/.*$/',
                 $this->pathSegmentRegistry->getPathSegment('base')
             ),
             $path,

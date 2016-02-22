@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2014 [Content]             Allow `-` in webspace name.
     * ENHANCEMENT #1999 [SnippetBundle]       Snippet controller now uses DocumentManager and Serializer.
     * ENHANCEMENT #2008 [ContactBundle]       Fixed sorting in contact selection content type
     * FEATURE     #2001 [MediaBundle]         Clear local image cache via cache clear service and command
