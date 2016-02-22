@@ -11,6 +11,7 @@ CHANGELOG for Sulu
     * HOTFIX      #2058 [ListBuilder]       Fixed cache for field-descriptor
     * HOTFIX      #2024 [ContactBundle]     Fixed account add-contact-overlay enter bug and search for e-mail
     * HOTFIX      #2020 [ContactBundle]     Added account metadata
+    * HOTFIX      #2029 [WebsiteBundle]     Fixed hreflang tag with one translation and different schemas
     * HOTFIX      #2000 [Filter]            Added filter metadata and new filter input types (tags, auto-complete)
     * ENHANCEMENT #2016 [AdminBundle]       Added loader to indicate loading suggestions
     * HOTFIX      #2002 [MediaBundle]       Fixed retina height for image scale command
