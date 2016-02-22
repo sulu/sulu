@@ -4,10 +4,11 @@ namespace Sulu\Bundle\ContentBundle\Search\ReIndex;
 
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Massive\Bundle\SearchBundle\Search\ReIndex\ReIndexProviderInterface;
+use Massive\Bundle\SearchBundle\Search\ReIndex\LocalizedReIndexProviderInterface;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
+use Sulu\Component\DocumentManager\DocumentInspector;
 
-class StructureProvider implements ReIndexProviderInterface
+class StructureProvider implements LocalizedReIndexProviderInterface
 {
     /**
      * @var MetadataFactoryInterface
@@ -24,15 +25,38 @@ class StructureProvider implements ReIndexProviderInterface
      */
     private $structureFactory;
 
+    /**
+     * @var DocumentInspector
+     */
+    private $inspector;
+
     public function __construct(
         DocumentManagerInterface $documentManager,
         MetadataFactoryInterface $metadataFactory,
-        StructureMetadataFactoryInterface $structureFactory
+        StructureMetadataFactoryInterface $structureFactory,
+        DocumentInspector $inspector
     )
     {
         $this->documentManager = $documentManager;
         $this->metadataFactory = $metadataFactory;
         $this->structureFactory = $structureFactory;
+        $this->inspector = $inspector;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLocalesForObject($object)
+    {
+        return $this->inspector->getLocales($object);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function translateObject($object, $locale)
+    {
+        return $this->documentManager->find($this->inspector->getUuid($object), $locale);
     }
 
     /**

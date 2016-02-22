@@ -18,33 +18,64 @@ use Sulu\Component\DocumentManager\Query\Query;
 use Prophecy\Argument;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Bundle\ContentBundle\Search\ReIndex\StructureProvider;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 
 
 class StructureProviderTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var LocalizedReIndexProviderInterface
+     */
     private $provider;
+
+    /**
+     * @var DocumentManager
+     */
     private $documentManager;
+
+    /**
+     * @var MetadataFactoryInterface
+     */
     private $metadataFactory;
+
+    /**
+     * @var StructureMetadataFactoryInterface
+     */
     private $structureFactory;
+
+    /**
+     * @var Query
+     */
     private $query;
+
+    /**
+     * @var Metadata
+     */
     private $metadata1;
-    private $metadata2;
+
+    /**
+     * @var StructureBehavior
+     */
+    private $structure;
 
     public function setUp()
     {
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
         $this->metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $this->structureFactory = $this->prophesize(StructureMetadataFactoryInterface::class);
+        $this->inspector = $this->prophesize(DocumentInspector::class);
 
         $this->provider = new StructureProvider(
             $this->documentManager->reveal(),
             $this->metadataFactory->reveal(),
-            $this->structureFactory->reveal()
+            $this->structureFactory->reveal(),
+            $this->inspector->reveal()
         );
 
         $this->query = $this->prophesize(Query::class);
         $this->metadata1 = $this->prophesize(Metadata::class);
-        $this->metadata2 = $this->prophesize(Metadata::class);
+        $this->structure = $this->prophesize(StructureBehavior::class);
     }
 
     /**
@@ -97,7 +128,6 @@ class StructureProviderTest extends \PHPUnit_Framework_TestCase
     public function testClassFqnsNoStructure()
     {
         $alias = 'a';
-        $class = 'Foo';
 
         $this->metadataFactory->getAllMetadata()->willReturn([
             $this->metadata1->reveal()
@@ -129,5 +159,32 @@ class StructureProviderTest extends \PHPUnit_Framework_TestCase
         $count = $this->provider->getCount($class);
 
         $this->assertEquals(count($objects), $count);
+    }
+
+    /**
+     * It should get the locales for a given document.
+     */
+    public function testGetLocales()
+    {
+        $locales = array('de', 'fr');
+        $this->inspector->getLocales($this->structure->reveal())->willReturn($locales);
+
+        $result = $this->provider->getLocalesForObject($this->structure->reveal());
+        $this->assertEquals($locales, $result);
+    }
+
+    /**
+     * It should translate a given object.
+     */
+    public function testTranslate()
+    {
+        $locale = 'de';
+        $uuid = '1234';
+        $this->inspector->getUuid($this->structure->reveal())->willReturn($uuid);
+        $this->documentManager->find($uuid, $locale)->willReturn($this->structure->reveal());
+
+        $translated = $this->provider->translateObject($this->structure->reveal(), $locale);
+
+        $this->assertSame($this->structure->reveal(), $translated);
     }
 }
