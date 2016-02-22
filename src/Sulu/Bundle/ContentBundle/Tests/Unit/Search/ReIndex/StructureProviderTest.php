@@ -9,18 +9,18 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Search\EventSubscriber;
+namespace Sulu\Bundle\ContentBundle\Tests\Unit\Search\ReIndex;
 
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
-use Sulu\Component\DocumentManager\MetadataFactoryInterface;
-use Sulu\Component\DocumentManager\Query\Query;
 use Prophecy\Argument;
-use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Bundle\ContentBundle\Search\ReIndex\StructureProvider;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
-
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\DocumentManager\Metadata;
+use Sulu\Component\DocumentManager\MetadataFactoryInterface;
+use Sulu\Component\DocumentManager\Query\Query;
 
 class StructureProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -76,6 +76,8 @@ class StructureProviderTest extends \PHPUnit_Framework_TestCase
         $this->query = $this->prophesize(Query::class);
         $this->metadata1 = $this->prophesize(Metadata::class);
         $this->structure = $this->prophesize(StructureBehavior::class);
+        $this->secureStructure = $this->prophesize(StructureBehavior::class)
+            ->willImplement(SecurityBehavior::class);
     }
 
     /**
@@ -103,7 +105,7 @@ class StructureProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should provide all the class FQNs
+     * It should provide all the class FQNs.
      */
     public function testClassFqns()
     {
@@ -111,7 +113,7 @@ class StructureProviderTest extends \PHPUnit_Framework_TestCase
         $class = 'Foo';
 
         $this->metadataFactory->getAllMetadata()->willReturn([
-            $this->metadata1->reveal()
+            $this->metadata1->reveal(),
         ]);
         $this->metadata1->getAlias()->willReturn($alias);
         $this->structureFactory->hasStructuresFor($alias)->willReturn(true);
@@ -130,7 +132,7 @@ class StructureProviderTest extends \PHPUnit_Framework_TestCase
         $alias = 'a';
 
         $this->metadataFactory->getAllMetadata()->willReturn([
-            $this->metadata1->reveal()
+            $this->metadata1->reveal(),
         ]);
         $this->metadata1->getAlias()->willReturn($alias);
         $this->structureFactory->hasStructuresFor($alias)->willReturn(false);
@@ -166,7 +168,7 @@ class StructureProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetLocales()
     {
-        $locales = array('de', 'fr');
+        $locales = ['de', 'fr'];
         $this->inspector->getLocales($this->structure->reveal())->willReturn($locales);
 
         $result = $this->provider->getLocalesForObject($this->structure->reveal());
@@ -186,5 +188,37 @@ class StructureProviderTest extends \PHPUnit_Framework_TestCase
         $translated = $this->provider->translateObject($this->structure->reveal(), $locale);
 
         $this->assertSame($this->structure->reveal(), $translated);
+    }
+
+    /**
+     * It should not index secure documents which have permissions.
+     */
+    public function testSecureDocuments()
+    {
+        $classFqn = 'Foo';
+        $offset = 0;
+        $maxResults = 50;
+        $objects = [
+            $this->structure->reveal(),
+            $this->secureStructure->reveal(),
+            $this->structure->reveal(),
+        ];
+
+        $this->metadataFactory->getMetadataForClass($classFqn)->willReturn(
+            $this->metadata1->reveal()
+        );
+        $this->documentManager->createQuery(Argument::type('string'))->willReturn(
+            $this->query->reveal()
+        );
+        $this->query->setFirstResult($offset)->shouldBeCalled();
+        $this->query->setMaxResults($maxResults)->shouldBeCalled();
+        $this->query->execute()->willReturn($objects);
+        $this->secureStructure->getPermissions()->willReturn(['one']);
+
+        $results = $this->provider->provide($classFqn, $offset, $maxResults);
+        $this->assertEquals([
+            $this->structure->reveal(),
+            $this->structure->reveal(),
+        ], $results);
     }
 }

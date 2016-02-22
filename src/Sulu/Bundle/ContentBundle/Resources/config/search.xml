@@ -7,7 +7,6 @@
         <parameter key="sulu_content.search.metadata.provider.structure.class">Sulu\Bundle\ContentBundle\Search\Metadata\StructureProvider</parameter>
         <parameter key="sulu_content.search.event_subscriber.blame_timestamp.class">Sulu\Bundle\ContentBundle\Search\EventSubscriber\BlameTimestampSubscriber</parameter>
         <parameter key="sulu_content.search.event_subscriber.structure.class">Sulu\Bundle\ContentBundle\Search\EventSubscriber\StructureSubscriber</parameter>
-        <parameter key="sulu_content.search.event_listener.reindex.class">Sulu\Bundle\ContentBundle\Search\EventListener\ReindexListener</parameter>
         <parameter key="sulu_search.event_listener.hit.class">Sulu\Bundle\ContentBundle\Search\EventListener\HitListener</parameter>
     </parameters>
 
