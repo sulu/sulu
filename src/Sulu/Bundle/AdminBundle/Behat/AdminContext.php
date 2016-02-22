@@ -79,6 +79,14 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
     }
 
     /**
+     * @Given I click the link icon
+     */
+    public function iClickOnTheLinkIcon()
+    {
+        $this->clickSelector('.fa-link');
+    }
+
+    /**
      * @Given I click the ok button
      */
     public function iClickOnTheOkButton()
