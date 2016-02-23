@@ -12,6 +12,8 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Controller;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use PHPCR\ImportUUIDBehaviorInterface;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
@@ -56,21 +58,29 @@ class NodeControllerTest extends SuluTestCase
         $this->purgeDatabase();
 
         $tag1 = new Tag();
+
+        $metadata = $this->em->getClassMetaData(get_class($tag1));
+        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+
+        $tag1->setId(1);
         $tag1->setName('tag1');
         $this->em->persist($tag1);
         $this->em->flush();
 
         $tag2 = new Tag();
+        $tag2->setId(2);
         $tag2->setName('tag2');
         $this->em->persist($tag2);
         $this->em->flush();
 
         $tag3 = new Tag();
+        $tag3->setId(3);
         $tag3->setName('tag3');
         $this->em->persist($tag3);
         $this->em->flush();
 
         $tag4 = new Tag();
+        $tag4->setId(4);
         $tag4->setName('tag4');
         $this->em->persist($tag4);
         $this->em->flush();
@@ -801,11 +811,30 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals(1, $response['nodeState']);
     }
 
+    private function import($file)
+    {
+        if ($this->session->getRootNode()->hasNode('cmf')) {
+            $this->session->getNode('/cmf')->remove();
+            $this->session->save();
+        }
+
+        $this->session->importXML(
+            '/',
+            __DIR__ . '/../../app/Resources/exports/' . $file . '.xml',
+            ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REPLACE_EXISTING
+        );
+        $this->session->save();
+    }
+
     private function buildTree()
     {
-        $data = [
+        $this->import('tree-dump');
+
+        return [
             [
+                'id' => 'e37fde9c-af7c-4132-b398-de8eef135d71',
                 'title' => 'test1',
+                'path' => '/test1',
                 'template' => 'default',
                 'url' => '/test1',
                 'article' => 'Test',
@@ -818,7 +847,9 @@ class NodeControllerTest extends SuluTestCase
                 ],
             ],
             [
+                'id' => '585ccd35-a98e-4e41-a62c-e502ca905496',
                 'title' => 'test2',
+                'path' => '/test2',
                 'template' => 'default',
                 'url' => '/test2',
                 'article' => 'Test',
@@ -831,7 +862,9 @@ class NodeControllerTest extends SuluTestCase
                 ],
             ],
             [
+                'id' => '5778b19f-460a-47fc-93da-9a6126e5c384',
                 'title' => 'test3',
+                'path' => '/test2/test3',
                 'template' => 'default',
                 'url' => '/test3',
                 'article' => 'Test',
@@ -845,7 +878,9 @@ class NodeControllerTest extends SuluTestCase
                 ],
             ],
             [
+                'id' => '3caed1fb-dde2-480d-8a1d-c4db1f10b24e',
                 'title' => 'test4',
+                'path' => '/test2/test4',
                 'template' => 'default',
                 'url' => '/test4',
                 'article' => 'Test',
@@ -858,7 +893,9 @@ class NodeControllerTest extends SuluTestCase
                 ],
             ],
             [
+                'id' => '84c2465c-f997-4c5b-9e9d-fb9b72232f0b',
                 'title' => 'test5',
+                'path' => '/test2',
                 'template' => 'default',
                 'url' => '/test5',
                 'article' => 'Test',
@@ -872,64 +909,6 @@ class NodeControllerTest extends SuluTestCase
                 ],
             ],
         ];
-
-        $client = $this->createAuthenticatedClient();
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data[0]);
-        $data[0] = (array) json_decode($client->getResponse()->getContent(), true);
-
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data[1]);
-        $data[1] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request(
-            'POST',
-            '/api/nodes?webspace=sulu_io&language=en&parent=' . $data[1]['id'],
-            $data[2]
-        );
-        $data[2] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request(
-            'POST',
-            '/api/nodes?webspace=sulu_io&language=en&parent=' . $data[1]['id'],
-            $data[3]
-        );
-        $data[3] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request(
-            'POST',
-            '/api/nodes?webspace=sulu_io&language=en&parent=' . $data[3]['id'],
-            $data[4]
-        );
-        $data[4] = (array) json_decode($client->getResponse()->getContent(), true);
-
-        $client->request(
-            'PUT',
-            '/api/nodes/' . $data[0]['id'] . '?state=2&webspace=sulu_io&language=en',
-            $data[0]
-        );
-        $data[0] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request(
-            'PUT',
-            '/api/nodes/' . $data[1]['id'] . '?state=2&webspace=sulu_io&language=en',
-            $data[1]
-        );
-        $data[1] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request(
-            'PUT',
-            '/api/nodes/' . $data[2]['id'] . '?state=2&webspace=sulu_io&language=en',
-            $data[2]
-        );
-        $data[2] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request(
-            'PUT',
-            '/api/nodes/' . $data[3]['id'] . '?state=2&webspace=sulu_io&language=en',
-            $data[3]
-        );
-        $data[3] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request(
-            'PUT',
-            '/api/nodes/' . $data[4]['id'] . '?state=2&webspace=sulu_io&language=en',
-            $data[4]
-        );
-        $data[4] = (array) json_decode($client->getResponse()->getContent(), true);
-
-        return $data;
     }
 
     public function testTreeGet()
@@ -1508,23 +1487,12 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        // remove extension unnecessary for this test
-        unset($data[0]['ext']);
-        unset($data[0]['tags']);
-        unset($response['ext']);
-        unset($response['tags']);
-        unset($data[0]['changed']);
-        unset($data[0]['changed']);
-        unset($response['changed']);
-        unset($data[0]['linked']);
-        unset($response['linked']);
-
-        // required because the links in the old serialization process are not generated using the symfony router
-        unset($response['_links']);
-        unset($data[0]['_links']);
-        unset($data[0]['_embedded']);
-
-        $this->assertEquals($data[0], $response);
+        $this->assertEquals($data[0]['id'], $response['id']);
+        $this->assertEquals($data[0]['title'], $response['title']);
+        $this->assertEquals($data[0]['path'], $response['path']);
+        $this->assertEquals($data[0]['template'], $response['template']);
+        $this->assertEquals($data[0]['url'], $response['url']);
+        $this->assertEquals($data[0]['article'], $response['article']);
     }
 
     public function testCopyNonExistingSource()
@@ -1555,37 +1523,34 @@ class NodeControllerTest extends SuluTestCase
     {
         $data = [
             [
+                'id' => 'a405d83c-5068-4b77-a312-692cea706e36',
                 'title' => 'test1',
                 'template' => 'default',
                 'url' => '/test1',
             ],
             [
+                'id' => 'be02903e-09e8-4d87-98fa-82acd3d4d2c5',
                 'title' => 'test2',
                 'template' => 'default',
                 'url' => '/test2',
             ],
             [
+                'id' => 'dfa34d10-2be5-465a-87d9-f935be5067be',
                 'title' => 'test3',
                 'template' => 'default',
                 'url' => '/test3',
             ],
             [
+                'id' => '666af636-2ccb-4712-8547-46c2229abbdf',
                 'title' => 'test4',
                 'template' => 'default',
                 'url' => '/test4',
             ],
         ];
 
-        $client = $this->createAuthenticatedClient();
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data[0]);
-        $data[0] = json_decode($client->getResponse()->getContent(), true);
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data[1]);
-        $data[1] = json_decode($client->getResponse()->getContent(), true);
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data[2]);
-        $data[2] = json_decode($client->getResponse()->getContent(), true);
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data[3]);
-        $data[3] = json_decode($client->getResponse()->getContent(), true);
+        $this->import('order-dump');
 
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
             '/api/nodes/' . $data[1]['id'] . '?webspace=sulu_io&language=en&action=order',
