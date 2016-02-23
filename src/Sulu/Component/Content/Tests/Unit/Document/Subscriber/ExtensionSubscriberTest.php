@@ -19,6 +19,7 @@ use Sulu\Component\Content\Document\Subscriber\ExtensionSubscriber;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\DocumentManager\DocumentAccessor;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
@@ -66,19 +67,22 @@ class ExtensionSubscriberTest extends SubscriberTestCase
         $this->extension = $this->prophesize(ExtensionInterface::class);
         $this->node = $this->prophesize(NodeInterface::class);
         $this->documentAccessor = $this->prophesize(DocumentAccessor::class);
+        $this->manager = $this->prophesize(DocumentManagerInterface::class);
 
         $this->subscriber = new ExtensionSubscriber(
             $this->encoder->reveal(),
             $this->extensionManager->reveal(),
-            $this->inspector->reveal(),
             $this->namespaceRegistry->reveal()
         );
 
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
         $this->hydrateEvent->getLocale()->willReturn('de');
         $this->hydrateEvent->getAccessor()->willReturn($this->documentAccessor->reveal());
+        $this->hydrateEvent->getManager()->willReturn($this->manager->reveal());
         $this->persistEvent->getNode()->willReturn($this->node->reveal());
         $this->persistEvent->getLocale()->willReturn('de');
+        $this->persistEvent->getManager()->willReturn($this->manager->reveal());
+        $this->manager->getInspector()->willReturn($this->inspector->reveal());
     }
 
     /**

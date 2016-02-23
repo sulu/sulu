@@ -18,7 +18,7 @@ use Sulu\Component\Content\Document\Behavior\RouteBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;
 use Sulu\Component\DocumentManager\DocumentInspector;
-use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
@@ -29,17 +29,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class StructureRemoveSubscriber implements EventSubscriberInterface
 {
-    private $inspector;
-    private $documentManager;
     private $metadataFactory;
 
     public function __construct(
-        DocumentManager $documentManager,
-        DocumentInspector $inspector,
         MetadataFactoryInterface $metadataFactory
     ) {
-        $this->documentManager = $documentManager;
-        $this->inspector = $inspector;
         $this->metadataFactory = $metadataFactory;
     }
 
@@ -53,20 +47,20 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
     public function handleRemove(RemoveEvent $event)
     {
         $document = $event->getDocument();
-        $this->removeDocument($document);
+        $this->removeDocument($event->getManager(), $document);
     }
 
-    public function removeDocument($document)
+    public function removeDocument(DocumentManagerInterface $documentManager, $document)
     {
         if ($document instanceof ChildrenBehavior) {
             foreach ($document->getChildren() as $child) {
-                $this->removeDocument($child);
+                $this->removeDocument($documentManager, $child);
             }
         }
 
         if ($document instanceof StructureBehavior) {
-            $this->removeReferences($document);
-            $this->removeRoute($document);
+            $this->removeReferences($documentManager->getInspector(), $document);
+            $this->removeRoute($documentManager, $document);
         }
     }
 
@@ -75,18 +69,18 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
      *
      * @param StructureBehavior $document
      */
-    private function removeRoute(StructureBehavior $document)
+    private function removeRoute(DocumentManagerInterface $documentManager, StructureBehavior $document)
     {
-        foreach ($this->inspector->getReferrers($document) as $referrer) {
+        foreach ($documentManager->getInspector()->getReferrers($document) as $referrer) {
             if ($referrer instanceof RouteBehavior) {
-                $this->documentManager->remove($referrer);
+                $documentManager->remove($referrer);
             }
         }
     }
 
-    private function removeReferences($document)
+    private function removeReferences(DocumentInspector $inspector, $document)
     {
-        $node = $this->inspector->getNode($document);
+        $node = $inspector->getNode($document);
 
         $references = $node->getReferences();
 

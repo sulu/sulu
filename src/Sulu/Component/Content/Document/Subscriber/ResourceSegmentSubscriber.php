@@ -32,11 +32,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ResourceSegmentSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    /**
      * @var PropertyEncoder
      */
     private $encoder;
@@ -48,11 +43,9 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
 
     public function __construct(
         PropertyEncoder $encoder,
-        DocumentInspector $documentInspector,
         RlpStrategyInterface $rlpStrategy
     ) {
         $this->encoder = $encoder;
-        $this->documentInspector = $documentInspector;
         $this->rlpStrategy = $rlpStrategy;
     }
 
@@ -99,8 +92,8 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
         }
 
         $node = $event->getNode();
-        $property = $this->getResourceSegmentProperty($document);
-        $originalLocale = $this->documentInspector->getOriginalLocale($document);
+        $property = $this->getResourceSegmentProperty($event->getManager()->getInspector(), $document);
+        $originalLocale = $event->getManager()->getInspector()->getOriginalLocale($document);
         $segment = $node->getPropertyValueWithDefault(
             $this->encoder->localizedSystemName(
                 $property->getName(),
@@ -126,7 +119,7 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $property = $this->getResourceSegmentProperty($document);
+        $property = $this->getResourceSegmentProperty($event->getManager()->getInspector(), $document);
         $this->persistDocument($document, $property);
     }
 
@@ -166,9 +159,9 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
      *
      * @return PropertyMetadata
      */
-    private function getResourceSegmentProperty($document)
+    private function getResourceSegmentProperty(DocumentInspector $inspector, $document)
     {
-        $structure = $this->documentInspector->getStructureMetadata($document);
+        $structure = $inspector->getStructureMetadata($document);
         $property = $structure->getPropertyByTagName('sulu.rlp');
 
         if (!$property) {

@@ -80,8 +80,6 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
 
         $this->subscriber = new FallbackLocalizationSubscriber(
             $this->encoder->reveal(),
-            $this->inspector->reveal(),
-            $this->registry->reveal(),
             new LocalizationFinder($this->webspaceManager->reveal())
         );
 
@@ -90,6 +88,9 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
         $this->hydrateEvent->getLocale()->willReturn(self::FIX_LOCALE);
         $this->webspaceManager->findWebspaceByKey(self::FIX_WEBSPACE)->willReturn($this->webspace);
         $this->registry->getDefaultLocale()->willReturn('de');
+
+        $this->manager->getInspector()->willReturn($this->inspector->reveal());
+        $this->manager->getRegistry()->willReturn($this->registry->reveal());
     }
 
     /**

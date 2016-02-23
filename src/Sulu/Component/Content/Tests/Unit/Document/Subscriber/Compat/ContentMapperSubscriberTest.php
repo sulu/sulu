@@ -21,6 +21,7 @@ use Sulu\Component\Content\Mapper\ContentEvents;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent;
 use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\FlushEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
@@ -67,9 +68,10 @@ class ContentMapperSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->contentMapper = $this->prophesize(ContentMapperInterface::class);
         $this->nodeHelper = $this->prophesize(SuluNodeHelper::class);
         $this->structureManager = $this->prophesize(StructureManager::class);
+        $this->manager = $this->prophesize(DocumentManagerInterface::class);
+        $this->manager->getInspector()->willReturn($this->documentInspector->reveal());
 
         $this->contentMapperSubscriber = new ContentMapperSubscriber(
-            $this->documentInspector->reveal(),
             $this->eventDispatcher->reveal(),
             $this->contentMapper->reveal(),
             $this->nodeHelper->reveal(),
@@ -87,12 +89,12 @@ class ContentMapperSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->eventDispatcher
             ->dispatch(ContentEvents::NODE_PRE_DELETE, Argument::type(ContentNodeDeleteEvent::class))
             ->shouldBeCalled();
-        $this->contentMapperSubscriber->handlePreRemove(new RemoveEvent($document->reveal()));
+        $this->contentMapperSubscriber->handlePreRemove(new RemoveEvent($this->manager->reveal(), $document->reveal()));
 
         $this->eventDispatcher
             ->dispatch(ContentEvents::NODE_POST_DELETE, Argument::type(ContentNodeDeleteEvent::class))
             ->shouldBeCalled();
-        $this->contentMapperSubscriber->handlePostRemove(new RemoveEvent($document->reveal()));
+        $this->contentMapperSubscriber->handlePostRemove(new RemoveEvent($this->manager->reveal(), $document->reveal()));
     }
 
     public function testPersistAndFlush()
@@ -123,12 +125,12 @@ class ContentMapperSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->structureManager->wrapStructure('home', $structureMetadata2->reveal())->willReturn($structureBridge2);
         $structureBridge2->setDocument($document2->reveal());
 
-        $this->contentMapperSubscriber->handlePersist(new PersistEvent($document1->reveal(), 'de'));
-        $this->contentMapperSubscriber->handlePersist(new PersistEvent($document2->reveal(), 'de'));
+        $this->contentMapperSubscriber->handlePersist(new PersistEvent($this->manager->reveal(), $document1->reveal(), 'de'));
+        $this->contentMapperSubscriber->handlePersist(new PersistEvent($this->manager->reveal(), $document2->reveal(), 'de'));
 
         $this->eventDispatcher->dispatch(ContentEvents::NODE_POST_SAVE, Argument::any())->shouldBeCalled();
         $this->eventDispatcher->dispatch(ContentEvents::NODE_POST_SAVE, Argument::any())->shouldBeCalled();
 
-        $this->contentMapperSubscriber->handleFlush(new FlushEvent());
+        $this->contentMapperSubscriber->handleFlush(new FlushEvent($this->manager->reveal()));
     }
 }

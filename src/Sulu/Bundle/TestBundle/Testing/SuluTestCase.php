@@ -134,16 +134,19 @@ abstract class SuluTestCase extends KernelTestCase
     protected function initPhpcr()
     {
         /** @var SessionInterface $session */
-        $session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
+        $registry = $this->getContainer()->get('doctrine_phpcr');
 
-        if ($session->nodeExists('/cmf')) {
+        foreach ($registry->getConnections() as $session) {
             NodeHelper::purgeWorkspace($session);
             $session->save();
         }
 
         if (!$this->importer) {
-            $this->importer = new PHPCRImporter($session);
+            $this->importer = new PHPCRImporter($this->getContainer()->get('doctrine_phpcr')->getConnection());
         }
+        $this->getContainer()->get('sulu_document_manager.initializer')->initialize();
+
+        return;
 
         // initialize the content repository.  in order to speed things up, for
         // each process, we dump the initial state to an XML file and restore

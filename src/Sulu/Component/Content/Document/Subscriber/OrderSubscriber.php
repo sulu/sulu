@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
@@ -27,13 +26,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class OrderSubscriber implements EventSubscriberInterface
 {
     const FIELD = 'order';
-
-    private $inspector;
-
-    public function __construct(DocumentInspector $inspector)
-    {
-        $this->inspector = $inspector;
-    }
 
     /**
      * {@inheritdoc}
@@ -99,14 +91,14 @@ class OrderSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $parentDocument = $this->inspector->getParent($document);
+        $parentDocument = $event->getManager()->getInspector()->getParent($document);
 
         if (null === $parentDocument) {
             return;
         }
 
         $count = 0;
-        foreach ($this->inspector->getChildren($parentDocument) as $childDocument) {
+        foreach ($event->getManager()->getInspector()->getChildren($parentDocument) as $childDocument) {
             if (!$childDocument instanceof OrderBehavior) {
                 continue;
             }

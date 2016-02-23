@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Extension\ManagedExtensionContainer;
@@ -28,11 +27,6 @@ class ExtensionSubscriber implements EventSubscriberInterface
      * @var ExtensionManagerInterface
      */
     private $extensionManager;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
 
     /**
      * @var NamespaceRegistry
@@ -54,13 +48,11 @@ class ExtensionSubscriber implements EventSubscriberInterface
     public function __construct(
         PropertyEncoder $encoder,
         ExtensionManagerInterface $extensionManager,
-        DocumentInspector $inspector,
         // these two dependencies should absolutely not be necessary
         NamespaceRegistry $namespaceRegistry
     ) {
         $this->encoder = $encoder;
         $this->extensionManager = $extensionManager;
-        $this->inspector = $inspector;
         $this->namespaceRegistry = $namespaceRegistry;
     }
 
@@ -110,7 +102,7 @@ class ExtensionSubscriber implements EventSubscriberInterface
         $node = $event->getNode();
         $extensionsData = $document->getExtensionsData();
 
-        $webspaceName = $this->inspector->getWebspace($document);
+        $webspaceName = $event->getManager()->getInspector()->getWebspace($document);
         $prefix = $this->namespaceRegistry->getPrefix('extension_localized');
 
         $extensions = $this->extensionManager->getExtensions($structureType);
@@ -140,8 +132,8 @@ class ExtensionSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
         $node = $event->getNode();
-        $locale = $this->inspector->getLocale($document);
-        $webspaceName = $this->inspector->getWebspace($document);
+        $locale = $event->getManager()->getInspector()->getLocale($document);
+        $webspaceName = $event->getManager()->getInspector()->getWebspace($document);
         $structureType = $document->getStructureType();
 
         if (null === $structureType) {

@@ -23,21 +23,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class TitleSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var DocumentInspector
-     */
-    private $inspector;
-
-    /**
      * @var PropertyEncoder
      */
     private $encoder;
 
     public function __construct(
-        PropertyEncoder $encoder,
-        DocumentInspector $inspector
+        PropertyEncoder $encoder
     ) {
         $this->encoder = $encoder;
-        $this->inspector = $inspector;
     }
 
     /**
@@ -63,7 +56,8 @@ class TitleSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $title = $this->getTitle($document);
+        $inspector = $event->getManager()->getInspector();
+        $title = $this->getTitle($inspector, $document);
 
         $document->setTitle($title);
     }
@@ -81,7 +75,7 @@ class TitleSubscriber implements EventSubscriberInterface
 
         $title = $document->getTitle();
 
-        $structure = $this->inspector->getStructureMetadata($document);
+        $structure = $event->getManager()->getInspector()->getStructureMetadata($document);
         if (!$structure->hasProperty('title')) {
             return;
         }
@@ -90,18 +84,18 @@ class TitleSubscriber implements EventSubscriberInterface
         $this->handleHydrate($event);
     }
 
-    private function getTitle($document)
+    private function getTitle(DocumentInspector $inspector, $document)
     {
-        if (!$this->hasTitle($document)) {
+        if (!$this->hasTitle($inspector, $document)) {
             return 'Document has no "title" property in content';
         }
 
         return $document->getStructure()->getProperty('title')->getValue();
     }
 
-    private function hasTitle($document)
+    private function hasTitle(DocumentInspector $inspector, $document)
     {
-        $structure = $this->inspector->getStructureMetadata($document);
+        $structure = $inspector->getStructureMetadata($document);
 
         return $structure->hasProperty('title');
     }
