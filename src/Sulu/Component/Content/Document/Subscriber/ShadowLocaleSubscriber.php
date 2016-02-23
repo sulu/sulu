@@ -28,28 +28,14 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
     const SHADOW_LOCALE_FIELD = 'shadow-base';
 
     /**
-     * @var DocumentInspector
-     */
-    private $inspector;
-
-    /**
-     * @var DocumentRegistry
-     */
-    private $registry;
-
-    /**
      * @var PropertyEncoder
      */
     private $encoder;
 
     public function __construct(
-        PropertyEncoder $encoder,
-        DocumentInspector $inspector,
-        DocumentRegistry $registry
+        PropertyEncoder $encoder
     ) {
         $this->encoder = $encoder;
-        $this->inspector = $inspector;
-        $this->registry = $registry;
     }
 
     /**
@@ -117,7 +103,7 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
 
         $shadowLocale = $this->getShadowLocale($node, $locale);
         $document->setShadowLocale($shadowLocale);
-        $this->registry->updateLocale($document, $shadowLocale, $locale);
+        $event->getContext()->getRegistry()->updateLocale($document, $shadowLocale, $locale);
         $event->setLocale($shadowLocale);
     }
 
@@ -137,7 +123,7 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
         }
 
         if ($document->isShadowLocaleEnabled()) {
-            $this->validateShadow($document);
+            $this->validateShadow($event->getContext()->getInspector(), $document);
         }
 
         $event->getNode()->setProperty(
@@ -171,7 +157,7 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
         }
 
         $node = $event->getNode();
-        $structure = $this->inspector->getStructureMetadata($document);
+        $structure = $event->getContext()->getInspector()->getStructureMetadata($document);
 
         if (false === $structure->hasPropertyWithTagName('sulu.rlp')) {
             return;
@@ -221,7 +207,7 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
         );
     }
 
-    private function validateShadow(ShadowLocaleBehavior $document)
+    private function validateShadow(DocumentInspector $inspector, ShadowLocaleBehavior $document)
     {
         if ($document->getLocale() === $document->getShadowLocale()) {
             throw new \RuntimeException(sprintf(
@@ -230,14 +216,14 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
             ));
         }
 
-        $locales = $this->inspector->getConcreteLocales($document);
+        $locales = $inspector->getConcreteLocales($document);
         if (!in_array($document->getShadowLocale(), $locales)) {
-            $this->inspector->getNode($document)->revert();
+            $inspector->getNode($document)->revert();
             throw new \RuntimeException(sprintf(
                 'Attempting to create shadow for "%s" on a non-concrete locale "%s" for document at "%s". Concrete languages are "%s"',
                 $document->getLocale(),
                 $document->getShadowLocale(),
-                $this->inspector->getPath($document),
+                $inspector->getPath($document),
                 implode('", "', $locales)
             ));
         }

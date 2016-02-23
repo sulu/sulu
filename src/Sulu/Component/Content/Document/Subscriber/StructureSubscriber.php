@@ -40,11 +40,6 @@ class StructureSubscriber implements EventSubscriberInterface
     private $contentTypeManager;
 
     /**
-     * @var DocumentInspector
-     */
-    private $inspector;
-
-    /**
      * @var LegacyPropertyFactory
      */
     private $legacyPropertyFactory;
@@ -63,12 +58,10 @@ class StructureSubscriber implements EventSubscriberInterface
     public function __construct(
         PropertyEncoder $encoder,
         ContentTypeManagerInterface $contentTypeManager,
-        DocumentInspector $inspector,
         LegacyPropertyFactory $legacyPropertyFactory
     ) {
         $this->encoder = $encoder;
         $this->contentTypeManager = $contentTypeManager;
-        $this->inspector = $inspector;
         $this->legacyPropertyFactory = $legacyPropertyFactory;
     }
 
@@ -126,7 +119,7 @@ class StructureSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $structureMetadata = $this->inspector->getStructureMetadata($document);
+        $structureMetadata = $event->getContext()->getInspector()->getStructureMetadata($document);
 
         $structure = $document->getStructure();
         if ($structure instanceof ManagedStructure) {
@@ -161,18 +154,20 @@ class StructureSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $inspector = $event->getContext()->getInspector();
+
         $node = $event->getNode();
         $propertyName = $this->getStructureTypePropertyName($document, $event->getLocale());
         $structureType = $node->getPropertyValueWithDefault($propertyName, null);
         $document->setStructureType($structureType);
 
         if (false === $event->getOption('load_ghost_content', false)) {
-            if ($this->inspector->getLocalizationState($document) === LocalizationState::GHOST) {
+            if ($inspector->getLocalizationState($document) === LocalizationState::GHOST) {
                 $structureType = null;
             }
         }
 
-        $container = $this->getStructure($document, $structureType);
+        $container = $this->getStructure($inspector, $document, $structureType);
 
         // Set the property container
         $event->getAccessor()->set(
@@ -203,8 +198,9 @@ class StructureSubscriber implements EventSubscriberInterface
 
         $node = $event->getNode();
         $locale = $event->getLocale();
+        $inspector = $event->getContext()->getInspector();
 
-        $this->mapContentToNode($document, $node, $locale);
+        $this->mapContentToNode($inspector, $document, $node, $locale);
 
         $node->setProperty(
             $this->getStructureTypePropertyName($document, $locale),
@@ -232,12 +228,12 @@ class StructureSubscriber implements EventSubscriberInterface
      *
      * @return ManagedStructure
      */
-    private function createStructure($document)
+    private function createStructure($inspector, $document)
     {
         return new ManagedStructure(
             $this->contentTypeManager,
             $this->legacyPropertyFactory,
-            $this->inspector,
+            $inspector,
             $document
         );
     }
@@ -251,11 +247,11 @@ class StructureSubscriber implements EventSubscriberInterface
      *
      * @throws MandatoryPropertyException
      */
-    private function mapContentToNode($document, NodeInterface $node, $locale)
+    private function mapContentToNode(DocumentInspector $inspector, $document, NodeInterface $node, $locale)
     {
         $structure = $document->getStructure();
-        $webspaceName = $this->inspector->getWebspace($document);
-        $metadata = $this->inspector->getStructureMetadata($document);
+        $webspaceName = $inspector->getWebspace($document);
+        $metadata = $inspector->getStructureMetadata($document);
 
         foreach ($metadata->getProperties() as $propertyName => $structureProperty) {
             $realProperty = $structure->getProperty($propertyName);
@@ -312,10 +308,10 @@ class StructureSubscriber implements EventSubscriberInterface
      *
      * @return StructureInterface
      */
-    private function getStructure($document, $structureType)
+    private function getStructure(DocumentInspector $inspector, $document, $structureType)
     {
         if ($structureType) {
-            return $this->createStructure($document);
+            return $this->createStructure($inspector, $document);
         }
 
         if ($document->getStructure()) {

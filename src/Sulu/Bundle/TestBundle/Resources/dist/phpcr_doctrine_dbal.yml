@@ -1,7 +1,9 @@
-sulu_core:
-    phpcr:
+doctrine_phpcr:
+    session:
         backend:
+            check_login_on_service: false
             type: doctrinedbal
         workspace: default
         username: "%phpcr_username%"
         password: "%phpcr_password%"
+    odm: []

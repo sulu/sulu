@@ -22,23 +22,18 @@ use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 /**
  * Remove routes and references associated with content.
  */
 class StructureRemoveSubscriber implements EventSubscriberInterface
 {
-    private $inspector;
-    private $documentManager;
     private $metadataFactory;
 
     public function __construct(
-        DocumentManager $documentManager,
-        DocumentInspector $inspector,
         MetadataFactoryInterface $metadataFactory
     ) {
-        $this->documentManager = $documentManager;
-        $this->inspector = $inspector;
         $this->metadataFactory = $metadataFactory;
     }
 
@@ -52,10 +47,10 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
     public function handleRemove(RemoveEvent $event)
     {
         $document = $event->getDocument();
-        $this->removeDocument($document);
+        $this->removeDocument($event->getContext()->getDocumentManager(), $document);
     }
 
-    public function removeDocument($document)
+    public function removeDocument(DocumentManagerInterface $documentManager, $document)
     {
         // TODO: This is not a good indicator. There should be a RoutableBehavior here.
         if (!$document instanceof StructureBehavior) {
@@ -64,30 +59,33 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
 
         if ($document instanceof ChildrenBehavior) {
             foreach ($document->getChildren() as $child) {
-                $this->removeDocument($child);
+                $this->removeDocument($documentManager, $child);
             }
         }
 
-        $this->removeReferences($document);
-        $this->recursivelyRemoveRoutes($document);
+        $this->removeReferences($documentManager->getInspector(), $document);
+        $this->recursivelyRemoveRoutes($documentManager, $document);
     }
 
-    private function recursivelyRemoveRoutes($document)
+    private function recursivelyRemoveRoutes(
+        DocumentManagerInterface $documentManager, 
+        $document
+    )
     {
-        $referrers = $this->inspector->getReferrers($document);
+        $referrers = $documentManager->getInspector()->getReferrers($document);
 
         foreach ($referrers as $document) {
             if ($document instanceof RouteDocument) {
-                $this->recursivelyRemoveRoutes($document);
-                $this->documentManager->remove($document);
+                $this->recursivelyRemoveRoutes($documentManager, $document);
+                $documentManager->remove($document);
                 continue;
             }
         }
     }
 
-    private function removeReferences($document)
+    private function removeReferences(DocumentInspector $inspector, $document)
     {
-        $node = $this->inspector->getNode($document);
+        $node = $inspector->getNode($document);
 
         $references = $node->getReferences();
 

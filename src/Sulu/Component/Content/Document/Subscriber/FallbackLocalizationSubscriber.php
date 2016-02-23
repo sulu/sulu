@@ -32,29 +32,15 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
     private $encoder;
 
     /**
-     * @var DocumentInspector
-     */
-    private $inspector;
-
-    /**
-     * @var DocumentRegistry
-     */
-    private $documentRegistry;
-
-    /**
      * @var LocalizationFinderInterface
      */
     private $localizationFinder;
 
     public function __construct(
         PropertyEncoder $encoder,
-        DocumentInspector $inspector,
-        DocumentRegistry $documentRegistry,
         LocalizationFinderInterface $localizationFinder
     ) {
         $this->encoder = $encoder;
-        $this->inspector = $inspector;
-        $this->documentRegistry = $documentRegistry;
         $this->localizationFinder = $localizationFinder;
     }
 
@@ -89,20 +75,23 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $newLocale = $this->getAvailableLocalization($document, $locale);
+        $context = $event->getContext();
+
+        $newLocale = $this->getAvailableLocalization($context->getInspector(), $document, $locale);
         $event->setLocale($newLocale);
 
         if ($newLocale === $locale) {
             return;
         }
 
+        $registry = $context->getRegistry();
         if ($event->getOption('load_ghost_content', true) === true) {
-            $this->documentRegistry->updateLocale($document, $newLocale, $locale);
+            $registry->updateLocale($document, $newLocale, $locale);
 
             return;
         }
 
-        $this->documentRegistry->updateLocale($document, $locale, $locale);
+        $registry->updateLocale($document, $locale, $locale);
     }
 
     /**
@@ -113,9 +102,9 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
      *
      * @return string
      */
-    public function getAvailableLocalization(StructureBehavior $document, $locale)
+    private function getAvailableLocalization(DocumentInspector $inspector, StructureBehavior $document, $locale)
     {
-        $availableLocales = $this->inspector->getLocales($document);
+        $availableLocales = $inspector->getLocales($document);
 
         if (in_array($locale, $availableLocales)) {
             return $locale;
@@ -125,7 +114,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
 
         if ($document instanceof WebspaceBehavior) {
             $fallbackLocale = $this->localizationFinder->findAvailableLocale(
-                $this->inspector->getWebspace($document),
+                $inspector->getWebspace($document),
                 $availableLocales,
                 $locale
             );

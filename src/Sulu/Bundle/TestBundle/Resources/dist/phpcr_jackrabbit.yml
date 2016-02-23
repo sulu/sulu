@@ -1,8 +1,20 @@
-sulu_core:
-    phpcr:
-        backend:
-            type: jackrabbit
-            url:  "%phpcr_backend_url%"
-        workspace: test
-        username: "%phpcr_username%"
-        password: "%phpcr_password%"
+doctrine_phpcr:
+    session:
+        default_session: default
+        sessions:
+            default:
+                backend:
+                    check_login_on_server: false
+                    type: jackrabbit
+                    url:  "%phpcr_backend_url%"
+                workspace: test
+                username: "%phpcr_username%"
+                password: "%phpcr_password%"
+            live:
+                backend:
+                    check_login_on_server: false
+                    type: jackrabbit
+                    url:  "%phpcr_backend_url%"
+                workspace: live
+                username: "%phpcr_username%"
+                password: "%phpcr_password%"

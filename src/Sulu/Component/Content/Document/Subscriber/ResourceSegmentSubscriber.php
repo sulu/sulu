@@ -29,21 +29,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ResourceSegmentSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var DocumentInspector
-     */
-    private $inspector;
-
-    /**
      * @var PropertyEncoder
      */
     private $encoder;
 
     public function __construct(
-        PropertyEncoder $encoder,
-        DocumentInspector $inspector
+        PropertyEncoder $encoder
     ) {
         $this->encoder = $encoder;
-        $this->inspector = $inspector;
     }
 
     /**
@@ -76,8 +69,8 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
         }
 
         $node = $event->getNode();
-        $property = $this->getResourceSegmentProperty($document);
-        $originalLocale = $this->inspector->getOriginalLocale($document);
+        $property = $this->getResourceSegmentProperty($event->getContext()->getInspector(), $document);
+        $originalLocale = $event->getContext()->getInspector()->getOriginalLocale($document);
         $segment = $node->getPropertyValueWithDefault(
             $this->encoder->localizedSystemName(
                 $property->getName(),
@@ -104,15 +97,15 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $property = $this->getResourceSegmentProperty($document);
+        $property = $this->getResourceSegmentProperty($event->getContext()->getInspector(), $document);
         $document->getStructure()->getProperty(
             $property->getName()
         )->setValue($document->getResourceSegment());
     }
 
-    private function getResourceSegmentProperty($document)
+    private function getResourceSegmentProperty(DocumentInspector $inspector, $document)
     {
-        $structure = $this->inspector->getStructureMetadata($document);
+        $structure = $inspector->getStructureMetadata($document);
         $property = $structure->getPropertyByTagName('sulu.rlp');
 
         if (!$property) {

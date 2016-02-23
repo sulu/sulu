@@ -31,39 +31,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
      */
     public function prepend(ContainerBuilder $container)
     {
-        // process the configuration of SuluCoreExtension
-        $configs = $container->getExtensionConfig($this->getAlias());
-        $parameterBag = $container->getParameterBag();
-        $configs = $parameterBag->resolveValue($configs);
-        $config = $this->processConfiguration(new Configuration(), $configs);
-
-        if (isset($config['phpcr'])) {
-            $phpcrConfig = $config['phpcr'];
-
-            // TODO: Workaround for issue: https://github.com/doctrine/DoctrinePHPCRBundle/issues/178
-            if (!isset($phpcrConfig['backend']['check_login_on_server'])) {
-                $phpcrConfig['backend']['check_login_on_server'] = false;
-            }
-
-            foreach ($container->getExtensions() as $name => $extension) {
-                $prependConfig = [];
-                switch ($name) {
-                    case 'doctrine_phpcr':
-                        $prependConfig = [
-                            'session' => $phpcrConfig,
-                            'odm' => [],
-                        ];
-                        break;
-                    case 'cmf_core':
-                        break;
-                }
-
-                if ($prependConfig) {
-                    $container->prependExtensionConfig($name, $prependConfig);
-                }
-            }
-        }
-
         if ($container->hasExtension('massive_build')) {
             $container->prependExtensionConfig('massive_build', [
                 'command_class' => 'Sulu\Bundle\CoreBundle\CommandOptional\SuluBuildCommand',

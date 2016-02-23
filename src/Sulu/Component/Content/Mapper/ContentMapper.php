@@ -112,11 +112,6 @@ class ContentMapper implements ContentMapperInterface
     private $formFactory;
 
     /**
-     * @var DocumentInspector
-     */
-    private $inspector;
-
-    /**
      * @var PropertyEncoder
      */
     private $encoder;
@@ -130,7 +125,6 @@ class ContentMapper implements ContentMapperInterface
         DocumentManager $documentManager,
         WebspaceManagerInterface $webspaceManager,
         FormFactoryInterface $formFactory,
-        DocumentInspector $inspector,
         PropertyEncoder $encoder,
         StructureManagerInterface $structureManager,
         ExtensionManagerInterface $extensionManager,
@@ -147,13 +141,13 @@ class ContentMapper implements ContentMapperInterface
         $this->webspaceManager = $webspaceManager;
         $this->documentManager = $documentManager;
         $this->formFactory = $formFactory;
-        $this->inspector = $inspector;
         $this->encoder = $encoder;
         $this->namespaceRegistry = $namespaceRegistry;
 
         // deprecated
         $this->eventDispatcher = $eventDispatcher;
         $this->strategy = $strategy;
+        $this->inspector = $documentManager->getInspector();
     }
 
     /**

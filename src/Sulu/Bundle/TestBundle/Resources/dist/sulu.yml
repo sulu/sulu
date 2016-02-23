@@ -105,7 +105,11 @@ sulu_test:
 
 sulu_document_manager:
     debug: false
-
+    managers:
+        default:
+            session: default
+        live:
+            session: live
     mapping:
         page:
             class: Sulu\Bundle\ContentBundle\Document\PageDocument
