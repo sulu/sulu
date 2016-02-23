@@ -244,7 +244,7 @@ class StructureProvider implements ProviderInterface
             [
                 'type' => 'string',
                 'stored' => true,
-                'indexed' => false,
+                'indexed' => true,
                 'field' => $this->factory->createMetadataProperty('structureType'),
             ]
         );
