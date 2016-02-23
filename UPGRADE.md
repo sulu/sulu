@@ -2,6 +2,48 @@
 
 ## dev-develop
 
+### Definition of security contexts
+
+The definition of security contexts in the `Admin` classes have changed. They
+used to look like the following example:
+
+```php
+public function getSecurityContexts()
+{
+    return [
+        'Sulu' => [
+            'Media' => [
+                'sulu.media.collections',
+            ],
+        ],
+    ];
+}
+```
+
+Now the available permission types have also to be passed:
+
+```php
+public function getSecurityContexts()
+{
+    return [
+        'Sulu' => [
+            'Media' => [
+                'sulu.media.collections' => [
+                    PermissionTypes::VIEW,
+                    PermissionTypes::ADD,
+                    PermissionTypes::EDIT,
+                    PermissionTypes::DELETE,
+                    PermissionTypes::SECURITY,
+                ],
+            ],
+        ],
+    ];
+}
+```
+
+If these adaptions are not done, it will be handled as if the permission types
+`VIEW`, `ADD`, `EDIT`, `DELETE` and `SECURITY` were passed.
+
 ### Media uploads
 
 Write permissions for the webserver must be set on `web/uploads` instead of

@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContactBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class ContactAdmin extends Admin
@@ -75,8 +76,18 @@ class ContactAdmin extends Admin
         return [
             'Sulu' => [
                 'Contacts' => [
-                    'sulu.contact.people',
-                    'sulu.contact.organizations',
+                    'sulu.contact.people' => [
+                        PermissionTypes::VIEW,
+                        PermissionTypes::ADD,
+                        PermissionTypes::EDIT,
+                        PermissionTypes::DELETE,
+                    ],
+                    'sulu.contact.organizations' => [
+                        PermissionTypes::VIEW,
+                        PermissionTypes::ADD,
+                        PermissionTypes::EDIT,
+                        PermissionTypes::DELETE,
+                    ],
                 ],
             ],
         ];
