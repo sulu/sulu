@@ -141,12 +141,10 @@ abstract class SuluTestCase extends KernelTestCase
             $session->save();
         }
 
+
         if (!$this->importer) {
             $this->importer = new PHPCRImporter($this->getContainer()->get('doctrine_phpcr')->getConnection());
         }
-        $this->getContainer()->get('sulu_document_manager.initializer')->initialize();
-
-        return;
 
         // initialize the content repository.  in order to speed things up, for
         // each process, we dump the initial state to an XML file and restore
