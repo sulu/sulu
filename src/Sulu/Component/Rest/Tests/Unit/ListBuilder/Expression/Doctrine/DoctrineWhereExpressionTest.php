@@ -12,8 +12,10 @@
 namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Expression\Doctrine;
 
 use Doctrine\ORM\QueryBuilder;
+use Prophecy\Argument;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineWhereExpression;
+use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 
 class DoctrineWhereExpressionTest extends \PHPUnit_Framework_TestCase
 {
@@ -38,11 +40,8 @@ class DoctrineWhereExpressionTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->queryBuilder = $this->getMockBuilder('Doctrine\ORM\QueryBuilder')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->queryBuilder->expects($this->any())->method('setParameter')->willReturnSelf();
+        $this->queryBuilder = $this->prophesize(QueryBuilder::class);
+        $this->queryBuilder->setParameter(Argument::any(), Argument::any())->willReturn($this->queryBuilder->reveal());
     }
 
     public function testGetStatement()
@@ -52,9 +51,74 @@ class DoctrineWhereExpressionTest extends \PHPUnit_Framework_TestCase
         $whereExpression = new DoctrineWhereExpression($fieldDescriptor, $value);
 
         // parameter names will be generated (combined with unique ids with length of 23 characters)
-        $statement = $whereExpression->getStatement($this->queryBuilder);
+        $statement = $whereExpression->getStatement($this->queryBuilder->reveal());
         $result = preg_match(
             '/^SuluCoreBundle:Example\.name = :name[\S]{' . $this->uniqueIdLength . '}/',
+            $statement
+        );
+        $this->assertEquals(1, $result);
+    }
+
+    public function nullProvider()
+    {
+        return [
+            [ListBuilderInterface::WHERE_COMPARATOR_EQUAL, 'IS NULL'],
+            [ListBuilderInterface::WHERE_COMPARATOR_UNEQUAL, 'IS NOT NULL'],
+        ];
+    }
+
+    /**
+     * @dataProvider nullProvider
+     */
+    public function testGetStatementNullValue($comparator, $expected)
+    {
+        $fieldDescriptor = new DoctrineFieldDescriptor('name', 'name', self::$entityName);
+        $whereExpression = new DoctrineWhereExpression($fieldDescriptor, null, $comparator);
+
+        $this->assertEquals(
+            'SuluCoreBundle:Example.name ' . $expected,
+            $whereExpression->getStatement($this->queryBuilder->reveal())
+        );
+    }
+
+    public function testGetStatementLike()
+    {
+        $value = 'test';
+        $fieldDescriptor = new DoctrineFieldDescriptor('name', 'name', self::$entityName);
+        $whereExpression = new DoctrineWhereExpression($fieldDescriptor, $value, 'LIKE');
+
+        $this->queryBuilder->setParameter(Argument::containingString('name'), '%' . $value . '%');
+
+        // parameter names will be generated (combined with unique ids with length of 23 characters)
+        $statement = $whereExpression->getStatement($this->queryBuilder->reveal());
+        $result = preg_match(
+            '/^SuluCoreBundle:Example\.name LIKE :name[\S]{' . $this->uniqueIdLength . '}/',
+            $statement
+        );
+        $this->assertEquals(1, $result);
+    }
+
+    public function andOrProvider()
+    {
+        return [
+            ['and'],
+            ['or'],
+        ];
+    }
+
+    /**
+     * @dataProvider andOrProvider
+     */
+    public function testGetStatementAndOr($comparator)
+    {
+        $value = [1, 2, 3];
+        $fieldDescriptor = new DoctrineFieldDescriptor('name', 'name', self::$entityName);
+        $whereExpression = new DoctrineWhereExpression($fieldDescriptor, $value, $comparator);
+
+        // parameter names will be generated (combined with unique ids with length of 23 characters)
+        $statement = $whereExpression->getStatement($this->queryBuilder->reveal());
+        $result = preg_match(
+            '/^(SuluCoreBundle:Example\.name = :name[\S]{' . $this->uniqueIdLength . '}[\S]{1}( ' . $comparator . ' )?){3}/',
             $statement
         );
         $this->assertEquals(1, $result);

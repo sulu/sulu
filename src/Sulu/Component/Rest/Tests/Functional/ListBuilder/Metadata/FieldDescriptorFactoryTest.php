@@ -8,13 +8,15 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Rest\Tests\Functional\ListBuilder\Metadata;
+namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Metadata;
 
 use Metadata\Driver\FileLocatorInterface;
 use Metadata\MetadataFactory;
 use Prophecy\Argument;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineGroupConcatFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineIdentityFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Driver\XmlDriver as DoctrineXmlDriver;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactory;
@@ -66,7 +68,9 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
             new MetadataProvider(
                 new MetadataFactory(new DoctrineXmlDriver($this->locator->reveal(), $parameterBag->reveal()))
             ),
-            new MetadataProvider(new MetadataFactory(new GeneralXmlDriver($this->locator->reveal()))),
+            new MetadataProvider(
+                new MetadataFactory(new GeneralXmlDriver($this->locator->reveal(), $parameterBag->reveal()))
+            ),
         ];
     }
 
@@ -104,7 +108,6 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
                 'class' => 'test-class',
                 'minWidth' => '50px',
                 'width' => '100px',
-                'select' => 'CONCAT(SuluContactBundle:Contact.firstName, CONCAT(\' \', SuluContactBundle:Contact.lastName))',
             ],
             'city' => ['name' => 'city', 'translation' => 'contact.address.city', 'default' => true],
         ];
@@ -127,6 +130,52 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
             'id' => ['name' => 'id', 'translation' => 'public.id', 'disabled' => true, 'type' => 'integer'],
             'firstName' => ['name' => 'firstName', 'translation' => 'contact.contacts.firstName', 'default' => true],
             'lastName' => ['name' => 'lastName', 'translation' => 'contact.contacts.lastName', 'default' => true],
+        ];
+
+        $this->assertFieldDescriptors($expected, $fieldDescriptor);
+    }
+
+    public function testGetFieldDescriptorForClassGroupConcat()
+    {
+        $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
+            ->willReturn(__DIR__ . '/Resources/group-concat.xml');
+
+        $provider = new ChainProvider($this->chain);
+        $factory = new FieldDescriptorFactory($provider, $this->configCache->reveal());
+        $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
+
+        $this->assertEquals(['tags'], array_keys($fieldDescriptor));
+
+        $expected = [
+            'tags' => [
+                'name' => 'tags',
+                'translation' => 'Tags',
+                'instance' => DoctrineGroupConcatFieldDescriptor::class,
+                'disabled' => true,
+            ],
+        ];
+
+        $this->assertFieldDescriptors($expected, $fieldDescriptor);
+    }
+
+    public function testGetFieldDescriptorForClassIdentity()
+    {
+        $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
+            ->willReturn(__DIR__ . '/Resources/identity.xml');
+
+        $provider = new ChainProvider($this->chain);
+        $factory = new FieldDescriptorFactory($provider, $this->configCache->reveal());
+        $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
+
+        $this->assertEquals(['tags'], array_keys($fieldDescriptor));
+
+        $expected = [
+            'tags' => [
+                'name' => 'tags',
+                'translation' => 'Tags',
+                'instance' => DoctrineIdentityFieldDescriptor::class,
+                'disabled' => true,
+            ],
         ];
 
         $this->assertFieldDescriptors($expected, $fieldDescriptor);

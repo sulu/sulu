@@ -19,8 +19,6 @@
         <service id="sulu_core.list_builder.metadata.provider.chain"
                  class="Sulu\Component\Rest\ListBuilder\Metadata\Provider\ChainProvider">
             <argument type="collection">
-                <argument type="service" id="sulu_core.list_builder.metadata.provider.general"/>
-                <argument type="service" id="sulu_core.list_builder.metadata.provider.doctrine"/>
             </argument>
         </service>
 
@@ -31,6 +29,8 @@
         <service id="sulu_core.list_builder.metadata.provider.general"
                  class="Sulu\Component\Rest\ListBuilder\Metadata\Provider\MetadataProvider">
             <argument type="service" id="sulu_core.list_builder.metadata.provider.general.factory"/>
+
+            <tag name="sulu.list-builder.metadata.provider"/>
         </service>
 
         <service id="sulu_core.list_builder.metadata.provider.general.cache" class="Metadata\Cache\FileCache">
@@ -49,6 +49,12 @@
         <service id="sulu_core.list_builder.metadata.provider.general.driver.xml"
                  class="Sulu\Component\Rest\ListBuilder\Metadata\General\Driver\XmlDriver">
             <argument type="service" id="sulu_core.list_builder.metadata.file_locator"/>
+            <argument type="service" id="sulu_core.list_builder.metadata.parameter_bag"/>
+        </service>
+
+        <service id="sulu_core.list_builder.metadata.provider.general.event_subscriber"
+                 class="Sulu\Component\Rest\ListBuilder\Metadata\Listener\GeneralMetadataSerializeSubscriber">
+            <tag name="jms_serializer.event_subscriber"/>
         </service>
 
         <service id="sulu_core.list_builder.metadata.provider.doctrine.cache" class="Metadata\Cache\FileCache">
@@ -58,6 +64,8 @@
         <service id="sulu_core.list_builder.metadata.provider.doctrine"
                  class="Sulu\Component\Rest\ListBuilder\Metadata\Provider\MetadataProvider">
             <argument type="service" id="sulu_core.list_builder.metadata.provider.doctrine.factory"/>
+
+            <tag name="sulu.list-builder.metadata.provider"/>
         </service>
 
         <service id="sulu_core.list_builder.metadata.provider.doctrine.factory" class="Metadata\MetadataFactory">

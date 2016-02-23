@@ -10,6 +10,8 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
+use Sulu\Component\Rest\ListBuilder\Metadata\PropertyMetadata;
+
 /**
  * Interface for all field-descriptors.
  */
@@ -74,4 +76,9 @@ interface FieldDescriptorInterface
      * @return string
      */
     public function getClass();
+
+    /**
+     * @return PropertyMetadata
+     */
+    public function getMetadata();
 }

@@ -45,15 +45,25 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
         $editable = false,
         $cssClass = ''
     ) {
-        parent::__construct($name, $translation, $disabled, $default, $type, $width, $minWidth, $sortable, $editable, $cssClass);
+        parent::__construct(
+            $name,
+            $translation,
+            $disabled,
+            $default,
+            $type,
+            $width,
+            $minWidth,
+            $sortable,
+            $editable,
+            $cssClass
+        );
+
         $this->fieldDescriptor = $fieldDescriptor;
         $this->glue = $glue;
     }
 
     /**
-     * Returns the select statement for this field without the alias.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getSelect()
     {
@@ -61,9 +71,15 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
     }
 
     /**
-     * Returns all the joins required for this field.
-     *
-     * @return DoctrineJoinDescriptor[]
+     * {@inheritdoc}
+     */
+    public function getWhere()
+    {
+        return $this->fieldDescriptor->getSelect();
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getJoins()
     {
