@@ -26,7 +26,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->arrayNode('namespace')
-                ->useAttributeAsKey('role')
+                    ->useAttributeAsKey('role')
                     ->defaultValue([
                         'extension_localized' => 'i18n',
                         'system' => 'sulu',
@@ -70,7 +70,26 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-            ->end();
+                ->scalarNode('default_manager')
+                    ->info('Name of the default document manager')
+                    ->defaultValue('default')
+                ->end()
+                ->arrayNode('managers')
+                    ->useAttributeAsKey('name')
+                    ->defaultValue([
+                        'default' => [
+                            'session' => 'default',
+                        ],
+                    ])
+                    ->prototype('array')
+                        ->children()
+                            ->scalarNode('session')
+                                ->info('PHPCR session name')
+                                ->isRequired()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end();
 
         return $treeBuilder;
     }

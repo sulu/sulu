@@ -40,11 +40,6 @@ class ContentMapperSubscriber implements EventSubscriberInterface
     private $eventDispatcher;
 
     /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    /**
      * @var ContentMapperInterface
      */
     private $contentMapper;
@@ -70,14 +65,12 @@ class ContentMapperSubscriber implements EventSubscriberInterface
     private $persistEvents = [];
 
     public function __construct(
-        DocumentInspector $inspector,
         EventDispatcherInterface $dispatcher,
         ContentMapperInterface $mapper,
         SuluNodeHelper $nodeHelper,
         StructureManagerInterface $structureManager
     ) {
         $this->eventDispatcher = $dispatcher;
-        $this->documentInspector = $inspector;
         $this->nodeHelper = $nodeHelper;
         $this->contentMapper = $mapper;
         $this->structureManager = $structureManager;
@@ -111,7 +104,9 @@ class ContentMapperSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $event = $this->getDeleteEvent($document);
+        $context = $event->getContext();
+
+        $event = $this->getDeleteEvent($context->getInspector(), $document);
         $this->deleteEvents[spl_object_hash($document)] = $event;
         $this->eventDispatcher->dispatch(
             ContentEvents::NODE_PRE_DELETE,
@@ -164,11 +159,12 @@ class ContentMapperSubscriber implements EventSubscriberInterface
      */
     public function handleFlush(FlushEvent $event)
     {
+        $inspector = $event->getContext()->getInspector();
         foreach ($this->persistEvents as $persistEvent) {
             $document = $persistEvent->getDocument();
-            $structure = $this->documentToStructure($document);
+            $structure = $this->documentToStructure($inspector, $document);
 
-            $event = new ContentNodeEvent($this->documentInspector->getNode($document), $structure);
+            $event = new ContentNodeEvent($inspector->getNode($document), $structure);
             $this->eventDispatcher->dispatch(ContentEvents::NODE_POST_SAVE, $event);
         }
 
@@ -180,13 +176,13 @@ class ContentMapperSubscriber implements EventSubscriberInterface
         return $document instanceof StructureBehavior;
     }
 
-    private function getDeleteEvent($document)
+    private function getDeleteEvent(DocumentInspector $inspector, $document)
     {
-        $webspace = $this->documentInspector->getWebspace($document);
+        $webspace = $inspector->getWebspace($document);
         $event = new ContentNodeDeleteEvent(
             $this->contentMapper,
             $this->nodeHelper,
-            $this->documentInspector->getNode($document),
+            $inspector->getNode($document),
             $webspace
         );
 
@@ -202,14 +198,14 @@ class ContentMapperSubscriber implements EventSubscriberInterface
      *
      * @deprecated
      */
-    private function documentToStructure(StructureBehavior $document)
+    private function documentToStructure(DocumentInspector $inspector, StructureBehavior $document)
     {
         if (null === $document) {
             return;
         }
 
-        $structure = $this->documentInspector->getStructureMetadata($document);
-        $documentAlias = $this->documentInspector->getMetadata($document)->getAlias();
+        $structure = $inspector->getStructureMetadata($document);
+        $documentAlias = $inspector->getMetadata($document)->getAlias();
 
         $structureBridge = $this->structureManager->wrapStructure($documentAlias, $structure);
         $structureBridge->setDocument($document);

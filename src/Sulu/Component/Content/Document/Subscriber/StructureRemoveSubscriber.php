@@ -23,23 +23,18 @@ use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 /**
  * Remove routes and references associated with content.
  */
 class StructureRemoveSubscriber implements EventSubscriberInterface
 {
-    private $inspector;
-    private $documentManager;
     private $metadataFactory;
 
     public function __construct(
-        DocumentManager $documentManager,
-        DocumentInspector $inspector,
         MetadataFactoryInterface $metadataFactory
     ) {
-        $this->documentManager = $documentManager;
-        $this->inspector = $inspector;
         $this->metadataFactory = $metadataFactory;
     }
 
@@ -53,14 +48,14 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
     public function handleRemove(RemoveEvent $event)
     {
         $document = $event->getDocument();
-        $this->removeDocument($document);
+        $this->removeDocument($event->getContext()->getDocumentManager(), $document);
     }
 
-    public function removeDocument($document)
+    public function removeDocument(DocumentManagerInterface $documentManager, $document)
     {
         if ($document instanceof ChildrenBehavior) {
             foreach ($document->getChildren() as $child) {
-                $this->removeDocument($child);
+                $this->removeDocument($documentManager, $child);
             }
         }
 
@@ -84,9 +79,9 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function removeReferences($document)
+    private function removeReferences(DocumentInspector $inspector, $document)
     {
-        $node = $this->inspector->getNode($document);
+        $node = $inspector->getNode($document);
 
         $references = $node->getReferences();
 

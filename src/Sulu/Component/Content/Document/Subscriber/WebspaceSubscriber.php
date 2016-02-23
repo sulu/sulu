@@ -21,21 +21,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class WebspaceSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var DocumentInspector
-     */
-    private $inspector;
-
-    /**
      * @var PropertyEncoder
      */
     private $encoder;
 
     public function __construct(
-        PropertyEncoder $encoder,
-        DocumentInspector $inspector
+        PropertyEncoder $encoder
     ) {
         $this->encoder = $encoder;
-        $this->inspector = $inspector;
     }
 
     /**
@@ -61,7 +54,7 @@ class WebspaceSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $webspaceName = $this->inspector->getWebspace($document);
+        $webspaceName = $event->getContext()->getInspector()->getWebspace($document);
         $event->getAccessor()->set('webspaceName', $webspaceName);
     }
 }

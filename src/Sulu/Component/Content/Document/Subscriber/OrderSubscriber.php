@@ -28,13 +28,6 @@ class OrderSubscriber implements EventSubscriberInterface
 {
     const FIELD = 'order';
 
-    private $inspector;
-
-    public function __construct(DocumentInspector $inspector)
-    {
-        $this->inspector = $inspector;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -99,14 +92,14 @@ class OrderSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $parentDocument = $this->inspector->getParent($document);
+        $parentDocument = $event->getContext()->getInspector()->getParent($document);
 
         if (null === $parentDocument) {
             return;
         }
 
         $count = 0;
-        foreach ($this->inspector->getChildren($parentDocument) as $childDocument) {
+        foreach ($event->getContext()->getInspector()->getChildren($parentDocument) as $childDocument) {
             if (!$childDocument instanceof OrderBehavior) {
                 continue;
             }
