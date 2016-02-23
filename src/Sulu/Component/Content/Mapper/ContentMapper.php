@@ -19,7 +19,6 @@ use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
 use PHPCR\Util\PathHelper;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\BreadcrumbItem;
 use Sulu\Component\Content\Compat\Property as LegacyProperty;
@@ -113,11 +112,6 @@ class ContentMapper implements ContentMapperInterface
     private $formFactory;
 
     /**
-     * @var DocumentInspector
-     */
-    private $inspector;
-
-    /**
      * @var PropertyEncoder
      */
     private $encoder;
@@ -131,7 +125,6 @@ class ContentMapper implements ContentMapperInterface
         DocumentManager $documentManager,
         WebspaceManagerInterface $webspaceManager,
         FormFactoryInterface $formFactory,
-        DocumentInspector $inspector,
         PropertyEncoder $encoder,
         StructureManagerInterface $structureManager,
         ExtensionManagerInterface $extensionManager,
@@ -148,13 +141,13 @@ class ContentMapper implements ContentMapperInterface
         $this->webspaceManager = $webspaceManager;
         $this->documentManager = $documentManager;
         $this->formFactory = $formFactory;
-        $this->inspector = $inspector;
         $this->encoder = $encoder;
         $this->namespaceRegistry = $namespaceRegistry;
         $this->rlpStrategy = $rlpStrategy;
 
         // deprecated
         $this->eventDispatcher = $eventDispatcher;
+        $this->inspector = $documentManager->getInspector();
     }
 
     /**

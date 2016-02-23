@@ -28,7 +28,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ContentInitializer implements InitializerInterface
 {
     /**
-     * @var DocumentRegistry
+     * @var ConnectionRegistry
      */
     private $registry;
 

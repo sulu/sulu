@@ -23,6 +23,8 @@ use Sulu\Component\Content\Document\WorkflowStage;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Security\Core\Tests\Authentication\Token\TestUser;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use PHPCR\NoSuchWorkspaceException;
 
 /**
  * Base test case for functional tests in Sulu.
@@ -62,20 +64,7 @@ abstract class SuluTestCase extends KernelTestCase
     public function tearDown()
     {
         parent::tearDown();
-        // close the doctrine connection
-        foreach ($this->getContainer()->get('doctrine')->getConnections() as $connection) {
-            $connection->close();
-        }
-
-        // close the jackalope connections - can be removed when
-        // https://github.com/sulu/sulu/pull/2125 is merged.
-        // this has a negligble impact on memory usage in anycase.
-        foreach ($this->getContainer()->get('doctrine_phpcr')->getConnections() as $connection) {
-            try {
-                $connection->logout();
-            } catch (\Exception $e) {
-            }
-        }
+        $this->getEntityManager()->getConnection()->close();
     }
 
     /**
@@ -138,34 +127,38 @@ abstract class SuluTestCase extends KernelTestCase
 
     /**
      * Initialize / reset the Sulu PHPCR environment.
-     *
-     * NOTE: We could use the document initializer here rather than manually creating
-     *       the webspace nodes, but it currently adds more overhead and offers
-     *       no control over *which* webspaces are created, see
-     *       https://github.com/sulu-io/sulu/pull/2063 for a solution.
      */
-    protected function initPhpcr()
+    protected function initPhpcr(HttpKernelInterface $kernel = null)
     {
-        /** @var SessionInterface $session */
-        $session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
+        $container = $kernel ? $kernel->getContainer() : $this->getContainer();
 
-        if ($session->nodeExists('/cmf')) {
-            NodeHelper::purgeWorkspace($session);
-            $session->save();
+        /** @var SessionInterface $session */
+        $registry = $container->get('doctrine_phpcr');
+
+        foreach ($registry->getConnections() as $session) {
+            try {
+                NodeHelper::purgeWorkspace($session);
+                $session->save();
+            } catch (NoSuchWorkspaceException $e) {
+            }
         }
 
         if (!$this->importer) {
-            $this->importer = new PHPCRImporter($session);
+            $this->importer = new PHPCRImporter($this->getContainer()->get('doctrine_phpcr')->getConnection());
         }
+
+        $connections = $registry->getConnections();
+        $connectionsKey = serialize(array_keys($connections));
 
         // initialize the content repository.  in order to speed things up, for
         // each process, we dump the initial state to an XML file and restore
         // it thereafter.
         $initializerDump = __DIR__ . '/../Resources/app/cache/initial.xml';
-        if (true === self::$workspaceInitialized) {
-            $session->importXml('/', $initializerDump, ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
-            $session->save();
-
+        if (self::$workspaceInitialized && $connectionsKey === self::$workspaceInitialized) {
+            foreach ($connections as $session) {
+                $session->importXml('/', $initializerDump, ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
+                $session->save();
+            }
             return;
         }
 
@@ -173,11 +166,11 @@ abstract class SuluTestCase extends KernelTestCase
         if (!$filesystem->exists(dirname($initializerDump))) {
             $filesystem->mkdir(dirname($initializerDump));
         }
-        $this->getContainer()->get('sulu_document_manager.initializer')->initialize();
+        $container->get('sulu_document_manager.initializer')->initialize();
         $handle = fopen($initializerDump, 'w');
-        $session->exportSystemView('/cmf', $handle, false, false);
+        $registry->getConnection()->exportSystemView('/cmf', $handle, false, false);
         fclose($handle);
-        self::$workspaceInitialized = true;
+        self::$workspaceInitialized = $connectionsKey;
     }
 
     /**

@@ -26,7 +26,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->arrayNode('namespace')
-                ->useAttributeAsKey('role')
+                    ->useAttributeAsKey('role')
                     ->defaultValue([
                         'extension_localized' => 'i18n',
                         'system' => 'sulu',
@@ -48,7 +48,7 @@ class Configuration implements ConfigurationInterface
                     ->prototype('array')
                         ->children()
                             ->scalarNode('class')
-                                ->info('Fully qualified class name for mapped object')
+                               ->info('Fully qualified class name for mapped object')
                                 ->isRequired()
                             ->end()
                             ->scalarNode('phpcr_type')
@@ -70,7 +70,42 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-            ->end();
+                ->scalarNode('default_manager')
+                    ->info('Name of the default document manager')
+                    ->defaultValue('default')
+                ->end()
+                ->arrayNode('sessions')
+                    ->useAttributeAsKey('name')
+                    ->prototype('array')
+                        ->children()
+                            ->arrayNode('backend')
+                                ->children()
+                                    ->scalarNode('type')->end()
+                                    ->scalarNode('url')->end()
+                                ->end()
+                            ->end()
+                            ->scalarNode('workspace')->end()
+                            ->scalarNode('username')->defaultValue('admin')->end()
+                            ->scalarNode('password')->defaultValue('admin')->end()
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('managers')
+                    ->useAttributeAsKey('name')
+                    ->defaultValue([
+                        'default' => [
+                            'session' => 'default',
+                        ],
+                    ])
+                    ->prototype('array')
+                        ->children()
+                            ->scalarNode('session')
+                                ->info('PHPCR session name')
+                                ->isRequired()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end();
 
         return $treeBuilder;
     }

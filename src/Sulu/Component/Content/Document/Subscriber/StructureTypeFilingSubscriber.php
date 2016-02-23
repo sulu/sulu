@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use Sulu\Component\Content\Document\Behavior\StructureTypeFilingBehavior;
+use Sulu\Component\DocumentManager\Event\AbstractEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\Subscriber\Behavior\Path\AbstractFilingSubscriber;
@@ -42,7 +43,7 @@ class StructureTypeFilingSubscriber extends AbstractFilingSubscriber
         if ($event->hasParentNode()) {
             $currentPath = $event->getParentNode()->getPath();
         }
-        $parentName = $this->getParentName($document);
+        $parentName = $this->getParentName($event);
 
         return sprintf('%s/%s', $currentPath, $parentName);
     }
@@ -58,8 +59,10 @@ class StructureTypeFilingSubscriber extends AbstractFilingSubscriber
     /**
      * {@inheritdoc}
      */
-    protected function getParentName($document)
+    protected function getParentName(AbstractEvent $event)
     {
+        $document = $event->getDocument();
+
         return $document->getStructureType();
     }
 }

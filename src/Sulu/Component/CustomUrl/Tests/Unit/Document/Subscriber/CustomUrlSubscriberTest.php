@@ -150,7 +150,7 @@ class CustomUrlSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn($webspace);
 
         $this->documentManager->find('/cmf/sulu_io/custom-urls/routes/sulu.lo/test-3', 'de')
-            ->willThrow(new DocumentNotFoundException());
+            ->willThrow(new DocumentNotFoundException('test'));
         $this->documentManager->create('custom_url_route')->willReturn($routeDocument3->reveal());
         $routeDocument3->setTargetDocument($document->reveal())->shouldBeCalled();
         $routeDocument3->setLocale('de')->shouldBeCalled();

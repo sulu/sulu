@@ -31,13 +31,14 @@ class WebspaceSubscriberTest extends SubscriberTestCase
         parent::setUp();
 
         $this->inspector = $this->prophesize(DocumentInspector::class);
-        $this->subscriber = new WebspaceSubscriber($this->encoder->reveal(), $this->inspector->reveal());
+        $this->subscriber = new WebspaceSubscriber($this->encoder->reveal());
     }
 
     public function testHandleWebspace()
     {
         $document = $this->prophesize(WebspaceBehavior::class);
         $this->persistEvent->getDocument()->willReturn($document);
+        $this->manager->getInspector()->willReturn($this->inspector->reveal());
 
         $this->inspector->getWebspace($document->reveal())->willReturn('example');
         $this->accessor->set('webspaceName', 'example')->shouldBeCalled();
