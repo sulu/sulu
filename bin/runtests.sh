@@ -141,6 +141,15 @@ for BUNDLE in $BUNDLES; do
     if [ $? -ne 0 ]; then
         echo $BUNDLE_NAME >> /tmp/failed.tests
     fi
+
+    comment "Restart jackrabbit"
+
+    PID=`ps -ef | grep "jackrabbit-standalone" | grep -v grep | awk '{ print $2 }'`
+    if [ $PID ]; then
+        kill -9 $PID
+    fi
+
+    ./bin/jackrabbit.sh
 done
 
 check_failed_tests
