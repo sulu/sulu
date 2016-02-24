@@ -15,6 +15,7 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\DataNavigationItem;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class MediaAdmin extends Admin
@@ -36,7 +37,7 @@ class MediaAdmin extends Admin
         $media->setPosition(30);
         $media->setIcon('image');
 
-        if ($this->securityChecker->hasPermission('sulu.media.collections', 'view')) {
+        if ($this->securityChecker->hasPermission('sulu.media.collections', PermissionTypes::VIEW)) {
             $collections = new DataNavigationItem('navigation.media.collections', '/admin/api/collections?sortBy=title', $media);
             $collections->setPosition(10);
             $collections->setId('collections-edit');
@@ -72,7 +73,13 @@ class MediaAdmin extends Admin
         return [
             'Sulu' => [
                 'Media' => [
-                    'sulu.media.collections',
+                    'sulu.media.collections' => [
+                        PermissionTypes::VIEW,
+                        PermissionTypes::ADD,
+                        PermissionTypes::EDIT,
+                        PermissionTypes::DELETE,
+                        PermissionTypes::SECURITY,
+                    ],
                 ],
             ],
         ];

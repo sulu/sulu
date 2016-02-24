@@ -27,6 +27,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -126,7 +127,7 @@ class CollectionManager implements CollectionManagerInterface
             $collectionEntity,
             $sortBy,
             $this->getCurrentUser(),
-            $this->permissions['view']
+            $this->permissions[PermissionTypes::VIEW]
         );
 
         $breadcrumbEntities = null;
@@ -207,7 +208,7 @@ class CollectionManager implements CollectionManagerInterface
             null,
             $sortBy,
             $this->getCurrentUser(),
-            $this->permissions['view']
+            $this->permissions[PermissionTypes::VIEW]
         );
 
         $collections = [];

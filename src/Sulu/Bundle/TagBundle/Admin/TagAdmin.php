@@ -14,6 +14,7 @@ namespace Sulu\Bundle\TagBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class TagAdmin extends Admin
@@ -66,7 +67,12 @@ class TagAdmin extends Admin
         return [
             'Sulu' => [
                 'Settings' => [
-                    'sulu.settings.tags',
+                    'sulu.settings.tags' => [
+                        PermissionTypes::VIEW,
+                        PermissionTypes::ADD,
+                        PermissionTypes::EDIT,
+                        PermissionTypes::DELETE,
+                    ],
                 ],
             ],
         ];

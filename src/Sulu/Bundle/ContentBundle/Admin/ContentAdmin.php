@@ -15,6 +15,7 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
@@ -64,7 +65,7 @@ class ContentAdmin extends Admin
 
         /** @var Webspace $webspace */
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT_PREFIX . $webspace->getKey(), 'view')) {
+            if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT_PREFIX . $webspace->getKey(), PermissionTypes::VIEW)) {
                 $webspaceItem = new NavigationItem($webspace->getName());
                 $webspaceItem->setPosition($position++);
                 $webspaceItem->setIcon('bullseye');
@@ -111,7 +112,13 @@ class ContentAdmin extends Admin
         $webspaceContexts = [];
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             /* @var Webspace $webspace */
-            $webspaceContexts[] = self::SECURITY_CONTEXT_PREFIX . $webspace->getKey();
+            $webspaceContexts[self::SECURITY_CONTEXT_PREFIX . $webspace->getKey()] = [
+                PermissionTypes::VIEW,
+                PermissionTypes::ADD,
+                PermissionTypes::EDIT,
+                PermissionTypes::DELETE,
+                PermissionTypes::SECURITY,
+            ];
         }
 
         return [

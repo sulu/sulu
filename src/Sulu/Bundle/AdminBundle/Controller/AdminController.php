@@ -16,6 +16,7 @@ use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\JsConfigPool;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -208,7 +209,17 @@ class AdminController
         $contexts = $this->adminPool->getSecurityContexts();
         $system = $request->get('system');
 
-        $response = isset($system) ? $contexts[$system] : $contexts;
+        $mappedContexts = [];
+
+        foreach ($contexts as $system => $sections) {
+            foreach ($sections as $section => $contexts) {
+                foreach ($contexts as $context => $permissionTypes) {
+                    $this->addContext($mappedContexts, $system, $section, $context, $permissionTypes);
+                }
+            }
+        }
+
+        $response = isset($system) ? $mappedContexts[$system] : $mappedContexts;
 
         return new JsonResponse($response);
     }
@@ -221,5 +232,30 @@ class AdminController
     public function configAction()
     {
         return new JsonResponse($this->jsConfigPool->getConfigParams());
+    }
+
+    /**
+     * Will transform the different representations of permission types to the same representation and adds it to the
+     * passed array.
+     *
+     * @param array $mappedContexts
+     * @param string $system
+     * @param string $section
+     * @param mixed $context
+     * @param mixed $permissionTypes
+     */
+    private function addContext(array &$mappedContexts, $system, $section, $context, $permissionTypes)
+    {
+        if (is_array($permissionTypes)) {
+            $mappedContexts[$system][$section][$context] = $permissionTypes;
+        } else {
+            $mappedContexts[$system][$section][$permissionTypes] = [
+                PermissionTypes::VIEW,
+                PermissionTypes::ADD,
+                PermissionTypes::EDIT,
+                PermissionTypes::DELETE,
+                PermissionTypes::SECURITY,
+            ];
+        }
     }
 }

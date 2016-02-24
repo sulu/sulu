@@ -35542,107 +35542,108 @@ define('__component__$matrix@husky',[],function() {
 
     'use strict';
 
-    var sandbox,
-        activeClass = 'is-active';
+    var activeClass = 'is-active';
 
     return {
         initialize: function() {
-            sandbox = this.sandbox;
-
-            this.$element = sandbox.dom.createElement('<div class="husky-matrix"/>');
+            this.$element = this.sandbox.dom.createElement('<div class="husky-matrix"/>');
 
             this.prepare();
 
-            sandbox.dom.append(this.$el, this.$element);
+            this.sandbox.dom.append(this.$el, this.$element);
 
             this.bindDOMEvents();
             this.bindCustomEvents();
         },
 
         bindDOMEvents: function() {
-            sandbox.dom.on(this.$element, 'click', this.toggleIcon.bind(this), 'tbody > tr > td:has(span[class^="fa-"])');
-            sandbox.dom.on(this.$element, 'click', this.setRowActive.bind(this), 'tbody > tr > td:last-child');
+            this.sandbox.dom.on(
+                this.$element,
+                'click',
+                this.toggleIcon.bind(this),
+                'tbody > tr > td.value > span[class^="fa-"]'
+            );
+            this.sandbox.dom.on(this.$element, 'click', this.toggleRow.bind(this), 'tbody > tr > td:last-child');
         },
 
         bindCustomEvents: function() {
-            sandbox.on('husky.matrix.set-all', this.setAllActive.bind(this));
-            sandbox.on('husky.matrix.unset-all', this.unsetAllActive.bind(this));
+            this.sandbox.on('husky.matrix.set-all', this.setAllActive.bind(this));
+            this.sandbox.on('husky.matrix.unset-all', this.unsetAllActive.bind(this));
         },
 
         toggleIcon: function(event) {
             var $target = event.currentTarget,
-                $tr = sandbox.dom.parent($target),
-                $allTargets = sandbox.dom.find('span[class^="fa-"]', $tr),
+                $tr = this.sandbox.dom.parent($target),
+                $allTargets = this.sandbox.dom.find('span[class^="fa-"]', $tr),
                 $activeTargets,
-                $link = sandbox.dom.find('td:last-child span', $tr);
+                $link = this.sandbox.dom.find('td:last-child span', $tr);
 
-            $target = sandbox.dom.find('span[class^="fa-"]', $target);
-            sandbox.dom.toggleClass($target, activeClass);
+            this.sandbox.dom.toggleClass($target, activeClass);
 
-            $activeTargets = sandbox.dom.find('span[class^="fa-"].' + activeClass, $tr);
+            $activeTargets = this.sandbox.dom.find('span[class^="fa-"].' + activeClass, $tr);
             if ($activeTargets.length < $allTargets.length) {
-                sandbox.dom.html($link, this.options.captions.all);
+                this.sandbox.dom.html($link, this.options.captions.all);
             } else {
-                sandbox.dom.html($link, this.options.captions.none);
+                this.sandbox.dom.html($link, this.options.captions.none);
             }
 
             // emit events for communication with the outside
-            sandbox.emit('husky.matrix.changed', {
-                section: sandbox.dom.data($target, 'section'),
-                value: sandbox.dom.data($target, 'value'),
-                activated: sandbox.dom.hasClass($target, activeClass)
+            this.sandbox.emit('husky.matrix.changed', {
+                section: this.sandbox.dom.data($target, 'section'),
+                value: this.sandbox.dom.data($target, 'value'),
+                activated: this.sandbox.dom.hasClass($target, activeClass)
             });
         },
 
-        setRowActive: function(event) {
-            var $tr = sandbox.dom.parent(event.currentTarget),
-                $targets = sandbox.dom.find('span[class^="fa-"]', $tr),
-                $activeTargets = sandbox.dom.find('span[class^="fa-"].' + activeClass, $tr),
-                $link = sandbox.dom.find('td:last-child span', $tr), activated;
+        toggleRow: function(event) {
+            var $tr = this.sandbox.dom.parent(event.currentTarget),
+                $targets = this.sandbox.dom.find('span[class^="fa-"]', $tr),
+                $activeTargets = this.sandbox.dom.find('span[class^="fa-"].' + activeClass, $tr),
+                $link = this.sandbox.dom.find('td:last-child span', $tr), activated;
 
             if ($activeTargets.length < $targets.length) {
-                sandbox.dom.addClass($targets, activeClass);
-                sandbox.dom.html($link, this.options.captions.none);
+                this.sandbox.dom.addClass($targets, activeClass);
+                this.sandbox.dom.html($link, this.options.captions.none);
                 activated = true;
             } else {
-                sandbox.dom.removeClass($targets, activeClass);
-                sandbox.dom.html($link, this.options.captions.all);
+                this.sandbox.dom.removeClass($targets, activeClass);
+                this.sandbox.dom.html($link, this.options.captions.all);
                 activated = false;
             }
 
             // emit events for communication with the outside
-            sandbox.emit('husky.matrix.changed', {
-                section: sandbox.dom.data($targets, 'section'),
-                value: this.options.values.horizontal,
+            this.sandbox.emit('husky.matrix.changed', {
+                section: this.sandbox.dom.data($targets, 'section'),
+                value: this.options.values.horizontal[$tr.data('row-count')],
                 activated: activated
             });
         },
 
         setAllActive: function() {
-            var $targets = sandbox.dom.find('span[class^="fa-"]', this.$element),
-                $trs = sandbox.dom.find('tbody > tr', this.$element);
-            sandbox.dom.addClass($targets, activeClass);
+            var $targets = this.sandbox.dom.find('span[class^="fa-"]', this.$element),
+                $trs = this.sandbox.dom.find('tbody > tr', this.$element);
+            this.sandbox.dom.addClass($targets, activeClass);
 
-            // emit events for communication with the outsite
-            sandbox.dom.each($trs, function(key, $tr) {
-                sandbox.emit('husky.matrix.changed', {
-                    section: sandbox.dom.data(sandbox.dom.find('td.section', $tr), 'section'),
-                    value: this.options.values.horizontal,
+            // emit events for communication with the outside
+            this.sandbox.dom.each($trs, function(key, tr) {
+                this.sandbox.emit('husky.matrix.changed', {
+                    section: this.sandbox.dom.data(this.sandbox.dom.find('td.section', tr), 'section'),
+                    value: this.options.values.horizontal[$(tr).data('row-count')],
                     activated: true
                 });
             }.bind(this));
         },
 
         unsetAllActive: function() {
-            var $targets = sandbox.dom.find('span[class^="fa-"]', this.$element),
-                $trs = sandbox.dom.find('tbody > tr', this.$element);
-            sandbox.dom.removeClass($targets, activeClass);
+            var $targets = this.sandbox.dom.find('span[class^="fa-"]', this.$element),
+                $trs = this.sandbox.dom.find('tbody > tr', this.$element);
+            this.sandbox.dom.removeClass($targets, activeClass);
 
             // emit events for communication with the outsite
-            sandbox.dom.each($trs, function(key, $tr) {
-                sandbox.emit('husky.matrix.changed', {
-                    section: sandbox.dom.data(sandbox.dom.find('td.section', $tr), 'section'),
-                    value: this.options.values.horizontal,
+            this.sandbox.dom.each($trs, function(key, tr) {
+                this.sandbox.emit('husky.matrix.changed', {
+                    section: this.sandbox.dom.data(this.sandbox.dom.find('td.section', tr), 'section'),
+                    value: this.options.values.horizontal[$(tr).data('row-count')],
                     activated: false
                 });
             }.bind(this));
@@ -35655,118 +35656,140 @@ define('__component__$matrix@husky',[],function() {
         prepareTable: function() {
             var $table;
 
-            $table = sandbox.dom.createElement('<table class="table matrix"/>');
-            sandbox.dom.append($table, this.prepareTableHead());
+            $table = this.sandbox.dom.createElement('<table class="table matrix"/>');
+            this.sandbox.dom.append($table, this.prepareTableHead());
 
             if (!!this.options.captions.vertical) {
-                sandbox.dom.append($table, this.prepareTableBody());
+                this.sandbox.dom.append($table, this.prepareTableBody());
             }
 
             return $table;
         },
 
         prepareTableHead: function() {
-            var $thead = sandbox.dom.createElement('<thead/>'),
-                $tr = sandbox.dom.createElement('<tr/>'),
-                $thSection = sandbox.dom.createElement('<th class="section"/>'),
+            var $thead = this.sandbox.dom.createElement('<thead/>'),
+                $tr = this.sandbox.dom.createElement('<tr/>'),
+                $thSection = this.sandbox.dom.createElement('<th class="section"/>'),
                 $thGeneral, $th;
 
             if (!!this.options.captions.general) {
-                $thGeneral = sandbox.dom.createElement('<th class="general"/>');
-                sandbox.dom.html($thGeneral, this.options.captions.general);
-                sandbox.dom.append($tr, $thGeneral);
+                $thGeneral = this.sandbox.dom.createElement('<th class="general"/>');
+                this.sandbox.dom.html($thGeneral, this.options.captions.general);
+                this.sandbox.dom.append($tr, $thGeneral);
             }
 
-            sandbox.dom.html($thSection, this.options.captions.type);
+            this.sandbox.dom.html($thSection, this.options.captions.type);
 
-            sandbox.dom.append($tr, $thSection);
+            this.sandbox.dom.append($tr, $thSection);
 
             if (typeof(this.options.captions.horizontal) === 'string') {
                 // insert a header for all values, if the horizontal caption is a string
-                $th = sandbox.dom.createElement('<th/>', {colspan: this.options.values.horizontal.length});
-                sandbox.dom.html($th, this.options.captions.horizontal);
-                sandbox.dom.append($tr, $th);
+                $th = this.sandbox.dom.createElement('<th/>');
+                this.sandbox.dom.html($th, this.options.captions.horizontal);
+                this.sandbox.dom.append($tr, $th);
             } else {
                 // insert the corresponding headers, if the horizontal caption is an array
                 this.options.captions.horizontal.forEach(function(caption) {
-                    var $th = sandbox.dom.createElement('<th/>');
-                    sandbox.dom.html($th, caption);
-                    sandbox.dom.append($tr, $th);
-                });
+                    var $th = this.sandbox.dom.createElement('<th/>');
+                    this.sandbox.dom.html($th, caption);
+                    this.sandbox.dom.append($tr, $th);
+                }.bind(this));
             }
 
             // add empty th for all link
-            sandbox.dom.append($tr, sandbox.dom.createElement('<th/>'));
+            this.sandbox.dom.append($tr, this.sandbox.dom.createElement('<th/>'));
 
-            sandbox.dom.append($thead, $tr);
+            this.sandbox.dom.append($thead, $tr);
 
             return $thead;
         },
 
         prepareTableBody: function() {
-            var $tbody = sandbox.dom.createElement('<tbody/>'), allActive,
-                i, j, $tr, $tdHead, $tdAll, $tdValue, $span, title;
+            var $tbody = this.sandbox.dom.createElement('<tbody/>'),
+                rowCount;
 
-            for (i = 0; i < this.options.captions.vertical.length; i++) {
-                $tr = sandbox.dom.createElement('<tr/>');
-                $tdHead = sandbox.dom.createElement('<td class="section"/>');
-                $tdAll = sandbox.dom.createElement('<td class="all"/>');
-
-                // insert empty line, if there is a general caption
-                if (!!this.options.captions.general) {
-                    sandbox.dom.append($tr, sandbox.dom.createElement('<td/>'));
-                }
-
-                // insert vertical headlines as first element
-                sandbox.dom.html($tdHead, this.options.captions.vertical[i]);
-                sandbox.dom.data($tdHead, 'section', this.options.values.vertical[i]);
-                sandbox.dom.append($tr, $tdHead);
-
-                // flag for checking if every flag is true
-                allActive = true;
-
-                // insert values of matrix
-                for (j = 0; j < this.options.values.horizontal.length; j++) {
-                    $tdValue = sandbox.dom.createElement('<td class="value"/>');
-
-                    if (this.options.values.titles) {
-                        title = 'title="' + this.options.values.titles[j] + '"';
-                    } else {
-                        title = '';
-                    }
-                    $span = sandbox.dom.createElement(
-                        '<span ' + title + ' class="fa-' + this.options.values.horizontal[j].icon + ' matrix-icon pointer"/>'
-                    );
-                    sandbox.dom.data($span, 'value', this.options.values.horizontal[j].value);
-                    sandbox.dom.data($span, 'section', this.options.values.vertical[i]);
-
-                    // set activated if set in delivered data
-                    if (!!this.options.data[i][j]) {
-                        sandbox.dom.addClass($span, activeClass);
-                    } else {
-                        // set the flag to false if there is one
-                        allActive = false;
-                    }
-
-                    sandbox.dom.append($tdValue, $span);
-                    sandbox.dom.append($tr, $tdValue);
-                }
-
-                //add all link
-                sandbox.dom.html(
-                    $tdAll,
-                    [
-                        '<span class="pointer">',
-                        (!!allActive) ? this.options.captions.none : this.options.captions.all,
-                        '</span>'
-                    ].join('')
-                );
-                sandbox.dom.append($tr, $tdAll);
-
-                sandbox.dom.append($tbody, $tr);
+            for (rowCount = 0; rowCount < this.options.captions.vertical.length; rowCount++) {
+                this.prepareTableRow($tbody, rowCount);
             }
 
             return $tbody;
+        },
+
+        prepareTableRow: function($tbody, rowCount) {
+            var $tr = this.sandbox.dom.createElement('<tr/>'),
+                $tdHead = this.sandbox.dom.createElement('<td class="section"/>'),
+                $tdValue = this.sandbox.dom.createElement('<td class="value"/>'),
+                $tdAll = this.sandbox.dom.createElement('<td class="all"/>'),
+                allActive;
+
+            $tr.data('row-count', rowCount);
+
+            // insert empty line, if there is a general caption
+            if (!!this.options.captions.general) {
+                this.sandbox.dom.append($tr, this.sandbox.dom.createElement('<td/>'));
+            }
+
+            // insert vertical headlines as first element
+            this.sandbox.dom.html($tdHead, this.options.captions.vertical[rowCount]);
+            this.sandbox.dom.data($tdHead, 'section', this.options.values.vertical[rowCount]);
+            this.sandbox.dom.append($tr, $tdHead);
+
+            // flag for checking if every flag is true
+            // insert values of matrix
+            allActive = this.prepareTableColumn(
+                $tdValue,
+                this.options.values.horizontal[rowCount],
+                this.options.values.vertical[rowCount],
+                this.options.data[rowCount]
+            );
+
+            this.sandbox.dom.append($tr, $tdValue);
+
+            //add all link
+            this.sandbox.dom.html(
+                $tdAll,
+                [
+                    '<span class="pointer">',
+                    (!!allActive) ? this.options.captions.none : this.options.captions.all,
+                    '</span>'
+                ].join('')
+            );
+            this.sandbox.dom.append($tr, $tdAll);
+
+            this.sandbox.dom.append($tbody, $tr);
+        },
+
+        prepareTableColumn: function($tdValue, columnData, section, value) {
+            var allActive = true,
+                title,
+                $span,
+                i;
+
+            for (i = 0; i < columnData.length; i++) {
+                if (columnData[i].title) {
+                    title = 'title="' + columnData[i].title + '"';
+                } else {
+                    title = '';
+                }
+                $span = this.sandbox.dom.createElement(
+                    '<span ' + title +
+                    ' class="fa-' + columnData[i].icon + ' matrix-icon pointer"/>'
+                );
+                this.sandbox.dom.data($span, 'value', columnData[i].value);
+                this.sandbox.dom.data($span, 'section', section);
+
+                // set activated if set in delivered data
+                if (!!value[i]) {
+                    this.sandbox.dom.addClass($span, activeClass);
+                } else {
+                    // set the flag to false if there is one
+                    allActive = false;
+                }
+
+                this.sandbox.dom.append($tdValue, $span);
+            }
+
+            return allActive;
         }
     };
 });
@@ -38195,7 +38218,7 @@ define('__component__$auto-complete@husky',[], function() {
                     var dataId = this.sandbox.dom.attr(this.$valueField, 'data-id');
                     if (dataId != null && dataId !== 'null') {
                         this.sandbox.dom.removeAttr(this.$valueField, 'data-id');
-                        this.sandbox.dom.data(this.$valueField, 'id', 'null');
+                        this.sandbox.dom.data(this.$valueField, 'data-id', 'null');
                         this.sandbox.emit(SELECTION_REMOVED.call(this));
                     }
                 }
@@ -38314,7 +38337,6 @@ define('__component__$auto-complete@husky',[], function() {
          */
         setValueFieldId: function(id) {
             this.sandbox.dom.attr(this.$valueField, {'data-id': id});
-            this.sandbox.dom.data(this.$valueField, 'id',  id);
         },
 
         /**

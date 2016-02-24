@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContactBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class ContactAdmin extends Admin
@@ -35,7 +36,7 @@ class ContactAdmin extends Admin
         $contacts->setPosition(20);
         $contacts->setIcon('user');
 
-        if ($this->securityChecker->hasPermission('sulu.contact.people', 'view')) {
+        if ($this->securityChecker->hasPermission('sulu.contact.people', PermissionTypes::VIEW)) {
             $people = new NavigationItem('navigation.contacts.people');
             $people->setPosition(10);
             $people->setIcon('users');
@@ -43,7 +44,7 @@ class ContactAdmin extends Admin
             $contacts->addChild($people);
         }
 
-        if ($this->securityChecker->hasPermission('sulu.contact.organizations', 'view')) {
+        if ($this->securityChecker->hasPermission('sulu.contact.organizations', PermissionTypes::VIEW)) {
             $companies = new NavigationItem('navigation.contacts.companies');
             $companies->setPosition(20);
             $companies->setIcon('building');
@@ -75,8 +76,18 @@ class ContactAdmin extends Admin
         return [
             'Sulu' => [
                 'Contacts' => [
-                    'sulu.contact.people',
-                    'sulu.contact.organizations',
+                    'sulu.contact.people' => [
+                        PermissionTypes::VIEW,
+                        PermissionTypes::ADD,
+                        PermissionTypes::EDIT,
+                        PermissionTypes::DELETE,
+                    ],
+                    'sulu.contact.organizations' => [
+                        PermissionTypes::VIEW,
+                        PermissionTypes::ADD,
+                        PermissionTypes::EDIT,
+                        PermissionTypes::DELETE,
+                    ],
                 ],
             ],
         ];

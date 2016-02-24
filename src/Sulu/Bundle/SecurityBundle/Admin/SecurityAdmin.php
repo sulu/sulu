@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SecurityBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class SecurityAdmin extends Admin
@@ -35,7 +36,7 @@ class SecurityAdmin extends Admin
         $settings->setPosition(40);
         $settings->setIcon('gear');
 
-        if ($this->securityChecker->hasPermission('sulu.security.roles', 'view')) {
+        if ($this->securityChecker->hasPermission('sulu.security.roles', PermissionTypes::VIEW)) {
             $roles = new NavigationItem('security.roles.title', $settings);
             $roles->setPosition(10);
             $roles->setAction('settings/roles');
@@ -55,9 +56,24 @@ class SecurityAdmin extends Admin
         return [
             'Sulu' => [
                 'Security' => [
-                    'sulu.security.roles',
-                    'sulu.security.groups',
-                    'sulu.security.users',
+                    'sulu.security.roles' => [
+                        PermissionTypes::VIEW,
+                        PermissionTypes::ADD,
+                        PermissionTypes::EDIT,
+                        PermissionTypes::DELETE,
+                    ],
+                    'sulu.security.groups' => [
+                        PermissionTypes::VIEW,
+                        PermissionTypes::ADD,
+                        PermissionTypes::EDIT,
+                        PermissionTypes::DELETE,
+                    ],
+                    'sulu.security.users' => [
+                        PermissionTypes::VIEW,
+                        PermissionTypes::ADD,
+                        PermissionTypes::EDIT,
+                        PermissionTypes::DELETE,
+                    ],
                 ],
             ],
         ];

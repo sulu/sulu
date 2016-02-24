@@ -73,12 +73,16 @@ class CreateRoleCommand extends ContainerAwareCommand
         // flatten contexts
         $securityContextsFlat = [];
 
-        array_walk_recursive(
-            $securityContexts['Sulu'],
-            function ($value) use (&$securityContextsFlat) {
-                $securityContextsFlat[] = $value;
+        foreach ($securityContexts['Sulu'] as $section => $contexts) {
+            foreach ($contexts as $context => $permissionTypes) {
+                if (is_array($permissionTypes)) {
+                    $securityContextsFlat[] = $context;
+                } else {
+                    // FIXME here for BC reasons, because the array used to only contain values without permission types
+                    $securityContextsFlat[] = $permissionTypes;
+                }
             }
-        );
+        }
 
         foreach ($securityContextsFlat as $securityContext) {
             $permission = new Permission();

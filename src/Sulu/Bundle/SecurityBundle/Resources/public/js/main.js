@@ -27,22 +27,11 @@ define(['config'], function(Config) {
             Config.set(
                 'sulusecurity.permissions',
                 [
-                    {value: 'view', icon: 'eye'},
-                    {value: 'add', icon: 'plus-circle'},
-                    {value: 'edit', icon: 'pencil'},
-                    {value: 'delete', icon: 'trash-o'},
-                    {value: 'security', icon: 'unlock-alt'}
-                ]
-            );
-
-            Config.set(
-                'sulusecurity.permission_titles',
-                [
-                    'security.permissions.view',
-                    'security.permissions.add',
-                    'security.permissions.edit',
-                    'security.permissions.delete',
-                    'security.permissions.security'
+                    {value: 'view', icon: 'eye', title: 'security.permissions.view'},
+                    {value: 'add', icon: 'plus-circle', title: 'security.permissions.add'},
+                    {value: 'edit', icon: 'pencil', title: 'security.permissions.edit'},
+                    {value: 'delete', icon: 'trash-o', title: 'security.permissions.delete'},
+                    {value: 'security', icon: 'unlock-alt', title: 'security.permissions.security'}
                 ]
             );
 
