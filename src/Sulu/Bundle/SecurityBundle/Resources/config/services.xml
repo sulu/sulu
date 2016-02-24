@@ -157,5 +157,11 @@
             <tag name="jms_serializer.event_subscriber" />
             <tag name="sulu.context" context="admin"/>
         </service>
+
+        <service id="sulu_security.event_listener.user" class="Sulu\Bundle\SecurityBundle\EventListener\UserLocaleListener">
+            <argument type="service" id="security.token_storage"/>
+            <tag name="kernel.event_listener" event="kernel.request" method="copyUserLocaleToRequest"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
     </services>
 </container>
