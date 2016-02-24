@@ -41,7 +41,15 @@ CHANGELOG for Sulu
     * BUGFIX      #1873 [ContactBundle]       Fixed remove contact birthday
     
 * dev-master
-    * HOTFIX     #1991   [Rest]             Added metadata for field-descriptors
+    * HOTFIX      #2024 [ContactBundle]     Fixed account add-contact-overlay enter bug and search for e-mail
+    * HOTFIX      #2000 [Filter]            Added filter metadata and new filter input types (tags, auto-complete)
+    * ENHANCEMENT #2016 [AdminBundle]       Added loader to indicate loading suggestions
+    * HOTFIX      #2002 [MediaBundle]       Fixed retina height for image scale command
+    * HOTFIX      #2005 [WebsiteBundle]     Merge Twig globals and add output buffer handling for preview rendering
+    * HOTFIX      #2003 [ContactBundle]     Fixed rendering of address with null title
+    * HOTFIX      #1991 [Rest]              Added metadata for field-descriptors
+    * BUGFIX      #1944 [MediaBundle]       Removed wrong definition of indices
+    * HOTFIX      #2011 [AdminBundle]       Fixed double handling of login via enter
     
 * 1.1.9 (2016-02-05)
     * ENHANCEMENT #1978 [SecurityBundle]    Made url for resetting password configurable via static variable

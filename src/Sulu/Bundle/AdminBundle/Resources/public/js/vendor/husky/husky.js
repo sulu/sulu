@@ -37739,10 +37739,13 @@ define('__component__$auto-complete@husky',[], function() {
     templates = {
         main: [
             '<div class="husky-auto-complete <%= dropdownSizeClass %>">',
-                '<div class="front">',
-                    '<a class="fa-<%= autoCompleteIcon %>"></a>',
-                '</div>',
-                '<div class="input"></div>',
+            '    <div class="front">',
+            '       <a class="fa-<%= autoCompleteIcon %>"></a>',
+            '    </div>',
+            '    <div class="input"></div>',
+            '    <div class="back">',
+            '       <div class="loader" style="display: none;"></div>',
+            '    </div>',
             '</div>'
         ].join('')
     },
@@ -37962,6 +37965,17 @@ define('__component__$auto-complete@husky',[], function() {
             this.initValueField();
             this.appendValueField();
 
+            this.sandbox.start([
+                {
+                    name: 'loader@husky',
+                    options: {
+                        el: this.$el.find('.loader'),
+                        color: '#ccc',
+                        size: '20px'
+                    }
+                }
+            ]);
+
             this.bindTypeahead();
         },
 
@@ -38019,8 +38033,8 @@ define('__component__$auto-complete@husky',[], function() {
                     url: this.options.prefetchUrl,
                     ttl: 1,
                     filter: function(data) {
-                        this.sandbox.emit(PREFETCH_LOAD.call(this));
-                        this.handleData(data);
+                        this.sandbox.emit(PREFETCH_LOAD.call(this), this.handleData(data));
+
                         return this.data;
                     }.bind(this)
                 };
@@ -38029,12 +38043,16 @@ define('__component__$auto-complete@husky',[], function() {
             if (!!this.options.remoteUrl) {
                 configs.remote = {
                     url: this.options.remoteUrl + delimiter + this.options.getParameter + '=%QUERY',
-                    beforeSend: function() {
-                        this.sandbox.emit(REMOTE_LOAD.call(this));
-                    }.bind(this),
+                    ajax: {
+                        beforeSend: function() {
+                            this.sandbox.emit(REMOTE_LOAD.call(this));
+                            this.showLoader();
+                        }.bind(this)
+                    },
                     filter: function(data) {
-                        this.sandbox.emit(REMOTE_RETRIEVE.call(this));
-                        this.handleData(data);
+                        this.sandbox.emit(REMOTE_RETRIEVE.call(this), this.handleData(data));
+                        this.hideLoader();
+
                         return this.data;
                     }.bind(this)
                 };
@@ -38051,6 +38069,20 @@ define('__component__$auto-complete@husky',[], function() {
             if (this.options.hint === false) {
                 this.sandbox.dom.remove(this.sandbox.dom.find('.tt-hint', this.$el));
             }
+        },
+
+        /**
+         * Show loader to indicate loading suggestions.
+         */
+        showLoader: function() {
+            this.$el.find('.loader').show();
+        },
+
+        /**
+         * Hide loader after loading suggestions.
+         */
+        hideLoader: function() {
+            this.$el.find('.loader').hide();
         },
 
         /**
@@ -38163,7 +38195,7 @@ define('__component__$auto-complete@husky',[], function() {
                     var dataId = this.sandbox.dom.attr(this.$valueField, 'data-id');
                     if (dataId != null && dataId !== 'null') {
                         this.sandbox.dom.removeAttr(this.$valueField, 'data-id');
-                        this.sandbox.dom.data(this.$valueField, 'data-id', 'null');
+                        this.sandbox.dom.data(this.$valueField, 'id', 'null');
                         this.sandbox.emit(SELECTION_REMOVED.call(this));
                     }
                 }
@@ -38282,6 +38314,7 @@ define('__component__$auto-complete@husky',[], function() {
          */
         setValueFieldId: function(id) {
             this.sandbox.dom.attr(this.$valueField, {'data-id': id});
+            this.sandbox.dom.data(this.$valueField, 'id',  id);
         },
 
         /**

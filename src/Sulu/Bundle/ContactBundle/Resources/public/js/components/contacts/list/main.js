@@ -147,7 +147,7 @@ define([
                 el: this.sandbox.dom.find('#people-list', this.$el),
                 url: '/admin/api/contacts?flat=true',
                 searchInstanceName: 'contacts',
-                searchFields: ['fullName'],
+                searchFields: ['fullName', 'mainEmail'],
                 resultKey: 'contacts',
                 instanceName: constants.datagridInstanceName,
                 actionCallback: actionCallback.bind(this),

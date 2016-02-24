@@ -8,3 +8,7 @@ doctrine:
         password: "%database_mysql_password%"
         charset:  UTF8
         server_version: 5.5
+    orm:
+        dql:
+            string_functions:
+                group_concat: Oro\ORM\Query\AST\Functions\String\GroupConcat

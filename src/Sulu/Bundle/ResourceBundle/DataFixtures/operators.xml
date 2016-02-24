@@ -124,4 +124,32 @@
             </value>
         </values>
     </operator>
+
+    <!-- tags -->
+    <operator type="tags" inputType="tags" operator="and">
+        <translations>
+            <translation locale="de">Übereinstimmung mit allen Tags</translation>
+            <translation locale="en">Use records that use ALL tags</translation>
+        </translations>
+    </operator>
+    <operator type="tags" inputType="tags" operator="or">
+        <translations>
+            <translation locale="de">Übereinstimmung mit mind. einem Tag</translation>
+            <translation locale="en">Use records that use ANY tag</translation>
+        </translations>
+    </operator>
+
+    <!-- auto-complete -->
+    <operator type="auto-complete" inputType="auto-complete" operator="=">
+        <translations>
+            <translation locale="de">gleich</translation>
+            <translation locale="en">is</translation>
+        </translations>
+    </operator>
+    <operator type="auto-complete" inputType="auto-complete" operator="!=">
+        <translations>
+            <translation locale="de">ungleich</translation>
+            <translation locale="en">is not</translation>
+        </translations>
+    </operator>
 </operators>

@@ -46,6 +46,21 @@ $item = new ContentNavigationItem('content-navigation.entry');
 $item->setPosition(10);
 ```
 
+## dev-master
+
+### Filter
+
+Update the schema `app/console doctrine:schema:update --force` and run following SQL-Statement:
+ 
+```sql
+UPDATE re_conditions SET value = CONCAT('"', value, '"') WHERE value NOT LIKE '"%"';
+INSERT INTO `re_operators` (`id`, `operator`, `type`, `inputType`) VALUES
+    (16, 'and', 5, 'tags'),
+    (17, 'or', 5, 'tags'),
+    (18, '=', 6, 'auto-complete'),
+    (19, '!=', 6, 'auto-complete');
+```
+
 ## 1.1.2
 
 ### Reindex-Command & Date Content-Type

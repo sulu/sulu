@@ -10,7 +10,7 @@
 define([
     'services/sulucontact/account-manager',
     'services/sulucontact/account-router',
-    'services/sulucontact/account-delete-dialog',
+    'services/sulucontact/account-delete-dialog'
 ], function(AccountManager, AccountRouter, DeleteDialog) {
 
     'use strict';
@@ -146,7 +146,7 @@ define([
                 el: this.sandbox.dom.find('#companies-list', this.$el),
                 url: '/admin/api/accounts?flat=true',
                 searchInstanceName: 'accounts',
-                searchFields: ['name'],
+                searchFields: ['name', 'mainEmail'],
                 resultKey: 'accounts',
                 instanceName: constants.datagridInstanceName,
                 actionCallback: actionCallback.bind(this),

@@ -1,0 +1,5 @@
+<class xmlns="http://schemas.sulu.io/class/general">
+    <properties>
+        <property name="tags" filter-type="test-input"/>
+    </properties>
+</class>
