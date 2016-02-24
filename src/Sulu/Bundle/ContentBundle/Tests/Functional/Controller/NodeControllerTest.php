@@ -22,6 +22,8 @@ use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\Util\XmlUtil;
+use Symfony\Component\Config\Util\XmlUtils;
 
 /**
  * @group nodecontroller
@@ -811,104 +813,60 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals(1, $response['nodeState']);
     }
 
-    private function import($file)
+    private function import($fileName)
     {
         if ($this->session->getRootNode()->hasNode('cmf')) {
             $this->session->getNode('/cmf')->remove();
             $this->session->save();
         }
 
+        $file = __DIR__ . '/../../app/Resources/exports/' . $fileName . '.xml';
+
         $this->session->importXML(
             '/',
-            __DIR__ . '/../../app/Resources/exports/' . $file . '.xml',
-            ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REPLACE_EXISTING
+            $file,
+            ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW
         );
         $this->session->save();
+
+        $doc = XmlUtils::loadFile($file);
+        $xpath = new \DOMXPath($doc);
+        $xpath->registerNamespace('sv', 'http://www.jcp.org/jcr/sv/1.0');
+
+        $data = [];
+        /** @var \DOMNode $node */
+        foreach ($xpath->query('//sv:value[text()="sulu:page"]/../..') as $node) {
+            $parent = $node;
+            $path = '';
+            do {
+                $path = '/' . XmlUtil::getValueFromXPath('@sv:name', $xpath, $parent) . $path;
+                $parent = $parent->parentNode;
+            } while (XmlUtil::getValueFromXPath('@sv:name', $xpath, $parent) !== 'contents');
+
+            $data[] = [
+                'id' => XmlUtil::getValueFromXPath('sv:property[@sv:name="jcr:uuid"]/sv:value', $xpath, $node),
+                'path' => $path,
+                'title' => XmlUtil::getValueFromXPath('sv:property[@sv:name="i18n:en-title"]/sv:value', $xpath, $node),
+                'template' => XmlUtil::getValueFromXPath(
+                    'sv:property[@sv:name="i18n:en-template"]/sv:value',
+                    $xpath,
+                    $node
+                ),
+                'url' => XmlUtil::getValueFromXPath('sv:property[@sv:name="i18n:en-url"]/sv:value', $xpath, $node),
+                'article' => XmlUtil::getValueFromXPath(
+                    'sv:property[@sv:name="i18n:en-article"]/sv:value',
+                    $xpath,
+                    $node
+                ),
+            ];
+        }
+
+        return $data;
     }
 
     private function buildTree()
     {
-        $this->import('tree-dump');
-
-        return [
-            [
-                'id' => 'e37fde9c-af7c-4132-b398-de8eef135d71',
-                'title' => 'test1',
-                'path' => '/test1',
-                'template' => 'default',
-                'url' => '/test1',
-                'article' => 'Test',
-                'ext' => [
-                    'excerpt' => [
-                        'tags' => [
-                            'tag1',
-                        ],
-                    ],
-                ],
-            ],
-            [
-                'id' => '585ccd35-a98e-4e41-a62c-e502ca905496',
-                'title' => 'test2',
-                'path' => '/test2',
-                'template' => 'default',
-                'url' => '/test2',
-                'article' => 'Test',
-                'ext' => [
-                    'excerpt' => [
-                        'tags' => [
-                            'tag2',
-                        ],
-                    ],
-                ],
-            ],
-            [
-                'id' => '5778b19f-460a-47fc-93da-9a6126e5c384',
-                'title' => 'test3',
-                'path' => '/test2/test3',
-                'template' => 'default',
-                'url' => '/test3',
-                'article' => 'Test',
-                'ext' => [
-                    'excerpt' => [
-                        'tags' => [
-                            'tag1',
-                            'tag2',
-                        ],
-                    ],
-                ],
-            ],
-            [
-                'id' => '3caed1fb-dde2-480d-8a1d-c4db1f10b24e',
-                'title' => 'test4',
-                'path' => '/test2/test4',
-                'template' => 'default',
-                'url' => '/test4',
-                'article' => 'Test',
-                'ext' => [
-                    'excerpt' => [
-                        'tags' => [
-                            'tag1',
-                        ],
-                    ],
-                ],
-            ],
-            [
-                'id' => '84c2465c-f997-4c5b-9e9d-fb9b72232f0b',
-                'title' => 'test5',
-                'path' => '/test2',
-                'template' => 'default',
-                'url' => '/test5',
-                'article' => 'Test',
-                'ext' => [
-                    'excerpt' => [
-                        'tags' => [
-                            'tag1',
-                            'tag2',
-                        ],
-                    ],
-                ],
-            ],
-        ];
+        return $this->import('tree');
     }
 
     public function testTreeGet()
@@ -1521,34 +1479,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testOrder()
     {
-        $data = [
-            [
-                'id' => 'a405d83c-5068-4b77-a312-692cea706e36',
-                'title' => 'test1',
-                'template' => 'default',
-                'url' => '/test1',
-            ],
-            [
-                'id' => 'be02903e-09e8-4d87-98fa-82acd3d4d2c5',
-                'title' => 'test2',
-                'template' => 'default',
-                'url' => '/test2',
-            ],
-            [
-                'id' => 'dfa34d10-2be5-465a-87d9-f935be5067be',
-                'title' => 'test3',
-                'template' => 'default',
-                'url' => '/test3',
-            ],
-            [
-                'id' => '666af636-2ccb-4712-8547-46c2229abbdf',
-                'title' => 'test4',
-                'template' => 'default',
-                'url' => '/test4',
-            ],
-        ];
-
-        $this->import('order-dump');
+        $data = $this->import('order');
 
         $client = $this->createAuthenticatedClient();
         $client->request(

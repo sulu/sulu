@@ -144,7 +144,7 @@ for BUNDLE in $BUNDLES; do
 
     comment "Restart jackrabbit"
 
-    PID=`ps -ef | grep "java -jar" | grep -v grep | awk '{ print $2 }'`
+    PID=`ps -ef | grep "java -jar jackrabbit-standalone" | grep -v grep | awk '{ print $2 }'`
     if [ PID ]; then
         kill -9 $PID
     fi
