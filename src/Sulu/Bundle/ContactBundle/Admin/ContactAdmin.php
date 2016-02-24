@@ -36,7 +36,7 @@ class ContactAdmin extends Admin
         $contacts->setPosition(20);
         $contacts->setIcon('user');
 
-        if ($this->securityChecker->hasPermission('sulu.contact.people', 'view')) {
+        if ($this->securityChecker->hasPermission('sulu.contact.people', PermissionTypes::VIEW)) {
             $people = new NavigationItem('navigation.contacts.people');
             $people->setPosition(10);
             $people->setIcon('users');
@@ -44,7 +44,7 @@ class ContactAdmin extends Admin
             $contacts->addChild($people);
         }
 
-        if ($this->securityChecker->hasPermission('sulu.contact.organizations', 'view')) {
+        if ($this->securityChecker->hasPermission('sulu.contact.organizations', PermissionTypes::VIEW)) {
             $companies = new NavigationItem('navigation.contacts.companies');
             $companies->setPosition(20);
             $companies->setIcon('building');

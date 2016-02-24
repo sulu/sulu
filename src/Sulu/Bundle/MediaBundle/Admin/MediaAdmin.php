@@ -37,7 +37,7 @@ class MediaAdmin extends Admin
         $media->setPosition(30);
         $media->setIcon('image');
 
-        if ($this->securityChecker->hasPermission('sulu.media.collections', 'view')) {
+        if ($this->securityChecker->hasPermission('sulu.media.collections', PermissionTypes::VIEW)) {
             $collections = new DataNavigationItem('navigation.media.collections', '/admin/api/collections?sortBy=title', $media);
             $collections->setPosition(10);
             $collections->setId('collections-edit');

@@ -65,7 +65,7 @@ class ContentAdmin extends Admin
 
         /** @var Webspace $webspace */
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT_PREFIX . $webspace->getKey(), 'view')) {
+            if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT_PREFIX . $webspace->getKey(), PermissionTypes::VIEW)) {
                 $webspaceItem = new NavigationItem($webspace->getName());
                 $webspaceItem->setPosition($position++);
                 $webspaceItem->setIcon('bullseye');

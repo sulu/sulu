@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContentBundle\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class ContentContentNavigationProvider implements ContentNavigationProviderInterface
@@ -74,7 +75,7 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
 
         $securityContext = 'sulu.webspaces.' . $options['webspace'];
 
-        if ($this->enabledSecurity && $this->securityChecker->hasPermission($securityContext, 'security')) {
+        if ($this->enabledSecurity && $this->securityChecker->hasPermission($securityContext, PermissionTypes::SECURITY)) {
             $permissions = new ContentNavigationItem('Permissions');
             $permissions->setAction('permissions');
             $permissions->setPosition(50);

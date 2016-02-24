@@ -36,7 +36,7 @@ class CategoryAdmin extends Admin
         $settings->setPosition(40);
         $settings->setIcon('cog');
 
-        if ($this->securityChecker->hasPermission('sulu.settings.categories', 'view')) {
+        if ($this->securityChecker->hasPermission('sulu.settings.categories', PermissionTypes::VIEW)) {
             $categories = new NavigationItem('navigation.settings.categories', $settings);
             $categories->setPosition(20);
             $categories->setAction('settings/categories');

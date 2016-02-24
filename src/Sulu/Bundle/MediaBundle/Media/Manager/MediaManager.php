@@ -37,6 +37,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
@@ -439,7 +440,7 @@ class MediaManager implements MediaManagerInterface
             $limit,
             $offset,
             $this->getCurrentUser(),
-            $this->permissions['view']
+            $this->permissions[PermissionTypes::VIEW]
         );
         $this->count = $this->mediaRepository->count($filter);
 
@@ -814,7 +815,7 @@ class MediaManager implements MediaManagerInterface
                     Collection::class,
                     $mediaEntity->getCollection()->getId()
                 ),
-                'delete'
+                PermissionTypes::DELETE
             );
         }
 

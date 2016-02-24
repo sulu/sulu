@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class ContactsContentNavigationProvider implements ContentNavigationProviderInterface
@@ -31,7 +32,7 @@ class ContactsContentNavigationProvider implements ContentNavigationProviderInte
     {
         $navigation = [];
 
-        if ($this->securityChecker->hasPermission('sulu.security.users', 'view')) {
+        if ($this->securityChecker->hasPermission('sulu.security.users', PermissionTypes::VIEW)) {
             $permissions = new ContentNavigationItem('content-navigation.security.permissions');
             $permissions->setAction('permissions');
             $permissions->setPosition(30);
