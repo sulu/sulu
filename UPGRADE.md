@@ -4,7 +4,7 @@
 
 ### Definition of security contexts
 
-The definition of security contexts in the `Admin` classes have changed. They
+The definition of security contexts in the `Admin` classes has changed. They
 used to look like the following example:
 
 ```php
@@ -20,7 +20,8 @@ public function getSecurityContexts()
 }
 ```
 
-Now the available permission types have also to be passed:
+Now you should also pass the permission types that you want to enable in the
+context:
 
 ```php
 public function getSecurityContexts()
@@ -41,8 +42,8 @@ public function getSecurityContexts()
 }
 ```
 
-If these adaptions are not done, it will be handled as if the permission types
-`VIEW`, `ADD`, `EDIT`, `DELETE` and `SECURITY` were passed.
+By default, we will enable the permission types `VIEW`, `ADD`, `EDIT`, `DELETE`
+and `SECURITY` in your context.
 
 ### Media uploads
 
