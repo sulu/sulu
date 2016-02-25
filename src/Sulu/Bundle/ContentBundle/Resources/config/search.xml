@@ -27,7 +27,7 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
-        <service id="sulu_content.search.reindex.structure_provider" class="Sulu\Bundle\ContentBundle\Search\ReIndex\StructureProvider">
+        <service id="sulu_content.search.reindex.structure_provider" class="Sulu\Bundle\ContentBundle\Search\Reindex\StructureProvider">
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="sulu_document_manager.metadata_factory.base"/>
             <argument type="service" id="sulu_content.structure.factory" />

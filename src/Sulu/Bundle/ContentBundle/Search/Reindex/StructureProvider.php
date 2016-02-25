@@ -9,16 +9,19 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Search\ReIndex;
+namespace Sulu\Bundle\ContentBundle\Search\Reindex;
 
-use Massive\Bundle\SearchBundle\Search\ReIndex\LocalizedReIndexProviderInterface;
+use Massive\Bundle\SearchBundle\Search\Reindex\LocalizedReindexProviderInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 
-class StructureProvider implements LocalizedReIndexProviderInterface
+/**
+ * Provides structures for the MassiveSearch reindex process.
+ */
+class StructureProvider implements LocalizedReindexProviderInterface
 {
     /**
      * @var MetadataFactoryInterface

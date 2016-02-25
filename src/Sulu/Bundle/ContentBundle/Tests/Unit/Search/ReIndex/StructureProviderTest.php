@@ -9,10 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Tests\Unit\Search\ReIndex;
+namespace Sulu\Bundle\ContentBundle\Tests\Unit\Search\Reindex;
 
 use Prophecy\Argument;
-use Sulu\Bundle\ContentBundle\Search\ReIndex\StructureProvider;
+use Sulu\Bundle\ContentBundle\Search\Reindex\StructureProvider;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
@@ -25,7 +25,7 @@ use Sulu\Component\DocumentManager\Query\Query;
 class StructureProviderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var LocalizedReIndexProviderInterface
+     * @var LocalizedReindexProviderInterface
      */
     private $provider;
 
