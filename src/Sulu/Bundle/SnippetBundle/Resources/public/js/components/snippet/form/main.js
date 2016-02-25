@@ -150,7 +150,6 @@ define([
 
         // content save-error
         this.sandbox.on('sulu.snippets.snippet.save-error', function() {
-            this.sandbox.emit('sulu.labels.error.show', 'labels.error.content-save-desc', 'labels.error');
             this.setHeaderBar(false);
         }, this);
     };
@@ -160,18 +159,12 @@ define([
      * @param {Boolean} saved
      */
     SnippetForm.prototype.setHeaderBar = function(saved) {
-        if (saved !== this.saved) {
-            if (saved === true) {
-                this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
-            } else {
-                this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
-            }
-            this.sandbox.emit('sulu.preview.state.change', saved);
+        if (saved === true) {
+            this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
+        } else {
+            this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
         }
-        this.saved = saved;
-        if (this.saved) {
-            this.contentChanged = false;
-        }
+        this.sandbox.emit('sulu.preview.state.change', saved);
     };
 
     SnippetForm.prototype.loadData = function() {
@@ -201,5 +194,4 @@ define([
     };
 
     return new SnippetForm();
-})
-;
+});

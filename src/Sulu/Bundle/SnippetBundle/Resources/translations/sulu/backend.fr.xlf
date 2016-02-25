@@ -54,6 +54,18 @@
                 <source>search-overlay.index.snippet.title</source>
                 <target>Fragments</target>
             </trans-unit>
+            <trans-unit id="19" resname="snippet.changed-warning.title">
+                <source>snippet.changed-warning.title</source>
+                <target>Attention, le contenu risque de s'écraser!</target>
+            </trans-unit>
+            <trans-unit id="20" resname="snippet.changed-warning.description">
+                <source>snippet.changed-warning.description</source>
+                <target>Ce fragment a été changée par un autre utilisateur dans l’intervalle. En cas que ce fragment est sauvegardée, ces données se perdent.</target>
+            </trans-unit>
+            <trans-unit id="21" resname="snippet.changed-warning.ok-button">
+                <source>snippet.changed-warning.ok-button</source>
+                <target>Enregistrer le fragment</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

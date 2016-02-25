@@ -25,6 +25,7 @@ use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Form\Exception\InvalidFormException;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\Hash\RequestHashChecker;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
@@ -89,6 +90,11 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
      */
     private $formFactory;
 
+    /**
+     * @var RequestHashChecker
+     */
+    private $requestHashChecker;
+
     public function __construct(
         ViewHandler $viewHandler,
         ContentMapper $contentMapper,
@@ -98,7 +104,8 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         UrlGeneratorInterface $urlGenerator,
         DefaultSnippetManagerInterface $defaultSnippetManager,
         DocumentManager $documentManager,
-        FormFactory $formFactory
+        FormFactory $formFactory,
+        RequestHashChecker $requestHashChecker
     ) {
         $this->viewHandler = $viewHandler;
         $this->contentMapper = $contentMapper;
@@ -109,6 +116,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         $this->defaultSnippetManager = $defaultSnippetManager;
         $this->documentManager = $documentManager;
         $this->formFactory = $formFactory;
+        $this->requestHashChecker = $requestHashChecker;
     }
 
     /**
@@ -211,6 +219,8 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     public function putAction(Request $request, $uuid)
     {
         $document = $this->findDocument($uuid, $this->getLocale($request));
+
+        $this->requestHashChecker->checkHash($request, $document, $document->getUuid());
         $this->processForm($request, $document);
 
         return $this->handleView($document);

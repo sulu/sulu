@@ -5,6 +5,8 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2034 [ContentBundle]       Improved content-bundle testcases
     * ENHANCEMENT #2036 [SecurityBundle]      Introduced different permission types for different security contexts
     * ENHANCEMENT #2014 [Content]             Allow `-` in webspace name.
+    * FEATURE     #1983 [ContentBundle]       Introduces hash check on save
+    * FEATURE     #1983 [SnippetBundle]       Introduces hash check on save
     * ENHANCEMENT #1999 [SnippetBundle]       Snippet controller now uses DocumentManager and Serializer.
     * ENHANCEMENT #2008 [ContactBundle]       Fixed sorting in contact selection content type
     * FEATURE     #2001 [MediaBundle]         Clear local image cache via cache clear service and command

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Document;
 
+use Sulu\Component\Content\Document\Behavior\AuditableBehavior;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\LocalizedStructureBehavior;
 use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
@@ -26,8 +27,6 @@ use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Document\Structure\StructureInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\DocumentManager\Behavior\Audit\BlameBehavior;
-use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
@@ -40,8 +39,6 @@ use Sulu\Component\DocumentManager\Collection\ChildrenCollection;
  */
 class BasePageDocument implements
     NodeNameBehavior,
-    TimestampBehavior,
-    BlameBehavior,
     ParentBehavior,
     LocalizedStructureBehavior,
     ResourceSegmentBehavior,
@@ -55,7 +52,8 @@ class BasePageDocument implements
     ExtensionBehavior,
     OrderBehavior,
     WebspaceBehavior,
-    SecurityBehavior
+    SecurityBehavior,
+    AuditableBehavior
 {
     /**
      * The name of this node.

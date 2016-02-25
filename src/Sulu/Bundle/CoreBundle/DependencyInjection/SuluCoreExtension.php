@@ -69,6 +69,23 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                 'command_class' => 'Sulu\Bundle\CoreBundle\CommandOptional\SuluBuildCommand',
             ]);
         }
+
+        if ($container->hasExtension('fos_rest')) {
+            $container->prependExtensionConfig(
+                'fos_rest',
+                [
+                    'exception' => [
+                        'enabled' => true,
+                        'codes' => [
+                            'Sulu\Component\Rest\Exception\InvalidHashException' => 409,
+                        ],
+                    ],
+                    'service' => [
+                        'exception_handler' => 'sulu_core.rest.exception_wrapper_handler',
+                    ],
+                ]
+            );
+        }
     }
 
     /**

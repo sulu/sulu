@@ -607,6 +607,18 @@
                 <source>content.webspace.settings.redirect</source>
                 <target>Weiterleitung</target>
             </trans-unit>
+            <trans-unit id="24" resname="content.changed-warning.title">
+                <source>content.changed-warning.title</source>
+                <target>Achtung, es werden Inhalte überschrieben!</target>
+            </trans-unit>
+            <trans-unit id="25" resname="content.changed-warning.description">
+                <source>content.changed-warning.description</source>
+                <target>Diese Seite wurde zwischenzeitlich von einem anderen Benutzer geändert. Wenn die Seite gespeichert wird, gehen diese Daten verloren.</target>
+            </trans-unit>
+            <trans-unit id="26" resname="content.changed-warning.ok-button">
+                <source>content.changed-warning.ok-button</source>
+                <target>Seite speichern</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -17,13 +17,11 @@ use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\SerializationContext;
 use PHPCR\ItemNotFoundException;
 use PHPCR\PropertyInterface;
-use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
-use Sulu\Component\Content\Exception\MandatoryPropertyException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
 use Sulu\Component\Content\Form\Exception\InvalidFormException;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
@@ -33,6 +31,7 @@ use Sulu\Component\Content\Repository\Mapping\MappingInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\InvalidHashException;
 use Sulu\Component\Rest\Exception\MissingParameterChoiceException;
 use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\ParameterDataTypeException;
@@ -585,6 +584,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * @return Response
      *
      * @throws InvalidFormException
+     * @throws InvalidHashException
      * @throws MissingParameterException
      */
     public function putAction(Request $request, $uuid)
@@ -592,17 +592,13 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $language = $this->getLanguage($request);
         $type = $request->query->get('type', 'page');
 
-        try {
-            $document = $this->getDocumentManager()->find(
-                $uuid,
-                $language,
-                ['type' => $type, 'load_ghost_content' => false]
-            );
-        } catch (DocumentNotFoundException $e) {
-            $e = new EntityNotFoundException(PageDocument::class, $uuid, $e);
+        $document = $this->getDocumentManager()->find(
+            $uuid,
+            $language,
+            ['load_ghost_content' => false]
+        );
 
-            return $this->handleView($this->view($e->toArray(), 404));
-        }
+        $this->get('sulu_hash.request_hash_checker')->checkHash($request, $document, $document->getUuid());
 
         $data = $request->request->all();
         $data['workflowStage'] = $this->getRequestParameter($request, 'state');
@@ -618,19 +614,15 @@ class NodeController extends RestController implements ClassResourceInterface, S
             throw new InvalidFormException($form);
         }
 
-        try {
-            $this->getDocumentManager()->persist(
-                $document,
-                $language,
-                [
-                    'user' => $this->getUser()->getId(),
-                    'clear_missing_content' => false,
-                ]
-            );
-            $this->getDocumentManager()->flush();
-        } catch (MandatoryPropertyException $e) {
-            return $this->handleView($this->view($e->getMessage(), 400));
-        }
+        $this->getDocumentManager()->persist(
+            $document,
+            $language,
+            [
+                'user' => $this->getUser()->getId(),
+                'clear_missing_content' => false,
+            ]
+        );
+        $this->getDocumentManager()->flush();
 
         $view = $this->view($document);
         $view->setSerializationContext(

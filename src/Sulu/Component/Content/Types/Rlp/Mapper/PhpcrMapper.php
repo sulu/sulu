@@ -593,9 +593,7 @@ class PhpcrMapper extends RlpMapper
                 // route already exists and referenced on contentNode
                 return true;
             } else {
-                throw new ResourceLocatorAlreadyExistsException(sprintf(
-                    'Resource locator "%s" already exists. Route node at path "%s"', $resourceLocator, $routeNode->getPath()
-                ));
+                throw new ResourceLocatorAlreadyExistsException($resourceLocator, $routeNode->getPath());
             }
         }
 
