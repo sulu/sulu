@@ -11,9 +11,7 @@
 
 namespace Sulu\Component\Content\Exception;
 
-use Exception;
-
-class ResourceLocatorAlreadyExistsException extends Exception
+class ResourceLocatorAlreadyExistsException extends \Exception
 {
     /**
      * @var string
@@ -31,7 +29,8 @@ class ResourceLocatorAlreadyExistsException extends Exception
         $this->path = $path;
         parent::__construct(
             sprintf(
-                'Resource locator "%s" already exists. Route node at path "%s"',
+                'The ResouceLocator "%s" already exists at the node "%s". Please choose a different resource locator'
+                . ' or delete the existing one before reassigning it.',
                 $this->resourceLocator,
                 $this->path
             ),

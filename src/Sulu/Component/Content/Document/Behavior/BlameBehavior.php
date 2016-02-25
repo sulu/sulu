@@ -11,20 +11,18 @@
 
 namespace Sulu\Component\Content\Document\Behavior;
 
-use Sulu\Component\Security\Authentication\UserInterface;
-
 /**
  * Adds the user who created and lastly changed the document.
  */
 interface BlameBehavior
 {
     /**
-     * @return UserInterface
+     * @return int
      */
     public function getCreator();
 
     /**
-     * @return UserInterface
+     * @return int
      */
     public function getChanger();
 }
