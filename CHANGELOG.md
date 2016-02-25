@@ -5,7 +5,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2014 [Content]             Allow `-` in webspace name.
     * ENHANCEMENT #1999 [SnippetBundle]       Snippet controller now uses DocumentManager and Serializer.
     * ENHANCEMENT #2008 [ContactBundle]       Fixed sorting in contact selection content type
-    * ENHANCEMENT #1981 [ConetntBundle]       Better search reindexing for structure content.
+    * ENHANCEMENT #1981 [ContentBundle]       Better search reindexing for structure content.
     * FEATURE     #2001 [MediaBundle]         Clear local image cache via cache clear service and command
     * BUGFIX      #1986 [All]                 Fixed naming of serializer properties
     * BUGFIX      #2006 [ContentBundle]       Show loading button after validating form

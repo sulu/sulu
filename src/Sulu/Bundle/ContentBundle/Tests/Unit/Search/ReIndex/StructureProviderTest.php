@@ -11,12 +11,14 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Search\Reindex;
 
+use Massive\Bundle\SearchBundle\Search\Reindex\LocalizedReindexProviderInterface;
 use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Search\Reindex\StructureProvider;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
+use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
@@ -58,6 +60,16 @@ class StructureProviderTest extends \PHPUnit_Framework_TestCase
      * @var StructureBehavior
      */
     private $structure;
+
+    /**
+     * @var DocumentInspector
+     */
+    private $inspector;
+
+    /**
+     * @var SecurityBehavior
+     */
+    private $secureStructure;
 
     public function setUp()
     {
