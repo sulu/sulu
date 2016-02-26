@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2054 [WebsiteBundle]   Fixed 'getTheme' error in ExceptionController
     * BUGFIX      #1510 [Persistence]     Fetch user only if an entity with UserBlameInterface is detected
     * BUGFIX      #1944 [MediaBundle]     Removed wrong definition of indices
     * FEATURE     #1921 [ContentBundle]   Added unset single internal link
