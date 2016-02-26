@@ -64,7 +64,11 @@ class ExceptionController extends BaseExceptionController
     ) {
         $code = $exception->getStatusCode();
         $showException = $request->attributes->get('showException', $this->debug);
-        $template = $this->requestAnalyzer->getWebspace()->getTheme()->getErrorTemplate($code);
+
+        $template = null;
+        if ($this->requestAnalyzer->getWebspace()) {
+            $template = $this->requestAnalyzer->getWebspace()->getTheme()->getErrorTemplate($code);
+        }
 
         if ($showException || $request->getRequestFormat() !== 'html' || $template === null) {
             return parent::showAction($request, $exception, $logger);
