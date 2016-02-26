@@ -126,17 +126,12 @@
             </orm:joins>
         </property>
 
-        <property name="countryId" display="never" filter-type="auto-complete"
+        <identity-property name="countryId" display="never" filter-type="auto-complete"
                   list:translation="contact.address.countryCode">
-            <orm:field-name>id</orm:field-name>
-            <orm:entity-name>SuluContactBundle:Country</orm:entity-name>
+            <orm:field-name>country</orm:field-name>
+            <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
 
-            <orm:joins ref="address">
-                <orm:join>
-                    <orm:entity-name>SuluContactBundle:Country</orm:entity-name>
-                    <orm:field-name>SuluContactBundle:Address.country</orm:field-name>
-                </orm:join>
-            </orm:joins>
+            <orm:joins ref="address"/>
 
             <filter-type-parameters>
                 <parameter key="singleUrl"><![CDATA[/admin/api/countries/{id}]]></parameter>
@@ -144,7 +139,7 @@
                 <parameter key="resultKey">countries</parameter>
                 <parameter key="valueKey">name</parameter>
             </filter-type-parameters>
-        </property>
+        </identity-property>
 
         <property name="mainPhone" display="always" filter-type="string" list:translation="public.phone">
             <orm:field-name>mainPhone</orm:field-name>
