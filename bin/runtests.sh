@@ -25,7 +25,7 @@ function init_database {
         init_phpcr_dbal
     fi
 
-    php vendor/symfony-cmf/testing/bin/console sulu:phpcr:init
+    php vendor/symfony-cmf/testing/bin/console sulu:document:initialize
 }
 
 function show_help {

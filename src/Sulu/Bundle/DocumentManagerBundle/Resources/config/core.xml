@@ -106,8 +106,15 @@
         </service>
 
         <!-- Initializer -->
+        <service id="sulu_document_manager.initializer.root_path_purger" class="Sulu\Bundle\DocumentManagerBundle\Initializer\RootPathPurger">
+            <argument type="service" id="doctrine_phpcr" />
+            <argument type="service" id="sulu_document_manager.path_segment_registry" />
+            <argument>base</argument>
+        </service>
+
         <service id="sulu_document_manager.initializer" class="Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer">
             <argument type="service" id="service_container" />
+            <argument type="service" id="sulu_document_manager.initializer.root_path_purger" />
             <argument type="collection" />
         </service>
 
@@ -161,6 +168,11 @@
             <argument type="service" id="sulu_document_manager.proxy_factory"/>
             <argument type="service" id="sulu_document_manager.document_registry"/>
             <tag name="sulu_document_manager.event_subscriber"/>
+        </service>
+
+        <service id="sulu_document_manager.initializer.workspace" class="Sulu\Bundle\DocumentManagerBundle\Initializer\WorkspaceInitializer">
+            <argument type="service" id="doctrine_phpcr" />
+            <tag name="sulu_document_manager.initializer" priority="255" />
         </service>
     </services>
 </container>

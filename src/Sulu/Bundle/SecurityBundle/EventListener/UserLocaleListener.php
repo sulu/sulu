@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class UserLocaleListener
 {
     /**
-     * TokenStorageInterface.
+     * @var TokenStorageInterface.
      */
     private $tokenStorage;
 
