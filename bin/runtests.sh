@@ -139,14 +139,15 @@ for BUNDLE in $BUNDLES; do
         bash $BEFORE_SCRIPT
     fi
 
-    cd -
     comment "Running tests"
 
-    phpunit --configuration $BUNDLE
+    phpunit -c phpunit.xml.dist
 
     if [ $? -ne 0 ]; then
         echo $BUNDLE_NAME >> /tmp/failed.tests
     fi
+
+    cd -
 
     if [ "$JACKRABBIT_RESTART" = true ] ; then
         comment "Restart jackrabbit"

@@ -23,6 +23,7 @@ use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManager;
+use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
@@ -1241,7 +1242,7 @@ class ContentMapperTest extends SuluTestCase
                 'tag1',
                 'tag2',
             ],
-            'url' => '/',
+            'url' => '/ae-ue-oe-ae-ue-oe',
             'article' => 'article',
         ];
 
@@ -3012,13 +3013,13 @@ class ContentMapperTest extends SuluTestCase
     {
         $data = $this->prepareCopyMoveTestData();
 
-        $result = $this->mapper->orderBefore($data[6]->getUuid(), $data[4]->getUuid(), 4, 'sulu_io', 'en');
+        $result = $this->mapper->orderBefore($data[6]->getUuid(), $data[4]->getUuid(), 4, 'sulu_io', 'de');
 
         $this->assertEquals($data[6]->getUuid(), $result->getUuid());
         $this->assertEquals('/page-2/subpage', $result->getPath());
         $this->assertEquals(4, $result->getChanger());
 
-        $result = $this->mapper->loadByParent($data[3]->getUuid(), 'sulu_io', 'en');
+        $result = $this->mapper->loadByParent($data[3]->getUuid(), 'sulu_io', 'de');
         $this->assertEquals('/page-2/subpage', $result[0]->getPath());
         $this->assertEquals('/page-2/sub', $result[1]->getPath());
         $this->assertEquals('/page-2/sub-1', $result[2]->getPath());
@@ -3416,6 +3417,7 @@ class ContentMapperTest extends SuluTestCase
         $data = [
             'title' => 'Page-1',
             'internal_link' => $page->getUuid(),
+            'nodeType' => RedirectType::INTERNAL,
         ];
 
         $data = $this->mapper->save($data, 'internal-link', 'sulu_io', 'de', 1);

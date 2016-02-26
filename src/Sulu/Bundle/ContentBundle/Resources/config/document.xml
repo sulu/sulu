@@ -27,6 +27,8 @@
                  class="Sulu\Component\Content\Document\Subscriber\ResourceSegmentSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
+            <argument type="service" id="sulu.content.rlp.strategy.tree" />
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
@@ -98,6 +100,9 @@
 
         <service id="sulu_document_manager.document.subscriber.route"
                  class="Sulu\Component\Content\Document\Subscriber\RouteSubscriber">
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
+            <argument type="service" id="sulu.phpcr.session"/>
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 

@@ -12,6 +12,9 @@
 namespace Sulu\Component\Content\Types\Rlp\Mapper;
 
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
+use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
+use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
 
 /**
@@ -20,56 +23,52 @@ use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
 interface RlpMapperInterface
 {
     /**
-     * returns name of mapper.
+     * Returns name of mapper.
      *
      * @return string
      */
     public function getName();
 
     /**
-     * creates a new route for given path.
+     * Saves the route for the given document.
      *
-     * @param NodeInterface $contentNode  reference node
-     * @param string        $path         path to generate
-     * @param string        $webspaceKey  key of webspace
-     * @param string        $languageCode
-     * @param string        $segmentKey
+     * @param ResourceSegmentBehavior $document
      */
-    public function save(NodeInterface $contentNode, $path, $webspaceKey, $languageCode, $segmentKey = null);
+    public function save(ResourceSegmentBehavior $document);
 
     /**
-     * returns path for given contentNode.
+     * Returns path for given contentNode.
      *
-     * @param NodeInterface $contentNode  reference node
-     * @param string        $webspaceKey  key of portal
-     * @param string        $languageCode
-     * @param string        $segmentKey
+     * @param NodeInterface $contentNode reference node
+     * @param string $webspaceKey key of portal
+     * @param string $languageCode
+     * @param string $segmentKey
      *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
+     * @throws ResourceLocatorNotFoundException
      *
      * @return string path
      */
     public function loadByContent(NodeInterface $contentNode, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
-     * returns path for given contentNode.
+     * Returns path for given contentNode.
      *
-     * @param string $uuid         uuid of contentNode
-     * @param string $webspaceKey  key of portal
+     * @param string $uuid uuid of contentNode
+     * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
+     * @throws ResourceLocatorNotFoundException
      *
      * @return string path
      */
     public function loadByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
-     * returns history for given contentNode.
+     * Returns history for given contentNode.
      *
-     * @param string $uuid         uuid of contentNode
-     * @param string $webspaceKey  key of portal
+     * @param string $uuid uuid of contentNode
+     * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
@@ -78,25 +77,25 @@ interface RlpMapperInterface
     public function loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
-     * returns the uuid of referenced content node.
+     * Returns the uuid of referenced content node.
      *
      * @param string $resourceLocator requested RL
-     * @param string $webspaceKey     key of portal
+     * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorMovedException    resourceLocator has been moved
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException resourceLocator not found or has no content reference
+     * @throws ResourceLocatorMovedException resourceLocator has been moved
+     * @throws ResourceLocatorNotFoundException resourceLocator not found or has no content reference
      *
      * @return string uuid of content node
      */
     public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
-     * checks if given path is unique.
+     * Checks if given path is unique.
      *
      * @param string $path
-     * @param string $webspaceKey  key of portal
+     * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
@@ -105,10 +104,10 @@ interface RlpMapperInterface
     public function unique($path, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
-     * returns a unique path with "-1" if necessary.
+     * Returns a unique path with "-1" if necessary.
      *
      * @param string $path
-     * @param string $webspaceKey  key of portal
+     * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
@@ -117,7 +116,7 @@ interface RlpMapperInterface
     public function getUniquePath($path, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
-     * returns resource locator for parent node.
+     * Returns resource locator for parent node.
      *
      * @param string $uuid
      * @param string $webspaceKey
@@ -129,34 +128,20 @@ interface RlpMapperInterface
     public function getParentPath($uuid, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
-     * creates a new resourcelocator and creates the correct history.
+     * Deletes given resource locator node.
      *
-     * @param string $src          old resource locator
-     * @param string $dest         new resource locator
-     * @param string $webspaceKey  key of portal
-     * @param string $languageCode
-     * @param string $segmentKey
-     *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorMovedException
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
-     */
-    public function move($src, $dest, $webspaceKey, $languageCode, $segmentKey = null);
-
-    /**
-     * deletes given resource locator node.
-     *
-     * @param string $path         of resource locator node
-     * @param string $webspaceKey  key of portal
+     * @param string $path of resource locator node
+     * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
      */
     public function deleteByPath($path, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
-     * restore given resource locator.
+     * Restore given resource locator.
      *
-     * @param string $path         of resource locator
-     * @param string $webspaceKey  key of portal
+     * @param string $path of resource locator
+     * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
      */

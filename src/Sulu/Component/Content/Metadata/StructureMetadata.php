@@ -132,7 +132,7 @@ class StructureMetadata extends ItemMetadata
      *
      * @param string $tagName
      *
-     * @return bool
+     * @return PropertyMetadata
      */
     public function getPropertyByTagName($tagName, $highest = true)
     {
@@ -166,7 +166,7 @@ class StructureMetadata extends ItemMetadata
      *
      * @param string $tagName
      *
-     * @return bool
+     * @return PropertyMetadata[]
      */
     public function getPropertiesByTagName($tagName)
     {

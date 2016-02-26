@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Rlp\Strategy;
 
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RLPStrategyInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy;
@@ -69,13 +70,17 @@ class TreeStrategyTest extends \PHPUnit_Framework_TestCase
         $structureManager = $this->getMockForAbstractClass('Sulu\Component\Content\Compat\StructureManagerInterface');
         $contentTypeManager = $this->getMockForAbstractClass('Sulu\Component\Content\ContentTypeManagerInterface');
         $nodeHelper = $this->getMock('Sulu\Component\Util\SuluNodeHelper', [], [], '', false);
+        $documentInspector = $this->getMockBuilder(DocumentInspector::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->strategy = new TreeStrategy(
             $this->mapper,
             new PathCleanup($this->replacers),
             $structureManager,
             $contentTypeManager,
-            $nodeHelper
+            $nodeHelper,
+            $documentInspector
         );
     }
 
