@@ -13,5 +13,10 @@
             <tag name="console.command" />
         </service>
 
+        <service id="sulu_document_manager.command.initialize" class="Sulu\Bundle\DocumentManagerBundle\Command\InitializeCommand">
+            <argument type="service" id="sulu_document_manager.initializer" />
+            <tag name="console.command" />
+        </service>
+
     </services>
 </container>

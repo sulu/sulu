@@ -11,6 +11,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2082 [ContentBundle]       Fixed block type don't triggers save-button
     * ENHANCEMENT #2082 [All]                 Get rid of the aliased evenement composer constraint
     * ENHANCEMENT #2035 [ContentBundle]       Add structure type to index
+    * FEATURE     #2076 [All]                 Better content repository initialization, deprecated sulu:phpcr:init & sulu:webspaces:init
     * BUGFIX      #2058 [ListBuilder]         Fixed cache for field-descriptor
     * ENHANCEMENT #2034 [ContentBundle]       Improved content-bundle testcases
     * ENHANCEMENT #2036 [SecurityBundle]      Introduced different permission types for different security contexts

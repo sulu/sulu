@@ -25,9 +25,10 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
     public function initEnv(BeforeScenarioScope $scope)
     {
         $this->execCommand('doctrine:fixtures:load', ['--no-interaction' => true, '--append' => false]);
-        $this->execCommand('doctrine:phpcr:workspace:purge', ['--force' => true]);
-        $this->execCommand('sulu:phpcr:init', ['--no-interaction' => true]);
-        $this->execCommand('sulu:webspace:init', ['--no-interaction' => true]);
+        $this->execCommand('sulu:document:initialize', [
+            '--purge' => true,
+            '--force' => true,
+        ]);
     }
 
     /**

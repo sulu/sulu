@@ -36,7 +36,7 @@
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_document_manager.path_builder" />
             <argument type="service" id="sulu_document_manager.node_manager" />
-            <tag name="sulu_document_manager.initializer" priority="255" />
+            <tag name="sulu_document_manager.initializer" priority="0" />
         </service>
 
         <service id="sulu_core.webspace.settings_manager" class="Sulu\Component\Webspace\Settings\SettingsManager">

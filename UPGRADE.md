@@ -2,6 +2,11 @@
 
 ## dev-develop
 
+### Deprecated sulu:phpcr:init and sulu:webspace:init
+
+The `sulu:phpcr:init` and `sulu:webspace:init` commands are now deprecated.
+Use the `sulu:document:initialize` command instead.
+
 ### Translation Code
 
 The maximum length of the translation code was extended run the following

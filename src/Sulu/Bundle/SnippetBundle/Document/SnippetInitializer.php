@@ -31,11 +31,14 @@ class SnippetInitializer
     public function initialize(OutputInterface $output)
     {
         $snippetPath = $this->pathBuilder->build(['%base%', '%snippet%']);
-        $output->writeln(sprintf('<info>Snippets</info>: %s ', $snippetPath));
 
         if (true === $this->nodeManager->has($snippetPath)) {
+            $output->writeln(sprintf('  [ ] <info>snippet path:</info>: %s ', $snippetPath));
+
             return;
         }
+
+        $output->writeln(sprintf('  [+] <info>snippet path:</info>: %s ', $snippetPath));
 
         $this->nodeManager->createPath($snippetPath);
         $this->nodeManager->save();

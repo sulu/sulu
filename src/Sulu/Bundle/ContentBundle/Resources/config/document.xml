@@ -118,5 +118,11 @@
             <argument type="service" id="sulu_document_manager.metadata_factory" />
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
+
+        <service id="sulu_content.document_manager.content_initializer" class="Sulu\Bundle\ContentBundle\DocumentManager\ContentInitializer">
+            <argument type="service" id="doctrine_phpcr" />
+            <argument>%sulu.content.language.namespace%</argument>
+            <tag name="sulu_document_manager.initializer" priority="127"/>
+        </service>
     </services>
 </container>
