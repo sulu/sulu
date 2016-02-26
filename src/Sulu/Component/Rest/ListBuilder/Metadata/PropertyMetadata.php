@@ -20,7 +20,7 @@ class PropertyMetadata extends BasePropertyMetadata
     /**
      * @var BasePropertyMetadata[]
      */
-    private $metadata = [];
+    protected $metadata = [];
 
     /**
      * @return BasePropertyMetadata[]
@@ -57,5 +57,32 @@ class PropertyMetadata extends BasePropertyMetadata
     public function has($name)
     {
         return array_key_exists($name, $this->metadata);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serialize()
+    {
+        return serialize(
+            [
+                $this->class,
+                $this->name,
+                $this->metadata,
+            ]
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unserialize($str)
+    {
+        list($this->class,
+            $this->name,
+            $this->metadata) = unserialize($str);
+
+        $this->reflection = new \ReflectionProperty($this->class, $this->name);
+        $this->reflection->setAccessible(true);
     }
 }
