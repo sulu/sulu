@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
@@ -32,7 +33,6 @@ use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Makes accounts available through a REST API.
@@ -61,7 +61,8 @@ class AccountController extends RestController implements ClassResourceInterface
     protected $accountManager;
     protected $locale;
 
-    // TODO: Move the field descriptors to a manager
+    // TODO: Move the field descriptors to a manager -
+    // or better -> refactor the whole file!
     /**
      * @var DoctrineFieldDescriptor[]
      */
@@ -70,28 +71,20 @@ class AccountController extends RestController implements ClassResourceInterface
     protected $accountAddressesFieldDescriptors;
 
     /**
-     * returns all fields that can be used by list.
+     * Returns all fields that can be used by list.
      *
      * @return mixed
      */
     public function fieldsAction()
     {
-        // default contacts list
+        // Default contacts list.
         return $this->handleView($this->view(array_values($this->getFieldDescriptors()), 200));
-    }
-
-    /**
-     * @return RestHelperInterface
-     */
-    protected function getRestHelper()
-    {
-        return $this->get('sulu_core.doctrine_rest_helper');
     }
 
     /**
      * Shows a single account with the given id.
      *
-     * @param $id
+     * @param int $id
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -123,10 +116,10 @@ class AccountController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * lists all contacts of an account
+     * Lists all contacts of an account.
      * optional parameter 'flat' calls listAction.
      *
-     * @param $id
+     * @param int $id
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -186,10 +179,10 @@ class AccountController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * lists all addresses of an account
+     * Lists all addresses of an account
      * optional parameter 'flat' calls listAction.
      *
-     * @param $id
+     * @param int $id
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -231,18 +224,18 @@ class AccountController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * @param $accountId
-     * @param $contactId
+     * @param int $accountId
+     * @param int j$contactId
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
      * @throws \Exception
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function putContactsAction($accountId, $contactId, Request $request)
     {
         try {
-            // get account
+            // Get account.
             /** @var AccountInterface $account */
             $account = $this->getDoctrine()
                 ->getRepository($this->getAccountEntityName())
@@ -251,7 +244,7 @@ class AccountController extends RestController implements ClassResourceInterface
                 throw new EntityNotFoundException('account', $accountId);
             }
 
-            // get contact
+            // Get contact.
             $contact = $this->getDoctrine()
                 ->getRepository($this->container->getParameter('sulu.model.contact.class'))
                 ->find($contactId);
@@ -259,7 +252,7 @@ class AccountController extends RestController implements ClassResourceInterface
                 throw new EntityNotFoundException('contact', $contactId);
             }
 
-            // check if relation already exists
+            // Check if relation already exists.
             $accountContact = $this->getDoctrine()
                 ->getRepository(self::$accountContactEntityName)
                 ->findOneBy(['contact' => $contact, 'account' => $account]);
@@ -267,14 +260,14 @@ class AccountController extends RestController implements ClassResourceInterface
                 throw new \Exception('Relation already exists');
             }
 
-            // create relation
+            // Create relation.
             $accountContact = new AccountContactEntity();
-            // if contact has no main relation - set as main
+            // If contact has no main relation - set as main.
             $accountContact->setMain($contact->getAccountContacts()->isEmpty());
             $accountContact->setAccount($account);
             $accountContact->setContact($contact);
 
-            // Set position on contact
+            // Set position on contact.
             $position = $this->getAccountManager()->getPosition($request->get('position', null));
             $accountContact->setPosition($position);
             $contact->setCurrentPosition($position);
@@ -313,17 +306,17 @@ class AccountController extends RestController implements ClassResourceInterface
     /**
      * Deleted account contact.
      *
-     * @param $accountId
-     * @param $contactId
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param int $accountId
+     * @param int $contactId
      *
      * @throws \Exception
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteContactsAction($accountId, $contactId)
     {
         try {
-            // check if relation exists
+            // Check if relation exists.
             /** @var AccountContactEntity $accountContact */
             $accountContact = $this->getDoctrine()
                 ->getRepository(self::$accountContactEntityName)
@@ -336,12 +329,12 @@ class AccountController extends RestController implements ClassResourceInterface
 
             $account = $accountContact->getAccount();
 
-            // remove main contact when relation with main was removed
+            // Remove main contact when relation with main was removed.
             if ($account->getMainContact() && strval($account->getMainContact()->getId()) === $contactId) {
                 $account->setMainContact(null);
             }
 
-            // remove accountContact
+            // Remove accountContact.
             $em = $this->getDoctrine()->getManager();
             $em->remove($accountContact);
             $em->flush();
@@ -355,8 +348,8 @@ class AccountController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * lists all accounts
-     * optional parameter 'flat' calls listAction.
+     * Lists all accounts.
+     * Optional parameter 'flat' calls listAction.
      *
      * @param Request $request
      *
@@ -364,17 +357,8 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     public function cgetAction(Request $request)
     {
-        // define filters
-        $filter = [];
-        $ids = $request->get('ids');
         $locale = $this->getUser()->getLocale();
-        if ($ids) {
-            if (is_array($ids)) {
-                $filter['id'] = $ids;
-            } else {
-                $filter['id'] = explode(',', $ids);
-            }
-        }
+        $filter = $this->retrieveFilter($request);
 
         if ($request->get('flat') == 'true') {
             /** @var RestHelperInterface $restHelper */
@@ -403,10 +387,6 @@ class AccountController extends RestController implements ClassResourceInterface
             $accounts = $accountManager->findAll($locale, $filter);
             $list = new CollectionRepresentation($accounts, self::$entityKey);
             $view = $this->view($list, 200);
-//          // FIXME: add serialization context for collection
-//            $view->setSerializationContext(
-//                SerializationContext::create()->setGroups(array('fullAccount', 'partialContact', 'partialMedia'))
-//            );
         }
 
         return $this->handleView($view);
@@ -437,6 +417,10 @@ class AccountController extends RestController implements ClassResourceInterface
     {
         if (json_decode($request->get('hasNoParent', null))) {
             $listBuilder->where($this->getFieldDescriptorForNoParent(), null);
+        }
+
+        if (json_decode($request->get('hasEmail', null))) {
+            $listBuilder->whereNot($this->getFieldDescriptorForEmail(), null);
         }
 
         foreach ($filter as $key => $value) {
@@ -470,6 +454,25 @@ class AccountController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * Returns fielddescriptor used for checking if account has an email
+     * assigned.
+     *
+     * @return DoctrineFieldDescriptor
+     */
+    protected function getFieldDescriptorForEmail()
+    {
+        return new DoctrineFieldDescriptor(
+            'mainEmail',
+            'mainEmail',
+            $this->getAccountEntityName(),
+            'contact.accounts.company',
+            [],
+            true,
+            false
+        );
+    }
+
+    /**
      * Creates a new account.
      *
      * @param Request $request
@@ -486,14 +489,10 @@ class AccountController extends RestController implements ClassResourceInterface
             }
 
             $em = $this->getDoctrine()->getManager();
-
             $account = $this->doPost($request);
-
             $em->persist($account);
-
             $em->flush();
 
-            // get api entity
             $accountManager = $this->getAccountManager();
             $locale = $this->getUser()->getLocale();
             $acc = $accountManager->getAccount($account, $locale);
@@ -511,13 +510,13 @@ class AccountController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * maps data from request to a new account.
+     * Maps data from request to a new account.
      *
      * @param Request $request
      *
-     * @return AccountInterface
-     *
      * @throws EntityNotFoundException
+     *
+     * @return AccountInterface
      */
     protected function doPost(Request $request)
     {
@@ -534,17 +533,14 @@ class AccountController extends RestController implements ClassResourceInterface
             $accountManager->setLogo($account, $request->get('logo')['id']);
         }
 
-        // set parent
         $this->setParent($request->get('parent'), $account);
 
-        // process categories
         $accountManager->processCategories($account, $request->get('categories', []));
 
-        // set creator / changer
         $account->setCreator($this->getUser());
         $account->setChanger($this->getUser());
 
-        // add urls, phones, emails, tags, bankAccounts, notes, addresses,..
+        // Add urls, phones, emails, tags, bankAccounts, notes, addresses,..
         $accountManager->addNewContactRelations($account, $request->request->all());
 
         return $account;
@@ -607,7 +603,6 @@ class AccountController extends RestController implements ClassResourceInterface
      */
     protected function doPut(AccountInterface $account, Request $request)
     {
-        // set name
         $account->setName($request->get('name'));
         $account->setCorporation($request->get('corporation'));
         $accountManager = $this->getAccountManager();
@@ -620,14 +615,12 @@ class AccountController extends RestController implements ClassResourceInterface
             $accountManager->setLogo($account, $request->get('logo')['id']);
         }
 
-        // set parent
         $this->setParent($request->get('parent'), $account);
 
-        // set changed
         $user = $this->getUser();
         $account->setChanger($user);
 
-        // process details
+        // Process details
         if (!($accountManager->processUrls($account, $request->get('urls', []))
             && $accountManager->processEmails($account, $request->get('emails', []))
             && $accountManager->processFaxes($account, $request->get('faxes', []))
@@ -643,7 +636,7 @@ class AccountController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * set parent to account.
+     * Set parent to account.
      *
      * @param array $parentData
      * @param AccountInterface $account
@@ -666,7 +659,7 @@ class AccountController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * partial update of account infos.
+     * Partial update of account infos.
      *
      * @param $id
      * @param Request $request
@@ -709,7 +702,7 @@ class AccountController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * process geiven entity for patch.
+     * Process geiven entity for patch.
      *
      * @param AccountInterface $account
      * @param Request $request
@@ -734,7 +727,7 @@ class AccountController extends RestController implements ClassResourceInterface
             $accountManager->setLogo($account, $request->get('logo')['id']);
         }
 
-        // check if mainContact is set
+        // Check if mainContact is set
         if (($mainContactRequest = $request->get('mainContact')) !== null) {
             $mainContact = $entityManager->getRepository(
                 $this->container->getParameter('sulu.model.contact.class')
@@ -744,7 +737,7 @@ class AccountController extends RestController implements ClassResourceInterface
             }
         }
 
-        // process details
+        // Process details
         if ($request->get('bankAccounts') !== null) {
             $accountManager->processBankAccounts($account, $request->get('bankAccounts', []));
         }
@@ -770,11 +763,6 @@ class AccountController extends RestController implements ClassResourceInterface
                 throw new EntityNotFoundException($this->getAccountEntityName(), $id);
             }
 
-            // do not allow to delete entity if child is existent
-            if (!$account->getChildren()->count()) {
-                // return 405 error
-            }
-
             $em = $this->getDoctrine()->getManager();
 
             $addresses = $account->getAddresses();
@@ -785,7 +773,7 @@ class AccountController extends RestController implements ClassResourceInterface
                 }
             }
 
-            // remove related contacts if removeContacts is true
+            // Remove related contacts if removeContacts is true.
             if ($request->get('removeContacts') !== null &&
                 $request->get('removeContacts') == 'true'
             ) {
@@ -804,7 +792,7 @@ class AccountController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * returns delete info for multiple ids.
+     * Returns delete info for multiple ids.
      *
      * @param Request $request
      *
@@ -824,11 +812,11 @@ class AccountController extends RestController implements ClassResourceInterface
                 ->getRepository($this->getAccountEntityName())
                 ->countDistinctAccountChildrenAndContacts($id);
 
-            // get number of subaccounts
+            // Get number of subaccounts.
             $numChildren += $account['numChildren'];
 
-            // FIXME: distinct contacts: (currently the same contacts could be counted multiple times)
-            // get full number of contacts
+            // FIXME: Distinct contacts: (currently the same contacts could be counted multiple times).
+            // Get full number of contacts.
             $numContacts += $account['numContacts'];
         }
 
@@ -859,7 +847,7 @@ class AccountController extends RestController implements ClassResourceInterface
             ->findChildrenAndContacts($id);
 
         if ($account != null) {
-            // return a maximum of 3 accounts
+            // Return a maximum of 3 accounts.
             $slicedContacts = [];
             $accountContacts = $account->getAccountContacts();
             $numContacts = 0;
@@ -914,27 +902,11 @@ class AccountController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Takes an array of accounts and resets the logo-property containing the media id with
-     * the actual urls to the logo thumbnails.
-     *
-     * @param array $accounts
-     * @param string $locale
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    private function addLogos($accounts, $locale)
+    public function getSecurityContext()
     {
-        $ids = array_filter(array_column($accounts, 'logo'));
-        $logos = $this->get('sulu_media.media_manager')->getFormatUrls($ids, $locale);
-        $i = 0;
-        foreach ($accounts as $key => $account) {
-            if (array_key_exists('logo', $account) && $account['logo']) {
-                $accounts[$key]['logo'] = $logos[$i];
-                $i += 1;
-            }
-        }
-
-        return $accounts;
+        return 'sulu.contact.organizations';
     }
 
     /**
@@ -1231,6 +1203,9 @@ class AccountController extends RestController implements ClassResourceInterface
         );
     }
 
+    /**
+     * Initializes the field descriptors.
+     */
     protected function initFieldDescriptors()
     {
         $this->fieldDescriptors = $this->get(
@@ -1238,16 +1213,63 @@ class AccountController extends RestController implements ClassResourceInterface
         )->getFieldDescriptorForClass(Account::class);
     }
 
+    /**
+     * @return string
+     */
     protected function getAccountEntityName()
     {
         return $this->container->getParameter('sulu_contact.account.entity');
     }
 
     /**
-     * {@inheritdoc}
+     * @return RestHelperInterface
      */
-    public function getSecurityContext()
+    protected function getRestHelper()
     {
-        return 'sulu.contact.organizations';
+        return $this->get('sulu_core.doctrine_rest_helper');
+    }
+
+    /**
+     * Takes an array of accounts and resets the logo-property containing the media id with
+     * the actual urls to the logo thumbnails.
+     *
+     * @param array $accounts
+     * @param string $locale
+     *
+     * @return array
+     */
+    private function addLogos($accounts, $locale)
+    {
+        $ids = array_filter(array_column($accounts, 'logo'));
+        $logos = $this->get('sulu_media.media_manager')->getFormatUrls($ids, $locale);
+        $i = 0;
+        foreach ($accounts as $key => $account) {
+            if (array_key_exists('logo', $account) && $account['logo']) {
+                $accounts[$key]['logo'] = $logos[$i];
+                $i += 1;
+            }
+        }
+
+        return $accounts;
+    }
+
+    /**
+     * Retrieves the ids from the request.
+     *
+     * @param Request $request
+     */
+    private function retrieveFilter(Request $request)
+    {
+        $filter = [];
+        $ids = $request->get('ids');
+        if ($ids) {
+            if (is_array($ids)) {
+                $filter['id'] = $ids;
+            } else {
+                $filter['id'] = explode(',', $ids);
+            }
+        }
+
+        return $filter;
     }
 }
