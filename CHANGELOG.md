@@ -46,6 +46,7 @@ CHANGELOG for Sulu
     
 * dev-master
     * HOTFIX      #2024 [ContactBundle]     Fixed account add-contact-overlay enter bug and search for e-mail
+    * HOTFIX      #2020 [ContactBundle]     Added account metadata
     * HOTFIX      #2000 [Filter]            Added filter metadata and new filter input types (tags, auto-complete)
     * ENHANCEMENT #2016 [AdminBundle]       Added loader to indicate loading suggestions
     * HOTFIX      #2002 [MediaBundle]       Fixed retina height for image scale command
@@ -54,6 +55,7 @@ CHANGELOG for Sulu
     * HOTFIX      #1991 [Rest]              Added metadata for field-descriptors
     * BUGFIX      #1944 [MediaBundle]       Removed wrong definition of indices
     * HOTFIX      #2011 [AdminBundle]       Fixed double handling of login via enter
+    * HOTFIX      #2023 [SecurityBundle]    Set the user language for requests in backend
     
 * 1.1.9 (2016-02-05)
     * ENHANCEMENT #1978 [SecurityBundle]    Made url for resetting password configurable via static variable

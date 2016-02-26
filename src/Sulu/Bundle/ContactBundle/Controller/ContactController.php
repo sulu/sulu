@@ -42,12 +42,7 @@ class ContactController extends RestController implements ClassResourceInterface
      */
     protected static $entityKey = 'contacts';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
-    protected static $titleEntityName = 'SuluContactBundle:ContactTitle';
-    protected static $mediaEntityName = 'SuluMediaBundle:Media';
     protected static $positionEntityName = 'SuluContactBundle:Position';
-    protected static $addressEntityName = 'SuluContactBundle:Address';
-    protected static $countryEntityName = 'SuluContactBundle:Country';
-    protected static $contactAddressEntityName = 'SuluContactBundle:ContactAddress';
 
     // serialization groups for contact
     protected static $contactSerializationGroups = [
