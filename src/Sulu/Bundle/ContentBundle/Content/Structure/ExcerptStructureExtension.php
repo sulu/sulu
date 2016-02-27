@@ -16,7 +16,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Export\ContentExportManager;
+use Sulu\Component\Content\Export\ContentExportManagerInterface;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Extension\ExportExtensionInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
@@ -58,7 +58,7 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
     protected $structureManager;
 
     /**
-     * @var ContentExportManager
+     * @var ContentExportManagerInterface
      */
     protected $contentExportManager;
 
@@ -81,7 +81,7 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
         StructureManagerInterface $structureManager,
         ContentTypeManagerInterface $contentTypeManager,
         Factory $factory,
-        ContentExportManager $contentExportManager
+        ContentExportManagerInterface $contentExportManager
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
