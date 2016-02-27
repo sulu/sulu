@@ -280,9 +280,9 @@ class Webspace implements WebspaceInterface
      *
      * @return array
      */
-    protected function createProperty($name, $value = null, $options = [], $type = '',  $children = null)
+    protected function createProperty($name, $value = null, $options = [], $type = '', $children = null)
     {
-        $property =  [
+        $property = [
             'name' => $name,
             'type' => $type,
             'options' => $options,

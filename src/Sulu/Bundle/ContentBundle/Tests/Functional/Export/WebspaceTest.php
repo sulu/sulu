@@ -13,7 +13,6 @@ namespace Sulu\Bundle\ContentBundle\Tests\Functional\Export;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Export\WebspaceInterface;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
