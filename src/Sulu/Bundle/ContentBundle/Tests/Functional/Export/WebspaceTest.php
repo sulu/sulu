@@ -79,7 +79,7 @@ class WebspaceTest extends SuluTestCase
         $data[1] = $this->mapper->save($data[1], 'overview', 'sulu_io', 'en', 1);
 
         /** @var Extension $extensionManager */
-        $extensionManager = $this->getContainer()->get('sulu.content.extension.manager');
+        $extensionManager = $this->getContainer()->get('sulu_content.extension.manager');
 
         foreach ($extensionDataList as $key => $extensions) {
             foreach ($extensions as $extensionName => $extensionData) {
