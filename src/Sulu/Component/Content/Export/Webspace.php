@@ -142,12 +142,13 @@ class Webspace implements WebspaceInterface
         foreach ($documents as $key => $document) {
             $contentData = $this->getContentData($document, $locale, $format);
             $extensionData = $this->getExtensionData($document, $format);
+            $settingData = $this->getSettingData($document, $format);
 
             $documentData[] = [
                 'uuid' => $document->getUuid(),
                 'locale' => $document->getLocale(),
-                'structureType' => $document->getStructureType(),
                 'content' => $contentData,
+                'settings' => $settingData,
                 'extensions' => $extensionData,
             ];
         }
@@ -221,12 +222,12 @@ class Webspace implements WebspaceInterface
      */
     protected function getPropertyData(PropertyMetadata $property, $propertyValue, $format)
     {
-        return [
-            'name' => $property->getName(),
-            'value' => $this->contentExportManager->export($property->getType(), $propertyValue),
-            'type' => $property->getType(),
-            'options' => $this->contentExportManager->getOptions($property->getType(), $format),
-        ];
+        return $this->createProperty(
+            $property->getName(),
+            $this->contentExportManager->export($property->getType(), $propertyValue),
+            $this->contentExportManager->getOptions($property->getType(), $format),
+            $property->getType()
+        );
     }
 
     /**
@@ -251,22 +252,49 @@ class Webspace implements WebspaceInterface
                 $format
             );
 
-            $block['type'] = [
-                'name' => 'type',
-                'value' => $blockType,
-                'type' => $property->getType() . '_type',
-                'options' => $this->contentExportManager->getOptions($property->getType(), $format),
-            ];
+            $block['type'] = $this->createProperty(
+                'type',
+                $blockType,
+                $this->contentExportManager->getOptions($property->getType(), $format),
+                $property->getType() . '_type'
+            );
 
             $children[] = $block;
         }
 
-        return [
-            'name' => $property->getName(),
-            'type' => $property->getType(),
-            'children' => $children,
-            'options' => $this->contentExportManager->getOptions($property->getType(), $format),
+        return $this->createProperty(
+            $property->getName(),
+            null,
+            $this->contentExportManager->getOptions($property->getType(), $format),
+            $property->getType(),
+            $children
+        );
+    }
+
+    /**
+     * @param $name
+     * @param $value
+     * @param array $options
+     * @param string $type
+     * @param array $children
+     *
+     * @return array
+     */
+    protected function createProperty($name, $value = null, $options = [], $type = '', $children = null)
+    {
+        $property = [
+            'name' => $name,
+            'type' => $type,
+            'options' => $options,
         ];
+
+        if ($children) {
+            $property['children'] = $children;
+        } else {
+            $property['value'] = $value;
+        }
+
+        return $property;
     }
 
     /**
@@ -289,6 +317,64 @@ class Webspace implements WebspaceInterface
         }
 
         return $extensionData;
+    }
+
+    /**
+     * @param BasePageDocument $document
+     * @param string $format
+     *
+     * @return array
+     */
+    protected function getSettingData(BasePageDocument $document, $format)
+    {
+        if ($parent = $document->getParent()) {
+            $parent = $document->getParent()->getUuid();
+        }
+
+        if ($created = $document->getCreated()) {
+            $created = $created->format('c');
+        }
+
+        if ($changed = $document->getChanged()) {
+            $changed = $changed->format('c');
+        }
+
+        if ($published = $document->getCreated()) {
+            $published = $published->format('c');
+        }
+
+        $settingOptions = [];
+        if ($format === '1.2.xliff') {
+            $settingOptions = ['translate' => false];
+        }
+
+        return [
+            'template' => $this->createProperty('template', $document->getStructureType(), $settingOptions),
+            'created' => $this->createProperty('created', $created, $settingOptions),
+            'changed' => $this->createProperty('changed', $changed, $settingOptions),
+            'creator' => $this->createProperty('creator', $document->getCreator(), $settingOptions),
+            'changer' => $this->createProperty('changer', $document->getChanger(), $settingOptions),
+            'navigationContexts' => $this->createProperty(
+                'navigationContexts',
+                json_encode($document->getNavigationContexts()),
+                $settingOptions
+            ),
+            'published' => $this->createProperty('published', $published, $settingOptions),
+            'permissions' => $this->createProperty(
+                'permissions',
+                json_encode($document->getPermissions()),
+                $settingOptions
+            ),
+            'shadowLocale' => $this->createProperty('shadowLocale', $document->getShadowLocale(), $settingOptions),
+            'webspaceName' => $this->createProperty('webspaceName', $document->getWebspaceName(), $settingOptions),
+            'redirectExternal' => $this->createProperty(
+                'redirectExternal',
+                $document->getRedirectExternal(),
+                $settingOptions),
+            'redirectType' => $this->createProperty('redirectType', $document->getRedirectType(), $settingOptions),
+            'workflowStage' => $this->createProperty('workflowStage', $document->getWorkflowStage(), $settingOptions),
+            'parent' => $this->createProperty('parent', $parent, $settingOptions),
+        ];
     }
 
     /**

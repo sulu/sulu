@@ -13,10 +13,10 @@ namespace Sulu\Bundle\ContentBundle\Tests\Functional\Export;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Export\WebspaceInterface;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 
 /**
  * Tests for the Webspace Export class.
@@ -78,13 +78,13 @@ class WebspaceTest extends SuluTestCase
         $data[0] = $this->mapper->save($data[0], 'overview', 'sulu_io', 'en', 1);
         $data[1] = $this->mapper->save($data[1], 'overview', 'sulu_io', 'en', 1);
 
-        /** @var StructureManagerInterface $structureManager */
-        $structureManager = $this->getContainer()->get('sulu.content.structure_manager');
+        /** @var Extension $extensionManager */
+        $extensionManager = $this->getContainer()->get('sulu_content.extension.manager');
 
         foreach ($extensionDataList as $key => $extensions) {
             foreach ($extensions as $extensionName => $extensionData) {
                 /** @var AbstractExtension $extension */
-                $extension = $structureManager->getExtension($data[$key]->getKey(), $extensionName);
+                $extension = $extensionManager->getExtension($data[$key]->getKey(), $extensionName);
                 $extension->setLanguageCode('en', 'i18n', $extensionName);
 
                 $this->mapper->saveExtension(
