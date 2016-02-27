@@ -16,6 +16,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Extension\ExportExtensionInterface;
+use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\DocumentManager\DocumentManager;
@@ -44,6 +45,11 @@ class Webspace implements WebspaceInterface
     protected $structureManager;
 
     /**
+     * @var ExtensionManagerInterface
+     */
+    protected $extensionManager;
+
+    /**
      * @var ContentExportManagerInterface
      */
     protected $contentExportManager;
@@ -58,6 +64,7 @@ class Webspace implements WebspaceInterface
      * @param DocumentManager $documentManager
      * @param DocumentInspector $documentInspector
      * @param StructureManagerInterface $structureManager
+     * @param ExtensionManagerInterface $extensionManager
      * @param ContentExportManagerInterface $contentExportManager
      * @param array $formatFilePaths
      */
@@ -66,6 +73,7 @@ class Webspace implements WebspaceInterface
         DocumentManager $documentManager,
         DocumentInspector $documentInspector,
         StructureManagerInterface $structureManager,
+        ExtensionManagerInterface $extensionManager,
         ContentExportManagerInterface $contentExportManager,
         array $formatFilePaths
     ) {
@@ -73,6 +81,7 @@ class Webspace implements WebspaceInterface
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
         $this->structureManager = $structureManager;
+        $this->extensionManager = $extensionManager;
         $this->contentExportManager = $contentExportManager;
         $this->formatFilePaths = $formatFilePaths;
     }
@@ -272,7 +281,7 @@ class Webspace implements WebspaceInterface
 
         foreach ($document->getExtensionsData()->toArray() as $extensionName => $extensionProperties) {
             /** @var \Sulu\Bundle\ContentBundle\Content\Structure\ExcerptStructureExtension $extension */
-            $extension = $this->structureManager->getExtension($document->getStructureType(), $extensionName);
+            $extension = $this->extensionManager->getExtension($document->getStructureType(), $extensionName);
 
             if ($extension instanceof ExportExtensionInterface) {
                 $extensionData[$extensionName] = $extension->export($extensionProperties, $format);

@@ -21,6 +21,7 @@
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu.content.structure_manager" />
+            <argument type="service" id="sulu_content.extension.manager" />
             <argument type="service" id="sulu_content.export.manager" />
             <argument>%sulu_content.export.webspace.formats%</argument>
         </service>
