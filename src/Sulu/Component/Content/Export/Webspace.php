@@ -349,7 +349,8 @@ class Webspace implements WebspaceInterface
         }
 
         return [
-            'template' => $this->createProperty('template', $document->getStructureType(), $settingOptions),
+            'structureType' => $this->createProperty('structureType', $document->getStructureType(), $settingOptions),
+            'published' => $this->createProperty('published', $published, $settingOptions),
             'created' => $this->createProperty('created', $created, $settingOptions),
             'changed' => $this->createProperty('changed', $changed, $settingOptions),
             'creator' => $this->createProperty('creator', $document->getCreator(), $settingOptions),
@@ -359,7 +360,6 @@ class Webspace implements WebspaceInterface
                 json_encode($document->getNavigationContexts()),
                 $settingOptions
             ),
-            'published' => $this->createProperty('published', $published, $settingOptions),
             'permissions' => $this->createProperty(
                 'permissions',
                 json_encode($document->getPermissions()),
