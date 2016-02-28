@@ -15,6 +15,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Export\WebspaceInterface;
 use Sulu\Component\Content\Extension\AbstractExtension;
+use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 
@@ -78,7 +79,7 @@ class WebspaceTest extends SuluTestCase
         $data[0] = $this->mapper->save($data[0], 'overview', 'sulu_io', 'en', 1);
         $data[1] = $this->mapper->save($data[1], 'overview', 'sulu_io', 'en', 1);
 
-        /** @var Extension $extensionManager */
+        /** @var ExtensionManagerInterface $extensionManager */
         $extensionManager = $this->getContainer()->get('sulu_content.extension.manager');
 
         foreach ($extensionDataList as $key => $extensions) {
@@ -344,7 +345,14 @@ class WebspaceTest extends SuluTestCase
 
             $data[] = [
                 'locale' => 'en',
-                'structureType' => 'overview',
+                'settings' => [
+                    'structureType' => 'overview',
+                    'creator' => 1,
+                    'changer' => 1,
+                    'navigationContexts' => '[]',
+                    'permissions' => '[]',
+                    'webspaceName' => 'sulu_io',
+                ],
                 'content' => $contentData,
                 'extensions' => $extensionData,
             ];
