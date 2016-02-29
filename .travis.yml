@@ -24,6 +24,8 @@ before_script:
 script: 
   - time ./bin/runtests.sh -i -a
   - phpunit
+  - phpbench run bench --report=
+  - ! 'php vendor/bin/phpbench run benchmark/ --report=''{"name": "console_table", "memory": true}'''
 
 notifications:
   slack:

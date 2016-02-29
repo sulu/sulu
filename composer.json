@@ -38,6 +38,7 @@
         "oro/doctrine-extensions": "^1.0"
     },
     "require-dev": {
+        "dantleech/phpbench": "dev-master",
         "phpcr/phpcr-shell": "~1.0.0@alpha",
         "doctrine/doctrine-bundle": "1.4.*",
         "jackalope/jackalope-jackrabbit": "~1.2.0",
@@ -90,6 +91,14 @@
     "autoload-dev": {
         "psr-0": {
             "Sulu\\": "tests/"
+        }
+    },
+    "autoload-dev": {
+        "psr-0": {
+            "Sulu\\": "tests/"
+        },
+        "psr-4": {
+            "Sulu\\Benchmark\\": "benchmark/"
         }
     }
 }
