@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2058 [ListBuilder]         Fixed cache for field-descriptor
     * HOTFIX      #2024 [ContactBundle]     Fixed account add-contact-overlay enter bug and search for e-mail
     * HOTFIX      #2020 [ContactBundle]     Added account metadata
     * HOTFIX      #2000 [Filter]            Added filter metadata and new filter input types (tags, auto-complete)
