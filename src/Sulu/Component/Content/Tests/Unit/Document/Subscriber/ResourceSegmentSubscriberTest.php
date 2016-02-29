@@ -21,6 +21,7 @@ use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
+use Sulu\Component\DocumentManager\DocumentManagerContext;
 
 class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
 {
@@ -34,6 +35,9 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $encoder = $this->prophesize(PropertyEncoder::class);
         $inspector = $this->prophesize(DocumentInspector::class);
         $event = $this->prophesize(AbstractMappingEvent::class);
+        $context = $this->prophesize(DocumentManagerContext::class);
+        $context->getInspector()->willReturn($inspector);
+        $event->getContext()->willReturn($context->reveal());
 
         $document = $this->prophesize(ResourceSegmentBehavior::class);
         $document->willImplement(StructureBehavior::class);
@@ -71,6 +75,9 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $encoder = $this->prophesize(PropertyEncoder::class);
         $inspector = $this->prophesize(DocumentInspector::class);
         $event = $this->prophesize(PersistEvent::class);
+        $context = $this->prophesize(DocumentManagerContext::class);
+        $context->getInspector()->willReturn($inspector);
+        $event->getContext()->willReturn($context->reveal());
 
         $document = $this->prophesize(ResourceSegmentBehavior::class);
         $document->willImplement(StructureBehavior::class);

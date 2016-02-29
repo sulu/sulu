@@ -77,7 +77,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
 
         $context = $event->getContext();
 
-        $newLocale = $this->getAvailableLocalization($context->getInspector(), $document, $locale);
+        $newLocale = $this->getAvailableLocalization($context->getInspector(), $context->getRegistry(), $document, $locale);
         $event->setLocale($newLocale);
 
         if ($newLocale === $locale) {
@@ -102,7 +102,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
      *
      * @return string
      */
-    private function getAvailableLocalization(DocumentInspector $inspector, StructureBehavior $document, $locale)
+    private function getAvailableLocalization(DocumentInspector $inspector, DocumentRegistry $registry, StructureBehavior $document, $locale)
     {
         $availableLocales = $inspector->getLocales($document);
 
@@ -125,7 +125,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         }
 
         if (!$fallbackLocale) {
-            $fallbackLocale = $this->documentRegistry->getDefaultLocale();
+            $fallbackLocale = $registry->getDefaultLocale();
         }
 
         return $fallbackLocale;

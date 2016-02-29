@@ -16,6 +16,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\Content\Document\Subscriber\OrderSubscriber;
 use Sulu\Component\DocumentManager\Event\ReorderEvent;
+use Sulu\Component\DocumentManager\DocumentManagerContext;
 
 class OrderSubscriberTest extends SubscriberTestCase
 {
@@ -31,9 +32,10 @@ class OrderSubscriberTest extends SubscriberTestCase
         parent::setUp();
 
         $this->inspector = $this->prophesize(DocumentInspector::class);
-        $this->subscriber = new OrderSubscriber($this->inspector->reveal());
+        $this->subscriber = new OrderSubscriber();
         $this->persistEvent->getDocument()->willReturn(new TestOrderDocument(null));
         $this->persistEvent->getNode()->willReturn($this->node->reveal());
+        $this->context->getInspector()->willReturn($this->inspector->reveal());
     }
 
     /**
@@ -58,6 +60,7 @@ class OrderSubscriberTest extends SubscriberTestCase
         ]);
 
         $reorderEvent = $this->prophesize(ReorderEvent::class);
+        $reorderEvent->getContext()->willReturn($this->context->reveal());
         $reorderEvent->getDocument()->willReturn($document);
 
         $this->subscriber->handleReorder($reorderEvent->reveal());
@@ -75,6 +78,7 @@ class OrderSubscriberTest extends SubscriberTestCase
         $document = new \stdClass();
 
         $reorderEvent = $this->prophesize(ReorderEvent::class);
+        $reorderEvent->getContext()->willReturn($this->context->reveal());
         $reorderEvent->getDocument()->willReturn($document);
 
         $this->subscriber->handleReorder($reorderEvent->reveal());
@@ -90,6 +94,7 @@ class OrderSubscriberTest extends SubscriberTestCase
 
         $reorderEvent = $this->prophesize(ReorderEvent::class);
         $reorderEvent->getDocument()->willReturn($document->reveal());
+        $reorderEvent->getContext()->willReturn($this->context->reveal());
         $this->inspector->getParent($document->reveal())->willReturn(null);
 
         $this->subscriber->handleReorder($reorderEvent->reveal());

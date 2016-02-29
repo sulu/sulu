@@ -26,6 +26,7 @@ use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\DocumentManagerContext;
 
 class StructureSubscriberTest extends SubscriberTestCase
 {
@@ -98,15 +99,16 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->propertyFactory = $this->prophesize(LegacyPropertyFactory::class);
         $this->document = $this->prophesize(StructureBehavior::class);
         $this->inspector = $this->prophesize(DocumentInspector::class);
+        $this->context->getInspector()->willReturn($this->inspector->reveal());
 
         $this->document->getStructureType()->willReturn('foobar');
         $this->inspector->getStructureMetadata(Argument::any())->willReturn($this->structureMetadata);
         $this->persistEvent->getLocale()->willReturn('en');
+        $this->persistEvent->getContext()->willReturn($this->context->reveal());
 
         $this->subscriber = new StructureSubscriber(
             $this->encoder->reveal(),
             $this->contentTypeManager->reveal(),
-            $this->inspector->reveal(),
             $this->propertyFactory->reveal()
         );
     }

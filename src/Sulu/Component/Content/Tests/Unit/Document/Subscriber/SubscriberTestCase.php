@@ -16,6 +16,7 @@ use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
+use Sulu\Component\DocumentManager\DocumentManagerContext;
 
 class SubscriberTestCase extends \PHPUnit_Framework_TestCase
 {
@@ -66,5 +67,8 @@ class SubscriberTestCase extends \PHPUnit_Framework_TestCase
         $this->persistEvent->getNode()->willReturn($this->node);
         $this->persistEvent->getAccessor()->willReturn($this->accessor);
         $this->hydrateEvent->getAccessor()->willReturn($this->accessor);
+        $this->context = $this->prophesize(DocumentManagerContext::class);
+        $this->hydrateEvent->getContext()->willReturn($this->context->reveal());
+        $this->persistEvent->getContext()->willReturn($this->context->reveal());
     }
 }

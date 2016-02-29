@@ -149,10 +149,13 @@ abstract class SuluTestCase extends BaseTestCase
     protected function initPhpcr()
     {
         /** @var SessionInterface $session */
-        $session = $this->db('PHPCR')->getOm()->getPhpcrSession();
+        $registry = $this->getContainer()->get('doctrine_phpcr');
 
-        if ($session->nodeExists('/cmf')) {
-            $session->getNode('/cmf')->remove();
+        foreach ($registry->getConnections() as $session) {
+            if ($session->nodeExists('/cmf')) {
+                $session->getNode('/cmf')->remove();
+            }
+            $session->save();
         }
 
         $this->createHomeDocument('sulu_io', ['de', 'de_at', 'en', 'en_us', 'fr']);
