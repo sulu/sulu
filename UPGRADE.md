@@ -20,6 +20,17 @@ INSERT INTO `re_operator_translations` (`id`, `name`, `locale`, `shortDescriptio
     (38, 'is not', 'en', NULL, NULL, 19);
 ```
 
+Additionally the filter by country has changed. Run following SQL script to update your filter conditions:
+
+```sql
+UPDATE `re_conditions` SET `field` = 'countryId', `type` = 6, `value` = CONCAT('"', (SELECT `id` FROM `co_countries` WHERE `code` = REPLACE(`re_conditions`. `value`, '"', '') LIMIT 1), '"') WHERE `field` = 'countryCode' AND `operator` != 'LIKE';
+
+DELETE FROM `re_filters` WHERE `re_filters`.`id` IN (SELECT `re_condition_groups`.`idFilters` FROM `re_condition_groups` LEFT JOIN `re_conditions` ON `re_condition_groups`.`id` = `re_conditions`.`idConditionGroups` WHERE `re_conditions`.`operator` = 'LIKE');
+```
+
+Filter with a "like" condition for country (account and contact) will be lost after the upgrade because there is no
+functionality for that anymore.
+
 ## 1.1.2
 
 ### Reindex-Command & Date Content-Type
