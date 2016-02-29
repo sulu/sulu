@@ -47,7 +47,7 @@ class OperatorValue
     /**
      * Get id.
      *
-     * @return int 
+     * @return int
      */
     public function getId()
     {
@@ -81,7 +81,7 @@ class OperatorValue
     /**
      * Get translations.
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getTranslations()
     {
@@ -105,7 +105,7 @@ class OperatorValue
     /**
      * Get operator.
      *
-     * @return \Sulu\Bundle\ResourceBundle\Entity\Operator 
+     * @return \Sulu\Bundle\ResourceBundle\Entity\Operator
      */
     public function getOperator()
     {
@@ -129,7 +129,7 @@ class OperatorValue
     /**
      * Get value.
      *
-     * @return string 
+     * @return string
      */
     public function getValue()
     {

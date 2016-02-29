@@ -51,7 +51,7 @@ class PageDocumentSerializationTest extends SuluTestCase
 
     /**
      * It can serialize content that contains objects.
-     * 
+     *
      * NOTE: We do not persist so that we can use any type
      *       of content - persisting would cause the content
      *       to be validated.

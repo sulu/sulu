@@ -38,7 +38,7 @@ abstract class ItemMetadata
     public $description = [];
 
     /**
-     * Tags, e.g. 
+     * Tags, e.g.
      *
      * ````
      * array(

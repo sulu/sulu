@@ -16,8 +16,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- */
 class InitCommand extends ContainerAwareCommand
 {
     protected function configure()

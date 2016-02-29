@@ -11,9 +11,6 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin;
 
-/**
- *
- */
 class JsConfig implements JsConfigInterface
 {
     /**

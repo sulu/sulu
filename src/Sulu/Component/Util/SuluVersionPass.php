@@ -15,8 +15,6 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Finder\SplFileInfo;
 
-/**
- */
 class SuluVersionPass implements CompilerPassInterface
 {
     /**

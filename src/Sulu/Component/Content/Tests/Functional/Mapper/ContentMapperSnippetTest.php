@@ -186,8 +186,6 @@ class ContentMapperSnippetTest extends SuluTestCase
         }
     }
 
-    /**
-     */
     public function testRemoveSnippetWithReferences()
     {
         $document = $this->documentManager->create('page');

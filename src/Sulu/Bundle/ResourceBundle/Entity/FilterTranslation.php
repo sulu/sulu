@@ -63,7 +63,7 @@ class FilterTranslation
     /**
      * Get name.
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -87,7 +87,7 @@ class FilterTranslation
     /**
      * Get locale.
      *
-     * @return string 
+     * @return string
      */
     public function getLocale()
     {
@@ -111,7 +111,7 @@ class FilterTranslation
     /**
      * Get shortDescription.
      *
-     * @return string 
+     * @return string
      */
     public function getShortDescription()
     {
@@ -135,7 +135,7 @@ class FilterTranslation
     /**
      * Get longDescription.
      *
-     * @return string 
+     * @return string
      */
     public function getLongDescription()
     {
@@ -145,7 +145,7 @@ class FilterTranslation
     /**
      * Get id.
      *
-     * @return int 
+     * @return int
      */
     public function getId()
     {
@@ -169,7 +169,7 @@ class FilterTranslation
     /**
      * Get filter.
      *
-     * @return \Sulu\Bundle\ResourceBundle\Entity\Filter 
+     * @return \Sulu\Bundle\ResourceBundle\Entity\Filter
      */
     public function getFilter()
     {

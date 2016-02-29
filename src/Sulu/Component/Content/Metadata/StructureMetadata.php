@@ -81,7 +81,7 @@ class StructureMetadata extends ItemMetadata
     /**
      * Return all model properties.
      *
-     * The "model" set of properties does not include UI elements 
+     * The "model" set of properties does not include UI elements
      * such as sections.
      *
      * @return PropertyMetadata[]

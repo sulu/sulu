@@ -26,8 +26,6 @@ use Sulu\Component\Rest\ApiWrapper;
  */
 class ContactAddress extends ApiWrapper
 {
-    /**
-     */
     public function __construct(ContactAddressEntity $address)
     {
         $this->entity = $address;

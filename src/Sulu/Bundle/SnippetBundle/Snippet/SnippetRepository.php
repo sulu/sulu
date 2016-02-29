@@ -169,7 +169,7 @@ class SnippetRepository
     /**
      * Copy snippet from src-locale to dest-locale.
      *
-     * TODO: We currently need the content mapper to copy the locale, it should be 
+     * TODO: We currently need the content mapper to copy the locale, it should be
      *       removed, see https://github.com/sulu-io/sulu/issues/1998
      *
      * @param string $uuid

@@ -12,7 +12,7 @@
 namespace Sulu\Component\Content\Document\Behavior;
 
 /**
- * Classes implementing this behavior will be able to act as 
+ * Classes implementing this behavior will be able to act as
  * redirects to external URLs or internal content.
  */
 interface RedirectTypeBehavior

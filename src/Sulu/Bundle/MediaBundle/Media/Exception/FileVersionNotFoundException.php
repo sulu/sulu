@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Exception;
 
-/**
- */
 class FileVersionNotFoundException extends MediaException
 {
     /**

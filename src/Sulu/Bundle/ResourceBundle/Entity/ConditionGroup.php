@@ -42,7 +42,7 @@ class ConditionGroup
     /**
      * Get id.
      *
-     * @return int 
+     * @return int
      */
     public function getId()
     {
@@ -76,7 +76,7 @@ class ConditionGroup
     /**
      * Get conditions.
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getConditions()
     {
@@ -100,7 +100,7 @@ class ConditionGroup
     /**
      * Get filter.
      *
-     * @return \Sulu\Bundle\ResourceBundle\Entity\Filter 
+     * @return \Sulu\Bundle\ResourceBundle\Entity\Filter
      */
     public function getFilter()
     {

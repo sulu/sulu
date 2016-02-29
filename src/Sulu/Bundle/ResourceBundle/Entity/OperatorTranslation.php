@@ -63,7 +63,7 @@ class OperatorTranslation
     /**
      * Get name.
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -87,7 +87,7 @@ class OperatorTranslation
     /**
      * Get locale.
      *
-     * @return string 
+     * @return string
      */
     public function getLocale()
     {
@@ -111,7 +111,7 @@ class OperatorTranslation
     /**
      * Get shortDescription.
      *
-     * @return string 
+     * @return string
      */
     public function getShortDescription()
     {
@@ -135,7 +135,7 @@ class OperatorTranslation
     /**
      * Get longDescription.
      *
-     * @return string 
+     * @return string
      */
     public function getLongDescription()
     {
@@ -145,7 +145,7 @@ class OperatorTranslation
     /**
      * Get id.
      *
-     * @return int 
+     * @return int
      */
     public function getId()
     {
@@ -169,7 +169,7 @@ class OperatorTranslation
     /**
      * Get operator.
      *
-     * @return \Sulu\Bundle\ResourceBundle\Entity\Operator 
+     * @return \Sulu\Bundle\ResourceBundle\Entity\Operator
      */
     public function getOperator()
     {

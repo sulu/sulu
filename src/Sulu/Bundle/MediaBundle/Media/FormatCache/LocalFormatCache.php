@@ -17,8 +17,6 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Route;
 
-/**
- */
 class LocalFormatCache implements FormatCacheInterface
 {
     /**
