@@ -1,22 +1,27 @@
 <?php
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Bridge;
 
-use PHPCR\NodeInterface;
-use PHPCR\PropertyInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspectorFactory;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
-use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
+use Sulu\Component\DocumentManager\DocumentManagerContext;
 use Sulu\Component\DocumentManager\DocumentRegistry;
-use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\DocumentManager\PathSegmentRegistry;
 use Sulu\Component\DocumentManager\ProxyFactory;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Component\DocumentManager\DocumentManagerContext;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspectorFactory;
 
 class DocumentInspectorFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -79,7 +84,6 @@ class DocumentInspectorFactoryTest extends \PHPUnit_Framework_TestCase
         $this->context = $this->prophesize(DocumentManagerContext::class);
         $this->context->getProxyFactory()->willReturn($this->proxyFactory->reveal());
         $this->context->getRegistry()->willReturn($this->documentRegistry->reveal());
-;
         $this->factory = new DocumentInspectorFactory(
             $this->pathRegistry->reveal(),
             $this->namespaceRegistry->reveal(),

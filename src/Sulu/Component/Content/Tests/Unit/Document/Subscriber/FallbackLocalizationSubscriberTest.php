@@ -20,7 +20,6 @@ use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
-use Sulu\Component\DocumentManager\DocumentManagerContext;
 
 class FallbackLocalizationSubscriberTest extends SubscriberTestCase
 {

@@ -1,10 +1,18 @@
 <?php
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Functional\Bridge;
 
-use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
-use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class DocumentManagerRegistryTest extends SuluTestCase
 {

@@ -18,12 +18,11 @@ use Sulu\Component\Content\Document\Behavior\RouteBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;
 use Sulu\Component\DocumentManager\DocumentInspector;
-use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 /**
  * Remove routes and references associated with content.
@@ -60,8 +59,8 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
         }
 
         if ($document instanceof StructureBehavior) {
-            $this->removeReferences($document);
-            $this->removeRoute($document);
+            $this->removeReferences($documentManager, $document);
+            $this->removeRoute($documentManager->getInspector(), $document);
         }
     }
 
@@ -74,7 +73,7 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
     {
         foreach ($this->inspector->getReferrers($document) as $referrer) {
             if ($referrer instanceof RouteBehavior) {
-                $this->documentManager->remove($referrer);
+                $documentManager->remove($referrer);
             }
         }
     }

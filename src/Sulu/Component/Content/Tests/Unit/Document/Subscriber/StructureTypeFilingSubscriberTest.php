@@ -17,11 +17,11 @@ use Sulu\Component\Content\Document\Behavior\StructureTypeFilingBehavior;
 use Sulu\Component\Content\Document\Subscriber\StructureTypeFilingSubscriber;
 use Sulu\Component\DocumentManager\Behavior\Path\BasePathBehavior;
 use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\DocumentManagerContext;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\NodeManager;
-use Sulu\Component\DocumentManager\DocumentManagerContext;
 
 class StructureTypeFilingSubscriberTest extends \PHPUnit_Framework_TestCase
 {

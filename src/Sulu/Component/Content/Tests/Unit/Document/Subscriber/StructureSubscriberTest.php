@@ -26,7 +26,6 @@ use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
-use Sulu\Component\DocumentManager\DocumentManagerContext;
 
 class StructureSubscriberTest extends SubscriberTestCase
 {

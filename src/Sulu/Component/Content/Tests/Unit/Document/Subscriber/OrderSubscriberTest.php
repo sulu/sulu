@@ -16,7 +16,6 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\Content\Document\Subscriber\OrderSubscriber;
 use Sulu\Component\DocumentManager\Event\ReorderEvent;
-use Sulu\Component\DocumentManager\DocumentManagerContext;
 
 class OrderSubscriberTest extends SubscriberTestCase
 {

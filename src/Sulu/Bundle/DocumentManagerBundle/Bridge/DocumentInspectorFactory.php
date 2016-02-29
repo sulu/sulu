@@ -1,16 +1,23 @@
 <?php
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\DocumentManagerBundle\Bridge;
 
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Component\DocumentManager\DocumentManagerContext;
-use Sulu\Component\DocumentManager\DocumentInspectorFactoryInterface;
-use Sulu\Component\DocumentManager\PathSegmentRegistry;
-use Sulu\Component\DocumentManager\NamespaceRegistry;
-use Sulu\Component\DocumentManager\MetadataFactoryInterface;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
+use Sulu\Component\DocumentManager\DocumentInspectorFactoryInterface;
+use Sulu\Component\DocumentManager\DocumentManagerContext;
+use Sulu\Component\DocumentManager\MetadataFactoryInterface;
+use Sulu\Component\DocumentManager\NamespaceRegistry;
+use Sulu\Component\DocumentManager\PathSegmentRegistry;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 class DocumentInspectorFactory implements DocumentInspectorFactoryInterface
 {
@@ -33,8 +40,7 @@ class DocumentInspectorFactory implements DocumentInspectorFactoryInterface
         StructureMetadataFactoryInterface $structureFactory,
         PropertyEncoder $encoder,
         WebspaceManagerInterface $webspaceManager
-    )
-    {
+    ) {
         $this->pathSegmentRegistry = $pathSegmentRegistry;
         $this->namespaceRegistry = $namespaceRegistry;
         $this->metadataFactory = $metadataFactory;

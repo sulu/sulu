@@ -22,11 +22,14 @@ use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\Subscriber\ResourceSegmentSubscriber;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
+<<<<<<< HEAD
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+=======
+use Sulu\Component\DocumentManager\DocumentManagerContext;
+>>>>>>> CS fix
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\DocumentManager\DocumentManagerContext;
 
 class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
 {
