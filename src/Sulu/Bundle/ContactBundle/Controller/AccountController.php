@@ -420,7 +420,7 @@ class AccountController extends RestController implements ClassResourceInterface
         }
 
         if (json_decode($request->get('hasEmail', null))) {
-            $listBuilder->whereNot($this->getFieldDescriptorForEmail(), null);
+            $listBuilder->whereNot($this->getFieldDescriptors()['mainEmail'], null);
         }
 
         foreach ($filter as $key => $value) {
@@ -445,25 +445,6 @@ class AccountController extends RestController implements ClassResourceInterface
         return new DoctrineFieldDescriptor(
             'parent',
             'parent',
-            $this->getAccountEntityName(),
-            'contact.accounts.company',
-            [],
-            true,
-            false
-        );
-    }
-
-    /**
-     * Returns fielddescriptor used for checking if account has an email
-     * assigned.
-     *
-     * @return DoctrineFieldDescriptor
-     */
-    protected function getFieldDescriptorForEmail()
-    {
-        return new DoctrineFieldDescriptor(
-            'mainEmail',
-            'mainEmail',
             $this->getAccountEntityName(),
             'contact.accounts.company',
             [],
