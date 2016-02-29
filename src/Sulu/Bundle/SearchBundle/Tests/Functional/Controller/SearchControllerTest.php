@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SearchBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Massive\Bundle\SearchBundle\Search\SearchManager;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -199,6 +200,11 @@ class SearchControllerTest extends SuluTestCase
         $user->setPassword('mypassword');
         $user->setLocale('en');
         $user->setSalt('12345');
+        $contact = new Contact();
+        $contact->setFirstName('Daniel');
+        $contact->setLastName('Leech');
+        $user->setContact($contact);
+        $this->entityManager->persist($contact);
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 

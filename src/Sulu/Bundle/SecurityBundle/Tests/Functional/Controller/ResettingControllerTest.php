@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SecurityBundle\Controller\ResettingController;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -42,6 +43,11 @@ class ResettingControllerTest extends SuluTestCase
         $user1->setPassword('securepassword');
         $user1->setSalt('salt');
         $user1->setLocale('en');
+        $contact1 = new Contact();
+        $contact1->setFirstName('User1');
+        $contact1->setLastName('Test');
+        $user1->setContact($contact1);
+        $this->em->persist($contact1);
         $this->user1 = $user1;
         $this->em->persist($this->user1);
 
@@ -52,6 +58,11 @@ class ResettingControllerTest extends SuluTestCase
         $user2->setPassword('securepassword');
         $user2->setSalt('salt');
         $user2->setLocale('en');
+        $contact2 = new Contact();
+        $contact2->setFirstName('User2');
+        $contact2->setLastName('Test');
+        $user2->setContact($contact2);
+        $this->em->persist($contact2);
         $this->user2 = $user2;
         $this->em->persist($this->user2);
 
@@ -65,6 +76,11 @@ class ResettingControllerTest extends SuluTestCase
         $user3->setPasswordResetToken('thisisasupersecrettoken');
         $user3->setPasswordResetTokenExpiresAt((new \DateTime())->add(new \DateInterval('PT24H')));
         $user3->setPasswordResetTokenEmailsSent(1);
+        $contact3 = new Contact();
+        $contact3->setFirstName('User3');
+        $contact3->setLastName('Test');
+        $user3->setContact($contact3);
+        $this->em->persist($contact3);
         $this->user3 = $user3;
         $this->em->persist($this->user3);
 
