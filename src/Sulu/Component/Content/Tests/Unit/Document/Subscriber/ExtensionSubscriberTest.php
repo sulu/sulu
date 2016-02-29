@@ -19,10 +19,10 @@ use Sulu\Component\Content\Document\Subscriber\ExtensionSubscriber;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\DocumentManager\DocumentAccessor;
+use Sulu\Component\DocumentManager\DocumentManagerContext;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
-use Sulu\Component\DocumentManager\DocumentManagerContext;
 
 class ExtensionSubscriberTest extends SubscriberTestCase
 {

@@ -11,9 +11,9 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Bridge;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentManagerRegistry;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class DocumentManagerRegistryTest extends \PHPUnit_Framework_TestCase
 {
@@ -26,11 +26,11 @@ class DocumentManagerRegistryTest extends \PHPUnit_Framework_TestCase
         $this->container = $this->prophesize(ContainerInterface::class);
         $this->registry = new DocumentManagerRegistry(
             $this->container->reveal(),
-            array(
+            [
                 'default' => 'document_manager.1.id',
                 'staging' => 'document_manager.2.id',
                 'live' => 'document_manager.3.id',
-            ),
+            ],
             'default'
         );
 
@@ -83,4 +83,3 @@ class DocumentManagerRegistryTest extends \PHPUnit_Framework_TestCase
         $this->registry->getManager('foo_foo');
     }
 }
-

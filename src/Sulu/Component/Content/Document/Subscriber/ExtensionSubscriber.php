@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Extension\ManagedExtensionContainer;

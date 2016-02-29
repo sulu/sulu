@@ -18,10 +18,10 @@ use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Subscriber\ResourceSegmentSubscriber;
 use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Component\DocumentManager\DocumentManagerContext;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\DocumentManager\DocumentManagerContext;
 
 class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
 {

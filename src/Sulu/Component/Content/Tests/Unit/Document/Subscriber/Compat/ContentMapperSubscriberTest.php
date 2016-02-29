@@ -21,13 +21,13 @@ use Sulu\Component\Content\Mapper\ContentEvents;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent;
 use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Component\DocumentManager\DocumentManagerContext;
 use Sulu\Component\DocumentManager\Event\FlushEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\Util\SuluNodeHelper;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Sulu\Component\DocumentManager\DocumentManagerContext;
 
 class ContentMapperSubscriberTest extends \PHPUnit_Framework_TestCase
 {
@@ -131,6 +131,6 @@ class ContentMapperSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->eventDispatcher->dispatch(ContentEvents::NODE_POST_SAVE, Argument::any())->shouldBeCalled();
         $this->eventDispatcher->dispatch(ContentEvents::NODE_POST_SAVE, Argument::any())->shouldBeCalled();
 
-        $this->contentMapperSubscriber->handleFlush(new FlushEvent($this->context->reveal())) ;
+        $this->contentMapperSubscriber->handleFlush(new FlushEvent($this->context->reveal()));
     }
 }

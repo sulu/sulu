@@ -19,7 +19,6 @@ use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
 use PHPCR\Util\PathHelper;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\BreadcrumbItem;
 use Sulu\Component\Content\Compat\Property as LegacyProperty;
