@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2064 [ResourceBundle]    Fixed no option for invalid filter
     * HOTFIX      #2055 [ContactBundle]     Replaced span by input type hidden in address form
     * HOTFIX      #2058 [ListBuilder]       Fixed cache for field-descriptor
     * HOTFIX      #2024 [ContactBundle]     Fixed account add-contact-overlay enter bug and search for e-mail
