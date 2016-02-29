@@ -130,10 +130,12 @@ abstract class SuluTestCase extends KernelTestCase
     protected function initPhpcr()
     {
         /** @var SessionInterface $session */
-        $session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
+        $registry = $this->getContainer()->get('doctrine_phpcr');
 
-        if ($session->nodeExists('/cmf')) {
-            NodeHelper::purgeWorkspace($session);
+        foreach ($registry->getConnections() as $session) {
+            if ($session->nodeExists('/cmf')) {
+                $session->getNode('/cmf')->remove();
+            }
             $session->save();
         }
 

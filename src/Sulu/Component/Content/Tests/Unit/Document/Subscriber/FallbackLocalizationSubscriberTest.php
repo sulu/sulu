@@ -20,6 +20,7 @@ use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
+use Sulu\Component\DocumentManager\DocumentManagerContext;
 
 class FallbackLocalizationSubscriberTest extends SubscriberTestCase
 {
@@ -80,8 +81,6 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
 
         $this->subscriber = new FallbackLocalizationSubscriber(
             $this->encoder->reveal(),
-            $this->inspector->reveal(),
-            $this->registry->reveal(),
             new LocalizationFinder($this->webspaceManager->reveal())
         );
 
@@ -90,6 +89,9 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
         $this->hydrateEvent->getLocale()->willReturn(self::FIX_LOCALE);
         $this->webspaceManager->findWebspaceByKey(self::FIX_WEBSPACE)->willReturn($this->webspace);
         $this->registry->getDefaultLocale()->willReturn('de');
+
+        $this->context->getInspector()->willReturn($this->inspector->reveal());
+        $this->context->getRegistry()->willReturn($this->registry->reveal());
     }
 
     /**

@@ -26,6 +26,7 @@ use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
+use Sulu\Component\DocumentManager\DocumentManagerContext;
 
 class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
 {
@@ -87,6 +88,9 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $localizedPropertyName = sprintf('i18n:%s-%s', $locale, $propertyName);
 
         $event = $this->prophesize(AbstractMappingEvent::class);
+        $context = $this->prophesize(DocumentManagerContext::class);
+        $context->getInspector()->willReturn($inspector);
+        $event->getContext()->willReturn($context->reveal());
 
         $event->getDocument()->willReturn($this->document->reveal());
 
@@ -116,6 +120,9 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $localizedPropertyName = sprintf('i18n:%s-%s', $locale, $propertyName);
 
         $event = $this->prophesize(PersistEvent::class);
+        $context = $this->prophesize(DocumentManagerContext::class);
+        $context->getInspector()->willReturn($inspector);
+        $event->getContext()->willReturn($context->reveal());
 
         $event->getDocument()->willReturn($this->document->reveal());
 
