@@ -209,6 +209,48 @@ abstract class SuluTestCase extends BaseTestCase
         }
     }
 
+    protected function initTestWebspace()
+    {
+        SuluTestKernel::purgeWebspaces();
+        SuluTestKernel::generateWebspace([
+            'key' => 'sulu_io',
+            'name' => 'Sulu CMF',
+            'localizations' => [
+                'en' => [
+                    'shadow' => 'auto',
+                    'children' => [
+                        'en' => [
+                            'country' => 'us',
+                            'shadow' => 'none',
+                        ]
+                    ],
+                ],
+                'de' => [
+                    'children' => [
+                        'de' => [
+                            'country' => 'at',
+                        ]
+                    ],
+                ],
+                'fr' => [
+                    'children' => [
+                        'fr' => [
+                            'country' => 'at',
+                        ]
+                    ],
+                ],
+            ],
+            'theme' => [],
+            'navigation' => [
+                'main' => ['title' => 'Mainnavigation'],
+                'footer' => ['title' => 'Footernavigation'],
+            ],
+            'portals' => [
+                'sulu_cmf' => [],
+            ],
+        ]);
+    }
+
     /**
      * Shuts the kernel down if it was used in the test.
      */

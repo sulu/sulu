@@ -24,6 +24,7 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Util\XmlUtil;
 use Symfony\Component\Config\Util\XmlUtils;
+use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 
 /**
  * @group nodecontroller
@@ -52,6 +53,46 @@ class NodeControllerTest extends SuluTestCase
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
 
         $this->initOrm();
+
+        SuluTestKernel::purgeWebspaces();
+        SuluTestKernel::generateWebspace([
+            'key' => 'sulu_io',
+            'name' => 'Sulu CMF',
+            'localizations' => [
+                'en' => [
+                    'shadow' => 'auto',
+                    'children' => [
+                        'en' => [
+                            'country' => 'us',
+                            'shadow' => 'none',
+                        ]
+                    ],
+                ],
+                'de' => [
+                    'children' => [
+                        'de' => [
+                            'country' => 'at',
+                        ]
+                    ],
+                ],
+                'fr' => [
+                    'children' => [
+                        'fr' => [
+                            'country' => 'at',
+                        ]
+                    ],
+                ],
+            ],
+            'theme' => [],
+            'navigation' => [
+                'main' => ['title' => 'Mainnavigation'],
+                'footer' => ['title' => 'Footernavigation'],
+            ],
+            'portals' => [
+                'sulu_cmf' => [],
+            ],
+        ]);
+
         $this->initPhpcr();
     }
 

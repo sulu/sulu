@@ -16,6 +16,7 @@ use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 
 class NodeControllerFieldsTest extends SuluTestCase
 {
@@ -33,6 +34,9 @@ class NodeControllerFieldsTest extends SuluTestCase
     {
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
+
+        $this->initTestWebspace();
+        $this->initPhpcr();
     }
 
     public function testCGet()

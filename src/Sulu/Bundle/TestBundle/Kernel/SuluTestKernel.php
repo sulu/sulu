@@ -14,9 +14,13 @@ namespace Sulu\Bundle\TestBundle\Kernel;
 use Sulu\Bundle\TestBundle\SuluTestBundle;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Filesystem\Filesystem;
+use Sulu\Bundle\TestBundle\Testing\Tool\WebspaceTool;
 
 class SuluTestKernel extends SuluKernel
 {
+    static protected $webspaceDir = __DIR__ . '/../Resources/webspaces';
+
     public function registerBundles()
     {
         $bundles = [
@@ -89,4 +93,47 @@ class SuluTestKernel extends SuluKernel
     {
         return $this->name . ucfirst($this->getContext()) . ucfirst($this->environment) . ($this->debug ? 'Debug' : '') . 'ProjectContainer';
     }
+<<<<<<< HEAD
+=======
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getKernelParameters()
+    {
+        return array_merge(
+            parent::getKernelParameters(),
+            [
+                'sulu_test.bundle_dir' => realpath(__DIR__),
+            ]
+        );
+    }
+
+    /**
+     * Generate a webspace file in the TestBundle webspace direectory.
+     * Will erase any existing webspaces.
+     *
+     * @see WebspaceTool::generateWebspace
+     */
+    public static function generateWebspace(array $webspaceConfig)
+    {
+        if (!isset($webspaceConfig['key'])) {
+            throw new \InvalidArgumentException(sprintf(
+                'You must at least define a "key" for each webspace, got: "%s"',
+                json_encode($webspaceConfig)
+            ));
+        }
+
+        $dom = WebspaceTool::generateWebspace($webspaceConfig);
+        $filename = self::$webspaceDir . '/' . $webspaceConfig['key'] . '.xml';
+        $dom->save($filename);
+    }
+
+    public static function purgeWebspaces()
+    {
+        $fs = new Filesystem();
+        $fs->remove(self::$webspaceDir);
+        $fs->mkdir(self::$webspaceDir);
+    }
+>>>>>>> f0722c9... WebspaceGneerator
 }
