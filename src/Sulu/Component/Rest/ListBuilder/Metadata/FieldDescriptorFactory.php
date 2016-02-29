@@ -35,14 +35,20 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
     private $metadataProvider;
 
     /**
-     * @var ConfigCache
+     * @var string
      */
-    private $cache;
+    private $cachePath;
 
-    public function __construct(ProviderInterface $metadataProvider, ConfigCache $cache)
+    /**
+     * @var bool
+     */
+    private $debug;
+
+    public function __construct(ProviderInterface $metadataProvider, $cachePath, $debug)
     {
         $this->metadataProvider = $metadataProvider;
-        $this->cache = $cache;
+        $this->cachePath = $cachePath;
+        $this->debug = $debug;
     }
 
     /**
@@ -50,8 +56,13 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
      */
     public function getFieldDescriptorForClass($className)
     {
-        if ($this->cache->isFresh()) {
-            return require $this->cache;
+        $cache = new ConfigCache(
+            sprintf('%s/%s.php', $this->cachePath, str_replace('\\', '-', $className)),
+            $this->debug
+        );
+
+        if ($cache->isFresh()) {
+            return require $cache->getPath();
         }
 
         $metadata = $this->metadataProvider->getMetadataForClass($className);
@@ -99,7 +110,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
             }
         }
 
-        $this->cache->write('<?php return unserialize(' . var_export(serialize($fieldDescriptors), true) . ');');
+        $cache->write('<?php return unserialize(' . var_export(serialize($fieldDescriptors), true) . ');');
 
         return $fieldDescriptors;
     }
