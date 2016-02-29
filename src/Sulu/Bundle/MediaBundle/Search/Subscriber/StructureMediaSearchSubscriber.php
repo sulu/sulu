@@ -120,8 +120,7 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
         } else {
             if (!isset($data['ids'])) {
                 throw new \RuntimeException(
-                    'Was expecting media value to contain array key "ids", got: "%s"',
-                    print_r($data, true)
+                    sprintf('Was expecting media value to contain array key "ids", got: "%s"', print_r($data, true))
                 );
             }
 
