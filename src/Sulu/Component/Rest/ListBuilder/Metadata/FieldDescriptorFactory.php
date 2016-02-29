@@ -62,7 +62,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
         );
 
         if ($cache->isFresh()) {
-            return require $cache->getPath();
+            return require $cache;
         }
 
         $metadata = $this->metadataProvider->getMetadataForClass($className);
