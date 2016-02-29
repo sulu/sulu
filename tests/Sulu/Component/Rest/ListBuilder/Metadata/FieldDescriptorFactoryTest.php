@@ -22,15 +22,20 @@ use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Driver\XmlDriver as Doctri
 use Sulu\Component\Rest\ListBuilder\Metadata\General\Driver\XmlDriver as GeneralXmlDriver;
 use Sulu\Component\Rest\ListBuilder\Metadata\Provider\ChainProvider;
 use Sulu\Component\Rest\ListBuilder\Metadata\Provider\MetadataProvider;
-use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var ConfigCache
+     * @var string
      */
-    private $configCache;
+    private $configCachePath;
+
+    /**
+     * @var bool
+     */
+    private $debug = false;
 
     /**
      * @var FileLocatorInterface
@@ -58,9 +63,12 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
         );
         $parameterBag->resolveValue(Argument::any())->willReturnArgument(0);
 
-        $this->configCache = $this->prophesize(ConfigCache::class);
-        $this->configCache->isFresh()->willReturn(false);
-        $this->configCache->write(Argument::any(), null)->willReturn(null);
+        $filesystem = new Filesystem();
+        $this->configCachePath = __DIR__ . '/cache';
+        if ($filesystem->exists($this->configCachePath)) {
+            $filesystem->remove($this->configCachePath);
+        }
+        $filesystem->mkdir($this->configCachePath);
 
         $this->chain = [
             new MetadataProvider(
@@ -78,7 +86,7 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
             ->willReturn(__DIR__ . '/Resources/complete.xml');
 
         $provider = new ChainProvider($this->chain);
-        $factory = new FieldDescriptorFactory($provider, $this->configCache->reveal());
+        $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
         $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
 
         $this->assertEquals(
@@ -120,7 +128,7 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
             ->willReturn(__DIR__ . '/Resources/minimal.xml');
 
         $provider = new ChainProvider($this->chain);
-        $factory = new FieldDescriptorFactory($provider, $this->configCache->reveal());
+        $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
         $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
 
         $this->assertEquals(['id', 'firstName', 'lastName'], array_keys($fieldDescriptor));
@@ -140,7 +148,7 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
             ->willReturn(__DIR__ . '/Resources/group-concat.xml');
 
         $provider = new ChainProvider($this->chain);
-        $factory = new FieldDescriptorFactory($provider, $this->configCache->reveal());
+        $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
         $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
 
         $this->assertEquals(['tags'], array_keys($fieldDescriptor));
@@ -163,7 +171,7 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
             ->willReturn(__DIR__ . '/Resources/identity.xml');
 
         $provider = new ChainProvider($this->chain);
-        $factory = new FieldDescriptorFactory($provider, $this->configCache->reveal());
+        $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
         $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
 
         $this->assertEquals(['tags'], array_keys($fieldDescriptor));
@@ -186,7 +194,7 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
             ->willReturn(__DIR__ . '/Resources/empty.xml');
 
         $provider = new ChainProvider($this->chain);
-        $factory = new FieldDescriptorFactory($provider, $this->configCache->reveal());
+        $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
         $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
 
         $this->assertEmpty($fieldDescriptor);
