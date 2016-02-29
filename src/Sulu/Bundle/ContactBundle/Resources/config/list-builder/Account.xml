@@ -90,7 +90,7 @@
                 </orm:join>
             </orm:joins>
         </property>
-        
+
         <concatenation-property name="mainContact" filter-type="string"
                                 list:translation="contact.contacts.main-contact" list:sortable="false"
                                 list:width="200px"
