@@ -21,8 +21,9 @@ interface FieldDescriptorFactoryInterface
      * Return field-descriptors for given class.
      *
      * @param string $className
+     * @param array $options
      *
      * @return FieldDescriptorInterface[]
      */
-    public function getFieldDescriptorForClass($className);
+    public function getFieldDescriptorForClass($className, $options = []);
 }

@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2074 [ListBuilder]       Added options for creating field-descriptors with meta-data
     * HOTFIX      #2053 [ContactBundle]     Added 'hasEmail' parameter to accounts api
     * HOTFIX      #2055 [ContactBundle]     Replaced span by input type hidden in address form
     * HOTFIX      #2058 [ListBuilder]       Fixed cache for field-descriptor
