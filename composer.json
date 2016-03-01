@@ -52,7 +52,8 @@
         "symfony/monolog-bundle": "2.4.*",
         "twig/twig": "~1.11",
         "zendframework/zend-stdlib": "~2.3",
-        "zendframework/zendsearch": "@dev"
+        "zendframework/zendsearch": "@dev",
+        "composer/composer": "@alpha"
     },
     "replace": {
         "sulu/media-bundle": "self.version",
@@ -82,9 +83,9 @@
         "psr-0": {
             "Sulu\\": "src/"
         },
-        "exclude-from-classmap": [ 
+        "exclude-from-classmap": [
             "src/Sulu/Component/*/Tests/",
-            "src/Sulu/Bundle/*/Tests/" 
+            "src/Sulu/Bundle/*/Tests/"
         ]
     },
     "autoload-dev": {
