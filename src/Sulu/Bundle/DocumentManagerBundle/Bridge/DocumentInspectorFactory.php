@@ -26,11 +26,34 @@ class DocumentInspectorFactory implements DocumentInspectorFactoryInterface
      */
     private $context;
 
+    /**
+     * @var NamespaceRegistry
+     */
     private $namespaceRegistry;
+
+    /**
+     * @var MetadataFactoryInterface
+     */
     private $metadataFactory;
+
+    /**
+     * @var StructureMetadataFactoryInterface
+     */
     private $structureFactory;
+
+    /**
+     * @var PropertyEncoder
+     */
     private $encoder;
+
+    /**
+     * @var WebspaceManagerInterface
+     */
     private $webspaceManager;
+
+    /**
+     * @var PathSegmentRegistry
+     */
     private $pathSegmentRegistry;
 
     public function __construct(
@@ -50,11 +73,23 @@ class DocumentInspectorFactory implements DocumentInspectorFactoryInterface
         $this->pathSegmentRegistry = $pathSegmentRegistry;
     }
 
+    /**
+     * Attach the document manager context.
+     *
+     * @param DocumentManagerContext
+     */
     public function attachContext(DocumentManagerContext $context)
     {
         $this->context = $context;
     }
 
+    /**
+     * Create a new instance of the inspector.
+     *
+     * TODO: Cache me.
+     *
+     * {@inheritdoc}
+     */
     public function getInspector(DocumentManagerContext $context)
     {
         return new DocumentInspector(

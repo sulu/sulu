@@ -17,8 +17,19 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class DocumentManagerRegistryTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var DocumentManagerRegistry
+     */
     private $registry;
+
+    /**
+     * @var ContainerInterface
+     */
     private $container;
+
+    /**
+     * @var DocumentManagerInterface
+     */
     private $manager;
 
     public function setUp()
