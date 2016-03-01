@@ -16,7 +16,7 @@ use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use InvalidArgumentException;
-use PHPCR\SessionInterface;
+use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Symfony\Bundle\FrameworkBundle\Client;
@@ -139,8 +139,12 @@ abstract class SuluTestCase extends BaseTestCase
     }
 
     /**
-     * Initialize / reset the Sulu PHPCR environment
-     * NOTE: This should use initializers when we implement that feature.
+     * Initialize / reset the Sulu PHPCR environment.
+     *
+     * NOTE: We could use the document initializer here rathan manually creating
+     *       the webspace nodes, but it currently adds more overhead and offers
+     *       no control over *which* webspaces are created, see
+     *       https://github.com/sulu-io/sulu/pull/2063 for a solution.
      */
     protected function initPhpcr()
     {
@@ -151,38 +155,39 @@ abstract class SuluTestCase extends BaseTestCase
             $session->getNode('/cmf')->remove();
         }
 
-        $session->save();
+        $this->createHomeDocument('sulu_io', ['de', 'de_at', 'en', 'en_us', 'fr']);
+    }
 
-        $cmf = $session->getRootNode()->addNode('cmf');
+    /**
+     * Create a webspace node with the given locales.
+     *
+     * @param string $name
+     * @param string[] $locales
+     */
+    protected function createHomeDocument($name, array $locales)
+    {
+        $documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
+        $nodeManager = $this->getContainer()->get('sulu_document_manager.node_manager');
 
-        // we should use the doctrinephpcrbundle repository initializer to do this.
-        $webspace = $cmf->addNode('sulu_io');
-        $webspace->addMixin('mix:referenceable');
+        $homeDocument = new HomeDocument();
+        $homeDocument->setTitle('Homepage');
+        $homeDocument->setStructureType('default');
+        $homeDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
 
-        $content = $webspace->addNode('contents');
-        $content->setProperty('i18n:en-template', 'default');
-        $content->setProperty('i18n:en-creator', 1);
-        $content->setProperty('i18n:en-created', new \DateTime());
-        $content->setProperty('i18n:en-changer', 1);
-        $content->setProperty('i18n:en-changed', new \DateTime());
-        $content->setProperty('i18n:en-title', 'Homepage');
-        $content->setProperty('i18n:en-state', WorkflowStage::PUBLISHED);
-        $content->setProperty('i18n:en-published', new \DateTime());
-        $content->setProperty('i18n:en-url', '/');
-        $content->addMixin('sulu:home');
-
-        $webspace->addNode('temp');
-
-        $session->save();
-        $nodes = $webspace->addNode('routes');
-        foreach (['de', 'de_at', 'en', 'en_us', 'fr'] as $locale) {
-            $localeNode = $nodes->addNode($locale);
-            $localeNode->setProperty('sulu:content', $content);
-            $localeNode->setProperty('sulu:history', false);
-            $localeNode->addMixin('sulu:path');
+        foreach ($locales as $locale) {
+            $nodeManager->createPath('/cmf/' . $name . '/routes/' . $locale);
+            $documentManager->persist(
+                $homeDocument,
+                $locale,
+                [
+                    'path' => '/cmf/' . $name . '/contents',
+                    'auto_create' => true,
+                    'load_ghost_content' => false,
+                ]
+            );
         }
 
-        $session->save();
+        $documentManager->flush();
     }
 
     /**

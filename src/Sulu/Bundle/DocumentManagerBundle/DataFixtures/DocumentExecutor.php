@@ -68,15 +68,9 @@ class DocumentExecutor
     {
         $output = $output ?: new NullOutput();
 
-        if (true === $purge) {
-            $output->writeln('<comment>Purging workspace</comment>');
-            $this->nodeManager->purgeWorkspace();
-            $this->nodeManager->save();
-        }
-
         if (true === $initialize) {
             $output->writeln('<comment>Initializing repository</comment>');
-            $this->initializer->initialize($output);
+            $this->initializer->initialize($output, $purge);
         }
 
         $output->writeln('<comment>Loading fixtures</comment>');
