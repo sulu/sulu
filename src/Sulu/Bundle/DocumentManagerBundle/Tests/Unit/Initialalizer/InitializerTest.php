@@ -17,7 +17,11 @@ use Sulu\Bundle\DocumentManagerBundle\Initializer\PurgerInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Sulu\Bundle\DocumentManagerBundle\Initializer\PurgerInterface;
 
+/**
+ * TODO: Test purge
+ */
 class InitializerTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()

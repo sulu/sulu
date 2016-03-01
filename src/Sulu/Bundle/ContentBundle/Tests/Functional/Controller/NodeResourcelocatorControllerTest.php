@@ -37,7 +37,7 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
 
     protected function setUp()
     {
-        $this->session = $this->db('PHPCR')->getOm()->getPhpcrSession();
+        $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
         $this->purgeDatabase();
         $this->initPhpcr();
         $this->data = $this->prepareRepositoryContent();
