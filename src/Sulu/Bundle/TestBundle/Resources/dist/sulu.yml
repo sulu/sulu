@@ -14,6 +14,8 @@ framework:
 fos_rest:
     routing_loader:
         default_format: json
+    exception:
+        enabled: false
 
 # Monolog is needed for the webspace bundle
 monolog:
