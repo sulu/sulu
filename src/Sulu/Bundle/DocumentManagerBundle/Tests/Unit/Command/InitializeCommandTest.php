@@ -23,12 +23,12 @@ use Symfony\Component\Console\Tester\CommandTester;
 class InitializeCommandTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var mixed
+     * @var QuestionHelper
      */
     private $questionHelper;
 
     /**
-     * @var mixed
+     * @var Initializer
      */
     private $initializer;
 

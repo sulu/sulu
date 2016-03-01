@@ -14,10 +14,24 @@ namespace Sulu\Bundle\DocumentManagerBundle\Bridge;
 use Sulu\Component\DocumentManager\DocumentManagerRegistryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Container based document manager registry.
+ */
 class DocumentManagerRegistry implements DocumentManagerRegistryInterface
 {
+    /**
+     * @var Container
+     */
     private $container;
+
+    /**
+     * @var array
+     */
     private $managers;
+
+    /**
+     * @var string
+     */
     private $defaultName;
 
     /**
@@ -35,16 +49,25 @@ class DocumentManagerRegistry implements DocumentManagerRegistryInterface
         $this->defaultName = $defaultName;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getDefaultManagerName()
     {
         return $this->defaultName;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getManagerNames()
     {
         return array_keys($this->managers);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getManager($name = null)
     {
         $name = $name ?: $this->defaultName;
