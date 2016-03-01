@@ -21,11 +21,6 @@ use Symfony\Bundle\FrameworkBundle\Client;
 class NodeResourcelocatorControllerTest extends SuluTestCase
 {
     /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    /**
      * @var Client
      */
     protected $client;
@@ -37,7 +32,6 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
 
     protected function setUp()
     {
-        $this->session = $this->getContainer()->get('doctrine')->getConnection();
         $this->purgeDatabase();
         $this->initPhpcr();
         $this->data = $this->prepareRepositoryContent();

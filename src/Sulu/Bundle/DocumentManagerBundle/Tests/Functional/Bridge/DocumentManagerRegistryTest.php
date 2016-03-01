@@ -21,7 +21,7 @@ class DocumentManagerRegistryTest extends SuluTestCase
     public function setUp()
     {
         $this->registry = $this->getContainer()->get('sulu_document_manager.registry');
-        $this->initPhpcr();
+        $this->getContainer()->get('sulu_document_manager.initializer')->initialize(null, true);
     }
 
     /**
@@ -47,6 +47,7 @@ class DocumentManagerRegistryTest extends SuluTestCase
         $pageDocument->setResourceSegment('/hoo');
         $dmLive->persist($pageDocument, 'de', [
             'path' => '/cmf/sulu_io/contents/home',
+            'auto_create' => true,
         ]);
         $dmLive->flush();
 
