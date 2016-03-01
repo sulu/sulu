@@ -13,9 +13,14 @@ INSERT INTO `re_operators` (`id`, `operator`, `type`, `inputType`) VALUES
     (17, 'or', 5, 'tags'),
     (18, '=', 6, 'auto-complete'),
     (19, '!=', 6, 'auto-complete');
+INSERT INTO `re_operator_translations` (`id`, `name`, `locale`, `shortDescription`, `longDescription`, `idOperators`) VALUES
+    (35, 'gleich', 'de', NULL, NULL, 18),
+    (36, 'is', 'en', NULL, NULL, 18),
+    (37, 'ungleich', 'de', NULL, NULL, 19),
+    (38, 'is not', 'en', NULL, NULL, 19);
 ```
 
-## 0.1.2
+## 1.1.2
 
 ### Reindex-Command & Date Content-Type
 
