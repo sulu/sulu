@@ -118,8 +118,9 @@ class GroupControllerTest extends SuluTestCase
                 ],
             ]
         );
-
         $response = json_decode($client->getResponse()->getContent());
+        die(print_r($response));die();;
+
 
         $this->assertEquals('Group3', $response->name);
         $this->assertEquals($this->group1->getId(), $response->parent->id);
