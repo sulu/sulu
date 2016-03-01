@@ -305,6 +305,9 @@ class CleanupHistoryCommandTest extends SuluTestCase
                 '--base-path' => $basePath,
             ]
         );
+        foreach ($result as $res) {
+            var_dump($res->getId());
+        }
         $output = $this->tester->getDisplay();
 
         $session = $this->sessionManager->getSession();

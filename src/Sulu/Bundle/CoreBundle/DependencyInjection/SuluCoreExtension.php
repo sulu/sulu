@@ -40,7 +40,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         // for *SOME REASON* we need to set the ODM key on the DoctrinePhpcrBundle in order
         // that the EntityManager serialization works correctly.
         //
-        // otherwise this test fails: 
+        // otherwise this test fails:
         //   Sulu\Bundle\SecurityBundle\Tests\Functional\Controller\GroupControllerTest::testPost
         //   Undefined property: stdClass::$name
         if (isset($config['phpcr'])) {
