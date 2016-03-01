@@ -45,6 +45,14 @@ public function getSecurityContexts()
 By default, we will enable the permission types `VIEW`, `ADD`, `EDIT`, `DELETE`
 and `SECURITY` in your context.
 
+### Page search index
+
+The metadata for pages has changed. Run following command to update your search index
+
+```bash
+sf massive:search:index:rebuild
+```
+
 ### Media uploads
 
 Write permissions for the webserver must be set on `web/uploads` instead of
