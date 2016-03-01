@@ -31,6 +31,35 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
      */
     public function prepend(ContainerBuilder $container)
     {
+        // process the configuration of SuluCoreExtension
+        $configs = $container->getExtensionConfig($this->getAlias());
+        $parameterBag = $container->getParameterBag();
+        $configs = $parameterBag->resolveValue($configs);
+        $config = $this->processConfiguration(new Configuration(), $configs);
+
+        // for *SOME REASON* we need to set the ODM key on the DoctrinePhpcrBundle in order
+        // that the EntityManager serialization works correctly.
+        //
+        // otherwise this test fails: 
+        //   Sulu\Bundle\SecurityBundle\Tests\Functional\Controller\GroupControllerTest::testPost
+        //   Undefined property: stdClass::$name
+        if (isset($config['phpcr'])) {
+            foreach (array_keys($container->getExtensions()) as $name) {
+                $prependConfig = [];
+                switch ($name) {
+                    case 'doctrine_phpcr':
+                        $prependConfig = [
+                            'odm' => [],
+                        ];
+                        break;
+                }
+
+                if ($prependConfig) {
+                    $container->prependExtensionConfig($name, $prependConfig);
+                }
+            }
+        }
+
         if ($container->hasExtension('massive_build')) {
             $container->prependExtensionConfig('massive_build', [
                 'command_class' => 'Sulu\Bundle\CoreBundle\CommandOptional\SuluBuildCommand',
