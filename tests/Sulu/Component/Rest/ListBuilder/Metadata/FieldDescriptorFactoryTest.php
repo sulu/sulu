@@ -17,6 +17,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenati
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineGroupConcatFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineIdentityFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Driver\XmlDriver as DoctrineXmlDriver;
 use Sulu\Component\Rest\ListBuilder\Metadata\General\Driver\XmlDriver as GeneralXmlDriver;
@@ -188,6 +189,36 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertFieldDescriptors($expected, $fieldDescriptor);
     }
 
+    public function testGetFieldDescriptorForClassOptions()
+    {
+        $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
+            ->willReturn(__DIR__ . '/Resources/options.xml');
+
+        $provider = new ChainProvider($this->chain);
+        $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
+        $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class, ['locale' => 'de']);
+
+        $this->assertEquals(['city'], array_keys($fieldDescriptor));
+
+        $expected = [
+            'city' => [
+                'name' => 'city',
+                'translation' => 'City',
+                'disabled' => true,
+                'joins' => [
+                    'SuluContactBundle:ContactAddress' => [
+                        'entity-name' => 'SuluContactBundle:ContactAddress',
+                        'field-name' => 'SuluContactBundle:Contact.contactAddresses',
+                        'method' => 'LEFT',
+                        'condition' => 'SuluContactBundle:ContactAddress.locale = \'de\'',
+                    ]
+                ]
+            ],
+        ];
+
+        $this->assertFieldDescriptors($expected, $fieldDescriptor);
+    }
+
     public function testGetFieldDescriptorForClassEmpty()
     {
         $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
@@ -237,5 +268,29 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected['sortable'], $fieldDescriptor->getSortable());
         $this->assertEquals($expected['editable'], $fieldDescriptor->getEditable());
         $this->assertEquals($expected['class'], $fieldDescriptor->getClass());
+
+        if (array_key_exists('joins', $expected)) {
+            foreach ($expected['joins'] as $name => $joinExpected) {
+                $this->assertJoin($joinExpected, $fieldDescriptor->getJoins()[$name]);
+            }
+        }
+    }
+
+    private function assertJoin(array $expected, DoctrineJoinDescriptor $join)
+    {
+        $expected = array_merge(
+            [
+                'entity-name' => null,
+                'field-name' => null,
+                'method' => null,
+                'condition' => null,
+            ],
+            $expected
+        );
+
+        $this->assertEquals($expected['entity-name'], $join->getEntityName());
+        $this->assertEquals($expected['field-name'], $join->getJoin());
+        $this->assertEquals($expected['method'], $join->getJoinMethod());
+        $this->assertEquals($expected['condition'], $join->getJoinCondition());
     }
 }
