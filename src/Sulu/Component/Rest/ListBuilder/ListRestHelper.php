@@ -76,7 +76,12 @@ class ListRestHelper implements ListRestHelperInterface
      */
     public function getLimit()
     {
-        return $this->getRequest()->get('limit', 10);
+        $default = 10;
+        if ($this->getRequest()->getRequestFormat() === 'csv') {
+            $default = null;
+        }
+
+        return $this->getRequest()->get('limit', $default);
     }
 
     /**

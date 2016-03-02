@@ -456,11 +456,6 @@ class ContactController extends RestController implements ClassResourceInterface
         return $contacts;
     }
 
-    private function getAccountEntityName()
-    {
-        return $this->container->getParameter('sulu_contact.account.entity');
-    }
-
     /**
      * {@inheritdoc}
      */

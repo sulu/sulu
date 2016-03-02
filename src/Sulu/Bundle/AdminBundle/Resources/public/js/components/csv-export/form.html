@@ -1,0 +1,78 @@
+<div class="grid">
+    <div class="grid-row">
+        <div class="grid-col-6">
+            <div class="form-group">
+                <label for="delimiter" class="required"><%= translations.delimiter %></label>
+
+                <div id="delimiter" class="delimiter"
+                     data-aura-component="select@husky"
+                     data-aura-data='[";", ",", "\\t"]'
+                     data-aura-multiple-select="false"
+                     data-aura-pre-selected-elements='[";"]'
+                     data-type="husky-select"
+                     data-form="true"
+                     data-mapper-return-value="value"
+                     data-mapper-property="delimiter">
+                </div>
+
+                <div class="input-description m-top-5"><%= translations.delimiterInfo %></div>
+            </div>
+        </div>
+        <div class="grid-col-6">
+            <div class="form-group">
+                <label for="escape" class="required"><%= translations.escape %></label>
+
+                <div id="escape" class="escape"
+                     data-aura-component="select@husky"
+                     data-aura-data='["\\", "\""]'
+                     data-aura-multiple-select="false"
+                     data-aura-pre-selected-elements='["\\"]'
+                     data-type="husky-select"
+                     data-form="true"
+                     data-mapper-return-value="value"
+                     data-mapper-property="escape">
+                </div>
+
+                <div class="input-description m-top-5"><%= translations.escapeInfo %></div>
+            </div>
+        </div>
+    </div>
+    <div class="grid-row">
+        <div class="grid-col-6">
+            <div class="form-group">
+                <label for="enclosure" class="required"><%= translations.enclosure %></label>
+
+                <div id="enclosure" class="enclosure"
+                     data-aura-component="select@husky"
+                     data-aura-data='["\"", ""]'
+                     data-aura-multiple-select="false"
+                     data-aura-pre-selected-elements='["\""]'
+                     data-type="husky-select"
+                     data-form="true"
+                     data-mapper-return-value="value"
+                     data-mapper-property="enclosure">
+                </div>
+
+                <div class="input-description m-top-10"><%= translations.enclosureInfo %></div>
+            </div>
+        </div>
+        <div class="grid-col-6">
+            <div class="form-group">
+                <label for="new-line" class="required"><%= translations.newLine %></label>
+
+                <div id="new-line" class="new-line"
+                     data-aura-component="select@husky"
+                     data-aura-data='["\\n", "\\r\\n", "\\r"]'
+                     data-aura-multiple-select="false"
+                     data-aura-pre-selected-elements='["\\n"]'
+                     data-type="husky-select"
+                     data-form="true"
+                     data-mapper-return-value="value"
+                     data-mapper-property="newLine">
+                </div>
+
+                <div class="input-description m-top-10"><%= translations.newLineInfo %></div>
+            </div>
+        </div>
+    </div>
+</div>
