@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2082 [All]                 Get rid of the aliased evenement composer constraint
     * ENHANCEMENT #2035 [ContentBundle]       Add structure type to index
     * BUGFIX      #2058 [ListBuilder]         Fixed cache for field-descriptor
     * ENHANCEMENT #2034 [ContentBundle]       Improved content-bundle testcases
