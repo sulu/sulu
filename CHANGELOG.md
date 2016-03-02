@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2046 [ContactBundle]     Added country-controller and use auto-complete for country
     * HOTFIX      #2074 [ListBuilder]       Added options for creating field-descriptors with meta-data
     * HOTFIX      #2053 [ContactBundle]     Added 'hasEmail' parameter to accounts api
     * HOTFIX      #2064 [ResourceBundle]    Fixed no option for invalid filter

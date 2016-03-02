@@ -6,6 +6,10 @@ sulu_contact.contacts:
     type: rest
     resource: Sulu\Bundle\ContactBundle\Controller\ContactController
 
+sulu_contact.countries:
+    type: rest
+    resource: Sulu\Bundle\ContactBundle\Controller\CountryController
+
 sulu_contact.accounts:
     type: rest
     resource: Sulu\Bundle\ContactBundle\Controller\AccountController
