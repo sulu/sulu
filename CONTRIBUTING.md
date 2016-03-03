@@ -4,8 +4,9 @@ Contributing
 Sulu CMF is an open source, community-driven project. We follow the same coding
 standards as Symfony.
 
-Before making a pull request please ensure you use the [Pull Request
+Before making a pull request please ensure you fill out the [Pull Request
 Template](http://docs.sulu.io/en/latest/developer/contributing/pull-requests.html#template)
+pre filled by GitHub accordingly.
 
 Useful links:
 
