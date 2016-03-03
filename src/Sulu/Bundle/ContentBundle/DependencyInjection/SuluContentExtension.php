@@ -94,6 +94,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
+        $this->processDocumentManager($container, $config);
         $this->processTemplates($container, $config);
         $this->processPreview($container, $config);
 
@@ -111,6 +112,11 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         $loader->load('compat.xml');
         $loader->load('document.xml');
         $loader->load('serializer.xml');
+    }
+
+    private function processDocumentManager(ContainerBuilder $container, $config)
+    {
+        $container->setParameter('sulu.content.publish.document_manager', $config['publish']['document_manager']);
     }
 
     private function processPreview(ContainerBuilder $container, $config)
