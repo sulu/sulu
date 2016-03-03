@@ -9,6 +9,8 @@ use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\DocumentManagerRegistryInterface;
 use Sulu\Component\DocumentManager\Event\FlushEvent;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
+use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 class WorkspaceSyncSubscriber implements EventSubscriberInterface
 {
@@ -36,24 +38,61 @@ class WorkspaceSyncSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            Events::PERSIST => 'handlePersist',
+            // persit needs to be before the content mapper subscriber
+            // because we need to stop propagation early on the live 
+            Events::PERSIST => [ 'handlePersist',10 ],
             Events::FLUSH => 'handleFlush'
         ];
     }
 
+    /**
+     * Documents should be synced if any of the following apply:
+     *
+     * - They are new
+     * - They are published.
+     *
+     * @param PersistEvent
+     */
     public function handlePersist(PersistEvent $event)
     {
-        $this->queue[] = $event->getDocument();
+        $node = $event->getNode();
+        $document = $event->getDocument();
+
+        $emittingManager = $event->getContext()->getDocumentManager();
+        $liveManager = $this->registry->getManager($this->liveWorkspaceName);
+
+        // if the  emitting manager is the live manager, stop we
+        // don't want to sync from the live workspace!
+        if ($emittingManager === $liveManager) {
+            return;
+        }
+
+        // always publish new documents
+        if ($node->isNew()) {
+            $this->syncDocument($document);
+            return;
+        }
+
+        // only publish documents implementing workflows
+        if (!$document instanceof WorkflowStageBehavior) {
+            return;
+        }
+
+        if ($document->getWorkflowStage() !== WorkflowStage::PUBLISHED) {
+            return;
+        }
+
+        $this->syncDocument($document);
     }
 
     public function handleFlush(FlushEvent $event)
     {
         $context = $event->getContext();
-        $defaultManager = $context->getDocumentManager();
+        $emittingManager = $context->getDocumentManager();
         $liveManager = $this->registry->getManager($this->liveWorkspaceName);
 
         // do not do anything if the default manager and live manager are the same.
-        if ($defaultManager === $liveManager) {
+        if ($emittingManager === $liveManager) {
             $this->queue = array();
             return;
         }
@@ -65,10 +104,11 @@ class WorkspaceSyncSubscriber implements EventSubscriberInterface
             }
 
             $path = $event->getContext()->getInspector()->getPath($document);
+            $locale = $event->getContext()->getInspector()->getLocale($document);
 
             $liveManager->persist(
                 $document,
-                'de',
+                $locale,
                 [
                     'path' => $path,
                     'auto_create' => true
@@ -77,5 +117,10 @@ class WorkspaceSyncSubscriber implements EventSubscriberInterface
         }
 
         $liveManager->flush();
+    }
+
+    private function syncDocument($document)
+    {
+        $this->queue[] = $document;
     }
 }

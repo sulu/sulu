@@ -54,7 +54,11 @@ class SnippetDocument implements
 
     public function __construct()
     {
-        $this->workflowStage = WorkflowStage::TEST;
+        // snippets should be published by default as there is no way
+        // to change this in the UI and this is the effective state.
+        //
+        // TODO: write a migration for this?
+        $this->workflowStage = WorkflowStage::PUBLISHED;
         $this->structure = new Structure();
     }
 
