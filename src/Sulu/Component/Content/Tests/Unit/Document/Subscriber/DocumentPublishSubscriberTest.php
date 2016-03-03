@@ -109,6 +109,8 @@ class DocumentPublishSubscriberTest extends SubscriberTestCase
 
     /**
      * It should sync a publishable, published document.
+     * It queue should be empty the flush (it should not sync the document
+     * twice on multiple flushes).
      */
     public function testSyncPublishablePublished()
     {
@@ -131,12 +133,12 @@ class DocumentPublishSubscriberTest extends SubscriberTestCase
                 'path' => $path,
                 'auto_create' => true,
             ]
-        )->shouldBeCalled();
+        )->shouldBeCalledTimes(1);
 
         $this->publishManager->flush()->shouldBeCalled();
 
         $this->subscriber->handlePersist($this->persistEvent->reveal());
         $this->subscriber->handleFlush($this->flushEvent->reveal());
+        $this->subscriber->handleFlush($this->flushEvent->reveal());
     }
-
 }

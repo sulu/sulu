@@ -93,7 +93,7 @@
         </service>
 
         <service id="sulu_document_manager.document.subscriber.document_managre_sync"
-            class="Sulu\Component\Content\Document\Subscriber\DocumentManagerSyncSubscriber">
+            class="Sulu\Component\Content\Document\Subscriber\DocumentPublishSubscriber">
             <argument type="service" id="sulu_document_manager.registry" />
             <argument>%sulu.content.publish.document_manager%</argument>
             <tag name="sulu_document_manager.event_subscriber" />

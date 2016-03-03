@@ -47,23 +47,28 @@ class DocumentPublishSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Documents should be synced if any of the following apply:
+     * Sync documents to the other workspace if they implement
+     * WorkflowStageBehavior and:
      *
-     * - They are new
-     * - They are synced.
+     *   A. They are new.
+     *   B. They are published.
      *
      * @param PersistEvent
      */
     public function handlePersist(PersistEvent $event)
     {
         $node = $event->getNode();
+        $context = $event->getContext();
 
-        $emittingManager = $event->getContext()->getDocumentManager();
+        $emittingManager = $context->getDocumentManager();
         $publishManager = $this->registry->getManager($this->publishWorkspaceName);
 
         // if the  emitting manager is the publish manager, stop we
         // don't want to sync from the publish workspace!
-        if ($emittingManager === $publishManager) {
+        //
+        // Note: this should be removed by implementing per-document-manager
+        // event-subscribers.
+        if ($publishManager === $emittingManager) {
             return;
         }
 
@@ -74,9 +79,11 @@ class DocumentPublishSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $locale = $context->getInspector()->getLocale($document);
+
         // always sync new documents
         if ($node->isNew()) {
-            $this->syncDocument($document);
+            $this->queueDocument($document, $locale);
             return;
         }
 
@@ -85,7 +92,7 @@ class DocumentPublishSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $this->syncDocument($document);
+        $this->queueDocument($document, $locale);
     }
 
     public function handleFlush(FlushEvent $event)
@@ -94,9 +101,8 @@ class DocumentPublishSubscriber implements EventSubscriberInterface
         $emittingManager = $context->getDocumentManager();
         $publishManager = $this->registry->getManager($this->publishWorkspaceName);
 
-        // do not do anything if the default manager and publish manager are the same.
-        if ($emittingManager === $publishManager) {
-            $this->queue = array();
+        // do nothing, see same condition in handlePersist.
+        if ($publishManager === $emittingManager) {
             return;
         }
 
@@ -104,14 +110,17 @@ class DocumentPublishSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $queue = $this->queue;
-        while ($document = array_shift($queue)) {
+        while ($entry = array_shift($this->queue)) {
+            $document = $entry['document'];
+
+            // this is a temporary (and invalid) hack until the routing system
+            // is converted to use the document manager.
             if ($document instanceof ResourceSegmentBehavior) {
                 $document->setResourceSegment('/' . uniqid());
             }
 
             $path = $event->getContext()->getInspector()->getPath($document);
-            $locale = $event->getContext()->getInspector()->getLocale($document);
+            $locale = $entry['locale'];
 
             $publishManager->persist(
                 $document,
@@ -126,8 +135,11 @@ class DocumentPublishSubscriber implements EventSubscriberInterface
         $publishManager->flush();
     }
 
-    private function syncDocument($document)
+    private function queueDocument($document, $locale)
     {
-        $this->queue[] = $document;
+        $this->queue[] = [
+            'document' => $document,
+            'locale' => $locale
+        ];
     }
 }
