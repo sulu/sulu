@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SnippetBundle\Document;
 use Sulu\Component\Content\Document\Behavior\LocalizedAuditableBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureTypeFilingBehavior;
+use Sulu\Component\Content\Document\Behavior\SynchronizeBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Document\WorkflowStage;
@@ -35,7 +36,8 @@ class SnippetDocument implements
     StructureBehavior,
     WorkflowStageBehavior,
     UuidBehavior,
-    PathBehavior
+    PathBehavior,
+    SynchronizeBehavior
 {
     private $created;
     private $changed;
@@ -51,10 +53,15 @@ class SnippetDocument implements
     private $locale;
     private $path;
     private $nodeName;
+    private $synchronizedManagers;
 
     public function __construct()
     {
-        $this->workflowStage = WorkflowStage::TEST;
+        // snippets should be published by default as there is no way
+        // to change this in the UI and this is the effective state.
+        //
+        // TODO: write a migration for this?
+        $this->workflowStage = WorkflowStage::PUBLISHED;
         $this->structure = new Structure();
     }
 
@@ -208,5 +215,13 @@ class SnippetDocument implements
     public function getPath()
     {
         return $this->path;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSynchronizedManagers()
+    {
+        return $this->synchronizedManagers;
     }
 }

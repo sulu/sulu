@@ -31,6 +31,8 @@ class ResourceLocatorMovedException extends Exception
 
     public function __construct($newResourceLocator, $newResourceLocatorUuid)
     {
+        parent::__construct(sprintf(
+            'Cannot move resource locator that is a history node: "%s"', $newResourceLocator));
         $this->newResourceLocator = $newResourceLocator;
         $this->newResourceLocatorUuid = $newResourceLocatorUuid;
     }

@@ -20,6 +20,7 @@ use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
+use Sulu\Component\Content\Document\Behavior\SynchronizeBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\Extension\ExtensionContainer;
@@ -53,7 +54,8 @@ class BasePageDocument implements
     OrderBehavior,
     WebspaceBehavior,
     SecurityBehavior,
-    LocalizedAuditableBehavior
+    LocalizedAuditableBehavior,
+    SynchronizeBehavior
 {
     /**
      * The name of this node.
@@ -234,6 +236,12 @@ class BasePageDocument implements
      * @var array
      */
     protected $permissions;
+
+    /**
+     * Names of all the non-default document managers to which this document
+     * is synchronized with.
+     */
+    protected $synchronizedManagers;
 
     public function __construct()
     {
@@ -570,5 +578,13 @@ class BasePageDocument implements
     public function getPermissions()
     {
         return $this->permissions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSynchronizedManagers()
+    {
+        return $this->synchronizedManagers;
     }
 }

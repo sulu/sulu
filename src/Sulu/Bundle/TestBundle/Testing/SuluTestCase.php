@@ -141,7 +141,6 @@ abstract class SuluTestCase extends KernelTestCase
             $session->save();
         }
 
-
         if (!$this->importer) {
             $this->importer = new PHPCRImporter($this->getContainer()->get('doctrine_phpcr')->getConnection());
         }

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Document;
 
 use Sulu\Component\Content\Document\Behavior\RouteBehavior;
 use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
+use Sulu\Component\Content\Document\Behavior\SynchronizeBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
@@ -31,7 +32,8 @@ class RouteDocument implements
     PathBehavior,
     UuidBehavior,
     RouteBehavior,
-    TimestampBehavior
+    TimestampBehavior,
+    SynchronizeBehavior
 {
     /**
      * @var string
@@ -67,6 +69,11 @@ class RouteDocument implements
      * @var \DateTime
      */
     protected $changed;
+
+    /**
+     * @var string[]
+     */
+    protected $synchronizedManagers;
 
     /**
      * {@inheritdoc}
@@ -154,5 +161,13 @@ class RouteDocument implements
     public function setChanged(\DateTime $changed)
     {
         $this->changed = $changed;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSynchronizedManagers()
+    {
+        return $this->synchronizedManagers;
     }
 }

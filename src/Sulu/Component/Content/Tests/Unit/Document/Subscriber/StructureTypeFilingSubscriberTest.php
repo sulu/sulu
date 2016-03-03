@@ -75,6 +75,11 @@ class StructureTypeFilingSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     private $subscriber;
 
+    /**
+     * @var array
+     */
+    private $options;
+
     public function setUp()
     {
         $this->persistEvent = $this->prophesize(PersistEvent::class);
