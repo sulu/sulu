@@ -17,6 +17,7 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
+use Sulu\Component\DocumentManager\Event\FlushEvent;
 
 class SubscriberTestCase extends \PHPUnit_Framework_TestCase
 {
@@ -29,6 +30,11 @@ class SubscriberTestCase extends \PHPUnit_Framework_TestCase
      * @var HydrateEvent
      */
     protected $hydrateEvent;
+
+    /**
+     * @var FlushEvent
+     */
+    protected $flushEvent;
 
     /**
      * @var \stdClass
@@ -59,6 +65,7 @@ class SubscriberTestCase extends \PHPUnit_Framework_TestCase
     {
         $this->persistEvent = $this->prophesize(PersistEvent::class);
         $this->hydrateEvent = $this->prophesize(HydrateEvent::class);
+        $this->flushEvent = $this->prophesize(FlushEvent::class);
         $this->notImplementing = new \stdClass();
         $this->encoder = $this->prophesize(PropertyEncoder::class);
         $this->node = $this->prophesize(NodeInterface::class);
@@ -70,5 +77,6 @@ class SubscriberTestCase extends \PHPUnit_Framework_TestCase
         $this->manager = $this->prophesize(DocumentManagerInterface::class);
         $this->hydrateEvent->getManager()->willReturn($this->manager->reveal());
         $this->persistEvent->getManager()->willReturn($this->manager->reveal());
+        $this->flushEvent->getContext()->willReturn($this->context->reveal());
     }
 }
