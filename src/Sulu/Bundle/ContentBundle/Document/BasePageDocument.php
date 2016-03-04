@@ -33,6 +33,7 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\Collection\ChildrenCollection;
+use Sulu\Component\Content\Document\Behavior\SyncronizeBehavior;
 
 /**
  * Base document for Page-like documents (i.e. Page and Home documents).
@@ -53,7 +54,8 @@ class BasePageDocument implements
     OrderBehavior,
     WebspaceBehavior,
     SecurityBehavior,
-    AuditableBehavior
+    AuditableBehavior,
+    SyncronizeBehavior
 {
     /**
      * The name of this node.
@@ -234,6 +236,12 @@ class BasePageDocument implements
      * @var array
      */
     protected $permissions;
+
+    /**
+     * Names of all the non-default document managers to which this document
+     * is syncronized with.
+     */
+    protected $syncronizedManagers;
 
     public function __construct()
     {
@@ -570,5 +578,13 @@ class BasePageDocument implements
     public function getPermissions()
     {
         return $this->permissions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSyncronizedManagers()
+    {
+        return $this->syncronizedManagers;
     }
 }

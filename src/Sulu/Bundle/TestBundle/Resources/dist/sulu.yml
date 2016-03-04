@@ -56,6 +56,8 @@ sulu_core:
     fallback_locale: 'en'
 
 sulu_content:
+    publish:
+        document_manager: live
     search:
         mapping:
             Sulu\Bundle\ContentBundle\Document\PageDocument:

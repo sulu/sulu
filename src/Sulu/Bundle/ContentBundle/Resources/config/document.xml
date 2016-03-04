@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <!-- TODO: All of these services should be prefixed with `sulu_content` -->
     <services>
         <!-- Subscribers -->
         <service id="sulu_content.document.subscriber.content"
@@ -92,10 +95,10 @@
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
-        <service id="sulu_document_manager.document.subscriber.document_managre_sync"
-            class="Sulu\Component\Content\Document\Subscriber\DocumentPublishSubscriber">
-            <argument type="service" id="sulu_document_manager.registry" />
-            <argument>%sulu.content.publish.document_manager%</argument>
+        <service id="sulu_document_manager.document.subscriber.document_syncronization"
+            class="Sulu\Component\Content\Document\Subscriber\DocumentSyncronizationSubscriber">
+            <argument type="service" id="sulu_document_manager.document_manager" />
+            <argument type="service" id="sulu_content.document.syncronization_manager" />
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
@@ -120,5 +123,20 @@
             <argument>%sulu.content.language.namespace%</argument>
             <tag name="sulu_document_manager.initializer" priority="127"/>
         </service>
+
+        <!-- Document syncronization -->
+        <service id="sulu_content.document.syncronization_manager"
+            class="Sulu\Component\Content\Document\SyncronizationManager">
+            <argument type="service" id="sulu_document_manager.registry" />
+            <argument type="service" id="sulu_document_manager.property_encoder" />
+            <argument>%sulu.content.publish.document_manager%</argument>
+        </service>
+
+        <service id="sulu_content.command.syncronize_document" class="Sulu\Bundle\ContentBundle\Command\SyncronizeCommand">
+            <argument type="service" id="sulu_document_manager.document_manager" />
+            <argument type="service" id="sulu_content.document.syncronization_manager" />
+            <tag name="console.command" />
+        </service>
+
     </services>
 </container>
