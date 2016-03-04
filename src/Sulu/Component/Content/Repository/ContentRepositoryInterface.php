@@ -108,4 +108,16 @@ interface ContentRepositoryInterface
      * @return Content[]
      */
     public function findAll($locale, $webspaceKey, MappingInterface $mapping, UserInterface $user = null);
+
+    /**
+     * Find all pages and returns an array of content.
+     *
+     * @param string $locale
+     * @param string $portalKey
+     * @param MappingInterface $mapping
+     * @param UserInterface|null $user
+     *
+     * @return Content[]
+     */
+    public function findAllByPortal($locale, $portalKey, MappingInterface $mapping, UserInterface $user = null);
 }
