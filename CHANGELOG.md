@@ -179,6 +179,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1733 [ContentBundle]   Added empty locale condition to fix empty locale bug
     * ENHANCEMENT #1719 [SearchBundle]    Updated search to only return granted documents
     * BUGFIX      #1733 [ContactBundle]   Added delete warning and download icon for contact avatar and account logo
+    * FEATURE     #1686 [ContentBundle]   Webspace xliff 1.2 Export
     * BUGFIX      #1733 [MediaBundle]     Fixed a few media-selection bugs
     * ENHANCEMENT #1605 [MediaBundle]     Adjust media-selection-overlay title
     * BUGFIX      #1716 [ContactBundle]   Fixed wrong contact entity identifier

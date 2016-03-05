@@ -17,7 +17,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 /**
  * Simple implementation of ContentTypes.
  */
-abstract class SimpleContentType implements ContentTypeInterface
+abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExportInterface
 {
     /**
      * name of content type.
@@ -170,5 +170,37 @@ abstract class SimpleContentType implements ContentTypeInterface
     public function getReferencedUuids(PropertyInterface $property)
     {
         return [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exportData($propertyValue)
+    {
+        if (is_bool($propertyValue)) {
+            if ($propertyValue) {
+                return '1';
+            }
+
+            return '';
+        }
+
+        if (is_string($propertyValue)) {
+            return $propertyValue;
+        }
+
+        if (is_string($this->defaultValue)) {
+            return $this->defaultValue;
+        }
+
+        if (is_bool($this->defaultValue)) {
+            if ($this->defaultValue) {
+                return '1';
+            }
+
+            return '';
+        }
+
+        return '';
     }
 }
