@@ -20,7 +20,10 @@ define(['mvc/relationalmodel'], function (RelationalModel) {
                 locale: '',
                 title: '',
                 name: '',
-                description: ''
+                description: '',
+                tags: [],
+                copyright: '',
+                versions: {}
             };
         }
     });

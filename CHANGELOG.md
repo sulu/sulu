@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2090 [MediaBundle]         Fixed fallback of media file-version meta
     * BUGFIX      #2100 [ContactBundle]       Fixed switching tab in contact and account after save
     * ENHANCEMENT #2097 [TranslateBundle]     Fixed translation code length in database schema
     * BUGIFX      #2093 [ContactBundle]       Fixed auto-select new position and title
