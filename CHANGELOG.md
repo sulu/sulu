@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2092 [ContactBundle]       Fixed new contact when creating a new contact in the account
     * BUGFIX      #2100 [ContactBundle]       Fixed switching tab in contact and account after save
     * ENHANCEMENT #2097 [TranslateBundle]     Fixed translation code length in database schema
     * BUGIFX      #2093 [ContactBundle]       Fixed auto-select new position and title
