@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.1.10 (2016-03-07)
     * HOTFIX      #2029 [WebsiteBundle]     Removed single alternate link in sitemap.xml
     * HOTFIX      #2029 [WebsiteBundle]     Fixed hreflang tag with one translation and different schemas
     * HOTFIX      #2046 [ContactBundle]     Added country-controller and use auto-complete for country
