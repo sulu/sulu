@@ -203,7 +203,7 @@ class SeoTwigExtension extends \Twig_Extension
                 }
 
                 $html .= $this->renderAlternateLink($url, $webspaceKey, $locale, false, $scheme);
-                $concreteTranslations++;
+                ++$concreteTranslations;
             }
         }
 

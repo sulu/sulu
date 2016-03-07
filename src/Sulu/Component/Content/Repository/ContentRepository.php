@@ -237,7 +237,6 @@ class ContentRepository implements ContentRepositoryInterface
         return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $webspaceKey, $mapping, $user);
     }
 
-
     /**
      * {@inheritdoc}
      */

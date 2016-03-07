@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2094 [CategoryBundle]      Fixed maximum length of category-key
     * ENHANCEMENT #2082 [All]                 Get rid of the aliased evenement composer constraint
     * ENHANCEMENT #2035 [ContentBundle]       Add structure type to index
     * BUGFIX      #2058 [ListBuilder]         Fixed cache for field-descriptor

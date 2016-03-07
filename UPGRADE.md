@@ -2,6 +2,14 @@
 
 ## dev-develop
 
+### Category-Key
+
+Length of category-key column was extended. Use following command to update the schema definition.
+
+```bash
+app/console doctrine:schema:update --force
+```
+
 ### Definition of security contexts
 
 The definition of security contexts in the `Admin` classes has changed. They
