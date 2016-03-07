@@ -19,9 +19,9 @@ use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Sulu\Component\Content\Document\Behavior\SyncronizeBehavior;
+use Sulu\Component\Content\Document\Behavior\SynchronizeBehavior;
 
-class SyncronizeSubscriber implements EventSubscriberInterface
+class SynchronizeSubscriber implements EventSubscriberInterface
 {
     public static function getSubscribedEvents()
     {
@@ -36,10 +36,10 @@ class SyncronizeSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
 
-        if (!$document instanceof SyncronizeBehavior) {
+        if (!$document instanceof SynchronizeBehavior) {
             return;
         }
 
-        $event->getAccessor()->set(SyncronizeBehavior::SYNCED_FIELD, []);
+        $event->getAccessor()->set(SynchronizeBehavior::SYNCED_FIELD, []);
     }
 }

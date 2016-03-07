@@ -12,15 +12,15 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentManagerRegistry;
-use Sulu\Component\Content\Document\Behavior\SyncronizeBehavior;
+use Sulu\Component\Content\Document\Behavior\SynchronizeBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\Content\Document\SyncronizationManager;
+use Sulu\Component\Content\Document\SynchronizationManager;
 use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 
-class DocumentSyncronizationSubscriber implements EventSubscriberInterface
+class DocumentSynchronizationSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var SyncronizationManager
+     * @var SynchronizationManager
      */
     private $syncManager;
 
@@ -35,7 +35,7 @@ class DocumentSyncronizationSubscriber implements EventSubscriberInterface
      *       event subscribers to specific document managers this would not
      *       be necessary.
      */
-    public function __construct(DocumentManagerInterface $defaultManager, SyncronizationManager $syncManager)
+    public function __construct(DocumentManagerInterface $defaultManager, SynchronizationManager $syncManager)
     {
         $this->defaultManager = $defaultManager;
         $this->syncManager = $syncManager;
@@ -60,19 +60,19 @@ class DocumentSyncronizationSubscriber implements EventSubscriberInterface
     {
         $metadata = $event->getMetadata();
 
-        if (false === $metadata->getReflectionClass()->isSubclassOf(SyncronizeBehavior::class)) {
+        if (false === $metadata->getReflectionClass()->isSubclassOf(SynchronizeBehavior::class)) {
             return;
         }
 
-        $metadata->addFieldMapping('syncronizedManagers', [
+        $metadata->addFieldMapping('synchronizedManagers', [
             'encoding' => 'system_localized',
-            'property' => SyncronizeBehavior::SYNCED_FIELD,
+            'property' => SynchronizeBehavior::SYNCED_FIELD,
             'type' => 'string',
         ]);
     }
 
     /**
-     * Syncronize new documents with the publish document manager.
+     * Synchronize new documents with the publish document manager.
      *
      * @param PersistEvent
      */
@@ -92,7 +92,7 @@ class DocumentSyncronizationSubscriber implements EventSubscriberInterface
         $document = $event->getDocument();
 
         // only sync documents implementing the sync behavior
-        if (!$document instanceof SyncronizeBehavior) {
+        if (!$document instanceof SynchronizeBehavior) {
             return;
         }
 
@@ -145,13 +145,13 @@ class DocumentSyncronizationSubscriber implements EventSubscriberInterface
             //
             // $this->defaultManager->find($document->getUUid(), $locale);
 
-            // delegate to the sync manager to syncronize the document.
-            $this->syncManager->syncronizeSingle($document);
+            // delegate to the sync manager to synchronize the document.
+            $this->syncManager->synchronizeSingle($document);
         }
 
         // flush both managers. the publish manager will then commit
-        // the syncronized documents and the default manager will update
-        // the "syncronized document managers" field of original documents.
+        // the synchronized documents and the default manager will update
+        // the "synchronized document managers" field of original documents.
         $publishManager->flush();
         $this->defaultManager->flush();
     }

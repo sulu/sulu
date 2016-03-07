@@ -16,7 +16,7 @@ use Sulu\Component\DocumentManager\Behavior\Path\BasePathBehavior;
 /**
  * TODO: Document me.
  */
-interface SyncronizeBehavior
+interface SynchronizeBehavior
 {
     const SYNCED_FIELD = 'synced';
 
@@ -26,5 +26,5 @@ interface SyncronizeBehavior
      *
      * @return string[]
      */
-    public function getSyncronizedManagers();
+    public function getSynchronizedManagers();
 }

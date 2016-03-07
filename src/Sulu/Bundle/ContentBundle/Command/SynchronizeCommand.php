@@ -7,15 +7,15 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\Content\Document\SyncronizationManager;
+use Sulu\Component\Content\Document\SynchronizationManager;
 use Symfony\Component\Console\Input\InputOption;
-use Sulu\Component\Content\Document\Behavior\SyncronizeBehavior;
+use Sulu\Component\Content\Document\Behavior\SynchronizeBehavior;
 
-class SyncronizeCommand extends Command
+class SynchronizeCommand extends Command
 {
     public function __construct(
         DocumentManagerInterface $defaultManager,
-        SyncronizationManager $syncManager
+        SynchronizationManager $syncManager
     )
     {
         parent::__construct();
@@ -25,8 +25,8 @@ class SyncronizeCommand extends Command
 
     public function configure()
     {
-        $this->setName('sulu:document:syncronize');
-        $this->addOption('id', null, InputOption::VALUE_REQUIRED|InputOption::VALUE_IS_ARRAY, 'Document UUID or path to syncronize');
+        $this->setName('sulu:document:synchronize');
+        $this->addOption('id', null, InputOption::VALUE_REQUIRED|InputOption::VALUE_IS_ARRAY, 'Document UUID or path to synchronize');
         $this->addOption('locale', null, InputOption::VALUE_REQUIRED|InputOption::VALUE_IS_ARRAY, 'Locale');
         $this->addOption('force', null, InputOption::VALUE_NONE, 'Force sync (ignore flags)');
     }
@@ -58,7 +58,7 @@ class SyncronizeCommand extends Command
             return;
         }
 
-        $output->writeln('Syncronizing documents');
+        $output->writeln('Synchronizing documents');
         $inspector = $this->defaultManager->getInspector();
 
         foreach ($documents as $document) {
@@ -66,21 +66,21 @@ class SyncronizeCommand extends Command
                 $locales = $this->defaultManager->getInspector()->getLocales($document);
             }
 
-            if (!$document instanceof SyncronizeBehavior) {
+            if (!$document instanceof SynchronizeBehavior) {
                 continue;
             }
 
             foreach ($locales as $locale) {
                 // translate document
                 $this->defaultManager->find($inspector->getUuid($document), $locale);
-                $synced = $document->getSyncronizedManagers() ?: [];
+                $synced = $document->getSynchronizedManagers() ?: [];
                 $output->write(sprintf(
                     '<info>=></> %s [<comment>synced</>:%s <comment>locale</>:%s]', 
                     $inspector->getPath($document),
                     implode(', ', $synced),
                     $locale
                 ));
-                $this->syncManager->syncronizeFull($document, $force);
+                $this->syncManager->synchronizeFull($document, $force);
                 $output->writeln(' [<info>OK</>]');
             }
         }

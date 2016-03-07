@@ -5,14 +5,14 @@ namespace Sulu\Component\Content\Tests\Unit\Document;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentManagerRegistry;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\Content\Document\SyncronizationManager;
+use Sulu\Component\Content\Document\SynchronizationManager;
 use Sulu\Bundle\ContentBundle\Document\RouteDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use PHPCR\NodeInterface;
 use Sulu\Component\DocumentManager\NodeManager;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Prophecy\Argument;
-use Sulu\Component\Content\Document\Behavior\SyncronizeBehavior;
+use Sulu\Component\Content\Document\Behavior\SynchronizeBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 
@@ -22,7 +22,7 @@ use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
  * - PDM: Publish document manager.
  * - DDM: Default document manager.
  */
-class SyncronizationManagerTest extends \PHPUnit_Framework_TestCase
+class SynchronizationManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var mixed
@@ -49,7 +49,7 @@ class SyncronizationManagerTest extends \PHPUnit_Framework_TestCase
         $this->managerRegistry = $this->prophesize(DocumentManagerRegistry::class);
         $this->propertyEncoder = $this->prophesize(PropertyEncoder::class);
 
-        $this->syncManager = new SyncronizationManager(
+        $this->syncManager = new SynchronizationManager(
             $this->managerRegistry->reveal(),
             $this->propertyEncoder->reveal(),
             'live'
@@ -58,23 +58,23 @@ class SyncronizationManagerTest extends \PHPUnit_Framework_TestCase
         $this->ddm = $this->prophesize(DocumentManagerInterface::class);
         $this->pdm = $this->prophesize(DocumentManagerInterface::class);
         $this->route1 = $this->prophesize(RouteDocument::class)
-            ->willImplement(SyncronizeBehavior::class);
+            ->willImplement(SynchronizeBehavior::class);
         $this->ddmInspector = $this->prophesize(DocumentInspector::class);
         $this->pdmNode = $this->prophesize(NodeInterface::class);
         $this->ddmNode = $this->prophesize(NodeInterface::class);
         $this->pdmNodeManager = $this->prophesize(NodeManager::class);
         $this->pdmDocumentRegistry = $this->prophesize(DocumentRegistry::class);
-        $this->document = $this->prophesize(SyncronizeBehavior::class);
+        $this->document = $this->prophesize(SynchronizeBehavior::class);
 
         $this->pdm->getNodeManager()->willReturn($this->pdmNodeManager->reveal());
         $this->pdm->getRegistry()->willReturn($this->pdmDocumentRegistry->reveal());
         $this->ddm->getInspector()->willReturn($this->ddmInspector->reveal());
     }
     /**
-     * (syncronize full) It should return early if publish manager and default manager are
+     * (synchronize full) It should return early if publish manager and default manager are
      * the same.
      */
-    public function testSyncronizeFull()
+    public function testSynchronizeFull()
     {
         $this->configureScenario([
             'pdm_name' => 'ddm'
@@ -82,13 +82,13 @@ class SyncronizationManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->pdm->persist(Argument::cetera())->shouldNotBeCalled();
 
-        $this->syncManager->syncronizeFull($this->document->reveal());
+        $this->syncManager->synchronizeFull($this->document->reveal());
     }
 
     /**
-     * (syncronize full) It should get all the routes for the document and syncronize them.
+     * (synchronize full) It should get all the routes for the document and synchronize them.
      */
-    public function testSyncronizeRoutes()
+    public function testSynchronizeRoutes()
     {
         // make the document implement the resource segment behavior - which would indicate
         // that it has routes associated with it.
@@ -104,7 +104,7 @@ class SyncronizationManagerTest extends \PHPUnit_Framework_TestCase
         ]);
 
         // setup the behavior of the route document...
-        $this->route1->getSyncronizedManagers()->willReturn($options['route_syncronized_managers']);
+        $this->route1->getSynchronizedManagers()->willReturn($options['route_synchronized_managers']);
         $this->ddmInspector->getUuid($this->route1->reveal())->willReturn($options['uuid']);
         $this->ddmInspector->getPath($this->route1->reveal())->willReturn($options['path']);
         $this->ddmInspector->getNode($this->route1->reveal())->willReturn($this->ddmNode->reveal());
@@ -117,7 +117,7 @@ class SyncronizationManagerTest extends \PHPUnit_Framework_TestCase
         $this->pdm->flush()->shouldBeCalled();
         $this->ddm->flush()->shouldBeCalled();
 
-        $this->syncManager->syncronizeFull($this->document->reveal());
+        $this->syncManager->synchronizeFull($this->document->reveal());
     }
 
     /**
@@ -131,22 +131,22 @@ class SyncronizationManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->pdm->persist(Argument::cetera())->shouldNotBeCalled();
 
-        $this->syncManager->syncronizeSingle($this->document->reveal());
+        $this->syncManager->synchronizeSingle($this->document->reveal());
     }
 
     /**
-     * It should not syncronize if force is false and the document believes that it is
-     * already syncronized.
+     * It should not synchronize if force is false and the document believes that it is
+     * already synchronized.
      */
-    public function testDocumentBelievesItIsSyncronizedNoForce()
+    public function testDocumentBelievesItIsSynchronizedNoForce()
     {
         $this->configureScenario([
-            'document_syncronized_managers' => [ 'live' ],
+            'document_synchronized_managers' => [ 'live' ],
         ]);
 
         $this->pdm->persist(Argument::cetera())->shouldNotBeCalled();
 
-        $this->syncManager->syncronizeSingle($this->document->reveal());
+        $this->syncManager->synchronizeSingle($this->document->reveal());
     }
 
     /**
@@ -168,7 +168,7 @@ class SyncronizationManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->pdm->persist(Argument::cetera())->shouldBeCalled();
 
-        $this->syncManager->syncronizeSingle($this->document->reveal());
+        $this->syncManager->synchronizeSingle($this->document->reveal());
     }
 
     /**
@@ -183,12 +183,12 @@ class SyncronizationManagerTest extends \PHPUnit_Framework_TestCase
         $this->document->setParent(null)->shouldBeCalled();
         $this->pdm->persist(Argument::cetera())->shouldBeCalled();
 
-        $this->syncManager->syncronizeSingle($this->document->reveal());
+        $this->syncManager->synchronizeSingle($this->document->reveal());
     }
 
     /**
-     * It should syncronize a document to the publish document manager.
-     * It should register the fact that the document is syncronized with the PDM.
+     * It should synchronize a document to the publish document manager.
+     * It should register the fact that the document is synchronized with the PDM.
      */
     public function testPublishSingle()
     {
@@ -205,7 +205,7 @@ class SyncronizationManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->ddmNode->setProperty($options['synced_property_name'], [ 'live' ])->shouldBeCalled();
 
-        $this->syncManager->syncronizeSingle($this->document->reveal());
+        $this->syncManager->synchronizeSingle($this->document->reveal());
     }
 
     /**
@@ -216,8 +216,8 @@ class SyncronizationManagerTest extends \PHPUnit_Framework_TestCase
         $options = array_merge(array(
             'ddm_name' => 'ddm',
             'pdm_name' => 'pdm',
-            'document_syncronized_managers' => [],
-            'route_syncronized_managers' => [],
+            'document_synchronized_managers' => [],
+            'route_synchronized_managers' => [],
             'uuid' => '1234',
             'locale' => 'de',
             'path' => '/',
@@ -230,7 +230,7 @@ class SyncronizationManagerTest extends \PHPUnit_Framework_TestCase
         $this->managerRegistry->getManager()->willReturn($this->{$options['ddm_name']}->reveal());
         $this->managerRegistry->getManager('live')->willReturn($this->{$options['pdm_name']}->reveal());
 
-        $this->document->getSyncronizedManagers()->willReturn($options['document_syncronized_managers']);
+        $this->document->getSynchronizedManagers()->willReturn($options['document_synchronized_managers']);
 
         $this->ddmInspector->getUuid($this->document->reveal())->willReturn($options['uuid']);
         $this->ddmInspector->getPath($this->document->reveal())->willReturn($options['path']);
@@ -243,7 +243,7 @@ class SyncronizationManagerTest extends \PHPUnit_Framework_TestCase
         $this->pdmDocumentRegistry->hasDocument($this->document->reveal())->willReturn($options['pdm_registry_has_document']);
 
         $this->propertyEncoder->localizedSystemName(
-            SyncronizeBehavior::SYNCED_FIELD,
+            SynchronizeBehavior::SYNCED_FIELD,
             $options['locale']
         )->willReturn($options['synced_property_name']);
 

@@ -33,7 +33,7 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\Collection\ChildrenCollection;
-use Sulu\Component\Content\Document\Behavior\SyncronizeBehavior;
+use Sulu\Component\Content\Document\Behavior\SynchronizeBehavior;
 
 /**
  * Base document for Page-like documents (i.e. Page and Home documents).
@@ -55,7 +55,7 @@ class BasePageDocument implements
     WebspaceBehavior,
     SecurityBehavior,
     AuditableBehavior,
-    SyncronizeBehavior
+    SynchronizeBehavior
 {
     /**
      * The name of this node.
@@ -239,9 +239,9 @@ class BasePageDocument implements
 
     /**
      * Names of all the non-default document managers to which this document
-     * is syncronized with.
+     * is synchronized with.
      */
-    protected $syncronizedManagers;
+    protected $synchronizedManagers;
 
     public function __construct()
     {
@@ -583,8 +583,8 @@ class BasePageDocument implements
     /**
      * {@inheritdoc}
      */
-    public function getSyncronizedManagers()
+    public function getSynchronizedManagers()
     {
-        return $this->syncronizedManagers;
+        return $this->synchronizedManagers;
     }
 }
