@@ -33,7 +33,6 @@
         "willdurand/hateoas-bundle": "0.3.*",
         "symfony/swiftmailer-bundle": "~2.3",
         "pagerfanta/pagerfanta": "~1.0",
-        "evenement/evenement": "2.0.0 as 1.0.0",
         "pulse00/ffmpeg-bundle": "^0.5.2",
         "oro/doctrine-extensions": "^1.0"
     },
