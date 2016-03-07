@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\CategoryBundle\Category;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
 use Sulu\Bundle\CategoryBundle\Category\Exception\KeyNotUniqueException;
 use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
@@ -300,10 +301,8 @@ class CategoryManager implements CategoryManagerInterface
             } else {
                 return $this->createCategory($data, $this->getUser($userId));
             }
-        } catch (\Doctrine\DBAL\DBALException $e) {
-            // FIXME: This hides any exceptions thrown by DBAL.
-            //        See https://github.com/sulu-cmf/sulu/issues/871
-            throw new KeyNotUniqueException();
+        } catch (UniqueConstraintViolationException $e) {
+            throw new KeyNotUniqueException($data['key'], $e);
         }
     }
 
