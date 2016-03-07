@@ -17,6 +17,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
+use Sulu\Bundle\ContentBundle\Document\RouteDocument;
 
 /**
  * The syncronization manager handles the syncronization of documents
@@ -53,7 +54,16 @@ class SyncronizationManager
     }
 
     /**
-     * Return the publish document manager.
+     * Return the publish document manager (PDM).
+     *
+     * This should be the only class that is aware of the PDM name. By having
+     * this method we can be sure that whatever the PDM is, the PDM is always
+     * the PDM.
+     *
+     * NOTE: This is used only by the syncronization subscriber in order
+     *       to "flush" the PDM.
+     *
+     * @return DocumentManagerInterface
      */
     public function getPublishDocumentManager()
     {
@@ -106,12 +116,16 @@ class SyncronizationManager
     }
 
     /**
-     * Syncronize a single document to the publish document manager.
+     * Syncronize a single document to the publish document manager in the
+     * documents currently registered locale.
      *
      * FLUSH will not be called and no associated documents will be
      * syncronized.
      *
+     * TODO: Add an explicit "locale" option?
+     *
      * @param SyncronizeBehavior $document
+     * @param boolean $force
      */
     public function syncronizeSingle(SyncronizeBehavior $document, $force = false)
     {
@@ -137,17 +151,17 @@ class SyncronizationManager
         $inspector = $defaultManager->getInspector();
         $locale = $inspector->getLocale($document);
         $path = $inspector->getPath($document);
-        $node = $inspector->getNode($document);
+        $uuid = $inspector->getUuid($document);
 
+        $registry = $publishManager->getRegistry();
         // if the publish manager already has the incoming PHPCR node then we
         // need to register the existing PHPCR node from the publish session
         // with the incoming document (otherwise the system will attempt to
         // create a new document and fail).
-        if ($publishManager->getNodeManager()->has($document->getUuid())) {
-            $node = $publishManager->getNodeManager()->find($document->getUuid());
-            $registry = $publishManager->getRegistry();
+        if (false === $registry->hasDocument($document)) {
+            if ($publishManager->getNodeManager()->has($uuid)) {
+                $node = $publishManager->getNodeManager()->find($uuid);
 
-            if (!$registry->hasDocument($document)) {
                 $registry->registerDocument(
                     $document,
                     $node,
@@ -218,10 +232,10 @@ class SyncronizationManager
 
             // this clause is technically not required as we already know that
             // it is a RouteDocument, but it adds another layer of safety.
-            if ($referrer instanceof SyncronizeBehavior) {
+            if (!$referrer instanceof SyncronizeBehavior) {
                 throw new \RuntimeException(sprintf(
                     'All route classes must implement the SyncronizeBehavior, for "%s"'
-                ), get_class($referrer));
+                , get_class($referrer)));
             }
 
             // if the route is already syncronized, continue.
