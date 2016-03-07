@@ -59,7 +59,9 @@ class AppendAnalyticsListener
      */
     public function onResponse(FilterResponseEvent $event)
     {
-        if ($event->getRequest()->getRequestFormat() !== 'html') {
+        if ($event->getRequest()->getRequestFormat() !== 'html'
+            || $this->requestAnalyzer->getPortalInformation() === null
+        ) {
             return;
         }
 

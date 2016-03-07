@@ -65,7 +65,7 @@ class SitemapXMLGeneratorTest extends SuluTestCase
     {
         $client = $this->createClient(
             [
-                'environment' => 'dev',
+                'environment' => 'prod',
                 'sulu_context' => 'website',
             ],
             [
@@ -84,7 +84,7 @@ class SitemapXMLGeneratorTest extends SuluTestCase
     {
         $client = $this->createClient(
             [
-                'environment' => 'dev',
+                'environment' => 'prod',
                 'sulu_context' => 'website',
             ],
             [
@@ -99,7 +99,7 @@ class SitemapXMLGeneratorTest extends SuluTestCase
         $content = $client->getResponse()->getContent();
 
         $this->assertContains(
-            '<url><loc>http://test.lo/en</loc><lastmod>' . $date . '</lastmod><xhtml:link rel="alternate" hreflang="en" href="http://test.lo/en"/><xhtml:link rel="alternate" hreflang="x-default" href="http://test.lo/en"/><xhtml:link rel="alternate" hreflang="en-us" href="http://test.lo/en-us"/></url><url><loc>http://test.lo/en-us</loc><lastmod>' . $date . '</lastmod><xhtml:link rel="alternate" hreflang="en" href="http://test.lo/en"/><xhtml:link rel="alternate" hreflang="x-default" href="http://test.lo/en"/><xhtml:link rel="alternate" hreflang="en-us" href="http://test.lo/en-us"/></url>',
+            '<url><loc>http://test.lo</loc><lastmod>' . $date . '</lastmod><xhtml:link rel="alternate" hreflang="en" href="http://test.lo"/><xhtml:link rel="alternate" hreflang="x-default" href="http://test.lo"/><xhtml:link rel="alternate" hreflang="en-us" href="http://test.lo/en-us"/></url><url><loc>http://test.lo/en-us</loc><lastmod>' . $date . '</lastmod><xhtml:link rel="alternate" hreflang="en" href="http://test.lo"/><xhtml:link rel="alternate" hreflang="x-default" href="http://test.lo"/><xhtml:link rel="alternate" hreflang="en-us" href="http://test.lo/en-us"/></url>',
             $content
         );
     }

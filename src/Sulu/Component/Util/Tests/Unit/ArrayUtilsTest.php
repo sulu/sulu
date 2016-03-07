@@ -8,7 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Util;
+namespace Sulu\Component\Util\Tests\Unit;
+
+use Sulu\Component\Util\ArrayUtils;
 
 class ArrayUtilsTest extends \PHPUnit_Framework_TestCase
 {
