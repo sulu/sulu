@@ -78,8 +78,7 @@
             <orm:joins ref="address"/>
         </property>
 
-        <property name="countryCode" filter-type="string" display="always"
-                  list:translation="contact.address.countryCode">
+        <property name="countryCode" display="always" list:translation="contact.address.countryCode">
             <orm:field-name>code</orm:field-name>
             <orm:entity-name>SuluContactBundle:Country</orm:entity-name>
 
@@ -90,6 +89,21 @@
                 </orm:join>
             </orm:joins>
         </property>
+
+        <identity-property name="countryId" display="never" filter-type="auto-complete"
+                           list:translation="contact.address.countryCode">
+            <orm:field-name>country</orm:field-name>
+            <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
+
+            <orm:joins ref="address"/>
+
+            <filter-type-parameters>
+                <parameter key="singleUrl"><![CDATA[/admin/api/countries/{id}]]></parameter>
+                <parameter key="prefetchUrl"><![CDATA[/admin/api/countries]]></parameter>
+                <parameter key="resultKey">countries</parameter>
+                <parameter key="valueKey">name</parameter>
+            </filter-type-parameters>
+        </identity-property>
         
         <concatenation-property name="mainContact" filter-type="string"
                                 list:translation="contact.contacts.main-contact" list:sortable="false"

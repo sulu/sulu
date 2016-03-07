@@ -54,10 +54,12 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getFieldDescriptorForClass($className)
+    public function getFieldDescriptorForClass($className, $options = [])
     {
+        $cacheKey = md5(json_encode($options));
+
         $cache = new ConfigCache(
-            sprintf('%s/%s.php', $this->cachePath, str_replace('\\', '-', $className)),
+            sprintf('%s/%s-%s.php', $this->cachePath, str_replace('\\', '-', $className), $cacheKey),
             $this->debug
         );
 
@@ -85,22 +87,26 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
             if ($doctrineMetadata->getType() instanceof ConcatenationTypeMetadata) {
                 $fieldDescriptor = $this->getConcatenationFieldDescriptor(
                     $generalMetadata,
-                    $doctrineMetadata->getType()
+                    $doctrineMetadata->getType(),
+                    $options
                 );
             } elseif ($doctrineMetadata->getType() instanceof GroupConcatTypeMetadata) {
                 $fieldDescriptor = $this->getGroupConcatenationFieldDescriptor(
                     $generalMetadata,
-                    $doctrineMetadata->getType()
+                    $doctrineMetadata->getType(),
+                    $options
                 );
             } elseif ($doctrineMetadata->getType() instanceof IdentityTypeMetadata) {
                 $fieldDescriptor = $this->getIdentityFieldDescriptor(
                     $generalMetadata,
-                    $doctrineMetadata->getType()
+                    $doctrineMetadata->getType(),
+                    $options
                 );
             } elseif ($doctrineMetadata->getType() instanceof SingleTypeMetadata) {
                 $fieldDescriptor = $this->getFieldDescriptor(
                     $generalMetadata,
-                    $doctrineMetadata->getType()->getField()
+                    $doctrineMetadata->getType()->getField(),
+                    $options
                 );
             }
 
@@ -120,26 +126,30 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
      *
      * @param GeneralPropertyMetadata $generalMetadata
      * @param FieldMetadata $fieldMetadata
+     * @param array $options
      *
      * @return DoctrineFieldDescriptor
      */
-    protected function getFieldDescriptor(GeneralPropertyMetadata $generalMetadata, FieldMetadata $fieldMetadata)
-    {
+    protected function getFieldDescriptor(
+        GeneralPropertyMetadata $generalMetadata,
+        FieldMetadata $fieldMetadata,
+        $options
+    ) {
         $joins = [];
         foreach ($fieldMetadata->getJoins() as $joinMetadata) {
             $joins[$joinMetadata->getEntityName()] = new DoctrineJoinDescriptor(
-                $joinMetadata->getEntityName(),
-                $joinMetadata->getEntityField(),
-                $joinMetadata->getCondition(),
+                $this->resolveOptions($joinMetadata->getEntityName(), $options),
+                $this->resolveOptions($joinMetadata->getEntityField(), $options),
+                $this->resolveOptions($joinMetadata->getCondition(), $options),
                 $joinMetadata->getMethod(),
                 $joinMetadata->getConditionMethod()
             );
         }
 
         return new DoctrineFieldDescriptor(
-            $fieldMetadata->getName(),
-            $generalMetadata->getName(),
-            $fieldMetadata->getEntityName(),
+            $this->resolveOptions($fieldMetadata->getName(), $options),
+            $this->resolveOptions($generalMetadata->getName(), $options),
+            $this->resolveOptions($fieldMetadata->getEntityName(), $options),
             $generalMetadata->getTranslation(),
             $joins,
             $this->isDisabled($generalMetadata),
@@ -158,23 +168,25 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
      *
      * @param GeneralPropertyMetadata $generalMetadata
      * @param ConcatenationTypeMetadata $type
+     * @param array $options
      *
      * @return DoctrineFieldDescriptor
      */
     protected function getConcatenationFieldDescriptor(
         GeneralPropertyMetadata $generalMetadata,
-        ConcatenationTypeMetadata $type
+        ConcatenationTypeMetadata $type,
+        $options
     ) {
         return new DoctrineConcatenationFieldDescriptor(
             array_map(
-                function (FieldMetadata $fieldMetadata) use ($generalMetadata) {
-                    return $this->getFieldDescriptor($generalMetadata, $fieldMetadata);
+                function (FieldMetadata $fieldMetadata) use ($generalMetadata, $options) {
+                    return $this->getFieldDescriptor($generalMetadata, $fieldMetadata, $options);
                 },
                 $type->getFields()
             ),
-            $generalMetadata->getName(),
+            $this->resolveOptions($generalMetadata->getName(), $options),
             $generalMetadata->getTranslation(),
-            $type->getGlue(),
+            $this->resolveOptions($type->getGlue(), $options),
             $this->isDisabled($generalMetadata),
             $this->isDefault($generalMetadata),
             $generalMetadata->getType(),
@@ -191,18 +203,20 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
      *
      * @param GeneralPropertyMetadata $generalMetadata
      * @param GroupConcatTypeMetadata $type
+     * @param array $options
      *
      * @return DoctrineFieldDescriptor
      */
     protected function getGroupConcatenationFieldDescriptor(
         GeneralPropertyMetadata $generalMetadata,
-        GroupConcatTypeMetadata $type
+        GroupConcatTypeMetadata $type,
+        $options
     ) {
         return new DoctrineGroupConcatFieldDescriptor(
-            $this->getFieldDescriptor($generalMetadata, $type->getField()),
-            $generalMetadata->getName(),
-            $generalMetadata->getTranslation(),
-            $type->getGlue(),
+            $this->getFieldDescriptor($generalMetadata, $type->getField(), $options),
+            $this->resolveOptions($generalMetadata->getName(), $options),
+            $this->resolveOptions($generalMetadata->getTranslation(), $options),
+            $this->resolveOptions($type->getGlue(), $options),
             $this->isDisabled($generalMetadata),
             $this->isDefault($generalMetadata),
             $generalMetadata->getType(),
@@ -219,28 +233,32 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
      *
      * @param GeneralPropertyMetadata $generalMetadata
      * @param IdentityTypeMetadata $type
+     * @param array $options
      *
      * @return DoctrineFieldDescriptor
      */
-    private function getIdentityFieldDescriptor(GeneralPropertyMetadata $generalMetadata, IdentityTypeMetadata $type)
-    {
+    private function getIdentityFieldDescriptor(
+        GeneralPropertyMetadata $generalMetadata,
+        IdentityTypeMetadata $type,
+        $options
+    ) {
         $fieldMetadata = $type->getField();
 
         $joins = [];
         foreach ($fieldMetadata->getJoins() as $joinMetadata) {
             $joins[$joinMetadata->getEntityName()] = new DoctrineJoinDescriptor(
-                $joinMetadata->getEntityName(),
-                $joinMetadata->getEntityField(),
-                $joinMetadata->getCondition(),
+                $this->resolveOptions($joinMetadata->getEntityName(), $options),
+                $this->resolveOptions($joinMetadata->getEntityField(), $options),
+                $this->resolveOptions($joinMetadata->getCondition(), $options),
                 $joinMetadata->getMethod(),
                 $joinMetadata->getConditionMethod()
             );
         }
 
         return new DoctrineIdentityFieldDescriptor(
-            $fieldMetadata->getName(),
-            $generalMetadata->getName(),
-            $fieldMetadata->getEntityName(),
+            $this->resolveOptions($fieldMetadata->getName(), $options),
+            $this->resolveOptions($generalMetadata->getName(), $options),
+            $this->resolveOptions($fieldMetadata->getEntityName(), $options),
             $generalMetadata->getTranslation(),
             $joins,
             $this->isDisabled($generalMetadata),
@@ -252,6 +270,23 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
             $generalMetadata->isEditable(),
             $generalMetadata->getCssClass()
         );
+    }
+
+    /**
+     * Resolves options for string.
+     *
+     * @param string $string
+     * @param array $options
+     *
+     * @return string
+     */
+    private function resolveOptions($string, array $options)
+    {
+        foreach ($options as $key => $value) {
+            $string = str_replace(':' . $key, $value, $string);
+        }
+
+        return $string;
     }
 
     /**

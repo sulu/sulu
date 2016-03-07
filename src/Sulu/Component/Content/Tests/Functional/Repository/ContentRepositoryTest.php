@@ -789,6 +789,25 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('/test-3', $result[4]->getPath());
     }
 
+    public function testFindAllByPortal()
+    {
+        $this->initPhpcr();
+
+        $this->createPage('test-1', 'de_at');
+
+        $result = $this->contentRepository->findAllByPortal(
+            'de_at',
+            'sulucmf_at',
+            MappingBuilder::create()->setResolveUrl(true)->getMapping()
+        );
+
+        $this->assertCount(2, $result);
+        $this->assertArrayHasKey('de_at', $result[0]->getUrls());
+        $this->assertArrayNotHasKey('de', $result[0]->getUrls());
+        $this->assertArrayHasKey('de_at', $result[1]->getUrls());
+        $this->assertArrayNotHasKey('de', $result[1]->getUrls());
+    }
+
     public function testFindUrl()
     {
         $this->initPhpcr();

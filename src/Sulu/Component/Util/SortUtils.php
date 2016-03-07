@@ -16,7 +16,7 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 /**
  * Sorting utilities.
  */
-class SortUtils
+final class SortUtils
 {
     /**
      * Cannot instantiate this class.

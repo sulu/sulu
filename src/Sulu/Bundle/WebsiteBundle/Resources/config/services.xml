@@ -131,6 +131,7 @@
         <service id="sulu_website.twig.seo" class="%sulu_website.twig.seo.class%">
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument type="service" id="sulu_website.twig.content_path"/>
+            <argument type="service" id="request_stack"/>
 
             <tag name="twig.extension"/>
         </service>

@@ -48,7 +48,16 @@ CHANGELOG for Sulu
     * BUGFIX      #1873 [ContactBundle]       Fixed remove title and position
     * BUGFIX      #1873 [ContactBundle]       Fixed remove contact birthday
     
-* dev-master
+* 1.1.10 (2016-03-07)
+    * HOTFIX      #2029 [WebsiteBundle]     Removed single alternate link in sitemap.xml
+    * HOTFIX      #2029 [WebsiteBundle]     Fixed hreflang tag with one translation and different schemas
+    * HOTFIX      #2046 [ContactBundle]     Added country-controller and use auto-complete for country
+    * HOTFIX      #2074 [ListBuilder]       Added options for creating field-descriptors with meta-data
+    * HOTFIX      #2053 [ContactBundle]     Added 'hasEmail' parameter to accounts api
+    * HOTFIX      #2064 [ResourceBundle]    Fixed no option for invalid filter
+    * HOTFIX      #2051 [ListBuilder]       Added metadata property to serialization process
+    * HOTFIX      #2055 [ContactBundle]     Replaced span by input type hidden in address form
+    * HOTFIX      #2058 [ListBuilder]       Fixed cache for field-descriptor
     * HOTFIX      #2024 [ContactBundle]     Fixed account add-contact-overlay enter bug and search for e-mail
     * HOTFIX      #2020 [ContactBundle]     Added account metadata
     * HOTFIX      #2000 [Filter]            Added filter metadata and new filter input types (tags, auto-complete)
@@ -60,7 +69,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1944 [MediaBundle]       Removed wrong definition of indices
     * HOTFIX      #2011 [AdminBundle]       Fixed double handling of login via enter
     * HOTFIX      #2023 [SecurityBundle]    Set the user language for requests in backend
-    
+
 * 1.1.9 (2016-02-05)
     * ENHANCEMENT #1978 [SecurityBundle]    Made url for resetting password configurable via static variable
     * HOTFIX      #1976 [MediaBundle]       Moved delete collection to drop-down to avoid misunderstandings
@@ -74,7 +83,7 @@ CHANGELOG for Sulu
 
 * 1.1.7 (2016-01-26)
     * HOTFIX      #1952 [PersistenceBundle] Fixed mapped superclass inheritance
-    * HOTFIX      #1950 [Rest]              Added possibility to disable the GROUP BY clause     
+    * HOTFIX      #1950 [Rest]              Added possibility to disable the GROUP BY clause
 
 * 1.1.6 (2016-01-26)
     * HOTFIX      #1948 [AdminBundle]     Updated husky for required validation fix
@@ -111,7 +120,7 @@ CHANGELOG for Sulu
     * HOTFIX      #1859 [MediaBundle]     Fixed media-query if no search isset
     * HOTFIX      #1855 [ContactBundle]   Fixed displaying correct position when adding new person to organisation
     * HOTFIX      #1856 [MediaBundle]     Fixed delete copyright from media
-    * HOTFIX      #1856 [All]             Changed datagrid-pagination to input field to avoid performance leaks 
+    * HOTFIX      #1856 [All]             Changed datagrid-pagination to input field to avoid performance leaks
 
 * 1.1.0 (2015-12-02)
     * BUGFIX      #1849 [MediaBundle]     Fixed media-edit-overlay language changer
@@ -149,7 +158,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1793 [TagBundle]       Fixed tag-list preview update
     * BUGFIX      #1793 [CategoryBundle]  Fixed category-list preview update
     * BUGFIX      #1790 [MediaBundle]     Fixed collection twice after edit collection
-    * BUGFIX      #1792 [WebsiteBundle]   Fixed alternate links with custom x-default locale and remove links to 
+    * BUGFIX      #1792 [WebsiteBundle]   Fixed alternate links with custom x-default locale and remove links to
                                           homepage
     * FEATURE     #1712 [MediaBundle]     Added media data-provider
     * ENHANCEMENT #1779 [ContactBundle]   Added title to address list and fixed style of title
@@ -221,7 +230,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1656 [ContentBundle]   Fixed preview nested properties
     * BUGFIX      #1656 [ContentBundle]   Fixed preview property attributes
     * BUGFIX      #1649 [ContentBundle]   Fixed floating of block type select
-    * BUGFIX      #1650 [LocationBundle]  Fixed configure overlay open multiple times 
+    * BUGFIX      #1650 [LocationBundle]  Fixed configure overlay open multiple times
     * BUGFIX      #1650 [ContentBundle]   Fixed serialization of null values
     * BUGFIX      #1650 [ContentBundle]   Fixed show ghost and shadow toggler in content column view
     * BUGFIX      #1646 [ContactBundle]   Fixed upload of contact-avatar when a position is applied to the contact
@@ -314,7 +323,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1365 [ContactBundle]   Fixed bug caused by new instance name of datagrid
     * BUGFIX      #1136 [MediaBundle]     Fixed image scale forceRatio parameter for none squared image formats
     * BUGFIX      #1785 [ContentBundle]   Fixed data returned for internal link in settings tab
-    
+
 * 1.0.15 (2016-01-08)
     * HOTFIX      #1919 [MediaBundle]    Fixed remove image description
     * ENHANCEMENT #1919 [LocationBundle] Added de and ch to google maps selection
@@ -329,7 +338,7 @@ CHANGELOG for Sulu
     * HOTFIX      #1634 [SecurityBundle] Allow attribute overrides for user email field
     * HOTFIX      #1624 [ContentBundle]  Fixed nullable internal link and added server/clientside validation
     * BUGFIX      #1668 [ContentBundle]  Fixed smart content for usage with block property
-    
+
 * 1.0.11 (2015-09-23)
     * HOTFIX      #1596 [GeneratorBundle] Fixed sulu bundle generator path generation
     * HOTFIX      #1615 [Content]         Fixed resource segment subscriber for order internal link

@@ -67,8 +67,8 @@ define([], function() {
             button: function(id, text) {
                 return [
                     '<div class="grid-row">',
-                    '   <div class="grid-col-3">',
-                    '       <div id="', id, '" class="btn action">',
+                    '   <div class="grid-col-6">',
+                    '       <div id="', id, '" class="btn action fit">',
                     '           <span class="fa-plus-circle"></span>',
                     '           <span class="text">', text, '</span>',
                     '       </div>',
@@ -329,9 +329,9 @@ define([], function() {
                     translatedText = this.sandbox.translate(this.usedFields[value]['translation']);
                     $options.push('<option value="' + this.usedFields[value]['name'] + '" selected>' + translatedText + '</option>');
                 }
-
-                this.sandbox.dom.append($select, $options.join(''));
             }
+
+            this.sandbox.dom.append($select, $options.join(''));
         },
 
         /**

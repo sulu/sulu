@@ -30,6 +30,7 @@ class VirtualPropertyMetadata extends PropertyMetadata
             [
                 $this->class,
                 $this->name,
+                $this->metadata,
             ]
         );
     }
@@ -39,6 +40,8 @@ class VirtualPropertyMetadata extends PropertyMetadata
      */
     public function unserialize($str)
     {
-        list($this->class, $this->name) = unserialize($str);
+        list($this->class,
+            $this->name,
+            $this->metadata) = unserialize($str);
     }
 }

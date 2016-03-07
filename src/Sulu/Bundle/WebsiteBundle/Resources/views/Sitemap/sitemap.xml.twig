@@ -14,18 +14,21 @@
     <url>
         <loc>{{ url }}</loc>
         <lastmod>{{ site.row.getValue('node.' ~ localization ~ 'Changed')|date("Y-m-d") }}</lastmod>
-                {# OTHER LOCALIZATIONS #}
-                {% for locale, siteUrl in site.urls if locale in webspaceSitemap.localizations and siteUrl is not null %}
-                    {% set url = sulu_content_path(siteUrl, site.webspaceKey, locale, domain, scheme) %}
-                    {# IF URL EXISTS IN LOCALE #}
-                    {% if url is not empty and url != siteUrl %}
+                {# PRINT ALTERNATE ONLY IF MORE THAN ONE URL EXISTS #}
+                {% if site.urls|sulu_util_filter('key in localizations && item !== null', webspaceSitemap)|length > 1 %}
+                    {# OTHER LOCALIZATIONS #}
+                    {% for locale, siteUrl in site.urls if locale in webspaceSitemap.localizations and siteUrl is not null %}
+                        {% set url = sulu_content_path(siteUrl, site.webspaceKey, locale, domain, scheme) %}
+                        {# IF URL EXISTS IN LOCALE #}
+                        {% if url is not empty and url != siteUrl %}
         <xhtml:link rel="alternate" hreflang="{{ locale|replace('_', '-') }}" href="{{ url }}"/>
-                        {# DEFAULT LOCALIZATION #}
-                        {% if webspaceSitemap.defaultLocalization == locale %}
+                            {# DEFAULT LOCALIZATION #}
+                            {% if webspaceSitemap.defaultLocalization == locale %}
         <xhtml:link rel="alternate" hreflang="x-default" href="{{ url }}"/>
-                        {% endif %} {# DEFAULT LOCALIZATION #}
-                    {% endif %} {# IF URL EXISTS IN LOCALE #}
-                {% endfor %} {# OTHER LOCALIZATIONS #}
+                            {% endif %} {# DEFAULT LOCALIZATION #}
+                        {% endif %} {# IF URL EXISTS IN LOCALE #}
+                    {% endfor %} {# OTHER LOCALIZATIONS #}
+                {% endif %}
     </url>
             {% endif %} {# IF URL EXISTS IN LOCALE #}
         {% endfor %} {# ALL LOCALES #}

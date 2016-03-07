@@ -262,11 +262,11 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         }
 
         if (null !== $condition = XmlUtil::getValueFromXPath('orm:condition', $xpath, $joinNode)) {
-            $joinMetadata->setCondition($condition);
+            $joinMetadata->setCondition($this->resolveParameter($condition));
         }
 
         if (null !== $conditionMethod = XmlUtil::getValueFromXPath('orm:condition-method', $xpath, $joinNode)) {
-            $joinMetadata->setConditionMethod($conditionMethod);
+            $joinMetadata->setConditionMethod($this->resolveParameter($conditionMethod));
         }
 
         if (null !== $method = XmlUtil::getValueFromXPath('orm:method', $xpath, $joinNode)) {

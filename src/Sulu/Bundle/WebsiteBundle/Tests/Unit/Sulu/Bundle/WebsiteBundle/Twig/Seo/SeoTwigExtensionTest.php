@@ -16,6 +16,8 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
 {
@@ -34,11 +36,30 @@ class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
      */
     private $contentPath;
 
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * @var Request
+     */
+    private $request;
+
     public function setUp()
     {
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->contentPath = $this->prophesize(ContentPathInterface::class);
-        $this->seoTwigExtension = new SeoTwigExtension($this->requestAnalyzer->reveal(), $this->contentPath->reveal());
+        $this->requestStack = $this->prophesize(RequestStack::class);
+        $this->request = $this->prophesize(Request::class);
+        $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
+        $this->request->getScheme()->willReturn('https');
+
+        $this->seoTwigExtension = new SeoTwigExtension(
+            $this->requestAnalyzer->reveal(),
+            $this->contentPath->reveal(),
+            $this->requestStack->reveal()
+        );
     }
 
     public function testGetFunctions()
@@ -79,7 +100,13 @@ class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $webspace = $this->prophesize(Webspace::class);
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);
 
-        $this->contentPath->getContentPath(Argument::cetera())->will(
+        $this->contentPath->getContentPath(
+            Argument::any(),
+            Argument::any(),
+            Argument::any(),
+            null,
+            'https'
+        )->will(
             function ($arguments) {
                 return '/' . str_replace('_', '-', $arguments[2]) . $arguments[0];
             }
@@ -288,9 +315,11 @@ class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
                 'en',
                 null,
                 [
-                    '<link rel="alternate" href="/de/url-de" hreflang="de"/>',
+                    // no alternate link if translation is the only one
                 ],
                 [
+                    '<link rel="alternate" href="/de/url-de" hreflang="x-default"/>',
+                    '<link rel="alternate" href="/de/url-de" hreflang="de"/>',
                     '<link rel="alternate" href="/en" hreflang="x-default"/>',
                     '<link rel="alternate" href="/en" hreflang="en"/>',
                 ],
@@ -306,9 +335,11 @@ class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
                 'en',
                 'en',
                 [
-                    '<link rel="alternate" href="/de/url-de" hreflang="de"/>',
+                    // no alternate link if translation is the only one
                 ],
                 [
+                    '<link rel="alternate" href="/de/url-de" hreflang="x-default"/>',
+                    '<link rel="alternate" href="/de/url-de" hreflang="de"/>',
                     '<link rel="alternate" href="/en" hreflang="x-default"/>',
                     '<link rel="alternate" href="/en" hreflang="en"/>',
                 ],
