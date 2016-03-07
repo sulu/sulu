@@ -22,7 +22,7 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\Behavior\Path\AliasFilingBehavior;
 use Sulu\Component\DocumentManager\Behavior\Path\AutoNameBehavior;
-use Sulu\Component\Content\Document\Behavior\SyncronizeBehavior;
+use Sulu\Component\Content\Document\Behavior\SynchronizeBehavior;
 
 /**
  * Snippet document.
@@ -37,7 +37,7 @@ class SnippetDocument implements
     WorkflowStageBehavior,
     UuidBehavior,
     PathBehavior,
-    SyncronizeBehavior
+    SynchronizeBehavior
 {
     private $created;
     private $changed;
@@ -53,7 +53,7 @@ class SnippetDocument implements
     private $locale;
     private $path;
     private $nodeName;
-    private $syncronizedManagers;
+    private $synchronizedManagers;
 
     public function __construct()
     {
@@ -220,8 +220,8 @@ class SnippetDocument implements
     /**
      * {@inheritdoc}
      */
-    public function getSyncronizedManagers()
+    public function getSynchronizedManagers()
     {
-        return $this->syncronizedManagers;
+        return $this->synchronizedManagers;
     }
 }

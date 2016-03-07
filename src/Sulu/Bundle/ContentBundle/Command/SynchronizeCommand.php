@@ -71,19 +71,30 @@ class SynchronizeCommand extends Command
             }
 
             foreach ($locales as $locale) {
-                // translate document
-                $this->defaultManager->find($inspector->getUuid($document), $locale);
+                $start = microtime(true);
                 $synced = $document->getSynchronizedManagers() ?: [];
+                // translate document
                 $output->write(sprintf(
                     '<info>=></> %s [<comment>synced</>:%s <comment>locale</>:%s]', 
                     $inspector->getPath($document),
                     implode(', ', $synced),
                     $locale
                 ));
-                $this->syncManager->synchronizeFull($document, $force);
-                $output->writeln(' [<info>OK</>]');
+                $this->defaultManager->find($inspector->getUuid($document), $locale);
+                $this->syncManager->synchronizeSingle($document, $force);
+                $output->writeln(sprintf(
+                    ' [<info>OK</> %ss]',
+                    number_format(microtime(true) - $start, 2)
+                ));
             }
         }
+
+        $output->write('Flushing publish document manager:');
+        $this->syncManager->getPublishDocumentManager()->flush();
+        $output->writeln(' [<info>OK</>]');
+        $output->write('Flushing default document manager:');
+        $this->defaultManager->flush();
+        $output->writeln(' [<info>OK</>]');
     }
 
 }

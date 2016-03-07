@@ -15,6 +15,7 @@ use Sulu\Component\Content\Document\Behavior\RouteBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
+use Sulu\Component\Content\Document\Behavior\SynchronizeBehavior;
 
 /**
  * The route document represents a route with in a webspace.
@@ -29,7 +30,8 @@ class RouteDocument implements
     NodeNameBehavior,
     PathBehavior,
     UuidBehavior,
-    RouteBehavior
+    RouteBehavior,
+    SynchronizeBehavior
 {
     /**
      * @var string
@@ -50,6 +52,11 @@ class RouteDocument implements
      * @var object
      */
     private $targetDocument;
+
+    /**
+     * @var string[]
+     */
+    private $synchronizedManagers;
 
     /**
      * {@inheritdoc}
@@ -89,5 +96,13 @@ class RouteDocument implements
     public function setTargetDocument($targetDocument)
     {
         $this->targetDocument = $targetDocument;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSynchronizedManagers()
+    {
+        $this->synchronizedManagers;
     }
 }

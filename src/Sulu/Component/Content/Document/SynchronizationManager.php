@@ -151,24 +151,10 @@ class SynchronizationManager
         $inspector = $defaultManager->getInspector();
         $locale = $inspector->getLocale($document);
         $path = $inspector->getPath($document);
-        $uuid = $inspector->getUuid($document);
 
-        $registry = $publishManager->getRegistry();
-        // if the publish manager already has the incoming PHPCR node then we
-        // need to register the existing PHPCR node from the publish session
-        // with the incoming document (otherwise the system will attempt to
-        // create a new document and fail).
-        if (false === $registry->hasDocument($document)) {
-            if ($publishManager->getNodeManager()->has($uuid)) {
-                $node = $publishManager->getNodeManager()->find($uuid);
-
-                $registry->registerDocument(
-                    $document,
-                    $node,
-                    $locale
-                );
-            }
-        }
+        // register the DDM document and its immediate relations with the PDM
+        // PHPCR node.
+        $this->registerDocumentWithPDM($document);
 
         // this is a temporary (and invalid) hack until the routing system
         // is converted to use the document manager.
@@ -239,13 +225,87 @@ class SynchronizationManager
             }
 
             // if the route is already synchronized, continue.
-            if (in_array($this->publishManagerName, $referrer->getSynchronizedManagers())) {
+            $synced = $referrer->getSynchronizedManagers() ?: [];
+            if (in_array($this->publishManagerName, $synced)) {
                 continue;
+            }
+
+            if ($referrer instanceof ParentBehavior) {
+                $referrer->setParent(null);
             }
 
             $routes[] = $referrer;
         }
 
         return $routes;
+    }
+
+    /**
+     * Register the incoming DDM document with any existing PHPCR node in the
+     * PDM.
+     *
+     * If the PDM already has the incoming PHPCR node then we need to register
+     * the existing PHPCR node from the PDM PHPCR session with the incoming DDM
+     * document (otherwise the system will attempt to create a new document and
+     * fail).
+     *
+     * @param SynchronizeBehavior $document
+     */
+    private function registerDocumentWithPDM(SynchronizeBehavior $document)
+    {
+        $this->registerSingleDocumentWithPDM($document);
+
+        $defaultManager = $this->registry->getManager();
+        $metadata = $defaultManager->getMetadataFactory()->getMetadataForClass(get_class($document));
+        $reflectionClass = $metadata->getReflectionClass();
+
+        foreach (array_keys($metadata->getFieldMappings()) as $field) {
+            $reflectionProperty = $reflectionClass->getProperty($field);
+            $reflectionProperty->setAccessible(true);
+            $propertyValue = $reflectionProperty->getValue($document);
+
+            if (false === is_object($propertyValue)) {
+                continue;
+            }
+
+            $this->registerSingleDocumentWithPDM($propertyValue);
+        }
+    }
+
+    private function registerSingleDocumentWithPDM($object)
+    {
+        $publishManager = $this->getPublishDocumentManager();
+        $defaultManager = $this->registry->getManager();
+        $ddmInspector = $defaultManager->getInspector();
+
+        // if the default document manager does not have this object then it is
+        // not a candidate for being persisted (e.g. it might be a \DateTime
+        // object).
+        if (false === $defaultManager->getRegistry()->hasDocument($object)) {
+            return;
+        }
+        $uuid = $ddmInspector->getUUid($object);
+        $locale = $ddmInspector->getLocale($object);
+        $pdmRegistry = $publishManager->getRegistry();
+
+        // if the PDM registry already has the document, then there is
+        // nothing to do.
+        if (true === $pdmRegistry->hasDocument($object)) {
+            return;
+        }
+
+        // If the PDM PHPCR session does not have the node, then there is
+        // nothing to do.
+        if (false === $publishManager->getNodeManager()->has($uuid)) {
+            return;
+        }
+
+        // register the DDM document with the PDM PHPCR node.
+        $node = $publishManager->getNodeManager()->find($uuid);
+        $pdmRegistry->registerDocument(
+            $object,
+            $node,
+            $locale
+        );
     }
 }
