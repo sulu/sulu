@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGIFX      #2093 [ContactBundle]       Fixed auto-select new position and title
     * ENHANCEMENT #2082 [All]                 Get rid of the aliased evenement composer constraint
     * ENHANCEMENT #2035 [ContentBundle]       Add structure type to index
     * BUGFIX      #2058 [ListBuilder]         Fixed cache for field-descriptor
