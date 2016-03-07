@@ -58,10 +58,17 @@ class SynchronizeCommand extends Command
             return;
         }
 
-        $output->writeln('Synchronizing documents');
+        $output->writeln('Synchronizing documents ...');
         $inspector = $this->defaultManager->getInspector();
+        $errors = array();
+        $documentCount = 0;
+        $syncedCount = 0;
 
         foreach ($documents as $document) {
+            if (false === $document instanceof LocaleBehavior) {
+                $locales = [ null ];
+            }
+
             if (empty($locales)) {
                 $locales = $this->defaultManager->getInspector()->getLocales($document);
             }
@@ -71,6 +78,7 @@ class SynchronizeCommand extends Command
             }
 
             foreach ($locales as $locale) {
+                $documentCount++;
                 $start = microtime(true);
                 $synced = $document->getSynchronizedManagers() ?: [];
                 // translate document
@@ -78,14 +86,24 @@ class SynchronizeCommand extends Command
                     '<info>=></> %s [<comment>synced</>:%s <comment>locale</>:%s]', 
                     $inspector->getPath($document),
                     implode(', ', $synced),
-                    $locale
+                    $locale === null ? 'N/A' : $locale
                 ));
                 $this->defaultManager->find($inspector->getUuid($document), $locale);
-                $this->syncManager->synchronizeSingle($document, $force);
-                $output->writeln(sprintf(
-                    ' [<info>OK</> %ss]',
-                    number_format(microtime(true) - $start, 2)
-                ));
+
+                try {
+                    $this->syncManager->synchronizeSingle($document, [
+                        'force' => $force,
+                        'repair' => true,
+                    ]);
+                    $output->writeln(sprintf(
+                        ' [<info>OK</> %ss]',
+                        number_format(microtime(true) - $start, 2)
+                    ));
+                    $syncedCount++;
+                } catch (\Exception $e) {
+                    $errors[] = [ $inspector->getPath($document), $locale, get_class($e), $e->getMessage() ];
+                    $output->writeln(' [<error>ERROR</>]');
+                }
             }
         }
 
@@ -95,6 +113,19 @@ class SynchronizeCommand extends Command
         $output->write('Flushing default document manager:');
         $this->defaultManager->flush();
         $output->writeln(' [<info>OK</>]');
+        $output->writeln(sprintf('%d/%d documents syncronized (inc. localizations)', $syncedCount, $documentCount));
+
+        if (count($errors)) {
+            $output->writeln(sprintf('%d errors encountered: ', count($errors)));
+            $output->write(PHP_EOL);
+            foreach ($errors as $error) {
+                list($path, $locale, $class, $message) = $error;
+                $output->writeln(sprintf('<error>%s</> %s [%s]', $class, $path, $locale));
+                $output->writeln($message);
+                $output->write(PHP_EOL);
+
+            }
+        }
     }
 
 }

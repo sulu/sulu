@@ -16,6 +16,7 @@ use Sulu\Component\Content\Document\Behavior\SynchronizeBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Content\Document\SynchronizationManager;
 use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
+use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 
 class DocumentSynchronizationSubscriber implements EventSubscriberInterface
 {
@@ -64,8 +65,10 @@ class DocumentSynchronizationSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $encoding = $metadata->getReflectionClass()->isSubclassOf(LocaleBehavior::class) ? 'system_localized' : 'system';
+
         $metadata->addFieldMapping('synchronizedManagers', [
-            'encoding' => 'system_localized',
+            'encoding' => $encoding,
             'property' => SynchronizeBehavior::SYNCED_FIELD,
             'type' => 'string',
         ]);
