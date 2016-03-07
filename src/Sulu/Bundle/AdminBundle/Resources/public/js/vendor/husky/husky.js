@@ -35803,7 +35803,6 @@ define('__component__$matrix@husky',[],function() {
  *
  */
 
-
 /**
  * @class Search
  * @constructor
@@ -35819,8 +35818,8 @@ define('__component__$search@husky',[], function() {
 
     var templates = {
             skeleton: [
-                '<a class="fa-search fa-flip-horizontal search-icon" href="#"></a>',
-                '<a class="fa-times-circle remove-icon" href="#"></a>',
+                '<button class="fa-search fa-flip-horizontal search-icon" />',
+                '<button class="fa-times-circle remove-icon" />',
                 '<input id="search-input" type="text" class="form-element input-round search-input" placeholder="<%= placeholderText %>"/>'
             ].join('')
         },
@@ -35958,13 +35957,8 @@ define('__component__$search@husky',[], function() {
             }
         },
 
-        submitSearch: function(event) {
-            if (!!event) {
-                event.preventDefault();
-            }
-
+        submitSearch: function() {
             // get search value
-
             var searchString = this.sandbox.dom.val(this.sandbox.dom.find('#search-input', this.$el));
 
             // if searchstring is emtpy, emit reset
@@ -35972,6 +35966,7 @@ define('__component__$search@husky',[], function() {
                 if (this.searchSubmitted) {
                     this.resetSearch();
                 }
+
                 return;
             }
 
@@ -35982,16 +35977,13 @@ define('__component__$search@husky',[], function() {
         },
 
         removeSearch: function(event, noEmit) {
-            if (!!event) {
-                event.preventDefault();
-            } else {
+            if (!event) {
                 event = {
                     target: this.sandbox.dom.find('.remove-icon', this.$el),
                     currentTarget: this.sandbox.dom.find('.remove-icon', this.$el)
                 };
             }
-            var $input;
-            $input = this.sandbox.dom.next(event.currentTarget, 'input');
+            var $input = this.sandbox.dom.next(event.currentTarget, 'input');
 
             this.sandbox.dom.hide(event.target);
             this.sandbox.dom.val($input, '');
@@ -45863,7 +45855,7 @@ define('__component__$data-navigation@husky',[
             this.$el.on('click', '.data-navigation-search > .icon-container', function() {
                 if (!$('.data-navigation-header').hasClass('header-search')) {
                     $('.data-navigation-header').addClass('header-search');
-                    $('.data-navigation-search span').attr('class', 'fa-times');
+                    $('.data-navigation-search .icon-container span').attr('class', 'fa-times');
                     $('.data-navigation-search input').select();
                 } else {
                     this.clearSearch();
@@ -45969,7 +45961,7 @@ define('__component__$data-navigation@husky',[
          */
         clearSearch: function() {
             $('.data-navigation-header').removeClass('header-search');
-            $('.data-navigation-search span').attr('class', 'fa-search fa-flip-horizontal');
+            $('.data-navigation-search .icon-container span').attr('class', 'fa-search fa-flip-horizontal');
             this.sandbox.emit('husky.search.data-navigation.clear');
             if (!!this.searchTerm) {
                 this.sandbox.emit('husky.search.data-navigation.reset');
