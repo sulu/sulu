@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the Sulu.
  *
@@ -32,6 +31,7 @@ class UtilTwigExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFilter('sulu_util_multisort', 'Sulu\Component\Util\SortUtils::multisort'),
+            new \Twig_SimpleFilter('sulu_util_filter', 'Sulu\Component\Util\ArrayUtils::filter'),
         ];
     }
 }

@@ -2,6 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2029 [WebsiteBundle]     Removed single alternate link in sitemap.xml
+    * HOTFIX      #2029 [WebsiteBundle]     Fixed hreflang tag with one translation and different schemas
     * HOTFIX      #2046 [ContactBundle]     Added country-controller and use auto-complete for country
     * HOTFIX      #2074 [ListBuilder]       Added options for creating field-descriptors with meta-data
     * HOTFIX      #2053 [ContactBundle]     Added 'hasEmail' parameter to accounts api

@@ -37,9 +37,9 @@ class SitemapController extends WebsiteController
         /** @var SitemapXMLGeneratorInterface $sitemapXMLGenerator */
         $sitemapXMLGenerator = $this->get('sulu_website.sitemap_xml_generator');
 
-        $sitemap = $this->get('sulu_content.content_repository')->findAll(
-            $requestAnalyzer->getWebspace()->getXDefaultLocalization()->getLocalization(),
-            $requestAnalyzer->getWebspace()->getKey(),
+        $sitemap = $this->get('sulu_content.content_repository')->findAllByPortal(
+            $requestAnalyzer->getPortal()->getXDefaultLocalization()->getLocalization(),
+            $requestAnalyzer->getPortal()->getKey(),
             MappingBuilder::create()
                 ->addProperties(['changed'])
                 ->setResolveUrl(true)

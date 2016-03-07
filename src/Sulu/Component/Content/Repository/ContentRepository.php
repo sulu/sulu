@@ -237,6 +237,26 @@ class ContentRepository implements ContentRepositoryInterface
         return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $webspaceKey, $mapping, $user);
     }
 
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findAllByPortal($locale, $portalKey, MappingInterface $mapping, UserInterface $user = null)
+    {
+        $webspaceKey = $this->webspaceManager->findPortalByKey($portalKey)->getWebspace()->getKey();
+
+        $contentPath = $this->sessionManager->getContentPath($webspaceKey);
+
+        $locales = $this->getLocalesByPortalKey($portalKey);
+        $queryBuilder = $this->getQueryBuilder($locale, $locales, $user)
+            ->where($this->qomFactory->descendantNode('node', $contentPath))
+            ->orWhere($this->qomFactory->sameNode('node', $contentPath));
+
+        $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
+
+        return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $webspaceKey, $mapping, $user);
+    }
+
     /**
      * Generates a content-tree with paths of given content array.
      *
@@ -402,6 +422,25 @@ class ContentRepository implements ContentRepositoryInterface
     }
 
     /**
+     * Returns array of locales for given portal key.
+     *
+     * @param string $portalKey
+     *
+     * @return string[]
+     */
+    private function getLocalesByPortalKey($portalKey)
+    {
+        $portal = $this->webspaceManager->findPortalByKey($portalKey);
+
+        return array_map(
+            function (Localization $localization) {
+                return $localization->getLocalization();
+            },
+            $portal->getLocalizations()
+        );
+    }
+
+    /**
      * Returns array of locales for webspaces.
      *
      * @return string[]
@@ -531,7 +570,7 @@ class ContentRepository implements ContentRepositoryInterface
                 return;
             }
             $type = StructureType::getShadow($row->getValue('shadowBase'));
-        } elseif ($ghostLocale !== $originalLocale) {
+        } elseif ($ghostLocale !== null && $ghostLocale !== $originalLocale) {
             if (!$mapping->shouldHydrateGhost()) {
                 return;
             }
