@@ -136,7 +136,8 @@ define([
          * @param data
          */
         initAvatarContainer: function(data) {
-            if (!!data.avatar) {
+            // if avatar is selected and is not a "dummy"
+            if (!!data.avatar && !!data.avatar.id) {
                 this.updateAvatarContainer(data.avatar.id, data.avatar.thumbnails[constants.imageFormat], data.avatar.url);
             }
 
