@@ -45,7 +45,10 @@ define([
     SnippetForm.prototype.header = function() {
         return {
             tabs: {
-                url: '/admin/content-navigations?alias=snippet'
+                url: '/admin/content-navigations?alias=snippet',
+                componentOptions: {
+                    values: this.data
+                }
             },
 
             toolbar: {
@@ -101,14 +104,12 @@ define([
 
     SnippetForm.prototype.initialize = function() {
         this.type = (!!this.options.id ? 'edit' : 'add');
-        this.dataDef = this.sandbox.data.deferred();
 
         this.bindModelEvents();
         this.bindCustomEvents();
-
         this.loadLocalizations();
 
-        this.loadData();
+        this.render(this.data);
     };
 
     SnippetForm.prototype.loadLocalizations = function() {
@@ -131,9 +132,7 @@ define([
 
         // get content data
         this.sandbox.on('sulu.snippets.snippet.get-data', function(callback) {
-            this.dataDef.then(function() {
-                callback(this.data);
-            }.bind(this));
+            callback(this.data);
         }.bind(this));
 
         // setter for header bar buttons
@@ -146,6 +145,7 @@ define([
             this.data = data;
             this.setHeaderBar(true);
             this.sandbox.emit('sulu.labels.success.show', 'labels.success.content-save-desc', 'labels.success');
+            this.sandbox.emit('sulu.header.saved', this.data);
         }, this);
 
         // content save-error
@@ -167,25 +167,24 @@ define([
         this.sandbox.emit('sulu.preview.state.change', saved);
     };
 
-    SnippetForm.prototype.loadData = function() {
-        if (!this.model) {
-            this.model = new Snippet({id: this.options.id});
-        }
+    SnippetForm.prototype.loadComponentData = function() {
+        var dataDef = this.sandbox.data.deferred();
+        this.model = new Snippet({id: this.options.id});
 
         if (this.options.id !== undefined) {
             this.model.fullFetch(
                 this.options.language,
                 {
                     success: function(data) {
-                        this.render(data.toJSON());
-                        this.dataDef.resolve();
+                        dataDef.resolve(data.toJSON());
                     }.bind(this)
                 }
             );
         } else {
-            this.render(this.model.toJSON());
-            this.dataDef.resolve();
+            dataDef.resolve(this.model.toJSON());
         }
+
+        return dataDef;
     };
 
     SnippetForm.prototype.render = function(data) {

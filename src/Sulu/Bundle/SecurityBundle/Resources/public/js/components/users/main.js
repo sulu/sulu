@@ -10,12 +10,11 @@
 define([
     './models/user',
     'sulusecurity/models/role',
-    'sulusecurity/models/permission',
     'sulucontact/models/contact',
     './collections/roles',
     './models/userRole',
     'widget-groups'
-], function(User, Role, Permission, Contact, Roles, UserRole, WidgetGroups) {
+], function(User, Role, Contact, Roles, UserRole, WidgetGroups) {
 
     'use strict';
 

@@ -16,7 +16,10 @@ define(function () {
         header: function () {
             return {
                 tabs: {
-                    url: '/admin/content-navigations?alias=category'
+                    url: '/admin/content-navigations?alias=category',
+                    componentOptions: {
+                        values: this.options.data
+                    }
                 },
                 toolbar: {
                     buttons: {

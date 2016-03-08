@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['mvc/relationalmodel', 'mvc/hasmany', './permission'], function(relationalModel, HasMany, Permission) {
+define(['mvc/relationalmodel'], function(relationalModel) {
 
     'use strict';
 
@@ -21,12 +21,6 @@ define(['mvc/relationalmodel', 'mvc/hasmany', './permission'], function(relation
                 identifier: '',
                 permissions: []
             };
-        }, relations: [
-            {
-                type: HasMany,
-                key: 'permissions',
-                relatedModel: Permission
-            }
-        ]
+        }
     });
 });

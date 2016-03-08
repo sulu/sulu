@@ -260,11 +260,11 @@ define([
             this.sandbox.on('sulu.content.contents.saved', function(id, data) {
                 this.data = data;
                 this.setHeaderBar(true);
-                this.updateTabVisibility();
 
                 // FIXME select should be able to override text in a item
                 this.sandbox.dom.html('li[data-id="' + this.options.language + '"] a', this.options.language);
 
+                this.sandbox.emit('sulu.header.saved', data);
                 this.sandbox.emit('sulu.labels.success.show', 'labels.success.content-save-desc', 'labels.success');
             }, this);
 
@@ -733,7 +733,6 @@ define([
         render: function() {
             this.setTemplate(this.data);
             this.setState(this.data);
-            this.updateTabVisibility();
 
             if (!!this.options.preview && this.data.nodeType === constants.contentNodeType && !this.data.shadowOn) {
                 this.sandbox.on('sulu.preview.initiated', function() {
@@ -1000,30 +999,6 @@ define([
             this.saved = saved;
         },
 
-        updateTabVisibility: function() {
-            var tabs = ['content', 'excerpt', 'seo'],
-                usedTabs = tabs,
-                unusedTabs;
-
-            if (this.data.nodeType === constants.internalLinkNodeType
-                || this.data.nodeType === constants.externalLinkNodeType
-            ) {
-                usedTabs = ['seo'];
-            } else if (!!this.data.shadowOn) {
-                usedTabs = [];
-            }
-
-            unusedTabs = _.difference(tabs, usedTabs);
-
-            usedTabs.forEach(function(tab) {
-                this.sandbox.emit('husky.tabs.header.item.show', constants.tabPrefix + tab);
-            }.bind(this));
-
-            unusedTabs.forEach(function(tab) {
-                this.sandbox.emit('husky.tabs.header.item.hide', constants.tabPrefix + tab);
-            }.bind(this));
-        },
-
         getPreviewDocument: function() {
             if (!!this.previewWindow) {
                 return this.previewWindow.document;
@@ -1254,7 +1229,10 @@ define([
                     noBack: isHomeDocument(this.data),
 
                     tabs: {
-                        url: navigationUrl
+                        url: navigationUrl,
+                        componentOptions: {
+                            values: this.content.toJSON()
+                        }
                     },
 
                     title: function() {
