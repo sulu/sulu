@@ -21,6 +21,7 @@ use Sulu\Bundle\ContentBundle\Document\RouteDocument;
 use PHPCR\NodeInterface;
 use Sulu\Component\DocumentManager\ClassNameInflector;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
+use PHPCR\Util\PathHelper;
 
 /**
  * The synchronization manager handles the synchronization of documents
@@ -176,7 +177,6 @@ class SynchronizationManager
             $locale,
             [
                 'path' => $path,
-                'auto_create' => true
             ]
         );
         // the document is now synchronized with the publish workspace...
@@ -238,7 +238,7 @@ class SynchronizationManager
         // TODO: Workaround for the fact that "parent" is not in the metadata,
         // see: https://github.com/sulu-io/sulu-document-manager/issues/67
         if ($document instanceof ParentBehavior) {
-            $document->setParent(null);
+            $this->registerSingleDocumentWithPDM($document->getParent(), $document);
         }
     }
 
@@ -247,7 +247,6 @@ class SynchronizationManager
         $publishManager = $this->getPublishDocumentManager();
         $defaultManager = $this->registry->getManager();
         $ddmInspector = $defaultManager->getInspector();
-        $pdmNodeManager = $publishManager->getNodeManager();
 
         // if the default document manager does not have this object then it is
         // not a candidate for being persisted (e.g. it might be a \DateTime
@@ -256,62 +255,91 @@ class SynchronizationManager
             return;
         }
 
-        $uuid = $ddmInspector->getUUid($object);
         $locale = $ddmInspector->getLocale($object);
         $pdmRegistry = $publishManager->getRegistry();
 
-        // if the PDM registry already has the document, then there is
-        // nothing to do.
+        // if the PDM registry already has the document in its registry, then
+        // there is nothing to do.
         if (true === $pdmRegistry->hasDocument($object)) {
             return;
         }
 
-        // if the UUID does not exist, we check to see if the path exsits.
-        // if neither the UUID or path exist, then we return, and the PDM
-        // should create a new document.
-        //
-        // if the path does not exist and the object is a proxy object, then
-        // something is wrong as the fact that it is a proxy object indicates
-        // that it has been persisted (and flushed) in the DDM but does not
-        // exist on the PDM. this should not happen.
-        //
-        // in the case the UUID does NOT exist we assume that in a valid system
-        // that path will ALSO NOT exist. If the path DOES exist, then it means that
-        // the corresponding PHPCR nodes were created independently of each
-        // other and bypassed the syncrhonization system.
-        if (false === $pdmNodeManager->has($uuid)) {
-            $path = $ddmInspector->getPath($object);
-
-            if (false === $pdmNodeManager->has($path)) {
-                if ($parentObject) {
-                    if (ClassNameInflector::isProxyClassName(get_class($object))) {
-                        throw new \RuntimeException(sprintf(
-                            'Proxy class relation "%s" (%s)) of document "%s" does not exist in publish '.
-                            'document manager. The document that the proxy class represents logically SHOULD have already been persisted in the default ' .
-                            'document manager and thus propagated to the publish workspace.',
-                            $ddmInspector->getPath($object),
-                            get_class($object),
-                            $ddmInspector->getPath($parentObject)
-                        ));
-                    }
-                }
-                return;
-            }
-
-            throw new \RuntimeException(sprintf(
-                'Publish document manager already has a node at path "%s" but ' .
-                'incoming UUID `%s` does not match existing UUID.',
-                $path, $uuid
-            ));
+        // see if we can resolve the corresponding node in the PDM.
+        // if we cannot then the system is free to try and create a new document.
+        if (false === $uuid = $this->resolvePDMUUID($object, $parentObject)) {
+            return;
         }
 
-        // register the DDM document with the PDM PHPCR node.
+        // register the DDM document against the PDM PHPCR node.
         $node = $publishManager->getNodeManager()->find($uuid);
         $pdmRegistry->registerDocument(
             $object,
             $node,
             $locale
         );
+    }
+
+    // if the UUID does not exist, we check to see if the path exsits.
+    // if neither the UUID or path exist, then we return, and the PDM
+    // should create a new document.
+    //
+    // if the path does not exist and the object is a proxy object, then
+    // something is wrong as the fact that it is a proxy object indicates
+    // that it has been persisted (and flushed) in the DDM but does not
+    // exist on the PDM. this should not happen.
+    //
+    // in the case the UUID does NOT exist we assume that in a valid system
+    // that path will ALSO NOT exist. If the path DOES exist, then it means that
+    // the corresponding PHPCR nodes were created independently of each
+    // other and bypassed the syncrhonization system.
+    //
+    // ^^ update this documentation.
+    private function resolvePDMUUID($object, $parentObject)
+    {
+        $pdmNodeManager = $this->getPublishDocumentManager()->getNodeManager();
+        $defaultManager = $this->registry->getManager();
+        $ddmInspector = $defaultManager->getInspector();
+        $uuid = $ddmInspector->getUUid($object);
+
+        if (true === $pdmNodeManager->has($uuid)) {
+            return $uuid;
+        }
+
+        $path = $ddmInspector->getPath($object);
+
+        if (false === $pdmNodeManager->has($path)) {
+
+            // if the parent path also does not exist in the PDM then we need
+            // to create the parent path using the same UUIDs that are used in
+            // the DDM.
+            $parentPath = PathHelper::getParentPath($path);
+            if (false === $pdmNodeManager->has($parentPath)) {
+                $this->syncPDMParentPath($parentPath);
+                return false;
+            }
+
+            // TODO: Is this still necessary??
+            if ($parentObject) {
+                if (ClassNameInflector::isProxyClassName(get_class($object))) {
+                    throw new \RuntimeException(sprintf(
+                        'Proxy class relation "%s" (%s)) of document "%s" does not exist in publish '.
+                        'document manager. The document that the proxy class represents logically SHOULD have already been persisted in the default ' .
+                        'document manager and thus propagated to the publish workspace.',
+                        $ddmInspector->getPath($object),
+                        get_class($object),
+                        $ddmInspector->getPath($parentObject)
+                    ));
+                }
+            }
+
+            // otherwise we can safely create the document.
+            return false;
+        }
+        throw new \RuntimeException(sprintf(
+            'Publish document manager already has a node at path "%s" but ' .
+            'incoming UUID `%s` does not match existing UUID: "%s".',
+            $path, $uuid, $pdmNodeManager->find($path)->getIdentifier()
+        ));
     }
 
     /**
@@ -333,5 +361,32 @@ class SynchronizationManager
         }
 
         return $routes;
+    }
+
+    private function syncPDMParentPath($parentPath)
+    {
+        $ddmNodeManager = $this->registry->getManager()->getNodeManager();
+        $pdmNodeManager = $this->getPublishDocumentManager()->getNodeManager();
+        $segments = explode('/', $parentPath);
+        $stack = [];
+
+        foreach ($segments as $segment) {
+            $stack[] = $segment;
+            $path = implode('/', $stack) ?: '/';
+            $ddmNode = $ddmNodeManager->find($path);
+            $pdmNode = $pdmNodeManager->createPath($path, false);
+            if (false === $pdmNode->isNew()) {
+                continue;
+            }
+            $pdmNode->addMixin('mix:referenceable');
+            $pdmNode->setProperty('jcr:uuid', $ddmNode->getIdentifier());
+        }
+
+        // flush the PHPCR session. if we do not save() here, then the node
+        // manager will be unable to "find" the newly created nodes by ID
+        // within the same session - because Jackalope.
+        //
+        // TODO: create an issue for this.
+        $pdmNodeManager->save();
     }
 }

@@ -110,6 +110,11 @@ class DocumentSynchronizationSubscriber implements EventSubscriberInterface
 
         // only sync new documents automatically
         if (false === $event->getNode()->isNew()) {
+            // otherwise the node is now capable of synchronized with all the managers.
+            $event->getContext()
+                ->getMetadataFactory()
+                ->getMetadataForClass(get_class($document))
+                ->setFieldValue($document, 'synchronizedManagers', []);
             return;
         }
 
