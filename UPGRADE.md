@@ -2,6 +2,16 @@
 
 ## dev-develop
 
+### Translation Code
+
+The maximum length of the translation code was extended run the following
+command to update your database schema.
+
+```bash
+app/console doctrine:schema:update --force
+```
+
+
 ### Definition of security contexts
 
 The definition of security contexts in the `Admin` classes has changed. They
