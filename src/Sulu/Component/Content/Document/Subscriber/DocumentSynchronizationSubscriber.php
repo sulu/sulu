@@ -17,6 +17,8 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Content\Document\SynchronizationManager;
 use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
+use Sulu\Component\DocumentManager\Event\RemoveEvent;
+use Sulu\Component\DocumentManager\DocumentManagerContext;
 
 class DocumentSynchronizationSubscriber implements EventSubscriberInterface
 {
@@ -29,6 +31,16 @@ class DocumentSynchronizationSubscriber implements EventSubscriberInterface
      * @var DocumentManagerInterface
      */
     private $defaultManager;
+
+    /**
+     * @var object[]
+     */
+    private $persistQueue = [];
+
+    /**
+     * @var object[]
+     */
+    private $removeQueue = [];
 
     /**
      * NOTE: We pass the default manager here because we need to ensure that we
@@ -84,11 +96,7 @@ class DocumentSynchronizationSubscriber implements EventSubscriberInterface
     {
         $context = $event->getContext();
 
-        $emittingManager = $context->getDocumentManager();
-
-        // if the  emitting manager is not the default manager, then
-        // return - see note in constructor.
-        if ($emittingManager !== $this->defaultManager) {
+        if (false === $this->isEmittingManagerDefaultManager($context)) {
             return;
         }
         // now we now deal only with the DEFAULT manager...
@@ -100,63 +108,95 @@ class DocumentSynchronizationSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $inspector = $emittingManager->getInspector();
-
         // only sync new documents automatically
         if (false === $event->getNode()->isNew()) {
             return;
         }
 
+        $inspector = $this->defaultManager->getInspector();
         $locale = $inspector->getLocale($document);
-        $this->queue[] = [
+        $this->persistQueue[] = [
             'document' => $document,
             'locale' => $locale
         ];
     }
 
+    public function handleRemove(RemoveEvent $removeEvent)
+    {
+        $context = $removeEvent->getContext();
+        if (false === $this->isEmittingManagerDefaultManager($context)) {
+            return;
+        }
+
+        $document = $removeEvent->getDocument();
+
+        // only sync documents implementing the sync behavior
+        if (!$document instanceof SynchronizeBehavior) {
+            return;
+        }
+
+        $this->removeQueue[] = $document;
+    }
+
+
     public function handleFlush(FlushEvent $event)
     {
-        if (empty($this->queue)) {
+        if (empty($this->persistQueue) && empty($this->removeQueue)) {
             return;
         }
 
         $context = $event->getContext();
-        $publishManager = $this->syncManager->getPublishDocumentManager();
-        $emittingManager = $context->getDocumentManager();
 
-        // do nothing, see same condition in handlePersist.
-        if ($emittingManager !== $this->defaultManager) {
+        if (false === $this->isEmittingManagerDefaultManager($context)) {
             return;
         }
 
-        // process the queue, FIFO (first in, first out)
+        $publishManager = $this->syncManager->getPublishDocumentManager();
+        $defaultFlush = false;
+
+        // process the persistQueue, FIFO (first in, first out)
         // array_shift will return and remove the first element of
-        // the queue for each iteration.
-        while ($entry = array_shift($this->queue)) {
+        // the persistQueue for each iteration.
+        while ($entry = array_shift($this->persistQueue)) {
+            $defaultFlush = true;
             $document = $entry['document'];
             $locale = $entry['locale'];
 
             // we need to load the document in the locale it was persisted in.
             // note that this should not create any significant overhead as all
             // the data is already in-memory.
-            //
-            // TODO: This, currently causes an exception:
-            //
-            //      Document 
-            //      "ProxyManagerGeneratedProxy\__PM__\Sulu\Component\DocumentManager\Document\UnknownDocument\Generateda84aebfffbf882fd8bddc950faa89e05"
-            //      with OID "00000000523d  b63f000000001e49b225" is not
-            //      managed, there are "0" managed objects, 
-            //
-            $this->defaultManager->find($document->getUUid(), $locale);
+            $inspector = $this->defaultManager->getInspector();
+            $this->defaultManager->find($inspector->getUUid($document), $locale);
 
             // delegate to the sync manager to synchronize the document.
             $this->syncManager->synchronizeSingle($document);
+        }
+
+        while ($entry = array_shift($this->removeQueue)) {
+            $publishManager->remove($entry);
         }
 
         // flush both managers. the publish manager will then commit
         // the synchronized documents and the default manager will update
         // the "synchronized document managers" field of original documents.
         $publishManager->flush();
-        $this->defaultManager->flush();
+
+        // only flush the default manager when objects have been synchronized (
+        // not removed).
+        if ($defaultFlush) {
+            $this->defaultManager->flush();
+        }
+    }
+
+    private function isEmittingManagerDefaultManager(DocumentManagerContext $context)
+    {
+        $emittingManager = $context->getDocumentManager();
+
+        // do nothing, see same condition in handlePersist.
+        if ($emittingManager === $this->defaultManager) {
+            return true;
+        }
+
+        return false;
     }
 }

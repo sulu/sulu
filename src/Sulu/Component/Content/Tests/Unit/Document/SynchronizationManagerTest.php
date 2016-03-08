@@ -15,6 +15,9 @@ use Prophecy\Argument;
 use Sulu\Component\Content\Document\Behavior\SynchronizeBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
+use Sulu\Component\DocumentManager\MetadataFactoryInterface;
+use Sulu\Component\DocumentManager\Metadata;
+use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 
 /**
  * Abbreviations:
@@ -64,22 +67,27 @@ class SynchronizationManagerTest extends \PHPUnit_Framework_TestCase
         $this->ddmNode = $this->prophesize(NodeInterface::class);
         $this->pdmNodeManager = $this->prophesize(NodeManager::class);
         $this->pdmDocumentRegistry = $this->prophesize(DocumentRegistry::class);
+        $this->ddmDocumentRegistry = $this->prophesize(DocumentRegistry::class);
         $this->document = $this->prophesize(SynchronizeBehavior::class);
+        $this->metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
+        $this->metadata = $this->prophesize(Metadata::class);
 
         $this->pdm->getNodeManager()->willReturn($this->pdmNodeManager->reveal());
         $this->pdm->getRegistry()->willReturn($this->pdmDocumentRegistry->reveal());
+        $this->ddm->getRegistry()->willReturn($this->ddmDocumentRegistry->reveal());
         $this->ddm->getInspector()->willReturn($this->ddmInspector->reveal());
+        $this->ddm->getMetadataFactory()->willReturn($this->metadataFactory->reveal());
     }
+
     /**
      * (synchronize full) It should return early if publish manager and default manager are
      * the same.
      */
-    public function testSynchronizeFull()
+    public function testSynchronizeFullPublishAndDefaultManagersAreSame()
     {
         $this->configureScenario([
             'pdm_name' => 'ddm'
         ]);
-
         $this->pdm->persist(Argument::cetera())->shouldNotBeCalled();
 
         $this->syncManager->synchronizeFull($this->document->reveal());
@@ -110,6 +118,7 @@ class SynchronizationManagerTest extends \PHPUnit_Framework_TestCase
         $this->ddmInspector->getNode($this->route1->reveal())->willReturn($this->ddmNode->reveal());
         $this->ddmInspector->getLocale($this->route1->reveal())->willReturn($options['locale']);
         $this->pdmDocumentRegistry->hasDocument($this->route1->reveal())->willReturn(true);
+        $this->metadataFactory->getMetadataForClass(get_class($this->route1->reveal()))->willReturn($this->metadata->reveal());
 
         // setup the expectations
         $this->pdm->persist($this->document->reveal(), Argument::cetera())->shouldBeCalled();
@@ -131,6 +140,21 @@ class SynchronizationManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->pdm->persist(Argument::cetera())->shouldNotBeCalled();
 
+        $this->syncManager->synchronizeSingle($this->document->reveal());
+    }
+
+    /**
+     * It should localize the PHPCR property if the document is localized.
+     */
+    public function testLocalizedPhpcrSyncedProperty()
+    {
+        $this->document->willImplement(LocaleBehavior::class);
+        $options = $this->configureScenario([
+            'localized' => true,
+        ]);
+        $this->pdm->persist(Argument::cetera())->shouldBeCalled();
+        $this->ddmNode->setProperty($options['synced_property_name'], ['live'])->shouldBeCalled();
+        $this->propertyEncoder->localizedSystemName($options['synced_property_name'], $options['locale'])->shouldBeCalled();
         $this->syncManager->synchronizeSingle($this->document->reveal());
     }
 
@@ -189,6 +213,7 @@ class SynchronizationManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * It should synchronize a document to the publish document manager.
      * It should register the fact that the document is synchronized with the PDM.
+     * It should NOT localize the PHPCR property for a non-localized document.
      */
     public function testPublishSingle()
     {
@@ -204,9 +229,13 @@ class SynchronizationManagerTest extends \PHPUnit_Framework_TestCase
         )->shouldBeCalled();
 
         $this->ddmNode->setProperty($options['synced_property_name'], [ 'live' ])->shouldBeCalled();
+        $this->propertyEncoder->systemName($options['synced_property_name'], $options['locale'])->shouldBeCalled();
 
         $this->syncManager->synchronizeSingle($this->document->reveal());
     }
+
+    /**
+     * It should 
 
     /**
      * Utility method to setup the standard requirements for this test.
@@ -224,7 +253,9 @@ class SynchronizationManagerTest extends \PHPUnit_Framework_TestCase
             'pdm_node_manager_has_node' => false,
             'pdm_registry_has_document' => true,
             'synced_property_name' => 'synced',
+            'document_field_mappings' => [],
             'document_referrers' => [],
+            'localized' => false,
         ), $options);
 
         $this->managerRegistry->getManager()->willReturn($this->{$options['ddm_name']}->reveal());
@@ -242,10 +273,20 @@ class SynchronizationManagerTest extends \PHPUnit_Framework_TestCase
         $this->pdmNodeManager->has($options['uuid'])->willReturn(true);
         $this->pdmDocumentRegistry->hasDocument($this->document->reveal())->willReturn($options['pdm_registry_has_document']);
 
-        $this->propertyEncoder->localizedSystemName(
-            SynchronizeBehavior::SYNCED_FIELD,
-            $options['locale']
-        )->willReturn($options['synced_property_name']);
+        if ($options['localized']) {
+            $this->propertyEncoder->localizedSystemName(
+                SynchronizeBehavior::SYNCED_FIELD,
+                $options['locale']
+            )->willReturn($options['synced_property_name']);
+        } else {
+            $this->propertyEncoder->systemName(
+                SynchronizeBehavior::SYNCED_FIELD,
+                $options['locale']
+            )->willReturn($options['synced_property_name']);
+        }
+        $this->metadataFactory->getMetadataForClass(get_class($this->document->reveal()))->willReturn($this->metadata->reveal());
+        $this->metadata->getFieldMappings()->willReturn($options['document_field_mappings']);
+        $this->metadata->getReflectionClass()->willReturn(new \ReflectionClass(get_class($this->document->reveal())));
 
         return $options;
     }

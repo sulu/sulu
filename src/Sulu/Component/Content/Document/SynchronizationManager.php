@@ -100,7 +100,8 @@ class SynchronizationManager
         // Get the routes for the document if it implements
         // the "resource segment subscriber".
         //
-        // TODO: Fire an event here instead?
+        // TODO: We should instead add configuration to cascade certain
+        //       document classes instead of hard coding this logic.
         $routes = [];
         if ($document instanceof ResourceSegmentBehavior) {
             $routes = $this->getDocumentRoutes($defaultManager->getInspector(), $document);
@@ -134,7 +135,6 @@ class SynchronizationManager
     {
         $options = array_merge([
             'force' => false,
-            'repair' => false
         ], $options);
 
         $defaultManager = $this->registry->getManager();
@@ -162,7 +162,7 @@ class SynchronizationManager
 
         // register the DDM document and its immediate relations with the PDM
         // PHPCR node.
-        $this->registerDocumentWithPDM($document, $options['repair']);
+        $this->registerDocumentWithPDM($document);
 
         // this is a temporary (and invalid) hack until the routing system
         // is converted to use the document manager.
@@ -202,27 +202,6 @@ class SynchronizationManager
             ),
             array_unique($synced)
         );
-    }
-
-    /**
-     * Return routes related to the document.
-     *
-     * @param DocumentInspector
-     * @param object $document
-     */
-    private function getDocumentRoutes(DocumentInspector $inspector, ResourceSegmentBehavior $document)
-    {
-        $referrers = $inspector->getReferrers($document);
-        $routes = array();
-
-        foreach ($referrers as $referrer) {
-            if (!$referrer instanceof RouteDocument) {
-                continue;
-            }
-            $routes[] = $referrer;
-        }
-
-        return $routes;
     }
 
     /**
@@ -333,5 +312,26 @@ class SynchronizationManager
             $node,
             $locale
         );
+    }
+
+    /**
+     * Return routes related to the document.
+     *
+     * @param DocumentInspector
+     * @param object $document
+     */
+    private function getDocumentRoutes(DocumentInspector $inspector, ResourceSegmentBehavior $document)
+    {
+        $referrers = $inspector->getReferrers($document);
+        $routes = array();
+
+        foreach ($referrers as $referrer) {
+            if (!$referrer instanceof RouteDocument) {
+                continue;
+            }
+            $routes[] = $referrer;
+        }
+
+        return $routes;
     }
 }
