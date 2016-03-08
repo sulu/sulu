@@ -107,6 +107,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      * @param AccountAddressEntity $accountAddress
      *
      * @throws \Exception
+     *
      * @return mixed|void
      */
     public function removeAddressRelation($account, $accountAddress)
