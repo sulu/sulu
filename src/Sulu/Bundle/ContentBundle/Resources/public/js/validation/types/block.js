@@ -313,6 +313,8 @@ define([
                                     $element.remove();
                                     this.checkFullAndEmpty();
                                 }
+
+                                $(form.$el).trigger('form-remove', [this.propertyName]);
                             }
                         }.bind(this)
                     );

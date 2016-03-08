@@ -309,6 +309,9 @@ define(['app-config', 'config', 'sulucontent/components/content/preview/main'], 
                     // ignore exceptions
                 }
 
+                // enable save button
+                this.setHeaderBar(false);
+
                 // reinit sorting
                 this.initSortableBlock();
             }.bind(this));
