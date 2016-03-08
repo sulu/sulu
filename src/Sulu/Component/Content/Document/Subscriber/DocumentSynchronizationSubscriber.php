@@ -49,6 +49,7 @@ class DocumentSynchronizationSubscriber implements EventSubscriberInterface
     {
         return [
             Events::FLUSH => 'handleFlush',
+            Events::REMOVE => 'handleRemove',
             Events::METADATA_LOAD => 'handleMetadataLoad',
 
             // persist needs to be before the content mapper subscriber
@@ -146,7 +147,7 @@ class DocumentSynchronizationSubscriber implements EventSubscriberInterface
             //      with OID "00000000523d  b63f000000001e49b225" is not
             //      managed, there are "0" managed objects, 
             //
-            // $this->defaultManager->find($document->getUUid(), $locale);
+            $this->defaultManager->find($document->getUUid(), $locale);
 
             // delegate to the sync manager to synchronize the document.
             $this->syncManager->synchronizeSingle($document);

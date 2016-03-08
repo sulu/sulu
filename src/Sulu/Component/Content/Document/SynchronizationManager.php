@@ -170,16 +170,6 @@ class SynchronizationManager
             $document->setResourceSegment('/' . uniqid());
         }
 
-        // as we are explicitly setting the path we can discard any parent document
-        // which may not be registered in the publish manager.
-        if ($document instanceof ParentBehavior) {
-            $document->setParent(null);
-        }
-
-        // TODO: What about other proxy situations? i.e. children and
-        //       referrers. Can we remove proxies automatically? or should we
-        //       cascade?
-
         // save the document with the "publish" document manager.
         $publishManager->persist(
             $document,
@@ -229,25 +219,6 @@ class SynchronizationManager
             if (!$referrer instanceof RouteDocument) {
                 continue;
             }
-
-            // this clause is technically not required as we already know that
-            // it is a RouteDocument, but it adds another layer of safety.
-            if (!$referrer instanceof SynchronizeBehavior) {
-                throw new \RuntimeException(sprintf(
-                    'All route classes must implement the SynchronizeBehavior, for "%s"'
-                , get_class($referrer)));
-            }
-
-            // if the route is already synchronized, continue.
-            $synced = $referrer->getSynchronizedManagers() ?: [];
-            if (in_array($this->publishManagerName, $synced)) {
-                continue;
-            }
-
-            if ($referrer instanceof ParentBehavior) {
-                $referrer->setParent(null);
-            }
-
             $routes[] = $referrer;
         }
 
@@ -283,6 +254,12 @@ class SynchronizationManager
             }
 
             $this->registerSingleDocumentWithPDM($propertyValue, $document);
+        }
+
+        // TODO: Workaround for the fact that "parent" is not in the metadata,
+        // see: https://github.com/sulu-io/sulu-document-manager/issues/67
+        if ($document instanceof ParentBehavior) {
+            $document->setParent(null);
         }
     }
 
