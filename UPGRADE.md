@@ -7,10 +7,13 @@
 The maximum length of the translation code was extended run the following
 command to update your database schema.
 
+### Category-Key
+
+Length of category-key column was extended. Use following command to update the schema definition.
+
 ```bash
 app/console doctrine:schema:update --force
 ```
-
 
 ### Definition of security contexts
 
