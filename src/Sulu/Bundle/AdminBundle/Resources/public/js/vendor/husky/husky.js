@@ -31062,7 +31062,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 content = this.sandbox.util.template(templates.img)({
                     alt: content[constants.thumbAltKey],
                     src: content[constants.thumbSrcKey],
-                    noImgIcon: this.options.noImgIcon
+                    noImgIcon: typeof this.options.noImgIcon === 'function' ?
+                        this.options.noImgIcon(record) : this.options.noImgIcon
                 });
             } else {
                 content = this.datagrid.processContentFilter(

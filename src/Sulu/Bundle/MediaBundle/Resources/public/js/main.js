@@ -20,6 +20,7 @@ require.config({
         'services/sulumedia/collection-manager': '../../sulumedia/js/services/collection-manager',
         'services/sulumedia/media-manager': '../../sulumedia/js/services/media-manager',
         'services/sulumedia/user-settings-manager': '../../sulumedia/js/services/user-settings-manager',
+        'services/sulumedia/file-icons': '../../sulumedia/js/services/file-icons',
 
         'type/media-selection': '../../sulumedia/js/validation/types/media-selection',
         'datagrid/decorators/masonry-view': '../../sulumedia/js/components/collections/masonry-decorator/masonry-view'

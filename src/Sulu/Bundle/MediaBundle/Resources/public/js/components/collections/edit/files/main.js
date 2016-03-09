@@ -13,8 +13,9 @@ define([
     'services/sulumedia/media-manager',
     'services/sulumedia/user-settings-manager',
     'services/sulumedia/overlay-manager',
-    'sulusecurity/services/security-checker'
-], function(Config, CollectionManager, MediaManager, UserSettingsManager, OverlayManager, SecurityChecker) {
+    'sulusecurity/services/security-checker',
+    'services/sulumedia/file-icons'
+], function(Config, CollectionManager, MediaManager, UserSettingsManager, OverlayManager, SecurityChecker, FileIcons) {
 
     'use strict';
 
@@ -303,7 +304,17 @@ define([
                     }.bind(this),
                     viewOptions: {
                         table: {
-                            actionIconColumn: 'name'
+                            actionIconColumn: 'name',
+                            noImgIcon: function(item) {
+                                return FileIcons.getByMimeType(item.mimeType);
+                            },
+                            emptyIcon: 'fa-file-o'
+                        },
+                        'datagrid/decorators/masonry-view': {
+                            noImgIcon: function(item) {
+                                return FileIcons.getByMimeType(item.mimeType);
+                            },
+                            emptyIcon: 'fa-file-o'
                         }
                     },
                     paginationOptions: {

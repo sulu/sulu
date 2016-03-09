@@ -42,6 +42,10 @@ define([
             separators: {
                 title: ' ',
                 description: ', '
+            },
+            emptyIcon: 'fa-coffee',
+            noImgIcon: function(item) {
+                return 'fa-file-o';
             }
         },
 
@@ -59,20 +63,20 @@ define([
             headImageClass: 'head-image',
             actionNavigatorClass: 'action-navigator',
             downloadNavigatorClass: 'download-navigator',
-            playVideoNavigatorClass: 'play-video-navigator',
+            playVideoNavigatorClass: 'play-video-navigator'
         },
 
         templates = {
             emptyIndicator: [
                 '<div class="' + constants.emptyIndicatorClass + '" style="display: none">',
-                '   <div class="fa-coffee icon"></div>',
+                '   <div class="<%= icon %> icon"></div>',
                 '   <span><%= text %></span>',
                 '</div>'
             ].join(''),
             item: [
                 '<div class="masonry-item ' + constants.loadingClass + '">',
                 '   <div class="masonry-head ' + constants.actionNavigatorClass + '">',
-                '       <div class="fa-coffee ' + constants.headIconClass + '"></div>',
+                '       <div class="<%= icon %> ' + constants.headIconClass + '"></div>',
                 '       <img ondragstart="return false;" class="' + constants.headImageClass + '" src="<%= image %>"/>',
                 '   </div>',
                 '   <div class="masonry-info">',
@@ -189,7 +193,8 @@ define([
 
             // render empty indicator
             var $empty = this.sandbox.util.template(templates.emptyIndicator, {
-                text: this.sandbox.translate(this.options.emptyListTranslation)
+                text: this.sandbox.translate(this.options.emptyListTranslation),
+                icon: this.options.emptyIcon
             });
             this.sandbox.dom.append(this.$el, $empty);
 
@@ -248,7 +253,7 @@ define([
                 var id = item.id,
                     image = item[this.options.fields.image].url || '',
                     downloadUrl = item.url,
-                    title = concatRecordColumns(item, this.options.fields.title,this.options.separators.title),
+                    title = concatRecordColumns(item, this.options.fields.title, this.options.separators.title),
                     description = concatRecordColumns(
                         item,
                         this.options.fields.description,
@@ -257,7 +262,16 @@ define([
                     isVideo = (item.type.name === 'video');
 
                 // pass the found data to a render method
-                this.renderItem(id, image, downloadUrl, title, description, isVideo, appendAtBottom);
+                this.renderItem(
+                    id,
+                    image,
+                    downloadUrl,
+                    title,
+                    description,
+                    isVideo,
+                    appendAtBottom,
+                    this.options.noImgIcon(item)
+                );
             }.bind(this));
         },
 
@@ -271,7 +285,7 @@ define([
          * @param isVideo
          * @param appendAtBottom
          */
-        renderItem: function(id, image, downloadUrl, title, description, isVideo, appendAtBottom) {
+        renderItem: function(id, image, downloadUrl, title, description, isVideo, appendAtBottom, icon) {
             this.$items[id] = this.sandbox.dom.createElement(
                 this.sandbox.util.template(templates.item, {
                     image: image,
@@ -279,7 +293,8 @@ define([
                     title: this.sandbox.util.cropMiddle(String(title), 24),
                     description: this.sandbox.util.cropMiddle(String(description), 32),
                     isVideo: isVideo,
-                    selectable: this.options.selectable
+                    selectable: this.options.selectable,
+                    icon: icon
                 })
             );
 
