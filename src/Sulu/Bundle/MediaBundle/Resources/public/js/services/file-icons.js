@@ -60,7 +60,7 @@ define(function() {
             var parts = mimeType.split('/');
 
             if (map.hasOwnProperty(parts[0])) {
-                return map[mimeType[0]];
+                return map[parts[0]];
             }
 
             return 'fa-file-o';
