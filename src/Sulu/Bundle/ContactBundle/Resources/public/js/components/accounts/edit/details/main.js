@@ -147,7 +147,8 @@ define([
          * @param data
          */
         initLogoContainer: function(data) {
-            if (!!data.logo) {
+            // if logo is selected and is not a "dummy"
+            if (!!data.logo && !!data.logo.id) {
                 this.updateLogoContainer(data.logo.id, data.logo.thumbnails[constants.logoThumbnailFormat], data.logo.url);
             }
 
