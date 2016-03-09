@@ -107,7 +107,7 @@ define([
          * @returns {Object}
          */
         toFlat = function(contact) {
-            contact.position = contact.position.position;
+            contact.position = !contact.position ? null : contact.position.position;
 
             return contact;
         },
