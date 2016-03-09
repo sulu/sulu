@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #2102 [ContactBundle]     Added filter for account tags
+
 * 1.1.10 (2016-03-07)
     * HOTFIX      #2029 [WebsiteBundle]     Removed single alternate link in sitemap.xml
     * HOTFIX      #2029 [WebsiteBundle]     Fixed hreflang tag with one translation and different schemas
