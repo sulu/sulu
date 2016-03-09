@@ -527,7 +527,7 @@ define([
                 this.sandbox.emit(
                     'husky.select.' + type + '.update',
                     response,
-                    [response[response.length - 1]], // preselected
+                    [response[response.length - 1].id], // preselected
                     true,
                     true
                 );
