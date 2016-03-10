@@ -32,14 +32,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ResourceSegmentSubscriber implements EventSubscriberInterface
 {
     /**
-<<<<<<< HEAD
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    /**
-=======
->>>>>>> Allow configuration of multiple document managers.
      * @var PropertyEncoder
      */
     private $encoder;
@@ -50,19 +42,11 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
     private $rlpStrategy;
 
     public function __construct(
-<<<<<<< HEAD
         PropertyEncoder $encoder,
-        DocumentInspector $documentInspector,
         RlpStrategyInterface $rlpStrategy
     ) {
         $this->encoder = $encoder;
-        $this->documentInspector = $documentInspector;
         $this->rlpStrategy = $rlpStrategy;
-=======
-        PropertyEncoder $encoder
-    ) {
-        $this->encoder = $encoder;
->>>>>>> Allow configuration of multiple document managers.
     }
 
     /**
@@ -108,8 +92,8 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
         }
 
         $node = $event->getNode();
-        $property = $this->getResourceSegmentProperty($event->getContext()->getInspector(), $document);
-        $originalLocale = $event->getContext()->getInspector()->getOriginalLocale($document);
+        $property = $this->getResourceSegmentProperty($event->getManager()->getInspector(), $document);
+        $originalLocale = $event->getManager()->getInspector()->getOriginalLocale($document);
         $segment = $node->getPropertyValueWithDefault(
             $this->encoder->localizedSystemName(
                 $property->getName(),

@@ -91,14 +91,14 @@ class OrderSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $parentDocument = $event->getContext()->getInspector()->getParent($document);
+        $parentDocument = $event->getManager()->getInspector()->getParent($document);
 
         if (null === $parentDocument) {
             return;
         }
 
         $count = 0;
-        foreach ($event->getContext()->getInspector()->getChildren($parentDocument) as $childDocument) {
+        foreach ($event->getManager()->getInspector()->getChildren($parentDocument) as $childDocument) {
             if (!$childDocument instanceof OrderBehavior) {
                 continue;
             }

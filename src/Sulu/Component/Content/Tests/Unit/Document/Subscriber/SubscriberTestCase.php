@@ -13,7 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\DocumentManager\DocumentAccessor;
-use Sulu\Component\DocumentManager\DocumentManagerContext;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
@@ -67,8 +67,8 @@ class SubscriberTestCase extends \PHPUnit_Framework_TestCase
         $this->persistEvent->getNode()->willReturn($this->node);
         $this->persistEvent->getAccessor()->willReturn($this->accessor);
         $this->hydrateEvent->getAccessor()->willReturn($this->accessor);
-        $this->context = $this->prophesize(DocumentManagerContext::class);
-        $this->hydrateEvent->getContext()->willReturn($this->context->reveal());
-        $this->persistEvent->getContext()->willReturn($this->context->reveal());
+        $this->manager = $this->prophesize(DocumentManagerInterface::class);
+        $this->hydrateEvent->getManager()->willReturn($this->manager->reveal());
+        $this->persistEvent->getManager()->willReturn($this->manager->reveal());
     }
 }

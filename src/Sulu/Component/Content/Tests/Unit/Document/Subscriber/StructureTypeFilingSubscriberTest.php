@@ -17,7 +17,7 @@ use Sulu\Component\Content\Document\Behavior\StructureTypeFilingBehavior;
 use Sulu\Component\Content\Document\Subscriber\StructureTypeFilingSubscriber;
 use Sulu\Component\DocumentManager\Behavior\Path\BasePathBehavior;
 use Sulu\Component\DocumentManager\DocumentManager;
-use Sulu\Component\DocumentManager\DocumentManagerContext;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
@@ -87,12 +87,12 @@ class StructureTypeFilingSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $this->metadata = $this->prophesize(Metadata::class);
         $this->parentNode = $this->prophesize(NodeInterface::class);
-        $this->context = $this->prophesize(DocumentManagerContext::class);
+        $this->manager = $this->prophesize(DocumentManagerInterface::class);
 
         $this->subscriber = new StructureTypeFilingSubscriber();
 
-        $this->context->getNodeManager()->willReturn($this->nodeManager->reveal());
-        $this->persistEvent->getContext()->willReturn($this->context->reveal());
+        $this->manager->getNodeManager()->willReturn($this->nodeManager->reveal());
+        $this->persistEvent->getManager()->willReturn($this->manager->reveal());
     }
 
     /**
@@ -100,6 +100,7 @@ class StructureTypeFilingSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     public function testPersistNotImplementing()
     {
+        $this->persistEvent->getOptions()->willReturn([]);
         $this->persistEvent->getDocument()->willReturn($this->notImplementing);
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
@@ -119,6 +120,7 @@ class StructureTypeFilingSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->persistEvent->hasParentNode()->shouldBeCalled();
         $this->persistEvent->setParentNode($this->parentNode->reveal())->shouldBeCalled();
         $this->documentManager->find('/test', 'fr')->willReturn($this->parentDocument);
+        $this->persistEvent->getOptions()->willReturn([]);
 
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }

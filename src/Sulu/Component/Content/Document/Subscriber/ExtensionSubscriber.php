@@ -102,7 +102,7 @@ class ExtensionSubscriber implements EventSubscriberInterface
         $node = $event->getNode();
         $extensionsData = $document->getExtensionsData();
 
-        $webspaceName = $event->getContext()->getInspector()->getWebspace($document);
+        $webspaceName = $event->getManager()->getInspector()->getWebspace($document);
         $prefix = $this->namespaceRegistry->getPrefix('extension_localized');
 
         $extensions = $this->extensionManager->getExtensions($structureType);
@@ -132,8 +132,8 @@ class ExtensionSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
         $node = $event->getNode();
-        $locale = $event->getContext()->getInspector()->getLocale($document);
-        $webspaceName = $event->getContext()->getInspector()->getWebspace($document);
+        $locale = $event->getManager()->getInspector()->getLocale($document);
+        $webspaceName = $event->getManager()->getInspector()->getWebspace($document);
         $structureType = $document->getStructureType();
 
         if (null === $structureType) {

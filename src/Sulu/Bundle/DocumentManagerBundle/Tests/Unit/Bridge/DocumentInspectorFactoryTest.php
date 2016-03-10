@@ -15,7 +15,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspectorFactory;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
-use Sulu\Component\DocumentManager\DocumentManagerContext;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
@@ -81,9 +81,9 @@ class DocumentInspectorFactoryTest extends \PHPUnit_Framework_TestCase
         $this->encoder = $this->prophesize(PropertyEncoder::class);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
 
-        $this->context = $this->prophesize(DocumentManagerContext::class);
-        $this->context->getProxyFactory()->willReturn($this->proxyFactory->reveal());
-        $this->context->getRegistry()->willReturn($this->documentRegistry->reveal());
+        $this->manager = $this->prophesize(DocumentManagerInterface::class);
+        $this->manager->getProxyFactory()->willReturn($this->proxyFactory->reveal());
+        $this->manager->getRegistry()->willReturn($this->documentRegistry->reveal());
         $this->factory = new DocumentInspectorFactory(
             $this->pathRegistry->reveal(),
             $this->namespaceRegistry->reveal(),
@@ -96,12 +96,20 @@ class DocumentInspectorFactoryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * It should return a document inspector.
+     * It should always return the same instance.
      */
     public function testGetInspector()
     {
+        $inspector = $this->factory->getInspector($this->manager->reveal());
+
         $this->assertInstanceOf(
             DocumentInspector::class,
-            $this->factory->getInspector($this->context->reveal())
+            $inspector
+        );
+
+        $this->assertSame(
+            $inspector,
+            $this->factory->getInspector($this->manager->reveal())
         );
     }
 }

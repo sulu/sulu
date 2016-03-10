@@ -56,7 +56,7 @@ class TitleSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $inspector = $event->getContext()->getInspector();
+        $inspector = $event->getManager()->getInspector();
         $title = $this->getTitle($inspector, $document);
 
         $document->setTitle($title);
@@ -75,7 +75,7 @@ class TitleSubscriber implements EventSubscriberInterface
 
         $title = $document->getTitle();
 
-        $structure = $event->getContext()->getInspector()->getStructureMetadata($document);
+        $structure = $event->getManager()->getInspector()->getStructureMetadata($document);
         if (!$structure->hasProperty('title')) {
             return;
         }

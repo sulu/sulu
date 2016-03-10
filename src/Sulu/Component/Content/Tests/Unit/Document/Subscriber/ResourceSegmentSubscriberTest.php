@@ -22,11 +22,9 @@ use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\Subscriber\ResourceSegmentSubscriber;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
-<<<<<<< HEAD
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
-=======
 use Sulu\Component\DocumentManager\DocumentManagerContext;
->>>>>>> CS fix
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
@@ -91,9 +89,9 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $localizedPropertyName = sprintf('i18n:%s-%s', $locale, $propertyName);
 
         $event = $this->prophesize(AbstractMappingEvent::class);
-        $context = $this->prophesize(DocumentManagerContext::class);
-        $context->getInspector()->willReturn($inspector);
-        $event->getContext()->willReturn($context->reveal());
+        $manager = $this->prophesize(DocumentManagerInterface::class);
+        $manager->getInspector()->willReturn($inspector);
+        $event->getManager()->willReturn($manager->reveal());
 
         $event->getDocument()->willReturn($this->document->reveal());
 
@@ -123,9 +121,9 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $localizedPropertyName = sprintf('i18n:%s-%s', $locale, $propertyName);
 
         $event = $this->prophesize(PersistEvent::class);
-        $context = $this->prophesize(DocumentManagerContext::class);
-        $context->getInspector()->willReturn($inspector);
-        $event->getContext()->willReturn($context->reveal());
+        $manager = $this->prophesize(DocumentManagerInterface::class);
+        $manager->getInspector()->willReturn($inspector);
+        $event->getManager()->willReturn($manager->reveal());
 
         $event->getDocument()->willReturn($this->document->reveal());
 

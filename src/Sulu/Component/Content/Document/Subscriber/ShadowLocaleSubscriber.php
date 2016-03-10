@@ -119,7 +119,7 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
 
         $shadowLocale = $this->getShadowLocale($node, $locale);
         $document->setShadowLocale($shadowLocale);
-        $event->getContext()->getRegistry()->updateLocale($document, $shadowLocale, $locale);
+        $event->getManager()->getRegistry()->updateLocale($document, $shadowLocale, $locale);
         $event->setLocale($shadowLocale);
     }
 
@@ -139,7 +139,7 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
         }
 
         if ($document->isShadowLocaleEnabled()) {
-            $this->validateShadow($event->getContext()->getInspector(), $document);
+            $this->validateShadow($event->getManager()->getInspector(), $document);
         }
 
         $event->getNode()->setProperty(
@@ -173,7 +173,7 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
         }
 
         $node = $event->getNode();
-        $structure = $event->getContext()->getInspector()->getStructureMetadata($document);
+        $structure = $event->getManager()->getInspector()->getStructureMetadata($document);
 
         if (false === $structure->hasPropertyWithTagName('sulu.rlp')) {
             return;

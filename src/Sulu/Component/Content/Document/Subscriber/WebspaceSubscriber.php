@@ -53,7 +53,7 @@ class WebspaceSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $webspaceName = $event->getContext()->getInspector()->getWebspace($document);
+        $webspaceName = $event->getManager()->getInspector()->getWebspace($document);
         $event->getAccessor()->set('webspaceName', $webspaceName);
     }
 }
