@@ -1,9 +1,9 @@
 | Q | A
 | --- | ---
-| Bug fix? | yes
-| New feature? | yes
-| BC breaks? | yes
-| Deprecations? | yes
+| Bug fix? | no
+| New feature? | no
+| BC breaks? | no
+| Deprecations? | no
 | Fixed tickets | fixes #issuenum
 | Related issues/PRs | #issuenum
 | License | MIT
