@@ -1,16 +1,17 @@
 | Q | A
 | --- | ---
 | Bug? | no
-| Version Used | Specific tag or commit sha
 | New Feature? | no
-
-#### Expected Behavior
-
-What is the behavior you expect?
+| Sulu Version | Specific version or SHA of a commit
+| Browser Version | Browser name and version
 
 #### Actual Behavior
 
 How does Sulu behave at the moment? 
+
+#### Expected Behavior
+
+What is the behavior you expect?
 
 #### Steps to Reproduce
 
@@ -20,4 +21,4 @@ screenshots or links to GitHub repositories that reproduce the problem.
 #### Possible Solutions
 
 If you have already ideas how to solve the issue, add them here.
-Otherwise remove this section.
+(remove this section if not needed)
