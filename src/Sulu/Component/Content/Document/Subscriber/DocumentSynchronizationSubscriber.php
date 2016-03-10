@@ -96,6 +96,11 @@ class DocumentSynchronizationSubscriber implements EventSubscriberInterface
     {
         $context = $event->getContext();
 
+        // do not do anything if the default and publish managers are the same.
+        if ($this->defaultManager === $this->syncManager->getPublishDocumentManager()) {
+            return;
+        }
+
         if (false === $this->isEmittingManagerDefaultManager($context)) {
             return;
         }
@@ -150,6 +155,10 @@ class DocumentSynchronizationSubscriber implements EventSubscriberInterface
             return;
         }
 
+        if ($this->defaultManager === $this->syncManager->getPublishDocumentManager()) {
+            return;
+        }
+
         $context = $event->getContext();
 
         if (false === $this->isEmittingManagerDefaultManager($context)) {
@@ -171,12 +180,14 @@ class DocumentSynchronizationSubscriber implements EventSubscriberInterface
             // note that this should not create any significant overhead as all
             // the data is already in-memory.
             $inspector = $this->defaultManager->getInspector();
-            $this->defaultManager->find($inspector->getUUid($document), $locale);
+
+            if ($inspector->getLocale($document) !== $locale) {
+                $this->defaultManager->find($inspector->getUUid($document), $locale);
+            }
 
             // delegate to the sync manager to synchronize the document.
             $this->syncManager->synchronizeSingle($document);
         }
-
         while ($entry = array_shift($this->removeQueue)) {
             $publishManager->remove($entry);
         }

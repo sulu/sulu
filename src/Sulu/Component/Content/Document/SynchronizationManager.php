@@ -249,7 +249,9 @@ class SynchronizationManager
         // TODO: Workaround for the fact that "parent" is not in the metadata,
         // see: https://github.com/sulu-io/sulu-document-manager/issues/67
         if ($document instanceof ParentBehavior) {
-            $this->registerSingleDocumentWithPDM($document->getParent(), true);
+            if ($parent = $document->getParent()) {
+                $this->registerSingleDocumentWithPDM($parent, true);
+            }
         }
     }
 
