@@ -79,15 +79,18 @@ class WebspaceInitializer implements InitializerInterface
         }
 
         foreach ($webspaceLocales as $webspaceLocale) {
-            $output->writeln(sprintf('<info>Homepage</info>: %s (%s)', $homePath, $webspaceLocale));
             if (in_array($webspaceLocale, $existingLocales)) {
+                $output->writeln(sprintf('  [ ] <info>homepage</info>: %s (%s)', $homePath, $webspaceLocale));
                 continue;
             }
 
+            $output->writeln(sprintf('  [+] <info>homepage</info>: %s (%s)', $homePath, $webspaceLocale));
             $this->nodeManager->createPath($routesPath . '/' . $webspaceLocale);
             $this->documentManager->persist($homeDocument, $webspaceLocale, [
                 'path' => $homePath,
             ]);
         }
+
+        $this->documentManager->flush();
     }
 }

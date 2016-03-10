@@ -32,12 +32,12 @@ class InitializerPass implements CompilerPassInterface
 
         foreach ($ids as $id => $attributes) {
             $priority = 0;
-            if (isset($attributes[0]['priotity'])) {
+            if (isset($attributes[0]['priority'])) {
                 $priority = $attributes[0]['priority'];
             }
             $map[$id] = $priority;
         }
 
-        $initializerDef->replaceArgument(1, $map);
+        $initializerDef->replaceArgument(2, $map);
     }
 }

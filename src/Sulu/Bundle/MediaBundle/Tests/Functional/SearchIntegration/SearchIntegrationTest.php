@@ -92,6 +92,11 @@ class SearchIntegrationTest extends SuluTestCase
 
         $testAdapter = $this->container->get('massive_search.adapter.test');
 
+        // remove the documents indexed when creating the fixtures
+        foreach ($testAdapter->listIndexes() as $indexName) {
+            $testAdapter->purge($indexName);
+        }
+
         $document = $this->documentManager->create('page');
         $document->setTitle('Hallo');
         $document->setResourceSegment('/hallo/fo');

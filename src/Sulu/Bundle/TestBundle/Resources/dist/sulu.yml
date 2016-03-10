@@ -105,6 +105,7 @@ sulu_test:
 
 sulu_document_manager:
     debug: false
+
     mapping:
         page:
             class: Sulu\Bundle\ContentBundle\Document\PageDocument

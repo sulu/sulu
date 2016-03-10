@@ -755,10 +755,10 @@ class ContentRepositoryTest extends SuluTestCase
         );
 
         $this->assertCount(3, $result);
-        $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $result[0]->getId());
+        $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $result[1]->getId());
         $this->assertTrue($result[0]->hasChildren());
         $this->assertEmpty($result[0]->getChildren());
-        $this->assertEquals($page1->getUuid(), $result[1]->getId());
+        $this->assertEquals($page1->getUuid(), $result[0]->getId());
         $this->assertTrue($result[1]->hasChildren());
         $this->assertEmpty($result[1]->getChildren());
         $this->assertEquals($page2->getUuid(), $result[2]->getId());
@@ -782,9 +782,9 @@ class ContentRepositoryTest extends SuluTestCase
         );
 
         $this->assertCount(5, $result);
-        $this->assertEquals('/', $result[0]->getPath());
-        $this->assertEquals('/test-1', $result[1]->getPath());
-        $this->assertEquals('/test-1/test-1-1', $result[2]->getPath());
+        $this->assertEquals('/test-1', $result[0]->getPath());
+        $this->assertEquals('/test-1/test-1-1', $result[1]->getPath());
+        $this->assertEquals('/', $result[2]->getPath());
         $this->assertEquals('/test-2', $result[3]->getPath());
         $this->assertEquals('/test-3', $result[4]->getPath());
     }
