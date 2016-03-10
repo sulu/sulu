@@ -266,10 +266,21 @@ class PhpcrMapper extends RlpMapper
         }
 
         if ($route->hasProperty('sulu:content') && $route->hasProperty('sulu:history')) {
+            if (!$route->getPropertyValue('sulu:history')) {
                 /** @var NodeInterface $content */
                 $content = $route->getPropertyValue('sulu:content');
 
                 return $content->getIdentifier();
+            } else {
+                // get path from history node
+                /** @var NodeInterface $realPath */
+                $realPath = $route->getPropertyValue('sulu:content');
+
+                throw new ResourceLocatorMovedException(
+                    $this->getResourceLocator($realPath->getPath(), $webspaceKey, $languageCode, $segmentKey),
+                    $realPath->getIdentifier()
+                );
+            }
         } else {
             throw new ResourceLocatorNotFoundException(sprintf(
                 'Route has "%s" does not have either the "sulu:content" or "sulu:history" properties',
@@ -354,6 +365,13 @@ class PhpcrMapper extends RlpMapper
         $routeNode = $routes->getNode(ltrim($src, '/'));
         if (!$routeNode->hasProperty('sulu:content')) {
             throw new ResourceLocatorNotFoundException();
+        } elseif ($routeNode->getPropertyValue('sulu:history')) {
+            $realPath = $routeNode->getPropertyValue('sulu:content');
+
+            throw new ResourceLocatorMovedException(
+                $this->getResourceLocator($realPath->getPath(), $webspaceKey, $languageCode, $segmentKey),
+                $realPath->getIdentifier()
+            );
         }
 
         $contentNode = $routeNode->getPropertyValue('sulu:content');
