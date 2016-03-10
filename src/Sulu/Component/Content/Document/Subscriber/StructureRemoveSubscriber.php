@@ -46,7 +46,7 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
     public function handleRemove(RemoveEvent $event)
     {
         $document = $event->getDocument();
-        $this->removeDocument($event->getContext()->getDocumentManager(), $document);
+        $this->removeDocument($event->getManager(), $document);
     }
 
     public function removeDocument(DocumentManagerInterface $documentManager, $document)

@@ -34,7 +34,7 @@ class OrderSubscriberTest extends SubscriberTestCase
         $this->subscriber = new OrderSubscriber();
         $this->persistEvent->getDocument()->willReturn(new TestOrderDocument(null));
         $this->persistEvent->getNode()->willReturn($this->node->reveal());
-        $this->context->getInspector()->willReturn($this->inspector->reveal());
+        $this->manager->getInspector()->willReturn($this->inspector->reveal());
     }
 
     /**
@@ -59,7 +59,7 @@ class OrderSubscriberTest extends SubscriberTestCase
         ]);
 
         $reorderEvent = $this->prophesize(ReorderEvent::class);
-        $reorderEvent->getContext()->willReturn($this->context->reveal());
+        $reorderEvent->getManager()->willReturn($this->manager->reveal());
         $reorderEvent->getDocument()->willReturn($document);
 
         $this->subscriber->handleReorder($reorderEvent->reveal());
@@ -77,7 +77,7 @@ class OrderSubscriberTest extends SubscriberTestCase
         $document = new \stdClass();
 
         $reorderEvent = $this->prophesize(ReorderEvent::class);
-        $reorderEvent->getContext()->willReturn($this->context->reveal());
+        $reorderEvent->getManager()->willReturn($this->manager->reveal());
         $reorderEvent->getDocument()->willReturn($document);
 
         $this->subscriber->handleReorder($reorderEvent->reveal());
@@ -93,7 +93,7 @@ class OrderSubscriberTest extends SubscriberTestCase
 
         $reorderEvent = $this->prophesize(ReorderEvent::class);
         $reorderEvent->getDocument()->willReturn($document->reveal());
-        $reorderEvent->getContext()->willReturn($this->context->reveal());
+        $reorderEvent->getManager()->willReturn($this->manager->reveal());
         $this->inspector->getParent($document->reveal())->willReturn(null);
 
         $this->subscriber->handleReorder($reorderEvent->reveal());

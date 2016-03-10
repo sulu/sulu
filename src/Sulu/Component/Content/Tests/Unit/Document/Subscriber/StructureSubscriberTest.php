@@ -98,12 +98,12 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->propertyFactory = $this->prophesize(LegacyPropertyFactory::class);
         $this->document = $this->prophesize(StructureBehavior::class);
         $this->inspector = $this->prophesize(DocumentInspector::class);
-        $this->context->getInspector()->willReturn($this->inspector->reveal());
+        $this->manager->getInspector()->willReturn($this->inspector->reveal());
 
         $this->document->getStructureType()->willReturn('foobar');
         $this->inspector->getStructureMetadata(Argument::any())->willReturn($this->structureMetadata);
         $this->persistEvent->getLocale()->willReturn('en');
-        $this->persistEvent->getContext()->willReturn($this->context->reveal());
+        $this->persistEvent->getManager()->willReturn($this->manager->reveal());
 
         $this->subscriber = new StructureSubscriber(
             $this->encoder->reveal(),

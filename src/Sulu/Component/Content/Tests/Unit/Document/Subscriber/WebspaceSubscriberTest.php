@@ -38,7 +38,7 @@ class WebspaceSubscriberTest extends SubscriberTestCase
     {
         $document = $this->prophesize(WebspaceBehavior::class);
         $this->persistEvent->getDocument()->willReturn($document);
-        $this->context->getInspector()->willReturn($this->inspector->reveal());
+        $this->manager->getInspector()->willReturn($this->inspector->reveal());
 
         $this->inspector->getWebspace($document->reveal())->willReturn('example');
         $this->accessor->set('webspaceName', 'example')->shouldBeCalled();

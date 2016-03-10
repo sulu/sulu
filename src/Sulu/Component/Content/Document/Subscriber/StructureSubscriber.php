@@ -119,7 +119,7 @@ class StructureSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $structureMetadata = $event->getContext()->getInspector()->getStructureMetadata($document);
+        $structureMetadata = $event->getManager()->getInspector()->getStructureMetadata($document);
 
         $structure = $document->getStructure();
         if ($structure instanceof ManagedStructure) {
@@ -154,7 +154,7 @@ class StructureSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $inspector = $event->getContext()->getInspector();
+        $inspector = $event->getManager()->getInspector();
 
         $node = $event->getNode();
         $propertyName = $this->getStructureTypePropertyName($document, $event->getLocale());
@@ -198,7 +198,7 @@ class StructureSubscriber implements EventSubscriberInterface
 
         $node = $event->getNode();
         $locale = $event->getLocale();
-        $inspector = $event->getContext()->getInspector();
+        $inspector = $event->getManager()->getInspector();
 
         $this->mapContentToNode($inspector, $document, $node, $locale);
 

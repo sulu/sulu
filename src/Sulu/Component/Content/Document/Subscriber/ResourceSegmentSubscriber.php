@@ -69,8 +69,8 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
         }
 
         $node = $event->getNode();
-        $property = $this->getResourceSegmentProperty($event->getContext()->getInspector(), $document);
-        $originalLocale = $event->getContext()->getInspector()->getOriginalLocale($document);
+        $property = $this->getResourceSegmentProperty($event->getManager()->getInspector(), $document);
+        $originalLocale = $event->getManager()->getInspector()->getOriginalLocale($document);
         $segment = $node->getPropertyValueWithDefault(
             $this->encoder->localizedSystemName(
                 $property->getName(),
@@ -97,7 +97,7 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $property = $this->getResourceSegmentProperty($event->getContext()->getInspector(), $document);
+        $property = $this->getResourceSegmentProperty($event->getManager()->getInspector(), $document);
         $document->getStructure()->getProperty(
             $property->getName()
         )->setValue($document->getResourceSegment());
