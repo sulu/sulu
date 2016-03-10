@@ -5,6 +5,7 @@ OCWD=`pwd`
 BUNDLE=""
 SULU_ORM=${SULU_ORM:-mysql}
 SULU_PHPCR=${SULU_PHPCR:-doctrine_dbal}
+INTERNPATH="Resources/public/js/tests/intern.js"
 
 source "$(dirname "$0")""/inc/runtestcommon.inc.sh"
 
@@ -98,6 +99,7 @@ else
 fi
 
 for BUNDLE in $BUNDLES; do
+    failed=false
 
     BUNDLE_DIR=`dirname $BUNDLE`
     BUNDLE_NAME=`basename $BUNDLE_DIR`
@@ -133,15 +135,29 @@ for BUNDLE in $BUNDLES; do
         bash $BEFORE_SCRIPT
     fi
 
+    comment "Running javascript tests"
+    if [ -e $INTERNPATH ]; then
+        npm install
+        ./node_modules/intern/bin/intern-client.js config=Resources/public/js/tests/intern.js
+
+        if [ $? -ne 0 ]; then
+            failed=true
+        fi
+    fi
+
     cd -
     comment "Running tests"
 
     phpunit --configuration phpunit.travis.xml.dist $BUNDLE_DIR/Tests
 
     if [ $? -ne 0 ]; then
-        echo $BUNDLE_NAME >> /tmp/failed.tests
+        failed=true
     fi
 
+    if [ $failed = true ]; then
+        echo $BUNDLE_NAME >> /tmp/failed.tests
+    fi
+    
     comment "Restart jackrabbit"
 
     PID=`ps -ef | grep "jackrabbit-standalone" | grep -v grep | awk '{ print $2 }'`
