@@ -109,26 +109,14 @@ class WebspaceCollectionBuilder
         $this->portalInformations = [];
 
         foreach ($finder as $file) {
-            /* @var SplFileInfo $file */
-            try {
-                // add file resource for cache invalidation
-                $collection->addResource(new FileResource($file->getRealPath()));
+            // add file resource for cache invalidation
+            $collection->addResource(new FileResource($file->getRealPath()));
 
-                /** @var Webspace $webspace */
-                $webspace = $this->loader->load($file->getRealPath());
-                $this->webspaces[] = $webspace;
+            /** @var Webspace $webspace */
+            $webspace = $this->loader->load($file->getRealPath());
+            $this->webspaces[] = $webspace;
 
-                $this->buildPortals($webspace);
-            } catch (\InvalidArgumentException $iae) {
-                $this->logger->warning(
-                    'Error in file "' . $file->getRealPath() . '" (' . $iae->getMessage(
-                    ) . '). The file has been skipped'
-                );
-            } catch (InvalidUrlDefinitionException $iude) {
-                $this->logger->warning(
-                    'Error: "' . $iude->getMessage() . '" in "' . $file->getRealPath() . '". File was skipped'
-                );
-            }
+            $this->buildPortals($webspace);
         }
 
         if (0 === count($this->webspaces)) {
