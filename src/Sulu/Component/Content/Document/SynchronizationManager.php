@@ -139,7 +139,7 @@ class SynchronizationManager
         ], $options);
 
         $defaultManager = $this->registry->getManager();
-        $publishManager = $this->registry->getManager($this->publishManagerName);
+        $publishManager = $this->getPublishDocumentManager();
 
         // see comment in same condition above.
         if ($publishManager === $defaultManager) {
@@ -184,9 +184,9 @@ class SynchronizationManager
         // add the document manager name to the list of synchronized
         // document managers directly on the PHPCR node.
         //
-        // NOTE: why do we store an array instead of a boolean? (i.e. we only
-        //       have one synchronization target) - we are supporting the possiblity
-        //       that there MIGHT be more than one synchronization target.
+        // we store an array instead of a boolean because we are supporting the
+        // possiblity that there MAY one day be more than one synchronization
+        // target.
         //
         // TODO: We should should set this value on the document and re-persist
         //       it rather than leak localization behavior here, however this is
@@ -213,6 +213,8 @@ class SynchronizationManager
      * document (otherwise the system will attempt to create a new document and
      * fail).
      *
+     * We also ensure that any immediately related documents are also registered.
+     *
      * @param SynchronizeBehavior $document
      */
     private function registerDocumentWithPDM(SynchronizeBehavior $document)
@@ -223,6 +225,8 @@ class SynchronizationManager
         $metadata = $defaultManager->getMetadataFactory()->getMetadataForClass(get_class($document));
         $reflectionClass = $metadata->getReflectionClass();
 
+        // iterate over the field mappings for the document, if they resolve to
+        // an object then try and register it with the PDM.
         foreach (array_keys($metadata->getFieldMappings()) as $field) {
             $reflectionProperty = $reflectionClass->getProperty($field);
             $reflectionProperty->setAccessible(true);
@@ -232,41 +236,50 @@ class SynchronizationManager
                 continue;
             }
 
-            $this->registerSingleDocumentWithPDM($propertyValue, $document);
+            // if the default document manager does not have this object then it is
+            // not a candidate for being persisted (e.g. it might be a \DateTime
+            // object).
+            if (false === $defaultManager->getRegistry()->hasDocument($propertyValue)) {
+                continue;
+            }
+
+            $this->registerSingleDocumentWithPDM($propertyValue);
         }
 
         // TODO: Workaround for the fact that "parent" is not in the metadata,
         // see: https://github.com/sulu-io/sulu-document-manager/issues/67
         if ($document instanceof ParentBehavior) {
-            $this->registerSingleDocumentWithPDM($document->getParent(), $document);
+            $this->registerSingleDocumentWithPDM($document->getParent(), true);
         }
     }
 
-    private function registerSingleDocumentWithPDM($object, $parentObject = null)
+    private function registerSingleDocumentWithPDM($object, $create = false)
     {
         $publishManager = $this->getPublishDocumentManager();
         $defaultManager = $this->registry->getManager();
         $ddmInspector = $defaultManager->getInspector();
 
-        // if the default document manager does not have this object then it is
-        // not a candidate for being persisted (e.g. it might be a \DateTime
-        // object).
-        if (false === $defaultManager->getRegistry()->hasDocument($object)) {
-            return;
-        }
-
         $locale = $ddmInspector->getLocale($object);
         $pdmRegistry = $publishManager->getRegistry();
 
-        // if the PDM registry already has the document in its registry, then
-        // there is nothing to do.
+        // if the PDM registry already has the document, then
+        // there is nothing to do - the document manager will
+        // handle the rest.
         if (true === $pdmRegistry->hasDocument($object)) {
             return;
         }
 
         // see if we can resolve the corresponding node in the PDM.
-        // if we cannot then the system is free to try and create a new document.
-        if (false === $uuid = $this->resolvePDMUUID($object, $parentObject)) {
+        // if we cannot then we either return and let the document
+        // manager create the new node, or, if $create is true, create
+        // the missing node (this happens when registering a document
+        // which is a relation to the incoming DDM document).
+        if (false === $uuid = $this->resolvePDMUUID($object)) {
+            if (false === $create) {
+                return;
+            }
+
+            $this->createPDMNode($ddmInspector->getPath($object), $ddmInspector->getUuid($object));
             return;
         }
 
@@ -279,33 +292,34 @@ class SynchronizationManager
         );
     }
 
-    // if the UUID does not exist, we check to see if the path exsits.
-    // if neither the UUID or path exist, then we return, and the PDM
-    // should create a new document.
-    //
-    // if the path does not exist and the object is a proxy object, then
-    // something is wrong as the fact that it is a proxy object indicates
-    // that it has been persisted (and flushed) in the DDM but does not
-    // exist on the PDM. this should not happen.
-    //
-    // in the case the UUID does NOT exist we assume that in a valid system
-    // that path will ALSO NOT exist. If the path DOES exist, then it means that
-    // the corresponding PHPCR nodes were created independently of each
-    // other and bypassed the syncrhonization system.
-    //
-    // ^^ update this documentation.
-    private function resolvePDMUUID($object, $parentObject)
+    /**
+     * If possible, resolve the UUID of the node in the PDM corresponding to
+     * the DDM node.
+     *
+     * If the UUID does not exist, we check to see if the path exsits.
+     * if neither the path or UUID exist, then the PDM should create a new
+     * document and we ensure that the PARENT path exists and if it doesn't
+     * we syncronize the ancestor nodes from the DDM.
+     *
+     * In the case the UUID does not exist we assume that in a valid system
+     * that path will also NOT EXIST. If the path does exist, then it means that
+     * the corresponding PHPCR nodes were created independently of each
+     * other and bypassed the syncrhonization system and we throw an exception.
+     *
+     * @throws \RuntimeException If the UUID could not be resolved and it would be
+     *                           invalid to implicitly allow the node to be created.
+     */
+    private function resolvePDMUUID($object)
     {
         $pdmNodeManager = $this->getPublishDocumentManager()->getNodeManager();
         $defaultManager = $this->registry->getManager();
         $ddmInspector = $defaultManager->getInspector();
         $uuid = $ddmInspector->getUUid($object);
+        $path = $ddmInspector->getPath($object);
 
         if (true === $pdmNodeManager->has($uuid)) {
             return $uuid;
         }
-
-        $path = $ddmInspector->getPath($object);
 
         if (false === $pdmNodeManager->has($path)) {
 
@@ -314,27 +328,14 @@ class SynchronizationManager
             // the DDM.
             $parentPath = PathHelper::getParentPath($path);
             if (false === $pdmNodeManager->has($parentPath)) {
-                $this->syncPDMParentPath($parentPath);
+                $this->syncPDMPath($parentPath);
                 return false;
-            }
-
-            // TODO: Is this still necessary??
-            if ($parentObject) {
-                if (ClassNameInflector::isProxyClassName(get_class($object))) {
-                    throw new \RuntimeException(sprintf(
-                        'Proxy class relation "%s" (%s)) of document "%s" does not exist in publish '.
-                        'document manager. The document that the proxy class represents logically SHOULD have already been persisted in the default ' .
-                        'document manager and thus propagated to the publish workspace.',
-                        $ddmInspector->getPath($object),
-                        get_class($object),
-                        $ddmInspector->getPath($parentObject)
-                    ));
-                }
             }
 
             // otherwise we can safely create the document.
             return false;
         }
+
         throw new \RuntimeException(sprintf(
             'Publish document manager already has a node at path "%s" but ' .
             'incoming UUID `%s` does not match existing UUID: "%s".',
@@ -345,8 +346,10 @@ class SynchronizationManager
     /**
      * Return routes related to the document.
      *
+     * See caller TODO.
+     *
      * @param DocumentInspector
-     * @param object $document
+     * @param ResourceSegmentBehavior $document
      */
     private function getDocumentRoutes(DocumentInspector $inspector, ResourceSegmentBehavior $document)
     {
@@ -363,23 +366,24 @@ class SynchronizationManager
         return $routes;
     }
 
-    private function syncPDMParentPath($parentPath)
+    /**
+     * Sync the given path from the DDM to the PDM, preserving
+     * the UUIDs.
+     *
+     * @param string $path
+     */
+    private function syncPDMPath($path)
     {
         $ddmNodeManager = $this->registry->getManager()->getNodeManager();
         $pdmNodeManager = $this->getPublishDocumentManager()->getNodeManager();
-        $segments = explode('/', $parentPath);
+        $segments = explode('/', $path);
         $stack = [];
 
         foreach ($segments as $segment) {
             $stack[] = $segment;
             $path = implode('/', $stack) ?: '/';
             $ddmNode = $ddmNodeManager->find($path);
-            $pdmNode = $pdmNodeManager->createPath($path, false);
-            if (false === $pdmNode->isNew()) {
-                continue;
-            }
-            $pdmNode->addMixin('mix:referenceable');
-            $pdmNode->setProperty('jcr:uuid', $ddmNode->getIdentifier());
+            $this->createPDMNode($path, $ddmNode->getIdentifier());
         }
 
         // flush the PHPCR session. if we do not save() here, then the node
@@ -388,5 +392,27 @@ class SynchronizationManager
         //
         // TODO: create an issue for this.
         $pdmNodeManager->save();
+    }
+
+    /**
+     * Create a node in the PDM manager at the given path with the given UUID.
+     *
+     * @param string $path
+     * @param string $uuid
+     */
+    private function createPDMNode($path, $uuid)
+    {
+        $pdmNodeManager = $this->getPublishDocumentManager()->getNodeManager();
+
+        // TODO: Make UUID an argument of the createPath method? If so why not
+        //       also all other properties of the node?
+        $pdmNode = $pdmNodeManager->createPath($path, false);
+
+        if (false === $pdmNode->isNew()) {
+            return;
+        }
+
+        $pdmNode->addMixin('mix:referenceable');
+        $pdmNode->setProperty('jcr:uuid', $uuid);
     }
 }
