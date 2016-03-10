@@ -200,11 +200,12 @@ class SynchronizationManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testDocumentHasParentBehavior()
     {
+        $parent = new \stdClass();
         $this->document->willImplement(ParentBehavior::class);
 
         $this->configureScenario([]);
 
-        $this->document->setParent(null)->shouldBeCalled();
+        $this->document->getParent()->willReturn($parent);
         $this->pdm->persist(Argument::cetera())->shouldBeCalled();
 
         $this->syncManager->synchronizeSingle($this->document->reveal());

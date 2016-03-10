@@ -28,6 +28,14 @@ use PHPCR\Util\PathHelper;
  * from the DEFAULT document manger to the PUBLISH document manager.
  *
  * NOTE: In the future multiple document managers may be supported.
+ *
+ * NOTE: Much of the logic in this class is about ensuring that corresponding
+ *       nodes exist in the PDM - this could be simplified (and made much more
+ *       efficient) if we were to use Jackalope observation to implement Event
+ *       listeners at the PHPCR level, however this feature is currently not
+ *       supported.
+ *
+ *       See: https://github.com/jackalope/jackalope/pull/241
  */
 class SynchronizationManager
 {
@@ -260,8 +268,6 @@ class SynchronizationManager
         $publishManager = $this->getPublishDocumentManager();
         $defaultManager = $this->registry->getManager();
         $ddmInspector = $defaultManager->getInspector();
-
-        $locale = $ddmInspector->getLocale($object);
         $pdmRegistry = $publishManager->getRegistry();
 
         // if the PDM registry already has the document, then
@@ -270,6 +276,8 @@ class SynchronizationManager
         if (true === $pdmRegistry->hasDocument($object)) {
             return;
         }
+
+        $locale = $ddmInspector->getLocale($object);
 
         // see if we can resolve the corresponding node in the PDM.
         // if we cannot then we either return and let the document

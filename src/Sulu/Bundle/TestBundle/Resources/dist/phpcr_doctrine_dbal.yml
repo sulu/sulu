@@ -1,5 +1,3 @@
-doctrine_phpcr:
-    session:
         backend:
             check_login_on_service: false
             type: doctrinedbal

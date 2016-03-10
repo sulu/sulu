@@ -107,7 +107,6 @@ class SyncronizationManagerTest extends SuluTestCase
         $this->manager->flush();
         $this->manager->getNodeManager()->createPath('/cmf/sulu_io/contents/foo/bar');
         $this->manager->move($page, '/cmf/sulu_io/contents/foo/bar');
-        var_dump('Moved');
 
         $this->syncManager->synchronizeFull($page);
 
