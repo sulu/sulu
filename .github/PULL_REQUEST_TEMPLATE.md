@@ -15,22 +15,23 @@ Explain the contents of the PR.
 
 #### Why?
 
-Which problem does the PR fix?
+Which problem does the PR fix? (remove this section if you linked an issue above)
 
 #### Example Usage
 
 ~~~php
+// If you added new features, show examples of how to use them here
+// (remove this section if not a new feature)
+
 $foo = new Foo();
 
 // Now we can do
 $foo->doSomething();
-
-// Remove this section if not needed
 ~~~
 
 #### BC Breaks/Deprecations
 
-Describe BC breaks/deprecations here (Remove this section if not needed).
+Describe BC breaks/deprecations here. (remove this section if not needed)
 
 #### To Do
 
