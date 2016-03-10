@@ -19,7 +19,6 @@ use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -226,7 +225,7 @@ class ContentRouteProvider implements RouteProviderInterface
         // redirect by information from webspace config
         return new Route(
             $request->getPathInfo(), [
-                '_controller' => 'SuluWebsiteBundle:Default:redirectWebspace',
+                '_controller' => 'SuluWebsiteBundle:Redirect:redirectWebspace',
                 'url' => $this->requestAnalyzer->getPortalUrl(),
                 'redirect' => $this->requestAnalyzer->getRedirect(),
             ]
@@ -244,7 +243,7 @@ class ContentRouteProvider implements RouteProviderInterface
         // redirect to linked page
         return new Route(
             $request->getPathInfo(), [
-                '_controller' => 'SuluWebsiteBundle:Default:redirect',
+                '_controller' => 'SuluWebsiteBundle:Redirect:redirect',
                 'url' => $url,
             ]
         );

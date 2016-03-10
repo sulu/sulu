@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Sulu.
  *
@@ -9,70 +8,63 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\WebsiteBundle\Controller;
+namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sulu\Bundle\WebsiteBundle\Controller;
+
+use Sulu\Bundle\WebsiteBundle\Controller\DefaultController;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var DefaultController
-     */
-    private $defaultController;
-
-    protected function setUp()
-    {
-        $this->defaultController = new DefaultController();
-    }
-
-    /**
-     * @param $getValueMap
-     * @param $uri
-     *
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    private function getRequestMock($requestUrl, $portalUrl, $redirectUrl = null)
-    {
-        $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')->getMock();
-        $request->expects($this->any())->method('get')->will(
-            $this->returnValueMap(
-                [
-                    ['url', null, false, $portalUrl],
-                    ['redirect', null, false, $redirectUrl],
-                ]
-            )
-        );
-        $request->expects($this->any())->method('getUri')->will($this->returnValue($requestUrl));
-
-        return $request;
-    }
-
-    public function provideRedirectAction()
+    public function provideForwardData()
     {
         return [
-            ['http://sulu.lo/articles?foo=bar', 'sulu.lo', 'sulu.lo/en', 'http://sulu.lo/en/articles?foo=bar'],
-            ['http://sulu.lo/articles?foo=bar&bar=boo', 'sulu.lo', 'sulu.lo/en', 'http://sulu.lo/en/articles?foo=bar&bar=boo'],
-            ['http://sulu.lo/articles/?foo=bar', 'sulu.lo', 'sulu.lo/en', 'http://sulu.lo/en/articles?foo=bar'],
-            ['http://sulu.lo/articles/?foo=bar&bar=boo', 'sulu.lo', 'sulu.lo/en', 'http://sulu.lo/en/articles?foo=bar&bar=boo'],
-            ['http://sulu.lo/en/articles/?foo=bar', 'sulu.lo', null, 'http://sulu.lo/en/articles?foo=bar'],
-            ['http://sulu.lo/en/articles/?foo=bar&bar=boo', 'sulu.lo', null, 'http://sulu.lo/en/articles?foo=bar&bar=boo'],
-            ['sulu.lo:8001/', 'sulu.lo', 'sulu.lo/en', 'http://sulu.lo:8001/en'],
-            ['sulu.lo:8001/#foobar', 'sulu.lo', 'sulu.lo/en', 'http://sulu.lo:8001/en#foobar'],
-            ['sulu.lo:8001/articles#foobar', 'sulu.lo', 'sulu.lo/en', 'http://sulu.lo:8001/en/articles#foobar'],
-            ['sulu-redirect.lo/', 'sulu-redirect.lo', 'sulu.lo', 'http://sulu.lo'],
-            ['sulu-redirect.lo/', 'sulu-redirect.lo', 'sulu.lo', 'http://sulu.lo'],
-            ['http://sulu.lo:8002/', 'sulu.lo', 'sulu.lo/en', 'http://sulu.lo:8002/en'],
-            ['http://sulu.lo/articles', 'sulu.lo/en', 'sulu.lo/de', 'http://sulu.lo/de/articles'],
+            ['SuluWebsiteBundle:Redirect:redirectWebspace', 'redirectWebspaceAction'],
+            ['SuluWebsiteBundle:Redirect:redirect', 'redirectAction'],
         ];
     }
 
     /**
-     * @dataProvider provideRedirectAction
+     * @dataProvider provideForwardData
      */
-    public function testRedirectAction($requestUri, $portalUrl, $redirectUrl, $expectedTargetUrl)
+    public function testForward($controller, $method)
     {
-        $request = $this->getRequestMock($requestUri, $portalUrl, $redirectUrl);
+        $query = [];
+        $attributes = [];
 
-        $response = $this->defaultController->redirectWebspaceAction($request);
+        $subRequest = $this->prophesize(Request::class);
 
-        $this->assertEquals($expectedTargetUrl, $response->getTargetUrl());
+        $attributesBag = $this->prophesize(ParameterBag::class);
+        $attributesBag->all()->willReturn($attributes);
+
+        $queryBag = $this->prophesize(ParameterBag::class);
+        $queryBag->all()->willReturn($query);
+
+        $request = $this->prophesize(Request::class);
+        $request->duplicate(
+            $query,
+            null,
+            array_merge($attributes, ['_controller' => $controller])
+        )->willReturn($subRequest->reveal());
+        $request->reveal()->attributes = $attributesBag->reveal();
+        $request->reveal()->query = $queryBag->reveal();
+
+        $requestStack = $this->prophesize(RequestStack::class);
+        $requestStack->getCurrentRequest()->willReturn($request->reveal());
+
+        $httpKernel = $this->prophesize(HttpKernelInterface::class);
+        $httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST)->shouldBeCalledTimes(1);
+
+        $container = $this->prophesize(ContainerInterface::class);
+        $container->get('request_stack')->willReturn($requestStack->reveal());
+        $container->get('http_kernel')->willReturn($httpKernel->reveal());
+
+        $controller = new DefaultController();
+        $controller->setContainer($container->reveal());
+
+        $controller->{$method}($request->reveal());
     }
 }

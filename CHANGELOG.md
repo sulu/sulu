@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2107 [WebsiteBundle]       Fixed portal redirect to local
     * BUGFIX      #2090 [MediaBundle]         Fixed fallback of media file-version meta
     * BUGFIX      #2092 [ContactBundle]       Fixed new contact when creating a new contact in the account
     * BUGFIX      #2100 [ContactBundle]       Fixed switching tab in contact and account after save

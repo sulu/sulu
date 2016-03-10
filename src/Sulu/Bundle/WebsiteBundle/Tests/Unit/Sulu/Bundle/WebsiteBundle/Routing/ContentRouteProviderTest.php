@@ -164,7 +164,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
-        $this->assertEquals('SuluWebsiteBundle:Default:redirectWebspace', $route->getDefaults()['_controller']);
+        $this->assertEquals('SuluWebsiteBundle:Redirect:redirectWebspace', $route->getDefaults()['_controller']);
         $this->assertEquals('sulu.lo/de/', $route->getDefaults()['url']);
         $this->assertEquals('sulu.lo/de', $route->getDefaults()['redirect']);
     }
@@ -241,7 +241,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
-        $this->assertEquals('SuluWebsiteBundle:Default:redirectWebspace', $route->getDefaults()['_controller']);
+        $this->assertEquals('SuluWebsiteBundle:Redirect:redirectWebspace', $route->getDefaults()['_controller']);
         $this->assertEquals('sulu.lo', $route->getDefaults()['url']);
         $this->assertEquals('sulu.lo/en-us', $route->getDefaults()['redirect']);
     }
@@ -319,7 +319,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
-        $this->assertEquals('SuluWebsiteBundle:Default:redirectWebspace', $route->getDefaults()['_controller']);
+        $this->assertEquals('SuluWebsiteBundle:Redirect:redirectWebspace', $route->getDefaults()['_controller']);
         $this->assertEquals('sulu-redirect.lo', $route->getDefaults()['url']);
         $this->assertEquals('sulu.lo', $route->getDefaults()['redirect']);
     }
@@ -367,7 +367,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
-        $this->assertEquals('SuluWebsiteBundle:Default:redirect', $route->getDefaults()['_controller']);
+        $this->assertEquals('SuluWebsiteBundle:Redirect:redirect', $route->getDefaults()['_controller']);
         $this->assertEquals('/de/other-test', $route->getDefaults()['url']);
     }
 
@@ -414,7 +414,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
-        $this->assertEquals('SuluWebsiteBundle:Default:redirect', $route->getDefaults()['_controller']);
+        $this->assertEquals('SuluWebsiteBundle:Redirect:redirect', $route->getDefaults()['_controller']);
         $this->assertEquals('http://www.example.org', $route->getDefaults()['url']);
     }
 
@@ -458,7 +458,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
-        $this->assertEquals('SuluWebsiteBundle:Default:redirectWebspace', $route->getDefaults()['_controller']);
+        $this->assertEquals('SuluWebsiteBundle:Redirect:redirectWebspace', $route->getDefaults()['_controller']);
         $this->assertEquals('sulu.lo', $route->getDefaults()['url']);
     }
 
@@ -502,7 +502,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
-        $this->assertEquals('SuluWebsiteBundle:Default:redirectWebspace', $route->getDefaults()['_controller']);
+        $this->assertEquals('SuluWebsiteBundle:Redirect:redirectWebspace', $route->getDefaults()['_controller']);
         $this->assertEquals('sulu.lo', $route->getDefaults()['url']);
     }
 
@@ -548,7 +548,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
-        $this->assertEquals('SuluWebsiteBundle:Default:redirect', $route->getDefaults()['_controller']);
+        $this->assertEquals('SuluWebsiteBundle:Redirect:redirect', $route->getDefaults()['_controller']);
         $this->assertEquals('/de/new-test', $route->getDefaults()['url']);
     }
 
