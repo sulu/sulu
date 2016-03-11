@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2114 [All]                 Update ffmpeg bundle and lib
     * ENHANCEMENT #2116 [All]                 Made restart of jackrabbit between tests configureable
     * BUGFIX      #2090 [MediaBundle]         Fixed fallback of media file-version meta
     * BUGFIX      #2092 [ContactBundle]       Fixed new contact when creating a new contact in the account
