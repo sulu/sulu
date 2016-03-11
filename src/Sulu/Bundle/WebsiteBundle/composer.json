@@ -26,7 +26,7 @@
         "phpunit/phpunit": "3.7.*",
         "phpspec/prophecy-phpunit": "1.0.*",
         "sulu/test-bundle": "dev-develop",
-        "matthiasnoback/symfony-dependency-injection-test": "~0.7.1"
+        "matthiasnoback/symfony-dependency-injection-test": "^0.7.3"
     },
     "autoload": {
         "psr-0": {

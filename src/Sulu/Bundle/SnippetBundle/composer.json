@@ -22,7 +22,7 @@
         "symfony-cmf/testing": "~1.1",
         "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "3.7.*",
-        "matthiasnoback/symfony-dependency-injection-test": "~0.7.1"
+        "matthiasnoback/symfony-dependency-injection-test": "^0.7.3"
     },
     "autoload": {
         "psr-4": {
