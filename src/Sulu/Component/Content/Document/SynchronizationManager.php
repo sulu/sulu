@@ -186,7 +186,7 @@ class SynchronizationManager
             [
                 'path' => $path,
             ]
-        );
+        );false
         // the document is now synchronized with the publish workspace...
 
         // add the document manager name to the list of synchronized
@@ -393,7 +393,7 @@ class SynchronizationManager
             $stack[] = $segment;
             $path = implode('/', $stack) ?: '/';
             $ddmNode = $ddmNodeManager->find($path);
-            $this->createPDMNode($path, $ddmNode->getIdentifier());
+            $pdmNodeManager->createPath($path, $ddmNode->getIdentifier());
         }
 
         // flush the PHPCR session. if we do not save() here, then the node
@@ -402,27 +402,5 @@ class SynchronizationManager
         //
         // TODO: create an issue for this.
         $pdmNodeManager->save();
-    }
-
-    /**
-     * Create a node in the PDM manager at the given path with the given UUID.
-     *
-     * @param string $path
-     * @param string $uuid
-     */
-    private function createPDMNode($path, $uuid)
-    {
-        $pdmNodeManager = $this->getPublishDocumentManager()->getNodeManager();
-
-        // TODO: Make UUID an argument of the createPath method? If so why not
-        //       also all other properties of the node?
-        $pdmNode = $pdmNodeManager->createPath($path, false);
-
-        if (false === $pdmNode->isNew()) {
-            return;
-        }
-
-        $pdmNode->addMixin('mix:referenceable');
-        $pdmNode->setProperty('jcr:uuid', $uuid);
     }
 }

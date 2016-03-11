@@ -131,12 +131,12 @@ class SyncronizationManagerTest extends SuluTestCase
     private function assertExistsInPublishDocumentManager($document)
     {
         $path = $this->manager->getInspector()->getPath($document);
-        $this->assertTrue($this->publishDocumentManager->getNodeManager()->has($path));
+        $this->assertTrue($this->publishDocumentManager->getNodeManager()->has($path), sprintf('Document "%s" exists in PDM', $path));
     }
 
     private function assertNotExistsInPublishDocumentManager($document)
     {
         $path = $this->manager->getInspector()->getPath($document);
-        $this->assertFalse($this->publishDocumentManager->getNodeManager()->has($path));
+        $this->assertFalse($this->publishDocumentManager->getNodeManager()->has($path), 'Page does not exist in PDM');
     }
 }

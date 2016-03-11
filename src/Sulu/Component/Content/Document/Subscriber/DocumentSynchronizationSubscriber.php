@@ -18,7 +18,6 @@ use Sulu\Component\Content\Document\SynchronizationManager;
 use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
-use Sulu\Component\DocumentManager\DocumentManagerContext;
 
 class DocumentSynchronizationSubscriber implements EventSubscriberInterface
 {
@@ -94,14 +93,14 @@ class DocumentSynchronizationSubscriber implements EventSubscriberInterface
      */
     public function handlePersist(PersistEvent $event)
     {
-        $context = $event->getContext();
+        $manager = $event->getManager();
 
         // do not do anything if the default and publish managers are the same.
         if ($this->defaultManager === $this->syncManager->getPublishDocumentManager()) {
             return;
         }
 
-        if (false === $this->isEmittingManagerDefaultManager($context)) {
+        if (false === $this->isEmittingManagerDefaultManager($manager)) {
             return;
         }
         // now we now deal only with the DEFAULT manager...
@@ -116,7 +115,7 @@ class DocumentSynchronizationSubscriber implements EventSubscriberInterface
         // only sync new documents automatically
         if (false === $event->getNode()->isNew()) {
             // otherwise the node is now capable of synchronized with all the managers.
-            $event->getContext()
+            $event->getManager()
                 ->getMetadataFactory()
                 ->getMetadataForClass(get_class($document))
                 ->setFieldValue($document, 'synchronizedManagers', []);
@@ -133,8 +132,8 @@ class DocumentSynchronizationSubscriber implements EventSubscriberInterface
 
     public function handleRemove(RemoveEvent $removeEvent)
     {
-        $context = $removeEvent->getContext();
-        if (false === $this->isEmittingManagerDefaultManager($context)) {
+        $manager = $removeEvent->getManager();
+        if (false === $this->isEmittingManagerDefaultManager($manager)) {
             return;
         }
 
@@ -159,9 +158,9 @@ class DocumentSynchronizationSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $context = $event->getContext();
+        $manager = $event->getManager();
 
-        if (false === $this->isEmittingManagerDefaultManager($context)) {
+        if (false === $this->isEmittingManagerDefaultManager($manager)) {
             return;
         }
 
@@ -204,12 +203,10 @@ class DocumentSynchronizationSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function isEmittingManagerDefaultManager(DocumentManagerContext $context)
+    private function isEmittingManagerDefaultManager(DocumentManagerInterface $manager)
     {
-        $emittingManager = $context->getDocumentManager();
-
         // do nothing, see same condition in handlePersist.
-        if ($emittingManager === $this->defaultManager) {
+        if ($manager === $this->defaultManager) {
             return true;
         }
 
