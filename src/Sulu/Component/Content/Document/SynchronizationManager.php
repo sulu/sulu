@@ -186,7 +186,7 @@ class SynchronizationManager
             [
                 'path' => $path,
             ]
-        );false
+        );
         // the document is now synchronized with the publish workspace...
 
         // add the document manager name to the list of synchronized
@@ -289,7 +289,8 @@ class SynchronizationManager
                 return;
             }
 
-            $this->createPDMNode($ddmInspector->getPath($object), $ddmInspector->getUuid($object));
+            $publishManager->getNodeManager()->createPath($ddmInspector->getPath($object), $ddmInspector->getUuid($object));
+
             return;
         }
 

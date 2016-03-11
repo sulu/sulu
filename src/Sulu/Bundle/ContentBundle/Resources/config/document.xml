@@ -99,7 +99,7 @@
             class="Sulu\Component\Content\Document\Subscriber\DocumentSynchronizationSubscriber">
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="sulu_content.document.synchronization_manager" />
-            <tag name="sulu_document_manager.event_subscriber" />
+            <tag name="sulu_document_manager.event_subscriber" manager="default" />
         </service>
 
         <!-- Compat -->

@@ -100,10 +100,7 @@ class DocumentSynchronizationSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if (false === $this->isEmittingManagerDefaultManager($manager)) {
-            return;
-        }
-        // now we now deal only with the DEFAULT manager...
+        $this->assertEmittingManagerDefaultManager($manager);
 
         $document = $event->getDocument();
 
@@ -133,9 +130,8 @@ class DocumentSynchronizationSubscriber implements EventSubscriberInterface
     public function handleRemove(RemoveEvent $removeEvent)
     {
         $manager = $removeEvent->getManager();
-        if (false === $this->isEmittingManagerDefaultManager($manager)) {
-            return;
-        }
+
+        $this->assertEmittingManagerDefaultManager($manager);
 
         $document = $removeEvent->getDocument();
 
@@ -159,10 +155,7 @@ class DocumentSynchronizationSubscriber implements EventSubscriberInterface
         }
 
         $manager = $event->getManager();
-
-        if (false === $this->isEmittingManagerDefaultManager($manager)) {
-            return;
-        }
+        $this->assertEmittingManagerDefaultManager($manager);
 
         $publishManager = $this->syncManager->getPublishDocumentManager();
         $defaultFlush = false;
@@ -203,13 +196,16 @@ class DocumentSynchronizationSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function isEmittingManagerDefaultManager(DocumentManagerInterface $manager)
+    private function assertEmittingManagerDefaultManager(DocumentManagerInterface $manager)
     {
         // do nothing, see same condition in handlePersist.
         if ($manager === $this->defaultManager) {
-            return true;
+            return;
         }
 
-        return false;
+        throw new \RuntimeException(
+            'The document syncronization subscriber must only be registered to the default document manager'
+        );
+
     }
 }
