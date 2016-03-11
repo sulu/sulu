@@ -32,9 +32,8 @@ class StructureSubscriber implements EventSubscriberInterface
     /**
      * @param SearchManagerInterface $searchManager
      */
-    public function __construct(
-        SearchManagerInterface $searchManager
-    ) {
+    public function __construct(SearchManagerInterface $searchManager)
+    {
         $this->searchManager = $searchManager;
     }
 
