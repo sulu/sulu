@@ -21,7 +21,7 @@ before_script:
   - ./bin/jackrabbit.sh
 
 script: 
-  - time ./bin/runtests.sh -i -a
+  - time ./bin/runtests.sh -i -a -r
   - phpunit
 
 notifications:

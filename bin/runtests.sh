@@ -5,6 +5,7 @@ OCWD=`pwd`
 BUNDLE=""
 SULU_ORM=${SULU_ORM:-mysql}
 SULU_PHPCR=${SULU_PHPCR:-doctrine_dbal}
+JACKRABBIT_RESTART=false
 
 source "$(dirname "$0")""/inc/runtestcommon.inc.sh"
 
@@ -41,6 +42,7 @@ function show_help {
     echo "  i) Execute the initializaction script before running the tests"
     echo "  t) Specify a target bundle"
     echo "  a) Run all tests"
+    echo "  r) restart jackrabbit between bundle tests"
     exit 0
 }
 
@@ -68,7 +70,7 @@ header "Sulu CMF Test Suite"
 comment "ORM: "$SULU_ORM
 comment "PHPCR: "$SULU_PHPCR
 
-while getopts ":ait:" OPT; do
+while getopts ":ait:r" OPT; do
     case $OPT in
         i)
             init_database
@@ -77,6 +79,9 @@ while getopts ":ait:" OPT; do
             BUNDLE=$OPTARG
             ;;
         a)
+            ;;
+        r)
+            JACKRABBIT_RESTART=true
             ;;
     esac
 done
@@ -142,14 +147,16 @@ for BUNDLE in $BUNDLES; do
         echo $BUNDLE_NAME >> /tmp/failed.tests
     fi
 
-    comment "Restart jackrabbit"
+    if [ "$JACKRABBIT_RESTART" = true ] ; then
+        comment "Restart jackrabbit"
 
-    PID=`ps -ef | grep "jackrabbit-standalone" | grep -v grep | awk '{ print $2 }'`
-    if [ $PID ]; then
-        kill -9 $PID
+        PID=`ps -ef | grep "jackrabbit-standalone" | grep -v grep | awk '{ print $2 }'`
+        if [ $PID ]; then
+            kill -9 $PID
+        fi
+
+        ./bin/jackrabbit.sh
     fi
-
-    ./bin/jackrabbit.sh
 done
 
 check_failed_tests
