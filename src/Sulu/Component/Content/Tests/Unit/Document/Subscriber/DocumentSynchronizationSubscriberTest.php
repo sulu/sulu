@@ -12,14 +12,11 @@ use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Document\SynchronizationManager;
 use Sulu\Component\Content\Document\Behavior\SynchronizeBehavior;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
+use Sulu\Component\DocumentManager\MetadataFactoryInterface;
+use Sulu\Component\DocumentManager\Metadata;
 
 class DocumentSynchronizationSubscriberTest extends SubscriberTestCase
 {
-    /**
-     * @var mixed
-     */
-    private $defaultManager;
-
     /**
      * @var mixed
      */
@@ -38,12 +35,11 @@ class DocumentSynchronizationSubscriberTest extends SubscriberTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->defaultManager = $this->prophesize(DocumentManagerInterface::class);
         $this->syncManager = $this->prophesize(SynchronizationManager::class);
         $this->publishManager = $this->prophesize(DocumentManagerInterface::class);
 
         $this->subscriber = new DocumentSynchronizationSubscriber(
-            $this->defaultManager->reveal(),
+            $this->manager->reveal(),
             $this->syncManager->reveal()
         );
         $this->document = $this->prophesize(SynchronizeBehavior::class);
@@ -51,19 +47,27 @@ class DocumentSynchronizationSubscriberTest extends SubscriberTestCase
         $this->syncManager->getPublishDocumentManager()->willReturn($this->publishManager->reveal());
         $this->removeEvent = $this->prophesize(RemoveEvent::class);
         $this->removeEvent->getDocument()->willReturn($this->document->reveal());
-        $this->removeEvent->getContext()->willReturn($this->context->reveal());
+        $this->removeEvent->getManager()->willReturn($this->manager->reveal());
+        $this->metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
+        $this->metadata = $this->prophesize(Metadata::class);
     }
 
     /**
      * It should do nothing if the default manager is not the default manager.
+     *
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage The document syncronization subscriber must only be registered to the default document manager
      */
     public function testDoNothingNotDefaultManager()
     {
-        $this->context->getDocumentManager()->willReturn($this->publishManager->reveal());
+        $subscriber = new DocumentSynchronizationSubscriber(
+            $this->prophesize(DocumentManagerInterface::class)->reveal(),
+            $this->syncManager->reveal()
+        );
         $this->publishManager->flush()->shouldNotBeCalled();
 
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
-        $this->subscriber->handleFlush($this->flushEvent->reveal());
+        $subscriber->handlePersist($this->persistEvent->reveal());
+        $subscriber->handleFlush($this->flushEvent->reveal());
     }
 
     /**
@@ -71,7 +75,6 @@ class DocumentSynchronizationSubscriberTest extends SubscriberTestCase
      */
     public function testDoNothingNotWorkflowStage()
     {
-        $this->context->getDocumentManager()->willReturn($this->defaultManager->reveal());
         $this->persistEvent->getDocument()->willReturn(new \stdClass());
         $this->publishManager->flush()->shouldNotBeCalled();
 
@@ -86,17 +89,38 @@ class DocumentSynchronizationSubscriberTest extends SubscriberTestCase
     {
         $locale = 'at';
 
-        $this->context->getDocumentManager()->willReturn($this->defaultManager->reveal());
         $this->persistEvent->getNode()->willReturn($this->node->reveal());
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
         $this->node->isNew()->willReturn(true);
 
-        $this->defaultManager->getInspector()->willReturn($this->inspector->reveal());
+        $this->manager->getInspector()->willReturn($this->inspector->reveal());
         $this->inspector->getLocale($this->document->reveal())->willReturn($locale);
-        $this->inspector->getUuid($this->document->reveal())->willReturn('1234');
-        $this->defaultManager->find('1234', $locale)->shouldBeCalled();
 
-        $this->defaultManager->flush()->shouldBeCalled();
+        $this->manager->flush()->shouldBeCalled();
+        $this->publishManager->flush()->shouldBeCalled();
+        $this->syncManager->synchronizeSingle($this->document->reveal())->shouldBeCalled();
+
+        $this->subscriber->handlePersist($this->persistEvent->reveal());
+        $this->subscriber->handleFlush($this->flushEvent->reveal());
+    }
+
+    /**
+     * It should load the document in the persisted locale if it is currently in a different one.
+     */
+    public function testSyncNewDifferentLocale()
+    {
+        $locale = 'at';
+
+        $this->persistEvent->getNode()->willReturn($this->node->reveal());
+        $this->persistEvent->getDocument()->willReturn($this->document->reveal());
+        $this->node->isNew()->willReturn(true);
+
+        $this->manager->getInspector()->willReturn($this->inspector->reveal());
+        $this->inspector->getLocale($this->document->reveal())->willReturn($locale, 'fr');
+        $this->inspector->getUuid($this->document->reveal())->willReturn('1234');
+        $this->manager->find('1234', $locale)->shouldBeCalled();
+
+        $this->manager->flush()->shouldBeCalled();
         $this->publishManager->flush()->shouldBeCalled();
         $this->syncManager->synchronizeSingle($this->document->reveal())->shouldBeCalled();
 
@@ -106,15 +130,19 @@ class DocumentSynchronizationSubscriberTest extends SubscriberTestCase
 
     /**
      * It should NOT persist a document with a not-new PHPCR node.
+     * It should add the name of the PDM to the synced property of the document.
      */
     public function testSyncOld()
     {
-        $this->context->getDocumentManager()->willReturn($this->defaultManager->reveal());
         $this->persistEvent->getNode()->willReturn($this->node->reveal());
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
         $this->node->isNew()->willReturn(false);
 
-        $this->defaultManager->flush()->shouldNotBeCalled();
+        $this->manager->getMetadataFactory()->willReturn($this->metadataFactory->reveal());
+        $this->metadataFactory->getMetadataForClass(get_class($this->document->reveal()))->willReturn($this->metadata->reveal());
+        $this->metadata->setFieldValue($this->document->reveal(), 'synced', 'live');
+
+        $this->manager->flush()->shouldNotBeCalled();
 
         $this->subscriber->handlePersist($this->persistEvent->reveal());
         $this->subscriber->handleFlush($this->flushEvent->reveal());
@@ -125,9 +153,8 @@ class DocumentSynchronizationSubscriberTest extends SubscriberTestCase
      */
     public function testRemove()
     {
-        $this->context->getDocumentManager()->willReturn($this->defaultManager->reveal());
         $this->publishManager->remove($this->document->reveal())->shouldBeCalled();
-        $this->defaultManager->flush()->shouldNotBeCalled();
+        $this->manager->flush()->shouldNotBeCalled();
         $this->publishManager->flush()->shouldBeCalled();
 
         $this->subscriber->handleRemove($this->removeEvent->reveal());

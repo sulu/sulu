@@ -206,6 +206,5 @@ class DocumentSynchronizationSubscriber implements EventSubscriberInterface
         throw new \RuntimeException(
             'The document syncronization subscriber must only be registered to the default document manager'
         );
-
     }
 }

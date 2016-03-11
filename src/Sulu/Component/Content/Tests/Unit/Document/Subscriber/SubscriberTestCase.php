@@ -61,6 +61,8 @@ class SubscriberTestCase extends \PHPUnit_Framework_TestCase
      */
     protected $parentNode;
 
+    protected $manager;
+
     public function setUp()
     {
         $this->persistEvent = $this->prophesize(PersistEvent::class);
@@ -77,6 +79,6 @@ class SubscriberTestCase extends \PHPUnit_Framework_TestCase
         $this->manager = $this->prophesize(DocumentManagerInterface::class);
         $this->hydrateEvent->getManager()->willReturn($this->manager->reveal());
         $this->persistEvent->getManager()->willReturn($this->manager->reveal());
-        $this->flushEvent->getContext()->willReturn($this->context->reveal());
+        $this->flushEvent->getManager()->willReturn($this->manager->reveal());
     }
 }
