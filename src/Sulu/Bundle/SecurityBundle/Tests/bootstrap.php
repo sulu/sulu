@@ -17,4 +17,3 @@ if (!file_exists($file)) {
 $autoload = require_once $file;
 
 \Doctrine\Common\Annotations\AnnotationRegistry::registerLoader([$autoload, 'loadClass']);
-\Doctrine\Common\Annotations\AnnotationRegistry::registerFile(__DIR__ . '/../vendor/doctrine/phpcr-odm/lib/Doctrine/ODM/PHPCR/Mapping/Annotations/DoctrineAnnotations.php');
