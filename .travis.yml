@@ -11,8 +11,6 @@ cache:
     - $HOME/.composer/cache
 
 env:
-  global:
-    - SYMFONY_DEPRECATIONS_HELPER=weak
   matrix:
     - SULU_ORM=mysql SULU_PHPCR=jackrabbit
 #    - SULU_ORM=postgres SULU_PHPCR=jackrabbit
