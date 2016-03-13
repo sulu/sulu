@@ -18,6 +18,7 @@ env:
 #    - SULU_ORM=postgres SULU_PHPCR=doctrine_dbal
 
 before_script:
+  - phpenv config-rm xdebug.ini
   - composer self-update
   - composer install  --prefer-dist --no-interaction
   - ./bin/jackrabbit.sh
