@@ -6,6 +6,10 @@ php:
   - 5.5
   - 7.0
 
+cache:
+  directories:
+    - $HOME/.composer/cache
+
 env:
   global:
     - SYMFONY_DEPRECATIONS_HELPER=weak
@@ -17,7 +21,7 @@ env:
 
 before_script:
   - composer self-update
-  - composer install
+  - composer install  --prefer-dist --no-interaction
   - ./bin/jackrabbit.sh
 
 script: 
