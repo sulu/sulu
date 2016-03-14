@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2121 [All]                 Cache composer cache dir and prefer dist downloads on Travis
     * ENHANCEMENT #2114 [All]                 Update ffmpeg bundle and lib
     * ENHANCEMENT #2116 [All]                 Made restart of jackrabbit between tests configureable
     * BUGFIX      #2090 [MediaBundle]         Fixed fallback of media file-version meta
