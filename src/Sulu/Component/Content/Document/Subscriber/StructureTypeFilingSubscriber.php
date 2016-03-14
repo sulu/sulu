@@ -37,9 +37,8 @@ class StructureTypeFilingSubscriber extends AbstractFilingSubscriber
      */
     protected function generatePath(PersistEvent $event)
     {
-        $document = $event->getDocument();
-
         $currentPath = '';
+
         if ($event->hasParentNode()) {
             $currentPath = $event->getParentNode()->getPath();
         }

@@ -1,0 +1,9 @@
+sulu_content:    
+    publish:
+        document_manager: live
+
+monolog:
+    handlers:
+        main:
+            type:   stream
+            path:   "%kernel.logs_dir%/%kernel.environment%.log"

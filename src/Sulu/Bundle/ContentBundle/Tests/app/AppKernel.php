@@ -21,5 +21,9 @@ class AppKernel extends SuluTestKernel
         if (class_exists('Sulu\Bundle\SearchBundle\SuluSearchBundle')) {
             $loader->load(__DIR__ . '/config/search.yml');
         }
+
+        if ($this->environment === 'multiple_document_managers') {
+            $loader->load(__DIR__ . '/config/multiple_document_managers.yml');
+        }
     }
 }
