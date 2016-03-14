@@ -42,12 +42,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         if (isset($config['phpcr'])) {
             $phpcrConfig = $config['phpcr'];
 
-            // TODO: Workaround for issue: https://github.com/doctrine/DoctrinePHPCRBundle/issues/178
-            if (!isset($phpcrConfig['backend']['check_login_on_server'])) {
-                $phpcrConfig['backend']['check_login_on_server'] = false;
-            }
-
-            foreach ($container->getExtensions() as $name => $extension) {
+            foreach (array_keys($container->getExtensions()) as $name) {
                 $prependConfig = [];
                 switch ($name) {
                     case 'doctrine_phpcr':
