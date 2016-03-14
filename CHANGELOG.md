@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2120 [All]                 Change bundle tests to use their own phpunit config and move `SYMFONY_DEPRECATIONS_HELPER` var into
     * ENHANCEMENT #2121 [All]                 Cache composer cache dir and prefer dist downloads on Travis
     * ENHANCEMENT #2114 [All]                 Update ffmpeg bundle and lib
     * ENHANCEMENT #2116 [All]                 Made restart of jackrabbit between tests configureable
