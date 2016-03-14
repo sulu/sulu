@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SnippetBundle\Document;
 use Sulu\Component\Content\Document\Behavior\AuditableBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureTypeFilingBehavior;
+use Sulu\Component\Content\Document\Behavior\SynchronizeBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Document\WorkflowStage;
@@ -22,7 +23,6 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\Behavior\Path\AliasFilingBehavior;
 use Sulu\Component\DocumentManager\Behavior\Path\AutoNameBehavior;
-use Sulu\Component\Content\Document\Behavior\SynchronizeBehavior;
 
 /**
  * Snippet document.

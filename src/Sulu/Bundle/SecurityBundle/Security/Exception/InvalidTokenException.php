@@ -16,7 +16,7 @@ namespace Sulu\Bundle\SecurityBundle\Security\Exception;
  */
 class InvalidTokenException extends SecurityException
 {
-    /** @var string  */
+    /** @var string */
     private $token;
 
     public function __construct($token)

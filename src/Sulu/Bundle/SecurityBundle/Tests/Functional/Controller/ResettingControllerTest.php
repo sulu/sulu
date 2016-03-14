@@ -24,11 +24,11 @@ class ResettingControllerTest extends SuluTestCase
      */
     private $em;
 
-    /** @var  User $user1 */
+    /** @var User $user1 */
     private $user1;
-    /** @var  User $user2 */
+    /** @var User $user2 */
     private $user2;
-    /** @var  User $user3 */
+    /** @var User $user3 */
     private $user3;
 
     public function setUp()

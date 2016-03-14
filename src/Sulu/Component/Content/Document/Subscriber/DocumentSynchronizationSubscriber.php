@@ -1,23 +1,26 @@
 <?php
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Sulu\Component\DocumentManager\Events;
-use Sulu\Component\DocumentManager\Event\PersistEvent;
-use Sulu\Component\DocumentManager\DocumentManagerRegistryInterface;
-use Sulu\Component\DocumentManager\Event\FlushEvent;
-use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
-use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
-use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentManagerRegistry;
 use Sulu\Component\Content\Document\Behavior\SynchronizeBehavior;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Content\Document\SynchronizationManager;
-use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\DocumentManager\Event\FlushEvent;
+use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
+use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
+use Sulu\Component\DocumentManager\Events;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class DocumentSynchronizationSubscriber implements EventSubscriberInterface
 {
@@ -64,8 +67,8 @@ class DocumentSynchronizationSubscriber implements EventSubscriberInterface
             Events::METADATA_LOAD => 'handleMetadataLoad',
 
             // persist needs to be before the content mapper subscriber
-            // because we need to stop propagation early on the publish 
-            Events::PERSIST => [ 'handlePersist',10 ],
+            // because we need to stop propagation early on the publish
+            Events::PERSIST => ['handlePersist', 10],
         ];
     }
 
@@ -116,6 +119,7 @@ class DocumentSynchronizationSubscriber implements EventSubscriberInterface
                 ->getMetadataFactory()
                 ->getMetadataForClass(get_class($document))
                 ->setFieldValue($document, 'synchronizedManagers', []);
+
             return;
         }
 
@@ -123,7 +127,7 @@ class DocumentSynchronizationSubscriber implements EventSubscriberInterface
         $locale = $inspector->getLocale($document);
         $this->persistQueue[] = [
             'document' => $document,
-            'locale' => $locale
+            'locale' => $locale,
         ];
     }
 
@@ -142,7 +146,6 @@ class DocumentSynchronizationSubscriber implements EventSubscriberInterface
 
         $this->removeQueue[] = $document;
     }
-
 
     public function handleFlush(FlushEvent $event)
     {

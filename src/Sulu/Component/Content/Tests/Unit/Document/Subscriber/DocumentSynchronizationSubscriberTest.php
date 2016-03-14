@@ -1,19 +1,24 @@
 <?php
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
-use Prophecy\Argument;
-use Sulu\Component\Content\Document\Subscriber\DocumentSynchronizationSubscriber;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentManagerRegistry;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\Content\Document\SynchronizationManager;
 use Sulu\Component\Content\Document\Behavior\SynchronizeBehavior;
+use Sulu\Component\Content\Document\Subscriber\DocumentSynchronizationSubscriber;
+use Sulu\Component\Content\Document\SynchronizationManager;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
-use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\Metadata;
+use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 
 class DocumentSynchronizationSubscriberTest extends SubscriberTestCase
 {
@@ -159,6 +164,5 @@ class DocumentSynchronizationSubscriberTest extends SubscriberTestCase
 
         $this->subscriber->handleRemove($this->removeEvent->reveal());
         $this->subscriber->handleFlush($this->flushEvent->reveal());
-
     }
 }

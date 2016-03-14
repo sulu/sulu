@@ -1,11 +1,18 @@
 <?php
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Document;
 
-use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-
-use Sulu\Bundle\ContentBundle\Tests\app\MultipleDocumentManagerKernel;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class SyncronizationManagerTest extends SuluTestCase
 {
@@ -35,7 +42,7 @@ class SyncronizationManagerTest extends SuluTestCase
 
     protected static function createKernel(array $options = [])
     {
-        return parent::createKernel([ 'environment' => 'multiple_document_managers' ]);
+        return parent::createKernel(['environment' => 'multiple_document_managers']);
     }
 
     /**
@@ -90,7 +97,6 @@ class SyncronizationManagerTest extends SuluTestCase
         $page = $this->publishDocumentManager->find($page->getUuid(), 'de');
         $this->assertEquals('Barbar', $page->getTitle());
     }
-
 
     /**
      * It should publish documents that have been moved in the default document manager.

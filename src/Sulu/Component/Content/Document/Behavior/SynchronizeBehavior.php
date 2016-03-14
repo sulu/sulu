@@ -11,8 +11,6 @@
 
 namespace Sulu\Component\Content\Document\Behavior;
 
-use Sulu\Component\DocumentManager\Behavior\Path\BasePathBehavior;
-
 /**
  * TODO: Document me.
  */

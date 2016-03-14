@@ -1,27 +1,24 @@
 <?php
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Content\Document;
 
-use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Sulu\Component\DocumentManager\Events;
-use Sulu\Component\DocumentManager\Event\PersistEvent;
-use Sulu\Component\DocumentManager\DocumentManagerRegistryInterface;
-use Sulu\Component\DocumentManager\Event\FlushEvent;
-use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
-use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
-use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentManagerRegistry;
-use Sulu\Component\Content\Document\Behavior\SynchronizeBehavior;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
-use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Bundle\ContentBundle\Document\RouteDocument;
-use PHPCR\NodeInterface;
-use Sulu\Component\DocumentManager\ClassNameInflector;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentManagerRegistry;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
+use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
+use Sulu\Component\Content\Document\Behavior\SynchronizeBehavior;
+use Sulu\Component\Content\Document\Syncronization\DocumentRegistrator;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
-use PHPCR\Util\PathHelper;
+use Sulu\Component\DocumentManager\DocumentManagerRegistryInterface;
 
 /**
  * The synchronization manager handles the synchronization of documents
@@ -36,6 +33,8 @@ use PHPCR\Util\PathHelper;
  *       supported.
  *
  *       See: https://github.com/jackalope/jackalope/pull/241
+ *
+ * TODO: Explcitly inject publish and default document managers?
  */
 class SynchronizationManager
 {
@@ -54,15 +53,24 @@ class SynchronizationManager
      */
     private $publishManagerName;
 
+    /**
+     * @var DocumentRegistrator
+     */
+    private $registrator;
+
     public function __construct(
         DocumentManagerRegistry $registry,
         PropertyEncoder $encoder,
-        $publishManagerName
-    )
-    {
+        $publishManagerName,
+        $registrator = null
+    ) {
         $this->registry = $registry;
         $this->publishManagerName = $publishManagerName;
         $this->encoder = $encoder;
+        $this->registrator = $registrator ?: new DocumentRegistrator(
+            $registry->getManager(),
+            $registry->getManager($this->publishManagerName)
+        );
     }
 
     /**
@@ -91,7 +99,7 @@ class SynchronizationManager
      *
      * @param SynchronizeBehavior $document
      */
-    public function synchronizeFull(SynchronizeBehavior $document, array $options = array())
+    public function synchronizeFull(SynchronizeBehavior $document, array $options = [])
     {
         // get the default managerj
         $defaultManager = $this->registry->getManager();
@@ -138,9 +146,9 @@ class SynchronizationManager
      * TODO: Add an explicit "locale" option?
      *
      * @param SynchronizeBehavior $document
-     * @param boolean $force
+     * @param bool $force
      */
-    public function synchronizeSingle(SynchronizeBehavior $document, array $options = array())
+    public function synchronizeSingle(SynchronizeBehavior $document, array $options = [])
     {
         $options = array_merge([
             'force' => false,
@@ -171,7 +179,7 @@ class SynchronizationManager
 
         // register the DDM document and its immediate relations with the PDM
         // PHPCR node.
-        $this->registerDocumentWithPDM($document);
+        $this->registrator->registerDocumentWithPDM($document);
 
         // this is a temporary (and invalid) hack until the routing system
         // is converted to use the document manager.
@@ -202,162 +210,27 @@ class SynchronizationManager
         //       UOW.
         $synced[] = $this->publishManagerName;
         $node = $inspector->getNode($document);
-        $encoding = $document instanceof LocaleBehavior ? 'localizedSystemName' : 'systemName';
-        $node->setProperty(
-            $this->encoder->$encoding(
-                SynchronizeBehavior::SYNCED_FIELD,
-                $inspector->getLocale($document)
-            ),
-            array_unique($synced)
-        );
-    }
 
-    /**
-     * Register the incoming DDM document with any existing PHPCR node in the
-     * PDM.
-     *
-     * If the PDM already has the incoming PHPCR node then we need to register
-     * the existing PHPCR node from the PDM PHPCR session with the incoming DDM
-     * document (otherwise the system will attempt to create a new document and
-     * fail).
-     *
-     * We also ensure that any immediately related documents are also registered.
-     *
-     * @param SynchronizeBehavior $document
-     */
-    private function registerDocumentWithPDM(SynchronizeBehavior $document)
-    {
-        $this->registerSingleDocumentWithPDM($document);
-
-        $defaultManager = $this->registry->getManager();
-        $metadata = $defaultManager->getMetadataFactory()->getMetadataForClass(get_class($document));
-        $reflectionClass = $metadata->getReflectionClass();
-
-        // iterate over the field mappings for the document, if they resolve to
-        // an object then try and register it with the PDM.
-        foreach (array_keys($metadata->getFieldMappings()) as $field) {
-            $reflectionProperty = $reflectionClass->getProperty($field);
-            $reflectionProperty->setAccessible(true);
-            $propertyValue = $reflectionProperty->getValue($document);
-
-            if (false === is_object($propertyValue)) {
-                continue;
-            }
-
-            // if the default document manager does not have this object then it is
-            // not a candidate for being persisted (e.g. it might be a \DateTime
-            // object).
-            if (false === $defaultManager->getRegistry()->hasDocument($propertyValue)) {
-                continue;
-            }
-
-            $this->registerSingleDocumentWithPDM($propertyValue);
+        if ($document instanceof LocaleBehavior) {
+            $node->setProperty(
+                $this->encoder->localizedSystemName(
+                    SynchronizeBehavior::SYNCED_FIELD,
+                    $inspector->getLocale($document)
+                ),
+                array_unique($synced)
+            );
+        } else {
+            $node->setProperty(
+                $this->encoder->systemName(
+                    SynchronizeBehavior::SYNCED_FIELD
+                ),
+                array_unique($synced)
+            );
         }
-
-        // TODO: Workaround for the fact that "parent" is not in the metadata,
-        // see: https://github.com/sulu-io/sulu-document-manager/issues/67
-        if ($document instanceof ParentBehavior) {
-            if ($parent = $document->getParent()) {
-                $this->registerSingleDocumentWithPDM($parent, true);
-            }
-        }
-    }
-
-    private function registerSingleDocumentWithPDM($object, $create = false)
-    {
-        $publishManager = $this->getPublishDocumentManager();
-        $defaultManager = $this->registry->getManager();
-        $ddmInspector = $defaultManager->getInspector();
-        $pdmRegistry = $publishManager->getRegistry();
-
-        // if the PDM registry already has the document, then
-        // there is nothing to do - the document manager will
-        // handle the rest.
-        if (true === $pdmRegistry->hasDocument($object)) {
-            return;
-        }
-
-        $locale = $ddmInspector->getLocale($object);
-
-        // see if we can resolve the corresponding node in the PDM.
-        // if we cannot then we either return and let the document
-        // manager create the new node, or, if $create is true, create
-        // the missing node (this happens when registering a document
-        // which is a relation to the incoming DDM document).
-        if (false === $uuid = $this->resolvePDMUUID($object)) {
-            if (false === $create) {
-                return;
-            }
-
-            $publishManager->getNodeManager()->createPath($ddmInspector->getPath($object), $ddmInspector->getUuid($object));
-
-            return;
-        }
-
-        // register the DDM document against the PDM PHPCR node.
-        $node = $publishManager->getNodeManager()->find($uuid);
-        $pdmRegistry->registerDocument(
-            $object,
-            $node,
-            $locale
-        );
-    }
-
-    /**
-     * If possible, resolve the UUID of the node in the PDM corresponding to
-     * the DDM node.
-     *
-     * If the UUID does not exist, we check to see if the path exsits.
-     * if neither the path or UUID exist, then the PDM should create a new
-     * document and we ensure that the PARENT path exists and if it doesn't
-     * we syncronize the ancestor nodes from the DDM.
-     *
-     * In the case the UUID does not exist we assume that in a valid system
-     * that path will also NOT EXIST. If the path does exist, then it means that
-     * the corresponding PHPCR nodes were created independently of each
-     * other and bypassed the syncrhonization system and we throw an exception.
-     *
-     * @throws \RuntimeException If the UUID could not be resolved and it would be
-     *                           invalid to implicitly allow the node to be created.
-     */
-    private function resolvePDMUUID($object)
-    {
-        $pdmNodeManager = $this->getPublishDocumentManager()->getNodeManager();
-        $defaultManager = $this->registry->getManager();
-        $ddmInspector = $defaultManager->getInspector();
-        $uuid = $ddmInspector->getUUid($object);
-        $path = $ddmInspector->getPath($object);
-
-        if (true === $pdmNodeManager->has($uuid)) {
-            return $uuid;
-        }
-
-        if (false === $pdmNodeManager->has($path)) {
-
-            // if the parent path also does not exist in the PDM then we need
-            // to create the parent path using the same UUIDs that are used in
-            // the DDM.
-            $parentPath = PathHelper::getParentPath($path);
-            if (false === $pdmNodeManager->has($parentPath)) {
-                $this->syncPDMPath($parentPath);
-                return false;
-            }
-
-            // otherwise we can safely create the document.
-            return false;
-        }
-
-        throw new \RuntimeException(sprintf(
-            'Publish document manager already has a node at path "%s" but ' .
-            'incoming UUID `%s` does not match existing UUID: "%s".',
-            $path, $uuid, $pdmNodeManager->find($path)->getIdentifier()
-        ));
     }
 
     /**
      * Return routes related to the document.
-     *
-     * See caller TODO.
      *
      * @param DocumentInspector
      * @param ResourceSegmentBehavior $document
@@ -365,7 +238,7 @@ class SynchronizationManager
     private function getDocumentRoutes(DocumentInspector $inspector, ResourceSegmentBehavior $document)
     {
         $referrers = $inspector->getReferrers($document);
-        $routes = array();
+        $routes = [];
 
         foreach ($referrers as $referrer) {
             if (!$referrer instanceof RouteDocument) {
@@ -375,33 +248,5 @@ class SynchronizationManager
         }
 
         return $routes;
-    }
-
-    /**
-     * Sync the given path from the DDM to the PDM, preserving
-     * the UUIDs.
-     *
-     * @param string $path
-     */
-    private function syncPDMPath($path)
-    {
-        $ddmNodeManager = $this->registry->getManager()->getNodeManager();
-        $pdmNodeManager = $this->getPublishDocumentManager()->getNodeManager();
-        $segments = explode('/', $path);
-        $stack = [];
-
-        foreach ($segments as $segment) {
-            $stack[] = $segment;
-            $path = implode('/', $stack) ?: '/';
-            $ddmNode = $ddmNodeManager->find($path);
-            $pdmNodeManager->createPath($path, $ddmNode->getIdentifier());
-        }
-
-        // flush the PHPCR session. if we do not save() here, then the node
-        // manager will be unable to "find" the newly created nodes by ID
-        // within the same session - because Jackalope.
-        //
-        // TODO: create an issue for this.
-        $pdmNodeManager->save();
     }
 }

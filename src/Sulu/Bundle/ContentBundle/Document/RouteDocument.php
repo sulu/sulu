@@ -12,10 +12,10 @@
 namespace Sulu\Bundle\ContentBundle\Document;
 
 use Sulu\Component\Content\Document\Behavior\RouteBehavior;
+use Sulu\Component\Content\Document\Behavior\SynchronizeBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
-use Sulu\Component\Content\Document\Behavior\SynchronizeBehavior;
 
 /**
  * The route document represents a route with in a webspace.
