@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Tests\Controller;
+namespace Sulu\Bundle\ContentBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -42,9 +42,9 @@ class NodeControllerTest extends SuluTestCase
      */
     private $documentManager;
 
-    protected function setUp()
+    public function setUp()
     {
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
 
@@ -1809,6 +1809,6 @@ class NodeControllerTest extends SuluTestCase
      */
     private function getMapper()
     {
-        return self::$kernel->getContainer()->get('sulu.content.mapper');
+        return $this->getContainer()->get('sulu.content.mapper');
     }
 }

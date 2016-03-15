@@ -45,7 +45,7 @@ class OperatorControllerTest extends SuluTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
         $this->purgeDatabase();
         $this->setUpOperators();
         $this->client = $this->createAuthenticatedClient();

@@ -76,7 +76,7 @@ class MediaControllerTest extends SuluTestCase
     {
         parent::setUp();
         $this->purgeDatabase();
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
         $this->cleanImage();
         $this->setUpCollection();
         $this->setUpMedia();
@@ -84,11 +84,11 @@ class MediaControllerTest extends SuluTestCase
 
     protected function cleanImage()
     {
-        if (self::$kernel->getContainer()) { //
-            $configPath = self::$kernel->getContainer()->getParameter('sulu_media.media.storage.local.path');
+        if ($this->getContainer()) { //
+            $configPath = $this->getContainer()->getParameter('sulu_media.media.storage.local.path');
             $this->recursiveRemoveDirectory($configPath);
 
-            $cachePath = self::$kernel->getContainer()->getParameter('sulu_media.format_cache.path');
+            $cachePath = $this->getContainer()->getParameter('sulu_media.format_cache.path');
             $this->recursiveRemoveDirectory($cachePath);
         }
     }

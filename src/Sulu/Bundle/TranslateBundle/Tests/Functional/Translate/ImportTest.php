@@ -36,7 +36,7 @@ class ImportTest extends SuluTestCase
 
     public function setUp()
     {
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
         $this->purgeDatabase();
 
         $hikaruBundle = $this->getMock('Symfony\Component\HttpKernel\Bundle', ['getName', 'getPath']);

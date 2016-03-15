@@ -15,24 +15,18 @@ use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
-use InvalidArgumentException;
 use PHPCR\SessionInterface;
 use PHPCR\Util\NodeHelper;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
-use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Cmf\Bundle\RoutingBundle\Tests\Functional\BaseTestCase;
 use Symfony\Component\Security\Core\Tests\Authentication\Token\TestUser;
 
 /**
  * Base test case for functional tests in Sulu.
  */
-abstract class SuluTestCase extends BaseTestCase
+abstract class SuluTestCase extends KernelTestCase
 {
-    protected static $kernels = [];
-    protected static $currentKernel = 'admin';
-
     /**
      * @var PHPCRImporter
      */
@@ -44,8 +38,8 @@ abstract class SuluTestCase extends BaseTestCase
     public static function setUpBeforeClass()
     {
         // enables garbage collector because symfony/phpunit-bridge disables it. see:
-        //  * https://github.com/symfony/symfony/pull/13398/files#diff-81bfee6017752d99d3119f4ddb1a09edR1
-        //  * https://github.com/symfony/symfony/pull/13398 (feature list)
+        // see: https://github.com/symfony/symfony/pull/13398/files#diff-81bfee6017752d99d3119f4ddb1a09edR1
+        // see: https://github.com/symfony/symfony/pull/13398 (feature list)
         if (!gc_enabled()) {
             gc_enable();
         }
@@ -59,43 +53,12 @@ abstract class SuluTestCase extends BaseTestCase
     }
 
     /**
-     * Create a new SuluTestKernel and pass the sulu.context to it.
-     *
-     * {@inheritdoc}
-     *
-     * @throws InvalidArgumentException If the found kernel does
-     *                                  not extend SuluTestKernel
-     */
-    protected static function createKernel(array $options = [])
-    {
-        if (null === static::$class) {
-            static::$class = static::getKernelClass();
-        }
-
-        $kernel = new static::$class(
-            isset($options['environment']) ? $options['environment'] : 'test',
-            isset($options['debug']) ? $options['debug'] : true,
-            isset($options['sulu_context']) ? $options['sulu_context'] : 'admin'
-        );
-
-        if (!$kernel instanceof SuluTestKernel) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'All Sulu testing Kernel classes must extend SuluTestKernel, "%s" does not',
-                    get_class($kernel)
-                )
-            );
-        }
-
-        return $kernel;
-    }
-
-    /**
      * Close the database connection after the tests finish.
      */
     public function tearDown()
     {
-        $this->db('ORM')->getOm()->getConnection()->close();
+        parent::tearDown();
+        $this->getEntityManager()->getConnection()->close();
     }
 
     /**
@@ -106,7 +69,7 @@ abstract class SuluTestCase extends BaseTestCase
      */
     protected function getTestUser()
     {
-        $user = $this->em->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')
+        $user = $this->getEntityManager()->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')
             ->findOneByUsername('test');
 
         return $user;
@@ -167,7 +130,7 @@ abstract class SuluTestCase extends BaseTestCase
     protected function initPhpcr()
     {
         /** @var SessionInterface $session */
-        $session = $this->db('PHPCR')->getOm()->getPhpcrSession();
+        $session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
 
         if ($session->nodeExists('/cmf')) {
             NodeHelper::purgeWorkspace($session);
@@ -221,32 +184,27 @@ abstract class SuluTestCase extends BaseTestCase
      */
     protected function purgeDatabase()
     {
-        /** @var EntityManager $em */
-        $em = $this->db('ORM')->getOm();
-        $connection = $em->getConnection();
+        /** @var EntityManager $manager */
+        $manager = $this->getEntityManager();
+        $connection = $manager->getConnection();
 
         if ($connection->getDriver() instanceof \Doctrine\DBAL\Driver\PDOMySql\Driver) {
             $connection->executeUpdate('SET foreign_key_checks = 0;');
         }
 
         $purger = new ORMPurger();
-        $executor = new ORMExecutor($em, $purger);
-        $referenceRepository = new ProxyReferenceRepository($em);
+        $executor = new ORMExecutor($manager, $purger);
+        $referenceRepository = new ProxyReferenceRepository($manager);
         $executor->setReferenceRepository($referenceRepository);
         $executor->purge();
 
         if ($connection->getDriver() instanceof \Doctrine\DBAL\Driver\PDOMySql\Driver) {
-            $em->getConnection()->executeUpdate('SET foreign_key_checks = 1;');
+            $connection->executeUpdate('SET foreign_key_checks = 1;');
         }
     }
 
-    /**
-     * Shuts the kernel down if it was used in the test.
-     */
-    protected static function ensureKernelShutdown()
+    protected function getEntityManager()
     {
-        if (null !== static::$kernel) {
-            static::$kernel->shutdown();
-        }
+        return $this->getContainer()->get('doctrine')->getManager();
     }
 }

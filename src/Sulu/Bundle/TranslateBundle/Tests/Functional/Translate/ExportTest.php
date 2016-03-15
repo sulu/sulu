@@ -41,7 +41,7 @@ class ExportTest extends SuluTestCase
 
     public function setUp()
     {
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
         $this->purgeDatabase();
 
         $this->export = new Export($this->em);
