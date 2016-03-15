@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * FEATURE     #1288 [All]                 Added deep-links for selection content-types
     * BUGFIX      #2131 [WebsiteBundle]       Fixed 'getTheme' error in ExceptionController
     * ENHANCEMENT #2131 [CoreBundle]          Added request attributes to extract data from request
+    * ENHANCEMENT #2130 [MediaBundle]         Add support for newer symfony distributions with `bin/` directory
     * BUGFIX      #2128 [All]                 Fix required version of PHP to support only ^5.5 and ^7.0
     * BUGFIX      #2126 [ContactBundle]       Excluded recursion in accounts REST API
     * BUGFIX      #2126 [All]                 Fixed firefox bug in label tick
