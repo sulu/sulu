@@ -16,6 +16,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2131 [CoreBundle]          Added request attributes to extract data from request
     * ENHANCEMENT #2130 [MediaBundle]         Add support for newer symfony distributions with `bin/` directory
     * FEATURE     #2075 [All]                 Added CSV export for list responses
+    * BUGFIX      #2128 [MediaBundle]         Fixed used language in media selection content type
     * BUGFIX      #2128 [All]                 Fix required version of PHP to support only ^5.5 and ^7.0
     * BUGFIX      #2126 [ContactBundle]       Excluded recursion in accounts REST API
     * BUGFIX      #2126 [All]                 Fixed firefox bug in label tick

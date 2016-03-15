@@ -26,6 +26,7 @@ define(function() {
             actionIcon: 'fa-file-image-o',
             types: null,
             navigateEvent: 'sulu.router.navigate',
+            locale: '',
             dataDefault: {
                 displayOption: 'top',
                 ids: []
@@ -157,7 +158,8 @@ define(function() {
                     el: $container,
                     instanceName: this.options.instanceName,
                     preSelectedIds: this.getData().ids,
-                    types: this.options.types
+                    types: this.options.types,
+                    locale: this.options.locale
                 }
             }]);
         },
@@ -219,7 +221,8 @@ define(function() {
             return [
                 this.options.url,
                 delimiter,
-                this.options.idsParameter, '=', (data.ids || []).join(',')
+                this.options.idsParameter, '=', (data.ids || []).join(','),
+                '&locale=', this.options.locale
             ].join('');
         },
 
