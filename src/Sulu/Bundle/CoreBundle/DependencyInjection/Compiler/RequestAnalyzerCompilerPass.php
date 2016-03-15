@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Sulu.
  *
@@ -11,10 +10,8 @@
 
 namespace Sulu\Bundle\CoreBundle\DependencyInjection\Compiler;
 
-use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -22,63 +19,24 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class RequestAnalyzerCompilerPass implements CompilerPassInterface
 {
+    const TAG_NAME = 'sulu.request_attributes';
+
     /**
      * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {
-        // set website request analyzer
-        $container->setDefinition(
-            'sulu_core.webspace.request_analyzer.website',
-            new Definition(
-                'Sulu\Component\Webspace\Analyzer\WebsiteRequestAnalyzer',
-                [
-                    new Reference('sulu_core.webspace.webspace_manager'),
-                    $container->getParameter('kernel.environment'),
-                ]
-            )
-        );
-        // set admin request analyzer
-        $container->setDefinition(
-            'sulu_core.webspace.request_analyzer.admin',
-            new Definition(
-                'Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer',
-                [
-                    new Reference('sulu_core.webspace.webspace_manager'),
-                    $container->getParameter('kernel.environment'),
-                ]
-            )
-        );
-
-        if ($container->getParameter('sulu.context') === SuluKernel::CONTEXT_WEBSITE) {
-            $container->setAlias('sulu_core.webspace.request_analyzer', 'sulu_core.webspace.request_analyzer.website');
-        } else {
-            $container->setAlias('sulu_core.webspace.request_analyzer', 'sulu_core.webspace.request_analyzer.admin');
+        $references = [];
+        foreach ($container->findTaggedServiceIds(self::TAG_NAME) as $id => $tags) {
+            foreach ($tags as $attributes) {
+                $priority = array_key_exists('priority', $attributes) ? $attributes['priority'] : 0;
+                $references[$priority][] = new Reference($id);
+            }
         }
 
-        // set listener
-        $container->setDefinition(
-            'sulu_core.webspace.request_listener',
-            new Definition(
-                'Sulu\Component\Webspace\EventListener\RequestListener',
-                [
-                    new Reference('sulu_core.webspace.request_analyzer'),
-                ]
-            )
-        );
+        krsort($references);
+        $references = call_user_func_array('array_merge', $references);
 
-        // add listener to event dispatcher
-        $eventDispatcher = $container->findDefinition('event_dispatcher');
-        $eventDispatcher->addMethodCall(
-            'addListenerService',
-            [
-                'kernel.request',
-                [
-                    'sulu_core.webspace.request_listener',
-                    'onKernelRequest',
-                ],
-                $container->getParameter('sulu_core.webspace.request_analyzer.priority'),
-            ]
-        );
+        $container->getDefinition('sulu_core.webspace.request_analyzer')->replaceArgument(0, $references);
     }
 }

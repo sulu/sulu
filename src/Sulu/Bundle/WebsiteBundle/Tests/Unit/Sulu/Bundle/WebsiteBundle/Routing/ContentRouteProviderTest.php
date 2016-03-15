@@ -17,6 +17,7 @@ use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Theme;
@@ -601,7 +602,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         }
 
         $portalManager = $this->getMockForAbstractClass(
-            '\Sulu\Component\Webspace\Analyzer\WebsiteRequestAnalyzer',
+            RequestAnalyzer::class,
             [],
             '',
             false,
