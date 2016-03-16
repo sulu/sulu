@@ -8862,37 +8862,44 @@ a.btn-black, a.btn-highlight {
   background-color: #fff;
 }
 /* line 43, ../scss/modules/search.scss */
+.search-container .search-icon, .search-container .remove-icon {
+  background: transparent;
+  border: 0px;
+  line-height: 25px;
+}
+/* line 49, ../scss/modules/search.scss */
 .search-container .search-icon {
   position: absolute;
   padding-left: 8px;
+  padding-right: 15px;
   font-size: 16px;
-  line-height: 30px;
   vertical-align: middle;
   text-decoration: none;
+  cursor: pointer;
 }
-/* line 52, ../scss/modules/search.scss */
+/* line 59, ../scss/modules/search.scss */
 .search-container .remove-icon {
   display: none;
   position: absolute;
   right: 10px;
-  line-height: 30px;
   vertical-align: middle;
   margin: auto;
   background-color: #fff;
   padding-left: 3px;
   text-decoration: none;
+  cursor: pointer;
 }
-/* line 67, ../scss/modules/search.scss */
+/* line 74, ../scss/modules/search.scss */
 .search-container.gray .search-icon {
   font-size: 16px;
   color: rgba(255, 255, 255, 0.5);
 }
-/* line 71, ../scss/modules/search.scss */
+/* line 78, ../scss/modules/search.scss */
 .search-container.gray .remove-icon {
   color: rgba(255, 255, 255, 0.5);
   background-color: transparent;
 }
-/* line 75, ../scss/modules/search.scss */
+/* line 82, ../scss/modules/search.scss */
 .search-container.gray .search-input {
   background-color: rgba(255, 255, 255, 0.5);
 }
@@ -8916,33 +8923,32 @@ a.btn-black, a.btn-highlight {
 .search-container.gray .search-input::-webkit-input-placeholder {
   color: rgba(255, 255, 255, 0.5);
 }
-/* line 82, ../scss/modules/search.scss */
+/* line 89, ../scss/modules/search.scss */
 .search-container.gray.focus .search-input {
   background-color: #fff;
 }
-/* line 85, ../scss/modules/search.scss */
+/* line 92, ../scss/modules/search.scss */
 .search-container.gray.focus .search-icon,
 .search-container.gray.focus .remove-icon {
   color: #3e3e3e;
 }
-/* line 94, ../scss/modules/search.scss */
+/* line 101, ../scss/modules/search.scss */
 .search-container.white .search-input {
   background-color: #fff;
 }
-/* line 96, ../scss/modules/search.scss */
+/* line 103, ../scss/modules/search.scss */
 .search-container.white .search-input:focus {
   background-color: #fff;
 }
-/* line 103, ../scss/modules/search.scss */
+/* line 110, ../scss/modules/search.scss */
 .search-container.small .search-input {
   font-size: 12px;
 }
-/* line 106, ../scss/modules/search.scss */
+/* line 113, ../scss/modules/search.scss */
 .search-container.small .search-icon {
-  padding-right: 15px;
   font-size: 12px;
 }
-/* line 113, ../scss/modules/search.scss */
+/* line 119, ../scss/modules/search.scss */
 .search-container.outline .input-round {
   border: 1px #999 solid;
 }
