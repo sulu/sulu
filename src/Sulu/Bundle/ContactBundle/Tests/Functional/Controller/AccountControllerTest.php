@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
+use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
@@ -38,6 +39,11 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 class AccountControllerTest extends SuluTestCase
 {
     /**
+     * @var EntityManager
+     */
+    private $em;
+
+    /**
      * @var Account
      */
     private $account;
@@ -56,6 +62,51 @@ class AccountControllerTest extends SuluTestCase
      * @var Account
      */
     private $parentAccount;
+
+    /**
+     * @var UrlType
+     */
+    private $urlType;
+
+    /**
+     * @var Url
+     */
+    private $url;
+
+    /**
+     * @var EmailType
+     */
+    private $emailType;
+
+    /**
+     * @var Email
+     */
+    private $email;
+
+    /**
+     * @var PhoneType
+     */
+    private $phoneType;
+
+    /**
+     * @var FaxType
+     */
+    private $faxType;
+
+    /**
+     * @var Country
+     */
+    private $country;
+
+    /**
+     * @var AddressType
+     */
+    private $addressType;
+
+    /**
+     * @var Address
+     */
+    private $address;
 
     public function setUp()
     {
@@ -238,6 +289,21 @@ class AccountControllerTest extends SuluTestCase
         $file->setMedia($this->logo);
         $this->em->persist($this->logo);
         $this->em->persist($file);
+    }
+
+    public function testCgetSerializationExclusions()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/accounts'
+        );
+
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertArrayNotHasKey('account', $response['_embedded']['accounts'][0]['accountContacts'][0]['contact']);
+        $this->assertArrayNotHasKey('account', $response['_embedded']['accounts'][0]['contacts'][0]);
     }
 
     public function testGetById()

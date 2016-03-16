@@ -389,6 +389,10 @@ class AccountController extends RestController implements ClassResourceInterface
             $view = $this->view($list, 200);
         }
 
+        $view->setSerializationContext(
+            SerializationContext::create()->setGroups(['fullAccount', 'partialContact', 'Default'])
+        );
+
         return $this->handleView($view);
     }
 
