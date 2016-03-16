@@ -33020,6 +33020,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 sortable: true,
                 matchings: [],
                 url: null,
+                saveParams: {},
                 data: null,
                 instanceName: '',
                 searchInstanceName: null,
@@ -33100,7 +33101,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                     }
                     return date;
                 },
-                
+
                 /**
                  * Brings a datetime into the right format
                  * @param date {String} the date to parse
@@ -35186,6 +35187,10 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                     url = url + '/' + data.id;
                 }
 
+                for (var key in this.options.saveParams) {
+                    url = setGetParameter.call(this, url, key, this.options.saveParams[key]);
+                }
+
                 this.sandbox.emit(DATA_CHANGED.call(this));
 
                 this.sandbox.util.save(url, method, data)
@@ -35206,7 +35211,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                         }
                     }.bind(this))
                     .fail(function(jqXHR, textStatus, error) {
-                        this.sandbox.emit(DATA_SAVE_FAILED.call(this), jqXHR, textStatus, error);
+                        this.sandbox.emit(DATA_SAVE_FAILED.call(this), jqXHR, textStatus, error, data);
 
                         if (typeof fail === 'function') {
                             fail(jqXHR, textStatus, error);

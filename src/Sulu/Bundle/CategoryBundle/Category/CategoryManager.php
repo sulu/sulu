@@ -16,6 +16,7 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
 use Sulu\Bundle\CategoryBundle\Category\Exception\KeyNotUniqueException;
 use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\CategoryBundle\Event\CategoryDeleteEvent;
 use Sulu\Bundle\CategoryBundle\Event\CategoryEvents;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -56,6 +57,11 @@ class CategoryManager implements CategoryManagerInterface
     private $categoryRepository;
 
     /**
+     * @var KeywordManagerInterface
+     */
+    private $keywordManager;
+
+    /**
      * @var DoctrineFieldDescriptor[]
      */
     private $fieldDescriptors;
@@ -63,6 +69,7 @@ class CategoryManager implements CategoryManagerInterface
     public function __construct(
         CategoryRepositoryInterface $categoryRepository,
         UserRepositoryInterface $userRepository,
+        KeywordManagerInterface $keywordManager,
         ObjectManager $em,
         EventDispatcherInterface $eventDispatcher
     ) {
@@ -70,6 +77,7 @@ class CategoryManager implements CategoryManagerInterface
         $this->userRepository = $userRepository;
         $this->categoryRepository = $categoryRepository;
         $this->eventDispatcher = $eventDispatcher;
+        $this->keywordManager = $keywordManager;
     }
 
     /**
@@ -319,6 +327,13 @@ class CategoryManager implements CategoryManagerInterface
 
         if (!$categoryEntity) {
             throw new EntityNotFoundException('SuluCategoryBundle:Category', $id);
+        }
+
+        /** @var CategoryTranslation $translation */
+        foreach ($categoryEntity->getTranslations() as $translation) {
+            foreach ($translation->getKeywords() as $keyword) {
+                $this->keywordManager->delete($keyword, $categoryEntity);
+            }
         }
 
         $this->em->remove($categoryEntity);

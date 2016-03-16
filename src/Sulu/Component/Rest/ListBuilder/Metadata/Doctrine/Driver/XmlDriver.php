@@ -18,6 +18,7 @@ use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\JoinMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\PropertyMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationTypeMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\CountTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\GroupConcatTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\IdentityTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleTypeMetadata;
@@ -103,6 +104,8 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
                 return $this->getGroupConcatenationType($xpath, $propertyNode);
             case 'identity-property':
                 return $this->getIdentityType($xpath, $propertyNode);
+            case 'count-property':
+                return $this->getCountType($xpath, $propertyNode);
             default:
                 return $this->getSingleType($xpath, $propertyNode);
         }
@@ -179,6 +182,23 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         }
 
         return new IdentityTypeMetadata($field);
+    }
+
+    /**
+     * Extracts count-type for property-node.
+     *
+     * @param \DOMXPath $xpath
+     * @param \DOMElement $propertyNode
+     *
+     * @return GroupConcatTypeMetadata
+     */
+    protected function getCountType(\DOMXPath $xpath, \DOMElement $propertyNode)
+    {
+        if (null === $field = $this->getField($xpath, $propertyNode)) {
+            return;
+        }
+
+        return new CountTypeMetadata($field);
     }
 
     /**

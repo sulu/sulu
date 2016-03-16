@@ -658,4 +658,20 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->doctrineListBuilder->execute();
     }
+
+    public function testDistinct()
+    {
+        $this->doctrineListBuilder->distinct(true);
+
+        $this->queryBuilder->expects($this->once())->method('distinct')->with(true);
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testNoDistinct()
+    {
+        $this->queryBuilder->expects($this->once())->method('distinct')->with(false);
+
+        $this->doctrineListBuilder->execute();
+    }
 }

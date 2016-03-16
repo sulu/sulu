@@ -14,6 +14,7 @@ use Metadata\Driver\FileLocatorInterface;
 use Metadata\MetadataFactory;
 use Prophecy\Argument;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCountFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineGroupConcatFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineIdentityFieldDescriptor;
@@ -214,6 +215,29 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
                         'condition' => 'SuluContactBundle:ContactAddress.locale = \'de\'',
                     ],
                 ],
+            ],
+        ];
+
+        $this->assertFieldDescriptors($expected, $fieldDescriptor);
+    }
+
+    public function testGetFieldDescriptorForClassCount()
+    {
+        $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
+            ->willReturn(__DIR__ . '/Resources/count.xml');
+
+        $provider = new ChainProvider($this->chain);
+        $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
+        $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
+
+        $this->assertEquals(['tags'], array_keys($fieldDescriptor));
+
+        $expected = [
+            'tags' => [
+                'name' => 'tags',
+                'translation' => 'Tags',
+                'instance' => DoctrineCountFieldDescriptor::class,
+                'disabled' => true,
             ],
         ];
 

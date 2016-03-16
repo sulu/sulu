@@ -25,6 +25,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2088 [ContentBundle]       Fixed matrix for object permission tab
     * ENHANCEMENT #2035 [ContentBundle]       Add structure type to index
     * FEATURE     #2076 [All]                 Better content repository initialization, deprecated sulu:phpcr:init & sulu:webspaces:init
+    * FEATURE     #2032 [CategoryBundle]      Added category keywords
     * BUGFIX      #2058 [ListBuilder]         Fixed cache for field-descriptor
     * ENHANCEMENT #2034 [ContentBundle]       Improved content-bundle testcases
     * ENHANCEMENT #2036 [SecurityBundle]      Introduced different permission types for different security contexts

@@ -920,6 +920,18 @@
                 <source>labels.success.save-desc</source>
                 <target>Erfolgreich gespeichert</target>
             </trans-unit>
+            <trans-unit id="c129c52dae1354cc4123c0b4820e23c11" resname="labels.success.delete-desc">
+                <source>labels.success.save-desc</source>
+                <target>Erfolgreich gelöscht</target>
+            </trans-unit>
+            <trans-unit id="c129c52dae1354cc4123c0b4820e23c12" resname="public.yes">
+                <source>public.yes</source>
+                <target>Ja</target>
+            </trans-unit>
+            <trans-unit id="c129c52dae1354cc4123c0b4820e23c13" resname="public.no">
+                <source>public.no</source>
+                <target>Nein</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

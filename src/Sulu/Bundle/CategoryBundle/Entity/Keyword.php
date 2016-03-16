@@ -17,14 +17,19 @@ use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
- * CategoryTranslation.
+ * The keywords can describe a category with different words.
  */
-class CategoryTranslation implements AuditableInterface
+class Keyword implements AuditableInterface
 {
+    /**
+     * @var int
+     */
+    private $id;
+
     /**
      * @var string
      */
-    private $translation;
+    private $keyword;
 
     /**
      * @var string
@@ -32,19 +37,9 @@ class CategoryTranslation implements AuditableInterface
     private $locale;
 
     /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @var Category
-     */
-    private $category;
-
-    /**
      * @var Collection
      */
-    private $keywords;
+    private $categoryTranslations;
 
     /**
      * @var UserInterface
@@ -66,33 +61,12 @@ class CategoryTranslation implements AuditableInterface
      */
     private $changed;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
-        $this->keywords = new ArrayCollection();
-    }
-
-    /**
-     * Set translation.
-     *
-     * @param string $translation
-     *
-     * @return CategoryTranslation
-     */
-    public function setTranslation($translation)
-    {
-        $this->translation = $translation;
-
-        return $this;
-    }
-
-    /**
-     * Get translation.
-     *
-     * @return string
-     */
-    public function getTranslation()
-    {
-        return $this->translation;
+        $this->categoryTranslations = new ArrayCollection();
     }
 
     /**
@@ -100,7 +74,7 @@ class CategoryTranslation implements AuditableInterface
      *
      * @param string $locale
      *
-     * @return CategoryTranslation
+     * @return Keyword
      */
     public function setLocale($locale)
     {
@@ -120,6 +94,30 @@ class CategoryTranslation implements AuditableInterface
     }
 
     /**
+     * Set keyword.
+     *
+     * @param string $keyword
+     *
+     * @return Keyword
+     */
+    public function setKeyword($keyword)
+    {
+        $this->keyword = $keyword;
+
+        return $this;
+    }
+
+    /**
+     * Get keyword.
+     *
+     * @return string
+     */
+    public function getKeyword()
+    {
+        return $this->keyword;
+    }
+
+    /**
      * Get id.
      *
      * @return int
@@ -130,77 +128,37 @@ class CategoryTranslation implements AuditableInterface
     }
 
     /**
-     * Set category.
+     * Add category-translation.
      *
-     * @param Category $category
+     * @param CategoryTranslation $categoryTranslation
      *
-     * @return CategoryTranslation
+     * @return Keyword
      */
-    public function setCategory(Category $category)
+    public function addCategoryTranslation(CategoryTranslation $categoryTranslation)
     {
-        $this->category = $category;
+        $this->categoryTranslations[] = $categoryTranslation;
 
         return $this;
     }
 
     /**
-     * Get category.
+     * Remove category-translation.
      *
-     * @return Category
+     * @param CategoryTranslation $categoryTranslation
      */
-    public function getCategory()
+    public function removeCategoryTranslation(CategoryTranslation $categoryTranslation)
     {
-        return $this->category;
+        $this->categoryTranslations->removeElement($categoryTranslation);
     }
 
     /**
-     * Add keyword.
+     * Get categories.
      *
-     * @param Keyword $keyword
-     *
-     * @return Category
+     * @return \Doctrine\Common\Collections\Collection
      */
-    public function addKeyword(Keyword $keyword)
+    public function getCategoryTranslations()
     {
-        $this->keywords[] = $keyword;
-
-        return $this;
-    }
-
-    /**
-     * Remove keyword.
-     *
-     * @param Keyword $keyword
-     */
-    public function removeKeyword(Keyword $keyword)
-    {
-        $this->keywords->removeElement($keyword);
-    }
-
-    /**
-     * Get keywords.
-     *
-     * @return Collection
-     */
-    public function getKeywords()
-    {
-        return $this->keywords;
-    }
-
-    /**
-     * Returns true if given keyword already linked with the category.
-     *
-     * @param Keyword $keyword
-     *
-     * @return bool
-     */
-    public function hasKeyword(Keyword $keyword)
-    {
-        return $this->getKeywords()->exists(
-            function ($key, Keyword $element) use ($keyword) {
-                return $element->equals($keyword);
-            }
-        );
+        return $this->categoryTranslations;
     }
 
     /**
@@ -265,5 +223,40 @@ class CategoryTranslation implements AuditableInterface
     public function setChanged($changed)
     {
         $this->changed = $changed;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isReferencedMultiple()
+    {
+        return $this->getCategoryTranslations()->count() > 1;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isReferenced()
+    {
+        return $this->getCategoryTranslations()->count() > 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCategoryTranslationCount()
+    {
+        return $this->getCategoryTranslations()->count();
+    }
+
+    /**
+     * @param Keyword $keyword
+     *
+     * @return bool
+     */
+    public function equals(Keyword $keyword)
+    {
+        return $keyword->getKeyword() === $this->getKeyword()
+            && $keyword->getLocale() === $this->getLocale();
     }
 }
