@@ -16,7 +16,8 @@ use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,10 +59,26 @@ class PreviewTest extends SuluTestCase
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');
         $this->preview = $this->getContainer()->get('sulu_content.preview');
 
-        /** @var AdminRequestAnalyzer $requestAnalyzer */
+        /** @var RequestAnalyzer $requestAnalyzer */
         $requestAnalyzer = $this->getContainer()->get('sulu_core.webspace.request_analyzer');
-        $requestAnalyzer->setWebspaceKey('sulu_io');
-        $requestAnalyzer->setLocalizationCode('en');
+
+        $webspace = $this->getContainer()->get('sulu_core.webspace.webspace_manager')->findWebspaceByKey('sulu_io');
+        $localization = $webspace->getLocalization('en');
+
+        $attributes = new \ReflectionProperty($requestAnalyzer, 'attributes');
+        $attributes->setAccessible(true);
+
+        $attributes->setValue(
+            $requestAnalyzer,
+            new RequestAttributes(
+                [
+                    'webspaceKey' => $webspace->getKey(),
+                    'webspace' => $webspace,
+                    'locale' => $localization->getLocalization(),
+                    'localization' => $localization,
+                ]
+            )
+        );
 
         $class = new \ReflectionClass(get_class($this->preview));
         $property = $class->getProperty('previewCache');

@@ -11,6 +11,7 @@
 
 use Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolver;
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Webspace;
@@ -96,7 +97,7 @@ class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
         $localization->setLanguage('de');
         $localization->setCountry('at');
 
-        $requestAnalyzer = $this->prophesize('Sulu\Component\Webspace\Analyzer\WebsiteRequestAnalyzer');
+        $requestAnalyzer = $this->prophesize(RequestAnalyzer::class);
         $requestAnalyzer->getWebspace()->willReturn($webspace);
         $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
         $requestAnalyzer->getPortalUrl()->willReturn('sulu.io/de');

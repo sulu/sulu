@@ -2,6 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2131 [WebsiteBundle]       Fixed 'getTheme' error in ExceptionController
+    * ENHANCEMENT #2131 [CoreBundle]          Added request attributes to extract data from request
     * BUGFIX      #2128 [All]                 Fix required version of PHP to support only ^5.5 and ^7.0
     * BUGFIX      #2126 [ContactBundle]       Excluded recursion in accounts REST API
     * BUGFIX      #2126 [All]                 Fixed firefox bug in label tick

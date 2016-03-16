@@ -144,4 +144,14 @@ interface RequestAnalyzerInterface
      * @return PortalInformation
      */
     public function getPortalInformation();
+
+    /**
+     * Returns request attribute with given name.
+     *
+     * @param string $name
+     * @param mixed|null $default
+     *
+     * @return mixed
+     */
+    public function getAttribute($name, $default = null);
 }

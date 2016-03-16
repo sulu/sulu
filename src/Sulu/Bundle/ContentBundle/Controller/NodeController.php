@@ -825,7 +825,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
      */
     public function getSecurityContext()
     {
-        $requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer.admin');
+        $requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer');
         $webspace = $requestAnalyzer->getWebspace();
 
         if ($webspace) {

@@ -26,11 +26,11 @@ class SuluCoreBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new RequestAnalyzerCompilerPass());
         $container->addCompilerPass(new RegisterContentTypesCompilerPass());
         $container->addCompilerPass(new RegisterLocalizationProvidersPass());
         $container->addCompilerPass(new RemoveForeignContextServicesPass());
         $container->addCompilerPass(new ReplacersCompilerPass(__DIR__ . '/DataFixtures/replacers.xml'));
         $container->addCompilerPass(new ListBuilderMetadataProviderCompilerPass());
+        $container->addCompilerPass(new RequestAnalyzerCompilerPass());
     }
 }
