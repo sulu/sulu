@@ -34,6 +34,22 @@
     height: 179px;
     position: relative;
 
+    &.icon {
+        color: $grayLight;
+        font-size: 150px;
+        text-align: center;
+        vertical-align: middle;
+        padding-top: 15px;
+    }
+
+    .file-version-change,
+    img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-size: $baseFontSize;
+    }
+
     #file-version-change {
         width: 100%;
         height: 100%;

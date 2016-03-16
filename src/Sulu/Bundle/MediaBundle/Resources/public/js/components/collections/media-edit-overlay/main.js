@@ -15,11 +15,12 @@
 define([
     'config',
     'services/sulumedia/media-manager',
+    'services/sulumedia/file-icons',
     'text!./info.html',
     'text!./copyright.html',
     'text!./versions.html',
     'text!./preview.html'
-], function(config, mediaManager, infoTemplate, copyrightTemplate, versionsTemplate, previewTemplate) {
+], function(config, mediaManager, fileIcons, infoTemplate, copyrightTemplate, versionsTemplate, previewTemplate) {
 
     'use strict';
 
@@ -194,7 +195,8 @@ define([
 
             $info = this.sandbox.dom.createElement(_.template(infoTemplate, {
                 media: this.media,
-                translate: this.sandbox.translate
+                translate: this.sandbox.translate,
+                icon: fileIcons.getByMimeType(media.mimeType)
             }));
 
             $copyright = this.sandbox.dom.createElement(_.template(copyrightTemplate, {
