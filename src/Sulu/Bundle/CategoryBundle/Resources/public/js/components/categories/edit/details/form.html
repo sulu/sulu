@@ -1,0 +1,28 @@
+<form id="category-form">
+    <div class="grid">
+        <div class="grid-row">
+            <label for="change-name"><%= translations.name %></label>
+            <input class="form-element input-bold" type="text" id="change-name" placeholder="<%= placeholder %>"
+                   data-validation-required="true"
+                   data-mapper-property="name"/>
+        </div>
+        <div class="grid-row">
+            <label for="change-key"><%= translations.key %></label>
+            <input class="form-element" type="text" id="change-key" placeholder="<%= translations.categoryKey %>"
+                   data-validation-required="false"
+                   data-mapper-property="key"
+                   data-validation-max-length="255"/>
+        </div>
+
+        <% if (!!keywords) { %>
+        <div class="grid-col-12 floating section section-content">
+            <h2 class="divider m-bottom-20" title=""><%= translations.keywords %></h2>
+
+            <div>
+                <div id="keywords-list-toolbar"/>
+                <div id="keywords-list"/>
+            </div>
+        </div>
+        <% } %>
+    </div>
+</form>

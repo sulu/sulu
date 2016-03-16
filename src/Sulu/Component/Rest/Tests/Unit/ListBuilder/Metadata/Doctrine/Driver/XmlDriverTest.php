@@ -18,6 +18,7 @@ use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\JoinMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\PropertyMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationTypeMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\CountTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\GroupConcatTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\IdentityTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleTypeMetadata;
@@ -213,6 +214,26 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testLoadMetadataFromFileCount()
+    {
+        $driver = new XmlDriver($this->locator->reveal(), $this->parameterBag->reveal());
+        $result = $this->loadMetadataFromFile($driver, 'count');
+
+        $this->assertInstanceOf(ClassMetadata::class, $result);
+        $this->assertEquals('stdClass', $result->name);
+        $this->assertCount(1, $result->propertyMetadata);
+
+        $this->assertEquals(['tags'], array_keys($result->propertyMetadata));
+
+        $this->assertCountMetadata(
+            [
+                'name' => 'tags',
+                'entityName' => 'SuluContactBundle:Contact',
+            ],
+            $result->propertyMetadata['tags']
+        );
+    }
+
     private function loadMetadataFromFile(XmlDriver $driver, $file)
     {
         $reflectionMethod = new \ReflectionMethod(get_class($driver), 'loadMetadataFromFile');
@@ -239,6 +260,12 @@ class XmlDriverTest extends \PHPUnit_Framework_TestCase
     private function assertIdentityMetadata(array $expected, PropertyMetadata $metadata)
     {
         $this->assertInstanceOf(IdentityTypeMetadata::class, $metadata->getType());
+        $this->assertField($expected, $metadata->getType()->getField());
+    }
+
+    private function assertCountMetadata(array $expected, PropertyMetadata $metadata)
+    {
+        $this->assertInstanceOf(CountTypeMetadata::class, $metadata->getType());
         $this->assertField($expected, $metadata->getType()->getField());
     }
 

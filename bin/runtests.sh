@@ -52,6 +52,7 @@ function init_dbal {
 
     if [[ $? != 0 ]]; then
         comment "Database already exists"
+        php vendor/symfony-cmf/testing/bin/console doctrine:schema:update --force
     else
         echo "Creating schema"
         php vendor/symfony-cmf/testing/bin/console doctrine:schema:create
