@@ -24,6 +24,16 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class SecuritySubscriber implements EventSubscriberInterface
 {
     /**
+     * @var array
+     */
+    private $permissions;
+
+    public function __construct(array $permissions)
+    {
+        $this->permissions = $permissions;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public static function getSubscribedEvents()
@@ -85,7 +95,12 @@ class SecuritySubscriber implements EventSubscriberInterface
         foreach ($node->getProperties('sec:*') as $property) {
             /** @var PropertyInterface $property */
             $roleId = substr($property->getName(), 9); // remove the "sec:role-" prefix
-            $permissions[$roleId] = $property->getValue();
+
+            $allowedPermissions = $property->getValue();
+
+            foreach ($this->permissions as $permission => $value) {
+                $permissions[$roleId][$permission] = in_array($permission, $allowedPermissions);
+            }
         }
 
         $document->setPermissions($permissions);
