@@ -23,17 +23,17 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     /**
      * @var RequestProcessorInterface[]
      */
-    private $requestAttributesProvider;
+    private $requestProcessors;
 
     /**
      * @var RequestAttributes
      */
     private $attributes;
 
-    public function __construct(array $requestAttributesProvider)
+    public function __construct(array $requestProcessors)
     {
-        $this->requestAttributesProvider = $requestAttributesProvider;
         $this->attributes = new RequestAttributes();
+        $this->requestProcessors = $requestProcessors;
     }
 
     /**
@@ -166,11 +166,11 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     protected function createAttributes(Request $request)
     {
         $attributes = new RequestAttributes();
-        foreach ($this->requestAttributesProvider as $provider) {
+        foreach ($this->requestProcessors as $provider) {
             $attributes = $attributes->merge($provider->process($request));
         }
 
-        foreach ($this->requestAttributesProvider as $provider) {
+        foreach ($this->requestProcessors as $provider) {
             $provider->validate($attributes);
         }
 
