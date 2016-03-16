@@ -107,6 +107,7 @@ class ContentDataProvider implements DataProviderInterface
                     ['column' => 'changed', 'title' => 'smart-content.changed'],
                 ]
             )
+            ->setDeepLink('content/contents/{webspace}/{locale}/edit:{id}/details')
             ->getConfiguration();
 
         return $this->configuration;

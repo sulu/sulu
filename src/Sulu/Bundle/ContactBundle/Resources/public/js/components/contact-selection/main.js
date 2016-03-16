@@ -29,6 +29,7 @@ define([], function() {
             contactUrl: null,
             account: true,
             accountUrl: null,
+            navigateEvent: 'sulu.router.navigate',
             translations: {
                 noContentSelected: 'contact-selection.no-contact-selected',
                 add: 'contact-selection.add'
@@ -50,8 +51,12 @@ define([], function() {
                 ].join('');
             },
 
-            contentItem: function(value) {
-                return ['<span class="value">', value, '</span>'].join('');
+            contentItem: function(id, value) {
+                return [
+                    '<a href="#" class="link" data-id="', id, '">',
+                    '   <span class="value">', value, '</span>',
+                    '</a>'
+                ].join('');
             }
         },
 
@@ -75,6 +80,17 @@ define([], function() {
                 'husky.overlay.contact-selection.' + this.options.instanceName + '.add.opened',
                 updateList.bind(this)
             );
+
+            this.sandbox.dom.on(this.$el, 'click', function(e) {
+                var element = this.sandbox.dom.data(e.currentTarget, 'id'),
+                    type = element.substr(0, 1),
+                    id = parseInt(element.substr(1)),
+                    route = 'contacts/' + (type === 'c' ? 'contacts' : 'accounts') + '/edit:' + id + '/details';
+
+                this.sandbox.emit(this.options.navigateEvent, route);
+
+                return false;
+            }.bind(this), 'a.link');
 
             // adjust position of overlay after column-navigation has initialized
             this.sandbox.on('husky.datagrid.contact.view.rendered', function() {
@@ -390,7 +406,7 @@ define([], function() {
         },
 
         getItemContent: function(item) {
-            return templates.contentItem(item.name);
+            return templates.contentItem(item.id, item.name);
         },
 
         sortHandler: function(ids) {

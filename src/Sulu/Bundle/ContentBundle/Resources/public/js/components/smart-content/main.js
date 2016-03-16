@@ -124,6 +124,8 @@ define(['services/husky/util'], function(util) {
             titleKey: 'title',
             imageKey: 'image',
             pathKey: 'path',
+            localeKey: 'locale',
+            webspaceKey: 'webspaceKey',
             translations: {},
             elementDataName: 'smart-content',
             externalConfigs: false,
@@ -131,7 +133,9 @@ define(['services/husky/util'], function(util) {
             title: 'Smart-Content',
             datasource: null,
             categoryRoot: null,
-            displayOptions: {}
+            displayOptions: {},
+            navigateEvent: 'sulu.router.navigate',
+            deepLink: ''
         },
 
         displayOptionsDefaults = {
@@ -201,6 +205,17 @@ define(['services/husky/util'], function(util) {
                 '    <span class="image"><img src="<%= image %>"/></span>',
                 '<% } %>',
                 '    <span class="value"><%= value %></span>',
+                '</li>'
+            ].join(''),
+            contentItemLink: [
+                '<li data-id="<%= dataId %>">',
+                '    <a href="#" data-id="<%= dataId %>" data-webspace="<%= webspace %>" data-locale="<%= locale %>" class="link">',
+                '        <span class="num"><%= num %></span>',
+                '<% if (!!image) { %>',
+                '        <span class="image"><img src="<%= image %>"/></span>',
+                '<% } %>',
+                '        <span class="value"><%= value %></span>',
+                '    </a>',
                 '</li>'
             ].join(''),
             categoryItem: [
@@ -398,6 +413,7 @@ define(['services/husky/util'], function(util) {
             this.startLoader();
             this.startOverlay();
             this.bindEvents();
+            this.bindDomEvents();
             this.setURI();
             this.loadContent();
 
@@ -592,10 +608,17 @@ define(['services/husky/util'], function(util) {
                 var ul = this.sandbox.dom.createElement('<ul class="' + constants.contentListClass + '"/>');
 
                 this.sandbox.util.foreach(this.items, function(item, index) {
-                    this.sandbox.dom.append(ul, _.template(templates.contentItem)({
+                    var template = templates.contentItem;
+                    if (this.options.deepLink !== '') {
+                        template = templates.contentItemLink;
+                    }
+
+                    this.sandbox.dom.append(ul, _.template(template, {
                         dataId: item[this.options.idKey],
                         value: item[this.options.titleKey],
                         image: item[this.options.imageKey] || null,
+                        webspace: this.options.webspace,
+                        locale: this.options.locale,
                         num: (index + 1)
                     }));
                 }.bind(this));
@@ -649,6 +672,26 @@ define(['services/husky/util'], function(util) {
                 this.setURI();
                 this.loadContent();
             }.bind(this));
+        },
+
+        /**
+         * Binds dom events
+         */
+        bindDomEvents: function() {
+            this.sandbox.dom.on(this.$el, 'click', function(e) {
+                var id = this.sandbox.dom.data(e.currentTarget, 'id'),
+                    webspace = this.sandbox.dom.data(e.currentTarget, 'webspace'),
+                    locale = this.sandbox.dom.data(e.currentTarget, 'locale'),
+                    route = this.options.deepLink;
+
+                route = route.replace('{webspace}', webspace)
+                    .replace('{locale}', locale)
+                    .replace('{id}', id);
+
+                this.sandbox.emit(this.options.navigateEvent, route);
+
+                return false;
+            }.bind(this), 'a.link');
         },
 
         /**

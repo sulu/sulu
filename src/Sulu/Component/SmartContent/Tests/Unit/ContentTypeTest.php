@@ -18,6 +18,7 @@ use Sulu\Component\SmartContent\Configuration\ProviderConfiguration;
 use Sulu\Component\SmartContent\ContentType as SmartContent;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderPool;
+use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -371,6 +372,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 ],
                 'datasource' => null,
                 'max_per_page' => new PropertyParameter('max_per_page', '5'),
+                'deep_link' => new PropertyParameter('deep_link', ''),
             ],
             ['webspaceKey' => null, 'locale' => null],
             null,
@@ -486,6 +488,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 ],
                 'datasource' => null,
                 'max_per_page' => new PropertyParameter('max_per_page', '5'),
+                'deep_link' => new PropertyParameter('deep_link', ''),
             ],
             ['webspaceKey' => null, 'locale' => null],
             null,
@@ -587,6 +590,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 ],
                 'datasource' => null,
                 'max_per_page' => new PropertyParameter('max_per_page', $pageSize),
+                'deep_link' => new PropertyParameter('deep_link', ''),
             ],
             ['webspaceKey' => null, 'locale' => null],
             $limitResult,
@@ -682,6 +686,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                 ],
                 'datasource' => null,
                 'max_per_page' => new PropertyParameter('max_per_page', $pageSize),
+                'deep_link' => new PropertyParameter('deep_link', null),
             ],
             ['webspaceKey' => null, 'locale' => null],
             $limitResult,
@@ -793,6 +798,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
                     'presentAs' => true,
                 ],
                 'datasource' => null,
+                'deep_link' => new PropertyParameter('deep_link', null),
             ],
             ['webspaceKey' => null, 'locale' => null],
             null

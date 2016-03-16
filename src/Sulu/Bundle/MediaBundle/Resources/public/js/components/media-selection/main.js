@@ -25,6 +25,7 @@ define(function() {
             dataAttribute: 'media-selection',
             actionIcon: 'fa-file-image-o',
             types: null,
+            navigateEvent: 'sulu.router.navigate',
             dataDefault: {
                 displayOption: 'top',
                 ids: []
@@ -59,10 +60,12 @@ define(function() {
         },
 
         templates = {
-            contentItem: function(title, thumbnails) {
+            contentItem: function(id, collection, title, thumbnails) {
                 return [
-                    '   <img src="', thumbnails['50x50'], '"/>',
-                    '   <span class="title">', title, '</span>'
+                    '<a href="#" class="link" data-id="', id, '" data-collection="', collection, '">',
+                    '    <img src="', thumbnails['50x50'], '"/>',
+                    '    <span class="title">', title, '</span>',
+                    '</a>'
                 ].join('');
             }
         },
@@ -126,6 +129,23 @@ define(function() {
         },
 
         /**
+         * Bind events to dom elements
+         */
+        bindDomEvents = function() {
+            this.sandbox.dom.on(this.$el, 'click', function(e) {
+                var id = this.sandbox.dom.data(e.currentTarget, 'id'),
+                    collection = this.sandbox.dom.data(e.currentTarget, 'collection');
+
+                this.sandbox.emit(
+                    this.options.navigateEvent,
+                    'media/collections/edit:' + collection + '/files/edit:' + id
+                );
+
+                return false;
+            }.bind(this), 'a.link');
+        },
+
+        /**
          * Starts the selection-overlay component
          */
         startSelectionOverlay = function() {
@@ -177,6 +197,8 @@ define(function() {
             };
 
             bindCustomEvents.call(this);
+            bindDomEvents.call(this);
+
             this.render();
 
             // set display option
@@ -202,7 +224,7 @@ define(function() {
         },
 
         getItemContent: function(item) {
-            return templates.contentItem(item.title, item.thumbnails);
+            return templates.contentItem(item.id, item.collection, item.title, item.thumbnails);
         },
 
         sortHandler: function(ids) {

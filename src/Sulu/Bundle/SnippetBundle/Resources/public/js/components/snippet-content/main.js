@@ -25,6 +25,8 @@ define([], function() {
             actionIcon: 'fa-file-text-o',
             hidePositionElement: true,
             hideConfigButton: true,
+            locale: null,
+            navigateEvent: 'sulu.router.navigate',
             translations: {
                 noContentSelected: 'snippet-content.nosnippets-selected',
                 addSnippets: 'snippet-content.add'
@@ -46,8 +48,12 @@ define([], function() {
                 ].join('');
             },
 
-            contentItem: function(value) {
-                return ['<span class="value">', value, '</span>'].join('');
+            contentItem: function(id, value) {
+                return [
+                    '<a href="#" class="link" data-id="', id, '">',
+                    '   <span class="value">', value, '</span>',
+                    '</a>'
+                ].join('');
             }
         },
 
@@ -163,6 +169,17 @@ define([], function() {
                     return false;
                 }
             }.bind(this), '.search-input');
+
+            this.sandbox.dom.on(this.$el, 'click', function(e) {
+                var id = this.sandbox.dom.data(e.currentTarget, 'id');
+
+                this.sandbox.emit(
+                    this.options.navigateEvent,
+                    'snippet/snippets/' + this.options.locale + '/edit:' + id
+                );
+
+                return false;
+            }.bind(this), 'a.link');
         },
 
         /**
@@ -241,7 +258,7 @@ define([], function() {
         },
 
         getItemContent: function(item) {
-            return templates.contentItem(item.title);
+            return templates.contentItem(item.id, item.title);
         },
 
         sortHandler: function(ids) {
