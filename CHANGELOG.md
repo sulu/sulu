@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * BUGFIX      #2128 [All]                 Fix required version of PHP to support only ^5.5 and ^7.0
     * BUGFIX      #2126 [ContactBundle]       Excluded recursion in accounts REST API
+    * BUGFIX      #2126 [All]                 Fixed firefox bug in label tick
     * ENHANCEMENT #2122 [All]                 Disable xdebug on Travis to speed up composer and tests
     * ENHANCEMENT #2120 [All]                 Change bundle tests to use their own phpunit config and move `SYMFONY_DEPRECATIONS_HELPER` var into
     * ENHANCEMENT #2121 [All]                 Cache composer cache dir and prefer dist downloads on Travis
