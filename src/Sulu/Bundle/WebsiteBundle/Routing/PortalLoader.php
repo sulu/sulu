@@ -11,8 +11,8 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Component\Webspace\Portal;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -78,6 +78,16 @@ class PortalLoader extends Loader
             $route = clone $importedRoute;
             $route->setHost($portalInformation->getHost());
             $route->setPath($portalInformation->getPrefix() . $route->getPath());
+
+            if ($portalInformation->getType() === RequestAnalyzerInterface::MATCH_TYPE_PARTIAL) {
+                $route->setDefaults(
+                    [
+                        '_controller' => 'SuluWebsiteBundle:Redirect:redirectToRoute',
+                        'route' => $portalInformation->getRedirect() . '.' . $importedRouteName,
+                        'permanent' => true,
+                    ]
+                );
+            }
 
             $this->collection->add($portalInformation->getUrl() . '.' . $importedRouteName, $route);
         }
