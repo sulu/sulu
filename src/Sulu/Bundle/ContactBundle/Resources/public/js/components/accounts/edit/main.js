@@ -34,6 +34,9 @@ define([
                             // this.data is set by sulu-content.js with data from loadComponentData()
                             return this.sandbox.util.extend(false, {}, this.data);
                         }.bind(this)
+                    },
+                    componentOptions: {
+                        values: this.data
                     }
                 },
                 toolbar: {
@@ -156,6 +159,7 @@ define([
          */
         afterSave: function(action, savedData) {
             this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
+            this.sandbox.emit('sulu.header.saved', savedData);
             if (action === 'back') {
                 AccountRouter.toList();
             } else if (action === 'new') {

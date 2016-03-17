@@ -11,7 +11,6 @@ define(function() {
 
     'use strict';
 
-    // TODO load from /admin/config
     var sulu = JSON.parse(JSON.stringify(SULU)),
         config = !!sulu.sections ? sulu.sections : {};
 

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
+use Sulu\Bundle\AdminBundle\Navigation\DisplayCondition;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -49,6 +50,12 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
         $content->setPosition(10);
         $content->setAction('content');
         $content->setComponent('content/form@sulucontent');
+        $content->setDisplayConditions(
+            [
+                new DisplayCondition('linked', DisplayCondition::OPERATOR_EQUAL, null),
+                new DisplayCondition('shadowOn', DisplayCondition::OPERATOR_EQUAL, false),
+            ]
+        );
 
         $seo = new ContentNavigationItem('content-navigation.contents.seo');
         $seo->setId('tab-seo');
@@ -56,6 +63,12 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
         $seo->setAction('seo');
         $seo->setComponent('content/seo@sulucontent');
         $seo->setDisplay(['edit']);
+        $seo->setDisplayConditions(
+            [
+                new DisplayCondition('linked', DisplayCondition::OPERATOR_EQUAL, null),
+                new DisplayCondition('shadowOn', DisplayCondition::OPERATOR_EQUAL, false),
+            ]
+        );
 
         $excerpt = new ContentNavigationItem('content-navigation.contents.excerpt');
         $excerpt->setId('tab-excerpt');
@@ -63,6 +76,12 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
         $excerpt->setAction('excerpt');
         $excerpt->setComponent('content/excerpt@sulucontent');
         $excerpt->setDisplay(['edit']);
+        $excerpt->setDisplayConditions(
+            [
+                new DisplayCondition('linked', DisplayCondition::OPERATOR_NOT_EQUAL, 'internal'),
+                new DisplayCondition('shadowOn', DisplayCondition::OPERATOR_EQUAL, false),
+            ]
+        );
 
         $settings = new ContentNavigationItem('content-navigation.contents.settings');
         $settings->setId('tab-settings');

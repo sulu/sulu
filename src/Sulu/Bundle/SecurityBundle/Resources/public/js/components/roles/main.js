@@ -8,9 +8,7 @@
  */
 
 
-define([
-    'sulusecurity/models/role'
-], function(Role) {
+define(['sulusecurity/models/role'], function(Role) {
 
     'use strict';
 
@@ -23,13 +21,13 @@ define([
         name: 'Sulu Security Role',
 
         initialize: function() {
-            this.role = null;
             this.idDelete = null;
             this.loading = 'delete';
 
             if (this.options.display === 'list') {
                 this.renderList();
             } else if (this.options.display === 'form') {
+                this.role = this.options.data();
                 this.renderForm();
             }
 
@@ -78,10 +76,12 @@ define([
         save: function(data, action) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
             this.role.set(data);
-            this.role.save(null, {
+
+            this.role.save(data, {
                 success: function(data) {
                     if (!!this.options.id) {
                         this.sandbox.emit('sulu.role.saved', data.id);
+                        this.sandbox.emit('sulu.header.saved', data.toJSON());
                     }
                     if (action === 'back') {
                         this.sandbox.emit('sulu.roles.list');
@@ -172,30 +172,17 @@ define([
         },
 
         renderForm: function() {
-            this.role = new Role();
-
-            var $form = this.sandbox.dom.createElement('<div id="roles-form-container"/>'),
-                component = {
-                    name: 'roles/components/form@sulusecurity',
-                    options: {
-                        el: $form,
-                        data: this.role.defaults()
-                    }
-                };
+            var $form = this.sandbox.dom.createElement('<div id="roles-form-container"/>');
 
             this.html($form);
 
-            if (!!this.options.id) {
-                this.role.set({id: this.options.id});
-                this.role.fetch({
-                    success: function(model) {
-                        component.options.data = model.toJSON();
-                        this.sandbox.start([component]);
-                    }.bind(this)
-                });
-            } else {
-                this.sandbox.start([component]);
-            }
+            this.sandbox.start([{
+                name: 'roles/components/form@sulusecurity',
+                options: {
+                    el: $form,
+                    data: this.role.toJSON()
+                }
+            }]);
         }
     };
 });
