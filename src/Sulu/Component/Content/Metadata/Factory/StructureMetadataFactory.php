@@ -16,6 +16,7 @@ use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 
 /**
  * Create new (mapped) structures using the provided loader.
@@ -113,14 +114,27 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
             // reverse paths, so that the last path overrides previous ones
             $fileLocator = new FileLocator(array_reverse($paths));
 
-            try {
-                $filePath = $fileLocator->locate(sprintf('%s.xml', $structureType));
-            } catch (\InvalidArgumentException $e) {
+            // fall to structure not found 
+            $fallback = 'structure-not-found';
+
+            $filePath = null;
+            $exception = null;
+            foreach ([ $structureType, $fallback ] as $structureName) {
+                try {
+                    $filePath = $fileLocator->locate($structureName . '.xml');
+                    break;
+                } catch (\InvalidArgumentException $e) {
+                    $exception = $e;
+                }
+            }
+
+            if (null === $filePath) {
                 throw new Exception\StructureTypeNotFoundException(
                     sprintf(
-                        'Could not load structure type "%s" for document type "%s", looked in "%s"',
+                        'Could not load structure type "%s" for document type "%s" and the fallback "%s" could also not be loaded, looked in "%s"',
                         $structureType,
                         $type,
+                        $fallback,
                         implode('", "', $paths)
                     ), null, $e
                 );
@@ -128,14 +142,18 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
 
             $metadata = $this->loader->load($filePath, $type);
 
+            if (null !== $exception) {
+                $metadata->setExceptionMessage($exception->getMessage());
+            }
+
             $resources = [new FileResource($filePath)];
 
             $cache->write(
                 sprintf('<?php $metadata = \'%s\';', serialize($metadata)),
                 $resources
             );
-        }
 
+        }
         require $cachePath;
 
         $structure = unserialize($metadata);

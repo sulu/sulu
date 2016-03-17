@@ -49,12 +49,22 @@ class StructureMetadata extends ItemMetadata
      *
      * @var array
      */
-    public $properties;
+    public $properties = [];
 
     /**
      * @var bool
      */
     public $internal;
+
+    /**
+     * @var string
+     */
+    public $exceptionMessage;
+
+    /**
+     * @var bool
+     */
+    public $isValid = true;
 
     /**
      * Return a model property.
@@ -203,5 +213,44 @@ class StructureMetadata extends ItemMetadata
     public function isInternal()
     {
         return $this->internal;
+    }
+
+    /**
+     * Set the exception message and invalidate the structure.
+     *
+     * @param string $exceptionMessage
+     */
+    public function setExceptionMessage($exceptionMessage)
+    {
+        $this->exceptionMessage = $exceptionMessage;
+        $this->isValid = false;
+    }
+
+    /**
+     * Return the exception message if this structure metadata
+     * is invalid.
+     *
+     * @retrun string
+     */
+    public function getExceptionMessage()
+    {
+        return $this->exceptionMessage;
+    }
+
+    /**
+     * Return true if this template is valid.
+     *
+     * When a structure is an invalid state it means that
+     * something went wrong when loading the structure, in practice
+     * this probably means that the structure file was not found.
+     *
+     * The error message may be retrieved via. the `getExceptionMessage`
+     * method.
+     *
+     * @return bool
+     */
+    public function isValid()
+    {
+        return $this->isValid;
     }
 }
