@@ -452,6 +452,21 @@ define(['app-config', 'config', 'sulucontent/components/content/preview/main'], 
         },
 
         submit: function(action) {
+            // check if each part is valid
+            var valid = true;
+            this.getDomElementsForTagName('sulu.rlp.part', function(property) {
+                if (!property.$el.data('element').validate()) {
+                    valid = false;
+                }
+            }.bind(this));
+
+
+            // if rlp-parts are empty dont wait for the resource-locator
+            // because without them it wont be generated
+            if (!valid) {
+                return;
+            }
+
             this.dfdListenForResourceLocator.then(function() {
                 if (this.sandbox.form.validate(this.formId)) {
                     this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
