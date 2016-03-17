@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2143 [ContactBundle]     Fixed account cget filtering of ids
     * HOTFIX      #2102 [ContactBundle]     Added filter for account tags
 
 * 1.1.10 (2016-03-07)

@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
@@ -33,6 +32,8 @@ use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Makes accounts available through a REST API.
@@ -87,7 +88,7 @@ class AccountController extends RestController implements ClassResourceInterface
      * @param int $id
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function getAction($id, Request $request)
     {
@@ -122,7 +123,7 @@ class AccountController extends RestController implements ClassResourceInterface
      * @param int $id
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function getContactsAction($id, Request $request)
     {
@@ -185,7 +186,7 @@ class AccountController extends RestController implements ClassResourceInterface
      * @param int $id
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function getAddressesAction($id, Request $request)
     {
@@ -230,7 +231,7 @@ class AccountController extends RestController implements ClassResourceInterface
      *
      * @throws \Exception
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function putContactsAction($accountId, $contactId, Request $request)
     {
@@ -311,7 +312,7 @@ class AccountController extends RestController implements ClassResourceInterface
      *
      * @throws \Exception
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function deleteContactsAction($accountId, $contactId)
     {
@@ -353,12 +354,14 @@ class AccountController extends RestController implements ClassResourceInterface
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function cgetAction(Request $request)
     {
+        $numberIdsFilter = 0;
+        $requestLimit = $request->get('limit');
         $locale = $this->getUser()->getLocale();
-        $filter = $this->retrieveFilter($request);
+        $filter = $this->retrieveFilter($request, $numberIdsFilter);
 
         if ($request->get('flat') == 'true') {
             /** @var RestHelperInterface $restHelper */
@@ -368,6 +371,11 @@ class AccountController extends RestController implements ClassResourceInterface
             $listBuilder = $this->generateFlatListBuilder();
             $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
             $this->applyRequestParameters($request, $filter, $listBuilder);
+
+            // If no limit is set in request and limit is set by ids
+            if (!$requestLimit && $numberIdsFilter > 0 && $numberIdsFilter > $listBuilder->getLimit()) {
+                $listBuilder->limit($numberIdsFilter);
+            }
 
             $listResponse = $listBuilder->execute();
             $listResponse = $this->addLogos($listResponse, $locale);
@@ -458,7 +466,7 @@ class AccountController extends RestController implements ClassResourceInterface
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function postAction(Request $request)
     {
@@ -533,7 +541,7 @@ class AccountController extends RestController implements ClassResourceInterface
      * @param int $id The id of the contact to update
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
@@ -645,7 +653,7 @@ class AccountController extends RestController implements ClassResourceInterface
      * @param $id
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function patchAction($id, Request $request)
     {
@@ -730,7 +738,7 @@ class AccountController extends RestController implements ClassResourceInterface
      * @param $id
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function deleteAction($id, Request $request)
     {
@@ -777,7 +785,7 @@ class AccountController extends RestController implements ClassResourceInterface
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function multipledeleteinfoAction(Request $request)
     {
@@ -815,7 +823,7 @@ class AccountController extends RestController implements ClassResourceInterface
      *
      * @param $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function getDeleteinfoAction($id)
     {
@@ -1238,17 +1246,23 @@ class AccountController extends RestController implements ClassResourceInterface
      * Retrieves the ids from the request.
      *
      * @param Request $request
+     * @param int &$count
+     *
+     * @return array
      */
-    private function retrieveFilter(Request $request)
+    private function retrieveFilter(Request $request, &$count)
     {
         $filter = [];
         $ids = $request->get('ids');
+        $count = 0;
+
         if ($ids) {
-            if (is_array($ids)) {
-                $filter['id'] = $ids;
-            } else {
-                $filter['id'] = explode(',', $ids);
+            if (is_string($ids)) {
+                $ids = explode(',', $ids);
             }
+
+            $count = count($ids);
+            $filter['id'] = $ids;
         }
 
         return $filter;

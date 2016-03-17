@@ -11,9 +11,11 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
@@ -37,6 +39,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AccountControllerTest extends SuluTestCase
 {
+    private $accountCount = 1;
     /**
      * @var Account
      */
@@ -51,6 +54,11 @@ class AccountControllerTest extends SuluTestCase
      * @var Media
      */
     private $logo;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $em;
 
     /**
      * @var Account
@@ -2123,5 +2131,102 @@ class AccountControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(2, $response->total);
+    }
+
+    /**
+     * Tests if all accounts are returned when fetching flat api by ids.
+     */
+    public function testCGetByIdsOnFlatApi()
+    {
+        $amount = 30;
+
+        // Create 30 new accounts.
+        $accounts = $this->createMultipleMinimalAccounts($amount);
+        $this->em->flush();
+
+        // Get ids of new accounts.
+        $ids = array_map(function ($account) {
+            return $account->getId();
+        }, $accounts);
+
+        // Make get request on flat api.
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/accounts?flat=true',
+            [
+                'ids' => $ids
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertCount($amount, $response->_embedded->accounts);
+    }
+
+    /**
+     * Tests if all accounts are returned when fetching flat api by ids.
+     */
+    public function testCGetByIdsOnFlatApiWithLimit()
+    {
+        $amount = 30;
+
+        // Create 30 new accounts.
+        $accounts = $this->createMultipleMinimalAccounts($amount);
+        $this->em->flush();
+
+        // Get ids of new accounts.
+        $ids = array_map(function ($account) {
+            return $account->getId();
+        }, $accounts);
+
+        // Make get request on flat api.
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/accounts?flat=true',
+            [
+                'ids' => $ids,
+                'page' => 2,
+                'limit' => 10
+            ]
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertCount(10, $response->_embedded->accounts);
+    }
+
+    /**
+     * Creates a minimal account.
+     *
+     * @return AccountInterface
+     */
+    private function createMinimalAccount()
+    {
+        $account = new Account();
+        $account->setName('Minimal Account '. $this->accountCount++);
+
+        $this->em->persist($account);
+
+        return $account;
+    }
+
+    /**
+     * Creates a certain amount of accounts.
+     *
+     * @param int $number
+     *
+     * @return array
+     */
+    private function createMultipleMinimalAccounts($number)
+    {
+        $accounts = [];
+
+        for ($i = 0; $i < $number; $i++) {
+            $accounts[] = $this->createMinimalAccount();
+        }
+
+        return $accounts;
     }
 }
