@@ -60,7 +60,7 @@ abstract class SuluBuilder implements ContainerAwareInterface, BuilderInterface
         if (!empty($args)) {
             $this->output->writeln(sprintf('<comment>%s </comment> (%s)', $command, json_encode($args)));
         } else {
-            $this->output->writeln(sprintf('<comment>%s </comment> (%s)', $command));
+            $this->output->writeln(sprintf('<comment>%s</comment>', $command));
         }
         $this->output->writeln('');
 
