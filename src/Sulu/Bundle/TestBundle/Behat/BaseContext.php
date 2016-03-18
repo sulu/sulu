@@ -76,9 +76,7 @@ abstract class BaseContext extends RawMinkContext implements Context, KernelAwar
         $input = new ArrayInput($args);
 
         $application = new Application($kernel);
-        foreach ($kernel->getBundles() as $bundle) {
-            $bundle->registerCommands($application);
-        }
+        $application->all();
 
         $application->setAutoExit(false);
         $application->setCatchExceptions(false);
