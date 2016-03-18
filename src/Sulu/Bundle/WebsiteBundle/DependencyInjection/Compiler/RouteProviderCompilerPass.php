@@ -31,7 +31,6 @@ class RouteProviderCompilerPass implements CompilerPassInterface
             $container->setDefinition(
                 'sulu_website.provider.content',
                 new Definition('Sulu\Bundle\WebsiteBundle\Routing\ContentRouteProvider', [
-                    new Reference('sulu.content.mapper'),
                     new Reference('sulu_core.webspace.request_analyzer'),
                 ])
             );

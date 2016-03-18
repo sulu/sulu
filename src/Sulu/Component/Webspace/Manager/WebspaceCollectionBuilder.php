@@ -21,6 +21,7 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Url;
+use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
@@ -29,24 +30,17 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class WebspaceCollectionBuilder
 {
-    const REPLACER_LANGUAGE = '{language}';
-    const REPLACER_COUNTRY = '{country}';
-    const REPLACER_LOCALIZATION = '{localization}';
-    const REPLACER_SEGMENT = '{segment}';
-
-    private $replacers = [
-        self::REPLACER_LANGUAGE,
-        self::REPLACER_COUNTRY,
-        self::REPLACER_LOCALIZATION,
-        self::REPLACER_SEGMENT,
-    ];
-
     /**
      * The loader for the xml config files.
      *
      * @var LoaderInterface
      */
     private $loader;
+
+    /**
+     * @var ReplacerInterface
+     */
+    private $urlReplacer;
 
     /**
      * Logger for logging the warnings.
@@ -85,12 +79,18 @@ class WebspaceCollectionBuilder
 
     /**
      * @param LoaderInterface $loader The loader for the xml config files
+     * @param ReplacerInterface $urlReplacer Factory for url-replacers
      * @param LoggerInterface $logger For logging the warnings
      * @param $path string The path to the xml config files
      */
-    public function __construct(LoaderInterface $loader, LoggerInterface $logger, $path)
-    {
+    public function __construct(
+        LoaderInterface $loader,
+        ReplacerInterface $urlReplacer,
+        LoggerInterface $logger,
+        $path
+    ) {
         $this->loader = $loader;
+        $this->urlReplacer = $urlReplacer;
         $this->logger = $logger;
         $this->path = $path;
     }
@@ -195,6 +195,39 @@ class WebspaceCollectionBuilder
                 );
             }
         }
+
+        foreach ($environment->getCustomUrls() as $customUrl) {
+            $urlAddress = $customUrl->getUrl();
+
+            if (strpos('*', $urlAddress) >= 0) {
+                $this->portalInformations[$environment->getType()][$urlAddress] = new PortalInformation(
+                    RequestAnalyzerInterface::MATCH_TYPE_WILDCARD,
+                    $portal->getWebspace(),
+                    $portal,
+                    null,
+                    $urlAddress,
+                    null,
+                    null,
+                    null,
+                    false,
+                    $urlAddress
+                );
+            }
+
+            $urlAddress = rtrim($urlAddress, '/') . '/*';
+            $this->portalInformations[$environment->getType()][$urlAddress] = new PortalInformation(
+                RequestAnalyzerInterface::MATCH_TYPE_WILDCARD,
+                $portal->getWebspace(),
+                $portal,
+                null,
+                $urlAddress,
+                null,
+                null,
+                null,
+                false,
+                $urlAddress
+            );
+        }
     }
 
     /**
@@ -249,7 +282,7 @@ class WebspaceCollectionBuilder
     ) {
         if (!empty($segments)) {
             foreach ($segments as $segment) {
-                $replacers[self::REPLACER_SEGMENT] = $segment->getKey();
+                $replacers[ReplacerInterface::REPLACER_SEGMENT] = $segment->getKey();
                 $urlResult = $this->generateUrlAddress($urlAddress, $replacers);
                 $this->portalInformations[$environment->getType()][$urlResult] = new PortalInformation(
                     RequestAnalyzerInterface::MATCH_TYPE_FULL,
@@ -296,17 +329,17 @@ class WebspaceCollectionBuilder
         Url $url
     ) {
         $replacers = [
-            self::REPLACER_LANGUAGE => $portal->getDefaultLocalization()->getLanguage(),
-            self::REPLACER_COUNTRY => $portal->getDefaultLocalization()->getCountry(),
-            self::REPLACER_LOCALIZATION => $portal->getDefaultLocalization()->getLocalization('-'),
+            ReplacerInterface::REPLACER_LANGUAGE => $portal->getDefaultLocalization()->getLanguage(),
+            ReplacerInterface::REPLACER_COUNTRY => $portal->getDefaultLocalization()->getCountry(),
+            ReplacerInterface::REPLACER_LOCALIZATION => $portal->getDefaultLocalization()->getLocalization('-'),
         ];
 
         $defaultSegment = $portal->getWebspace()->getDefaultSegment();
         if ($defaultSegment) {
-            $replacers[self::REPLACER_SEGMENT] = $defaultSegment->getKey();
+            $replacers[ReplacerInterface::REPLACER_SEGMENT] = $defaultSegment->getKey();
         }
 
-        $urlResult = $this->removeUrlPlaceHolders($urlAddress);
+        $urlResult = $this->urlReplacer->cleanup($urlAddress);
         $urlRedirect = $this->generateUrlAddress($urlAddress, $replacers);
 
         if ($this->validateUrlPartialMatch($urlResult, $environment)) {
@@ -328,15 +361,21 @@ class WebspaceCollectionBuilder
     /**
      * Builds the URLs for the portal, which are not a redirect.
      *
-     * @param Portal      $portal
+     * @param Portal $portal
      * @param Environment $environment
      * @param $url
      * @param $segments
      * @param $urlAddress
      * @param $urlAnalyticsKey
      */
-    private function buildUrls(Portal $portal, Environment $environment, Url $url, $segments, $urlAddress, $urlAnalyticsKey)
-    {
+    private function buildUrls(
+        Portal $portal,
+        Environment $environment,
+        Url $url,
+        $segments,
+        $urlAddress,
+        $urlAnalyticsKey
+    ) {
         if ($url->getLanguage()) {
             $language = $url->getLanguage();
             $country = $url->getCountry();
@@ -359,9 +398,9 @@ class WebspaceCollectionBuilder
                 $country = $url->getCountry() ? $url->getCountry() : $localization->getCountry();
 
                 $replacers = [
-                    self::REPLACER_LANGUAGE => $language,
-                    self::REPLACER_COUNTRY => $country,
-                    self::REPLACER_LOCALIZATION => $localization->getLocalization('-'),
+                    ReplacerInterface::REPLACER_LANGUAGE => $language,
+                    ReplacerInterface::REPLACER_COUNTRY => $country,
+                    ReplacerInterface::REPLACER_LOCALIZATION => $localization->getLocalization('-'),
                 ];
 
                 $this->buildUrlFullMatch(
@@ -404,34 +443,15 @@ class WebspaceCollectionBuilder
      * Replaces the given values in the pattern.
      *
      * @param string $pattern
-     * @param array  $replacers
+     * @param array $replacers
      *
      * @return string
      */
     private function generateUrlAddress($pattern, $replacers)
     {
         foreach ($replacers as $replacer => $value) {
-            $pattern = str_replace($replacer, $value, $pattern);
+            $pattern = $this->urlReplacer->replace($pattern, $replacer, $value);
         }
-
-        return $pattern;
-    }
-
-    /**
-     * Removes the placesholders from the url address.
-     *
-     * @param $pattern
-     *
-     * @return mixed|string
-     */
-    private function removeUrlPlaceHolders($pattern)
-    {
-        foreach ($this->replacers as $replacer) {
-            $pattern = str_replace($replacer, '', $pattern);
-        }
-
-        $pattern = ltrim($pattern, '.');
-        $pattern = rtrim($pattern, '/');
 
         return $pattern;
     }

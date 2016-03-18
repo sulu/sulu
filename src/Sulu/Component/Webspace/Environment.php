@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Sulu.
  *
@@ -25,7 +24,14 @@ class Environment
      *
      * @var Url[]
      */
-    private $urls;
+    private $urls = [];
+
+    /**
+     * The custom-urls for this environment.
+     *
+     * @var CustomUrl[]
+     */
+    private $customUrls = [];
 
     /**
      * @var Url
@@ -96,7 +102,7 @@ class Environment
     /**
      * Set the urls for this environment.
      *
-     * @param \Sulu\Component\Webspace\Url[] $urls
+     * @param Url[] $urls
      */
     public function setUrls($urls)
     {
@@ -106,11 +112,41 @@ class Environment
     /**
      * Returns the urls for this environment.
      *
-     * @return \Sulu\Component\Webspace\Url[]
+     * @return Url[]
      */
     public function getUrls()
     {
         return $this->urls;
+    }
+
+    /**
+     * Returns custom-urls.
+     *
+     * @return CustomUrl[]
+     */
+    public function getCustomUrls()
+    {
+        return $this->customUrls;
+    }
+
+    /**
+     * Sets custom-urls.
+     *
+     * @param CustomUrl[] $customUrls
+     */
+    public function setCustomUrls($customUrls)
+    {
+        $this->customUrls = $customUrls;
+    }
+
+    /**
+     * Adds a new custom-url to this environment.
+     *
+     * @param CustomUrl $customUrl
+     */
+    public function addCustomUrl(CustomUrl $customUrl)
+    {
+        $this->customUrls[] = $customUrl;
     }
 
     /**
@@ -123,6 +159,10 @@ class Environment
 
         foreach ($this->getUrls() as $url) {
             $res['urls'][] = $url->toArray();
+        }
+
+        foreach ($this->getCustomUrls() as $customUrl) {
+            $res['customUrls'][] = $customUrl->toArray();
         }
 
         return $res;

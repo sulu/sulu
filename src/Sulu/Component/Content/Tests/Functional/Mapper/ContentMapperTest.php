@@ -1360,11 +1360,17 @@ class ContentMapperTest extends SuluTestCase
     {
         $this->prepareTreeTestData();
 
-        $result = $this->mapper->loadBySql2('SELECT * FROM [sulu:content]', 'de', 'sulu_io');
+        $sql2 = "SELECT *
+                 FROM [nt:unstructured] as page
+                 WHERE (page.[jcr:mixinTypes] = 'sulu:page'
+                       OR page.[jcr:mixinTypes] = 'sulu:home')
+                       AND isdescendantnode(page, '/cmf/sulu_io')";
+
+        $result = $this->mapper->loadBySql2($sql2, 'de', 'sulu_io');
 
         $this->assertEquals(5, count($result));
 
-        $result = $this->mapper->loadBySql2('SELECT * FROM [sulu:content]', 'de', 'sulu_io', 2);
+        $result = $this->mapper->loadBySql2($sql2, 'de', 'sulu_io', 2);
 
         $this->assertEquals(2, count($result));
     }

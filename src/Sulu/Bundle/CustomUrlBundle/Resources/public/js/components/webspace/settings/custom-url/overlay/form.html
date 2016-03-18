@@ -1,0 +1,131 @@
+<form id="custom-url-form" class="grid">
+    <div class="form-group grid-row">
+        <label for="custom-url-title" class="required"><%= translations.title %></label>
+        <input type="text"
+               id="custom-url-title"
+               name="title"
+               class="form-element"
+               data-mapper-property="title"
+               data-validation-required="true"
+               data-validation-min-length="3"/>
+    </div>
+
+    <div class="grid-row">
+        <span class="content">
+            <span data-form="true"
+                 id="custom-url-published"
+                 data-type="toggler"
+                 data-mapper-property="published"></span>
+        </span>
+
+        <label for="custom-url-published" class="husky-toggler-label" style="display: inline;">
+            <%= translations.published %>
+        </label>
+    </div>
+
+    <div class="grid-row form-group">
+        <label for="custom-url-base-domain" class="required">
+            <%= translations.baseDomain %>
+        </label>
+
+        <div id="custom-url-base-domain" data-form="true" data-type="husky-select"
+             data-mapper-property="baseDomain" data-mapper-return-value="value" data-validation-required="true"></div>
+    </div>
+
+    <div class="grid-row form-group" id="custom-url-input-container" style="display: none;">
+        <label for="custom-url-input" class="required">
+            <%= translations.customUrl %>
+        </label>
+
+        <div id="custom-url-input" class="custom-url-input" data-form="true" data-type="custom-url"
+             data-mapper-property="domainParts"></div>
+    </div>
+
+    <div class="grid-row">
+        <div class="grid-col-9 form-group target-input" id="custom-url-target-container">
+
+            <label for="custom-url-target-button" class="required">
+                <%= translations.target %>
+            </label>
+
+            <div class="single-internal-link custom-url-target container form-element" id="custom-url-target-input">
+                <a class="fa-link icon action choose" href="#" id="custom-url-target-button"></a>
+                <a class="fa-times-circle clear" href="#" id="custom-url-target-button-clear"
+                   style="display: none;"></a>
+                <input type="text" class="form-element preview-update trigger-save-button" readonly="readonly"
+                       id="custom-url-target-value"
+                       data-validation-required="true"/>
+            </div>
+        </div>
+        <div class="grid-col-3 form-group">
+            <label for="custom-url-target-locale" class="required">
+                <%= translations.locale %>
+            </label>
+
+            <div id="custom-url-target-locale" data-form="true" data-type="husky-select"
+                 data-mapper-property="targetLocale"
+                 data-validation-required="true"
+                 data-mapper-return-value="value"></div>
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <span class="content">
+            <span data-form="true"
+                  id="custom-url-redirect"
+                  data-type="toggler"
+                  data-mapper-property="redirect"></span>
+        </span>
+
+        <label for="custom-url-redirect" class="husky-toggler-label" style="display: inline;">
+            <%= translations.redirect %>
+        </label>
+
+        <div class="input-description"><%= translations.descriptionRedirect %></div>
+    </div>
+
+    <div class="grid-row redirect-hide">
+        <span class="content">
+            <span data-form="true"
+                 id="custom-url-canonical"
+                 data-type="toggler"
+                 data-mapper-property="canonical"></span>
+        </span>
+
+        <label for="custom-url-canonical" class="husky-toggler-label" style="display: inline;">
+            <%= translations.canonical %>
+        </label>
+
+        <div class="input-description"><%= translations.descriptionCanonical %></div>
+    </div>
+
+    <div class="grid-row redirect-hide">
+        <span class="content">
+            <span data-form="true"
+                 id="custom-url-no-index"
+                 data-type="toggler"
+                 data-mapper-property="noIndex"></span>
+        </span>
+
+        <label for="custom-url-no-index" class="husky-toggler-label" style="display: inline;">
+            <%= translations.noIndex %>
+        </label>
+
+        <div class="input-description"><%= translations.descriptionNoIndex %></div>
+    </div>
+
+    <div class="grid-row redirect-hide">
+        <span class="content">
+            <span data-form="true"
+                 id="custom-url-no-follow"
+                 data-type="toggler"
+                 data-mapper-property="noFollow"></span>
+        </span>
+
+        <label for="custom-url-no-follow" class="husky-toggler-label" style="display: inline;">
+            <%= translations.noFollow %>
+        </label>
+
+        <div class="input-description"><%= translations.descriptionNoFollow %></div>
+    </div>
+</form>

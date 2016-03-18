@@ -59,6 +59,8 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
         $this->configureDocumentManager($config, $container);
+        $this->configurePathSegmentRegistry($config, $container);
+
         $loader->load('core.xml');
         $loader->load('behaviors.xml');
         $loader->load('serializer.xml');
@@ -81,5 +83,20 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
         }
         $container->setParameter('sulu_document_manager.mapping', $realMapping);
         $container->setParameter('sulu_document_manager.namespace_mapping', $config['namespace']);
+    }
+
+    private function configurePathSegmentRegistry($config, ContainerBuilder $container)
+    {
+        $pathSegments = array_merge(
+            $config['path_segments'],
+            [
+                'base' => $container->getParameter('sulu.content.node_names.base'),
+                'content' => $container->getParameter('sulu.content.node_names.content'),
+                'route' => $container->getParameter('sulu.content.node_names.route'),
+                'snippet' => $container->getParameter('sulu.content.node_names.snippet'),
+            ]
+        );
+
+        $container->setParameter('sulu_document_manager.segments', $pathSegments);
     }
 }

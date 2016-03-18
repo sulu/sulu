@@ -310,53 +310,33 @@ class SitemapGeneratorTest extends SuluTestCase
     {
         $result = $this->sitemapGenerator->generateAllLocals('sulu_io', true)->getSitemap();
 
-        $this->assertEquals(12, count($result));
-        $this->assertEquals('Homepage', $result[0]['title']);
-        $this->assertEquals('News en', $result[1]['title']);
-        $this->assertEquals('News-1 en', $result[2]['title']);
-        $this->assertEquals('News-2 en', $result[3]['title']);
-        $this->assertEquals('Products-2 en', $result[4]['title']);
-        $this->assertEquals('Products-3 en', $result[5]['title']);
-        $this->assertEquals('Homepage', $result[6]['title']); // en_us homepage
-        $this->assertEquals('News en_us', $result[7]['title']);
-        $this->assertEquals('News-1 en_us', $result[8]['title']);
-        $this->assertEquals('News-2 en_us', $result[9]['title']);
+        $result = array_map(
+            function ($item) {
+                return [$item['title'], $item['url'], $item['nodeType']];
+            },
+            $result
+        );
+
+        $this->assertCount(12, $result);
+        $this->assertContains(['Homepage', '/', 1], $result);
+        $this->assertContains(['News en', '/news', 1], $result);
+        $this->assertContains(['News-1 en', '/news/news-1', 1], $result);
+        $this->assertContains(['News-2 en', '/news/news-2', 1], $result);
+        $this->assertContains(['Products-2 en', 'http://www.asdf.at', 4], $result);
+        $this->assertContains(['Products-3 en', '/news', 2], $result);
+        $this->assertContains(['News en_us', '/news', 1], $result);
+        $this->assertContains(['News-1 en_us', '/news/news-1', 1], $result);
+        $this->assertContains(['News-2 en_us', '/news/news-2', 1], $result);
         // Products-1 en/en_us is a internal link to the unpublished page products (not in result)
-        $this->assertEquals('Products-2 en_us', $result[10]['title']);
-        $this->assertEquals('Products-3 en_us', $result[11]['title']);
-
-        $this->assertEquals('/news', $result[1]['url']);
-        $this->assertEquals('/news/news-1', $result[2]['url']);
-        $this->assertEquals('/news/news-2', $result[3]['url']);
-        $this->assertEquals('http://www.asdf.at', $result[4]['url']);
-        $this->assertEquals('/news', $result[5]['url']);
-        $this->assertEquals('/', $result[6]['url']);
-        $this->assertEquals('/news', $result[7]['url']);
-        $this->assertEquals('/news/news-1', $result[8]['url']);
-        $this->assertEquals('/news/news-2', $result[9]['url']);
-        $this->assertEquals('http://www.asdf.at', $result[10]['url']);
-        $this->assertEquals('/news', $result[11]['url']);
-
-        $this->assertEquals('/', $result[0]['url']);
-        $this->assertEquals(1, $result[0]['nodeType']);
-        $this->assertEquals(1, $result[1]['nodeType']);
-        $this->assertEquals(1, $result[2]['nodeType']);
-        $this->assertEquals(1, $result[3]['nodeType']);
-        $this->assertEquals(4, $result[4]['nodeType']);
-        $this->assertEquals(2, $result[5]['nodeType']);
-        $this->assertEquals(1, $result[6]['nodeType']);
-        $this->assertEquals(1, $result[7]['nodeType']);
-        $this->assertEquals(1, $result[8]['nodeType']);
-        $this->assertEquals(1, $result[9]['nodeType']);
-        $this->assertEquals(4, $result[10]['nodeType']);
-        $this->assertEquals(2, $result[11]['nodeType']);
+        $this->assertContains(['Products-2 en_us', 'http://www.asdf.at', 4], $result);
+        $this->assertContains(['Products-3 en_us', '/news', 2], $result);
     }
 
     public function testGenerateFlat()
     {
         $result = $this->sitemapGenerator->generate('sulu_io', 'en', true)->getSitemap();
 
-        $this->assertEquals(6, count($result));
+        $this->assertCount(6, $result);
         $this->assertEquals('Homepage', $result[0]['title']);
         $this->assertEquals('News en', $result[1]['title']);
         $this->assertEquals('News-1 en', $result[2]['title']);
@@ -390,7 +370,7 @@ class SitemapGeneratorTest extends SuluTestCase
 
         $layer1 = array_values($root['children']);
 
-        $this->assertEquals(3, count($layer1));
+        $this->assertCount(3, $layer1);
 
         $this->assertEquals('News en', $layer1[0]['title']);
         $this->assertEquals('/news', $layer1[0]['url']);

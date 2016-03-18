@@ -11,11 +11,11 @@
 
 namespace Sulu\Component\Content\Document\Behavior;
 
-use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
+use Sulu\Component\DocumentManager\Behavior\Audit\LocalizedTimestampBehavior;
 
 /**
  * This behavior combines the creator and changer with the created and changed dates.
  */
-interface AuditableBehavior extends BlameBehavior, TimestampBehavior
+interface LocalizedAuditableBehavior extends LocalizedBlameBehavior, LocalizedTimestampBehavior
 {
 }

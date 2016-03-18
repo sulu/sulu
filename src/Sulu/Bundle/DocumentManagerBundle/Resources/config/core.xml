@@ -59,12 +59,7 @@
 
         <!-- Utilities -->
         <service id="sulu_document_manager.path_segment_registry" class="Sulu\Component\DocumentManager\PathSegmentRegistry">
-            <argument type="collection">
-                <argument key="base">%sulu.content.node_names.base%</argument>
-                <argument key="content">%sulu.content.node_names.content%</argument>
-                <argument key="route">%sulu.content.node_names.route%</argument>
-                <argument key="snippet">%sulu.content.node_names.snippet%</argument>
-            </argument>
+            <argument>%sulu_document_manager.segments%</argument>
         </service>
 
         <service id="sulu_document_manager.path_builder" class="Sulu\Component\DocumentManager\PathBuilder" public="false">

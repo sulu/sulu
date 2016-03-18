@@ -10,7 +10,7 @@
 
 namespace Sulu\Component\Hash\Tests;
 
-use Sulu\Component\Content\Document\Behavior\AuditableBehavior;
+use Sulu\Component\Content\Document\Behavior\LocalizedAuditableBehavior;
 use Sulu\Component\Hash\AuditableHasher;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -103,7 +103,7 @@ class AuditableHasherTest extends \PHPUnit_Framework_TestCase
 
     public function testHashAuditableBehavior()
     {
-        $object = $this->prophesize(AuditableBehavior::class);
+        $object = $this->prophesize(LocalizedAuditableBehavior::class);
         $object->getChanger()->willReturn(1);
         $object->getChanged()->willReturn(new \DateTime('2016-02-09'));
 
@@ -112,7 +112,7 @@ class AuditableHasherTest extends \PHPUnit_Framework_TestCase
 
     public function testHashAuditableBehaviorWithoutDate()
     {
-        $object = $this->prophesize(AuditableBehavior::class);
+        $object = $this->prophesize(LocalizedAuditableBehavior::class);
         $object->getChanger()->willReturn(1);
         $object->getChanged()->willReturn(null);
 

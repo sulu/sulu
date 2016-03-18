@@ -1,0 +1,21 @@
+.custom-url-input {
+    .form-element {
+        width: 100px;
+        margin: 0 5px;
+    }
+
+    .form-element.prefix {
+        margin-left: 0;
+    }
+
+    .domain-part {
+        color: $grayLight;
+    }
+}
+
+.target-input {
+    div.husky-validate-error {
+        border-color: $red;
+        border-width: 2px;
+    }
+}

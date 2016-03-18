@@ -21,10 +21,11 @@ interface RequestProcessorInterface
      * Returns request attributes for given request.
      *
      * @param Request $request
+     * @param RequestAttributes $requestAttributes
      *
      * @return RequestAttributes
      */
-    public function process(Request $request);
+    public function process(Request $request, RequestAttributes $requestAttributes);
 
     /**
      * Validate the given attributes and return true if it is valid,

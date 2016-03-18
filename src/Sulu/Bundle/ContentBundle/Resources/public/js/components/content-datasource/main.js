@@ -78,7 +78,7 @@ define([], function() {
                     selected: this.selected,
                     actionCallback: function(item) {
                         this.selected = item.id;
-                        this.options.selectCallback(item.id, item.path);
+                        this.options.selectCallback(item.id, item.path, item.title);
                     }.bind(this)
                 });
 

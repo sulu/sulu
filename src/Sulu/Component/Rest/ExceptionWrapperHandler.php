@@ -25,6 +25,7 @@ class ExceptionWrapperHandler implements ExceptionWrapperHandlerInterface
     public function wrap($data)
     {
         $data['status_code'] = $data['exception']->getCode();
+        $data['errors'] = [$data['exception']];
 
         return new ExceptionWrapper($data);
     }

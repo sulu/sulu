@@ -37,7 +37,7 @@ class AdminRequestProcessor implements RequestProcessorInterface
     /**
      * {@inheritdoc}
      */
-    public function process(Request $request)
+    public function process(Request $request, RequestAttributes $requestAttributes)
     {
         $attributes = [];
         $attributes['webspaceKey'] = $request->get('webspace');

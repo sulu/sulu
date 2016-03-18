@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Sulu.
  *
@@ -12,17 +11,8 @@
 namespace Sulu\Component\Content\Document\Behavior;
 
 /**
- * Adds the user who created and lastly changed the document.
+ * Adds the user who created and lastly changed the document (without locale).
  */
-interface BlameBehavior
+interface BlameBehavior extends LocalizedBlameBehavior
 {
-    /**
-     * @return int
-     */
-    public function getCreator();
-
-    /**
-     * @return int
-     */
-    public function getChanger();
 }

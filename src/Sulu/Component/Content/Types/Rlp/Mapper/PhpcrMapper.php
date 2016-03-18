@@ -132,10 +132,16 @@ class PhpcrMapper extends RlpMapper
         if ($node->isNew()) {
             return;
         }
+
+        $routePath = $this->sessionManager->getRoutePath($webspaceKey, $languageCode);
+
         // search for references with name 'content'
         foreach ($node->getReferences('sulu:content') as $ref) {
             if ($ref instanceof \PHPCR\PropertyInterface) {
                 $routeNode = $ref->getParent();
+                if (0 !== strpos($routeNode->getPath(), $routePath)) {
+                    continue;
+                }
 
                 $resourceLocator = $this->getResourceLocator(
                     $ref->getParent()->getPath(),

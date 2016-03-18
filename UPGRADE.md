@@ -2,6 +2,21 @@
 
 ## dev-develop
 
+### Document-Manager
+
+The Behaviors `TimestampBehavior` and `BlameBehavior` now save the values in the non-localized
+properties. To keep the old behavior use the `LocalizedTimestampBehavior` and 
+`LocalizedBlameBehavior` instead.
+
+### Custom-URLS
+
+Additional system nodes added by the custom-url feature. Run following command to add
+them.
+
+```bash
+app/console sulu:document:initialize
+```
+
 ### Deprecated sulu:phpcr:init and sulu:webspace:init
 
 The `sulu:phpcr:init` and `sulu:webspace:init` commands are now deprecated.
@@ -18,6 +33,22 @@ Length of category-key column was extended. Use following command to update the 
 
 ```bash
 app/console doctrine:schema:update --force
+```
+
+The name of symfony-routes which are loaded by the portal-loader has changed (e.g. the `website_search` route). The old
+keeps to work but are deprecated. If you want to use the custom-urls you have to upgrade your route generation in the
+twig-templates.
+
+__Before:__
+
+```twig
+{{ path(request.portalUrl ~ '.website_search') }}
+```
+
+__After:__
+
+```twig
+{{ path(request.portalUrl ~ '.' ~ request.locale ~ '.website_search') }}
 ```
 
 ### Definition of security contexts
@@ -68,7 +99,7 @@ and `SECURITY` in your context.
 The metadata for pages has changed. Run following command to update your search index
 
 ```bash
-sf massive:search:index:rebuild
+app/console massive:search:index:rebuild
 ```
 
 ### Media uploads

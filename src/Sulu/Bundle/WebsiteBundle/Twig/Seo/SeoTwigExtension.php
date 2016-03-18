@@ -43,6 +43,7 @@ class SeoTwigExtension extends \Twig_Extension
         $this->requestStack = $requestStack;
         // FIXME Should not use another twig extension here, that is not the intended use case of twig extensions
         $this->contentPath = $contentPath;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -75,6 +76,10 @@ class SeoTwigExtension extends \Twig_Extension
      */
     public function renderSeoTags(array $seoExtension, array $content, array $urls, $shadowBaseLocale)
     {
+        $request = $this->requestStack->getCurrentRequest();
+        $requestSeo = $request->get('_seo', []);
+        $seoExtension = array_merge($seoExtension, $requestSeo);
+
         $html = '';
         // FIXME this is only necessary because we have to set a default parameter
         $webspace = $this->requestAnalyzer->getWebspace();

@@ -24,7 +24,8 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $provider = $this->prophesize(RequestProcessorInterface::class);
         $request = $this->prophesize(Request::class);
 
-        $provider->process($request->reveal())->shouldBeCalled()->willReturn(new RequestAttributes());
+        $provider->process($request->reveal(), Argument::type(RequestAttributes::class))
+            ->shouldBeCalled()->willReturn(new RequestAttributes());
         $provider->validate(Argument::type(RequestAttributes::class))->shouldBeCalled()->willReturn(true);
 
         $requestAnalyzer = new RequestAnalyzer([$provider->reveal()]);
@@ -37,11 +38,11 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $provider2 = $this->prophesize(RequestProcessorInterface::class);
         $request = $this->prophesize(Request::class);
 
-        $provider1->process($request->reveal())->shouldBeCalled()->willReturn(
+        $provider1->process($request->reveal(), Argument::type(RequestAttributes::class))->shouldBeCalled()->willReturn(
             new RequestAttributes(['test1' => 1])
         );
         $provider1->validate(Argument::type(RequestAttributes::class))->shouldBeCalled()->willReturn(true);
-        $provider2->process($request->reveal())->shouldBeCalled()->willReturn(
+        $provider2->process($request->reveal(), Argument::type(RequestAttributes::class))->shouldBeCalled()->willReturn(
             new RequestAttributes(['test1' => 2, 'test2' => 3])
         );
         $provider2->validate(Argument::type(RequestAttributes::class))->shouldBeCalled()->willReturn(true);
@@ -98,7 +99,8 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
     {
         $provider = $this->prophesize(RequestProcessorInterface::class);
         $request = $this->prophesize(Request::class);
-        $provider->process($request->reveal())->shouldBeCalled()->willReturn(new RequestAttributes($attributes));
+        $provider->process($request->reveal(), Argument::type(RequestAttributes::class))
+            ->shouldBeCalled()->willReturn(new RequestAttributes($attributes));
         $provider->validate(Argument::type(RequestAttributes::class))->shouldBeCalled()->willReturn(true);
 
         $requestAnalyzer = new RequestAnalyzer([$provider->reveal()]);

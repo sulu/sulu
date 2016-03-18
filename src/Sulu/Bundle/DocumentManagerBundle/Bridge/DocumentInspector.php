@@ -20,6 +20,7 @@ use Sulu\Component\Content\Document\Subscriber\WorkflowStageSubscriber;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\DocumentInspector as BaseDocumentInspector;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Metadata;
@@ -79,9 +80,11 @@ class DocumentInspector extends BaseDocumentInspector
      * TODO: We need a better solution for retrieving webspace paths (the existing
      *       "session manager" is not a good solution).
      *
+     * @param PathBehavior $document
+     *
      * @return string
      */
-    public function getContentPath(StructureBehavior $document)
+    public function getContentPath(PathBehavior $document)
     {
         $path = $this->getPath($document);
         $webspaceKey = $this->getWebspace($document);

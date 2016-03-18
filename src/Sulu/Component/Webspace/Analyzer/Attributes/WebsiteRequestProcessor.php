@@ -10,6 +10,11 @@
 
 namespace Sulu\Component\Webspace\Analyzer\Attributes;
 
+use PHPCR\RepositoryException;
+use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
+use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Webspace\Analyzer\Exception\UrlMatchNotFoundException;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -27,36 +32,89 @@ class WebsiteRequestProcessor implements RequestProcessorInterface
     private $webspaceManager;
 
     /**
+     * @var ContentMapperInterface
+     */
+    private $contentMapper;
+
+    /**
      * @var string
      */
     private $environment;
 
-    public function __construct(WebspaceManagerInterface $webspaceManager, $environment)
-    {
+    public function __construct(
+        WebspaceManagerInterface $webspaceManager,
+        ContentMapperInterface $contentMapper,
+        $environment
+    ) {
         $this->webspaceManager = $webspaceManager;
+        $this->contentMapper = $contentMapper;
         $this->environment = $environment;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function process(Request $request)
+    public function process(Request $request, RequestAttributes $requestAttributes)
     {
-        $attributes = [];
-
         $url = $request->getHost() . $request->getPathInfo();
-        $portalInformation = $this->webspaceManager->findPortalInformationByUrl(
+        $portalInformations = $this->webspaceManager->findPortalInformationsByUrl(
             $url,
             $this->environment
         );
 
-        $attributes['requestUri'] = $request->getUri();
+        if (count($portalInformations) === 0) {
+            return new RequestAttributes();
+        } elseif (count($portalInformations) === 1) {
+            return $this->processPortalInformation($request, reset($portalInformations));
+        }
+
+        usort(
+            $portalInformations,
+            function (PortalInformation $a, PortalInformation $b) {
+                return $a->getType() > $b->getType();
+            }
+        );
+
+        $redirectTypes = [RequestAnalyzerInterface::MATCH_TYPE_FULL, RequestAnalyzerInterface::MATCH_TYPE_PARTIAL];
+
+        foreach ($portalInformations as $portalInformation) {
+            // take first none full match
+            if (!in_array($portalInformation->getType(), $redirectTypes)) {
+                return $this->processPortalInformation($request, $portalInformation);
+            }
+
+            // if there exists a resource-locator take this portal
+            if (null !== $content = $this->checkForResourceLocator($request, $portalInformation)) {
+                return $this->processPortalInformation($request, $portalInformation, $content);
+            }
+        }
+
+        return new RequestAttributes();
+    }
+
+    /**
+     * Returns the request attributes for given portal information.
+     *
+     * @param Request $request
+     * @param PortalInformation $portalInformation
+     * @param mixed $content
+     *
+     * @return RequestAttributes
+     */
+    protected function processPortalInformation(
+        Request $request,
+        PortalInformation $portalInformation,
+        $content = null
+    ) {
+        $attributes = ['requestUri' => $request->getUri(), 'content' => $content];
 
         if ($portalInformation === null) {
             return new RequestAttributes($attributes);
         }
 
-        $request->setLocale($portalInformation->getLocalization()->getLocalization());
+        if (null !== $localization = $portalInformation->getLocalization()) {
+            $request->setLocale($portalInformation->getLocalization()->getLocalization());
+        }
 
         $attributes['portalInformation'] = $portalInformation;
 
@@ -92,6 +150,38 @@ class WebsiteRequestProcessor implements RequestProcessorInterface
         }
 
         return new RequestAttributes($attributes);
+    }
+
+    /**
+     * Returns the content if a route exists.
+     *
+     * @param Request $request
+     * @param PortalInformation $portalInformation
+     *
+     * @return StructureInterface|void
+     */
+    protected function checkForResourceLocator(Request $request, PortalInformation $portalInformation)
+    {
+        list($resourceLocator, $format) = $this->getResourceLocatorFromRequest(
+            $portalInformation,
+            $request
+        );
+
+        try {
+            $content = $this->contentMapper->loadByResourceLocator(
+                rtrim($resourceLocator, '/'),
+                $portalInformation->getWebspaceKey(),
+                $portalInformation->getLocale()
+            );
+        } catch (ResourceLocatorNotFoundException $ex) {
+            return;
+        } catch (ResourceLocatorMovedException $ex) {
+            return $ex;
+        } catch (RepositoryException $ex) {
+            return;
+        }
+
+        return $content;
     }
 
     /**

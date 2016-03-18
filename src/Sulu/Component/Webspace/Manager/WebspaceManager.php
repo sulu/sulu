@@ -12,9 +12,11 @@
 namespace Sulu\Component\Webspace\Manager;
 
 use Psr\Log\LoggerInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\Dumper\PhpWebspaceCollectionDumper;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
+use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -44,9 +46,19 @@ class WebspaceManager implements WebspaceManagerInterface
      */
     private $logger;
 
-    public function __construct(LoaderInterface $loader, LoggerInterface $logger, $options = [])
-    {
+    /**
+     * @var ReplacerInterface
+     */
+    private $urlReplacer;
+
+    public function __construct(
+        LoaderInterface $loader,
+        ReplacerInterface $urlReplacer,
+        LoggerInterface $logger,
+        $options = []
+    ) {
         $this->loader = $loader;
+        $this->urlReplacer = $urlReplacer;
         $this->logger = $logger;
         $this->setOptions($options);
     }
@@ -76,27 +88,35 @@ class WebspaceManager implements WebspaceManagerInterface
     }
 
     /**
-     * Returns the portal with the given url (which has not necessarily to be the main url).
-     *
-     * @param string $url The url to search for
-     * @param string $environment The environment in which the url should be searched
-     *
-     * @return array|null
+     * {@inheritdoc}
      */
     public function findPortalInformationByUrl($url, $environment)
     {
-        foreach (
-            $this->getWebspaceCollection()->getPortalInformations($environment) as $portalUrl => $portalInformation
-        ) {
-            $nextChar = substr($url, strlen($portalUrl), 1);
-            if (strpos($url, $portalUrl) === 0 &&
-                ($nextChar === '/' || $nextChar === '.' || $nextChar === false || $nextChar === '')
-            ) {
+        $portalInformations = $this->getWebspaceCollection()->getPortalInformations($environment);
+        foreach ($portalInformations as $portalUrl => $portalInformation) {
+            if ($this->matchUrl($url, $portalUrl)) {
                 return $portalInformation;
             }
         }
 
         return;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findPortalInformationsByUrl($url, $environment)
+    {
+        return array_filter(
+            $this->getWebspaceCollection()->getPortalInformations($environment),
+            function (PortalInformation $portalInformation) use ($url) {
+                if ($portalInformation->getType() === RequestAnalyzerInterface::MATCH_TYPE_REDIRECT) {
+                    return $url === $portalInformation->getUrl();
+                }
+
+                return $this->matchUrl($url, $portalInformation->getUrl());
+            }
+        );
     }
 
     /**
@@ -138,7 +158,10 @@ class WebspaceManager implements WebspaceManagerInterface
         $urls = [];
         $portals = $this->getWebspaceCollection()->getPortalInformations($environment);
         foreach ($portals as $url => $portalInformation) {
-            $sameLocalization = $portalInformation->getLocalization()->getLocalization() === $languageCode;
+            $sameLocalization = (
+                $portalInformation->getLocalization() === null
+                || $portalInformation->getLocalization()->getLocalization() === $languageCode
+            );
             $sameWebspace = $webspaceKey === null || $portalInformation->getWebspace()->getKey() === $webspaceKey;
             $url = rtrim(sprintf('%s://%s%s', $scheme, $url, $resourceLocator), '/');
             if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {
@@ -230,6 +253,7 @@ class WebspaceManager implements WebspaceManagerInterface
             if (!$cache->isFresh()) {
                 $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
                     $this->loader,
+                    $this->urlReplacer,
                     $this->logger,
                     $this->options['config_dir']
                 );
@@ -305,5 +329,24 @@ class WebspaceManager implements WebspaceManagerInterface
         }
 
         return false;
+    }
+
+    /**
+     * Matches given url with portal-url.
+     *
+     * @param string $url
+     * @param string $portalUrl
+     *
+     * @return bool
+     */
+    protected function matchUrl($url, $portalUrl)
+    {
+        $patternUrl = rtrim($portalUrl, '/');
+        $patternUrl = preg_quote($patternUrl);
+        $patternUrl = str_replace('/', '\/', $patternUrl);
+        $patternUrl = str_replace('\*', '[^\/.]+', $patternUrl);
+        $regexp = sprintf('/^%s($|([\/].*)|([.].*))$/', $patternUrl);
+
+        return preg_match($regexp, $url);
     }
 }

@@ -46,6 +46,13 @@ interface RequestAnalyzerInterface
     const MATCH_TYPE_REDIRECT = 3;
 
     /**
+     * Type for a wildcard url.
+     *
+     * The url contains a wildcard, which can be replaced with anything.
+     */
+    const MATCH_TYPE_WILDCARD = 4;
+
+    /**
      * Analyzes the current request, and saves the values for portal, language, country and segment for further usage.
      *
      * @param Request $request The request to analyze
