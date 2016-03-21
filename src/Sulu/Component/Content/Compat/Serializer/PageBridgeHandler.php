@@ -83,6 +83,7 @@ class PageBridgeHandler implements SubscribingHandlerInterface
             [
                 'document' => $bridge->getDocument(),
                 'documentClass' => get_class($bridge->getDocument()),
+                'structure' => $bridge->getStructure()->getName(),
             ]
         );
     }
@@ -102,7 +103,7 @@ class PageBridgeHandler implements SubscribingHandlerInterface
         Context $context
     ) {
         $document = $context->accept($data['document'], ['name' => $data['documentClass']]);
-        $structure = $this->structureFactory->getStructureMetadata('page', $document->getStructureType());
+        $structure = $this->structureFactory->getStructureMetadata('page', $data['structure']);
         $bridge = new PageBridge($structure, $this->inspector, $this->propertyFactory, $document);
 
         // filthy hack to set the Visitor::$result to null and force the
