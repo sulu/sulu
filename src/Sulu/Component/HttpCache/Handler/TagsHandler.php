@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\HttpCache\Handler;
 
+use FOS\HttpCache\ProxyClient\Invalidation\BanInterface;
 use FOS\HttpCache\ProxyClient\ProxyClientInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
@@ -19,6 +20,7 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\HttpCache\HandlerFlushInterface;
 use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
 use Sulu\Component\HttpCache\HandlerUpdateResponseInterface;
+use Sulu\Component\HttpCache\ProxyClient\Invalidation\TagInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -68,12 +70,12 @@ class TagsHandler implements
     public function updateResponse(Response $response, StructureInterface $structure)
     {
         $tags = [
-            $this->getBanKey($structure->getUuid()),
+            $this->getTagKey($structure->getUuid()),
         ];
 
         foreach ($structure->getProperties(true) as $property) {
             foreach ($this->getReferencedUuids($property) as $uuid) {
-                $tags[] = $this->getBanKey($uuid);
+                $tags[] = $this->getTagKey($uuid);
             }
         }
 
@@ -92,7 +94,7 @@ class TagsHandler implements
         return $referencedUuids;
     }
 
-    private function getBanKey($uuid)
+    private function getTagKey($uuid)
     {
         return 'structure-' . $uuid;
     }
@@ -106,16 +108,51 @@ class TagsHandler implements
             return false;
         }
 
+        $tags = [];
         foreach ($this->structuresToInvalidate as $structure) {
-            $banKey = $this->getBanKey($structure->getUuid());
-
-            $this->proxyClient->ban([
-                self::TAGS_HEADER => sprintf('(%s)(,.+)?$', preg_quote($banKey)),
-            ]);
+            $tags[] = $this->getTagKey($structure->getUuid());
         }
 
+        $this->doInvalidate($tags);
         $this->proxyClient->flush();
+    }
 
-        return true;
+    /**
+     * TODO: In the future the FOSHttpClient Varnish proxy will implement the TagInterface and this
+     *       code will no longer be necessary.
+     */
+    private function doInvalidate(array $tags)
+    {
+        if ($this->proxyClient instanceof TagInterface) {
+            $this->proxyClient->invalidateTags($tags);
+
+            return;
+        }
+
+        if ($this->proxyClient instanceof BanInterface) {
+            $tagExpression = sprintf('(%s)(,.+)?$', implode('|', array_map('preg_quote', $this->escapeTags($tags))));
+            $this->proxyClient->ban([
+                self::TAGS_HEADER => $tagExpression,
+            ]);
+
+            return;
+        }
+
+        throw new \RuntimeException(sprintf(
+            'Proxy client must either support BAN (BanInterface) or tag invalidation (TagInterface), "%s" supports neither',
+            get_class($this->proxyClient)
+        ));
+    }
+
+    /**
+     * Escape tags (should be handled by the client, see comment on `doInvalidate`.
+     */
+    private function escapeTags(array $tags)
+    {
+        array_walk($tags, function (&$tag) {
+            $tag = str_replace([',', "\n"], ['_', '_'], $tag);
+        });
+
+        return $tags;
     }
 }

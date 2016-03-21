@@ -23,11 +23,13 @@ use Guzzle\Http\Exception\CurlException;
 use Guzzle\Http\Exception\MultiTransferException;
 use Guzzle\Http\Exception\RequestException;
 use Guzzle\Http\Message\RequestInterface;
+use Sulu\Component\HttpCache\Handler\TagsHandler;
+use Sulu\Component\HttpCache\ProxyClient\Invalidation\TagInterface;
 
 /**
  * Symfony HTTP cache invalidator.
  */
-class Symfony implements ProxyClientInterface, PurgeInterface
+class Symfony implements ProxyClientInterface, PurgeInterface, TagInterface
 {
     const HTTP_METHOD_PURGE = 'PURGE';
 
@@ -46,15 +48,21 @@ class Symfony implements ProxyClientInterface, PurgeInterface
     private $queue;
 
     /**
+     * @var string
+     */
+    private $tagInvalidationUrl;
+
+    /**
      * Constructor.
      *
      * @param ClientInterface $client HTTP client (optional). If no HTTP client
      *                                is supplied, a default one will be
      *                                created.
      */
-    public function __construct(ClientInterface $client = null)
+    public function __construct(ClientInterface $client = null, $tagInvalidationUrl = null)
     {
         $this->client = $client ?: new Client();
+        $this->tagInvalidationUrl = $tagInvalidationUrl ?: $this->guessTagInvalidationUrl();
     }
 
     /**
@@ -65,6 +73,18 @@ class Symfony implements ProxyClientInterface, PurgeInterface
         $this->queueRequest(self::HTTP_METHOD_PURGE, $url);
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function invalidateTags(array $tags)
+    {
+        $headers = [
+            TagsHandler::TAGS_HEADER => implode(',', $tags),
+        ];
+
+        $this->queueRequest('POST', $this->tagInvalidationUrl, $headers);
     }
 
     /**
@@ -236,5 +256,14 @@ class Symfony implements ProxyClientInterface, PurgeInterface
     protected function getAllowedSchemes()
     {
         return ['http'];
+    }
+
+    private function guessTagInvalidationUrl()
+    {
+        return sprintf(
+            '%s://%s',
+            isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] ? 'https' : 'http',
+            isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost'
+        );
     }
 }

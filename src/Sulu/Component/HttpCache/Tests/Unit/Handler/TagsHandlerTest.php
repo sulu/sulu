@@ -31,7 +31,8 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
 
         $this->structure = $this->prophesize('Sulu\Component\Content\Compat\StructureInterface');
-        $this->proxyCache = $this->prophesize('FOS\HttpCache\ProxyClient\Invalidation\BanInterface');
+        $this->banProxyCache = $this->prophesize('FOS\HttpCache\ProxyClient\Invalidation\BanInterface');
+        $this->proxyCache = $this->prophesize('Sulu\Component\HttpCache\ProxyClient\Invalidation\TagInterface');
         $this->parameterBag = $this->prophesize('Symfony\Component\HttpFoundation\ParameterBag');
         $this->response = $this->prophesize('Symfony\Component\HttpFoundation\Response');
         $this->response->headers = $this->parameterBag;
@@ -42,19 +43,38 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
         $this->contentTypeManager = $this->prophesize('Sulu\Component\Content\ContentTypeManager');
 
         $this->handler = new TagsHandler(
-            $this->proxyCache->reveal(),
+            $this->banProxyCache->reveal(),
             $this->contentTypeManager->reveal()
         );
     }
 
-    public function testInvalidateStructure()
+    /**
+     * It should invalidate tags on a client which supports explicit tag invalidation.
+     */
+    public function testInvalidateStructureTag()
     {
         $this->structure->getUuid()->willReturn('this-is-uuid');
 
-        $this->proxyCache->ban([
-            TagsHandler::TAGS_HEADER => '(structure\-this\-is\-uuid)(,.+)?$',
+        $this->proxyCache->invalidateTags([
+            TagsHandler::TAGS_HEADER => 'structure-this-is-uuid',
         ])->shouldBeCalled();
         $this->proxyCache->flush()->shouldBeCalled();
+
+        $this->handler->invalidateStructure($this->structure->reveal());
+        $this->handler->flush();
+    }
+
+    /**
+     * It should invalidate the tags with a client which implements the BAN interface.
+     */
+    public function testInvalidateStructureBan()
+    {
+        $this->structure->getUuid()->willReturn('this-is-uuid');
+
+        $this->banProxyCache->ban([
+            TagsHandler::TAGS_HEADER => '(structure\-this\-is\-uuid)(,.+)?$',
+        ])->shouldBeCalled();
+        $this->banProxyCache->flush()->shouldBeCalled();
 
         $this->handler->invalidateStructure($this->structure->reveal());
 
