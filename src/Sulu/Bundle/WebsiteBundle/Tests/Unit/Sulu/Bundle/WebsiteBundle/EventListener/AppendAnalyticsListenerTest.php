@@ -67,7 +67,9 @@ class AppendAnalyticsListenerTest extends \PHPUnit_Framework_TestCase
 
         $portalInformation = $this->prophesize(PortalInformation::class);
         $portalInformation->getUrlExpression()->willReturn('sulu.lo/{localization}');
+        $portalInformation->getType()->willReturn(RequestAnalyzerInterface::MATCH_TYPE_FULL);
         $requestAnalyzer->getPortalInformation()->willReturn($portalInformation->reveal());
+        $requestAnalyzer->getAttribute('urlExpression')->willReturn('sulu.lo/{localization}');
 
         $analyticsRepository->findByUrl('sulu.lo/{localization}', 'prod')->willReturn(['test' => 1]);
         $listener = new AppendAnalyticsListener(
@@ -81,6 +83,45 @@ class AppendAnalyticsListenerTest extends \PHPUnit_Framework_TestCase
         $request = $this->prophesize(Request::class);
         $event->getRequest()->willReturn($request->reveal());
         $request->getRequestFormat()->willReturn('html');
+        $response = $this->prophesize(Response::class);
+        $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/html']);
+        $event->getResponse()->willReturn($response->reveal());
+
+        $engine->render('SuluWebsiteBundle:Analytics:website.html.twig', ['analytics' => ['test' => 1]])
+            ->shouldBeCalled()->willReturn('<script>var i = 0;</script>');
+        $response->getContent()->willReturn('<html><head><title>Test</title></head><body><h1>Title</h1></body></html>');
+        $response->setContent(
+            '<html><head><title>Test</title></head><body><h1>Title</h1><script>var i = 0;</script></body></html>'
+        )->shouldBeCalled();
+        $listener->onResponse($event->reveal());
+    }
+
+    public function testAppendWildcard()
+    {
+        $engine = $this->prophesize(EngineInterface::class);
+        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+        $analyticsRepository = $this->prophesize(AnalyticsRepository::class);
+
+        $portalInformation = $this->prophesize(PortalInformation::class);
+        $portalInformation->getUrlExpression()->willReturn('*.sulu.lo/*');
+        $portalInformation->getType()->willReturn(RequestAnalyzerInterface::MATCH_TYPE_WILDCARD);
+        $requestAnalyzer->getPortalInformation()->willReturn($portalInformation->reveal());
+        $requestAnalyzer->getAttribute('urlExpression')->willReturn('1.sulu.lo/2');
+
+        $analyticsRepository->findByUrl('1.sulu.lo/2', 'prod')->willReturn(['test' => 1]);
+        $listener = new AppendAnalyticsListener(
+            $engine->reveal(),
+            $requestAnalyzer->reveal(),
+            $analyticsRepository->reveal(),
+            'prod'
+        );
+
+        $event = $this->prophesize(FilterResponseEvent::class);
+        $request = $this->prophesize(Request::class);
+        $event->getRequest()->willReturn($request->reveal());
+        $request->getRequestFormat()->willReturn('html');
+        $request->getHost()->willReturn('1.sulu.lo');
+        $request->getRequestUri()->willReturn('/2');
         $response = $this->prophesize(Response::class);
         $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/html']);
         $event->getResponse()->willReturn($response->reveal());

@@ -68,9 +68,10 @@ class Url implements ArrayableInterface
      */
     private $environment;
 
-    public function __construct($url = null)
+    public function __construct($url = null, $environment = null)
     {
         $this->url = $url;
+        $this->environment = $environment;
     }
 
     /**

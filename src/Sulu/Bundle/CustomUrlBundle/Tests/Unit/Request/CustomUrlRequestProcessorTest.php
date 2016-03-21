@@ -15,6 +15,7 @@ use Sulu\Bundle\CustomUrlBundle\Request\CustomUrlRequestProcessor;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Document\RouteDocument;
+use Sulu\Component\CustomUrl\Generator\Generator;
 use Sulu\Component\CustomUrl\Manager\CustomUrlManager;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
@@ -89,6 +90,8 @@ class CustomUrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
             } else {
                 $customUrl = $this->prophesize(CustomUrlDocument::class);
                 $customUrl->isPublished()->willReturn($published);
+                $customUrl->getBaseDomain()->willReturn('sulu.lo/*');
+                $customUrl->getDomainParts()->willReturn(['prefix' => '', 'suffix' => ['test-1']]);
                 $customUrl->getTargetLocale()->willReturn('de');
                 $customUrlManager->findByUrl($route, $webspaceKey, 'de')->willReturn($customUrl->reveal());
 
@@ -132,7 +135,14 @@ class CustomUrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', 'prod')
             ->willReturn([$portalInformation]);
 
-        $processor = new CustomUrlRequestProcessor($customUrlManager->reveal(), $webspaceManager->reveal(), 'prod');
+        $generator = $this->prophesize(Generator::class);
+
+        $processor = new CustomUrlRequestProcessor(
+            $customUrlManager->reveal(),
+            $generator->reveal(),
+            $webspaceManager->reveal(),
+            'prod'
+        );
         $processor->process($request->reveal(), $requestAttributes);
     }
 }

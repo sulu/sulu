@@ -104,7 +104,7 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($result->isRedirect());
     }
 
-    public function testReadList()
+    public function testFindList()
     {
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
         $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
@@ -131,7 +131,34 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([['title' => 'Test-1'], ['title' => 'Test-2']], $result);
     }
 
-    public function testRead()
+    public function testFindUrls()
+    {
+        $documentManager = $this->prophesize(DocumentManagerInterface::class);
+        $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
+        $metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
+        $pathBuilder = $this->prophesize(PathBuilder::class);
+        $cacheHandler = $this->prophesize(HandlerInvalidatePathInterface::class);
+
+        $pathBuilder->build(['%base%', 'sulu_io', '%custom_urls%', '%custom_urls_items%'])
+            ->willReturn('/cmf/sulu_io/custom_urls/items');
+
+        $manager = new CustomUrlManager(
+            $documentManager->reveal(),
+            $customUrlRepository->reveal(),
+            $metadataFactory->reveal(),
+            $pathBuilder->reveal(),
+            $cacheHandler->reveal()
+        );
+
+        $customUrlRepository->findUrls('/cmf/sulu_io/custom_urls/items')
+            ->willReturn(['1.sulu.lo', '1.sulu.lo/2']);
+
+        $result = $manager->findUrls('sulu_io');
+
+        $this->assertEquals(['1.sulu.lo', '1.sulu.lo/2'], $result);
+    }
+
+    public function testFind()
     {
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
         $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
@@ -155,7 +182,7 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($document->reveal(), $result);
     }
 
-    public function testReadByUrl()
+    public function testFindByUrl()
     {
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
         $customUrlRepository = $this->prophesize(CustomUrlRepository::class);
@@ -186,7 +213,7 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($customUrlDocument->reveal(), $result);
     }
 
-    public function testReadRouteByUrl()
+    public function testFindRouteByUrl()
     {
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
         $customUrlRepository = $this->prophesize(CustomUrlRepository::class);

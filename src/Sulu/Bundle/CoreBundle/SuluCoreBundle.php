@@ -18,6 +18,7 @@ use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterLocalizationProv
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RemoveForeignContextServicesPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\ReplacersCompilerPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RequestAnalyzerCompilerPass;
+use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\WebspaceUrlProviderCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -34,5 +35,6 @@ class SuluCoreBundle extends Bundle
         $container->addCompilerPass(new ListBuilderMetadataProviderCompilerPass());
         $container->addCompilerPass(new RequestAnalyzerCompilerPass());
         $container->addCompilerPass(new CsvHandlerCompilerPass());
+        $container->addCompilerPass(new WebspaceUrlProviderCompilerPass());
     }
 }

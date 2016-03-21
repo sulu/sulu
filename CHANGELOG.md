@@ -26,6 +26,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2157 [CustomUrlBundle]     Fixed route-validation in request processor
     * ENHANCEMENT #1288 [CoreBundle]          Introduced lazy initialization of request attributes
     * ENHANCEMENT #2132 [Test]                Removed external classes from and refactored functional test class hierarchy
+    * FEATURE     #1288 [CustomUrlBundle]     Integrated custom-urls into analytics
     * FEATURE     #1288 [All]                 Added deep-links for selection content-types
     * BUGFIX      #2131 [WebsiteBundle]       Fixed 'getTheme' error in ExceptionController
     * ENHANCEMENT #2131 [CoreBundle]          Added request attributes to extract data from request

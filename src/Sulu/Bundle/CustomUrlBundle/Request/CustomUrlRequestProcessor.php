@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\CustomUrlBundle\Request;
 
 use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\CustomUrl\Generator\GeneratorInterface;
 use Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\Attributes\AbstractRequestProcessor;
@@ -32,6 +33,11 @@ class CustomUrlRequestProcessor extends AbstractRequestProcessor
     private $customUrlManager;
 
     /**
+     * @var GeneratorInterface
+     */
+    private $generator;
+
+    /**
      * @var WebspaceManagerInterface
      */
     private $webspaceManager;
@@ -43,10 +49,12 @@ class CustomUrlRequestProcessor extends AbstractRequestProcessor
 
     public function __construct(
         CustomUrlManagerInterface $customUrlManager,
+        GeneratorInterface $generator,
         WebspaceManagerInterface $webspaceManager,
         $environment
     ) {
         $this->customUrlManager = $customUrlManager;
+        $this->generator = $generator;
         $this->webspaceManager = $webspaceManager;
         $this->environment = $environment;
     }
@@ -157,7 +165,15 @@ class CustomUrlRequestProcessor extends AbstractRequestProcessor
         return $this->processPortalInformation(
             $request,
             reset($portalInformations),
-            ['localization' => $localization, 'customUrlRoute' => $routeDocument, 'customUrl' => $customUrlDocument]
+            [
+                'localization' => $localization,
+                'customUrlRoute' => $routeDocument,
+                'customUrl' => $customUrlDocument,
+                'urlExpression' => $this->generator->generate(
+                    $customUrlDocument->getBaseDomain(),
+                    $customUrlDocument->getDomainParts()
+                ),
+            ]
         );
     }
 

@@ -12,6 +12,7 @@
 namespace Sulu\Component\Webspace\Manager;
 
 use Psr\Log\LoggerInterface;
+use Sulu\Component\Util\WildcardUrlUtil;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\Dumper\PhpWebspaceCollectionDumper;
 use Sulu\Component\Webspace\Portal;
@@ -369,12 +370,6 @@ class WebspaceManager implements WebspaceManagerInterface
      */
     protected function matchUrl($url, $portalUrl)
     {
-        $patternUrl = rtrim($portalUrl, '/');
-        $patternUrl = preg_quote($patternUrl);
-        $patternUrl = str_replace('/', '\/', $patternUrl);
-        $patternUrl = str_replace('\*', '[^\/.]+', $patternUrl);
-        $regexp = sprintf('/^%s($|([\/].*)|([.].*))$/', $patternUrl);
-
-        return preg_match($regexp, $url);
+        return WildcardUrlUtil::match($url, $portalUrl);
     }
 }

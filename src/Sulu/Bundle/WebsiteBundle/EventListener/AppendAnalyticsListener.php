@@ -65,10 +65,8 @@ class AppendAnalyticsListener
             return;
         }
 
-        $analytics = $this->analyticsRepository->findByUrl(
-            $this->requestAnalyzer->getPortalInformation()->getUrlExpression(),
-            $this->environment
-        );
+        $portalUrl = $this->requestAnalyzer->getAttribute('urlExpression');
+        $analytics = $this->analyticsRepository->findByUrl($portalUrl, $this->environment);
 
         $content = $this->engine->render('SuluWebsiteBundle:Analytics:website.html.twig', ['analytics' => $analytics]);
 
