@@ -13,7 +13,6 @@ namespace Sulu\Bundle\WebsiteBundle\EventListener;
 
 use Liip\ThemeBundle\ActiveTheme;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
  * Listener which applies the configured theme.
@@ -30,10 +29,6 @@ class SetThemeEventListener
      */
     private $activeTheme;
 
-    /**
-     * @param RequestAnalyzerInterface
-     * @param ActiveTheme
-     */
     public function __construct(
         RequestAnalyzerInterface $requestAnalyzer,
         ActiveTheme $activeTheme
@@ -44,10 +39,8 @@ class SetThemeEventListener
 
     /**
      * Set the active theme if there is a portal.
-     *
-     * @param GetResponseEvent $event
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function setActiveTheme()
     {
         $portal = $this->requestAnalyzer->getPortal();
 

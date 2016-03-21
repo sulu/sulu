@@ -194,6 +194,7 @@ class UserRepositoryTest extends SuluTestCase
 
         /** @var UserRepository $userRepository */
         $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
+        $userRepository->init('Sulu');
 
         $user = $userRepository->loadUserByUsername('sulu');
 

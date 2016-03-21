@@ -80,14 +80,6 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('config_dir')
                     ->defaultValue('%kernel.root_dir%/Resources/webspaces')
                 ->end()
-                ->arrayNode('request_analyzer')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('priority')
-                            ->defaultValue(300)
-                        ->end()
-                    ->end()
-                ->end()
             ->end()
         ->end();
     }

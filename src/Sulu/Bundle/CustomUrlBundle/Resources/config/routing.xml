@@ -91,7 +91,7 @@
             <argument type="service" id="sulu_custom_urls.routing.provider"/>
 
             <tag name="sulu.context" context="website"/>
-            <tag name="router" priority="110"/>
+            <tag name="router" priority="30"/>
         </service>
         
         <service id="sulu_custom_urls.request_processor"

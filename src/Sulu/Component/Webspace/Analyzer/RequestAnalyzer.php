@@ -14,6 +14,7 @@ namespace Sulu\Component\Webspace\Analyzer;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestProcessorInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Default request analyzer will be used for sulu-admin and extended for sulu-website.
@@ -26,13 +27,18 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     private $requestProcessors;
 
     /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
      * @var RequestAttributes
      */
     private $attributes;
 
-    public function __construct(array $requestProcessors)
+    public function __construct(RequestStack $requestStack, array $requestProcessors)
     {
-        $this->attributes = new RequestAttributes();
+        $this->requestStack = $requestStack;
         $this->requestProcessors = $requestProcessors;
     }
 
@@ -41,7 +47,28 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     public function analyze(Request $request)
     {
-        $this->attributes = $this->createAttributes($request);
+        $this->attributes = new RequestAttributes();
+        foreach ($this->requestProcessors as $provider) {
+            $this->attributes = $this->attributes->merge($provider->process($request, $this->attributes));
+        }
+
+        foreach ($this->requestProcessors as $provider) {
+            $provider->validate($this->attributes);
+        }
+    }
+
+    /**
+     * Initializes the request attributes lazily.
+     *
+     * @return RequestAttributes
+     */
+    protected function getAttributes()
+    {
+        if (!$this->attributes) {
+            $this->analyze($this->requestStack->getCurrentRequest());
+        }
+
+        return $this->attributes;
     }
 
     /**
@@ -49,7 +76,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     public function getAttribute($name, $default = null)
     {
-        return $this->attributes->getAttribute($name, $default);
+        return $this->getAttributes()->getAttribute($name, $default);
     }
 
     /**
@@ -154,26 +181,5 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     public function getPortalInformation()
     {
         return $this->getAttribute('portalInformation');
-    }
-
-    /**
-     * Returns merged attributes from all providers.
-     *
-     * @param Request $request
-     *
-     * @return RequestAttributes
-     */
-    protected function createAttributes(Request $request)
-    {
-        $attributes = new RequestAttributes();
-        foreach ($this->requestProcessors as $provider) {
-            $attributes = $attributes->merge($provider->process($request, $attributes));
-        }
-
-        foreach ($this->requestProcessors as $provider) {
-            $provider->validate($attributes);
-        }
-
-        return $attributes;
     }
 }
