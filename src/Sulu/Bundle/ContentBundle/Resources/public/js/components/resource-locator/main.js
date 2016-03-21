@@ -146,7 +146,7 @@ define([], function() {
 
             startOptionsLoader.call(this, $element);
 
-            this.sandbox.util.save(this.items[id]._links.delete, 'DELETE', {})
+            this.sandbox.util.save(this.items[id]._links.delete, 'DELETE')
                 .then(function() {
                     stopOptionsLoader.call(this, $element);
                     this.sandbox.dom.remove($element);
