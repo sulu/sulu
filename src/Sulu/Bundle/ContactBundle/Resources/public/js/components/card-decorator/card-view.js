@@ -278,7 +278,7 @@ define(function() {
                 $('.' + constants.cardGridClass).prepend(this.$items[id]);
             }
 
-            this.bindItemDomEvents(id);
+            this.bindItemEvents(id);
         },
 
         /**
@@ -321,7 +321,7 @@ define(function() {
          * Binds Dom-Events for a card-item
          * @param id {Number|String} the identifier of the thumbnail to bind events on
          */
-        bindItemDomEvents: function(id) {
+        bindItemEvents: function(id) {
             this.sandbox.dom.on(this.$items[id], 'click', function(event) {
                 this.sandbox.dom.stopPropagation(event);
                 this.datagrid.itemAction.call(this.datagrid, id);

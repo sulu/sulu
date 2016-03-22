@@ -7957,30 +7957,31 @@ li a.navigation-settings-icon {
 .dropdown {
   display: inline-block;
   position: relative;
+  font-family: Helvetica, Arial, sans-serif;
 }
-/* line 10, ../scss/modules/dropdown.scss */
+/* line 11, ../scss/modules/dropdown.scss */
 .dropdown.dropdown-show .dropdown-menu {
   display: block;
 }
 
-/* line 16, ../scss/modules/dropdown.scss */
+/* line 17, ../scss/modules/dropdown.scss */
 .dropdown-shadow, .tt-dropdown-menu {
   -moz-box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
   box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
 }
-/* line 18, ../scss/modules/dropdown.scss */
+/* line 19, ../scss/modules/dropdown.scss */
 .dropdown-shadow.dropdown-align-right, .dropdown-align-right.tt-dropdown-menu {
   right: -3px;
 }
-/* line 22, ../scss/modules/dropdown.scss */
+/* line 23, ../scss/modules/dropdown.scss */
 .dropdown-shadow.dropdown-align-top, .dropdown-align-top.tt-dropdown-menu {
   top: auto;
   bottom: 20px;
   margin-bottom: 0;
 }
 
-/* line 29, ../scss/modules/dropdown.scss */
+/* line 30, ../scss/modules/dropdown.scss */
 .dropdown-menu {
   width: 250px;
   max-height: 350px;
@@ -7997,31 +7998,54 @@ li a.navigation-settings-icon {
   z-index: 90;
   border-radius: 3px;
 }
-/* line 45, ../scss/modules/dropdown.scss */
+/* line 46, ../scss/modules/dropdown.scss */
 .dropdown-menu.top {
   top: auto;
   bottom: 25px;
   margin-bottom: 0;
 }
-/* line 51, ../scss/modules/dropdown.scss */
+/* line 52, ../scss/modules/dropdown.scss */
 .dropdown-menu > ul {
   list-style: none;
   margin: 0;
   padding: 10px 0;
 }
-/* line 56, ../scss/modules/dropdown.scss */
+/* line 57, ../scss/modules/dropdown.scss */
 .dropdown-menu > ul > li {
   padding: 0 20px;
   line-height: 30px;
   text-align: left;
 }
-/* line 60, ../scss/modules/dropdown.scss */
+/* line 62, ../scss/modules/dropdown.scss */
+.dropdown-menu > ul > li .info, .dropdown-menu > ul > li .info-clicked {
+  display: none;
+  font-size: 12px;
+  padding: 0 20px;
+  position: absolute;
+  right: 0;
+  background-color: transparent;
+}
+/* line 71, ../scss/modules/dropdown.scss */
+.dropdown-menu > ul > li .info-clicked.clicked {
+  display: inline;
+  float: right;
+}
+/* line 76, ../scss/modules/dropdown.scss */
 .dropdown-menu > ul > li:hover, .dropdown-menu > ul > li.hover {
   background-color: #52B6CA;
   cursor: pointer;
   color: #fff;
 }
-/* line 66, ../scss/modules/dropdown.scss */
+/* line 82, ../scss/modules/dropdown.scss */
+.dropdown-menu > ul > li:hover .info, .dropdown-menu > ul > li.hover .info {
+  display: inline;
+  float: right;
+}
+/* line 86, ../scss/modules/dropdown.scss */
+.dropdown-menu > ul > li:hover .info.clicked, .dropdown-menu > ul > li.hover .info.clicked {
+  display: none;
+}
+/* line 91, ../scss/modules/dropdown.scss */
 .dropdown-menu > ul > li.divider {
   height: 1px;
   margin: 5px 0 10px 0;
@@ -8030,34 +8054,34 @@ li a.navigation-settings-icon {
   background-color: #ddd;
   cursor: default;
 }
-/* line 74, ../scss/modules/dropdown.scss */
+/* line 99, ../scss/modules/dropdown.scss */
 .dropdown-menu > ul > li.disabled {
   color: #999;
 }
-/* line 76, ../scss/modules/dropdown.scss */
+/* line 101, ../scss/modules/dropdown.scss */
 .dropdown-menu > ul > li.disabled:hover {
   background-color: transparent;
   cursor: default;
 }
 
-/* line 85, ../scss/modules/dropdown.scss */
+/* line 110, ../scss/modules/dropdown.scss */
 .dropdown-align-right {
   right: 6px;
   left: inherit;
 }
 
-/* line 90, ../scss/modules/dropdown.scss */
+/* line 115, ../scss/modules/dropdown.scss */
 .dropdown-footer {
   border-top: 1px solid #ccc;
   padding: 10px 10px;
 }
 
-/* line 95, ../scss/modules/dropdown.scss */
+/* line 120, ../scss/modules/dropdown.scss */
 .dropdown-toggle {
   display: inline-block;
   cursor: pointer;
 }
-/* line 98, ../scss/modules/dropdown.scss */
+/* line 123, ../scss/modules/dropdown.scss */
 .dropdown-toggle::after {
   content: "";
   display: inline-block;
@@ -8071,7 +8095,7 @@ li a.navigation-settings-icon {
   border-top: 6px solid #000;
 }
 
-/* line 113, ../scss/modules/dropdown.scss */
+/* line 138, ../scss/modules/dropdown.scss */
 .dropdown-trigger {
   height: 30px;
   line-height: 30px;

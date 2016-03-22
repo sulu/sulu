@@ -49,82 +49,74 @@
   width: 190px;
   background-color: #fff;
   border-radius: 3px;
-  overflow: hidden;
   opacity: 1;
   -moz-transition: opacity 100ms, top 100ms, left 100ms;
   -o-transition: opacity 100ms, top 100ms, left 100ms;
   -webkit-transition: opacity 100ms, top 100ms, left 100ms;
   transition: opacity 100ms, top 100ms, left 100ms;
 }
-/* line 54, ../scss/modules/collection.scss */
+/* line 53, ../scss/modules/collection.scss */
 .masonry-container #masonry-grid .masonry-item.loading {
   opacity: 0;
 }
-/* line 58, ../scss/modules/collection.scss */
+/* line 57, ../scss/modules/collection.scss */
 .masonry-container #masonry-grid .masonry-item .masonry-head {
   background-color: #ddd;
   width: 100%;
 }
-/* line 62, ../scss/modules/collection.scss */
+/* line 61, ../scss/modules/collection.scss */
 .masonry-container #masonry-grid .masonry-item .masonry-head .head-icon {
   color: white;
   font-size: 70px;
   margin: 30px;
 }
-/* line 68, ../scss/modules/collection.scss */
+/* line 67, ../scss/modules/collection.scss */
 .masonry-container #masonry-grid .masonry-item .masonry-head .head-image {
   vertical-align: middle;
 }
-/* line 73, ../scss/modules/collection.scss */
+/* line 72, ../scss/modules/collection.scss */
 .masonry-container #masonry-grid .masonry-item .masonry-info {
   width: 100%;
   height: 45px;
   margin-top: 10px;
 }
-/* line 78, ../scss/modules/collection.scss */
+/* line 77, ../scss/modules/collection.scss */
 .masonry-container #masonry-grid .masonry-item .masonry-info span.description {
   font-size: 12px;
   color: #999;
 }
-/* line 84, ../scss/modules/collection.scss */
+/* line 83, ../scss/modules/collection.scss */
 .masonry-container #masonry-grid .masonry-item .masonry-footer {
   width: 100%;
   height: 15px;
   margin-bottom: 10px;
   padding: 0 10px;
 }
-/* line 90, ../scss/modules/collection.scss */
+/* line 89, ../scss/modules/collection.scss */
 .masonry-container #masonry-grid .masonry-item .masonry-footer .footer-checkbox {
   float: left;
 }
-/* line 94, ../scss/modules/collection.scss */
-.masonry-container #masonry-grid .masonry-item .masonry-footer .footer-download {
+/* line 93, ../scss/modules/collection.scss */
+.masonry-container #masonry-grid .masonry-item .masonry-footer .footer-icon {
   position: relative;
   top: 2px;
   font-size: 17px;
   float: right;
   margin-left: 5px;
-}
-/* line 102, ../scss/modules/collection.scss */
-.masonry-container #masonry-grid .masonry-item .masonry-footer .footer-play-video {
-  position: relative;
-  top: 2px;
-  font-size: 17px;
-  float: right;
   cursor: pointer;
 }
-/* line 111, ../scss/modules/collection.scss */
+/* line 103, ../scss/modules/collection.scss */
 .masonry-container #masonry-grid .masonry-item .action-navigator, .masonry-container #masonry-grid .masonry-item .download-navigator {
   cursor: pointer;
   color: #000;
 }
 
-/* line 120, ../scss/modules/collection.scss */
+/* line 112, ../scss/modules/collection.scss */
 .sticky-toolbar.fixed .list-toolbar-container.collection {
   width: 92.75%;
 }
 
-/* line 126, ../scss/modules/collection.scss */
+/* line 118, ../scss/modules/collection.scss */
 .toolbar-hidden .collection-header-container {
   top: -60px;
 }

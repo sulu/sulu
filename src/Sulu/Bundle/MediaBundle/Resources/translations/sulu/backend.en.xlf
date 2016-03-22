@@ -246,6 +246,30 @@
                 <source>sulu.dropzone.error.message.wrong-filetype</source>
                 <target>The new version must be the same media type.</target>
             </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f221234" resname="sulu.media.copy_url">
+                <source>sulu.media.copy_url</source>
+                <target>Copy URL</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f221214" resname="sulu.media.copied_url">
+                <source>sulu.media.copied_url</source>
+                <target>URL copied</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f221215" resname="sulu.media.original">
+                <source>sulu.media.original</source>
+                <target>Master file</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f221235" resname="sulu.media.copy_original">
+                <source>sulu.media.copy_original</source>
+                <target>Master file URL</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f221236" resname="sulu.media.download_original">
+                <source>sulu.media.download_original</source>
+                <target>Download master file</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f221237" resname="sulu.media.formats">
+                <source>sulu.media.formats</source>
+                <target>Media formats</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
