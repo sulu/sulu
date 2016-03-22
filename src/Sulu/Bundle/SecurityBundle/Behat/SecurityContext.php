@@ -178,30 +178,13 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
             return $role;
         }
 
-        $role = new Role();
-        $role->setName($name);
-        $role->setSystem($system);
-        $pool = $this->getContainer()->get('sulu_admin.admin_pool');
-        $securityContexts = $pool->getSecurityContexts();
-
-        $securityContextsFlat = [];
-        array_walk_recursive(
-            $securityContexts['Sulu'],
-            function ($value) use (&$securityContextsFlat) {
-                $securityContextsFlat[] = $value;
-            }
+        $this->execCommand(
+            'sulu:security:role:create',
+            [
+                'name' => $name,
+                'system' => 'Sulu',
+            ]
         );
-
-        foreach ($securityContextsFlat as $securityContext) {
-            $permission = new Permission();
-            $permission->setRole($role);
-            $permission->setContext($securityContext);
-            $permission->setPermissions(120);
-            $role->addPermission($permission);
-        }
-
-        $this->getEntityManager()->persist($role);
-        $this->getEntityManager()->flush();
 
         return $role;
     }
