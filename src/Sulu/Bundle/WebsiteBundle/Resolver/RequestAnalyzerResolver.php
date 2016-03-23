@@ -83,7 +83,11 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
     public function resolveForPreview($webspaceKey, $locale)
     {
         // take first portal url
-        $portalInformation = $this->webspaceManager->getPortalInformations($this->environment);
+        $portalInformation = $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale(
+            $webspaceKey,
+            $locale,
+            $this->environment
+        );
         $portalUrl = array_keys($portalInformation)[0];
 
         return [

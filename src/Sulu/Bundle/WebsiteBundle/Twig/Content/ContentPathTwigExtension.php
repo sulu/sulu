@@ -81,7 +81,14 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
                 $scheme
             );
         } elseif (strpos($url, '/') === 0 && $this->requestAnalyzer) {
-            return rtrim($this->requestAnalyzer->getResourceLocatorPrefix() . $url, '/');
+            return $this->webspaceManager->findUrlByResourceLocator(
+                $url,
+                $this->environment,
+                $locale ?: $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
+                $this->requestAnalyzer->getWebspace()->getKey(),
+                $domain,
+                $scheme
+            );
         }
 
         return $url;
@@ -92,15 +99,7 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
      */
     public function getContentRootPath($full = false)
     {
-        if ($this->requestAnalyzer !== null) {
-            if ($full) {
-                return $this->requestAnalyzer->getPortalUrl();
-            } else {
-                return $this->requestAnalyzer->getResourceLocatorPrefix();
-            }
-        } else {
-            return '/';
-        }
+        return $this->getContentPath('/');
     }
 
     /**

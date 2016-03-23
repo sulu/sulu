@@ -60,6 +60,17 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
     public function findPortalInformationsByUrl($url, $environment);
 
     /**
+     * Returns all portal which matches the given webspace-key and locale.
+     *
+     * @param string $webspaceKey The webspace-key which the portal should match
+     * @param string $locale The locale which the portal should match
+     * @param string $environment The environment in which the url should be searched
+     *
+     * @return \Sulu\Component\Webspace\PortalInformation[]
+     */
+    public function findPortalInformationsByWebspaceKeyAndLocale($webspaceKey, $locale, $environment);
+
+    /**
      * Returns all possible urls for resourcelocator.
      *
      * @param string $resourceLocator

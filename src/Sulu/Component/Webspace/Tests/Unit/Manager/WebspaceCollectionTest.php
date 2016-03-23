@@ -128,6 +128,19 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $this->webspaceCollection->setPortalInformations($portalInformations);
     }
 
+    public function testGetPortalInformations()
+    {
+        $this->assertCount(1, $this->webspaceCollection->getPortalInformations('dev'));
+        $this->assertCount(
+            1,
+            $this->webspaceCollection->getPortalInformations('dev', [RequestAnalyzerInterface::MATCH_TYPE_FULL])
+        );
+        $this->assertCount(
+            0,
+            $this->webspaceCollection->getPortalInformations('dev', [RequestAnalyzerInterface::MATCH_TYPE_REDIRECT])
+        );
+    }
+
     public function testToArray()
     {
         $collectionArray = $this->webspaceCollection->toArray();

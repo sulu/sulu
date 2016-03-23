@@ -35,7 +35,7 @@
         <property name="shadowLocaleEnabled" type="boolean" serialized-name="shadowOn" groups="defaultPage"/>
         <property name="uuid" type="string" serialized-name="id" groups="defaultPage,smallPage,previewPage"/>
         <property name="structureType" type="string" groups="previewPage"/>
-        <property name="locale" type="string"/>
+        <property name="locale" type="string" groups="previewPage"/>
         <property name="path" type="string"/>
         <property name="internal" type="boolean" groups="defaultPage"/>
         <property name="webspaceName" type="string"/>

@@ -122,6 +122,20 @@ class WebspaceManager implements WebspaceManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function findPortalInformationsByWebspaceKeyAndLocale($webspaceKey, $locale, $environment)
+    {
+        return array_filter(
+            $this->getWebspaceCollection()->getPortalInformations($environment),
+            function (PortalInformation $portalInformation) use ($webspaceKey, $locale) {
+                return $portalInformation->getWebspace()->getKey() === $webspaceKey
+                       && $portalInformation->getLocale() === $locale;
+            }
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findUrlsByResourceLocator(
         $resourceLocator,
         $environment,
@@ -131,7 +145,14 @@ class WebspaceManager implements WebspaceManagerInterface
         $scheme = 'http'
     ) {
         $urls = [];
-        $portals = $this->getWebspaceCollection()->getPortalInformations($environment);
+        $portals = $this->getWebspaceCollection()->getPortalInformations(
+            $environment,
+            [
+                RequestAnalyzerInterface::MATCH_TYPE_FULL,
+                RequestAnalyzerInterface::MATCH_TYPE_PARTIAL,
+                RequestAnalyzerInterface::MATCH_TYPE_REDIRECT,
+            ]
+        );
         foreach ($portals as $url => $portalInformation) {
             $sameLocalization = $portalInformation->getLocalization()->getLocalization() === $languageCode;
             $sameWebspace = $webspaceKey === null || $portalInformation->getWebspace()->getKey() === $webspaceKey;
@@ -156,7 +177,14 @@ class WebspaceManager implements WebspaceManagerInterface
         $scheme = 'http'
     ) {
         $urls = [];
-        $portals = $this->getWebspaceCollection()->getPortalInformations($environment);
+        $portals = $this->getWebspaceCollection()->getPortalInformations(
+            $environment,
+            [
+                RequestAnalyzerInterface::MATCH_TYPE_FULL,
+                RequestAnalyzerInterface::MATCH_TYPE_PARTIAL,
+                RequestAnalyzerInterface::MATCH_TYPE_REDIRECT,
+            ]
+        );
         foreach ($portals as $url => $portalInformation) {
             $sameLocalization = (
                 $portalInformation->getLocalization() === null

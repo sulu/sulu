@@ -352,7 +352,7 @@ class WebspaceCollectionBuilder
                 $portal->getWebspace()->getDefaultSegment(),
                 $urlRedirect,
                 $urlAnalyticsKey,
-                $url->isMain(),
+                false, // partial matches cannot be main
                 $url->getUrl()
             );
         }

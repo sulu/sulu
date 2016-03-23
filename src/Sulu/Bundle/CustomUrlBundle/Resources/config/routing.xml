@@ -97,6 +97,8 @@
         <service id="sulu_custom_urls.request_processor"
                  class="Sulu\Bundle\CustomUrlBundle\Request\CustomUrlRequestProcessor">
             <argument type="service" id="sulu_custom_urls.manager"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="string">%kernel.environment%</argument>
 
             <tag name="sulu.context" context="website"/>
             <tag name="sulu.request_attributes"/>

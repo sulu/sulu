@@ -16,8 +16,13 @@ use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Document\RouteDocument;
 use Sulu\Component\CustomUrl\Manager\CustomUrlManager;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
 class CustomUrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
@@ -52,6 +57,8 @@ class CustomUrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $webspace = $this->prophesize(Webspace::class);
         $webspace->getKey()->willReturn($webspaceKey);
 
+        $localization = new Localization('de');
+
         $requestAttributes = new RequestAttributes(['webspace' => $webspace->reveal()]);
 
         $request = $this->prophesize(Request::class);
@@ -59,12 +66,18 @@ class CustomUrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $request->getRequestUri()->willReturn($requestedUri);
         $request->getPathInfo()->willReturn($requestedUri);
         $request->getScheme()->willReturn('http');
+        $request->getUri()->willReturn('http://' . $host . $requestedUri);
+        $request->reveal()->query = new ParameterBag();
+        $request->reveal()->request = new ParameterBag();
 
         $customUrlManager = $this->prophesize(CustomUrlManager::class);
 
         if (!$exists) {
             $customUrlManager->findRouteByUrl($route, $webspaceKey)->willReturn(null);
         } else {
+            $request->setLocale('de')->shouldBeCalled();
+            $request->setRequestFormat('html')->shouldBeCalled();
+
             $routeDocument = $this->prophesize(RouteDocument::class);
             $routeDocument->isHistory()->willReturn($history);
             $routeDocument->getPath()->willReturn('/cmf/sulu_io/custom-urls/routes/' . $route);
@@ -95,7 +108,31 @@ class CustomUrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
             $customUrlManager->findRouteByUrl($route, $webspaceKey)->willReturn($routeDocument->reveal());
         }
 
-        $processor = new CustomUrlRequestProcessor($customUrlManager->reveal());
+        $wildcardPortalInformation = new PortalInformation(
+            RequestAnalyzerInterface::MATCH_TYPE_WILDCARD,
+            $webspace->reveal(),
+            null,
+            $localization,
+            '*.sulu.lo'
+        );
+
+        $portalInformation = new PortalInformation(
+            RequestAnalyzerInterface::MATCH_TYPE_FULL,
+            $webspace->reveal(),
+            null,
+            $localization,
+            'sulu.lo'
+        );
+
+        $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
+        $webspaceManager->findPortalInformationsByUrl(
+            $route,
+            'prod'
+        )->willReturn([$wildcardPortalInformation]);
+        $webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', 'prod')
+            ->willReturn([$portalInformation]);
+
+        $processor = new CustomUrlRequestProcessor($customUrlManager->reveal(), $webspaceManager->reveal(), 'prod');
         $processor->process($request->reveal(), $requestAttributes);
     }
 }
