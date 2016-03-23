@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2168 [WebsiteBundle]       Changed request to purge cache from GET to DELETE
     * BUGFIX      #2152 [ContentBundle]       Fixed not empty request body for delete history url
     * BUGIFX      #2141 [ContentBundle]       Fixed page gets immediately saved after generating URL
     * BUGFIX      #2156 [SecurityBundle]      Fixed behat context to create correct roles

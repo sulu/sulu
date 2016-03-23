@@ -32,16 +32,26 @@ define(['jquery', 'css!suluwebsitecss/main'], function($) {
                  * Clear the cache for the website.
                  */
                 cacheClear: function() {
-                    $.ajax('/admin/website/cache/clear')
+                    $.ajax('/admin/website/cache', { method: 'DELETE' })
                         .then(function() {
-                            app.sandbox.emit('sulu.labels.success.show', 'sulu.website.cache.remove.success.description', 'sulu.website.cache.remove.success.title', 'cache-success');
+                            app.sandbox.emit(
+                                'sulu.labels.success.show',
+                                'sulu.website.cache.remove.success.description',
+                                'sulu.website.cache.remove.success.title',
+                                'cache-success'
+                            );
                         }.bind(this))
                         .fail(function(jqXHR) {
                             if (jqXHR.status === 403) {
                                 return;
                             }
 
-                            app.sandbox.emit('sulu.labels.error.show', 'sulu.website.cache.remove.error.description', 'sulu.website.cache.remove.error.title', 'cache-error');
+                            app.sandbox.emit(
+                                'sulu.labels.error.show',
+                                'sulu.website.cache.remove.error.description',
+                                'sulu.website.cache.remove.error.title',
+                                'cache-error'
+                            );
                         }.bind(this));
                 }
             };
