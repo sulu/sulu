@@ -206,18 +206,26 @@ define(['underscore', 'text!./form.html'], function(_, form) {
          * Initializes sub-components.
          */
         initializeFormComponents: function() {
-            var routeData = _.filter(
-                _.map(this.data.routes, function(routeDocument, route) {
+            this.customUrls = {};
+
+            var routeData = _.chain(this.data.routes).map(function(routeDocument, route) {
                     if (!routeDocument.history) {
                         return null;
                     }
 
                     return {uuid: routeDocument.uuid, route: route, created: routeDocument.created};
-                }),
-                function(route) {
+                }).filter(function(route) {
                     return route !== null;
-                }
-            );
+                }).value(),
+                baseDomains = _.map(this.options.webspace.customUrls, function(item) {
+                    this.customUrls[item.url] = item;
+
+                    return item.url;
+                }.bind(this)),
+                targetLocales = this.filterConcreteLocales(
+                    this.data.baseDomain,
+                    (!!this.data.targetDocument ? (this.data.targetDocument.concreteLanguages || []) : [])
+                );
 
             this.sandbox.start(
                 [
@@ -239,13 +247,19 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                         options: {
                             el: '#custom-url-base-domain',
                             isNative: true,
-                            data: _.map(this.options.webspace.customUrls, function(item) {
-                                return item.url;
-                            }),
+                            data: baseDomains,
                             defaultLabel: this.translations.customUrlDefaultValue,
                             selectCallback: function(key, item) {
                                 $('#custom-url-input-container').show();
                                 this.sandbox.emit('sulu.webspace-settings.custom-url.set-base-domain', item);
+
+                                var targetItem = $('#custom-url-target-value').data('item'),
+                                    locales;
+                                
+                                if (!!targetItem) {
+                                    locales = this.filterConcreteLocales(this.getData().baseDomain, targetItem.concreteLanguages);
+                                    this.sandbox.emit('husky.select.target-locale.update', locales, [locales[0]], false);
+                                }
                             }.bind(this),
                             preselectCallback: function() {
                                 // do nothing
@@ -256,10 +270,9 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                         name: 'select@husky',
                         options: {
                             el: '#custom-url-target-locale',
+                            instanceName: 'target-locale',
                             isNative: true,
-                            data: _.map(this.options.webspace.localizations, function(item) {
-                                return item.localization;
-                            }),
+                            data: targetLocales,
                             defaultLabel: this.translations.localeDefaultValue,
                             preselectCallback: function() {
                                 // do nothing
@@ -294,7 +307,6 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                     {
                         name: 'content-datasource@sulucontent',
                         options: {
-
                             el: '#target-select',
                             selected: (!!this.data.targetDocument ? this.data.targetDocument.uuid : null),
                             webspace: this.options.webspace.key,
@@ -303,16 +315,18 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                             rootUrl: constants.targetRootUrl,
                             selectedUrl: constants.targetSelectedUrl,
                             resultKey: 'nodes',
-                            selectCallback: function(id, path, title) {
-                                $('#custom-url-target-value').val(title);
+                            selectCallback: function(id, path, title, item) {
+                                var $value = $('#custom-url-target-value');
+                                $value.val(title);
+                                $value.data('item', item);
                                 $('#custom-url-target-button-clear').show();
+
+                                var locales = this.filterConcreteLocales(this.getData().baseDomain, item.concreteLanguages);
+                                this.sandbox.emit('husky.select.target-locale.update', locales, [locales[0]], false);
 
                                 this.target = id;
                                 this.sandbox.emit('husky.overlay.custom-urls.slide-to', 0);
-                            }.bind(this),
-                            preselectCallback: function() {
-                                // do nothing
-                            }
+                            }.bind(this)
                         }
                     },
                     {
@@ -371,6 +385,22 @@ define(['underscore', 'text!./form.html'], function(_, form) {
             if (!!this.data.redirect) {
                 $('.redirect-hide').hide();
             }
+        },
+
+        filterConcreteLocales: function(baseDomain, concreteLocales) {
+            if (!baseDomain || !concreteLocales) {
+                return [];
+            }
+
+            var localizations = [];
+            for (var localization in this.customUrls[baseDomain].locales) {
+                var locale = this.customUrls[baseDomain].locales[localization].localization;
+                if (concreteLocales.indexOf(locale) !== -1) {
+                    localizations.push(locale);
+                }
+            }
+
+            return localizations;
         },
 
         /**

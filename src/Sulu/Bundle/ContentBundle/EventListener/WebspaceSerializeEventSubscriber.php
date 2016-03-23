@@ -15,7 +15,9 @@ use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\JsonSerializationVisitor;
+use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Webspace;
 
 /**
@@ -66,6 +68,8 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
         $this->appendPortalInformation($webspace, $context, $visitor);
         $this->appendUrls($webspace, $context, $visitor);
         $this->appendCustomUrls($webspace, $context, $visitor);
+
+        $visitor->addData('allLocalizations', $webspace->getAllLocalizations());
     }
 
     /**
@@ -115,10 +119,34 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
     {
         $customUrls = [];
         foreach ($webspace->getPortals() as $portal) {
-            $customUrls = array_merge($customUrls, $portal->getEnvironment($this->environment)->getCustomUrls());
+            $customUrls = array_merge(
+                $customUrls,
+                $this->getCustomUrlsForEnvironment($portal, $portal->getEnvironment($this->environment), $context)
+            );
         }
 
         $customUrls = $context->accept($customUrls);
         $visitor->addData('customUrls', $customUrls);
+    }
+
+    /**
+     * Returns custom-url data with the connected locales.
+     *
+     * @param Portal $portal
+     * @param Environment $environment
+     * @param Context $context
+     *
+     * @return array
+     */
+    private function getCustomUrlsForEnvironment(Portal $portal, Environment $environment, Context $context)
+    {
+        $customUrls = [];
+        foreach ($environment->getCustomUrls() as $customUrl) {
+            $customUrl = $context->accept($customUrl);
+            $customUrl['locales'] = $context->accept($portal->getLocalizations());
+            $customUrls[] = $customUrl;
+        }
+
+        return $customUrls;
     }
 }
