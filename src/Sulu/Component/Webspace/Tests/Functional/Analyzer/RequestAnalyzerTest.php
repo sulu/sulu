@@ -200,6 +200,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $request->query = new ParameterBag(['get' => 1]);
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
+        $request->expects($this->once())->method('getScheme')->willReturn('http');
         $request->expects($this->once())->method('setLocale')->with('de_at');
         $this->requestAnalyzer->analyze($request);
 
@@ -250,6 +251,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
         $request->expects($this->once())->method('setLocale')->with('de_at');
+        $request->expects($this->once())->method('getScheme')->willReturn('http');
 
         if ($expected['format']) {
             $request->expects($this->once())->method('setRequestFormat')->will(

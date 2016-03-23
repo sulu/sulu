@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Sulu.
  *
@@ -11,9 +10,12 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
+use PHPCR\RepositoryException;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
+use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,12 +28,18 @@ use Symfony\Component\Routing\RouteCollection;
 class ContentRouteProvider implements RouteProviderInterface
 {
     /**
+     * @var ContentMapperInterface
+     */
+    private $contentMapper;
+
+    /**
      * @var RequestAnalyzerInterface
      */
     private $requestAnalyzer;
 
-    public function __construct(RequestAnalyzerInterface $requestAnalyzer)
+    public function __construct(ContentMapperInterface $contentMapper, RequestAnalyzerInterface $requestAnalyzer)
     {
+        $this->contentMapper = $contentMapper;
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
@@ -79,19 +87,18 @@ class ContentRouteProvider implements RouteProviderInterface
                 )
             );
         } else {
-            $content = $this->requestAnalyzer->getAttribute('content');
-
-            if ($content instanceof ResourceLocatorMovedException) {
-                // old url resource was moved
-                $collection->add(
-                    $content->getNewResourceLocatorUuid() . '_' . uniqid(),
-                    $this->getRedirectRoute(
-                        $request,
-                        $this->requestAnalyzer->getResourceLocatorPrefix() . $content->getNewResourceLocator()
-                    )
+            // just show the page
+            $portal = $this->requestAnalyzer->getPortal();
+            $language = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
+            try {
+                // load content by url ignore ending trailing slash
+                $content = $this->contentMapper->loadByResourceLocator(
+                    rtrim($resourceLocator, '/'),
+                    $portal->getWebspace()->getKey(),
+                    $language
                 );
-            } elseif ($content instanceof StructureInterface) {
-                if (preg_match('/\/$/', $resourceLocator)
+                if (
+                    preg_match('/\/$/', $resourceLocator)
                     && $this->requestAnalyzer->getResourceLocatorPrefix()
                     && $content->getNodeState() === StructureInterface::STATE_PUBLISHED
                 ) {
@@ -125,7 +132,8 @@ class ContentRouteProvider implements RouteProviderInterface
                     !$content->getHasTranslation() ||
                     !$this->checkResourceLocator()
                 ) {
-                    // error 404 page not published - no route found
+                    // error 404 page not published
+                    throw new ResourceLocatorNotFoundException();
                 } else {
                     // show the page
                     $collection->add(
@@ -133,6 +141,19 @@ class ContentRouteProvider implements RouteProviderInterface
                         $this->getStructureRoute($request, $content)
                     );
                 }
+            } catch (ResourceLocatorNotFoundException $exc) {
+                // just do not add any routes to the collection
+            } catch (ResourceLocatorMovedException $exc) {
+                // old url resource was moved
+                $collection->add(
+                    $exc->getNewResourceLocatorUuid() . '_' . uniqid(),
+                    $this->getRedirectRoute(
+                        $request,
+                        $this->requestAnalyzer->getResourceLocatorPrefix() . $exc->getNewResourceLocator()
+                    )
+                );
+            } catch (RepositoryException $exc) {
+                // just do not add any routes to the collection
             }
         }
 

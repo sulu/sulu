@@ -129,7 +129,8 @@ class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testResolveForPreview()
     {
-        $this->webspaceManager->getPortalInformations('dev')->willReturn(['sulu.io/de' => []]);
+        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', 'dev')
+            ->willReturn(['sulu.io/de' => []]);
 
         $request = new \Symfony\Component\HttpFoundation\Request();
         $this->requestStack->getCurrentRequest()->willReturn($request);
@@ -155,7 +156,8 @@ class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testResolveForPreviewWithRequestParameter()
     {
-        $this->webspaceManager->getPortalInformations('dev')->willReturn(['sulu.io/de' => []]);
+        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', 'dev')
+            ->willReturn(['sulu.io/de' => []]);
 
         $request = new \Symfony\Component\HttpFoundation\Request(['test' => 1], ['test' => 2]);
         $this->requestStack->getCurrentRequest()->willReturn($request);

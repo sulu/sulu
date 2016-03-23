@@ -281,7 +281,7 @@ class PreviewMessageHandler implements MessageHandlerInterface
         }
         $changes = $msg['data'];
 
-        $request = new Request(['webspaceKey' => $webspaceKey, 'locale' => $locale]);
+        $request = new Request(['webspace' => $webspaceKey, 'locale' => $locale]);
         $this->requestAnalyzer->analyze($request);
 
         foreach ($changes as $property => $data) {

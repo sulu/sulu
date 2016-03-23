@@ -190,6 +190,7 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $request->query = new ParameterBag(['get' => 1]);
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
+        $request->expects($this->any())->method('getScheme')->will($this->returnValue('http'));
 
         $attributes = $this->provider->process($request, new RequestAttributes());
 
@@ -238,6 +239,7 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $request->query = new ParameterBag(['get' => 1]);
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
+        $request->expects($this->any())->method('getScheme')->will($this->returnValue('http'));
 
         $attributes = $this->provider->process($request, new RequestAttributes());
 

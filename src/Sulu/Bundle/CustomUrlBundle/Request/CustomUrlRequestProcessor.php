@@ -14,23 +14,41 @@ namespace Sulu\Bundle\CustomUrlBundle\Request;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface;
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\Analyzer\Attributes\AbstractRequestProcessor;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
-use Sulu\Component\Webspace\Analyzer\Attributes\RequestProcessorInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\PortalInformation;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Set localization in case of custom-url route.
  */
-class CustomUrlRequestProcessor implements RequestProcessorInterface
+class CustomUrlRequestProcessor extends AbstractRequestProcessor
 {
     /**
      * @var CustomUrlManagerInterface
      */
     private $customUrlManager;
 
-    public function __construct(CustomUrlManagerInterface $customUrlManager)
-    {
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
+     * @var string
+     */
+    private $environment;
+
+    public function __construct(
+        CustomUrlManagerInterface $customUrlManager,
+        WebspaceManagerInterface $webspaceManager,
+        $environment
+    ) {
         $this->customUrlManager = $customUrlManager;
+        $this->webspaceManager = $webspaceManager;
+        $this->environment = $environment;
     }
 
     /**
@@ -38,46 +56,38 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
      */
     public function process(Request $request, RequestAttributes $requestAttributes)
     {
-        $resourceLocator = rtrim(sprintf('%s%s', $request->getHost(), $request->getRequestUri()), '/');
-        if (substr($resourceLocator, -5, 5) === '.html') {
-            $resourceLocator = substr($resourceLocator, 0, -5);
+        $url = rtrim(sprintf('%s%s', $request->getHost(), $request->getRequestUri()), '/');
+        if (substr($url, -5, 5) === '.html') {
+            $url = substr($url, 0, -5);
         }
+        $portalInformations = $this->webspaceManager->findPortalInformationsByUrl(
+            $url,
+            $this->environment
+        );
 
-        $webspace = $requestAttributes->getAttribute('webspace');
-
-        if (!$webspace) {
+        if (count($portalInformations) === 0) {
             return new RequestAttributes();
         }
 
-        $routeDocument = $this->customUrlManager->findRouteByUrl(
-            $resourceLocator,
-            $webspace->getKey()
+        /** @var PortalInformation[] $portalInformations */
+        $portalInformations = array_filter(
+            $portalInformations,
+            function (PortalInformation $portalInformation) {
+                return $portalInformation->getType() === RequestAnalyzer::MATCH_TYPE_WILDCARD;
+            }
         );
 
-        if (!$routeDocument || $routeDocument->isHistory()) {
-            return new RequestAttributes(['customUrlRoute' => $routeDocument]);
+        foreach ($portalInformations as $portalInformation) {
+            if (!$portalInformation->getWebspace()) {
+                continue;
+            }
+
+            if (null !== $attributes = $this->matchCustomUrl($url, $portalInformation, $request)) {
+                return $attributes;
+            }
         }
 
-        $customUrlDocument = $this->customUrlManager->findByUrl(
-            $resourceLocator,
-            $requestAttributes->getAttribute('webspace')->getKey(),
-            $routeDocument->getTargetDocument()->getTargetLocale()
-        );
-
-        if ($customUrlDocument === null
-            || $customUrlDocument->isPublished() === false
-            || $customUrlDocument->getTargetDocument() === null
-            || $customUrlDocument->getTargetDocument()->getWorkflowStage() !== WorkflowStage::PUBLISHED
-        ) {
-            return new RequestAttributes(['customUrlRoute' => $routeDocument, 'customUrl' => $customUrlDocument]);
-        }
-
-        $localization = $this->parse($customUrlDocument->getTargetLocale());
-        $request->setLocale($localization->getLocalization());
-
-        return new RequestAttributes(
-            ['localization' => $localization, 'customUrlRoute' => $routeDocument, 'customUrl' => $customUrlDocument]
-        );
+        return new RequestAttributes();
     }
 
     /**
@@ -86,6 +96,69 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
     public function validate(RequestAttributes $attributes)
     {
         return true;
+    }
+
+    /**
+     * Matches given url to portal-information.
+     *
+     * @param string $url
+     * @param PortalInformation $portalInformation
+     * @param Request $request
+     *
+     * @return RequestAttributes|void
+     */
+    private function matchCustomUrl($url, PortalInformation $portalInformation, Request $request)
+    {
+        $webspace = $portalInformation->getWebspace();
+        $routeDocument = $this->customUrlManager->findRouteByUrl(
+            $url,
+            $webspace->getKey()
+        );
+
+        if (!$routeDocument) {
+            return;
+        } elseif ($routeDocument->isHistory()) {
+            // redirect happen => no portal is needed
+            return $this->processPortalInformation(
+                $request,
+                $portalInformation,
+                ['customUrlRoute' => $routeDocument]
+            );
+        }
+
+        $customUrlDocument = $this->customUrlManager->findByUrl(
+            $url,
+            $webspace->getKey(),
+            $routeDocument->getTargetDocument()->getTargetLocale()
+        );
+
+        if ($customUrlDocument === null
+            || $customUrlDocument->isPublished() === false
+            || $customUrlDocument->getTargetDocument() === null
+            || $customUrlDocument->getTargetDocument()->getWorkflowStage() !== WorkflowStage::PUBLISHED
+        ) {
+            // error happen because this custom-url is not published => no portal is needed
+            return $this->processPortalInformation(
+                $request,
+                $portalInformation,
+                ['customUrlRoute' => $routeDocument, 'customUrl' => $customUrlDocument]
+            );
+        }
+
+        $localization = $this->parse($customUrlDocument->getTargetLocale());
+        $request->setLocale($localization->getLocalization());
+
+        $portalInformations = $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale(
+            $portalInformation->getWebspace()->getKey(),
+            $localization->getLocalization(),
+            $this->environment
+        );
+
+        return $this->processPortalInformation(
+            $request,
+            reset($portalInformations),
+            ['localization' => $localization, 'customUrlRoute' => $routeDocument, 'customUrl' => $customUrlDocument]
+        );
     }
 
     /**

@@ -116,10 +116,10 @@ class PreviewControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
-        $client->request('POST', '/api/nodes?&webspace=sulu_io&language=en', $data);
+        $client->request('POST', '/api/nodes?&webspace=sulu_io&language=de_at', $data);
         $response = json_decode($client->getResponse()->getContent());
 
-        $client->request('GET', '/content/preview/' . $response->id . '/render?webspace=sulu_io&language=en');
+        $client->request('GET', '/content/preview/' . $response->id . '/render?webspace=sulu_io&language=de_at');
         $response = $client->getResponse()->getContent();
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -141,10 +141,10 @@ class PreviewControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=de_at', $data);
         $response = json_decode($client->getResponse()->getContent());
 
-        $client->request('GET', '/content/preview/' . $response->id . '/render?webspace=sulu_io&language=en');
+        $client->request('GET', '/content/preview/' . $response->id . '/render?webspace=sulu_io&language=de_at');
         $response = $client->getResponse()->getContent();
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -168,10 +168,10 @@ class PreviewControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=de_at', $data);
         $response = json_decode($client->getResponse()->getContent());
 
-        $client->request('GET', '/content/preview/' . $response->id . '/render?webspace=sulu_io&language=en');
+        $client->request('GET', '/content/preview/' . $response->id . '/render?webspace=sulu_io&language=de_at');
         $response = $client->getResponse()->getContent();
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
