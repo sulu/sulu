@@ -5,6 +5,7 @@
     <services>
         <service id="sulu_core.webspace.request_analyzer"
                  class="Sulu\Component\Webspace\Analyzer\RequestAnalyzer">
+            <argument type="service" id="request_stack"/>
             <argument type="collection"/>
         </service>
 
@@ -25,14 +26,6 @@
 
             <tag name="sulu.context" context="website"/>
             <tag name="sulu.request_attributes" priority="0"/>
-        </service>
-
-        <service id="sulu_core.webspace.request_listener"
-                 class="Sulu\Component\Webspace\EventListener\RequestListener">
-            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
-
-            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest"
-                 priority="%sulu_core.webspace.request_analyzer.priority%"/>
         </service>
     </services>
 </container>

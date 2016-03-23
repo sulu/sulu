@@ -15,6 +15,7 @@ use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepository;
 use Sulu\Bundle\WebsiteBundle\EventListener\AppendAnalyticsListener;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\PortalInformation;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -49,6 +50,7 @@ class AppendAnalyticsListenerTest extends \PHPUnit_Framework_TestCase
         $event->getRequest()->willReturn($request->reveal());
         $request->getRequestFormat()->willReturn($format);
         $response = $this->prophesize(Response::class);
+        $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/plain']);
         $event->getResponse()->willReturn($response->reveal());
 
         $listener->onResponse($event->reveal());
@@ -80,6 +82,7 @@ class AppendAnalyticsListenerTest extends \PHPUnit_Framework_TestCase
         $event->getRequest()->willReturn($request->reveal());
         $request->getRequestFormat()->willReturn('html');
         $response = $this->prophesize(Response::class);
+        $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/html']);
         $event->getResponse()->willReturn($response->reveal());
 
         $engine->render('SuluWebsiteBundle:Analytics:website.html.twig', ['analytics' => ['test' => 1]])
