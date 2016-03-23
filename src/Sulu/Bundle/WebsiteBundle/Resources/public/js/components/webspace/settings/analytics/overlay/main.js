@@ -146,7 +146,12 @@ define([
                         instanceName: 'analytics-overlay',
                         defaultLabel: this.translations.pleaseChoose,
                         data: this.options.types,
-                        selectCallback: this.changeType.bind(this)
+                        selectCallback: function(typeId) {
+                            this.changeType(typeId);
+                        }.bind(this),
+                        preselectCallback: function() {
+                            // do nothing
+                        }
                     }
                 },
                 {
