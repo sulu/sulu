@@ -1052,3 +1052,8 @@ input, select {
 .sticky-toolbar.fixed .list-toolbar {
   padding-bottom: 10px;
 }
+
+/* line 1, ../scss/modules/csv-export.scss */
+.delimiter, .escape, .enclosure, .new-line {
+  width: 100px;
+}

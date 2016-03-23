@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\CoreBundle;
 
+use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\CsvHandlerCompilerPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\ListBuilderMetadataProviderCompilerPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterContentTypesCompilerPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterLocalizationProvidersPass;
@@ -32,5 +33,6 @@ class SuluCoreBundle extends Bundle
         $container->addCompilerPass(new ReplacersCompilerPass(__DIR__ . '/DataFixtures/replacers.xml'));
         $container->addCompilerPass(new ListBuilderMetadataProviderCompilerPass());
         $container->addCompilerPass(new RequestAnalyzerCompilerPass());
+        $container->addCompilerPass(new CsvHandlerCompilerPass());
     }
 }

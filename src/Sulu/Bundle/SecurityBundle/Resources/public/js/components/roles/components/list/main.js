@@ -57,7 +57,15 @@ define(function() {
                 toolbar: {
                     buttons: {
                         add: {},
-                        deleteSelected: {}
+                        deleteSelected: {},
+                        export: {
+                            options: {
+                                urlParameter: {
+                                    flat: true
+                                },
+                                url: '/admin/api/roles.csv'
+                            }
+                        }
                     }
                 }
             };

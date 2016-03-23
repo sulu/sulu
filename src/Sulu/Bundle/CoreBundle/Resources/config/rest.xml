@@ -34,5 +34,9 @@
         <service id="sulu_core.rest.datetime_handler" class="%sulu_core.rest.datetime_handler.class%">
             <tag name="jms_serializer.subscribing_handler" />
         </service>
+
+        <service id="sulu_core.rest.view_handler.csv" class="Sulu\Component\Rest\Csv\CsvHandler">
+            <argument type="service" id="serializer"/>
+        </service>
     </services>
 </container>

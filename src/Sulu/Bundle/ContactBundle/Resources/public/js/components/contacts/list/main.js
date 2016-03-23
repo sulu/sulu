@@ -105,7 +105,15 @@ define([
             toolbar: {
                 buttons: {
                     add: {},
-                    deleteSelected: {}
+                    deleteSelected: {},
+                    export: {
+                        options: {
+                            urlParameter: {
+                                flat: true
+                            },
+                            url: '/admin/api/contacts.csv'
+                        }
+                    }
                 }
             }
         },
