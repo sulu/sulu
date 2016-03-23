@@ -59,10 +59,6 @@ class PhpcrMapper extends RlpMapper
     {
         $path = $document->getResourceSegment();
 
-        if ($path === '/') {
-            return;
-        }
-
         $webspaceKey = $this->documentInspector->getWebspace($document);
         $locale = $this->documentInspector->getLocale($document);
         $segmentKey = null;
@@ -75,10 +71,6 @@ class PhpcrMapper extends RlpMapper
                 $locale,
                 $segmentKey
             );
-
-            if ($routeNodePath === '/') {
-                return;
-            }
 
             $routeDocument = $this->documentManager->find(
                 $webspaceRouteRootPath . $routeNodePath,

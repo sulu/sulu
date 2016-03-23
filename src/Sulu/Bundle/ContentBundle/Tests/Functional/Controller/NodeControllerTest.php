@@ -632,9 +632,23 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($data[1]['title'], $response->_embedded->nodes[1]->title);
     }
 
-    public function testPutHome()
+    public function testPutHomeWithChildren()
     {
+        $data = [
+            'title' => 'Testtitle',
+            'template' => 'default',
+            'tags' => [
+                'tag1',
+                'tag2',
+            ],
+            'url' => '/test',
+            'article' => 'Test',
+        ];
+
         $client = $this->createAuthenticatedClient();
+
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data);
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $data = [
             'template' => 'default',
