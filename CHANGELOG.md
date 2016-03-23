@@ -4,6 +4,8 @@ CHANGELOG for Sulu
 * dev-develop
     * BUGFIX      #2152 [ContentBundle]       Fixed not empty request body for delete history url
     * BUGIFX      #2141 [ContentBundle]       Fixed page gets immediately saved after generating URL
+    * BUGFIX      #2156 [SecurityBundle]      Fixed behat context to create correct roles
+    * BUGFIX      #2152 [ContentBundle]       Fixed not empty request body for delete history url 
     * FEATURE     #1288 [All]                 Added deep-links for selection content-types
     * BUGFIX      #2131 [WebsiteBundle]       Fixed 'getTheme' error in ExceptionController
     * ENHANCEMENT #2131 [CoreBundle]          Added request attributes to extract data from request
