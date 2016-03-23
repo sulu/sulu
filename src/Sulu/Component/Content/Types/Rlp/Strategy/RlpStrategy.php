@@ -270,7 +270,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
      */
     public function isValid($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
-        return $path === '/' || $this->cleaner->validate($path) && $this->mapper->unique(
+        return $path !== '/' && $this->cleaner->validate($path) && $this->mapper->unique(
             $path,
             $webspaceKey,
             $languageCode,

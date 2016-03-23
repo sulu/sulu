@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
+use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
@@ -140,6 +141,10 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
         $document = $event->getDocument();
 
         if (!$this->supports($document)) {
+            return;
+        }
+
+        if ($document instanceof HomeDocument) {
             return;
         }
 
