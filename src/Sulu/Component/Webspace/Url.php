@@ -68,13 +68,6 @@ class Url implements ArrayableInterface
      */
     private $environment;
 
-    /**
-     * Indicates that this url will be used as custom-url.
-     *
-     * @var bool
-     */
-    private $customUrl;
-
     public function __construct($url = null)
     {
         $this->url = $url;
@@ -241,26 +234,6 @@ class Url implements ArrayableInterface
     }
 
     /**
-     * Returns custom-url flag.
-     *
-     * @return bool
-     */
-    public function isCustomUrl()
-    {
-        return $this->customUrl;
-    }
-
-    /**
-     * Sets custom-url flag.
-     *
-     * @param bool $customUrl
-     */
-    public function setCustomUrl($customUrl)
-    {
-        $this->customUrl = $customUrl;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function toArray($depth = null)
@@ -274,7 +247,6 @@ class Url implements ArrayableInterface
         $res['main'] = $this->isMain();
         $res['analyticsKey'] = $this->getAnalyticsKey();
         $res['environment'] = $this->getEnvironment();
-        $res['customUrl'] = $this->isCustomUrl();
 
         return $res;
     }

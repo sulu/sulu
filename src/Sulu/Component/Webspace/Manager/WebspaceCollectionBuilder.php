@@ -16,6 +16,7 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Exception\NoValidWebspaceException;
+use Sulu\Component\Webspace\Loader\Exception\InvalidCustomUrlException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
@@ -119,14 +120,29 @@ class WebspaceCollectionBuilder
                 $this->webspaces[] = $webspace;
 
                 $this->buildPortals($webspace);
-            } catch (\InvalidArgumentException $iae) {
+            } catch (\InvalidArgumentException $e) {
                 $this->logger->warning(
-                    'Error in file "' . $file->getRealPath() . '" (' . $iae->getMessage(
-                    ) . '). The file has been skipped'
+                    sprintf(
+                        'Error: "%s" in "%s". The file has been skipped.',
+                        $e->getMessage(),
+                        $file->getRealPath()
+                    )
                 );
-            } catch (InvalidUrlDefinitionException $iude) {
+            } catch (InvalidUrlDefinitionException $e) {
                 $this->logger->warning(
-                    'Error: "' . $iude->getMessage() . '" in "' . $file->getRealPath() . '". File was skipped'
+                    sprintf(
+                        'Error: "%s" in "%s". The file has been skipped.',
+                        $e->getMessage(),
+                        $file->getRealPath()
+                    )
+                );
+            } catch (InvalidCustomUrlException $e) {
+                $this->logger->warning(
+                    sprintf(
+                        'Error: "%s" in "%s". The file has been skipped.',
+                        $e->getMessage(),
+                        $file->getRealPath()
+                    )
                 );
             }
         }

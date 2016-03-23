@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * BUGFIX      #2171 [ContentBundle]       Fixed saving of homepage
+    * BUGFIX      #2172 [CustomUrlBundle]     Added check for custom-url placeholder
     * BUGFIX      #2166 [WebsiteBundle]       Fixed analytics type change
     * ENHANCEMENT #2168 [WebsiteBundle]       Changed request to purge cache from GET to DELETE
     * BUGFIX      #2152 [ContentBundle]       Fixed not empty request body for delete history url

@@ -110,7 +110,6 @@ class {{ cache_class }} extends {{ base_class }}
         $url->setRedirect('{{ url.redirect }}');
         $url->setMain({{ url.main?'true':'false' }});
         $url->setAnalyticsKey('{{ url.analyticsKey }}');
-        $url->setCustomUrl({{ url.customUrl?'true':'false' }});
         $environment->addUrl($url);
 {% endfor %}
 {% for customUrl in environment.customUrls %}
