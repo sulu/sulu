@@ -33,6 +33,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2094 [CategoryBundle]      Fixed maximum length of category-key
     * BUGFIX      #2082 [ContentBundle]       Fixed block type don't triggers save-button
     * ENHANCEMENT #2057 [ContentBundle]       Refactored ResourceLocator ContentType to use DocumentManager
+    * ENHANCEMENT #2095 [WebsiteBundle]       Added security context for cache navigation entry
     * ENHANCEMENT #2082 [All]                 Get rid of the aliased evenement composer constraint
     * BUGFIX      #2088 [ContentBundle]       Fixed matrix for object permission tab
     * ENHANCEMENT #2035 [ContentBundle]       Add structure type to index

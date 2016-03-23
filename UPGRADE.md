@@ -2,6 +2,11 @@
 
 ## dev-develop
 
+### New security permission for cache
+ 
+To be able to clear the cache the user need the permission LIVE in the
+webspace context.
+
 ### Document-Manager
 
 The Behaviors `TimestampBehavior` and `BlameBehavior` now save the values in the non-localized

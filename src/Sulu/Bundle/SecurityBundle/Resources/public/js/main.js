@@ -31,6 +31,7 @@ define(['config'], function(Config) {
                     {value: 'add', icon: 'plus-circle', title: 'security.permissions.add'},
                     {value: 'edit', icon: 'pencil', title: 'security.permissions.edit'},
                     {value: 'delete', icon: 'trash-o', title: 'security.permissions.delete'},
+                    {value: 'live', icon: 'signal', title: 'security.permissions.live'},
                     {value: 'security', icon: 'unlock-alt', title: 'security.permissions.security'}
                 ]
             );
