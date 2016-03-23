@@ -56,7 +56,7 @@ class RouteDocument implements
     /**
      * @var bool
      */
-    protected $history;
+    protected $history = false;
 
     /**
      * @var \DateTime

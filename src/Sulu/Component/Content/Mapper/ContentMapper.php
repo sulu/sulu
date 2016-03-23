@@ -39,6 +39,7 @@ use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Exception\InvalidOrderPositionException;
+use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Exception\TranslatedNodeNotFoundException;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
@@ -99,7 +100,7 @@ class ContentMapper implements ContentMapperInterface
     /**
      * @var RlpStrategyInterface
      */
-    private $strategy;
+    private $rlpStrategy;
 
     /**
      * @Var DocumentManager
@@ -137,7 +138,7 @@ class ContentMapper implements ContentMapperInterface
         ContentTypeManagerInterface $contentTypeManager,
         SessionManagerInterface $sessionManager,
         EventDispatcherInterface $eventDispatcher,
-        RlpStrategyInterface $strategy,
+        RlpStrategyInterface $rlpStrategy,
         NamespaceRegistry $namespaceRegistry
     ) {
         $this->contentTypeManager = $contentTypeManager;
@@ -150,10 +151,10 @@ class ContentMapper implements ContentMapperInterface
         $this->inspector = $inspector;
         $this->encoder = $encoder;
         $this->namespaceRegistry = $namespaceRegistry;
+        $this->rlpStrategy = $rlpStrategy;
 
         // deprecated
         $this->eventDispatcher = $eventDispatcher;
-        $this->strategy = $strategy;
     }
 
     /**
@@ -383,7 +384,7 @@ class ContentMapper implements ContentMapperInterface
      */
     public function loadByResourceLocator($resourceLocator, $webspaceKey, $locale, $segmentKey = null)
     {
-        $uuid = $this->getResourceLocator()->loadContentNodeUuid(
+        $uuid = $this->rlpStrategy->loadByResourceLocator(
             $resourceLocator,
             $webspaceKey,
             $locale,
@@ -599,20 +600,22 @@ class ContentMapper implements ContentMapperInterface
         $document = $this->documentManager->find($uuid, $srcLocale);
         $parentDocument = $this->inspector->getParent($document);
 
-        $resourceLocatorType = $this->getResourceLocator();
-
         foreach ($destLocales as $destLocale) {
             $document->setLocale($destLocale);
             $document->getStructure()->bind($document->getStructure()->toArray());
 
             // TODO: This can be removed if RoutingAuto replaces the ResourceLocator code.
             if ($document instanceof ResourceSegmentBehavior) {
-                $parentResourceLocator = $resourceLocatorType->getResourceLocatorByUuid(
-                    $parentDocument->getUUid(),
-                    $webspaceKey,
-                    $destLocale
-                );
-                $resourceLocator = $resourceLocatorType->getStrategy()->generate(
+                try {
+                    $parentResourceLocator = $this->rlpStrategy->loadByContentUuid(
+                        $this->inspector->getUuid($parentDocument),
+                        $webspaceKey,
+                        $destLocale
+                    );
+                } catch (ResourceLocatorNotFoundException $e) {
+                    $parentResourceLocator = null;
+                }
+                $resourceLocator = $this->rlpStrategy->generate(
                     $document->getTitle(),
                     $parentResourceLocator,
                     $webspaceKey,
@@ -748,9 +751,8 @@ class ContentMapper implements ContentMapperInterface
                 continue;
             }
 
-            $strategy = $this->getResourceLocator()->getStrategy();
             $nodeName = PathHelper::getNodeName($document->getResourceSegment());
-            $newResourceLocator = $strategy->generate(
+            $newResourceLocator = $this->rlpStrategy->generate(
                 $nodeName,
                 $parentDocument->getResourceSegment(),
                 $webspaceKey,
@@ -1081,7 +1083,7 @@ class ContentMapper implements ContentMapperInterface
      */
     public function restoreHistoryPath($path, $userId, $webspaceKey, $locale, $segmentKey = null)
     {
-        $this->strategy->restoreByPath($path, $webspaceKey, $locale, $segmentKey);
+        $this->rlpStrategy->restoreByPath($path, $webspaceKey, $locale, $segmentKey);
 
         $content = $this->loadByResourceLocator($path, $webspaceKey, $locale, $segmentKey);
         $property = $content->getPropertyByTagName('sulu.rlp');

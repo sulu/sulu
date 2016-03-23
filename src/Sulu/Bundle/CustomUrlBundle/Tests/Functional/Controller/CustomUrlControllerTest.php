@@ -516,8 +516,8 @@ class CustomUrlControllerTest extends SuluTestCase
         $this->assertArrayHasKey('creator', $responseData);
         $this->assertArrayHasKey('changer', $responseData);
 
-        $this->assertEquals(new \DateTime(), new \DateTime($responseData['created']), '', 2);
-        $this->assertEquals(new \DateTime(), new \DateTime($responseData['changed']), '', 2);
+        $this->assertLessThanOrEqual(new \DateTime(), new \DateTime($responseData['created']));
+        $this->assertLessThanOrEqual(new \DateTime(), new \DateTime($responseData['changed']));
         $this->assertEquals(Urlizer::urlize($data['title']), $responseData['nodeName']);
         if (array_key_exists('targetDocument', $data)) {
             $this->assertEquals('Homepage', $responseData['targetTitle']);

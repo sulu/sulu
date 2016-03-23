@@ -19,7 +19,14 @@ use Sulu\Component\Content\Compat\PropertyInterface;
  */
 interface ContentTypeInterface
 {
+    /**
+     * @deprecated All the ContentTypes should be of this type, so declaring it explicitly is not necessary
+     */
     const PRE_SAVE = 1;
+
+    /**
+     * @deprecated This type is not supported anymore, because it is not even used by the ResourceLocator anymore.
+     */
     const POST_SAVE = 2;
 
     /**

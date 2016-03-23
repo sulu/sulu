@@ -64,6 +64,12 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
      */
     public function getPermissions($type, $identifier)
     {
+        $permissions = [];
+
+        if (!$identifier) {
+            return $permissions;
+        }
+
         try {
             $document = $this->documentManager->find($identifier, null, ['rehydrate' => false]);
         } catch (DocumentNotFoundException $e) {

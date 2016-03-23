@@ -15,7 +15,8 @@ use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\InitializerInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\DocumentInspector;
-use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\DocumentManager\NodeManager;
 use Sulu\Component\DocumentManager\PathBuilder;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -24,15 +25,34 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class WebspaceInitializer implements InitializerInterface
 {
+    /**
+     * @var WebspaceManagerInterface
+     */
     private $webspaceManager;
+
+    /**
+     * @var DocumentManagerInterface
+     */
     private $documentManager;
+
+    /**
+     * @var PathBuilder
+     */
     private $pathBuilder;
+
+    /**
+     * @var DocumentInspector
+     */
     private $inspector;
+
+    /**
+     * @var NodeManager
+     */
     private $nodeManager;
 
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
-        DocumentManager $documentManager,
+        DocumentManagerInterface $documentManager,
         DocumentInspector $inspector,
         PathBuilder $pathBuilder,
         NodeManager $nodeManager
@@ -85,9 +105,23 @@ class WebspaceInitializer implements InitializerInterface
             }
 
             $output->writeln(sprintf('  [+] <info>homepage</info>: %s (%s)', $homePath, $webspaceLocale));
-            $this->nodeManager->createPath($routesPath . '/' . $webspaceLocale);
+
+            $routePath = $routesPath . '/' . $webspaceLocale;
+            try {
+                $routeDocument = $this->documentManager->find($routePath);
+            } catch (DocumentNotFoundException $e) {
+                $routeDocument = $this->documentManager->create('route');
+            }
+
             $this->documentManager->persist($homeDocument, $webspaceLocale, [
                 'path' => $homePath,
+                'auto_create' => true,
+            ]);
+
+            $routeDocument->setTargetDocument($homeDocument);
+            $this->documentManager->persist($routeDocument, $webspaceLocale, [
+                'path' => $routePath,
+                'auto_create' => true,
             ]);
         }
 

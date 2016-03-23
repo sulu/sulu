@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\Types\Rlp\Strategy;
 
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
@@ -27,18 +28,22 @@ class TreeStrategy extends RlpStrategy
         PathCleanupInterface $cleaner,
         StructureManagerInterface $structureManager,
         ContentTypeManagerInterface $contentTypeManager,
-        SuluNodeHelper $nodeHelper
+        SuluNodeHelper $nodeHelper,
+        DocumentInspector $documentInspector
     ) {
-        parent::__construct('whole-tree', $mapper, $cleaner, $structureManager, $contentTypeManager, $nodeHelper);
+        parent::__construct(
+            'whole-tree',
+            $mapper,
+            $cleaner,
+            $structureManager,
+            $contentTypeManager,
+            $nodeHelper,
+            $documentInspector
+        );
     }
 
     /**
-     * internal generator.
-     *
-     * @param string $title
-     * @param string $parentPath
-     *
-     * @return string
+     * {@inheritdoc}
      */
     protected function generatePath($title, $parentPath = null)
     {

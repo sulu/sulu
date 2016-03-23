@@ -11,15 +11,11 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Rlp\Strategy;
 
-use ReflectionClass;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategy;
 use Sulu\Component\PHPCR\PathCleanup;
-
-//FIXME remove on update to phpunit 3.8, caused by https://github.com/sebastianbergmann/phpunit/issues/604
-interface NodeInterface extends \PHPCR\NodeInterface, \Iterator
-{
-}
 
 class RlpStrategyTest extends \PHPUnit_Framework_TestCase
 {
@@ -58,6 +54,11 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
     private $strategy;
 
     /**
+     * @var DocumentInspector
+     */
+    private $documentInspector;
+
+    /**
      * @var string
      */
     private $className = 'Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategy';
@@ -93,9 +94,6 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
             ->method('move')
             ->will($this->returnCallback([$this, 'moveCallback']));
         $this->mapper->expects($this->any())
-            ->method('loadByContent')
-            ->will($this->returnValue('/test'));
-        $this->mapper->expects($this->any())
             ->method('loadByContentUuid')
             ->will($this->returnValue('/test'));
         $this->mapper->expects($this->any())
@@ -108,6 +106,9 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
         $structureManager = $this->getMockForAbstractClass('Sulu\Component\Content\Compat\StructureManagerInterface');
         $contentTypeManager = $this->getMockForAbstractClass('Sulu\Component\Content\ContentTypeManagerInterface');
         $nodeHelper = $this->getMock('Sulu\Component\Util\SuluNodeHelper', [], [], '', false);
+        $this->documentInspector = $this->getMockBuilder(DocumentInspector::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->strategy = $this->getMockForAbstractClass(
             $this->className,
@@ -118,6 +119,7 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
                 $structureManager,
                 $contentTypeManager,
                 $nodeHelper,
+                $this->documentInspector,
             ],
             'TestStrategy'
         );
@@ -165,15 +167,6 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
-    }
-
-    private function getMethod($class, $name)
-    {
-        $class = new ReflectionClass($class);
-        $method = $class->getMethod($name);
-        $method->setAccessible(true);
-
-        return $method;
     }
 
     public function testIsValid()
@@ -232,14 +225,35 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
     public function testSave()
     {
         $this->isSaved = false;
+
+        $this->mapper->expects($this->any())
+            ->method('loadByContent')
+            ->will($this->returnValue(null));
+
+        $document = $this->getMockBuilder(ResourceSegmentBehavior::class)
+            ->getMock();
+        $document->expects($this->any())
+            ->method('getResourceSegment')
+            ->willReturn('/test/test-1');
+
+        $node = $this->getNodeMock();
+
+        $this->documentInspector->expects($this->any())
+            ->method('getNode')
+            ->will($this->returnValue($node));
+
         // its a delegate
-        $this->strategy->save($this->getNodeMock(), '/test/test-1', 1, 'default', 'de');
+        $this->strategy->save($document, 1);
 
         $this->assertTrue($this->isSaved);
     }
 
     public function testRead()
     {
+        $this->mapper->expects($this->any())
+            ->method('loadByContent')
+            ->will($this->returnValue('/test'));
+
         // its a delegate
         $result = $this->mapper->loadByContent($this->getNodeMock(), 'default', 'de');
         $this->assertEquals('/test', $result);
@@ -256,16 +270,28 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
 
     public function testMove()
     {
-        $contentNode = $this->getMock(NodeInterface::class, [], [], '', false);
-        $contentNode->expects($this->any())
-            ->method('getNodes')
-            ->willReturn([]);
+        $this->mapper->expects($this->any())
+            ->method('loadByContent')
+            ->will($this->returnValue('/test'));
 
-        $this->isMoved = false;
+        $document = $this->getMockBuilder(ResourceSegmentBehavior::class)
+            ->getMock();
+        $document->expects($this->any())
+            ->method('getResourceSegment')
+            ->willReturn('/test/test-1');
+
+        $node = $this->getNodeMock();
+
+        $this->documentInspector->expects($this->any())
+            ->method('getNode')
+            ->will($this->returnValue($node));
+
+        $this->isSaved = false;
+
         // its a delegate
-        $this->strategy->move('/test/test', '/test/test-1', $contentNode, 1, 'default', 'de');
+        $this->strategy->save($document, 1);
 
-        $this->assertTrue($this->isMoved);
+        $this->assertTrue($this->isSaved);
     }
 
     public function testGenerateForUuid()
