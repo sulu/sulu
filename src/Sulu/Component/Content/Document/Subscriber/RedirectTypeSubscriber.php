@@ -28,7 +28,8 @@ class RedirectTypeSubscriber implements EventSubscriberInterface
     {
         return [
             Events::METADATA_LOAD => 'handleMetadataLoad',
-            Events::PERSIST => 'handlePersist',
+            // has to be called sooner, because the ResourceSegmentSubscriber relies ont that value
+            Events::PERSIST => ['handlePersist', 15],
         ];
     }
 

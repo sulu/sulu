@@ -56,7 +56,7 @@ class CollectionControllerTest extends SuluTestCase
         parent::setUp();
 
         $this->purgeDatabase();
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
         $this->initOrm();
 
         $this->systemCollectionCache = $this->getContainer()->get('sulu_media.system_collections.cache');

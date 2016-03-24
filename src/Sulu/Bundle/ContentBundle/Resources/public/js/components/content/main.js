@@ -833,6 +833,21 @@ define([
          * Starts the toolbar for the preview
          */
         startPreviewToolbar: function() {
+            var buttons = {
+                displayDevices: {},
+                refresh: {}
+            };
+
+            if (!!this.content.get('_permissions').live) {
+                buttons.cache = {
+                    options: {
+                        icon: 'recycle',
+                        title: 'sulu.website.cache.remove',
+                        callback: this.cacheClear.bind(this)
+                    }
+                };
+            }
+
             this.sandbox.start([{
                 name: 'toolbar@husky',
                 options: {
@@ -840,17 +855,7 @@ define([
                     instanceName: 'preview',
                     skin: 'big',
                     responsive: true,
-                    buttons: this.sandbox.sulu.buttons.get({
-                        displayDevices: {},
-                        refresh: {},
-                        cache: {
-                            options: {
-                                icon: 'recycle',
-                                title: 'sulu.website.cache.remove',
-                                callback: this.cacheClear.bind(this)
-                            }
-                        }
-                    })
+                    buttons: this.sandbox.sulu.buttons.get(buttons)
                 }
             }]);
         },

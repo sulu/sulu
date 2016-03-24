@@ -59,7 +59,7 @@ class AppendAnalyticsListener
      */
     public function onResponse(FilterResponseEvent $event)
     {
-        if ($event->getRequest()->getRequestFormat() !== 'html'
+        if (0 !== strpos($event->getResponse()->headers->get('Content-Type'), 'text/html')
             || $this->requestAnalyzer->getPortalInformation() === null
         ) {
             return;

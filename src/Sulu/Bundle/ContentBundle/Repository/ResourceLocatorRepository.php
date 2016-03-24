@@ -14,7 +14,6 @@ namespace Sulu\Bundle\ContentBundle\Repository;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 
@@ -31,12 +30,7 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     /**
      * @var RlpStrategyInterface
      */
-    private $strategy;
-
-    /**
-     * @var ResourceLocatorInterface
-     */
-    private $resourceLocator;
+    private $rlpStrategy;
 
     /**
      * @var ContentMapperInterface
@@ -56,14 +50,12 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
      * Constructor.
      */
     public function __construct(
-        RlpStrategyInterface $strategy,
+        RlpStrategyInterface $rlpStrategy,
         StructureManagerInterface $structureManager,
-        ResourceLocatorInterface $resourceLocator,
         ContentMapperInterface $contentMapper
     ) {
-        $this->strategy = $strategy;
+        $this->rlpStrategy = $rlpStrategy;
         $this->structureManager = $structureManager;
-        $this->resourceLocator = $resourceLocator;
         $this->contentMapper = $contentMapper;
     }
 
@@ -77,13 +69,13 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
         $title = $this->implodeRlpParts($structure, $parts);
 
         if ($parentUuid !== null) {
-            $parentPath = $this->strategy->loadByContentUuid($parentUuid, $webspaceKey, $languageCode, $segmentKey);
-            $result = $this->strategy->generate($title, $parentPath, $webspaceKey, $languageCode, $segmentKey);
+            $parentPath = $this->rlpStrategy->loadByContentUuid($parentUuid, $webspaceKey, $languageCode, $segmentKey);
+            $result = $this->rlpStrategy->generate($title, $parentPath, $webspaceKey, $languageCode, $segmentKey);
         } elseif ($uuid !== null) {
-            $result = $this->strategy->generateForUuid($title, $uuid, $webspaceKey, $languageCode, $segmentKey);
+            $result = $this->rlpStrategy->generateForUuid($title, $uuid, $webspaceKey, $languageCode, $segmentKey);
         } else {
             $parentPath = '/';
-            $result = $this->strategy->generate($title, $parentPath, $webspaceKey, $languageCode, $segmentKey);
+            $result = $this->rlpStrategy->generate($title, $parentPath, $webspaceKey, $languageCode, $segmentKey);
         }
 
         return [
@@ -99,7 +91,7 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
      */
     public function getHistory($uuid, $webspaceKey, $languageCode)
     {
-        $urls = $this->resourceLocator->loadHistoryByUuid($uuid, $webspaceKey, $languageCode);
+        $urls = $this->rlpStrategy->loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode);
 
         $result = [];
         /** @var ResourceLocatorInformation $url */
@@ -135,7 +127,7 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
      */
     public function delete($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
-        $this->resourceLocator->deleteByPath($path, $webspaceKey, $languageCode, $segmentKey);
+        $this->rlpStrategy->deleteByPath($path, $webspaceKey, $languageCode, $segmentKey);
     }
 
     /**

@@ -1,11 +1,29 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.2.0-RC2 (2016-03-24)
+    * BUGFIX      #2183 [ContentBundle]       Added missing locale for loading route document
+    * BUGIFX      #2178 [WebsiteBundle]       Added default IP anonymization for google analytics
+    * BUGFIX      #2171 [ContentBundle]       Fixed saving of homepage
+    * BUGFIX      #2172 [CustomUrlBundle]     Added check for custom-url placeholder
+    * BUGFIX      #2166 [WebsiteBundle]       Fixed analytics type change
+    * ENHANCEMENT #2168 [WebsiteBundle]       Changed request to purge cache from GET to DELETE
+    * BUGFIX      #2169 [CustomUrlBundle]     Fixed dropdown of custom-url target locales
+    * BUGFIX      #2152 [ContentBundle]       Fixed not empty request body for delete history url
+    * BUGIFX      #2141 [ContentBundle]       Fixed page gets immediately saved after generating URL
+    * BUGFIX      #2156 [SecurityBundle]      Fixed behat context to create correct roles
+    * BUGFIX      #2152 [ContentBundle]       Fixed not empty request body for delete history url 
+    * BUGFIX      #2157 [CustomUrlBundle]     Fixed route-validation in request processor
+    * ENHANCEMENT #1288 [CoreBundle]          Introduced lazy initialization of request attributes
+    * ENHANCEMENT #2132 [Test]                Removed external classes from and refactored functional test class hierarchy
+
 * 1.2.0-RC1 (2016-03-18)
     * FEATURE     #1288 [All]                 Added deep-links for selection content-types
     * BUGFIX      #2131 [WebsiteBundle]       Fixed 'getTheme' error in ExceptionController
     * ENHANCEMENT #2131 [CoreBundle]          Added request attributes to extract data from request
     * ENHANCEMENT #2130 [MediaBundle]         Add support for newer symfony distributions with `bin/` directory
+    * FEATURE     #2075 [All]                 Added CSV export for list responses
+    * BUGFIX      #2128 [MediaBundle]         Fixed used language in media selection content type
     * BUGFIX      #2128 [All]                 Fix required version of PHP to support only ^5.5 and ^7.0
     * BUGFIX      #2126 [ContactBundle]       Excluded recursion in accounts REST API
     * BUGFIX      #2126 [All]                 Fixed firefox bug in label tick
@@ -26,6 +44,8 @@ CHANGELOG for Sulu
     * BUGIFX      #2093 [ContactBundle]       Fixed auto-select new position and title
     * BUGFIX      #2094 [CategoryBundle]      Fixed maximum length of category-key
     * BUGFIX      #2082 [ContentBundle]       Fixed block type don't triggers save-button
+    * ENHANCEMENT #2057 [ContentBundle]       Refactored ResourceLocator ContentType to use DocumentManager
+    * ENHANCEMENT #2095 [WebsiteBundle]       Added security context for cache navigation entry
     * ENHANCEMENT #2082 [All]                 Get rid of the aliased evenement composer constraint
     * BUGFIX      #2088 [ContentBundle]       Fixed matrix for object permission tab
     * ENHANCEMENT #2035 [ContentBundle]       Add structure type to index

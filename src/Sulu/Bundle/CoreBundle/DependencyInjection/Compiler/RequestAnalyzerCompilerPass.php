@@ -37,6 +37,6 @@ class RequestAnalyzerCompilerPass implements CompilerPassInterface
         krsort($references);
         $references = call_user_func_array('array_merge', $references);
 
-        $container->getDefinition('sulu_core.webspace.request_analyzer')->replaceArgument(0, $references);
+        $container->getDefinition('sulu_core.webspace.request_analyzer')->replaceArgument(1, $references);
     }
 }

@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Tests\Controller;
+namespace Sulu\Bundle\ContentBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -42,9 +42,9 @@ class NodeControllerTest extends SuluTestCase
      */
     private $documentManager;
 
-    protected function setUp()
+    public function setUp()
     {
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
 
@@ -632,9 +632,23 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($data[1]['title'], $response->_embedded->nodes[1]->title);
     }
 
-    public function testPutHome()
+    public function testPutHomeWithChildren()
     {
+        $data = [
+            'title' => 'Testtitle',
+            'template' => 'default',
+            'tags' => [
+                'tag1',
+                'tag2',
+            ],
+            'url' => '/test',
+            'article' => 'Test',
+        ];
+
         $client = $this->createAuthenticatedClient();
+
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data);
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $data = [
             'template' => 'default',
@@ -1795,6 +1809,6 @@ class NodeControllerTest extends SuluTestCase
      */
     private function getMapper()
     {
-        return self::$kernel->getContainer()->get('sulu.content.mapper');
+        return $this->getContainer()->get('sulu.content.mapper');
     }
 }

@@ -24,6 +24,8 @@ before_script:
   - ./bin/jackrabbit.sh
 
 script: 
+  # launch with the "r" flag in order to restart jackrabbit after each suite
+  # see: https://github.com/sulu-io/sulu/issues/2137
   - time ./bin/runtests.sh -i -a -r
   - phpunit
 

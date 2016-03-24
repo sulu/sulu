@@ -46,7 +46,7 @@ class MediaRepositoryTest extends SuluTestCase
         parent::setUp();
 
         $this->purgeDatabase();
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
         $this->setUpCollection();
         $this->setUpMedia();
     }

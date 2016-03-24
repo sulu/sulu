@@ -16,6 +16,7 @@ use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestProcessorInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
 {
@@ -28,11 +29,50 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
             ->shouldBeCalled()->willReturn(new RequestAttributes());
         $provider->validate(Argument::type(RequestAttributes::class))->shouldBeCalled()->willReturn(true);
 
-        $requestAnalyzer = new RequestAnalyzer([$provider->reveal()]);
+        $requestStack = $this->prophesize(RequestStack::class);
+        $requestStack->getCurrentRequest()->willReturn($request->reveal());
+        $requestAnalyzer = new RequestAnalyzer($requestStack->reveal(), [$provider->reveal()]);
         $requestAnalyzer->analyze($request->reveal());
     }
 
-    public function testCreateAttributes()
+    public function testGetAttribute()
+    {
+        $provider = $this->prophesize(RequestProcessorInterface::class);
+        $request = $this->prophesize(Request::class);
+
+        $provider->process($request->reveal(), Argument::type(RequestAttributes::class))
+            ->shouldBeCalledTimes(1)->willReturn(new RequestAttributes(['test' => 1]));
+        $provider->validate(Argument::type(RequestAttributes::class))->shouldBeCalled()->willReturn(true);
+
+        $requestStack = $this->prophesize(RequestStack::class);
+        $requestStack->getCurrentRequest()->willReturn($request->reveal());
+        $requestAnalyzer = new RequestAnalyzer($requestStack->reveal(), [$provider->reveal()]);
+
+        $this->assertEquals(1, $requestAnalyzer->getAttribute('test'));
+        $this->assertEquals(2, $requestAnalyzer->getAttribute('test1', 2));
+    }
+
+    public function testGetAttributeTwice()
+    {
+        $provider = $this->prophesize(RequestProcessorInterface::class);
+        $request = $this->prophesize(Request::class);
+
+        $provider->process($request->reveal(), Argument::type(RequestAttributes::class))
+            ->shouldBeCalledTimes(1)->willReturn(new RequestAttributes(['test' => 1]));
+        $provider->validate(Argument::type(RequestAttributes::class))->shouldBeCalled()->willReturn(true);
+
+        $requestStack = $this->prophesize(RequestStack::class);
+        $requestStack->getCurrentRequest()->willReturn($request->reveal());
+        $requestAnalyzer = new RequestAnalyzer($requestStack->reveal(), [$provider->reveal()]);
+
+        $this->assertEquals(1, $requestAnalyzer->getAttribute('test'));
+        $this->assertEquals(2, $requestAnalyzer->getAttribute('test1', 2));
+
+        $this->assertEquals(1, $requestAnalyzer->getAttribute('test'));
+        $this->assertEquals(2, $requestAnalyzer->getAttribute('test1', 2));
+    }
+
+    public function testAnalyzeMultipleProvider()
     {
         $provider1 = $this->prophesize(RequestProcessorInterface::class);
         $provider2 = $this->prophesize(RequestProcessorInterface::class);
@@ -47,17 +87,15 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         );
         $provider2->validate(Argument::type(RequestAttributes::class))->shouldBeCalled()->willReturn(true);
 
-        $requestAnalyzer = new RequestAnalyzer([$provider1->reveal(), $provider2->reveal()]);
+        $requestStack = $this->prophesize(RequestStack::class);
+        $requestStack->getCurrentRequest()->willReturn($request->reveal());
+        $requestAnalyzer = new RequestAnalyzer($requestStack->reveal(), [$provider1->reveal(), $provider2->reveal()]);
 
-        $reflectionClass = new \ReflectionClass($requestAnalyzer);
-        $reflectionMethod = $reflectionClass->getMethod('createAttributes');
-        $reflectionMethod->setAccessible(true);
+        $requestAnalyzer->analyze($request->reveal());
 
-        $result = $reflectionMethod->invokeArgs($requestAnalyzer, [$request->reveal()]);
-
-        $this->assertEquals(2, $result->getAttribute('test1'));
-        $this->assertEquals(3, $result->getAttribute('test2'));
-        $this->assertNull($result->getAttribute('test3'));
+        $this->assertEquals(2, $requestAnalyzer->getAttribute('test1'));
+        $this->assertEquals(3, $requestAnalyzer->getAttribute('test2'));
+        $this->assertNull($requestAnalyzer->getAttribute('test3'));
     }
 
     public function provideGetter()
@@ -103,7 +141,9 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
             ->shouldBeCalled()->willReturn(new RequestAttributes($attributes));
         $provider->validate(Argument::type(RequestAttributes::class))->shouldBeCalled()->willReturn(true);
 
-        $requestAnalyzer = new RequestAnalyzer([$provider->reveal()]);
+        $requestStack = $this->prophesize(RequestStack::class);
+        $requestStack->getCurrentRequest()->willReturn($request->reveal());
+        $requestAnalyzer = new RequestAnalyzer($requestStack->reveal(), [$provider->reveal()]);
         $requestAnalyzer->analyze($request->reveal());
 
         $this->assertEquals($expected, $requestAnalyzer->{$method}());

@@ -948,6 +948,46 @@
                 <source>public.no</source>
                 <target>Non</target>
             </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23110" resname="public.export">
+                <source>public.export</source>
+                <target>Exporter</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23111" resname="csv_export.export-title">
+                <source>csv_export.export-title</source>
+                <target>Configurer le format des données</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23112" resname="csv_export.delimiter">
+                <source>csv_export.delimiter</source>
+                <target>tiret</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23113" resname="csv_export.delimiter-info">
+                <source>csv_export.delimiter-info</source>
+                <target>Signe pour séparer les cellules.</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23114" resname="csv_export.enclosure">
+                <source>csv_export.enclosure</source>
+                <target>Enserrer</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23115" resname="csv_export.enclosure-info">
+                <source>csv_export.enclosure-info</source>
+                <target>Marquer entrées avec plusieurs mots.</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23116" resname="csv_export.escape">
+                <source>csv_export.escape</source>
+                <target>Masquer</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23117" resname="csv_export.escape-info">
+                <source>csv_export.escape-info</source>
+                <target>Ajout en cas de caractères spéciaux.</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23118" resname="csv_export.new-line">
+                <source>csv_export.new-line</source>
+                <target>Nouvelle ligne</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23119" resname="csv_export.new-line-info">
+                <source>csv_export.new-line-info</source>
+                <target>Signe pour retour à la ligne.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -69,6 +69,12 @@ class Localization implements \JsonSerializable, ArrayableInterface
      */
     private $xDefault;
 
+    public function __construct($language = null, $country = null)
+    {
+        $this->language = $language;
+        $this->country = $country;
+    }
+
     /**
      * Sets the country of this localization.
      *

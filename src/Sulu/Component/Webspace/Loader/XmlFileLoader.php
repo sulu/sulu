@@ -16,6 +16,7 @@ use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Loader\Exception\ExpectedDefaultTemplatesNotFound;
 use Sulu\Component\Webspace\Loader\Exception\InvalidAmountOfDefaultErrorTemplateException;
+use Sulu\Component\Webspace\Loader\Exception\InvalidCustomUrlException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidDefaultErrorTemplateException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidDefaultLocalizationException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidErrorTemplateException;
@@ -446,13 +447,8 @@ class XmlFileLoader extends FileLoader
             $url->setRedirect($this->getOptionalNodeAttribute($urlNode, 'redirect'));
             $url->setMain($this->getOptionalNodeAttribute($urlNode, 'main', false));
             $url->setAnalyticsKey($this->getOptionalNodeAttribute($urlNode, 'analytics-key'));
-            $url->setCustomUrl($this->getOptionalNodeAttribute($urlNode, 'custom-url', false));
 
             $environment->addUrl($url);
-
-            if ($url->isCustomUrl()) {
-                $environment->addCustomUrl(new CustomUrl($url->getUrl()));
-            }
         }
     }
 
@@ -460,7 +456,7 @@ class XmlFileLoader extends FileLoader
      * @param \DOMNode $environmentNode
      * @param Environment $environment
      *
-     * @throws Exception\InvalidUrlDefinitionException
+     * @throws InvalidCustomUrlException
      */
     private function generateCustomUrls(\DOMNode $environmentNode, Environment $environment)
     {
@@ -469,6 +465,10 @@ class XmlFileLoader extends FileLoader
             $url = new CustomUrl();
 
             $url->setUrl(rtrim($urlNode->nodeValue, '/'));
+
+            if (false === strpos($url->getUrl(), '*')) {
+                throw new InvalidCustomUrlException($this->webspace, $url->getUrl());
+            }
 
             $environment->addCustomUrl($url);
         }

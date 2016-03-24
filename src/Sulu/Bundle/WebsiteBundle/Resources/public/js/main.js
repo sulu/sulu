@@ -16,7 +16,7 @@ require.config({
     }
 });
 
-define(['css!suluwebsitecss/main'], function() {
+define(['jquery', 'css!suluwebsitecss/main'], function($) {
     return {
 
         name: "SuluWebsiteBundle",
@@ -32,12 +32,26 @@ define(['css!suluwebsitecss/main'], function() {
                  * Clear the cache for the website.
                  */
                 cacheClear: function() {
-                    app.sandbox.util.load('/admin/website/cache/clear')
+                    $.ajax('/admin/website/cache', { method: 'DELETE' })
                         .then(function() {
-                            app.sandbox.emit('sulu.labels.success.show', 'sulu.website.cache.remove.success.description', 'sulu.website.cache.remove.success.title', 'cache-success');
+                            app.sandbox.emit(
+                                'sulu.labels.success.show',
+                                'sulu.website.cache.remove.success.description',
+                                'sulu.website.cache.remove.success.title',
+                                'cache-success'
+                            );
                         }.bind(this))
-                        .fail(function() {
-                            app.sandbox.emit('sulu.labels.error.show', 'sulu.website.cache.remove.error.description', 'sulu.website.cache.remove.error.title', 'cache-error');
+                        .fail(function(jqXHR) {
+                            if (jqXHR.status === 403) {
+                                return;
+                            }
+
+                            app.sandbox.emit(
+                                'sulu.labels.error.show',
+                                'sulu.website.cache.remove.error.description',
+                                'sulu.website.cache.remove.error.title',
+                                'cache-error'
+                            );
                         }.bind(this));
                 }
             };

@@ -33,7 +33,7 @@ class ResettingControllerTest extends SuluTestCase
 
     public function setUp()
     {
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
         $this->purgeDatabase();
 
         // User 1
@@ -105,7 +105,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals($this->user1->getEmail(), $response->email);
 
         // asserting user properties
-        $user = $this->em->find('SuluSecurityBundle:User', $this->user1->getId());
+        $user = $client->getContainer()->get('doctrine')->getManager()->find('SuluSecurityBundle:User', $this->user1->getId());
         $this->assertTrue(is_string($user->getPasswordResetToken()));
         $this->assertGreaterThan(new \DateTime(), $user->getPasswordResetTokenExpiresAt());
 
@@ -135,7 +135,8 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals($this->user1->getEmail(), $response->email);
 
         // asserting user properties
-        $user = $this->em->find('SuluSecurityBundle:User', $this->user1->getId());
+        $user = $client->getContainer()->get('doctrine')->getManager()
+            ->find('SuluSecurityBundle:User', $this->user1->getId());
         $this->assertTrue(is_string($user->getPasswordResetToken()));
         $this->assertGreaterThan(new \DateTime(), $user->getPasswordResetTokenExpiresAt());
         $this->assertEquals(1, $user->getPasswordResetTokenEmailsSent());
@@ -166,7 +167,8 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals('installation.email@sulu.test', $response->email);
 
         // asserting user properties
-        $user = $this->em->find('SuluSecurityBundle:User', $this->user2->getId());
+        $user = $client->getContainer()->get('doctrine')->getManager()
+            ->find('SuluSecurityBundle:User', $this->user2->getId());
         $this->assertTrue(is_string($user->getPasswordResetToken()));
         $this->assertGreaterThan(new \DateTime(), $user->getPasswordResetTokenExpiresAt());
         $this->assertEquals(1, $user->getPasswordResetTokenEmailsSent());
@@ -197,7 +199,8 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals($this->user3->getEmail(), $response->email);
 
         // asserting user properties
-        $user = $this->em->find('SuluSecurityBundle:User', $this->user3->getId());
+        $user = $client->getContainer()->get('doctrine')->getManager()
+            ->find('SuluSecurityBundle:User', $this->user3->getId());
         $this->assertEquals('thisisasupersecrettoken', $user->getPasswordResetToken());
         $this->assertGreaterThan(new \DateTime(), $user->getPasswordResetTokenExpiresAt());
         $this->assertEquals(2, $user->getPasswordResetTokenEmailsSent());
@@ -210,7 +213,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertContains($user->getPasswordResetToken(), $message->getBody());
     }
 
-    public function testResendEmailActionToMuch()
+    public function testResendEmailActionTooMuch()
     {
         $client = $this->createAuthenticatedClient();
         $client->enableProfiler();
@@ -237,7 +240,8 @@ class ResettingControllerTest extends SuluTestCase
 
         $mailCollector = $client->getProfile()->getCollector('swiftmailer');
         $response = json_decode($client->getResponse()->getContent());
-        $user = $this->em->find('SuluSecurityBundle:User', $this->user3->getId());
+        $user = $client->getContainer()->get('doctrine')->getManager()
+            ->find('SuluSecurityBundle:User', $this->user3->getId());
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
         $this->assertEquals(1007, $response->code);
@@ -314,11 +318,12 @@ class ResettingControllerTest extends SuluTestCase
             'password' => $newPassword,
         ]);
         $response = json_decode($client->getResponse()->getContent());
-        $user = $this->em->find('SuluSecurityBundle:User', $this->user3->getId());
+        $user = $client->getContainer()->get('doctrine')->getManager()
+            ->find('SuluSecurityBundle:User', $this->user3->getId());
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
+        $encoder = $this->getContainer()->get('security.encoder_factory')->getEncoder($user);
         $this->assertEquals($encoder->encodePassword($newPassword, $user->getSalt()), $user->getPassword());
         $this->assertNull($user->getPasswordResetToken());
         $this->assertNull($user->getPasswordResetTokenExpiresAt());

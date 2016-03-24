@@ -55,8 +55,8 @@ class AccountMediaControllerTest extends SuluTestCase
 
     public function setUp()
     {
-        $this->db('ORM')->purgeDatabase();
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
+        $this->purgeDatabase();
         $this->initOrm();
     }
 

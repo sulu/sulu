@@ -14,7 +14,9 @@ namespace Sulu\Component\Webspace\Tests\Unit;
 use Psr\Log\LoggerInterface;
 use Sulu\Component\Webspace\Loader\XmlFileLoader;
 use Sulu\Component\Webspace\Manager\WebspaceManager;
+use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Url\Replacer;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Filesystem\Filesystem;
 
 class WebspaceManagerTest extends WebspaceTestCase
@@ -368,6 +370,21 @@ class WebspaceManagerTest extends WebspaceTestCase
         } else {
             $this->assertNull($portalInformation);
         }
+    }
+
+    public function testFindPortalInformationsByWebspaceKeyAndLocale()
+    {
+        $portalInformations = $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale(
+            'sulu_io',
+            'de_at',
+            'dev'
+        );
+
+        $this->assertCount(1, $portalInformations);
+        $portalInformation = reset($portalInformations);
+
+        $this->assertEquals('sulu_io', $portalInformation->getWebspace()->getKey());
+        $this->assertEquals('de_at', $portalInformation->getLocale());
     }
 
     public function testFindPortalInformationByUrlWithSegment()

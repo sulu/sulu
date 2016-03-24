@@ -50,7 +50,15 @@ define([
             toolbar: {
                 buttons: {
                     add: {},
-                    deleteSelected: {}
+                    deleteSelected: {},
+                    export: {
+                        options: {
+                            urlParameter: {
+                                flat: true
+                            },
+                            url: '/admin/api/snippets.csv'
+                        }
+                    }
                 },
                 languageChanger: {
                     preSelected: this.options.language

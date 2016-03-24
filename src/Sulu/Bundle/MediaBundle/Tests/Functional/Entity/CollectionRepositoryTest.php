@@ -61,7 +61,7 @@ class CollectionRepositoryTest extends SuluTestCase
         parent::setUp();
 
         $this->purgeDatabase();
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
 
         $collectionType = new CollectionType();
         $collectionType->setName('Default Type');

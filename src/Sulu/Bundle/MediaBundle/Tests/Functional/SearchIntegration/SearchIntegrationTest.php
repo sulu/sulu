@@ -56,8 +56,8 @@ class SearchIntegrationTest extends SuluTestCase
     public function setUp()
     {
         $this->initPhpcr();
-        $this->documentManager = $this->container->get('sulu_document_manager.document_manager');
-        $this->nodeManager = $this->container->get('sulu_document_manager.node_manager');
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
+        $this->nodeManager = $this->getContainer()->get('sulu_document_manager.node_manager');
         $this->webspaceDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $mediaEntity = new Media();
@@ -90,7 +90,7 @@ class SearchIntegrationTest extends SuluTestCase
             $format => 'myimage.jpg',
         ]);
 
-        $testAdapter = $this->container->get('massive_search.adapter.test');
+        $testAdapter = $this->getContainer()->get('massive_search.adapter.test');
 
         // remove the documents indexed when creating the fixtures
         foreach ($testAdapter->listIndexes() as $indexName) {

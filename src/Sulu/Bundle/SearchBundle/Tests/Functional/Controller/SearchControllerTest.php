@@ -41,6 +41,17 @@ class SearchControllerTest extends SuluTestCase
      */
     private $user;
 
+    public function setUp()
+    {
+        parent::setUp();
+        $this->purgeDatabase();
+        $this->client = $this->createAuthenticatedClient();
+        $this->searchManager = $this->client->getContainer()->get('massive_search.search_manager');
+        $this->entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $this->createUser();
+        $this->indexProducts();
+    }
+
     public function provideSearch()
     {
         return [
@@ -180,17 +191,6 @@ class SearchControllerTest extends SuluTestCase
         $result = json_decode($response->getContent(), true);
 
         $this->assertEquals('product', $result[0]['indexName']);
-    }
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->db('ORM')->purgeDatabase();
-        $this->client = $this->createAuthenticatedClient();
-        $this->searchManager = $this->client->getContainer()->get('massive_search.search_manager');
-        $this->entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $this->createUser();
-        $this->indexProducts();
     }
 
     private function createUser()

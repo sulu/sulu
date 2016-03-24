@@ -35,14 +35,14 @@ class KeywordControllerTest extends SuluTestCase
 
     public function setUp()
     {
-        $this->entityManager = $this->db('ORM')->getOm();
+        $this->entityManager = $this->getEntityManager();
 
         $this->initOrm();
     }
 
     public function initOrm()
     {
-        $this->db('ORM')->purgeDatabase();
+        $this->purgeDatabase();
 
         $this->category1 = new Category();
         $this->category1->setKey('1');

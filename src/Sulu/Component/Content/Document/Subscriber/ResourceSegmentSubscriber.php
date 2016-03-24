@@ -11,11 +11,14 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
+use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\RedirectType;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
+use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
@@ -31,19 +34,26 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
     /**
      * @var DocumentInspector
      */
-    private $inspector;
+    private $documentInspector;
 
     /**
      * @var PropertyEncoder
      */
     private $encoder;
 
+    /**
+     * @var RlpStrategyInterface
+     */
+    private $rlpStrategy;
+
     public function __construct(
         PropertyEncoder $encoder,
-        DocumentInspector $inspector
+        DocumentInspector $documentInspector,
+        RlpStrategyInterface $rlpStrategy
     ) {
         $this->encoder = $encoder;
-        $this->inspector = $inspector;
+        $this->documentInspector = $documentInspector;
+        $this->rlpStrategy = $rlpStrategy;
     }
 
     /**
@@ -53,18 +63,31 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
     {
         return [
             // persist should happen before content is mapped
-            Events::PERSIST => ['handlePersist', 10],
+            Events::PERSIST => [
+                ['handlePersistDocument', 10],
+                // has to happen after MappingSubscriber, because the mapped data is needed
+                ['handlePersistRoute', -200],
+            ],
             // hydrate should happen afterwards
             Events::HYDRATE => ['handleHydrate', -200],
         ];
     }
 
+    /**
+     * Checks if the given Document supports the operations done in this Subscriber.
+     *
+     * @param object $document
+     *
+     * @return bool
+     */
     public function supports($document)
     {
         return $document instanceof ResourceSegmentBehavior && $document instanceof StructureBehavior;
     }
 
     /**
+     * Sets the ResourceSegment of the document.
+     *
      * @param AbstractMappingEvent $event
      */
     public function handleHydrate(AbstractMappingEvent $event)
@@ -77,7 +100,7 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
 
         $node = $event->getNode();
         $property = $this->getResourceSegmentProperty($document);
-        $originalLocale = $this->inspector->getOriginalLocale($document);
+        $originalLocale = $this->documentInspector->getOriginalLocale($document);
         $segment = $node->getPropertyValueWithDefault(
             $this->encoder->localizedSystemName(
                 $property->getName(),
@@ -90,13 +113,38 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
     }
 
     /**
+     * Sets the ResourceSegment on the Structure.
+     *
      * @param PersistEvent $event
      */
-    public function handlePersist(PersistEvent $event)
+    public function handlePersistDocument(PersistEvent $event)
     {
+        /** @var ResourceSegmentBehavior $document */
         $document = $event->getDocument();
 
         if (!$this->supports($document)) {
+            return;
+        }
+
+        $property = $this->getResourceSegmentProperty($document);
+        $this->persistDocument($document, $property);
+    }
+
+    /**
+     * Creates or updates the route for the document.
+     *
+     * @param PersistEvent $event
+     */
+    public function handlePersistRoute(PersistEvent $event)
+    {
+        /** @var ResourceSegmentBehavior $document */
+        $document = $event->getDocument();
+
+        if (!$this->supports($document)) {
+            return;
+        }
+
+        if ($document instanceof HomeDocument) {
             return;
         }
 
@@ -104,15 +152,19 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $property = $this->getResourceSegmentProperty($document);
-        $document->getStructure()->getProperty(
-            $property->getName()
-        )->setValue($document->getResourceSegment());
+        $this->persistRoute($document);
     }
 
+    /**
+     * Returns the property of the document's structure containing the ResourceSegment.
+     *
+     * @param $document
+     *
+     * @return PropertyMetadata
+     */
     private function getResourceSegmentProperty($document)
     {
-        $structure = $this->inspector->getStructureMetadata($document);
+        $structure = $this->documentInspector->getStructureMetadata($document);
         $property = $structure->getPropertyByTagName('sulu.rlp');
 
         if (!$property) {
@@ -127,5 +179,28 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
         }
 
         return $property;
+    }
+
+    /**
+     * Sets the ResourceSegment to the given property of the given document.
+     *
+     * @param ResourceSegmentBehavior $document
+     * @param PropertyMetadata $property
+     */
+    private function persistDocument(ResourceSegmentBehavior $document, PropertyMetadata $property)
+    {
+        $document->getStructure()->getProperty(
+            $property->getName()
+        )->setValue($document->getResourceSegment());
+    }
+
+    /**
+     * Creates or updates the route of the document using the RlpStrategy.
+     *
+     * @param ResourceSegmentBehavior $document
+     */
+    private function persistRoute(ResourceSegmentBehavior $document)
+    {
+        $this->rlpStrategy->save($document, null);
     }
 }

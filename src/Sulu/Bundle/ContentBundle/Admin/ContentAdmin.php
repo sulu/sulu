@@ -117,6 +117,7 @@ class ContentAdmin extends Admin
                 PermissionTypes::ADD,
                 PermissionTypes::EDIT,
                 PermissionTypes::DELETE,
+                PermissionTypes::LIVE,
                 PermissionTypes::SECURITY,
             ];
         }

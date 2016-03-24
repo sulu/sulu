@@ -64,6 +64,8 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
             [
                 [
                     'portal_url' => 'sulu.lo/test',
+                    'resource_locator_prefix' => '/test',
+                    'resource_locator' => '/path/to',
                     'path_info' => '/test/path/to',
                     'match_type' => RequestAnalyzerInterface::MATCH_TYPE_FULL,
                     'redirect' => '',
@@ -79,6 +81,8 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
                 [
                     'portal_url' => 'sulu.lo',
                     'path_info' => '/test/path/to',
+                    'resource_locator_prefix' => '',
+                    'resource_locator' => '/test/path/to',
                     'match_type' => RequestAnalyzerInterface::MATCH_TYPE_PARTIAL,
                     'redirect' => 'sulu.lo/test',
                 ],
@@ -190,6 +194,7 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $request->query = new ParameterBag(['get' => 1]);
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
+        $request->expects($this->any())->method('getScheme')->will($this->returnValue('http'));
 
         $attributes = $this->provider->process($request, new RequestAttributes());
 
@@ -238,6 +243,7 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $request->query = new ParameterBag(['get' => 1]);
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
+        $request->expects($this->any())->method('getScheme')->will($this->returnValue('http'));
 
         $attributes = $this->provider->process($request, new RequestAttributes());
 

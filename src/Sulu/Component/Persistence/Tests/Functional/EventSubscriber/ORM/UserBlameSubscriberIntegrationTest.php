@@ -44,9 +44,9 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
         $contact->setFirstName('Daniel');
         $contact->setLastName('Leech');
         $user->setContact($contact);
-        $this->db('ORM')->getOm()->persist($contact);
-        $this->db('ORM')->getOm()->persist($user);
-        $this->db('ORM')->getOm()->flush();
+        $this->getEntityManager()->persist($contact);
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
         $token->setUser($user);
 
         $context->setToken($token);
@@ -55,8 +55,8 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
         $contact->setLastName('Mustermann');
         $contact->setPosition('CEO');
         $contact->setSalutation('Sehr geehrter Herr Dr Mustermann');
-        $this->db('ORM')->getOm()->persist($contact);
-        $this->db('ORM')->getOm()->flush();
+        $this->getEntityManager()->persist($contact);
+        $this->getEntityManager()->flush();
 
         $changer = $contact->getChanger();
         $creator = $contact->getCreator();
@@ -80,8 +80,8 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
             '/Expected user object to be an instance of \(Sulu\) UserInterface\./'
         );
 
-        $this->db('ORM')->getOm()->persist($contact);
-        $this->db('ORM')->getOm()->flush();
+        $this->getEntityManager()->persist($contact);
+        $this->getEntityManager()->flush();
     }
 
     public function testExternalUserNoBlame()
@@ -91,8 +91,8 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
         $permission = new Permission();
         $permission->setContext('sulu.contact.people');
         $permission->setPermissions(127);
-        $this->db('ORM')->getOm()->persist($permission);
-        $this->db('ORM')->getOm()->flush();
+        $this->getEntityManager()->persist($permission);
+        $this->getEntityManager()->flush();
 
         $this->assertInternalType('int', $permission->getId());
     }

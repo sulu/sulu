@@ -37,7 +37,7 @@
             <argument>%kernel.environment%</argument>
 
             <tag name="sulu.context" context="website"/>
-            <tag name="kernel.event_listener" event="kernel.response" method="onResponse"/>
+            <tag name="kernel.event_listener" event="kernel.response" method="onResponse" priority="-5"/>
         </service>
 
         <service id="sulu_wesite.analytics.event_subscriber"

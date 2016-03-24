@@ -14,6 +14,7 @@ use JMS\Serializer\Context;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\JsonSerializationVisitor;
 use Sulu\Bundle\ContentBundle\EventListener\WebspaceSerializeEventSubscriber;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -124,10 +125,14 @@ class WebspaceSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
             new CustomUrl('*.sulu.io'),
         ];
 
+        $locales = [new Localization('de'), new Localization('en')];
+
         $environments = [$this->prophesize(Environment::class), $this->prophesize(Environment::class)];
         $portals = [$this->prophesize(Portal::class), $this->prophesize(Portal::class)];
         $portals[0]->getEnvironment('prod')->willReturn($environments[0]->reveal());
+        $portals[0]->getLocalizations()->willReturn($locales);
         $portals[1]->getEnvironment('prod')->willReturn($environments[1]->reveal());
+        $portals[1]->getLocalizations()->willReturn($locales);
 
         $environments[0]->getCustomUrls()->willReturn([$customUrls[0], $customUrls[1]]);
         $environments[1]->getCustomUrls()->willReturn([$customUrls[2], $customUrls[3]]);
@@ -148,8 +153,20 @@ class WebspaceSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
         $context = $this->prophesize(Context::class);
         $visitor = $this->prophesize(JsonSerializationVisitor::class);
 
-        $serialzedData = '[{"url": "sulu.lo"}, {"url": "*.sulu.lo"}, {"url": "sulu.io"}, {"url": "*.sulu.io"}]';
-        $context->accept($customUrls)->willReturn($serialzedData);
+        $serialzedData = '[{"url": "sulu.lo", "locales": [{"localization":"de"}, {"localization":"en"}]}, {"url": "*.sulu.lo","locales": [{"localization":"de"}, {"localization":"en"}]}, {"url": "sulu.io","locales": [{"localization":"de"}, {"localization":"en"}]}, {"url": "*.sulu.io","locales": [{"localization":"de"}, {"localization":"en"}]}]';
+        $context->accept($customUrls[0])->willReturn(['url' => 'sulu.lo']);
+        $context->accept($customUrls[1])->willReturn(['url' => '*.sulu.lo']);
+        $context->accept($customUrls[2])->willReturn(['url' => 'sulu.io']);
+        $context->accept($customUrls[3])->willReturn(['url' => '*.sulu.io']);
+        $context->accept($locales)->willReturn([['localization' => 'de'], ['localization' => 'en']]);
+        $context->accept(
+            [
+                ['url' => 'sulu.lo', 'locales' => [['localization' => 'de'], ['localization' => 'en']]],
+                ['url' => '*.sulu.lo', 'locales' => [['localization' => 'de'], ['localization' => 'en']]],
+                ['url' => 'sulu.io', 'locales' => [['localization' => 'de'], ['localization' => 'en']]],
+                ['url' => '*.sulu.io', 'locales' => [['localization' => 'de'], ['localization' => 'en']]],
+            ]
+        )->willReturn($serialzedData);
         $visitor->addData('customUrls', $serialzedData)->shouldBeCalled();
 
         $reflection = new \ReflectionClass(get_class($subscriber));

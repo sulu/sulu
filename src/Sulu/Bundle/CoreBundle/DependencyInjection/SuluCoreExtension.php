@@ -12,6 +12,8 @@
 namespace Sulu\Bundle\CoreBundle\DependencyInjection;
 
 use InvalidArgumentException;
+use Sulu\Component\Rest\Csv\ObjectNotSupportedException;
+use Sulu\Component\Rest\Exception\InvalidHashException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -77,7 +79,8 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                     'exception' => [
                         'enabled' => true,
                         'codes' => [
-                            'Sulu\Component\Rest\Exception\InvalidHashException' => 409,
+                            InvalidHashException::class => 409,
+                            ObjectNotSupportedException::class => 406,
                         ],
                     ],
                     'service' => [
@@ -146,10 +149,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
     private function initWebspace($webspaceConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
     {
         $container->setParameter('sulu_core.webspace.config_dir', $webspaceConfig['config_dir']);
-        $container->setParameter(
-            'sulu_core.webspace.request_analyzer.priority',
-            $webspaceConfig['request_analyzer']['priority']
-        );
         $loader->load('webspace.xml');
     }
 

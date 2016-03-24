@@ -21,6 +21,7 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,6 +40,11 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
      */
     private $contentMapper;
 
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
     public function setUp()
     {
         $this->webspaceManager = $this->getMockForAbstractClass(
@@ -52,8 +58,10 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->contentMapper = $this->prophesize(ContentMapperInterface::class);
+        $this->requestStack = $this->prophesize(RequestStack::class);
 
         $this->requestAnalyzer = new RequestAnalyzer(
+            $this->requestStack->reveal(),
             [new WebsiteRequestProcessor($this->webspaceManager, $this->contentMapper->reveal(), 'prod')]
         );
     }
@@ -200,6 +208,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $request->query = new ParameterBag(['get' => 1]);
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
+        $request->expects($this->once())->method('getScheme')->willReturn('http');
         $request->expects($this->once())->method('setLocale')->with('de_at');
         $this->requestAnalyzer->analyze($request);
 
@@ -250,6 +259,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
         $request->expects($this->once())->method('setLocale')->with('de_at');
+        $request->expects($this->once())->method('getScheme')->willReturn('http');
 
         if ($expected['format']) {
             $request->expects($this->once())->method('setRequestFormat')->will(

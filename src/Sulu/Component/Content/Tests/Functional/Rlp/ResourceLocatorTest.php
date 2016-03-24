@@ -18,7 +18,6 @@ use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
-use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
 class ResourceLocatorTest extends SuluTestCase
@@ -44,11 +43,6 @@ class ResourceLocatorTest extends SuluTestCase
     private $rlpMapper;
 
     /**
-     * @var RlpStrategyInterface
-     */
-    private $strategy;
-
-    /**
      * @var ResourceLocator
      */
     private $resourceLocator;
@@ -61,10 +55,13 @@ class ResourceLocatorTest extends SuluTestCase
 
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->session = $this->sessionManager->getSession();
-        $this->rlpMapper = new PhpcrMapper($this->getContainer()->get('sulu.phpcr.session'));
-        $this->strategy = $this->getContainer()->get('sulu.content.rlp.strategy.tree');
+        $this->rlpMapper = new PhpcrMapper(
+            $this->getContainer()->get('sulu.phpcr.session'),
+            $this->getContainer()->get('sulu_document_manager.document_manager'),
+            $this->getContainer()->get('sulu_document_manager.document_inspector')
+        );
 
-        $this->resourceLocator = new ResourceLocator($this->strategy, 'not-in-use');
+        $this->resourceLocator = new ResourceLocator('not-in-use');
     }
 
     protected function initOrm()
@@ -81,10 +78,9 @@ class ResourceLocatorTest extends SuluTestCase
         $node->addMixin('sulu:content');
         $this->session->save();
 
-        $this->resourceLocator->write($node, $property, 1, 'sulu_io', 'en');
+        $this->resourceLocator->write($node, $property, 1, 'sulu_io', 'en', null);
 
         $this->assertEquals('/test', $node->getPropertyValue('url'));
-        $this->assertTrue($this->session->getRootNode()->hasNode('cmf/sulu_io/routes/en/test'));
     }
 
     public function testLoadFromProperty()
@@ -110,35 +106,14 @@ class ResourceLocatorTest extends SuluTestCase
         $node->addMixin('sulu:content');
         $this->session->save();
 
-        $this->resourceLocator->write($node, $property, 1, 'sulu_io', 'en');
+        $this->resourceLocator->write($node, $property, 1, 'sulu_io', 'en', null);
         $this->session->save();
 
         $property->setValue('not-good');
 
-        $this->resourceLocator->read($node, $property, 'sulu_io', 'en');
+        $this->resourceLocator->read($node, $property, 'sulu_io', 'en', null);
 
         $this->assertEquals('/test', $property->getValue());
         $this->assertEquals('/test', $node->getPropertyValue('url'));
-    }
-
-    public function testOverride()
-    {
-        $property = new Property('url', [], 'resource_locator');
-        $property->setValue('/test');
-
-        $node = $this->sessionManager->getContentNode('sulu_io')->addNode('test');
-        $node->addMixin('sulu:content');
-        $this->session->save();
-
-        $this->resourceLocator->write($node, $property, 1, 'sulu_io', 'en');
-
-        $this->assertEquals('/test', $node->getPropertyValue('url'));
-        $this->assertTrue($this->session->getRootNode()->hasNode('cmf/sulu_io/routes/en/test'));
-
-        $property->setValue('/test-2');
-        $this->resourceLocator->write($node, $property, 1, 'sulu_io', 'en');
-
-        $this->assertEquals('/test-2', $node->getPropertyValue('url'));
-        $this->assertTrue($this->session->getRootNode()->hasNode('cmf/sulu_io/routes/en/test-2'));
     }
 }
