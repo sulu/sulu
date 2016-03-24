@@ -343,22 +343,40 @@ class MediaControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/media/' . $media->getId()
+            '/api/media/' . $media->getId() . '?locale=en-gb'
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals($media->getId(), $response->id);
-        $this->assertNotNull($response->type->id);
-        $this->assertEquals('image', $response->type->name);
-        $this->assertEquals('photo.jpeg', $response->name);
-        $this->assertEquals($this->mediaDefaultTitle, $response->title);
-        $this->assertEquals('2', $response->downloadCounter);
-        $this->assertEquals($this->mediaDefaultDescription, $response->description);
-        $this->assertNotEmpty($response->url);
-        $this->assertNotEmpty($response->thumbnails);
+        $this->assertEquals($media->getId(), $response['id']);
+        $this->assertNotNull($response['type']['id']);
+        $this->assertEquals('image', $response['type']['name']);
+        $this->assertEquals('en-gb', $response['locale']);
+        $this->assertArrayNotHasKey('fallbackLocale', $response);
+        $this->assertEquals('photo.jpeg', $response['name']);
+        $this->assertEquals($this->mediaDefaultTitle, $response['title']);
+        $this->assertEquals('2', $response['downloadCounter']);
+        $this->assertEquals($this->mediaDefaultDescription, $response['description']);
+        $this->assertNotEmpty($response['url']);
+        $this->assertNotEmpty($response['thumbnails']);
+    }
+
+    public function testGetByIdWithFallback()
+    {
+        $media = $this->createMedia('photo');
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('GET', '/api/media/' . $media->getId() . '?locale=de');
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals($media->getId(), $response['id']);
+        $this->assertEquals('de', $response['locale']);
+        $this->assertEquals('en-gb', $response['fallbackLocale']);
     }
 
     /**

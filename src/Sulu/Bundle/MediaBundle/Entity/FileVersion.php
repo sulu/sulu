@@ -423,7 +423,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get meta.
      *
-     * @return FileVersionMeta
+     * @return FileVersionMeta[]
      */
     public function getMeta()
     {
