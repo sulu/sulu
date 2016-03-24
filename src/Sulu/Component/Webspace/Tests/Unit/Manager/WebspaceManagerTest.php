@@ -107,13 +107,19 @@ class WebspaceManagerTest extends WebspaceTestCase
 
         $this->assertEquals('tree', $portal->getResourceLocatorStrategy());
 
-        $this->assertEquals(2, count($portal->getLocalizations()));
+        $this->assertEquals(4, count($portal->getLocalizations()));
         $this->assertEquals('en', $portal->getLocalizations()[0]->getLanguage());
         $this->assertEquals('us', $portal->getLocalizations()[0]->getCountry());
         $this->assertEquals(false, $portal->getLocalizations()[0]->getShadow());
-        $this->assertEquals('de', $portal->getLocalizations()[1]->getLanguage());
-        $this->assertEquals(null, $portal->getLocalizations()[1]->getCountry());
+        $this->assertEquals('en', $portal->getLocalizations()[1]->getLanguage());
+        $this->assertEquals('ca', $portal->getLocalizations()[1]->getCountry());
         $this->assertEquals(false, $portal->getLocalizations()[1]->getShadow());
+        $this->assertEquals('fr', $portal->getLocalizations()[2]->getLanguage());
+        $this->assertEquals('ca', $portal->getLocalizations()[2]->getCountry());
+        $this->assertEquals(false, $portal->getLocalizations()[2]->getShadow());
+        $this->assertEquals('de', $portal->getLocalizations()[3]->getLanguage());
+        $this->assertEquals(null, $portal->getLocalizations()[3]->getCountry());
+        $this->assertEquals(false, $portal->getLocalizations()[3]->getShadow());
 
         $this->assertEquals(2, count($portal->getEnvironments()));
 
@@ -189,10 +195,13 @@ class WebspaceManagerTest extends WebspaceTestCase
 
         $this->assertEquals('short', $portal->getResourceLocatorStrategy());
 
-        $this->assertEquals(1, count($portal->getLocalizations()));
-        $this->assertEquals('de', $portal->getLocalizations()[0]->getLanguage());
-        $this->assertEquals('at', $portal->getLocalizations()[0]->getCountry());
+        $this->assertEquals(2, count($portal->getLocalizations()));
+        $this->assertEquals('en', $portal->getLocalizations()[0]->getLanguage());
+        $this->assertEquals('us', $portal->getLocalizations()[0]->getCountry());
         $this->assertEquals('', $portal->getLocalizations()[0]->getShadow());
+        $this->assertEquals('de', $portal->getLocalizations()[1]->getLanguage());
+        $this->assertEquals('at', $portal->getLocalizations()[1]->getCountry());
+        $this->assertEquals('', $portal->getLocalizations()[1]->getShadow());
 
         $this->assertEquals(3, count($portal->getEnvironments()));
 
@@ -218,10 +227,13 @@ class WebspaceManagerTest extends WebspaceTestCase
 
         $this->assertEquals('short', $portal->getResourceLocatorStrategy());
 
-        $this->assertEquals(1, count($portal->getLocalizations()));
-        $this->assertEquals('de', $portal->getLocalizations()[0]->getLanguage());
-        $this->assertEquals('at', $portal->getLocalizations()[0]->getCountry());
+        $this->assertEquals(2, count($portal->getLocalizations()));
+        $this->assertEquals('en', $portal->getLocalizations()[0]->getLanguage());
+        $this->assertEquals('us', $portal->getLocalizations()[0]->getCountry());
         $this->assertEquals('', $portal->getLocalizations()[0]->getShadow());
+        $this->assertEquals('de', $portal->getLocalizations()[1]->getLanguage());
+        $this->assertEquals('at', $portal->getLocalizations()[1]->getCountry());
+        $this->assertEquals('', $portal->getLocalizations()[1]->getShadow());
 
         $this->assertCount(3, $portal->getEnvironments());
 
@@ -278,10 +290,13 @@ class WebspaceManagerTest extends WebspaceTestCase
 
         $this->assertEquals('short', $portal->getResourceLocatorStrategy());
 
-        $this->assertEquals(1, count($portal->getLocalizations()));
-        $this->assertEquals('de', $portal->getLocalizations()[0]->getLanguage());
-        $this->assertEquals('at', $portal->getLocalizations()[0]->getCountry());
+        $this->assertEquals(2, count($portal->getLocalizations()));
+        $this->assertEquals('en', $portal->getLocalizations()[0]->getLanguage());
+        $this->assertEquals('us', $portal->getLocalizations()[0]->getCountry());
         $this->assertEquals('', $portal->getLocalizations()[0]->getShadow());
+        $this->assertEquals('de', $portal->getLocalizations()[1]->getLanguage());
+        $this->assertEquals('at', $portal->getLocalizations()[1]->getCountry());
+        $this->assertEquals('', $portal->getLocalizations()[1]->getShadow());
 
         $this->assertCount(3, $portal->getEnvironments());
 
@@ -323,10 +338,13 @@ class WebspaceManagerTest extends WebspaceTestCase
 
         $this->assertEquals('short', $portal->getResourceLocatorStrategy());
 
-        $this->assertEquals(1, count($portal->getLocalizations()));
-        $this->assertEquals('de', $portal->getLocalizations()[0]->getLanguage());
-        $this->assertEquals('at', $portal->getLocalizations()[0]->getCountry());
+        $this->assertEquals(2, count($portal->getLocalizations()));
+        $this->assertEquals('en', $portal->getLocalizations()[0]->getLanguage());
+        $this->assertEquals('us', $portal->getLocalizations()[0]->getCountry());
         $this->assertEquals('', $portal->getLocalizations()[0]->getShadow());
+        $this->assertEquals('de', $portal->getLocalizations()[1]->getLanguage());
+        $this->assertEquals('at', $portal->getLocalizations()[1]->getCountry());
+        $this->assertEquals('', $portal->getLocalizations()[1]->getShadow());
 
         $this->assertEquals(3, count($portal->getEnvironments()));
 
@@ -401,13 +419,19 @@ class WebspaceManagerTest extends WebspaceTestCase
 
         $this->assertEquals('tree', $portal->getResourceLocatorStrategy());
 
-        $this->assertEquals(2, count($portal->getLocalizations()));
+        $this->assertEquals(4, count($portal->getLocalizations()));
         $this->assertEquals('en', $portal->getLocalizations()[0]->getLanguage());
         $this->assertEquals('us', $portal->getLocalizations()[0]->getCountry());
         $this->assertEquals(false, $portal->getLocalizations()[0]->getShadow());
-        $this->assertEquals('de', $portal->getLocalizations()[1]->getLanguage());
-        $this->assertEquals(null, $portal->getLocalizations()[1]->getCountry());
+        $this->assertEquals('en', $portal->getLocalizations()[1]->getLanguage());
+        $this->assertEquals('ca', $portal->getLocalizations()[1]->getCountry());
         $this->assertEquals(false, $portal->getLocalizations()[1]->getShadow());
+        $this->assertEquals('fr', $portal->getLocalizations()[2]->getLanguage());
+        $this->assertEquals('ca', $portal->getLocalizations()[2]->getCountry());
+        $this->assertEquals(false, $portal->getLocalizations()[2]->getShadow());
+        $this->assertEquals('de', $portal->getLocalizations()[3]->getLanguage());
+        $this->assertEquals(null, $portal->getLocalizations()[3]->getCountry());
+        $this->assertEquals(false, $portal->getLocalizations()[3]->getShadow());
 
         $this->assertCount(2, $portal->getEnvironments());
 

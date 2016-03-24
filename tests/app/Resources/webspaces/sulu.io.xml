@@ -48,6 +48,9 @@
 
             <localizations>
                 <localization language="de" country="at" default="true"/>
+                <localization language="en"/>
+                <localization language="en" country="us"/>
+                <localization language="de"/>
             </localizations>
 
             <environments>

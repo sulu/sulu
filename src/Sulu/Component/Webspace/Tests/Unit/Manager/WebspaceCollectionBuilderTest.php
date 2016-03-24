@@ -79,7 +79,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
         $prodPortalInformations = $webspaceCollection->getPortalInformations('prod');
 
-        $this->assertCount(8, $prodPortalInformations);
+        $this->assertCount(12, $prodPortalInformations);
 
         $prodPortalInformationKeys = array_keys($prodPortalInformations);
         $prodPortalInformationValues = array_values($prodPortalInformations);
@@ -91,46 +91,79 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $prodPortalInformationValues[3]->getType());
         $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $prodPortalInformationValues[4]->getType());
         $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $prodPortalInformationValues[5]->getType());
-        $this->assertEquals('www.sulu.at', $prodPortalInformationKeys[6]);
-        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_REDIRECT, $prodPortalInformationValues[6]->getType());
-        $this->assertEquals('sulu.at', $prodPortalInformationKeys[7]);
-        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $prodPortalInformationValues[7]->getType());
+        $this->assertEquals('www.sulu.at', $prodPortalInformationKeys[10]);
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_REDIRECT, $prodPortalInformationValues[10]->getType());
+        $this->assertEquals('sulu.at', $prodPortalInformationKeys[11]);
+        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $prodPortalInformationValues[11]->getType());
 
         $devPortalInformations = $webspaceCollection->getPortalInformations('dev');
 
-        $this->assertCount(9, $devPortalInformations);
+        $this->assertCount(13, $devPortalInformations);
 
-        $devPortalInformationKeys = array_keys($devPortalInformations);
-        /** @var PortalInformation[] $devPortalInformationValues */
-        $devPortalInformationValues = array_values($devPortalInformations);
+        $devPortalInformationValues = [];
+        foreach ($devPortalInformations as $portalInformation) {
+            $devPortalInformationValues[$portalInformation->getUrl()] = array_filter([
+                'type' => $portalInformation->getType(),
+                'redirect' => $portalInformation->getRedirect(),
+                'locale' => $portalInformation->getLocale(),
+            ]);
+        }
 
-        // the values before have the same size, therefore the order cannot be determined
-        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $devPortalInformationValues[0]->getType());
-        $this->assertNull($devPortalInformationValues[0]->getRedirect());
-        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $devPortalInformationValues[1]->getType());
-        $this->assertNull($devPortalInformationValues[1]->getRedirect());
-        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $devPortalInformationValues[2]->getType());
-        $this->assertNull($devPortalInformationValues[2]->getRedirect());
-        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $devPortalInformationValues[3]->getType());
-        $this->assertNull($devPortalInformationValues[3]->getRedirect());
-        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $devPortalInformationValues[4]->getType());
-        $this->assertNull($devPortalInformationValues[4]->getRedirect());
-        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $devPortalInformationValues[5]->getType());
-        $this->assertNull($devPortalInformationValues[5]->getRedirect());
-        $this->assertEquals('massiveart-us.lo', $devPortalInformationKeys[6]);
-        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_PARTIAL, $devPortalInformationValues[6]->getType());
-        $this->assertEquals('massiveart-us.lo/en-us/s', $devPortalInformationValues[6]->getRedirect());
-        $this->assertEquals('massiveart-ca.lo', $devPortalInformationKeys[7]);
-        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_PARTIAL, $devPortalInformationValues[7]->getType());
-        $this->assertEquals('massiveart-ca.lo/fr-ca/s', $devPortalInformationValues[7]->getRedirect());
-        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_PARTIAL, $devPortalInformationValues[7]->getType());
-        $this->assertEquals('sulu.lo', $devPortalInformationKeys[8]);
-        $this->assertEquals(RequestAnalyzerInterface::MATCH_TYPE_FULL, $devPortalInformationValues[8]->getType());
+        // massiveart-ca.lo
+        $this->assertEquals(
+            ['type' => RequestAnalyzerInterface::MATCH_TYPE_FULL, 'locale' => 'en_ca'],
+            $devPortalInformationValues['massiveart-ca.lo/en-ca/w']
+        );
+        $this->assertEquals(
+            ['type' => RequestAnalyzerInterface::MATCH_TYPE_FULL, 'locale' => 'en_ca'],
+            $devPortalInformationValues['massiveart-ca.lo/en-ca/s']
+        );
+        $this->assertEquals(
+            ['type' => RequestAnalyzerInterface::MATCH_TYPE_FULL, 'locale' => 'fr_ca'],
+            $devPortalInformationValues['massiveart-ca.lo/fr-ca/w']
+        );
+        $this->assertEquals(
+            ['type' => RequestAnalyzerInterface::MATCH_TYPE_FULL, 'locale' => 'fr_ca'],
+            $devPortalInformationValues['massiveart-ca.lo/fr-ca/s']
+        );
 
-        $this->assertEquals('en_us', $devPortalInformationValues[6]->getLocalization()->getLocalization());
-        $this->assertEquals('s', $devPortalInformationValues[6]->getSegment()->getKey());
-        $this->assertEquals('fr_ca', $devPortalInformationValues[7]->getLocalization()->getLocalization());
-        $this->assertEquals('s', $devPortalInformationValues[7]->getSegment()->getKey());
+        // massiveart-us.lo
+        $this->assertEquals(
+            ['type' => RequestAnalyzerInterface::MATCH_TYPE_FULL, 'locale' => 'en_ca'],
+            $devPortalInformationValues['massiveart-us.lo/en-ca/w']
+        );
+        $this->assertEquals(
+            ['type' => RequestAnalyzerInterface::MATCH_TYPE_FULL, 'locale' => 'en_ca'],
+            $devPortalInformationValues['massiveart-us.lo/en-ca/s']
+        );
+        $this->assertEquals(
+            ['type' => RequestAnalyzerInterface::MATCH_TYPE_FULL, 'locale' => 'en_us'],
+            $devPortalInformationValues['massiveart-us.lo/en-us/w']
+        );
+        $this->assertEquals(
+            ['type' => RequestAnalyzerInterface::MATCH_TYPE_FULL, 'locale' => 'en_us'],
+            $devPortalInformationValues['massiveart-us.lo/en-us/s']
+        );
+        $this->assertEquals(
+            ['type' => RequestAnalyzerInterface::MATCH_TYPE_FULL, 'locale' => 'fr_ca'],
+            $devPortalInformationValues['massiveart-us.lo/fr-ca/w']
+        );
+        $this->assertEquals(
+            ['type' => RequestAnalyzerInterface::MATCH_TYPE_FULL, 'locale' => 'fr_ca'],
+            $devPortalInformationValues['massiveart-us.lo/fr-ca/s']
+        );
+        $this->assertEquals(
+            ['type' => RequestAnalyzerInterface::MATCH_TYPE_PARTIAL, 'locale' => 'fr_ca', 'redirect' => 'massiveart-ca.lo/fr-ca/s'],
+            $devPortalInformationValues['massiveart-ca.lo']
+        );
+        $this->assertEquals(
+            ['type' => RequestAnalyzerInterface::MATCH_TYPE_PARTIAL, 'locale' => 'en_us', 'redirect' => 'massiveart-us.lo/en-us/s'],
+            $devPortalInformationValues['massiveart-us.lo']
+        );
+        $this->assertEquals(
+            ['type' => RequestAnalyzerInterface::MATCH_TYPE_FULL, 'locale' => 'de_at'],
+            $devPortalInformationValues['sulu.lo']
+        );
     }
 
     public function testBuildWithMultipleLocalizationUrls()

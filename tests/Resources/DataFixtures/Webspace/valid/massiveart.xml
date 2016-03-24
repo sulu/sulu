@@ -58,7 +58,9 @@
 
             <localizations>
                 <localization language="en" country="us"/>
-                <localization language="de" />
+                <localization language="en" country="ca"/>
+                <localization language="fr" country="ca"/>
+                <localization language="de" default="true"/>
             </localizations>
 
             <environments>

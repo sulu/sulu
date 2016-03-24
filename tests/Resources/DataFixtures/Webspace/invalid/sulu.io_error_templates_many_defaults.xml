@@ -55,7 +55,9 @@
             </resource-locator>
 
             <localizations>
-                <localization language="de" country="at"/>
+                <localization language="en" country="us"/>
+                <localization language="en" country="ca"/>
+                <localization language="fr" country="ca"/>
             </localizations>
 
             <environments>

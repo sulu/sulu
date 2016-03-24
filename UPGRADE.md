@@ -10,6 +10,11 @@ This twig function returns now the user. To get the related contact use followin
 {{ sulu_resolve_user(userId).contact.fullName }}
 ```
 
+### Webspace validation
+
+Webspaces which have unused localizations by portals will now be not valid and ignored. Remove this
+localizations or add them to a portal.
+
 ### New security permission for cache
  
 To be able to clear the cache the user need the permission LIVE in the
