@@ -11,6 +11,11 @@
 
 namespace Sulu\Bundle\AdminBundle\Behat;
 
+use Behat\Behat\Context\SnippetAcceptingContext;
+use Behat\Mink\Exception\ElementNotFoundException;
+use Behat\MinkExtension\Context\RawMinkContext;
+use Sulu\Bundle\TestBundle\Behat\BaseContext;
+
 /**
  * Behat context class for the AdminBundle.
  */
