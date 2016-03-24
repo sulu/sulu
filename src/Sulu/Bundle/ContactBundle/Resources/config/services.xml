@@ -86,9 +86,10 @@
         </service>
         <service id="sulu_contact.twig.cache" class="%sulu_contact.twig.cache.class%"/>
         <service id="sulu_contact.twig" class="%sulu_contact.twig.class%">
-            <tag name="twig.extension"/>
             <argument type="service" id="sulu_contact.twig.cache"/>
-            <argument type="service" id="sulu.repository.user"/>
+            <argument type="service" id="sulu.repository.contact"/>
+
+            <tag name="twig.extension"/>
         </service>
 
         <service id="sulu_contact.account_factory" class="%sulu_contact.account_factory.class%"/>

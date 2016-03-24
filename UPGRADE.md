@@ -2,6 +2,14 @@
 
 ## dev-develop
 
+### Twig function `sulu_resolve_user`
+
+This twig function returns now the user. To get the related contact use following code snippet:
+
+```twig
+{{ sulu_resolve_user(userId).contact.fullName }}
+```
+
 ### New security permission for cache
  
 To be able to clear the cache the user need the permission LIVE in the
