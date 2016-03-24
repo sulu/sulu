@@ -26,6 +26,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileException;
+use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
@@ -541,6 +542,10 @@ class MediaManager implements MediaManagerInterface
             // new uploaded file
             ++$version;
             $this->validator->validate($uploadedFile);
+            $type = $this->typeManager->getMediaType($uploadedFile->getMimeType());
+            if ($type !== $mediaEntity->getType()->getId()) {
+                throw new InvalidMediaTypeException('New media version must have the same media type.');
+            }
 
             $data['storageOptions'] = $this->storage->save(
                 $uploadedFile->getPathname(),
@@ -553,7 +558,7 @@ class MediaManager implements MediaManagerInterface
             $data['mimeType'] = $uploadedFile->getMimeType();
             $data['properties'] = $this->getProperties($uploadedFile);
             $data['type'] = [
-                'id' => $this->typeManager->getMediaType($uploadedFile->getMimeType()),
+                'id' => $type,
             ];
             $data['version'] = $version;
 
