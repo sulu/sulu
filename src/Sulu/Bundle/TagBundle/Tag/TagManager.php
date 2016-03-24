@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\TagBundle\Tag;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Entity\TagRepository;
 use Sulu\Bundle\TagBundle\Event\TagDeleteEvent;
@@ -172,12 +172,8 @@ class TagManager implements TagManagerInterface
             $this->em->flush();
 
             return $tag;
-        } catch (DBALException $exc) {
-            if ($exc->getPrevious()->getCode() == 23000) { // Check if unique constraint fails
-                throw new TagAlreadyExistsException($name);
-            } else {
-                throw $exc;
-            }
+        } catch (UniqueConstraintViolationException $exc) {
+            throw new TagAlreadyExistsException($name);
         }
     }
 

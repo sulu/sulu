@@ -129,7 +129,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                         $depth,
                         $breadcrumb,
                         $filter,
-                        $sortBy !== null ? [$sortBy => $sortOrder] : []
+                        $sortBy !== null ? [$sortBy => $sortOrder] : ['id' => 'ASC']
                     );
                 }
             );
@@ -173,7 +173,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                     ],
                     $limit,
                     $offset,
-                    $sortBy !== null ? [$sortBy => $sortOrder] : []
+                    $sortBy !== null ? [$sortBy => $sortOrder] : ['id' => 'ASC']
                 );
             } else {
                 $collections = $collectionManager->getTree(

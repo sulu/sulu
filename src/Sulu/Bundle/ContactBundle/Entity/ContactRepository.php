@@ -161,7 +161,8 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
             ->addSelect('medias')
             ->addSelect('categories')
             ->addSelect('bankAccounts')
-            ->where('u.id IN (:ids)');
+            ->where('u.id IN (:ids)')
+            ->orderBy('u.id', 'ASC');
 
         $query = $qb->getQuery();
         $query->setParameter('ids', $ids);

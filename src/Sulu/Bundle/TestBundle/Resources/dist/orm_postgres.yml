@@ -7,3 +7,4 @@ doctrine:
         user:     "%database_pgsql_user%"
         password: "%database_pgsql_password%"
         charset:  UTF8
+        server_version: 9.1

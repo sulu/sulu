@@ -75,7 +75,8 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
         try {
             $queryBuilder = $this->createQueryBuilder('role')
                 ->leftJoin('role.permissions', 'permissions')
-                ->addSelect('permissions');
+                ->addSelect('permissions')
+                ->orderBy('role.id', 'ASC');
 
             $query = $queryBuilder->getQuery();
 
