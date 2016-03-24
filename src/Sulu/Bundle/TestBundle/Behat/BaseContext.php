@@ -229,6 +229,8 @@ EOT;
      * has not appeared after the timeout has been exceeded.
      *
      * @param string $text
+     *
+     * @throws \Exception
      */
     protected function waitForTextAndAssert($text)
     {
@@ -262,6 +264,8 @@ EOT;
      * Assert that the given selector is present.
      *
      * @param string $selector
+     *
+     * @throws \Exception
      */
     protected function assertSelector($selector)
     {
@@ -279,6 +283,8 @@ EOT;
      * Assert that the given selector is hidden.
      *
      * @param string $selector
+     *
+     * @throws \Exception
      */
     protected function assertSelectorIsHidden($selector)
     {
@@ -295,6 +301,8 @@ EOT;
      * Assert that at least one of the given selectors is present.
      *
      * @param array $selectors Array of selectors
+     *
+     * @throws \Exception
      */
     protected function assertAtLeastOneSelectors($selectors)
     {
@@ -361,5 +369,64 @@ EOT
 
         $this->getSession()->executeScript($script);
         $this->getSession()->wait($time, $assertion);
+    }
+
+    /**
+     * Using spin functions for slow tests.
+     *
+     * @param callable $lambda
+     * @param int $wait
+     *
+     * @throws \Exception
+     *
+     * @return bool
+     */
+    protected function spin($lambda, $wait = self::MEDIUM_WAIT_TIME)
+    {
+        for ($i = 0; $i < $wait; $i++) {
+            try {
+                if ($lambda($this)) {
+                    return true;
+                }
+            } catch (\Exception $e) {
+                // Ignore exception & do nothing.
+            }
+
+            sleep(1);
+        }
+
+        $backtrace = debug_backtrace();
+
+        throw new \Exception('Timeout thrown by ' . $backtrace[1]['class'] . '::' . $backtrace[1]['function']);
+    }
+
+    /**
+     * Fills in element with specified selector.
+     *
+     * @param string $selector
+     * @param string $value
+     *
+     * @throws ElementNotFoundException
+     */
+    protected function fillElement($selector, $value)
+    {
+        $page = $this->getSession()->getPage();
+        $element = $page->find('css', $selector);
+
+        if (null === $element) {
+            throw new ElementNotFoundException($this->getSession(), null, 'css', $selector);
+        }
+
+        $element->setValue($value);
+    }
+
+    /**
+     * Wait until ajax requests are terminated.
+     *
+     * @param int $timeout timeout in milliseconds
+     */
+    protected function waitForAjax($timeout)
+    {
+        $this->getSession()->wait($timeout, '(0 === jQuery.active)');
     }
 }

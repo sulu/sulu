@@ -41,6 +41,30 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
     }
 
     /**
+     * @Given the user :username exists with password :password and locale :locale
+     */
+    public function theUserExistsWithPasswordAndLocale($username, $password, $locale)
+    {
+        $this->getOrCreateRole('User', 'Sulu');
+
+        $user = $this->getEntityManager()
+            ->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')
+            ->findOneByUsername($username);
+
+        if (!$user) {
+            $this->execCommand('sulu:security:user:create', [
+                'username' => $username,
+                'firstName' => 'Adam',
+                'lastName' => 'Ministrator',
+                'email' => $username . '@example.com',
+                'locale' => $locale,
+                'password' => $password,
+                'role' => 'User',
+            ]);
+        }
+    }
+
+    /**
      * @Given the following users exist:
      */
     public function theFollowingUsersExist(TableNode $users)
@@ -136,6 +160,31 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
     public function iAmLoggedInAsAnAdministrator()
     {
         $this->theUserExistsWithPassword('admin', 'admin');
+
+        $this->visitPath('/admin');
+        $page = $this->getSession()->getPage();
+        $this->waitForSelector('#username');
+        $this->fillSelector('#username', 'admin');
+        $this->fillSelector('#password', 'admin');
+        $loginButton = $page->findById('login-button');
+
+        if (!$loginButton) {
+            throw new \InvalidArgumentException(
+                'Could not find submit button on login page'
+            );
+        }
+
+        $loginButton->click();
+        $this->getSession()->wait(5000, "document.querySelector('.navigation')");
+    }
+
+    /**
+     * @Given I am logged in as an administrator with locale :locale
+     */
+    public function iAmLoggedInAsAnAdministratorWithLocale($locale)
+    {
+        $this->theUserExistsWithPasswordAndLocale('admin', 'admin', $locale);
+
         $this->visitPath('/admin');
         $page = $this->getSession()->getPage();
         $this->waitForSelector('#username');
