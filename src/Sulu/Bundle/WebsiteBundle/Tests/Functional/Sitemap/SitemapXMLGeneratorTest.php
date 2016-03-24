@@ -55,7 +55,6 @@ class SitemapXMLGeneratorTest extends SuluTestCase
         $client->request('GET', 'http://test.lo/sitemap.xml');
         $content = $client->getResponse()->getContent();
 
-        $date = '2016-03-01';
         $this->assertContains(
             '<url><loc>http://test.lo/en</loc><lastmod>2016-03-01</lastmod><xhtml:link rel="alternate" hreflang="en" href="http://test.lo/en"/><xhtml:link rel="alternate" hreflang="x-default" href="http://test.lo/en"/><xhtml:link rel="alternate" hreflang="en-us" href="http://test.lo/en-us"/></url><url><loc>http://test.lo/en-us</loc><lastmod>2016-03-01</lastmod><xhtml:link rel="alternate" hreflang="en" href="http://test.lo/en"/><xhtml:link rel="alternate" hreflang="x-default" href="http://test.lo/en"/><xhtml:link rel="alternate" hreflang="en-us" href="http://test.lo/en-us"/></url>',
             $content

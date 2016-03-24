@@ -870,10 +870,17 @@ class ContentRepositoryTest extends SuluTestCase
         );
 
         $this->assertCount(2, $result);
-        $this->assertArrayHasKey('de_at', $result[0]->getUrls());
-        $this->assertArrayNotHasKey('de', $result[0]->getUrls());
-        $this->assertArrayHasKey('de_at', $result[1]->getUrls());
-        $this->assertArrayNotHasKey('de', $result[1]->getUrls());
+        $urls = $result[0]->getUrls();
+        $this->assertEquals('/test-1', $urls['de_at']);
+        $this->assertNull($urls['de']);
+        $this->assertNull($urls['en']);
+        $this->assertNull($urls['en_us']);
+
+        $urls = $result[1]->getUrls();
+        $this->assertEquals('/', $urls['de_at']);
+        $this->assertEquals('/', $urls['de']);
+        $this->assertEquals('/', $urls['en']);
+        $this->assertEquals('/', $urls['en_us']);
     }
 
     public function testFindUrl()

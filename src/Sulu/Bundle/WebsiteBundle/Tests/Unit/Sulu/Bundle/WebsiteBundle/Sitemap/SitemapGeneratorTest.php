@@ -98,7 +98,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->dataEn = $this->prepareTestData();
         $this->dataEnUs = $this->prepareTestData('en_us');
 
-        $this->contents = $this->session->getNode('/cmf/sulu_io/contents');
+        $this->contents = $this->session->getNode('/cmf/test_io/contents');
 
         $this->contents->setProperty('i18n:en-state', Structure::STATE_PUBLISHED);
         $this->contents->setProperty('i18n:en-nodeType', Structure::NODE_TYPE_CONTENT);
@@ -123,7 +123,7 @@ class SitemapGeneratorTest extends SuluTestCase
         }
 
         $this->webspace = new Webspace();
-        $this->webspace->setKey('sulu_io');
+        $this->webspace->setKey('test_io');
 
         $local1 = new Localization();
         $local1->setLanguage('en');
@@ -224,7 +224,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $data['news'] = $this->mapper->save(
             $data['news'],
             'overview',
-            'sulu_io',
+            'test_io',
             $locale,
             1,
             true,
@@ -235,7 +235,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $data['news/news-1'] = $this->mapper->save(
             $data['news/news-1'],
             'simple',
-            'sulu_io',
+            'test_io',
             $locale,
             1,
             true,
@@ -246,7 +246,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $data['news/news-2'] = $this->mapper->save(
             $data['news/news-2'],
             'simple',
-            'sulu_io',
+            'test_io',
             $locale,
             1,
             true,
@@ -258,7 +258,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $data['products'] = $this->mapper->save(
             $data['products'],
             'overview',
-            'sulu_io',
+            'test_io',
             $locale,
             1,
             true,
@@ -271,7 +271,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $data['products/products-1'] = $this->mapper->save(
             $data['products/products-1'],
             'overview',
-            'sulu_io',
+            'test_io',
             $locale,
             1,
             true,
@@ -282,7 +282,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $data['products/products-2'] = $this->mapper->save(
             $data['products/products-2'],
             'overview',
-            'sulu_io',
+            'test_io',
             $locale,
             1,
             true,
@@ -294,7 +294,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $data['products/products-3'] = $this->mapper->save(
             $data['products/products-3'],
             'overview',
-            'sulu_io',
+            'test_io',
             $locale,
             1,
             true,
@@ -308,7 +308,7 @@ class SitemapGeneratorTest extends SuluTestCase
 
     public function testGenerateAllFlat()
     {
-        $result = $this->sitemapGenerator->generateAllLocals('sulu_io', true)->getSitemap();
+        $result = $this->sitemapGenerator->generateAllLocals('test_io', true)->getSitemap();
 
         $result = array_map(
             function ($item) {
@@ -334,7 +334,7 @@ class SitemapGeneratorTest extends SuluTestCase
 
     public function testGenerateFlat()
     {
-        $result = $this->sitemapGenerator->generate('sulu_io', 'en', true)->getSitemap();
+        $result = $this->sitemapGenerator->generate('test_io', 'en', true)->getSitemap();
 
         $this->assertCount(6, $result);
         $this->assertEquals('Homepage', $result[0]['title']);
@@ -361,7 +361,7 @@ class SitemapGeneratorTest extends SuluTestCase
 
     public function testGenerateTree()
     {
-        $result = $this->sitemapGenerator->generate('sulu_io', 'en')->getSitemap();
+        $result = $this->sitemapGenerator->generate('test_io', 'en')->getSitemap();
 
         $root = $result;
         $this->assertEquals('Homepage', $root['title']);

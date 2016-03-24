@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * BUGFIX      #2183 [ContentBundle]       Added missing locale for loading route document
     * BUGIFX      #2178 [WebsiteBundle]       Added default IP anonymization for google analytics
+    * ENHANCEMENT #2171 [CoreBundle]          Added validation of unused webspace locales
     * BUGFIX      #2171 [ContentBundle]       Fixed saving of homepage
     * BUGFIX      #2172 [CustomUrlBundle]     Added check for custom-url placeholder
     * BUGFIX      #2166 [WebsiteBundle]       Fixed analytics type change
