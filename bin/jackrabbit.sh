@@ -13,7 +13,7 @@ if [ ! -f "$DIR/$JAR" ]; then
     wget http://archive.apache.org/dist/jackrabbit/$VERSION/$JAR
 fi
 
-java -jar $DIR/$JAR&
+java -jar $DIR/$JAR > /dev/null &
 
 echo "Waiting until Jackrabbit is ready on port 8080"
 while [[ -z `curl -s 'http://localhost:8080' ` ]]
@@ -22,4 +22,4 @@ do
     sleep 2s
 done
 
-echo "Jackrabbit is up"
+echo ""

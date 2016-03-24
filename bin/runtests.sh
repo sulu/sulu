@@ -18,7 +18,7 @@ function error {
 }
 
 function init_database {
-    comment "Initializing database"
+    comment "> initializing database"
 
     init_dbal
 
@@ -51,7 +51,7 @@ function init_dbal {
     php vendor/symfony-cmf/testing/bin/console doctrine:database:create
 
     if [[ $? != 0 ]]; then
-        comment "Database already exists"
+        comment "> database already exists"
         php vendor/symfony-cmf/testing/bin/console doctrine:schema:update --force
     else
         echo "Creating schema"
@@ -110,14 +110,6 @@ for BUNDLE in $BUNDLES; do
 
     header $BUNDLE_NAME
 
-    if [ -e $BUNDLE_DIR"/Tests/Resources/app/AppKernel.php" ]; then
-        export KERNEL_DIR=$BUNDLE_DIR"/Tests/Resources/app"
-    elif [ -e $BUNDLE_DIR"/Tests/app/AppKernel.php" ]; then
-        export KERNEL_DIR=$BUNDLE_DIR"/Tests/app"
-    else
-        export KERNEL_DIR=""
-    fi
-
     cd $BUNDLE_DIR
 
     if [ ! -e vendor ]; then
@@ -126,20 +118,20 @@ for BUNDLE in $BUNDLES; do
 
     if [[ ! -z "$KERNEL_DIR" ]]; then
         CONSOLE="env KERNEL_DIR=$OCWD"/"$KERNEL_DIR $OCWD/bin/console"
-        comment "Kernel: "$KERNEL_DIR
+        comment "> kernel: "$KERNEL_DIR
 
         $CONSOLE container:debug | cut -d' ' -f2 | grep "^doctrine.orm" &> /dev/null \
-            && comment "Doctrine ORM detected" \
+            && comment "> doctrine ORM detected" \
             && $CONSOLE doctrine:schema:update --force
     fi
 
-    comment "Running preparation script"
+    comment "> running preparation script"
     BEFORE_SCRIPT="bin/before-test.sh"
     if [ -e $BEFORE_SCRIPT ]; then
         bash $BEFORE_SCRIPT
     fi
 
-    comment "Running tests"
+    comment "> running tests"
 
     phpunit -c phpunit.xml.dist
 
@@ -150,7 +142,8 @@ for BUNDLE in $BUNDLES; do
     cd -
 
     if [ "$JACKRABBIT_RESTART" = true ] ; then
-        comment "Restart jackrabbit"
+        echo ""
+        comment "> restarting jackrabbit"
 
         PID=`ps -ef | grep "jackrabbit-standalone" | grep -v grep | awk '{ print $2 }'`
         if [ $PID ]; then

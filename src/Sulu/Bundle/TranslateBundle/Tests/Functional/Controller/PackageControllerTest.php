@@ -19,7 +19,7 @@ class PackageControllerTest extends SuluTestCase
 {
     public function setUp()
     {
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
         $this->purgeDatabase();
 
         $package = new Package();

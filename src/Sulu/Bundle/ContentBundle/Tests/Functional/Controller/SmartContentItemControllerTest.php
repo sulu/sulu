@@ -90,7 +90,7 @@ class SmartContentItemControllerTest extends SuluTestCase
 
     protected function setUp()
     {
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->formFactory = $this->getContainer()->get('form.factory');

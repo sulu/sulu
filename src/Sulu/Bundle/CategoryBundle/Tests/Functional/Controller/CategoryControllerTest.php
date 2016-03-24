@@ -45,14 +45,14 @@ class CategoryControllerTest extends SuluTestCase
 
     public function setUp()
     {
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
 
         $this->initOrm();
     }
 
     public function initOrm()
     {
-        $this->db('ORM')->purgeDatabase();
+        $this->purgeDatabase();
         /* First Category
         -------------------------------------*/
         $category = new Category();
