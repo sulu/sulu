@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGIFX      #2178 [WebsiteBundle]       Added default IP anonymization for google analytics
     * BUGFIX      #2171 [ContentBundle]       Fixed saving of homepage
     * BUGFIX      #2172 [CustomUrlBundle]     Added check for custom-url placeholder
     * BUGFIX      #2166 [WebsiteBundle]       Fixed analytics type change
