@@ -17,7 +17,7 @@ use Behat\MinkExtension\Context\RawMinkContext;
 use Sulu\Bundle\TestBundle\Behat\BaseContext;
 
 /**
- * Behat context class for the AdminBundle.
+ * Behat context class for the HuskyBundle.
  */
 class HuskyContext extends BaseContext implements SnippetAcceptingContext
 {
