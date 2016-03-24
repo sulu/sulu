@@ -38,7 +38,6 @@ class UrlTest extends \PHPUnit_Framework_TestCase
             'main' => true,
             'analyticsKey' => 'analytics',
             'environment' => null,
-            'customUrl' => true,
         ];
 
         $this->url->setUrl($expected['url']);
@@ -48,7 +47,6 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         $this->url->setRedirect($expected['redirect']);
         $this->url->setMain($expected['main']);
         $this->url->setAnalyticsKey($expected['analyticsKey']);
-        $this->url->setCustomUrl($expected['customUrl']);
 
         $this->assertEquals($expected, $this->url->toArray());
     }

@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Webspace\Tests\Unit\Loader;
 
+use Sulu\Component\Webspace\Loader\Exception\InvalidCustomUrlException;
 use Sulu\Component\Webspace\Loader\XmlFileLoader;
 use Sulu\Component\Webspace\Tests\Unit\WebspaceTestCase;
 
@@ -514,5 +515,14 @@ class XmlFileLoaderTest extends WebspaceTestCase
 
         $this->assertEquals('de_at', $webspace->getPortals()[0]->getDefaultLocalization()->getLocalization());
         $this->assertEquals('de_at', $webspace->getPortals()[0]->getXDefaultLocalization()->getLocalization());
+    }
+
+    public function testInvalidCustomUrl()
+    {
+        $this->setExpectedException(InvalidCustomUrlException::class);
+
+        $this->loader->load(
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/invalid/massiveart_invalid_custom_url.xml'
+        );
     }
 }
