@@ -107,9 +107,6 @@ class Property implements PropertyInterface, \JsonSerializable
      */
     protected $propertyValue;
 
-    /**
-     * Constructor.
-     */
     public function __construct(
         $name,
         $metaData,
