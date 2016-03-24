@@ -74,7 +74,7 @@ class PhpcrMapper extends RlpMapper
 
             $routeDocument = $this->documentManager->find(
                 $webspaceRouteRootPath . $routeNodePath,
-                null,
+                $locale,
                 ['rehydrate' => false]
             );
             $routeDocumentPath = $webspaceRouteRootPath . $routeNodePath;
