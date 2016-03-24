@@ -3,8 +3,8 @@
 DB=mysql
 OCWD=`pwd`
 BUNDLE=""
-SULU_ORM=${SULU_ORM:-mysql}
-SULU_PHPCR=${SULU_PHPCR:-doctrine_dbal}
+SYMFONY__DATABASE__DRIVER=${SYMFONY__DATABASE__DRIVER:-mysql}
+SYMFONY__PHPCR__TRANSPORT=${SYMFONY__PHPCR__TRANSPORT:-doctrine_dbal}
 JACKRABBIT_RESTART=false
 
 source "$(dirname "$0")""/inc/runtestcommon.inc.sh"
@@ -22,7 +22,7 @@ function init_database {
 
     init_dbal
 
-    if [[ $SULU_PHPCR == 'doctrine_dbal' ]]; then
+    if [[ $SYMFONY__PHPCR__TRANSPORT == 'doctrine_dbal' ]]; then
         init_phpcr_dbal
     fi
 
@@ -68,8 +68,8 @@ function init_phpcr_dbal {
 logo
 
 header "Sulu CMF Test Suite"
-comment "ORM: "$SULU_ORM
-comment "PHPCR: "$SULU_PHPCR
+comment "DB Driver: "$SYMFONY__DATABASE__DRIVER
+comment "PHPCR Transport: "$SYMFONY__PHPCR__TRANSPORT
 
 while getopts ":ait:r" OPT; do
     case $OPT in
