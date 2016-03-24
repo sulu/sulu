@@ -136,7 +136,7 @@ class Media extends ApiWrapper
         if (!$this->getLocalizedMeta()) {
             return;
         }
-        
+
         $fallbackLocale = $this->getLocalizedMeta()->getLocale();
 
         return $fallbackLocale !== $this->locale ? $fallbackLocale : null;
@@ -239,7 +239,7 @@ class Media extends ApiWrapper
         if (!$this->getLocalizedMeta()) {
             return;
         }
-        
+
         return $this->getLocalizedMeta()->getTitle();
     }
 
@@ -266,7 +266,7 @@ class Media extends ApiWrapper
         if (!$this->getLocalizedMeta()) {
             return;
         }
-        
+
         return $this->getLocalizedMeta()->getDescription();
     }
 
@@ -295,7 +295,7 @@ class Media extends ApiWrapper
     public function getCopyright()
     {
         if (!$this->getLocalizedMeta()) {
-            return null;
+            return;
         }
 
         return $this->getLocalizedMeta()->getCopyright();
@@ -906,6 +906,7 @@ class Media extends ApiWrapper
         foreach ($metas as $key => $meta) {
             if ($meta->getLocale() == $this->locale) {
                 $this->localizedMeta = $meta;
+                break;
             }
         }
 

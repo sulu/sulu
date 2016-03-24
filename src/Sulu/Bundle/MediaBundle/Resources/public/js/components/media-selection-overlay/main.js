@@ -443,7 +443,19 @@ define([
                         viewSpacingBottom: 180,
                         viewOptions: {
                             table: {
-                                actionIconColumn: 'name'
+                                actionIconColumn: 'name',
+                                badges: [
+                                    {
+                                        column: 'title',
+                                        callback: function(item, badge) {
+                                            if (!!item.fallbackLocale) {
+                                                badge.title = item.fallbackLocale;
+
+                                                return badge;
+                                            }
+                                        }.bind(this)
+                                    }
+                                ]
                             },
                             'datagrid/decorators/masonry-view': {
                                 selectable: true,
