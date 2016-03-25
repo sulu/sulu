@@ -58,10 +58,12 @@ class XmlFileLoaderTest extends WebspaceTestCase
 
         $this->assertEquals('short', $webspace->getPortals()[0]->getResourceLocatorStrategy());
 
-        $this->assertEquals(1, count($webspace->getPortals()[0]->getLocalizations()));
-        $this->assertEquals('de', $webspace->getPortals()[0]->getLocalizations()[0]->getLanguage());
-        $this->assertEquals('at', $webspace->getPortals()[0]->getLocalizations()[0]->getCountry());
-        $this->assertEquals(true, $webspace->getPortals()[0]->getLocalizations()[0]->isDefault());
+        $this->assertEquals(2, count($webspace->getPortals()[0]->getLocalizations()));
+        $this->assertEquals('en', $webspace->getPortals()[0]->getLocalizations()[0]->getLanguage());
+        $this->assertEquals('us', $webspace->getPortals()[0]->getLocalizations()[0]->getCountry());
+        $this->assertEquals('de', $webspace->getPortals()[0]->getLocalizations()[1]->getLanguage());
+        $this->assertEquals('at', $webspace->getPortals()[0]->getLocalizations()[1]->getCountry());
+        $this->assertEquals(true, $webspace->getPortals()[0]->getLocalizations()[1]->isDefault());
 
         $this->assertEquals('de_at', $webspace->getPortals()[0]->getDefaultLocalization()->getLocalization());
 
@@ -142,13 +144,17 @@ class XmlFileLoaderTest extends WebspaceTestCase
 
         $this->assertEquals('tree', $webspace->getPortals()[0]->getResourceLocatorStrategy());
 
-        $this->assertEquals(2, count($webspace->getPortals()[0]->getLocalizations()));
+        $this->assertEquals(4, count($webspace->getPortals()[0]->getLocalizations()));
         $this->assertEquals('en', $webspace->getPortals()[0]->getLocalizations()[0]->getLanguage());
         $this->assertEquals('us', $webspace->getPortals()[0]->getLocalizations()[0]->getCountry());
         $this->assertEquals(false, $webspace->getPortals()[0]->getLocalizations()[0]->isDefault());
-        $this->assertEquals('de', $webspace->getPortals()[0]->getLocalizations()[1]->getLanguage());
-        $this->assertEquals(null, $webspace->getPortals()[0]->getLocalizations()[1]->getCountry());
-        $this->assertEquals(true, $webspace->getPortals()[0]->getLocalizations()[1]->isDefault());
+        $this->assertEquals('en', $webspace->getPortals()[0]->getLocalizations()[1]->getLanguage());
+        $this->assertEquals('ca', $webspace->getPortals()[0]->getLocalizations()[1]->getCountry());
+        $this->assertEquals('fr', $webspace->getPortals()[0]->getLocalizations()[2]->getLanguage());
+        $this->assertEquals('ca', $webspace->getPortals()[0]->getLocalizations()[2]->getCountry());
+        $this->assertEquals('de', $webspace->getPortals()[0]->getLocalizations()[3]->getLanguage());
+        $this->assertEquals(null, $webspace->getPortals()[0]->getLocalizations()[3]->getCountry());
+        $this->assertEquals(true, $webspace->getPortals()[0]->getLocalizations()[3]->isDefault());
 
         $this->assertEquals(2, count($webspace->getNavigation()->getContexts()));
 

@@ -52,7 +52,8 @@
             </resource-locator>
 
             <localizations>
-                <localization language="en" country="ca" default="true"/>
+                <localization language="en" country="us"/>
+                <localization language="en" country="ca"/>
                 <localization language="fr" country="ca"/>
             </localizations>
 
