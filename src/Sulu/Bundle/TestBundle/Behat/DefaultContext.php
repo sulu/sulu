@@ -13,6 +13,8 @@ namespace Sulu\Bundle\TestBundle\Behat;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Mink\Exception\ElementNotFoundException;
+use Behat\MinkExtension\Context\RawMinkContext;
 
 /**
  * Default context class for Sulu contexts.
@@ -31,12 +33,35 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
     }
 
     /**
+     * Javascript click event.
+     *
      * @Given I click ":selector"
      * @When /^(?:|I )click on the element "([^"]*)"$/
      */
     public function iClickOnTheElement($selector)
     {
         $this->clickSelector($selector);
+    }
+
+    /**
+     * Real click event.
+     *
+     * @Given I click element :selector
+     *
+     * @param string $selector
+     *
+     * @throws ElementNotFoundException
+     */
+    public function click($selector)
+    {
+        $page = $this->getSession()->getPage();
+        $link = $page->find('css', $selector);
+
+        if (null === $link) {
+            throw new ElementNotFoundException($this->getSession(), null, 'css', $selector);
+        }
+
+        $link->click();
     }
 
     /**
@@ -86,6 +111,7 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
 
     /**
      * @Then I expect to see ":text"
+     * @And I expect to see ":text"
      * @Given I wait to see ":text"
      */
     public function iExpectToSee($text)
@@ -101,6 +127,25 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
     {
         $this->waitForSelector($selector);
         $this->assertNumberOfElements($selector, $count);
+    }
+
+    /**
+     * Checks, that (?P<num>\d+) CSS elements exist on the page
+     * Example: Then I wait and should see 5 "div" elements
+     * Example: And I wait and should see 5 "div" elements
+     *
+     * @Then /^(?:|I )wait and should see (?P<num>\d+) "(?P<element>[^"]*)" elements?$/
+     *
+     * @param int $num
+     * @param string $element
+     */
+    public function iWaitAndShouldSeeNbElements($num, $element)
+    {
+        $this->spin(function (RawMinkContext $context) use ($num, $element) {
+            $context->assertSession()->elementsCount('css', $element, intval($num));
+
+            return true;
+        });
     }
 
     /**
@@ -159,5 +204,67 @@ EOT;
         }
 
         $this->getSession()->wait(BaseContext::LONG_WAIT_TIME, '$.active == 0');
+    }
+
+    /**
+     * @Then I wait and expect to see element :element
+     *
+     * @param string $selector
+     *
+     * @throws \Exception
+     */
+    public function iWaitAndExpectToSeeElement($selector)
+    {
+        $this->waitForSelector($selector);
+    }
+
+    /**
+     * Waits and checks, that element with specified CSS contains specified HTML
+     * Example: Then the "body" element should contain "style=\"color:black;\""
+     * Example: And the "body" element should contain "style=\"color:black;\""
+     *
+     * @Then /^(?:|I )wait that the "(?P<element>[^"]*)" element should contain "(?P<value>(?:[^"]|\\")*)"$/
+     *
+     * @param string $element
+     * @param string $value
+     */
+    public function waitAndAssertElementContains($element, $value)
+    {
+        $this->spin(function (RawMinkContext $context) use ($element, $value) {
+            $context->assertSession()->elementContains('css', $element, $value);
+
+            return true;
+        });
+    }
+
+    /**
+     * Fills in element with specified selector.
+     *
+     * @When /^(?:|I )fill in element "(?P<selector>(?:[^"]|\\")*)" with "(?P<value>(?:[^"]|\\")*)"$/
+     *
+     * @param string $selector
+     * @param string $value
+     *
+     * @throws ElementNotFoundException
+     */
+    public function iFillElement($selector, $value)
+    {
+        $this->fillElement($selector, $value);
+    }
+
+    /**
+     * Waits and checks, that current page PATH matches regular expression
+     *
+     * @Then /^wait that the (?i)url(?-i) should match (?P<pattern>"(?:[^"]|\\")*")$/
+     *
+     * @param string $pattern
+     */
+    public function assertUrlRegExp($pattern)
+    {
+        $this->spin(function (RawMinkContext $context) use ($pattern) {
+            $context->assertSession()->addressMatches($pattern);
+
+            return true;
+        });
     }
 }
