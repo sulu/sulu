@@ -121,7 +121,7 @@ function write($line)
 function exec_sf_cmd($cmd, $echo = true, $checkForError = true)
 {
     return exec_cmd(
-        __DIR__ . '/console ' . $cmd,
+        'php ' . __DIR__ . '/console ' . $cmd,
         $echo,
         $checkForError
     );
@@ -388,7 +388,7 @@ function init_bundle($phpunitPath)
     }
 
     $process = exec_cmd(sprintf(
-        '%s %s',
+        'php %s %s',
         $console,
         'debug:container doctrine.orm.entity_manager'
     ), false);
@@ -400,7 +400,7 @@ function init_bundle($phpunitPath)
 
     write_info('Doctrine ORM detected, updating the schema for the bundle.');
     exec_cmd(sprintf(
-        '%s %s',
+        'php %s %s',
         $console,
         ' doctrine:schema:update --force'
     ));

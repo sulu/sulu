@@ -20,6 +20,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2125 [All]                 Upgraded to DoctrinePHPCRBundle 1.3
     * ENHANCEMENT #2086 [ContentBundle]       Improved presentation of info-text
     * FEATURE     #2155 [MediaBundle]         Added media formats to masonry-view and edit-overlay
+    * FEATURE     #2191 [All]                 Appveyor build for windows
     * BUGFIX      #2183 [ContentBundle]       Added missing locale for loading route document
     * BUGFIX      #2185 [MediaBundle]         Fixed throw exception if new version has a different media type
     * ENHANCEMENT #2182 [ContactBundle]       Added `sulu_resolve_contact` twig function
