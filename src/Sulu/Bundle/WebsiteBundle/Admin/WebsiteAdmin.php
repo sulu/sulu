@@ -54,7 +54,7 @@ class WebsiteAdmin extends Admin
 
         $rootNavigationItem = new NavigationItem($title);
         $section = new NavigationItem('');
-        $section->setPosition(10);
+        $section->setPosition(20);
 
         if ($this->checkLivePermissionForAllWebspaces()) {
             $settings = new NavigationItem('navigation.settings');

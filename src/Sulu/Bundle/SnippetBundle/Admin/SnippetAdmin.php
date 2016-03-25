@@ -64,23 +64,15 @@ class SnippetAdmin extends Admin
 
         $rootNavigationItem = new NavigationItem($title);
 
-        $section = new NavigationItem('navigation.webspaces');
+        $section = new NavigationItem('');
         $section->setPosition(20);
-
-        $global = new NavigationItem('navigation.global-content');
-        $global->setPosition(10);
-        $global->setIcon('globe');
-        $section->addChild($global);
 
         if ($this->securityChecker->hasPermission('sulu.global.snippets', 'view')) {
             $snippet = new NavigationItem('navigation.snippets');
             $snippet->setPosition(10);
-            $snippet->setIcon('bullseye');
+            $snippet->setIcon('file-o fa-flip-vertical');
             $snippet->setAction('snippet/snippets');
-            $global->addChild($snippet);
-        }
-
-        if ($global->hasChildren()) {
+            $section->addChild($snippet);
             $rootNavigationItem->addChild($section);
         }
 

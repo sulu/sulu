@@ -22,6 +22,10 @@
                 <source>search-overlay.documents-found</source>
                 <target>Documents found:</target>
             </trans-unit>
+            <trans-unit id="e4b1428ja8a085ede21265f5656d30a" resname="navigation.search-section">
+                <source>navigation.search-section</source>
+                <target></target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

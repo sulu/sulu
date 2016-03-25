@@ -30,10 +30,10 @@ class ContactAdmin extends Admin
 
         $rootNavigationItem = new NavigationItem($title);
         $section = new NavigationItem('');
-        $section->setPosition(10);
+        $section->setPosition(20);
 
         $contacts = new NavigationItem('navigation.contacts');
-        $contacts->setPosition(20);
+        $contacts->setPosition(30);
         $contacts->setIcon('user');
 
         if ($this->securityChecker->hasPermission('sulu.contact.people', PermissionTypes::VIEW)) {

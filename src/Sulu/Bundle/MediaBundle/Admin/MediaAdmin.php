@@ -31,10 +31,10 @@ class MediaAdmin extends Admin
 
         $rootNavigationItem = new NavigationItem($title);
         $section = new NavigationItem('');
-        $section->setPosition(10);
+        $section->setPosition(20);
 
         $media = new NavigationItem('navigation.media');
-        $media->setPosition(30);
+        $media->setPosition(20);
         $media->setIcon('image');
 
         if ($this->securityChecker->hasPermission('sulu.media.collections', PermissionTypes::VIEW)) {

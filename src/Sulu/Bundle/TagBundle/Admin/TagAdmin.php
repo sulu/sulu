@@ -30,7 +30,7 @@ class TagAdmin extends Admin
 
         $rootNavigationItem = new NavigationItem($title);
         $section = new NavigationItem('');
-        $section->setPosition(10);
+        $section->setPosition(20);
 
         $settings = new NavigationItem('navigation.settings');
         $settings->setPosition(40);
