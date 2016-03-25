@@ -4,7 +4,9 @@ CHANGELOG for Sulu
 * dev-develop
     * BUGFIX      #2183 [ContentBundle]       Added missing locale for loading route document
     * BUGFIX      #2185 [MediaBundle]         Fixed throw exception if new version has a different media type
-    * BUGIFX      #2178 [WebsiteBundle]       Added default IP anonymization for google analytics
+    * ENHANCEMENT #2182 [ContactBundle]       Added `sulu_resolve_contact` twig function
+    * ENHANCEMENT #2182 [SecurityBundle]      Fixed `sulu_resolve_user` twig function to return a user instead of a contact
+    * BUGFIX      #2178 [WebsiteBundle]       Added default IP anonymization for google analytics
     * BUGFIX      #2171 [ContentBundle]       Fixed saving of homepage
     * BUGFIX      #2172 [CustomUrlBundle]     Added check for custom-url placeholder
     * BUGFIX      #2166 [WebsiteBundle]       Fixed analytics type change
