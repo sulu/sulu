@@ -10,17 +10,21 @@ cache:
   directories:
     - $HOME/.composer/cache
 
+env:
+  global:
+    - JACKRABBIT_VERSION=2.12.0
+
 before_script:
+  - wget http://archive.apache.org/dist/jackrabbit/$JACKRABBIT_VERSION/jackrabbit-standalone-$JACKRABBIT_VERSION.jar
+  - java -jar jackrabbit-standalone-$JACKRABBIT_VERSION.jar > /dev/null &
   - phpenv config-rm xdebug.ini
   - composer self-update
   - composer install  --prefer-dist --no-interaction
-  - ./bin/jackrabbit.sh
 
 script: 
   # launch with the "r" flag in order to restart jackrabbit after each suite
   # see: https://github.com/sulu-io/sulu/issues/2137
-  - time ./bin/runtests.sh -i -a -r
-  - phpunit
+  - time ./bin/runtests -i -a -r
 
 notifications:
   slack:
