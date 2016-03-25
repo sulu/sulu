@@ -185,5 +185,11 @@
             <argument type="string">%kernel.environment%</argument>
             <argument type="service" id="filesystem"/>
         </service>
+
+        <service id="sulu_website.translator.request_analyzer"
+                 class="Sulu\Bundle\WebsiteBundle\Translator\RequestAnalyzerTranslator" decorates="translator">
+            <argument type="service" id="sulu_website.translator.request_analyzer.inner"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+        </service>
     </services>
 </container>

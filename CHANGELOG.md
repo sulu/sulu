@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2190 [WebsiteBundle]       Fixed wrong translator locale by decorating translator
     * BUGFIX      #2183 [ContentBundle]       Added missing locale for loading route document
     * BUGFIX      #2185 [MediaBundle]         Fixed throw exception if new version has a different media type
     * ENHANCEMENT #2182 [ContactBundle]       Added `sulu_resolve_contact` twig function
