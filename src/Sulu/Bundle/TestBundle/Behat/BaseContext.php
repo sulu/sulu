@@ -381,7 +381,7 @@ EOT
      *
      * @return bool
      */
-    protected function spin($lambda, $wait = self::MEDIUM_WAIT_TIME)
+    protected function spin($lambda, $wait = 5)
     {
         for ($i = 0; $i < $wait; $i++) {
             try {

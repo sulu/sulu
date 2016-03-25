@@ -27,29 +27,35 @@ class HuskyContext extends BaseContext implements SnippetAcceptingContext
      * @Given I select :itemValue from the husky auto complete :selector
      *
      * @param string $itemValue
-     * @param string $htmlId
+     * @param string $selector Container element of the field
      *
      * @throws ElementNotFoundException
      * @throws \Excpetion
      */
-    public function iSelectFromTheHuskyAutoComplete($itemValue, $htmlId)
+    public function iSelectFromTheHuskyAutoComplete($itemValue, $selector)
     {
-        $element = $this->getSession()->getPage()->findById($htmlId);
+        $containerElement = $this->getSession()->getPage()->find('css', $selector);
 
-        if (null === $element) {
-            throw new ElementNotFoundException($this->getSession(), $htmlId);
+        if (null === $containerElement) {
+            throw new ElementNotFoundException($this->getSession(), $selector);
+        }
+
+        $inputElement = $containerElement->find('css', 'input.tt-input');
+
+        if (null === $inputElement) {
+            throw new ElementNotFoundException($this->getSession(), $inputElement);
         }
 
         // Workaround for $element->setValue() because this function adds a TAB key at the end.
         // See https://github.com/minkphp/MinkSelenium2Driver/issues/188 for more information.
-        $el = $this->getSession()->getDriver()->getWebDriverSession()->element('xpath', $element->getXpath());
+        $el = $this->getSession()->getDriver()->getWebDriverSession()->element('xpath', $inputElement->getXpath());
         $el->postValue(array('value' => array($itemValue)));
 
         // Wait until loading is finished.
-        $this->spin(function (RawMinkContext $context) use ($htmlId) {
+        $this->spin(function (RawMinkContext $context) use ($containerElement) {
             // Search for all displayed suggestions.
-            $suggestionElementSelector = '#' . $htmlId . 'Field .tt-suggestions .suggestion';
-            $suggestionElements = $context->getSession()->getPage()->findAll('css', $suggestionElementSelector);
+            $suggestionElementSelector = '.tt-suggestions .suggestion';
+            $suggestionElements = $containerElement->findAll('css', $suggestionElementSelector);
 
             if (null === $suggestionElements) {
                 throw new ElementNotFoundException($this->getSession(), $suggestionElementSelector);
@@ -58,14 +64,10 @@ class HuskyContext extends BaseContext implements SnippetAcceptingContext
             // Choose the first item in the list.
             $suggestionElements[0]->click();
 
-            $loaderElementSelector = '#' . $htmlId . 'Field .loader';
-            $loaderElement = $context->getSession()->getPage()->find('css', $loaderElementSelector);
+            $loaderElementSelector = '.loader';
+            $loaderElement = $containerElement->find('css', $loaderElementSelector);
 
-            if (null === $loaderElement) {
-                throw new ElementNotFoundException($this->getSession(), $loaderElementSelector);
-            }
-
-            if ($loaderElement->isVisible()) {
+            if ($loaderElement && $loaderElement->isVisible()) {
                 throw new \Exception('Loader visible');
             }
 
