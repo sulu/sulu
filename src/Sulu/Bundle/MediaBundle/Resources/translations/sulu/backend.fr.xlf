@@ -242,6 +242,10 @@
                 <source>sulu.media.upload-new-preview</source>
                 <target>Transférer une nouvelle image d'aperçu</target>
             </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f22111" resname="sulu.dropzone.error.message.wrong-filetype">
+                <source>sulu.dropzone.error.message.wrong-filetype</source>
+                <target>La nouvelle version doit être le même type de media.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
