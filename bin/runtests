@@ -259,7 +259,7 @@ function jackrabbit_restart()
 
     $process = new Process(sprintf(
         'java -jar %s --repo %s/jackrabbit > jackrabbit_process.log &',
-        $jackrabbitJar->getFilename(), dirname($jackrabbitJar->getPathname())
+        $jackrabbitJar->getPathname(), dirname(dirname($jackrabbitJar->getPathname()))
     ));
     $process->start();
     while (false === jackrabbit_is_up()) {
@@ -279,7 +279,7 @@ function jackrabbit_is_up()
 function jackrabbit_pid()
 {
     $jackrabbitJar = jackrabbit_get_path();
-    $process = exec_cmd('pgrep -f -n "java \-jar ' . basename($jackrabbitJar) . '"', false, false);
+    $process = exec_cmd('pgrep -f -n "java \-jar .*' . basename($jackrabbitJar) . '"', false, false);
 
     // no process found
     if ($process->getExitCode() == 1) {
@@ -292,7 +292,7 @@ function jackrabbit_pid()
 function jackrabbit_get_path()
 {
     static $jackrabbit = null;
-    $jackrabbitPath = realpath(__DIR__ . '/../');
+    $jackrabbitPath = realpath(__DIR__ . '/../downloads');
 
     if (!$jackrabbit) {
         $finder = Finder::create()
