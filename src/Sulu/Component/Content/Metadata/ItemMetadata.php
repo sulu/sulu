@@ -255,12 +255,18 @@ abstract class ItemMetadata
     }
 
     /**
-     * Return the decsription of this property.
+     * Return the description of this property.
+     *
+     * @param string $locale
      *
      * @return string
      */
-    public function getDescription()
+    public function getDescription($locale)
     {
-        return $this->description;
+        if (isset($this->description[$locale])) {
+            return $this->description[$locale];
+        }
+
+        return '';
     }
 }

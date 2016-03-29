@@ -30415,7 +30415,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             editedErrorClass: 'server-validation-error',
             newRecordId: 'newrecord',
             gridIconClass: 'grid-icon',
-            gridBadgeClass: 'grid-badge',
+            gridBadgeClass: 'badge',
             gridImageClass: 'grid-image',
             childWrapperClass: 'child-wrapper',
             parentClass: 'children-toggler',
@@ -30478,7 +30478,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 '<span class="' + constants.gridBadgeClass + ' <%= cssClass %>">',
                 '   <% if(!!icon) { %><span class="fa-<%= icon %>"></span><% } %>',
                 '   <% if(!!title) { %><%= title %><% } %>',
-                '</span>'
+                '</span> '
             ].join(''),
             checkbox: [
                 '<div class="custom-checkbox">',

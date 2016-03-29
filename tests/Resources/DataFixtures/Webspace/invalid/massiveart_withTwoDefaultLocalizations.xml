@@ -53,6 +53,8 @@
 
             <localizations>
                 <localization language="en" country="us"/>
+                <localization language="en" country="ca"/>
+                <localization language="fr" country="ca"/>
             </localizations>
 
             <environments>

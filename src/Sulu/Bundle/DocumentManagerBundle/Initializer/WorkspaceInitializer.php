@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\DocumentManagerBundle\Initializer;
 
 use Doctrine\Common\Persistence\ConnectionRegistry;
-use PHPCR\NoSuchWorkspaceException;
+use PHPCR\RepositoryException;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -41,7 +41,10 @@ class WorkspaceInitializer implements InitializerInterface
             try {
                 $connection->getRootNode();
                 $output->writeln(sprintf('  [ ] <info>workspace</info>: "%s"', $workspace->getName()));
-            } catch (NoSuchWorkspaceException $e) {
+            } catch (RepositoryException $e) {
+                // TODO: We should catch the more explicit
+                // WorkspaceNotFoundException but Jackalope doctrine-dbal does
+                // not throw this: https://github.com/jackalope/jackalope-doctrine-dbal/issues/322
                 $workspace->createWorkspace($workspace->getName());
                 $output->writeln(sprintf('  [+] <info>workspace</info>: "%s"', $workspace->getName()));
             }

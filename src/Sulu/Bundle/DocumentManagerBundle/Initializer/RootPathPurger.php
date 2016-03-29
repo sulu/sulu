@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\DocumentManagerBundle\Initializer;
 
 use Doctrine\Common\Persistence\ConnectionRegistry;
+use PHPCR\RepositoryException;
 use PHPCR\SessionInterface;
 use Sulu\Component\DocumentManager\PathSegmentRegistry;
 
@@ -51,6 +52,15 @@ class RootPathPurger implements PurgerInterface
         $rootPath = '/' . $this->pathSegments->getPathSegment($this->rootRole);
 
         foreach ($sessions as $session) {
+            try {
+                $session->getRootNode();
+            } catch (RepositoryException $e) {
+                // TODO: We should catch the more explicit
+                // WorkspaceNotFoundException but Jackalope doctrine-dbal does
+                // not throw this: https://github.com/jackalope/jackalope-doctrine-dbal/issues/322
+                continue;
+            }
+
             if ($session->nodeExists($rootPath)) {
                 $session->getNode($rootPath)->remove();
                 $session->save();

@@ -152,10 +152,11 @@ define([
                     '/admin/api/media/' + curMediaId + '?action=new-version' :
                     '/admin/api/media?collection=' + this.formOptions.contactAvatarCollection;
 
+                url = url + '&locale=' + encodeURIComponent(this.sandbox.sulu.user.locale);
+                
                 // if possible, change the title of the avatar to the name of the contact
                 if (!!data.fullName) {
                     url = url + '&title=' + encodeURIComponent(data.fullName);
-                    url = url + '&locale=' + encodeURIComponent(this.sandbox.sulu.user.locale);
                 }
 
                 return url;

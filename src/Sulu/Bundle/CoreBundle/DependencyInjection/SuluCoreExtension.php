@@ -47,7 +47,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                 $phpcrConfig['backend']['check_login_on_server'] = false;
             }
 
-            foreach ($container->getExtensions() as $name => $extension) {
+            foreach (array_keys($container->getExtensions()) as $name) {
                 $prependConfig = [];
                 switch ($name) {
                     case 'doctrine_phpcr':

@@ -166,5 +166,13 @@
             <argument type="service" id="security.token_storage" on-invalid="null"/>
             <tag name="jms_serializer.event_subscriber"/>
         </service>
+
+        <service id="sulu_security.twig_extension.user.cache" class="Doctrine\Common\Cache\ArrayCache"/>
+        <service id="sulu_security.twig_extension.user" class="Sulu\Bundle\SecurityBundle\Twig\UserTwigExtension">
+            <argument type="service" id="sulu_security.twig_extension.user.cache"/>
+            <argument type="service" id="sulu.repository.user"/>
+
+            <tag name="twig.extension"/>
+        </service>
     </services>
 </container>

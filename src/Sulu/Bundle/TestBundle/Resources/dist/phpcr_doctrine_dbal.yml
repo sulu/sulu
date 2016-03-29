@@ -1,7 +1,0 @@
-sulu_core:
-    phpcr:
-        backend:
-            type: doctrinedbal
-        workspace: default
-        username: "%phpcr_username%"
-        password: "%phpcr_password%"

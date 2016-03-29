@@ -17,6 +17,8 @@
                                 {{ property.getTitle(userLocale) }}
                             </label>
 
+                            <div class="input-description">{{ property.getInfoText(userLocale) }}</div>
+
                             <div data-mapper-remove="{{ property.name }}"
                                  class="fa-times options-remove mapper-remove-{{ property.name }}"></div>
                         </div>

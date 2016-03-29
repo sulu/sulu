@@ -49,8 +49,10 @@
             </resource-locator>
 
             <localizations>
-                <localization language="en" default="true"/>
+                <localization language="en"/>
+                <localization language="en" country="us"/>
                 <localization language="de"/>
+                <localization language="de" country="at"/>
             </localizations>
 
             <environments>

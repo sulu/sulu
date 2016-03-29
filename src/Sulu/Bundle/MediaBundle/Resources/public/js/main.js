@@ -103,11 +103,17 @@ define([
                     });
                 }.bind(this));
 
-                this.sandbox.on('husky.dropzone.error', function() {
-                    var title = this.sandbox.translate('sulu.dropzone.error.title');
+                this.sandbox.on('husky.dropzone.error', function(xhr, file) {
+                    var title = this.sandbox.translate('sulu.dropzone.error.title'),
+                        message = 'sulu.dropzone.error.message';
+
                     title = title.replace('{{filename}}', this.sandbox.util.cropMiddle(file.name, 20));
 
-                    this.sandbox.emit('sulu.labels.error.show', 'sulu.dropzone.error.message', title);
+                    if(xhr.code === 5007){
+                        message ='sulu.dropzone.error.message.wrong-filetype';
+                    }
+
+                    this.sandbox.emit('sulu.labels.error.show', message, title);
                 }.bind(this));
 
                 this.sandbox.on('husky.dropzone.error.file-to-big', function(message, file) {

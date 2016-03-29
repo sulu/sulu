@@ -50,6 +50,9 @@
             <localizations>
                 <localization language="fr"/>
                 <localization language="de" country="at" default="true"/>
+                <localization language="de"/>
+                <localization language="en"/>
+                <localization language="en" country="us"/>
             </localizations>
 
             <environments>

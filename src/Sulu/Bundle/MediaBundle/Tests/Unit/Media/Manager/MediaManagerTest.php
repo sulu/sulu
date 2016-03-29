@@ -21,6 +21,8 @@ use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
@@ -242,6 +244,41 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $media = $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'my title'], 1);
 
         $this->assertEquals($fileName, $media->getName());
+    }
+
+    public function testSaveWrongVersionType()
+    {
+        $this->setExpectedException(InvalidMediaTypeException::class);
+
+        $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith(['', 1, null, null, 1, true]);
+        $uploadedFile->getClientOriginalName()->willReturn('test.pdf');
+        $uploadedFile->getPathname()->willReturn('');
+        $uploadedFile->getSize()->willReturn('123');
+        $uploadedFile->getMimeType()->willReturn('img');
+
+        $media = $this->prophesize(Media::class);
+        $media->setChanger(Argument::any())->willReturn(null);
+        $media->setChanged(Argument::any())->willReturn(null);
+
+        $mediaType = $this->prophesize(MediaType::class);
+        $mediaType->getId()->willReturn(1);
+        $media->getType()->willReturn($mediaType->reveal());
+
+        $file = $this->prophesize(File::class);
+        $file->getVersion()->willReturn(1);
+        $file->setChanger(Argument::any())->willReturn(null);
+        $file->setChanged(Argument::any())->willReturn(null);
+        $media->getFiles()->willReturn([$file->reveal()]);
+
+        $fileVersion = $this->prophesize(FileVersion::class);
+        $fileVersion->getVersion()->willReturn(1);
+        $file->getFileVersions()->willReturn([$fileVersion]);
+
+        $this->typeManager->getMediaType('img')->willReturn(2);
+
+        $this->mediaRepository->findMediaById(1)->willReturn($media);
+
+        $this->mediaManager->save($uploadedFile->reveal(), ['id' => 1], 42);
     }
 
     public function provideGetByIds()

@@ -1,16 +1,27 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.2.0-RC3 (2016-03-29)
+    * BUGFIX      #2190 [WebsiteBundle]       Fixed wrong translator locale by decorating translator
+    * ENHANCEMENT #2192 [WebsiteBundle]       Added X-Generator HTTP header for Sulu website detection
+    * ENHANCEMENT #2086 [ContentBundle]       Improved presentation of info-text
+
 * 1.2.0-RC2 (2016-03-24)
     * BUGFIX      #2183 [ContentBundle]       Added missing locale for loading route document
-    * BUGIFX      #2178 [WebsiteBundle]       Added default IP anonymization for google analytics
+    * BUGFIX      #2185 [MediaBundle]         Fixed throw exception if new version has a different media type
+    * ENHANCEMENT #2182 [ContactBundle]       Added `sulu_resolve_contact` twig function
+    * ENHANCEMENT #2182 [SecurityBundle]      Fixed `sulu_resolve_user` twig function to return a user instead of a contact
+    * BUGFIX      #2178 [WebsiteBundle]       Added default IP anonymization for google analytics
+    * ENHANCEMENT #2171 [CoreBundle]          Added validation of unused webspace locales
+    * FEATURE     #2180 [MediaBundle]         Added fallback information for media assigments
+    * BUGFIX      #2178 [WebsiteBundle]       Added default IP anonymization for google analytics
     * BUGFIX      #2171 [ContentBundle]       Fixed saving of homepage
     * BUGFIX      #2172 [CustomUrlBundle]     Added check for custom-url placeholder
     * BUGFIX      #2166 [WebsiteBundle]       Fixed analytics type change
     * ENHANCEMENT #2168 [WebsiteBundle]       Changed request to purge cache from GET to DELETE
     * BUGFIX      #2169 [CustomUrlBundle]     Fixed dropdown of custom-url target locales
     * BUGFIX      #2152 [ContentBundle]       Fixed not empty request body for delete history url
-    * BUGIFX      #2141 [ContentBundle]       Fixed page gets immediately saved after generating URL
+    * BUGFIX      #2141 [ContentBundle]       Fixed page gets immediately saved after generating URL
     * BUGFIX      #2156 [SecurityBundle]      Fixed behat context to create correct roles
     * BUGFIX      #2152 [ContentBundle]       Fixed not empty request body for delete history url 
     * BUGFIX      #2157 [CustomUrlBundle]     Fixed route-validation in request processor
@@ -41,7 +52,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2103 [MediaBundle]         Fixed upload new version for media without thumbnail
     * BUGFIX      #2100 [ContactBundle]       Fixed switching tab in contact and account after save
     * ENHANCEMENT #2097 [TranslateBundle]     Fixed translation code length in database schema
-    * BUGIFX      #2093 [ContactBundle]       Fixed auto-select new position and title
+    * BUGFIX      #2093 [ContactBundle]       Fixed auto-select new position and title
     * BUGFIX      #2094 [CategoryBundle]      Fixed maximum length of category-key
     * BUGFIX      #2082 [ContentBundle]       Fixed block type don't triggers save-button
     * ENHANCEMENT #2057 [ContentBundle]       Refactored ResourceLocator ContentType to use DocumentManager
@@ -91,7 +102,7 @@ CHANGELOG for Sulu
     * FEATURE     #1851 [ContentBundle]       Added webspace-settings
     * FEATURE     #1905 [All]                 Added french translation
     * BUGFIX      #1893 [ContentBundle]       Fixed resource locator deferred for edit
-    * BUGIFX      #1871 [ContentBundle]       Fixed url-generation and save button
+    * BUGFIX      #1871 [ContentBundle]       Fixed url-generation and save button
     * BUGFIX      #1873 [ContactBundle]       Fixed remove title and position
     * BUGFIX      #1873 [ContactBundle]       Fixed remove contact birthday
     

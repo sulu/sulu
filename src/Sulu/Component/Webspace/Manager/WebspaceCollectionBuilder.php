@@ -18,6 +18,7 @@ use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Exception\NoValidWebspaceException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidCustomUrlException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
+use Sulu\Component\Webspace\Loader\Exception\WebspaceLocalizationNotUsedException;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Segment;
@@ -137,6 +138,14 @@ class WebspaceCollectionBuilder
                     )
                 );
             } catch (InvalidCustomUrlException $e) {
+                $this->logger->warning(
+                    sprintf(
+                        'Error: "%s" in "%s". The file has been skipped.',
+                        $e->getMessage(),
+                        $file->getRealPath()
+                    )
+                );
+            } catch (WebspaceLocalizationNotUsedException $e) {
                 $this->logger->warning(
                     sprintf(
                         'Error: "%s" in "%s". The file has been skipped.',

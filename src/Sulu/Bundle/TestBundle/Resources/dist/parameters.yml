@@ -1,14 +1,15 @@
 parameters:
-    database_mysql_host:     localhost
-    database_mysql_user:     root
-    database_mysql_password: ~
-    database_mysql_port:     ~
+    database.driver:   pdo_mysql
+    database.host:     localhost
+    database.user:     root
+    database.name:     sulu_test
+    database.port:     ~
+    database.password: ~
+    database.version:  5.5
 
-    database_pgsql_host:     localhost
-    database_pgsql_user:     postgres
-    database_pgsql_password: ~
-    database_pgsql_port:     ~
+    phpcr.transport:   jackrabbit
+    phpcr.backend_url: http://localhost:8080/server/
+    phpcr.username:    admin
+    phpcr.password:    admin
+    phpcr.workspace:   test
 
-    phpcr_backend_url: http://localhost:8080/server/
-    phpcr_username:    admin
-    phpcr_password:    admin
