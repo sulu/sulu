@@ -11,7 +11,7 @@
     <services>
         <!-- request analyzer data collector -->
         <service id="sulu_website.data_collector.sulu_collector" class="%sulu_website.data_collector.sulu_collector.class%">
-            <argument type="service" id="sulu_core.webspace.request_analyzer" />
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
 
             <tag name="data_collector" template="SuluWebsiteBundle:Profiler:layout" id="sulu"/>
             <tag name="sulu.context" context="website"/>
@@ -38,6 +38,14 @@
             <argument type="service" id="liip_theme.active_theme"/>
 
             <tag name="kernel.event_listener" event="%sulu_website.engine.initialize%" method="setActiveTheme"/>
+            <tag name="sulu.context" context="website"/>
+        </service>
+
+        <service id="sulu_website.generator.event_subscriber"
+                 class="Sulu\Bundle\WebsiteBundle\EventSubscriber\GeneratorEventSubscriber">
+            <argument>%sulu.version%</argument>
+
+            <tag name="kernel.event_subscriber"/>
             <tag name="sulu.context" context="website"/>
         </service>
     </services>

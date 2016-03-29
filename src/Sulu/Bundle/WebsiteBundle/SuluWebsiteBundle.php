@@ -11,8 +11,19 @@
 
 namespace Sulu\Bundle\WebsiteBundle;
 
+use Sulu\Component\Util\SuluVersionPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SuluWebsiteBundle extends Bundle
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
+
+        $container->addCompilerPass(new SuluVersionPass());
+    }
 }
