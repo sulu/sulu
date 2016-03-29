@@ -61,13 +61,22 @@ define(function() {
         },
 
         templates = {
-            contentItem: function(id, collection, title, thumbnails) {
-                return [
+            contentItem: function(id, collection, title, thumbnails, fallbackLocale) {
+                var content = [
                     '<a href="#" class="link" data-id="', id, '" data-collection="', collection, '">',
-                    '    <img src="', thumbnails['50x50'], '"/>',
+                    '    <img src="', thumbnails['50x50'], '"/>'
+                ];
+
+                if (fallbackLocale) {
+                    content.push('    <span class="badge">', fallbackLocale, '</span>');
+                }
+                
+                content.push(
                     '    <span class="title">', title, '</span>',
                     '</a>'
-                ].join('');
+                );
+
+                return content.join('');
             }
         },
 
@@ -227,7 +236,7 @@ define(function() {
         },
 
         getItemContent: function(item) {
-            return templates.contentItem(item.id, item.collection, item.title, item.thumbnails);
+            return templates.contentItem(item.id, item.collection, item.title, item.thumbnails, item.fallbackLocale);
         },
 
         sortHandler: function(ids) {

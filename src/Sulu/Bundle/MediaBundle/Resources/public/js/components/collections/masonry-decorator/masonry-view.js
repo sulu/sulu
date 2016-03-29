@@ -80,6 +80,9 @@ define([
                 '       <img ondragstart="return false;" class="' + constants.headImageClass + '" src="<%= image %>"/>',
                 '   </div>',
                 '   <div class="masonry-info">',
+                '       <% if (!!fallbackLocale) { %>',
+                '       <span class="badge"><%= fallbackLocale %></span>',
+                '       <% } %>',
                 '       <span class="title ' + constants.actionNavigatorClass + '"><%= title %></span><br/>',
                 '       <span class="description ' + constants.actionNavigatorClass + '"><%= description %></span>',
                 '   </div>',
@@ -250,9 +253,7 @@ define([
             this.updateEmptyIndicatorVisibility();
             this.sandbox.util.foreach(records, function(record) {
                 var item = processContentFilters.call(this, record);
-                var id = item.id,
-                    image = item[this.options.fields.image].url || '',
-                    downloadUrl = item.url,
+                var image = item[this.options.fields.image].url || '',
                     title = concatRecordColumns(item, this.options.fields.title, this.options.separators.title),
                     description = concatRecordColumns(
                         item,
@@ -263,10 +264,11 @@ define([
 
                 // pass the found data to a render method
                 this.renderItem(
-                    id,
+                    item.id,
                     image,
-                    downloadUrl,
+                    item.url,
                     title,
+                    item.fallbackLocale,
                     description,
                     isVideo,
                     appendAtBottom,
@@ -284,13 +286,15 @@ define([
          * @param description
          * @param isVideo
          * @param appendAtBottom
+         * @param icon
          */
-        renderItem: function(id, image, downloadUrl, title, description, isVideo, appendAtBottom, icon) {
+        renderItem: function(id, image, downloadUrl, title, fallbackLocale, description, isVideo, appendAtBottom, icon) {
             this.$items[id] = this.sandbox.dom.createElement(
                 this.sandbox.util.template(templates.item, {
                     image: image,
                     downloadUrl: downloadUrl,
                     title: this.sandbox.util.cropMiddle(String(title), 24),
+                    fallbackLocale: fallbackLocale,
                     description: this.sandbox.util.cropMiddle(String(description), 32),
                     isVideo: isVideo,
                     selectable: this.options.selectable,

@@ -162,11 +162,12 @@ define([
                 var url = (!!curMediaId) ?
                     '/admin/api/media/' + curMediaId + '?action=new-version' :
                     '/admin/api/media?collection=' + this.formOptions.accountAvatarCollection;
+                
+                url = url + '&locale=' + encodeURIComponent(this.sandbox.sulu.user.locale);
 
                 // if possible, change the title of the logo to the name of the account
                 if (!!data.name) {
                     url = url + '&title=' + encodeURIComponent(data.name);
-                    url = url + '&locale=' + encodeURIComponent(this.sandbox.sulu.user.locale);
                 }
 
                 return url;
