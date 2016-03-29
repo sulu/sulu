@@ -56,6 +56,7 @@ class AbstractMediaController extends RestController
             'title' => $request->get('title', $fallback ? $this->getTitleFromUpload($request, 'fileVersion') : null),
             'description' => $request->get('description'),
             'copyright' => $request->get('copyright'),
+            'credits' => $request->get('credits'),
             'changer' => $request->get('changer'),
             'creator' => $request->get('creator'),
             'changed' => $request->get('changed'),

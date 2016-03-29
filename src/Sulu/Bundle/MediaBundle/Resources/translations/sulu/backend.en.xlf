@@ -222,6 +222,14 @@
                 <source>sulu.media.copyright</source>
                 <target>Copyright</target>
             </trans-unit>
+            <trans-unit id="243d88cf2f646526337ls55369f11111" resname="sulu.media.licence">
+                <source>sulu.media.licence</source>
+                <target>Licence</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f646526337ls55369f22222" resname="sulu.media.credits-information">
+                <source>sulu.media.credits-information</source>
+                <target>Media credits</target>
+            </trans-unit>
             <trans-unit id="243d88cf2f646526337ls55369f22124" resname="sulu.media.copyright-information">
                 <source>sulu.media.copyright-information</source>
                 <target>Copyright information</target>

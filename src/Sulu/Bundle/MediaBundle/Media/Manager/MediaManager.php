@@ -705,7 +705,8 @@ class MediaManager implements MediaManagerInterface
                 ($attribute === 'tags' && $value !== null) ||
                 ($attribute === 'size' && $value !== null) ||
                 ($attribute === 'description' && $value !== null) ||
-                ($attribute === 'copyright' && $value !== null)
+                ($attribute === 'copyright' && $value !== null) ||
+                ($attribute === 'credits' && $value !== null)
             ) {
                 switch ($attribute) {
                     case 'size':
@@ -719,6 +720,9 @@ class MediaManager implements MediaManagerInterface
                         break;
                     case 'copyright':
                         $media->setCopyright($value);
+                        break;
+                    case 'credits':
+                        $media->setCredits($value);
                         break;
                     case 'version':
                         $media->setVersion($value);
