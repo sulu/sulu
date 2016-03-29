@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2192 [WebsiteBundle]       Added X-Generator HTTP header for Sulu website detection
     * BUGFIX      #2183 [ContentBundle]       Added missing locale for loading route document
     * BUGFIX      #2185 [MediaBundle]         Fixed throw exception if new version has a different media type
     * ENHANCEMENT #2182 [ContactBundle]       Added `sulu_resolve_contact` twig function
