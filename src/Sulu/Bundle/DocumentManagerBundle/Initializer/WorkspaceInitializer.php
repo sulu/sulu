@@ -39,13 +39,9 @@ class WorkspaceInitializer implements InitializerInterface
             $workspace = $connection->getWorkspace();
 
             try {
-                $connection->getRootNode();
+                $workspace->createWorkspace($workspace->getName());
                 $output->writeln(sprintf('  [ ] <info>workspace</info>: "%s"', $workspace->getName()));
             } catch (RepositoryException $e) {
-                // TODO: We should catch the more explicit
-                // WorkspaceNotFoundException but Jackalope doctrine-dbal does
-                // not throw this: https://github.com/jackalope/jackalope-doctrine-dbal/issues/322
-                $workspace->createWorkspace($workspace->getName());
                 $output->writeln(sprintf('  [+] <info>workspace</info>: "%s"', $workspace->getName()));
             }
         }
