@@ -13,12 +13,6 @@
     display: block;
     padding: 15px 3px;
     border-bottom: 1px solid $grayLighter;
-}
-
-a.media-edit-link,
-.media-edit-link a {
-    color: $black;
-    text-decoration: none;
 
     .fa-cloud-download {
         display: none;
@@ -29,6 +23,16 @@ a.media-edit-link,
             display: inline-block;
         }
     }
+
+    .media-edit-copied {
+        color: $grayLight;
+    }
+}
+
+a.media-edit-link,
+.media-edit-link a {
+    color: $black;
+    text-decoration: none;
 }
 
 .media-edit-title {
@@ -108,4 +112,20 @@ a.media-edit-link,
 
 .overlay-footer .btn.media-reset-preview-action.hide {
     display: none;
+}
+
+#media-info {
+    textarea.description {
+        height: 90px;
+        min-height: 90px;
+    }
+
+    .media-info-preview {
+        text-align: center;
+
+        span.description {
+            font-size: 12px;
+            color: $grayLight;
+        }
+    }
 }

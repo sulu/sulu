@@ -197,6 +197,7 @@ define([
             $info = this.sandbox.dom.createElement(_.template(infoTemplate, {
                 media: this.media,
                 translate: this.sandbox.translate,
+                formatBytes: this.sandbox.util.formatBytes,
                 icon: fileIcons.getByMimeType(media.mimeType)
             }));
 

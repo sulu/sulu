@@ -35256,7 +35256,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
  * husky.dropdown.<<instanceName>>.hide       - hide dropdown menu
  */
 
-define('__component__$dropdown@husky',[], function() {
+define('__component__$dropdown@husky',['underscore'], function(_) {
 
     'use strict';
 
@@ -35276,9 +35276,9 @@ define('__component__$dropdown@husky',[], function() {
             instanceName: 'undefined',  // instance name
             alignment: 'left',  // alignment of the arrow and the box
             verticalAlignment: 'bottom', // alignment of the box
-            translateLabels: true   // translate labels withe globalize
+            translateLabels: true,   // translate labels withe globalize
+            clickDelay: 1000
         };
-
 
     return {
         initialize: function() {
@@ -35400,7 +35400,8 @@ define('__component__$dropdown@husky',[], function() {
         // trigger event with clicked item
         clickItem: function(id) {
             var item = this.getItemById(id),
-                $item = this.$el.find('*[data-id="' + id + '"]');
+                $item = this.$el.find('*[data-id="' + id + '"]'),
+                $infos;
 
             if (!item) {
                 return;
@@ -35418,14 +35419,16 @@ define('__component__$dropdown@husky',[], function() {
                 return this.hideDropDown();
             }
 
+            $infos = $item.find('.info, .info-clicked');
             $item.addClass('highlight-animation');
-            $item.find('.info, .info-clicked').addClass('clicked');
+            $infos.addClass('clicked');
 
             _.delay(function() {
                 $item.removeClass('highlight-animation');
-                $item.find('.info, .info-clicked').removeClass('clicked');
+                $infos.removeClass('clicked');
+
                 return this.hideDropDown();
-            }.bind(this), 1000);
+            }.bind(this), this.options.clickDelay);
         },
 
         getItemById: function(id) {
@@ -35439,8 +35442,9 @@ define('__component__$dropdown@husky',[], function() {
 
         // trigger click event handler toggles the dropDown
         triggerClick: function(event) {
-            if ($(event.target).hasClass('husky-dropdown-item')
-                || $(event.target).parents().hasClass('husky-dropdown-item')
+            var $target = $(event.target);
+            if ($target.hasClass('husky-dropdown-item')
+                || $target.parents().hasClass('husky-dropdown-item')
             ) {
                 return;
             }
@@ -35535,6 +35539,7 @@ define('__component__$dropdown@husky',[], function() {
                     result = false;
                 }
             }.bind(this));
+
             return result;
         },
 
@@ -35574,22 +35579,18 @@ define('__component__$dropdown@husky',[], function() {
 
         // hide dropDown
         hideDropDown: function(event) {
-            // ignore it if the target is children of trigger but not children of item
-            if (!!event
-                && ((
-                    $(event.target).hasClass('husky-dropdown-trigger')
-                    || $(event.target).parents().hasClass('husky-dropdown-trigger')
-                )
-                && !(
-                    $(event.target).hasClass('husky-dropdown-item')
-                    || $(event.target).parents().hasClass('husky-dropdown-item')
-                )
-                || $(event.target).hasClass('highlight-animation')
-                || $(event.target).parents().hasClass('highlight-animation'))
-            ) {
-                this.sandbox.dom.one(this.sandbox.dom.window, 'click', this.hideDropDown.bind(this));
+            // do not hide if the target is children of trigger but not children of item or the element was highlighted
+            // reapply the hide listener
+            if (!!event) {
+                var $target = $(event.target);
 
-                return;
+                if ($target.is('.husky-dropdown-trigger:not(.husky-dropdown-item), .highlight-animation')
+                    || $target.parents().is('.husky-dropdown-trigger:not(.husky-dropdown-item), .highlight-animation')
+                ) {
+                    this.sandbox.dom.one(this.sandbox.dom.window, 'click', this.hideDropDown.bind(this));
+
+                    return;
+                }
             }
 
             this.sandbox.logger.log(this.name, 'hide dropdown');
