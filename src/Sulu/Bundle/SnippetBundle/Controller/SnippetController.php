@@ -457,7 +457,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
                 );
                 $data['structures'][] = $content->toArray();
             } else {
-                $data['other'] = $reference->getPath();
+                $data['other'][] = $reference->getParent()->getPath();
             }
         }
 
