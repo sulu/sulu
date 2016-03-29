@@ -29,7 +29,7 @@ class ContactAdmin extends Admin
         $this->securityChecker = $securityChecker;
 
         $rootNavigationItem = new NavigationItem($title);
-        $section = new NavigationItem('');
+        $section = new NavigationItem('navigation.modules');
         $section->setPosition(20);
 
         $contacts = new NavigationItem('navigation.contacts');

@@ -53,7 +53,7 @@ class WebsiteAdmin extends Admin
         $this->securityChecker = $securityChecker;
 
         $rootNavigationItem = new NavigationItem($title);
-        $section = new NavigationItem('');
+        $section = new NavigationItem('navigation.modules');
         $section->setPosition(20);
 
         if ($this->checkLivePermissionForAllWebspaces()) {

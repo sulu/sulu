@@ -12,6 +12,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2199 [SnippetBundle]       Fixed syntax mistake in snippet-controller
     * ENHANCEMENT #2204 [WebsiteBundle]       Enhanced custom-route creation 
     * FEATURE     #2201 [All]                 Added collaboration message to all sulu core-bundles
+    * ENHANCEMENT #2196 [AdminBundle]         Restructured admin-navigation
     * BUGFIX      #2190 [WebsiteBundle]       Fixed wrong translator locale by decorating translator
     * ENHANCEMENT #2192 [WebsiteBundle]       Added X-Generator HTTP header for Sulu website detection
     * ENHANCEMENT #2125 [All]                 Upgraded to DoctrinePHPCRBundle 1.3
