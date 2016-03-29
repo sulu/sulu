@@ -294,7 +294,7 @@ define([
                 },
                 {
                     el: this.$find(constants.datagridSelector),
-                    url: '/admin/api/media?orderBy=media.changed&orderSort=DESC&locale=' + UserSettingsManager.getMediaLocale() + '&collection=' + this.options.id,
+                    url: '/admin/api/media?orderBy=media.created&orderSort=desc&locale=' + UserSettingsManager.getMediaLocale() + '&collection=' + this.options.id,
                     view: view,
                     pagination: UserSettingsManager.getMediaListPagination(),
                     resultKey: 'media',
