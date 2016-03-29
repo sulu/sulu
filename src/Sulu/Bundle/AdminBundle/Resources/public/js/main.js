@@ -88,9 +88,14 @@ require(['husky', 'app-config'], function(Husky, AppConfig) {
         locale = fallbackLocale;
     }
 
-    require(['text!/admin/bundles', 'text!/admin/translations/sulu.' + locale + '.json'], function(text, messagesText) {
+    require([
+        'text!/admin/bundles',
+        'text!/admin/translations/sulu.' + locale + '.json',
+        'text!/admin/translations/sulu.' + fallbackLocale + '.json'
+    ], function(text, messagesText, defaultMessagesText) {
         var bundles = JSON.parse(text),
-            messages = JSON.parse(messagesText);
+            messages = JSON.parse(messagesText),
+            defaultMessages = JSON.parse(defaultMessagesText);
 
         app = new Husky({
             debug: {
@@ -98,7 +103,8 @@ require(['husky', 'app-config'], function(Husky, AppConfig) {
             },
             culture: {
                 name: locale,
-                messages: messages
+                messages: messages,
+                defaultMessages: defaultMessages
             }
         });
 

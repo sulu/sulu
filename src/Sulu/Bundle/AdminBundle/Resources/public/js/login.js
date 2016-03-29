@@ -64,7 +64,8 @@ require(['husky'], function(Husky) {
             },
             culture: {
                 name: language,
-                messages: messages
+                messages: messages,
+                defaultMessages: {}
             }
         });
 
