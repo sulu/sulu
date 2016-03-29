@@ -126,17 +126,29 @@ class WebspaceInitializerTest extends \PHPUnit_Framework_TestCase
         $this->documentManager->persist(
             Argument::type(HomeDocument::class),
             'de',
-            ['path' => '/cmf/webspace1/contents', 'auto_create' => true]
+            [
+                'path' => '/cmf/webspace1/contents',
+                'auto_create' => true,
+                'ignore_required' => true,
+            ]
         )->shouldBeCalled();
         $this->documentManager->persist(
             Argument::type(HomeDocument::class),
             'en',
-            ['path' => '/cmf/webspace1/contents', 'auto_create' => true]
+            [
+                'path' => '/cmf/webspace1/contents',
+                'auto_create' => true,
+                'ignore_required' => true,
+            ]
         )->shouldBeCalled();
         $this->documentManager->persist(
             Argument::type(HomeDocument::class),
             'de',
-            ['path' => '/cmf/webspace2/contents', 'auto_create' => true]
+            [
+                'path' => '/cmf/webspace2/contents',
+                'auto_create' => true,
+                'ignore_required' => true,
+            ]
         )->shouldBeCalled();
 
         $this->documentManager->persist(
