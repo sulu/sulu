@@ -336,7 +336,8 @@ define([
                     options: {
                         el: this.$find(constants.dropzoneSelector),
                         maxFilesize: Config.get('sulu-media').maxFilesize,
-                        url: '/admin/api/media?collection=' + this.options.id,
+                        url: '/admin/api/media?collection=' + this.options.id
+                            + '&locale=' + UserSettingsManager.getMediaLocale(),
                         method: 'POST',
                         paramName: 'fileVersion',
                         instanceName: this.options.instanceName

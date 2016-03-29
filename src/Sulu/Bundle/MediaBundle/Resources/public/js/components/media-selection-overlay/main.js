@@ -299,7 +299,7 @@ define([
         changeUploadCollection = function(collectionId) {
             this.sandbox.emit(
                 'husky.dropzone.media-selection-overlay.' + this.options.instanceName + '.change-url',
-                '/admin/api/media?collection=' + collectionId
+                '/admin/api/media?collection=' + collectionId + '&locale=' + this.options.locale
             );
         },
 
@@ -479,7 +479,7 @@ define([
                         options: {
                             el: this.$el.find('.media-selection-overlay-dropzone-container'),
                             maxFilesize: Config.get('sulu-media').maxFilesize,
-                            url: '/admin/api/media',
+                            url: '/admin/api/media?locale=' + this.options.locale,
                             method: 'POST',
                             paramName: 'fileVersion',
                             instanceName: 'media-selection-overlay.' + this.options.instanceName,
