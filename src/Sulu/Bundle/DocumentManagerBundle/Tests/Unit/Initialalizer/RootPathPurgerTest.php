@@ -13,6 +13,7 @@ namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Initialalizer;
 
 use Doctrine\Common\Persistence\ConnectionRegistry;
 use PHPCR\NodeInterface;
+use PHPCR\RepositoryException;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\RootPathPurger;
 use Sulu\Component\DocumentManager\PathSegmentRegistry;
@@ -74,7 +75,38 @@ class RootPathPurgerTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->segmentRegistry->getPathSegment('root')->willReturn('baff');
 
+        // we attempt to access the root node only to assert that the workspace
+        // exists.
+        $this->session1->getRootNode()->shouldBeCalled();
+        $this->session2->getRootNode()->shouldBeCalled();
+
         $this->session1->nodeExists('/baff')->willReturn(false);
+        $this->session2->nodeExists('/baff')->willReturn(true);
+        $this->session2->getNode('/baff')->willReturn($this->node->reveal());
+        $this->node->remove()->shouldBeCalled();
+        $this->session2->save()->shouldBeCalled();
+
+        $this->purger->purge();
+    }
+
+    /**
+     * It should skip purging if the workspace does not exist.
+     */
+    public function testDoNotPurgeWorkspaceNotFound()
+    {
+        $this->connectionRegistry->getConnections()->willReturn([
+            $this->session1->reveal(),
+            $this->session2->reveal(),
+        ]);
+        $this->segmentRegistry->getPathSegment('root')->willReturn('baff');
+
+        // throw a repository exception because the workspace does not exist
+        $this->session1->getRootNode()->willThrow(new RepositoryException('Foo'));
+
+        // session 2 is fine however
+        $this->session2->getRootNode()->shouldBeCalled();
+
+        $this->session1->nodeExists('/baff')->shouldNotBeCalled();
         $this->session2->nodeExists('/baff')->willReturn(true);
         $this->session2->getNode('/baff')->willReturn($this->node->reveal());
         $this->node->remove()->shouldBeCalled();
