@@ -40,8 +40,8 @@ class XmlLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Default EN', $blockTypes[0]->getTitle('en'));
         $this->assertEquals('Test DE', $blockTypes[1]->getTitle('de'));
         $this->assertEquals('Test EN', $blockTypes[1]->getTitle('en'));
-
-        // TODO also check info_text and placeholder (or are they not necessary at all?)
+        $this->assertEquals('Info Block1 DE', $blockTypes[1]->getDescription('de'));
+        $this->assertEquals('Info Block1 EN', $blockTypes[1]->getDescription('en'));
     }
 
     public function testLoadBlockTypeWithoutMeta()
