@@ -102,12 +102,14 @@ class StructureSubscriber implements EventSubscriberInterface
             [
                 'load_ghost_content' => true,
                 'clear_missing_content' => false,
+                'ignore_required' => false,
             ]
         );
         $options->setAllowedTypes(
             [
                 'load_ghost_content' => 'bool',
                 'clear_missing_content' => 'bool',
+                'ignore_required' => 'bool',
             ]
         );
     }
@@ -203,8 +205,9 @@ class StructureSubscriber implements EventSubscriberInterface
 
         $node = $event->getNode();
         $locale = $event->getLocale();
+        $options = $event->getOptions();
 
-        $this->mapContentToNode($document, $node, $locale);
+        $this->mapContentToNode($document, $node, $locale, $options['ignore_required']);
 
         $node->setProperty(
             $this->getStructureTypePropertyName($document, $locale),
@@ -248,10 +251,11 @@ class StructureSubscriber implements EventSubscriberInterface
      * @param mixed $document
      * @param NodeInterface $node
      * @param string $locale
+     * @param bool $ignoreRequired
      *
      * @throws MandatoryPropertyException
      */
-    private function mapContentToNode($document, NodeInterface $node, $locale)
+    private function mapContentToNode($document, NodeInterface $node, $locale, $ignoreRequired)
     {
         $structure = $document->getStructure();
         $webspaceName = $this->inspector->getWebspace($document);
@@ -261,7 +265,7 @@ class StructureSubscriber implements EventSubscriberInterface
             $realProperty = $structure->getProperty($propertyName);
             $value = $realProperty->getValue();
 
-            if ($structureProperty->isRequired() && null === $value) {
+            if (false === $ignoreRequired && $structureProperty->isRequired() && null === $value) {
                 throw new MandatoryPropertyException(
                     sprintf(
                         'Property "%s" in structure "%s" is required but no value was given. Loaded from "%s"',

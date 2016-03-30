@@ -91,9 +91,10 @@ class WebspaceInitializer implements InitializerInterface
             ]);
             $existingLocales = $this->inspector->getLocales($homeDocument);
         } else {
+            $homeType = $webspace->getTheme()->getDefaultTemplate('homepage');
             $homeDocument = new HomeDocument();
             $homeDocument->setTitle('Homepage');
-            $homeDocument->setStructureType($webspace->getTheme()->getDefaultTemplate('homepage'));
+            $homeDocument->setStructureType($homeType);
             $homeDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
             $existingLocales = [];
         }
@@ -104,7 +105,7 @@ class WebspaceInitializer implements InitializerInterface
                 continue;
             }
 
-            $output->writeln(sprintf('  [+] <info>homepage</info>: %s (%s)', $homePath, $webspaceLocale));
+            $output->writeln(sprintf('  [+] <info>homepage</info>: [%s] %s (%s)', $homeType, $homePath, $webspaceLocale));
 
             $routePath = $routesPath . '/' . $webspaceLocale;
             try {
@@ -116,6 +117,7 @@ class WebspaceInitializer implements InitializerInterface
             $this->documentManager->persist($homeDocument, $webspaceLocale, [
                 'path' => $homePath,
                 'auto_create' => true,
+                'ignore_required' => true,
             ]);
 
             $routeDocument->setTargetDocument($homeDocument);
