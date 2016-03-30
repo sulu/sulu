@@ -14,8 +14,10 @@ use FOS\RestBundle\Controller\Annotations\RouteResource;
 use Hateoas\Representation\CollectionRepresentation;
 use Hateoas\Representation\RouteAwareRepresentation;
 use JMS\Serializer\SerializationContext;
+use Sulu\Bundle\CustomUrlBundle\Admin\CustomUrlAdmin;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -24,7 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @RouteResource("custom-urls")
  */
-class CustomUrlController extends RestController
+class CustomUrlController extends RestController implements SecuredControllerInterface
 {
     use RequestParametersTrait;
 
@@ -192,5 +194,16 @@ class CustomUrlController extends RestController
         $this->get('sulu_document_manager.document_manager')->flush();
 
         return $this->handleView($this->view());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSecurityContext()
+    {
+        $request = $this->container->get('request_stack')->getCurrentRequest();
+
+         return CustomUrlAdmin::getCustomUrlSecurityContext($request->get('webspaceKey'));
+
     }
 }
