@@ -10203,16 +10203,20 @@ a.btn-black, a.btn-highlight {
   top: auto;
   bottom: -3px;
 }
-/* line 158, ../scss/modules/select.scss */
+/* line 156, ../scss/modules/select.scss */
+.husky-select-container.small .husky-select-label {
+  min-height: 20px;
+}
+/* line 162, ../scss/modules/select.scss */
 .husky-select-container.white .dropdown-label {
   background: #fff;
 }
-/* line 164, ../scss/modules/select.scss */
+/* line 168, ../scss/modules/select.scss */
 .husky-select-container.action .dropdown-label {
   background: #52B6CA;
   color: #fff;
 }
-/* line 170, ../scss/modules/select.scss */
+/* line 174, ../scss/modules/select.scss */
 .husky-select-container select {
   opacity: 0;
   position: absolute;
