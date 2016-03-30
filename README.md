@@ -1,5 +1,7 @@
 # Sulu
 
+[![Join the chat at https://gitter.im/sulu-io/sulu](https://badges.gitter.im/sulu-io/sulu.svg)](https://gitter.im/sulu-io/sulu?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![](https://travis-ci.org/sulu-io/sulu.png?branch=develop)](https://travis-ci.org/sulu-io/sulu)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/sulu-io/sulu/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/sulu-io/sulu/?branch=develop)
 
