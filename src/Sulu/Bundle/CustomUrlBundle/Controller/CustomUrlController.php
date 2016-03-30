@@ -203,7 +203,6 @@ class CustomUrlController extends RestController implements SecuredControllerInt
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
 
-         return CustomUrlAdmin::getCustomUrlSecurityContext($request->get('webspaceKey'));
-
+        return CustomUrlAdmin::getCustomUrlSecurityContext($request->get('webspaceKey'));
     }
 }

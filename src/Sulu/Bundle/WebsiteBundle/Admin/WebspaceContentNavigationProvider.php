@@ -42,7 +42,7 @@ class WebspaceContentNavigationProvider implements ContentNavigationProviderInte
         ) {
             return [];
         }
-        
+
         $analytics = new ContentNavigationItem('content-navigation.webspace.analytics');
         $analytics->setId('tab-analytics');
         $analytics->setAction('analytics');

@@ -114,7 +114,7 @@ define(['underscore', 'config', 'text!./skeleton.html'], function(_, Config, ske
                 buttons.deleteSelected = {};
             }
 
-            if (!!security.add || !!security.delete) {
+            if (!_.isEmpty(buttons)) {
                 components.push({
                     name: 'list-toolbar@suluadmin',
                     options: {

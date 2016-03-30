@@ -8,10 +8,11 @@
  */
 
 define([
+    'underscore',
     'config',
     'text!./skeleton.html',
     'services/sulucustomurl/custom-url-manager'
-], function(Config, skeleton, CustomUrlManager) {
+], function(_, Config, skeleton, CustomUrlManager) {
 
     'use strict';
 
@@ -161,7 +162,7 @@ define([
                 buttons.deleteSelected = {options: {callback: this.del.bind(this)}};
             }
 
-            if (!!security.add || !!security.delete) {
+            if (!_.isEmpty(buttons)) {
                 components.push({
                     name: 'list-toolbar@suluadmin',
                     options: {

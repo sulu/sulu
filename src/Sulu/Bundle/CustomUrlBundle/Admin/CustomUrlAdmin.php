@@ -39,7 +39,7 @@ class CustomUrlAdmin extends Admin
      * @var WebspaceManagerInterface
      */
     private $webspaceManager;
-    
+
     public function __construct($title, WebspaceManagerInterface $webspaceManager)
     {
         $rootNavigationItem = new NavigationItem($title);
@@ -55,12 +55,13 @@ class CustomUrlAdmin extends Admin
     {
         return 'sulucustomurl';
     }
+
     /**
          * {@inheritdoc}
          */
     public function getSecurityContexts()
-     {
-         $webspaceContexts = [];
+    {
+        $webspaceContexts = [];
          /* @var Webspace $webspace */
          foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
              $webspaceContexts[self::getCustomUrlSecurityContext($webspace->getKey())] = [
@@ -71,10 +72,10 @@ class CustomUrlAdmin extends Admin
              ];
          }
 
-         return [
+        return [
              'Sulu' => [
                  'Webspace Settings' => $webspaceContexts,
              ],
          ];
-     }
+    }
 }

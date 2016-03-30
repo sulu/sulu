@@ -12,9 +12,12 @@ namespace Sulu\Bundle\SnippetBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,6 +40,12 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
     {
         $defaults = $this->getBooleanRequestParameter($request, 'defaults');
         $webspaceKey = $this->getRequestParameter($request, 'webspace', $defaults);
+        if ($defaults) {
+            $this->get('sulu_security.security_checker')->checkPermission(
+                new SecurityCondition(SnippetAdmin::getDefaultSnippetsSecurityContext($webspaceKey)),
+                PermissionTypes::VIEW
+            );
+        }
 
         $defaultSnippetManager = $this->get('sulu_snippet.default_snippet.manager');
 
@@ -79,8 +88,13 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
      */
     public function putDefaultAction($key, Request $request)
     {
-        $default = $request->get('default');
         $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
+        $this->get('sulu_security.security_checker')->checkPermission(
+            new SecurityCondition(SnippetAdmin::getDefaultSnippetsSecurityContext($webspaceKey)),
+            PermissionTypes::EDIT
+        );
+
+        $default = $request->get('default');
 
         $type = $this->get('sulu.content.structure_manager')->getStructure($key, Structure::TYPE_SNIPPET);
         $defaultSnippet = $this->get('sulu_snippet.default_snippet.manager')->save(
@@ -111,6 +125,10 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
     public function deleteDefaultAction($key, Request $request)
     {
         $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
+        $this->get('sulu_security.security_checker')->checkPermission(
+            new SecurityCondition(SnippetAdmin::getDefaultSnippetsSecurityContext($webspaceKey)),
+            PermissionTypes::EDIT
+        );
 
         $type = $this->get('sulu.content.structure_manager')->getStructure($key, Structure::TYPE_SNIPPET);
         $this->get('sulu_snippet.default_snippet.manager')->remove($webspaceKey, $key);

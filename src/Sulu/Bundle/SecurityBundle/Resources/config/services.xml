@@ -156,6 +156,7 @@
         <service id="sulu_security.serializer.handler.secured_entity" class="Sulu\Component\Security\Serializer\Subscriber\SecuredEntitySubscriber">
             <argument type="service" id="sulu_security.access_control_manager"/>
             <argument type="service" id="security.token_storage"/>
+
             <tag name="jms_serializer.event_subscriber" />
             <tag name="sulu.context" context="admin"/>
         </service>
@@ -164,6 +165,7 @@
                  class="Sulu\Bundle\SecurityBundle\Serializer\Subscriber\SecuritySubscriber">
             <argument type="service" id="sulu_security.access_control_manager"/>
             <argument type="service" id="security.token_storage" on-invalid="null"/>
+
             <tag name="jms_serializer.event_subscriber"/>
         </service>
 
@@ -182,6 +184,7 @@
             <argument type="service" id="security.token_storage"/>
 
             <tag name="sulu.js_config"/>
+            <tag name="sulu.context" context="admin"/>
         </service>
     </services>
 </container>
