@@ -65,7 +65,8 @@ require.config({
         '*': {
             'css': 'vendor/require-css/css'
         }
-    }
+    },
+    urlArgs: 'v=develop'
 });
 
 define('underscore', function() {
