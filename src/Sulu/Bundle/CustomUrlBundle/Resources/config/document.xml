@@ -50,5 +50,10 @@
         <service id="sulu_custom_urls.domain_generator" class="Sulu\Component\CustomUrl\Generator\Generator">
             <argument type="service" id="sulu_core.webspace.webspace_manager.url_replacer"/>
         </service>
+
+        <service id="sulu_custom_urls.url_provider" class="Sulu\Component\CustomUrl\WebspaceCustomUrlProvider">
+            <argument type="service" id="sulu_custom_urls.manager"/>
+            <tag name="sulu.webspace.url_provider"/>
+        </service>
     </services>
 </container>

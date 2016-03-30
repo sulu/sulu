@@ -46,5 +46,13 @@
         <service id="sulu_core.webspace.settings_manager" class="Sulu\Component\Webspace\Settings\SettingsManager">
             <argument type="service" id="sulu.phpcr.session"/>
         </service>
+
+        <service id="sulu_core.webspace.url_provider" class="Sulu\Component\Webspace\Url\WebspaceUrlChainProvider">
+            <argument type="collection"/>
+        </service>
+
+        <service id="sulu_core.webspace.url_provider.default" class="Sulu\Component\Webspace\Url\WebspaceUrlProvider">
+            <tag name="sulu.webspace.url_provider"/>
+        </service>
     </services>
 </container>

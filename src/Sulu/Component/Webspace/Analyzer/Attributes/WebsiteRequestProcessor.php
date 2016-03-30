@@ -68,7 +68,14 @@ class WebsiteRequestProcessor extends AbstractRequestProcessor
             }
         );
 
-        return $this->processPortalInformation($request, reset($portalInformations));
+        /** @var PortalInformation $portalInformation */
+        $portalInformation = reset($portalInformations);
+
+        return $this->processPortalInformation(
+            $request,
+            $portalInformation,
+            ['urlExpression' => $portalInformation->getUrlExpression()]
+        );
     }
 
     /**

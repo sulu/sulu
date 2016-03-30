@@ -42,6 +42,15 @@ interface CustomUrlManagerInterface
     public function findList($webspaceKey, $locale);
 
     /**
+     * Returns a list of custom-urls.
+     *
+     * @param string $webspaceKey
+     *
+     * @return string[]
+     */
+    public function findUrls($webspaceKey);
+
+    /**
      * Returns a single custom-url object identified by uuid.
      *
      * @param string $uuid
