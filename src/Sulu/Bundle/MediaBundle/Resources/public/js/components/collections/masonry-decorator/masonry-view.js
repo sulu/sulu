@@ -182,7 +182,7 @@ define([
             this.initializeMasonryGrid();
             this.bindGeneralDomEvents();
 
-            this.renderRecords(data.embedded);
+            this.renderRecords(data.embedded, true);
             this.rendered = true;
         },
 
