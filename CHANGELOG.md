@@ -7,6 +7,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1980 [MediaBundle]         Sort assets by created date descending in lists
     * BUGFIX      #2193 [ContentBundle]       Ignore required properties on homepages during initialization.
     * BUGFIX      #2199 [SnippetBundle]       Fixed syntax mistake in snippet-controller
+    * ENHANCEMENT #2204 [WebsiteBundle]       Enhanced custom-route creation 
     * BUGFIX      #2190 [WebsiteBundle]       Fixed wrong translator locale by decorating translator
     * ENHANCEMENT #2192 [WebsiteBundle]       Added X-Generator HTTP header for Sulu website detection
     * ENHANCEMENT #2125 [All]                 Upgraded to DoctrinePHPCRBundle 1.3

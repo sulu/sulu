@@ -73,6 +73,10 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
                 'get' => $requestAnalyzer->getGetParameters(),
                 'post' => $requestAnalyzer->getPostParameters(),
                 'analyticsKey' => $requestAnalyzer->getAnalyticsKey(),
+                'routeParameters' => [
+                    'host' => $requestAnalyzer->getPortalInformation()->getHost(),
+                    'prefix' => $requestAnalyzer->getPortalInformation()->getPrefix(),
+                ],
             ],
         ];
     }
@@ -83,24 +87,28 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
     public function resolveForPreview($webspaceKey, $locale)
     {
         // take first portal url
-        $portalInformation = $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale(
+        $portalInformations = $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale(
             $webspaceKey,
             $locale,
             $this->environment
         );
-        $portalUrl = array_keys($portalInformation)[0];
+        $portalInformation = array_values($portalInformations)[0];
 
         return [
             'request' => [
                 'webspaceKey' => $webspaceKey,
                 'locale' => $locale,
                 'defaultLocale' => $locale,
-                'portalUrl' => $portalUrl,
+                'portalUrl' => $portalInformation->getUrl(),
                 'resourceLocatorPrefix' => '',
                 'resourceLocator' => '',
                 'get' => $this->requestStack->getCurrentRequest()->query->all(),
                 'post' => $this->requestStack->getCurrentRequest()->request->all(),
                 'analyticsKey' => $this->previewDefaults['analyticsKey'],
+                'routeParameters' => [
+                    'host' => $portalInformation->getHost(),
+                    'prefix' => ltrim($portalInformation->getPrefix(), '/'),
+                ],
             ],
         ];
     }

@@ -2,6 +2,22 @@
 
 ## dev-develop
 
+### Custom-Routes
+
+The naming of the custom-routes with `type: portal` has changed. You can use now the configured name 
+and pass the host and prefix in the parameter. The current parameter will be populated in the variable
+`request.routeParameters`.
+
+__before:__
+```
+{{ path(request.portalUrl ~'.'~ request.locale ~ '.website_search') }}
+```
+
+__after:__
+```
+{{ path('website_search', request.routeParameters) }}
+```
+
 ### Twig function `sulu_resolve_user`
 
 This twig function returns now the user. To get the related contact use following code snippet:
