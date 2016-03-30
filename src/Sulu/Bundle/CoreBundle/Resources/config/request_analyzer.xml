@@ -22,6 +22,7 @@
                  class="Sulu\Component\Webspace\Analyzer\Attributes\WebsiteRequestProcessor">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu.content.mapper"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager.url_replacer"/>
             <argument type="string">%kernel.environment%</argument>
 
             <tag name="sulu.context" context="website"/>

@@ -14,6 +14,7 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Webspace\Analyzer\Exception\UrlMatchNotFoundException;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\PortalInformation;
+use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -36,13 +37,20 @@ class WebsiteRequestProcessor extends AbstractRequestProcessor
      */
     private $environment;
 
+    /**
+     * @var ReplacerInterface
+     */
+    private $replacer;
+
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
         ContentMapperInterface $contentMapper,
+        ReplacerInterface $replacer,
         $environment
     ) {
         $this->webspaceManager = $webspaceManager;
         $this->contentMapper = $contentMapper;
+        $this->replacer = $replacer;
         $this->environment = $environment;
     }
 
@@ -52,6 +60,14 @@ class WebsiteRequestProcessor extends AbstractRequestProcessor
     public function process(Request $request, RequestAttributes $requestAttributes)
     {
         $url = $request->getHost() . $request->getPathInfo();
+        $urlInfo = parse_url($request->getScheme() . '://' . $url);
+        foreach ($this->webspaceManager->getPortalInformations($this->environment) as $portalInformation) {
+            $portalUrl = $this->replacer->replaceHost($portalInformation->getUrl(), $urlInfo['host']);
+            $portalInformation->setUrl($portalUrl);
+            $portalRedirect = $this->replacer->replaceHost($portalInformation->getRedirect(), $urlInfo['host']);
+            $portalInformation->setRedirect($portalRedirect);
+        }
+
         $portalInformations = $this->webspaceManager->findPortalInformationsByUrl(
             $url,
             $this->environment

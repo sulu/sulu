@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Webspace\Tests\Unit\Analyzer\Attributes;
 
+use Prophecy\Argument;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
@@ -20,6 +21,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
+use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,21 +43,23 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
      */
     private $contentMapper;
 
+    /**
+     * @var ReplacerInterface
+     */
+    private $replacer;
+
     public function setUp()
     {
-        $this->webspaceManager = $this->getMockForAbstractClass(
-            WebspaceManagerInterface::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['findPortalInformationByUrl']
-        );
-
+        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->contentMapper = $this->prophesize(ContentMapperInterface::class);
+        $this->replacer = $this->prophesize(ReplacerInterface::class);
 
-        $this->provider = new WebsiteRequestProcessor($this->webspaceManager, $this->contentMapper->reveal(), 'prod');
+        $this->provider = new WebsiteRequestProcessor(
+            $this->webspaceManager->reveal(),
+            $this->contentMapper->reveal(),
+            $this->replacer->reveal(),
+            'prod'
+        );
     }
 
     public function provideAnalyze()
@@ -261,6 +265,69 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['get' => 1], $attributes->getAttribute('getParameter'));
     }
 
+    public function testProcessHostReplacer()
+    {
+        $webspace = new Webspace();
+        $webspace->setKey('sulu');
+
+        $portal = new Portal();
+        $portal->setKey('sulu');
+
+        $localization = new Localization();
+        $localization->setCountry('at');
+        $localization->setLanguage('de');
+
+        $portalInformation1 = new PortalInformation(
+            RequestAnalyzerInterface::MATCH_TYPE_FULL,
+            $webspace,
+            $portal,
+            $localization,
+            '{host}',
+            null,
+            '{host}/de'
+        );
+
+        $portalInformation2 = new PortalInformation(
+            RequestAnalyzerInterface::MATCH_TYPE_FULL,
+            $webspace,
+            $portal,
+            $localization,
+            '{host}/de'
+        );
+
+        $portalInformation3 = new PortalInformation(
+            RequestAnalyzerInterface::MATCH_TYPE_FULL,
+            $webspace,
+            $portal,
+            $localization,
+            'sulu.io/de'
+        );
+
+        $this->webspaceManager->findPortalInformationsByUrl(Argument::any(), 'prod')
+            ->willReturn([$portalInformation1]);
+        $this->webspaceManager->getPortalInformations('prod')
+            ->willReturn([$portalInformation1, $portalInformation2, $portalInformation3]);
+
+        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
+        $request->request = new ParameterBag(['post' => 1]);
+        $request->query = new ParameterBag(['get' => 1]);
+        $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
+        $request->expects($this->any())->method('getPathInfo')->will($this->returnValue('/test'));
+        $request->expects($this->any())->method('getScheme')->will($this->returnValue('http'));
+
+        $this->replacer->replaceHost(null, 'sulu.lo')->willReturn(null);
+        $this->replacer->replaceHost('{host}', 'sulu.lo')->willReturn('sulu.lo');
+        $this->replacer->replaceHost('{host}/de', 'sulu.lo')->willReturn('sulu.lo/de');
+        $this->replacer->replaceHost('sulu.io/de', 'sulu.lo')->willReturn('sulu.io/de');
+
+        $attributes = $this->provider->process($request, new RequestAttributes());
+
+        $this->assertEquals('sulu.lo', $attributes->getAttribute('portalInformation')->getUrl());
+        $this->assertEquals('sulu.lo', $portalInformation1->getUrl());
+        $this->assertEquals('sulu.lo/de', $portalInformation2->getUrl());
+        $this->assertEquals('sulu.io/de', $portalInformation3->getUrl());
+    }
+
     public function provideAnalyzeData()
     {
         $portalInformation = $this->prophesize(PortalInformation::class);
@@ -292,8 +359,8 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
      */
     protected function prepareWebspaceManager($portalInformation)
     {
-        $this->webspaceManager->expects($this->any())->method('findPortalInformationsByUrl')->will(
-            $this->returnValue([$portalInformation])
-        );
+        $this->webspaceManager->findPortalInformationsByUrl(Argument::any(), Argument::any())
+            ->willReturn([$portalInformation]);
+        $this->webspaceManager->getPortalInformations(Argument::any())->willReturn([]);
     }
 }

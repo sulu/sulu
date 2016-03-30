@@ -19,6 +19,7 @@ interface ReplacerInterface
     const REPLACER_COUNTRY = '{country}';
     const REPLACER_LOCALIZATION = '{localization}';
     const REPLACER_SEGMENT = '{segment}';
+    const REPLACER_HOST = '{host}';
 
     /**
      * Returns true if language replacer exists.
@@ -97,6 +98,25 @@ interface ReplacerInterface
     public function replaceSegment($url, $segment);
 
     /**
+     * Returns true if host replacer exists.
+     *
+     * @param string $url
+     *
+     * @return bool
+     */
+    public function hasHostReplacer($url);
+
+    /**
+     * Replace host with given value.
+     *
+     * @param string $url
+     * @param string $host
+     *
+     * @return string
+     */
+    public function replaceHost($url, $host);
+
+    /**
      * Replace replacer with given value.
      *
      * @param string $url
@@ -111,10 +131,11 @@ interface ReplacerInterface
      * Removes all replacers.
      *
      * @param string $url
+     * @param array $replacers
      *
      * @return string
      */
-    public function cleanup($url);
+    public function cleanup($url, array $replacers = null);
 
     /**
      * Appends localization replacer to url.

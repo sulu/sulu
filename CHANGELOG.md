@@ -20,6 +20,7 @@ CHANGELOG for Sulu
     * FEATURE     #2201 [All]                 Added collaboration message to all sulu core-bundles
     * ENHANCEMENT #2196 [AdminBundle]         Restructured admin-navigation
     * FEATURE     #2197 [MediaBundle]         Added media field credits
+    * FEATURE     #2203 [WebsiteBundle]       Added host replacer to portal routes to support wildcard-urls 
     * BUGFIX      #2190 [WebsiteBundle]       Fixed wrong translator locale by decorating translator
     * ENHANCEMENT #2192 [WebsiteBundle]       Added X-Generator HTTP header for Sulu website detection
     * ENHANCEMENT #2125 [All]                 Upgraded to DoctrinePHPCRBundle 1.3

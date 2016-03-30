@@ -12,13 +12,16 @@
 namespace Sulu\Component\Webspace\Tests\Functional\Analyzer;
 
 use PHPUnit_Framework_MockObject_MockObject;
+use Prophecy\Argument;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\Attributes\WebsiteRequestProcessor;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
+use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -41,28 +44,29 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
     private $contentMapper;
 
     /**
+     * @var ReplacerInterface
+     */
+    private $replacer;
+
+    /**
      * @var RequestStack
      */
     private $requestStack;
 
     public function setUp()
     {
-        $this->webspaceManager = $this->getMockForAbstractClass(
-            '\Sulu\Component\Webspace\Manager\WebspaceManagerInterface',
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['findPortalInformationsByUrl']
-        );
-
+        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->contentMapper = $this->prophesize(ContentMapperInterface::class);
         $this->requestStack = $this->prophesize(RequestStack::class);
+        $this->replacer = $this->prophesize(ReplacerInterface::class);
 
         $this->requestAnalyzer = new RequestAnalyzer(
             $this->requestStack->reveal(),
-            [new WebsiteRequestProcessor($this->webspaceManager, $this->contentMapper->reveal(), 'prod')]
+            [
+                new WebsiteRequestProcessor(
+                    $this->webspaceManager->reveal(), $this->contentMapper->reveal(), $this->replacer->reveal(), 'prod'
+                ),
+            ]
         );
     }
 
@@ -71,9 +75,9 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
      */
     protected function prepareWebspaceManager($portalInformation)
     {
-        $this->webspaceManager->expects($this->any())->method('findPortalInformationsByUrl')->will(
-            $this->returnValue([$portalInformation])
-        );
+        $this->webspaceManager->findPortalInformationsByUrl(Argument::any(), Argument::any())
+            ->willReturn([$portalInformation]);
+        $this->webspaceManager->getPortalInformations(Argument::any())->willReturn([]);
     }
 
     public function provideAnalyze()
@@ -208,7 +212,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $request->query = new ParameterBag(['get' => 1]);
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
-        $request->expects($this->once())->method('getScheme')->willReturn('http');
+        $request->expects($this->any())->method('getScheme')->willReturn('http');
         $request->expects($this->once())->method('setLocale')->with('de_at');
         $this->requestAnalyzer->analyze($request);
 
@@ -259,7 +263,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
         $request->expects($this->once())->method('setLocale')->with('de_at');
-        $request->expects($this->once())->method('getScheme')->willReturn('http');
+        $request->expects($this->any())->method('getScheme')->willReturn('http');
 
         if ($expected['format']) {
             $request->expects($this->once())->method('setRequestFormat')->will(
@@ -302,9 +306,8 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
      */
     public function testAnalyzeNotExisting()
     {
-        $this->webspaceManager->expects($this->any())->method('findPortalInformationByUrl')->will(
-            $this->returnValue(null)
-        );
+        $this->webspaceManager->findPortalInformationsByUrl(Argument::any(), Argument::any())->willReturn(null);
+        $this->webspaceManager->getPortalInformations(Argument::any())->willReturn([]);
 
         $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
         $request->request = new ParameterBag(['post' => 1]);

@@ -360,7 +360,15 @@ class WebspaceCollectionBuilder
             $replacers[ReplacerInterface::REPLACER_SEGMENT] = $defaultSegment->getKey();
         }
 
-        $urlResult = $this->urlReplacer->cleanup($urlAddress);
+        $urlResult = $this->urlReplacer->cleanup(
+            $urlAddress,
+            [
+                ReplacerInterface::REPLACER_LANGUAGE,
+                ReplacerInterface::REPLACER_COUNTRY,
+                ReplacerInterface::REPLACER_LOCALIZATION,
+                ReplacerInterface::REPLACER_SEGMENT,
+            ]
+        );
         $urlRedirect = $this->generateUrlAddress($urlAddress, $replacers);
 
         if ($this->validateUrlPartialMatch($urlResult, $environment)) {

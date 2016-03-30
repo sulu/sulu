@@ -94,8 +94,8 @@ class WebspaceManager implements WebspaceManagerInterface
     public function findPortalInformationByUrl($url, $environment)
     {
         $portalInformations = $this->getWebspaceCollection()->getPortalInformations($environment);
-        foreach ($portalInformations as $portalUrl => $portalInformation) {
-            if ($this->matchUrl($url, $portalUrl)) {
+        foreach ($portalInformations as $portalInformation) {
+            if ($this->matchUrl($url, $portalInformation->getUrl())) {
                 return $portalInformation;
             }
         }
@@ -150,10 +150,10 @@ class WebspaceManager implements WebspaceManagerInterface
             $environment,
             [RequestAnalyzerInterface::MATCH_TYPE_FULL]
         );
-        foreach ($portals as $url => $portalInformation) {
+        foreach ($portals as $portalInformation) {
             $sameLocalization = $portalInformation->getLocalization()->getLocalization() === $languageCode;
             $sameWebspace = $webspaceKey === null || $portalInformation->getWebspace()->getKey() === $webspaceKey;
-            $url = rtrim(sprintf('%s://%s%s', $scheme, $url, $resourceLocator), '/');
+            $url = rtrim(sprintf('%s://%s%s', $scheme, $portalInformation->getUrl(), $resourceLocator), '/');
             if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {
                 $urls[] = $url;
             }
@@ -182,13 +182,13 @@ class WebspaceManager implements WebspaceManagerInterface
                 RequestAnalyzerInterface::MATCH_TYPE_REDIRECT,
             ]
         );
-        foreach ($portals as $url => $portalInformation) {
+        foreach ($portals as $portalInformation) {
             $sameLocalization = (
                 $portalInformation->getLocalization() === null
                 || $portalInformation->getLocalization()->getLocalization() === $languageCode
             );
             $sameWebspace = $webspaceKey === null || $portalInformation->getWebspace()->getKey() === $webspaceKey;
-            $url = rtrim(sprintf('%s://%s%s', $scheme, $url, $resourceLocator), '/');
+            $url = rtrim(sprintf('%s://%s%s', $scheme, $portalInformation->getUrl(), $resourceLocator), '/');
             if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {
                 if ($portalInformation->isMain()) {
                     array_unshift($urls, $url);
