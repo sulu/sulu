@@ -199,12 +199,18 @@ class CollectionManager implements CollectionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getTree($locale, $offset, $limit, $search, $depth = 0, $sortBy = [])
+    public function getTree($locale, $offset, $limit, $search, $depth = 0, $sortBy = [], $systemCollections = true)
     {
         /** @var Paginator $collectionSet */
         $collectionSet = $this->collectionRepository->findCollectionSet(
             $depth,
-            ['offset' => $offset, 'limit' => $limit, 'search' => $search, 'locale' => $locale],
+            [
+                'offset' => $offset,
+                'limit' => $limit,
+                'search' => $search,
+                'locale' => $locale,
+                'systemCollections' => $systemCollections,
+            ],
             null,
             $sortBy,
             $this->getCurrentUser(),

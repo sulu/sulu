@@ -9502,34 +9502,35 @@ a.btn-black, a.btn-highlight {
 }
 /* line 8, ../scss/modules/matrix.scss */
 .table.matrix th {
-  vertical-align: baseline;
+  vertical-align: middle;
+  line-height: 22px;
 }
-/* line 11, ../scss/modules/matrix.scss */
+/* line 12, ../scss/modules/matrix.scss */
 .table.matrix th.general {
   width: 140px;
   font-weight: bold;
 }
-/* line 16, ../scss/modules/matrix.scss */
+/* line 17, ../scss/modules/matrix.scss */
 .table.matrix th.section {
   width: 180px;
 }
-/* line 22, ../scss/modules/matrix.scss */
+/* line 23, ../scss/modules/matrix.scss */
 .table.matrix td.value {
   margin: 0;
   border: none;
   white-space: nowrap;
 }
-/* line 28, ../scss/modules/matrix.scss */
+/* line 29, ../scss/modules/matrix.scss */
 .table.matrix td.all {
   text-align: left;
   padding-left: 16px;
   color: #000;
 }
-/* line 33, ../scss/modules/matrix.scss */
+/* line 34, ../scss/modules/matrix.scss */
 .table.matrix td.section {
   color: #999;
 }
-/* line 38, ../scss/modules/matrix.scss */
+/* line 39, ../scss/modules/matrix.scss */
 .table.matrix .matrix-icon {
   border: 1px solid #000;
   color: #000;

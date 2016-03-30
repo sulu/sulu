@@ -14,15 +14,19 @@ namespace Sulu\Bundle\MediaBundle\Controller;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
+use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -74,7 +78,17 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
             $view = $this->responseGetById(
                 $id,
                 function ($id) use ($locale, $mediaManager) {
-                    return $mediaManager->getById($id, $locale);
+                    $media = $mediaManager->getById($id, $locale);
+                    $collection = $media->getEntity()->getCollection();
+
+                    if ($collection->getType()->getKey() === SystemCollectionManagerInterface::COLLECTION_TYPE) {
+                        $this->getSecurityChecker()->checkPermission(
+                            'sulu.media.system_collections',
+                            PermissionTypes::VIEW
+                        );
+                    }
+
+                    return $media;
                 }
             );
         } catch (MediaNotFoundException $e) {
@@ -96,10 +110,21 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
     public function cgetAction(Request $request)
     {
         try {
+            $collectionId = $request->get('collection');
+
+            if ($collectionId) {
+                $collection = $this->getCollectionManager()->getById($collectionId, $this->getLocale($request));
+                if ($collection->getType()->getKey() === SystemCollectionManagerInterface::COLLECTION_TYPE) {
+                    $this->getSecurityChecker()->checkPermission(
+                        'sulu.media.system_collections',
+                        PermissionTypes::VIEW
+                    );
+                }
+            }
+
             /** @var ListRestHelperInterface $listRestHelper */
             $listRestHelper = $this->get('sulu_core.list_rest_helper');
 
-            $collection = $request->get('collection');
             $limit = $request->get('limit', $listRestHelper->getLimit());
             $offset = ($request->get('page', 1) - 1) * $limit;
             $ids = $request->get('ids');
@@ -120,11 +145,15 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
                 $media = $mediaManager->get(
                     $this->getLocale($request),
                     [
-                        'collection' => $collection,
+                        'collection' => $collectionId,
                         'types' => $types,
                         'search' => str_replace('*', '%', $search),
                         'orderBy' => $orderBy,
                         'orderSort' => $orderSort,
+                        'systemCollections' => $this->getSecurityChecker()->hasPermission(
+                            'sulu.media.system_collections',
+                            PermissionTypes::VIEW
+                        ),
                     ],
                     $limit,
                     $offset
@@ -323,5 +352,21 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
     public function getSecuredObjectId(Request $request)
     {
         return $request->get('collection');
+    }
+
+    /**
+     * @return CollectionManagerInterface
+     */
+    protected function getCollectionManager()
+    {
+        return $this->get('sulu_media.collection_manager');
+    }
+
+    /**
+     * @return SecurityCheckerInterface
+     */
+    protected function getSecurityChecker()
+    {
+        return $this->get('sulu_security.security_checker');
     }
 }

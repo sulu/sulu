@@ -21,6 +21,7 @@ use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
+use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
@@ -28,6 +29,7 @@ use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -123,7 +125,7 @@ class CollectionController extends RestController implements ClassResourceInterf
             $view = $this->responseGetById(
                 $id,
                 function ($id) use ($locale, $collectionManager, $depth, $breadcrumb, $filter, $sortBy, $sortOrder) {
-                    return $collectionManager->getById(
+                    $collection = $collectionManager->getById(
                         $id,
                         $locale,
                         $depth,
@@ -131,6 +133,15 @@ class CollectionController extends RestController implements ClassResourceInterf
                         $filter,
                         $sortBy !== null ? [$sortBy => $sortOrder] : []
                     );
+
+                    if ($collection->getType()->getKey() === SystemCollectionManagerInterface::COLLECTION_TYPE) {
+                        $this->get('sulu_security.security_checker')->checkPermission(
+                            'sulu.media.system_collections',
+                            PermissionTypes::VIEW
+                        );
+                    }
+
+                    return $collection;
                 }
             );
         } catch (CollectionNotFoundException $cnf) {
@@ -154,6 +165,7 @@ class CollectionController extends RestController implements ClassResourceInterf
         try {
             /** @var ListRestHelperInterface $listRestHelper */
             $listRestHelper = $this->get('sulu_core.list_rest_helper');
+            $securityChecker = $this->get('sulu_security.security_checker');
 
             $flat = $this->getBooleanRequestParameter($request, 'flat', false);
             $depth = $request->get('depth', 0);
@@ -182,7 +194,8 @@ class CollectionController extends RestController implements ClassResourceInterf
                     $limit,
                     $search,
                     $depth,
-                    $sortBy !== null ? [$sortBy => $sortOrder] : []
+                    $sortBy !== null ? [$sortBy => $sortOrder] : [],
+                    $securityChecker->hasPermission('sulu.media.system_collections', 'view')
                 );
             }
 

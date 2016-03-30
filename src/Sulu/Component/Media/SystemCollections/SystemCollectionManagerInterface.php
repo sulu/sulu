@@ -15,6 +15,8 @@ namespace Sulu\Component\Media\SystemCollections;
  */
 interface SystemCollectionManagerInterface
 {
+    const COLLECTION_TYPE = 'collection.system';
+
     /**
      * Builds cache for system collections.
      */

@@ -80,6 +80,9 @@ class MediaAdmin extends Admin
                         PermissionTypes::DELETE,
                         PermissionTypes::SECURITY,
                     ],
+                    'sulu.media.system_collections' => [
+                        PermissionTypes::VIEW,
+                    ],
                 ],
             ],
         ];

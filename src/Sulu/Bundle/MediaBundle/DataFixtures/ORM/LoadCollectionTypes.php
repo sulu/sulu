@@ -15,6 +15,7 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 
 class LoadCollectionTypes extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -30,7 +31,11 @@ class LoadCollectionTypes extends AbstractFixture implements OrderedFixtureInter
         $defaultCollectionType = $this->createCollectionType(1, 'collection.default', 'Default');
         $manager->persist($defaultCollectionType);
 
-        $systemCollectionType = $this->createCollectionType(2, 'collection.system', 'System Collections');
+        $systemCollectionType = $this->createCollectionType(
+            2,
+            SystemCollectionManagerInterface::COLLECTION_TYPE,
+            'System Collections'
+        );
         $manager->persist($systemCollectionType);
 
         $manager->flush();
