@@ -11,9 +11,8 @@ define(['underscore', 'text!./form.html'], function(_, form) {
 
     'use strict';
 
-    const formSelector = '#custom-url-form';
-
-    var defaults = {
+    var formSelector = '#custom-url-form',
+        defaults = {
             options: {
                 saveCallback: function() {
                 }

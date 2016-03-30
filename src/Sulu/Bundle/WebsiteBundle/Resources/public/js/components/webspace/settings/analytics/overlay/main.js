@@ -10,18 +10,18 @@
 define([
     'jquery',
     'underscore',
+    'config',
     'text!./form.html',
     'text!./input.html',
     'text!./textarea.html',
     'text!./piwik.html'
-], function($, _, form, input, textarea, piwik) {
+], function($, _, Config, form, input, textarea, piwik) {
 
     'use strict';
 
-    const formSelector = '#analytics-form',
-        contentSelector = '.analytics-content-wrapper';
-
-    var defaults = {
+    var formSelector = '#analytics-form',
+        contentSelector = '.analytics-content-wrapper',
+        defaults = {
         options: {
             saveCallback: function() {
             },
@@ -82,6 +82,32 @@ define([
         },
 
         startOverlay: function() {
+            var security = Config.get('sulu_security.contexts')['sulu.webspace_settings.' + this.options.webspaceKey + '.analytics'],
+                buttons = [
+                    {
+                        type: 'cancel',
+                        inactive: false,
+                        align: 'center'
+                    }
+                ];
+
+            if ((!!this.options.id && security.edit)
+                || (!this.options.id && security.add)
+            ) {
+                buttons = [
+                    {
+                        type: 'ok',
+                        inactive: false,
+                        align: 'right'
+                    },
+                    {
+                        type: 'cancel',
+                        inactive: false,
+                        align: 'left'
+                    }
+                ];
+            }
+
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
@@ -99,7 +125,8 @@ define([
                                     } else {
                                         return false;
                                     }
-                                }.bind(this)
+                                }.bind(this),
+                                buttons: buttons
                             }
                         ]
                     }

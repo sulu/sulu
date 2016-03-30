@@ -30,7 +30,7 @@ define(['underscore'], function(_) {
                 noBack: true,
 
                 tabs: {
-                    url: '/admin/content-navigations?alias=webspace',
+                    url: '/admin/content-navigations?alias=webspace&webspace=' + this.options.webspace,
                     options: {
                         data: function() {
                             // this.data is set by sulu-content.js with data from loadComponentData()
