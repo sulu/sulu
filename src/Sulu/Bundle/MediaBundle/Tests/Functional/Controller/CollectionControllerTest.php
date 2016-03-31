@@ -18,6 +18,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Cache\CacheInterface;
+use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 
 class CollectionControllerTest extends SuluTestCase
 {
@@ -119,7 +120,11 @@ class CollectionControllerTest extends SuluTestCase
             'Default Collection Type',
             'Default Collection Type'
         );
-        $this->collectionType2 = $this->createCollectionType(2, 'collection.system', 'System Collections');
+        $this->collectionType2 = $this->createCollectionType(
+            2,
+            SystemCollectionManagerInterface::COLLECTION_TYPE,
+            'System Collections'
+        );
         $this->em->persist($this->collectionType1);
         $this->em->persist($this->collectionType2);
         $this->em->flush();
