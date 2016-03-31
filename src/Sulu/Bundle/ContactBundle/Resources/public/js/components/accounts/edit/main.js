@@ -18,6 +18,10 @@ define([
     return {
 
         collaboration: function() {
+            if (!this.options.id) {
+                return;
+            }
+            
             return {
                 id: this.options.id,
                 type: 'contact'

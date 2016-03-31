@@ -103,6 +103,10 @@ define([
     };
 
     SnippetForm.prototype.collaboration = function() {
+        if (!this.options.id) {
+            return;
+        }
+
         return {
             id: this.options.id,
             type: 'snippet'
