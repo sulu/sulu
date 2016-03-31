@@ -356,7 +356,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
         $res = [];
         $res['country'] = $this->getCountry();
         $res['language'] = $this->getLanguage();
-        $res['localization'] = $this->getLocalization();
+        $res['localization'] = $this->getLocale();
         $res['default'] = $this->isDefault();
         $res['xDefault'] = $this->isXDefault();
         $res['children'] = [];
