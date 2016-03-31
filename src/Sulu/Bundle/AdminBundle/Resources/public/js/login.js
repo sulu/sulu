@@ -25,7 +25,8 @@ require.config({
     ],
     exclude: [
         'husky'
-    ]
+    ],
+    urlArgs: 'v=develop'
 });
 
 define('underscore', function() {
