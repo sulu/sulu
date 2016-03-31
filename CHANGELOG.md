@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2209 [ContentBundle]       Added open-ghost overlay on change-locale in content-form
     * ENHANCEMENT #1980 [MediaBundle]         Sort assets by created date descending in lists
     * BUGFIX      #2193 [ContentBundle]       Ignore required properties on homepages during initialization.
     * BUGFIX      #2199 [SnippetBundle]       Fixed syntax mistake in snippet-controller

@@ -11,9 +11,10 @@ define([
     'sulucontent/model/content',
     'sulucontent/components/content/preview/main',
     'sulucontent/components/copy-locale-overlay/main',
+    'sulucontent/components/open-ghost-overlay/main',
     'sulusecurity/services/security-checker',
     'config'
-], function(Content, Preview, CopyLocale, SecurityChecker, Config) {
+], function(Content, Preview, CopyLocale, OpenGhost, SecurityChecker, Config) {
 
     'use strict';
 
@@ -232,7 +233,25 @@ define([
                     var data = this.content.toJSON();
 
                     if (!!data.id) {
-                        this.sandbox.emit('sulu.content.contents.load', data, this.options.webspace, item.id);
+                        if (-1 === data.concreteLanguages.indexOf(item.id)) {
+                            OpenGhost.openGhost.call(this, data).then(function(copy, src) {
+                                if (!!copy) {
+                                    CopyLocale.copyLocale.call(
+                                        this,
+                                        data.id,
+                                        src,
+                                        [item.id],
+                                        function() {
+                                            this.load(data, this.options.webspace, item.id, true);
+                                        }.bind(this)
+                                    );
+                                } else {
+                                    this.load(data, this.options.webspace, item.id, true);
+                                }
+                            }.bind(this));
+                        } else {
+                            this.load(data, this.options.webspace, item.id, true);
+                        }
                     } else {
                         this.add(
                             !!this.options.parent ? {id: this.options.parent} : null,
@@ -426,8 +445,8 @@ define([
             ].join('');
 
             this.sandbox.util.save(url, 'POST', {
-                position: position
-            })
+                    position: position
+                })
                 .then(function(data) {
                     if (!!successCallback && typeof successCallback === 'function') {
                         successCallback(data);
@@ -556,26 +575,26 @@ define([
          * Asks if the content should be overriden, if the content has been changed on the server.
          * @param {Object} data
          */
-        handleErrorContentChanged: function (data) {
+        handleErrorContentChanged: function(data) {
             this.sandbox.emit(
                 'sulu.overlay.show-warning',
                 'content.changed-warning.title',
                 'content.changed-warning.description',
-                function () {
+                function() {
                     this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
                 }.bind(this),
-                function () {
+                function() {
                     this.saveContent(
                         data,
                         {
                             // on success save contents id
-                            success: function (response) {
+                            success: function(response) {
                                 var model = response.toJSON();
                                 this.sandbox.emit('sulu.content.contents.saved', model.id, model);
                                 this.setHeaderBar(false);
                                 this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
                             }.bind(this),
-                            error: function (model, response) {
+                            error: function(model, response) {
                                 this.handleError(response.responseJSON.code, data);
                             }.bind(this)
                         },
@@ -593,7 +612,7 @@ define([
          * @param {number} errorCode
          * @param {Object} data
          */
-        handleError: function (errorCode, data) {
+        handleError: function(errorCode, data) {
             switch (errorCode) {
                 case errorCodes.contentChanged:
                     this.handleErrorContentChanged(data);
@@ -1144,12 +1163,6 @@ define([
                         id: this.localizations[i].id,
                         title: this.localizations[i].title
                     };
-
-                    if (concreteLanguages.indexOf(this.localizations[i].id) < 0) {
-                        dropdownLocalizations[i].title += [
-                            ' (', this.sandbox.translate('content.contents.new'), ')'
-                        ].join('');
-                    }
                 }
 
                 navigationUrl = '/admin/content-navigations';

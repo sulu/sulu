@@ -61,7 +61,7 @@ define(function() {
                 buttons = [
                     {
                         type: 'cancel',
-                        align: 'right'
+                        align: 'left'
                     }
                 ];
             this.sandbox.dom.append(this.$el, $element);
@@ -69,7 +69,7 @@ define(function() {
             if (!!okButton) {
                 buttons.push({
                     type: 'ok',
-                    align: 'left',
+                    align: 'right',
                     text: this.sandbox.translate('content.contents.settings.' + instanceName + '.ok')
                 });
             }
