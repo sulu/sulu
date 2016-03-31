@@ -14,6 +14,7 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -97,6 +98,10 @@ class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
         $localization->setLanguage('de');
         $localization->setCountry('at');
 
+        $portalInformation = $this->prophesize(PortalInformation::class);
+        $portalInformation->getHost()->willReturn('sulu.lo');
+        $portalInformation->getPrefix()->willReturn('de_at');
+
         $requestAnalyzer = $this->prophesize(RequestAnalyzer::class);
         $requestAnalyzer->getWebspace()->willReturn($webspace);
         $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
@@ -107,6 +112,7 @@ class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
         $requestAnalyzer->getPostParameters()->willReturn([]);
         $requestAnalyzer->getPortal()->willReturn($portal);
         $requestAnalyzer->getAnalyticsKey()->willReturn('analyticsKey');
+        $requestAnalyzer->getPortalInformation()->willReturn($portalInformation->reveal());
 
         $result = $this->resolver->resolve($requestAnalyzer->reveal());
         $this->assertEquals(
@@ -121,6 +127,10 @@ class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
                     'get' => ['p' => 1],
                     'post' => [],
                     'analyticsKey' => 'analyticsKey',
+                    'routeParameters' => [
+                        'host' => 'sulu.lo',
+                        'prefix' => 'de_at',
+                    ],
                 ],
             ],
             $result
@@ -129,8 +139,13 @@ class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testResolveForPreview()
     {
+        $portalInformation = $this->prophesize(PortalInformation::class);
+        $portalInformation->getUrl()->willReturn('sulu.io/de');
+        $portalInformation->getHost()->willReturn('sulu.lo');
+        $portalInformation->getPrefix()->willReturn('de');
+
         $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', 'dev')
-            ->willReturn(['sulu.io/de' => []]);
+            ->willReturn(['sulu.io/de' => $portalInformation->reveal()]);
 
         $request = new \Symfony\Component\HttpFoundation\Request();
         $this->requestStack->getCurrentRequest()->willReturn($request);
@@ -148,6 +163,10 @@ class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
                     'get' => [],
                     'post' => [],
                     'analyticsKey' => 'UA-SULU-Test',
+                    'routeParameters' => [
+                        'host' => 'sulu.lo',
+                        'prefix' => 'de',
+                    ],
                 ],
             ],
             $result
@@ -156,8 +175,13 @@ class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testResolveForPreviewWithRequestParameter()
     {
+        $portalInformation = $this->prophesize(PortalInformation::class);
+        $portalInformation->getUrl()->willReturn('sulu.io/de');
+        $portalInformation->getHost()->willReturn('sulu.lo');
+        $portalInformation->getPrefix()->willReturn('de');
+
         $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', 'dev')
-            ->willReturn(['sulu.io/de' => []]);
+            ->willReturn(['sulu.io/de' => $portalInformation->reveal()]);
 
         $request = new \Symfony\Component\HttpFoundation\Request(['test' => 1], ['test' => 2]);
         $this->requestStack->getCurrentRequest()->willReturn($request);
@@ -175,6 +199,10 @@ class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
                     'get' => ['test' => 1],
                     'post' => ['test' => 2],
                     'analyticsKey' => 'UA-SULU-Test',
+                    'routeParameters' => [
+                        'host' => 'sulu.lo',
+                        'prefix' => 'de',
+                    ],
                 ],
             ],
             $result
