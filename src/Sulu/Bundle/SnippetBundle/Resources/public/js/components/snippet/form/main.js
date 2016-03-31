@@ -102,6 +102,13 @@ define([
         };
     };
 
+    SnippetForm.prototype.collaboration = function() {
+        return {
+            id: this.options.id,
+            type: 'snippet'
+        };
+    };
+
     SnippetForm.prototype.initialize = function() {
         this.type = (!!this.options.id ? 'edit' : 'add');
 
