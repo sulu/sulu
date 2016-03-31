@@ -258,17 +258,21 @@
                 <source>smart-content.choose-data-source.cancel</source>
                 <target>Zurück</target>
             </trans-unit>
+            <trans-unit id="443d99ff2f64652633a5ca2169f22211" resname="sulu.content.seo.serp">
+                <source>sulu.content.seo.serp</source>
+                <target>Suchergebnis Vorschau (SERP)</target>
+            </trans-unit>
             <trans-unit id="443d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.title">
                 <source>sulu.content.seo.title</source>
-                <target>Titel</target>
+                <target>Titel (Meta Title)</target>
             </trans-unit>
             <trans-unit id="441d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.description">
                 <source>sulu.content.seo.description</source>
-                <target>Beschreibung</target>
+                <target>Beschreibung (Meta Description)</target>
             </trans-unit>
             <trans-unit id="442d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.keywords">
                 <source>sulu.content.seo.keywords</source>
-                <target>Keywords</target>
+                <target>Keywords (Meta Keywords)</target>
             </trans-unit>
             <trans-unit id="445d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.canonical">
                 <source>sulu.content.seo.canonical</source>
@@ -305,6 +309,10 @@
             <trans-unit id="142cd92f1c29c9e456a5ce2178d22197" resname="sulu.content.excerpt.images">
                 <source>sulu.content.excerpt.images</source>
                 <target>Bilder</target>
+            </trans-unit>
+            <trans-unit id="c50af522ac181350142c0b4720e29a2e" resname="sulu.content.seo.title.note">
+                <source>sulu.content.seo.title.note</source>
+                <target>Der Meta-Title ist auf 55 Zeichen limitiert.</target>
             </trans-unit>
             <trans-unit id="c50af522ac181350142c0b4720e29a2f" resname="sulu.content.seo.descriptions.note">
                 <source>sulu.content.seo.descriptions.note</source>

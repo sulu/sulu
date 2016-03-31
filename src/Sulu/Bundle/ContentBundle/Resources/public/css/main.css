@@ -241,9 +241,8 @@
   background: #fff;
   width: 440px;
   position: relative;
-  margin: 0 auto;
   padding: 10px;
-  margin-bottom: 20px;
+  margin-top: 10px;
 }
 /* line 8, ../scss/modules/seo.scss */
 .seo-excerpt .title {

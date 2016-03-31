@@ -250,17 +250,21 @@
                 <source>smart-content.choose-data-source.back</source>
                 <target>Retour</target>
             </trans-unit>
+            <trans-unit id="443d99ff2f64652633a5ca2169f22211" resname="sulu.content.seo.serp">
+                <source>sulu.content.seo.serp</source>
+                <target>Search Engine Results Pages Preview (SERP)</target>
+            </trans-unit>
             <trans-unit id="443d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.title">
                 <source>sulu.content.seo.title</source>
-                <target>Titre</target>
+                <target>Titre (Meta Title)</target>
             </trans-unit>
             <trans-unit id="441d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.description">
                 <source>sulu.content.seo.description</source>
-                <target>Description</target>
+                <target>Description (Meta Description)</target>
             </trans-unit>
             <trans-unit id="442d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.keywords">
                 <source>sulu.content.seo.keywords</source>
-                <target>Mots-clefs</target>
+                <target>Mots-clefs (Meta Keywords)</target>
             </trans-unit>
             <trans-unit id="445d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.canonical">
                 <source>sulu.content.seo.canonical</source>
@@ -309,6 +313,10 @@
             <trans-unit id="a50af522ac181350142c0b4720e29a2f" resname="sulu.content.seo.keywords-left">
                 <source>sulu.content.seo.keywords-left</source>
                 <target>mots-clés restants</target>
+            </trans-unit>
+            <trans-unit id="c50af522ac181350142c0b4720e29a2e" resname="sulu.content.seo.title.note">
+                <source>sulu.content.seo.title.note</source>
+                <target>Le meta title est limitée à 55 caractères.</target>
             </trans-unit>
             <trans-unit id="c50af522ac181350142c0b4720e29a2f" resname="sulu.content.seo.descriptions.note">
                 <source>sulu.content.seo.descriptions.note</source>
