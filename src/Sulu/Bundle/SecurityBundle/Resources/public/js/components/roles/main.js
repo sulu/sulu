@@ -20,6 +20,17 @@ define(['sulusecurity/models/role'], function(Role) {
 
         name: 'Sulu Security Role',
 
+        collaboration: function() {
+            if (!this.options.id) {
+                return;
+            }
+
+            return {
+                id: this.options.id,
+                type: 'roles'
+            };
+        },
+
         initialize: function() {
             this.idDelete = null;
             this.loading = 'delete';

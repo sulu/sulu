@@ -29,11 +29,10 @@ define(['underscore', 'app-config'], function(_, AppConfig) {
              * Start collaboration component if the property exists.
              */
             app.components.before('initialize', function() {
-                if (!this.collaboration) {
+                var config;
+                if (!this.collaboration || !(config = this.collaboration())) {
                     return;
                 }
-
-                var config = _.defaults(this.collaboration(), {autoStart: true});
 
                 var $element = $('<div id="content-column-collaboration"/>'),
                     options = _.defaults(config, {el: $element, userId: AppConfig.getUser().id});
