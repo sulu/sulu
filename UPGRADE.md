@@ -18,6 +18,22 @@ __after:__
 {{ path('website_search', request.routeParameters) }}
 ```
 
+### Admin
+
+The navigation entry with the empty name wont be used in sulu anymore. It should be replaced by:
+
+__before:__
+
+```php
+    $section = new NavigationItem('');
+```
+
+__after:__
+
+```php
+    $section = new NavigationItem('navigation.modules');
+```
+
 ### Twig function `sulu_resolve_user`
 
 This twig function returns now the user. To get the related contact use following code snippet:

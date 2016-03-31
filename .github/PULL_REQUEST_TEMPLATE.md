@@ -7,7 +7,7 @@
 | Fixed tickets | fixes #issuenum
 | Related issues/PRs | #issuenum
 | License | MIT
-| Documentation PR | sulu-io/sulu-docs#prnum
+| Documentation PR | sulu/sulu-docs#prnum
 
 #### What's in this PR?
 

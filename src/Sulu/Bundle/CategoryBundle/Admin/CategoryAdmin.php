@@ -29,8 +29,8 @@ class CategoryAdmin extends Admin
         $this->securityChecker = $securityChecker;
 
         $rootNavigationItem = new NavigationItem($title);
-        $section = new NavigationItem('');
-        $section->setPosition(10);
+        $section = new NavigationItem('navigation.modules');
+        $section->setPosition(20);
 
         $settings = new NavigationItem('navigation.settings');
         $settings->setPosition(40);

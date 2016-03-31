@@ -64,11 +64,11 @@ class ContentAdmin extends Admin
         $rootNavigationItem = new NavigationItem($title);
 
         $section = new NavigationItem('navigation.webspaces');
-        $section->setPosition(20);
+        $section->setPosition(10);
 
         $rootNavigationItem->addChild($section);
 
-        $position = 20;
+        $position = 10;
 
         /** @var Webspace $webspace */
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
