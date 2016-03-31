@@ -20,6 +20,7 @@ define([
     var defaults = {};
 
     return {
+
         header: function() {
             var buttons = {
                 edit: {

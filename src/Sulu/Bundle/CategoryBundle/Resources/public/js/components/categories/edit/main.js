@@ -13,6 +13,17 @@ define(function () {
 
     return {
 
+        collaboration: function() {
+            if (!this.options.data || !this.options.id) {
+                return;
+            }
+
+            return {
+                id: this.options.data.id,
+                type: 'categories'
+            };
+        },
+
         header: function () {
             return {
                 tabs: {
