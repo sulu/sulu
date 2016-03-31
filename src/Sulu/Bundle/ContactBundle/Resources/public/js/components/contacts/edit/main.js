@@ -16,6 +16,13 @@ define([
 
     return {
 
+        collaboration: function() {
+            return {
+                id: this.options.id,
+                type: 'contact'
+            };
+        },
+
         /**
          * Returns the header config for this main-view
          * if an existing contact is edited a delete-button and a toggler get added
