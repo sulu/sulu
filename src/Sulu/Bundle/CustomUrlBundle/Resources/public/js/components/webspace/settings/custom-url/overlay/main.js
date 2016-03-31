@@ -7,13 +7,12 @@
  * with this source code in the file LICENSE.
  */
 
-define(['underscore', 'text!./form.html'], function(_, form) {
+define(['underscore', 'config', 'text!./form.html'], function(_, Config, form) {
 
     'use strict';
 
-    const formSelector = '#custom-url-form';
-
-    var defaults = {
+    var formSelector = '#custom-url-form',
+        defaults = {
             options: {
                 saveCallback: function() {
                 }
@@ -107,14 +106,39 @@ define(['underscore', 'text!./form.html'], function(_, form) {
          * Start overlay container for form.
          */
         startOverlay: function() {
-            var tabs = [
-                {
-                    title: this.translations.titleDetails,
-                    data: this.templates.form({translations: this.translations})
-                }
-            ];
+            var security = Config.get('sulu_security.contexts')['sulu.webspace_settings.' + this.options.webspace.key + '.custom-urls'],
+                tabs = [
+                    {
+                        title: this.translations.titleDetails,
+                        data: this.templates.form({translations: this.translations})
+                    }
+                ],
+                buttons = [
+                    {
+                        type: 'cancel',
+                        inactive: false,
+                        align: 'center'
+                    }
+                ];
 
-            if (!!this.data.routes && _.size(this.data.routes) > 0) {
+            if ((!!this.options.id && security.edit)
+                || (!this.options.id && security.add)
+            ) {
+                buttons = [
+                    {
+                        type: 'ok',
+                        inactive: false,
+                        align: 'right'
+                    },
+                    {
+                        type: 'cancel',
+                        inactive: false,
+                        align: 'left'
+                    }
+                ];
+            }
+
+            if (!!this.data.routes && _.size(this.data.routes) > 0 && security.edit) {
                 tabs.push({
                     title: this.translations.titleUrls,
                     data: this.templates.urlList({translations: this.translations})
@@ -153,7 +177,8 @@ define(['underscore', 'text!./form.html'], function(_, form) {
                                     }
 
                                     return false;
-                                }.bind(this)
+                                }.bind(this),
+                                buttons: buttons
                             },
                             {
                                 title: this.translations.overlayTitle,
@@ -255,7 +280,7 @@ define(['underscore', 'text!./form.html'], function(_, form) {
 
                                 var targetItem = $('#custom-url-target-value').data('item'),
                                     locales;
-                                
+
                                 if (!!targetItem) {
                                     locales = this.filterConcreteLocales(this.getData().baseDomain, targetItem.concreteLanguages);
                                     this.sandbox.emit('husky.select.target-locale.update', locales, [locales[0]], false);

@@ -13,7 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Hateoas\Representation\RouteAwareRepresentation;
-use Sulu\Bundle\ContentBundle\Admin\ContentAdmin;
+use Sulu\Bundle\WebsiteBundle\Admin\WebsiteAdmin;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -139,8 +139,7 @@ class AnalyticsController extends RestController implements ClassResourceInterfa
     public function getSecurityContext()
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
-        $webspaceKey = $request->get('webspaceKey');
 
-        return ContentAdmin::SECURITY_CONTEXT_PREFIX . $webspaceKey;
+        return WebsiteAdmin::getAnalyticsSecurityContext($request->get('webspaceKey'));
     }
 }

@@ -6,6 +6,7 @@
     <services>
         <service id="sulu_custom_urls.admin" class="Sulu\Bundle\CustomUrlBundle\Admin\CustomUrlAdmin">
             <argument>%sulu_admin.name%</argument>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
 
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
@@ -13,6 +14,8 @@
 
         <service id="sulu_custom_urls.webspace_navigation_provider"
                  class="Sulu\Bundle\CustomUrlBundle\Admin\WebspaceContentNavigationProvider">
+            <argument type="service" id="sulu_security.security_checker"/>
+
             <tag name="sulu_admin.content_navigation" alias="webspace"/>
             <tag name="sulu.context" context="admin"/>
         </service>

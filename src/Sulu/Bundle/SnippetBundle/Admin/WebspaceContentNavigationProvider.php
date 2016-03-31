@@ -13,6 +13,8 @@ namespace Sulu\Bundle\SnippetBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 /**
  * Provides tabs for webspace settings.
@@ -24,8 +26,14 @@ class WebspaceContentNavigationProvider implements ContentNavigationProviderInte
      */
     private $defaultEnabled;
 
-    public function __construct($defaultEnabled)
+    /**
+     * @var SecurityCheckerInterface
+     */
+    private $securityChecker;
+
+    public function __construct(SecurityCheckerInterface $securityChecker, $defaultEnabled)
     {
+        $this->securityChecker = $securityChecker;
         $this->defaultEnabled = $defaultEnabled;
     }
 
@@ -34,7 +42,12 @@ class WebspaceContentNavigationProvider implements ContentNavigationProviderInte
      */
     public function getNavigationItems(array $options = [])
     {
-        if ($this->defaultEnabled === false) {
+        if (!$this->securityChecker->hasPermission(
+                SnippetAdmin::getDefaultSnippetsSecurityContext($options['webspace']),
+                PermissionTypes::VIEW
+            )
+            || !$this->defaultEnabled
+        ) {
             return [];
         }
 

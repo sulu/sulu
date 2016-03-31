@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['app-config'], function(AppConfig) {
+define(['config', 'app-config'], function(Config, AppConfig) {
 
     'use strict';
 
@@ -75,6 +75,34 @@ define(['app-config'], function(AppConfig) {
         },
 
         startDatagrid: function() {
+            var security = Config.get('sulu_security.contexts')['sulu.webspace_settings.' + this.data.webspace.key + '.default-snippets'],
+                icons = [];
+
+            if (!!security.edit) {
+                icons = [
+                    {
+                        icon: 'plus-circle',
+                        column: 'defaultTitle',
+                        align: 'right',
+                        cssClass: 'no-hover',
+                        disableCallback: function(record) {
+                            return !record.defaultUuid;
+                        },
+                        callback: this.openOverlay.bind(this)
+                    },
+                    {
+                        icon: 'times',
+                        column: 'defaultTitle',
+                        align: 'right',
+                        cssClass: 'no-hover simple',
+                        disableCallback: function(record) {
+                            return !!record.defaultUuid;
+                        },
+                        callback: this.removeDefault.bind(this)
+                    }
+                ];
+            }
+
             this.sandbox.start([
                 {
                     name: 'datagrid@husky',
@@ -85,28 +113,7 @@ define(['app-config'], function(AppConfig) {
                         viewOptions: {
                             table: {
                                 selectItem: false,
-                                icons: [
-                                    {
-                                        icon: 'plus-circle',
-                                        column: 'defaultTitle',
-                                        align: 'right',
-                                        cssClass: 'no-hover',
-                                        disableCallback: function(record) {
-                                            return !record.defaultUuid;
-                                        },
-                                        callback: this.openOverlay.bind(this)
-                                    },
-                                    {
-                                        icon: 'times',
-                                        column: 'defaultTitle',
-                                        align: 'right',
-                                        cssClass: 'no-hover simple',
-                                        disableCallback: function(record) {
-                                            return !!record.defaultUuid;
-                                        },
-                                        callback: this.removeDefault.bind(this)
-                                    }
-                                ]
+                                icons: icons
                             }
                         },
                         matchings: [
