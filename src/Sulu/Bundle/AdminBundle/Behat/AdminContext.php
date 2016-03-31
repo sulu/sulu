@@ -309,13 +309,12 @@ EOT;
      */
     public function iClickTheTabItem($tabTitle)
     {
-        $this->clickByTitle('.column-navigation .item-text', $tabTitle);
-
-        $tabItems = $this->getSession()->getPage()->findAll('css', '.tabs-container ul li');
+        $selector = '.tabs-container ul li';
+        $tabItems = $this->getSession()->getPage()->findAll('css', $selector);
 
         /* @var NodeElement $tabItem */
         foreach ($tabItems as $tabItem) {
-            $element = $tabItem->find('named', array('content', $tabTitle));
+            $element = $tabItem->find('named', ['content', $tabTitle]);
             if ($element && $element->isVisible()) {
                 // Click and wait for the ajax request.
                 $element->click();
@@ -325,7 +324,7 @@ EOT;
             }
         }
 
-        throw new ElementNotFoundException($this->getSession(), null, 'css', '.tabs-container ul li');
+        throw new ElementNotFoundException($this->getSession(), null, 'css', $selector);
     }
 
     /**
