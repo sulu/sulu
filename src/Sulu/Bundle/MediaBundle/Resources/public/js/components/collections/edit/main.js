@@ -20,6 +20,14 @@ define([
     var defaults = {};
 
     return {
+
+        collaboration: function() {
+            return {
+                id: this.options.id,
+                type: 'collection'
+            };
+        },
+
         header: function() {
             var buttons = {
                 edit: {
