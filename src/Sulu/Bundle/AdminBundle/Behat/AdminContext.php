@@ -305,6 +305,30 @@ EOT;
     }
 
     /**
+     * @When I click the tab item :tabTitle
+     */
+    public function iClickTheTabItem($tabTitle)
+    {
+        $this->clickByTitle('.column-navigation .item-text', $tabTitle);
+
+        $tabItems = $this->getSession()->getPage()->findAll('css', '.tabs-container ul li');
+
+        /* @var NodeElement $tabItem */
+        foreach ($tabItems as $tabItem) {
+            $element = $tabItem->find('named', array('content', $tabTitle));
+            if ($element && $element->isVisible()) {
+                // Click and wait for the ajax request.
+                $element->click();
+                $this->waitForAjax(self::MEDIUM_WAIT_TIME);
+
+                return;
+            }
+        }
+
+        throw new ElementNotFoundException($this->getSession(), null, 'css', '.tabs-container ul li');
+    }
+
+    /**
      * @Then I wait for the column navigation column :index
      */
     public function iWaitForTheColumnNavigationColumn($index)
