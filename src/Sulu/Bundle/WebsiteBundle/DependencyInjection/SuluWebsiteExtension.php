@@ -59,6 +59,9 @@ class SuluWebsiteExtension extends Extension
 
         if (SuluKernel::CONTEXT_WEBSITE == $container->getParameter('sulu.context')) {
             $loader->load('website.xml');
+
+            // default local provider
+            $container->setAlias('sulu_website.default_locale.provider', $config['default_locale']['provider_service_id']);
         }
     }
 }

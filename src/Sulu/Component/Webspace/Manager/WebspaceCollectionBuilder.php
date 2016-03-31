@@ -353,11 +353,7 @@ class WebspaceCollectionBuilder
         $urlAnalyticsKey,
         Url $url
     ) {
-        $replacers = [
-            ReplacerInterface::REPLACER_LANGUAGE => $portal->getDefaultLocalization()->getLanguage(),
-            ReplacerInterface::REPLACER_COUNTRY => $portal->getDefaultLocalization()->getCountry(),
-            ReplacerInterface::REPLACER_LOCALIZATION => $portal->getDefaultLocalization()->getLocalization('-'),
-        ];
+        $replacers = [];
 
         $defaultSegment = $portal->getWebspace()->getDefaultSegment();
         if ($defaultSegment) {
@@ -372,7 +368,7 @@ class WebspaceCollectionBuilder
                 RequestAnalyzerInterface::MATCH_TYPE_PARTIAL,
                 $portal->getWebspace(),
                 $portal,
-                $portal->getDefaultLocalization(),
+                null,
                 $urlResult,
                 $portal->getWebspace()->getDefaultSegment(),
                 $urlRedirect,

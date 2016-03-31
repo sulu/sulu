@@ -148,11 +148,7 @@ class WebspaceManager implements WebspaceManagerInterface
         $urls = [];
         $portals = $this->getWebspaceCollection()->getPortalInformations(
             $environment,
-            [
-                RequestAnalyzerInterface::MATCH_TYPE_FULL,
-                RequestAnalyzerInterface::MATCH_TYPE_PARTIAL,
-                RequestAnalyzerInterface::MATCH_TYPE_REDIRECT,
-            ]
+            [RequestAnalyzerInterface::MATCH_TYPE_FULL]
         );
         foreach ($portals as $url => $portalInformation) {
             $sameLocalization = $portalInformation->getLocalization()->getLocalization() === $languageCode;

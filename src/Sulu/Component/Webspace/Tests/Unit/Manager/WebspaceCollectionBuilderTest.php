@@ -153,11 +153,11 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
             $devPortalInformationValues['massiveart-us.lo/fr-ca/s']
         );
         $this->assertEquals(
-            ['type' => RequestAnalyzerInterface::MATCH_TYPE_PARTIAL, 'locale' => 'fr_ca', 'redirect' => 'massiveart-ca.lo/fr-ca/s'],
+            ['type' => RequestAnalyzerInterface::MATCH_TYPE_PARTIAL, 'redirect' => 'massiveart-ca.lo/{localization}/s'],
             $devPortalInformationValues['massiveart-ca.lo']
         );
         $this->assertEquals(
-            ['type' => RequestAnalyzerInterface::MATCH_TYPE_PARTIAL, 'locale' => 'en_us', 'redirect' => 'massiveart-us.lo/en-us/s'],
+            ['type' => RequestAnalyzerInterface::MATCH_TYPE_PARTIAL, 'redirect' => 'massiveart-us.lo/{localization}/s'],
             $devPortalInformationValues['massiveart-us.lo']
         );
         $this->assertEquals(
