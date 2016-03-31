@@ -96,6 +96,12 @@ module.exports = function(grunt) {
                         cwd: 'bower_components/require-css',
                         src: ['css.js'],
                         dest: 'Resources/public/js/vendor/require-css/'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'bower_components/clipboard/dist',
+                        src: ['clipboard.js'],
+                        dest: 'Resources/public/js/vendor/clipboard/'
                     }
                 ]
             }

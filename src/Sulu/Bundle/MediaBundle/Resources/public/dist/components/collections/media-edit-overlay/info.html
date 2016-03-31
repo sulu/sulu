@@ -1,6 +1,6 @@
 <form id="media-info" class="grid">
     <div class="grid-row">
-        <div class="grid-col-4">
+        <div class="grid-col-4 media-info-preview">
             <div class="<%= icon %> icon media-edit-preview-image">
 <% if (!!media.thumbnails && !!media.thumbnails['200x200']) { %>
                 <img src="<%=media.thumbnails['200x200']%>"
@@ -9,6 +9,7 @@
 <% } %>
                 <div id="file-version-change" class="file-version-change"></div>
             </div>
+            <span class="description action-navigator"><%= media.mimeType %>, <%= formatBytes(media.size) %></span>
         </div>
         <div class="grid-col-8">
             <div class="form-group m-bottom-20">
@@ -19,7 +20,7 @@
             </div>
             <div class="form-group">
                 <label for="media-edit-description"><%= translate('public.description') %></label>
-                <textarea class="small noResize form-element" id="media-edit-description"
+                <textarea class="small noResize form-element description" id="media-edit-description"
                           data-mapper-property="description"></textarea>
             </div>
         </div>

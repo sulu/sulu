@@ -47,7 +47,6 @@
             width: 190px;
             background-color: $white;
             border-radius: 3px;
-            overflow: hidden;
             opacity: 1;
             @include transition(opacity 100ms, top 100ms, left 100ms);
 
@@ -91,19 +90,12 @@
                     float: left;
                 }
 
-                .footer-download {
+                .footer-icon {
                     position: relative;
                     top: 2px;
                     font-size: 17px;
                     float: right;
                     margin-left: 5px;
-                }
-
-                .footer-play-video {
-                    position: relative;
-                    top: 2px;
-                    font-size: 17px;
-                    float: right;
                     cursor: pointer;
                 }
             }
