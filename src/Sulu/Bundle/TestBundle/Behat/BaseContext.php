@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\TestBundle\Behat;
 
 use Behat\Behat\Context\Context;
+use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\MinkExtension\Context\RawMinkContext;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
