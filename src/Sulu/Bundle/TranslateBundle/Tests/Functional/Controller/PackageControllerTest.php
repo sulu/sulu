@@ -211,7 +211,7 @@ class PackageControllerTest extends SuluTestCase
             []
         );
 
-        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(400, $client->getResponse());
     }
 
     public function testPut()
@@ -302,7 +302,7 @@ class PackageControllerTest extends SuluTestCase
             ['name' => 'Portal']
         );
 
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
     }
 
     public function testPutNotExistingCatalogue()
@@ -320,7 +320,7 @@ class PackageControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(400, $client->getResponse());
 
         $client->request(
             'GET',
@@ -338,7 +338,7 @@ class PackageControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
 
         $client->request('DELETE', '/api/packages/' . $this->package1->getId());
-        $this->assertEquals('204', $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(204, $client->getResponse());
     }
 
     public function testDeleteByIdNotExisting()
@@ -346,7 +346,7 @@ class PackageControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
 
         $client->request('DELETE', '/api/packages/4711');
-        $this->assertEquals('404', $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
 
         // there still have to be 3 packages
         $client->request('GET', '/api/packages');

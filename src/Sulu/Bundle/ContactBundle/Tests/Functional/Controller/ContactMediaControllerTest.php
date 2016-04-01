@@ -350,7 +350,7 @@ class ContactMediaControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
 
         $client->request(
             'GET',
@@ -370,7 +370,7 @@ class ContactMediaControllerTest extends SuluTestCase
             '/api/contacts/' . $this->contact->getId() . '/medias/' . $this->media2->getId()
         );
 
-        $this->assertEquals('204', $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(204, $client->getResponse());
 
         $client->request(
             'GET',
@@ -389,7 +389,7 @@ class ContactMediaControllerTest extends SuluTestCase
             '/api/contacts/' . $this->contact->getId() . '/medias/99'
         );
 
-        $this->assertEquals('404', $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
 
         $client->request(
             'GET',

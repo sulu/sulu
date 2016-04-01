@@ -115,7 +115,7 @@ class TranslationsControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request('GET', '/api/catalogues/' . $this->catalogue2->getId() . '/translations');
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals(2, $response->total);
         $this->assertEquals(2, count($response->_embedded->translations));
@@ -165,12 +165,12 @@ class TranslationsControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request('PATCH', '/api/catalogues/' . $this->catalogue1->getId() . '/translations', $request);
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(204, $client->getResponse());
 
         $client = $this->createAuthenticatedClient();
         $client->request('GET', '/api/catalogues/' . $this->catalogue1->getId() . '/translations');
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals(3, $response->total);
         $this->assertEquals(3, count($response->_embedded->translations));

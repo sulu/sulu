@@ -184,7 +184,7 @@ class GroupControllerTest extends SuluTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals(2, count($response->_embedded->groups));
 
         $client->request(
@@ -192,7 +192,7 @@ class GroupControllerTest extends SuluTestCase
             '/api/groups/' . $this->group1->getId()
         );
 
-        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(204, $client->getResponse());
 
         $client->request(
             'GET',
@@ -200,7 +200,7 @@ class GroupControllerTest extends SuluTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals(1, count($response->_embedded->groups));
     }
 }

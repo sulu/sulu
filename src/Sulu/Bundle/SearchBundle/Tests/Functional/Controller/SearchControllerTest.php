@@ -172,7 +172,7 @@ class SearchControllerTest extends SuluTestCase
         $this->client->request('GET', '/search/query', $params);
 
         $response = $this->client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
         $result = json_decode($response->getContent(), true);
         unset($result['_links']);
 
@@ -187,7 +187,7 @@ class SearchControllerTest extends SuluTestCase
         $this->client->request('GET', '/search/indexes');
 
         $response = $this->client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
         $result = json_decode($response->getContent(), true);
 
         $this->assertEquals('product', $result[0]['indexName']);
