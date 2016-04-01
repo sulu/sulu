@@ -9,7 +9,7 @@
 <% } %>
                 <div id="file-version-change" class="file-version-change"></div>
             </div>
-            <span class="description action-navigator"><%= media.mimeType %>, <%= formatBytes(media.size) %></span>
+            <span class="description action-navigator"><%= crop(media.mimeType + ',' + formatBytes(media.size), 32) %></span>
         </div>
         <div class="grid-col-8">
             <div class="form-group m-bottom-20">

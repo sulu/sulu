@@ -39662,7 +39662,7 @@ define('__component__$select@husky',[], function() {
                     '</div>',
                     '<div class="grid-row">',
                     '   <div id="addRow" class="addButton">',
-                    this.sandbox.translate(defaults.translations.addItem),
+                    '   <span>', this.sandbox.translate(defaults.translations.addItem), '</span>',
                     '   </div>',
                     '</div>'
                 ].join('');

@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * ENHANCEMENT #2216 [All]                 Added KernelTestCase::assertHttpStatusCode method
+    * BUGFIX      #2217 [MediaBundle]         Fixed ui-bugs in media-collections
     * ENHANCEMENT #2214 [WebsiteBundle]       Added website default locale providers
     * ENHANCEMENT #2208 [AdminBundle]         Added require-js url args to avoid wrong cache hits
     * ENHANCEMENT #2206 [WebsiteBundle]       Added security contexts to webspace settings
