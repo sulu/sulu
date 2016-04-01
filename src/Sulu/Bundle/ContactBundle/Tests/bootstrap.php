@@ -16,6 +16,6 @@ if (!file_exists($file)) {
     throw new RuntimeException('Install dependencies to run test suite.');
 }
 
-$loader = require_once $file;
+$loader = require $file;
 
 AnnotationRegistry::registerLoader([$loader, 'loadClass']);

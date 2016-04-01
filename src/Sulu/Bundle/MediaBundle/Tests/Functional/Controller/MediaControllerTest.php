@@ -248,7 +248,10 @@ class MediaControllerTest extends SuluTestCase
             '/uploads/media/50x50/01/' . $media->getId() . '-photo.jpeg'
         );
 
-        $this->assertEquals($date->format('Y-m-d'), $client->getResponse()->getExpires()->format('Y-m-d'));
+        $this->assertEquals(
+            $date->format('Y-m-d'),
+            $client->getResponse()->getExpires()->format('Y-m-d')
+        );
     }
 
     /**
