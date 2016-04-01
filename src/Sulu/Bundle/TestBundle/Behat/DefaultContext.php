@@ -215,7 +215,11 @@ EOT;
      */
     public function iWaitAndExpectToSeeElement($selector)
     {
-        $this->waitForSelector($selector);
+        $this->spin(function (RawMinkContext $context) use ($selector) {
+            $context->assertSession()->elementExists('css', $selector);
+
+            return true;
+        });
     }
 
     /**
