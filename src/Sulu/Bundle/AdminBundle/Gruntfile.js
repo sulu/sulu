@@ -141,7 +141,7 @@ module.exports = function(grunt) {
                     variables: {
                         'app.min': '/bundles/suluadmin/dist/app.min.' + time,
                         'login.min': '/bundles/suluadmin/dist/login.min.' + time,
-                        'bundles/suluadmin/js/vendor/husky/husky.js': '/bundles/suluadmin/js/vendor/husky/husky.min.js',
+                        'bundles/suluadmin/js/vendor/husky/husky.js': '/bundles/suluadmin/js/vendor/husky/husky.min.js?v=' + time,
                         'debug: true': 'debug: false'
                     },
                     prefix: ''
