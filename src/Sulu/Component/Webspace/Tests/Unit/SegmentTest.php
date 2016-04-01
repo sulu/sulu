@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Segment\Tests\Unit;
+namespace Sulu\Component\Webspace\Tests\Unit;
 
 use Sulu\Component\Webspace\Segment;
 

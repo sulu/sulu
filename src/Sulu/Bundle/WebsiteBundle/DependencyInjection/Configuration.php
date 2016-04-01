@@ -61,6 +61,12 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+            ->end()
+            ->arrayNode('default_locale')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->scalarNode('provider_service_id')->defaultValue('sulu_website.default_locale.portal_provider')->end()
+                ->end()
             ->end();
 
         return $treeBuilder;

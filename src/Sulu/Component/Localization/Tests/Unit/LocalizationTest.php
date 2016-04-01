@@ -20,17 +20,18 @@ class LocalizationTest extends \PHPUnit_Framework_TestCase
      */
     private $localization;
 
-    public function testToArray()
+    public function setUp()
     {
-        $this->localization = new Localization();
-        $this->localization->setLanguage('fr');
-        $this->localization->setCountry('at');
+        $this->localization = new Localization('de', 'at');
         $this->localization->setDefault(true);
         $this->localization->setXDefault(true);
+    }
 
+    public function testToArray()
+    {
         $expected = [
-            'language' => 'fr',
-            'localization' => 'fr_at',
+            'language' => 'de',
+            'localization' => 'de_at',
             'country' => 'at',
             'default' => true,
             'xDefault' => true,
@@ -39,5 +40,13 @@ class LocalizationTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->assertEquals($expected, $this->localization->toArray());
+    }
+
+    public function testGetLocale()
+    {
+        $this->assertEquals('de_at', $this->localization->getLocale(Localization::UNDERSCORE));
+        $this->assertEquals('de-at', $this->localization->getLocale(Localization::DASH));
+        $this->assertEquals('de-AT', $this->localization->getLocale(Localization::ISO6391));
+        $this->assertEquals('de_AT', $this->localization->getLocale(Localization::LCID));
     }
 }
