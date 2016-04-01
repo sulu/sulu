@@ -237,7 +237,7 @@ define([
 
             var tabs = [
                 {title: this.sandbox.translate('public.info'), data: $info},
-                {title: this.sandbox.translate('sulu.media.copyright'), data: $copyright}
+                {title: this.sandbox.translate('sulu.media.licence'), data: $copyright}
             ];
 
             if (!!$preview) {

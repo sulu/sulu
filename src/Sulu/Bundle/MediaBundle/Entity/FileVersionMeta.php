@@ -39,6 +39,11 @@ class FileVersionMeta
     /**
      * @var string
      */
+    private $credits;
+
+    /**
+     * @var string
+     */
     private $locale;
 
     /**
@@ -126,6 +131,30 @@ class FileVersionMeta
     public function getCopyright()
     {
         return $this->copyright;
+    }
+
+    /**
+     * Set credits.
+     *
+     * @param string $credits
+     *
+     * @return FileVersionMeta
+     */
+    public function setCredits($credits)
+    {
+        $this->credits = $credits;
+
+        return $this;
+    }
+
+    /**
+     * Get credits.
+     *
+     * @return string
+     */
+    public function getCredits()
+    {
+        return $this->credits;
     }
 
     /**

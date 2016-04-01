@@ -302,6 +302,37 @@ class Media extends ApiWrapper
     }
 
     /**
+     * @param string $credits
+     *
+     * @return $this
+     */
+    public function setCredits($credits)
+    {
+        $this->getMeta(true)->setCredits($credits);
+
+        return $this;
+    }
+
+    /**
+     * Returns copyright for media.
+     *
+     * @VirtualProperty
+     * @SerializedName("credits")
+     *
+     * @return string
+     *
+     * @throws FileVersionNotFoundException
+     */
+    public function getCredits()
+    {
+        if (!$this->getLocalizedMeta()) {
+            return;
+        }
+
+        return $this->getLocalizedMeta()->getCredits();
+    }
+
+    /**
      * @param int $version
      *
      * @return $this
