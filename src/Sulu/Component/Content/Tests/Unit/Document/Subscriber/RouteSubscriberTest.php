@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use PHPCR\NodeInterface;
+use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
@@ -20,6 +21,7 @@ use Sulu\Component\Content\Document\Subscriber\RouteSubscriber;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
 class RouteSubscriberTest extends \PHPUnit_Framework_TestCase
@@ -209,5 +211,34 @@ class RouteSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->documentInspector->getNode($targetDocument->reveal())->shouldNotBeCalled();
 
         $this->routeSubscriber->handlePersist($persistEvent->reveal());
+    }
+
+    public function testRemoveNoReferrer()
+    {
+        $removeEvent = $this->prophesize(RemoveEvent::class);
+        $document = $this->prophesize(RouteBehavior::class);
+        $removeEvent->getDocument()->willReturn($document->reveal());
+
+        $this->documentInspector->getReferrers($document->reveal())->willReturn([]);
+
+        $this->routeSubscriber->handleRemove($removeEvent->reveal());
+
+        $this->documentManager->remove(Argument::any())->shouldNotBeCalled();
+    }
+
+    public function testRemove()
+    {
+        $removeEvent = $this->prophesize(RemoveEvent::class);
+        $routeDocument1 = $this->prophesize(RouteBehavior::class);
+        $removeEvent->getDocument()->willReturn($routeDocument1->reveal());
+
+        $routeDocument2 = $this->prophesize(RouteBehavior::class);
+
+        $this->documentInspector->getReferrers($routeDocument1->reveal())->willReturn([$routeDocument2->reveal()]);
+        $this->documentInspector->getReferrers($routeDocument2->reveal())->willReturn([]);
+
+        $this->routeSubscriber->handleRemove($removeEvent->reveal());
+
+        $this->documentManager->remove($routeDocument2->reveal())->shouldBeCalled();
     }
 }

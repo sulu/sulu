@@ -18,7 +18,6 @@ use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
-use Sulu\Component\Content\Document\Behavior\RoutableBehavior;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
@@ -54,8 +53,7 @@ class BasePageDocument implements
     OrderBehavior,
     WebspaceBehavior,
     SecurityBehavior,
-    LocalizedAuditableBehavior,
-    RoutableBehavior
+    LocalizedAuditableBehavior
 {
     /**
      * The name of this node.

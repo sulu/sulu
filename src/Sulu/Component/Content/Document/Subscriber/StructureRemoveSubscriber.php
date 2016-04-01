@@ -14,7 +14,7 @@ namespace Sulu\Component\Content\Document\Subscriber;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use Sulu\Bundle\ContentBundle\Document\RouteDocument;
-use Sulu\Component\Content\Document\Behavior\RoutableBehavior;
+use Sulu\Component\Content\Document\Behavior\RouteBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;
 use Sulu\Component\DocumentManager\DocumentInspector;
@@ -66,22 +66,20 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
 
         if ($document instanceof StructureBehavior) {
             $this->removeReferences($document);
-        }
-
-        if ($document instanceof RoutableBehavior) {
-            $this->recursivelyRemoveRoutes($document);
+            $this->removeRoute($document);
         }
     }
 
-    private function recursivelyRemoveRoutes($document)
+    /**
+     * Removes related route of given document.
+     *
+     * @param StructureBehavior $document
+     */
+    private function removeRoute(StructureBehavior $document)
     {
-        $referrers = $this->inspector->getReferrers($document);
-
-        foreach ($referrers as $document) {
-            if ($document instanceof RouteDocument) {
-                $this->recursivelyRemoveRoutes($document);
-                $this->documentManager->remove($document);
-                continue;
+        foreach ($this->inspector->getReferrers($document) as $referrer) {
+            if ($referrer instanceof RouteBehavior) {
+                $this->documentManager->remove($referrer);
             }
         }
     }

@@ -20,6 +20,7 @@ use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -65,6 +66,7 @@ class RouteSubscriber implements EventSubscriberInterface
             // must be exectued before the TargetSubscriber
             Events::PERSIST => ['handlePersist', 5],
             Events::HYDRATE => 'handleHydrate',
+            Events::REMOVE => ['handleRemove', 550],
         ];
     }
 
@@ -122,13 +124,52 @@ class RouteSubscriber implements EventSubscriberInterface
             /** @var RouteDocument $newRouteDocument */
             $newRouteDocument = $this->documentManager->create('route');
             $newRouteDocument->setTargetDocument($targetDocument);
-            $this->documentManager->persist($newRouteDocument, $locale, [
-                'path' => $routePath,
-                'auto_create' => true,
-            ]);
+            $this->documentManager->persist(
+                $newRouteDocument,
+                $locale,
+                [
+                    'path' => $routePath,
+                    'auto_create' => true,
+                ]
+            );
 
             // change routes in old position to history
             $this->changeOldPathToHistoryRoutes($document, $newRouteDocument);
+        }
+    }
+
+    /**
+     * Removes the routes for the given document and removes history routes if necessary.
+     *
+     * @param RemoveEvent $event
+     */
+    public function handleRemove(RemoveEvent $event)
+    {
+        $document = $event->getDocument();
+
+        if (!$document instanceof RouteBehavior) {
+            return;
+        }
+
+        $this->recursivelyRemoveRoutes($document);
+    }
+
+    /**
+     * Remove given Route and his history.
+     *
+     * @param $document
+     */
+    private function recursivelyRemoveRoutes(RouteBehavior $document)
+    {
+        $referrers = $this->documentInspector->getReferrers($document);
+
+        foreach ($referrers as $referrer) {
+            if (!$referrer instanceof RouteBehavior) {
+                continue;
+            }
+
+            $this->recursivelyRemoveRoutes($referrer);
+            $this->documentManager->remove($referrer);
         }
     }
 
