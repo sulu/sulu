@@ -807,6 +807,84 @@ class NodeControllerTest extends SuluTestCase
         $this->assertArrayNotHasKey('type', $response);
     }
 
+    public function testPutRemoveShadowWithDifferentTemplate()
+    {
+        $data = [
+            'en' => [
+                'template' => 'default',
+                'title' => 'test_en',
+                'tags' => [
+                    'tag1',
+                    'tag2',
+                ],
+                'url' => '/test_en',
+                'article' => 'Test English',
+            ],
+            'de' => [
+                'template' => 'overview',
+                'title' => 'test_de',
+                'tags' => [
+                    'tag1',
+                    'tag2',
+                ],
+                'url' => '/test_de',
+                'article' => 'Test German',
+            ],
+        ];
+        $mapper = $this->getMapper();
+
+        $englishStructure = $mapper->save($data['en'], 'default', 'sulu_io', 'en', 1);
+        $germanStructure = $mapper->save(
+            $data['de'],
+            'overview',
+            'sulu_io',
+            'de',
+            1,
+            true,
+            $englishStructure->getUuid()
+        );
+
+        $germanStructure = $mapper->save(
+            $data['de'],
+            'overview',
+            'sulu_io',
+            'de',
+            1,
+            true,
+            $germanStructure->getUuid(),
+            null,
+            null,
+            true,
+            'en'
+        );
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('GET', '/api/nodes/' . $germanStructure->getUuid() . '?language=de');
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals(true, $response['shadowOn']);
+        $this->assertEquals('default', $response['template']);
+
+        $client->request(
+            'PUT',
+            '/api/nodes/' . $germanStructure->getUuid() . '?language=de&webspace=sulu_io',
+            [
+                'id' => $germanStructure->getUuid(),
+                'nodeType' => 1,
+                'shadowOn' => false,
+            ]
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $client->request('GET', '/api/nodes/' . $germanStructure->getUuid() . '?language=de');
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals(false, $response['shadowOn']);
+        $this->assertEquals('overview', $response['template']);
+    }
+
     public function testPutState()
     {
         $data = [

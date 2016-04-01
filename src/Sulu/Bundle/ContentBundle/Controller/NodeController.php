@@ -595,7 +595,10 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $document = $this->getDocumentManager()->find(
             $uuid,
             $language,
-            ['load_ghost_content' => false]
+            [
+                'load_ghost_content' => false,
+                'load_shadow_content' => false,
+            ]
         );
 
         $this->get('sulu_hash.request_hash_checker')->checkHash($request, $document, $document->getUuid());

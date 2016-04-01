@@ -17,6 +17,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
@@ -67,7 +68,23 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
             Events::HYDRATE => [
                 ['handleHydrate', 390],
             ],
+            Events::CONFIGURE_OPTIONS => 'handleConfigureOptions',
         ];
+    }
+
+    public function handleConfigureOptions(ConfigureOptionsEvent $event)
+    {
+        $options = $event->getOptions();
+        $options->setDefaults(
+            [
+                'load_shadow_content' => true,
+            ]
+        );
+        $options->setAllowedTypes(
+            [
+                'load_shadow_content' => 'bool',
+            ]
+        );
     }
 
     public function handleMetadataLoad(MetadataLoadEvent $event)
@@ -102,7 +119,7 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
 
-        if (!$document instanceof ShadowLocaleBehavior) {
+        if (!$document instanceof ShadowLocaleBehavior || !$event->getOption('load_shadow_content')) {
             return;
         }
 
