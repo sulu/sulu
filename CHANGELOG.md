@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2233 [ContentBundle]       Fixed resource locators for saving without locale
     * ENHANCEMENT #2220 [ContentBundle]       Removed routable behavior and moved logic route-subscriber
     * BUGFIX      #2219 [ContentBundle]       Fixed changing template when disabling shadow page
+    * ENHANCEMENT #2216 [ContentBundle]       Fixed hide add button if user has no add permission for webspace
     * ENHANCEMENT #2216 [All]                 Added KernelTestCase::assertHttpStatusCode method
     * BUGFIX      #2217 [MediaBundle]         Fixed ui-bugs in media-collections
     * ENHANCEMENT #2214 [WebsiteBundle]       Added website default locale providers
