@@ -216,7 +216,15 @@ EOT;
     public function iWaitAndExpectToSeeElement($selector)
     {
         $this->spin(function (RawMinkContext $context) use ($selector) {
-            $context->assertSession()->elementExists('css', $selector);
+            $element = $context->getSession()->getPage()->find('css', $selector);
+
+            if ($element === null) {
+                throw new \Exception('Element not found');
+            }
+
+            if (!$element->isVisible()) {
+                throw new \Exception('Element not visible');
+            }
 
             return true;
         });
