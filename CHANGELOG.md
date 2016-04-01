@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * ENHANCEMENT #2220 [ContentBundle]       Removed routable behavior and moved logic route-subscriber
+    * BUGFIX      #2219 [ContentBundle]       Fixed changing template when disabling shadow page
     * ENHANCEMENT #2216 [All]                 Added KernelTestCase::assertHttpStatusCode method
     * BUGFIX      #2217 [MediaBundle]         Fixed ui-bugs in media-collections
     * ENHANCEMENT #2214 [WebsiteBundle]       Added website default locale providers

@@ -660,7 +660,7 @@ class NodeControllerTest extends SuluTestCase
 
         $client->request(
             'PUT',
-            '/api/nodes/' . $response->id . '?type=home&webspace=sulu_io&language=en',
+            '/api/nodes/' . $response->id . '?webspace=sulu_io&language=en',
             $data
         );
 

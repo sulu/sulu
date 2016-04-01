@@ -276,15 +276,26 @@ define([
             }.bind(this));
 
             // content saved
-            this.sandbox.on('sulu.content.contents.saved', function(id, data) {
-                this.data = data;
-                this.setHeaderBar(true);
+            this.sandbox.on('sulu.content.contents.saved', function(id, data, action) {
+                if (!this.options.id) {
+                    this.sandbox.sulu.viewStates.justSaved = true;
+                } else {
+                    this.data = data;
+                    this.content.set(data);
+                    this.setHeaderBar(true);
 
-                // FIXME select should be able to override text in a item
-                this.sandbox.dom.html('li[data-id="' + this.options.language + '"] a', this.options.language);
+                    // FIXME select should be able to override text in a item
+                    this.sandbox.dom.html('li[data-id="' + this.options.language + '"] a', this.options.language);
 
-                this.sandbox.emit('sulu.header.saved', data);
-                this.sandbox.emit('sulu.labels.success.show', 'labels.success.content-save-desc', 'labels.success');
+                    this.sandbox.emit('sulu.header.saved', data);
+                    this.sandbox.emit('sulu.labels.success.show', 'labels.success.content-save-desc', 'labels.success');
+                }
+
+                this.afterSaveAction(action, !this.options.id);
+            }, this);
+
+            this.sandbox.on('sulu.content.contents.error', function(code, data, action) {
+                this.handleError(code, data, action);
             }, this);
 
             // content delete
@@ -574,8 +585,9 @@ define([
         /**
          * Asks if the content should be overriden, if the content has been changed on the server.
          * @param {Object} data
+         * @param {string} action
          */
-        handleErrorContentChanged: function(data) {
+        handleErrorContentChanged: function(data, action) {
             this.sandbox.emit(
                 'sulu.overlay.show-warning',
                 'content.changed-warning.title',
@@ -590,12 +602,16 @@ define([
                             // on success save contents id
                             success: function(response) {
                                 var model = response.toJSON();
-                                this.sandbox.emit('sulu.content.contents.saved', model.id, model);
-                                this.setHeaderBar(false);
+                                this.sandbox.emit('sulu.content.contents.saved', model.id, model, action);
                                 this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
                             }.bind(this),
                             error: function(model, response) {
-                                this.handleError(response.responseJSON.code, data);
+                                this.sandbox.emit(
+                                    'sulu.content.contents.error',
+                                    response.responseJSON.code,
+                                    data,
+                                    action
+                                );
                             }.bind(this)
                         },
                         true
@@ -611,11 +627,12 @@ define([
          * Handles the error based on its error code.
          * @param {number} errorCode
          * @param {Object} data
+         * @param {string} action
          */
-        handleError: function(errorCode, data) {
+        handleError: function(errorCode, data, action) {
             switch (errorCode) {
                 case errorCodes.contentChanged:
-                    this.handleErrorContentChanged(data);
+                    this.handleErrorContentChanged(data, action);
                     break;
                 case errorCodes.resourceLocatorAlreadyExists:
                     this.sandbox.emit(
@@ -656,16 +673,11 @@ define([
                     // on success save contents id
                     success: function(response) {
                         var model = response.toJSON();
-                        if (!!this.options.id) {
-                            this.sandbox.emit('sulu.content.contents.saved', model.id, model);
-                        } else {
-                            this.sandbox.sulu.viewStates.justSaved = true;
-                        }
-                        this.afterSaveAction(action, !this.options.id);
+                        this.sandbox.emit('sulu.content.contents.saved', model.id, model, action);
                         def.resolve();
                     }.bind(this),
                     error: function(model, response) {
-                        this.handleError.call(this, response.responseJSON.code, data);
+                        this.sandbox.emit('sulu.content.contents.error', response.responseJSON.code, data, action);
                     }.bind(this)
                 }
             );

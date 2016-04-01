@@ -20,7 +20,6 @@ use PHPCR\PropertyInterface;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
-use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
 use Sulu\Component\Content\Form\Exception\InvalidFormException;
@@ -30,6 +29,7 @@ use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 use Sulu\Component\Content\Repository\Mapping\MappingInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
+use Sulu\Component\DocumentManager\Metadata\BaseMetadataFactory;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\InvalidHashException;
 use Sulu\Component\Rest\Exception\MissingParameterChoiceException;
@@ -590,7 +590,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
     public function putAction(Request $request, $uuid)
     {
         $language = $this->getLanguage($request);
-        $type = $request->query->get('type', 'page');
 
         $document = $this->getDocumentManager()->find(
             $uuid,
@@ -600,6 +599,8 @@ class NodeController extends RestController implements ClassResourceInterface, S
                 'load_shadow_content' => false,
             ]
         );
+
+        $type = $this->getMetadataFactory()->getMetadataForClass(get_class($document))->getAlias();
 
         $this->get('sulu_hash.request_hash_checker')->checkHash($request, $document, $document->getUuid());
 
@@ -654,14 +655,12 @@ class NodeController extends RestController implements ClassResourceInterface, S
             if ($state !== null) {
                 $state = intval($state);
             }
-            $type = $request->query->get('type', Structure::TYPE_PAGE);
 
             $data = $request->request->all();
 
             $template = isset($data['template']) ? $data['template'] : null;
 
             $mapperRequest = ContentMapperRequest::create()
-                ->setType($type)
                 ->setTemplateKey($template)
                 ->setWebspaceKey($webspace)
                 ->setUserId($this->getUser()->getId())
@@ -821,6 +820,14 @@ class NodeController extends RestController implements ClassResourceInterface, S
     protected function getRepository()
     {
         return $this->get('sulu_content.node_repository');
+    }
+
+    /**
+     * @return BaseMetadataFactory
+     */
+    protected function getMetadataFactory()
+    {
+        return $this->get('sulu_document_manager.metadata_factory.base');
     }
 
     /**

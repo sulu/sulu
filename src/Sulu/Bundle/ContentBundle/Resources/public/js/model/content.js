@@ -22,6 +22,9 @@ define([
             return this.save.call(this, attributes, options);
         },
 
+        /**
+         * @deprecated Use ContentManager::save instead
+         */
         fullSave: function(webspace, language, parent, state, type, attributes, options, force) {
             options = _.defaults(
                 (options || {}),
