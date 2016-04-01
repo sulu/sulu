@@ -12,6 +12,7 @@ namespace Sulu\Component\CustomUrl\Document\Subscriber;
 
 use PHPCR\Util\PathHelper;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Document\Behavior\RouteBehavior;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 use Sulu\Component\CustomUrl\Document\CustomUrlBehavior;
 use Sulu\Component\CustomUrl\Document\RouteDocument;
@@ -19,6 +20,7 @@ use Sulu\Component\CustomUrl\Generator\GeneratorInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\DocumentManager\PathBuilder;
@@ -75,7 +77,11 @@ class CustomUrlSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return [Events::PERSIST => 'handlePersist', Events::HYDRATE => 'handleHydrate'];
+        return [
+            Events::PERSIST => 'handlePersist',
+            Events::HYDRATE => 'handleHydrate',
+            Events::REMOVE => ['handleRemove', 550],
+        ];
     }
 
     /**
@@ -209,6 +215,25 @@ class CustomUrlSubscriber implements EventSubscriberInterface
 
         $webspaceKey = $this->inspector->getWebspace($document);
         $document->setRoutes($this->findReferrer($document, $webspaceKey));
+    }
+
+    /**
+     * Removes the routes for the given document.
+     *
+     * @param RemoveEvent $event
+     */
+    public function handleRemove(RemoveEvent $event)
+    {
+        $document = $event->getDocument();
+        if (!($document instanceof CustomUrlBehavior)) {
+            return;
+        }
+
+        foreach ($this->inspector->getReferrers($document) as $referrer) {
+            if ($referrer instanceof RouteBehavior) {
+                $this->documentManager->remove($referrer);
+            }
+        }
     }
 
     /**
