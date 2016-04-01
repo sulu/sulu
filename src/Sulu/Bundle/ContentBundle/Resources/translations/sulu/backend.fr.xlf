@@ -250,17 +250,21 @@
                 <source>smart-content.choose-data-source.back</source>
                 <target>Retour</target>
             </trans-unit>
+            <trans-unit id="443d99ff2f64652633a5ca2169f22211" resname="sulu.content.seo.serp">
+                <source>sulu.content.seo.serp</source>
+                <target>Search Engine Results Pages Preview (SERP)</target>
+            </trans-unit>
             <trans-unit id="443d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.title">
                 <source>sulu.content.seo.title</source>
-                <target>Titre</target>
+                <target>Titre (Meta Title)</target>
             </trans-unit>
             <trans-unit id="441d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.description">
                 <source>sulu.content.seo.description</source>
-                <target>Description</target>
+                <target>Description (Meta Description)</target>
             </trans-unit>
             <trans-unit id="442d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.keywords">
                 <source>sulu.content.seo.keywords</source>
-                <target>Mots-clefs</target>
+                <target>Mots-clefs (Meta Keywords)</target>
             </trans-unit>
             <trans-unit id="445d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.canonical">
                 <source>sulu.content.seo.canonical</source>
@@ -310,6 +314,10 @@
                 <source>sulu.content.seo.keywords-left</source>
                 <target>mots-clés restants</target>
             </trans-unit>
+            <trans-unit id="c50af522ac181350142c0b4720e29a2e" resname="sulu.content.seo.title.note">
+                <source>sulu.content.seo.title.note</source>
+                <target>Le meta title est limitée à 55 caractères.</target>
+            </trans-unit>
             <trans-unit id="c50af522ac181350142c0b4720e29a2f" resname="sulu.content.seo.descriptions.note">
                 <source>sulu.content.seo.descriptions.note</source>
                 <target>Le meta description est limitée à 155 caractères.</target>
@@ -320,15 +328,15 @@
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a7343623dfdf010" resname="sulu.content.form.settings.nav-contexts">
                 <source>sulu.content.form.settings.nav-contexts</source>
-                <target>Contexte de navigation</target>
+                <target>Indique la page dans</target>
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a7343623dfdf011" resname="sulu.content.form.settings.all-nav-contexts">
                 <source>sulu.content.form.settings.all-nav-contexts</source>
-                <target>Tous les contextes de navigation choisis ...</target>
+                <target>toutes les navigations</target>
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a7343623dfdf012" resname="sulu.content.form.settings.no-nav-contexts">
                 <source>sulu.content.form.settings.no-nav-contexts</source>
-                <target>Aucun contextes de navigation choisis ...</target>
+                <target>aucune navigation</target>
             </trans-unit>
             <trans-unit id="aaaaaaf371239fbed4a73a4123dfdf008" resname="sulu.content.form.settings.shadow_page">
                 <source>sulu.content.form.settings.shadow_page</source>

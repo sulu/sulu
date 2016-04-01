@@ -9,6 +9,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2206 [SnippetBundle]       Added security contexts to webspace settings
     * ENHANCEMENT #2206 [CustomUrlBundle]     Added security contexts to webspace settings
     * ENHANCEMENT #2209 [ContentBundle]       Added open-ghost overlay on change-locale in content-form
+    * ENHANCEMENT #2211 [ContentBundle]       Improved translations and UI of seo tab
     * ENHANCEMENT #1980 [MediaBundle]         Sort assets by created date descending in lists
     * BUGFIX      #2193 [ContentBundle]       Ignore required properties on homepages during initialization.
     * BUGFIX      #2199 [SnippetBundle]       Fixed syntax mistake in snippet-controller
