@@ -133,7 +133,7 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
             '/api/nodes/resourcelocators/generates?webspace=sulu_io&language=en&template=default',
             ['parts' => ['title' => 'test']]
         );
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('/test', $response->resourceLocator);
 
@@ -142,7 +142,7 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
             '/api/nodes/resourcelocators/generates?parent=' . $this->data[0]['id'] . '&webspace=sulu_io&language=en&template=default',
             ['parts' => ['title' => 'test']]
         );
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('/products/test', $response->resourceLocator);
 
@@ -151,7 +151,7 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
             '/api/nodes/resourcelocators/generates?parent=' . $this->data[1]['id'] . '&webspace=sulu_io&language=en&template=default',
             ['parts' => ['title' => 'test']]
         );
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('/news/test-2', $response->resourceLocator);
 
@@ -160,7 +160,7 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
             '/api/nodes/resourcelocators/generates?parent=' . $this->data[3]['id'] . '&webspace=sulu_io&language=en&template=default',
             ['parts' => ['title' => 'test']]
         );
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('/news/test-1/test-1', $response->resourceLocator);
     }
@@ -181,7 +181,7 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
             'GET',
             '/api/nodes/' . $newsData['id'] . '/resourcelocators?webspace=sulu_io&language=en'
         );
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $result = (array) json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals(1, count($result['_embedded']['resourcelocators']));
@@ -205,20 +205,20 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
             'GET',
             '/api/nodes/' . $newsData['id'] . '/resourcelocators?webspace=sulu_io&language=en'
         );
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $history = (array) json_decode($this->client->getResponse()->getContent(), true);
 
         $url = $history['_embedded']['resourcelocators'][0]['_links']['delete'];
 
         $url = substr($url, 6);
         $this->client->request('DELETE', $url);
-        $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
 
         $this->client->request(
             'GET',
             '/api/nodes/' . $newsData['id'] . '/resourcelocators?webspace=sulu_io&language=en'
         );
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $result = (array) json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals(0, count($result['_embedded']['resourcelocators']));
@@ -242,19 +242,19 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
             '/api/nodes/' . $newsData['id'] . '/resourcelocators?webspace=sulu_io&language=en'
         );
         $node = (array) json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $history = (array) json_decode($this->client->getResponse()->getContent(), true);
 
         $url = $history['_embedded']['resourcelocators'][0]['_links']['restore'];
         $url = substr($url, 6);
         $this->client->request('PUT', $url);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->client->request(
             'GET',
             '/api/nodes/' . $newsData['id'] . '?webspace=sulu_io&language=en'
         );
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $node = (array) json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('/news', $node['url']);

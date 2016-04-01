@@ -14,6 +14,7 @@ namespace Sulu\Bundle\TestBundle\Testing;
 use InvalidArgumentException;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Base test tests which require the Sulu kernel / container.
@@ -182,5 +183,43 @@ abstract class KernelTestCase extends \PHPUnit_Framework_TestCase
         while ($kernel = array_shift($this->kernelStack)) {
             $kernel->shutdown();
         }
+    }
+
+    /**
+     * Assert the HTTP status code of a Response.
+     *
+     * If the response is not as expected we set the assertion message to the
+     * body of the response - if it is json-decodable then we pretty print
+     * JSON.
+     *
+     * The $debugLength argument limits the number of lines included from the
+     * response body in case of failure.
+     *
+     * @param int $code
+     * @param Response $response
+     * @param int $debugLength
+     */
+    protected function assertHttpStatusCode($code, Response $response, $debugLength = 10)
+    {
+        $httpCode = $response->getStatusCode();
+
+        $message = null;
+        if ($code !== $httpCode) {
+            $message = $response->getContent();
+
+            if ($json = json_decode($message, true)) {
+                $message = explode(PHP_EOL, json_encode($json, JSON_PRETTY_PRINT));
+                $message = implode(PHP_EOL, array_slice($message, 0, $debugLength));
+                $message = sprintf(
+                    'HTTP status code %s is not expected %s, showing %s lines of the response body: %s',
+                    $httpCode,
+                    $code,
+                    $debugLength,
+                    $message
+                );
+            }
+        }
+
+        $this->assertEquals($code, $httpCode, $message);
     }
 }

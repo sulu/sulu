@@ -518,7 +518,7 @@ class ContactControllerTest extends SuluTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
@@ -831,7 +831,7 @@ class ContactControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(400, $client->getResponse());
         $this->assertEquals(
             'The "Sulu\Bundle\ContactBundle\Entity\Contact"-entity requires a "contact"-argument',
             $response->message
@@ -890,7 +890,7 @@ class ContactControllerTest extends SuluTestCase
         $client = $this->createTestClient();
         $client->request('GET', '/api/contacts?flat=true&search=Nothing&searchFields=fullName');
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(0, $response->total);
@@ -910,7 +910,7 @@ class ContactControllerTest extends SuluTestCase
         $client = $this->createTestClient();
         $client->request('GET', '/api/contacts?flat=true&search=Erika&searchFields=fullName&fields=fullName');
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
@@ -1546,7 +1546,7 @@ class ContactControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
     }
 
     public function testGetList()
@@ -1659,12 +1659,12 @@ class ContactControllerTest extends SuluTestCase
         $client = $this->createTestClient();
         $client->request('DELETE', '/api/contacts/' . $this->contact->getId());
 
-        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(204, $client->getResponse());
 
         $client = $this->createTestClient();
         $client->request('GET', '/api/contacts/' . $this->contact->getId());
 
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
     }
 
     public function testDeleteNotExisting()
@@ -1672,7 +1672,7 @@ class ContactControllerTest extends SuluTestCase
         $client = $this->createTestClient();
         $client->request('DELETE', '/api/contacts/4711');
 
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
 
         $client->request('GET', '/api/contacts?flat=true');
         $response = json_decode($client->getResponse()->getContent());

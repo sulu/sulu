@@ -143,7 +143,7 @@ class FilterControllerTest extends SuluTestCase
             'GET',
             '/api/filters/' . $this->filter1->getId()
         );
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($this->filter1->getId(), $response->id);
@@ -192,7 +192,7 @@ class FilterControllerTest extends SuluTestCase
             'GET',
             '/api/filters?context=contact'
         );
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertNotEmpty($response);
@@ -205,7 +205,7 @@ class FilterControllerTest extends SuluTestCase
             'GET',
             '/api/filters?flat=true&context=contact'
         );
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertNotEmpty($response);
@@ -221,7 +221,7 @@ class FilterControllerTest extends SuluTestCase
             'GET',
             '/api/filters/666'
         );
-        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
     /**
@@ -232,11 +232,11 @@ class FilterControllerTest extends SuluTestCase
         $filter = $this->createFilterAsArray('newFilter', false, 'contact');
         $this->client->request('POST', '/api/filters', $filter);
         $response = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->client->request('GET', '/api/filters/' . $response->id);
         $response = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals($filter['conjunction'], $response->conjunction);
         $this->assertEquals($filter['context'], $response->context);
@@ -256,7 +256,7 @@ class FilterControllerTest extends SuluTestCase
     {
         $filter = $this->createFilterAsArray('newFilter', false, 'not defined');
         $this->client->request('POST', '/api/filters', $filter);
-        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
     /**
@@ -270,7 +270,7 @@ class FilterControllerTest extends SuluTestCase
         ];
         $this->client->request('POST', '/api/filters', $filter);
 
-        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
 
         $filter = [
             'name' => 'name',
@@ -278,7 +278,7 @@ class FilterControllerTest extends SuluTestCase
         ];
         $this->client->request('POST', '/api/filters', $filter);
 
-        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
 
         $filter = [
             'name' => 'name',
@@ -286,7 +286,7 @@ class FilterControllerTest extends SuluTestCase
         ];
         $this->client->request('POST', '/api/filters', $filter);
 
-        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
     public function createFilterAsArray($name, $conjunction, $context, $partial = false)
@@ -329,11 +329,11 @@ class FilterControllerTest extends SuluTestCase
         $filter = $this->createFilterAsArray('newFilter', 'and', 'account', true);
         $this->client->request('POST', '/api/filters', $filter);
         $response = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->client->request('GET', '/api/filters/' . $response->id);
         $response = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertEquals($filter['conjunction'], $response->conjunction);
         $this->assertEquals($filter['context'], $response->context);
@@ -378,7 +378,7 @@ class FilterControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($newName, $response->name);
@@ -431,7 +431,7 @@ class FilterControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($newName, $response->name);
@@ -473,7 +473,7 @@ class FilterControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($newName, $response->name);
@@ -504,7 +504,7 @@ class FilterControllerTest extends SuluTestCase
                 'context' => $newContext,
             ]
         );
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($newName, $response->name);
@@ -519,7 +519,7 @@ class FilterControllerTest extends SuluTestCase
     {
         $this->client->request('PUT', '/api/filters/666', ['code' => 'Missing filter']);
         $response = json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
         $this->assertEquals(
             'Entity with the type "SuluResourceBundle:Filter" and the id "666" not found.',
             $response->message
@@ -532,10 +532,10 @@ class FilterControllerTest extends SuluTestCase
     public function testDeleteById()
     {
         $this->client->request('DELETE', '/api/filters/' . $this->filter1->getId());
-        $this->assertEquals('204', $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
 
         $this->client->request('GET', '/api/filters/' . $this->filter1->getId());
-        $this->assertEquals('404', $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
     /**
@@ -547,10 +547,10 @@ class FilterControllerTest extends SuluTestCase
             '/api/filters?ids=' . $this->filter1->getId() . ',' . $this->filter2->getId() . ',' . $this->filter3->getId(
             )
         );
-        $this->assertEquals('204', $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
 
         $this->client->request('GET', '/api/filters?context=contact');
-        $this->assertEquals('200', $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEmpty($response->_embedded->filters);
     }
@@ -561,10 +561,10 @@ class FilterControllerTest extends SuluTestCase
     public function testCDeleteByIdsNotExisting()
     {
         $this->client->request('DELETE', '/api/filters?ids=666,999');
-        $this->assertEquals('204', $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
 
         $this->client->request('GET', '/api/filters?context=contact&flat=true');
-        $this->assertEquals('200', $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(2, count($response->_embedded->filters));
     }
@@ -575,10 +575,10 @@ class FilterControllerTest extends SuluTestCase
     public function testCDeleteByIdsPartialExistent()
     {
         $this->client->request('DELETE', '/api/filters?ids=' . $this->filter1->getId() . ',666');
-        $this->assertEquals('204', $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
 
         $this->client->request('GET', '/api/filters?context=contact&flat=true');
-        $this->assertEquals('200', $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, count($response->_embedded->filters));
     }
@@ -589,6 +589,6 @@ class FilterControllerTest extends SuluTestCase
     public function testDeleteByIdNotExisting()
     {
         $this->client->request('GET', '/api/filters/666');
-        $this->assertEquals('404', $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 }

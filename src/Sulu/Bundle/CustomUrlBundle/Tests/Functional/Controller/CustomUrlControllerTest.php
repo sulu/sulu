@@ -118,11 +118,7 @@ class CustomUrlControllerTest extends SuluTestCase
         $response = $client->getResponse();
         $responseData = json_decode($response->getContent(), true);
 
-        $this->assertEquals(
-            $statusCode,
-            $response->getStatusCode(),
-            json_encode($responseData)
-        );
+        $this->assertHttpStatusCode($statusCode, $response);
 
         if ($statusCode !== 200) {
             $this->assertEquals($restErrorCode, $responseData['code']);
@@ -492,11 +488,7 @@ class CustomUrlControllerTest extends SuluTestCase
         $response = $client->getResponse();
         $responseData = json_decode($response->getContent(), true);
 
-        $this->assertEquals(
-            $statusCode,
-            $response->getStatusCode(),
-            array_key_exists('error', $responseData) ? $responseData['error']['message'] : ''
-        );
+        $this->assertHttpStatusCode($statusCode, $response);
 
         if ($statusCode !== 200) {
             $this->assertEquals($restErrorCode, $responseData['code']);
@@ -576,11 +568,7 @@ class CustomUrlControllerTest extends SuluTestCase
         $response = $client->getResponse();
         $responseData = json_decode($response->getContent(), true);
 
-        $this->assertEquals(
-            200,
-            $response->getStatusCode(),
-            array_key_exists('error', $responseData) ? $responseData['error']['message'] : ''
-        );
+        $this->assertHttpStatusCode(200, $response);
 
         foreach ($data as $key => $value) {
             if ($key === 'targetDocument') {
@@ -657,7 +645,7 @@ class CustomUrlControllerTest extends SuluTestCase
         $response = $client->getResponse();
         $responseDataComplete = json_decode($response->getContent(), true);
 
-        $this->assertEquals(200, $response->getStatusCode(), $response);
+        $this->assertHttpStatusCode(200, $response);
 
         foreach ($responseDataComplete['_embedded']['custom-urls'] as $responseData) {
             $data = $items[$responseData['customUrl']];
@@ -692,13 +680,13 @@ class CustomUrlControllerTest extends SuluTestCase
         $client->request('DELETE', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
 
         $response = $client->getResponse();
-        $this->assertEquals(204, $response->getStatusCode());
+        $this->assertHttpStatusCode(204, $response);
 
         $client = $this->createAuthenticatedClient();
         $client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
 
         $response = $client->getResponse();
-        $this->assertEquals(404, $response->getStatusCode());
+        $this->assertHttpStatusCode(404, $response);
     }
 
     /**
@@ -731,13 +719,13 @@ class CustomUrlControllerTest extends SuluTestCase
         $client->request('DELETE', '/api/webspaces/sulu_io/custom-urls?ids=' . implode(',', $uuids));
 
         $response = $client->getResponse();
-        $this->assertEquals(204, $response->getStatusCode());
+        $this->assertHttpStatusCode(204, $response);
 
         $client = $this->createAuthenticatedClient();
         $client->request('GET', '/api/webspaces/sulu_io/custom-urls');
 
         $response = $client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
 
         $responseData = json_decode($response->getContent(), true);
         $this->assertCount(1, $responseData['_embedded']['custom-urls']);
@@ -874,7 +862,7 @@ class CustomUrlControllerTest extends SuluTestCase
         );
 
         $response = $client->getResponse();
-        $this->assertEquals($statusCode, $response->getStatusCode());
+        $this->assertHttpStatusCode($statusCode, $response);
 
         if ($restErrorCode) {
             $responseData = json_decode($response->getContent(), true);

@@ -42,6 +42,6 @@ class GeolocatorControllerTest extends SuluTestCase
         ]));
 
         $response = $this->client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
     }
 }

@@ -135,7 +135,7 @@ class OperatorControllerTest extends SuluTestCase
             'GET',
             '/api/operators'
         );
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertNotEmpty($response);
