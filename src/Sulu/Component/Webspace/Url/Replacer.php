@@ -111,15 +111,6 @@ class Replacer implements ReplacerInterface
         return str_replace($replacer, $value, $url);
     }
 
-    public function replaceAll($url, $replacers)
-    {
-        foreach ($replacers as $replacer => $value) {
-            $url = $this->replace($url, $replacer, $value);
-        }
-
-        return $url;
-    }
-
     /**
      * {@inheritdoc}
      */
