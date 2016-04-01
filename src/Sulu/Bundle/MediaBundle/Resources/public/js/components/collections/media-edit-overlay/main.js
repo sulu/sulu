@@ -198,6 +198,7 @@ define([
                 media: this.media,
                 translate: this.sandbox.translate,
                 formatBytes: this.sandbox.util.formatBytes,
+                crop: this.sandbox.util.cropMiddle,
                 icon: fileIcons.getByMimeType(media.mimeType)
             }));
 
@@ -271,6 +272,7 @@ define([
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'media-edit',
+                        skin: 'wide',
                         slides: [
                             {
                                 title: this.media.title,
@@ -279,7 +281,6 @@ define([
                                     locales: this.sandbox.sulu.locales,
                                     preSelected: this.options.locale
                                 },
-                                skin: 'wide',
                                 propagateEvents: false,
                                 okCallback: this.singleOkCallback.bind(this),
                                 cancelCallback: function() {

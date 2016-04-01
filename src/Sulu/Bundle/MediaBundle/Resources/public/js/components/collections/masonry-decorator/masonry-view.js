@@ -76,10 +76,12 @@ define([
                 '</div>'
             ].join(''),
             item: [
-                '<div class="masonry-item ' + constants.loadingClass + '">',
+                '<div class="masonry-item <% if (image !== "") { %>' + constants.loadingClass + '<% } %>">',
                 '   <div class="masonry-head ' + constants.actionNavigatorClass + '">',
                 '       <div class="<%= icon %> ' + constants.headIconClass + '"></div>',
+                '       <% if (image !== "") { %>',
                 '       <img ondragstart="return false;" class="' + constants.headImageClass + '" src="<%= image %>"/>',
+                '       <% } %>',
                 '   </div>',
                 '   <div class="masonry-info">',
                 '       <% if (!!fallbackLocale) { %>',
