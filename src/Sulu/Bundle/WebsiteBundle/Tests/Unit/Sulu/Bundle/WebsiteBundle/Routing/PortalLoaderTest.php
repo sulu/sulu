@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Routing;
 
 use Prophecy\Argument;
 use Sulu\Bundle\WebsiteBundle\Routing\PortalLoader;
+use Sulu\Bundle\WebsiteBundle\Routing\PortalRoute;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -93,26 +94,19 @@ class PortalLoaderTest extends \PHPUnit_Framework_TestCase
 
         $routeCollection = $this->portalLoader->load('', 'portal');
 
-        $this->assertCount(8, $routeCollection);
+        $this->assertCount(2, $routeCollection);
 
         $routes = $routeCollection->getIterator();
-        $this->assertArrayHasKey('sulu.io/de.route1', $routes);
-        $this->assertArrayHasKey('sulu.io/de.de.route1', $routes);
-        $this->assertArrayHasKey('sulu.io/de.route2', $routes);
-        $this->assertArrayHasKey('sulu.io/de.de.route2', $routes);
-        $this->assertArrayHasKey('sulu.com.route1', $routes);
-        $this->assertArrayHasKey('sulu.com.en.route1', $routes);
-        $this->assertArrayHasKey('sulu.com.route2', $routes);
-        $this->assertArrayHasKey('sulu.com.en.route2', $routes);
+        $this->assertArrayHasKey('route1', $routes);
+        $this->assertArrayHasKey('route2', $routes);
 
-        $this->assertEquals('/de/example/route1', $routeCollection->get('sulu.io/de.route1')->getPath());
-        $this->assertEquals('/de/example/route1', $routeCollection->get('sulu.io/de.de.route1')->getPath());
-        $this->assertEquals('/de/route2', $routeCollection->get('sulu.io/de.route2')->getPath());
-        $this->assertEquals('/de/route2', $routeCollection->get('sulu.io/de.de.route2')->getPath());
-        $this->assertEquals('/example/route1', $routeCollection->get('sulu.com.route1')->getPath());
-        $this->assertEquals('/example/route1', $routeCollection->get('sulu.com.en.route1')->getPath());
-        $this->assertEquals('/route2', $routeCollection->get('sulu.com.route2')->getPath());
-        $this->assertEquals('/route2', $routeCollection->get('sulu.com.en.route2')->getPath());
+        $this->assertInstanceOf(PortalRoute::class, $routeCollection->get('route1'));
+        $this->assertInstanceOf(PortalRoute::class, $routeCollection->get('route2'));
+
+        $this->assertEquals('{prefix}/example/route1', $routeCollection->get('route1')->getPath());
+        $this->assertEquals('{prefix}/route2', $routeCollection->get('route2')->getPath());
+        $this->assertEquals('{host}', $routeCollection->get('route1')->getHost());
+        $this->assertEquals('{host}', $routeCollection->get('route2')->getHost());
     }
 
     public function testLoadWithCustomUrls()
@@ -141,18 +135,19 @@ class PortalLoaderTest extends \PHPUnit_Framework_TestCase
 
         $routeCollection = $this->portalLoader->load('', 'portal');
 
-        $this->assertCount(12, $routeCollection);
+        $this->assertCount(2, $routeCollection);
 
         $routes = $routeCollection->getIterator();
-        $this->assertArrayHasKey('sulu.com/*.de.route1', $routes);
-        $this->assertArrayHasKey('sulu.com/*.en.route1', $routes);
-        $this->assertArrayHasKey('sulu.com/*.de.route2', $routes);
-        $this->assertArrayHasKey('sulu.com/*.en.route2', $routes);
+        $this->assertArrayHasKey('route1', $routes);
+        $this->assertArrayHasKey('route2', $routes);
 
-        $this->assertEquals('/de/example/route1', $routeCollection->get('sulu.com/*.de.route1')->getPath());
-        $this->assertEquals('/en/example/route1', $routeCollection->get('sulu.com/*.en.route1')->getPath());
-        $this->assertEquals('/de/route2', $routeCollection->get('sulu.com/*.de.route2')->getPath());
-        $this->assertEquals('/en/route2', $routeCollection->get('sulu.com/*.en.route2')->getPath());
+        $this->assertInstanceOf(PortalRoute::class, $routeCollection->get('route1'));
+        $this->assertInstanceOf(PortalRoute::class, $routeCollection->get('route2'));
+
+        $this->assertEquals('{prefix}/example/route1', $routeCollection->get('route1')->getPath());
+        $this->assertEquals('{prefix}/route2', $routeCollection->get('route2')->getPath());
+        $this->assertEquals('{host}', $routeCollection->get('route1')->getHost());
+        $this->assertEquals('{host}', $routeCollection->get('route2')->getHost());
     }
 
     public function testLoadPartial()
@@ -185,32 +180,14 @@ class PortalLoaderTest extends \PHPUnit_Framework_TestCase
 
         $routeCollection = $this->portalLoader->load('', 'portal');
 
-        $this->assertCount(4, $routeCollection);
+        $this->assertCount(1, $routeCollection);
 
         $routes = $routeCollection->getIterator();
-        $this->assertArrayHasKey('sulu.io.route', $routes);
-        $this->assertArrayHasKey('sulu.io.de.route', $routes);
-        $this->assertArrayHasKey('sulu.io/de.route', $routes);
-        $this->assertArrayHasKey('sulu.io/de.de.route', $routes);
-        $this->assertEquals('/route', $routeCollection->get('sulu.io.route')->getPath());
-        $this->assertEquals('/route', $routeCollection->get('sulu.io.de.route')->getPath());
-        $this->assertEquals('/de/route', $routeCollection->get('sulu.io/de.route')->getPath());
-        $this->assertEquals('/de/route', $routeCollection->get('sulu.io/de.de.route')->getPath());
-        $this->assertEquals(
-            [
-                '_controller' => 'SuluWebsiteBundle:Redirect:redirectToRoute',
-                'route' => 'sulu.io/de.de.route',
-                'permanent' => true,
-            ],
-            $routeCollection->get('sulu.io.route')->getDefaults()
-        );
-        $this->assertEquals(
-            [
-                '_controller' => 'SuluWebsiteBundle:Redirect:redirectToRoute',
-                'route' => 'sulu.io/de.de.route',
-                'permanent' => true,
-            ],
-            $routeCollection->get('sulu.io.de.route')->getDefaults()
-        );
+        $this->assertArrayHasKey('route', $routes);
+
+        $this->assertInstanceOf(PortalRoute::class, $routeCollection->get('route'));
+
+        $this->assertEquals('{prefix}/route', $routeCollection->get('route')->getPath());
+        $this->assertEquals('{host}', $routeCollection->get('route')->getHost());
     }
 }

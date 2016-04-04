@@ -1,0 +1,35 @@
+<form id="media-formats">
+    <div class="grid">
+        <div class="grid-row">
+            <div class="media-edit-links">
+                <div class="media-edit-link">
+                    <a href="<%= media.url %>" class="media-edit-title" target="_blank">
+                        <%= translate('sulu.media.original') %>
+                        <i class="fa fa-cloud-download"></i>
+                    </a>
+                    <span class="media-edit-icons">
+                        <i class="fa fa-clipboard" data-clipboard-text="<%= domain + media.url %>" title=" <%= translate('sulu.media.copy_url') %>"></i>
+                        <span class="media-edit-copied" style="display:none;">
+                            <%= translate('sulu.media.copied_url') %>
+                        </span>
+                    </span>
+                </div>
+
+                <% _.each(_.keys(media.thumbnails), function(formatName) { var formatUrl = media.thumbnails[formatName]; %>
+                <div class="media-edit-link">
+                    <a href="<%= formatUrl %>" class="media-edit-title" target="_blank">
+                        <%= formatName %>
+                        <i class="fa fa-cloud-download"></i>
+                    </a>
+                    <span class="media-edit-icons">
+                        <i class="fa fa-clipboard" data-clipboard-text="<%= domain + formatUrl %>" title=" <%= translate('sulu.media.copy_url') %>"></i>
+                        <span class="media-edit-copied" style="display:none;">
+                            <%= translate('sulu.media.copied_url') %>
+                        </span>
+                    </span>
+                </div>
+                <% }); %>
+            </div>
+        </div>
+    </div>
+</form>

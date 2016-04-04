@@ -480,6 +480,10 @@ define(['app-config', 'config', 'sulucontent/components/content/preview/main'], 
         },
 
         startCollaborationComponent: function() {
+            if (!this.options.id) {
+                return;
+            }
+
             var $container = this.sandbox.dom.createElement('<div id="content-column-collaboration"/>');
             this.$el.prepend($container);
 

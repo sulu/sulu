@@ -83,6 +83,11 @@ class PortalInformation implements ArrayableInterface
      */
     private $urlExpression;
 
+    /**
+     * @var int
+     */
+    private $priority;
+
     public function __construct(
         $type,
         Webspace $webspace = null,
@@ -93,7 +98,8 @@ class PortalInformation implements ArrayableInterface
         $redirect = null,
         $analyticsKey = null,
         $main = false,
-        $urlExpression = null
+        $urlExpression = null,
+        $priority = 0
     ) {
         $this->setType($type);
         $this->setWebspace($webspace);
@@ -105,6 +111,7 @@ class PortalInformation implements ArrayableInterface
         $this->setAnalyticsKey($analyticsKey);
         $this->setMain($main);
         $this->setUrlExpression($urlExpression);
+        $this->setPriority($priority);
     }
 
     /**
@@ -379,6 +386,22 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
+     * @return int
+     */
+    public function getPriority()
+    {
+        return $this->priority;
+    }
+
+    /**
+     * @param int $priority
+     */
+    public function setPriority($priority)
+    {
+        $this->priority = $priority;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function toArray($depth = null)
@@ -388,6 +411,7 @@ class PortalInformation implements ArrayableInterface
         $result['webspace'] = $this->getWebspace()->getKey();
         $result['url'] = $this->getUrl();
         $result['main'] = $this->isMain();
+        $result['priority'] = $this->getPriority();
 
         $portal = $this->getPortal();
         if ($portal) {

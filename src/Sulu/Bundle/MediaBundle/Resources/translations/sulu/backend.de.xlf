@@ -222,6 +222,14 @@
                 <source>sulu.media.copyright</source>
                 <target>Urheberrecht</target>
             </trans-unit>
+            <trans-unit id="243d88cf2f646526337ls55369f11111" resname="sulu.media.licence">
+                <source>sulu.media.licence</source>
+                <target>Lizenz</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f646526337ls55369f22222" resname="sulu.media.credits-information">
+                <source>sulu.media.credits-information</source>
+                <target>Bildnachweis</target>
+            </trans-unit>
             <trans-unit id="243d88cf2f646526337ls55369f22124" resname="sulu.media.copyright-information">
                 <source>sulu.media.copyright-information</source>
                 <target>Urheberrechtsinformationen</target>
@@ -245,6 +253,30 @@
             <trans-unit id="243d88cf2f64352w337js55369f22111" resname="sulu.dropzone.error.message.wrong-filetype">
                 <source>sulu.dropzone.error.message.wrong-filetype</source>
                 <target>Die neue Version muss den gleichen Medientyp aufweisen.</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f221234" resname="sulu.media.copy_url">
+                <source>sulu.media.copy_url</source>
+                <target>URL kopieren</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f221214" resname="sulu.media.copied_url">
+                <source>sulu.media.copied_url</source>
+                <target>URL kopiert</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f221215" resname="sulu.media.original">
+                <source>sulu.media.original</source>
+                <target>Original</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f221235" resname="sulu.media.copy_original">
+                <source>sulu.media.copy_original</source>
+                <target>Original URL kopieren</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f221236" resname="sulu.media.download_original">
+                <source>sulu.media.download_original</source>
+                <target>Original herunterladen</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f221237" resname="sulu.media.formats">
+                <source>sulu.media.formats</source>
+                <target>Medienformate</target>
             </trans-unit>
         </body>
     </file>

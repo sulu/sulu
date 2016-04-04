@@ -31,6 +31,6 @@ Feature: Media upload
          #When I attach the file "images/image2.png" to the current drop-zone
          #Then I expect a success notification to appear
          And I click the overlay tab "History"
-         And I expect to see "1" ".media-edit-versions-link" elements
+         And I expect to see "1" "#media-versions .media-edit-link" elements
          # FIXME: Why is there only one version
-         #And I expect to see "2" ".media-edit-versions-link" elements
+         #And I expect to see "2" ".media-edit-link" elements

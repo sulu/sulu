@@ -30,6 +30,13 @@ class ContentAdmin extends Admin
     const SECURITY_CONTEXT_PREFIX = 'sulu.webspaces.';
 
     /**
+     * The prefix for the settings security context, the key of the webspace has to be appended.
+     *
+     * @var string
+     */
+    const SECURITY_SETTINGS_CONTEXT_PREFIX = 'sulu.webspace_settings.';
+
+    /**
      * @var WebspaceManagerInterface
      */
     private $webspaceManager;
@@ -57,11 +64,11 @@ class ContentAdmin extends Admin
         $rootNavigationItem = new NavigationItem($title);
 
         $section = new NavigationItem('navigation.webspaces');
-        $section->setPosition(20);
+        $section->setPosition(10);
 
         $rootNavigationItem->addChild($section);
 
-        $position = 20;
+        $position = 10;
 
         /** @var Webspace $webspace */
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {

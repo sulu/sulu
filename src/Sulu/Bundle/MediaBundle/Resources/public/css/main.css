@@ -49,82 +49,74 @@
   width: 190px;
   background-color: #fff;
   border-radius: 3px;
-  overflow: hidden;
   opacity: 1;
   -moz-transition: opacity 100ms, top 100ms, left 100ms;
   -o-transition: opacity 100ms, top 100ms, left 100ms;
   -webkit-transition: opacity 100ms, top 100ms, left 100ms;
   transition: opacity 100ms, top 100ms, left 100ms;
 }
-/* line 54, ../scss/modules/collection.scss */
+/* line 53, ../scss/modules/collection.scss */
 .masonry-container #masonry-grid .masonry-item.loading {
   opacity: 0;
 }
-/* line 58, ../scss/modules/collection.scss */
+/* line 57, ../scss/modules/collection.scss */
 .masonry-container #masonry-grid .masonry-item .masonry-head {
   background-color: #ddd;
   width: 100%;
 }
-/* line 62, ../scss/modules/collection.scss */
+/* line 61, ../scss/modules/collection.scss */
 .masonry-container #masonry-grid .masonry-item .masonry-head .head-icon {
   color: white;
   font-size: 70px;
   margin: 30px;
 }
-/* line 68, ../scss/modules/collection.scss */
+/* line 67, ../scss/modules/collection.scss */
 .masonry-container #masonry-grid .masonry-item .masonry-head .head-image {
   vertical-align: middle;
 }
-/* line 73, ../scss/modules/collection.scss */
+/* line 72, ../scss/modules/collection.scss */
 .masonry-container #masonry-grid .masonry-item .masonry-info {
   width: 100%;
   height: 45px;
   margin-top: 10px;
 }
-/* line 78, ../scss/modules/collection.scss */
+/* line 77, ../scss/modules/collection.scss */
 .masonry-container #masonry-grid .masonry-item .masonry-info span.description {
   font-size: 12px;
   color: #999;
 }
-/* line 84, ../scss/modules/collection.scss */
+/* line 83, ../scss/modules/collection.scss */
 .masonry-container #masonry-grid .masonry-item .masonry-footer {
   width: 100%;
   height: 15px;
   margin-bottom: 10px;
   padding: 0 10px;
 }
-/* line 90, ../scss/modules/collection.scss */
+/* line 89, ../scss/modules/collection.scss */
 .masonry-container #masonry-grid .masonry-item .masonry-footer .footer-checkbox {
   float: left;
 }
-/* line 94, ../scss/modules/collection.scss */
-.masonry-container #masonry-grid .masonry-item .masonry-footer .footer-download {
+/* line 93, ../scss/modules/collection.scss */
+.masonry-container #masonry-grid .masonry-item .masonry-footer .footer-icon {
   position: relative;
   top: 2px;
   font-size: 17px;
   float: right;
   margin-left: 5px;
-}
-/* line 102, ../scss/modules/collection.scss */
-.masonry-container #masonry-grid .masonry-item .masonry-footer .footer-play-video {
-  position: relative;
-  top: 2px;
-  font-size: 17px;
-  float: right;
   cursor: pointer;
 }
-/* line 111, ../scss/modules/collection.scss */
+/* line 103, ../scss/modules/collection.scss */
 .masonry-container #masonry-grid .masonry-item .action-navigator, .masonry-container #masonry-grid .masonry-item .download-navigator {
   cursor: pointer;
   color: #000;
 }
 
-/* line 120, ../scss/modules/collection.scss */
+/* line 112, ../scss/modules/collection.scss */
 .sticky-toolbar.fixed .list-toolbar-container.collection {
   width: 92.75%;
 }
 
-/* line 126, ../scss/modules/collection.scss */
+/* line 118, ../scss/modules/collection.scss */
 .toolbar-hidden .collection-header-container {
   top: -60px;
 }
@@ -222,31 +214,27 @@
   }
 }
 /* line 88, ../scss/modules/media-selection.scss */
-.media-selection-overlay-container .fa-cloud-download {
-  display: none !important;
-}
-/* line 92, ../scss/modules/media-selection.scss */
 .media-selection-overlay-container .selected-elements {
   display: none;
 }
 
-/* line 97, ../scss/modules/media-selection.scss */
+/* line 93, ../scss/modules/media-selection.scss */
 .media-selection-overlay {
   height: 100%;
 }
 
-/* line 101, ../scss/modules/media-selection.scss */
+/* line 97, ../scss/modules/media-selection.scss */
 .media-selection-overlay-navigation-container {
   width: 250px;
   height: 100%;
 }
 
-/* line 106, ../scss/modules/media-selection.scss */
+/* line 102, ../scss/modules/media-selection.scss */
 .media-selection-overlay-toolbar-container {
   display: inline-block;
 }
 
-/* line 110, ../scss/modules/media-selection.scss */
+/* line 106, ../scss/modules/media-selection.scss */
 .media-selection-overlay-content {
   height: 100%;
   padding: 15px 0 10px 20px;
@@ -254,13 +242,13 @@
   position: relative;
 }
 
-/* line 117, ../scss/modules/media-selection.scss */
+/* line 113, ../scss/modules/media-selection.scss */
 .media-selection-overlay-content-area {
   overflow: auto;
   height: calc(100% - 55px);
 }
 
-/* line 122, ../scss/modules/media-selection.scss */
+/* line 118, ../scss/modules/media-selection.scss */
 .media-selection-overlay-close {
   position: absolute;
   top: 10px;
@@ -270,47 +258,47 @@
   z-index: 100;
 }
 
-/* line 132, ../scss/modules/media-selection.scss */
+/* line 128, ../scss/modules/media-selection.scss */
 .media-selection-overlay-add .heading {
   width: 100%;
   border-bottom: 2px #ccc solid;
 }
-/* line 136, ../scss/modules/media-selection.scss */
+/* line 132, ../scss/modules/media-selection.scss */
 .media-selection-overlay-add h3 {
   font-size: 16px;
   margin-top: 20px;
   margin-bottom: 10px;
 }
-/* line 141, ../scss/modules/media-selection.scss */
+/* line 137, ../scss/modules/media-selection.scss */
 .media-selection-overlay-add .overlay-loader {
   margin: 20px 0;
 }
 
-/* line 146, ../scss/modules/media-selection.scss */
+/* line 142, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container {
   padding-right: 20px;
 }
-/* line 149, ../scss/modules/media-selection.scss */
+/* line 145, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container > .husky-dropzone {
   display: none;
   margin-top: 30px;
   margin-bottom: 20px;
 }
-/* line 154, ../scss/modules/media-selection.scss */
+/* line 150, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container > .husky-dropzone.dropped {
   display: block;
 }
-/* line 159, ../scss/modules/media-selection.scss */
+/* line 155, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container > div {
   width: 100% !important;
 }
-/* line 162, ../scss/modules/media-selection.scss */
+/* line 158, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container .husky-overlay-wrapper {
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
 }
-/* line 167, ../scss/modules/media-selection.scss */
+/* line 163, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container .husky-overlay-container {
   position: absolute !important;
   top: 0 !important;
@@ -321,43 +309,43 @@
   height: 100%;
   background-color: rgba(255, 255, 255, 0.95);
 }
-/* line 177, ../scss/modules/media-selection.scss */
+/* line 173, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container .husky-overlay-container .slides {
   margin: 0;
   padding: 0;
 }
-/* line 182, ../scss/modules/media-selection.scss */
+/* line 178, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container .husky-overlay-container .slide {
   width: 100% !important;
 }
-/* line 187, ../scss/modules/media-selection.scss */
+/* line 183, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container .husky-overlay-backdrop {
   display: none !important;
 }
-/* line 191, ../scss/modules/media-selection.scss */
+/* line 187, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container .overlay-content {
   height: auto !important;
   background-color: transparent;
 }
 
-/* line 197, ../scss/modules/media-selection.scss */
+/* line 193, ../scss/modules/media-selection.scss */
 .media-selection-overlay-content-title {
   margin-bottom: 20px !important;
   border-bottom: none !important;
 }
 
-/* line 202, ../scss/modules/media-selection.scss */
+/* line 198, ../scss/modules/media-selection.scss */
 .media-selection-overlay-datagrid-container {
   padding-right: 20px;
   padding-bottom: 20px;
 }
 
-/* line 207, ../scss/modules/media-selection.scss */
+/* line 203, ../scss/modules/media-selection.scss */
 .media-selection-overlay-datagrid-header {
   white-space: nowrap;
 }
 
-/* line 211, ../scss/modules/media-selection.scss */
+/* line 207, ../scss/modules/media-selection.scss */
 .media-selection-overlay-selected-info {
   display: inline-block;
   vertical-align: top;
@@ -386,33 +374,58 @@
 }
 
 /* line 5, ../scss/modules/media-edit-overlay.scss */
-.media-edit-versions-links {
+.media-edit-links {
   margin: 20px 0 0;
   border-top: 2px solid #ccc;
   border-bottom: 1px solid #ccc;
 }
 
 /* line 11, ../scss/modules/media-edit-overlay.scss */
-.media-edit-versions-link {
-  color: black;
+.media-edit-link {
+  color: #999;
   display: block;
   padding: 15px 3px;
   border-bottom: 1px solid #ccc;
+}
+/* line 17, ../scss/modules/media-edit-overlay.scss */
+.media-edit-link .fa-cloud-download {
+  display: none;
+}
+/* line 22, ../scss/modules/media-edit-overlay.scss */
+.media-edit-link:hover .fa-cloud-download {
+  display: inline-block;
+}
+/* line 27, ../scss/modules/media-edit-overlay.scss */
+.media-edit-link .media-edit-copied {
+  color: #999;
+}
+
+/* line 32, ../scss/modules/media-edit-overlay.scss */
+a.media-edit-link,
+.media-edit-link a {
+  color: #000;
   text-decoration: none;
 }
 
-/* line 20, ../scss/modules/media-edit-overlay.scss */
-.active .media-edit-versions-title {
+/* line 39, ../scss/modules/media-edit-overlay.scss */
+.active .media-edit-title {
   font-weight: bold;
 }
 
-/* line 25, ../scss/modules/media-edit-overlay.scss */
-.media-edit-versions-created {
+/* line 44, ../scss/modules/media-edit-overlay.scss */
+.media-edit-icons {
+  float: right;
+  color: #000;
+  cursor: pointer;
+}
+
+/* line 50, ../scss/modules/media-edit-overlay.scss */
+.media-edit-created {
   float: right;
   color: #999;
 }
 
-/* line 30, ../scss/modules/media-edit-overlay.scss */
+/* line 55, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image {
   background-position: center center;
   background-repeat: no-repeat;
@@ -420,7 +433,7 @@
   height: 179px;
   position: relative;
 }
-/* line 37, ../scss/modules/media-edit-overlay.scss */
+/* line 62, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image.icon {
   color: #999;
   font-size: 150px;
@@ -428,7 +441,7 @@
   vertical-align: middle;
   padding-top: 15px;
 }
-/* line 45, ../scss/modules/media-edit-overlay.scss */
+/* line 70, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image .file-version-change,
 .media-edit-preview-image img {
   position: absolute;
@@ -436,43 +449,58 @@
   left: 0;
   font-size: 14px;
 }
-/* line 53, ../scss/modules/media-edit-overlay.scss */
+/* line 78, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image #file-version-change {
   width: 100%;
   height: 100%;
 }
-/* line 57, ../scss/modules/media-edit-overlay.scss */
+/* line 82, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image #file-version-change .dropzone-container {
   width: 150px;
   height: 150px;
 }
 
-/* line 65, ../scss/modules/media-edit-overlay.scss */
+/* line 90, ../scss/modules/media-edit-overlay.scss */
 #media-preview .media-edit-preview-image-container {
   background-color: #ddd;
   width: 250px;
   height: 250px;
 }
-/* line 71, ../scss/modules/media-edit-overlay.scss */
+/* line 96, ../scss/modules/media-edit-overlay.scss */
 #media-preview .media-edit-preview-image {
   background-size: cover;
   width: 100%;
   height: 100%;
 }
-/* line 77, ../scss/modules/media-edit-overlay.scss */
+/* line 102, ../scss/modules/media-edit-overlay.scss */
 #media-preview #preview-image-change {
   width: 100%;
   height: 100%;
 }
-/* line 81, ../scss/modules/media-edit-overlay.scss */
+/* line 106, ../scss/modules/media-edit-overlay.scss */
 #media-preview #preview-image-change .dropzone-container {
   width: 150px;
   height: 150px;
 }
 
-/* line 88, ../scss/modules/media-edit-overlay.scss */
+/* line 113, ../scss/modules/media-edit-overlay.scss */
 .overlay-footer .btn.media-reset-preview-action.hide {
   display: none;
+}
+
+/* line 118, ../scss/modules/media-edit-overlay.scss */
+#media-info textarea.description {
+  height: 90px;
+  min-height: 90px;
+}
+/* line 123, ../scss/modules/media-edit-overlay.scss */
+#media-info .media-info-preview {
+  text-align: center;
+}
+/* line 126, ../scss/modules/media-edit-overlay.scss */
+#media-info .media-info-preview span.description {
+  font-size: 12px;
+  color: #999;
 }
 
 /* line 1, ../scss/modules/media-play-video-overlay.scss */

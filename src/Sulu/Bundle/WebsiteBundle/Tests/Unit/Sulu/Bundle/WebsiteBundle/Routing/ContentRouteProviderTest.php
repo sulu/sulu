@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
+use Sulu\Bundle\WebsiteBundle\Locale\DefaultLocaleProviderInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
@@ -21,6 +22,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Theme;
+use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
 
 class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
@@ -47,7 +49,15 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $contentMapper = $this->getContentMapperMock();
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue($structure));
 
-        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer);
+        $defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
+        $urlReplacer = $this->prophesize(ReplacerInterface::class);
+
+        $portalRouteProvider = new ContentRouteProvider(
+            $contentMapper,
+            $requestAnalyzer,
+            $defaultLocaleProvider->reveal(),
+            $urlReplacer->reveal()
+        );
 
         $request = $this->getRequestMock($path);
 
@@ -79,7 +89,15 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $contentMapper = $this->getContentMapperMock();
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue($structure));
 
-        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer);
+        $defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
+        $urlReplacer = $this->prophesize(ReplacerInterface::class);
+
+        $portalRouteProvider = new ContentRouteProvider(
+            $contentMapper,
+            $requestAnalyzer,
+            $defaultLocaleProvider->reveal(),
+            $urlReplacer->reveal()
+        );
 
         $request = $this->getRequestMock($path);
 
@@ -111,7 +129,15 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $contentMapper = $this->getContentMapperMock();
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue($structure));
 
-        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer);
+        $defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
+        $urlReplacer = $this->prophesize(ReplacerInterface::class);
+
+        $portalRouteProvider = new ContentRouteProvider(
+            $contentMapper,
+            $requestAnalyzer,
+            $defaultLocaleProvider->reveal(),
+            $urlReplacer->reveal()
+        );
 
         $request = $this->getRequestMock($path);
 
@@ -138,7 +164,15 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $contentMapper = $this->getContentMapperMock();
         $requestAnalyzer = $this->getRequestAnalyzerMock($portal, $path, $prefix);
 
-        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer);
+        $defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
+        $urlReplacer = $this->prophesize(ReplacerInterface::class);
+
+        $portalRouteProvider = new ContentRouteProvider(
+            $contentMapper,
+            $requestAnalyzer,
+            $defaultLocaleProvider->reveal(),
+            $urlReplacer->reveal()
+        );
 
         $request = $this->getRequestMock($path);
 
@@ -178,7 +212,19 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $contentMapper = $this->getContentMapperMock();
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue($structure));
 
-        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer);
+        $defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
+        $defaultLocaleProvider->getDefaultLocale()->willReturn(new Localization('de', 'at'));
+        $urlReplacer = $this->prophesize(ReplacerInterface::class);
+        $urlReplacer->replaceCountry('sulu.lo/de', 'at')->shouldBeCalled()->willReturn('sulu.lo/de');
+        $urlReplacer->replaceLanguage('sulu.lo/de', 'de')->shouldBeCalled()->willReturn('sulu.lo/de');
+        $urlReplacer->replaceLocalization('sulu.lo/de', 'de-at')->shouldBeCalled()->willReturn('sulu.lo/de');
+
+        $portalRouteProvider = new ContentRouteProvider(
+            $contentMapper,
+            $requestAnalyzer,
+            $defaultLocaleProvider->reveal(),
+            $urlReplacer->reveal()
+        );
 
         $request = $this->getRequestMock($path);
 
@@ -214,7 +260,15 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $contentMapper = $this->getContentMapperMock();
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue($structure));
 
-        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer);
+        $defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
+        $urlReplacer = $this->prophesize(ReplacerInterface::class);
+
+        $portalRouteProvider = new ContentRouteProvider(
+            $contentMapper,
+            $requestAnalyzer,
+            $defaultLocaleProvider->reveal(),
+            $urlReplacer->reveal()
+        );
 
         $request = $this->getRequestMock($path);
 
@@ -244,17 +298,29 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $portal,
             $path,
             $prefix,
-            new Localization(),
+            null,
             RequestAnalyzerInterface::MATCH_TYPE_PARTIAL,
             'sulu.lo',
-            'sulu.lo/en-us'
+            'sulu.lo/{localization}'
         );
         $requestAnalyzer->expects($this->any())->method('getAttribute')->will($this->returnValue(null));
 
         $contentMapper = $this->getContentMapperMock();
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue(null));
 
-        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer);
+        $defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
+        $defaultLocaleProvider->getDefaultLocale()->willReturn(new Localization('de', 'at'));
+        $urlReplacer = $this->prophesize(ReplacerInterface::class);
+        $urlReplacer->replaceCountry('sulu.lo/{localization}', 'at')->shouldBeCalled()->willReturn('sulu.lo/{localization}');
+        $urlReplacer->replaceLanguage('sulu.lo/{localization}', 'de')->shouldBeCalled()->willReturn('sulu.lo/{localization}');
+        $urlReplacer->replaceLocalization('sulu.lo/{localization}', 'de-at')->shouldBeCalled()->willReturn('sulu.lo/de-at');
+
+        $portalRouteProvider = new ContentRouteProvider(
+            $contentMapper,
+            $requestAnalyzer,
+            $defaultLocaleProvider->reveal(),
+            $urlReplacer->reveal()
+        );
 
         $request = $this->getRequestMock($path);
 
@@ -265,7 +331,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $route = $routes->getIterator()->current();
         $this->assertEquals('SuluWebsiteBundle:Redirect:redirectWebspace', $route->getDefaults()['_controller']);
         $this->assertEquals('sulu.lo', $route->getDefaults()['url']);
-        $this->assertEquals('sulu.lo/en-us', $route->getDefaults()['redirect']);
+        $this->assertEquals('sulu.lo/de-at', $route->getDefaults()['redirect']);
     }
 
     public function testGetCollectionForNotExistingRequest()
@@ -291,7 +357,15 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $this->throwException(new ResourceLocatorNotFoundException())
         );
 
-        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer);
+        $defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
+        $urlReplacer = $this->prophesize(ReplacerInterface::class);
+
+        $portalRouteProvider = new ContentRouteProvider(
+            $contentMapper,
+            $requestAnalyzer,
+            $defaultLocaleProvider->reveal(),
+            $urlReplacer->reveal()
+        );
 
         $request = $this->getRequestMock($path);
 
@@ -328,7 +402,19 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $contentMapper = $this->getContentMapperMock();
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue(null));
 
-        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer);
+        $defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
+        $defaultLocaleProvider->getDefaultLocale()->willReturn(new Localization('de', 'at'));
+        $urlReplacer = $this->prophesize(ReplacerInterface::class);
+        $urlReplacer->replaceCountry('sulu.lo', 'at')->shouldBeCalled()->willReturn('sulu.lo');
+        $urlReplacer->replaceLanguage('sulu.lo', 'de')->shouldBeCalled()->willReturn('sulu.lo');
+        $urlReplacer->replaceLocalization('sulu.lo', 'de-at')->shouldBeCalled()->willReturn('sulu.lo');
+
+        $portalRouteProvider = new ContentRouteProvider(
+            $contentMapper,
+            $requestAnalyzer,
+            $defaultLocaleProvider->reveal(),
+            $urlReplacer->reveal()
+        );
 
         $request = $this->getRequestMock($path);
 
@@ -375,7 +461,15 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $contentMapper = $this->getContentMapperMock();
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue($structure));
 
-        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer);
+        $defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
+        $urlReplacer = $this->prophesize(ReplacerInterface::class);
+
+        $portalRouteProvider = new ContentRouteProvider(
+            $contentMapper,
+            $requestAnalyzer,
+            $defaultLocaleProvider->reveal(),
+            $urlReplacer->reveal()
+        );
 
         $request = $this->getRequestMock($path);
 
@@ -421,7 +515,15 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $contentMapper = $this->getContentMapperMock();
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue($structure));
 
-        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer);
+        $defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
+        $urlReplacer = $this->prophesize(ReplacerInterface::class);
+
+        $portalRouteProvider = new ContentRouteProvider(
+            $contentMapper,
+            $requestAnalyzer,
+            $defaultLocaleProvider->reveal(),
+            $urlReplacer->reveal()
+        );
 
         $request = $this->getRequestMock($path);
 
@@ -458,13 +560,25 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $localization,
             RequestAnalyzerInterface::MATCH_TYPE_FULL,
             'sulu.lo',
-            'sulu.lo/en-us'
+            'sulu.lo/de-at'
         );
 
         $contentMapper = $this->getContentMapperMock();
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->willReturn($structure);
 
-        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer);
+        $defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
+        $defaultLocaleProvider->getDefaultLocale()->willReturn(new Localization('de', 'at'));
+        $urlReplacer = $this->prophesize(ReplacerInterface::class);
+        $urlReplacer->replaceCountry('sulu.lo/de-at', 'at')->shouldBeCalled()->willReturn('sulu.lo/de-at');
+        $urlReplacer->replaceLanguage('sulu.lo/de-at', 'de')->shouldBeCalled()->willReturn('sulu.lo/de-at');
+        $urlReplacer->replaceLocalization('sulu.lo/de-at', 'de-at')->shouldBeCalled()->willReturn('sulu.lo/de-at');
+
+        $portalRouteProvider = new ContentRouteProvider(
+            $contentMapper,
+            $requestAnalyzer,
+            $defaultLocaleProvider->reveal(),
+            $urlReplacer->reveal()
+        );
 
         $request = $this->getRequestMock($path);
 
@@ -501,13 +615,25 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $localization,
             RequestAnalyzerInterface::MATCH_TYPE_FULL,
             'sulu.lo',
-            'sulu.lo/en-us'
+            'sulu.lo/de-at'
         );
 
         $contentMapper = $this->getContentMapperMock();
         $contentMapper->expects($this->any())->method('loadByResourceLocator')->willReturn($structure);
 
-        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer);
+        $defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
+        $defaultLocaleProvider->getDefaultLocale()->willReturn(new Localization('de', 'at'));
+        $urlReplacer = $this->prophesize(ReplacerInterface::class);
+        $urlReplacer->replaceCountry('sulu.lo/de-at', 'at')->shouldBeCalled()->willReturn('sulu.lo/de-at');
+        $urlReplacer->replaceLanguage('sulu.lo/de-at', 'de')->shouldBeCalled()->willReturn('sulu.lo/de-at');
+        $urlReplacer->replaceLocalization('sulu.lo/de-at', 'de-at')->shouldBeCalled()->willReturn('sulu.lo/de-at');
+
+        $portalRouteProvider = new ContentRouteProvider(
+            $contentMapper,
+            $requestAnalyzer,
+            $defaultLocaleProvider->reveal(),
+            $urlReplacer->reveal()
+        );
 
         $request = $this->getRequestMock($path);
 
@@ -551,7 +677,15 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $this->throwException(new ResourceLocatorMovedException('/new-test', '123-123-123'))
         );
 
-        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer);
+        $defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
+        $urlReplacer = $this->prophesize(ReplacerInterface::class);
+
+        $portalRouteProvider = new ContentRouteProvider(
+            $contentMapper,
+            $requestAnalyzer,
+            $defaultLocaleProvider->reveal(),
+            $urlReplacer->reveal()
+        );
 
         $request = $this->getRequestMock($path);
 

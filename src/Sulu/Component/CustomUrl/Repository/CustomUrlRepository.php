@@ -124,4 +124,51 @@ class CustomUrlRepository
             $this->userManager
         );
     }
+
+    /**
+     * Returns list of custom-url data-arrays.
+     *
+     * @param string $path
+     *
+     * @return \Iterator
+     */
+    public function findUrls($path)
+    {
+        $session = $this->sessionManager->getSession();
+        $queryManager = $session->getWorkspace()->getQueryManager();
+
+        $qomFactory = $queryManager->getQOMFactory();
+        $queryBuilder = new QueryBuilder($qomFactory);
+
+        $queryBuilder->addSelect('a', 'domainParts', 'domainParts')
+            ->addSelect('a', 'baseDomain', 'baseDomain');
+
+        $queryBuilder->from(
+            $queryBuilder->qomf()->selector('a', 'nt:unstructured')
+        );
+
+        $queryBuilder->where(
+            $queryBuilder->qomf()->comparison(
+                $queryBuilder->qomf()->propertyValue('a', 'jcr:mixinTypes'),
+                QueryObjectModelConstantsInterface::JCR_OPERATOR_EQUAL_TO,
+                $queryBuilder->qomf()->literal('sulu:custom_url')
+            )
+        );
+        $queryBuilder->andWhere(
+            $queryBuilder->qomf()->descendantNode('a', $path)
+        );
+
+        $query = $queryBuilder->getQuery();
+        $result = $query->execute();
+
+        return array_map(
+            function (Row $item) {
+                return $this->generator->generate(
+                    $item->getValue('a.baseDomain'),
+                    json_decode($item->getValue('a.domainParts'), true)
+                );
+            },
+            iterator_to_array($result->getRows())
+        );
+    }
 }

@@ -7,7 +7,12 @@
  * with this source code in the file LICENSE.
  */
 
-define(['text!./skeleton.html', 'services/sulucustomurl/custom-url-manager'], function(skeleton, CustomUrlManager) {
+define([
+    'underscore',
+    'config',
+    'text!./skeleton.html',
+    'services/sulucustomurl/custom-url-manager'
+], function(_, Config, skeleton, CustomUrlManager) {
 
     'use strict';
 
@@ -75,93 +80,101 @@ define(['text!./skeleton.html', 'services/sulucustomurl/custom-url-manager'], fu
         /**
          * Start datagrid and toolbar.
          */
-        startDatagrid: function(){
-            this.sandbox.start([
-                {
+        startDatagrid: function() {
+            var security = Config.get('sulu_security.contexts')['sulu.webspace_settings.' + this.data.key + '.custom-urls'],
+                buttons = {},
+                components = [
+                    {
+                        name: 'datagrid@husky',
+                        options: {
+                            el: '#webspace-custom-url-list',
+                            url: CustomUrlManager.generateUrl(this.data, null, null),
+                            resultKey: 'custom-urls',
+                            actionCallback: this.edit.bind(this),
+                            pagination: 'infinite-scroll',
+                            idKey: 'uuid',
+                            viewOptions: {
+                                table: {
+                                    actionIconColumn: 'title',
+                                    actionIcon: (!!security.edit ? 'pencil' : 'eye')
+                                }
+                            },
+                            matchings: [
+                                {
+                                    attribute: 'title',
+                                    name: 'title',
+                                    content: this.translations.title
+                                },
+                                {
+                                    attribute: 'published',
+                                    name: 'published',
+                                    content: this.translations.published,
+                                    type: 'checkbox_readonly'
+                                },
+                                {
+                                    attribute: 'customUrl',
+                                    name: 'customUrl',
+                                    content: this.translations.customUrl
+                                },
+                                {
+                                    attribute: 'targetTitle',
+                                    name: 'targetTitle',
+                                    content: this.translations.targetTitle,
+                                    type: function(content) {
+                                        if (content === '') {
+                                            return this.translations.noTarget;
+                                        }
+
+                                        return content;
+                                    }.bind(this)
+                                },
+                                {
+                                    attribute: 'changed',
+                                    name: 'changed',
+                                    content: this.translations.changed,
+                                    type: 'datetime'
+                                },
+                                {
+                                    attribute: 'changerFullName',
+                                    name: 'changerFullName',
+                                    content: this.translations.changer
+                                },
+                                {
+                                    attribute: 'created',
+                                    name: 'created',
+                                    content: this.translations.created,
+                                    type: 'datetime'
+                                },
+                                {
+                                    attribute: 'creatorFullName',
+                                    name: 'creatorFullName',
+                                    content: this.translations.creator
+                                }
+                            ]
+                        }
+                    }
+                ];
+
+            if (!!security.add) {
+                buttons.add = {options: {callback: this.edit.bind(this)}};
+            }
+            if (!!security.delete) {
+                buttons.deleteSelected = {options: {callback: this.del.bind(this)}};
+            }
+
+            if (!_.isEmpty(buttons)) {
+                components.push({
                     name: 'list-toolbar@suluadmin',
                     options: {
                         el: '#webspace-custom-url-list-toolbar',
                         instanceName: 'custom-url',
                         hasSearch: false,
-                        template: this.sandbox.sulu.buttons.get({
-                            add: {
-                                options: {callback: this.edit.bind(this)}
-                            },
-                            deleteSelected: {
-                                options: {callback: this.del.bind(this)}
-                            }
-                        })
+                        template: this.sandbox.sulu.buttons.get(buttons)
                     }
-                },
-                {
-                    name: 'datagrid@husky',
-                    options: {
-                        el: '#webspace-custom-url-list',
-                        url: CustomUrlManager.generateUrl(this.data, null, null),
-                        resultKey: 'custom-urls',
-                        actionCallback: this.edit.bind(this),
-                        pagination: 'infinite-scroll',
-                        idKey: 'uuid',
-                        viewOptions: {
-                            table: {
-                                actionIconColumn: 'title'
-                            }
-                        },
-                        matchings: [
-                            {
-                                attribute: 'title',
-                                name: 'title',
-                                content: this.translations.title
-                            },
-                            {
-                                attribute: 'published',
-                                name: 'published',
-                                content: this.translations.published,
-                                type: 'checkbox_readonly'
-                            },
-                            {
-                                attribute: 'customUrl',
-                                name: 'customUrl',
-                                content: this.translations.customUrl
-                            },
-                            {
-                                attribute: 'targetTitle',
-                                name: 'targetTitle',
-                                content: this.translations.targetTitle,
-                                type: function(content) {
-                                    if (content === '') {
-                                        return this.translations.noTarget;
-                                    }
+                });
+            }
 
-                                    return content;
-                                }.bind(this)
-                            },
-                            {
-                                attribute: 'changed',
-                                name: 'changed',
-                                content: this.translations.changed,
-                                type: 'datetime'
-                            },
-                            {
-                                attribute: 'changerFullName',
-                                name: 'changerFullName',
-                                content: this.translations.changer
-                            },
-                            {
-                                attribute: 'created',
-                                name: 'created',
-                                content: this.translations.created,
-                                type: 'datetime'
-                            },
-                            {
-                                attribute: 'creatorFullName',
-                                name: 'creatorFullName',
-                                content: this.translations.creator
-                            }
-                        ]
-                    }
-                }
-            ]);
+            this.sandbox.start(components);
         },
 
         /**

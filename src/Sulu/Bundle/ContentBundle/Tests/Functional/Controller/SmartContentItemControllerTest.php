@@ -249,7 +249,7 @@ class SmartContentItemControllerTest extends SuluTestCase
             '&provider=content&excluded=' . $this->team->getUuid()
         );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $result = json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(
@@ -276,7 +276,7 @@ class SmartContentItemControllerTest extends SuluTestCase
             '&provider=content&excluded=' . $this->johannes->getUuid()
         );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $result = json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(
@@ -302,7 +302,7 @@ class SmartContentItemControllerTest extends SuluTestCase
             '&provider=content&excluded=' . $this->team->getUuid() . '&limitResult=2'
         );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $result = json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(
@@ -328,7 +328,7 @@ class SmartContentItemControllerTest extends SuluTestCase
             '&provider=content&excluded=' . $this->team->getUuid() . '&limitResult=2&tags[]=' . $this->tag1->getName()
         );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $result = json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(

@@ -175,5 +175,19 @@
             <orm:field-name>placeOfJurisdiction</orm:field-name>
             <orm:entity-name>%sulu_contact.account.entity%</orm:entity-name>
         </property>
+
+        <group-concat-property name="tagIds" display="never" filter-type="tags"
+                               list:translation="public.tags"
+                               orm:glue=",">
+            <orm:field-name>id</orm:field-name>
+            <orm:entity-name>SuluTagBundle:Tag</orm:entity-name>
+
+            <orm:joins>
+                <orm:join>
+                    <orm:entity-name>SuluTagBundle:Tag</orm:entity-name>
+                    <orm:field-name>%sulu_contact.account.entity%.tags</orm:field-name>
+                </orm:join>
+            </orm:joins>
+        </group-concat-property>
     </properties>
 </class>

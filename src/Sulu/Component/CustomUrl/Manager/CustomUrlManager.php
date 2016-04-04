@@ -107,6 +107,14 @@ class CustomUrlManager implements CustomUrlManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function findUrls($webspaceKey)
+    {
+        return $this->customUrlRepository->findUrls($this->getItemsPath($webspaceKey));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function find($uuid, $locale = null)
     {
         return $this->documentManager->find($uuid, $locale, ['load_ghost_content' => true]);

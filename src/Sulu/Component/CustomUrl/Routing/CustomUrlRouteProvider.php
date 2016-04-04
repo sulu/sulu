@@ -59,7 +59,8 @@ class CustomUrlRouteProvider implements RouteProviderInterface
 
         $routeDocument = $this->requestAnalyzer->getAttribute('customUrlRoute');
         $customUrlDocument = $this->requestAnalyzer->getAttribute('customUrl');
-        if (null === $routeDocument) {
+        $localization = $this->requestAnalyzer->getAttribute('localization');
+        if (null === $routeDocument || null === $localization) {
             return $collection;
         }
 

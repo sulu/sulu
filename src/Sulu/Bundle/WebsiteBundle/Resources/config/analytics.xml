@@ -5,6 +5,7 @@
     <services>
         <service id="sulu_website.webspace_navigation_provider"
                  class="Sulu\Bundle\WebsiteBundle\Admin\WebspaceContentNavigationProvider">
+            <argument type="service" id="sulu_security.security_checker"/>
             <tag name="sulu_admin.content_navigation" alias="webspace"/>
             <tag name="sulu.context" context="admin"/>
         </service>

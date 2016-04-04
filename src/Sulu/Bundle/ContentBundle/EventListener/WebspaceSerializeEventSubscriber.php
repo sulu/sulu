@@ -18,6 +18,7 @@ use JMS\Serializer\JsonSerializationVisitor;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\Url\WebspaceUrlProviderInterface;
 use Sulu\Component\Webspace\Webspace;
 
 /**
@@ -31,13 +32,22 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
     private $webspaceManager;
 
     /**
+     * @var WebspaceUrlProviderInterface
+     */
+    private $webspaceUrlProvider;
+
+    /**
      * @var string
      */
     private $environment;
 
-    public function __construct(WebspaceManagerInterface $webspaceManager, $environment)
-    {
+    public function __construct(
+        WebspaceManagerInterface $webspaceManager,
+        WebspaceUrlProviderInterface $webspaceUrlProvider,
+        $environment
+    ) {
         $this->webspaceManager = $webspaceManager;
+        $this->webspaceUrlProvider = $webspaceUrlProvider;
         $this->environment = $environment;
     }
 
@@ -99,11 +109,7 @@ class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
      */
     private function appendUrls(Webspace $webspace, Context $context, JsonSerializationVisitor $visitor)
     {
-        $urls = [];
-        foreach ($webspace->getPortals() as $portal) {
-            $environment = $portal->getEnvironment($this->environment);
-            $urls = array_merge($urls, $environment->getUrls());
-        }
+        $urls = $this->webspaceUrlProvider->getUrls($webspace, $this->environment);
         $urls = $context->accept($urls);
         $visitor->addData('urls', $urls);
     }

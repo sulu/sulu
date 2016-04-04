@@ -79,10 +79,10 @@ class CatalogueControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
 
         $client->request('DELETE', '/api/catalogues/' . $this->catalogue->getId());
-        $this->assertEquals('204', $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(204, $client->getResponse());
 
         $client->request('GET', '/api/catalogues/' . $this->catalogue->getId());
-        $this->assertEquals('404', $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
     }
 
     public function testDeleteByIdNotExisting()
@@ -90,7 +90,7 @@ class CatalogueControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
 
         $client->request('DELETE', '/api/catalogues/4711');
-        $this->assertEquals('404', $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
 
         $client->request('GET', '/api/catalogues');
         $response = json_decode($client->getResponse()->getContent());
@@ -102,7 +102,7 @@ class CatalogueControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/api/catalogues?flat=true&fields=id,locale&packageId=' . $this->package->getId());
-        $this->assertEquals('200', $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals($this->catalogue->getId(), $response->_embedded->catalogues[0]->id);
@@ -115,7 +115,7 @@ class CatalogueControllerTest extends SuluTestCase
         $client->request('GET', '/api/catalogues?flat=true&fields=id,locale&packageId=4711');
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals('200', $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals('0', $response->total);
     }
 

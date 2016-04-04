@@ -2,6 +2,38 @@
 
 ## dev-develop
 
+### Custom-Routes
+
+The naming of the custom-routes with `type: portal` has changed. You can use now the configured name 
+and pass the host and prefix in the parameter. The current parameter will be populated in the variable
+`request.routeParameters`.
+
+__before:__
+```
+{{ path(request.portalUrl ~'.'~ request.locale ~ '.website_search') }}
+```
+
+__after:__
+```
+{{ path('website_search', request.routeParameters) }}
+```
+
+### Admin
+
+The navigation entry with the empty name wont be used in sulu anymore. It should be replaced by:
+
+__before:__
+
+```php
+    $section = new NavigationItem('');
+```
+
+__after:__
+
+```php
+    $section = new NavigationItem('navigation.modules');
+```
+
 ### Twig function `sulu_resolve_user`
 
 This twig function returns now the user. To get the related contact use following code snippet:
@@ -198,7 +230,11 @@ INSERT INTO `re_operator_translations` (`id`, `name`, `locale`, `shortDescriptio
     (35, 'gleich', 'de', NULL, NULL, 18),
     (36, 'is', 'en', NULL, NULL, 18),
     (37, 'ungleich', 'de', NULL, NULL, 19),
-    (38, 'is not', 'en', NULL, NULL, 19);
+    (38, 'is not', 'en', NULL, NULL, 19),
+    (39, 'und', 'de', NULL, NULL, 16),
+    (40, 'and', 'en', NULL, NULL, 16),
+    (41, 'oder', 'de', NULL, NULL, 17),
+    (42, 'or', 'en', NULL, NULL, 17);
 ```
 
 Additionally the filter by country has changed. Run following SQL script to update your filter conditions:

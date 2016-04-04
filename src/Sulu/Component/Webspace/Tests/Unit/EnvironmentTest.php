@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Environment\Tests\Unit;
+namespace Sulu\Component\Webspace\Tests\Unit;
 
 use Prophecy\Argument;
 use Sulu\Component\Webspace\Environment;

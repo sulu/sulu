@@ -192,7 +192,7 @@
             </trans-unit>
             <trans-unit id="883c0562a1ae3578239d1803dfe61292" resname="navigation.webspaces">
                 <source>navigation.webspaces</source>
-                <target>Globale Inhalte &amp; Webspaces</target>
+                <target>Webspaces</target>
             </trans-unit>
             <trans-unit id="eefab6371eb9c8bb5457d1f5e35014a2" resname="navigation.webspaces.pages">
                 <source>navigation.webspaces.pages</source>
@@ -977,6 +977,10 @@
             <trans-unit id="c229c52dae1354cc4123c0b4820e23119" resname="csv_export.new-line-info">
                 <source>csv_export.new-line-info</source>
                 <target>Zeichen für den Zeilenumbruch.</target>
+            </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23133" resname="navigation.modules">
+                <source>navigation.modules</source>
+                <target></target>
             </trans-unit>
         </body>
     </file>

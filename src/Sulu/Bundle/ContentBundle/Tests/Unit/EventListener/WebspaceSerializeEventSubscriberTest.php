@@ -21,14 +21,16 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Url;
+use Sulu\Component\Webspace\Url\WebspaceUrlProviderInterface;
 use Sulu\Component\Webspace\Webspace;
 
 class WebspaceSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetSubscribedEvents()
     {
+        $webspaceUrlProvider = $this->prophesize(WebspaceUrlProviderInterface::class);
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
-        $subscriber = new WebspaceSerializeEventSubscriber($webspaceManager->reveal(), 'prod');
+        $subscriber = new WebspaceSerializeEventSubscriber($webspaceManager->reveal(), $webspaceUrlProvider->reveal(), 'prod');
 
         $events = $subscriber->getSubscribedEvents();
 
@@ -46,8 +48,9 @@ class WebspaceSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testAppendPortalInformation()
     {
+        $webspaceUrlProvider = $this->prophesize(WebspaceUrlProviderInterface::class);
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
-        $subscriber = new WebspaceSerializeEventSubscriber($webspaceManager->reveal(), 'prod');
+        $subscriber = new WebspaceSerializeEventSubscriber($webspaceManager->reveal(), $webspaceUrlProvider->reveal(), 'prod');
 
         $webspace = $this->prophesize(Webspace::class);
         $webspace->getKey()->willReturn('sulu_io');
@@ -81,26 +84,12 @@ class WebspaceSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
             new Url('*.sulu.io'),
         ];
 
-        $environments = [$this->prophesize(Environment::class), $this->prophesize(Environment::class)];
-        $portals = [$this->prophesize(Portal::class), $this->prophesize(Portal::class)];
-        $portals[0]->getEnvironment('prod')->willReturn($environments[0]->reveal());
-        $portals[1]->getEnvironment('prod')->willReturn($environments[1]->reveal());
-
-        $environments[0]->getUrls()->willReturn([$urls[0], $urls[1]]);
-        $environments[1]->getUrls()->willReturn([$urls[2], $urls[3]]);
+        $webspaceUrlProvider = $this->prophesize(WebspaceUrlProviderInterface::class);
+        $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
+        $subscriber = new WebspaceSerializeEventSubscriber($webspaceManager->reveal(), $webspaceUrlProvider->reveal(), 'prod');
 
         $webspace = $this->prophesize(Webspace::class);
-        $webspace->getPortals()->willReturn(
-            array_map(
-                function ($portal) {
-                    return $portal->reveal();
-                },
-                $portals
-            )
-        );
-
-        $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
-        $subscriber = new WebspaceSerializeEventSubscriber($webspaceManager->reveal(), 'prod');
+        $webspaceUrlProvider->getUrls($webspace->reveal(), 'prod')->willReturn($urls);
 
         $context = $this->prophesize(Context::class);
         $visitor = $this->prophesize(JsonSerializationVisitor::class);
@@ -147,8 +136,9 @@ class WebspaceSerializeEventSubscriberTest extends \PHPUnit_Framework_TestCase
             )
         );
 
+        $webspaceUrlProvider = $this->prophesize(WebspaceUrlProviderInterface::class);
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
-        $subscriber = new WebspaceSerializeEventSubscriber($webspaceManager->reveal(), 'prod');
+        $subscriber = new WebspaceSerializeEventSubscriber($webspaceManager->reveal(), $webspaceUrlProvider->reveal(), 'prod');
 
         $context = $this->prophesize(Context::class);
         $visitor = $this->prophesize(JsonSerializationVisitor::class);

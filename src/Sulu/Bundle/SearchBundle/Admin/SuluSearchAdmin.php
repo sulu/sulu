@@ -21,8 +21,8 @@ class SuluSearchAdmin extends Admin
     {
         $rootNavigationItem = new NavigationItem($title);
 
-        $section = new NavigationItem('');
-        $section->setPosition(10);
+        $section = new NavigationItem('navigation.search-section');
+        $section->setPosition(1);
 
         $rootNavigationItem->addChild($section);
 

@@ -79,7 +79,7 @@ class KeywordControllerTest extends SuluTestCase
         );
 
         $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
         $this->assertEquals($locale, $result['locale']);
@@ -100,7 +100,7 @@ class KeywordControllerTest extends SuluTestCase
         );
 
         $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
         $this->assertEquals($locale, $result['locale']);
@@ -119,7 +119,7 @@ class KeywordControllerTest extends SuluTestCase
         );
 
         $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
         $this->assertEquals($locale, $result['locale']);
@@ -140,7 +140,7 @@ class KeywordControllerTest extends SuluTestCase
         );
 
         $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
         $this->assertEquals($locale, $result['locale']);
@@ -160,7 +160,7 @@ class KeywordControllerTest extends SuluTestCase
         );
 
         $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
         $this->assertEquals($locale, $result['locale']);
@@ -179,7 +179,7 @@ class KeywordControllerTest extends SuluTestCase
         );
 
         $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
         $this->assertEquals($locale, $result['locale']);
@@ -198,7 +198,7 @@ class KeywordControllerTest extends SuluTestCase
         );
 
         $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
         $this->assertEquals($locale, $result['locale']);
@@ -222,7 +222,7 @@ class KeywordControllerTest extends SuluTestCase
         );
 
         $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertEquals(409, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(409, $client->getResponse());
         $this->assertEquals(2002, $result['code']);
     }
 
@@ -238,7 +238,7 @@ class KeywordControllerTest extends SuluTestCase
         );
 
         $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
         $this->assertEquals($locale, $result['locale']);
@@ -257,7 +257,7 @@ class KeywordControllerTest extends SuluTestCase
         );
 
         $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($keyword, $result['keyword']);
         $this->assertEquals($locale, $result['locale']);
@@ -281,7 +281,7 @@ class KeywordControllerTest extends SuluTestCase
         );
 
         $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertEquals(409, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(409, $client->getResponse());
         $this->assertEquals(2001, $result['code']);
     }
 
@@ -298,7 +298,7 @@ class KeywordControllerTest extends SuluTestCase
         );
 
         $result = json_decode($client->getResponse()->getContent(), true);
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($keyword1, $result['keyword']);
         $this->assertEquals($locale, $result['locale']);
@@ -315,7 +315,7 @@ class KeywordControllerTest extends SuluTestCase
             '/api/categories/' . $this->category1->getId() . '/keywords/' . $first['id']
         );
 
-        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(204, $client->getResponse());
         $this->assertNull($this->entityManager->find(Keyword::class, $first['id']));
     }
 
@@ -329,7 +329,7 @@ class KeywordControllerTest extends SuluTestCase
             '/api/categories/' . $this->category1->getId() . '/keywords/' . $first['id']
         );
 
-        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(204, $client->getResponse());
         $this->assertNotNull($this->entityManager->find(Keyword::class, $first['id']));
     }
 }

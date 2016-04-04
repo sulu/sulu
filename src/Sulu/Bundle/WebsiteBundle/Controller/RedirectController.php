@@ -35,7 +35,7 @@ class RedirectController extends Controller
             $request->getUri()
         );
 
-        return new RedirectResponse($url, 301);
+        return new RedirectResponse($url, 301, ['Cache-Control' => 'private']);
     }
 
     /**
@@ -47,7 +47,7 @@ class RedirectController extends Controller
      */
     public function redirectAction(Request $request)
     {
-        return new RedirectResponse($request->get('url'), 301);
+        return new RedirectResponse($request->get('url'), 301, ['Cache-Control' => 'private']);
     }
 
     /**
@@ -70,7 +70,8 @@ class RedirectController extends Controller
 
         return new RedirectResponse(
             $this->container->get('router')->generate($route, $attributes, UrlGeneratorInterface::ABSOLUTE_URL),
-            $permanent ? 301 : 302
+            $permanent ? 301 : 302,
+            ['Cache-Control' => 'private']
         );
     }
 

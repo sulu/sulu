@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['underscore', 'text!./skeleton.html'], function(_, skeleton) {
+define(['underscore', 'config', 'text!./skeleton.html'], function(_, Config, skeleton) {
 
     'use strict';
 
@@ -58,63 +58,75 @@ define(['underscore', 'text!./skeleton.html'], function(_, skeleton) {
         render: function() {
             this.html(this.templates.skeleton());
 
-            this.sandbox.start([
-                {
+            var security = Config.get('sulu_security.contexts')['sulu.webspace_settings.' + this.data.key + '.analytics'],
+                buttons = {},
+                components = [
+                    {
+                        name: 'datagrid@husky',
+                        options: {
+                            el: '#webspace-analytics-list',
+                            url: this.templates.url({webspace: this.data, id: null, ids: null}),
+                            resultKey: 'analytics',
+                            actionCallback: this.editAnalytics.bind(this),
+                            pagination: 'infinite-scroll',
+                            viewOptions: {
+                                table: {
+                                    actionIconColumn: 'title',
+                                    actionIcon: (!!security.edit ? 'pencil' : 'eye')
+                                }
+                            },
+                            matchings: [
+                                {
+                                    name: 'title',
+                                    attribute: 'title',
+                                    content: this.translations.title
+                                },
+                                {
+                                    name: 'type',
+                                    attribute: 'type',
+                                    content: this.translations.type
+                                },
+                                {
+                                    name: 'domains',
+                                    attribute: 'domains',
+                                    content: this.translations.domains,
+                                    type: function(content) {
+                                        if (content === true) {
+                                            return this.translations.allDomains;
+                                        }
+
+                                        var urls = _.map(content, function(item) {
+                                            return item['url'];
+                                        });
+
+                                        return urls.join(', ');
+                                    }.bind(this)
+                                }
+                            ]
+                        }
+                    }
+                ];
+
+            if (!!security.add) {
+                buttons.add = {};
+            }
+            if (!!security.delete) {
+                buttons.deleteSelected = {};
+            }
+
+            if (!_.isEmpty(buttons)) {
+                components.push({
                     name: 'list-toolbar@suluadmin',
                     options: {
                         el: '#webspace-analytics-list-toolbar',
                         instanceName: 'analytics',
                         hasSearch: false,
-                        template: this.sandbox.sulu.buttons.get({
-                            add: {},
-                            deleteSelected: {}
-                        })
+                        template: this.sandbox.sulu.buttons.get(buttons)
                     }
-                },
-                {
-                    name: 'datagrid@husky',
-                    options: {
-                        el: '#webspace-analytics-list',
-                        url: this.templates.url({webspace: this.data, id: null, ids: null}),
-                        resultKey: 'analytics',
-                        actionCallback: this.editAnalytics.bind(this),
-                        pagination: 'infinite-scroll',
-                        viewOptions: {
-                            table: {
-                                actionIconColumn: 'title'
-                            }
-                        },
-                        matchings: [
-                            {
-                                name: 'title',
-                                attribute: 'title',
-                                content: this.translations.title
-                            },
-                            {
-                                name: 'type',
-                                attribute: 'type',
-                                content: this.translations.type
-                            },
-                            {
-                                name: 'domains',
-                                attribute: 'domains',
-                                content: this.translations.domains,
-                                type: function(content) {
-                                    if (content === true) {
-                                        return this.translations.allDomains;
-                                    }
+                });
+            }
 
-                                    var urls = _.map(content, function(item) {
-                                        return item['url'];
-                                    });
-
-                                    return urls.join(', ');
-                                }.bind(this)
-                            }
-                        ]
-                    }
-                }
-            ]);
+            this.sandbox.start(components);
         },
 
         editAnalytics: function(id) {

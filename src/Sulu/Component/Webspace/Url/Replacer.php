@@ -20,6 +20,7 @@ class Replacer implements ReplacerInterface
         self::REPLACER_COUNTRY,
         self::REPLACER_LOCALIZATION,
         self::REPLACER_SEGMENT,
+        self::REPLACER_HOST,
     ];
 
     /**
@@ -89,6 +90,22 @@ class Replacer implements ReplacerInterface
     /**
      * {@inheritdoc}
      */
+    public function hasHostReplacer($url)
+    {
+        return $this->hasReplacer($url, self::REPLACER_HOST);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function replaceHost($url, $host)
+    {
+        return $this->replace($url, self::REPLACER_HOST, $host);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function replace($url, $replacer, $value)
     {
         return str_replace($replacer, $value, $url);
@@ -97,9 +114,13 @@ class Replacer implements ReplacerInterface
     /**
      * {@inheritdoc}
      */
-    public function cleanup($url)
+    public function cleanup($url, array $replacers = null)
     {
-        foreach ($this->replacers as $replacer) {
+        if (!$replacers) {
+            $replacers = $this->replacers;
+        }
+
+        foreach ($replacers as $replacer) {
             $url = $this->replace($url, $replacer, '');
         }
 

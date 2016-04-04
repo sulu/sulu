@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\SnippetBundle\Controller;
 
+use PHPCR\SessionInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\StructureInterface;
@@ -38,6 +39,11 @@ class SnippetControllerTest extends SuluTestCase
      */
     protected $documentManager;
 
+    /**
+     * @var SessionInterface
+     */
+    private $phpcrSession;
+
     public function setUp()
     {
         parent::setUp();
@@ -58,7 +64,7 @@ class SnippetControllerTest extends SuluTestCase
 
         $result = $response->getContent();
         $result = json_decode($response->getContent(), true);
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
         $this->assertLinks([
             'self', 'delete', 'update', 'new',
         ], $result);
@@ -99,7 +105,7 @@ class SnippetControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
 
         $result = json_decode($response->getContent(), true);
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
         $this->assertLinks([
             'self', 'first', 'last', 'filter', 'find', 'pagination', 'sortable',
         ], $result);
@@ -123,7 +129,7 @@ class SnippetControllerTest extends SuluTestCase
         );
         $response = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
         $result = json_decode($response->getContent(), true);
         $result = reset($result['_embedded']['snippets']);
         $this->assertEquals($this->hotel1->getUuid(), $result['id']);
@@ -141,7 +147,7 @@ class SnippetControllerTest extends SuluTestCase
         ));
         $response = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
         $result = json_decode($response->getContent(), true);
         $result = $result['_embedded']['snippets'];
         $this->assertCount(2, $result);
@@ -206,7 +212,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->client->request('GET', '/snippets?' . $query);
         $response = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
 
         $result = json_decode($response->getContent(), true);
         $this->assertCount($expectedNbResults, $result['_embedded']['snippets']);
@@ -259,7 +265,7 @@ class SnippetControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
 
         $result = json_decode($response->getContent(), true);
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
         $this->assertLinks([
             'self', 'delete', 'update', 'new',
         ], $result);
@@ -295,7 +301,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->client->request('POST', '/snippets?' . $query, $data);
         $response = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
         $result = json_decode($response->getContent(), true);
         $this->assertEquals($data['title'], $result['title']);
         $this->assertEquals($params['language'], reset($result['concreteLanguages']));
@@ -321,7 +327,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->client->request('POST', '/snippets?' . $query, $data);
         $response = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
         $result = json_decode($response->getContent(), true);
         $this->assertEquals($data['title'], $result['title']);
         $this->assertEquals($params['language'], reset($result['concreteLanguages']));
@@ -345,7 +351,7 @@ class SnippetControllerTest extends SuluTestCase
         $response = $this->client->getResponse();
 
         $result = json_decode($response->getContent(), true);
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
 
         foreach ($data as $key => $value) {
             $this->assertEquals($data[$key], $value);
@@ -372,7 +378,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->client->request('PUT', sprintf('/snippets/%s?%s', $this->hotel1->getUuid(), $query), $data);
         $response = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
         $result = json_decode($response->getContent(), true);
         $this->assertLinks([
             'self', 'delete', 'update', 'new',
@@ -398,7 +404,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->client->request('PUT', sprintf('/snippets/%s?%s', $this->hotel1->getUuid(), $query), $data);
         $response = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
         $result = json_decode($response->getContent(), true);
         $this->assertEquals(StructureInterface::STATE_TEST, $result['nodeState']);
     }
@@ -414,7 +420,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->client->request('POST', '/snippets?language=de', $data);
         $response = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
         $result = json_decode($response->getContent(), true);
 
         $this->client->request(
@@ -423,7 +429,7 @@ class SnippetControllerTest extends SuluTestCase
             array_merge(['_hash' => $result['_hash']], $data)
         );
 
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
     }
 
     public function testPutWithInvalidHash()
@@ -437,7 +443,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->client->request('POST', '/snippets?language=de', $data);
         $response = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
         $result = json_decode($response->getContent(), true);
 
         $this->client->request(
@@ -446,7 +452,7 @@ class SnippetControllerTest extends SuluTestCase
             array_merge(['_hash' => 'wrong-hash'], $data)
         );
 
-        $this->assertEquals(409, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(409, $this->client->getResponse());
     }
 
     public function testDeleteReferenced()
@@ -461,8 +467,24 @@ class SnippetControllerTest extends SuluTestCase
 
         $this->client->request('DELETE', '/snippets/' . $this->hotel1->getUuid() . '?_format=text');
         $response = $this->client->getResponse();
+        $content = json_decode($response->getContent(), true);
 
         $this->assertEquals(409, $response->getStatusCode());
+        $this->assertEquals($page->getUuid(), $content['structures'][0]['id']);
+    }
+
+    public function testDeleteReferencedOther()
+    {
+        $node = $this->phpcrSession->getRootNode()->addNode('test-other');
+        $node->setProperty('test', $this->phpcrSession->getNodeByIdentifier($this->hotel1->getUuid()));
+        $this->phpcrSession->save();
+
+        $this->client->request('DELETE', '/snippets/' . $this->hotel1->getUuid() . '?_format=text');
+        $response = $this->client->getResponse();
+        $content = json_decode($response->getContent(), true);
+
+        $this->assertHttpStatusCode(409, $response);
+        $this->assertEquals($node->getPath(), $content['other'][0]);
     }
 
     public function testCopyLocale()
@@ -474,7 +496,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->documentManager->flush();
 
         $this->client->request('POST', '/snippets/' . $snippet->getUuid() . '?action=copy-locale&dest=en&language=de');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $newPage = $this->documentManager->find($snippet->getUuid(), 'en');
         $this->assertEquals('Hotel de', $newPage->getTitle());
@@ -487,7 +509,7 @@ class SnippetControllerTest extends SuluTestCase
     {
         $this->client->request('GET', '/snippet/fields');
         $response = $this->client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
         $body = $response->getContent();
         $fields = json_decode($body);
         $this->assertNotNull($fields);

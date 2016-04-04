@@ -12,6 +12,7 @@
 namespace Sulu\Component\Webspace\Manager;
 
 use Psr\Log\LoggerInterface;
+use Sulu\Component\Util\WildcardUrlUtil;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\Dumper\PhpWebspaceCollectionDumper;
 use Sulu\Component\Webspace\Portal;
@@ -93,8 +94,8 @@ class WebspaceManager implements WebspaceManagerInterface
     public function findPortalInformationByUrl($url, $environment)
     {
         $portalInformations = $this->getWebspaceCollection()->getPortalInformations($environment);
-        foreach ($portalInformations as $portalUrl => $portalInformation) {
-            if ($this->matchUrl($url, $portalUrl)) {
+        foreach ($portalInformations as $portalInformation) {
+            if ($this->matchUrl($url, $portalInformation->getUrl())) {
                 return $portalInformation;
             }
         }
@@ -147,16 +148,12 @@ class WebspaceManager implements WebspaceManagerInterface
         $urls = [];
         $portals = $this->getWebspaceCollection()->getPortalInformations(
             $environment,
-            [
-                RequestAnalyzerInterface::MATCH_TYPE_FULL,
-                RequestAnalyzerInterface::MATCH_TYPE_PARTIAL,
-                RequestAnalyzerInterface::MATCH_TYPE_REDIRECT,
-            ]
+            [RequestAnalyzerInterface::MATCH_TYPE_FULL]
         );
-        foreach ($portals as $url => $portalInformation) {
+        foreach ($portals as $portalInformation) {
             $sameLocalization = $portalInformation->getLocalization()->getLocalization() === $languageCode;
             $sameWebspace = $webspaceKey === null || $portalInformation->getWebspace()->getKey() === $webspaceKey;
-            $url = rtrim(sprintf('%s://%s%s', $scheme, $url, $resourceLocator), '/');
+            $url = rtrim(sprintf('%s://%s%s', $scheme, $portalInformation->getUrl(), $resourceLocator), '/');
             if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {
                 $urls[] = $url;
             }
@@ -185,13 +182,13 @@ class WebspaceManager implements WebspaceManagerInterface
                 RequestAnalyzerInterface::MATCH_TYPE_REDIRECT,
             ]
         );
-        foreach ($portals as $url => $portalInformation) {
+        foreach ($portals as $portalInformation) {
             $sameLocalization = (
                 $portalInformation->getLocalization() === null
                 || $portalInformation->getLocalization()->getLocalization() === $languageCode
             );
             $sameWebspace = $webspaceKey === null || $portalInformation->getWebspace()->getKey() === $webspaceKey;
-            $url = rtrim(sprintf('%s://%s%s', $scheme, $url, $resourceLocator), '/');
+            $url = rtrim(sprintf('%s://%s%s', $scheme, $portalInformation->getUrl(), $resourceLocator), '/');
             if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {
                 if ($portalInformation->isMain()) {
                     array_unshift($urls, $url);
@@ -369,12 +366,6 @@ class WebspaceManager implements WebspaceManagerInterface
      */
     protected function matchUrl($url, $portalUrl)
     {
-        $patternUrl = rtrim($portalUrl, '/');
-        $patternUrl = preg_quote($patternUrl);
-        $patternUrl = str_replace('/', '\/', $patternUrl);
-        $patternUrl = str_replace('\*', '[^\/.]+', $patternUrl);
-        $regexp = sprintf('/^%s($|([\/].*)|([.].*))$/', $patternUrl);
-
-        return preg_match($regexp, $url);
+        return WildcardUrlUtil::match($url, $portalUrl);
     }
 }

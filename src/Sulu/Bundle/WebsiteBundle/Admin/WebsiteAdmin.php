@@ -18,9 +18,22 @@ use Sulu\Bundle\ContentBundle\Admin\ContentAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 
 class WebsiteAdmin extends Admin
 {
+    /**
+     * Returns security context for analytics in given webspace.
+     *
+     * @param string $webspaceKey
+     *
+     * @return string
+     */
+    public static function getAnalyticsSecurityContext($webspaceKey)
+    {
+        return sprintf('%s%s.%s', ContentAdmin::SECURITY_SETTINGS_CONTEXT_PREFIX, $webspaceKey, 'analytics');
+    }
+
     /**
      * @var WebspaceManagerInterface
      */
@@ -40,8 +53,8 @@ class WebsiteAdmin extends Admin
         $this->securityChecker = $securityChecker;
 
         $rootNavigationItem = new NavigationItem($title);
-        $section = new NavigationItem('');
-        $section->setPosition(10);
+        $section = new NavigationItem('navigation.modules');
+        $section->setPosition(20);
 
         if ($this->checkLivePermissionForAllWebspaces()) {
             $settings = new NavigationItem('navigation.settings');
@@ -66,6 +79,29 @@ class WebsiteAdmin extends Admin
     public function getJsBundleName()
     {
         return 'suluwebsite';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSecurityContexts()
+    {
+        $webspaceContexts = [];
+        /* @var Webspace $webspace */
+        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
+            $webspaceContexts[self::getAnalyticsSecurityContext($webspace->getKey())] = [
+                PermissionTypes::VIEW,
+                PermissionTypes::ADD,
+                PermissionTypes::EDIT,
+                PermissionTypes::DELETE,
+            ];
+        }
+
+        return [
+            'Sulu' => [
+                'Webspace Settings' => $webspaceContexts,
+            ],
+        ];
     }
 
     /**

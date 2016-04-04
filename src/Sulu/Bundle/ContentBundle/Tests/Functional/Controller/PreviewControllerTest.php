@@ -122,7 +122,7 @@ class PreviewControllerTest extends SuluTestCase
         $client->request('GET', '/content/preview/' . $response->id . '/render?webspace=sulu_io&language=de_at');
         $response = $client->getResponse()->getContent();
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertTrue(strpos($response, '<h1 property="title">Hello Hikaru Sulu</h1>') > -1);
     }
 
@@ -147,7 +147,7 @@ class PreviewControllerTest extends SuluTestCase
         $client->request('GET', '/content/preview/' . $response->id . '/render?webspace=sulu_io&language=de_at');
         $response = $client->getResponse()->getContent();
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertTrue(strpos($response, '<h1>Hello Hikaru Sulu</h1>') > -1);
         $this->assertTrue(strpos($response, '<nav>') > -1);
         $this->assertTrue(strpos($response, '</nav>') > -1);
@@ -174,7 +174,7 @@ class PreviewControllerTest extends SuluTestCase
         $client->request('GET', '/content/preview/' . $response->id . '/render?webspace=sulu_io&language=de_at');
         $response = $client->getResponse()->getContent();
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertTrue(strpos($response, '<h1>Hello Hikaru Sulu</h1>') > -1);
         $this->assertTrue(preg_match('/^\<p\>This is a fabulous test case!\s*\<\/p\>/', $response) > -1);
         $this->assertTrue(strpos($response, '<nav>') > -1);

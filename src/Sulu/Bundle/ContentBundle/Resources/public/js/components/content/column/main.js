@@ -8,9 +8,10 @@
  */
 
 define([
+    'config',
     'sulucontent/components/open-ghost-overlay/main',
     'sulusecurity/services/security-checker'
-], function(OpenGhost, SecurityChecker) {
+], function(Config, OpenGhost, SecurityChecker) {
 
     'use strict';
 
@@ -149,7 +150,9 @@ define([
                 }
 
                 if (!column.parent.selectedItem) {
-                    return true;
+                    var config = Config.get('sulu_security.contexts')['sulu.webspaces.sulu_io'];
+
+                    return !!config[permission];
                 }
             }
 

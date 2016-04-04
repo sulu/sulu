@@ -30,29 +30,24 @@ class MediaAdmin extends Admin
         $this->securityChecker = $securityChecker;
 
         $rootNavigationItem = new NavigationItem($title);
-        $section = new NavigationItem('');
-        $section->setPosition(10);
-
-        $media = new NavigationItem('navigation.media');
-        $media->setPosition(30);
-        $media->setIcon('image');
+        $section = new NavigationItem('navigation.modules');
+        $section->setPosition(20);
 
         if ($this->securityChecker->hasPermission('sulu.media.collections', PermissionTypes::VIEW)) {
-            $collections = new DataNavigationItem('navigation.media.collections', '/admin/api/collections?sortBy=title', $media);
-            $collections->setPosition(10);
-            $collections->setId('collections-edit');
-            $collections->setAction('media/collections/root');
-            $collections->setInstanceName('collections');
-            $collections->setDataNameKey('title');
-            $collections->setDataResultKey('collections');
-            $collections->setShowAddButton(true);
-            $collections->setTitleTranslationKey('navigation.media.collections');
-            $collections->setNoDataTranslationKey('navigation.media.collections.empty');
-            $collections->setAddButtonTranslationKey('navigation.media.collections.add');
-            $collections->setSearchTranslationKey('navigation.media.collections.search');
-        }
+            $media = new DataNavigationItem('navigation.media', '/admin/api/collections?sortBy=title', $section);
+            $media->setId('collections-edit');
+            $media->setPosition(20);
+            $media->setIcon('image');
+            $media->setAction('media/collections/root');
+            $media->setInstanceName('collections');
+            $media->setDataNameKey('title');
+            $media->setDataResultKey('collections');
+            $media->setShowAddButton(true);
+            $media->setTitleTranslationKey('navigation.media.collections');
+            $media->setNoDataTranslationKey('navigation.media.collections.empty');
+            $media->setAddButtonTranslationKey('navigation.media.collections.add');
+            $media->setSearchTranslationKey('navigation.media.collections.search');
 
-        if ($media->hasChildren()) {
             $section->addChild($media);
             $rootNavigationItem->addChild($section);
         }
@@ -79,6 +74,9 @@ class MediaAdmin extends Admin
                         PermissionTypes::EDIT,
                         PermissionTypes::DELETE,
                         PermissionTypes::SECURITY,
+                    ],
+                    'sulu.media.system_collections' => [
+                        PermissionTypes::VIEW,
                     ],
                 ],
             ],

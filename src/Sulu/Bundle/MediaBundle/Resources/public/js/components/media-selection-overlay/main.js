@@ -431,7 +431,7 @@ define([
                         el: this.$el.find('.media-selection-overlay-datagrid-container'),
                         url: [
                             '/admin/api/media?locale=', this.options.locale,
-                            '&orderBy=media.changed&orderSort=DESC',
+                            '&orderBy=media.created&orderSort=DESC',
                             (!!this.options.types ? '&types=' + this.options.types : '')
                         ].join(''),
                         view: UserSettingsManager.getMediaListView(),

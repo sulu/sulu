@@ -12,6 +12,8 @@ namespace Sulu\Bundle\WebsiteBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 /**
  * Provides tabs for webspace settings.
@@ -19,10 +21,28 @@ use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 class WebspaceContentNavigationProvider implements ContentNavigationProviderInterface
 {
     /**
+     * @var SecurityCheckerInterface
+     */
+    private $securityChecker;
+
+    public function __construct(SecurityCheckerInterface $securityChecker)
+    {
+        $this->securityChecker = $securityChecker;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getNavigationItems(array $options = [])
     {
+        if (!$this->securityChecker->hasPermission(
+            WebsiteAdmin::getAnalyticsSecurityContext($options['webspace']),
+            PermissionTypes::VIEW
+        )
+        ) {
+            return [];
+        }
+
         $analytics = new ContentNavigationItem('content-navigation.webspace.analytics');
         $analytics->setId('tab-analytics');
         $analytics->setAction('analytics');

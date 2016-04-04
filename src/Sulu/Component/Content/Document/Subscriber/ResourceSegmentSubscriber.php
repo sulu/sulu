@@ -144,6 +144,10 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
             return;
         }
 
+        if (!$event->getLocale()) {
+            return;
+        }
+
         if ($document instanceof HomeDocument) {
             return;
         }

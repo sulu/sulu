@@ -19,8 +19,9 @@ define([
     'text!./info.html',
     'text!./copyright.html',
     'text!./versions.html',
-    'text!./preview.html'
-], function(config, mediaManager, fileIcons, infoTemplate, copyrightTemplate, versionsTemplate, previewTemplate) {
+    'text!./preview.html',
+    'text!./formats.html'
+], function(config, mediaManager, fileIcons, infoTemplate, copyrightTemplate, versionsTemplate, previewTemplate, formatsTemplate) {
 
     'use strict';
 
@@ -189,13 +190,15 @@ define([
          * @param media {Object} the id of the media to edit
          */
         editSingleMedia: function(media) {
-            var $info, $copyright, $versions, $preview;
+            var $info, $copyright, $versions, $preview, $formats;
 
             this.media = media;
 
             $info = this.sandbox.dom.createElement(_.template(infoTemplate, {
                 media: this.media,
                 translate: this.sandbox.translate,
+                formatBytes: this.sandbox.util.formatBytes,
+                crop: this.sandbox.util.cropMiddle,
                 icon: fileIcons.getByMimeType(media.mimeType)
             }));
 
@@ -216,20 +219,26 @@ define([
                 translate: this.sandbox.translate
             }));
 
-            this.startSingleOverlay($info, $copyright, $versions, $preview);
+            $formats = this.sandbox.dom.createElement(_.template(formatsTemplate, {
+                media: this.media,
+                domain: window.location.protocol + '//' + window.location.host,
+                translate: this.sandbox.translate
+            }));
+
+            this.startSingleOverlay($info, $copyright, $formats, $versions, $preview);
         },
 
         /**
          * Starts the actual overlay for single-edit
          */
-        startSingleOverlay: function($info, $copyright, $versions, $preview) {
+        startSingleOverlay: function($info, $copyright, $formats, $versions, $preview) {
             var $container = this.sandbox.dom.createElement('<div class="' + constants.singleEditClass + '" id="media-form"/>');
             this.sandbox.dom.append(this.$el, $container);
             this.bindSingleOverlayEvents();
 
             var tabs = [
                 {title: this.sandbox.translate('public.info'), data: $info},
-                {title: this.sandbox.translate('sulu.media.copyright'), data: $copyright}
+                {title: this.sandbox.translate('sulu.media.licence'), data: $copyright}
             ];
 
             if (!!$preview) {
@@ -240,6 +249,13 @@ define([
                     }
                 );
             }
+
+            tabs.push(
+                {
+                    title: this.sandbox.translate('sulu.media.formats'),
+                    data: $formats
+                }
+            );
 
             tabs.push(
                 {
@@ -256,6 +272,7 @@ define([
                         openOnStart: true,
                         removeOnClose: true,
                         instanceName: 'media-edit',
+                        skin: 'wide',
                         slides: [
                             {
                                 title: this.media.title,
@@ -264,7 +281,6 @@ define([
                                     locales: this.sandbox.sulu.locales,
                                     preSelected: this.options.locale
                                 },
-                                skin: 'wide',
                                 propagateEvents: false,
                                 okCallback: this.singleOkCallback.bind(this),
                                 cancelCallback: function() {
@@ -332,6 +348,10 @@ define([
                 this.sandbox.emit('husky.overlay.media-edit.loading.close');
             }.bind(this));
 
+            this.sandbox.once('husky.overlay.media-edit.opened', function() {
+                this.clipboard = this.sandbox.clipboard.initialize('.fa-clipboard');
+            }.bind(this));
+
             // change language (single-edit)
             this.sandbox.on('husky.tabs.overlaymedia-edit.item.select', function(tab) {
                 var $resetPreviewButton = $('.' + constants.resetPreviewActionClass);
@@ -356,6 +376,22 @@ define([
             this.sandbox.on(
                 'husky.overlay.media-edit.language-changed', this.languageChangedSingle.bind(this)
             );
+            
+            this.sandbox.dom.on(this.$el, 'click', function(e) {
+                var $target = $(e.currentTarget),
+                    $item = $target.parents('.media-edit-link'),
+                    $info = $target.siblings('.media-edit-copied');
+
+                $item.addClass('highlight-animation');
+                $target.hide();
+                $info.show();
+
+                _.delay(function($target, $item, $info) {
+                    $item.removeClass('highlight-animation');
+                    $info.hide();
+                    $target.show();
+                }, 2000, $target, $item, $info);
+            }.bind(this), '.fa-clipboard');
         },
 
         /**

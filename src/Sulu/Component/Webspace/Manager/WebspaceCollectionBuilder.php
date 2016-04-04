@@ -235,7 +235,8 @@ class WebspaceCollectionBuilder
                     null,
                     null,
                     false,
-                    $urlAddress
+                    $urlAddress,
+                    1
                 );
             }
 
@@ -250,7 +251,8 @@ class WebspaceCollectionBuilder
                 null,
                 null,
                 false,
-                $urlAddress
+                $urlAddress,
+                1
             );
         }
     }
@@ -281,7 +283,8 @@ class WebspaceCollectionBuilder
             $urlRedirect,
             $urlAnalyticsKey,
             $url->isMain(),
-            $url->getUrl()
+            $url->getUrl(),
+            $this->urlReplacer->hasHostReplacer($urlAddress) ? 4 : 9
         );
     }
 
@@ -319,7 +322,8 @@ class WebspaceCollectionBuilder
                     null,
                     $urlAnalyticsKey,
                     $url->isMain(),
-                    $url->getUrl()
+                    $url->getUrl(),
+                    $this->urlReplacer->hasHostReplacer($urlResult) ? 5 : 10
                 );
             }
         } else {
@@ -334,7 +338,8 @@ class WebspaceCollectionBuilder
                 null,
                 $urlAnalyticsKey,
                 $url->isMain(),
-                $url->getUrl()
+                $url->getUrl(),
+                $this->urlReplacer->hasHostReplacer($urlResult) ? 5 : 10
             );
         }
     }
@@ -353,18 +358,22 @@ class WebspaceCollectionBuilder
         $urlAnalyticsKey,
         Url $url
     ) {
-        $replacers = [
-            ReplacerInterface::REPLACER_LANGUAGE => $portal->getDefaultLocalization()->getLanguage(),
-            ReplacerInterface::REPLACER_COUNTRY => $portal->getDefaultLocalization()->getCountry(),
-            ReplacerInterface::REPLACER_LOCALIZATION => $portal->getDefaultLocalization()->getLocalization('-'),
-        ];
+        $replacers = [];
 
         $defaultSegment = $portal->getWebspace()->getDefaultSegment();
         if ($defaultSegment) {
             $replacers[ReplacerInterface::REPLACER_SEGMENT] = $defaultSegment->getKey();
         }
 
-        $urlResult = $this->urlReplacer->cleanup($urlAddress);
+        $urlResult = $this->urlReplacer->cleanup(
+            $urlAddress,
+            [
+                ReplacerInterface::REPLACER_LANGUAGE,
+                ReplacerInterface::REPLACER_COUNTRY,
+                ReplacerInterface::REPLACER_LOCALIZATION,
+                ReplacerInterface::REPLACER_SEGMENT,
+            ]
+        );
         $urlRedirect = $this->generateUrlAddress($urlAddress, $replacers);
 
         if ($this->validateUrlPartialMatch($urlResult, $environment)) {
@@ -372,13 +381,14 @@ class WebspaceCollectionBuilder
                 RequestAnalyzerInterface::MATCH_TYPE_PARTIAL,
                 $portal->getWebspace(),
                 $portal,
-                $portal->getDefaultLocalization(),
+                null,
                 $urlResult,
                 $portal->getWebspace()->getDefaultSegment(),
                 $urlRedirect,
                 $urlAnalyticsKey,
                 false, // partial matches cannot be main
-                $url->getUrl()
+                $url->getUrl(),
+                $this->urlReplacer->hasHostReplacer($urlResult) ? 4 : 9
             );
         }
     }

@@ -168,6 +168,9 @@ class StructureSubscriberTest extends SubscriberTestCase
     {
         $this->document->getStructure()->willReturn($this->structure->reveal());
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
+        $this->persistEvent->getOptions()->willReturn([
+            'ignore_required' => false,
+        ]);
 
         // map the structure type
         $this->persistEvent->getLocale()->willReturn('fr');
@@ -180,29 +183,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->structureMetadata->getProperties()->willReturn([
             'prop1' => $this->structureProperty->reveal(),
         ]);
-        $this->structureProperty->isRequired()->willReturn(true);
-        $this->structureProperty->getContentTypeName()->willReturn('content_type');
-        $this->contentTypeManager->get('content_type')->willReturn($this->contentType->reveal());
-        $this->propertyFactory->createTranslatedProperty($this->structureProperty->reveal(), 'fr')->willReturn($this->legacyProperty->reveal());
-        $this->structure->getProperty('prop1')->willReturn($this->propertyValue->reveal());
-        $this->propertyValue->getValue()->willReturn('test');
-
-        $this->contentType->remove(
-            $this->node->reveal(),
-            $this->legacyProperty->reveal(),
-            'webspace',
-            'fr',
-            null
-        )->shouldBeCalled();
-
-        $this->contentType->write(
-            $this->node->reveal(),
-            $this->legacyProperty->reveal(),
-            null,
-            'webspace',
-            'fr',
-            null
-        )->shouldBeCalled();
+        $this->setupPropertyWrite();
 
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
@@ -216,6 +197,9 @@ class StructureSubscriberTest extends SubscriberTestCase
     {
         $this->document->getStructure()->willReturn($this->structure->reveal());
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
+        $this->persistEvent->getOptions()->willReturn([
+            'ignore_required' => false,
+        ]);
 
         // map the structure type
         $this->persistEvent->getLocale()->willReturn('fr');
@@ -231,6 +215,37 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->propertyValue->getValue()->willReturn(null);
         $this->structureMetadata->getName()->willReturn('test');
         $this->structureMetadata->getResource()->willReturn('/path/to/resource.xml');
+
+        $this->subscriber->handlePersist($this->persistEvent->reveal());
+    }
+
+    /**
+     * It should ignore required properties if the `ignore_required` option is given.
+     */
+    public function testIgnoreRequiredProperties()
+    {
+        $this->document->getStructure()->willReturn($this->structure->reveal());
+        $this->persistEvent->getDocument()->willReturn($this->document->reveal());
+        $this->persistEvent->getOptions()->willReturn([
+            'ignore_required' => true,
+        ]);
+
+        // map the structure type
+        $this->persistEvent->getLocale()->willReturn('fr');
+
+        // map the content
+        $this->inspector->getStructureMetadata($this->document->reveal())->willReturn($this->structureMetadata->reveal());
+        $this->inspector->getWebspace($this->document->reveal())->willReturn('webspace');
+        $this->structureMetadata->getProperties()->willReturn([
+            'prop1' => $this->structureProperty->reveal(),
+        ]);
+        $this->structureProperty->isRequired()->willReturn(true);
+        $this->structure->getProperty('prop1')->willReturn($this->propertyValue->reveal());
+        $this->propertyValue->getValue()->willReturn(null);
+        $this->structureMetadata->getName()->willReturn('test');
+        $this->structureMetadata->getResource()->willReturn('/path/to/resource.xml');
+
+        $this->setupPropertyWrite();
 
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
@@ -308,5 +323,32 @@ class StructureSubscriberTest extends SubscriberTestCase
         // set the property container
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
         $this->accessor->set('structure', $this->structure->reveal())->shouldHaveBeenCalled();
+    }
+
+    private function setupPropertyWrite()
+    {
+        $this->structureProperty->isRequired()->willReturn(true);
+        $this->structureProperty->getContentTypeName()->willReturn('content_type');
+        $this->contentTypeManager->get('content_type')->willReturn($this->contentType->reveal());
+        $this->propertyFactory->createTranslatedProperty($this->structureProperty->reveal(), 'fr')->willReturn($this->legacyProperty->reveal());
+        $this->structure->getProperty('prop1')->willReturn($this->propertyValue->reveal());
+        $this->propertyValue->getValue()->willReturn('test');
+
+        $this->contentType->remove(
+            $this->node->reveal(),
+            $this->legacyProperty->reveal(),
+            'webspace',
+            'fr',
+            null
+        )->shouldBeCalled();
+
+        $this->contentType->write(
+            $this->node->reveal(),
+            $this->legacyProperty->reveal(),
+            null,
+            'webspace',
+            'fr',
+            null
+        )->shouldBeCalled();
     }
 }
