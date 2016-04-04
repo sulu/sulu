@@ -118,11 +118,11 @@ class SeoTwigExtension extends \Twig_Extension
         $titleHtml = '<title>%s</title>';
 
         if (isset($seoExtension['title']) && $seoExtension['title'] !== '') {
-            return sprintf($titleHtml, $seoExtension['title']);
+            return sprintf($titleHtml, htmlentities($seoExtension['title']));
         }
 
         if (isset($content['title'])) {
-            return sprintf($titleHtml . PHP_EOL, $content['title']);
+            return sprintf($titleHtml . PHP_EOL, htmlentities($content['title']));
         }
 
         return '';
@@ -175,7 +175,7 @@ class SeoTwigExtension extends \Twig_Extension
      */
     private function renderMetaTag($name, $content)
     {
-        return sprintf('<meta name="%s" content="%s"/>' . PHP_EOL, $name, $content);
+        return sprintf('<meta name="%s" content="%s"/>' . PHP_EOL, $name, htmlentities($content));
     }
 
     /**

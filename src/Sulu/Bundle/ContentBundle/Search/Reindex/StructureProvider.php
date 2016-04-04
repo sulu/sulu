@@ -91,7 +91,7 @@ class StructureProvider implements LocalizedReindexProviderInterface
                 }
             }
             $newDocuments[] = $document;
-        };
+        }
 
         return $newDocuments;
     }

@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2229 [WebsiteBundle]       Fixed escaping of seo tags
     * ENHANCEMENT #2220 [ContentBundle]       Removed routable behavior and moved logic route-subscriber
     * ENHANCEMENT #2216 [All]                 Added KernelTestCase::assertHttpStatusCode method
     * BUGFIX      #2217 [MediaBundle]         Fixed ui-bugs in media-collections
