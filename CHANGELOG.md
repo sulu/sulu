@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2232 [ContentBundle]       Updated condition to open ghost overlay
     * ENHANCEMENT #2220 [ContentBundle]       Removed routable behavior and moved logic route-subscriber
     * BUGFIX      #2219 [ContentBundle]       Fixed changing template when disabling shadow page
     * ENHANCEMENT #2216 [All]                 Added KernelTestCase::assertHttpStatusCode method

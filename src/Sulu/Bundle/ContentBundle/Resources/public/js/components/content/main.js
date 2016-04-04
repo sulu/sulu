@@ -233,22 +233,24 @@ define([
                     var data = this.content.toJSON();
 
                     if (!!data.id) {
-                        if (-1 === data.concreteLanguages.indexOf(item.id)) {
+                        if (-1 === _(data.concreteLanguages).indexOf(item.id)
+                            && -1 === _(data.enabledShadowLanguages).values().indexOf(item.id)
+                        ) {
                             OpenGhost.openGhost.call(this, data).then(function(copy, src) {
-                                if (!!copy) {
-                                    CopyLocale.copyLocale.call(
-                                        this,
-                                        data.id,
-                                        src,
-                                        [item.id],
-                                        function() {
-                                            this.load(data, this.options.webspace, item.id, true);
-                                        }.bind(this)
-                                    );
-                                } else {
-                                    this.load(data, this.options.webspace, item.id, true);
-                                }
-                            }.bind(this));
+                                    if (!!copy) {
+                                        CopyLocale.copyLocale.call(
+                                            this,
+                                            data.id,
+                                            src,
+                                            [item.id],
+                                            function() {
+                                                this.load(data, this.options.webspace, item.id, true);
+                                            }.bind(this)
+                                        );
+                                    } else {
+                                        this.load(data, this.options.webspace, item.id, true);
+                                    }
+                                }.bind(this));
                         } else {
                             this.load(data, this.options.webspace, item.id, true);
                         }
