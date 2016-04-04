@@ -842,7 +842,7 @@ class ContentMapper implements ContentMapperInterface
 
                     $result[] = $item;
                 }
-            };
+            }
         }
 
         return $result;
