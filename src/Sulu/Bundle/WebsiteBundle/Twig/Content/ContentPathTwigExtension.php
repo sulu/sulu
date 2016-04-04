@@ -68,8 +68,7 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
      */
     public function getContentPath($url, $webspaceKey = null, $locale = null, $domain = null, $scheme = 'http')
     {
-        if (
-            $webspaceKey !== null &&
+        if ($webspaceKey !== null &&
             $this->requestAnalyzer
         ) {
             return $this->webspaceManager->findUrlByResourceLocator(

@@ -107,14 +107,6 @@ class PortalLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('{prefix}/route2', $routeCollection->get('route2')->getPath());
         $this->assertEquals('{host}', $routeCollection->get('route1')->getHost());
         $this->assertEquals('{host}', $routeCollection->get('route2')->getHost());
-        $this->assertEquals(
-            '(context.getHost() == \'sulu.io\' and context.getParameter(\'prefix\') == \'/de\') or (context.getHost() == \'sulu.com\' and context.getParameter(\'prefix\') == \'\')',
-            $routeCollection->get('route1')->getCondition()
-        );
-        $this->assertEquals(
-            '(context.getHost() == \'sulu.io\' and context.getParameter(\'prefix\') == \'/de\') or (context.getHost() == \'sulu.com\' and context.getParameter(\'prefix\') == \'\')',
-            $routeCollection->get('route2')->getCondition()
-        );
     }
 
     public function testLoadWithCustomUrls()
@@ -156,14 +148,6 @@ class PortalLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('{prefix}/route2', $routeCollection->get('route2')->getPath());
         $this->assertEquals('{host}', $routeCollection->get('route1')->getHost());
         $this->assertEquals('{host}', $routeCollection->get('route2')->getHost());
-        $this->assertEquals(
-            '(context.getHost() == \'sulu.io\' and context.getParameter(\'prefix\') == \'/de\') or (context.getHost() == \'sulu.io\' and context.getParameter(\'prefix\') == \'/en\') or (context.getHost() == \'sulu.com\' and context.getParameter(\'prefix\') == \'/*\')',
-            $routeCollection->get('route1')->getCondition()
-        );
-        $this->assertEquals(
-            '(context.getHost() == \'sulu.io\' and context.getParameter(\'prefix\') == \'/de\') or (context.getHost() == \'sulu.io\' and context.getParameter(\'prefix\') == \'/en\') or (context.getHost() == \'sulu.com\' and context.getParameter(\'prefix\') == \'/*\')',
-            $routeCollection->get('route2')->getCondition()
-        );
     }
 
     public function testLoadPartial()
@@ -205,9 +189,5 @@ class PortalLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('{prefix}/route', $routeCollection->get('route')->getPath());
         $this->assertEquals('{host}', $routeCollection->get('route')->getHost());
-        $this->assertEquals(
-            '(context.getHost() == \'sulu.io\' and context.getParameter(\'prefix\') == \'/de\') or (context.getHost() == \'sulu.io\' and context.getParameter(\'prefix\') == \'\')',
-            $routeCollection->get('route')->getCondition()
-        );
     }
 }

@@ -53,7 +53,6 @@ class PortalLoader extends Loader
         /** @var Route[] $importedRoutes */
         $importedRoutes = $this->import($resource, null);
 
-        $condition = $this->getCondition();
         foreach ($importedRoutes as $importedRouteName => $importedRoute) {
             $this->collection->add(
                 $importedRouteName,
@@ -65,7 +64,7 @@ class PortalLoader extends Loader
                     '{host}',
                     $importedRoute->getSchemes(),
                     $importedRoute->getMethods(),
-                    $condition
+                    $importedRoute->getCondition()
                 )
             );
         }
@@ -79,24 +78,5 @@ class PortalLoader extends Loader
     public function supports($resource, $type = null)
     {
         return $type === 'portal';
-    }
-
-    /**
-     * This condition ensures only existing parameters.
-     *
-     * @return string
-     */
-    private function getCondition()
-    {
-        $conditionParts = [];
-        foreach ($this->webspaceManager->getPortalInformations($this->environment) as $portalInformation) {
-            $conditionParts[] = sprintf(
-                'context.getHost() == \'%s\' and context.getParameter(\'prefix\') == \'%s\'',
-                $portalInformation->getHost(),
-                $portalInformation->getPrefix()
-            );
-        }
-
-        return sprintf('(%s)', implode(') or (', $conditionParts));
     }
 }
