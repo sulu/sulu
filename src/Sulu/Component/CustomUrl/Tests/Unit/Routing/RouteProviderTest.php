@@ -16,6 +16,7 @@ use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Document\RouteDocument;
 use Sulu\Component\CustomUrl\Routing\CustomUrlRouteProvider;
 use Sulu\Component\DocumentManager\PathBuilder;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,6 +58,7 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $request = $this->prophesize(Request::class);
 
         $requestAnalyzer->getWebspace()->willReturn($webspace->reveal());
+        $requestAnalyzer->getAttribute('localization')->willReturn(new Localization('de'));
 
         $pathBuilder->build(['%base%', $webspaceKey, '%custom_urls%', '%custom_urls_routes%'])
             ->willReturn('/cmf/sulu_io/custom-urls/routes');

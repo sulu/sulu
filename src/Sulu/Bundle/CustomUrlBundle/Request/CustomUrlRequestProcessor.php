@@ -162,6 +162,14 @@ class CustomUrlRequestProcessor extends AbstractRequestProcessor
             $this->environment
         );
 
+        if (0 === count($portalInformations)) {
+            return $this->processPortalInformation(
+                $request,
+                $portalInformation,
+                ['customUrlRoute' => $routeDocument, 'customUrl' => $customUrlDocument]
+            );
+        }
+
         return $this->processPortalInformation(
             $request,
             reset($portalInformations),

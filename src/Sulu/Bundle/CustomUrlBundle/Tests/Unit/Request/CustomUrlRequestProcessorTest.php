@@ -36,8 +36,9 @@ class CustomUrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
             ['sulu.io', '/test.html', 'sulu.io/test', true, true],
             ['sulu.io', '/test.html', 'sulu.io/test', true, false, false],
             ['sulu.io', '/test.html', 'sulu.io/test', true, false, true, false],
-            ['sulu.io', '/test.html', 'sulu.io/test', true, false, true, true, WorkflowStage::PUBLISHED],
-            ['sulu.io', '/test.html', 'sulu.io/test', true, false, true, true, WorkflowStage::TEST],
+            ['sulu.io', '/test.html', 'sulu.io/test', true, false, true, false, true],
+            ['sulu.io', '/test.html', 'sulu.io/test', true, false, true, true, false, WorkflowStage::PUBLISHED],
+            ['sulu.io', '/test.html', 'sulu.io/test', true, false, true, true, false, WorkflowStage::TEST],
         ];
     }
 
@@ -52,6 +53,7 @@ class CustomUrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $history = true,
         $published = true,
         $hasTarget = true,
+        $noConcretePortal = false,
         $workflowStage = WorkflowStage::PUBLISHED,
         $webspaceKey = 'sulu_io'
     ) {
@@ -76,8 +78,10 @@ class CustomUrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
         if (!$exists) {
             $customUrlManager->findRouteByUrl($route, $webspaceKey)->willReturn(null);
         } else {
-            $request->setLocale('de')->shouldBeCalled();
-            $request->setRequestFormat('html')->shouldBeCalled();
+            if (!$noConcretePortal) {
+                $request->setLocale('de')->shouldBeCalled();
+                $request->setRequestFormat('html')->shouldBeCalled();
+            }
 
             $routeDocument = $this->prophesize(RouteDocument::class);
             $routeDocument->isHistory()->willReturn($history);
@@ -99,7 +103,7 @@ class CustomUrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
                     $target = $this->prophesize(PageDocument::class);
                     $target->getWorkflowStage()->willReturn($workflowStage);
                     $customUrl->getTargetDocument()->willReturn($target->reveal());
-                    if ($workflowStage === WorkflowStage::PUBLISHED && $published) {
+                    if ($workflowStage === WorkflowStage::PUBLISHED && $published && !$noConcretePortal) {
                         $request->setLocale('de')->shouldBeCalled();
                     }
                 } else {
@@ -131,7 +135,7 @@ class CustomUrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $webspaceManager->findPortalInformationsByUrl(
             $route,
             'prod'
-        )->willReturn([$wildcardPortalInformation]);
+        )->willReturn($noConcretePortal ? [] : [$wildcardPortalInformation]);
         $webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', 'prod')
             ->willReturn([$portalInformation]);
 

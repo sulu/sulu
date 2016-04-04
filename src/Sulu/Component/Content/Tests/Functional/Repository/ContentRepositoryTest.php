@@ -958,6 +958,22 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals(['de'], $result->getConcreteLanguages());
     }
 
+    public function testFindNonExistingProperty()
+    {
+        $this->initPhpcr();
+
+        $page = $this->createShadowPage('test', 'de', 'en');
+
+        $result = $this->contentRepository->find(
+            $page->getUuid(),
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->addProperties(['testProperty'])->getMapping()
+        );
+
+        $this->assertEquals('', $result['testProperty']);
+    }
+
     /**
      * @param string $title
      * @param string $locale

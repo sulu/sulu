@@ -11,12 +11,12 @@
 
 namespace Sulu\Bundle\AdminBundle\Behat;
 
-use WebDriver\Exception;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\MinkExtension\Context\RawMinkContext;
 use Sulu\Bundle\TestBundle\Behat\BaseContext;
+use WebDriver\Exception;
 
 /**
  * Behat context class for the AdminBundle.
@@ -515,7 +515,7 @@ EOT;
         // Workaround for $element->setValue() because this function adds a TAB key at the end.
         // See https://github.com/minkphp/MinkSelenium2Driver/issues/188 for more information.
         $el = $this->getSession()->getDriver()->getWebDriverSession()->element('xpath', $inputElement->getXpath());
-        $el->postValue(array('value' => array($itemValue)));
+        $el->postValue(['value' => [$itemValue]]);
 
         // Wait until loading is finished.
         $this->spin(function (RawMinkContext $context) use ($containerElement) {
