@@ -138,9 +138,23 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->resourceSegmentSubscriber->handlePersistDocument($event->reveal());
     }
 
+    public function testPersistDocumentWithoutLocale()
+    {
+        $event = $this->prophesize(PersistEvent::class);
+        $document = $this->prophesize(ResourceSegmentBehavior::class);
+        $document->willImplement(StructureBehavior::class);
+
+        $event->getDocument()->willReturn($document->reveal());
+        $event->getLocale()->willReturn(null)->shouldBeCalled();
+        $this->rlpStrategy->save($document->reveal(), Argument::any())->shouldNotBeCalled();
+
+        $this->resourceSegmentSubscriber->handlePersistRoute($event->reveal());
+    }
+
     public function testPersistRoute()
     {
         $event = $this->prophesize(PersistEvent::class);
+        $event->getLocale()->willReturn('de');
 
         $this->document->getRedirectType()->willReturn(RedirectType::NONE);
         $event->getDocument()->willReturn($this->document->reveal());
@@ -152,6 +166,7 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
     public function testPersistRouteForRedirect()
     {
         $event = $this->prophesize(PersistEvent::class);
+        $event->getLocale()->willReturn('de');
 
         $this->document->getRedirectType()->willReturn(RedirectType::INTERNAL);
         $event->getDocument()->willReturn($this->document->reveal());

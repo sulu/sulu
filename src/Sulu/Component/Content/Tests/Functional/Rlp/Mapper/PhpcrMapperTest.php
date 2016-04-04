@@ -313,11 +313,11 @@ class PhpcrMapperTest extends SuluTestCase
         $session = $this->sessionManager->getSession();
 
         $document2 = $this->createDocument($this->document1, 'content2', '/news');
-        $this->documentManager->persist($document2);
+        $this->documentManager->persist($document2, 'en');
         $document3 = $this->createDocument($document2, 'content3', '/news/news-1');
-        $this->documentManager->persist($document3);
+        $this->documentManager->persist($document3, 'en');
         $document4 = $this->createDocument($document3, 'content4', '/news/news-1/sub-1');
-        $this->documentManager->persist($document4);
+        $this->documentManager->persist($document4, 'en');
         $this->documentManager->flush();
 
         $this->document1->setResourceSegment('/news/news-1/sub-2');
