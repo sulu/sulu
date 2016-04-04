@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * BUGFIX      #2233 [ContentBundle]       Fixed resource locators for saving without locale
     * BUGFIX      #2232 [ContentBundle]       Updated condition to open ghost overlay
+    * BUGFIX      #2229 [WebsiteBundle]       Fixed escaping of seo tags
     * ENHANCEMENT #2220 [ContentBundle]       Removed routable behavior and moved logic route-subscriber
     * BUGFIX      #2219 [ContentBundle]       Fixed changing template when disabling shadow page
     * ENHANCEMENT #2216 [All]                 Added KernelTestCase::assertHttpStatusCode method

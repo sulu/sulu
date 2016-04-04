@@ -407,6 +407,45 @@ class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
                     'noFollow' => false,
                 ],
             ],
+            [
+                [
+                    'title' => '"SEO title"',
+                    'description' => '"SEO description"',
+                    'keywords' => '"SEO keywords"',
+                ],
+                [],
+                [
+                    'en' => '/url-en',
+                ],
+                'en',
+                'en',
+                null,
+                [
+                    '<title>&quot;SEO title&quot;</title>',
+                    '<meta name="description" content="&quot;SEO description&quot;"/>',
+                    '<meta name="keywords" content="&quot;SEO keywords&quot;"/>',
+                ],
+            ],
+            [
+                [
+                    'description' => '"SEO description"',
+                    'keywords' => '"SEO keywords"',
+                ],
+                [
+                    'title' => '"Content title"',
+                ],
+                [
+                    'en' => '/url-en',
+                ],
+                'en',
+                'en',
+                null,
+                [
+                    '<title>&quot;Content title&quot;</title>',
+                    '<meta name="description" content="&quot;SEO description&quot;"/>',
+                    '<meta name="keywords" content="&quot;SEO keywords&quot;"/>',
+                ],
+            ],
         ];
     }
 }
