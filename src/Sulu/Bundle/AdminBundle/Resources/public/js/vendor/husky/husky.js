@@ -39886,7 +39886,13 @@ define('__component__$select@husky',[], function() {
         render: function() {
             // if preselected items are not present in the data.
             this.options.preSelectedElements = _.filter(this.options.preSelectedElements, function(item) {
-                return _.contains(this.options.data, item);
+                return _.contains(this.options.data, item)
+                    || _.filter(
+                        this.options.data,
+                        function(data){
+                            return data.id == item;
+                        }.bind(this)
+                    ).length > 0;
             }.bind(this));
 
             // add husky-select class to component
