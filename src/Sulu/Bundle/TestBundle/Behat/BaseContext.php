@@ -382,7 +382,7 @@ EOT
      */
     protected function spin($lambda, $wait = 5)
     {
-        for ($i = 0; $i < $wait; $i++) {
+        for ($i = 0; $i < $wait; ++$i) {
             try {
                 if ($lambda($this)) {
                     return true;

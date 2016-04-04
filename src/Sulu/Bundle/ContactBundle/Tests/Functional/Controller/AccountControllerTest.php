@@ -2217,7 +2217,7 @@ class AccountControllerTest extends SuluTestCase
             'GET',
             '/api/accounts?flat=true',
             [
-                'ids' => $ids
+                'ids' => $ids,
             ]
         );
 
@@ -2253,7 +2253,7 @@ class AccountControllerTest extends SuluTestCase
             [
                 'ids' => $ids,
                 'page' => 2,
-                'limit' => 10
+                'limit' => 10,
             ]
         );
 
@@ -2288,7 +2288,7 @@ class AccountControllerTest extends SuluTestCase
     {
         $accounts = [];
 
-        for ($i = 0; $i < $number; $i++) {
+        for ($i = 0; $i < $number; ++$i) {
             $accounts[] = $this->createMinimalAccount();
         }
 

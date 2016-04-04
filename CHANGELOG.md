@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2233 [ContentBundle]       Fixed resource locators for saving without locale
     * BUGFIX      #2232 [ContentBundle]       Updated condition to open ghost overlay
     * BUGFIX      #2229 [WebsiteBundle]       Fixed escaping of seo tags
+    * BUGFIX      #2233 [CustomUrlBundle]     Fixed remove selected webspace-locale
     * ENHANCEMENT #2220 [ContentBundle]       Removed routable behavior and moved logic route-subscriber
     * BUGFIX      #2219 [ContentBundle]       Fixed changing template when disabling shadow page
     * ENHANCEMENT #2216 [ContentBundle]       Fixed hide add button if user has no add permission for webspace

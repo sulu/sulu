@@ -755,7 +755,12 @@ class ContentRepository implements ContentRepositoryInterface
 
         $name = sprintf('%s%s', $locale, ucfirst($name));
 
-        return $row->getValue($name);
+        try {
+            return $row->getValue($name);
+        } catch (ItemNotFoundException $e) {
+            // the default value of a non existing property in jackalope is an empty string
+            return '';
+        }
     }
 
     /**
