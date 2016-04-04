@@ -291,7 +291,7 @@ EOT;
      */
     public function iClickTheOverlayTab($title)
     {
-        $this->clickByTitle('.overlay-header .tabs-container ul li', $title);
+        $this->clickByTitle('.overlay-tabs .tabs-container ul li a', $title);
     }
 
     /**
