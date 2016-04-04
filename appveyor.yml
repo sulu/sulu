@@ -59,7 +59,7 @@ install:
   # install composer and phpunit
   - cd %APPVEYOR_BUILD_FOLDER%
   - php -r "readfile('http://getcomposer.org/installer');" | php
-  - php composer.phar install --no-interaction --no-progress
+  - php composer.phar install --no-interaction --no-progress --prefer-dist
 
 test_script:
    - cd %APPVEYOR_BUILD_FOLDER%
