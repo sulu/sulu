@@ -230,7 +230,11 @@ INSERT INTO `re_operator_translations` (`id`, `name`, `locale`, `shortDescriptio
     (35, 'gleich', 'de', NULL, NULL, 18),
     (36, 'is', 'en', NULL, NULL, 18),
     (37, 'ungleich', 'de', NULL, NULL, 19),
-    (38, 'is not', 'en', NULL, NULL, 19);
+    (38, 'is not', 'en', NULL, NULL, 19),
+    (39, 'und', 'de', NULL, NULL, 16),
+    (40, 'and', 'en', NULL, NULL, 16),
+    (41, 'oder', 'de', NULL, NULL, 17),
+    (42, 'or', 'en', NULL, NULL, 17);
 ```
 
 Additionally the filter by country has changed. Run following SQL script to update your filter conditions:

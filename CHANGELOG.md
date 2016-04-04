@@ -128,6 +128,10 @@ CHANGELOG for Sulu
     * BUGFIX      #1873 [ContactBundle]       Fixed remove title and position
     * BUGFIX      #1873 [ContactBundle]       Fixed remove contact birthday
     
+* 1.1.11 (2016-04-04)
+    * HOTFIX      #2143 [ContactBundle]     Fixed account cget filtering of ids
+    * HOTFIX      #2102 [ContactBundle]     Added filter for account tags
+
 * 1.1.10 (2016-03-07)
     * HOTFIX      #2029 [WebsiteBundle]     Removed single alternate link in sitemap.xml
     * HOTFIX      #2029 [WebsiteBundle]     Fixed hreflang tag with one translation and different schemas

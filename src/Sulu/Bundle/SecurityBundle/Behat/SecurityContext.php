@@ -23,21 +23,23 @@ use Sulu\Bundle\TestBundle\Behat\BaseContext;
  */
 class SecurityContext extends BaseContext implements SnippetAcceptingContext
 {
+    const ADMIN_USERNAME = 'admin';
+    const ADMIN_PASSWORD = 'admin';
+
     /**
      * @Given the user :username exists with password :password
      */
     public function theUserExistsWithPassword($username, $password)
     {
-        $this->getOrCreateRole('User', 'Sulu');
-        $this->execCommand('sulu:security:user:create', [
-            'username' => $username,
-            'firstName' => 'Adam',
-            'lastName' => 'Ministrator',
-            'email' => $username . '@example.com',
-            'locale' => 'en',
-            'password' => $password,
-            'role' => 'User',
-        ]);
+        $this->createUser($username, $password, 'en', false);
+    }
+
+    /**
+     * @Given the user :username exists with password :password and locale :locale
+     */
+    public function theUserExistsWithPasswordAndLocale($username, $password, $locale)
+    {
+        $this->createUser($username, $password, $locale, true);
     }
 
     /**
@@ -135,22 +137,17 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
      */
     public function iAmLoggedInAsAnAdministrator()
     {
-        $this->theUserExistsWithPassword('admin', 'admin');
-        $this->visitPath('/admin');
-        $page = $this->getSession()->getPage();
-        $this->waitForSelector('#username');
-        $this->fillSelector('#username', 'admin');
-        $this->fillSelector('#password', 'admin');
-        $loginButton = $page->findById('login-button');
+        $this->logInAsAdministrator();
+    }
 
-        if (!$loginButton) {
-            throw new \InvalidArgumentException(
-                'Could not find submit button on login page'
-            );
-        }
-
-        $loginButton->click();
-        $this->getSession()->wait(5000, "document.querySelector('.navigation')");
+    /**
+     * @Given I am logged in as an administrator with locale :locale
+     *
+     * @param string $locale
+     */
+    public function iAmLoggedInAsAnAdministratorWithLocale($locale)
+    {
+        $this->logInAsAdministrator($locale);
     }
 
     /**
@@ -187,5 +184,70 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
         );
 
         return $role;
+    }
+
+    /**
+     * Creates user with given credentials.
+     *
+     * @param string $username
+     * @param string $password
+     * @param string $locale
+     * @param bool $checkIfUserExists
+     *
+     * @throws \Exception
+     */
+    private function createUser($username, $password, $locale, $checkIfUserExists)
+    {
+        if ($checkIfUserExists) {
+            $user = $this->getEntityManager()
+                ->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')
+                ->findOneByUsername($username);
+
+            if ($user) {
+                // User exists already, we don't need to create it again.
+                return;
+            }
+        }
+
+        $this->getOrCreateRole('User', 'Sulu');
+        $this->execCommand('sulu:security:user:create', [
+            'username' => $username,
+            'firstName' => 'Adam',
+            'lastName' => 'Ministrator',
+            'email' => $username . '@example.com',
+            'locale' => $locale,
+            'password' => $password,
+            'role' => 'User',
+        ]);
+    }
+
+    /**
+     * Login as administrator with given locale.
+     *
+     * @param string $locale
+     */
+    private function logInAsAdministrator($locale = null)
+    {
+        if ($locale) {
+            $this->theUserExistsWithPasswordAndLocale(self::ADMIN_USERNAME, self::ADMIN_PASSWORD, $locale);
+        } else {
+            $this->theUserExistsWithPassword(self::ADMIN_USERNAME, self::ADMIN_PASSWORD);
+        }
+
+        $this->visitPath('/admin');
+        $page = $this->getSession()->getPage();
+        $this->waitForSelector('#username');
+        $this->fillSelector('#username', self::ADMIN_USERNAME);
+        $this->fillSelector('#password', self::ADMIN_PASSWORD);
+        $loginButton = $page->findById('login-button');
+
+        if (!$loginButton) {
+            throw new \InvalidArgumentException(
+                'Could not find submit button on login page'
+            );
+        }
+
+        $loginButton->click();
+        $this->getSession()->wait(5000, "document.querySelector('.navigation')");
     }
 }

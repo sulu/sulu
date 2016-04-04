@@ -11,10 +11,12 @@
 
 namespace Sulu\Bundle\AdminBundle\Behat;
 
+use WebDriver\Exception;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
+use Behat\Mink\Exception\ElementNotFoundException;
+use Behat\MinkExtension\Context\RawMinkContext;
 use Sulu\Bundle\TestBundle\Behat\BaseContext;
-use WebDriver\Exception;
 
 /**
  * Behat context class for the AdminBundle.
@@ -311,6 +313,29 @@ EOT;
     }
 
     /**
+     * @When I click the tab item :tabTitle
+     */
+    public function iClickTheTabItem($tabTitle)
+    {
+        $selector = '.tabs-container ul li';
+        $tabItems = $this->getSession()->getPage()->findAll('css', $selector);
+
+        /* @var NodeElement $tabItem */
+        foreach ($tabItems as $tabItem) {
+            $element = $tabItem->find('named', ['content', $tabTitle]);
+            if ($element && $element->isVisible()) {
+                // Click and wait for the ajax request.
+                $element->click();
+                $this->waitForAjax(self::MEDIUM_WAIT_TIME);
+
+                return;
+            }
+        }
+
+        throw new ElementNotFoundException($this->getSession(), null, 'css', $selector);
+    }
+
+    /**
      * @Then I wait for the column navigation column :index
      */
     public function iWaitForTheColumnNavigationColumn($index)
@@ -429,6 +454,91 @@ EOT;
         $script = "li[data-id='" . $id . "']";
 
         $this->assertSelectorIsHidden($script);
+    }
+
+    /**
+     * @Given I wait until toolbar dropdown menu is visible and select item :item
+     *
+     * @param string $item
+     */
+    public function iWaitUntilToolbarDropdownMenuIsVisible($item)
+    {
+        $this->spin(function (RawMinkContext $context) use ($item) {
+            $page = $context->getSession()->getPage();
+            $element = $page->find('css', '.toolbar-dropdown-menu');
+
+            if (null === $element) {
+                throw new ElementNotFoundException($this->getSession(), null, 'css', '.toolbar-dropdown-menu');
+            }
+
+            if (!$element->isVisible()) {
+                return false;
+            }
+
+            $item = $element->find('css', 'li[data-id=' . $item . ']');
+
+            if (null === $item) {
+                throw new ElementNotFoundException($this->getSession(), null, 'css', 'li[data-id=' . $item . ']');
+            }
+
+            $item->click();
+
+            return true;
+        });
+    }
+
+    /**
+     * Select a value from husky select list.
+     *
+     * @Given I select :itemValue from the husky auto complete :selector
+     *
+     * @param string $itemValue
+     * @param string $selector Container element of the field
+     *
+     * @throws ElementNotFoundException
+     * @throws \Excpetion
+     */
+    public function iSelectFromTheHuskyAutoComplete($itemValue, $selector)
+    {
+        $containerElement = $this->getSession()->getPage()->find('css', $selector);
+
+        if (null === $containerElement) {
+            throw new ElementNotFoundException($this->getSession(), $selector);
+        }
+
+        $inputElement = $containerElement->find('css', 'input.tt-input');
+
+        if (null === $inputElement) {
+            throw new ElementNotFoundException($this->getSession(), $inputElement);
+        }
+
+        // Workaround for $element->setValue() because this function adds a TAB key at the end.
+        // See https://github.com/minkphp/MinkSelenium2Driver/issues/188 for more information.
+        $el = $this->getSession()->getDriver()->getWebDriverSession()->element('xpath', $inputElement->getXpath());
+        $el->postValue(array('value' => array($itemValue)));
+
+        // Wait until loading is finished.
+        $this->spin(function (RawMinkContext $context) use ($containerElement) {
+            // Search for all displayed suggestions.
+            $suggestionElementSelector = '.tt-suggestions .suggestion';
+            $suggestionElements = $containerElement->findAll('css', $suggestionElementSelector);
+
+            if (null === $suggestionElements) {
+                throw new ElementNotFoundException($this->getSession(), $suggestionElementSelector);
+            }
+
+            // Choose the first item in the list.
+            $suggestionElements[0]->click();
+
+            $loaderElementSelector = '.loader';
+            $loaderElement = $containerElement->find('css', $loaderElementSelector);
+
+            if ($loaderElement && $loaderElement->isVisible()) {
+                return false;
+            }
+
+            return true;
+        });
     }
 
     /**
