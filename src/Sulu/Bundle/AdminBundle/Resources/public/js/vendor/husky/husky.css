@@ -839,133 +839,6 @@ table {
   height: 25px !important;
 }
 
-/* line 7, ../scss/typo.scss */
-body {
-  font-size: 14px;
-  font-family: Helvetica, Arial, sans-serif;
-  line-height: 20px;
-}
-
-/* line 15, ../scss/typo.scss */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: inherit;
-  font-weight: normal;
-  color: #999;
-}
-
-/* line 26, ../scss/typo.scss */
-h1 {
-  color: #52B6CA;
-  font-size: 36px;
-  line-height: 40px;
-  margin: 10px 0 40px 0;
-}
-/* line 32, ../scss/typo.scss */
-h1.bright {
-  color: #74C4D4;
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-/* line 39, ../scss/typo.scss */
-h2 {
-  font-size: 24px;
-  line-height: 30px;
-  margin: 0 0 20px 0;
-}
-/* line 44, ../scss/typo.scss */
-h2.content-title {
-  margin-bottom: 30px;
-}
-/* line 45, ../scss/typo.scss */
-h2.content-title.underlined {
-  border-bottom: 2px solid #ddd;
-}
-/* line 52, ../scss/typo.scss */
-h2.light {
-  color: #ccc;
-}
-
-/* line 57, ../scss/typo.scss */
-h3 {
-  font-size: 20px;
-  line-height: 25px;
-}
-
-/* line 62, ../scss/typo.scss */
-h4 {
-  font-size: 18px;
-  line-height: 20px;
-}
-
-/* line 67, ../scss/typo.scss */
-h5 {
-  font-size: 14px;
-  line-height: 15px;
-}
-
-/* line 72, ../scss/typo.scss */
-h6 {
-  font-size: 12px;
-  line-height: 15px;
-  margin: 0;
-}
-
-/* line 79, ../scss/typo.scss */
-.compoundedHeadlines :first-child {
-  color: #52B6CA;
-  font-size: 14px;
-  margin: 0;
-  line-height: 20px;
-}
-/* line 85, ../scss/typo.scss */
-.compoundedHeadlines :nth-child(2) {
-  margin-top: 0;
-}
-
-/* line 92, ../scss/typo.scss */
-h1, h2, h3, h4, h5 {
-  position: relative;
-  z-index: 1;
-  overflow: hidden;
-}
-/* line 96, ../scss/typo.scss */
-h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divider:after {
-  position: absolute;
-  top: 50%;
-  margin-left: 10px;
-  overflow: hidden;
-  width: 100%;
-  height: 1px;
-  content: '\a0';
-  background-color: #ccc;
-}
-
-/* line 111, ../scss/typo.scss */
-.bold {
-  font-family: Helvetica, Arial, sans-serif !important;
-}
-
-/* line 120, ../scss/typo.scss */
-.small-font {
-  font-size: 12px;
-}
-
-/* line 124, ../scss/typo.scss */
-.smaller-font {
-  font-size: 10px;
-}
-
-/* line 128, ../scss/typo.scss */
-.grey-font {
-  color: #999;
-}
-
 /* line 10, ../scss/various.scss */
 .husky-position {
   width: 100%;
@@ -6205,6 +6078,143 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   text-align: left;
 }
 
+/* line 7, ../scss/typo.scss */
+body {
+  font-size: 14px;
+  font-family: Helvetica, Arial, sans-serif;
+  line-height: 20px;
+}
+
+/* line 15, ../scss/typo.scss */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: inherit;
+  font-weight: normal;
+  color: #999;
+}
+
+/* line 26, ../scss/typo.scss */
+h1 {
+  color: #52B6CA;
+  font-size: 36px;
+  line-height: 40px;
+  margin: 10px 0 40px 0;
+}
+/* line 32, ../scss/typo.scss */
+h1.bright {
+  color: #74C4D4;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* line 39, ../scss/typo.scss */
+h2 {
+  font-size: 24px;
+  line-height: 30px;
+  margin: 0 0 20px 0;
+}
+/* line 44, ../scss/typo.scss */
+h2.content-title {
+  margin-bottom: 30px;
+}
+/* line 45, ../scss/typo.scss */
+h2.content-title.underlined {
+  border-bottom: 2px solid #ddd;
+}
+/* line 52, ../scss/typo.scss */
+h2.light {
+  color: #ccc;
+}
+
+/* line 57, ../scss/typo.scss */
+h3 {
+  font-size: 20px;
+  line-height: 25px;
+}
+
+/* line 62, ../scss/typo.scss */
+h4 {
+  font-size: 18px;
+  line-height: 20px;
+}
+
+/* line 67, ../scss/typo.scss */
+h5 {
+  font-size: 14px;
+  line-height: 15px;
+}
+
+/* line 72, ../scss/typo.scss */
+h6 {
+  font-size: 12px;
+  line-height: 15px;
+  margin: 0;
+}
+
+/* line 79, ../scss/typo.scss */
+.compoundedHeadlines :first-child {
+  color: #52B6CA;
+  font-size: 14px;
+  margin: 0;
+  line-height: 20px;
+}
+/* line 85, ../scss/typo.scss */
+.compoundedHeadlines :nth-child(2) {
+  margin-top: 0;
+}
+
+/* line 92, ../scss/typo.scss */
+h1, h2, h3, h4, h5 {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+/* line 96, ../scss/typo.scss */
+h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divider:after {
+  position: absolute;
+  top: 50%;
+  margin-left: 10px;
+  overflow: hidden;
+  width: 100%;
+  height: 1px;
+  content: '\a0';
+  background-color: #ccc;
+}
+
+/* line 111, ../scss/typo.scss */
+.bold {
+  font-family: Helvetica, Arial, sans-serif !important;
+}
+
+/* line 120, ../scss/typo.scss */
+.small-font {
+  font-size: 12px;
+}
+
+/* line 124, ../scss/typo.scss */
+.smaller-font {
+  font-size: 10px;
+}
+
+/* line 128, ../scss/typo.scss */
+.grey-font {
+  color: #999;
+}
+
+/* line 136, ../scss/typo.scss */
+[class^=fa-] {
+  font-family: inherit;
+}
+
+/* line 140, ../scss/typo.scss */
+[class^=fa-]::before {
+  font-family: FontAwesome;
+}
+
 /* line 6, ../scss/modules/overlay.scss */
 .husky-overlay-container {
   width: 580px;
@@ -8016,28 +8026,27 @@ li a.navigation-settings-icon {
   border: 1px solid #ddd;
   z-index: 90;
   border-radius: 3px;
-  font-family: Helvetica, Arial, sans-serif;
   font-size: 14px;
 }
-/* line 47, ../scss/modules/dropdown.scss */
+/* line 46, ../scss/modules/dropdown.scss */
 .dropdown-menu.top {
   top: auto;
   bottom: 25px;
   margin-bottom: 0;
 }
-/* line 53, ../scss/modules/dropdown.scss */
+/* line 52, ../scss/modules/dropdown.scss */
 .dropdown-menu > ul {
   list-style: none;
   margin: 0;
   padding: 10px 0;
 }
-/* line 58, ../scss/modules/dropdown.scss */
+/* line 57, ../scss/modules/dropdown.scss */
 .dropdown-menu > ul > li {
   padding: 0 20px;
   line-height: 30px;
   text-align: left;
 }
-/* line 63, ../scss/modules/dropdown.scss */
+/* line 62, ../scss/modules/dropdown.scss */
 .dropdown-menu > ul > li .info, .dropdown-menu > ul > li .info-clicked {
   display: none;
   font-size: 12px;
@@ -8045,31 +8054,31 @@ li a.navigation-settings-icon {
   position: absolute;
   right: 0;
 }
-/* line 71, ../scss/modules/dropdown.scss */
+/* line 70, ../scss/modules/dropdown.scss */
 .dropdown-menu > ul > li .info-clicked.clicked {
   display: inline;
   float: right;
   background-color: #fff;
 }
-/* line 77, ../scss/modules/dropdown.scss */
+/* line 76, ../scss/modules/dropdown.scss */
 .dropdown-menu > ul > li:hover, .dropdown-menu > ul > li.hover {
   background-color: #52B6CA;
   cursor: pointer;
   color: #fff;
 }
-/* line 83, ../scss/modules/dropdown.scss */
+/* line 82, ../scss/modules/dropdown.scss */
 .dropdown-menu > ul > li:hover .info, .dropdown-menu > ul > li.hover .info {
   display: inline;
 }
-/* line 87, ../scss/modules/dropdown.scss */
+/* line 86, ../scss/modules/dropdown.scss */
 .dropdown-menu > ul > li:hover .info, .dropdown-menu > ul > li:hover .info-clicked, .dropdown-menu > ul > li.hover .info, .dropdown-menu > ul > li.hover .info-clicked {
   background-color: #52B6CA;
 }
-/* line 90, ../scss/modules/dropdown.scss */
+/* line 89, ../scss/modules/dropdown.scss */
 .dropdown-menu > ul > li:hover .info.clicked, .dropdown-menu > ul > li:hover .info-clicked.clicked, .dropdown-menu > ul > li.hover .info.clicked, .dropdown-menu > ul > li.hover .info-clicked.clicked {
   display: none;
 }
-/* line 95, ../scss/modules/dropdown.scss */
+/* line 94, ../scss/modules/dropdown.scss */
 .dropdown-menu > ul > li.divider {
   height: 1px;
   margin: 5px 0 10px 0;
@@ -8078,34 +8087,34 @@ li a.navigation-settings-icon {
   background-color: #ddd;
   cursor: default;
 }
-/* line 103, ../scss/modules/dropdown.scss */
+/* line 102, ../scss/modules/dropdown.scss */
 .dropdown-menu > ul > li.disabled {
   color: #999;
 }
-/* line 105, ../scss/modules/dropdown.scss */
+/* line 104, ../scss/modules/dropdown.scss */
 .dropdown-menu > ul > li.disabled:hover {
   background-color: transparent;
   cursor: default;
 }
 
-/* line 114, ../scss/modules/dropdown.scss */
+/* line 113, ../scss/modules/dropdown.scss */
 .dropdown-align-right {
   right: 6px;
   left: inherit;
 }
 
-/* line 119, ../scss/modules/dropdown.scss */
+/* line 118, ../scss/modules/dropdown.scss */
 .dropdown-footer {
   border-top: 1px solid #ccc;
   padding: 10px 10px;
 }
 
-/* line 124, ../scss/modules/dropdown.scss */
+/* line 123, ../scss/modules/dropdown.scss */
 .dropdown-toggle {
   display: inline-block;
   cursor: pointer;
 }
-/* line 127, ../scss/modules/dropdown.scss */
+/* line 126, ../scss/modules/dropdown.scss */
 .dropdown-toggle::after {
   content: "";
   display: inline-block;
@@ -8119,7 +8128,7 @@ li a.navigation-settings-icon {
   border-top: 6px solid #000;
 }
 
-/* line 142, ../scss/modules/dropdown.scss */
+/* line 141, ../scss/modules/dropdown.scss */
 .dropdown-trigger {
   height: 30px;
   line-height: 30px;
