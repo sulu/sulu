@@ -27960,7 +27960,7 @@ define('services/husky/util',[],function() {
 
     /**
      * Returns human readable byte string.
-     * 
+     *
      * @param {int} bytes
      * @returns {String}
      */
@@ -27972,7 +27972,7 @@ define('services/husky/util',[],function() {
             sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
             i = Math.floor(Math.log(bytes) / Math.log(k));
 
-        return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
+        return (bytes / Math.pow(k, i)).toFixed(2) + ' ' + sizes[i];
     };
 
     Util.getInstance = function() {
