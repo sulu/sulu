@@ -376,7 +376,7 @@ define([
             this.sandbox.on(
                 'husky.overlay.media-edit.language-changed', this.languageChangedSingle.bind(this)
             );
-            
+
             this.sandbox.dom.on(this.$el, 'click', function(e) {
                 var $target = $(e.currentTarget),
                     $item = $target.parents('.media-edit-link'),
@@ -392,6 +392,9 @@ define([
                     $target.show();
                 }, 2000, $target, $item, $info);
             }.bind(this), '.fa-clipboard');
+
+            this.sandbox.on('husky.dropzone.file-version.files-added', this.newVersionUploadedHandler.bind(this));
+            this.sandbox.on('husky.dropzone.preview-image.files-added', this.previewImageChangeHandler.bind(this));
         },
 
         /**
@@ -400,6 +403,8 @@ define([
         unbindSingleOverlayEvents: function() {
             this.sandbox.off('husky.overlay.media-edit.language-changed');
             this.sandbox.off('husky.tabs.overlaymedia-edit.item.select');
+            this.sandbox.off('husky.dropzone.file-version.files-added');
+            this.sandbox.off('husky.dropzone.preview-image.files-added');
         },
 
         /**
@@ -428,6 +433,9 @@ define([
                 this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-save-desc');
 
                 this.sandbox.stop(this.$find('*'));
+
+                this.unbindSingleOverlayEvents();
+
                 this.initialize();
             }
         },
@@ -443,6 +451,8 @@ define([
                 this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-save-desc');
 
                 this.sandbox.stop(this.$find('*'));
+
+                this.unbindSingleOverlayEvents();
                 this.initialize();
             }.bind(this));
         },
@@ -476,8 +486,6 @@ define([
          * Starts the dropzone for changing the file-version
          */
         startSingleDropzone: function() {
-            this.sandbox.on('husky.dropzone.file-version.files-added', this.newVersionUploadedHandler.bind(this));
-
             this.sandbox.start([
                 {
                     name: 'dropzone@husky',
@@ -502,8 +510,6 @@ define([
          * Starts the dropzone for changing the preview image
          */
         startPreviewDropzone: function() {
-            this.sandbox.on('husky.dropzone.preview-image.files-added', this.previewImageChangeHandler.bind(this));
-
             this.sandbox.start([
                 {
                     name: 'dropzone@husky',
