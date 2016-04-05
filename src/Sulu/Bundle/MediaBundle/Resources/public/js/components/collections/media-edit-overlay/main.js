@@ -484,7 +484,7 @@ define([
                     options: {
                         el: constants.fileDropzoneSelector,
                         maxFilesize: config.get('sulu-media').maxFilesize,
-                        url: '/admin/api/media/' + this.media.id + '?action=new-version',
+                        url: '/admin/api/media/' + this.media.id + '?action=new-version&locale=' + this.options.locale,
                         method: 'POST',
                         paramName: 'fileVersion',
                         showOverlay: false,
