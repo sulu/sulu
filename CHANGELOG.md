@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2238 [ContentBundle]       Fixed URL in SEO tab
     * BUGFIX      #2233 [ContentBundle]       Fixed resource locators for saving without locale
     * BUGFIX      #2232 [ContentBundle]       Updated condition to open ghost overlay
     * BUGFIX      #2229 [WebsiteBundle]       Fixed escaping of seo tags
