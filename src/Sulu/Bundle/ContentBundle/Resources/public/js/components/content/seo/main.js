@@ -88,7 +88,7 @@ define([], function() {
         render: function(data) {
             this.data = data;
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/content/template/content/seo', {
-                siteUrl: this.options.excerptUrlPrefix + '/' + this.options.language + this.data.path
+                siteUrl: this.options.excerptUrlPrefix + '/' + this.options.language + this.data.url
             }));
 
             this.createForm(this.initData(data));
