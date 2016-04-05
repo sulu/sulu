@@ -7,8 +7,9 @@
 
 set_time_limit(0);
 
-require_once __DIR__ . '/../bootstrap.php';
-require_once __DIR__.'/AppKernel.php';
+require_once __DIR__ . '/bootstrap.php';
+require_kernel();
+
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -30,4 +31,30 @@ $application->run($input);
 $adminPool = $kernel->getContainer()->get('sulu_admin.admin_pool');
 foreach ($adminPool->getCommands() as $command) {
     $application->add($command);
+}
+
+function require_kernel()
+{
+    $dirs = [ 'tests/app', 'Tests/app' ];
+
+    if ($kernelDir = getenv('KERNEL_DIR')) {
+        $dirs[] = $kernelDir;
+    }
+
+    $found = false;
+    foreach ($dirs as $dir) {
+        // TODO: Use autoloading for the kernel.
+        $kernelPath = sprintf('%s/AppKernel.php', $dir);
+        if (file_exists($kernelPath)) {
+            $found = true;
+            break;
+        }
+    }
+
+    if (false === $found) {
+        echo sprintf('Could not find kernel looked in: "%s"', implode('", "', $dirs));
+        exit(1);
+    }
+
+    require_once $kernelPath;
 }

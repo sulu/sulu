@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
     colors="true"
-    bootstrap="vendor/symfony-cmf/testing/bootstrap/bootstrap.php"
+    bootstrap="../TestBundle/Resources/app/bootstrap.php"
     processIsolation="false"
 >
 

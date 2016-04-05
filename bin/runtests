@@ -209,23 +209,16 @@ function get_bundles($target = null)
     return iterator_to_array($finder);
 }
 
-function get_bundle_console_path($phpunitPath)
+function get_bundle_console_path($bundlePath)
 {
-    $kernelDir = get_kernel_dir($phpunitPath);
-    $kernelDir = dirname($phpunitPath) . '/' . $kernelDir;
-    putenv('KERNEL_DIR=' . $kernelDir);
-    $console = realpath($kernelDir) . '/console';
+    $consolePath = realpath($bundlePath . '/..') . '/TestBundle/Resources/app/console';
 
-    if (!file_exists($console)) {
-        write_info(sprintf(
-            'Cannot find console, not initializing (looked in %s).',
-            substr($console, strlen(getcwd()))
-        ));
-
-        return;
+    if (!file_exists($consolePath)) {
+        write_error(sprintf('Could not find test console "%s", is the test being executed in the correct directory?', $consolePath));
+        exit(1);
     }
 
-    return $console;
+    return $consolePath;
 }
 
 function get_kernel_dir($phpunitPath)
@@ -359,6 +352,8 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
     // (we assume that the bundle will purge the fixtures etc.)
     init_bundle($phpunitFile->getPathname());
 
+    putenv('KERNEL_DIR=' . $bundleDir . DIRECTORY_SEPARATOR . get_kernel_dir($phpunitFile->getPathname()));
+
     write_info('Running tests');
 
     $flags = $input->getOption('flags');
@@ -383,7 +378,7 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
 
 function init_bundle($phpunitPath)
 {
-    if (!$console = get_bundle_console_path($phpunitPath)) {
+    if (!$console = get_bundle_console_path(dirname($phpunitPath))) {
         return;
     }
 
