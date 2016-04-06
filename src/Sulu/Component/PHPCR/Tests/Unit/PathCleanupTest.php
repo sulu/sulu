@@ -12,6 +12,7 @@
 namespace Sulu\Component\PHPCR\Tests\Unit;
 
 use Sulu\Component\PHPCR\PathCleanup;
+use Sulu\Component\PHPCR\PathCleanupInterface;
 
 class PathCleanupTest extends \PHPUnit_Framework_TestCase
 {
@@ -60,6 +61,10 @@ class PathCleanupTest extends \PHPUnit_Framework_TestCase
         $result = $this->cleaner->validate('/asdf/asdf');
         $this->assertTrue($result);
         $result = $this->cleaner->validate('  ');
+        $this->assertFalse($result);
+        $result = $this->cleaner->validate('/Test');
+        $this->assertFalse($result);
+        $result = $this->cleaner->validate('/-test');
         $this->assertFalse($result);
     }
 }

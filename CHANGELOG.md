@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * BUGFIX      #2244 [AdminBundle]         Fixed login with enter for Safari and IE
     * BUGFIX      #2245 [CustomUrlBundle]     Removed double wildcard for custom-url
+    * BUGFIX      #2235 [ContentBundle]       Fixed validation of resource-segments
     * BUGFIX      #2238 [ContentBundle]       Fixed URL in SEO tab
     * BUGFIX      #2237 [MediaBundle]         Added locale to request for adding new media version
     * BUGFIX      #2236 [ContentBundle]       Fixed preview js errors
