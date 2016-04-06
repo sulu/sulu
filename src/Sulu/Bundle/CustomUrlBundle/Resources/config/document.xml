@@ -26,7 +26,7 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu.phpcr.session"/>
 
-            <tag name="sulu_document_manager.initializer"/>
+            <tag name="sulu_document_manager.initializer" priority="-127"/>
         </service>
 
         <service id="sulu_custom_urls.subscriber"
