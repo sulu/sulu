@@ -223,24 +223,6 @@ class WebspaceCollectionBuilder
 
         foreach ($environment->getCustomUrls() as $customUrl) {
             $urlAddress = $customUrl->getUrl();
-
-            if (strpos('*', $urlAddress) >= 0) {
-                $this->portalInformations[$environment->getType()][$urlAddress] = new PortalInformation(
-                    RequestAnalyzerInterface::MATCH_TYPE_WILDCARD,
-                    $portal->getWebspace(),
-                    $portal,
-                    null,
-                    $urlAddress,
-                    null,
-                    null,
-                    null,
-                    false,
-                    $urlAddress,
-                    1
-                );
-            }
-
-            $urlAddress = rtrim($urlAddress, '/') . '/*';
             $this->portalInformations[$environment->getType()][$urlAddress] = new PortalInformation(
                 RequestAnalyzerInterface::MATCH_TYPE_WILDCARD,
                 $portal->getWebspace(),
