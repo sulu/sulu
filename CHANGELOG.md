@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2251 [MediaBundle]         Fixed filter media by symstem-collection and type
     * BUGFIX      #2244 [AdminBundle]         Fixed login with enter for Safari and IE
     * BUGFIX      #2245 [CustomUrlBundle]     Removed double wildcard for custom-url
     * BUGFIX      #2242 [MediaBundle]         Fixed leaking events after uploading new media version
