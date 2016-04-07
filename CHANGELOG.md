@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * BUGFIX      #2255 [WebsocketBundle]     Introduced own websocket app to avoid connecting to port 8843
+    * BUGFIX      #2258 [WebsiteBundle]       Added validation of analytic type
     * BUGFIX      #2251 [MediaBundle]         Fixed filter media by symstem-collection and type
     * BUGFIX      #2252 [ContentBundle]       Fixed webspace in permission check
     * BUGFIX      #2244 [AdminBundle]         Fixed login with enter for Safari and IE
