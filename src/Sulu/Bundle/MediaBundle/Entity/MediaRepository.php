@@ -313,8 +313,10 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         }
 
         if (!$systemCollections) {
-            $queryBuilder->leftJoin('collection.type', 'type');
-            $queryBuilder->andWhere('type.key != \'' . SystemCollectionManagerInterface::COLLECTION_TYPE . '\'');
+            $queryBuilder->leftJoin('collection.type', 'collectionType');
+            $queryBuilder->andWhere(
+                sprintf('collectionType.key != \'%s\'', SystemCollectionManagerInterface::COLLECTION_TYPE)
+            );
         }
 
         if (!empty($types)) {
