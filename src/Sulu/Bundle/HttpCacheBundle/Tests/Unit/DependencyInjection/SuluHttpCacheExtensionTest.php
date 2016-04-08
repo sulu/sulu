@@ -93,8 +93,11 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
         $this->load($config);
         $this->compile();
 
-        $res = $this->container->getParameter('sulu_http_cache.proxy_client.symfony.servers');
+        $paramName = 'sulu_http_cache.proxy_client.symfony.servers';
+        $res = $this->container->getParameter($paramName);
         $this->assertEquals($config['proxy_client']['symfony']['servers'], $res);
+        $definition = $this->container->getDefinition('sulu_http_cache.proxy_client.symfony');
+        $this->assertEquals('%' . $paramName . '%', $definition->getArgument(0));
     }
 
     public function testVarnishConfig()

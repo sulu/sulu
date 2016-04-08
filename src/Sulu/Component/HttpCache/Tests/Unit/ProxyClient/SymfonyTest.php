@@ -58,6 +58,36 @@ class SymfonyTest extends \PHPUnit_Framework_TestCase
         $client->flush();
     }
 
+    /**
+     * It should purge URLs.
+     */
+    public function testPurge()
+    {
+        $method = 'PURGE';
+        $url = 'http://localhost/foo';
+
+        $this->request->getMethod()->willReturn($method);
+        $this->request->getUrl()->willReturn($url);
+        $this->request->getHeaders()->willReturn([]);
+
+        $this->httpClient->createRequest(
+            $method,
+            $url,
+            []
+        )->willReturn($this->request->reveal());
+
+        $this->httpClient->send([
+            $this->request->reveal()
+        ])->shouldBeCalled();
+
+        $client = $this->createClient();
+        $this->assertInstanceOf(TagInterface::class, $client);
+
+        $client->purge('/foo');
+        $client->flush();
+    }
+
+
     private function createClient($invalidationUrls = null)
     {
         return new Symfony($invalidationUrls, $this->httpClient->reveal());
