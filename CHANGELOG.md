@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * BUGFIX      #2273 [ContentBundle]       Fixed link generation for internal link type without webspace
+    * BUGFIX      #2274 [WebsiteBundle]       Fixed sulu-content-path with different webspace
     * BUGFIX      #2269 [WebsiteBundle]       Added query string to redirect for internal links
     * ENHANCEMENT #2189 [Travis]              Cache jackrabbit download
     * BUGFIX      #2272 [ContentBundle]       Fixed ordering of pages for columns including ghosts
