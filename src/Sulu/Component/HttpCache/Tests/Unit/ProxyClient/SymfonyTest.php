@@ -56,5 +56,5 @@ class SymfonyTest extends \PHPUnit_Framework_TestCase
 
         $this->client->invalidateTags(['one', 'two']);
         $this->client->flush();
-    }
+   }
 }

@@ -28,6 +28,9 @@ use Sulu\Component\HttpCache\ProxyClient\Invalidation\TagInterface;
 
 /**
  * Symfony HTTP cache invalidator.
+ *
+ * NOTE: We should adoprt the FriendsOfSymfony/FOSHttpCache Symfony proxy client
+ *       when it supports tagging.
  */
 class Symfony implements ProxyClientInterface, PurgeInterface, TagInterface
 {

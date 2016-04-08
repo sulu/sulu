@@ -13,14 +13,10 @@ namespace Sulu\Component\HttpCache\Tests\Unit\Handler;
 
 use Prophecy\Argument;
 use Sulu\Component\HttpCache\Handler\TagsHandler;
+use Sulu\Component\HttpCache\ProxyClient\Invalidation\TagInterface;
 
 class TagsHandlerTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var HandlerInterface
-     */
-    private $handler;
-
     /**
      * @var StructureInterface
      */
@@ -32,7 +28,7 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
 
         $this->structure = $this->prophesize('Sulu\Component\Content\Compat\StructureInterface');
         $this->banProxyCache = $this->prophesize('FOS\HttpCache\ProxyClient\Invalidation\BanInterface');
-        $this->proxyCache = $this->prophesize('Sulu\Component\HttpCache\ProxyClient\Invalidation\TagInterface');
+        $this->taggingProxyClient = $this->prophesize(TagInterface::class);
         $this->parameterBag = $this->prophesize('Symfony\Component\HttpFoundation\ParameterBag');
         $this->response = $this->prophesize('Symfony\Component\HttpFoundation\Response');
         $this->response->headers = $this->parameterBag;
@@ -42,8 +38,12 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
         $this->contentType2 = $this->prophesize('Sulu\Component\Content\ContentTypeInterface');
         $this->contentTypeManager = $this->prophesize('Sulu\Component\Content\ContentTypeManager');
 
-        $this->handler = new TagsHandler(
-            $this->banProxyCache->reveal(),
+    }
+
+    private function createHandler($taggingProxyClient)
+    {
+        return new TagsHandler(
+            $taggingProxyClient,
             $this->contentTypeManager->reveal()
         );
     }
@@ -55,13 +55,15 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $this->structure->getUuid()->willReturn('this-is-uuid');
 
-        $this->proxyCache->invalidateTags([
-            TagsHandler::TAGS_HEADER => 'structure-this-is-uuid',
+        $this->taggingProxyClient->invalidateTags([
+            'structure-this-is-uuid',
         ])->shouldBeCalled();
-        $this->proxyCache->flush()->shouldBeCalled();
+        $this->taggingProxyClient->flush()->shouldBeCalled();
 
-        $this->handler->invalidateStructure($this->structure->reveal());
-        $this->handler->flush();
+
+        $handler = $this->createHandler($this->taggingProxyClient->reveal());
+        $handler->invalidateStructure($this->structure->reveal());
+        $handler->flush();
     }
 
     /**
@@ -76,9 +78,10 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
         ])->shouldBeCalled();
         $this->banProxyCache->flush()->shouldBeCalled();
 
-        $this->handler->invalidateStructure($this->structure->reveal());
+        $handler = $this->createHandler($this->banProxyCache->reveal());
+        $handler->invalidateStructure($this->structure->reveal());
 
-        $this->handler->flush();
+        $handler->flush();
     }
 
     public function testUpdateResponse()
@@ -108,6 +111,7 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
 
         $this->parameterBag->set('X-Cache-Tags', implode(',', $expectedTags))->shouldBeCalled();
 
-        $this->handler->updateResponse($this->response->reveal(), $this->structure->reveal());
+        $handler = $this->createHandler($this->banProxyCache->reveal());
+        $handler->updateResponse($this->response->reveal(), $this->structure->reveal());
     }
 }

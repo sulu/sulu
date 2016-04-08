@@ -130,7 +130,7 @@ class TagsHandler implements
         }
 
         if ($this->proxyClient instanceof BanInterface) {
-            $tagExpression = sprintf('(%s)(,.+)?$', implode('|', array_map('preg_quote', $this->escapeTags($tags))));
+            $tagExpression = sprintf('(%s)(,.+)?$', implode('|', array_map('preg_quote', $tags)));
             $this->proxyClient->ban([
                 self::TAGS_HEADER => $tagExpression,
             ]);
@@ -142,17 +142,5 @@ class TagsHandler implements
             'Proxy client must either support BAN (BanInterface) or tag invalidation (TagInterface), "%s" supports neither',
             get_class($this->proxyClient)
         ));
-    }
-
-    /**
-     * Escape tags (should be handled by the client, see comment on `doInvalidate`.
-     */
-    private function escapeTags(array $tags)
-    {
-        array_walk($tags, function (&$tag) {
-            $tag = str_replace([',', "\n"], ['_', '_'], $tag);
-        });
-
-        return $tags;
     }
 }
