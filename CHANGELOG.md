@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2271 [ContentBundle]       Fixed internal link webspace locale bug
     * BUGFIX      #2267 [CategoryBundle]      Fixed collaboration component
     * BUGFIX      #2255 [WebsocketBundle]     Introduced own websocket app to avoid connecting to port 8843
     * BUGFIX      #2258 [WebsiteBundle]       Added validation of analytic type

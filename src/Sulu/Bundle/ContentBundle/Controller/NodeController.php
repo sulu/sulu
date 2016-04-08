@@ -895,6 +895,10 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $webspaces = [];
         /** @var Webspace $webspace */
         foreach ($webspaceManager->getWebspaceCollection() as $webspace) {
+            if (null === $webspace->getLocalization($locale)) {
+                continue;
+            }
+
             $paths[] = $sessionManager->getContentPath($webspace->getKey());
             $webspaces[$webspace->getKey()] = $webspace;
         }
