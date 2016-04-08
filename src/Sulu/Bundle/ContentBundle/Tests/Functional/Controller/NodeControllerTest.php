@@ -1660,6 +1660,58 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals(40, $items[3]['order']);
     }
 
+    public function testOrderWithGhosts()
+    {
+        $data = $this->importer->import(__DIR__ . '/../../app/Resources/exports/order.xml');
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'POST',
+            '/api/nodes/' . $data[1]['id'] . '?webspace=sulu_io&language=de&action=order',
+            [
+                'position' => 3,
+            ]
+        );
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        // check some properties
+        $this->assertEquals($data[1]['id'], $response['id']);
+        $this->assertEquals('test2', $response['title']);
+        $this->assertEquals(30, $response['order']);
+
+        $client->request(
+            'POST',
+            '/api/nodes/' . $data[3]['id'] . '?webspace=sulu_io&language=de&action=order',
+            [
+                'position' => 1,
+            ]
+        );
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        // check some properties
+        $this->assertEquals($data[3]['id'], $response['id']);
+        $this->assertEquals('test4', $response['title']);
+        $this->assertEquals(10, $response['order']);
+
+        // get child nodes from root
+        $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=de');
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $items = $response['_embedded']['nodes'];
+
+        $this->assertEquals(4, count($items));
+        $this->assertEquals('test4', $items[0]['title']);
+        $this->assertEquals(10, $items[0]['order']);
+        $this->assertEquals('test1', $items[1]['title']);
+        $this->assertEquals(20, $items[1]['order']);
+        $this->assertEquals('test3', $items[2]['title']);
+        $this->assertEquals(30, $items[2]['order']);
+        $this->assertEquals('test2', $items[3]['title']);
+        $this->assertEquals(40, $items[3]['order']);
+    }
+
     public function testOrderNonExistingSource()
     {
         $data = [
