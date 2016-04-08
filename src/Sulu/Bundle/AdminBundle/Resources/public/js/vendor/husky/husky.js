@@ -41868,7 +41868,7 @@ define('__component__$column-navigation@husky',[],function() {
         bindDOMEvents: function() {
             var selector = 'li:not(.selected' + (this.options.disabledChildren ? ', .' + constants.disabledClass : '') + ')';
 
-            this.sandbox.dom.on(this.$el, 'click', this.itemSelected.bind(this), selector);
+            this.sandbox.dom.on(this.dom.$container, 'click', this.itemSelected.bind(this), selector);
 
             this.sandbox.dom.on(this.$el, 'mouseenter', this.itemMouseEnter.bind(this), '.column-navigation li');
             this.sandbox.dom.on(this.$el, 'mouseleave', this.itemMouseLeave.bind(this), '.column-navigation li');
