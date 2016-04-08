@@ -79,6 +79,24 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
         $this->container->get('sulu_http_cache.handler.' . $handler);
     }
 
+    public function testSymfonyConfig()
+    {
+        $config = [
+            'proxy_client' => [
+                'symfony' => [
+                    'enabled' => true,
+                    'servers' => ['foobar.dom', 'dom.foobar'],
+                ],
+            ],
+        ];
+
+        $this->load($config);
+        $this->compile();
+
+        $res = $this->container->getParameter('sulu_http_cache.proxy_client.symfony.servers');
+        $this->assertEquals($config['proxy_client']['symfony']['servers'], $res);
+    }
+
     public function testVarnishConfig()
     {
         $config = [

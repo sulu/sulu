@@ -60,7 +60,6 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
         ])->shouldBeCalled();
         $this->taggingProxyClient->flush()->shouldBeCalled();
 
-
         $handler = $this->createHandler($this->taggingProxyClient->reveal());
         $handler->invalidateStructure($this->structure->reveal());
         $handler->flush();

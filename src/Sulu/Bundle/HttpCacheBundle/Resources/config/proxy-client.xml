@@ -19,7 +19,9 @@
 
         <!-- Symfony Http Cache -->
         <service id="sulu_http_cache.proxy_client.symfony"
-                 class="%sulu_http_cache.proxy_client.symfony.class%"/>
+            class="%sulu_http_cache.proxy_client.symfony.class%">
+            <argument>%sulu_http_cache.proxy_client.symfony.servers%</argument>
+        </service>
 
     </services>
 

@@ -18,12 +18,10 @@ use Guzzle\Http\Message\Request;
 
 class SymfonyTest extends \PHPUnit_Framework_TestCase
 {
-    private $client;
 
     public function setUp()
     {
         $this->httpClient = $this->prophesize(Client::class);
-        $this->client = new Symfony($this->httpClient->reveal());
         $this->request = $this->prophesize(Request::class);
     }
 
@@ -42,7 +40,6 @@ class SymfonyTest extends \PHPUnit_Framework_TestCase
         $this->request->getUrl()->willReturn($url);
         $this->request->getHeaders()->willReturn($headers);
 
-        $this->assertInstanceOf(TagInterface::class, $this->client);
         $this->httpClient->createRequest(
             $method,
             $url,
@@ -54,7 +51,15 @@ class SymfonyTest extends \PHPUnit_Framework_TestCase
             $this->request->reveal()
         ])->shouldBeCalled();
 
-        $this->client->invalidateTags(['one', 'two']);
-        $this->client->flush();
-   }
+        $client = $this->createClient();
+        $this->assertInstanceOf(TagInterface::class, $client);
+
+        $client->invalidateTags(['one', 'two']);
+        $client->flush();
+    }
+
+    private function createClient($invalidationUrls = null)
+    {
+        return new Symfony($invalidationUrls, $this->httpClient->reveal());
+    }
 }

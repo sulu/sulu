@@ -52,7 +52,8 @@ class SuluHttpCacheExtension extends Extension
      */
     private function configureProxyClient($config, ContainerBuilder $container)
     {
-        $this->configureProxyClientVarnish($config['varnish'], $container);
+        $this->configureProxyClientParameters('varnish', $config['varnish'], $container);
+        $this->configureProxyClientParameters('symfony', $config['symfony'], $container);
 
         // get default
         $proxyClientName = null;
@@ -81,16 +82,13 @@ class SuluHttpCacheExtension extends Extension
     }
 
     /**
-     * Configure the varnish services.
-     *
-     * @param array            $config
-     * @param ContainerBuilder $container
+     * Load the proxy client configurations into the container as parameters.
      */
-    private function configureProxyClientVarnish($config, ContainerBuilder $container)
+    private function configureProxyClientParameters($context, $config, ContainerBuilder $container)
     {
         foreach ($config as $key => $value) {
             $container->setParameter(
-                $this->getAlias() . '.proxy_client.varnish.' . $key,
+                $this->getAlias() . '.proxy_client.' . $context . '.' . $key,
                 $value
             );
         }

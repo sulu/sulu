@@ -51,9 +51,9 @@ class Symfony implements ProxyClientInterface, PurgeInterface, TagInterface
     private $queue;
 
     /**
-     * @var string
+     * @var string[]
      */
-    private $tagInvalidationUrl;
+    private $tagInvalidationUrls;
 
     /**
      * Constructor.
@@ -62,10 +62,10 @@ class Symfony implements ProxyClientInterface, PurgeInterface, TagInterface
      *                                is supplied, a default one will be
      *                                created.
      */
-    public function __construct(ClientInterface $client = null, $tagInvalidationUrl = null)
+    public function __construct(array $tagInvalidationUrls = null, ClientInterface $client = null)
     {
         $this->client = $client ?: new Client();
-        $this->tagInvalidationUrl = $tagInvalidationUrl ?: $this->guessTagInvalidationUrl();
+        $this->tagInvalidationUrls = $tagInvalidationUrls ?: [ $this->guessTagInvalidationUrl() ];
     }
 
     /**
@@ -87,7 +87,9 @@ class Symfony implements ProxyClientInterface, PurgeInterface, TagInterface
             TagsHandler::TAGS_HEADER => implode(',', $tags),
         ];
 
-        $this->queueRequest('POST', $this->tagInvalidationUrl, $headers);
+        foreach ($this->tagInvalidationUrls as $invalidationUrl) {
+            $this->queueRequest('POST', $invalidationUrl, $headers);
+        }
     }
 
     /**
