@@ -144,11 +144,14 @@ define([], function() {
         getColumnNavigationUrl = function() {
             var url = '/admin/api/nodes',
                 urlParts = [
-                    'webspace=' + this.options.webspace,
                     'language=' + this.options.locale,
                     'fields=title,order',
                     'webspace-nodes=all'
                 ];
+            
+            if (!!this.options.webspace) {
+                urlParts.push('webspace=' + this.options.webspace);
+            }
 
             return url + '?' + urlParts.join('&');
         },
