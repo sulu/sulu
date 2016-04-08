@@ -1904,6 +1904,76 @@ class NodeControllerTest extends SuluTestCase
         $this->assertArrayHasKey('_permissions', $response);
     }
 
+    public function testCGetWithAllWebspaceNodes()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/nodes?webspace=sulu_io&language=de&fields=title&webspace-nodes=all'
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $nodes = $response['_embedded']['nodes'];
+        $this->assertCount(2, $nodes);
+
+        $titles = array_map(
+            function ($node) {
+                return $node['title'];
+            },
+            $nodes
+        );
+        $this->assertContains('Sulu CMF', $titles);
+        $this->assertContains('Test CMF', $titles);
+    }
+
+    public function testCGetWithAllWebspaceNodesDifferentLocales()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/nodes?webspace=sulu_io&language=fr&fields=title&webspace-nodes=all'
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $nodes = $response['_embedded']['nodes'];
+        $this->assertCount(1, $nodes);
+
+        $titles = array_map(
+            function ($node) {
+                return $node['title'];
+            },
+            $nodes
+        );
+        $this->assertContains('Sulu CMF', $titles);
+    }
+
+    public function testCGetWithSingleWebspaceNodes()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/nodes?webspace=sulu_io&language=fr&fields=title&webspace-nodes=single'
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $nodes = $response['_embedded']['nodes'];
+        $this->assertCount(1, $nodes);
+
+        $titles = array_map(
+            function ($node) {
+                return $node['title'];
+            },
+            $nodes
+        );
+        $this->assertContains('Sulu CMF', $titles);
+    }
+
     private function setUpContent($data)
     {
         /** @var ContentMapperInterface $mapper */
