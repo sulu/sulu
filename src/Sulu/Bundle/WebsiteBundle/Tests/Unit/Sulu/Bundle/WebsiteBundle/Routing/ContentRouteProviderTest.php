@@ -482,6 +482,60 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/de/other-test', $route->getDefaults()['url']);
     }
 
+    public function testGetRedirectForInternalLinkWithQueryString()
+    {
+        // Set up test
+        $path = '/test';
+        $prefix = '/de';
+        $uuid = 1;
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $theme = new Theme();
+        $theme->setKey('theme');
+        $webspace = new Webspace();
+        $webspace->setTheme($theme);
+        $portal->setWebspace($webspace);
+
+        $structure = $this->getStructureMock(
+            $uuid,
+            '/other-test',
+            Structure::STATE_PUBLISHED,
+            Structure::NODE_TYPE_INTERNAL_LINK
+        );
+
+        $locale = new Localization();
+        $locale->setLanguage('en');
+        $requestAnalyzer = $this->getRequestAnalyzerMock(
+            $portal,
+            $path,
+            $prefix,
+            $locale
+        );
+
+        $contentMapper = $this->getContentMapperMock();
+        $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue($structure));
+
+        $defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
+        $urlReplacer = $this->prophesize(ReplacerInterface::class);
+
+        $portalRouteProvider = new ContentRouteProvider(
+            $contentMapper,
+            $requestAnalyzer,
+            $defaultLocaleProvider->reveal(),
+            $urlReplacer->reveal()
+        );
+
+        $request = $this->getRequestMock($path, 'test1=value1');
+
+        // Test the route provider
+        $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
+
+        $this->assertCount(1, $routes);
+        $route = $routes->getIterator()->current();
+        $this->assertEquals('SuluWebsiteBundle:Redirect:redirect', $route->getDefaults()['_controller']);
+        $this->assertEquals('/de/other-test?test1=value1', $route->getDefaults()['url']);
+    }
+
     public function testGetRedirectForExternalLink()
     {
         // Set up test
@@ -791,16 +845,16 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param $path
-     * @param null $prefix
+     * @param string $path
+     * @param string $queryString
      *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    protected function getRequestMock($path, $prefix = null)
+    protected function getRequestMock($path, $queryString = null)
     {
-        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request', ['getRequestUri']);
+        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request', ['getRequestUri', 'getQueryString']);
         $request->expects($this->any())->method('getRequestUri')->will($this->returnValue($path));
-        $request->expects($this->any())->method('getResourceLocatorPrefix')->will($this->returnValue($prefix));
+        $request->expects($this->any())->method('getQueryString')->will($this->returnValue($queryString));
 
         return $request;
     }
