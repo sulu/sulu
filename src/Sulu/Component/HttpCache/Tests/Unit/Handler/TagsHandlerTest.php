@@ -37,7 +37,6 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
         $this->contentType1 = $this->prophesize('Sulu\Component\Content\ContentTypeInterface');
         $this->contentType2 = $this->prophesize('Sulu\Component\Content\ContentTypeInterface');
         $this->contentTypeManager = $this->prophesize('Sulu\Component\Content\ContentTypeManager');
-
     }
 
     private function createHandler($taggingProxyClient)

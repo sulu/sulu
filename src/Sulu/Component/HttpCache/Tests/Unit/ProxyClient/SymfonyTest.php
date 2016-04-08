@@ -11,14 +11,13 @@
 
 namespace Sulu\Component\HttpCache\Tests\Unit\ProxyClient;
 
-use Sulu\Component\HttpCache\ProxyClient\Invalidation\TagInterface;
-use Sulu\Component\HttpCache\ProxyClient\Symfony;
 use Guzzle\Http\Client;
 use Guzzle\Http\Message\Request;
+use Sulu\Component\HttpCache\ProxyClient\Invalidation\TagInterface;
+use Sulu\Component\HttpCache\ProxyClient\Symfony;
 
 class SymfonyTest extends \PHPUnit_Framework_TestCase
 {
-
     public function setUp()
     {
         $this->httpClient = $this->prophesize(Client::class);
@@ -33,7 +32,7 @@ class SymfonyTest extends \PHPUnit_Framework_TestCase
         $method = 'POST';
         $url = 'http://localhost';
         $headers = [
-            'X-Cache-Tags' => 'one,two'
+            'X-Cache-Tags' => 'one,two',
         ];
 
         $this->request->getMethod()->willReturn($method);
@@ -46,9 +45,8 @@ class SymfonyTest extends \PHPUnit_Framework_TestCase
             $headers
         )->willReturn($this->request->reveal());
 
-
         $this->httpClient->send([
-            $this->request->reveal()
+            $this->request->reveal(),
         ])->shouldBeCalled();
 
         $client = $this->createClient();
@@ -77,7 +75,7 @@ class SymfonyTest extends \PHPUnit_Framework_TestCase
         )->willReturn($this->request->reveal());
 
         $this->httpClient->send([
-            $this->request->reveal()
+            $this->request->reveal(),
         ])->shouldBeCalled();
 
         $client = $this->createClient();
@@ -86,7 +84,6 @@ class SymfonyTest extends \PHPUnit_Framework_TestCase
         $client->purge('/foo');
         $client->flush();
     }
-
 
     private function createClient($invalidationUrls = null)
     {

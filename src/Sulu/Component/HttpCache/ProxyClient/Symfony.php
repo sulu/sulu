@@ -65,7 +65,7 @@ class Symfony implements ProxyClientInterface, PurgeInterface, TagInterface
     public function __construct(array $servers = null, ClientInterface $client = null)
     {
         $this->client = $client ?: new Client();
-        $this->servers = $servers ?: [ $this->guessTagInvalidationUrl() ];
+        $this->servers = $servers ?: [$this->guessTagInvalidationUrl()];
     }
 
     /**
