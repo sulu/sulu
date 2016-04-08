@@ -2,6 +2,11 @@
 
 ## dev-develop
 
+### sulu_content_path
+
+The twig function `sulu_content_path('/path')` now always returning the full-qualified-domain
+`http://www.sulu.io/de/path`.
+
 ### Custom-Routes
 
 The naming of the custom-routes with `type: portal` has changed. You can use now the configured name 
