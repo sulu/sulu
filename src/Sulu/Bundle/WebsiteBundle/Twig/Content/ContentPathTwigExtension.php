@@ -77,6 +77,10 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
         $locale = $locale ?: $this->requestAnalyzer->getCurrentLocalization()->getLocale();
 
         if ($webspaceKey !== null) {
+            if (!$this->webspaceManager->findWebspaceByKey($webspaceKey)->hasDomain($domain, $this->environment)) {
+                $domain = null;
+            }
+
             $url = $this->webspaceManager->findUrlByResourceLocator(
                 $url,
                 $this->environment,
