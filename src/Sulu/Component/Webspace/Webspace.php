@@ -396,6 +396,30 @@ class Webspace implements ArrayableInterface
     }
 
     /**
+     * Returns false if domain not exists in webspace.
+     *
+     * @param string $domain
+     * @param string $environment
+     *
+     * @return bool
+     *
+     * @throws Exception\EnvironmentNotFoundException
+     */
+    public function hasDomain($domain, $environment)
+    {
+        foreach ($this->getPortals() as $portal) {
+            foreach ($portal->getEnvironment($environment)->getUrls() as $url) {
+                $host = parse_url('//' . $url->getUrl())['host'];
+                if ($host === $domain || $host === '{host}') {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function toArray($depth = null)

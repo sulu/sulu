@@ -13,6 +13,8 @@ namespace Sulu\Component\Content\Tests\Unit\Rlp\Strategy;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
+use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
+use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategy;
 use Sulu\Component\PHPCR\PathCleanup;
@@ -171,15 +173,12 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
 
     public function testIsValid()
     {
-        // false from mapper (is not unique)
         $result = $this->strategy->isValid('/products/machines', 'default', 'de');
-        $this->assertFalse($result);
+        $this->assertTrue($result);
 
-        // true from mapper (is unique)
         $result = $this->strategy->isValid('/products/machines-1', 'default', 'de');
         $this->assertTrue($result);
 
-        // false from strategy incorrect signs
         $result = $this->strategy->isValid('/products/mä  chines', 'default', 'de');
         $this->assertFalse($result);
     }
@@ -246,6 +245,104 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
         $this->strategy->save($document, 1);
 
         $this->assertTrue($this->isSaved);
+    }
+
+    public function testSaveSame()
+    {
+        $this->isSaved = false;
+
+        $this->mapper->expects($this->any())
+            ->method('loadByContent')
+            ->will($this->returnValue('/test/test-1'));
+
+        $document = $this->getMockBuilder(ResourceSegmentBehavior::class)
+            ->getMock();
+        $document->expects($this->any())
+            ->method('getResourceSegment')
+            ->willReturn('/test/test-1');
+
+        $node = $this->getNodeMock();
+
+        $this->documentInspector->expects($this->any())
+            ->method('getNode')
+            ->will($this->returnValue($node));
+
+        // its a delegate
+        $this->strategy->save($document, 1);
+
+        $this->assertFalse($this->isSaved);
+    }
+
+    public function testSaveAlreadyExists()
+    {
+        $this->setExpectedException(ResourceLocatorAlreadyExistsException::class);
+
+        $this->mapper->expects($this->any())
+            ->method('loadByContent')
+            ->will($this->returnValue(null));
+
+        $document = $this->getMockBuilder(ResourceSegmentBehavior::class)
+            ->getMock();
+        $document->expects($this->any())
+            ->method('getResourceSegment')
+            ->willReturn('/products/machines');
+
+        $node = $this->getNodeMock();
+
+        $this->documentInspector->expects($this->any())
+            ->method('getNode')
+            ->will($this->returnValue($node));
+
+        // its a delegate
+        $this->strategy->save($document, 1);
+    }
+
+    public function testSaveNotValidSlash()
+    {
+        $this->setExpectedException(ResourceLocatorNotValidException::class);
+
+        $this->mapper->expects($this->any())
+            ->method('loadByContent')
+            ->will($this->returnValue(null));
+
+        $document = $this->getMockBuilder(ResourceSegmentBehavior::class)
+            ->getMock();
+        $document->expects($this->any())
+            ->method('getResourceSegment')
+            ->willReturn('/');
+
+        $node = $this->getNodeMock();
+
+        $this->documentInspector->expects($this->any())
+            ->method('getNode')
+            ->will($this->returnValue($node));
+
+        // its a delegate
+        $this->strategy->save($document, 1);
+    }
+
+    public function testSaveNotValid()
+    {
+        $this->setExpectedException(ResourceLocatorNotValidException::class);
+
+        $this->mapper->expects($this->any())
+            ->method('loadByContent')
+            ->will($this->returnValue(null));
+
+        $document = $this->getMockBuilder(ResourceSegmentBehavior::class)
+            ->getMock();
+        $document->expects($this->any())
+            ->method('getResourceSegment')
+            ->willReturn('/Test');
+
+        $node = $this->getNodeMock();
+
+        $this->documentInspector->expects($this->any())
+            ->method('getNode')
+            ->will($this->returnValue($node));
+
+        // its a delegate
+        $this->strategy->save($document, 1);
     }
 
     public function testRead()

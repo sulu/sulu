@@ -3033,7 +3033,6 @@ class ContentMapperTest extends SuluTestCase
         $result = $this->mapper->orderAt($data[2]->getUuid(), 3, 17, 'sulu_io', 'en');
         $this->assertEquals($data[2]->getUuid(), $result->getUuid());
         $this->assertEquals('/page-1/page-1-2', $result->getPath());
-        $this->assertEquals(17, $result->getChanger());
 
         $result = $this->mapper->loadByParent($data[0]->getUuid(), 'sulu_io', 'en');
         $this->assertEquals('/page-1/page-1-1', $result[0]->getPath());
@@ -3071,7 +3070,6 @@ class ContentMapperTest extends SuluTestCase
         $result = $this->mapper->orderAt($site->getUuid(), 3, 17, 'sulu_io', 'en');
         $this->assertEquals($site->getUuid(), $result->getUuid());
         $this->assertEquals('/page-1/test', $result->getPath());
-        $this->assertEquals(17, $result->getChanger());
 
         $this->documentManager->clear();
 

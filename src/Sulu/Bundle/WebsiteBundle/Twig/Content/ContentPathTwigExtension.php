@@ -66,24 +66,34 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
     /**
      * {@inheritdoc}
      */
-    public function getContentPath($url, $webspaceKey = null, $locale = null, $domain = null, $scheme = 'http')
+    public function getContentPath($url, $webspaceKey = null, $locale = null, $domain = null, $scheme = null)
     {
-        if ($webspaceKey !== null &&
-            $this->requestAnalyzer
-        ) {
-            return $this->webspaceManager->findUrlByResourceLocator(
+        if (!$this->requestAnalyzer) {
+            return $url;
+        }
+
+        $domain = $domain ?: $this->requestAnalyzer->getAttribute('host');
+        $scheme = $scheme ?: $this->requestAnalyzer->getAttribute('scheme');
+        $locale = $locale ?: $this->requestAnalyzer->getCurrentLocalization()->getLocale();
+
+        if ($webspaceKey !== null) {
+            if (!$this->webspaceManager->findWebspaceByKey($webspaceKey)->hasDomain($domain, $this->environment)) {
+                $domain = null;
+            }
+
+            $url = $this->webspaceManager->findUrlByResourceLocator(
                 $url,
                 $this->environment,
-                $locale ?: $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
+                $locale,
                 $webspaceKey,
                 $domain,
                 $scheme
             );
-        } elseif (strpos($url, '/') === 0 && $this->requestAnalyzer) {
-            return $this->webspaceManager->findUrlByResourceLocator(
+        } elseif (strpos($url, '/') === 0) {
+            $url = $this->webspaceManager->findUrlByResourceLocator(
                 $url,
                 $this->environment,
-                $locale ?: $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
+                $locale,
                 $this->requestAnalyzer->getWebspace()->getKey(),
                 $domain,
                 $scheme

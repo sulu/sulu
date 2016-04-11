@@ -159,9 +159,13 @@ define(['underscore', 'config', 'text!./form.html'], function(_, Config, form) {
                                 tabs: tabs,
                                 okCallback: function() {
                                     if (this.sandbox.form.validate(formSelector)) {
+                                        this.sandbox.emit('husky.overlay.custom-urls.show-loader');
                                         this.options.saveCallback(this.options.id, this.getData()).done(function() {
                                             this.sandbox.emit('husky.overlay.custom-urls.close');
+                                            this.sandbox.emit('husky.overlay.custom-urls.hide-loader');
                                         }.bind(this)).fail(function(a) {
+                                            this.sandbox.emit('husky.overlay.custom-urls.hide-loader');
+
                                             switch (a.responseJSON.code) {
                                                 case 9001:
                                                     var $title = $('#custom-url-title');

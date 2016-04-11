@@ -83,6 +83,7 @@ class RedirectControllerTest extends \PHPUnit_Framework_TestCase
             ['sulu.lo/de', 'http://sulu.lo', 'http://sulu.lo/de'],
             ['http://sulu.lo/de', 'http://sulu.lo', 'http://sulu.lo/de'],
             ['http://sulu.lo', 'http://sulu.lo/de/test', 'http://sulu.lo/de/test'],
+            ['sulu.lo/de', 'http://sulu.lo?test1=value1', 'http://sulu.lo/de?test1=value1'],
         ];
     }
 

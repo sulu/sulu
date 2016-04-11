@@ -1,6 +1,29 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.2.0 (2016-04-11)
+    * BUGFIX      #2280 [ContentBundle]       Removed scrollbar from categories in overlay
+    * BUGFIX      #2281 [ContentBundle]       Use correct link for content tab in page form
+    * BUGFIX      #2273 [ContentBundle]       Fixed link generation for internal link type without webspace
+    * BUGFIX      #2274 [WebsiteBundle]       Fixed sulu-content-path with different webspace
+    * BUGFIX      #2269 [WebsiteBundle]       Added query string to redirect for internal links
+    * ENHANCEMENT #2189 [Travis]              Cache jackrabbit download
+    * BUGFIX      #2272 [ContentBundle]       Fixed ordering of pages for columns including ghosts
+    * BUGFIX      #2269 [WebsiteBundle]       Fixed domain switching in sulu-content path
+    * BUGFIX      #2271 [ContentBundle]       Fixed internal link webspace locale bug
+    * BUGFIX      #2267 [CategoryBundle]      Fixed collaboration component
+    * BUGFIX      #2255 [WebsocketBundle]     Introduced own websocket app to avoid connecting to port 8843
+    * BUGFIX      #2258 [WebsiteBundle]       Added validation of analytic type
+    * BUGFIX      #2251 [MediaBundle]         Fixed filter media by symstem-collection and type
+    * BUGFIX      #2252 [ContentBundle]       Fixed webspace in permission check
+    * BUGFIX      #2244 [AdminBundle]         Fixed login with enter for Safari and IE
+    * BUGFIX      #2245 [CustomUrlBundle]     Removed double wildcard for custom-url
+    * BUGFIX      #2242 [MediaBundle]         Fixed leaking events after uploading new media version
+    * BUGFIX      #2235 [ContentBundle]       Fixed validation of resource-segments
+    * BUGFIX      #2238 [ContentBundle]       Fixed URL in SEO tab
+    * BUGFIX      #2237 [MediaBundle]         Added locale to request for adding new media version
+    * BUGFIX      #2236 [ContentBundle]       Fixed preview js errors
+
 * 1.2.0-RC4 (2016-04-04)
     * BUGFIX      #2233 [ContentBundle]       Fixed resource locators for saving without locale
     * BUGFIX      #2232 [ContentBundle]       Updated condition to open ghost overlay

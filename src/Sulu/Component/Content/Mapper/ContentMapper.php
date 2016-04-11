@@ -685,7 +685,7 @@ class ContentMapper implements ContentMapperInterface
 
         // this should not be necessary (see https://github.com/sulu-io/sulu-document-manager/issues/39)
         foreach ($siblingDocuments as $siblingDocument) {
-            $this->documentManager->persist($siblingDocument, $locale);
+            $this->documentManager->persist($siblingDocument, null, ['auto_name' => false]);
         }
 
         $this->documentManager->flush();

@@ -72,30 +72,37 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, $requestAnalyzer->getAttribute('test1', 2));
     }
 
-    public function testAnalyzeMultipleProvider()
+    public function testGetAttributeBasic()
     {
-        $provider1 = $this->prophesize(RequestProcessorInterface::class);
-        $provider2 = $this->prophesize(RequestProcessorInterface::class);
+        $provider = $this->prophesize(RequestProcessorInterface::class);
         $request = $this->prophesize(Request::class);
 
-        $provider1->process($request->reveal(), Argument::type(RequestAttributes::class))->shouldBeCalled()->willReturn(
-            new RequestAttributes(['test1' => 1])
-        );
-        $provider1->validate(Argument::type(RequestAttributes::class))->shouldBeCalled()->willReturn(true);
-        $provider2->process($request->reveal(), Argument::type(RequestAttributes::class))->shouldBeCalled()->willReturn(
-            new RequestAttributes(['test1' => 2, 'test2' => 3])
-        );
-        $provider2->validate(Argument::type(RequestAttributes::class))->shouldBeCalled()->willReturn(true);
+        $provider->process($request->reveal(), Argument::type(RequestAttributes::class))
+            ->shouldBeCalledTimes(1)->willReturn(new RequestAttributes(['test' => 1]));
+        $provider->validate(Argument::type(RequestAttributes::class))->shouldBeCalled()->willReturn(true);
 
         $requestStack = $this->prophesize(RequestStack::class);
         $requestStack->getCurrentRequest()->willReturn($request->reveal());
-        $requestAnalyzer = new RequestAnalyzer($requestStack->reveal(), [$provider1->reveal(), $provider2->reveal()]);
+        $requestAnalyzer = new RequestAnalyzer($requestStack->reveal(), [$provider->reveal()]);
+
+        $this->assertEquals(1, $requestAnalyzer->getAttribute('test'));
+        $this->assertEquals(2, $requestAnalyzer->getAttribute('test1', 2));
+    }
+
+    public function testAnalyzeMultipleProvider()
+    {
+        $request = $this->prophesize(Request::class);
+        $request->getHost()->willReturn('www.sulu.io');
+        $request->getScheme()->willReturn('https');
+
+        $requestStack = $this->prophesize(RequestStack::class);
+        $requestStack->getCurrentRequest()->willReturn($request->reveal());
+        $requestAnalyzer = new RequestAnalyzer($requestStack->reveal(), []);
 
         $requestAnalyzer->analyze($request->reveal());
 
-        $this->assertEquals(2, $requestAnalyzer->getAttribute('test1'));
-        $this->assertEquals(3, $requestAnalyzer->getAttribute('test2'));
-        $this->assertNull($requestAnalyzer->getAttribute('test3'));
+        $this->assertEquals('www.sulu.io', $requestAnalyzer->getAttribute('host'));
+        $this->assertEquals('https', $requestAnalyzer->getAttribute('scheme'));
     }
 
     public function provideGetter()

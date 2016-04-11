@@ -27,6 +27,7 @@ class ResourceLocatorAlreadyExistsException extends \Exception
     {
         $this->resourceLocator = $resourceLocator;
         $this->path = $path;
+
         parent::__construct(
             sprintf(
                 'The ResouceLocator "%s" already exists at the node "%s". Please choose a different resource locator'

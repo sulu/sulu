@@ -414,6 +414,15 @@ class MediaRepositoryTest extends SuluTestCase
         $this->assertCount(1, $this->mediaRepository->findMedia(['systemCollections' => false]));
     }
 
+    public function testFindMediaWithSystemCollectionsAndTypes()
+    {
+        $this->createMedia('test-1', 'test-1');
+        $this->createMedia('test-2', 'test-2', 'image', 2);
+
+        $this->assertCount(2, $this->mediaRepository->findMedia());
+        $this->assertCount(1, $this->mediaRepository->findMedia(['systemCollections' => false, 'types' => ['image']]));
+    }
+
     public function testFindMediaByIds()
     {
         $media1 = $this->createMedia('test-1', 'test-1', 'video');

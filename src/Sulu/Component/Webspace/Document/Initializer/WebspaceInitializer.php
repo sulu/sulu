@@ -83,6 +83,7 @@ class WebspaceInitializer implements InitializerInterface
             $webspaceLocales[] = $localization->getLocalization();
         }
 
+        $homeType = $webspace->getTheme()->getDefaultTemplate('homepage');
         if ($this->nodeManager->has($homePath)) {
             $homeDocument = $this->documentManager->find($homePath, 'fr', [
                 'load_ghost_content' => false,
@@ -91,7 +92,6 @@ class WebspaceInitializer implements InitializerInterface
             ]);
             $existingLocales = $this->inspector->getLocales($homeDocument);
         } else {
-            $homeType = $webspace->getTheme()->getDefaultTemplate('homepage');
             $homeDocument = new HomeDocument();
             $homeDocument->setTitle('Homepage');
             $homeDocument->setStructureType($homeType);

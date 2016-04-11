@@ -2,6 +2,11 @@
 
 ## dev-develop
 
+### sulu_content_path
+
+The twig function `sulu_content_path('/path')` now always returning the full-qualified-domain
+`http://www.sulu.io/de/path`.
+
 ### Custom-Routes
 
 The naming of the custom-routes with `type: portal` has changed. You can use now the configured name 
@@ -58,48 +63,10 @@ The Behaviors `TimestampBehavior` and `BlameBehavior` now save the values in the
 properties. To keep the old behavior use the `LocalizedTimestampBehavior` and 
 `LocalizedBlameBehavior` instead.
 
-### Custom-URLS
-
-Additional system nodes added by the custom-url feature. Run following command to add
-them.
-
-```bash
-app/console sulu:document:initialize
-```
-
 ### Deprecated sulu:phpcr:init and sulu:webspace:init
 
 The `sulu:phpcr:init` and `sulu:webspace:init` commands are now deprecated.
 Use the `sulu:document:initialize` command instead.
-
-### Translation Code
-
-The maximum length of the translation code was extended run the following
-command to update your database schema.
-
-### Category-Key
-
-Length of category-key column was extended. Use following command to update the schema definition.
-
-```bash
-app/console doctrine:schema:update --force
-```
-
-The name of symfony-routes which are loaded by the portal-loader has changed (e.g. the `website_search` route). The old
-keeps to work but are deprecated. If you want to use the custom-urls you have to upgrade your route generation in the
-twig-templates.
-
-__Before:__
-
-```twig
-{{ path(request.portalUrl ~ '.website_search') }}
-```
-
-__After:__
-
-```twig
-{{ path(request.portalUrl ~ '.' ~ request.locale ~ '.website_search') }}
-```
 
 ### Definition of security contexts
 
@@ -149,7 +116,8 @@ and `SECURITY` in your context.
 The metadata for pages has changed. Run following command to update your search index
 
 ```bash
-app/console massive:search:index:rebuild
+app/console massive:search:purge --all
+app/console massive:search:reindex
 ```
 
 ### Media uploads
@@ -181,27 +149,32 @@ autodetect Commands in the `Command` directory of each bundle anyway. This only
 affects you, if you have not followed the Symfony standards and located your
 commands somewhere else.
 
-### Preview
-
-Clear the preview cache to avoid wrong cached data.
-
-```bash
-app/console cache:clear
-```
-
 ### WebsiteRequestAnalyzer
 
 The `Current`-part of all setters have been removed, because they have already
 been removed from the getters. This only affects you if you have overridden the
 `WebsiteRequestAnalyzer` and have called or overridden these methods.
 
-### Webspace Settings
+### Databases
 
-A new phpcr namespace was added. To register it run following command:
+#### PHPCR
+
+A new namespace and additional system nodes were added. To create them run the following command:
 
 ```bash
-app/console sulu:phpcr:init
+app/console sulu:document:initialize
 ```
+
+#### ORM
+
+The relational structure of categories, translations and users have changed. 
+Use the following command to update:
+
+```bash
+app/console doctrine:schema:update --force
+```
+
+It might be possible that foreign key checks have to be disabled for this update.
 
 ### ContentNavigation & Navigation
 

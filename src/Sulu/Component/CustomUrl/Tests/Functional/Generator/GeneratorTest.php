@@ -111,6 +111,13 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
                 'test-1.sulu.io/at/test-2',
             ],
             [
+                '*.sulu.io/at/*',
+                ['prefix' => 'test-1', 'suffix' => ['']],
+                null,
+                null,
+                MissingDomainPartException::class,
+            ],
+            [
                 '*.sulu.io/at',
                 ['prefix' => 'test-1', 'suffix' => []],
                 null,

@@ -14,7 +14,7 @@ define(function () {
     return {
 
         collaboration: function() {
-            if (!this.options.data || !this.options.id) {
+            if (!this.options.data || !this.options.data.id) {
                 return;
             }
 

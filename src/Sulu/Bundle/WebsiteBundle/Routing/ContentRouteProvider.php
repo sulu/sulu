@@ -139,11 +139,17 @@ class ContentRouteProvider implements RouteProviderInterface
                     $content->getNodeState() === StructureInterface::STATE_PUBLISHED
                 ) {
                     // redirect internal link
+                    $redirectUrl = $this->requestAnalyzer->getResourceLocatorPrefix() . $content->getResourceLocator();
+
+                    if ($request->getQueryString()) {
+                        $redirectUrl .= '?' . $request->getQueryString();
+                    }
+
                     $collection->add(
                         $content->getKey() . '_' . uniqid(),
                         $this->getRedirectRoute(
                             $request,
-                            $this->requestAnalyzer->getResourceLocatorPrefix() . $content->getResourceLocator()
+                            $redirectUrl
                         )
                     );
                 } elseif (

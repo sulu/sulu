@@ -12,6 +12,8 @@
 namespace Sulu\Component\Webspace\Tests\Unit;
 
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\Environment;
+use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
 
 class WebspaceTest extends \PHPUnit_Framework_TestCase
@@ -154,5 +156,27 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->webspace->getLocalization('en_us');
         $this->assertEquals(null, $result);
+    }
+
+    public function testHasDomain()
+    {
+        $environment = $this->prophesize(Environment::class);
+        $environment->getUrls()->willReturn([new Url('sulu.lo')]);
+        $this->portal->getEnvironment('prod')->willReturn($environment->reveal());
+        $this->webspace->addPortal($this->portal->reveal());
+
+        $this->assertTrue($this->webspace->hasDomain('sulu.lo', 'prod'));
+        $this->assertFalse($this->webspace->hasDomain('1.sulu.lo', 'prod'));
+    }
+
+    public function testHasDomainWildcard()
+    {
+        $environment = $this->prophesize(Environment::class);
+        $environment->getUrls()->willReturn([new Url('{host}')]);
+        $this->portal->getEnvironment('prod')->willReturn($environment->reveal());
+        $this->webspace->addPortal($this->portal->reveal());
+
+        $this->assertTrue($this->webspace->hasDomain('sulu.lo', 'prod'));
+        $this->assertTrue($this->webspace->hasDomain('1.sulu.lo', 'prod'));
     }
 }

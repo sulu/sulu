@@ -48,6 +48,10 @@ class Generator implements GeneratorInterface
         }
 
         foreach ($domainParts['suffix'] as $suffix) {
+            if (empty($suffix)) {
+                continue;
+            }
+
             $domain = preg_replace('/\*/', $suffix, $domain, 1);
         }
 

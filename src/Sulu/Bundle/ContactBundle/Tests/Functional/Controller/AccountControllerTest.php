@@ -303,6 +303,7 @@ class AccountControllerTest extends SuluTestCase
             '/api/accounts'
         );
 
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertArrayNotHasKey('account', $response['_embedded']['accounts'][0]['accountContacts'][0]['contact']);

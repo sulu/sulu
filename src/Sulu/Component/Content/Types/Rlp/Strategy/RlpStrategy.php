@@ -15,6 +15,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
+use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
@@ -143,8 +144,18 @@ abstract class RlpStrategy implements RlpStrategyInterface
             $treeValue = null;
         }
 
-        if ($treeValue === null && !$this->isValid($path, $webspaceKey, $languageCode)) {
+        if ($treeValue === $path) {
+            return;
+        }
+
+        if (!$this->isValid($path, $webspaceKey, $languageCode)) {
             throw new ResourceLocatorNotValidException($path);
+        }
+
+        if (!$this->mapper->unique($path, $webspaceKey, $languageCode)) {
+            $treeContent = $this->loadByResourceLocator($path, $webspaceKey, $languageCode);
+
+            throw new ResourceLocatorAlreadyExistsException($path, $treeContent);
         }
 
         $this->mapper->save($document);
@@ -270,12 +281,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
      */
     public function isValid($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
-        return $path !== '/' && $this->cleaner->validate($path) && $this->mapper->unique(
-            $path,
-            $webspaceKey,
-            $languageCode,
-            $segmentKey
-        );
+        return $path !== '/' && $this->cleaner->validate($path);
     }
 
     /**

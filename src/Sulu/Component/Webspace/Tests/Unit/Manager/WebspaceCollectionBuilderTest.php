@@ -229,4 +229,32 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $this->assertEquals('www.sulu.at', $prod->getMainUrl()->getUrl());
         $this->assertEquals('sulu.at', $main->getMainUrl()->getUrl());
     }
+
+    public function testBuildWithCustomUrl()
+    {
+        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
+            $this->loader,
+            new Replacer(),
+            $this->logger,
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/custom-url'
+        );
+
+        $webspaceCollection = $webspaceCollectionBuilder->build();
+
+        $webspace = $webspaceCollection->getWebspaces()[0];
+        $this->assertEquals('sulu_io', $webspace->getKey());
+
+        $dev = $webspace->getPortals()[0]->getEnvironment('dev');
+        $prod = $webspace->getPortals()[0]->getEnvironment('prod');
+        $stage = $webspace->getPortals()[0]->getEnvironment('stage');
+
+        $this->assertCount(1, $dev->getCustomUrls());
+        $this->assertCount(1, $stage->getCustomUrls());
+        $this->assertCount(2, $prod->getCustomUrls());
+
+        $this->assertEquals('dev.sulu.lo/*', $dev->getCustomUrls()[0]->getUrl());
+        $this->assertEquals('stage.sulu.lo/*', $stage->getCustomUrls()[0]->getUrl());
+        $this->assertEquals('sulu.lo/*', $prod->getCustomUrls()[0]->getUrl());
+        $this->assertEquals('*.sulu.lo', $prod->getCustomUrls()[1]->getUrl());
+    }
 }
