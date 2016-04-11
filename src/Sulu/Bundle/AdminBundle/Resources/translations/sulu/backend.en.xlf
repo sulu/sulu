@@ -920,7 +920,7 @@
             </trans-unit>
             <trans-unit id="b229c52dae1354cc4123c0b4820e23cda" resname="public.show-selected">
                 <source>public.show-selected</source>
-                <target>Show selected anzeigen</target>
+                <target>Show selected</target>
             </trans-unit>
             <trans-unit id="b229c52dae1354cc4123c0b4820e23cdb" resname="public.show-all">
                 <source>public.show-all</source>
