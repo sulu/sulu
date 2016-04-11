@@ -16,6 +16,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 
 class CollectionRepositoryTest extends SuluTestCase
 {
@@ -28,27 +29,27 @@ class CollectionRepositoryTest extends SuluTestCase
      * @var array
      */
     private $collectionData = [
-        ['1', null],
-        ['2', 0],
-        ['3', 1],
-        ['4', 2],
-        ['5', 3],
-        ['6', 3],
-        ['7', 5],
-        ['8', 5],
-        ['9', 2],
-        ['10', 1],
-        ['11', 9],
-        ['12', 9],
-        ['13', 0],
-        ['14', 12],
-        ['15', 12],
-        ['16', null],
-        ['17', 15],
-        ['18', 15],
-        ['19', 17],
-        ['20', 17],
-        ['21', null],
+        ['1', null, false],
+        ['2', 0, false],
+        ['3', 1, false],
+        ['4', 2, false],
+        ['5', 3, false],
+        ['6', 3, false],
+        ['7', 5, false],
+        ['8', 5, false],
+        ['9', 2, false],
+        ['10', 1, false],
+        ['11', 9, false],
+        ['12', 9, false],
+        ['13', 0, false],
+        ['14', 12, false],
+        ['15', 12, false],
+        ['16', null, true],
+        ['17', 15, true],
+        ['18', 15, true],
+        ['19', 17, true],
+        ['20', 17, true],
+        ['21', null, false],
     ];
 
     /**
@@ -56,26 +57,42 @@ class CollectionRepositoryTest extends SuluTestCase
      */
     private $collections;
 
+    /**
+     * @var CollectionRepository
+     */
+    private $collectionRepository;
+
     protected function setUp()
     {
         parent::setUp();
 
         $this->purgeDatabase();
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
 
-        $collectionType = new CollectionType();
-        $collectionType->setName('Default Type');
-        $collectionType->setDescription('Default Collection Type');
-        $this->em->persist($collectionType);
+        $defaultCollectionType = new CollectionType();
+        $defaultCollectionType->setName('Default Type');
+        $defaultCollectionType->setDescription('Default Collection Type');
+        $defaultCollectionType->setKey('collection.default');
+        $this->em->persist($defaultCollectionType);
+
+        $systemCollectionType = new CollectionType();
+        $systemCollectionType->setName('Default Type');
+        $systemCollectionType->setDescription('Default Collection Type');
+        $systemCollectionType->setKey(SystemCollectionManagerInterface::COLLECTION_TYPE);
+        $this->em->persist($systemCollectionType);
 
         foreach ($this->collectionData as $collection) {
-            $this->collections[] = $this->createCollection($collection[0], $collection[1], $collectionType);
+            $this->collections[] = $this->createCollection(
+                $collection[0],
+                $collection[1],
+                $collection[2] ? $systemCollectionType : $defaultCollectionType
+            );
         }
         $this->em->flush();
 
         /** @var CollectionRepository $repository */
-        $repository = $this->getContainer()->get('sulu_media.collection_repository');
-        $repository->recover();
+        $this->collectionRepository = $this->getContainer()->get('sulu_media.collection_repository');
+        $this->collectionRepository->recover();
         $this->em->flush();
     }
 
@@ -124,11 +141,18 @@ class CollectionRepositoryTest extends SuluTestCase
             $expected[] = $this->collections[$item];
         }
 
-        /** @var CollectionRepository $repository */
-        $repository = $this->getContainer()->get('sulu_media.collection_repository');
-
-        $result = $repository->findTree($id, 'de');
+        $result = $this->collectionRepository->findTree($id, 'de');
 
         $this->assertEquals($expected, $result);
+    }
+
+    public function testFindCollectionSet()
+    {
+        $this->assertCount(21, $this->collectionRepository->findCollectionSet(5));
+    }
+
+    public function testFindCollectionSetWithoutSystemCollections()
+    {
+        $this->assertCount(16, $this->collectionRepository->findCollectionSet(5, ['systemCollections' => false]));
     }
 }

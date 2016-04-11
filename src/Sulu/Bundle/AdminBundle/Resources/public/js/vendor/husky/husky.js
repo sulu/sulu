@@ -16399,7 +16399,29 @@ define('form/util',[], function() {
 
         // get form fields
         getFields: function(element) {
-            return $(element).find('input:not([data-form="false"], [type="submit"], [type="button"]), textarea:not([data-form="false"]), select:not([data-form="false"]), *[data-form="true"], *[data-type="collection"], *[contenteditable="true"]');
+            return $(element).find('input:not([data-form="false"], [type="submit"], [type="button"], [type="checkbox"], [type="radio"]), textarea:not([data-form="false"]), select:not([data-form="false"]), *[data-form="true"], *[data-type="collection"], *[contenteditable="true"]');
+        },
+
+        findGroupedFieldsBySelector: function(element, filter) {
+            var groupedFields = {}, fieldName;
+
+            $(element).find(filter).each(function(key, field) {
+                fieldName = $(field).data('mapper-property');
+                if (!groupedFields[fieldName]) {
+                    groupedFields[fieldName] = [];
+                }
+                groupedFields[fieldName].push(field);
+            });
+
+            return groupedFields;
+        },
+
+        getCheckboxes: function(element) {
+            return this.findGroupedFieldsBySelector(element, 'input[type="checkbox"]');
+        },
+
+        getRadios: function(element) {
+            return this.findGroupedFieldsBySelector(element, 'input[type="radio"]');
         },
 
         /**
@@ -16582,9 +16604,7 @@ define('form/util',[], function() {
         isNumeric: function(str) {
             return str.match(/-?\d+(.\d+)?/);
         }
-
     };
-
 });
 
 /*
@@ -16974,6 +16994,84 @@ define('form/element',['form/util'], function(Util) {
 });
 
 /*
+ * This file is part of Husky Validation.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+define('form/elementGroup',[],function() {
+    'use strict';
+
+    var setMultipleValue = function(elements, values) {
+            elements.forEach(function(element) {
+                values.forEach(function(value) {
+                    if (element.$el.val() === value) {
+                        element.$el.prop('checked', true);
+                    }
+                });
+            });
+        },
+
+        setSingleValue = function(elements, value) {
+            for (var i = -1; ++i < elements.length;) {
+                if (elements[i].$el.val() === value) {
+                    elements[i].$el.prop('checked', true);
+
+                    return;
+                }
+            }
+        };
+
+    return function(elements, isSingleValue) {
+        var result = {
+            getValue: function() {
+                var value = [];
+                elements.forEach(function(element) {
+                    if (element.$el.is(':checked')) {
+                        value.push(element.$el.val());
+                    }
+                });
+
+                if (!!isSingleValue) {
+                    if (value.length > 1) {
+                        throw new Error('Single value element group cannot return more than one value');
+                    }
+
+                    return value[0];
+                }
+
+                return value;
+            },
+
+            setValue: function(values) {
+                if (!!isSingleValue && !!$.isArray(values)) {
+                    throw new Error('Single value element cannot be set to an array value');
+                }
+
+                if (!isSingleValue && !$.isArray(values)) {
+                    throw new Error('Field with multiple values cannot be set to a single value');
+                }
+
+                if ($.isArray(values)) {
+                    setMultipleValue.call(this, elements, values);
+                } else {
+                    setSingleValue.call(this, elements, values);
+                }
+            }
+        };
+
+        elements.forEach(function(element) {
+            element.$el.data('elementGroup', result);
+        });
+
+        return result;
+    };
+});
+
+/*
  * This file is part of the Husky Validation.
  *
  * (c) MASSIVE ART WebServices GmbH
@@ -17024,6 +17122,16 @@ define('form/validation',[
                             // TODO: scroll to first invalid element you can't use $.focus because an element mustn't be an input
                             result = false;
                         }
+                    });
+
+                    $.each(form.mapper.collections, function(i, collection) {
+                        $.each(collection.items, function(j, item) {
+                            $.each(item.data('collection').childElements, function(k, childElement) {
+                                if (!childElement.validate(force)) {
+                                    result = false;
+                                }
+                            });
+                        });
                     });
 
                     that.setValid.call(this, result);
@@ -17102,8 +17210,6 @@ define('form/mapper',[
                     this.collectionsSet = {};
                     this.emptyTemplates = {};
                     this.templates = {};
-                    this.elements = [];
-                    this.collectionsInitiated = $.Deferred();
 
                     form.initialized.then(function() {
                         var selector = '*[data-type="collection"]',
@@ -17117,7 +17223,7 @@ define('form/mapper',[
                     var $element = $(value),
                         element = $element.data('element'),
                         property = $element.data('mapper-property'),
-                        $newChild, collection, emptyTemplate,
+                        newChild, collection, emptyTemplate,
                         dfd = $.Deferred(),
                         counter = 0,
                         resolve = function() {
@@ -17132,7 +17238,7 @@ define('form/mapper',[
                             property = [property];
                             $element.data('mapper-property', property);
                         } else {
-                            throw "no valid mapper-property value";
+                            throw 'no valid mapper-property value';
                         }
                     }
 
@@ -17147,7 +17253,8 @@ define('form/mapper',[
                         id: _.uniqueId('collection_'),
                         property: property,
                         $element: $element,
-                        element: element
+                        element: element,
+                        items: []
                     };
                     this.collections.push(collection);
 
@@ -17168,16 +17275,16 @@ define('form/mapper',[
                             throw 'template has to be defined as <script>';
                         }
 
-                        $newChild = {tpl: $child.html(), id: $child.attr('id'), collection: collection};
-                        element.$children[i] = $newChild;
+                        newChild = {tpl: $child.html(), id: $child.attr('id'), collection: collection};
+                        element.$children[i] = newChild;
 
                         for (x = -1, len = property.length; ++x < len;) {
-                            if (property[x].tpl === $newChild.id) {
+                            if (property[x].tpl === newChild.id) {
                                 propertyName = property[x].data;
                                 emptyTemplate = property[x]['empty-tpl'];
                             }
                             // if child has empty template, set to empty templates
-                            if (property[x]['empty-tpl'] && property[x]['empty-tpl'] === $newChild.id) {
+                            if (property[x]['empty-tpl'] && property[x]['empty-tpl'] === newChild.id) {
                                 this.emptyTemplates[property[x].data] = {
                                     id: property[x]['empty-tpl'],
                                     tpl: $child.html()
@@ -17186,14 +17293,18 @@ define('form/mapper',[
                         }
                         // check if template is set
                         if (!!propertyName) {
-                            $newChild.propertyName = propertyName;
+                            newChild.propertyName = propertyName;
                             propertyCount = collection.element.getType().getMinOccurs();
-                            this.templates[propertyName] = {tpl: $newChild, collection: collection, emptyTemplate: emptyTemplate};
+                            this.templates[propertyName] = {
+                                tpl: newChild,
+                                collection: collection,
+                                emptyTemplate: emptyTemplate,
+                            };
                             // init default children
                             for (x = collection.element.getType().getMinOccurs() + 1; --x > 0;) {
-                                that.appendChildren.call(this, collection.$element, $newChild).then(function() {
+                                that.appendChildren.call(this, collection, newChild).then(function() {
                                     // set counter
-                                    $('#current-counter-' + propertyName).text(collection.element.getType().getChildren($newChild.id).length);
+                                    $('#current-counter-' + propertyName).text(collection.element.getType().getChildren(newChild.id).length);
                                     resolveElement();
                                 }.bind(this));
                             }
@@ -17231,7 +17342,7 @@ define('form/mapper',[
                         collection = this.templates[propertyName].collection;
 
                     if (collection.element.getType().canAdd(tpl.id)) {
-                        that.appendChildren.call(this, collection.$element, tpl).then(function() {
+                        that.appendChildren.call(this, collection, tpl).then(function() {
                             // set counter
                             $('#current-counter-' + propertyName).text(collection.element.getType().getChildren(tpl.id).length);
                             that.emitAddEvent(propertyName, null);
@@ -17265,8 +17376,8 @@ define('form/mapper',[
                 },
 
                 checkFullAndEmpty: function(propertyName) {
-                    var $addButton = $("[data-mapper-add='"+ propertyName +"']"),
-                        $removeButton = $("[data-mapper-remove='"+ propertyName +"']"),
+                    var $addButton = $("[data-mapper-add='" + propertyName + "']"),
+                        $removeButton = $("[data-mapper-remove='" + propertyName + "']"),
                         tpl = this.templates[propertyName].tpl,
                         collection = this.templates[propertyName].collection,
                         fullClass = collection.element.$el.data('mapper-full-class') || 'full',
@@ -17283,7 +17394,7 @@ define('form/mapper',[
                             $addButton.addClass(fullClass);
                             $(collection.element.$el).addClass(fullClass);
 
-                        // else, if no remove is possible add empty style-classes
+                            // else, if no remove is possible add empty style-classes
                         } else if (!collection.element.getType().canRemove(tpl.id)) {
                             $addButton.addClass(emptyClass);
                             $(collection.element.$el).addClass(emptyClass);
@@ -17310,7 +17421,7 @@ define('form/mapper',[
                         type = $el.data('type'),
                         property = $el.data('mapper-property'),
                         element = $el.data('element'),
-                        result, item,
+                        result,
                         filtersAction;
 
 
@@ -17331,19 +17442,32 @@ define('form/mapper',[
                         result = [];
                         $.each($el.children(), function(key, value) {
                             if (!collection || collection.tpl === value.dataset.mapperPropertyTpl) {
-                                item = that.getData($(value));
-                                    // only set mapper-id if explicitly set
-                                if (!!returnMapperId) {
-                                    item.mapperId = value.dataset.mapperId;
+                                var elements = $(value).data('collection').childElements,
+                                    elementGroups = $(value).data('collection').childElementGroups,
+                                    data = {};
+
+                                elements.forEach(function(child) {
+                                    that.addDataFromElement.call(this, child, data, returnMapperId);
+                                });
+
+                                for (key in elementGroups) {
+                                    if (elementGroups.hasOwnProperty(key)) {
+                                        data[key] = elementGroups[key].getValue();
+                                    }
                                 }
 
-                                var keys = Object.keys(item);
+                                // only set mapper-id if explicitly set
+                                if (!!returnMapperId) {
+                                    data.mapperId = value.dataset.mapperId;
+                                }
+
+                                var keys = Object.keys(data);
                                 if (keys.length === 1) { // for value only collection
-                                    if (item[keys[0]] !== '') {
-                                        result.push(item[keys[0]]);
+                                    if (data[keys[0]] !== '') {
+                                        result.push(data[keys[0]]);
                                     }
-                                } else if (!filtersAction || filtersAction(item)) {
-                                    result.push(item);
+                                } else if (!filtersAction || filtersAction(data)) {
+                                    result.push(data);
                                 }
                             }
                         }.bind(this));
@@ -17351,12 +17475,11 @@ define('form/mapper',[
                     }
                 },
 
-                setCollectionData: function(collection, collectionElement) {
+                setCollectionData: function(data, collection) {
                     // remember first child remove the rest
-                    var $element = collectionElement.$element,
-                        $child = collectionElement.$child,
-                        $emptyTemplate,
-                        count = collection.length,
+                    var $element = collection.$element,
+                        child = this.templates[collection.key].tpl,
+                        count = data.length,
                         dfd = $.Deferred(),
                         resolve = function() {
                             count--;
@@ -17364,23 +17487,28 @@ define('form/mapper',[
                                 dfd.resolve();
                             }
                         },
-                        x, len;
+                        x,
+                        length;
 
                     // no element in collection
                     if (count === 0) {
                         // check if empty template exists for that element and show it
-                        that.addEmptyTemplate.call(this, $element, $child.propertyName);
+                        that.addEmptyTemplate.call(this, $element, child.propertyName);
                         dfd.resolve();
                     } else {
-                        if (collection.length < collectionElement.element.getType().getMinOccurs()) {
-                            for (x = collectionElement.element.getType().getMinOccurs() + 1, len = collection.length; --x > len;) {
-                                collection.push({});
+                        if (data.length < collection.element.getType().getMinOccurs()) {
+                            for (x = collection.element.getType().getMinOccurs() + 1, length = data.length; --x > length;) {
+                                data.push({});
                             }
                         }
 
+                        // FIXME the old DOM elements should be reused, instead of generated over and over again
+                        // remove all prefilled items from the collection, because the DOM elements are recreated
+                        collection.items = [];
+
                         // foreach collection elements: create a new dom element, call setData recursively
-                        $.each(collection, function(key, value) {
-                            that.appendChildren.call(this, $element, $child, value).then(function($newElement) {
+                        $.each(data, function(key, value) {
+                            that.appendChildren.call(this, collection, child, value).then(function($newElement) {
                                 that.setData.call(this, value, $newElement).then(function() {
                                     resolve();
                                 }.bind(this));
@@ -17389,36 +17517,44 @@ define('form/mapper',[
                     }
 
                     // set current length of collection
-                    $('#current-counter-' + $element.attr('id')).text(collection.length);
-                    that.checkFullAndEmpty.call(this, collectionElement.property[0].data);
+                    $('#current-counter-' + $element.attr('id')).text(data.length);
+                    that.checkFullAndEmpty.call(this, collection.property[0].data);
                     return dfd.promise();
                 },
 
-                appendChildren: function($element, $child, tplOptions, data, insertAfter) {
-                    var index = $child.collection.element.getType().getChildren($child.id).length,
+                appendChildren: function(collection, child, tplOptions, data, insertAfter) {
+                    var clonedChild = $.extend(true, {}, child),
+                        index = clonedChild.collection.element.getType().getChildren(clonedChild.id).length,
                         options = $.extend({}, {index: index}, tplOptions || {}),
-                        template = _.template($child.tpl, options, form.options.delimiter),
+                        template = _.template(clonedChild.tpl, options, form.options.delimiter),
                         $template = $(template),
                         $newFields = Util.getFields($template),
+                        $radioFields = Util.getRadios($template),
+                        $checkboxFields = Util.getCheckboxes($template),
                         dfd = $.Deferred(),
                         counter = $newFields.length,
+                        $element = collection.$element,
+                        $lastElement,
                         element;
 
                     // adding
-                    $template.attr('data-mapper-property-tpl', $child.id);
+                    $template.attr('data-mapper-property-tpl', clonedChild.id);
                     $template.attr('data-mapper-id', _.uniqueId());
 
                     // add template to element
-                    if (insertAfter) {
-                        $element.after($template);
+                    if (insertAfter && ($lastElement = $element.find('*[data-mapper-property-tpl="' + clonedChild.id + '"]').last()).length > 0) {
+                        $lastElement.after($template);
                     } else {
                         $element.append($template);
                     }
 
+                    clonedChild.collection.childElements = [];
+                    clonedChild.collection.childElementGroups = {};
                     // add fields
                     if ($newFields.length > 0) {
-                        $.each($newFields, function(key, field) {
-                            element = form.addField($(field));
+                        $newFields.each(function(key, field) {
+                            element = form.createField($(field));
+                            clonedChild.collection.childElements.push(element);
                             element.initialized.then(function() {
                                 counter--;
                                 if (counter === 0) {
@@ -17430,6 +17566,19 @@ define('form/mapper',[
                         dfd.resolve($template);
                     }
 
+                    if (_.size($radioFields) > 0) {
+                        $.each($radioFields, function(key, field) {
+                            clonedChild.collection.childElementGroups[key] = form.createFieldGroup(field, true);
+                        });
+                    }
+                    if (_.size($checkboxFields) > 0) {
+                        $.each($checkboxFields, function(key, field) {
+                            clonedChild.collection.childElementGroups[key] = form.createFieldGroup(field, false);
+                        });
+                    }
+
+                    $template.data('collection', clonedChild.collection);
+
                     // if automatically set data after initialization ( needed for adding elements afterwards)
                     if (!!data) {
                         dfd.then(function() {
@@ -17437,8 +17586,7 @@ define('form/mapper',[
                         }.bind(this));
                     }
 
-                    // push element to global array
-                    this.elements.push($template);
+                    collection.items.push($template);
 
                     return dfd.promise();
                 },
@@ -17449,11 +17597,14 @@ define('form/mapper',[
                  * @return {Object|null} the dom object or null
                  **/
                 getElementByMapperId: function(mapperId) {
-                    for (var i = -1, length = this.elements.length; ++i < length;) {
-                        if (this.elements[i].data('mapper-id') === mapperId) {
-                            return this.elements[i];
+                    for (var i = -1, iLength = this.collections.length; ++i < iLength;) {
+                        for (var j = -1, jLength = this.collections[i].items.length; ++j < jLength;) {
+                            if (this.collections[i].items[j].data('mapper-id') === mapperId) {
+                                return this.collections[i].items[j];
+                            }
                         }
                     }
+
                     return null;
                 },
 
@@ -17463,16 +17614,23 @@ define('form/mapper',[
                  * @return {boolean|string} if an element was found and deleted it returns its template-name, else it returns false
                  **/
                 deleteElementByMapperId: function(mapperId) {
-                    var i, length, templateName;
-                    for (i = -1, length = this.elements.length; ++i < length;) {
-                        if (this.elements[i].data('mapper-id').toString() === mapperId.toString()) {
-                            templateName = this.elements[i].attr('data-mapper-property-tpl');
-                            this.elements[i].remove();
-                            this.elements.splice(i, 1);
-                            return templateName;
-                        }
-                    }
-                    return false;
+                    var templateName;
+
+                    $.each(this.collections, function(i, collection) {
+                        $.each(collection.items, function(j, item) {
+                            if (item.data('mapper-id').toString() !== mapperId.toString()) {
+                                return true;
+                            }
+
+                            templateName = item.attr('data-mapper-property-tpl');
+                            item.remove();
+                            collection.items.splice(j, 1);
+
+                            return false;
+                        });
+                    }.bind(this));
+
+                    return templateName;
                 },
 
                 remove: function($element) {
@@ -17483,46 +17641,6 @@ define('form/mapper',[
 
                     // remove element
                     $element.remove();
-                },
-
-                getData: function($el, returnMapperId) {
-                    if (!$el) {
-                        $el = form.$el;
-                    }
-
-                    var data = { }, $childElement, property, parts,
-
-                    // search field with mapper property
-                        selector = '*[data-mapper-property]',
-                        $elements = $el.find(selector);
-
-                    // do it while elements exists
-                    while ($elements.length > 0) {
-                        // get first
-                        $childElement = $($elements.get(0));
-                        property = $childElement.data('mapper-property');
-
-                        if ($.isArray(property)) {
-                            $.each(property, function(i, prop) {
-                                data[prop.data] = that.processData.call(this, $childElement, prop, returnMapperId);
-                            }.bind(this));
-                        } else if (property.match(/.*\..*/)) {
-                            parts = property.split('.');
-                            data[parts[0]] = {};
-                            data[parts[0]][parts[1]] = that.processData.call(this, $childElement);
-                        } else {
-                            // process it
-                            data[property] = that.processData.call(this, $childElement);
-                        }
-
-                        // remove element itself
-                        $elements = $elements.not($childElement);
-
-                        // remove child elements
-                        $elements = $elements.not($childElement.find(selector));
-                    }
-
-                    return data;
                 },
 
                 setData: function(data, $el) {
@@ -17569,12 +17687,12 @@ define('form/mapper',[
                             // if field is a collection
                             if ($.isArray(value) && this.templates.hasOwnProperty(key)) {
                                 collection = this.templates[key].collection;
-                                collection.$child = this.templates[key].tpl;
+                                collection.key = key;
 
                                 // if first element of collection, clear collection
                                 if (!this.collectionsSet.hasOwnProperty(collection.id)) {
                                     collection.$element.children().each(function(key, value) {
-                                        that.remove.call(this, $(value));
+                                        $(value).remove();
                                     }.bind(this));
                                 }
                                 this.collectionsSet[collection.id] = true;
@@ -17582,6 +17700,9 @@ define('form/mapper',[
                                 that.setCollectionData.call(this, value, collection).then(function() {
                                     resolve();
                                 });
+                            } else if (form.elementGroups.hasOwnProperty(key)) {
+                                form.elementGroups[key].setValue(value);
+                                resolve();
                             } else {
                                 // search field with mapper property
                                 selector = '*[data-mapper-property="' + key + '"]';
@@ -17613,8 +17734,46 @@ define('form/mapper',[
                     }
 
                     return dfd.promise();
-                }
+                },
 
+                addDataFromElement: function(element, data, returnMapperId) {
+                    var $element = element.$el,
+                        property = $element.data('mapper-property'),
+                        parts;
+
+                    if (!property) {
+                        return;
+                    }
+
+                    if ($.isArray(property)) {
+                        $.each(property, function(i, prop) {
+                            data[prop.data] = that.processData.call(this, $element, prop, returnMapperId);
+                        }.bind(this));
+                    } else if (property.match(/.*\..*/)) {
+                        parts = property.split('.');
+                        data[parts[0]] = {};
+                        data[parts[0]][parts[1]] = that.processData.call(this, $element);
+                    } else {
+                        // process it
+                        data[property] = that.processData.call(this, $element);
+                    }
+                },
+
+                getDataFromElements: function(elements, elementGroups, returnMapperId) {
+                    var data = {};
+
+                    elements.forEach(function(element) {
+                        that.addDataFromElement.call(this, element, data, returnMapperId);
+                    }.bind(this));
+
+                    for (var key in elementGroups) {
+                        if (elementGroups.hasOwnProperty(key)) {
+                            data[key] = elementGroups[key].getValue();
+                        }
+                    }
+
+                    return data;
+                }
             },
 
         // define mapper interface
@@ -17628,11 +17787,20 @@ define('form/mapper',[
 
                 /**
                  * extracts data from $element or default form element
-                 *  @param {Object} [$el=undefined] element to select data from
-                 *  @param {Boolean} [returnMapperId=false] returnMapperId
+                 * @param {Object} [$el=undefined] element to select data from
+                 * @param {Boolean} [returnMapperId=false] returnMapperId
                  */
                 getData: function($el, returnMapperId) {
-                    return that.getData.call(this, $el, returnMapperId);
+                    if (!!$el && !!$el.data('mapper-id')) {
+                        var collection = that.getElementByMapperId.call(this, $el.data('mapper-id')).data('collection');
+                        return that.getDataFromElements(
+                            collection.childElements,
+                            collection.childElementGroups,
+                            returnMapperId
+                        );
+                    } else {
+                        return that.getDataFromElements(form.elements, form.elementGroups, returnMapperId);
+                    }
                 },
 
                 addCollectionFilter: function(name, callback) {
@@ -17658,19 +17826,18 @@ define('form/mapper',[
                         dfd = $.Deferred();
 
                     // check if element exists and put it after last
-                    if (!append && (lastElement = element.find('*[data-mapper-property-tpl="' + template.tpl.id + '"]').last()).length > 0) {
-                        element = lastElement;
+                    if (!append) {
                         insertAfterLast = true;
                     }
                     // check if empty template is set and lookup in dom
                     if (template.emptyTemplate) {
-                        $emptyTpl = $(element).find('#'+template.emptyTemplate);
+                        $emptyTpl = $(element).find('#' + template.emptyTemplate);
                         if ($emptyTpl) {
                             $emptyTpl.remove();
                         }
                     }
 
-                    that.appendChildren.call(this, element, template.tpl, data, data, insertAfterLast).then(function($element) {
+                    that.appendChildren.call(this, template.collection, template.tpl, data, data, insertAfterLast).then(function($element) {
                         dfd.resolve($element);
                     }.bind(this));
 
@@ -17696,7 +17863,7 @@ define('form/mapper',[
                         templateName = that.deleteElementByMapperId.call(this, mapperId);
 
                     // check if collection still has elements with propertyName, else render empty Template
-                    if (form.$el.find('*[data-mapper-property-tpl='+templateName+']').length < 1) {
+                    if (form.$el.find('*[data-mapper-property-tpl=' + templateName + ']').length < 1) {
                         // get collection with is owner of templateName
                         for (i in this.templates) {
                             // if emptyTemplates is set
@@ -17732,6 +17899,7 @@ require.config({
         'form/mapper': 'js/mapper',
         'form/validation': 'js/validation',
         'form/element': 'js/element',
+        'form/elementGroup': 'js/elementGroup',
         'form/util': 'js/util',
 
         'type/default': 'js/types/default',
@@ -17762,10 +17930,11 @@ require.config({
 
 define('form',[
     'form/element',
+    'form/elementGroup',
     'form/validation',
     'form/mapper',
     'form/util'
-], function(Element, Validation, Mapper, Util) {
+], function(Element, ElementGroup, Validation, Mapper, Util) {
 
     'use strict';
 
@@ -17805,8 +17974,6 @@ define('form',[
                     }
 
                     this.$el.data('form-object', this);
-                    Util.debug('Form', this);
-                    Util.debug('Elements', this.elements);
                 },
 
                 // initialize field objects
@@ -17822,8 +17989,10 @@ define('form',[
 
                     $.each(Util.getFields($el || this.$el), function(key, value) {
                         requireCounter++;
-                        that.addField.call(this, value, false).initialized.then(resolve.bind(this));
+                        that.addField.call(this, value).initialized.then(resolve.bind(this));
                     }.bind(this));
+
+                    that.addGroupedFields.call(this, $el);
 
                     return dfd.promise();
                 },
@@ -17837,22 +18006,74 @@ define('form',[
                     }
                 },
 
-                addField: function(selector) {
+                createField: function(selector) {
                     var $element = $(selector),
-                        options = Util.parseData($element, '', this.options),
-                        element = new Element($element, this, options);
+                        options = Util.parseData($element, '', this.options);
+
+                    return new Element($element, result, options);
+                },
+
+                createFieldGroup: function(selectors, single) {
+                    return new ElementGroup(
+                        selectors.map(function(selector) {
+                            var $element = $(selector),
+                                options = Util.parseData($element, '', this.options);
+
+                            return new Element($element, result, options);
+                        }.bind(this)),
+                        single
+                    );
+                },
+
+                addField: function(selector) {
+                    var element = this.createField(selector);
 
                     this.elements.push(element);
                     Util.debug('Element created', options);
+
                     return element;
+                },
+
+                addSingleGroupedField: function(key, selectors, single) {
+                    this.elementGroups[key] = this.createFieldGroup(selectors, single);
+                },
+
+                addGroupedFields: function($el) {
+                    $.each(Util.getCheckboxes($el || this.$el), function(key, value) {
+                        if (value.length > 1) {
+                            that.addSingleGroupedField.call(this, key, value, false);
+                        } else {
+                            // backwards compatibility: single checkbox are handled as boolean values
+                            that.addField.call(this, value);
+                        }
+                    }.bind(this));
+
+                    $.each(Util.getRadios($el || this.$el), function(key, value) {
+                        that.addSingleGroupedField.call(this, key, value, true);
+                    }.bind(this));
                 }
             },
 
             result = {
                 elements: [],
+                elementGroups: {},
                 options: {},
                 validation: false,
                 mapper: false,
+
+                createField: function(selector) {
+                    var element = that.createField(selector);
+
+                    element.initialized.then(function() {
+                        element.fieldAdded(element);
+                    }.bind(this));
+
+                    return element;
+                },
+
+                createFieldGroup: function(selectors, single) {
+                    return that.createFieldGroup(selectors, single);
+                },
 
                 addField: function(selector) {
                     var element = that.addField.call(this, selector);
@@ -17866,6 +18087,10 @@ define('form',[
                     }.bind(this));
 
                     return element;
+                },
+
+                addGroupedFields: function($el) {
+                    return that.addGroupedFields.call(this, $el);
                 },
 
                 initFields: function($el) {
@@ -27143,6 +27368,108 @@ define('type/husky-select',[
 });
 
 /*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+define('services/husky/url-validator',[],function() {
+
+    'use strict';
+
+    var constants = {
+            regex: "(?:\\S+(?::\\S*)?@)?(?:(?!10(?:\\.\\d{1,3}){3})(?!127(?:\\.\\d{1,3}){3})(?!169\\.254(?:\\.\\d{1,3}){2})(?!192\\.168(?:\\.\\d{1,3}){2})(?!172\\.(?:1[6-9]|2\\d|3[0-1])(?:\\.\\d{1,3}){2})(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00A1-\\uFFFF0-9]+-?)*[a-z\\u00A1-\\uFFFF0-9]+)(?:\\.(?:[a-z\\u00A1-\\uFFFF0-9]+-?)*[a-z\\u00A1-\\uFFFF0-9]+)*(?:\\.(?:[a-z\\u00A1-\\uFFFF]{2,})))(?::\\d{2,5})?(?:\/[^\\s]*)?",
+            regexOptions: 'im',
+            defaultProtocols: ['http://', 'https://', 'ftp://', 'ftps://'],
+            specificPartKey: 3,
+            schemeKey: 1,
+            urlKey: 0
+        },
+
+        getRegexp = function(schemes) {
+            var schemeNames = _.map(schemes, function(scheme) {
+                    return scheme.replace('://', '');
+                }),
+                hasSameScheme = schemes.indexOf('//') > -1,
+                schemeRegex = [
+                    (hasSameScheme ? '((' : '('),
+                    schemeNames.join('|'),
+                    (hasSameScheme ? '):)?' : '):'),
+                    '\\/{2}'
+                ].join(''),
+                regexParts = [];
+
+            regexParts.push('^(');
+            if (schemes.length > 0) {
+                regexParts.push(schemeRegex);
+                regexParts.push(')(');
+            }
+            regexParts.push(constants.regex);
+            regexParts.push(')$');
+
+            return new RegExp(regexParts.join(''), constants.regexOptions);
+        };
+
+    function Validator() {
+    }
+
+    /**
+     * Returns default schemes.
+     *
+     * @returns {Array}
+     */
+    Validator.prototype.getDefaultSchemes = function() {
+        return constants.defaultProtocols;
+    };
+
+    /**
+     * Tests given URL against internal regex.
+     *
+     * @param {String} url
+     * @param {Array} schemes if NULL default schemes will be used
+     *
+     * @returns {Boolean}
+     */
+    Validator.prototype.test = function(url, schemes) {
+        if (!schemes) {
+            schemes = this.getDefaultSchemes();
+        }
+
+        return getRegexp(schemes).test(url);
+    };
+
+    /**
+     * Returns parts of URL.
+     *
+     * @param {String} url
+     * @param {Array} schemes if NULL default schemes will be used
+     *
+     * @returns {{url, scheme, specificPart}}
+     */
+    Validator.prototype.match = function(url, schemes) {
+        if (!schemes) {
+            schemes = this.getDefaultSchemes();
+        }
+
+        var match = url.match(getRegexp(schemes));
+
+        if (!match) {
+            return match;
+        }
+
+        return {
+            scheme: match[constants.schemeKey],
+            specificPart: match[constants.specificPartKey]
+        };
+    };
+
+    return new Validator();
+});
+
+/*
  * This file is part of the Husky Validation.
  *
  * (c) MASSIVE ART WebServices GmbH
@@ -27153,8 +27480,9 @@ define('type/husky-select',[
  */
 
 define('type/husky-input',[
-    'type/default'
-], function(Default) {
+    'type/default',
+    'services/husky/url-validator'
+], function(Default, urlValidator) {
 
     'use strict';
 
@@ -27181,8 +27509,7 @@ define('type/husky-input',[
                     return regex.test(value);
                 },
                 url: function(value) {
-                    var regex = /^([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-\?\$\#])*\/?/;
-                    return regex.test(value);
+                    return urlValidator.test(value, []);
                 },
                 time: function(value) {
                     return Globalize.parseDate(value, this.options.timeFormat) !== null;
@@ -27272,108 +27599,6 @@ define('type/husky-input',[
 
         return new Default($el, defaults, options, 'husky-input', typeInterface);
     };
-});
-
-/*
- * This file is part of the Sulu CMS.
- *
- * (c) MASSIVE ART WebServices GmbH
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- */
-
-define('services/husky/url-validator',[],function() {
-
-    'use strict';
-
-    var constants = {
-            regex: "(([0-9a-z_-]+\\.)+(aero|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cu|cv|cx|cy|cz|cz|de|dj|dk|dm|do|dz|ec|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mn|mn|mo|mp|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|nom|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ra|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sj|sk|sl|sm|sn|so|sr|st|su|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw|arpa|lo)(:[0-9]+)?((\\/([~0-9a-zA-Z\\#\\+\\%@\\.\\/_:-]+))?(\\?[0-9a-zA-Z\\+\\%@\\/&\\[\\];=_:-]+)?)?)",
-            regexOptions: 'im',
-            defaultProtocols: ['http://', 'https://', 'ftp://', 'ftps://'],
-            specificPartKey: 4,
-            schemeKey: 1,
-            urlKey: 0
-        },
-
-        getRegexp = function(schemes) {
-            var schemeNames = _.map(schemes, function(scheme) {
-                    return scheme.replace('://', '');
-                }),
-                hasSameScheme = schemes.indexOf('//') > -1,
-                schemeRegex = [
-                    (hasSameScheme ? '((' : '('),
-                    schemeNames.join('|'),
-                    (hasSameScheme ? '):)?' : '):'),
-                    '\\/{2}'
-                ].join('');
-
-            return new RegExp(
-                [
-                    '^(',
-                    schemeRegex,
-                    ')(',
-                    constants.regex,
-                    ')$'
-                ].join(''),
-                constants.regexOptions
-            );
-        };
-
-    function Validator() {
-    }
-
-    /**
-     * Returns default schemes.
-     *
-     * @returns {Array}
-     */
-    Validator.prototype.getDefaultSchemes = function() {
-        return constants.defaultProtocols;
-    };
-
-    /**
-     * Tests given URL against internal regex.
-     *
-     * @param {String} url
-     * @param {Array} schemes if NULL default schemes will be used
-     *
-     * @returns {Boolean}
-     */
-    Validator.prototype.test = function(url, schemes) {
-        if (!schemes) {
-            schemes = this.getDefaultSchemes();
-        }
-
-        return getRegexp(schemes).test(url);
-    };
-
-    /**
-     * Returns parts of URL.
-     *
-     * @param {String} url
-     * @param {Array} schemes if NULL default schemes will be used
-     *
-     * @returns {{url, scheme, specificPart}}
-     */
-    Validator.prototype.match = function(url, schemes) {
-        if (!schemes) {
-            schemes = this.getDefaultSchemes();
-        }
-
-        var match = url.match(getRegexp(schemes));
-
-        if (!match) {
-            return match;
-        }
-
-        return {
-            scheme: match[constants.schemeKey],
-            specificPart: match[constants.specificPartKey]
-        };
-    };
-
-    return new Validator();
 });
 
 /*
@@ -27731,6 +27956,23 @@ define('services/husky/util',[],function() {
         }
 
         return string.charAt(0).toUpperCase() + string.slice(1);
+    };
+
+    /**
+     * Returns human readable byte string.
+     *
+     * @param {int} bytes
+     * @returns {String}
+     */
+    Util.prototype.formatBytes = function(bytes){
+        if (bytes === 0) {
+            return '0 Byte';
+        }
+        var k = 1000,
+            sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+            i = Math.floor(Math.log(bytes) / Math.log(k));
+
+        return (bytes / Math.pow(k, i)).toFixed(2) + ' ' + sizes[i];
     };
 
     Util.getInstance = function() {
@@ -28999,8 +29241,11 @@ define('__component__$navigation@husky',[],function() {
                 $sectionDiv = this.sandbox.dom.createElement('<div class="section">');
                 $sectionList = this.sandbox.dom.createElement('<ul class="section-items">');
 
-                if (!!section.title) {
-                    this.sandbox.dom.append($sectionDiv, '<div class="section-headline"><span class="section-headline-title">' + this.sandbox.translate(section.title).toUpperCase() + '</span></div>');
+                var title;
+                if (!!section.title && !!(title = this.sandbox.translate(section.title))) {
+                    this.sandbox.dom.append($sectionDiv, '<div class="section-headline"><span class="section-headline-title">' + title.toUpperCase() + '</span></div>');
+                } else if (!!$elem && $elem.children().length > 0) {
+                    this.sandbox.dom.append($sectionDiv, '<hr class="section-headline-divider"/>');
                 }
 
                 this.sandbox.dom.append($sectionDiv, $sectionList);
@@ -30110,6 +30355,7 @@ define('__component__$column-options@husky',[],function() {
  * @param {String} [options.icons[].icon] the actual icon which sould be displayed
  * @param {String} [options.icons[].column] the id of the column in which the icon should be displayed
  * @param {String} [options.icons[].align] the align of the icon. 'left' org 'right'
+ * @param {String} [options.icons[].disableCallback] callback to determine if icon is displayed
  * @param {Function} [options.icons.callback] a callback to execute if the icon got clicked. Gets the id of the data-record as first argument
  * @param {Boolean} [options.hideChildrenAtBeginning] if true children get hidden, if all children are loaded at the beginning
  * @param {String|Number|Null} [options.openChildId] the id of the children to open all parents for. (only relevant in a child-list)
@@ -30189,7 +30435,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             editedErrorClass: 'server-validation-error',
             newRecordId: 'newrecord',
             gridIconClass: 'grid-icon',
-            gridBadgeClass: 'grid-badge',
+            gridBadgeClass: 'badge',
             gridImageClass: 'grid-image',
             childWrapperClass: 'child-wrapper',
             parentClass: 'children-toggler',
@@ -30244,7 +30490,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             childWrapper: '<div class="' + constants.childWrapperClass + '"></div>',
             toggleIcon: '<span class="' + constants.toggleIconClass + '"></span>',
             icon: [
-                '<span class="' + constants.gridIconClass + ' <%= align %>" data-icon-index="<%= index %>">',
+                '<span class="', constants.gridIconClass, ' <%= cssClass %> <%= align %>" data-icon-index="<%= index %>">',
                 '   <span class="fa-<%= icon %>"></span>',
                 '</span>'
             ].join(''),
@@ -30252,7 +30498,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 '<span class="' + constants.gridBadgeClass + ' <%= cssClass %>">',
                 '   <% if(!!icon) { %><span class="fa-<%= icon %>"></span><% } %>',
                 '   <% if(!!title) { %><%= title %><% } %>',
-                '</span>'
+                '</span> '
             ].join(''),
             checkbox: [
                 '<div class="custom-checkbox">',
@@ -30331,6 +30577,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         initialize: function(context, options) {
             // store context of the datagrid-component
             this.datagrid = context;
+            this.keys = {id: this.datagrid.options.idKey};
 
             // make sandbox available in this-context
             this.sandbox = this.datagrid.sandbox;
@@ -30655,7 +30902,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 $overrideElement = (!!this.table.rows[record.id]) ? this.table.rows[record.id].$el : null,
                 hasParent = this.hasParent(record);
 
-            record.id = (!!record.id) ? record.id : constants.newRecordId;
+            record.id = (!!record[this.keys.id]) ? record[this.keys.id] : constants.newRecordId;
             this.sandbox.dom.data($row, 'id', record.id);
 
             // render the parents before rendering the children
@@ -30835,7 +31082,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 content = this.sandbox.util.template(templates.img)({
                     alt: content[constants.thumbAltKey],
                     src: content[constants.thumbSrcKey],
-                    noImgIcon: this.options.noImgIcon
+                    noImgIcon: typeof this.options.noImgIcon === 'function' ?
+                        this.options.noImgIcon(record) : this.options.noImgIcon
                 });
             } else {
                 content = this.datagrid.processContentFilter(
@@ -30855,7 +31103,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             }
 
             if (!!this.icons) {
-                content = this.addIconsToCellContent(content, column, $cell);
+                content = this.addIconsToCellContent(content, column, $cell, record);
             }
 
             if (!!this.badges) {
@@ -30925,15 +31173,17 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param content {String|Object} html or a dom object. If its a string icons get added to the string, if its an object it gets appended
          * @param column {Object} the column data object
          * @param $cell {Object} the cell-dom-element
+         * @param record {Object} the record object
          * @returns content {String|Object} html or a dom object
          */
-        addIconsToCellContent: function(content, column, $cell) {
+        addIconsToCellContent: function(content, column, $cell, record) {
             var iconStr;
             this.sandbox.util.foreach(this.icons, function(icon, index) {
-                if (icon.column === column.attribute) {
+                if (icon.column === column.attribute && (!icon.disableCallback || icon.disableCallback(record))) {
                     iconStr = this.sandbox.util.template(templates.icon)({
                         icon: icon.icon,
                         align: icon.align,
+                        cssClass: icon.cssClass,
                         index: index
                     });
                     if (typeof content === 'object') {
@@ -32759,6 +33009,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
  * @param {Function} [options.clickCallback] callback for clicking an item - first parameter item id, second parameter the dataset of the clicked item
  * @param {Function} [options.actionCallback] action callback. E.g. executed on double-click in table-view - first parameter item id, second parameter the dataset of the clicked item
  * @param {Function} [options.idKey] the name of the id property
+ * @param {Function} [options.childrenKey] the name of the children property
  */
 (function() {
 
@@ -32789,6 +33040,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 sortable: true,
                 matchings: [],
                 url: null,
+                saveParams: {},
                 data: null,
                 instanceName: '',
                 searchInstanceName: null,
@@ -32807,7 +33059,8 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 viewSpacingBottom: 110,
                 clickCallback: null,
                 actionCallback: null,
-                idKey: 'id'
+                idKey: 'id',
+                childrenKey: 'children'
             },
 
             types = {
@@ -32817,6 +33070,8 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 TITLE: 'title',
                 BYTES: 'bytes',
                 RADIO: 'radio',
+                CHECKBOX: 'checkbox',
+                CHECKBOX_READONLY: 'checkbox_readonly',
                 COUNT: 'count',
                 TRANSLATION: 'translation',
                 NUMBER: 'number',
@@ -32841,13 +33096,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                  * @returns {string}
                  */
                 bytes: function(bytes) {
-                    if (bytes === 0) {
-                        return '0 Byte';
-                    }
-                    var k = 1000,
-                        sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
-                        i = Math.floor(Math.log(bytes) / Math.log(k));
-                    return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
+                    return this.sandbox.util.formatBytes(bytes);
                 },
 
                 title: function(content) {
@@ -32866,10 +33115,10 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                     }
                     return date;
                 },
-                
+
                 /**
                  * Brings a datetime into the right format
-                 * @param date {String} the date to parse
+                 * @param datetime {String} the date to parse
                  * @returns {String}
                  */
                 datetime: function(datetime) {
@@ -32944,8 +33193,29 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                  * checks for bool value and sets radio to true
                  */
                 radio: function(content, index, columnName) {
-                    var checked = (!content) ? false : true;
-                    return this.sandbox.util.template(templates.radio, {checked: checked, columnName: columnName});
+                    return this.sandbox.util.template(templates.radio, {checked: !!content, columnName: columnName});
+                },
+
+                /**
+                 * checks for bool value and renders a checkbox with value.
+                 */
+                checkbox: function(content, index, columnName) {
+                    return this.sandbox.util.template(templates.checkbox, {
+                        checked: !!content,
+                        columnName: columnName,
+                        readonly: false
+                    });
+                },
+
+                /**
+                 * checks for bool value and renders a readonly checkbox with value.
+                 */
+                checkbox_readonly: function(content, index, columnName) {
+                    return this.sandbox.util.template(templates.checkbox, {
+                        checked: !!content,
+                        columnName: columnName,
+                        readonly: true
+                    });
                 }
             },
 
@@ -32953,6 +33223,14 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 radio: [
                     '<div class="custom-radio custom-filter">',
                     '   <input name="radio-<%= columnName %>" type="radio" class="form-element" <% if (checked) { print("checked")} %>/>',
+                    '   <span class="icon"></span>',
+                    '</div>'
+                ].join(''),
+                checkbox: [
+                    '<div class="custom-checkbox custom-filter">',
+                    '   <input name="radio-<%= columnName %>" type="checkbox" class="form-element"',
+                    '       <% if (readonly) { %>readonly="readonly"<% } %>',
+                    '       <% if (checked) { %>checked<% } %>/>',
                     '   <span class="icon"></span>',
                     '</div>'
                 ].join(''),
@@ -33463,9 +33741,9 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                     this.sandbox.logger.log('load data from array');
                     this.data = {};
                     if (!!this.options.resultKey && !!this.options.data[this.options.resultKey]) {
-                        this.data.embedded = this.options.data[this.options.resultKey];
+                        this.data.embedded = this.parseEmbedded(this.options.data[this.options.resultKey]);
                     } else {
-                        this.data.embedded = this.options.data;
+                        this.data.embedded = this.parseEmbedded(this.options.data);
                     }
 
                     this.render();
@@ -33829,11 +34107,42 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
             parseData: function(data) {
                 this.data = {};
                 this.data.links = this.parseLinks(data._links);
-                this.data.embedded = data._embedded[this.options.resultKey];
+                this.data.embedded = this.parseEmbedded(data._embedded[this.options.resultKey]);
                 this.data.total = data.total;
                 this.data.page = data.page;
                 this.data.pages = data.pages;
                 this.data.limit = data.limit;
+            },
+
+            /**
+             * Parses data and returns normalized embedded items.
+             *
+             * @param {Array} data
+             * @param {Object} parent
+             */
+            parseEmbedded: function(data, parent) {
+                var embedded = [];
+                for (var i = 0, len = data.length; i < len; i++) {
+                    var children = [];
+                    if (!!parent) {
+                        data[i].parent = parent;
+                    }
+
+                    data[i].id = data[i][this.options.idKey];
+                    if (!data[i][this.options.childrenPropertyName]) {
+                        data[i][this.options.childrenPropertyName] = false;
+                    }
+
+                    if (data[i].hasOwnProperty(this.options.childrenKey)) {
+                        children = this.parseEmbedded(data[i][this.options.childrenKey], data[i].id);
+                        data[i][this.options.childrenPropertyName] = (children.length > 0);
+                    }
+
+                    embedded.push(data[i]);
+                    embedded = embedded.concat(children);
+                }
+
+                return embedded;
             },
 
             /**
@@ -34081,7 +34390,9 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
              * @returns {String} the manipulated content
              */
             manipulateContent: function(content, type, argument, columnName) {
-                if (filters.hasOwnProperty(type)) {
+                if (typeof type === 'function') {
+                    return type(content, argument, columnName);
+                } else if (filters.hasOwnProperty(type)) {
                     return filters[type].call(this, content, argument, columnName);
                 }
                 return content;
@@ -34297,7 +34608,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
              */
             addRecordHandler: function(recordData) {
                 if (!!this.gridViews[this.viewId].addRecord) {
-                    if (!!recordData.id) {
+                    if (!!recordData[this.options.idKey]) {
                         this.pushRecords([recordData]);
                     }
                     this.gridViews[this.viewId].addRecord(recordData, false);
@@ -34314,7 +34625,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
             addRecordsHandler: function(records, callback) {
                 if (!!this.gridViews[this.viewId].addRecord) {
                     this.sandbox.util.foreach(records, function(record) {
-                        if (!!record.id) {
+                        if (!!record[this.options.idKey]) {
                             this.pushRecords([record]);
                             this.gridViews[this.viewId].addRecord(record, false);
                         }
@@ -34625,7 +34936,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
              */
             updateRecord: function(record) {
                 for (var i = -1, length = this.data.embedded.length; ++i < length;) {
-                    if (record.id === this.data.embedded[i].id) {
+                    if (record[this.options.idKey] === this.data.embedded[i].id) {
                         this.data.embedded[i] = record;
                         return true;
                     }
@@ -34639,9 +34950,9 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
              * @returns {Boolean} returns true if changed successfully
              */
             changeRecord: function(record) {
-                if (!!record.id) {
+                if (!!record[this.options.idKey]) {
                     for (var i = -1, length = this.data.embedded.length; ++i < length;) {
-                        if (record.id === this.data.embedded[i].id) {
+                        if (record[this.options.idKey] === this.data.embedded[i].id) {
                             this.data.embedded[i] = this.sandbox.util.extend(true, {}, this.data.embedded[i], record);
                             return true;
                         }
@@ -34890,6 +35201,10 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                     url = url + '/' + data.id;
                 }
 
+                for (var key in this.options.saveParams) {
+                    url = setGetParameter.call(this, url, key, this.options.saveParams[key]);
+                }
+
                 this.sandbox.emit(DATA_CHANGED.call(this));
 
                 this.sandbox.util.save(url, method, data)
@@ -34910,7 +35225,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                         }
                     }.bind(this))
                     .fail(function(jqXHR, textStatus, error) {
-                        this.sandbox.emit(DATA_SAVE_FAILED.call(this), jqXHR, textStatus, error);
+                        this.sandbox.emit(DATA_SAVE_FAILED.call(this), jqXHR, textStatus, error, data);
 
                         if (typeof fail === 'function') {
                             fail(jqXHR, textStatus, error);
@@ -34944,7 +35259,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
  * husky.dropdown.<<instanceName>>.hide       - hide dropdown menu
  */
 
-define('__component__$dropdown@husky',[], function() {
+define('__component__$dropdown@husky',['underscore'], function(_) {
 
     'use strict';
 
@@ -34957,14 +35272,16 @@ define('__component__$dropdown@husky',[], function() {
             shadow: true,  // if box-shadow should be shown
             toggleClassOn: null, // container to set is-active class
             valueName: 'name', // name of text property
+            infoName: 'info', // name of info property (used to display hover info)
+            clickedName: 'clickedInfo', // name of info property (used to display clicked info)
             setParentDropDown: false, // set class dropdown for parent dom object
             excludeItems: [], // items to filter,
             instanceName: 'undefined',  // instance name
             alignment: 'left',  // alignment of the arrow and the box
             verticalAlignment: 'bottom', // alignment of the box
-            translateLabels: true   // translate labels withe globalize
+            translateLabels: true,   // translate labels withe globalize
+            clickDelay: 1000
         };
-
 
     return {
         initialize: function() {
@@ -35004,19 +35321,18 @@ define('__component__$dropdown@husky',[], function() {
                 this.sandbox.dom.addClass(this.sandbox.dom.parent(this.$element), 'dropdown');
             }
 
-            // check alginment
+            // check alignment
             if (this.options.alignment === 'right') {
                 this.sandbox.dom.addClass(this.$dropDown, 'dropdown-align-right');
             }
 
-            // check vertical alginment
+            // check vertical alignment
             if (this.options.verticalAlignment === 'top') {
                 this.sandbox.dom.addClass(this.$dropDown, 'dropdown-align-top');
             }
 
             // bind dom elements
             this.bindDOMEvents();
-
             this.bindCustomEvents();
 
             // load data
@@ -35036,17 +35352,19 @@ define('__component__$dropdown@husky',[], function() {
             // init drop-down
             if (this.options.trigger !== '') {
                 if (this.options.triggerOutside) {
+                    $(this.options.trigger).addClass('husky-dropdown-trigger');
                     this.sandbox.dom.on(this.options.trigger, 'click', this.triggerClick.bind(this));
                 } else {
+                    $(this.options.el).addClass('husky-dropdown-trigger');
                     this.sandbox.dom.on(this.options.el, 'click', this.triggerClick.bind(this), this.options.trigger);
                 }
             } else {
+                $(this.options.el).addClass('husky-dropdown-trigger');
                 this.sandbox.dom.on(this.options.el, 'click', this.triggerClick.bind(this));
             }
 
             // on click on list item
             this.sandbox.dom.on(this.$dropDownList, 'click', function(event) {
-                event.stopPropagation();
                 if (!this.sandbox.dom.hasClass(event.currentTarget, 'disabled')) {
                     this.clickItem(this.sandbox.dom.data(event.currentTarget, 'id'));
                 }
@@ -35075,36 +35393,65 @@ define('__component__$dropdown@husky',[], function() {
         },
 
         itemEnable: function(id) {
-            this.sandbox.dom.removeClass(this.$find('li[data-id="'+ id +'"]'), 'disabled');
+            this.sandbox.dom.removeClass(this.$find('li[data-id="' + id + '"]'), 'disabled');
         },
 
         itemDisable: function(id) {
-            this.sandbox.dom.addClass(this.$find('li[data-id="'+ id +'"]'), 'disabled');
+            this.sandbox.dom.addClass(this.$find('li[data-id="' + id + '"]'), 'disabled');
         },
 
         // trigger event with clicked item
         clickItem: function(id) {
-            this.sandbox.util.foreach(this.options.data, function(item) {
+            var item = this.getItemById(id),
+                $item = this.$el.find('*[data-id="' + id + '"]'),
+                $infos;
+
+            if (!item) {
+                return;
+            }
+
+            if (!!item.callback && typeof item.callback === 'function') {
+                item.callback.call(this);
+            } else if (!!this.options.clickCallback && typeof this.options.clickCallback === 'function') {
+                this.options.clickCallback(item, this.$el);
+            } else {
+                this.sandbox.emit(this.getEvent('item.click'), item, this.$el);
+            }
+
+            if (!item[this.options.clickedName]) {
+                return this.hideDropDown();
+            }
+
+            $infos = $item.find('.info, .info-clicked');
+            $item.addClass('highlight-animation');
+            $infos.addClass('clicked');
+
+            _.delay(function() {
+                $item.removeClass('highlight-animation');
+                $infos.removeClass('clicked');
+
+                return this.hideDropDown();
+            }.bind(this), this.options.clickDelay);
+        },
+
+        getItemById: function(id) {
+            for (var i = 0, length = this.options.data.length, item; i < length; ++i) {
+                item = this.options.data[i];
                 if (typeof item.id !== 'undefined' && item.id.toString() === id.toString()) {
-                    this.sandbox.logger.log(this.name, 'item.click: ' + id, 'success');
-
-                    if (!!item.callback && typeof item.callback === 'function') {
-                        item.callback.call(this);
-                    } else if (!!this.options.clickCallback && typeof this.options.clickCallback === 'function') {
-                        this.options.clickCallback(item, this.$el);
-                    } else {
-                        this.sandbox.emit(this.getEvent('item.click'), item, this.$el);
-                    }
-
-                    return false;
+                    return item;
                 }
-            }.bind(this));
-            this.hideDropDown();
+            }
         },
 
         // trigger click event handler toggles the dropDown
         triggerClick: function(event) {
-            event.stopPropagation();
+            var $target = $(event.target);
+            if ($target.hasClass('husky-dropdown-item')
+                || $target.parents().hasClass('husky-dropdown-item')
+            ) {
+                return;
+            }
+
             this.toggleDropDown();
         },
 
@@ -35116,6 +35463,7 @@ define('__component__$dropdown@husky',[], function() {
                 this.loadData();
             }
         },
+
         // load data with ajax
         loadData: function() {
             var url = this.getUrl();
@@ -35154,11 +35502,26 @@ define('__component__$dropdown@husky',[], function() {
                 items.forEach(function(item) {
                     if (item.divider !== true) {
                         if (this.isVisible(item)) {
-                            var label = item[this.options.valueName];
+                            var label = item[this.options.valueName],
+                                info = item[this.options.infoName],
+                                clicked = item[this.options.clickedName],
+                                template;
                             if (this.options.translateLabels) {
                                 label = this.sandbox.translate(label);
+                                info = this.sandbox.translate(info);
+                                clicked = this.sandbox.translate(clicked);
                             }
-                            this.sandbox.dom.append(this.$dropDownList, '<li data-id="' + item.id + '">' + label + '</li>');
+
+                            label = this.sandbox.util.cropMiddle(label, 35);
+                            template = [
+                                '<li class="husky-dropdown-item" data-id="', item.id, '">',
+                                '<span class="label">', label, '</span>',
+                                (info !== undefined ? ('<span class="info">' + info + '</span>') : ''),
+                                (clicked !== undefined ? ('<span class="info-clicked">' + clicked + '</span>') : ''),
+                                '</li>'
+                            ].join('');
+
+                            this.sandbox.dom.append(this.$dropDownList, template);
                         }
                     } else {
                         this.sandbox.dom.append(this.$dropDownList, '<li class="divider"/>');
@@ -35167,6 +35530,8 @@ define('__component__$dropdown@husky',[], function() {
             } else {
                 this.sandbox.dom.append(this.$dropDownList, '<li>No data received</li>');
             }
+
+            this.sandbox.emit(this.getEvent('rendered'));
         },
 
         // is item visible (filter)
@@ -35177,6 +35542,7 @@ define('__component__$dropdown@husky',[], function() {
                     result = false;
                 }
             }.bind(this));
+
             return result;
         },
 
@@ -35215,7 +35581,21 @@ define('__component__$dropdown@husky',[], function() {
         },
 
         // hide dropDown
-        hideDropDown: function() {
+        hideDropDown: function(event) {
+            // do not hide if the target is children of trigger but not children of item or the element was highlighted
+            // reapply the hide listener
+            if (!!event) {
+                var $target = $(event.target);
+
+                if ($target.is('.husky-dropdown-trigger:not(.husky-dropdown-item), .highlight-animation')
+                    || $target.parents().is('.husky-dropdown-trigger:not(.husky-dropdown-item), .highlight-animation')
+                ) {
+                    this.sandbox.dom.one(this.sandbox.dom.window, 'click', this.hideDropDown.bind(this));
+
+                    return;
+                }
+            }
+
             this.sandbox.logger.log(this.name, 'hide dropdown');
             // remove global click event
             this.sandbox.dom.off(this.sandbox.dom.window, 'click', this.hideDropDown.bind(this));
@@ -35247,107 +35627,108 @@ define('__component__$matrix@husky',[],function() {
 
     'use strict';
 
-    var sandbox,
-        activeClass = 'is-active';
+    var activeClass = 'is-active';
 
     return {
         initialize: function() {
-            sandbox = this.sandbox;
-
-            this.$element = sandbox.dom.createElement('<div class="husky-matrix"/>');
+            this.$element = this.sandbox.dom.createElement('<div class="husky-matrix"/>');
 
             this.prepare();
 
-            sandbox.dom.append(this.$el, this.$element);
+            this.sandbox.dom.append(this.$el, this.$element);
 
             this.bindDOMEvents();
             this.bindCustomEvents();
         },
 
         bindDOMEvents: function() {
-            sandbox.dom.on(this.$element, 'click', this.toggleIcon.bind(this), 'tbody > tr > td:has(span[class^="fa-"])');
-            sandbox.dom.on(this.$element, 'click', this.setRowActive.bind(this), 'tbody > tr > td:last-child');
+            this.sandbox.dom.on(
+                this.$element,
+                'click',
+                this.toggleIcon.bind(this),
+                'tbody > tr > td.value > span[class^="fa-"]'
+            );
+            this.sandbox.dom.on(this.$element, 'click', this.toggleRow.bind(this), 'tbody > tr > td:last-child');
         },
 
         bindCustomEvents: function() {
-            sandbox.on('husky.matrix.set-all', this.setAllActive.bind(this));
-            sandbox.on('husky.matrix.unset-all', this.unsetAllActive.bind(this));
+            this.sandbox.on('husky.matrix.set-all', this.setAllActive.bind(this));
+            this.sandbox.on('husky.matrix.unset-all', this.unsetAllActive.bind(this));
         },
 
         toggleIcon: function(event) {
             var $target = event.currentTarget,
-                $tr = sandbox.dom.parent($target),
-                $allTargets = sandbox.dom.find('span[class^="fa-"]', $tr),
+                $tr = this.sandbox.dom.parent($target),
+                $allTargets = this.sandbox.dom.find('span[class^="fa-"]', $tr),
                 $activeTargets,
-                $link = sandbox.dom.find('td:last-child span', $tr);
+                $link = this.sandbox.dom.find('td:last-child span', $tr);
 
-            $target = sandbox.dom.find('span[class^="fa-"]', $target);
-            sandbox.dom.toggleClass($target, activeClass);
+            this.sandbox.dom.toggleClass($target, activeClass);
 
-            $activeTargets = sandbox.dom.find('span[class^="fa-"].' + activeClass, $tr);
+            $activeTargets = this.sandbox.dom.find('span[class^="fa-"].' + activeClass, $tr);
             if ($activeTargets.length < $allTargets.length) {
-                sandbox.dom.html($link, this.options.captions.all);
+                this.sandbox.dom.html($link, this.options.captions.all);
             } else {
-                sandbox.dom.html($link, this.options.captions.none);
+                this.sandbox.dom.html($link, this.options.captions.none);
             }
 
             // emit events for communication with the outside
-            sandbox.emit('husky.matrix.changed', {
-                section: sandbox.dom.data($target, 'section'),
-                value: sandbox.dom.data($target, 'value'),
-                activated: sandbox.dom.hasClass($target, activeClass)
+            this.sandbox.emit('husky.matrix.changed', {
+                section: this.sandbox.dom.data($target, 'section'),
+                value: this.sandbox.dom.data($target, 'value'),
+                activated: this.sandbox.dom.hasClass($target, activeClass)
             });
         },
 
-        setRowActive: function(event) {
-            var $tr = sandbox.dom.parent(event.currentTarget),
-                $targets = sandbox.dom.find('span[class^="fa-"]', $tr),
-                $activeTargets = sandbox.dom.find('span[class^="fa-"].' + activeClass, $tr),
-                $link = sandbox.dom.find('td:last-child span', $tr), activated;
+        toggleRow: function(event) {
+            var $tr = this.sandbox.dom.parent(event.currentTarget),
+                $targets = this.sandbox.dom.find('span[class^="fa-"]', $tr),
+                $activeTargets = this.sandbox.dom.find('span[class^="fa-"].' + activeClass, $tr),
+                $link = this.sandbox.dom.find('td:last-child span', $tr), activated;
 
             if ($activeTargets.length < $targets.length) {
-                sandbox.dom.addClass($targets, activeClass);
-                sandbox.dom.html($link, this.options.captions.none);
+                this.sandbox.dom.addClass($targets, activeClass);
+                this.sandbox.dom.html($link, this.options.captions.none);
                 activated = true;
             } else {
-                sandbox.dom.removeClass($targets, activeClass);
-                sandbox.dom.html($link, this.options.captions.all);
+                this.sandbox.dom.removeClass($targets, activeClass);
+                this.sandbox.dom.html($link, this.options.captions.all);
                 activated = false;
             }
 
             // emit events for communication with the outside
-            sandbox.emit('husky.matrix.changed', {
-                section: sandbox.dom.data($targets, 'section'),
-                value: this.options.values.horizontal,
+            this.sandbox.emit('husky.matrix.changed', {
+                section: this.sandbox.dom.data($targets, 'section'),
+                value: this.options.values.horizontal[$tr.data('row-count')],
                 activated: activated
             });
         },
 
         setAllActive: function() {
-            var $targets = sandbox.dom.find('span[class^="fa-"]', this.$element),
-                $trs = sandbox.dom.find('tbody > tr', this.$element);
-            sandbox.dom.addClass($targets, activeClass);
+            var $targets = this.sandbox.dom.find('span[class^="fa-"]', this.$element),
+                $trs = this.sandbox.dom.find('tbody > tr', this.$element);
+            this.sandbox.dom.addClass($targets, activeClass);
 
-            // emit events for communication with the outsite
-            sandbox.dom.each($trs, function(key, $tr) {
-                sandbox.emit('husky.matrix.changed', {
-                    section: sandbox.dom.data(sandbox.dom.find('td.section', $tr), 'section'),
-                    value: this.options.values.horizontal,
+            // emit events for communication with the outside
+            this.sandbox.dom.each($trs, function(key, tr) {
+                this.sandbox.emit('husky.matrix.changed', {
+                    section: this.sandbox.dom.data(this.sandbox.dom.find('td.section', tr), 'section'),
+                    value: this.options.values.horizontal[$(tr).data('row-count')],
                     activated: true
                 });
             }.bind(this));
         },
 
         unsetAllActive: function() {
-            var $targets = sandbox.dom.find('span[class^="fa-"]', this.$element),
-                $trs = sandbox.dom.find('tbody > tr', this.$element);
-            sandbox.dom.removeClass($targets, activeClass);
+            var $targets = this.sandbox.dom.find('span[class^="fa-"]', this.$element),
+                $trs = this.sandbox.dom.find('tbody > tr', this.$element);
+            this.sandbox.dom.removeClass($targets, activeClass);
 
             // emit events for communication with the outsite
-            sandbox.dom.each($trs, function(key, $tr) {
-                sandbox.emit('husky.matrix.changed', {
-                    section: sandbox.dom.data(sandbox.dom.find('td.section', $tr), 'section'),
-                    value: this.options.values.horizontal,
+            this.sandbox.dom.each($trs, function(key, tr) {
+                this.sandbox.emit('husky.matrix.changed', {
+                    section: this.sandbox.dom.data(this.sandbox.dom.find('td.section', tr), 'section'),
+                    value: this.options.values.horizontal[$(tr).data('row-count')],
                     activated: false
                 });
             }.bind(this));
@@ -35360,118 +35741,140 @@ define('__component__$matrix@husky',[],function() {
         prepareTable: function() {
             var $table;
 
-            $table = sandbox.dom.createElement('<table class="table matrix"/>');
-            sandbox.dom.append($table, this.prepareTableHead());
+            $table = this.sandbox.dom.createElement('<table class="table matrix"/>');
+            this.sandbox.dom.append($table, this.prepareTableHead());
 
             if (!!this.options.captions.vertical) {
-                sandbox.dom.append($table, this.prepareTableBody());
+                this.sandbox.dom.append($table, this.prepareTableBody());
             }
 
             return $table;
         },
 
         prepareTableHead: function() {
-            var $thead = sandbox.dom.createElement('<thead/>'),
-                $tr = sandbox.dom.createElement('<tr/>'),
-                $thSection = sandbox.dom.createElement('<th class="section"/>'),
+            var $thead = this.sandbox.dom.createElement('<thead/>'),
+                $tr = this.sandbox.dom.createElement('<tr/>'),
+                $thSection = this.sandbox.dom.createElement('<th class="section"/>'),
                 $thGeneral, $th;
 
             if (!!this.options.captions.general) {
-                $thGeneral = sandbox.dom.createElement('<th class="general"/>');
-                sandbox.dom.html($thGeneral, this.options.captions.general);
-                sandbox.dom.append($tr, $thGeneral);
+                $thGeneral = this.sandbox.dom.createElement('<th class="general"/>');
+                this.sandbox.dom.html($thGeneral, this.options.captions.general);
+                this.sandbox.dom.append($tr, $thGeneral);
             }
 
-            sandbox.dom.html($thSection, this.options.captions.type);
+            this.sandbox.dom.html($thSection, this.options.captions.type);
 
-            sandbox.dom.append($tr, $thSection);
+            this.sandbox.dom.append($tr, $thSection);
 
             if (typeof(this.options.captions.horizontal) === 'string') {
                 // insert a header for all values, if the horizontal caption is a string
-                $th = sandbox.dom.createElement('<th/>', {colspan: this.options.values.horizontal.length});
-                sandbox.dom.html($th, this.options.captions.horizontal);
-                sandbox.dom.append($tr, $th);
+                $th = this.sandbox.dom.createElement('<th/>');
+                this.sandbox.dom.html($th, this.options.captions.horizontal);
+                this.sandbox.dom.append($tr, $th);
             } else {
                 // insert the corresponding headers, if the horizontal caption is an array
                 this.options.captions.horizontal.forEach(function(caption) {
-                    var $th = sandbox.dom.createElement('<th/>');
-                    sandbox.dom.html($th, caption);
-                    sandbox.dom.append($tr, $th);
-                });
+                    var $th = this.sandbox.dom.createElement('<th/>');
+                    this.sandbox.dom.html($th, caption);
+                    this.sandbox.dom.append($tr, $th);
+                }.bind(this));
             }
 
             // add empty th for all link
-            sandbox.dom.append($tr, sandbox.dom.createElement('<th/>'));
+            this.sandbox.dom.append($tr, this.sandbox.dom.createElement('<th/>'));
 
-            sandbox.dom.append($thead, $tr);
+            this.sandbox.dom.append($thead, $tr);
 
             return $thead;
         },
 
         prepareTableBody: function() {
-            var $tbody = sandbox.dom.createElement('<tbody/>'), allActive,
-                i, j, $tr, $tdHead, $tdAll, $tdValue, $span, title;
+            var $tbody = this.sandbox.dom.createElement('<tbody/>'),
+                rowCount;
 
-            for (i = 0; i < this.options.captions.vertical.length; i++) {
-                $tr = sandbox.dom.createElement('<tr/>');
-                $tdHead = sandbox.dom.createElement('<td class="section"/>');
-                $tdAll = sandbox.dom.createElement('<td class="all"/>');
-
-                // insert empty line, if there is a general caption
-                if (!!this.options.captions.general) {
-                    sandbox.dom.append($tr, sandbox.dom.createElement('<td/>'));
-                }
-
-                // insert vertical headlines as first element
-                sandbox.dom.html($tdHead, this.options.captions.vertical[i]);
-                sandbox.dom.data($tdHead, 'section', this.options.values.vertical[i]);
-                sandbox.dom.append($tr, $tdHead);
-
-                // flag for checking if every flag is true
-                allActive = true;
-
-                // insert values of matrix
-                for (j = 0; j < this.options.values.horizontal.length; j++) {
-                    $tdValue = sandbox.dom.createElement('<td class="value"/>');
-
-                    if (this.options.values.titles) {
-                        title = 'title="' + this.options.values.titles[j] + '"';
-                    } else {
-                        title = '';
-                    }
-                    $span = sandbox.dom.createElement(
-                        '<span ' + title + ' class="fa-' + this.options.values.horizontal[j].icon + ' matrix-icon pointer"/>'
-                    );
-                    sandbox.dom.data($span, 'value', this.options.values.horizontal[j].value);
-                    sandbox.dom.data($span, 'section', this.options.values.vertical[i]);
-
-                    // set activated if set in delivered data
-                    if (!!this.options.data[i][j]) {
-                        sandbox.dom.addClass($span, activeClass);
-                    } else {
-                        // set the flag to false if there is one
-                        allActive = false;
-                    }
-
-                    sandbox.dom.append($tdValue, $span);
-                    sandbox.dom.append($tr, $tdValue);
-                }
-
-                //add all link
-                sandbox.dom.html(
-                    $tdAll,
-                    [
-                        '<span class="pointer">',
-                        (!!allActive) ? this.options.captions.none : this.options.captions.all,
-                        '</span>'
-                    ].join('')
-                );
-                sandbox.dom.append($tr, $tdAll);
-
-                sandbox.dom.append($tbody, $tr);
+            for (rowCount = 0; rowCount < this.options.captions.vertical.length; rowCount++) {
+                this.prepareTableRow($tbody, rowCount);
             }
 
             return $tbody;
+        },
+
+        prepareTableRow: function($tbody, rowCount) {
+            var $tr = this.sandbox.dom.createElement('<tr/>'),
+                $tdHead = this.sandbox.dom.createElement('<td class="section"/>'),
+                $tdValue = this.sandbox.dom.createElement('<td class="value"/>'),
+                $tdAll = this.sandbox.dom.createElement('<td class="all"/>'),
+                allActive;
+
+            $tr.data('row-count', rowCount);
+
+            // insert empty line, if there is a general caption
+            if (!!this.options.captions.general) {
+                this.sandbox.dom.append($tr, this.sandbox.dom.createElement('<td/>'));
+            }
+
+            // insert vertical headlines as first element
+            this.sandbox.dom.html($tdHead, this.options.captions.vertical[rowCount]);
+            this.sandbox.dom.data($tdHead, 'section', this.options.values.vertical[rowCount]);
+            this.sandbox.dom.append($tr, $tdHead);
+
+            // flag for checking if every flag is true
+            // insert values of matrix
+            allActive = this.prepareTableColumn(
+                $tdValue,
+                this.options.values.horizontal[rowCount],
+                this.options.values.vertical[rowCount],
+                this.options.data[rowCount]
+            );
+
+            this.sandbox.dom.append($tr, $tdValue);
+
+            //add all link
+            this.sandbox.dom.html(
+                $tdAll,
+                [
+                    '<span class="pointer">',
+                    (!!allActive) ? this.options.captions.none : this.options.captions.all,
+                    '</span>'
+                ].join('')
+            );
+            this.sandbox.dom.append($tr, $tdAll);
+
+            this.sandbox.dom.append($tbody, $tr);
+        },
+
+        prepareTableColumn: function($tdValue, columnData, section, value) {
+            var allActive = true,
+                title,
+                $span,
+                i;
+
+            for (i = 0; i < columnData.length; i++) {
+                if (columnData[i].title) {
+                    title = 'title="' + columnData[i].title + '"';
+                } else {
+                    title = '';
+                }
+                $span = this.sandbox.dom.createElement(
+                    '<span ' + title +
+                    ' class="fa-' + columnData[i].icon + ' matrix-icon pointer"/>'
+                );
+                this.sandbox.dom.data($span, 'value', columnData[i].value);
+                this.sandbox.dom.data($span, 'section', section);
+
+                // set activated if set in delivered data
+                if (!!value && !!value[i]) {
+                    this.sandbox.dom.addClass($span, activeClass);
+                } else {
+                    // set the flag to false if there is one
+                    allActive = false;
+                }
+
+                this.sandbox.dom.append($tdValue, $span);
+            }
+
+            return allActive;
         }
     };
 });
@@ -35483,7 +35886,6 @@ define('__component__$matrix@husky',[],function() {
  * with this source code in the file LICENSE.
  *
  */
-
 
 /**
  * @class Search
@@ -35500,8 +35902,8 @@ define('__component__$search@husky',[], function() {
 
     var templates = {
             skeleton: [
-                '<a class="fa-search fa-flip-horizontal search-icon" href="#"></a>',
-                '<a class="fa-times-circle remove-icon" href="#"></a>',
+                '<button class="fa-search fa-flip-horizontal search-icon" />',
+                '<button class="fa-times-circle remove-icon" />',
                 '<input id="search-input" type="text" class="form-element input-round search-input" placeholder="<%= placeholderText %>"/>'
             ].join('')
         },
@@ -35639,13 +36041,8 @@ define('__component__$search@husky',[], function() {
             }
         },
 
-        submitSearch: function(event) {
-            if (!!event) {
-                event.preventDefault();
-            }
-
+        submitSearch: function() {
             // get search value
-
             var searchString = this.sandbox.dom.val(this.sandbox.dom.find('#search-input', this.$el));
 
             // if searchstring is emtpy, emit reset
@@ -35653,6 +36050,7 @@ define('__component__$search@husky',[], function() {
                 if (this.searchSubmitted) {
                     this.resetSearch();
                 }
+
                 return;
             }
 
@@ -35663,16 +36061,13 @@ define('__component__$search@husky',[], function() {
         },
 
         removeSearch: function(event, noEmit) {
-            if (!!event) {
-                event.preventDefault();
-            } else {
+            if (!event) {
                 event = {
                     target: this.sandbox.dom.find('.remove-icon', this.$el),
                     currentTarget: this.sandbox.dom.find('.remove-icon', this.$el)
                 };
             }
-            var $input;
-            $input = this.sandbox.dom.next(event.currentTarget, 'input');
+            var $input = this.sandbox.dom.next(event.currentTarget, 'input');
 
             this.sandbox.dom.hide(event.target);
             this.sandbox.dom.val($input, '');
@@ -35762,6 +36157,7 @@ define('__component__$tabs@husky',[],function() {
             forceReload: false,
             callback: null,
             forceSelect: true,
+            values: {},
             preSelectEvent: {
                 enabled: false,
                 triggerSelectItem: true
@@ -35837,6 +36233,15 @@ define('__component__$tabs@husky',[],function() {
         },
 
         /**
+         * used to update the tab-component.
+         * @event husky.tabs.initialized
+         * @param {Object} values object
+         */
+        UPDATE = function() {
+            return this.createEventName('update');
+        },
+
+        /**
          * triggered when component was initialized
          * @event husky.tabs.initialized
          */
@@ -35908,6 +36313,20 @@ define('__component__$tabs@husky',[],function() {
             setMarker.call(this);
         },
 
+        update = function(values) {
+            this.sandbox.util.foreach(this.data, function(item) {
+                var $item = this.$find('li[data-id="' + item.id + '"]');
+
+                if (!!item.displayConditions && !this.evaluate(item.displayConditions, values)) {
+                    this.sandbox.dom.hide($item);
+                } else {
+                    this.sandbox.dom.show($item);
+                }
+            }.bind(this));
+
+            setMarker.call(this);
+        },
+
         bindDOMEvents = function() {
             if (!!this.options.preSelectEvent.enabled) {
                 this.sandbox.dom.on(this.$el, 'click', preSelectEvent.bind(this), 'li');
@@ -35923,14 +36342,11 @@ define('__component__$tabs@husky',[],function() {
             }.bind(this));
 
             this.sandbox.on(ACTIVATE.call(this), this.activate.bind(this));
-
             this.sandbox.on(DEACTIVATE.call(this), this.deactivate.bind(this));
-
             this.sandbox.on(ITEM_SHOW.call(this), showItem.bind(this));
-
             this.sandbox.on(ITEM_HIDE.call(this), hideItem.bind(this));
-
             this.sandbox.on(ITEM_CLICKED.call(this), selectItem.bind(this));
+            this.sandbox.on(UPDATE.call(this), update.bind(this));
         };
 
     return {
@@ -35944,18 +36360,19 @@ define('__component__$tabs@husky',[],function() {
             this.domItems = {};
 
             bindDOMEvents.call(this);
-
             bindCustomEvents.call(this);
 
             // load data and call render
             if (!!this.options.url) {
                 this.sandbox.util.load(this.options.url)
-                    .then(this.render.bind(this))
+                    .then(function(data) {
+                        this.render(data, this.options.values);
+                    }.bind(this))
                     .fail(function(data) {
                         this.sandbox.logger.log('data could not be loaded:', data);
                     }.bind(this));
             } else if (!!this.options.data) {
-                this.render(this.options.data);
+                this.render(this.options.data, this.options.values);
             } else {
                 this.sandbox.logger.log('no data provided for tabs!');
             }
@@ -35963,6 +36380,7 @@ define('__component__$tabs@husky',[],function() {
 
         createEventName: function(ending) {
             var instanceName = this.options.instanceName ? this.options.instanceName + '.' : '';
+
             return 'husky.tabs.' + instanceName + ending;
         },
 
@@ -36002,8 +36420,55 @@ define('__component__$tabs@husky',[],function() {
             return Math.floor((Math.random() * 1677721500000000)).toString(16);
         },
 
-        render: function(data) {
-            data = this.generateIds(data);
+        /**
+         * Evaluates the given display-conditions against the condition-data.
+         *
+         * @param {[{property, operator, value}]} displayConditions
+         * @param {Object} values
+         *
+         * @returns {boolean}
+         */
+        evaluate: function(displayConditions, values) {
+            for (var i = 0, length = displayConditions.length; i < length; i++) {
+                var item = this.sandbox.util.extend(
+                    true,
+                    {},
+                    {
+                        property: null,
+                        operator: null,
+                        value: null
+                    }, displayConditions[i]
+                );
+
+                if (!values.hasOwnProperty(item.property)) {
+                    this.sandbox.logger.warn('property "' + item.property + '" does not exists in data');
+
+                    return false;
+                }
+
+                switch (item.operator) {
+                    case 'eq':
+                        if (values[item.property] !== item.value) {
+                            return false;
+                        }
+                        break;
+                    case 'neq':
+                        if (values[item.property] === item.value) {
+                            return false;
+                        }
+                        break;
+                    default:
+                        this.sandbox.logger.error('operator "' + item.operator + '" is not implemented.');
+
+                        return false;
+                }
+            }
+
+            return true;
+        },
+
+        render: function(data, values) {
+            this.data = this.generateIds(data);
 
             var $element = this.sandbox.dom.createElement('<div class="tabs-container"></div>'),
                 $list = this.sandbox.dom.createElement('<ul/>'),
@@ -36019,14 +36484,16 @@ define('__component__$tabs@husky',[],function() {
             this.items = [];
             this.domItems = {};
 
-            this.sandbox.util.foreach(data, function(item, index) {
+            this.sandbox.util.foreach(this.data, function(item, index) {
                 this.items[item.id] = item;
                 $item = this.sandbox.dom.createElement(
                     '<li data-id="' + item.id + '"><a href="#">' + this.sandbox.translate(item.name) + '</a></li>'
                 );
                 this.sandbox.dom.append($list, $item);
 
-                if (!!item.disabled && item.disabled.toString() === 'true') {
+                if ((!!item.disabled && item.disabled.toString() === 'true')
+                    || (!!item.displayConditions && !this.evaluate(item.displayConditions, values))
+                ) {
                     this.sandbox.dom.hide($item);
                 }
 
@@ -36051,6 +36518,7 @@ define('__component__$tabs@husky',[],function() {
                 this.sandbox.dom.addClass(this.sandbox.dom.find('li', $list).eq(0), 'is-selected');
             }
             setMarker.call(this);
+
             // initialization finished
             this.sandbox.emit(INITIALIZED.call(this), selectedItem);
         }
@@ -39132,6 +39600,7 @@ define('__component__$select@husky',[], function() {
             deselectField: false,             // field for deselection is added to dropdown if value is a string
             disabled: false,                  // if true button is disabled
             selectCallback: null,
+            preselectCallback: null,
             deselectCallback: null,
             style: 'normal',
             skin: '',
@@ -39193,7 +39662,7 @@ define('__component__$select@husky',[], function() {
                     '</div>',
                     '<div class="grid-row">',
                     '   <div id="addRow" class="addButton">',
-                    this.sandbox.translate(defaults.translations.addItem),
+                    '   <span>', this.sandbox.translate(defaults.translations.addItem), '</span>',
                     '   </div>',
                     '</div>'
                 ].join('');
@@ -39415,6 +39884,17 @@ define('__component__$select@husky',[], function() {
         },
 
         render: function() {
+            // if preselected items are not present in the data.
+            this.options.preSelectedElements = _.filter(this.options.preSelectedElements, function(item) {
+                return _.contains(this.options.data, item)
+                    || _.filter(
+                        this.options.data,
+                        function(data){
+                            return data.id == item;
+                        }.bind(this)
+                    ).length > 0;
+            }.bind(this));
+
             // add husky-select class to component
             this.sandbox.dom.addClass(this.$el, constants.selectClass);
 
@@ -40169,16 +40649,18 @@ define('__component__$select@husky',[], function() {
 
             // callback, if defined
             if (!!this.options.selectCallback) {
-                this.options.selectCallback.call(this, key);
+                this.options.selectCallback.call(this, key, selectedValue);
             } else {
-                this.sandbox.emit(EVENT_SELECTED_ITEM.call(this), key);
+                this.sandbox.emit(EVENT_SELECTED_ITEM.call(this), key, selectedValue);
             }
         },
 
         // triggers select callback or emits event
         triggerPreSelect: function(key) {
             // callback, if defined
-            if (!!this.options.selectCallback) {
+            if (!!this.options.preselectCallback) {
+                this.options.preselectCallback.call(this, key);
+            } else if (!!this.options.selectCallback) {
                 this.options.selectCallback.call(this, key);
             } else {
                 this.sandbox.emit(EVENT_PRESELECTED_ITEM.call(this), key);
@@ -40302,7 +40784,12 @@ define('__component__$select@husky',[], function() {
                     '<div class="husky-select-container">',
                     '   <div class="dropdown-label pointer">',
                     '       <% if (isNative) { %>',
-                    '           <select class="' + constants.listClass + '"></select>',
+                    '           <select class="' + constants.listClass + '">',
+                    (
+                        this.options.preSelectedElements.length === 0 ?
+                        '           <option selected="true" disabled="true">' + defaultLabel + '</option>' : ''
+                    ),
+                    '           </select>',
                     '       <% } %>',
                     '       <div class="checkbox">',
                                 iconSpan,
@@ -41381,7 +41868,7 @@ define('__component__$column-navigation@husky',[],function() {
         bindDOMEvents: function() {
             var selector = 'li:not(.selected' + (this.options.disabledChildren ? ', .' + constants.disabledClass : '') + ')';
 
-            this.sandbox.dom.on(this.$el, 'click', this.itemSelected.bind(this), selector);
+            this.sandbox.dom.on(this.dom.$container, 'click', this.itemSelected.bind(this), selector);
 
             this.sandbox.dom.on(this.$el, 'mouseenter', this.itemMouseEnter.bind(this), '.column-navigation li');
             this.sandbox.dom.on(this.$el, 'mouseleave', this.itemMouseLeave.bind(this), '.column-navigation li');
@@ -42577,11 +43064,12 @@ define('__component__$overlay@husky',[], function() {
             ].join(''),
             okButton: [
                 '<div class="btn action overlay-ok<%= classes %>">',
-                '<% if (!!icon) { %>',
-                '<span class="fa-<%= icon %>"></span>',
-                '<% } %>',
-                '<span class="text"><%= text %></span>',
-                '</div>'
+                '   <% if (!!icon) { %>',
+                '   <span class="fa-<%= icon %>"></span>',
+                '   <% } %>',
+                '   <span class="text"><%= text %></span>',
+                '</div>',
+                '<div class="loader" style="display: none;"></div>'
             ].join(''),
             cancelButton: [
                 '<div class="btn gray black-text overlay-cancel<%= classes %>">',
@@ -42683,6 +43171,22 @@ define('__component__$overlay@husky',[], function() {
          */
         CLOSE = function() {
             return createEventName.call(this, 'close');
+        },
+
+        /**
+         * show loader instead of save button
+         * @event husky.overlay.<instance-name>.show-loader
+         */
+        SHOW_LOADER = function() {
+            return createEventName.call(this, 'show-loader');
+        },
+
+        /**
+         * hide loader and show of save button
+         * @event husky.overlay.<instance-name>.hide-loader
+         */
+        HIDE_LOADER = function() {
+            return createEventName.call(this, 'hide-loader');
         },
 
         /**
@@ -42889,6 +43393,8 @@ define('__component__$overlay@husky',[], function() {
                     this.overlay.$content = this.sandbox.dom.find(constants.contentSelector, this.overlay.$el);
 
                     this.insertOverlay(true);
+
+                    this.sandbox.start([{name: 'loader@husky', options: {el: this.$el.find('.loader'), size: '30px'}}]);
                 } else {
                     this.insertOverlay(true);
                 }
@@ -42902,6 +43408,18 @@ define('__component__$overlay@husky',[], function() {
             this.sandbox.on(SLIDE_LEFT.call(this), this.slideLeft.bind(this));
             this.sandbox.on(SLIDE_RIGHT.call(this), this.slideRight.bind(this));
             this.sandbox.on(SLIDE_TO.call(this), this.slideEvent.bind(this));
+            this.sandbox.on(SHOW_LOADER.call(this), this.showLoader.bind(this));
+            this.sandbox.on(HIDE_LOADER.call(this), this.hideLoader.bind(this));
+        },
+
+        showLoader: function() {
+            this.$el.find('.btn').hide();
+            this.$el.find('.loader').show();
+        },
+
+        hideLoader: function() {
+            this.$el.find('.btn').show();
+            this.$el.find('.loader').hide();
         },
 
         /**
@@ -43442,7 +43960,7 @@ define('__component__$label@husky',[],function() {
      */
     templates = {
         basic: ['<div class="' + constants.textClass + '">',
-                '   <strong><%= title %></strong>',
+                '   <% if (!!title) { %><strong><%= title %></strong><% } %>',
                 '   <span><%= description %></span>',
                 '   <div class="' + constants.counterClass + '"><span><%= counter %></span></div>',
                 '</div>'].join(''),
@@ -43707,7 +44225,6 @@ define('__component__$toggler@husky',[], function() {
 
     var defaults = {
             instanceName: 'undefined',
-            checked: false,
             hiddenCheckbox: true,
             outline: false
         },
@@ -43724,13 +44241,13 @@ define('__component__$toggler@husky',[], function() {
          * namespace for events
          * @type {string}
          */
-            eventNamespace = 'husky.toggler.',
+        eventNamespace = 'husky.toggler.',
 
         /**
          * raised after initialization process
          * @event husky.toggler.<instance-name>.initialize
          */
-            INITIALIZED = function() {
+        INITIALIZED = function() {
             return createEventName.call(this, 'initialized');
         },
 
@@ -43739,7 +44256,7 @@ define('__component__$toggler@husky',[], function() {
          * @event husky.toggler.<instance-name>.changed
          * @param {boolean} on True if button is on
          */
-            CHANGED = function() {
+        CHANGED = function() {
             return createEventName.call(this, 'changed');
         },
 
@@ -43748,12 +44265,12 @@ define('__component__$toggler@husky',[], function() {
          * @event husky.toggler.<instance-name>.change
          * @param {boolean} on To turn the button on or off
          */
-            CHANGE = function() {
+        CHANGE = function() {
             return createEventName.call(this, 'change');
         },
 
         /** returns normalized event names */
-            createEventName = function(postFix) {
+        createEventName = function(postFix) {
             return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
         };
 
@@ -43767,7 +44284,6 @@ define('__component__$toggler@husky',[], function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             this.hasId = false;
-            this.checked = !!this.options.checked;
             this.$checkbox = null;
             this.$wrapper = null;
 
@@ -43775,7 +44291,9 @@ define('__component__$toggler@husky',[], function() {
             this.bindDomEvents();
             this.bindCustomEvents();
 
-            this.setData();
+            if (this.$el.data('checked') === undefined) {
+                this.setData(false);
+            }
 
             this.sandbox.emit(INITIALIZED.call(this));
         },
@@ -43796,16 +44314,16 @@ define('__component__$toggler@husky',[], function() {
             }
 
             //wrapper to insert all content into
-            this.$wrapper = this.sandbox.dom.createElement('<div class="'+ constants.wrapperClass +'"/>');
+            this.$wrapper = this.sandbox.dom.createElement('<div class="' + constants.wrapperClass + '"/>');
             this.sandbox.dom.html(this.$el, this.$wrapper);
 
             this.generateHiddenCheckbox();
 
-            if (this.checked === true) {
+            if (this.getData() === true) {
                 this.setChecked(false);
             }
 
-            this.sandbox.dom.append(this.$wrapper, this.sandbox.dom.createElement('<div class="'+ constants.switchClass +'"/>'));
+            this.sandbox.dom.append(this.$wrapper, this.sandbox.dom.createElement('<div class="' + constants.switchClass + '"/>'));
         },
 
         /**
@@ -43813,12 +44331,12 @@ define('__component__$toggler@husky',[], function() {
          */
         bindDomEvents: function() {
             this.sandbox.dom.on(this.$el, 'click', function() {
-               this.toggleButton();
+                this.toggleButton();
             }.bind(this));
 
             //if toggler has id enable clicks on labels
             if (this.hasId === true) {
-                this.sandbox.dom.on('label[for="'+ this.options.instanceName +'"]', 'click', function() {
+                this.sandbox.dom.on('label[for="' + this.options.instanceName + '"]', 'click', function() {
                     this.toggleButton();
                 }.bind(this));
             }
@@ -43829,7 +44347,7 @@ define('__component__$toggler@husky',[], function() {
          */
         bindCustomEvents: function() {
             this.sandbox.on(CHANGE.call(this), function(checked) {
-                if (this.checked !== checked) {
+                if (this.getData() !== checked) {
                     if (checked === true) {
                         this.setChecked(true);
                     } else {
@@ -43843,7 +44361,7 @@ define('__component__$toggler@husky',[], function() {
          * Toggles the button state
          */
         toggleButton: function() {
-            if (this.checked === true) {
+            if (this.getData() === true) {
                 this.unsetChecked(true);
             } else {
                 this.setChecked(true);
@@ -43855,9 +44373,8 @@ define('__component__$toggler@husky',[], function() {
          */
         setChecked: function(emit) {
             this.sandbox.dom.addClass(this.$el, constants.checkedClass);
-            this.checked = true;
-            this.setData();
-            this.updateCheckbox(this.checked);
+            this.setData(true);
+            this.updateCheckbox(this.getData());
 
             if (emit !== false) {
                 this.sandbox.emit(CHANGED.call(this), true);
@@ -43869,9 +44386,8 @@ define('__component__$toggler@husky',[], function() {
          */
         unsetChecked: function(emit) {
             this.sandbox.dom.removeClass(this.$el, constants.checkedClass);
-            this.checked = false;
-            this.setData();
-            this.updateCheckbox(this.checked);
+            this.setData(false);
+            this.updateCheckbox(this.getData());
 
             if (emit !== false) {
                 this.sandbox.emit(CHANGED.call(this), false);
@@ -43883,7 +44399,7 @@ define('__component__$toggler@husky',[], function() {
          */
         generateHiddenCheckbox: function() {
             if (this.options.hiddenCheckbox === true) {
-                this.$checkbox = this.sandbox.dom.createElement('<input type="checkbox" name="'+ this.options.instanceName +'"/>');
+                this.$checkbox = this.sandbox.dom.createElement('<input type="checkbox" name="' + this.options.instanceName + '"/>');
                 this.sandbox.dom.append(this.$wrapper, this.$checkbox);
             }
         },
@@ -43901,11 +44417,18 @@ define('__component__$toggler@husky',[], function() {
         /**
          * Sets the data-checked attribute for the toggler
          */
-        setData: function() {
-            this.sandbox.dom.data(this.$el, 'checked', (!!this.checked) ? 'checked' : '');
+        setData: function(isChecked) {
+            this.$el.data('checked', !!isChecked);
+        },
+
+        /**
+         * Returns the data-checked attribute for the toggler
+         * @returns {boolean}
+         */
+        getData: function() {
+            return this.$el.data('checked');
         }
     };
-
 });
 
 /**
@@ -45534,7 +46057,7 @@ define('__component__$data-navigation@husky',[
             this.$el.on('click', '.data-navigation-search > .icon-container', function() {
                 if (!$('.data-navigation-header').hasClass('header-search')) {
                     $('.data-navigation-header').addClass('header-search');
-                    $('.data-navigation-search span').attr('class', 'fa-times');
+                    $('.data-navigation-search .icon-container span').attr('class', 'fa-times');
                     $('.data-navigation-search input').select();
                 } else {
                     this.clearSearch();
@@ -45640,7 +46163,7 @@ define('__component__$data-navigation@husky',[
          */
         clearSearch: function() {
             $('.data-navigation-header').removeClass('header-search');
-            $('.data-navigation-search span').attr('class', 'fa-search fa-flip-horizontal');
+            $('.data-navigation-search .icon-container span').attr('class', 'fa-search fa-flip-horizontal');
             this.sandbox.emit('husky.search.data-navigation.clear');
             if (!!this.searchTerm) {
                 this.sandbox.emit('husky.search.data-navigation.reset');
@@ -50429,7 +50952,7 @@ define("datepicker-zh-TW", function(){});
                         return key;
                     }
 
-                    return !!translation ? translation : key;
+                    return (!!translation || translation === '') ? translation : key;
                 };
 
                 app.sandbox.date = {
@@ -50534,13 +51057,17 @@ define("datepicker-zh-TW", function(){});
                 };
 
                 /**
+                 * Set culture with given name and messages
                  *
                  * @param cultureName
                  * @param messages
+                 * @param defaultMessages will be used as fallback messages
                  */
-                app.setLanguage = function(cultureName, messages) {
+                app.setLanguage = function(cultureName, messages, defaultMessages) {
                     Globalize.culture(cultureName);
+
                     app.sandbox.globalize.addCultureInfo(cultureName, messages);
+                    app.sandbox.globalize.addCultureInfo('default', defaultMessages);
                 };
 
                 if (!!app.config.culture && !!app.config.culture.name && app.config.culture.name !== 'en') {
@@ -50554,7 +51081,11 @@ define("datepicker-zh-TW", function(){});
                         app.config.culture.messages = {};
                     }
 
-                    app.setLanguage(app.config.culture.name, app.config.culture.messages);
+                    app.setLanguage(
+                        app.config.culture.name,
+                        app.config.culture.messages,
+                        app.config.culture.defaultMessages
+                    );
                 }
 
                 app.sandbox.globalize.setCurrency('');
@@ -50636,13 +51167,7 @@ define("datepicker-zh-TW", function(){});
                     },
 
                     getObject: function(selector) {
-                        if (typeof selector === 'string') {
-                            return $(selector).data('form-object');
-                        } else if (typeof selector === 'object') {
-                            return selector;
-                        } else {
-                            throw 'Not supported';
-                        }
+                        return $(selector).data('form-object');
                     },
 
                     validate: function(selector, force) {
@@ -52054,7 +52579,7 @@ define('husky_extensions/itemgrid',[],function() {
             };
 
             app.core.dom.text = function(selector, value) {
-                if (!!value) {
+                if (!!value || value === '') {
                     return $(selector).text(value);
                 } else {
                     return $(selector).text();

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,21 +16,32 @@ use Sulu\Component\Websocket\ConnectionContext\ConnectionContextInterface;
 use Sulu\Component\Websocket\Exception\HandlerNotFoundException;
 
 /**
- * Class MessageDispatcher.
+ * Responsible for taking messages and meta information from a MessageComponentInterface, passing this data to a
+ * MessageHandler, and returning the new message to the MessageComponentInterface.
  */
 class MessageDispatcher implements MessageDispatcherInterface
 {
     /**
+     * @var MessageBuilderInterface
+     */
+    private $messageBuilder;
+
+    /**
      * @var MessageHandlerInterface[]
      */
-    private $handler = [];
+    private $handlers = [];
+
+    public function __construct(MessageBuilderInterface $messageBuilder)
+    {
+        $this->messageBuilder = $messageBuilder;
+    }
 
     /**
      * {@inheritdoc}
      */
     public function add($name, MessageHandlerInterface $handler)
     {
-        $this->handler[$name] = $handler;
+        $this->handlers[$name] = $handler;
     }
 
     /**
@@ -43,24 +54,19 @@ class MessageDispatcher implements MessageDispatcherInterface
         array $options,
         ConnectionContextInterface $context
     ) {
-        if (!array_key_exists($name, $this->handler)) {
+        if (!array_key_exists($name, $this->handlers)) {
             throw new HandlerNotFoundException($name);
         }
 
         $error = false;
         try {
-            $message = $this->handler[$name]->handle($conn, $message, $context);
+            $message = $this->handlers[$name]->handle($conn, $message, $context);
         } catch (MessageHandlerException $ex) {
             $message = $ex->getResponseMessage();
             $error = true;
         }
 
-        return [
-            'handler' => $name,
-            'message' => $message,
-            'options' => $options,
-            'error' => $error,
-        ];
+        return $this->messageBuilder->build($name, $message, $options, $error);
     }
 
     /**
@@ -70,8 +76,8 @@ class MessageDispatcher implements MessageDispatcherInterface
         ConnectionInterface $conn,
         ConnectionContextInterface $context
     ) {
-        foreach ($this->handler as $handler) {
-            $handler->onClose($conn, $context);
+        foreach ($this->handlers as $name => $handler) {
+            $handler->onClose($conn, new MessageHandlerContext($context, $name));
         }
     }
 }

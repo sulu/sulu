@@ -12,8 +12,7 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
     'use strict';
 
     var permissionUrl = '/admin/api/permissions',
-        permissions = Config.get('sulusecurity.permissions').slice(0, -1), // removes the security permission
-        permissionTitles = Config.get('sulusecurity.permission_titles').slice(0, -1),
+        permissionTypes = Config.get('sulusecurity.permissions').slice(0, -1),
         loaderSelector = '#permission-loader',
         matrixContainerSelector = '#matrix-container',
         matrixSelector = '#matrix',
@@ -61,7 +60,8 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
                     var permissionResponseData = permissionResponse[0],
                         matrixData = [],
                         verticalCaptions = [],
-                        verticalValues = [];
+                        verticalValues = [],
+                        horizontalValues = [];
 
                     // set the data for all available roles
                     this.sandbox.util.each(roles, function(index, role) {
@@ -70,9 +70,10 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
                         // set the captions and values for the matrix
                         verticalCaptions.push(role.name);
                         verticalValues.push(role.id);
+                        horizontalValues.push(permissionTypes);
 
                         // initialize the data
-                        this.sandbox.util.each(permissions, function(index, permission) {
+                        this.sandbox.util.each(permissionTypes, function(index, permission) {
                             data[permission.value] = false;
                         }.bind(this));
 
@@ -118,8 +119,7 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
                                 },
                                 values: {
                                     vertical: verticalValues,
-                                    horizontal: permissions,
-                                    titles: this.sandbox.translateArray(permissionTitles)
+                                    horizontal: horizontalValues
                                 },
                                 data: matrixData
                             }

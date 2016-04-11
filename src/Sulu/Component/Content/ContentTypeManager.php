@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Content;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,8 +20,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Uses an alias => service ID map to fetch content types from
  * the dependency injection container.
  */
-class ContentTypeManager extends ContainerAware implements ContentTypeManagerInterface
+class ContentTypeManager implements ContentTypeManagerInterface
 {
+    use ContainerAwareTrait;
+
     /**
      * @var array
      */

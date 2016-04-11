@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -80,6 +80,11 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected $queryBuilder;
 
+    /**
+     * @var bool
+     */
+    private $distinct = false;
+
     public function __construct(EntityManager $em, $entityName, EventDispatcherInterface $eventDispatcher)
     {
         $this->em = $em;
@@ -143,6 +148,8 @@ class DoctrineListBuilder extends AbstractListBuilder
         // use ids previously selected ids for query
         $this->queryBuilder->where($this->entityName . '.id IN (:ids)')
             ->setParameter('ids', $ids);
+
+        $this->queryBuilder->distinct($this->distinct);
 
         return $this->queryBuilder->getQuery()->getArrayResult();
     }
@@ -462,6 +469,16 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         return new DoctrineBetweenExpression($fieldDescriptor, $values[0], $values[1]);
+    }
+
+    /**
+     * Eliminates duplicated rows.
+     *
+     * @param bool $flag
+     */
+    public function distinct($flag = true)
+    {
+        $this->distinct = $flag;
     }
 
     /**

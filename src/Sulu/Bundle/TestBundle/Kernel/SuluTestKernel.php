@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -56,7 +56,16 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\LocationBundle\SuluLocationBundle(),
             new \Sulu\Bundle\DocumentManagerBundle\SuluDocumentManagerBundle(),
             new \Sulu\Bundle\ResourceBundle\SuluResourceBundle(),
+            new \Sulu\Bundle\TranslateBundle\SuluTranslateBundle(),
+            new \Sulu\Bundle\HashBundle\SuluHashBundle(),
+            new \Sulu\Bundle\CustomUrlBundle\SuluCustomUrlBundle(),
         ];
+
+        if ($this->getContext() === self::CONTEXT_WEBSITE) {
+            // smyfony-cmf
+            $bundles[] = new \Symfony\Cmf\Bundle\CoreBundle\CmfCoreBundle();
+            $bundles[] = new \Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle();
+        }
 
         return $bundles;
     }

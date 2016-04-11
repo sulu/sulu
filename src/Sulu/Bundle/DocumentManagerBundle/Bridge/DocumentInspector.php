@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,6 +20,7 @@ use Sulu\Component\Content\Document\Subscriber\WorkflowStageSubscriber;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\DocumentInspector as BaseDocumentInspector;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Metadata;
@@ -79,9 +80,11 @@ class DocumentInspector extends BaseDocumentInspector
      * TODO: We need a better solution for retrieving webspace paths (the existing
      *       "session manager" is not a good solution).
      *
+     * @param PathBehavior $document
+     *
      * @return string
      */
-    public function getContentPath(StructureBehavior $document)
+    public function getContentPath(PathBehavior $document)
     {
         $path = $this->getPath($document);
         $webspaceKey = $this->getWebspace($document);
@@ -151,13 +154,18 @@ class DocumentInspector extends BaseDocumentInspector
     }
 
     /**
-     * Return the locale for the given document.
+     * Return the locale for the given document or null
+     * if the document is not managed.
      *
-     * @return string
+     * @return string|null
      */
     public function getLocale($document)
     {
-        return $this->documentRegistry->getLocaleForDocument($document);
+        if ($this->documentRegistry->hasDocument($document)) {
+            return $this->documentRegistry->getLocaleForDocument($document);
+        }
+
+        return;
     }
 
     /**
@@ -180,7 +188,7 @@ class DocumentInspector extends BaseDocumentInspector
      *
      * @return array
      */
-    public function getLocales(StructureBehavior $document)
+    public function getLocales($document)
     {
         $locales = [];
         $node = $this->getNode($document);
@@ -208,9 +216,15 @@ class DocumentInspector extends BaseDocumentInspector
      *
      * @return array
      */
-    public function getConcreteLocales(ShadowLocaleBehavior $document)
+    public function getConcreteLocales($document)
     {
-        return array_diff($this->getLocales($document), $this->getShadowLocales($document));
+        $locales = $this->getLocales($document);
+
+        if ($document instanceof ShadowLocaleBehavior) {
+            $locales = array_diff($locales, $this->getShadowLocales($document));
+        }
+
+        return $locales;
     }
 
     /**
@@ -320,7 +334,7 @@ class DocumentInspector extends BaseDocumentInspector
     {
         $match = preg_match(
             sprintf(
-                '/^\/%s\/([\w\.]*?)\/.*$/',
+                '/^\/%s\/([\w\.-]*?)\/.*$/',
                 $this->pathSegmentRegistry->getPathSegment('base')
             ),
             $path,

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -17,8 +17,6 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Route;
 
-/**
- */
 class LocalFormatCache implements FormatCacheInterface
 {
     /**
@@ -96,6 +94,27 @@ class LocalFormatCache implements FormatCacheInterface
     public function getMediaUrl($id, $fileName, $options, $format, $version)
     {
         return $this->getPathUrl($this->pathUrl, $id, $fileName, $format, $version);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function clear()
+    {
+        $realCacheDir = $this->path;
+        $oldCacheDir = $realCacheDir . '_old';
+
+        if (!is_writable($realCacheDir)) {
+            throw new \RuntimeException(sprintf('Unable to write in the "%s" directory', $realCacheDir));
+        }
+
+        if ($this->filesystem->exists($oldCacheDir)) {
+            $this->filesystem->remove($oldCacheDir);
+        }
+
+        $this->filesystem->rename($realCacheDir, $oldCacheDir);
+        $this->filesystem->mkdir($realCacheDir);
+        $this->filesystem->remove($oldCacheDir);
     }
 
     /**

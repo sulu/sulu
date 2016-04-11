@@ -26,35 +26,8 @@ define([
             eventNamespace: 'sulu.media-selection-overlay',
             preselectedIds: [],
             instanceName: null,
-            types: null
-        },
-
-        listViews = {
-            table: {
-                itemId: 'table',
-                name: 'table'
-            },
-            thumbnailSmall: {
-                itemId: 'small-thumbnails',
-                name: 'thumbnail',
-                thViewOptions: {
-                    large: false,
-                    unselectOnBackgroundClick: false
-                }
-            },
-            thumbnailLarge: {
-                itemId: 'big-thumbnails',
-                name: 'thumbnail',
-                thViewOptions: {
-                    large: true,
-                    unselectOnBackgroundClick: false
-                }
-            }
-        },
-
-        constants = {
-            lastVisitedCollectionKey: 'last-visited-collection',
-            listViewStorageKey: 'mediaOverlayListView'
+            types: null,
+            locale: ''
         },
 
         /**
@@ -324,10 +297,9 @@ define([
          * @param collectionId
          */
         changeUploadCollection = function(collectionId) {
-            this.uploadCollection = collectionId;
             this.sandbox.emit(
                 'husky.dropzone.media-selection-overlay.' + this.options.instanceName + '.change-url',
-                '/admin/api/media?collection=' + collectionId
+                '/admin/api/media?collection=' + collectionId + '&locale=' + this.options.locale
             );
         },
 
@@ -337,7 +309,6 @@ define([
         startOverlay = function() {
             var $element = this.sandbox.dom.createElement('<div/>');
             this.sandbox.dom.append(this.$el, $element);
-            this.listView = this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'thumbnailSmall';
 
             this.sandbox.start([
                 {
@@ -458,7 +429,11 @@ define([
                     },
                     {
                         el: this.$el.find('.media-selection-overlay-datagrid-container'),
-                        url: '/admin/api/media?orderBy=media.changed&orderSort=DESC' + (!!this.options.types ? '&types=' + this.options.types : ''),
+                        url: [
+                            '/admin/api/media?locale=', this.options.locale,
+                            '&orderBy=media.created&orderSort=DESC',
+                            (!!this.options.types ? '&types=' + this.options.types : '')
+                        ].join(''),
                         view: UserSettingsManager.getMediaListView(),
                         pagination: UserSettingsManager.getMediaListPagination(),
                         resultKey: 'media',
@@ -468,7 +443,19 @@ define([
                         viewSpacingBottom: 180,
                         viewOptions: {
                             table: {
-                                actionIconColumn: 'name'
+                                actionIconColumn: 'name',
+                                badges: [
+                                    {
+                                        column: 'title',
+                                        callback: function(item, badge) {
+                                            if (!!item.fallbackLocale) {
+                                                badge.title = item.fallbackLocale;
+
+                                                return badge;
+                                            }
+                                        }.bind(this)
+                                    }
+                                ]
                             },
                             'datagrid/decorators/masonry-view': {
                                 selectable: true,
@@ -492,7 +479,7 @@ define([
                         options: {
                             el: this.$el.find('.media-selection-overlay-dropzone-container'),
                             maxFilesize: Config.get('sulu-media').maxFilesize,
-                            url: '/admin/api/media',
+                            url: '/admin/api/media?locale=' + this.options.locale,
                             method: 'POST',
                             paramName: 'fileVersion',
                             instanceName: 'media-selection-overlay.' + this.options.instanceName,
@@ -512,12 +499,6 @@ define([
 
             // init collection
             this.collections = new Collections();
-            this.newCollection = new Collection();
-            this.collectionArray = null;
-            this.newCollectionId = null;
-
-            // init vars
-            this.uploadCollection = null;
 
             bindCustomEvents.call(this);
 

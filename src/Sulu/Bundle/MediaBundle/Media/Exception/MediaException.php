@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -164,6 +164,13 @@ class MediaException extends Exception
      * @var int
      */
     const EXCEPTION_CODE_FILE_NOT_FOUND = 5021;
+
+    /**
+     * Format cache is not found.
+     *
+     * @var int
+     */
+    const EXCEPTION_CACHE_NOT_FOUND = 5022;
 
     /**
      * Systemfile is not found.

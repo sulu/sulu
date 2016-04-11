@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,6 +20,7 @@ use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\Authentication\UserInterface;
 
@@ -494,7 +495,8 @@ class Collection extends ApiWrapper
      */
     public function getLocked()
     {
-        return !$this->entity->getType() || $this->entity->getType()->getKey() === 'collection.system';
+        return !$this->entity->getType()
+            || $this->entity->getType()->getKey() === SystemCollectionManagerInterface::COLLECTION_TYPE;
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -423,7 +423,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get meta.
      *
-     * @return FileVersionMeta
+     * @return FileVersionMeta[]
      */
     public function getMeta()
     {

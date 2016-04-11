@@ -11,6 +11,7 @@
 namespace Sulu\Component\Rest\ListBuilder\Metadata;
 
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCountFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineGroupConcatFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineIdentityFieldDescriptor;
@@ -18,6 +19,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescrip
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\PropertyMetadata as DoctrinePropertyMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationTypeMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\CountTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\GroupConcatTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\IdentityTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\SingleTypeMetadata;
@@ -64,7 +66,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
         );
 
         if ($cache->isFresh()) {
-            return require $cache;
+            return require $cache->getPath();
         }
 
         $metadata = $this->metadataProvider->getMetadataForClass($className);
@@ -108,6 +110,11 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
                     $doctrineMetadata->getType()->getField(),
                     $options
                 );
+            } elseif ($doctrineMetadata->getType() instanceof CountTypeMetadata) {
+                $fieldDescriptor = $this->getCountFieldDescriptor(
+                    $generalMetadata,
+                    $doctrineMetadata->getType()->getField()
+                );
             }
 
             if (null !== $fieldDescriptor) {
@@ -150,6 +157,44 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
             $this->resolveOptions($fieldMetadata->getName(), $options),
             $this->resolveOptions($generalMetadata->getName(), $options),
             $this->resolveOptions($fieldMetadata->getEntityName(), $options),
+            $generalMetadata->getTranslation(),
+            $joins,
+            $this->isDisabled($generalMetadata),
+            $this->isDefault($generalMetadata),
+            $generalMetadata->getType(),
+            $generalMetadata->getWidth(),
+            $generalMetadata->getMinWidth(),
+            $generalMetadata->isSortable(),
+            $generalMetadata->isEditable(),
+            $generalMetadata->getCssClass()
+        );
+    }
+
+    /**
+     * Returns count-field-descriptor for given general metadata.
+     *
+     * @param GeneralPropertyMetadata $generalMetadata
+     * @param FieldMetadata $fieldMetadata
+     *
+     * @return DoctrineCountFieldDescriptor
+     */
+    protected function getCountFieldDescriptor(GeneralPropertyMetadata $generalMetadata, FieldMetadata $fieldMetadata)
+    {
+        $joins = [];
+        foreach ($fieldMetadata->getJoins() as $joinMetadata) {
+            $joins[$joinMetadata->getEntityName()] = new DoctrineJoinDescriptor(
+                $joinMetadata->getEntityName(),
+                $joinMetadata->getEntityField(),
+                $joinMetadata->getCondition(),
+                $joinMetadata->getMethod(),
+                $joinMetadata->getConditionMethod()
+            );
+        }
+
+        return new DoctrineCountFieldDescriptor(
+            $fieldMetadata->getName(),
+            $generalMetadata->getName(),
+            $fieldMetadata->getEntityName(),
             $generalMetadata->getTranslation(),
             $joins,
             $this->isDisabled($generalMetadata),

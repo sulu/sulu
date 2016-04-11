@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,14 +20,14 @@ use PHPCR\SessionInterface;
 interface SessionManagerInterface
 {
     /**
-     * returns a valid session to interact with a phpcr database.
+     * Returns a valid session to interact with a phpcr database.
      *
      * @return SessionInterface
      */
     public function getSession();
 
     /**
-     * returns the route node for given webspace.
+     * Returns the route node for given webspace.
      *
      * @param string $webspaceKey
      * @param string $languageCode
@@ -38,7 +38,7 @@ interface SessionManagerInterface
     public function getRouteNode($webspaceKey, $languageCode, $segment = null);
 
     /**
-     * returns the route path for given webspace.
+     * Returns the route path for given webspace.
      *
      * @param string $webspaceKey
      * @param string $languageCode
@@ -49,7 +49,7 @@ interface SessionManagerInterface
     public function getRoutePath($webspaceKey, $languageCode, $segment = null);
 
     /**
-     * returns the content node for given webspace.
+     * Returns the content node for given webspace.
      *
      * @param string $webspaceKey
      *
@@ -58,13 +58,31 @@ interface SessionManagerInterface
     public function getContentNode($webspaceKey);
 
     /**
-     * returns the content path for given webspace.
+     * Returns the content path for given webspace.
      *
      * @param string $webspaceKey
      *
      * @return string
      */
     public function getContentPath($webspaceKey);
+
+    /**
+     * Returns the webspace node for given webspace.
+     *
+     * @param string$webspaceKey
+     *
+     * @return NodeInterface
+     */
+    public function getWebspaceNode($webspaceKey);
+
+    /**
+     * Returns the webspace path for given webspace.
+     *
+     * @param string$webspaceKey
+     *
+     * @return string
+     */
+    public function getWebspacePath($webspaceKey);
 
     /**
      * returns the snippet node.

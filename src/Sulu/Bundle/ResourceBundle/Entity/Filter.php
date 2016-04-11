@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -85,7 +86,7 @@ class Filter
     /**
      * Get id.
      *
-     * @return int 
+     * @return int
      */
     public function getId()
     {
@@ -119,7 +120,7 @@ class Filter
     /**
      * Get translations.
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getTranslations()
     {
@@ -153,7 +154,7 @@ class Filter
     /**
      * Get conditionGroups.
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getConditionGroups()
     {
@@ -177,7 +178,7 @@ class Filter
     /**
      * Get created.
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -201,7 +202,7 @@ class Filter
     /**
      * Get changed.
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getChanged()
     {
@@ -273,7 +274,7 @@ class Filter
     /**
      * Get conjunction.
      *
-     * @return string 
+     * @return string
      */
     public function getConjunction()
     {
@@ -321,7 +322,7 @@ class Filter
     /**
      * Get context.
      *
-     * @return string 
+     * @return string
      */
     public function getContext()
     {
@@ -345,7 +346,7 @@ class Filter
     /**
      * Get private.
      *
-     * @return bool 
+     * @return bool
      */
     public function getPrivate()
     {

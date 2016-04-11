@@ -79,10 +79,11 @@ interface CollectionManagerInterface
      * @param string $search
      * @param int $depth maximum depth for query
      * @param array $sortBy
+     * @param bool $systemCollections Whether or not system collectino should be included in the result
      *
      * @return \Sulu\Bundle\MediaBundle\Api\Collection[]
      */
-    public function getTree($locale, $offset, $limit, $search, $depth = 0, $sortBy = []);
+    public function getTree($locale, $offset, $limit, $search, $depth = 0, $sortBy = [], $systemCollections = true);
 
     /**
      * Returns a collection count.

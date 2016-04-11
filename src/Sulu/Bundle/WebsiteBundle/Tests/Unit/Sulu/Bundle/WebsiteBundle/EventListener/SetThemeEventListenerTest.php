@@ -1,7 +1,6 @@
 <?php
-
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -51,7 +50,7 @@ class SetThemeEventListenerTest extends \PHPUnit_Framework_TestCase
             ->method('setName')
             ->with('test');
 
-        $this->listener->onKernelRequest($this->event);
+        $this->listener->setActiveTheme($this->event);
     }
 
     public function testEventListenerNotMaster()
@@ -62,6 +61,6 @@ class SetThemeEventListenerTest extends \PHPUnit_Framework_TestCase
         $this->webspace->expects($this->never())
             ->method('getTheme');
 
-        $this->listener->onKernelRequest($this->event);
+        $this->listener->setActiveTheme($this->event);
     }
 }

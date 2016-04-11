@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -76,6 +76,9 @@ class XmlLoader extends XmlLegacyLoader
         if (isset($data['meta']['title'])) {
             $section->title = $data['meta']['title'];
         }
+        if (isset($data['meta']['info_text'])) {
+            $section->description = $data['meta']['info_text'];
+        }
 
         foreach ($data['properties'] as $name => $property) {
             $section->children[$name] = $this->createProperty($name, $property);
@@ -93,6 +96,9 @@ class XmlLoader extends XmlLegacyLoader
         if (isset($data['meta']['title'])) {
             $blockProperty->title = $data['meta']['title'];
         }
+        if (isset($data['meta']['info_text'])) {
+            $blockProperty->description = $data['meta']['info_text'];
+        }
 
         $this->mapProperty($blockProperty, $data);
 
@@ -102,6 +108,9 @@ class XmlLoader extends XmlLegacyLoader
 
             if (isset($type['meta']['title'])) {
                 $component->title = $type['meta']['title'];
+            }
+            if (isset($data['meta']['info_text'])) {
+                $component->description = $data['meta']['info_text'];
             }
 
             foreach ($type['properties'] as $propertyName => $propertyData) {

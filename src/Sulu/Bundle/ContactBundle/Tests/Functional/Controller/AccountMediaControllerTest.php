@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -55,8 +55,8 @@ class AccountMediaControllerTest extends SuluTestCase
 
     public function setUp()
     {
-        $this->db('ORM')->purgeDatabase();
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
+        $this->purgeDatabase();
         $this->initOrm();
     }
 
@@ -355,7 +355,7 @@ class AccountMediaControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
 
         $client->request(
             'GET',
@@ -375,7 +375,7 @@ class AccountMediaControllerTest extends SuluTestCase
             '/api/accounts/' . $this->account->getId() . '/medias/' . $this->media2->getId()
         );
 
-        $this->assertEquals('204', $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(204, $client->getResponse());
 
         $client->request(
             'GET',
@@ -394,7 +394,7 @@ class AccountMediaControllerTest extends SuluTestCase
             '/api/accounts/' . $this->account->getId() . '/medias/99'
         );
 
-        $this->assertEquals('404', $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
 
         $client->request(
             'GET',

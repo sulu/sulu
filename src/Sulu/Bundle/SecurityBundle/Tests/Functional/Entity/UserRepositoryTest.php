@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -28,7 +28,7 @@ class UserRepositoryTest extends SuluTestCase
 {
     public function setUp()
     {
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
         $this->purgeDatabase();
 
         // email
@@ -194,6 +194,7 @@ class UserRepositoryTest extends SuluTestCase
 
         /** @var UserRepository $userRepository */
         $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
+        $userRepository->init('Sulu');
 
         $user = $userRepository->loadUserByUsername('sulu');
 

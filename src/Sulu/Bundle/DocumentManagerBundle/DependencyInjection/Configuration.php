@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -38,19 +38,35 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('debug')
                     ->info('Enable the debug event dispatcher. Logs all document manager events. Very slow.')
-                    ->defaultValue('%kernel.debug%')
+                    ->defaultValue(false)
+                ->end()
+                ->arrayNode('path_segments')
+                    ->prototype('scalar')->end()
                 ->end()
                 ->arrayNode('mapping')
                     ->useAttributeAsKey('alias')
                     ->prototype('array')
-                    ->children()
-                        ->scalarNode('class')
-                            ->info('Fully qualified class name for mapped object')
-                            ->isRequired()
-                        ->end()
-                        ->scalarNode('phpcr_type')
-                            ->info('PHPCR type to map to')
-                            ->isRequired()
+                        ->children()
+                            ->scalarNode('class')
+                                ->info('Fully qualified class name for mapped object')
+                                ->isRequired()
+                            ->end()
+                            ->scalarNode('phpcr_type')
+                                ->info('PHPCR type to map to')
+                                ->isRequired()
+                            ->end()
+                            ->arrayNode('mapping')
+                                ->prototype('array')
+                                    ->children()
+                                        ->scalarNode('encoding')->defaultValue('content')->end()
+                                        ->scalarNode('property')->end()
+                                        ->scalarNode('type')->end()
+                                        ->booleanNode('mapped')->defaultTrue()->end()
+                                        ->booleanNode('multiple')->defaultFalse()->end()
+                                        ->scalarNode('default')->defaultValue(null)->end()
+                                    ->end()
+                                ->end()
+                            ->end()
                         ->end()
                     ->end()
                 ->end()

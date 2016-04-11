@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -38,7 +38,7 @@ abstract class ItemMetadata
     public $description = [];
 
     /**
-     * Tags, e.g. 
+     * Tags, e.g.
      *
      * ````
      * array(
@@ -255,12 +255,18 @@ abstract class ItemMetadata
     }
 
     /**
-     * Return the decsription of this property.
+     * Return the description of this property.
+     *
+     * @param string $locale
      *
      * @return string
      */
-    public function getDescription()
+    public function getDescription($locale)
     {
-        return $this->description;
+        if (isset($this->description[$locale])) {
+            return $this->description[$locale];
+        }
+
+        return '';
     }
 }

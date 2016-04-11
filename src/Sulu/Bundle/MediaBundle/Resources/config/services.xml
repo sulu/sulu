@@ -9,6 +9,7 @@
         <parameter key="sulu_media.storage.class">Sulu\Bundle\MediaBundle\Media\Storage\LocalStorage</parameter>
         <parameter key="sulu_media.file_validator.class">Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidator</parameter>
         <parameter key="sulu_media.format_manager.class">Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManager</parameter>
+        <parameter key="sulu_media.format_cache_clearer.class">Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheClearer</parameter>
         <parameter key="sulu_media.format_cache.class">Sulu\Bundle\MediaBundle\Media\FormatCache\LocalFormatCache</parameter>
         <parameter key="sulu_media.image.converter.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\ImagineImageConverter</parameter>
         <parameter key="sulu_media.image.command_manager.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager\CommandManager</parameter>
@@ -41,22 +42,17 @@
             <tag name="sulu_admin.content_navigation" alias="media"/>
             <tag name="sulu.context" context="admin"/>
         </service>
-        <service id="sulu_media.media_repository"
-                 class="%sulu_media.media_repository.class%"
-                 factory-service="doctrine.orm.entity_manager"
-                 factory-method="getRepository">
+        <service id="sulu_media.media_repository" class="%sulu_media.media_repository.class%">
+            <factory service="doctrine.orm.entity_manager" method="getRepository"/>
             <argument>%sulu_media.media_entity%</argument>
         </service>
-        <service id="sulu_media.collection_repository"
-                 class="%sulu_media.collection_repository.class%"
-                 factory-service="doctrine.orm.entity_manager"
-                 factory-method="getRepository">
+        <service id="sulu_media.collection_repository" class="%sulu_media.collection_repository.class%">
+            <factory service="doctrine.orm.entity_manager" method="getRepository"/>
             <argument>%sulu_media.collection_entity%</argument>
         </service>
         <service id="sulu_media.file_version_meta_repository"
-                 class="Sulu\Bundle\MediaBundle\Entity\FileVersionMetaRepository"
-                 factory-service="doctrine.orm.entity_manager"
-                 factory-method="getRepository">
+                 class="Sulu\Bundle\MediaBundle\Entity\FileVersionMetaRepository">
+            <factory service="doctrine.orm.entity_manager" method="getRepository"/>
             <argument>%sulu_media.entity.file_version_meta%</argument>
         </service>
         <service id="sulu_media.storage.file_system" class="Symfony\Component\Filesystem\Filesystem"/>
@@ -67,13 +63,17 @@
             <argument type="service" id="logger"/>
         </service>
         <service id="sulu_media.file_validator" class="%sulu_media.file_validator.class%" />
+
+        <service id="sulu_media.format_cache_clearer" class="%sulu_media.format_cache_clearer.class%" />
         <service id="sulu_media.format_cache" class="%sulu_media.format_cache.class%">
             <argument type="service" id="filesystem"/>
             <argument>%sulu_media.format_cache.path%</argument>
             <argument>%sulu_media.format_cache.media_proxy_path%</argument>
             <argument>%sulu_media.format_cache.segments%</argument>
             <argument>%sulu_media.image.formats%</argument>
+            <tag name="sulu_media.format_cache" alias="local" />
         </service>
+
         <service id="sulu_media.image.converter" class="%sulu_media.image.converter.class%">
             <argument type="service" id="sulu_media.image.command_manager" />
         </service>

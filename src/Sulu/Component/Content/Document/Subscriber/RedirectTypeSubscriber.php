@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -28,7 +28,8 @@ class RedirectTypeSubscriber implements EventSubscriberInterface
     {
         return [
             Events::METADATA_LOAD => 'handleMetadataLoad',
-            Events::PERSIST => 'handlePersist',
+            // has to be called sooner, because the ResourceSegmentSubscriber relies ont that value
+            Events::PERSIST => ['handlePersist', 15],
         ];
     }
 

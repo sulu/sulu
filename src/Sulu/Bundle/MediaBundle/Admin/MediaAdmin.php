@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,6 +15,7 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\DataNavigationItem;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class MediaAdmin extends Admin
@@ -29,39 +30,29 @@ class MediaAdmin extends Admin
         $this->securityChecker = $securityChecker;
 
         $rootNavigationItem = new NavigationItem($title);
-        $section = new NavigationItem('');
+        $section = new NavigationItem('navigation.modules');
+        $section->setPosition(20);
 
-        $media = new NavigationItem('navigation.media');
-        $media->setIcon('image');
+        if ($this->securityChecker->hasPermission('sulu.media.collections', PermissionTypes::VIEW)) {
+            $media = new DataNavigationItem('navigation.media', '/admin/api/collections?sortBy=title', $section);
+            $media->setId('collections-edit');
+            $media->setPosition(20);
+            $media->setIcon('image');
+            $media->setAction('media/collections/root');
+            $media->setInstanceName('collections');
+            $media->setDataNameKey('title');
+            $media->setDataResultKey('collections');
+            $media->setShowAddButton(true);
+            $media->setTitleTranslationKey('navigation.media.collections');
+            $media->setNoDataTranslationKey('navigation.media.collections.empty');
+            $media->setAddButtonTranslationKey('navigation.media.collections.add');
+            $media->setSearchTranslationKey('navigation.media.collections.search');
 
-        if ($this->securityChecker->hasPermission('sulu.media.collections', 'view')) {
-            $collections = new DataNavigationItem('navigation.media.collections', '/admin/api/collections?sortBy=title', $media);
-            $collections->setId('collections-edit');
-            $collections->setAction('media/collections/root');
-            $collections->setInstanceName('collections');
-            $collections->setDataNameKey('title');
-            $collections->setDataResultKey('collections');
-            $collections->setShowAddButton(true);
-            $collections->setTitleTranslationKey('navigation.media.collections');
-            $collections->setNoDataTranslationKey('navigation.media.collections.empty');
-            $collections->setAddButtonTranslationKey('navigation.media.collections.add');
-            $collections->setSearchTranslationKey('navigation.media.collections.search');
-        }
-
-        if ($media->hasChildren()) {
             $section->addChild($media);
             $rootNavigationItem->addChild($section);
         }
 
         $this->setNavigation(new Navigation($rootNavigationItem));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCommands()
-    {
-        return [];
     }
 
     /**
@@ -77,7 +68,16 @@ class MediaAdmin extends Admin
         return [
             'Sulu' => [
                 'Media' => [
-                    'sulu.media.collections',
+                    'sulu.media.collections' => [
+                        PermissionTypes::VIEW,
+                        PermissionTypes::ADD,
+                        PermissionTypes::EDIT,
+                        PermissionTypes::DELETE,
+                        PermissionTypes::SECURITY,
+                    ],
+                    'sulu.media.system_collections' => [
+                        PermissionTypes::VIEW,
+                    ],
                 ],
             ],
         ];

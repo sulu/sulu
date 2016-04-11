@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -23,6 +23,7 @@ use Sulu\Bundle\SearchBundle\Rest\SearchResultRepresentation;
 use Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfiguration;
 use Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfigurationProviderInterface;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -128,8 +129,8 @@ class SearchController
                 'query' => $query,
                 'index' => $index,
             ],
-            (integer) $page,
-            (integer) $limit,
+            (int) $page,
+            (int) $limit,
             $pager->getNbPages(),
             'page',
             'limit',
@@ -206,7 +207,7 @@ class SearchController
                 continue;
             }
 
-            if ($this->securityChecker->hasPermission($indexConfiguration->getSecurityContext(), 'view')) {
+            if ($this->securityChecker->hasPermission($indexConfiguration->getSecurityContext(), PermissionTypes::VIEW)) {
                 $allowedIndexNames[] = $indexName;
             }
         }

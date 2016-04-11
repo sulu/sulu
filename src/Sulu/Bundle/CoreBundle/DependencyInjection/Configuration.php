@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -79,14 +79,6 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('config_dir')
                     ->defaultValue('%kernel.root_dir%/Resources/webspaces')
-                ->end()
-                ->arrayNode('request_analyzer')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('priority')
-                            ->defaultValue(300)
-                        ->end()
-                    ->end()
                 ->end()
             ->end()
         ->end();

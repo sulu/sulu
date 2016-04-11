@@ -12,6 +12,8 @@
     <services>
         <service id="sulu_snippet.admin" class="%sulu_snippet.admin.class%">
             <argument type="service" id="sulu_security.security_checker"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument>%sulu_snippet.content-type.default_enabled%</argument>
             <argument>%sulu_admin.name%</argument>
 
             <tag name="sulu.admin"/>
@@ -20,6 +22,15 @@
 
         <service id="sulu_snippet.content_navigation_provider" class="%sulu_snippet.content_navigation_provider.class%">
             <tag name="sulu_admin.content_navigation" alias="snippet"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_snippet.webspace_navigation_provider"
+                 class="Sulu\Bundle\SnippetBundle\Admin\WebspaceContentNavigationProvider">
+            <argument type="service" id="sulu_security.security_checker"/>
+            <argument>%sulu_snippet.content-type.default_enabled%</argument>
+
+            <tag name="sulu_admin.content_navigation" alias="webspace"/>
             <tag name="sulu.context" context="admin"/>
         </service>
 

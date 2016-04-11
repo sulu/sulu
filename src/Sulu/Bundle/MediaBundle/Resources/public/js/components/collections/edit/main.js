@@ -20,6 +20,7 @@ define([
     var defaults = {};
 
     return {
+
         header: function() {
             var buttons = {
                 edit: {
@@ -52,7 +53,10 @@ define([
 
                 noBack: true,
                 tabs: {
-                    url: '/admin/content-navigations?alias=media'
+                    url: '/admin/content-navigations?alias=media',
+                    componentOptions: {
+                        values: this.data
+                    }
                 },
                 toolbar: {
                     buttons: buttons,
@@ -165,6 +169,7 @@ define([
             this.sandbox.on('sulu.medias.collection.saved', function(id, collection) {
                 if (!collection.locale || collection.locale === UserSettingsManager.getMediaLocale()) {
                     this.data = collection;
+                    this.sandbox.emit('sulu.header.saved', this.data);
                 }
             }.bind(this));
 

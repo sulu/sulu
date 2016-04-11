@@ -22,17 +22,20 @@ define([
             return this.save.call(this, attributes, options);
         },
 
-        fullSave: function(template, webspace, language, parent, state, type, attributes, options) {
+        /**
+         * @deprecated Use ContentManager::save instead
+         */
+        fullSave: function(webspace, language, parent, state, type, attributes, options, force) {
             options = _.defaults(
                 (options || {}),
                 {
                     url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '')
                         + '?webspace=' + webspace
                         + '&language=' + language
-                        + '&template=' + template
                         + (!!type ? '&type=' + type : '')
                         + (!!parent ? '&parent=' + parent : '')
                         + (!!state ? '&state=' + state : '')
+                        + (!!force ? '&force=' + force : '')
                 });
 
             return this.save.call(this, attributes, options);

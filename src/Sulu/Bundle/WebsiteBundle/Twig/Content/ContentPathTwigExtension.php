@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -66,25 +66,38 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
     /**
      * {@inheritdoc}
      */
-    public function getContentPath($url, $webspaceKey = null, $locale = null, $domain = null, $scheme = 'http')
+    public function getContentPath($url, $webspaceKey = null, $locale = null, $domain = null, $scheme = null)
     {
-        if (
-            $webspaceKey !== null &&
-            $this->requestAnalyzer
-        ) {
-            $portalUrls = $this->webspaceManager->findUrlsByResourceLocator(
+        if (!$this->requestAnalyzer) {
+            return $url;
+        }
+
+        $domain = $domain ?: $this->requestAnalyzer->getAttribute('host');
+        $scheme = $scheme ?: $this->requestAnalyzer->getAttribute('scheme');
+        $locale = $locale ?: $this->requestAnalyzer->getCurrentLocalization()->getLocale();
+
+        if ($webspaceKey !== null) {
+            if (!$this->webspaceManager->findWebspaceByKey($webspaceKey)->hasDomain($domain, $this->environment)) {
+                $domain = null;
+            }
+
+            $url = $this->webspaceManager->findUrlByResourceLocator(
                 $url,
                 $this->environment,
-                $locale ?: $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
+                $locale,
                 $webspaceKey,
                 $domain,
                 $scheme
             );
-            if (count($portalUrls) > 0) {
-                return rtrim($portalUrls[0], '/');
-            }
-        } elseif (strpos($url, '/') === 0 && $this->requestAnalyzer) {
-            return rtrim($this->requestAnalyzer->getResourceLocatorPrefix() . $url, '/');
+        } elseif (strpos($url, '/') === 0) {
+            $url = $this->webspaceManager->findUrlByResourceLocator(
+                $url,
+                $this->environment,
+                $locale,
+                $this->requestAnalyzer->getWebspace()->getKey(),
+                $domain,
+                $scheme
+            );
         }
 
         return $url;
@@ -95,15 +108,7 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
      */
     public function getContentRootPath($full = false)
     {
-        if ($this->requestAnalyzer !== null) {
-            if ($full) {
-                return $this->requestAnalyzer->getPortalUrl();
-            } else {
-                return $this->requestAnalyzer->getResourceLocatorPrefix();
-            }
-        } else {
-            return '/';
-        }
+        return $this->getContentPath('/');
     }
 
     /**

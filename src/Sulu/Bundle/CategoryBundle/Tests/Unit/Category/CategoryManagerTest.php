@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,11 +12,16 @@
 namespace Sulu\Bundle\CategoryBundle\Tests\Unit\Category;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManager;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Category\CategoryRepositoryInterface;
+use Sulu\Bundle\CategoryBundle\Category\KeywordManagerInterface;
+use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
+use Sulu\Bundle\CategoryBundle\Entity\Keyword;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -35,7 +40,7 @@ class CategoryManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * @var ObjectManager
      */
-    protected $em;
+    protected $entityManager;
 
     /**
      * @var EventDispatcherInterface
@@ -47,41 +52,25 @@ class CategoryManagerTest extends \PHPUnit_Framework_TestCase
      */
     private $categoryManager;
 
+    /**
+     * @var KeywordManagerInterface
+     */
+    private $keywordManager;
+
     public function setUp()
     {
-        $this->categoryRepository = $this->getMockForAbstractClass(
-            'Sulu\Bundle\CategoryBundle\Category\CategoryRepositoryInterface',
-            [],
-            '',
-            false
-        );
-
-        $this->userRepository = $this->getMockForAbstractClass(
-            'Sulu\Component\Security\Authentication\UserRepositoryInterface',
-            [],
-            '',
-            false
-        );
-
-        $this->em = $this->getMockForAbstractClass(
-            'Doctrine\Common\Persistence\ObjectManager',
-            [],
-            '',
-            false
-        );
-
-        $this->eventDispatcher = $this->getMockForAbstractClass(
-            'Symfony\Component\EventDispatcher\EventDispatcherInterface',
-            [],
-            '',
-            false
-        );
+        $this->categoryRepository = $this->prophesize(CategoryRepositoryInterface::class);
+        $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
+        $this->entityManager = $this->prophesize(EntityManagerInterface::class);
+        $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $this->keywordManager = $this->prophesize(KeywordManagerInterface::class);
 
         $this->categoryManager = new CategoryManager(
-            $this->categoryRepository,
-            $this->userRepository,
-            $this->em,
-            $this->eventDispatcher
+            $this->categoryRepository->reveal(),
+            $this->userRepository->reveal(),
+            $this->keywordManager->reveal(),
+            $this->entityManager->reveal(),
+            $this->eventDispatcher->reveal()
         );
     }
 
@@ -114,5 +103,23 @@ class CategoryManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($wrappers[3] instanceof CategoryWrapper);
         $this->assertEquals(null, $wrappers[1]);
         $this->assertEquals(null, $wrappers[4]);
+    }
+
+    public function testDelete()
+    {
+        $id = 1;
+
+        $translation = $this->prophesize(CategoryTranslation::class);
+        $keyword1 = $this->prophesize(Keyword::class);
+        $keyword2 = $this->prophesize(Keyword::class);
+        $category = $this->prophesize(Category::class);
+        $translation->getKeywords()->willReturn([$keyword1->reveal(), $keyword2->reveal()]);
+        $category->getTranslations()->willReturn([$translation->reveal()]);
+
+        $this->categoryRepository->findCategoryById($id)->willReturn($category->reveal());
+        $this->keywordManager->delete($keyword1->reveal(), $category->reveal())->shouldBeCalledTimes(1);
+        $this->keywordManager->delete($keyword2->reveal(), $category->reveal())->shouldBeCalledTimes(1);
+
+        $this->categoryManager->delete($id);
     }
 }

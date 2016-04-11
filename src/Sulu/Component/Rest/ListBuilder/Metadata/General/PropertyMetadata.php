@@ -170,7 +170,8 @@ class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
-     * @return boolean
+     * @return bool
+     * @return bool
      */
     public function isSortable()
     {
@@ -178,7 +179,8 @@ class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
-     * @param boolean $sortable
+     * @param bool $sortable
+     * @param bool $sortable
      */
     public function setSortable($sortable)
     {
@@ -186,7 +188,8 @@ class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
-     * @return boolean
+     * @return bool
+     * @return bool
      */
     public function isEditable()
     {
@@ -194,7 +197,8 @@ class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
-     * @param boolean $editable
+     * @param bool $editable
+     * @param bool $editable
      */
     public function setEditable($editable)
     {
@@ -289,7 +293,6 @@ class PropertyMetadata extends BasePropertyMetadata
             $this->editable,
             $this->cssClass,
             $this->filterType,
-            $this->filterTypeParameters,
-            ) = unserialize($str);
+            $this->filterTypeParameters) = unserialize($str);
     }
 }

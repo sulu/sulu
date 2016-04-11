@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -396,6 +396,10 @@ class AccountController extends RestController implements ClassResourceInterface
             $list = new CollectionRepresentation($accounts, self::$entityKey);
             $view = $this->view($list, 200);
         }
+
+        $view->setSerializationContext(
+            SerializationContext::create()->setGroups(['fullAccount', 'partialContact', 'Default'])
+        );
 
         return $this->handleView($view);
     }

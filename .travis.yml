@@ -4,24 +4,30 @@ language: php
 
 php:
   - 5.5
+  - 7.0
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+    - downloads
 
 env:
-  - SULU_ORM=mysql SULU_PHPCR=jackrabbit
-#  - SULU_ORM=postgres SULU_PHPCR=jackrabbit
-#  - SULU_ORM=mysql SULU_PHPCR=doctrine_dbal
-#  - SULU_ORM=postgres SULU_PHPCR=doctrine_dbal
+  global:
+    - JACKRABBIT_VERSION=2.12.0
 
 before_script:
+  - if [ ! -d downloads ]; then mkdir downloads; fi
+  - if [ ! -f downloads/jackrabbit-standalone-$JACKRABBIT_VERSION.jar ]; then cd downloads; wget http://archive.apache.org/dist/jackrabbit/$JACKRABBIT_VERSION/jackrabbit-standalone-$JACKRABBIT_VERSION.jar; cd -; fi
+  - java -jar downloads/jackrabbit-standalone-$JACKRABBIT_VERSION.jar > /dev/null &
+  - phpenv config-rm xdebug.ini
   - composer self-update
-  - composer install
-  - ./bin/jackrabbit.sh
-  - php bin/jackrabbit.php
+  - composer install  --prefer-dist --no-interaction
 
 script: 
-  - time ./bin/runtests.sh -i -a
-  - phpunit
+  # launch with the "r" flag in order to restart jackrabbit after each suite
+  # see: https://github.com/sulu-io/sulu/issues/2137
+  - time ./bin/runtests -i -a -r
 
 notifications:
   slack:
     secure: "Gd3/1e0pBKvJv1UhWpBkWijJpmSWlarg6uPBJO0h4z1IpkZjd++jOjhmOQ7n+yMfuapQuJTcVOK0yIWu7orJoGAKFkBlMEIrLk1xMAG9phjjMLUO0FWgcQ3eVW5mTyfMBtClz4OL5wXckw17ohtXHDK8qnI0Hz9Qj8Rqgf2OZhM="
-

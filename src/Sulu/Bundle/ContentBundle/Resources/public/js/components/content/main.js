@@ -11,9 +11,10 @@ define([
     'sulucontent/model/content',
     'sulucontent/components/content/preview/main',
     'sulucontent/components/copy-locale-overlay/main',
+    'sulucontent/components/open-ghost-overlay/main',
     'sulusecurity/services/security-checker',
     'config'
-], function(Content, Preview, CopyLocale, SecurityChecker, Config) {
+], function(Content, Preview, CopyLocale, OpenGhost, SecurityChecker, Config) {
 
     'use strict';
 
@@ -29,6 +30,11 @@ define([
             contentNodeType: 1,
             internalLinkNodeType: 2,
             externalLinkNodeType: 4
+        },
+
+        errorCodes = {
+            contentChanged: 1102,
+            resourceLocatorAlreadyExists: 1103
         },
 
         translationKeys = {
@@ -227,7 +233,27 @@ define([
                     var data = this.content.toJSON();
 
                     if (!!data.id) {
-                        this.sandbox.emit('sulu.content.contents.load', data, this.options.webspace, item.id);
+                        if (-1 === _(data.concreteLanguages).indexOf(item.id)
+                            && -1 === _(data.enabledShadowLanguages).values().indexOf(item.id)
+                        ) {
+                            OpenGhost.openGhost.call(this, data).then(function(copy, src) {
+                                    if (!!copy) {
+                                        CopyLocale.copyLocale.call(
+                                            this,
+                                            data.id,
+                                            src,
+                                            [item.id],
+                                            function() {
+                                                this.load(data, this.options.webspace, item.id, true);
+                                            }.bind(this)
+                                        );
+                                    } else {
+                                        this.load(data, this.options.webspace, item.id, true);
+                                    }
+                                }.bind(this));
+                        } else {
+                            this.load(data, this.options.webspace, item.id, true);
+                        }
                     } else {
                         this.add(
                             !!this.options.parent ? {id: this.options.parent} : null,
@@ -252,29 +278,26 @@ define([
             }.bind(this));
 
             // content saved
-            this.sandbox.on('sulu.content.contents.saved', function(id, data) {
-                this.data = data;
-                this.setHeaderBar(true);
-                this.updateTabVisibility();
+            this.sandbox.on('sulu.content.contents.saved', function(id, data, action) {
+                if (!this.options.id) {
+                    this.sandbox.sulu.viewStates.justSaved = true;
+                } else {
+                    this.data = data;
+                    this.content.set(data);
+                    this.setHeaderBar(true);
 
-                // FIXME select should be able to override text in a item
-                this.sandbox.dom.html('li[data-id="' + this.options.language + '"] a', this.options.language);
+                    // FIXME select should be able to override text in a item
+                    this.sandbox.dom.html('li[data-id="' + this.options.language + '"] a', this.options.language);
 
-                this.sandbox.emit('sulu.labels.success.show', 'labels.success.content-save-desc', 'labels.success');
+                    this.sandbox.emit('sulu.header.saved', data);
+                    this.sandbox.emit('sulu.labels.success.show', 'labels.success.content-save-desc', 'labels.success');
+                }
+
+                this.afterSaveAction(action, !this.options.id);
             }, this);
 
-            // content save-error
-            this.sandbox.on('sulu.content.contents.save-error', function(status) {
-                if (status === 409) {
-                    this.sandbox.emit(
-                        'sulu.labels.error.show',
-                        'labels.error.content-save-resource-locator',
-                        'labels.error'
-                    );
-                } else {
-                    this.sandbox.emit('sulu.labels.error.show', 'labels.error.content-save-desc', 'labels.error');
-                }
-                this.setHeaderBar(false);
+            this.sandbox.on('sulu.content.contents.error', function(code, data, action) {
+                this.handleError(code, data, action);
             }, this);
 
             // content delete
@@ -435,8 +458,8 @@ define([
             ].join('');
 
             this.sandbox.util.save(url, 'POST', {
-                position: position
-            })
+                    position: position
+                })
                 .then(function(data) {
                     if (!!successCallback && typeof successCallback === 'function') {
                         successCallback(data);
@@ -561,46 +584,124 @@ define([
             });
         },
 
+        /**
+         * Asks if the content should be overriden, if the content has been changed on the server.
+         * @param {Object} data
+         * @param {string} action
+         */
+        handleErrorContentChanged: function(data, action) {
+            this.sandbox.emit(
+                'sulu.overlay.show-warning',
+                'content.changed-warning.title',
+                'content.changed-warning.description',
+                function() {
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
+                }.bind(this),
+                function() {
+                    this.saveContent(
+                        data,
+                        {
+                            // on success save contents id
+                            success: function(response) {
+                                var model = response.toJSON();
+                                this.sandbox.emit('sulu.content.contents.saved', model.id, model, action);
+                                this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
+                            }.bind(this),
+                            error: function(model, response) {
+                                this.sandbox.emit(
+                                    'sulu.content.contents.error',
+                                    response.responseJSON.code,
+                                    data,
+                                    action
+                                );
+                            }.bind(this)
+                        },
+                        true
+                    );
+                }.bind(this),
+                {
+                    okDefaultText: 'content.changed-warning.ok-button'
+                }
+            );
+        },
+
+        /**
+         * Handles the error based on its error code.
+         * @param {number} errorCode
+         * @param {Object} data
+         * @param {string} action
+         */
+        handleError: function(errorCode, data, action) {
+            switch (errorCode) {
+                case errorCodes.contentChanged:
+                    this.handleErrorContentChanged(data, action);
+                    break;
+                case errorCodes.resourceLocatorAlreadyExists:
+                    this.sandbox.emit(
+                        'sulu.labels.error.show',
+                        'labels.error.content-save-resource-locator',
+                        'labels.error'
+                    );
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
+                    break;
+                default:
+                    this.sandbox.emit('sulu.labels.error.show', 'labels.error.content-save-desc', 'labels.error');
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
+            }
+        },
+
         save: function(data, action) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
 
             var def = this.sandbox.data.deferred();
+
+            if (!!this.template) {
+                data.template = this.template;
+            }
 
             if (!!this.content) {
                 this.content.set(data);
             } else {
                 this.content = new Content(data);
             }
+
             if (!!this.options.id) {
                 this.content.set({id: this.options.id});
             }
+
+            this.saveContent(
+                data,
+                {
+                    // on success save contents id
+                    success: function(response) {
+                        var model = response.toJSON();
+                        this.sandbox.emit('sulu.content.contents.saved', model.id, model, action);
+                        def.resolve();
+                    }.bind(this),
+                    error: function(model, response) {
+                        this.sandbox.emit('sulu.content.contents.error', response.responseJSON.code, data, action);
+                    }.bind(this)
+                }
+            );
+
+            return def;
+        },
+
+        saveContent: function(data, options, force) {
+            if (typeof force === 'undefined') {
+                force = false;
+            }
+
             this.content.fullSave(
-                this.template,
                 this.options.webspace,
                 this.options.language,
                 this.options.parent,
                 this.state,
                 (isHomeDocument(data) ? 'home' : null),
-                null, {
-                    // on success save contents id
-                    success: function(response) {
-                        var model = response.toJSON();
-                        if (!!this.options.id) {
-                            this.sandbox.emit('sulu.content.contents.saved', model.id, model);
-                        } else {
-                            this.sandbox.sulu.viewStates.justSaved = true;
-                        }
-                        this.afterSaveAction(action, !this.options.id);
-                        def.resolve();
-                    }.bind(this),
-                    error: function(model, response) {
-                        this.sandbox.logger.log("error while saving profile");
-                        this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
-                        this.sandbox.emit('sulu.content.contents.save-error', response.status);
-                    }.bind(this)
-                });
-
-            return def;
+                null,
+                options,
+                force
+            );
         },
 
         /**
@@ -665,7 +766,6 @@ define([
         render: function() {
             this.setTemplate(this.data);
             this.setState(this.data);
-            this.updateTabVisibility();
 
             if (!!this.options.preview && this.data.nodeType === constants.contentNodeType && !this.data.shadowOn) {
                 this.sandbox.on('sulu.preview.initiated', function() {
@@ -766,6 +866,21 @@ define([
          * Starts the toolbar for the preview
          */
         startPreviewToolbar: function() {
+            var buttons = {
+                displayDevices: {},
+                refresh: {}
+            };
+
+            if (!!this.content.get('_permissions').live) {
+                buttons.cache = {
+                    options: {
+                        icon: 'recycle',
+                        title: 'sulu.website.cache.remove',
+                        callback: this.cacheClear.bind(this)
+                    }
+                };
+            }
+
             this.sandbox.start([{
                 name: 'toolbar@husky',
                 options: {
@@ -773,17 +888,7 @@ define([
                     instanceName: 'preview',
                     skin: 'big',
                     responsive: true,
-                    buttons: this.sandbox.sulu.buttons.get({
-                        displayDevices: {},
-                        refresh: {},
-                        cache: {
-                            options: {
-                                icon: 'recycle',
-                                title: 'sulu.website.cache.remove',
-                                callback: this.cacheClear.bind(this)
-                            }
-                        }
-                    })
+                    buttons: this.sandbox.sulu.buttons.get(buttons)
                 }
             }]);
         },
@@ -932,30 +1037,6 @@ define([
             this.saved = saved;
         },
 
-        updateTabVisibility: function() {
-            var tabs = ['content', 'excerpt', 'seo'],
-                usedTabs = tabs,
-                unusedTabs;
-
-            if (this.data.nodeType === constants.internalLinkNodeType
-                || this.data.nodeType === constants.externalLinkNodeType
-            ) {
-                usedTabs = ['seo'];
-            } else if (!!this.data.shadowOn) {
-                usedTabs = [];
-            }
-
-            unusedTabs = _.difference(tabs, usedTabs);
-
-            usedTabs.forEach(function(tab) {
-                this.sandbox.emit('husky.tabs.header.item.show', constants.tabPrefix + tab);
-            }.bind(this));
-
-            unusedTabs.forEach(function(tab) {
-                this.sandbox.emit('husky.tabs.header.item.hide', constants.tabPrefix + tab);
-            }.bind(this));
-        },
-
         getPreviewDocument: function() {
             if (!!this.previewWindow) {
                 return this.previewWindow.document;
@@ -994,7 +1075,7 @@ define([
                     before = sequence[item];
                     filter += ' *[property="' + sequence[item] + '"]';
                 } else {
-                    filter += ' *[rel="' + before + '"]:nth-child(' + (parseInt(sequence[item]) + 1) + ')';
+                    filter += ' *[rel="' + before + '"]:eq(' + (parseInt(sequence[item])) + ')';
                 }
             }
 
@@ -1023,7 +1104,7 @@ define([
 
         handle: function(content, selector, validate) {
             var i = 0,
-                elements = this.getPreviewDocument().querySelectorAll(selector),
+                elements = $(this.getPreviewDocument()).find(selector),
                 nodeArray = [].slice.call(elements);
 
             nodeArray.forEach(function(element) {
@@ -1096,12 +1177,6 @@ define([
                         id: this.localizations[i].id,
                         title: this.localizations[i].title
                     };
-
-                    if (concreteLanguages.indexOf(this.localizations[i].id) < 0) {
-                        dropdownLocalizations[i].title += [
-                            ' (', this.sandbox.translate('content.contents.new'), ')'
-                        ].join('');
-                    }
                 }
 
                 navigationUrl = '/admin/content-navigations';
@@ -1186,7 +1261,10 @@ define([
                     noBack: isHomeDocument(this.data),
 
                     tabs: {
-                        url: navigationUrl
+                        url: navigationUrl,
+                        componentOptions: {
+                            values: this.content.toJSON()
+                        }
                     },
 
                     title: function() {
@@ -1216,7 +1294,7 @@ define([
                         collapsed: true
                     },
                     content: {
-                        shrinkable: (!!this.options.preview) ? true : false
+                        shrinkable: !!this.options.preview
                     },
                     sidebar: (!!this.options.preview) ? 'max' : false
                 };

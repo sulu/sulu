@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -22,8 +22,9 @@ use Sulu\Component\Websocket\Exception\MissingParameterException;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerException;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerInterface;
-use Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Handles messages for preview.
@@ -66,7 +67,7 @@ class PreviewMessageHandler implements MessageHandlerInterface
 
     public function __construct(
         PreviewInterface $preview,
-        AdminRequestAnalyzer $requestAnalyzer,
+        RequestAnalyzer $requestAnalyzer,
         Registry $registry,
         ContentMapperInterface $contentMapper,
         LoggerInterface $logger
@@ -280,8 +281,8 @@ class PreviewMessageHandler implements MessageHandlerInterface
         }
         $changes = $msg['data'];
 
-        $this->requestAnalyzer->setWebspaceKey($webspaceKey);
-        $this->requestAnalyzer->setLocalizationCode($locale);
+        $request = new Request(['webspace' => $webspaceKey, 'locale' => $locale]);
+        $this->requestAnalyzer->analyze($request);
 
         foreach ($changes as $property => $data) {
             // update property

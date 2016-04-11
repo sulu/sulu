@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -37,7 +37,7 @@ class CategoryMeta
     private $id;
 
     /**
-     * @var \Sulu\Bundle\CategoryBundle\Entity\Category
+     * @var Category
      */
     private $category;
 
@@ -126,11 +126,11 @@ class CategoryMeta
     /**
      * Set category.
      *
-     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $category
+     * @param Category $category
      *
      * @return CategoryMeta
      */
-    public function setCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $category)
+    public function setCategory(Category $category)
     {
         $this->category = $category;
 
@@ -140,7 +140,7 @@ class CategoryMeta
     /**
      * Get category.
      *
-     * @return \Sulu\Bundle\CategoryBundle\Entity\Category
+     * @return Category
      */
     public function getCategory()
     {

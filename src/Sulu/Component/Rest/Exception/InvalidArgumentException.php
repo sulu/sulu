@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -39,7 +39,7 @@ class InvalidArgumentException extends RestException
     {
         $this->entity = $entity;
         $this->argument = $argument;
-        $message = 'The "' . $entity . '"-entity requires a valid "' . $argument . '"-argument';
+        $message = 'The "' . $entity . '"-entity requires a valid "' . $argument . '"-argument. ';
         if ($customMessage != null) {
             $message .= $customMessage;
         }

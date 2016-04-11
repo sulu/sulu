@@ -43,6 +43,7 @@ class SeoTwigExtension extends \Twig_Extension
         $this->requestStack = $requestStack;
         // FIXME Should not use another twig extension here, that is not the intended use case of twig extensions
         $this->contentPath = $contentPath;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -75,6 +76,10 @@ class SeoTwigExtension extends \Twig_Extension
      */
     public function renderSeoTags(array $seoExtension, array $content, array $urls, $shadowBaseLocale)
     {
+        $request = $this->requestStack->getCurrentRequest();
+        $requestSeo = $request->get('_seo', []);
+        $seoExtension = array_merge($seoExtension, $requestSeo);
+
         $html = '';
         // FIXME this is only necessary because we have to set a default parameter
         $webspace = $this->requestAnalyzer->getWebspace();
@@ -113,11 +118,11 @@ class SeoTwigExtension extends \Twig_Extension
         $titleHtml = '<title>%s</title>';
 
         if (isset($seoExtension['title']) && $seoExtension['title'] !== '') {
-            return sprintf($titleHtml, $seoExtension['title']);
+            return sprintf($titleHtml, htmlentities($seoExtension['title']));
         }
 
         if (isset($content['title'])) {
-            return sprintf($titleHtml . PHP_EOL, $content['title']);
+            return sprintf($titleHtml . PHP_EOL, htmlentities($content['title']));
         }
 
         return '';
@@ -170,7 +175,7 @@ class SeoTwigExtension extends \Twig_Extension
      */
     private function renderMetaTag($name, $content)
     {
-        return sprintf('<meta name="%s" content="%s"/>' . PHP_EOL, $name, $content);
+        return sprintf('<meta name="%s" content="%s"/>' . PHP_EOL, $name, htmlentities($content));
     }
 
     /**
@@ -203,7 +208,7 @@ class SeoTwigExtension extends \Twig_Extension
                 }
 
                 $html .= $this->renderAlternateLink($url, $webspaceKey, $locale, false, $scheme);
-                $concreteTranslations++;
+                ++$concreteTranslations;
             }
         }
 

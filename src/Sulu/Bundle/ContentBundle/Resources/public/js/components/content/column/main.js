@@ -8,9 +8,10 @@
  */
 
 define([
+    'config',
     'sulucontent/components/open-ghost-overlay/main',
     'sulusecurity/services/security-checker'
-], function(OpenGhost, SecurityChecker) {
+], function(Config, OpenGhost, SecurityChecker) {
 
     'use strict';
 
@@ -110,7 +111,7 @@ define([
         },
 
         /**
-         * Enaber for ORDER
+         * Enabler for ORDER
          * @param column
          * @returns {boolean}
          */
@@ -124,7 +125,9 @@ define([
                 }
             });
 
-            return column.numberItems > 1 && editChildrenPermission && checkParentSecurity(column, 'edit');
+            return column.numberItems > 1
+                && editChildrenPermission
+                && checkParentSecurity(column, 'edit', this.options.webspace);
         },
 
         /**
@@ -133,23 +136,26 @@ define([
          * @returns {boolean}
          */
         addButtonEnabler = function(column) {
-            return checkParentSecurity(column, 'add');
+            return checkParentSecurity(column, 'add', this.options.webspace);
         },
 
         /**
          * Checks if the selected item in the parent column has the given permission
          * @param column
          * @param permission
+         * @param webspace
          * @returns {boolean}
          */
-        checkParentSecurity = function(column, permission) {
+        checkParentSecurity = function(column, permission, webspace) {
             if (!!column.parent) {
                 if (!!column.parent.hasOwnProperty('_permissions')) {
                     return column.parent._permissions[permission];
                 }
 
                 if (!column.parent.selectedItem) {
-                    return true;
+                    var config = Config.get('sulu_security.contexts')['sulu.webspaces.' + webspace];
+
+                    return !!config[permission];
                 }
             }
 

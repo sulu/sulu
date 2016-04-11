@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="de" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1" resname="collaboration.warning">
+                <source>content.collaboration.warning</source>
+                <target>
+                    <![CDATA[
+                    Cette page est actuellement utilisée par <strong>%s</strong><br/>
+                    Vos changements risquent de se perdre ou d' être effacés par.
+                    ]]>
+                </target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

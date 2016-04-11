@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -31,7 +31,7 @@ class TemplateControllerTest extends SuluTestCase
         );
         $crawler = $client->request('GET', '/content/template/form/default.html');
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals(1, $crawler->filter('form#content-form')->count());
 
         // foreach property one textfield

@@ -190,6 +190,22 @@
                     }
                 },
                 {
+                    name: 'export',
+                    template: {
+                        title: 'public.export',
+                        icon: 'download',
+                        callback: function() {
+                            var $container = $('<div/>');
+                            $('body').append($container);
+
+                            App.start([{
+                                name: 'csv-export@suluadmin',
+                                options: {el: $container, urlParameter: this.urlParameter, url: this.url}
+                            }]);
+                        }
+                    }
+                },
+                {
                     name: 'edit',
                     template: {
                         title: 'public.edit',
@@ -261,7 +277,7 @@
                         title: '',
                         content: '<div ' +
                         'data-aura-component="toggler@husky" ' +
-                        'data-aura-checked="true" ' +
+                        'data-checked="true" ' +
                         'data-aura-instance-name="sulu-toolbar"></div>'
                     }
                 },
@@ -282,7 +298,7 @@
                             onlyOnClickOnArrow: true
                         }
                     }
-                },
+                }
             ];
 
             adminDropdownItems = [

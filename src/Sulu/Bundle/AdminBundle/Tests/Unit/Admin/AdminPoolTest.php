@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -118,11 +118,6 @@ class AdminPoolTest extends \PHPUnit_Framework_TestCase
         $navigation = $this->adminPool->getNavigation();
         $this->assertEquals('Child1', $navigation->getRoot()->getChildren()[0]->getName());
         $this->assertEquals('Child2', $navigation->getRoot()->getChildren()[1]->getName());
-    }
-
-    public function testCommands()
-    {
-        $this->assertEquals($this->command, $this->adminPool->getCommands()[0]);
     }
 
     public function testSecurityContexts()

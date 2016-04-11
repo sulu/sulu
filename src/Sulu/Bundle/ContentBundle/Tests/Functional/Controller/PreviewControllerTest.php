@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -107,6 +107,7 @@ class PreviewControllerTest extends SuluTestCase
 
         $data = [
             'title' => 'Testtitle',
+            'template' => 'default',
             'tags' => [
                 'tag1',
                 'tag2',
@@ -115,14 +116,13 @@ class PreviewControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
-        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
+        $client->request('POST', '/api/nodes?&webspace=sulu_io&language=de_at', $data);
         $response = json_decode($client->getResponse()->getContent());
 
-        $client->request('GET', '/content/preview/' . $response->id . '/start?webspace=sulu_io&language=en');
-        $client->request('GET', '/content/preview/' . $response->id . '/render?webspace=sulu_io&language=en');
+        $client->request('GET', '/content/preview/' . $response->id . '/render?webspace=sulu_io&language=de_at');
         $response = $client->getResponse()->getContent();
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertTrue(strpos($response, '<h1 property="title">Hello Hikaru Sulu</h1>') > -1);
     }
 
@@ -132,6 +132,7 @@ class PreviewControllerTest extends SuluTestCase
 
         $data = [
             'title' => 'Testtitle',
+            'template' => 'html5',
             'tags' => [
                 'tag1',
                 'tag2',
@@ -140,13 +141,13 @@ class PreviewControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
-        $client->request('POST', '/api/nodes?template=html5&webspace=sulu_io&language=en', $data);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=de_at', $data);
         $response = json_decode($client->getResponse()->getContent());
 
-        $client->request('GET', '/content/preview/' . $response->id . '/render?webspace=sulu_io&language=en');
+        $client->request('GET', '/content/preview/' . $response->id . '/render?webspace=sulu_io&language=de_at');
         $response = $client->getResponse()->getContent();
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertTrue(strpos($response, '<h1>Hello Hikaru Sulu</h1>') > -1);
         $this->assertTrue(strpos($response, '<nav>') > -1);
         $this->assertTrue(strpos($response, '</nav>') > -1);
@@ -158,6 +159,7 @@ class PreviewControllerTest extends SuluTestCase
 
         $data = [
             'title' => 'Testtitle',
+            'template' => 'invalidhtml',
             'tags' => [
                 'tag1',
                 'tag2',
@@ -166,14 +168,13 @@ class PreviewControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
-        $client->request('POST', '/api/nodes?template=invalidhtml&webspace=sulu_io&language=en', $data);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=de_at', $data);
         $response = json_decode($client->getResponse()->getContent());
 
-        $client->request('GET', '/content/preview/' . $response->id . '/start?webspace=sulu_io&language=en');
-        $client->request('GET', '/content/preview/' . $response->id . '/render?webspace=sulu_io&language=en');
+        $client->request('GET', '/content/preview/' . $response->id . '/render?webspace=sulu_io&language=de_at');
         $response = $client->getResponse()->getContent();
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertTrue(strpos($response, '<h1>Hello Hikaru Sulu</h1>') > -1);
         $this->assertTrue(preg_match('/^\<p\>This is a fabulous test case!\s*\<\/p\>/', $response) > -1);
         $this->assertTrue(strpos($response, '<nav>') > -1);

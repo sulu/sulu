@@ -18,3 +18,7 @@ sulu_content.webspace.localization:
 sulu_content.smart_content:
     type: rest
     resource: Sulu\Bundle\ContentBundle\Controller\SmartContentItemController
+
+sulu_content.webspace:
+    type: rest
+    resource: Sulu\Bundle\ContentBundle\Controller\WebspaceController

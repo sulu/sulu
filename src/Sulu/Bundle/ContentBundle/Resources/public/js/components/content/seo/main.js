@@ -12,6 +12,7 @@ define([], function() {
     'use strict';
 
     var defaults = {
+        maxTitleCharacters: 55,
         maxDescriptionCharacters: 155,
         maxKeywords: 5,
         keywordsSeparator: ',',
@@ -38,6 +39,10 @@ define([], function() {
             this.sandbox.emit('sulu.app.ui.reset', { navigation: 'small', content: 'auto'});
             this.sandbox.emit('husky.toolbar.header.item.disable', 'template', false);
 
+            this.title = {
+                $el: null,
+                $counter: null
+            };
             this.description = {
                 $el: null,
                 $counter: null
@@ -83,7 +88,7 @@ define([], function() {
         render: function(data) {
             this.data = data;
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/content/template/content/seo', {
-                siteUrl: this.options.excerptUrlPrefix + '/' + this.options.language + this.data.path
+                siteUrl: this.options.excerptUrlPrefix + '/' + this.options.language + this.data.url
             }));
 
             this.createForm(this.initData(data));
@@ -99,6 +104,7 @@ define([], function() {
                 this.sandbox.form.setData(this.formId, data).then(function() {
                     this.listenForChange();
                     this.updateExcerpt();
+                    this.initializeTitleCounter();
                     this.initializeDescriptionCounter();
                     this.initializeKeywordsCounter();
 
@@ -126,6 +132,19 @@ define([], function() {
             );
         },
 
+        initializeTitleCounter: function() {
+            this.title.$el = this.$find('#seo-title');
+            this.title.$counter = this.$find('#title-left');
+            this.updateTitleCounter();
+            this.sandbox.dom.on(this.title.$el, 'keyup', this.updateTitleCounter.bind(this));
+        },
+
+        updateTitleCounter: function() {
+            var charsLeft = this.options.maxTitleCharacters - this.sandbox.dom.val(this.title.$el).length;
+            this.sandbox.dom.html(this.title.$counter, ' ' + charsLeft + ' ');
+            this.toggleWarning(this.title.$counter.parent(), (charsLeft <= 0));
+        },
+
         initializeDescriptionCounter: function() {
             this.description.$el = this.$find('#seo-description');
             this.description.$counter = this.$find('#description-left');
@@ -136,7 +155,7 @@ define([], function() {
         updateDescriptionCounter: function() {
             var charsLeft = this.options.maxDescriptionCharacters - this.sandbox.dom.val(this.description.$el).length;
             this.sandbox.dom.html(this.description.$counter, ' ' + charsLeft + ' ');
-            this.toggleWarning(this.description.$counter.parent(), (charsLeft < 0));
+            this.toggleWarning(this.description.$counter.parent(), (charsLeft <= 0));
         },
 
         updateKeywordsCounter: function() {

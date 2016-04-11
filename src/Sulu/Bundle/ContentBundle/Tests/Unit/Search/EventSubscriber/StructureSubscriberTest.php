@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Search\EventSubscriber;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
-use Sulu\Component\Content\Document\Subscriber\SubscriberTestCase;
+use Sulu\Component\Content\Tests\Unit\Document\Subscriber\SubscriberTestCase;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 
 class StructureSubscriberTest extends SubscriberTestCase

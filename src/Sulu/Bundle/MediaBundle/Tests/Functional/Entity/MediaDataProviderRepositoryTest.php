@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -94,7 +95,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         parent::setUp();
 
         $this->purgeDatabase();
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
 
         foreach ($this->collectionData as $collection) {
             $this->collections[] = $this->createCollection($collection[0], $collection[1]);

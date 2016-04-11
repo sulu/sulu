@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of Sulu
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -65,24 +66,17 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
     {
         $permissions = [];
 
-        try {
-            $document = $this->documentManager->find($identifier, null, ['rehydrate' => false]);
-        } catch (DocumentNotFoundException $e) {
+        if (!$identifier) {
             return $permissions;
         }
 
-        $allowedPermissions = $document->getPermissions();
-
-        if (is_array($allowedPermissions)) {
-            foreach ($allowedPermissions as $roleId => $rolePermissions) {
-                $permissions[$roleId] = [];
-                foreach ($this->permissions as $permission => $value) {
-                    $permissions[$roleId][$permission] = in_array($permission, $rolePermissions);
-                }
-            }
+        try {
+            $document = $this->documentManager->find($identifier, null, ['rehydrate' => false]);
+        } catch (DocumentNotFoundException $e) {
+            return [];
         }
 
-        return $permissions;
+        return $document->getPermissions();
     }
 
     /**

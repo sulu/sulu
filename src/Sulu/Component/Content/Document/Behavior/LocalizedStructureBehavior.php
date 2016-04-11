@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,7 +13,7 @@ namespace Sulu\Component\Content\Document\Behavior;
 
 /**
  * All content documents can have localized content, but only
- * content documents implementing this behavior can change the 
+ * content documents implementing this behavior can change the
  * structure type for each localization.
  */
 interface LocalizedStructureBehavior

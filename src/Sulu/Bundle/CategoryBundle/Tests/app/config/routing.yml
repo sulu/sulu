@@ -4,4 +4,5 @@ sulu_category:
 
 sulu_category_api:
     resource: "@SuluCategoryBundle/Resources/config/routing_api.yml"
+    type: rest
     prefix: /api

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="e4b1406d7ka085ede200b7f5acb2d39e" resname="search-overlay.index.all.title">
+                <source>search-overlay.index.all.title</source>
+                <target>Tout</target>
+            </trans-unit>
+            <trans-unit id="e4b1428ja8a085ede200b7f5acb2d39e" resname="search-overlay.placeholder">
+                <source>search-overlay.placeholder.all</source>
+                <target>Recherche %s...</target>
+            </trans-unit>
+            <trans-unit id="e4b1428ja8a085ede200b7f5656d39e" resname="search-overlay.asterix-info-text">
+                <source>search-overlay.asterix-info-text</source>
+                <target>Utilisez (*) dans votre requête comme un espace réservé pour les pièces d'un mot.</target>
+            </trans-unit>
+            <trans-unit id="e4b1428ja8a085ede21265f5656d39e" resname="search-overlay.no-results-text">
+                <source>search-overlay.no-results-text</source>
+                <target>Aucun document ne correspond à votre terme de recherche.</target>
+            </trans-unit>
+            <trans-unit id="e4b1428ja8a085ede21265f5656d30f" resname="search-overlay.documents-found">
+                <source>search-overlay.documents-found</source>
+                <target>Documents trouvés:</target>
+            </trans-unit>
+            <trans-unit id="e4b1428ja8a085ede21265f5656d30a" resname="navigation.search-section">
+                <source>navigation.search-section</source>
+                <target></target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

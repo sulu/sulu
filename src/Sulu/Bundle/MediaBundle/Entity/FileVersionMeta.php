@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -35,6 +35,11 @@ class FileVersionMeta
      * @var string
      */
     private $copyright;
+
+    /**
+     * @var string
+     */
+    private $credits;
 
     /**
      * @var string
@@ -126,6 +131,30 @@ class FileVersionMeta
     public function getCopyright()
     {
         return $this->copyright;
+    }
+
+    /**
+     * Set credits.
+     *
+     * @param string $credits
+     *
+     * @return FileVersionMeta
+     */
+    public function setCredits($credits)
+    {
+        $this->credits = $credits;
+
+        return $this;
+    }
+
+    /**
+     * Get credits.
+     *
+     * @return string
+     */
+    public function getCredits()
+    {
+        return $this->credits;
     }
 
     /**

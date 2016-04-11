@@ -203,6 +203,7 @@ class ContentType extends ComplexContentType
                 'presentAs' => $configuration->hasPresentAs(),
             ],
             'datasource' => $configuration->getDatasource(),
+            'deep_link' => new PropertyParameter('deep_link', $configuration->getDeepLink()),
         ];
 
         return array_merge(

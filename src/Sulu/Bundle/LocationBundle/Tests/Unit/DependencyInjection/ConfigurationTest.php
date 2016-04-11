@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,11 +11,13 @@
 
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\DependencyInjection;
 
-use Matthias\SymfonyConfigTest\PhpUnit\AbstractConfigurationTestCase;
+use Matthias\SymfonyConfigTest\PhpUnit\ConfigurationTestCaseTrait;
 use Sulu\Bundle\LocationBundle\DependencyInjection\Configuration;
 
-class ConfigurationTest extends AbstractConfigurationTestCase
+class ConfigurationTest extends \PHPUnit_Framework_TestCase
 {
+    use ConfigurationTestCaseTrait;
+
     protected $expectedDefaultConfig = [
         'types' => [
             'location' => [

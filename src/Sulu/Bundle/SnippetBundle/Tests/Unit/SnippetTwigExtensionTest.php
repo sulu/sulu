@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,6 +16,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 class SnippetTwigExtensionTest extends SuluTestCase
@@ -46,8 +47,23 @@ class SnippetTwigExtensionTest extends SuluTestCase
         $this->requestAnalyzer = $this->getContainer()->get('sulu_core.webspace.request_analyzer');
         $this->structureResolver = $this->getContainer()->get('sulu_website.resolver.structure');
 
-        $this->requestAnalyzer->setWebspaceKey('sulu_io');
-        $this->requestAnalyzer->setLocalizationCode('en');
+        $webspace = $this->getContainer()->get('sulu_core.webspace.webspace_manager')->findWebspaceByKey('sulu_io');
+        $localization = $webspace->getLocalization('en');
+
+        $attributes = new \ReflectionProperty($this->requestAnalyzer, 'attributes');
+        $attributes->setAccessible(true);
+
+        $attributes->setValue(
+            $this->requestAnalyzer,
+            new RequestAttributes(
+                [
+                    'webspaceKey' => $webspace->getKey(),
+                    'webspace' => $webspace,
+                    'locale' => $localization->getLocalization(),
+                    'localization' => $localization,
+                ]
+            )
+        );
 
         $this->initPhpcr();
 

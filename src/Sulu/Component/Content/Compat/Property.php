@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -107,9 +107,6 @@ class Property implements PropertyInterface, \JsonSerializable
      */
     protected $propertyValue;
 
-    /**
-     * Constructor.
-     */
     public function __construct(
         $name,
         $metaData,

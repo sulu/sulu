@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,12 +11,12 @@
 
 namespace Sulu\Bundle\AdminBundle\Behat;
 
-use WebDriver\Exception;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\MinkExtension\Context\RawMinkContext;
 use Sulu\Bundle\TestBundle\Behat\BaseContext;
+use WebDriver\Exception;
 
 /**
  * Behat context class for the AdminBundle.
@@ -81,6 +81,14 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
     }
 
     /**
+     * @Given I click the link icon
+     */
+    public function iClickOnTheLinkIcon()
+    {
+        $this->clickSelector('.fa-link');
+    }
+
+    /**
      * @Given I click the ok button
      */
     public function iClickOnTheOkButton()
@@ -127,7 +135,7 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
     public function iClickOnTheRowContaining($text)
     {
         $this->waitForText($text);
-        $script = <<<EOT
+        $script = <<<'EOT'
 var f = function () {
     var items = document.querySelectorAll("td span.cell-content");
 
@@ -152,7 +160,7 @@ EOT;
     public function iClickOnTheEditIconInTheRowContaining($text)
     {
         $this->waitForText($text);
-        $script = <<<EOT
+        $script = <<<'EOT'
             var f = function () {
                 var items = document.querySelectorAll("td span.cell-content");
 
@@ -229,7 +237,7 @@ EOT;
      */
     public function iSelectFromTheHusky($itemValue, $selectListClass)
     {
-        $script = <<<EOT
+        $script = <<<'EOT'
 var selector = '%s';
 var items = $("div." + selector + " .husky-select-list .item-value");
 if (items.length == 0) {
@@ -285,7 +293,7 @@ EOT;
      */
     public function iClickTheOverlayTab($title)
     {
-        $this->clickByTitle('.overlay-header .tabs-container ul li', $title);
+        $this->clickByTitle('.overlay-tabs .tabs-container ul li a', $title);
     }
 
     /**
@@ -507,7 +515,7 @@ EOT;
         // Workaround for $element->setValue() because this function adds a TAB key at the end.
         // See https://github.com/minkphp/MinkSelenium2Driver/issues/188 for more information.
         $el = $this->getSession()->getDriver()->getWebDriverSession()->element('xpath', $inputElement->getXpath());
-        $el->postValue(array('value' => array($itemValue)));
+        $el->postValue(['value' => [$itemValue]]);
 
         // Wait until loading is finished.
         $this->spin(function (RawMinkContext $context) use ($containerElement) {
@@ -547,7 +555,7 @@ EOT;
                      'data-aura-instance-name',
                      'data-mapper-property',
                  ] as $propertyName) {
-            $script = <<<EOT
+            $script = <<<'EOT'
 var el = $('%s[%s="%s"]').data('element');
 
 if (el !== null) {

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -53,8 +53,15 @@ class SuluWebsiteExtension extends Extension
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 
+        if ($config['analytics']['enabled']) {
+            $loader->load('analytics.xml');
+        }
+
         if (SuluKernel::CONTEXT_WEBSITE == $container->getParameter('sulu.context')) {
             $loader->load('website.xml');
+
+            // default local provider
+            $container->setAlias('sulu_website.default_locale.provider', $config['default_locale']['provider_service_id']);
         }
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -24,6 +24,13 @@ abstract class WebsiteController extends Controller
 {
     /**
      * Returns a rendered structure.
+     *
+     * @param StructureInterface $structure The structure, which has been loaded for rendering
+     * @param array $attributes Additional attributes, which will be passed to twig
+     * @param bool $preview Defines if the site is rendered in preview mode
+     * @param bool $partial Defines if only the content block of the template should be rendered
+     *
+     * @return Response
      */
     protected function renderStructure(
         StructureInterface $structure,
@@ -57,11 +64,6 @@ abstract class WebsiteController extends Controller
                     $viewTemplate,
                     $data
                 );
-            }
-
-            // remove empty first line
-            if (ob_get_length()) {
-                ob_clean();
             }
 
             return new Response($content);

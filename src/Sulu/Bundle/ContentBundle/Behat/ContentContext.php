@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -27,7 +27,7 @@ class ContentContext extends BaseStructureContext implements SnippetAcceptingCon
      */
     public function thereExistsAPageTemplateWithTheFollowingPropertyConfiguration($arg1, PyStringNode $string)
     {
-        $template = <<<EOT
+        $template = <<<'EOT'
 <?xml version="1.0" ?>
 
 <template xmlns="http://schemas.sulu.io/template/template"

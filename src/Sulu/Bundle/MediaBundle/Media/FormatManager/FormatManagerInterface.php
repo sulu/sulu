@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -59,4 +59,9 @@ interface FormatManagerInterface
      * @return bool
      */
     public function purge($idMedia, $fileName, $options);
+
+    /**
+     * Clears the format cache.
+     */
+    public function clearCache();
 }

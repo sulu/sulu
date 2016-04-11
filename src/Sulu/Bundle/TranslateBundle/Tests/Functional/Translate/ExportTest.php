@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -41,7 +41,7 @@ class ExportTest extends SuluTestCase
 
     public function setUp()
     {
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
         $this->purgeDatabase();
 
         $this->export = new Export($this->em);

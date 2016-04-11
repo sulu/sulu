@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,6 +12,8 @@
 namespace Sulu\Bundle\CoreBundle\DependencyInjection;
 
 use InvalidArgumentException;
+use Sulu\Component\Rest\Csv\ObjectNotSupportedException;
+use Sulu\Component\Rest\Exception\InvalidHashException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -45,7 +47,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                 $phpcrConfig['backend']['check_login_on_server'] = false;
             }
 
-            foreach ($container->getExtensions() as $name => $extension) {
+            foreach (array_keys($container->getExtensions()) as $name) {
                 $prependConfig = [];
                 switch ($name) {
                     case 'doctrine_phpcr':
@@ -68,6 +70,24 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $container->prependExtensionConfig('massive_build', [
                 'command_class' => 'Sulu\Bundle\CoreBundle\CommandOptional\SuluBuildCommand',
             ]);
+        }
+
+        if ($container->hasExtension('fos_rest')) {
+            $container->prependExtensionConfig(
+                'fos_rest',
+                [
+                    'exception' => [
+                        'enabled' => true,
+                        'codes' => [
+                            InvalidHashException::class => 409,
+                            ObjectNotSupportedException::class => 406,
+                        ],
+                    ],
+                    'service' => [
+                        'exception_handler' => 'sulu_core.rest.exception_wrapper_handler',
+                    ],
+                ]
+            );
         }
     }
 
@@ -118,6 +138,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('build.xml');
         $loader->load('localization.xml');
         $loader->load('serializer.xml');
+        $loader->load('request_analyzer.xml');
     }
 
     /**
@@ -128,10 +149,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
     private function initWebspace($webspaceConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
     {
         $container->setParameter('sulu_core.webspace.config_dir', $webspaceConfig['config_dir']);
-        $container->setParameter(
-            'sulu_core.webspace.request_analyzer.priority',
-            $webspaceConfig['request_analyzer']['priority']
-        );
         $loader->load('webspace.xml');
     }
 

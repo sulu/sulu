@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -85,6 +85,26 @@ class SessionManager implements SessionManagerInterface
         );
 
         return $path;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getWebspaceNode($webspaceKey)
+    {
+        return $this->getSession()->getNode($this->getWebspacePath($webspaceKey));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getWebspacePath($webspaceKey)
+    {
+        return sprintf(
+            '/%s/%s',
+            $this->nodeNames['base'],
+            $webspaceKey
+        );
     }
 
     /**

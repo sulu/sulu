@@ -52,6 +52,7 @@ class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $this->contentPath = $this->prophesize(ContentPathInterface::class);
         $this->requestStack = $this->prophesize(RequestStack::class);
         $this->request = $this->prophesize(Request::class);
+        $this->request = $this->prophesize(Request::class);
         $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
         $this->request->getScheme()->willReturn('https');
 
@@ -60,6 +61,8 @@ class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
             $this->contentPath->reveal(),
             $this->requestStack->reveal()
         );
+
+        $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
     }
 
     public function testGetFunctions()
@@ -84,8 +87,11 @@ class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $xDefaultLocale,
         $expectedResults,
         $unexpectedResults = [],
-        $resourceLocator = '/test'
+        $resourceLocator = '/test',
+        $requestSeoData = []
     ) {
+        $this->request->get('_seo', [])->willReturn($requestSeoData);
+
         /** @var Localization $localization */
         $localization = $this->prophesize(Localization::class);
         $localization->getLocalization()->willReturn($xDefaultLocale ?: $defaultLocale);
@@ -130,6 +136,7 @@ class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testRenderSeoTagsWithoutPortal()
     {
+        $this->request->get('_seo', [])->willReturn([]);
         $this->seoTwigExtension->renderSeoTags([], [], [], null);
     }
 
@@ -361,6 +368,83 @@ class SeoTwigExtensionTest extends \PHPUnit_Framework_TestCase
                 ],
                 [],
                 false,
+            ],
+            [
+                [
+                    'title' => 'SEO title',
+                    'description' => 'SEO description',
+                    'keywords' => 'SEO keywords',
+                    'canonicalUrl' => '/canonical-url',
+                    'noIndex' => true,
+                    'noFollow' => true,
+                    'hideInSitemap' => true,
+                ],
+                [
+                    'title' => 'Content title',
+                ],
+                [
+                    'en' => '/url-en',
+                    'de' => '/url-de',
+                ],
+                'en',
+                'en',
+                null,
+                [
+                    '<title>SEO title</title>',
+                    '<meta name="description" content="SEO description"/>',
+                    '<meta name="keywords" content="SEO keywords"/>',
+                    '<meta name="robots" content="index,follow"/>',
+                    '<link rel="alternate" href="/en/url-en" hreflang="x-default"/>',
+                    '<link rel="alternate" href="/en/url-en" hreflang="en"/>',
+                    '<link rel="alternate" href="/de/url-de" hreflang="de"/>',
+                    '<link rel="canonical" href="/test-url"/>',
+                ],
+                [],
+                false,
+                [
+                    'canonicalUrl' => '/test-url',
+                    'noIndex' => false,
+                    'noFollow' => false,
+                ],
+            ],
+            [
+                [
+                    'title' => '"SEO title"',
+                    'description' => '"SEO description"',
+                    'keywords' => '"SEO keywords"',
+                ],
+                [],
+                [
+                    'en' => '/url-en',
+                ],
+                'en',
+                'en',
+                null,
+                [
+                    '<title>&quot;SEO title&quot;</title>',
+                    '<meta name="description" content="&quot;SEO description&quot;"/>',
+                    '<meta name="keywords" content="&quot;SEO keywords&quot;"/>',
+                ],
+            ],
+            [
+                [
+                    'description' => '"SEO description"',
+                    'keywords' => '"SEO keywords"',
+                ],
+                [
+                    'title' => '"Content title"',
+                ],
+                [
+                    'en' => '/url-en',
+                ],
+                'en',
+                'en',
+                null,
+                [
+                    '<title>&quot;Content title&quot;</title>',
+                    '<meta name="description" content="&quot;SEO description&quot;"/>',
+                    '<meta name="keywords" content="&quot;SEO keywords&quot;"/>',
+                ],
             ],
         ];
     }

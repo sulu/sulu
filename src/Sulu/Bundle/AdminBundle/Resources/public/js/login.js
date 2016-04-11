@@ -25,7 +25,8 @@ require.config({
     ],
     exclude: [
         'husky'
-    ]
+    ],
+    urlArgs: 'v=develop'
 });
 
 define('underscore', function() {
@@ -63,7 +64,8 @@ require(['husky'], function(Husky) {
             },
             culture: {
                 name: language,
-                messages: messages
+                messages: messages,
+                defaultMessages: {}
             }
         });
 

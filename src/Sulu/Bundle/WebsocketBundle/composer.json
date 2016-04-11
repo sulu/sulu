@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "php": ">=5.4"
+        "php": "^5.5 || ^7.0"
     },
     "require-dev": {
         "symfony/symfony": "2.5.*",

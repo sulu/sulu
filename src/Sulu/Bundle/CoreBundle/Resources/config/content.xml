@@ -47,9 +47,8 @@
             <argument type="service" id="form.factory" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_document_manager.property_encoder" />
-
             <argument type="service" id="sulu.content.structure_manager"/>
-
+            <argument type="service" id="sulu_content.extension.manager"/>
             <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="event_dispatcher"/>
@@ -65,7 +64,6 @@
         <!-- structure manager -->
         <service id="sulu.content.structure_manager" class="%sulu.content.structure_manager.class%">
             <argument type="service" id="sulu_content.structure.factory" />
-            <argument type="service" id="sulu_content.extension.manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_content.compat.structure.legacy_property_factory" />
             <argument>%sulu.content.structure.type_map%</argument>
@@ -86,6 +84,8 @@
         <!-- rlp mapper -->
         <service id="sulu.content.rlp.mapper.phpcr" class="%sulu.content.rlp.mapper.phpcr.class%" public="false">
             <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
         </service>
 
         <!-- rlp strategies -->
@@ -95,6 +95,7 @@
             <argument type="service" id="sulu.content.structure_manager" />
             <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu.util.node_helper"/>
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
         </service>
 
         <!-- simple content types -->
@@ -110,13 +111,12 @@
             <argument>%sulu.content.type.text_editor.template%</argument>
             <tag name="sulu.content.type" alias="text_editor"/>
         </service>
-
-        <!-- complex content types -->
         <service id="sulu.content.type.resource_locator" class="%sulu.content.type.resource_locator.class%">
-            <argument type="service" id="sulu.content.rlp.strategy.tree"/>
             <argument>%sulu.content.type.resource_locator.template%</argument>
             <tag name="sulu.content.type" alias="resource_locator"/>
         </service>
+
+        <!-- complex content types -->
         <service id="sulu.content.type.block" class="%sulu.content.type.block.class%">
             <argument type="service" id="sulu.content.type_manager"/>
             <argument>%sulu.content.type.block.template%</argument>

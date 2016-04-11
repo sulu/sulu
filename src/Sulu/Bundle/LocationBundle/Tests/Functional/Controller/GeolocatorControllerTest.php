@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -42,6 +42,6 @@ class GeolocatorControllerTest extends SuluTestCase
         ]));
 
         $response = $this->client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
     }
 }

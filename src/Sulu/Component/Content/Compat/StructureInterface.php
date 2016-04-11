@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -253,6 +253,8 @@ interface StructureInterface extends \JsonSerializable
      * @param bool $complete True if result should be representation of full node
      *
      * @return array
+     *
+     * @deprecated Use the serializer instead
      */
     public function toArray($complete = true);
 

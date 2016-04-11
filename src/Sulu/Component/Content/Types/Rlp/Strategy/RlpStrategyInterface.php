@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,7 +11,8 @@
 
 namespace Sulu\Component\Content\Types\Rlp\Strategy;
 
-use PHPCR\NodeInterface;
+use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
+use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
 
 /**
  * InterfaceDefinition of Resource Locator Path Strategy.
@@ -28,9 +29,9 @@ interface RlpStrategyInterface
     /**
      * returns whole path for given ContentNode.
      *
-     * @param string $title        title of new node
-     * @param string $parentPath   parent path of new contentNode
-     * @param string $webspaceKey  key of portal
+     * @param string $title title of new node
+     * @param string $parentPath parent path of new contentNode
+     * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
@@ -41,9 +42,9 @@ interface RlpStrategyInterface
     /**
      * returns whole path for given ContentNode.
      *
-     * @param string $title        title of new node
-     * @param string $uuid         uuid for node to generate rl
-     * @param string $webspaceKey  key of portal
+     * @param string $title title of new node
+     * @param string $uuid uuid for node to generate rl
+     * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
@@ -54,55 +55,27 @@ interface RlpStrategyInterface
     /**
      * creates a new route for given path.
      *
-     * @param NodeInterface $contentNode  reference node
-     * @param string        $path         path to generate
-     * @param int           $userId
-     * @param string        $webspaceKey  key of portal
-     * @param string        $languageCode
-     * @param string        $segmentKey
+     * @param ResourceSegmentBehavior $document
+     * @param int $userId
      *
      * @return
      */
-    public function save(NodeInterface $contentNode, $path, $userId, $webspaceKey, $languageCode, $segmentKey = null);
-
-    /**
-     * creates a new resourcelocator and creates the correct history.
-     *
-     * @param string        $src          old resource locator
-     * @param string        $dest         new resource locator
-     * @param NodeInterface $contentNode
-     * @param int           $userId
-     * @param string        $webspaceKey  key of portal
-     * @param string        $languageCode
-     * @param string        $segmentKey
-     */
-    public function move(
-        $src,
-        $dest,
-        NodeInterface $contentNode,
-        $userId,
-        $webspaceKey,
-        $languageCode,
-        $segmentKey = null
-    );
+    public function save(ResourceSegmentBehavior $document, $userId);
 
     /**
      * returns path for given contentNode.
      *
-     * @param NodeInterface $contentNode  reference node
-     * @param string        $webspaceKey  key of portal
-     * @param string        $languageCode
-     * @param string        $segmentKey
+     * @param ResourceSegmentBehavior $document reference node
      *
      * @return string path
      */
-    public function loadByContent(NodeInterface $contentNode, $webspaceKey, $languageCode, $segmentKey = null);
+    public function loadByContent(ResourceSegmentBehavior $document);
 
     /**
      * returns path for given contentNode.
      *
-     * @param string $uuid         uuid of contentNode
-     * @param string $webspaceKey  key of portal
+     * @param string $uuid uuid of contentNode
+     * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
@@ -113,8 +86,8 @@ interface RlpStrategyInterface
     /**
      * returns history for given contentNode.
      *
-     * @param string $uuid         uuid of contentNode
-     * @param string $webspaceKey  key of portal
+     * @param string $uuid uuid of contentNode
+     * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
@@ -126,7 +99,7 @@ interface RlpStrategyInterface
      * returns the uuid of referenced content node.
      *
      * @param string $resourceLocator requested RL
-     * @param string $webspaceKey     key of portal
+     * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
@@ -137,8 +110,8 @@ interface RlpStrategyInterface
     /**
      * checks if path is valid.
      *
-     * @param string $path         path of route
-     * @param string $webspaceKey  key of portal
+     * @param string $path path of route
+     * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
@@ -149,8 +122,8 @@ interface RlpStrategyInterface
     /**
      * deletes given resource locator node.
      *
-     * @param string $path         of resource locator node
-     * @param string $webspaceKey  key of portal
+     * @param string $path of resource locator node
+     * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
      */
@@ -159,8 +132,8 @@ interface RlpStrategyInterface
     /**
      * restore given resource locator.
      *
-     * @param string $path         of resource locator
-     * @param string $webspaceKey  key of portal
+     * @param string $path of resource locator
+     * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
      */

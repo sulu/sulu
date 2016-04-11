@@ -4,13 +4,14 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
                   xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
 
-    <entity name="Sulu\Bundle\CategoryBundle\Entity\Category" table="ca_categories" repository-class="Sulu\Bundle\CategoryBundle\Entity\CategoryRepository">
+    <entity name="Sulu\Bundle\CategoryBundle\Entity\Category" table="ca_categories"
+            repository-class="Sulu\Bundle\CategoryBundle\Entity\CategoryRepository">
 
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="key" column="category_key" type="string" length="45" nullable="true" unique="true"/>
+        <field name="key" column="category_key" type="string" length="255" nullable="true" unique="true"/>
         <field name="defaultLocale" column="default_locale" type="string" length="5" nullable="false"/>
 
         <field name="lft" type="integer" column="lft">
@@ -28,7 +29,8 @@
                 <cascade-all/>
             </cascade>
         </one-to-many>
-        <one-to-many field="translations" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation" mapped-by="category">
+        <one-to-many field="translations" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation"
+                     mapped-by="category">
             <cascade>
                 <cascade-all/>
             </cascade>

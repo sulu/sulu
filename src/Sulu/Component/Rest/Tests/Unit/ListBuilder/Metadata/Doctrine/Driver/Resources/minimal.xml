@@ -1,0 +1,19 @@
+<class xmlns="http://schemas.sulu.io/class/general"
+       xmlns:orm="http://schemas.sulu.io/class/doctrine">
+    <properties>
+        <property name="id">
+            <orm:field-name>id</orm:field-name>
+            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        </property>
+
+        <property name="firstName">
+            <orm:field-name>firstName</orm:field-name>
+            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        </property>
+
+        <property name="lastName">
+            <orm:field-name>lastName</orm:field-name>
+            <orm:entity-name>%sulu.model.contact.class%</orm:entity-name>
+        </property>
+    </properties>
+</class>

@@ -24,7 +24,7 @@
             </trans-unit>
             <trans-unit id="fbfasdf371239fbed4a73a4basdfdf006" resname="sulu.content.form.settings.type">
                 <source>sulu.content.form.settings.type</source>
-                <target>Content Type</target>
+                <target>Page Type</target>
             </trans-unit>
             <trans-unit id="fbfasdf371239fbed4a73a4123dfdf006" resname="sulu.content.form.settings.type.content">
                 <source>sulu.content.form.settings.type.content</source>
@@ -250,17 +250,21 @@
                 <source>smart-content.choose-data-source.back</source>
                 <target>Back</target>
             </trans-unit>
+            <trans-unit id="443d99ff2f64652633a5ca2169f22211" resname="sulu.content.seo.serp">
+                <source>sulu.content.seo.serp</source>
+                <target>Search Engine Results Pages Preview (SERP)</target>
+            </trans-unit>
             <trans-unit id="443d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.title">
                 <source>sulu.content.seo.title</source>
-                <target>Title</target>
+                <target>Title (Meta Title)</target>
             </trans-unit>
             <trans-unit id="441d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.description">
                 <source>sulu.content.seo.description</source>
-                <target>Description</target>
+                <target>Description (Meta Description)</target>
             </trans-unit>
             <trans-unit id="442d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.keywords">
                 <source>sulu.content.seo.keywords</source>
-                <target>Keywords</target>
+                <target>Keywords (Meta Keywords)</target>
             </trans-unit>
             <trans-unit id="445d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.canonical">
                 <source>sulu.content.seo.canonical</source>
@@ -310,6 +314,10 @@
                 <source>sulu.content.seo.keywords-left</source>
                 <target>keywords left</target>
             </trans-unit>
+            <trans-unit id="c50af522ac181350142c0b4720e29a2e" resname="sulu.content.seo.title.note">
+                <source>sulu.content.seo.title.note</source>
+                <target>The meta title is limited to 55 characters.</target>
+            </trans-unit>
             <trans-unit id="c50af522ac181350142c0b4720e29a2f" resname="sulu.content.seo.descriptions.note">
                 <source>sulu.content.seo.descriptions.note</source>
                 <target>The meta description is limited to 155 characters.</target>
@@ -320,15 +328,15 @@
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a7343623dfdf010" resname="sulu.content.form.settings.nav-contexts">
                 <source>sulu.content.form.settings.nav-contexts</source>
-                <target>Navigation context</target>
+                <target>Show page in</target>
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a7343623dfdf011" resname="sulu.content.form.settings.all-nav-contexts">
                 <source>sulu.content.form.settings.all-nav-contexts</source>
-                <target>All navigation contexts chosen ...</target>
+                <target>All navigations</target>
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a7343623dfdf012" resname="sulu.content.form.settings.no-nav-contexts">
                 <source>sulu.content.form.settings.no-nav-contexts</source>
-                <target>No navigation contexts chosen ...</target>
+                <target>No navigation</target>
             </trans-unit>
             <trans-unit id="aaaaaaf371239fbed4a73a4123dfdf008" resname="sulu.content.form.settings.shadow_page">
                 <source>sulu.content.form.settings.shadow_page</source>
@@ -554,6 +562,62 @@
             <trans-unit id="12" resname="content.delete-do-it">
                 <source>content.delete-do-it</source>
                 <target>Yes, I am sure</target>
+            </trans-unit>
+            <trans-unit id="13" resname="content.webspace.settings.localizations">
+                <source>content.webspace.settings.localizations</source>
+                <target>Available Localizations</target>
+            </trans-unit>
+            <trans-unit id="14" resname="content.webspace.settings.localization">
+                <source>content.webspace.settings.localization</source>
+                <target>Localization</target>
+            </trans-unit>
+            <trans-unit id="15" resname="content.webspace.settings.theme">
+                <source>content.webspace.settings.theme</source>
+                <target>Theme</target>
+            </trans-unit>
+            <trans-unit id="16" resname="content.webspace.settings.urls">
+                <source>content.webspace.settings.urls</source>
+                <target>Configured Domains / URLs</target>
+            </trans-unit>
+            <trans-unit id="17" resname="content.webspace.settings.url">
+                <source>content.webspace.settings.url</source>
+                <target>Domain (URL)</target>
+            </trans-unit>
+            <trans-unit id="18" resname="content.webspace.settings.main">
+                <source>content.webspace.settings.main</source>
+                <target>Main</target>
+            </trans-unit>
+            <trans-unit id="19" resname="content-navigation.webspace.general">
+                <source>content-navigation.webspace.general</source>
+                <target>General</target>
+            </trans-unit>
+            <trans-unit id="20" resname="content-navigation.webspace.analytics">
+                <source>content-navigation.webspace.analytics</source>
+                <target>Analytics</target>
+            </trans-unit>
+            <trans-unit id="21" resname="content-navigation.webspace.urls">
+                <source>content-navigation.webspace.urls</source>
+                <target>Custom URLs</target>
+            </trans-unit>
+            <trans-unit id="22" resname="navigation.webspaces.settings">
+                <source>navigation.webspaces.settings</source>
+                <target>Settings</target>
+            </trans-unit>
+            <trans-unit id="23" resname="content.webspace.settings.redirect">
+                <source>content.webspace.settings.redirect</source>
+                <target>Redirect</target>
+            </trans-unit>
+            <trans-unit id="24" resname="content.changed-warning.title">
+                <source>content.changed-warning.title</source>
+                <target>Warning, content will be overwritten!</target>
+            </trans-unit>
+            <trans-unit id="25" resname="content.changed-warning.description">
+                <source>content.changed-warning.description</source>
+                <target>This page has been edited by another user. When you save the page this data will get lost.</target>
+            </trans-unit>
+            <trans-unit id="26" resname="content.changed-warning.ok-button">
+                <source>content.changed-warning.ok-button</source>
+                <target>Save page</target>
             </trans-unit>
         </body>
     </file>

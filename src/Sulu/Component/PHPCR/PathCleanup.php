@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -33,7 +33,7 @@ class PathCleanup implements PathCleanupInterface
      *
      * @var string
      */
-    private $pattern = '/^(\/[a-z0-9-_]+)+$/i';
+    private $pattern = '/^(\/[a-z0-9][a-z0-9-_]*)+$/';
 
     /**
      * PathCleanup constructor.
@@ -76,10 +76,13 @@ class PathCleanup implements PathCleanupInterface
         // delete problematic characters
         $clean = str_replace('%2F', '/', urlencode(preg_replace('/([^A-za-z0-9\s-_\/])/', '', $clean)));
 
-        // replace multiple minus with one
+        // replace multiple dash with one
         $clean = preg_replace('/([-]+)/', '-', $clean);
 
-        // delete minus at the beginning or end
+        // remove dash after slash
+        $clean = preg_replace('/\/[-]+/', '/', $clean);
+
+        // delete dash at the beginning or end
         $clean = preg_replace('/^([-])/', '', $clean);
         $clean = preg_replace('/([-])$/', '', $clean);
 

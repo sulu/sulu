@@ -1,7 +1,3 @@
 sulu_category.template.category.list:
     pattern: /template/category/list.html
     defaults: { _controller: SuluCategoryBundle:Template:categoriesList }
-
-sulu_category.template.category.form.details:
-    pattern: /template/category/form/details.html
-    defaults: { _controller: SuluCategoryBundle:Template:categoriesFormDetails }

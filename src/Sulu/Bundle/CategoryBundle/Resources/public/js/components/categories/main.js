@@ -175,6 +175,7 @@ define([
                 success: function(result) {
                     this.sandbox.emit(CATEGORY_CHANGED.call(this), result.toJSON());
                     callback(result.toJSON(), true);
+                    this.sandbox.emit('sulu.header.saved', result.toJSON());
                 }.bind(this),
                 error: function(result, response) {
                     this.sandbox.logger.log('Error while saving category');

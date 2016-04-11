@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -279,8 +279,11 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
 
         $birthday = $this->getProperty($data, 'birthday');
         if (!empty($birthday)) {
-            $contact->setBirthday(new DateTime($birthday));
+            $birthday = new DateTime($birthday);
+        } else {
+            $birthday = null;
         }
+        $contact->setBirthday($birthday);
 
         if (!$id) {
             $parentData = $this->getProperty($data, 'account');

@@ -27,6 +27,7 @@ require.config({
         'aura_extensions/default-extension': 'aura_extensions/default-extension',
         'aura_extensions/event-extension': 'aura_extensions/event-extension',
         'aura_extensions/sticky-toolbar': 'aura_extensions/sticky-toolbar',
+        'aura_extensions/clipboard': 'aura_extensions/clipboard',
 
         '__component__$app@suluadmin': 'components/app/main',
         '__component__$overlay@suluadmin': 'components/overlay/main',
@@ -48,6 +49,7 @@ require.config({
         'aura_extensions/default-extension',
         'aura_extensions/event-extension',
         'aura_extensions/sticky-toolbar',
+        'aura_extensions/clipboard',
         'widget-groups',
 
         '__component__$app@suluadmin',
@@ -65,7 +67,8 @@ require.config({
         '*': {
             'css': 'vendor/require-css/css'
         }
-    }
+    },
+    urlArgs: 'v=develop'
 });
 
 define('underscore', function() {
@@ -85,9 +88,14 @@ require(['husky', 'app-config'], function(Husky, AppConfig) {
         locale = fallbackLocale;
     }
 
-    require(['text!/admin/bundles', 'text!/admin/translations/sulu.' + locale + '.json'], function(text, messagesText) {
+    require([
+        'text!/admin/bundles',
+        'text!/admin/translations/sulu.' + locale + '.json',
+        'text!/admin/translations/sulu.' + fallbackLocale + '.json'
+    ], function(text, messagesText, defaultMessagesText) {
         var bundles = JSON.parse(text),
-            messages = JSON.parse(messagesText);
+            messages = JSON.parse(messagesText),
+            defaultMessages = JSON.parse(defaultMessagesText);
 
         app = new Husky({
             debug: {
@@ -95,18 +103,20 @@ require(['husky', 'app-config'], function(Husky, AppConfig) {
             },
             culture: {
                 name: locale,
-                messages: messages
+                messages: messages,
+                defaultMessages: defaultMessages
             }
         });
 
+        app.use('aura_extensions/default-extension');
         app.use('aura_extensions/url-manager');
         app.use('aura_extensions/backbone-relational');
         app.use('aura_extensions/sulu-content');
         app.use('aura_extensions/sulu-extension');
         app.use('aura_extensions/sulu-buttons');
-        app.use('aura_extensions/default-extension');
         app.use('aura_extensions/event-extension');
         app.use('aura_extensions/sticky-toolbar');
+        app.use('aura_extensions/clipboard');
 
         bundles.forEach(function(bundle) {
             app.use('/bundles/' + bundle + '/js/main.js');

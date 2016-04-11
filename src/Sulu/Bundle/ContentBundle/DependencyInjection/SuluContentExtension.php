@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -45,20 +45,40 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         }
 
         if ($container->hasExtension('jms_serializer')) {
-            $container->prependExtensionConfig('jms_serializer', [
-                'metadata' => [
-                    'directories' => [
-                        [
-                            'path' => __DIR__ . '/../Resources/config/serializer',
-                            'namespace_prefix' => 'Sulu\Bundle\ContentBundle',
-                        ],
-                        [
-                            'path' => __DIR__ . '/../Resources/config/serializer',
-                            'namespace_prefix' => 'Sulu\Component\Content',
+            $container->prependExtensionConfig(
+                'jms_serializer',
+                [
+                    'metadata' => [
+                        'directories' => [
+                            [
+                                'path' => __DIR__ . '/../Resources/config/serializer',
+                                'namespace_prefix' => 'Sulu\Bundle\ContentBundle',
+                            ],
+                            [
+                                'path' => __DIR__ . '/../Resources/config/serializer',
+                                'namespace_prefix' => 'Sulu\Component\Content',
+                            ],
+                            [
+                                'path' => __DIR__ . '/../Resources/config/serializer',
+                                'namespace_prefix' => 'Sulu\Component\Webspace',
+                            ],
                         ],
                     ],
-                ],
-            ]);
+                ]
+            );
+        }
+
+        if ($container->hasExtension('fos_rest')) {
+            $container->prependExtensionConfig(
+                'fos_rest',
+                [
+                    'exception' => [
+                        'codes' => [
+                            'Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException' => 409,
+                        ],
+                    ],
+                ]
+            );
         }
     }
 
@@ -153,6 +173,14 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         $container->setParameter(
             'sulu.content.type.checkbox.template',
             $config['types']['checkbox']['template']
+        );
+        $container->setParameter(
+            'sulu.content.type.multiple_select.template',
+            $config['types']['multiple_select']['template']
+        );
+        $container->setParameter(
+            'sulu.content.type.single_select.template',
+            $config['types']['single_select']['template']
         );
     }
 

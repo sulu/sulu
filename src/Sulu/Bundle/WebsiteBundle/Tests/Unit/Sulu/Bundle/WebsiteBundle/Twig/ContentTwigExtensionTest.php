@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -18,8 +18,8 @@ use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Content\ContentTwigExtension;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Types\TextLine;
 use Sulu\Component\Localization\Localization;
@@ -60,9 +60,9 @@ class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
     private $requestAnalyzer;
 
     /**
-     * @var StructureManagerInterface
+     * @var ExtensionManagerInterface
      */
-    private $structureManager;
+    private $extensionManager;
 
     /**
      * @var ContentTypeManagerInterface
@@ -98,15 +98,15 @@ class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->contentMapper = $this->prophesize('Sulu\Component\Content\Mapper\ContentMapperInterface');
-        $this->requestAnalyzer = $this->prophesize('Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface');
-        $this->contentTypeManager = $this->prophesize('Sulu\Component\Content\ContentTypeManagerInterface');
-        $this->structureManager = $this->prophesize('Sulu\Component\Content\Compat\StructureManagerInterface');
-        $this->sessionManager = $this->prophesize('Sulu\Component\PHPCR\SessionManager\SessionManagerInterface');
-        $this->session = $this->prophesize('PHPCR\SessionInterface');
-        $this->node = $this->prophesize('PHPCR\NodeInterface');
-        $this->parentNode = $this->prophesize('PHPCR\NodeInterface');
-        $this->startPageNode = $this->prophesize('PHPCR\NodeInterface');
+        $this->contentMapper = $this->prophesize(ContentMapperInterface::class);
+        $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+        $this->contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);
+        $this->extensionManager = $this->prophesize(ExtensionManagerInterface::class);
+        $this->sessionManager = $this->prophesize(SessionManagerInterface::class);
+        $this->session = $this->prophesize(SessionInterface::class);
+        $this->node = $this->prophesize(NodeInterface::class);
+        $this->parentNode = $this->prophesize(NodeInterface::class);
+        $this->startPageNode = $this->prophesize(NodeInterface::class);
 
         $webspace = new Webspace();
         $webspace->setKey('sulu_test');
@@ -137,7 +137,7 @@ class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->structureResolver = new StructureResolver(
             $this->contentTypeManager->reveal(),
-            $this->structureManager->reveal()
+            $this->extensionManager->reveal()
         );
     }
 

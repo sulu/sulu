@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,6 +11,9 @@
 
 namespace Sulu\Component\Content\Mapper;
 
+/**
+ * @deprecated use events of DocumentManager instead
+ */
 final class ContentEvents
 {
     /**

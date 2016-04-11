@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -62,7 +63,7 @@ class OperatorValueTranslation
     /**
      * Get name.
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -86,7 +87,7 @@ class OperatorValueTranslation
     /**
      * Get locale.
      *
-     * @return string 
+     * @return string
      */
     public function getLocale()
     {
@@ -110,7 +111,7 @@ class OperatorValueTranslation
     /**
      * Get shortDescription.
      *
-     * @return string 
+     * @return string
      */
     public function getShortDescription()
     {
@@ -134,7 +135,7 @@ class OperatorValueTranslation
     /**
      * Get longDescription.
      *
-     * @return string 
+     * @return string
      */
     public function getLongDescription()
     {
@@ -144,7 +145,7 @@ class OperatorValueTranslation
     /**
      * Get id.
      *
-     * @return int 
+     * @return int
      */
     public function getId()
     {
@@ -168,7 +169,7 @@ class OperatorValueTranslation
     /**
      * Get operatorValue.
      *
-     * @return \Sulu\Bundle\ResourceBundle\Entity\OperatorValue 
+     * @return \Sulu\Bundle\ResourceBundle\Entity\OperatorValue
      */
     public function getOperatorValue()
     {

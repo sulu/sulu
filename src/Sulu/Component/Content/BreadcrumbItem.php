@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,6 +13,8 @@ namespace Sulu\Component\Content;
 
 /**
  * Item for breadcrumb.
+ *
+ * @deprecated This class was only used for an array generation, which is now done in a serializer subscriber
  */
 class BreadcrumbItem implements BreadcrumbItemInterface
 {

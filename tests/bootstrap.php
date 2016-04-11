@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,7 +16,8 @@ if (!file_exists($file)) {
     throw new RuntimeException('Install dependencies to run test suite.');
 }
 
-$autoload = require_once $file;
+$loader = require $file;
 
-\Doctrine\Common\Annotations\AnnotationRegistry::registerLoader([$autoload, 'loadClass']);
-AnnotationRegistry::registerFile(__DIR__ . '/../vendor/doctrine/phpcr-odm/lib/Doctrine/ODM/PHPCR/Mapping/Annotations/DoctrineAnnotations.php');
+AnnotationRegistry::registerLoader([$loader, 'loadClass']);
+
+return $loader;

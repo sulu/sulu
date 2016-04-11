@@ -1,7 +1,6 @@
 <?php
-
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,11 +10,15 @@
 
 namespace Sulu\Bundle\SnippetBundle\Document;
 
+use Sulu\Bundle\DocumentManagerBundle\Initializer\InitializerInterface;
 use Sulu\Component\DocumentManager\NodeManager;
 use Sulu\Component\DocumentManager\PathBuilder;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class SnippetInitializer
+/**
+ * Initializes phpcr-nodes for snippets.
+ */
+class SnippetInitializer implements InitializerInterface
 {
     private $nodeManager;
     private $pathBuilder;
@@ -31,11 +34,14 @@ class SnippetInitializer
     public function initialize(OutputInterface $output)
     {
         $snippetPath = $this->pathBuilder->build(['%base%', '%snippet%']);
-        $output->writeln(sprintf('<info>Snippets</info>: %s ', $snippetPath));
 
         if (true === $this->nodeManager->has($snippetPath)) {
+            $output->writeln(sprintf('  [ ] <info>snippet path:</info>: %s ', $snippetPath));
+
             return;
         }
+
+        $output->writeln(sprintf('  [+] <info>snippet path:</info>: %s ', $snippetPath));
 
         $this->nodeManager->createPath($snippetPath);
         $this->nodeManager->save();

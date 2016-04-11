@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Twig;
 
 use Doctrine\Common\Cache\Cache;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
+use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 
 /**
  * Extension to handle contacts in frontend.
@@ -21,19 +21,19 @@ use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 class ContactTwigExtension extends \Twig_Extension
 {
     /**
-     * @var UserRepository
+     * @var ContactRepository
      */
-    private $userRepository;
+    private $contactRepository;
 
     /**
      * @var Cache
      */
     private $cache;
 
-    public function __construct(Cache $cache, UserRepository $userRepository)
+    public function __construct(Cache $cache, ContactRepository $contactRepository)
     {
         $this->cache = $cache;
-        $this->userRepository = $userRepository;
+        $this->contactRepository = $contactRepository;
     }
 
     /**
@@ -42,30 +42,31 @@ class ContactTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('sulu_resolve_user', [$this, 'resolveUserFunction']),
+            new \Twig_SimpleFunction('sulu_resolve_contact', [$this, 'resolveContactFunction']),
         ];
     }
 
     /**
      * resolves user id to user data.
      *
-     * @param int $userId id to resolve
+     * @param int $id id to resolve
      *
      * @return Contact
      */
-    public function resolveUserFunction($userId)
+    public function resolveContactFunction($id)
     {
-        if (!$this->cache->contains($userId)) {
-            $user = $this->userRepository->findUserById($userId);
-
-            if ($user === null) {
-                return;
-            }
-
-            $this->cache->save($userId, $user->getContact());
+        if ($this->cache->contains($id)) {
+            return $this->cache->fetch($id);
         }
 
-        return $this->cache->fetch($userId);
+        $contact = $this->contactRepository->find($id);
+        if ($contact === null) {
+            return;
+        }
+
+        $this->cache->save($id, $contact);
+
+        return $contact;
     }
 
     /**

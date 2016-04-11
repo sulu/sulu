@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -107,6 +107,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      * @param AccountAddressEntity $accountAddress
      *
      * @throws \Exception
+     *
      * @return mixed|void
      */
     public function removeAddressRelation($account, $accountAddress)

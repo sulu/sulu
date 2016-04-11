@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -74,5 +74,15 @@ class Checkbox extends SimpleContentType
     public function getTemplate()
     {
         return $this->template;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultParams(PropertyInterface $property = null)
+    {
+        return [
+            'type' => 'checkbox',
+        ];
     }
 }

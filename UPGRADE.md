@@ -1,5 +1,191 @@
 # Upgrade
 
+## dev-develop
+
+### sulu_content_path
+
+The twig function `sulu_content_path('/path')` now always returning the full-qualified-domain
+`http://www.sulu.io/de/path`.
+
+### Custom-Routes
+
+The naming of the custom-routes with `type: portal` has changed. You can use now the configured name 
+and pass the host and prefix in the parameter. The current parameter will be populated in the variable
+`request.routeParameters`.
+
+__before:__
+```
+{{ path(request.portalUrl ~'.'~ request.locale ~ '.website_search') }}
+```
+
+__after:__
+```
+{{ path('website_search', request.routeParameters) }}
+```
+
+### Admin
+
+The navigation entry with the empty name wont be used in sulu anymore. It should be replaced by:
+
+__before:__
+
+```php
+    $section = new NavigationItem('');
+```
+
+__after:__
+
+```php
+    $section = new NavigationItem('navigation.modules');
+```
+
+### Twig function `sulu_resolve_user`
+
+This twig function returns now the user. To get the related contact use following code snippet:
+
+```twig
+{{ sulu_resolve_user(userId).contact.fullName }}
+```
+
+### Webspace validation
+
+Webspaces which have unused localizations by portals will now be not valid and ignored. Remove this
+localizations or add them to a portal.
+
+### New security permission for cache
+ 
+To be able to clear the cache the user need the permission LIVE in the
+webspace context.
+
+### Document-Manager
+
+The Behaviors `TimestampBehavior` and `BlameBehavior` now save the values in the non-localized
+properties. To keep the old behavior use the `LocalizedTimestampBehavior` and 
+`LocalizedBlameBehavior` instead.
+
+### Deprecated sulu:phpcr:init and sulu:webspace:init
+
+The `sulu:phpcr:init` and `sulu:webspace:init` commands are now deprecated.
+Use the `sulu:document:initialize` command instead.
+
+### Definition of security contexts
+
+The definition of security contexts in the `Admin` classes has changed. They
+used to look like the following example:
+
+```php
+public function getSecurityContexts()
+{
+    return [
+        'Sulu' => [
+            'Media' => [
+                'sulu.media.collections',
+            ],
+        ],
+    ];
+}
+```
+
+Now you should also pass the permission types that you want to enable in the
+context:
+
+```php
+public function getSecurityContexts()
+{
+    return [
+        'Sulu' => [
+            'Media' => [
+                'sulu.media.collections' => [
+                    PermissionTypes::VIEW,
+                    PermissionTypes::ADD,
+                    PermissionTypes::EDIT,
+                    PermissionTypes::DELETE,
+                    PermissionTypes::SECURITY,
+                ],
+            ],
+        ],
+    ];
+}
+```
+
+By default, we will enable the permission types `VIEW`, `ADD`, `EDIT`, `DELETE`
+and `SECURITY` in your context.
+
+### Page search index
+
+The metadata for pages has changed. Run following command to update your search index
+
+```bash
+app/console massive:search:purge --all
+app/console massive:search:reindex
+```
+
+### Media uploads
+
+Write permissions for the webserver must be set on `web/uploads` instead of
+`web/uploads/media` alone to support simple cache clearing.
+
+### BlameSubscriber
+
+The BlameBehavior has been moved from the DocumentManager component to the
+Sulu Content component. Documents which implemented
+`Sulu\Component\DocumentManager\Behavior\Audit\BlameBehavior` should now
+implement `Sulu\Component\Content\Document\Behavior\BlameBehavior` instead.
+
+### Contact Entity is required for User
+
+When you create new `User` entities in your application it is required now
+that this user has a `Contact` entity. The following SQL will return you
+all users which have no contact entity. You need to update them manually.
+
+```sql
+SELECT * FROM se_users WHERE se_users.idContacts IS NULL 
+```
+
+### Admin Commands
+
+The method `getCommands` on the Admin has been removed, because Symfony can
+autodetect Commands in the `Command` directory of each bundle anyway. This only
+affects you, if you have not followed the Symfony standards and located your
+commands somewhere else.
+
+### WebsiteRequestAnalyzer
+
+The `Current`-part of all setters have been removed, because they have already
+been removed from the getters. This only affects you if you have overridden the
+`WebsiteRequestAnalyzer` and have called or overridden these methods.
+
+### Databases
+
+#### PHPCR
+
+A new namespace and additional system nodes were added. To create them run the following command:
+
+```bash
+app/console sulu:document:initialize
+```
+
+#### ORM
+
+The relational structure of categories, translations and users have changed. 
+Use the following command to update:
+
+```bash
+app/console doctrine:schema:update --force
+```
+
+It might be possible that foreign key checks have to be disabled for this update.
+
+### ContentNavigation & Navigation
+
+The ContentNavigationItems & NavigationItems will be sorted by their position. If there is no position set, the item
+will be placed behind all other items.
+
+```php
+$item = new ContentNavigationItem('content-navigation.entry');
+$item->setPosition(10);
+```
+
 ## 1.1.10
 
 ### Filter

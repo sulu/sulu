@@ -1,0 +1,41 @@
+<form id="analytics-form" class="grid">
+    <div class="form-group grid-row">
+        <label for="analytics-title" class="required"><%= translations.title %></label>
+        <input type="text" id="analytics-title" name="title" class="form-element input-bold"
+               data-mapper-property="title" data-validation-required="true"
+               data-validation-min-length="3"/>
+    </div>
+
+    <div class="form-group grid-row">
+        <label for="analytics-all-domains">
+            <div class="custom-checkbox" style="display: inline-block;">
+                <input type="checkbox" id="analytics-all-domains" name="all-domains" class="form-element"
+                       data-mapper-property="allDomains" data-form="true"/>
+                <span class="icon"></span>
+            </div>
+            <%= translations.allDomains %>
+        </label>
+    </div>
+
+    <div class="form-group grid-row" id="analytics-domains-container">
+        <label for="analytics-domains"><%= translations.domains %></label>
+
+        <div id="analytics-domains"></div>
+    </div>
+
+    <div class="form-group grid-row">
+        <label for="analytics-type" class="required"><%= translations.type %></label>
+
+        <div id="analytics-type"
+             data-form="true"
+             data-type="husky-select"
+             data-type-label="title"
+             data-mapper-property="type"
+             data-mapper-return-value="id"
+             data-validation-required="true"
+             class="domains grid-col-3"></div>
+    </div>
+
+    <div class="analytics-content-wrapper">
+    </div>
+</form>

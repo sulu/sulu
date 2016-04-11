@@ -31,15 +31,31 @@ module.exports = function(grunt) {
             build: {
                 files: [
                     //copy fonts
-                    {expand: true, cwd: 'Resources/public/js/vendor/husky/', src: ['fonts/**'], dest: 'Resources/public/dist/'},
+                    {
+                        expand: true,
+                        cwd: 'Resources/public/js/vendor/husky/',
+                        src: ['fonts/**'],
+                        dest: 'Resources/public/dist/'
+                    },
                     //only needed due to wrong path generation
                     {src: ['Resources/views/Admin/index.html.twig'], dest: 'Resources/public/index.html.twig'},
                     {src: ['Resources/views/Security/login.html.twig'], dest: 'Resources/public/login.html.twig'},
                     {expand: true, cwd: 'Resources/public', src: ['**'], dest: 'Resources/public/bundles/suluadmin/'},
                     // copy cultures
-                    {expand: true, cwd: 'Resources/public/js/vendor/globalize', src: ['cultures/**'], dest: 'Resources/public/dist/vendor/globalize'},
+                    {
+                        expand: true,
+                        cwd: 'Resources/public/js/vendor/globalize',
+                        src: ['cultures/**'],
+                        dest: 'Resources/public/dist/vendor/globalize'
+                    },
                     // copy files
-                    {expand: true, cwd: 'Resources/public/js/vendor/husky/vendor', src: ['*'], dest: 'Resources/public/dist/vendor', filter: 'isFile'}
+                    {
+                        expand: true,
+                        cwd: 'Resources/public/js/vendor/husky/vendor',
+                        src: ['*'],
+                        dest: 'Resources/public/dist/vendor',
+                        filter: 'isFile'
+                    }
 
                 ]
             },
@@ -80,12 +96,18 @@ module.exports = function(grunt) {
                         cwd: 'bower_components/require-css',
                         src: ['css.js'],
                         dest: 'Resources/public/js/vendor/require-css/'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'bower_components/clipboard/dist',
+                        src: ['clipboard.js'],
+                        dest: 'Resources/public/js/vendor/clipboard/'
                     }
                 ]
             }
         },
         clean: {
-            options: { force: true },
+            options: {force: true},
             dist: {
                 files: [
                     {src: ['Resources/public/dist']}
@@ -119,7 +141,7 @@ module.exports = function(grunt) {
                     variables: {
                         'app.min': '/bundles/suluadmin/dist/app.min.' + time,
                         'login.min': '/bundles/suluadmin/dist/login.min.' + time,
-                        'bundles/suluadmin/js/vendor/husky/husky.js': '/bundles/suluadmin/js/vendor/husky/husky.min.js',
+                        'bundles/suluadmin/js/vendor/husky/husky.js': '/bundles/suluadmin/js/vendor/husky/husky.min.js?v=' + time,
                         'debug: true': 'debug: false'
                     },
                     prefix: ''
@@ -137,10 +159,16 @@ module.exports = function(grunt) {
             },
             buildMain: {
                 options: {
-                    variables: {
-                        '/js/main.js': '/dist/main.js'
-                    },
-                    prefix: ''
+                    patterns: [
+                        {
+                            match: /v=develop/,
+                            replacement: 'v=' + time.toString()
+                        },
+                        {
+                            match: /\/js\/main\.js/,
+                            replacement: '/dist/main.js'
+                        }
+                    ]
                 },
                 files: [
                     {src: ['Resources/public/dist/app.min.js'], dest: 'Resources/public/dist/app.min.js'}
@@ -148,10 +176,12 @@ module.exports = function(grunt) {
             },
             buildLogin: {
                 options: {
-                    variables: {
-                        '/js/login.js': '/dist/login.js'
-                    },
-                    prefix: ''
+                    patterns: [
+                        {
+                            match: /v=develop/,
+                            replacement: 'v=' + time.toString()
+                        }
+                    ]
                 },
                 files: [
                     {src: ['Resources/public/dist/login.min.js'], dest: 'Resources/public/dist/login.min.js'}
@@ -209,8 +239,7 @@ module.exports = function(grunt) {
         },
         cssmin: {
             // TODO: options: { banner: '<%= meta.banner %>' },
-            compress: {
-            }
+            compress: {}
         },
         compass: {
             dev: {

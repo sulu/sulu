@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\SmartContent;
 
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Query\ContentQueryBuilder;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -70,11 +71,12 @@ class QueryBuilder extends ContentQueryBuilder
 
     public function __construct(
         StructureManagerInterface $structureManager,
+        ExtensionManagerInterface $extensionManager,
         WebspaceManagerInterface $webspaceManager,
         SessionManagerInterface $sessionManager,
         $languageNamespace
     ) {
-        parent::__construct($structureManager, $languageNamespace);
+        parent::__construct($structureManager, $extensionManager, $languageNamespace);
 
         $this->webspaceManager = $webspaceManager;
         $this->sessionManager = $sessionManager;
@@ -240,7 +242,7 @@ class QueryBuilder extends ContentQueryBuilder
      */
     private function buildExtensionSelect($alias, $extension, $propertyName, $locale, &$additionalFields)
     {
-        $extension = $this->structureManager->getExtension('all', $extension);
+        $extension = $this->extensionManager->getExtension('all', $extension);
         $additionalFields[$locale][] = [
             'name' => $alias,
             'extension' => $extension,

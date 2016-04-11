@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,50 +15,41 @@ use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
-use InvalidArgumentException;
 use PHPCR\SessionInterface;
-use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
+use PHPCR\Util\NodeHelper;
+use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Cmf\Bundle\RoutingBundle\Tests\Functional\BaseTestCase;
 use Symfony\Component\Security\Core\Tests\Authentication\Token\TestUser;
 
 /**
  * Base test case for functional tests in Sulu.
  */
-abstract class SuluTestCase extends BaseTestCase
+abstract class SuluTestCase extends KernelTestCase
 {
-    protected static $kernels = [];
-    protected static $currentKernel = 'admin';
+    /**
+     * @var PHPCRImporter
+     */
+    protected $importer;
 
     /**
-     * Create a new SuluTestKernel and pass the sulu.context to it.
-     *
      * {@inheritdoc}
-     *
-     * @throws InvalidArgumentException If the found kernel does
-     *                                  not extend SuluTestKernel
      */
-    protected static function createKernel(array $options = [])
+    public static function setUpBeforeClass()
     {
-        if (null === static::$class) {
-            static::$class = static::getKernelClass();
+        // enables garbage collector because symfony/phpunit-bridge disables it. see:
+        // see: https://github.com/symfony/symfony/pull/13398/files#diff-81bfee6017752d99d3119f4ddb1a09edR1
+        // see: https://github.com/symfony/symfony/pull/13398 (feature list)
+        if (!gc_enabled()) {
+            gc_enable();
         }
+    }
 
-        $kernel = new static::$class(
-            isset($options['environment']) ? $options['environment'] : 'test',
-            isset($options['debug']) ? $options['debug'] : true,
-            isset($options['sulu_context']) ? $options['sulu_context'] : 'admin'
-        );
+    protected function setUp()
+    {
+        parent::setUp();
 
-        if (!$kernel instanceof SuluTestKernel) {
-            throw new \InvalidArgumentException(sprintf(
-                'All Sulu testing Kernel classes must extend SuluTestKernel, "%s" does not',
-                get_class($kernel)
-            ));
-        }
-
-        return $kernel;
+        $this->importer = new PHPCRImporter($this->getContainer()->get('sulu.phpcr.session')->getSession());
     }
 
     /**
@@ -66,7 +57,8 @@ abstract class SuluTestCase extends BaseTestCase
      */
     public function tearDown()
     {
-        $this->db('ORM')->getOm()->getConnection()->close();
+        parent::tearDown();
+        $this->getEntityManager()->getConnection()->close();
     }
 
     /**
@@ -77,7 +69,7 @@ abstract class SuluTestCase extends BaseTestCase
      */
     protected function getTestUser()
     {
-        $user = $this->em->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')
+        $user = $this->getEntityManager()->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')
             ->findOneByUsername('test');
 
         return $user;
@@ -119,57 +111,72 @@ abstract class SuluTestCase extends BaseTestCase
      */
     protected function createWebsiteClient()
     {
-        return $this->createClient([
-            'sulu_context' => 'website',
-            'environment' => 'dev',
-        ]);
+        return $this->createClient(
+            [
+                'sulu_context' => 'website',
+                'environment' => 'dev',
+            ]
+        );
     }
 
     /**
-     * Initialize / reset the Sulu PHPCR environment
-     * NOTE: This should use initializers when we implement that feature.
+     * Initialize / reset the Sulu PHPCR environment.
+     *
+     * NOTE: We could use the document initializer here rather than manually creating
+     *       the webspace nodes, but it currently adds more overhead and offers
+     *       no control over *which* webspaces are created, see
+     *       https://github.com/sulu-io/sulu/pull/2063 for a solution.
      */
     protected function initPhpcr()
     {
         /** @var SessionInterface $session */
-        $session = $this->db('PHPCR')->getOm()->getPhpcrSession();
+        $session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
 
         if ($session->nodeExists('/cmf')) {
-            $session->getNode('/cmf')->remove();
+            NodeHelper::purgeWorkspace($session);
+            $session->save();
         }
 
-        $session->save();
-
-        $cmf = $session->getRootNode()->addNode('cmf');
-
-        // we should use the doctrinephpcrbundle repository initializer to do this.
-        $webspace = $cmf->addNode('sulu_io');
-        $webspace->addMixin('mix:referenceable');
-
-        $content = $webspace->addNode('contents');
-        $content->setProperty('i18n:en-template', 'default');
-        $content->setProperty('i18n:en-creator', 1);
-        $content->setProperty('i18n:en-created', new \DateTime());
-        $content->setProperty('i18n:en-changer', 1);
-        $content->setProperty('i18n:en-changed', new \DateTime());
-        $content->setProperty('i18n:en-title', 'Homepage');
-        $content->setProperty('i18n:en-state', WorkflowStage::PUBLISHED);
-        $content->setProperty('i18n:en-published', new \DateTime());
-        $content->setProperty('i18n:en-url', '/');
-        $content->addMixin('sulu:home');
-
-        $webspace->addNode('temp');
-
-        $session->save();
-        $nodes = $webspace->addNode('routes');
-        foreach (['de', 'de_at', 'en', 'en_us', 'fr'] as $locale) {
-            $localeNode = $nodes->addNode($locale);
-            $localeNode->setProperty('sulu:content', $content);
-            $localeNode->setProperty('sulu:history', false);
-            $localeNode->addMixin('sulu:path');
+        if (!$this->importer) {
+            $this->importer = new PHPCRImporter($session);
         }
 
-        $session->save();
+        // to update this file use following command
+        // php vendor/symfony-cmf/testing/bin/console doctrine:phpcr:workspace:export -p /cmf \
+        // src/Sulu/Bundle/TestBundle/Resources/dump/initial-state.xml
+        $this->importer->import(__DIR__ . '/../Resources/dump/initial-state.xml');
+    }
+
+    /**
+     * Create a webspace node with the given locales.
+     *
+     * @param string $name
+     * @param string[] $locales
+     */
+    protected function createHomeDocument($name, array $locales)
+    {
+        $documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
+        $nodeManager = $this->getContainer()->get('sulu_document_manager.node_manager');
+
+        $homeDocument = new HomeDocument();
+        $homeDocument->setTitle('Homepage');
+        $homeDocument->setStructureType('default');
+        $homeDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
+
+        foreach ($locales as $locale) {
+            $nodeManager->createPath('/cmf/' . $name . '/routes/' . $locale);
+            $documentManager->persist(
+                $homeDocument,
+                $locale,
+                [
+                    'path' => '/cmf/' . $name . '/contents',
+                    'auto_create' => true,
+                    'load_ghost_content' => false,
+                ]
+            );
+        }
+
+        $documentManager->flush();
     }
 
     /**
@@ -177,22 +184,27 @@ abstract class SuluTestCase extends BaseTestCase
      */
     protected function purgeDatabase()
     {
-        /** @var EntityManager $em */
-        $em = $this->db('ORM')->getOm();
-        $connection = $em->getConnection();
+        /** @var EntityManager $manager */
+        $manager = $this->getEntityManager();
+        $connection = $manager->getConnection();
 
         if ($connection->getDriver() instanceof \Doctrine\DBAL\Driver\PDOMySql\Driver) {
             $connection->executeUpdate('SET foreign_key_checks = 0;');
         }
 
         $purger = new ORMPurger();
-        $executor = new ORMExecutor($em, $purger);
-        $referenceRepository = new ProxyReferenceRepository($em);
+        $executor = new ORMExecutor($manager, $purger);
+        $referenceRepository = new ProxyReferenceRepository($manager);
         $executor->setReferenceRepository($referenceRepository);
         $executor->purge();
 
         if ($connection->getDriver() instanceof \Doctrine\DBAL\Driver\PDOMySql\Driver) {
-            $em->getConnection()->executeUpdate('SET foreign_key_checks = 1;');
+            $connection->executeUpdate('SET foreign_key_checks = 1;');
         }
+    }
+
+    protected function getEntityManager()
+    {
+        return $this->getContainer()->get('doctrine')->getManager();
     }
 }

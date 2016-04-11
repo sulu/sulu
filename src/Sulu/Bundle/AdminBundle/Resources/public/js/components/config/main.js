@@ -11,7 +11,6 @@ define(function() {
 
     'use strict';
 
-    // TODO load from /admin/config
     var sulu = JSON.parse(JSON.stringify(SULU)),
         config = !!sulu.sections ? sulu.sections : {};
 
@@ -29,6 +28,15 @@ define(function() {
         },
 
         /**
+         * Returns true if the given key exists in the config, otherwise false
+         * @param key
+         * @returns {boolean}
+         */
+        has: function(key) {
+            return !!key && typeof(key) === 'string' && config.hasOwnProperty(key);
+        },
+
+        /**
          * Returns configuration for key
          * @param key should be a string which starts with the js-bundle-name and is seperated by dots
          * e.g. 'suluproduct.components.autocomplete.default'
@@ -38,7 +46,7 @@ define(function() {
             var empty,
                 value = null;
 
-            if (!!key && typeof(key) === 'string' && config.hasOwnProperty(key)) {
+            if (this.has(key)) {
                 value = config[key];
                 if (typeof value === 'object') {
                     empty = (value instanceof Array) ? [] : {};

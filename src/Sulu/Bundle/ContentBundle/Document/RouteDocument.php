@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContentBundle\Document;
 
 use Sulu\Component\Content\Document\Behavior\RouteBehavior;
+use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
@@ -22,34 +23,50 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
  * Route Documents are children of the designated route-containing
  * node (which is a child of the webspace node).
  *
- * Routes contain a reference to the content which should be dispayed
- * when the route is resolved by the RouteProvider.
+ * Routes contain a reference to the content which should be displayed
+ * when the route is resolved by the CustomUrlRouteProvider.
  */
 class RouteDocument implements
     NodeNameBehavior,
     PathBehavior,
     UuidBehavior,
-    RouteBehavior
+    RouteBehavior,
+    TimestampBehavior
 {
     /**
      * @var string
      */
-    private $nodeName;
+    protected $nodeName;
 
     /**
      * @var string
      */
-    private $path;
+    protected $path;
 
     /**
      * @var string
      */
-    private $uuid;
+    protected $uuid;
 
     /**
      * @var object
      */
-    private $targetDocument;
+    protected $targetDocument;
+
+    /**
+     * @var bool
+     */
+    protected $history = false;
+
+    /**
+     * @var \DateTime
+     */
+    protected $created;
+
+    /**
+     * @var \DateTime
+     */
+    protected $changed;
 
     /**
      * {@inheritdoc}
@@ -89,5 +106,53 @@ class RouteDocument implements
     public function setTargetDocument($targetDocument)
     {
         $this->targetDocument = $targetDocument;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isHistory()
+    {
+        return $this->history;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setHistory($history)
+    {
+        $this->history = $history;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * @param \DateTime $created
+     */
+    public function setCreated(\DateTime $created)
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChanged()
+    {
+        return $this->changed;
+    }
+
+    /**
+     * @param \DateTime $changed
+     */
+    public function setChanged(\DateTime $changed)
+    {
+        $this->changed = $changed;
     }
 }

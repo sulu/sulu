@@ -25,6 +25,8 @@ define(function() {
             dataAttribute: 'media-selection',
             actionIcon: 'fa-file-image-o',
             types: null,
+            navigateEvent: 'sulu.router.navigate',
+            locale: '',
             dataDefault: {
                 displayOption: 'top',
                 ids: []
@@ -59,11 +61,22 @@ define(function() {
         },
 
         templates = {
-            contentItem: function(title, thumbnails) {
-                return [
-                    '   <img src="', thumbnails['50x50'], '"/>',
-                    '   <span class="title">', title, '</span>'
-                ].join('');
+            contentItem: function(id, collection, title, thumbnails, fallbackLocale) {
+                var content = [
+                    '<a href="#" class="link" data-id="', id, '" data-collection="', collection, '">',
+                    '    <img src="', thumbnails['50x50'], '"/>'
+                ];
+
+                if (fallbackLocale) {
+                    content.push('    <span class="badge">', fallbackLocale, '</span>');
+                }
+                
+                content.push(
+                    '    <span class="title">', title, '</span>',
+                    '</a>'
+                );
+
+                return content.join('');
             }
         },
 
@@ -126,6 +139,23 @@ define(function() {
         },
 
         /**
+         * Bind events to dom elements
+         */
+        bindDomEvents = function() {
+            this.sandbox.dom.on(this.$el, 'click', function(e) {
+                var id = this.sandbox.dom.data(e.currentTarget, 'id'),
+                    collection = this.sandbox.dom.data(e.currentTarget, 'collection');
+
+                this.sandbox.emit(
+                    this.options.navigateEvent,
+                    'media/collections/edit:' + collection + '/files/edit:' + id
+                );
+
+                return false;
+            }.bind(this), 'a.link');
+        },
+
+        /**
          * Starts the selection-overlay component
          */
         startSelectionOverlay = function() {
@@ -137,7 +167,8 @@ define(function() {
                     el: $container,
                     instanceName: this.options.instanceName,
                     preSelectedIds: this.getData().ids,
-                    types: this.options.types
+                    types: this.options.types,
+                    locale: this.options.locale
                 }
             }]);
         },
@@ -177,6 +208,8 @@ define(function() {
             };
 
             bindCustomEvents.call(this);
+            bindDomEvents.call(this);
+
             this.render();
 
             // set display option
@@ -197,12 +230,13 @@ define(function() {
             return [
                 this.options.url,
                 delimiter,
-                this.options.idsParameter, '=', (data.ids || []).join(',')
+                this.options.idsParameter, '=', (data.ids || []).join(','),
+                '&locale=', this.options.locale
             ].join('');
         },
 
         getItemContent: function(item) {
-            return templates.contentItem(item.title, item.thumbnails);
+            return templates.contentItem(item.id, item.collection, item.title, item.thumbnails, item.fallbackLocale);
         },
 
         sortHandler: function(ids) {

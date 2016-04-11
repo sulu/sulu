@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,11 +16,14 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Exception\NoValidWebspaceException;
+use Sulu\Component\Webspace\Loader\Exception\InvalidCustomUrlException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
+use Sulu\Component\Webspace\Loader\Exception\WebspaceLocalizationNotUsedException;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Url;
+use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
@@ -29,24 +32,17 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class WebspaceCollectionBuilder
 {
-    const REPLACER_LANGUAGE = '{language}';
-    const REPLACER_COUNTRY = '{country}';
-    const REPLACER_LOCALIZATION = '{localization}';
-    const REPLACER_SEGMENT = '{segment}';
-
-    private $replacers = [
-        self::REPLACER_LANGUAGE,
-        self::REPLACER_COUNTRY,
-        self::REPLACER_LOCALIZATION,
-        self::REPLACER_SEGMENT,
-    ];
-
     /**
      * The loader for the xml config files.
      *
      * @var LoaderInterface
      */
     private $loader;
+
+    /**
+     * @var ReplacerInterface
+     */
+    private $urlReplacer;
 
     /**
      * Logger for logging the warnings.
@@ -85,12 +81,18 @@ class WebspaceCollectionBuilder
 
     /**
      * @param LoaderInterface $loader The loader for the xml config files
+     * @param ReplacerInterface $urlReplacer Factory for url-replacers
      * @param LoggerInterface $logger For logging the warnings
      * @param $path string The path to the xml config files
      */
-    public function __construct(LoaderInterface $loader, LoggerInterface $logger, $path)
-    {
+    public function __construct(
+        LoaderInterface $loader,
+        ReplacerInterface $urlReplacer,
+        LoggerInterface $logger,
+        $path
+    ) {
         $this->loader = $loader;
+        $this->urlReplacer = $urlReplacer;
         $this->logger = $logger;
         $this->path = $path;
     }
@@ -119,14 +121,37 @@ class WebspaceCollectionBuilder
                 $this->webspaces[] = $webspace;
 
                 $this->buildPortals($webspace);
-            } catch (\InvalidArgumentException $iae) {
+            } catch (\InvalidArgumentException $e) {
                 $this->logger->warning(
-                    'Error in file "' . $file->getRealPath() . '" (' . $iae->getMessage(
-                    ) . '). The file has been skipped'
+                    sprintf(
+                        'Error: "%s" in "%s". The file has been skipped.',
+                        $e->getMessage(),
+                        $file->getRealPath()
+                    )
                 );
-            } catch (InvalidUrlDefinitionException $iude) {
+            } catch (InvalidUrlDefinitionException $e) {
                 $this->logger->warning(
-                    'Error: "' . $iude->getMessage() . '" in "' . $file->getRealPath() . '". File was skipped'
+                    sprintf(
+                        'Error: "%s" in "%s". The file has been skipped.',
+                        $e->getMessage(),
+                        $file->getRealPath()
+                    )
+                );
+            } catch (InvalidCustomUrlException $e) {
+                $this->logger->warning(
+                    sprintf(
+                        'Error: "%s" in "%s". The file has been skipped.',
+                        $e->getMessage(),
+                        $file->getRealPath()
+                    )
+                );
+            } catch (WebspaceLocalizationNotUsedException $e) {
+                $this->logger->warning(
+                    sprintf(
+                        'Error: "%s" in "%s". The file has been skipped.',
+                        $e->getMessage(),
+                        $file->getRealPath()
+                    )
                 );
             }
         }
@@ -185,20 +210,51 @@ class WebspaceCollectionBuilder
                 $this->buildUrls($portal, $environment, $url, $segments, $urlAddress, $urlAnalyticsKey);
             } else {
                 // create the redirect
-                $this->buildUrlRedirect($portal->getWebspace(), $environment, $urlAddress, $urlRedirect, $urlAnalyticsKey);
+                $this->buildUrlRedirect(
+                    $portal->getWebspace(),
+                    $environment,
+                    $urlAddress,
+                    $urlRedirect,
+                    $urlAnalyticsKey,
+                    $url
+                );
             }
+        }
+
+        foreach ($environment->getCustomUrls() as $customUrl) {
+            $urlAddress = $customUrl->getUrl();
+            $this->portalInformations[$environment->getType()][$urlAddress] = new PortalInformation(
+                RequestAnalyzerInterface::MATCH_TYPE_WILDCARD,
+                $portal->getWebspace(),
+                $portal,
+                null,
+                $urlAddress,
+                null,
+                null,
+                null,
+                false,
+                $urlAddress,
+                1
+            );
         }
     }
 
     /**
-     * @param Webspace    $webspace
+     * @param Webspace $webspace
      * @param Environment $environment
-     * @param string      $urlAddress
-     * @param string      $urlRedirect
-     * @param string      $urlAnalyticsKey
+     * @param string $urlAddress
+     * @param string $urlRedirect
+     * @param string $urlAnalyticsKey
+     * @param Url $url
      */
-    private function buildUrlRedirect(Webspace $webspace, Environment $environment, $urlAddress, $urlRedirect, $urlAnalyticsKey)
-    {
+    private function buildUrlRedirect(
+        Webspace $webspace,
+        Environment $environment,
+        $urlAddress,
+        $urlRedirect,
+        $urlAnalyticsKey,
+        Url $url
+    ) {
         $this->portalInformations[$environment->getType()][$urlAddress] = new PortalInformation(
             RequestAnalyzerInterface::MATCH_TYPE_REDIRECT,
             $webspace,
@@ -207,18 +263,22 @@ class WebspaceCollectionBuilder
             $urlAddress,
             null,
             $urlRedirect,
-            $urlAnalyticsKey
+            $urlAnalyticsKey,
+            $url->isMain(),
+            $url->getUrl(),
+            $this->urlReplacer->hasHostReplacer($urlAddress) ? 4 : 9
         );
     }
 
     /**
-     * @param Portal       $portal
-     * @param Environment  $environment
-     * @param Segment[]    $segments
-     * @param string[]     $replacers
-     * @param string       $urlAddress
+     * @param Portal $portal
+     * @param Environment $environment
+     * @param Segment[] $segments
+     * @param string[] $replacers
+     * @param string $urlAddress
      * @param Localization $localization
-     * @param string       $urlAnalyticsKey
+     * @param string $urlAnalyticsKey
+     * @param Url $url
      */
     private function buildUrlFullMatch(
         Portal $portal,
@@ -227,11 +287,12 @@ class WebspaceCollectionBuilder
         $replacers,
         $urlAddress,
         Localization $localization,
-        $urlAnalyticsKey
+        $urlAnalyticsKey,
+        Url $url
     ) {
         if (!empty($segments)) {
             foreach ($segments as $segment) {
-                $replacers[self::REPLACER_SEGMENT] = $segment->getKey();
+                $replacers[ReplacerInterface::REPLACER_SEGMENT] = $segment->getKey();
                 $urlResult = $this->generateUrlAddress($urlAddress, $replacers);
                 $this->portalInformations[$environment->getType()][$urlResult] = new PortalInformation(
                     RequestAnalyzerInterface::MATCH_TYPE_FULL,
@@ -241,7 +302,10 @@ class WebspaceCollectionBuilder
                     $urlResult,
                     $segment,
                     null,
-                    $urlAnalyticsKey
+                    $urlAnalyticsKey,
+                    $url->isMain(),
+                    $url->getUrl(),
+                    $this->urlReplacer->hasHostReplacer($urlResult) ? 5 : 10
                 );
             }
         } else {
@@ -254,31 +318,44 @@ class WebspaceCollectionBuilder
                 $urlResult,
                 null,
                 null,
-                $urlAnalyticsKey
+                $urlAnalyticsKey,
+                $url->isMain(),
+                $url->getUrl(),
+                $this->urlReplacer->hasHostReplacer($urlResult) ? 5 : 10
             );
         }
     }
 
     /**
-     * @param Portal      $portal
+     * @param Portal $portal
      * @param Environment $environment
-     * @param string      $urlAddress
-     * @param string      $urlAnalyticsKey
+     * @param string $urlAddress
+     * @param string $urlAnalyticsKey
+     * @param Url $url
      */
-    private function buildUrlPartialMatch(Portal $portal, Environment $environment, $urlAddress, $urlAnalyticsKey)
-    {
-        $replacers = [
-            self::REPLACER_LANGUAGE => $portal->getDefaultLocalization()->getLanguage(),
-            self::REPLACER_COUNTRY => $portal->getDefaultLocalization()->getCountry(),
-            self::REPLACER_LOCALIZATION => $portal->getDefaultLocalization()->getLocalization('-'),
-        ];
+    private function buildUrlPartialMatch(
+        Portal $portal,
+        Environment $environment,
+        $urlAddress,
+        $urlAnalyticsKey,
+        Url $url
+    ) {
+        $replacers = [];
 
         $defaultSegment = $portal->getWebspace()->getDefaultSegment();
         if ($defaultSegment) {
-            $replacers[self::REPLACER_SEGMENT] = $defaultSegment->getKey();
+            $replacers[ReplacerInterface::REPLACER_SEGMENT] = $defaultSegment->getKey();
         }
 
-        $urlResult = $this->removeUrlPlaceHolders($urlAddress);
+        $urlResult = $this->urlReplacer->cleanup(
+            $urlAddress,
+            [
+                ReplacerInterface::REPLACER_LANGUAGE,
+                ReplacerInterface::REPLACER_COUNTRY,
+                ReplacerInterface::REPLACER_LOCALIZATION,
+                ReplacerInterface::REPLACER_SEGMENT,
+            ]
+        );
         $urlRedirect = $this->generateUrlAddress($urlAddress, $replacers);
 
         if ($this->validateUrlPartialMatch($urlResult, $environment)) {
@@ -286,11 +363,14 @@ class WebspaceCollectionBuilder
                 RequestAnalyzerInterface::MATCH_TYPE_PARTIAL,
                 $portal->getWebspace(),
                 $portal,
-                $portal->getDefaultLocalization(),
+                null,
                 $urlResult,
                 $portal->getWebspace()->getDefaultSegment(),
                 $urlRedirect,
-                $urlAnalyticsKey
+                $urlAnalyticsKey,
+                false, // partial matches cannot be main
+                $url->getUrl(),
+                $this->urlReplacer->hasHostReplacer($urlResult) ? 4 : 9
             );
         }
     }
@@ -298,15 +378,21 @@ class WebspaceCollectionBuilder
     /**
      * Builds the URLs for the portal, which are not a redirect.
      *
-     * @param Portal      $portal
+     * @param Portal $portal
      * @param Environment $environment
      * @param $url
      * @param $segments
      * @param $urlAddress
      * @param $urlAnalyticsKey
      */
-    private function buildUrls(Portal $portal, Environment $environment, Url $url, $segments, $urlAddress, $urlAnalyticsKey)
-    {
+    private function buildUrls(
+        Portal $portal,
+        Environment $environment,
+        Url $url,
+        $segments,
+        $urlAddress,
+        $urlAnalyticsKey
+    ) {
         if ($url->getLanguage()) {
             $language = $url->getLanguage();
             $country = $url->getCountry();
@@ -319,7 +405,8 @@ class WebspaceCollectionBuilder
                 [],
                 $urlAddress,
                 $portal->getLocalization($locale),
-                $urlAnalyticsKey
+                $urlAnalyticsKey,
+                $url
             );
         } else {
             // create all the urls for every localization/segment combination
@@ -328,14 +415,29 @@ class WebspaceCollectionBuilder
                 $country = $url->getCountry() ? $url->getCountry() : $localization->getCountry();
 
                 $replacers = [
-                    self::REPLACER_LANGUAGE => $language,
-                    self::REPLACER_COUNTRY => $country,
-                    self::REPLACER_LOCALIZATION => $localization->getLocalization('-'),
+                    ReplacerInterface::REPLACER_LANGUAGE => $language,
+                    ReplacerInterface::REPLACER_COUNTRY => $country,
+                    ReplacerInterface::REPLACER_LOCALIZATION => $localization->getLocalization('-'),
                 ];
 
-                $this->buildUrlFullMatch($portal, $environment, $segments, $replacers, $urlAddress, $localization, $urlAnalyticsKey);
+                $this->buildUrlFullMatch(
+                    $portal,
+                    $environment,
+                    $segments,
+                    $replacers,
+                    $urlAddress,
+                    $localization,
+                    $urlAnalyticsKey,
+                    $url
+                );
             }
-            $this->buildUrlPartialMatch($portal, $environment, $urlAddress, $urlAnalyticsKey);
+            $this->buildUrlPartialMatch(
+                $portal,
+                $environment,
+                $urlAddress,
+                $urlAnalyticsKey,
+                $url
+            );
         }
     }
 
@@ -358,34 +460,15 @@ class WebspaceCollectionBuilder
      * Replaces the given values in the pattern.
      *
      * @param string $pattern
-     * @param array  $replacers
+     * @param array $replacers
      *
      * @return string
      */
     private function generateUrlAddress($pattern, $replacers)
     {
         foreach ($replacers as $replacer => $value) {
-            $pattern = str_replace($replacer, $value, $pattern);
+            $pattern = $this->urlReplacer->replace($pattern, $replacer, $value);
         }
-
-        return $pattern;
-    }
-
-    /**
-     * Removes the placesholders from the url address.
-     *
-     * @param $pattern
-     *
-     * @return mixed|string
-     */
-    private function removeUrlPlaceHolders($pattern)
-    {
-        foreach ($this->replacers as $replacer) {
-            $pattern = str_replace($replacer, '', $pattern);
-        }
-
-        $pattern = ltrim($pattern, '.');
-        $pattern = rtrim($pattern, '/');
 
         return $pattern;
     }

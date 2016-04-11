@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,6 +13,7 @@ namespace Sulu\Component\Websocket;
 
 use Ratchet\App;
 use React\EventLoop\LoopInterface;
+use Sulu\Bundle\WebsocketBundle\App\WebsocketApp;
 
 /**
  * Class manages ratchet websocket apps.
@@ -50,7 +51,7 @@ class RatchetAppManager implements AppManagerInterface
     /**
      * Ratchet app.
      *
-     * @var App
+     * @var WebsocketApp
      */
     private $ratchetApp;
 
@@ -98,7 +99,7 @@ class RatchetAppManager implements AppManagerInterface
      */
     public function run()
     {
-        $this->ratchetApp = new App($this->getHttpHost(), $this->getPort(), $this->getIpAddress(), $this->loop);
+        $this->ratchetApp = new WebsocketApp($this->getHttpHost(), $this->getPort(), $this->getIpAddress(), $this->loop);
 
         foreach ($this->apps as $app) {
             // TODO introduce session config for this: $sessionApp = new SessionProvider($app['app'], $this->sessionHandler);

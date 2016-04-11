@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -27,9 +27,10 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
     public function initEnv(BeforeScenarioScope $scope)
     {
         $this->execCommand('doctrine:fixtures:load', ['--no-interaction' => true, '--append' => false]);
-        $this->execCommand('doctrine:phpcr:workspace:purge', ['--force' => true]);
-        $this->execCommand('sulu:phpcr:init', ['--no-interaction' => true]);
-        $this->execCommand('sulu:webspace:init', ['--no-interaction' => true]);
+        $this->execCommand('sulu:document:initialize', [
+            '--purge' => true,
+            '--force' => true,
+        ]);
     }
 
     /**
@@ -132,7 +133,7 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
     /**
      * Checks, that (?P<num>\d+) CSS elements exist on the page
      * Example: Then I wait and should see 5 "div" elements
-     * Example: And I wait and should see 5 "div" elements
+     * Example: And I wait and should see 5 "div" elements.
      *
      * @Then /^(?:|I )wait and should see (?P<num>\d+) "(?P<element>[^"]*)" elements?$/
      *
@@ -181,7 +182,7 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
     public function iPressEnterOn($selector)
     {
         $this->clickSelector($selector);
-        $script = <<<EOT
+        $script = <<<'EOT'
 var e = $.Event("keypress");
 e.which = 13;
 e.keyCode = 13;
@@ -197,7 +198,7 @@ EOT;
      */
     public function iExpectTheAjaxRequest()
     {
-        $active = (integer) $this->getSession()->evaluateScript('$.active');
+        $active = (int) $this->getSession()->evaluateScript('$.active');
 
         if ($active === 0) {
             $this->getSession()->wait(1000, '$.active > 0');
@@ -233,7 +234,7 @@ EOT;
     /**
      * Waits and checks, that element with specified CSS contains specified HTML
      * Example: Then the "body" element should contain "style=\"color:black;\""
-     * Example: And the "body" element should contain "style=\"color:black;\""
+     * Example: And the "body" element should contain "style=\"color:black;\"".
      *
      * @Then /^(?:|I )wait that the "(?P<element>[^"]*)" element should contain "(?P<value>(?:[^"]|\\")*)"$/
      *
@@ -265,7 +266,7 @@ EOT;
     }
 
     /**
-     * Waits and checks, that current page PATH matches regular expression
+     * Waits and checks, that current page PATH matches regular expression.
      *
      * @Then /^wait that the (?i)url(?-i) should match (?P<pattern>"(?:[^"]|\\")*")$/
      *

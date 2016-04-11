@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -76,7 +76,7 @@ class MediaControllerTest extends SuluTestCase
     {
         parent::setUp();
         $this->purgeDatabase();
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
         $this->cleanImage();
         $this->setUpCollection();
         $this->setUpMedia();
@@ -84,11 +84,11 @@ class MediaControllerTest extends SuluTestCase
 
     protected function cleanImage()
     {
-        if (self::$kernel->getContainer()) { //
-            $configPath = self::$kernel->getContainer()->getParameter('sulu_media.media.storage.local.path');
+        if ($this->getContainer()) { //
+            $configPath = $this->getContainer()->getParameter('sulu_media.media.storage.local.path');
             $this->recursiveRemoveDirectory($configPath);
 
-            $cachePath = self::$kernel->getContainer()->getParameter('sulu_media.format_cache.path');
+            $cachePath = $this->getContainer()->getParameter('sulu_media.format_cache.path');
             $this->recursiveRemoveDirectory($cachePath);
         }
     }
@@ -248,7 +248,10 @@ class MediaControllerTest extends SuluTestCase
             '/uploads/media/50x50/01/' . $media->getId() . '-photo.jpeg'
         );
 
-        $this->assertEquals($date->format('Y-m-d'), $client->getResponse()->getExpires()->format('Y-m-d'));
+        $this->assertEquals(
+            $date->format('Y-m-d'),
+            $client->getResponse()->getExpires()->format('Y-m-d')
+        );
     }
 
     /**
@@ -343,22 +346,40 @@ class MediaControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/media/' . $media->getId()
+            '/api/media/' . $media->getId() . '?locale=en-gb'
         );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals($media->getId(), $response->id);
-        $this->assertNotNull($response->type->id);
-        $this->assertEquals('image', $response->type->name);
-        $this->assertEquals('photo.jpeg', $response->name);
-        $this->assertEquals($this->mediaDefaultTitle, $response->title);
-        $this->assertEquals('2', $response->downloadCounter);
-        $this->assertEquals($this->mediaDefaultDescription, $response->description);
-        $this->assertNotEmpty($response->url);
-        $this->assertNotEmpty($response->thumbnails);
+        $this->assertEquals($media->getId(), $response['id']);
+        $this->assertNotNull($response['type']['id']);
+        $this->assertEquals('image', $response['type']['name']);
+        $this->assertEquals('en-gb', $response['locale']);
+        $this->assertArrayNotHasKey('fallbackLocale', $response);
+        $this->assertEquals('photo.jpeg', $response['name']);
+        $this->assertEquals($this->mediaDefaultTitle, $response['title']);
+        $this->assertEquals('2', $response['downloadCounter']);
+        $this->assertEquals($this->mediaDefaultDescription, $response['description']);
+        $this->assertNotEmpty($response['url']);
+        $this->assertNotEmpty($response['thumbnails']);
+    }
+
+    public function testGetByIdWithFallback()
+    {
+        $media = $this->createMedia('photo');
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('GET', '/api/media/' . $media->getId() . '?locale=de');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals($media->getId(), $response['id']);
+        $this->assertEquals('de', $response['locale']);
+        $this->assertEquals('en-gb', $response['fallbackLocale']);
     }
 
     /**
@@ -375,7 +396,7 @@ class MediaControllerTest extends SuluTestCase
             '/api/media'
         );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -397,7 +418,7 @@ class MediaControllerTest extends SuluTestCase
             '/api/media?collection=' . $this->collection->getId()
         );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -422,7 +443,7 @@ class MediaControllerTest extends SuluTestCase
             '/api/media?collection=' . $this->collection->getId() . '&types=image'
         );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -445,7 +466,7 @@ class MediaControllerTest extends SuluTestCase
             '/api/media?collection=' . $this->collection->getId() . '&types=audio'
         );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -468,7 +489,7 @@ class MediaControllerTest extends SuluTestCase
             '/api/media?collection=' . $this->collection->getId() . '&types=image,audio'
         );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -493,7 +514,7 @@ class MediaControllerTest extends SuluTestCase
             '/api/media?ids=' . $media->getId()
         );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -516,7 +537,7 @@ class MediaControllerTest extends SuluTestCase
             '/api/media?ids=' . $media2->getId() . ',' . $media1->getId()
         );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -540,7 +561,7 @@ class MediaControllerTest extends SuluTestCase
             '/api/media?flat=true&search=photo%2A'
         );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $response = json_decode($client->getResponse()->getContent(), true);
 
@@ -570,7 +591,7 @@ class MediaControllerTest extends SuluTestCase
             '/api/media?ids=1232,3123,1234'
         );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -591,7 +612,7 @@ class MediaControllerTest extends SuluTestCase
             '/api/media/11230'
         );
 
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(5015, $response->code);
@@ -618,6 +639,7 @@ class MediaControllerTest extends SuluTestCase
                 'title' => 'New Image Title',
                 'description' => 'New Image Description',
                 'copyright' => 'My copyright',
+                'credits' => 'My credits',
                 'contentLanguages' => [
                     'en-gb',
                 ],
@@ -637,7 +659,7 @@ class MediaControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals('photo.jpeg', $response->name);
         $this->assertNotNull($response->id);
@@ -646,6 +668,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('New Image Title', $response->title);
         $this->assertEquals('New Image Description', $response->description);
         $this->assertEquals('My copyright', $response->copyright);
+        $this->assertEquals('My credits', $response->credits);
         $this->assertNotEmpty($response->url);
         $this->assertNotEmpty($response->thumbnails);
 
@@ -695,7 +718,7 @@ class MediaControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals($this->mediaDefaultTitle, $response->title);
 
         $this->assertEquals('photo.jpeg', $response->name);
@@ -730,7 +753,7 @@ class MediaControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals('small', $response->title);
 
         $this->assertEquals('small.txt', $response->name);
@@ -759,6 +782,7 @@ class MediaControllerTest extends SuluTestCase
                 'title' => 'New Image Title',
                 'description' => 'New Image Description',
                 'copyright' => 'My copyright',
+                'credits' => 'My credits',
                 'contentLanguages' => [
                     'en-gb',
                 ],
@@ -778,7 +802,7 @@ class MediaControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals($media->getId(), $response->id);
         $this->assertEquals($this->collection->getId(), $response->collection);
         $this->assertEquals(2, $response->version);
@@ -788,6 +812,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('New Image Title', $response->title);
         $this->assertEquals('New Image Description', $response->description);
         $this->assertEquals('My copyright', $response->copyright);
+        $this->assertEquals('My credits', $response->credits);
         $this->assertEquals(
             [
                 'en-gb',
@@ -823,6 +848,7 @@ class MediaControllerTest extends SuluTestCase
                 'title' => 'Update Title',
                 'description' => 'Update Description',
                 'copyright' => 'My copyright',
+                'credits' => 'My credits',
                 'contentLanguages' => [
                     'en-gb',
                 ],
@@ -837,7 +863,7 @@ class MediaControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals($media->getId(), $response->id);
         $this->assertEquals($this->collection->getId(), $response->collection);
         $this->assertEquals(1, $response->version);
@@ -846,6 +872,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('Update Title', $response->title);
         $this->assertEquals('Update Description', $response->description);
         $this->assertEquals('My copyright', $response->copyright);
+        $this->assertEquals('My credits', $response->credits);
         $this->assertNotEmpty($response->url);
         $this->assertNotEmpty($response->thumbnails);
         $this->assertEquals(
@@ -893,7 +920,7 @@ class MediaControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals($media->getId(), $response->id);
         $this->assertEquals($this->mediaDefaultTitle, $response->title);
@@ -925,7 +952,7 @@ class MediaControllerTest extends SuluTestCase
             '/api/media/' . $media->getId()
         );
 
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(5015, $response->code);
@@ -944,7 +971,7 @@ class MediaControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
 
         $client->request('DELETE', '/api/collections/' . $this->collection->getId());
-        $this->assertEquals('204', $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(204, $client->getResponse());
 
         $client = $this->createAuthenticatedClient();
 
@@ -953,7 +980,7 @@ class MediaControllerTest extends SuluTestCase
             '/api/media/' . $media->getId()
         );
 
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(5015, $response->code);
@@ -969,7 +996,7 @@ class MediaControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
 
         $client->request('DELETE', '/api/media/404');
-        $this->assertEquals('404', $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
 
         $client->request('GET', '/api/media');
         $response = json_decode($client->getResponse()->getContent());
@@ -992,14 +1019,14 @@ class MediaControllerTest extends SuluTestCase
         );
         ob_end_clean();
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $client->request(
             'GET',
             '/api/media/' . $media->getId()
         );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -1039,7 +1066,7 @@ class MediaControllerTest extends SuluTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals($destCollection->getId(), $response['collection']);
         $this->assertEquals($this->mediaDefaultTitle, $response['title']);
     }
@@ -1054,7 +1081,7 @@ class MediaControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request('POST', '/api/media/' . $media->getId() . '?action=move&destination=404');
 
-        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(400, $client->getResponse());
     }
 
     /**
@@ -1065,7 +1092,7 @@ class MediaControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request('POST', '/api/media/404?action=move&destination=' . $this->collection->getId());
 
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
     }
 
     /**
@@ -1078,7 +1105,7 @@ class MediaControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request('POST', '/api/media/' . $media->getId() . '?action=test');
 
-        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(400, $client->getResponse());
     }
 
     /**

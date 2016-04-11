@@ -13,8 +13,9 @@ define([
     'services/sulumedia/media-manager',
     'services/sulumedia/user-settings-manager',
     'services/sulumedia/overlay-manager',
-    'sulusecurity/services/security-checker'
-], function(Config, CollectionManager, MediaManager, UserSettingsManager, OverlayManager, SecurityChecker) {
+    'sulusecurity/services/security-checker',
+    'services/sulumedia/file-icons'
+], function(Config, CollectionManager, MediaManager, UserSettingsManager, OverlayManager, SecurityChecker, FileIcons) {
 
     'use strict';
 
@@ -293,7 +294,7 @@ define([
                 },
                 {
                     el: this.$find(constants.datagridSelector),
-                    url: '/admin/api/media?orderBy=media.changed&orderSort=DESC&locale=' + UserSettingsManager.getMediaLocale() + '&collection=' + this.options.id,
+                    url: '/admin/api/media?orderBy=media.created&orderSort=desc&locale=' + UserSettingsManager.getMediaLocale() + '&collection=' + this.options.id,
                     view: view,
                     pagination: UserSettingsManager.getMediaListPagination(),
                     resultKey: 'media',
@@ -303,7 +304,17 @@ define([
                     }.bind(this),
                     viewOptions: {
                         table: {
-                            actionIconColumn: 'name'
+                            actionIconColumn: 'name',
+                            noImgIcon: function(item) {
+                                return FileIcons.getByMimeType(item.mimeType);
+                            },
+                            emptyIcon: 'fa-file-o'
+                        },
+                        'datagrid/decorators/masonry-view': {
+                            noImgIcon: function(item) {
+                                return FileIcons.getByMimeType(item.mimeType);
+                            },
+                            emptyIcon: 'fa-file-o'
                         }
                     },
                     paginationOptions: {
@@ -325,7 +336,8 @@ define([
                     options: {
                         el: this.$find(constants.dropzoneSelector),
                         maxFilesize: Config.get('sulu-media').maxFilesize,
-                        url: '/admin/api/media?collection=' + this.options.id,
+                        url: '/admin/api/media?collection=' + this.options.id
+                            + '&locale=' + UserSettingsManager.getMediaLocale(),
                         method: 'POST',
                         paramName: 'fileVersion',
                         instanceName: this.options.instanceName

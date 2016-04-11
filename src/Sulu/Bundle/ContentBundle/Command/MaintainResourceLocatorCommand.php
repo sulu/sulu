@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -87,7 +87,6 @@ class MaintainResourceLocatorCommand extends ContainerAwareCommand
             1
         );
 
-        /** @var Page $page */
         foreach ($pages as $page) {
             $this->upgradeNode($page, $webspace, $localization, $output, substr_count($page->getPath(), '/'));
             $this->upgradeByParent($page, $webspace, $localization, $contentMapper, $output);
@@ -136,7 +135,14 @@ class MaintainResourceLocatorCommand extends ContainerAwareCommand
 
             // save value
             $property->setValue($rl);
-            $resourceLocator->write($node, $transProperty, 1, $webspace->getKey(), $localization->getLocalization());
+            $resourceLocator->write(
+                $node,
+                $transProperty,
+                1,
+                $webspace->getKey(),
+                $localization->getLocalization(),
+                null
+            );
             $session->save();
 
             $prefix = '   ';

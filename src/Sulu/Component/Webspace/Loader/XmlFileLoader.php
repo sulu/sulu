@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,9 +12,11 @@
 namespace Sulu\Component\Webspace\Loader;
 
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Loader\Exception\ExpectedDefaultTemplatesNotFound;
 use Sulu\Component\Webspace\Loader\Exception\InvalidAmountOfDefaultErrorTemplateException;
+use Sulu\Component\Webspace\Loader\Exception\InvalidCustomUrlException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidDefaultErrorTemplateException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidDefaultLocalizationException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidErrorTemplateException;
@@ -24,6 +26,7 @@ use Sulu\Component\Webspace\Loader\Exception\InvalidWebspaceDefaultLocalizationE
 use Sulu\Component\Webspace\Loader\Exception\InvalidWebspaceDefaultSegmentException;
 use Sulu\Component\Webspace\Loader\Exception\PortalDefaultLocalizationNotFoundException;
 use Sulu\Component\Webspace\Loader\Exception\WebspaceDefaultSegmentNotFoundException;
+use Sulu\Component\Webspace\Loader\Exception\WebspaceLocalizationNotUsedException;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Portal;
@@ -64,9 +67,7 @@ class XmlFileLoader extends FileLoader
         $path = $this->getLocator()->locate($resource);
 
         // load data in path
-        $webspace = $this->parseXml($path);
-
-        return $webspace;
+        return $this->parseXml($path);
     }
 
     /**
@@ -127,6 +128,7 @@ class XmlFileLoader extends FileLoader
         $this->validateWebspaceDefaultLocalization();
         $this->validateDefaultPortalLocalization();
         $this->validateWebspaceDefaultSegment();
+        $this->validateLocalizations();
     }
 
     /**
@@ -415,6 +417,7 @@ class XmlFileLoader extends FileLoader
             $environment->setType($environmentNode->attributes->getNamedItem('type')->nodeValue);
 
             $this->generateUrls($environmentNode, $environment);
+            $this->generateCustomUrls($environmentNode, $environment);
 
             $portal->addEnvironment($environment);
         }
@@ -444,20 +447,43 @@ class XmlFileLoader extends FileLoader
             $url->setCountry($this->getOptionalNodeAttribute($urlNode, 'country'));
             $url->setSegment($this->getOptionalNodeAttribute($urlNode, 'segment'));
             $url->setRedirect($this->getOptionalNodeAttribute($urlNode, 'redirect'));
+            $url->setMain($this->getOptionalNodeAttribute($urlNode, 'main', false));
             $url->setAnalyticsKey($this->getOptionalNodeAttribute($urlNode, 'analytics-key'));
 
             $environment->addUrl($url);
         }
     }
 
-    private function getOptionalNodeAttribute(\DOMNode $node, $name)
+    /**
+     * @param \DOMNode $environmentNode
+     * @param Environment $environment
+     *
+     * @throws InvalidCustomUrlException
+     */
+    private function generateCustomUrls(\DOMNode $environmentNode, Environment $environment)
+    {
+        foreach ($this->xpath->query('x:custom-urls/x:custom-url', $environmentNode) as $urlNode) {
+            /** @var \DOMNode $urlNode */
+            $url = new CustomUrl();
+
+            $url->setUrl(rtrim($urlNode->nodeValue, '/'));
+
+            if (false === strpos($url->getUrl(), '*')) {
+                throw new InvalidCustomUrlException($this->webspace, $url->getUrl());
+            }
+
+            $environment->addCustomUrl($url);
+        }
+    }
+
+    private function getOptionalNodeAttribute(\DOMNode $node, $name, $default = null)
     {
         $attribute = $node->attributes->getNamedItem($name);
         if ($attribute) {
             return $attribute->nodeValue;
         }
 
-        return;
+        return $default;
     }
 
     /**
@@ -519,6 +545,43 @@ class XmlFileLoader extends FileLoader
             } catch (InvalidDefaultLocalizationException $ex) {
                 throw new InvalidPortalDefaultLocalizationException($this->webspace, $portal);
             }
+        }
+    }
+
+    /**
+     * Validate that all localizations are used in the portals.
+     *
+     * @throws Exception\PortalDefaultLocalizationNotFoundException
+     * @throws Exception\InvalidPortalDefaultLocalizationException
+     */
+    private function validateLocalizations()
+    {
+        $locales = array_unique(
+            array_map(
+                function (Localization $localization) {
+                    return $localization->getLocalization();
+                },
+                $this->webspace->getAllLocalizations()
+            )
+        );
+
+        $portalLocales = [];
+        foreach ($this->webspace->getPortals() as $portal) {
+            $portalLocales = array_merge(
+                $portalLocales,
+                array_map(
+                    function (Localization $localization) {
+                        return $localization->getLocalization();
+                    },
+                    $portal->getLocalizations()
+                )
+            );
+        }
+
+        $portalLocales = array_unique($portalLocales);
+
+        if (array_diff($locales, $portalLocales) || array_diff($portalLocales, $locales)) {
+            throw new WebspaceLocalizationNotUsedException($this->webspace);
         }
     }
 

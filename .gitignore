@@ -10,7 +10,7 @@
 /src/Sulu/Bundle/*/Tests/app/cache
 /src/Sulu/Bundle/*/Tests/app/logs
 /src/Sulu/Bundle/*/Tests/app/data
-/tests/Sulu/Component/Rest/ListBuilder/Metadata/cache
+/src/Sulu/Component/Rest/Tests/Functional/ListBuilder/Metadata/cache
 
 npm-debug.log
 
@@ -25,8 +25,8 @@ npm-debug.log
 phpunit.xml
 
 # Jackrabbit
-/bin/jackrabbit-standalone*
-/bin/jackrabbit/*
+jackrabbit-standalone*
+jackrabbit/*
 
 # phpunit
 /phpunit.xml

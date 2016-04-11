@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,6 +20,8 @@ use Sulu\Component\Content\Compat\StructureInterface;
 
 /**
  * Interface of ContentMapper.
+ *
+ * @deprecated Use the DocumentManagerInterface instead
  */
 interface ContentMapperInterface
 {
@@ -187,6 +189,8 @@ interface ContentMapperInterface
      * @param $webspaceKey
      *
      * @return BreadcrumbItemInterface[]
+     *
+     * @deprecated
      */
     public function loadBreadcrumb($uuid, $languageCode, $webspaceKey);
 

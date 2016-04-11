@@ -7,29 +7,57 @@
  * with this source code in the file LICENSE.
  */
 
-define(function() {
+define(['sulusecurity/models/role'], function(Role) {
 
     'use strict';
 
     return {
-        header: {
-            tabs: {
-                url: '/admin/content-navigations?alias=roles'
-            },
-            toolbar: {
-                buttons: {
-                    save: {
-                        parent: 'saveWithOptions'
+        header: function() {
+            return {
+                tabs: {
+                    url: '/admin/content-navigations?alias=roles',
+                    options: {
+                        data: function() {
+                            return this.data;
+                        }.bind(this)
                     },
-                    edit: {
-                        options: {
-                            dropdownItems: {
-                                delete: {}
+                    componentOptions: {
+                        values: this.data.toJSON()
+                    }
+                },
+                toolbar: {
+                    buttons: {
+                        save: {
+                            parent: 'saveWithOptions'
+                        },
+                        edit: {
+                            options: {
+                                dropdownItems: {
+                                    delete: {}
+                                }
                             }
                         }
                     }
                 }
+            };
+        },
+
+        loadComponentData: function() {
+            var promise = this.sandbox.data.deferred();
+            this.role = new Role();
+
+            if (!!this.options.id) {
+                this.role.set({id: this.options.id});
+                this.role.fetch({
+                    success: function(model) {
+                        promise.resolve(model);
+                    }.bind(this)
+                });
+            } else {
+                promise.resolve(this.role);
             }
+
+            return promise;
         }
     };
 });

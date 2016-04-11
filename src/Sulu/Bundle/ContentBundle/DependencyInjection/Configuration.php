@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -14,11 +14,6 @@ namespace Sulu\Bundle\ContentBundle\DependencyInjection;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
-/**
- * This is the class that validates and merges configuration from your app/config files.
- *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
- */
 class Configuration implements ConfigurationInterface
 {
     /**
@@ -155,6 +150,22 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('template')
                                 ->defaultValue('SuluContentBundle:Template:content-types/checkbox.html.twig')
                             ->end()
+                        ->end()
+                    ->end()
+                    ->arrayNode('multiple_select')
+                        ->addDefaultsIfNotSet()
+                        ->children()
+                            ->scalarNode('template')
+                                ->defaultValue('SuluContentBundle:Template:content-types/multiple_select.html.twig')
+                            ->end()
+                        ->end()
+                    ->end()
+                    ->arrayNode('single_select')
+                        ->addDefaultsIfNotSet()
+                        ->children()
+                            ->scalarNode('template')
+                            ->defaultValue('SuluContentBundle:Template:content-types/single_select.html.twig')
+                        ->end()
                         ->end()
                     ->end()
                 ->end()

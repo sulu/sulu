@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -14,7 +14,6 @@ namespace Sulu\Bundle\CoreBundle\Build;
 use Massive\Bundle\BuildBundle\Build\BuilderContext;
 use Massive\Bundle\BuildBundle\Build\BuilderInterface;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
-use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -55,12 +54,11 @@ abstract class SuluBuilder implements ContainerAwareInterface, BuilderInterface
     protected function execCommand($description, $command, $args = [''])
     {
         $this->output->getFormatter()->setIndentLevel(1);
-        $formatter = new FormatterHelper();
 
         if (!empty($args)) {
             $this->output->writeln(sprintf('<comment>%s </comment> (%s)', $command, json_encode($args)));
         } else {
-            $this->output->writeln(sprintf('<comment>%s </comment> (%s)', $command));
+            $this->output->writeln(sprintf('<comment>%s</comment>', $command));
         }
         $this->output->writeln('');
 

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class ContactsContentNavigationProvider implements ContentNavigationProviderInterface
@@ -31,9 +32,10 @@ class ContactsContentNavigationProvider implements ContentNavigationProviderInte
     {
         $navigation = [];
 
-        if ($this->securityChecker->hasPermission('sulu.security.users', 'view')) {
+        if ($this->securityChecker->hasPermission('sulu.security.users', PermissionTypes::VIEW)) {
             $permissions = new ContentNavigationItem('content-navigation.security.permissions');
             $permissions->setAction('permissions');
+            $permissions->setPosition(30);
             $permissions->setComponent('users@sulusecurity');
             $permissions->setDisplay(['edit']);
 

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -14,8 +14,6 @@ namespace Sulu\Bundle\TranslateBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
-use Sulu\Bundle\TranslateBundle\Command\ExportCommand;
-use Sulu\Bundle\TranslateBundle\Command\ImportCommand;
 
 class TranslateAdmin extends Admin
 {
@@ -23,12 +21,15 @@ class TranslateAdmin extends Admin
     {
         $rootNavigationItem = new NavigationItem($title);
 
-        $section = new NavigationItem('');
+        $section = new NavigationItem('navigation.modules');
+        $section->setPosition(20);
 
         $settings = new NavigationItem('navigation.settings');
+        $settings->setPosition(40);
         $settings->setIcon('cogwheels');
 
         $translate = new NavigationItem('navigation.settings.translate');
+        $translate->setPosition(40);
         $translate->setAction('settings/translate');
         $translate->setIcon('book-open');
         $settings->addChild($translate);
@@ -36,17 +37,6 @@ class TranslateAdmin extends Admin
         $section->addChild($settings);
         $rootNavigationItem->addChild($section);
         $this->setNavigation(new Navigation($rootNavigationItem));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCommands()
-    {
-        return [
-            new ImportCommand(),
-            new ExportCommand(),
-        ];
     }
 
     /**

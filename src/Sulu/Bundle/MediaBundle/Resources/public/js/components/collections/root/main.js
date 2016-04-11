@@ -11,8 +11,9 @@ define([
     'services/sulumedia/media-manager',
     'services/sulumedia/user-settings-manager',
     'services/sulumedia/media-router',
+    'services/sulumedia/file-icons',
     'config'
-], function(MediaManager, UserSettingsManager, MediaRouter, Config) {
+], function(MediaManager, UserSettingsManager, MediaRouter, FileIcons, Config) {
 
     'use strict';
 
@@ -161,7 +162,7 @@ define([
                 },
                 {
                     el: this.$find(constants.datagridSelector),
-                    url: '/admin/api/media?orderBy=media.changed&orderSort=desc&locale=' + UserSettingsManager.getMediaLocale(),
+                    url: '/admin/api/media?orderBy=media.created&orderSort=desc&locale=' + UserSettingsManager.getMediaLocale(),
                     view: UserSettingsManager.getMediaListView(),
                     pagination: UserSettingsManager.getMediaListPagination(),
                     resultKey: 'media',
@@ -170,10 +171,18 @@ define([
                     viewOptions: {
                         table: {
                             selectItem: true,
-                            actionIconColumn: 'name'
+                            actionIconColumn: 'name',
+                            noImgIcon: function(item) {
+                                return FileIcons.getByMimeType(item.mimeType);
+                            },
+                            emptyIcon: 'fa-file-o'
                         },
                         'datagrid/decorators/masonry-view': {
-                            selectable: false
+                            selectable: false,
+                            noImgIcon: function(item) {
+                                return FileIcons.getByMimeType(item.mimeType);
+                            },
+                            emptyIcon: 'fa-file-o'
                         }
                     },
                     paginationOptions: {

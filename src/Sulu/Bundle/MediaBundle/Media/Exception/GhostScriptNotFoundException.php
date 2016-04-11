@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Exception;
 
-/**
- */
 class GhostScriptNotFoundException extends MediaException
 {
     /**

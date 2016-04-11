@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,11 +15,15 @@ use Sulu\Component\Rest\Exception\RestException;
 
 class KeyNotUniqueException extends RestException
 {
-    public function toArray()
+    /**
+     * @var string
+     */
+    private $key;
+
+    public function __construct($key, \Exception $previous)
     {
-        return [
-            'code' => 1,
-            'message' => 'A category-key has to be unique',
-        ];
+        parent::__construct('A category-key has to be unique or null', 1, $previous);
+
+        $this->key = $key;
     }
 }

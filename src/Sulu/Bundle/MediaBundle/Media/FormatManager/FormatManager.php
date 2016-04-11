@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -567,6 +567,14 @@ class FormatManager implements FormatManagerInterface
     public function purge($idMedia, $fileName, $options)
     {
         return $this->formatCache->purge($idMedia, $fileName, $options);
+    }
+
+    /**
+     * Clears the format cache.
+     */
+    public function clearCache()
+    {
+        $this->formatCache->clear();
     }
 
     /**

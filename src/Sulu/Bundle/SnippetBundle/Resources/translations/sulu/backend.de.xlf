@@ -54,6 +54,34 @@
                 <source>search-overlay.index.snippet.title</source>
                 <target>Snippets</target>
             </trans-unit>
+            <trans-unit id="15" resname="content-navigation.webspace.snippets">
+                <source>content-navigation.webspace.general</source>
+                <target>Schnipsel</target>
+            </trans-unit>
+            <trans-unit id="16" resname="snippets.defaults.default">
+                <source>snippets.defaults.default</source>
+                <target>Standard</target>
+            </trans-unit>
+            <trans-unit id="17" resname="snippets.defaults.type">
+                <source>snippets.defaults.type</source>
+                <target>Typ</target>
+            </trans-unit>
+            <trans-unit id="18" resname="snippet.delete-confirm-default-text">
+                <source>snippet.delete-confirm-default-text</source>
+                <target>Dieses Schnipsel wird als Webspace-Standard verwendet.</target>
+            </trans-unit>
+            <trans-unit id="19" resname="snippet.changed-warning.title">
+                <source>snippet.changed-warning.title</source>
+                <target>Achtung, es werden Inhalte überschrieben!</target>
+            </trans-unit>
+            <trans-unit id="20" resname="snippet.changed-warning.description">
+                <source>snippet.changed-warning.description</source>
+                <target>Dieses Schnipsel wurde zwischenzeitlich von einem anderen Benutzer geändert. Wenn das Schnipsel gespeichert wird, gehen diese Daten verloren.</target>
+            </trans-unit>
+            <trans-unit id="21" resname="snippet.changed-warning.ok-button">
+                <source>snippet.changed-warning.ok-button</source>
+                <target>Schnipsel speichern</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

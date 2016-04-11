@@ -161,6 +161,16 @@ define([], function() {
         },
 
         /**
+         * listens on and update for example the tabs
+         *
+         * @event sulu.header.[INSTANCE_NAME].set-title
+         * @param {Object} data save data
+         */
+        SAVED = function() {
+            return createEventName.call(this, 'saved');
+        },
+
+        /**
          * listens on and initializes a blank toolbar with given options
          *
          * @deprecated This event is deprecated. Try to set the toolbar when starting the header
@@ -538,8 +548,13 @@ define([], function() {
 
             this.sandbox.on(SET_TOOLBAR.call(this), this.setToolbar.bind(this));
             this.sandbox.on(SET_TITLE.call(this), this.setTitle.bind(this));
+            this.sandbox.on(SAVED.call(this), this.saved.bind(this));
             this.bindAbstractToolbarEvents();
             this.bindAbstractTabsEvents();
+        },
+
+        saved: function(data) {
+            this.sandbox.emit('husky.tabs.header.update', data);
         },
 
         /**

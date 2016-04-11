@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\SnippetBundle\Controller;
 
+use PHPCR\SessionInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\StructureInterface;
@@ -38,6 +39,11 @@ class SnippetControllerTest extends SuluTestCase
      */
     protected $documentManager;
 
+    /**
+     * @var SessionInterface
+     */
+    private $phpcrSession;
+
     public function setUp()
     {
         parent::setUp();
@@ -48,16 +54,44 @@ class SnippetControllerTest extends SuluTestCase
         $this->client = $this->createAuthenticatedClient();
     }
 
-    public function testGet()
+    /**
+     * @dataProvider provideGet
+     */
+    public function testGet($locale, $expected)
     {
-        $this->client->request('GET', '/snippets/' . $this->hotel1->getUuid() . '?language=de');
+        $this->client->request('GET', '/snippets/' . $this->hotel1->getUuid() . '?language=' . $locale);
         $response = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $result = $response->getContent();
         $result = json_decode($response->getContent(), true);
+        $this->assertHttpStatusCode(200, $response);
+        $this->assertLinks([
+            'self', 'delete', 'update', 'new',
+        ], $result);
 
-        $this->assertEquals('Le grande budapest', $result['title']); // snippet nodes do not have a path
+        $this->assertEquals($expected['title'], $result['title']);
+        $this->assertEquals($expected['description'], $result['description']);
         $this->assertEquals($this->hotel1->getUuid(), $result['id']);
+    }
+
+    public function provideGet()
+    {
+        return [
+            [
+                'de',
+                [
+                    'title' => 'Das Großes Budapest',
+                    'description' => 'Hallo Weld!',
+                ],
+            ],
+            [
+                'en',
+                [
+                    'title' => 'The Grand Budapest',
+                    'description' => 'Hello World',
+                ],
+            ],
+        ];
     }
 
     public function testGetMany()
@@ -70,12 +104,16 @@ class SnippetControllerTest extends SuluTestCase
         ));
         $response = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
         $result = json_decode($response->getContent(), true);
+        $this->assertHttpStatusCode(200, $response);
+        $this->assertLinks([
+            'self', 'first', 'last', 'filter', 'find', 'pagination', 'sortable',
+        ], $result);
+
         $this->assertCount(2, $result['_embedded']['snippets']);
 
         $result = reset($result['_embedded']['snippets']);
-        $this->assertEquals('Le grande budapest', $result['title']);
+        $this->assertEquals('Das Großes Budapest', $result['title']);
         $this->assertEquals($this->hotel1->getUuid(), $result['id']);
         $this->assertEquals('Hotel', $result['localizedTemplate']);
     }
@@ -91,7 +129,7 @@ class SnippetControllerTest extends SuluTestCase
         );
         $response = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
         $result = json_decode($response->getContent(), true);
         $result = reset($result['_embedded']['snippets']);
         $this->assertEquals($this->hotel1->getUuid(), $result['id']);
@@ -109,12 +147,12 @@ class SnippetControllerTest extends SuluTestCase
         ));
         $response = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
         $result = json_decode($response->getContent(), true);
         $result = $result['_embedded']['snippets'];
         $this->assertCount(2, $result);
         $result = reset($result);
-        $this->assertEquals('Le grande budapest', $result['title']);
+        $this->assertEquals('Das Großes Budapest', $result['title']);
         $this->assertEquals($this->hotel1->getUuid(), $result['id']);
     }
 
@@ -174,7 +212,8 @@ class SnippetControllerTest extends SuluTestCase
         $this->client->request('GET', '/snippets?' . $query);
         $response = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
+
         $result = json_decode($response->getContent(), true);
         $this->assertCount($expectedNbResults, $result['_embedded']['snippets']);
 
@@ -218,17 +257,29 @@ class SnippetControllerTest extends SuluTestCase
         $data = [
             'template' => 'car',
             'title' => 'My New Car',
+            'description' => 'My car is red.',
         ];
 
         $query = http_build_query($params);
         $this->client->request('POST', '/snippets?' . $query, $data);
         $response = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
         $result = json_decode($response->getContent(), true);
+        $this->assertHttpStatusCode(200, $response);
+        $this->assertLinks([
+            'self', 'delete', 'update', 'new',
+        ], $result);
+
         $this->assertEquals($data['title'], $result['title']);
         $this->assertEquals($params['language'], reset($result['concreteLanguages']));
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $result['nodeState']);
+        $this->assertEquals('My car is red.', $result['description']);
+
+        try {
+            $this->documentManager->find($result['id'], 'de');
+        } catch (\DocumentNotFoundException $e) {
+            $this->fail('Document was not persisted');
+        }
     }
 
     /**
@@ -250,7 +301,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->client->request('POST', '/snippets?' . $query, $data);
         $response = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
         $result = json_decode($response->getContent(), true);
         $this->assertEquals($data['title'], $result['title']);
         $this->assertEquals($params['language'], reset($result['concreteLanguages']));
@@ -276,89 +327,132 @@ class SnippetControllerTest extends SuluTestCase
         $this->client->request('POST', '/snippets?' . $query, $data);
         $response = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
         $result = json_decode($response->getContent(), true);
         $this->assertEquals($data['title'], $result['title']);
         $this->assertEquals($params['language'], reset($result['concreteLanguages']));
         $this->assertEquals(StructureInterface::STATE_TEST, $result['nodeState']);
     }
 
-    public function providePut()
+    public function testPut()
     {
-        return [
-            [
-                [],
-                [
-                    'template' => 'hotel',
-                    'title' => 'Renamed Hotel',
-                ],
-            ],
+        $data = [
+            'template' => 'hotel',
+            'title' => 'Renamed Hotel',
+            'description' => 'My hotel is red',
         ];
-    }
 
-    /**
-     * @dataProvider providePut
-     */
-    public function testPut($params, $data)
-    {
-        $params = array_merge([
+        $params = [
             'language' => 'de',
-        ], $params);
+        ];
 
         $query = http_build_query($params);
         $this->client->request('PUT', sprintf('/snippets/%s?%s', $this->hotel1->getUuid(), $query), $data);
         $response = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
         $result = json_decode($response->getContent(), true);
-        $this->assertEquals($data['template'], $result['template']);
-        $this->assertEquals($data['title'], $result['title']);
-        $this->assertEquals($params['language'], reset($result['concreteLanguages']));
+        $this->assertHttpStatusCode(200, $response);
+
+        foreach ($data as $key => $value) {
+            $this->assertEquals($data[$key], $value);
+        }
+
+        $this->assertContains($params['language'], $result['concreteLanguages']);
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $result['nodeState']);
+
+        $document = $this->documentManager->find($result['id'], 'de');
+
+        $this->assertEquals($data['title'], $document->getTitle());
+        $this->assertEquals($data['description'], $document->getStructure()->getProperty('description')->getValue());
     }
 
-    /**
-     * @dataProvider providePut
-     */
-    public function testPutPublished($params, $data)
+    public function testPutPublished()
     {
-        $params = array_merge([
+        $data = [];
+        $params = [
             'language' => 'de',
             'state' => StructureInterface::STATE_PUBLISHED,
-        ], $params);
+        ];
 
         $query = http_build_query($params);
         $this->client->request('PUT', sprintf('/snippets/%s?%s', $this->hotel1->getUuid(), $query), $data);
         $response = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
         $result = json_decode($response->getContent(), true);
-        $this->assertEquals($data['template'], $result['template']);
-        $this->assertEquals($data['title'], $result['title']);
-        $this->assertEquals($params['language'], reset($result['concreteLanguages']));
+        $this->assertLinks([
+            'self', 'delete', 'update', 'new',
+        ], $result);
+
+        foreach ($data as $key => $value) {
+            $this->assertEquals($value, $result[$key]);
+        }
+
+        $this->assertContains($params['language'], $result['concreteLanguages']);
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $result['nodeState']);
     }
 
-    /**
-     * @dataProvider providePut
-     */
-    public function testPutTest($params, $data)
+    public function testPutTest()
     {
-        $params = array_merge([
+        $data = [];
+        $params = [
             'language' => 'de',
             'state' => StructureInterface::STATE_TEST,
-        ], $params);
+        ];
 
         $query = http_build_query($params);
         $this->client->request('PUT', sprintf('/snippets/%s?%s', $this->hotel1->getUuid(), $query), $data);
         $response = $this->client->getResponse();
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertHttpStatusCode(200, $response);
         $result = json_decode($response->getContent(), true);
-        $this->assertEquals($data['template'], $result['template']);
-        $this->assertEquals($data['title'], $result['title']);
-        $this->assertEquals($params['language'], reset($result['concreteLanguages']));
         $this->assertEquals(StructureInterface::STATE_TEST, $result['nodeState']);
+    }
+
+    public function testPutWithValidHash()
+    {
+        $data = [
+            'template' => 'car',
+            'title' => 'My New Car',
+            'description' => 'My car is red.',
+        ];
+
+        $this->client->request('POST', '/snippets?language=de', $data);
+        $response = $this->client->getResponse();
+
+        $this->assertHttpStatusCode(200, $response);
+        $result = json_decode($response->getContent(), true);
+
+        $this->client->request(
+            'PUT',
+            '/snippets/' . $result['id'] . '?language=de',
+            array_merge(['_hash' => $result['_hash']], $data)
+        );
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+    }
+
+    public function testPutWithInvalidHash()
+    {
+        $data = [
+            'template' => 'car',
+            'title' => 'My New Car',
+            'description' => 'My car is red.',
+        ];
+
+        $this->client->request('POST', '/snippets?language=de', $data);
+        $response = $this->client->getResponse();
+
+        $this->assertHttpStatusCode(200, $response);
+        $result = json_decode($response->getContent(), true);
+
+        $this->client->request(
+            'PUT',
+            '/snippets/' . $result['id'] . '?language=de',
+            array_merge(['_hash' => 'wrong-hash'], $data)
+        );
+
+        $this->assertHttpStatusCode(409, $this->client->getResponse());
     }
 
     public function testDeleteReferenced()
@@ -373,8 +467,24 @@ class SnippetControllerTest extends SuluTestCase
 
         $this->client->request('DELETE', '/snippets/' . $this->hotel1->getUuid() . '?_format=text');
         $response = $this->client->getResponse();
+        $content = json_decode($response->getContent(), true);
 
         $this->assertEquals(409, $response->getStatusCode());
+        $this->assertEquals($page->getUuid(), $content['structures'][0]['id']);
+    }
+
+    public function testDeleteReferencedOther()
+    {
+        $node = $this->phpcrSession->getRootNode()->addNode('test-other');
+        $node->setProperty('test', $this->phpcrSession->getNodeByIdentifier($this->hotel1->getUuid()));
+        $this->phpcrSession->save();
+
+        $this->client->request('DELETE', '/snippets/' . $this->hotel1->getUuid() . '?_format=text');
+        $response = $this->client->getResponse();
+        $content = json_decode($response->getContent(), true);
+
+        $this->assertHttpStatusCode(409, $response);
+        $this->assertEquals($node->getPath(), $content['other'][0]);
     }
 
     public function testCopyLocale()
@@ -386,7 +496,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->documentManager->flush();
 
         $this->client->request('POST', '/snippets/' . $snippet->getUuid() . '?action=copy-locale&dest=en&language=de');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $newPage = $this->documentManager->find($snippet->getUuid(), 'en');
         $this->assertEquals('Hotel de', $newPage->getTitle());
@@ -395,12 +505,27 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals('Hotel de', $newPage->getTitle());
     }
 
+    public function testGetFields()
+    {
+        $this->client->request('GET', '/snippet/fields');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        $body = $response->getContent();
+        $fields = json_decode($body);
+        $this->assertNotNull($fields);
+    }
+
     private function loadFixtures()
     {
         // HOTELS
         $this->hotel1 = $this->documentManager->create('snippet');
         $this->hotel1->setStructureType('hotel');
-        $this->hotel1->setTitle('Le grande budapest');
+        $this->hotel1->setTitle('The Grand Budapest');
+        $this->hotel1->getStructure()->getProperty('description')->setValue('Hello World');
+        $this->documentManager->persist($this->hotel1, 'en');
+
+        $this->hotel1->getStructure()->getProperty('description')->setValue('Hallo Weld!');
+        $this->hotel1->setTitle('Das Großes Budapest');
         $this->documentManager->persist($this->hotel1, 'de');
 
         $this->hotel2 = $this->documentManager->create('snippet');
@@ -430,5 +555,20 @@ class SnippetControllerTest extends SuluTestCase
         $this->documentManager->persist($car, 'en');
 
         $this->documentManager->flush();
+    }
+
+    private function assertLinks(array $links, array $response)
+    {
+        $this->assertArrayHasKey('_links', $response);
+        $responseLinks = $response['_links'];
+
+        $diff = array_diff($links, array_keys($responseLinks));
+
+        if ($diff) {
+            $this->fail(sprintf(
+                'Failed asserting that the links "%s" were present in response. Got "%s"',
+                implode('", "', $diff), implode('", "', array_keys($responseLinks))
+            ));
+        }
     }
 }

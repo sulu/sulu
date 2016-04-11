@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,9 +15,8 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use PHPUnit_Framework_TestCase;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Sulu\Bundle\ContactBundle\Twig\ContactTwigExtension;
-use Sulu\Bundle\SecurityBundle\Entity\User;
-use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 
 class ContactTwigExtensionTest extends PHPUnit_Framework_TestCase
 {
@@ -32,61 +31,41 @@ class ContactTwigExtensionTest extends PHPUnit_Framework_TestCase
     private $cache;
 
     /**
-     * @var UserRepository
+     * @var ContactRepository
      */
-    private $userRepository;
+    private $contactRepository;
 
     protected function setUp()
     {
         $this->cache = new ArrayCache();
-        $this->userRepository = $this->getMock(
-            'Sulu\Bundle\SecurityBundle\Entity\UserRepository',
-            ['findUserById'],
-            [],
-            'UserRepositoryMock',
-            false,
-            false
-        );
+        $this->contactRepository = $this->prophesize(ContactRepository::class);
 
-        $this->extension = new ContactTwigExtension($this->cache, $this->userRepository);
+        $this->extension = new ContactTwigExtension($this->cache, $this->contactRepository->reveal());
     }
 
-    public function testResolveUserFunction()
+    public function testResolveContactFunction()
     {
-        $user1 = new User();
         $contact1 = new Contact();
         $contact1->setFirstName('Hikaru');
         $contact1->setLastName('Sulu');
-        $user1->setContact($contact1);
 
-        $user2 = new User();
         $contact2 = new Contact();
         $contact2->setFirstName('John');
         $contact2->setLastName('Cho');
-        $user2->setContact($contact2);
 
-        $this->userRepository
-            ->expects($this->exactly(2))
-            ->method('findUserById')
-            ->will(
-                $this->returnValueMap(
-                    [
-                        [1, $user1],
-                        [2, $user2],
-                    ]
-                )
-            );
+        $this->contactRepository->find(1)->willReturn($contact1);
+        $this->contactRepository->find(2)->willReturn($contact2);
 
-        $contact = $this->extension->resolveUserFunction(1);
+        $contact = $this->extension->resolveContactFunction(1);
         $this->assertEquals('Hikaru Sulu', $contact->getFullName());
 
-        $contact = $this->extension->resolveUserFunction(2);
+        $contact = $this->extension->resolveContactFunction(2);
         $this->assertEquals('John Cho', $contact->getFullName());
     }
 
-    public function testResolveUserFunctionNonExisting()
+    public function testResolveContactFunctionNonExisting()
     {
-        $contact = $this->extension->resolveUserFunction(3);
+        $contact = $this->extension->resolveContactFunction(3);
         $this->assertNull($contact);
     }
 }

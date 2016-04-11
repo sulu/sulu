@@ -21,5 +21,8 @@
             </join-columns>
         </many-to-one>
 
+        <many-to-many field="keywords" mapped-by="categoryTranslations"
+                      target-entity="Sulu\Bundle\CategoryBundle\Entity\Keyword"/>
+
     </entity>
 </doctrine-mapping>

@@ -1,0 +1,25 @@
+<div class="grid webspace-settings general">
+    <div class="fixed-width">
+        <div class="form-group localizations-key">
+            <p class="label"><%= translations.localizationsKey %></p>
+
+            <div data-aura-component="datagrid@husky"
+                 data-aura-id-key="localization"
+                 data-aura-children-property-name="hasChildren"
+                 data-aura-view-options='{"table": {"selectItem": false}}'
+                 data-aura-matchings='[{"attribute": "localization", "content": "<%= translations.localizationKey %>"}]'
+                 data-aura-data='<%= JSON.stringify(webspace.localizations) %>'></div>
+        </div>
+
+        <div class="form-group urls-key">
+            <p class="label"><%= translations.urlsKey %></p>
+
+            <div data-aura-component="datagrid@husky"
+                 data-aura-id-key="url"
+                 data-aura-children-property-name="hasChildren"
+                 data-aura-view-options='{"table": {"selectItem": false}}'
+                 data-aura-matchings='[{"attribute": "url", "content": "<%= translations.urlKey %>"},{"attribute": "locale", "content": "<%= translations.localizationKey %>"},{"attribute": "redirect", "content": "<%= translations.redirectKey %>"},{"attribute": "main", "content": "<%= translations.mainKey %>", "type": "checkbox_readonly"}]'
+                 data-aura-data='<%= JSON.stringify(webspace.portalInformation) %>'></div>
+        </div>
+    </div>
+</div>

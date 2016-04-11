@@ -2,6 +2,8 @@
     {% if title == true %}
         <h2 class="divider m-bottom-20"
             title="{{ property.getInfoText(userLocale) }}">{{ property.getTitle(userLocale) }}</h2>
+
+        <div class="input-description">{{ property.getInfoText(userLocale) }}</div>
     {% endif %}
 
     <div class="grid">
@@ -13,11 +15,11 @@
                 {% set params = sulu_get_params(child) %}
 
                 {% if child.contentTypeName == 'block' %}
-                    {% include type.template with {'property': child, 'params': params, 'type': type, 'id': child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
+                    {% include type.template with {'property': child, 'params': params, 'type': type, 'id': child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale, 'uuid': uuid} only %}
                 {% elseif child is multiple %}
-                    {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': child, 'params': params, 'type': type, 'id': child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
+                    {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': child, 'params': params, 'type': type, 'id': child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale, 'uuid': uuid} only %}
                 {% else %}
-                    {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': child, 'params': params, 'type': type, 'id': child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
+                    {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': child, 'params': params, 'type': type, 'id': child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale, 'uuid': uuid} only %}
                 {% endif %}
             {% endfor %}
         </div>

@@ -1,0 +1,4 @@
+sulu_website.webspace_analytics:
+    type: rest
+    parent: sulu_content.webspace
+    resource: Sulu\Bundle\WebsiteBundle\Controller\AnalyticsController

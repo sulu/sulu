@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -82,6 +82,13 @@ class ContentNavigationItem
      * @var int
      */
     private $position;
+
+    /**
+     * Defines conditions whether the tab will be displayed or not.
+     *
+     * @var DisplayCondition[]
+     */
+    private $displayConditions;
 
     public function __construct($name)
     {
@@ -232,5 +239,21 @@ class ContentNavigationItem
     public function setPosition($position)
     {
         $this->position = $position;
+    }
+
+    /**
+     * @return DisplayCondition[]
+     */
+    public function getDisplayConditions()
+    {
+        return $this->displayConditions;
+    }
+
+    /**
+     * @param DisplayCondition[] $displayConditions
+     */
+    public function setDisplayConditions(array $displayConditions)
+    {
+        $this->displayConditions = $displayConditions;
     }
 }

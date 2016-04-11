@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -62,32 +62,32 @@ class Category implements AuditableInterface
     private $defaultLocale;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $meta;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $translations;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $children;
 
     /**
-     * @var \Sulu\Bundle\CategoryBundle\Entity\Category
+     * @var Category
      */
     private $parent;
 
     /**
-     * @var \Sulu\Component\Security\Authentication\UserInterface
+     * @var UserInterface
      */
     private $creator;
 
     /**
-     * @var \Sulu\Component\Security\Authentication\UserInterface
+     * @var UserInterface
      */
     private $changer;
 
@@ -334,6 +334,22 @@ class Category implements AuditableInterface
     }
 
     /**
+     * Get single meta by locale.
+     *
+     * @param $locale
+     *
+     * @return CategoryTranslation
+     */
+    public function findTranslationByLocale($locale)
+    {
+        return $this->translations->filter(
+            function (CategoryTranslation $translation) use ($locale) {
+                return $translation->getLocale() === $locale;
+            }
+        )->first();
+    }
+
+    /**
      * {@see Category::addChild}.
      *
      * @deprecated use Category::addChild instead
@@ -445,6 +461,20 @@ class Category implements AuditableInterface
     public function setChanger(UserInterface $changer = null)
     {
         $this->changer = $changer;
+
+        return $this;
+    }
+
+    /**
+     * Set changed.
+     *
+     * @param \DateTime $changed
+     *
+     * @return Category
+     */
+    public function setChanged(\DateTime $changed)
+    {
+        $this->changed = $changed;
 
         return $this;
     }

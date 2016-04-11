@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -22,11 +22,11 @@ class MediaScriptHandler extends ScriptHandler
     public static function initBundle(CommandEvent $event)
     {
         $options = parent::getOptions($event);
-        $appDir = $options['symfony-app-dir'];
+        $consoleDir = isset($options['symfony-bin-dir']) ? $options['symfony-bin-dir'] : $options['symfony-app-dir'];
 
         parent::executeCommand(
             $event,
-            $appDir,
+            $consoleDir,
             'sulu:media:init'
         );
     }

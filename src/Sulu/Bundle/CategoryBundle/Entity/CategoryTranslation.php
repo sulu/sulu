@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,10 +11,15 @@
 
 namespace Sulu\Bundle\CategoryBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Sulu\Component\Persistence\Model\AuditableInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
+
 /**
  * CategoryTranslation.
  */
-class CategoryTranslation
+class CategoryTranslation implements AuditableInterface
 {
     /**
      * @var string
@@ -32,9 +37,39 @@ class CategoryTranslation
     private $id;
 
     /**
-     * @var \Sulu\Bundle\CategoryBundle\Entity\Category
+     * @var Category
      */
     private $category;
+
+    /**
+     * @var Collection
+     */
+    private $keywords;
+
+    /**
+     * @var UserInterface
+     */
+    private $creator;
+
+    /**
+     * @var UserInterface
+     */
+    private $changer;
+
+    /**
+     * @var \DateTime
+     */
+    private $created;
+
+    /**
+     * @var \DateTime
+     */
+    private $changed;
+
+    public function __construct()
+    {
+        $this->keywords = new ArrayCollection();
+    }
 
     /**
      * Set translation.
@@ -97,11 +132,11 @@ class CategoryTranslation
     /**
      * Set category.
      *
-     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $category
+     * @param Category $category
      *
      * @return CategoryTranslation
      */
-    public function setCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $category)
+    public function setCategory(Category $category)
     {
         $this->category = $category;
 
@@ -111,10 +146,124 @@ class CategoryTranslation
     /**
      * Get category.
      *
-     * @return \Sulu\Bundle\CategoryBundle\Entity\Category
+     * @return Category
      */
     public function getCategory()
     {
         return $this->category;
+    }
+
+    /**
+     * Add keyword.
+     *
+     * @param Keyword $keyword
+     *
+     * @return Category
+     */
+    public function addKeyword(Keyword $keyword)
+    {
+        $this->keywords[] = $keyword;
+
+        return $this;
+    }
+
+    /**
+     * Remove keyword.
+     *
+     * @param Keyword $keyword
+     */
+    public function removeKeyword(Keyword $keyword)
+    {
+        $this->keywords->removeElement($keyword);
+    }
+
+    /**
+     * Get keywords.
+     *
+     * @return Collection
+     */
+    public function getKeywords()
+    {
+        return $this->keywords;
+    }
+
+    /**
+     * Returns true if given keyword already linked with the category.
+     *
+     * @param Keyword $keyword
+     *
+     * @return bool
+     */
+    public function hasKeyword(Keyword $keyword)
+    {
+        return $this->getKeywords()->exists(
+            function ($key, Keyword $element) use ($keyword) {
+                return $element->equals($keyword);
+            }
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCreator()
+    {
+        return $this->creator;
+    }
+
+    /**
+     * @param UserInterface $creator
+     */
+    public function setCreator($creator)
+    {
+        $this->creator = $creator;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChanger()
+    {
+        return $this->changer;
+    }
+
+    /**
+     * @param UserInterface $changer
+     */
+    public function setChanger($changer)
+    {
+        $this->changer = $changer;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * @param \DateTime $created
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChanged()
+    {
+        return $this->changed;
+    }
+
+    /**
+     * @param \DateTime $changed
+     */
+    public function setChanged($changed)
+    {
+        $this->changed = $changed;
     }
 }

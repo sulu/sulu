@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -10,8 +10,6 @@
  */
 
 namespace Sulu\Component\Content\Document\Structure;
-
-use Sulu\Component\Content\Compat\Property;
 
 /**
  * Lazy loading container for content properties.

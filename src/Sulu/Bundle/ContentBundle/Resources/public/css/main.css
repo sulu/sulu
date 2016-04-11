@@ -241,9 +241,8 @@
   background: #fff;
   width: 440px;
   position: relative;
-  margin: 0 auto;
   padding: 10px;
-  margin-bottom: 20px;
+  margin-top: 10px;
 }
 /* line 8, ../scss/modules/seo.scss */
 .seo-excerpt .title {
@@ -512,4 +511,78 @@
   float: right;
   width: 5%;
   text-align: center;
+}
+
+/* line 2, ../scss/modules/webspace-settings.scss */
+.webspace-settings.general p.label {
+  display: block;
+  font-size: 14px;
+  color: #999;
+  white-space: nowrap;
+}
+/* line 9, ../scss/modules/webspace-settings.scss */
+.webspace-settings.general p.value {
+  color: #999;
+  font-size: 14px;
+}
+/* line 13, ../scss/modules/webspace-settings.scss */
+.webspace-settings.general p.value.big {
+  font-size: 24px;
+  line-height: 40px;
+  height: 40px;
+}
+/* line 19, ../scss/modules/webspace-settings.scss */
+.webspace-settings.general p.value.bold {
+  font-weight: bolder;
+}
+/* line 24, ../scss/modules/webspace-settings.scss */
+.webspace-settings.general .webspace-name {
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+/* line 2, ../scss/modules/single-internal-link.scss */
+.single-internal-link.container {
+  position: relative;
+  width: 100%;
+  height: 32px;
+  border: 1px solid #ddd;
+  padding: 0 5px;
+  font-size: 14px;
+  border-radius: 3px;
+  background: #fff;
+}
+/* line 14, ../scss/modules/single-internal-link.scss */
+.single-internal-link .choose {
+  position: absolute;
+  padding: 0 8px;
+  margin-top: 5px;
+  font-size: 12px;
+  line-height: 20px;
+  vertical-align: middle;
+  text-decoration: none;
+  border-radius: 2px;
+  color: #fff;
+  background: #52B6CA;
+}
+/* line 29, ../scss/modules/single-internal-link.scss */
+.single-internal-link .clear {
+  position: absolute;
+  right: 10px;
+  font-size: 16px;
+  line-height: 30px;
+  vertical-align: middle;
+  margin: auto;
+  padding-left: 3px;
+  text-decoration: none;
+  color: #3e3e3e;
+}
+/* line 42, ../scss/modules/single-internal-link.scss */
+.single-internal-link input {
+  background-color: #fff;
+  padding-left: 40px;
+  padding-right: 10px;
+  border: 0;
+  margin: 0;
+  color: #3e3e3e;
 }

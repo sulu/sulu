@@ -1,6 +1,7 @@
 <?php
+
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -89,7 +90,7 @@ class SmartContentItemControllerTest extends SuluTestCase
 
     protected function setUp()
     {
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->formFactory = $this->getContainer()->get('form.factory');
@@ -205,7 +206,7 @@ class SmartContentItemControllerTest extends SuluTestCase
     {
         $data = array_merge(
             [
-                'structureType' => $template,
+                'template' => $template,
                 'parent' => $parent,
                 'workflowStage' => 2,
                 'webspace_key' => 'sulu_io',
@@ -248,7 +249,7 @@ class SmartContentItemControllerTest extends SuluTestCase
             '&provider=content&excluded=' . $this->team->getUuid()
         );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $result = json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(
@@ -275,7 +276,7 @@ class SmartContentItemControllerTest extends SuluTestCase
             '&provider=content&excluded=' . $this->johannes->getUuid()
         );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $result = json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(
@@ -301,7 +302,7 @@ class SmartContentItemControllerTest extends SuluTestCase
             '&provider=content&excluded=' . $this->team->getUuid() . '&limitResult=2'
         );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $result = json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(
@@ -327,7 +328,7 @@ class SmartContentItemControllerTest extends SuluTestCase
             '&provider=content&excluded=' . $this->team->getUuid() . '&limitResult=2&tags[]=' . $this->tag1->getName()
         );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $result = json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(

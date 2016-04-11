@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -139,6 +139,7 @@ class DoctrineCacheProviderTest extends SuluTestCase
         $data = json_decode($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')), true);
         $this->assertEquals('Testtitle', $data['document']['structure']['title']);
         $this->assertEquals('overview', $data['document']['structureType']);
+        $this->assertEquals('en', $data['document']['locale']);
     }
 
     public function testSaveStructure()
@@ -230,6 +231,7 @@ class DoctrineCacheProviderTest extends SuluTestCase
         $result = $this->cache->fetchStructure(1, $data[0]->getUuid(), 'sulu_io', 'en');
         $this->assertEquals('Testtitle', $result->getPropertyValue('title'));
         $this->assertEquals('overview', $result->getKey());
+        $this->assertEquals('en', $result->getLanguageCode());
     }
 
     public function testFetchNotExists()

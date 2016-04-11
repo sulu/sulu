@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -167,6 +167,7 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
     {
         $context = SerializationContext::create();
         $context->setSerializeNull(true);
+        $context->setGroups(['previewPage']);
 
         $data = $this->serializer->serialize($content, $this->serializeType, $context);
 

@@ -1,18 +1,31 @@
 <form id="seo-form" class="grid">
-    <div class="seo-excerpt">
-        <div id="seo-excerpt-title" class="title"></div>
-        <div class="url"><%= siteUrl %></div>
-        <div id="seo-excerpt-description" class="description"></div>
+    <div class="grid-row">
+        <label for="seo-title"><%=translate('sulu.content.seo.serp')%></label>
+
+        <div class="seo-excerpt">
+            <div id="seo-excerpt-title" class="title"></div>
+            <div class="url"><%= siteUrl %></div>
+            <div id="seo-excerpt-description" class="description"></div>
+        </div>
     </div>
     <div class="grid-row form-group">
         <label for="seo-title"><%=translate('sulu.content.seo.title')%></label>
         <input type="text" id="seo-title" data-mapper-property="title"
                class="form-element preview-update trigger-save-button"/>
+
+        <span class="smaller-font grey-font">
+            <%= translate('sulu.content.seo.title.note')%>
+            <strong>
+                <span id="title-left"></span>
+                <%= translate('sulu.content.seo.characters-left')%>
+            </strong>
+        </span>
     </div>
     <div class="grid-row form-group">
         <label for="seo-description"><%=translate('sulu.content.seo.description')%></label>
         <textarea id="seo-description" data-mapper-property="description"
                   class="form-element preview-update trigger-save-button"></textarea>
+
         <span class="smaller-font grey-font">
             <%= translate('sulu.content.seo.descriptions.note')%>
             <strong>

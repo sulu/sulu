@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -58,7 +58,7 @@ class FixturesLoadCommand extends Command
             ->addOption('fixtures', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The directory or file to load data fixtures from.')
             ->addOption('append', null, InputOption::VALUE_NONE, 'Append the data fixtures to the existing data - will not purge the workspace.')
             ->addOption('no-initialize', null, InputOption::VALUE_NONE, 'Do not run the repository initializers after purging the repository.')
-            ->setHelp(<<<EOT
+            ->setHelp(<<<'EOT'
 The <info>sulu:document:fixtures:load</info> command loads data fixtures from
 your bundles DataFixtures/Document directory:
 

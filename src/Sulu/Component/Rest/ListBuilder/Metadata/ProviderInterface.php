@@ -13,7 +13,11 @@ namespace Sulu\Component\Rest\ListBuilder\Metadata;
 use Metadata\ClassMetadata;
 
 /**
- * Interface for metadata-providers.
+ * Each provider returns a single type of metadata for the given class. The ChainProvider merges them and returns
+ * the whole metadata.
+ *
+ * In case of using the jms/metadata component you can use the metadata-factory adapter to provide metadata for
+ * the list-builder.
  */
 interface ProviderInterface
 {

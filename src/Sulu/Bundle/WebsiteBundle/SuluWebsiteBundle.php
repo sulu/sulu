@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,16 +11,19 @@
 
 namespace Sulu\Bundle\WebsiteBundle;
 
-use Sulu\Bundle\WebsiteBundle\DependencyInjection\Compiler\RouteProviderCompilerPass;
+use Sulu\Component\Util\SuluVersionPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SuluWebsiteBundle extends Bundle
 {
+    /**
+     * {@inheritdoc}
+     */
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
 
-        $container->addCompilerPass(new RouteProviderCompilerPass());
+        $container->addCompilerPass(new SuluVersionPass());
     }
 }

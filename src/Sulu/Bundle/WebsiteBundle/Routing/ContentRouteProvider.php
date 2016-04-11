@@ -1,7 +1,6 @@
 <?php
-
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,14 +11,16 @@
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
 use PHPCR\RepositoryException;
+use Sulu\Bundle\WebsiteBundle\Locale\DefaultLocaleProviderInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -39,12 +40,32 @@ class ContentRouteProvider implements RouteProviderInterface
      */
     private $requestAnalyzer;
 
+    /**
+     * @var DefaultLocaleProviderInterface
+     */
+    private $defaultLocaleProvider;
+
+    /**
+     * @var ReplacerInterface
+     */
+    private $urlReplacer;
+
+    /**
+     * @param ContentMapperInterface $contentMapper
+     * @param RequestAnalyzerInterface $requestAnalyzer
+     * @param DefaultLocaleProviderInterface $defaultLocaleProvider
+     * @param ReplacerInterface $urlReplacer
+     */
     public function __construct(
         ContentMapperInterface $contentMapper,
-        RequestAnalyzerInterface $requestAnalyzer
+        RequestAnalyzerInterface $requestAnalyzer,
+        DefaultLocaleProviderInterface $defaultLocaleProvider,
+        ReplacerInterface $urlReplacer
     ) {
         $this->contentMapper = $contentMapper;
         $this->requestAnalyzer = $requestAnalyzer;
+        $this->defaultLocaleProvider = $defaultLocaleProvider;
+        $this->urlReplacer = $urlReplacer;
     }
 
     /**
@@ -60,6 +81,13 @@ class ContentRouteProvider implements RouteProviderInterface
     public function getRouteCollectionForRequest(Request $request)
     {
         $collection = new RouteCollection();
+
+        // no portal information without localization supported
+        if ($this->requestAnalyzer->getCurrentLocalization() === null &&
+            $this->requestAnalyzer->getMatchType() !== RequestAnalyzerInterface::MATCH_TYPE_PARTIAL
+        ) {
+            return $collection;
+        }
 
         $htmlExtension = '.html';
         $resourceLocator = $this->requestAnalyzer->getResourceLocator();
@@ -89,7 +117,6 @@ class ContentRouteProvider implements RouteProviderInterface
             // just show the page
             $portal = $this->requestAnalyzer->getPortal();
             $language = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
-
             try {
                 // load content by url ignore ending trailing slash
                 $content = $this->contentMapper->loadByResourceLocator(
@@ -97,7 +124,6 @@ class ContentRouteProvider implements RouteProviderInterface
                     $portal->getWebspace()->getKey(),
                     $language
                 );
-
                 if (
                     preg_match('/\/$/', $resourceLocator)
                     && $this->requestAnalyzer->getResourceLocatorPrefix()
@@ -113,11 +139,17 @@ class ContentRouteProvider implements RouteProviderInterface
                     $content->getNodeState() === StructureInterface::STATE_PUBLISHED
                 ) {
                     // redirect internal link
+                    $redirectUrl = $this->requestAnalyzer->getResourceLocatorPrefix() . $content->getResourceLocator();
+
+                    if ($request->getQueryString()) {
+                        $redirectUrl .= '?' . $request->getQueryString();
+                    }
+
                     $collection->add(
                         $content->getKey() . '_' . uniqid(),
                         $this->getRedirectRoute(
                             $request,
-                            $this->requestAnalyzer->getResourceLocatorPrefix() . $content->getResourceLocator()
+                            $redirectUrl
                         )
                     );
                 } elseif (
@@ -223,12 +255,19 @@ class ContentRouteProvider implements RouteProviderInterface
      */
     protected function getRedirectWebSpaceRoute(Request $request)
     {
+        $localization = $this->defaultLocaleProvider->getDefaultLocale();
+
+        $redirect = $this->requestAnalyzer->getRedirect();
+        $redirect = $this->urlReplacer->replaceCountry($redirect, $localization->getCountry());
+        $redirect = $this->urlReplacer->replaceLanguage($redirect, $localization->getLanguage());
+        $redirect = $this->urlReplacer->replaceLocalization($redirect, $localization->getLocale(Localization::DASH));
+
         // redirect by information from webspace config
         return new Route(
             $request->getPathInfo(), [
-                '_controller' => 'SuluWebsiteBundle:Default:redirectWebspace',
+                '_controller' => 'SuluWebsiteBundle:Redirect:redirectWebspace',
                 'url' => $this->requestAnalyzer->getPortalUrl(),
-                'redirect' => $this->requestAnalyzer->getRedirect(),
+                'redirect' => $redirect,
             ]
         );
     }
@@ -244,7 +283,7 @@ class ContentRouteProvider implements RouteProviderInterface
         // redirect to linked page
         return new Route(
             $request->getPathInfo(), [
-                '_controller' => 'SuluWebsiteBundle:Default:redirect',
+                '_controller' => 'SuluWebsiteBundle:Redirect:redirect',
                 'url' => $url,
             ]
         );

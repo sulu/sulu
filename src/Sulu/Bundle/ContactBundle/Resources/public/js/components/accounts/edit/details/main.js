@@ -147,7 +147,8 @@ define([
          * @param data
          */
         initLogoContainer: function(data) {
-            if (!!data.logo) {
+            // if logo is selected and is not a "dummy"
+            if (!!data.logo && !!data.logo.id) {
                 this.updateLogoContainer(data.logo.id, data.logo.thumbnails[constants.logoThumbnailFormat], data.logo.url);
             }
 
@@ -161,11 +162,12 @@ define([
                 var url = (!!curMediaId) ?
                     '/admin/api/media/' + curMediaId + '?action=new-version' :
                     '/admin/api/media?collection=' + this.formOptions.accountAvatarCollection;
+                
+                url = url + '&locale=' + encodeURIComponent(this.sandbox.sulu.user.locale);
 
                 // if possible, change the title of the logo to the name of the account
                 if (!!data.name) {
                     url = url + '&title=' + encodeURIComponent(data.name);
-                    url = url + '&locale=' + encodeURIComponent(this.sandbox.sulu.user.locale);
                 }
 
                 return url;

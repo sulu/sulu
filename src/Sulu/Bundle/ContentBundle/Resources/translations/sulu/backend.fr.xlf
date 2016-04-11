@@ -1,0 +1,624 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="de" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="f1234df37123123fd4a73a4123dfdf00A" resname="public.url-history.none">
+                <source>public.url-history.none</source>
+                <target>Pas d'historique existant pour cette page ...</target>
+            </trans-unit>
+            <trans-unit id="fbf455837741abced4a73a4ba3fdf006" resname="single-internal-link.title">
+                <source>single-internal-link.title</source>
+                <target>Sélectionnez un seul lien interne</target>
+            </trans-unit>
+            <trans-unit id="fbf4558371239fbed1233a4ba3fdf006" resname="content-navigation.contents.internal-link">
+                <source>content-navigation.contents.internal-link</source>
+                <target>Lien interne</target>
+            </trans-unit>
+            <trans-unit id="fbf1328371239fbed4a73a4ba3fdf006" resname="content-navigation.contents.external-link">
+                <source>content-navigation.contents.external-link</source>
+                <target>Lien externe</target>
+            </trans-unit>
+            <trans-unit id="fbf1328371239fbed4a73a4basdfdf006" resname="sulu.content.form.settings.show-in-navigation">
+                <source>sulu.content.form.settings.show-in-navigation</source>
+                <target>Afficher dans la navigation</target>
+            </trans-unit>
+            <trans-unit id="fbfasdf371239fbed4a73a4basdfdf006" resname="sulu.content.form.settings.type">
+                <source>sulu.content.form.settings.type</source>
+                <target>Type de Contenu</target>
+            </trans-unit>
+            <trans-unit id="fbfasdf371239fbed4a73a4123dfdf006" resname="sulu.content.form.settings.type.content">
+                <source>sulu.content.form.settings.type.content</source>
+                <target>Contenu</target>
+            </trans-unit>
+            <trans-unit id="f1234df371239fbed4a73a4123dfdf006" resname="sulu.content.form.settings.type.internal-link">
+                <source>sulu.content.form.settings.type.internal-link</source>
+                <target>Lien interne</target>
+            </trans-unit>
+            <trans-unit id="f1234df371239fbed4a73a4123dfdf007" resname="sulu.content.form.settings.type.external-link">
+                <source>sulu.content.form.settings.type.external-link</source>
+                <target>Lien externe</target>
+            </trans-unit>
+            <trans-unit id="f1234df37123123ed4a73a4123dfdf006" resname="content.contents.settings.delete">
+                <source>content.contents.settings.delete</source>
+                <target>Supprimer page</target>
+            </trans-unit>
+            <trans-unit id="f1234df37123123ed4a73a4123dfdf007" resname="content.contents.settings.copy">
+                <source>content.contents.settings.copy</source>
+                <target>Copier page</target>
+            </trans-unit>
+            <trans-unit id="f1234df37123123ed4a73a4123dfdf008" resname="content.contents.settings.copy.title">
+                <source>content.contents.settings.copy.title</source>
+                <target>Choisir la page parente</target>
+            </trans-unit>
+            <trans-unit id="f1234df37123123ed4a73a4123dfdf009" resname="content.contents.settings.move">
+                <source>content.contents.settings.move</source>
+                <target>Déplacer la page</target>
+            </trans-unit>
+            <trans-unit id="f1234df37123123ed4a73a4123dfdf00A" resname="content.contents.settings.move.title">
+                <source>content.contents.settings.move.title</source>
+                <target>Choisir la page parente</target>
+            </trans-unit>
+            <trans-unit id="f1234df37123123ed4a73a4123dfdf00B" resname="content.contents.settings.order">
+                <source>content.contents.settings.order</source>
+                <target>Ordre des pages</target>
+            </trans-unit>
+            <trans-unit id="f1234df37123123ed4a73a4123dfdf00C" resname="content.contents.settings.order.title">
+                <source>content.contents.settings.order.title</source>
+                <target>Ordre des pages</target>
+            </trans-unit>
+            <trans-unit id="92762f7528ee1cbcd85bf435fd03c846" resname="smart-content.nocontent-found">
+                <source>smart-content.nocontent-found</source>
+                <target>Aucun contenu trouvé</target>
+            </trans-unit>
+            <trans-unit id="eabf67921221f58698ecdb840eceb15f" resname="smart-content.nocontent-selected">
+                <source>smart-content.nocontent-selected</source>
+                <target>Aucun contenu sélectionné</target>
+            </trans-unit>
+            <trans-unit id="7ed9c6dfa56487c35fa173d0a750d1e8" resname="smart-content.visible">
+                <source>smart-content.visible</source>
+                <target>visible</target>
+            </trans-unit>
+            <trans-unit id="3dbb6bd1426dd22f15726e31904a77dd" resname="smart-content.of">
+                <source>smart-content.of</source>
+                <target>de</target>
+            </trans-unit>
+            <trans-unit id="f85e55126a0ec3ab6617b52fc033bc18" resname="smart-content.configure-smart-content">
+                <source>smart-content.configure-smart-content</source>
+                <target>Configuration {title}</target>
+            </trans-unit>
+            <trans-unit id="7a9bd49b2b4443383bff6eb67dd0afb6" resname="smart-content.data-source">
+                <source>smart-content.data-source</source>
+                <target>Source de donnée</target>
+            </trans-unit>
+            <trans-unit id="66f18ec54ed3b6a089ee3712167c4e87" resname="smart-content.include-sub-folders">
+                <source>smart-content.include-sub-folders</source>
+                <target>Inclure les sous-pages</target>
+            </trans-unit>
+            <trans-unit id="4cf5babee84aa0eef15db3ce11648b35" resname="smart-content.filter-by-category">
+                <source>smart-content.filter-by-category</source>
+                <target>Filtrer par catégorie</target>
+            </trans-unit>
+            <trans-unit id="ea58ee4521c5fe65055dc05092ea8d08" resname="smart-content.filter-by-tags">
+                <source>smart-content.filter-by-tags</source>
+                <target>Filtrer par tags</target>
+            </trans-unit>
+            <trans-unit id="ea58ee4521c5fe65045dc05092ea7d06" resname="smart-content.use-any-tag">
+                <source>smart-content.use-any-tag</source>
+                <target>Utilisez des pages qui utilisent N'IMPORTE QUEL tag</target>
+            </trans-unit>
+            <trans-unit id="ea58ee4521c5fe65045dc05092ea7d08" resname="smart-content.use-all-tags">
+                <source>smart-content.use-all-tags</source>
+                <target>Utilisez des pages qui utilisent TOUS les tags</target>
+            </trans-unit>
+            <trans-unit id="7e3c491707f805797c98a366cf0c28e2" resname="smart-content.sort-by">
+                <source>smart-content.sort-by</source>
+                <target>Trier par</target>
+            </trans-unit>
+            <trans-unit id="831eaac1fa8a279d10e452f59e716b35" resname="smart-content.no-sorting">
+                <source>smart-content.no-sorting</source>
+                <target>Admin-Tri</target>
+            </trans-unit>
+            <trans-unit id="fc27db8368ee8e93b0432c6f929eb22c" resname="smart-content.ascending">
+                <source>smart-content.ascending</source>
+                <target>Ascendant</target>
+            </trans-unit>
+            <trans-unit id="71c74b6461ba3ba4613e1ac306a55f82" resname="smart-content.descending">
+                <source>smart-content.descending</source>
+                <target>Descendant</target>
+            </trans-unit>
+            <trans-unit id="6574850a4e95ff29395d3078b5e4ea74" resname="smart-content.present-as">
+                <source>smart-content.present-as</source>
+                <target>présent que</target>
+            </trans-unit>
+            <trans-unit id="a9097de27632b967cec91eb705ac82ad" resname="smart-content.limit-result-to">
+                <source>smart-content.limit-result-to</source>
+                <target>Limiter résultat de</target>
+            </trans-unit>
+            <trans-unit id="48c38a0436a34817dcc6a358d39f9262" resname="smart-content.no-category">
+                <source>smart-content.no-category</source>
+                <target>Sans catégorie</target>
+            </trans-unit>
+            <trans-unit id="f033dcd178a34ec4932e49f1dfeea02f" resname="smart-content.choose-present-as">
+                <source>smart-content.choose-present-as</source>
+                <target>Choisir..</target>
+            </trans-unit>
+            <trans-unit id="1dbb7db699bba74e52807fbbccbb91d7" resname="smart-content.choose-data-source">
+                <source>smart-content.choose-data-source</source>
+                <target>Choisir..</target>
+            </trans-unit>
+            <trans-unit id="5ff9374232125b7f296a3e4cd9dc0bfe" resname="smart-content.from">
+                <source>smart-content.from</source>
+                <target>De</target>
+            </trans-unit>
+            <trans-unit id="475db242975e3fbfd85d008cede565bc" resname="smart-content.sub-folders-inclusive">
+                <source>smart-content.sub-folders-inclusive</source>
+                <target>incl. sous dossiers</target>
+            </trans-unit>
+            <trans-unit id="30092dd4c161f141539f1802e8da02a8" resname="smart-content.view-all">
+                <source>smart-content.view-all</source>
+                <target>Voir tout</target>
+            </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f99adb8316" resname="smart-content.view-less">
+                <source>smart-content.view-less</source>
+                <target>Voir moins</target>
+            </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f99adb8317" resname="smart-content.title">
+                <source>smart-content.title</source>
+                <target>Titre (alphabétique)</target>
+            </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f99adb8327" resname="smart-content.published">
+                <source>smart-content.published</source>
+                <target>Publié (date)</target>
+            </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f99ad18337" resname="smart-content.created">
+                <source>smart-content.created</source>
+                <target>Créé (date)</target>
+            </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f99ad28337" resname="smart-content.changed">
+                <source>smart-content.changed</source>
+                <target>Modifié (date)</target>
+            </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b9f99bdb8317" resname="smart-content.save">
+                <source>smart-content.save</source>
+                <target>Sauvegarder</target>
+            </trans-unit>
+            <trans-unit id="cc88fcd370c8ff1d96f0b0f99bdb8317" resname="smart-content.clear">
+                <source>smart-content.clear</source>
+                <target>Réinitialisation des champs</target>
+            </trans-unit>
+            <trans-unit id="ad64f69edc5ce6dae6033001f5d01b6e" resname="content.template.dialog.titile">
+                <source>content.template.dialog.titile</source>
+                <target>hanger de modèle</target>
+            </trans-unit>
+            <trans-unit id="f6fca7ef129af3eac26919260b73ebf5" resname="content.template.dialog.content">
+                <source>content.template.dialog.content</source>
+                <target>Vous avez des données inchangées.&lt;br/&gt;Voulez-vous quitter ce site?</target>
+            </trans-unit>
+            <trans-unit id="19931932279c1626435d623b80e5439d" resname="content.template.dialog.submit-button">
+                <source>content.template.dialog.submit-button</source>
+                <target>Oui</target>
+            </trans-unit>
+            <trans-unit id="12e2b110f256ebb55f9c550d4d146ab6" resname="content.template.dialog.cancel-button">
+                <source>content.template.dialog.cancel-button</source>
+                <target>Annuler</target>
+            </trans-unit>
+            <trans-unit id="18fe4f5f2d5a25f1a9b5360e0bd18bfa" resname="content.delete.dialog.title">
+                <source>content.delete.dialog.title</source>
+                <target>Supprimer page</target>
+            </trans-unit>
+            <trans-unit id="0c64601205aa73314446c02e5a3dd4c8" resname="content.delete.dialog.content">
+                <source>content.delete.dialog.content</source>
+                <target>Voulez-vous vraiment supprimer la page sélectionnée?</target>
+            </trans-unit>
+            <trans-unit id="18ffe800b505f7d878907c67d7fb1be4" resname="content.delete.dialog.cancel">
+                <source>content.delete.dialog.cancel</source>
+                <target>Ne pas le faire</target>
+            </trans-unit>
+            <trans-unit id="4688b62de10bced4621f963565894a4f" resname="content.delete.dialog.submit">
+                <source>content.delete.dialog.submit</source>
+                <target>Faites-le, je comprends</target>
+            </trans-unit>
+            <trans-unit id="e8a77e532dfb3d0614824b7349d7b680" resname="content.contents.show-ghost-pages">
+                <source>content.contents.show-ghost-pages</source>
+                <target>Voir les ghosts et shadow pages</target>
+            </trans-unit>
+            <trans-unit id="9d6ff6ec28392e6c52d795266f34743e" resname="content.preview.resolutions">
+                <source>content.preview.resolutions</source>
+                <target>Résolutions</target>
+            </trans-unit>
+            <trans-unit id="fd7f7507a45f470925dd0e3257b20da2" resname="sulu.content.add-type">
+                <source>sulu.content.add-type</source>
+                <target>Ajouter un Block</target>
+            </trans-unit>
+            <trans-unit id="90aa264459ba0f52ef7a4d3c0298d5f" resname="smart-content.data-source.label">
+                <source>smart-content.data-source.label</source>
+                <target>La source de données</target>
+            </trans-unit>
+            <trans-unit id="90a3272459ba0f52ef7a4d2c0298d5c" resname="smart-content.data-source.button">
+                <source>smart-content.data-source.button</source>
+                <target>Choisissez la source</target>
+            </trans-unit>
+            <trans-unit id="90a3272459ba0f52ef7a4d320298d5c" resname="smart-content.choose-data-source">
+                <source>smart-content.choose-data-source</source>
+                <target>Choisissez la data source</target>
+            </trans-unit>
+            <trans-unit id="90a3276459ba0f52ef7a4d320298d5d" resname="smart-content.choose-data-source.reset">
+                <source>smart-content.choose-data-source.reset</source>
+                <target>Réinitialiser</target>
+            </trans-unit>
+            <trans-unit id="90a3276459ba0f52ef7a41320298d5d" resname="smart-content.choose-data-source.back">
+                <source>smart-content.choose-data-source.back</source>
+                <target>Retour</target>
+            </trans-unit>
+            <trans-unit id="443d99ff2f64652633a5ca2169f22211" resname="sulu.content.seo.serp">
+                <source>sulu.content.seo.serp</source>
+                <target>Search Engine Results Pages Preview (SERP)</target>
+            </trans-unit>
+            <trans-unit id="443d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.title">
+                <source>sulu.content.seo.title</source>
+                <target>Titre (Meta Title)</target>
+            </trans-unit>
+            <trans-unit id="441d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.description">
+                <source>sulu.content.seo.description</source>
+                <target>Description (Meta Description)</target>
+            </trans-unit>
+            <trans-unit id="442d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.keywords">
+                <source>sulu.content.seo.keywords</source>
+                <target>Mots-clefs (Meta Keywords)</target>
+            </trans-unit>
+            <trans-unit id="445d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.canonical">
+                <source>sulu.content.seo.canonical</source>
+                <target>URL Canonique (Canonical Tag)</target>
+            </trans-unit>
+            <trans-unit id="445d99ff2f64652633a5ca2169f22256" resname="sulu.content.seo.robots">
+                <source>sulu.content.seo.robots</source>
+                <target>Robots settings (robots.txt)</target>
+            </trans-unit>
+            <trans-unit id="445d99ff2f64652633a5ca2169f2225c" resname="sulu.content.seo.robots.no-index">
+                <source>sulu.content.seo.robots.no-index</source>
+                <target>no-index (la page ne sera pas indexé par les moteurs de recherche)</target>
+            </trans-unit>
+            <trans-unit id="445d99ff2f64652633a5ca2169f22252" resname="sulu.content.seo.robots.no-follow">
+                <source>sulu.content.seo.robots.no-follow</source>
+                <target>no-follow (les liens sur cette page ne seront pas suivis par le moteur de recherche)</target>
+            </trans-unit>
+            <trans-unit id="445d99ff2f64652633a5ca2169f22253" resname="sulu.content.seo.sitemap">
+                <source>sulu.content.seo.sitemap</source>
+                <target>Sitemap (Plan du site)</target>
+            </trans-unit>
+            <trans-unit id="445d99ff2f64652633a5ca2169f22255" resname="sulu.content.seo.sitemap.hide">
+                <source>sulu.content.seo.sitemap.hide</source>
+                <target>Caché dans le sitemap</target>
+            </trans-unit>
+            <trans-unit id="142cd92f1c29c9e456a5ce2178d22192" resname="sulu.content.excerpt.title">
+                <source>sulu.content.excerpt.title</source>
+                <target>Titre</target>
+            </trans-unit>
+            <trans-unit id="142cd92f1c29c9e456a5ce2178d22196" resname="sulu.content.excerpt.description">
+                <source>sulu.content.excerpt.description</source>
+                <target>Description</target>
+            </trans-unit>
+            <trans-unit id="142cd92f1c29c9e456a5ce2178d22197" resname="sulu.content.excerpt.images">
+                <source>sulu.content.excerpt.images</source>
+                <target>Images</target>
+            </trans-unit>
+            <trans-unit id="e50af522ac181350142c0b4720e29a2f" resname="sulu.content.seo.characters-left">
+                <source>sulu.content.seo.characters-left</source>
+                <target>caractères restants</target>
+            </trans-unit>
+            <trans-unit id="b50af522ac181350142c0b4720e29a2f" resname="sulu.content.seo.keywords.note">
+                <source>sulu.content.seo.keywords.note</source>
+                <target>S'il vous plaît utiliser un max. 5 mots clés, en rapport avec le contenu de la page, séparés par des virgules.</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e29a2f" resname="sulu.content.seo.keywords-left">
+                <source>sulu.content.seo.keywords-left</source>
+                <target>mots-clés restants</target>
+            </trans-unit>
+            <trans-unit id="c50af522ac181350142c0b4720e29a2e" resname="sulu.content.seo.title.note">
+                <source>sulu.content.seo.title.note</source>
+                <target>Le meta title est limitée à 55 caractères.</target>
+            </trans-unit>
+            <trans-unit id="c50af522ac181350142c0b4720e29a2f" resname="sulu.content.seo.descriptions.note">
+                <source>sulu.content.seo.descriptions.note</source>
+                <target>Le meta description est limitée à 155 caractères.</target>
+            </trans-unit>
+            <trans-unit id="a945ccdbf95d2852ab6390cea24ebb6f" resname="content.contents.title">
+                <source>content.contents.title</source>
+                <target>Contenu</target>
+            </trans-unit>
+            <trans-unit id="f1234df37123123ed4a7343623dfdf010" resname="sulu.content.form.settings.nav-contexts">
+                <source>sulu.content.form.settings.nav-contexts</source>
+                <target>Indique la page dans</target>
+            </trans-unit>
+            <trans-unit id="f1234df37123123ed4a7343623dfdf011" resname="sulu.content.form.settings.all-nav-contexts">
+                <source>sulu.content.form.settings.all-nav-contexts</source>
+                <target>toutes les navigations</target>
+            </trans-unit>
+            <trans-unit id="f1234df37123123ed4a7343623dfdf012" resname="sulu.content.form.settings.no-nav-contexts">
+                <source>sulu.content.form.settings.no-nav-contexts</source>
+                <target>aucune navigation</target>
+            </trans-unit>
+            <trans-unit id="aaaaaaf371239fbed4a73a4123dfdf008" resname="sulu.content.form.settings.shadow_page">
+                <source>sulu.content.form.settings.shadow_page</source>
+                <target>Shadow Page</target>
+            </trans-unit>
+            <trans-unit id="aaaaaaf371239fbed4a73a4123dfdf009" resname="sulu.content.form.settings.shadow.enable">
+                <source>sulu.content.form.settings.shadow.enable</source>
+                <target>Activer Shadow</target>
+            </trans-unit>
+            <trans-unit id="aaaa4df371239fbed4a73a4123dfdf010" resname="sulu.content.form.settings.shadow.base_language">
+                <source>sulu.content.form.settings.shadow.base_language</source>
+                <target>Shadow base de Langue</target>
+            </trans-unit>
+            <trans-unit id="aaaaaaa371239fbed4a73a4123dfdf011" resname="sulu.content.form.settings.shadow.no_base_language">
+                <source>sulu.content.form.settings.shadow.no_base_language</source>
+                <target>Aucune Shadow Page langue existes ...</target>
+            </trans-unit>
+            <trans-unit id="aaaaaaa371239fbed4a73a4123dfdf012" resname="sulu.content.form.settings.shadow.select_base_language">
+                <source>sulu.content.form.settings.shadow.select_base_language</source>
+                <target>Choisissez la langue ...</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa371239fbed4a73a4123dfdf010" resname="sulu.content.form.settings.type.internal-link.title">
+                <source>sulu.content.form.settings.type.internal-link.title</source>
+                <target>Lien titre</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa371239fbed4a73a4123dfdf011" resname="sulu.content.form.settings.type.internal-link.link">
+                <source>sulu.content.form.settings.type.internal-link.link</source>
+                <target>Contenu lié</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa371239fbed4a73a4123dfdf012" resname="sulu.content.form.settings.type.external-link.title">
+                <source>sulu.content.form.settings.type.external-link.title</source>
+                <target>Titre</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa371239fbed4a73a4123dfdf013" resname="sulu.content.form.settings.type.external-link.url">
+                <source>sulu.content.form.settings.type.external-link.url</source>
+                <target>URL</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382139fbed4a73a4123dfdf013" resname="sulu.content.collapse.blocks">
+                <source>sulu.content.collapse.blocks</source>
+                <target>Réduire tous les blocs</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf113" resname="sulu.content.expand.blocks">
+                <source>sulu.content.expand.blocks</source>
+                <target>Développer tous les blocs</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf013" resname="content.contents.settings.copy-locales.title">
+                <source>content.contents.settings.copy-locales.title</source>
+                <target>Copie de la langue</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf014" resname="content.contents.settings.copy-locales.copy-from">
+                <source>content.contents.settings.copy-locales.copy-from</source>
+                <target>Copiez à partir de</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf015" resname="content.contents.settings.copy-locales.current-language">
+                <source>content.contents.settings.copy-locales.current-language</source>
+                <target>langue courante</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf016" resname="content.contents.settings.copy-locales.target">
+                <source>content.contents.settings.copy-locales.target</source>
+                <target>Langues cibles</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf017" resname="content.contents.settings.copy-locales.info">
+                <source>content.contents.settings.copy-locales.info</source>
+                <target>Nouvelle page sera créée</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf018" resname="content.contents.settings.copy-locales.ok">
+                <source>content.contents.settings.copy-locales.ok</source>
+                <target>Copier les langues</target>
+            </trans-unit>
+
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf019" resname="content.contents.settings.copy-locale.title">
+                <source>content.contents.settings.copy-locale.title</source>
+                <target>Qu'est-ce que vous aimeriez faire?</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf020" resname="content.contents.settings.copy-locale.info">
+                <source>content.contents.settings.copy-locale.info</source>
+                <target><![CDATA[Cette page n'existe pas dans cette langue.<br/>S'il vous plaît sélectionnez une des options suivantes:]]></target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf021" resname="content.contents.settings.copy-locale.new">
+                <source>content.contents.settings.copy-locale.new</source>
+                <target><![CDATA[Créer une nouvelle <b>page vide</b> dans cette langue]]></target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf022" resname="content.contents.settings.copy-locale.copy">
+                <source>content.contents.settings.copy-locale.copy</source>
+                <target><![CDATA[Créer une nouvelle page dans cette langue et <b>copier le contenu d'</b>:]]></target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf023" resname="content.contents.settings.copy-locale.select-default">
+                <source>content.contents.settings.copy-locale.select-default"</source>
+                <target>Choisir ...</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf024" resname="content.contents.settings.copy-locale-overlay.ok">
+                <source>content.contents.settings.copy-locale.ok</source>
+                <target>Créer page</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf025" resname="toolbar.copy-locale">
+                <source>toolbar.copy-locale</source>
+                <target>Copier les langues</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf026" resname="content.contents.new">
+                <source>content.contents.create</source>
+                <target>Créer page</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf027" resname="content.contents.settings.copy-locales.default-label">
+                <source>content.contents.settings.copy-locales.default-label</source>
+                <target>Choisissez la langue ...</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf028" resname="content.contents.start-preview">
+                <source>content.contents.start-preview</source>
+                <target>Commencez aperçu</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf030" resname="sulu.content.form.settings.changelog">
+                <source>sulu.content.form.settings.changelog</source>
+                <target>Changelog</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf031" resname="sulu.content.form.settings.changelog.changed">
+                <source>sulu.content.form.settings.changelog.changed</source>
+                <target>Changé par:</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf032" resname="sulu.content.form.settings.changelog.created">
+                <source>sulu.content.form.settings.changelog.created</source>
+                <target>Crée par:</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf033" resname="sulu.content.form.settings.changelog.user-not-found">
+                <source>sulu.content.form.settings.changelog.user-not-found</source>
+                <target>Utilisateur introuvable</target>
+            </trans-unit>
+            <trans-unit id="acbaaaaa382148fbed4a73a4123dfdf0f" resname="column-navigation.ghost">
+                <source>column-navigation.ghost</source>
+                <target>Ghost page</target>
+            </trans-unit>
+            <trans-unit id="acbaaaaa38148fbed4a73a4123dfdf0fc" resname="column-navigation.shadow">
+                <source>column-navigation.shadow</source>
+                <target>Shadow page</target>
+            </trans-unit>
+            <trans-unit id="9cbaaaaa38148fbed4a73a4123dfdf0fc" resname="public.unpublished">
+                <source>public.unpublished</source>
+                <target>Non publié</target>
+            </trans-unit>
+            <trans-unit id="5cbaaaaa38148fbed4a73a4123dfdf0fc" resname="public.internal-link">
+                <source>public.internal-link</source>
+                <target>lien interne</target>
+            </trans-unit>
+            <trans-unit id="2cbaaaaa38148fbed4a73a4123dfdf0fc" resname="public.external-link">
+                <source>public.external-link</source>
+                <target>lien externe</target>
+            </trans-unit>
+            <trans-unit id="2cbaaaaa38248fbed4a73a4129dfdf0fc" resname="column-navigation.order-title">
+                <source>column-navigation.order-title</source>
+                <target>Réorganiser la page</target>
+            </trans-unit>
+            <trans-unit id="2cbbaaca39148fbed4a73a4123dfdf0fc" resname="column-navigation.order-message">
+                <source>column-navigation.order-message</source>
+                <target>L'opération que vous êtes sur le point de faire va réorganiser la page.</target>
+            </trans-unit>
+            <trans-unit id="75435af307a7ae8f965923968a0e0f94" resname="labels.error.content-save-desc">
+                <source>labels.error.content-save-desc</source>
+                <target>La page n'a pas pu être sauvée.</target>
+            </trans-unit>
+            <trans-unit id="75435af3a7a7a38f968923968a0e0f94" resname="labels.error.content-save-resource-locator">
+                <source>labels.error.content-save-resource-locator</source>
+                <target>Le Resource Locator donnée est pas valable.</target>
+            </trans-unit>
+            <trans-unit id="2647c238cae0fa45d7fbad336e43750f" resname="labels.success.content-deleted-desc">
+                <source>labels.success.content-deleted-desc</source>
+                <target>Page supprimée avec succès.</target>
+            </trans-unit>
+            <trans-unit id="487f946d51783a9899fa59d31dcfc3e8" resname="labels.success.content-save-desc">
+                <source>labels.success.content-save-desc</source>
+                <target>Page enregistrée avec succès</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh40" resname="smart-content.categories.label">
+                <source>smart-content.categories.label</source>
+                <target>Filtrer par catégories</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh41" resname="smart-content.categories.button">
+                <source>smart-content.categories.button</source>
+                <target>Choisissez catégories</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh42" resname="smart-content.categories">
+                <source>smart-content.categories</source>
+                <target>Catégories</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh43" resname="smart-content.choose-categories">
+                <source>smart-content.choose-categories</source>
+                <target>Choisissez catégories</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh44" resname="smart-content.categories.operator-label">
+                <source>smart-content.categories.operator-label</source>
+                <target>Condition</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh45" resname="smart-content.categories.use-any-category">
+                <source>smart-content.categories.use-any-category</source>
+                <target>Utilisez des pages qui utilisent N'IMPORTE QUEL tag</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh46" resname="smart-content.categories.use-all-categories">
+                <source>smart-content.categories.use-all-categories</source>
+                <target>Utilisez des pages qui utilisent TOUTES les catégories</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh47" resname="smart-content.categories.categories-label">
+                <source>smart-content.categories.categories-label</source>
+                <target>Choisissez catégories</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh48" resname="smart-content.choose-categories.cancel">
+                <source>smart-content.choose-categories.cancel</source>
+                <target>Retour</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf51234dh49" resname="smart-content.choose-categories.ok">
+                <source>smart-content.choose-categories.ok</source>
+                <target>Appliquer catégories</target>
+            </trans-unit>
+            <trans-unit id="9" resname="content.delete-referenced-by-following">
+                <source>content.delete-referenced-by-following</source>
+                <target>Cette page est référencée par les pages suivantes:</target>
+            </trans-unit>
+            <trans-unit id="10" resname="content.delete-confirm-text">
+                <source>content.delete-confirm-text</source>
+                <target>Etes-vous sûr que vous voulez le retirer ?</target>
+            </trans-unit>
+            <trans-unit id="11" resname="content.delete-confirm-title">
+                <source>content.delete-confirm-title</source>
+                <target>Confirmation de la suppression</target>
+            </trans-unit>
+            <trans-unit id="12" resname="content.delete-do-it">
+                <source>content.delete-do-it</source>
+                <target>Oui, je suis sûr</target>
+            </trans-unit>
+            <trans-unit id="13" resname="content.webspace.settings.localizations">
+                <source>content.webspace.settings.localizations</source>
+                <target>Traductions disponibles</target>
+            </trans-unit>
+            <trans-unit id="14" resname="content.webspace.settings.localization">
+                <source>content.webspace.settings.localization</source>
+                <target>Localisation</target>
+            </trans-unit>
+            <trans-unit id="15" resname="content.webspace.settings.theme">
+                <source>content.webspace.settings.theme</source>
+                <target>Thème</target>
+            </trans-unit>
+            <trans-unit id="16" resname="content.webspace.settings.urls">
+                <source>content.webspace.settings.urls</source>
+                <target>Domaines / URL configurés</target>
+            </trans-unit>
+            <trans-unit id="17" resname="content.webspace.settings.url">
+                <source>content.webspace.settings.url</source>
+                <target>Domaine (URL)</target>
+            </trans-unit>
+            <trans-unit id="18" resname="content.webspace.settings.main">
+                <source>content.webspace.settings.main</source>
+                <target>Dominant</target>
+            </trans-unit>
+            <trans-unit id="19" resname="content-navigation.webspace.general">
+                <source>content-navigation.webspace.general</source>
+                <target>Général</target>
+            </trans-unit>
+            <trans-unit id="20" resname="content-navigation.webspace.analytics">
+                <source>content-navigation.webspace.analytics</source>
+                <target>Analytics</target>
+            </trans-unit>
+            <trans-unit id="21" resname="content-navigation.webspace.urls">
+                <source>content-navigation.webspace.urls</source>
+                <target>Custome URLs</target>
+            </trans-unit>
+            <trans-unit id="22" resname="navigation.webspaces.settings">
+                <source>navigation.webspaces.settings</source>
+                <target>Paramètres</target>
+            </trans-unit>
+            <trans-unit id="23" resname="content.webspace.settings.redirect">
+                <source>content.webspace.settings.redirect</source>
+                <target>Réorienter</target>
+            </trans-unit>
+            <trans-unit id="24" resname="content.changed-warning.title">
+                <source>content.changed-warning.title</source>
+                <target>Attention, le contenu risque de s'écraser!</target>
+            </trans-unit>
+            <trans-unit id="25" resname="content.changed-warning.description">
+                <source>content.changed-warning.description</source>
+                <target>Cette page a été changée par un autre utilisateur dans l’intervalle. En cas que cette page est sauvegardée, ces données se perdent.</target>
+            </trans-unit>
+            <trans-unit id="26" resname="content.changed-warning.ok-button">
+                <source>content.changed-warning.ok-button</source>
+                <target>Enregistrer la page</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

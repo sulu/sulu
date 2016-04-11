@@ -32,16 +32,16 @@
         </service>
 
         <!-- Filters -->
-        <service id="sulu_resource.filter_repository" class="%sulu_resource.filter_repository.class%"
-                 factory-method="getRepository" factory-service="doctrine.orm.entity_manager">
+        <service id="sulu_resource.filter_repository" class="%sulu_resource.filter_repository.class%">
+            <factory service="doctrine.orm.entity_manager" method="getRepository"/>
             <argument>SuluResourceBundle:Filter</argument>
         </service>
         <service id="sulu_resource.conditionGroup_repository" class="%sulu_resource.conditionGroup_repository.class%"
                  factory-method="getRepository" factory-service="doctrine.orm.entity_manager">
             <argument>SuluResourceBundle:ConditionGroup</argument>
         </service>
-        <service id="sulu_resource.condition_repository" class="%sulu_resource.condition_repository.class%"
-                 factory-method="getRepository" factory-service="doctrine.orm.entity_manager">
+        <service id="sulu_resource.condition_repository" class="%sulu_resource.condition_repository.class%">
+            <factory service="doctrine.orm.entity_manager" method="getRepository"/>
             <argument>SuluResourceBundle:Condition</argument>
         </service>
         <service id="sulu_resource.filter_manager" class="%sulu_resource.filter_manager.class%">

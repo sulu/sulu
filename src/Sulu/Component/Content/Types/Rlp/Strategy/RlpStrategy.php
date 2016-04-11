@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,17 +11,20 @@
 
 namespace Sulu\Component\Content\Types\Rlp\Strategy;
 
-use PHPCR\NodeInterface;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
+use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
+use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 
 /**
- * base class for Resource Locator Path Strategy.
+ * Base class for Resource Locator Path Strategy.
  */
 abstract class RlpStrategy implements RlpStrategyInterface
 {
@@ -56,15 +59,18 @@ abstract class RlpStrategy implements RlpStrategyInterface
     protected $nodeHelper;
 
     /**
-     * Constructor.
+     * @var DocumentInspector
      */
+    protected $documentInspector;
+
     public function __construct(
         $name,
         RlpMapperInterface $mapper,
         PathCleanupInterface $cleaner,
         StructureManagerInterface $structureManager,
         ContentTypeManagerInterface $contentTypeManager,
-        SuluNodeHelper $nodeHelper
+        SuluNodeHelper $nodeHelper,
+        DocumentInspector $documentInspector
     ) {
         $this->name = $name;
         $this->mapper = $mapper;
@@ -72,12 +78,11 @@ abstract class RlpStrategy implements RlpStrategyInterface
         $this->structureManager = $structureManager;
         $this->contentTypeManager = $contentTypeManager;
         $this->nodeHelper = $nodeHelper;
+        $this->documentInspector = $documentInspector;
     }
 
     /**
-     * returns name of RLP Strategy (e.g. whole tree).
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -85,15 +90,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
     }
 
     /**
-     * returns whole path for given ContentNode.
-     *
-     * @param string $title        title of new node
-     * @param string $parentPath   parent path of new contentNode
-     * @param string $webspaceKey  key of portal
-     * @param string $languageCode
-     * @param string $segmentKey
-     *
-     * @return string whole path
+     * {@inheritdoc}
      */
     public function generate($title, $parentPath, $webspaceKey, $languageCode, $segmentKey = null)
     {
@@ -113,15 +110,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
     }
 
     /**
-     * returns whole path for given ContentNode.
-     *
-     * @param string $title        title of new node
-     * @param string $uuid         uuid for node to generate rl
-     * @param string $webspaceKey  key of portal
-     * @param string $languageCode
-     * @param string $segmentKey
-     *
-     * @return string whole path
+     * {@inheritdoc}
      */
     public function generateForUuid($title, $uuid, $webspaceKey, $languageCode, $segmentKey = null)
     {
@@ -143,139 +132,126 @@ abstract class RlpStrategy implements RlpStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function save(NodeInterface $contentNode, $path, $userId, $webspaceKey, $languageCode, $segmentKey = null)
+    public function save(ResourceSegmentBehavior $document, $userId)
     {
-        if (!$this->isValid($path, $webspaceKey, $languageCode, $segmentKey)) {
+        $path = $document->getResourceSegment();
+        $webspaceKey = $this->documentInspector->getWebspace($document);
+        $languageCode = $this->documentInspector->getLocale($document);
+
+        try {
+            $treeValue = $this->loadByContent($document);
+        } catch (ResourceLocatorNotFoundException $e) {
+            $treeValue = null;
+        }
+
+        if ($treeValue === $path) {
+            return;
+        }
+
+        if (!$this->isValid($path, $webspaceKey, $languageCode)) {
             throw new ResourceLocatorNotValidException($path);
         }
 
-        // delegate to mapper
-        $result = $this->mapper->save($contentNode, $path, $webspaceKey, $languageCode, $segmentKey);
+        if (!$this->mapper->unique($path, $webspaceKey, $languageCode)) {
+            $treeContent = $this->loadByResourceLocator($path, $webspaceKey, $languageCode);
 
-        // no iteration => will be done over this save method
-        $this->adaptResourceLocators($contentNode, $userId, $webspaceKey, $languageCode, $segmentKey, false);
+            throw new ResourceLocatorAlreadyExistsException($path, $treeContent);
+        }
 
-        return $result;
-    }
+        $this->mapper->save($document);
 
-    /**
-     * {@inheritdoc}
-     */
-    public function move(
-        $src,
-        $dest,
-        NodeInterface $contentNode,
-        $userId,
-        $webspaceKey,
-        $languageCode,
-        $segmentKey = null
-    ) {
-        // delegate to mapper
-        $this->mapper->move($src, $dest, $webspaceKey, $languageCode, $segmentKey);
-
-        $this->adaptResourceLocators($contentNode, $userId, $webspaceKey, $languageCode, $segmentKey);
+        $this->adaptResourceLocators($document, $userId);
     }
 
     /**
      * adopts resource locator of children by iteration.
      *
-     * @param NodeInterface $contentNode
-     * @param int           $userId
-     * @param string        $webspaceKey
-     * @param string        $languageCode
-     * @param bool          $iterate
-     * @param string        $segmentKey
+     * @param ResourceSegmentBehavior $document
+     * @param int $userId
      */
-    private function adaptResourceLocators(
-        NodeInterface $contentNode,
-        $userId,
-        $webspaceKey,
-        $languageCode,
-        $segmentKey = null,
-        $iterate = true
-    ) {
-        foreach ($contentNode->getNodes() as $node) {
+    private function adaptResourceLocators(ResourceSegmentBehavior $document, $userId)
+    {
+        if (!$document instanceof ChildrenBehavior) {
+            return;
+        }
+
+        $webspaceKey = $this->documentInspector->getWebspace($document);
+        $languageCode = $this->documentInspector->getLocale($document);
+
+        foreach ($document->getChildren() as $childDocument) {
+            $childNode = $this->documentInspector->getNode($childDocument);
+
             // determine structure
             $templatePropertyName = $this->nodeHelper->getTranslatedPropertyName('template', $languageCode);
 
-            if (!$node->hasProperty($templatePropertyName)) {
+            if (!$childNode->hasProperty($templatePropertyName)) {
                 continue;
             }
 
-            $template = $node->getPropertyValue($templatePropertyName);
+            $template = $childNode->getPropertyValue($templatePropertyName);
             $structure = $this->structureManager->getStructure($template);
 
-            // only if rlp exists
-            if ($structure->hasTag('sulu.rlp')) {
-                // get rlp
-                try {
-                    $rlp = $this->loadByContent($node, $webspaceKey, $languageCode);
-                } catch (ResourceLocatorNotFoundException $ex) {
-                    $contentNode->getSession()->save();
-
-                    $rlpPart = $node->getPropertyValue(
-                        $this->nodeHelper->getTranslatedPropertyName('title', $languageCode)
-                    );
-                    $prentRlp = $this->mapper->getParentPath(
-                        $node->getIdentifier(),
-                        $webspaceKey,
-                        $languageCode,
-                        $segmentKey
-                    );
-
-                    // generate new resourcelocator
-                    $rlp = $this->generate(
-                        $rlpPart,
-                        $prentRlp,
-                        $webspaceKey,
-                        $languageCode
-                    );
-                }
-
-                // determine rlp property
-                $property = $structure->getPropertyByTagName('sulu.rlp');
-                $contentType = $this->contentTypeManager->get($property->getContentTypeName());
-                $property->setValue($rlp);
-
-                // write value to node
-                $translatedProperty = $this->nodeHelper->getTranslatedProperty($property, $languageCode);
-                $contentType->write($node, $translatedProperty, $userId, $webspaceKey, $languageCode, $segmentKey);
+            if (!$structure->hasTag('sulu.rlp')) {
+                continue;
             }
 
-            // for node move the tree will be copied to then there is the iteration over this function
-            // for node copy the iteration is done by the content-type which calls over the move function
-            //     recursively this function
-            if ($iterate) {
-                $this->adaptResourceLocators($node, $userId, $webspaceKey, $languageCode, $segmentKey);
+            // get rlp
+            try {
+                $rlp = $this->loadByContent($childDocument);
+            } catch (ResourceLocatorNotFoundException $ex) {
+                $childNode->getSession()->save();
+
+                $rlpPart = $childNode->getPropertyValue(
+                    $this->nodeHelper->getTranslatedPropertyName('title', $languageCode)
+                );
+                $parentRlp = $this->mapper->getParentPath(
+                    $childNode->getIdentifier(),
+                    $webspaceKey,
+                    $languageCode
+                );
+
+                // generate new resourcelocator
+                $rlp = $this->generate(
+                    $rlpPart,
+                    $parentRlp,
+                    $webspaceKey,
+                    $languageCode
+                );
             }
+
+            // build new resource segment based on parent changes
+            $rlpParts = explode('/', $rlp);
+            $newRlp = $document->getResourceSegment() . '/' . $rlpParts[count($rlpParts) - 1];
+
+            // determine rlp property
+            $property = $structure->getPropertyByTagName('sulu.rlp');
+            $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+            $property->setValue($newRlp);
+            $childDocument->setResourceSegment($newRlp);
+
+            // write value to node
+            $translatedProperty = $this->nodeHelper->getTranslatedProperty($property, $languageCode);
+            $contentType->write($childNode, $translatedProperty, $userId, $webspaceKey, $languageCode, null);
+            $this->save($childDocument, $userId);
         }
     }
 
     /**
-     * returns path for given contentNode.
-     *
-     * @param NodeInterface $contentNode  reference node
-     * @param string        $webspaceKey  key of portal
-     * @param string        $languageCode
-     * @param string        $segmentKey
-     *
-     * @return string path
+     * {@inheritdoc}
      */
-    public function loadByContent(NodeInterface $contentNode, $webspaceKey, $languageCode, $segmentKey = null)
+    public function loadByContent(ResourceSegmentBehavior $document)
     {
         // delegate to mapper
-        return $this->mapper->loadByContent($contentNode, $webspaceKey, $languageCode, $segmentKey);
+        return $this->mapper->loadByContent(
+            $this->documentInspector->getNode($document),
+            $this->documentInspector->getWebspace($document),
+            $this->documentInspector->getLocale($document),
+            null
+        );
     }
 
     /**
-     * returns path for given contentNode.
-     *
-     * @param string $uuid         uuid of contentNode
-     * @param string $webspaceKey  key of portal
-     * @param string $languageCode
-     * @param string $segmentKey
-     *
-     * @return string path
+     * {@inheritdoc}
      */
     public function loadByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null)
     {
@@ -292,14 +268,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
     }
 
     /**
-     * returns the uuid of referenced content node.
-     *
-     * @param string $resourceLocator requested RL
-     * @param string $webspaceKey     key of portal
-     * @param string $languageCode
-     * @param string $segmentKey
-     *
-     * @return string uuid of content node
+     * {@inheritdoc}
      */
     public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null)
     {
@@ -308,32 +277,15 @@ abstract class RlpStrategy implements RlpStrategyInterface
     }
 
     /**
-     * checks if path is valid.
-     *
-     * @param string $path         path of route
-     * @param string $webspaceKey  key of portal
-     * @param string $languageCode
-     * @param string $segmentKey
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public function isValid($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
-        return $this->cleaner->validate($path) && $this->mapper->unique(
-            $path,
-            $webspaceKey,
-            $languageCode,
-            $segmentKey
-        );
+        return $path !== '/' && $this->cleaner->validate($path);
     }
 
     /**
-     * deletes given resource locator node.
-     *
-     * @param string $path         of resource locator node
-     * @param string $webspaceKey  key of portal
-     * @param string $languageCode
-     * @param string $segmentKey
+     * {@inheritdoc}
      */
     public function deleteByPath($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
@@ -341,12 +293,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
     }
 
     /**
-     * restore given resource locator.
-     *
-     * @param string $path         of resource locator
-     * @param string $webspaceKey  key of portal
-     * @param string $languageCode
-     * @param string $segmentKey
+     * {@inheritdoc}
      */
     public function restoreByPath($path, $webspaceKey, $languageCode, $segmentKey = null)
     {

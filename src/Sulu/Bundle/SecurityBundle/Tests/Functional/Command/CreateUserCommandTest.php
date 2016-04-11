@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -56,7 +56,7 @@ class CreateUserCommandTest extends SuluTestCase
         $this->createUser('sulu', 'test');
         $this->createUser('sulu', 'test');
 
-        $this->assertEquals("User \"sulu\" already exists\n", $this->tester->getDisplay());
+        $this->assertEquals('User "sulu" already exists', trim($this->tester->getDisplay()));
     }
 
     public function testCreateUserNonExistingRole()

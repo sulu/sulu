@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -99,8 +99,9 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
         }
 
         $cachePath = sprintf(
-            '%s/%s%s',
+            '%s%s%s%s',
             $this->cachePath,
+            DIRECTORY_SEPARATOR,
             Inflector::camelize($type),
             Inflector::camelize($structureType)
         );

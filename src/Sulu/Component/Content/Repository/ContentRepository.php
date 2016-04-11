@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Repository;
 use Jackalope\Query\QOM\PropertyValue;
 use Jackalope\Query\Row;
 use PHPCR\ItemNotFoundException;
+use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
 use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
@@ -223,6 +224,36 @@ class ContentRepository implements ContentRepositoryInterface
     /**
      * {@inheritdoc}
      */
+    public function findByUuids(
+        array $uuids,
+        $locale,
+        MappingInterface $mapping,
+        UserInterface $user = null
+    ) {
+        if (count($uuids) === 0) {
+            return [];
+        }
+
+        $locales = $this->getLocales();
+        $queryBuilder = $this->getQueryBuilder($locale, $locales, $user);
+
+        foreach ($uuids as $uuid) {
+            $queryBuilder->orWhere(
+                $this->qomFactory->comparison(
+                    $queryBuilder->qomf()->propertyValue('node', 'jcr:uuid'),
+                    QueryObjectModelConstantsInterface::JCR_OPERATOR_EQUAL_TO,
+                    $queryBuilder->qomf()->literal($uuid)
+                )
+            );
+        }
+        $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
+
+        return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, null, $mapping, $user);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findAll($locale, $webspaceKey, MappingInterface $mapping, UserInterface $user = null)
     {
         $contentPath = $this->sessionManager->getContentPath($webspaceKey);
@@ -236,7 +267,6 @@ class ContentRepository implements ContentRepositoryInterface
 
         return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $webspaceKey, $mapping, $user);
     }
-
 
     /**
      * {@inheritdoc}
@@ -289,6 +319,10 @@ class ContentRepository implements ContentRepositoryInterface
 
             ksort($childrenByPath[$content->getPath()]);
             $content->setChildren(array_values($childrenByPath[$content->getPath()]));
+        }
+
+        if (!array_key_exists('/', $childrenByPath) || !is_array($childrenByPath['/'])) {
+            return [];
         }
 
         ksort($childrenByPath['/']);
@@ -721,7 +755,12 @@ class ContentRepository implements ContentRepositoryInterface
 
         $name = sprintf('%s%s', $locale, ucfirst($name));
 
-        return $row->getValue($name);
+        try {
+            return $row->getValue($name);
+        } catch (ItemNotFoundException $e) {
+            // the default value of a non existing property in jackalope is an empty string
+            return '';
+        }
     }
 
     /**

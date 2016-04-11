@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -113,7 +113,7 @@ class ContactContext extends BaseContext implements SnippetAcceptingContext
     public function iClickOnTheEditIconInTheRowContaining($text)
     {
         $this->waitForText($text);
-        $script = <<<EOT
+        $script = <<<'EOT'
             var f = function () {
                 var cards = document.querySelectorAll(".card-item .head-name");
 

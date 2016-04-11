@@ -59,7 +59,6 @@ class PropertyMetadata extends BasePropertyMetadata
         list(
             $this->class,
             $this->name,
-            $this->type,
-            ) = unserialize($str);
+            $this->type) = unserialize($str);
     }
 }

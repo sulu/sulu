@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -26,6 +26,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileException;
+use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
@@ -37,6 +38,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
@@ -439,7 +441,7 @@ class MediaManager implements MediaManagerInterface
             $limit,
             $offset,
             $this->getCurrentUser(),
-            $this->permissions['view']
+            $this->permissions[PermissionTypes::VIEW]
         );
         $this->count = $this->mediaRepository->count($filter);
 
@@ -525,7 +527,7 @@ class MediaManager implements MediaManagerInterface
         $currentFileVersion = null;
 
         foreach ($file->getFileVersions() as $fileVersion) {
-            /**  @var FileVersion $fileVersion */
+            /** @var FileVersion $fileVersion */
             if ($version == $fileVersion->getVersion()) {
                 $currentFileVersion = $fileVersion;
                 break;
@@ -540,6 +542,10 @@ class MediaManager implements MediaManagerInterface
             // new uploaded file
             ++$version;
             $this->validator->validate($uploadedFile);
+            $type = $this->typeManager->getMediaType($uploadedFile->getMimeType());
+            if ($type !== $mediaEntity->getType()->getId()) {
+                throw new InvalidMediaTypeException('New media version must have the same media type.');
+            }
 
             $data['storageOptions'] = $this->storage->save(
                 $uploadedFile->getPathname(),
@@ -552,7 +558,7 @@ class MediaManager implements MediaManagerInterface
             $data['mimeType'] = $uploadedFile->getMimeType();
             $data['properties'] = $this->getProperties($uploadedFile);
             $data['type'] = [
-                'id' => $this->typeManager->getMediaType($uploadedFile->getMimeType()),
+                'id' => $type,
             ];
             $data['version'] = $version;
 
@@ -699,7 +705,8 @@ class MediaManager implements MediaManagerInterface
                 ($attribute === 'tags' && $value !== null) ||
                 ($attribute === 'size' && $value !== null) ||
                 ($attribute === 'description' && $value !== null) ||
-                ($attribute === 'copyright' && $value !== null)
+                ($attribute === 'copyright' && $value !== null) ||
+                ($attribute === 'credits' && $value !== null)
             ) {
                 switch ($attribute) {
                     case 'size':
@@ -713,6 +720,9 @@ class MediaManager implements MediaManagerInterface
                         break;
                     case 'copyright':
                         $media->setCopyright($value);
+                        break;
+                    case 'credits':
+                        $media->setCredits($value);
                         break;
                     case 'version':
                         $media->setVersion($value);
@@ -814,7 +824,7 @@ class MediaManager implements MediaManagerInterface
                     Collection::class,
                     $mediaEntity->getCollection()->getId()
                 ),
-                'delete'
+                PermissionTypes::DELETE
             );
         }
 

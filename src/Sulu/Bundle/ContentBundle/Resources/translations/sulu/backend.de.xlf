@@ -258,17 +258,21 @@
                 <source>smart-content.choose-data-source.cancel</source>
                 <target>Zurück</target>
             </trans-unit>
+            <trans-unit id="443d99ff2f64652633a5ca2169f22211" resname="sulu.content.seo.serp">
+                <source>sulu.content.seo.serp</source>
+                <target>Suchergebnis Vorschau (SERP)</target>
+            </trans-unit>
             <trans-unit id="443d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.title">
                 <source>sulu.content.seo.title</source>
-                <target>Titel</target>
+                <target>Titel (Meta Title)</target>
             </trans-unit>
             <trans-unit id="441d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.description">
                 <source>sulu.content.seo.description</source>
-                <target>Beschreibung</target>
+                <target>Beschreibung (Meta Description)</target>
             </trans-unit>
             <trans-unit id="442d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.keywords">
                 <source>sulu.content.seo.keywords</source>
-                <target>Keywords</target>
+                <target>Keywords (Meta Keywords)</target>
             </trans-unit>
             <trans-unit id="445d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.canonical">
                 <source>sulu.content.seo.canonical</source>
@@ -306,6 +310,10 @@
                 <source>sulu.content.excerpt.images</source>
                 <target>Bilder</target>
             </trans-unit>
+            <trans-unit id="c50af522ac181350142c0b4720e29a2e" resname="sulu.content.seo.title.note">
+                <source>sulu.content.seo.title.note</source>
+                <target>Der Meta-Title ist auf 55 Zeichen limitiert.</target>
+            </trans-unit>
             <trans-unit id="c50af522ac181350142c0b4720e29a2f" resname="sulu.content.seo.descriptions.note">
                 <source>sulu.content.seo.descriptions.note</source>
                 <target>Die Meta-Beschreibung ist auf 155 Zeichen limitiert.</target>
@@ -328,31 +336,31 @@
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a7343623dfdf010" resname="sulu.content.form.settings.nav-contexts">
                 <source>sulu.content.form.settings.nav-contexts</source>
-                <target>Navigations Kontexte</target>
+                <target>Zeige Seite in</target>
             </trans-unit>
             <trans-unit id="f1234df37123123ed4a7343623dfdf011" resname="sulu.content.form.settings.all-nav-contexts">
                 <source>sulu.content.form.settings.all-nav-contexts</source>
-                <target>Alle Navigations Kontexte ausgewählt ...</target>
+                <target>Allen Navigationen</target>
             </trans-unit>
             <trans-unit id="aaaaaaa37123123ed4a7343623dfdf012" resname="sulu.content.form.settings.no-nav-contexts">
                 <source>sulu.content.form.settings.no-nav-contexts</source>
-                <target>Keinen Navigations Kontexte ausgewählt ...</target>
+                <target>Keiner Navigation</target>
             </trans-unit>
             <trans-unit id="aaaaaaa371239fbed4a73a4123dfdf008" resname="sulu.content.form.settings.shadow_page">
                 <source>sulu.content.form.settings.shadow_page</source>
-                <target>Shadow Page</target>
+                <target>Shadow Seite</target>
             </trans-unit>
             <trans-unit id="aaaaaaa371239fbed4a73a4123dfdf009" resname="sulu.content.form.settings.shadow.enable">
                 <source>sulu.content.form.settings.shadow.enable</source>
-                <target>Shadow Page aktivieren</target>
+                <target>Shadow Seite aktivieren</target>
             </trans-unit>
             <trans-unit id="aaaaaaa371239fbed4a73a4123dfdf010" resname="sulu.content.form.settings.shadow.base_language">
                 <source>sulu.content.form.settings.shadow.base_language</source>
-                <target>Shadow Page Sprache</target>
+                <target>Shadow Seite Sprache</target>
             </trans-unit>
             <trans-unit id="aaaaaaa371239fbed4a73a4123dfdf011" resname="sulu.content.form.settings.shadow.no_base_language">
                 <source>sulu.content.form.settings.shadow.no_base_language</source>
-                <target>Keine Shadow Page Sprache vorhanden ...</target>
+                <target>Keine Shadow Seite Sprache vorhanden ...</target>
             </trans-unit>
             <trans-unit id="aaaaaaa371239fbed4a73a4123dfdf012" resname="sulu.content.form.settings.shadow.select_base_language">
                 <source>sulu.content.form.settings.shadow.select_base_language</source>
@@ -505,7 +513,7 @@
             </trans-unit>
             <trans-unit id="487f946d51783a9899fa59d31dcfc3e8" resname="labels.success.content-save-desc">
                 <source>labels.success.content-save-desc</source>
-                <target>Node erfolgreich gespeichert.</target>
+                <target>Seite erfolgreich gespeichert.</target>
             </trans-unit>
             <trans-unit id="e4b14069a8a085ede2092hf51234dh40" resname="smart-content.categories.label">
                 <source>smart-content.categories.label</source>
@@ -562,6 +570,62 @@
             <trans-unit id="12" resname="content.delete-do-it">
                 <source>content.delete-do-it</source>
                 <target>Ja, ich bin sicher</target>
+            </trans-unit>
+            <trans-unit id="13" resname="content.webspace.settings.localizations">
+                <source>content.webspace.settings.localizations</source>
+                <target>Verfügbare Lokalisierungen</target>
+            </trans-unit>
+            <trans-unit id="14" resname="content.webspace.settings.localization">
+                <source>content.webspace.settings.localization</source>
+                <target>Lokalisierung</target>
+            </trans-unit>
+            <trans-unit id="15" resname="content.webspace.settings.theme">
+                <source>content.webspace.settings.theme</source>
+                <target>Theme</target>
+            </trans-unit>
+            <trans-unit id="16" resname="content.webspace.settings.urls">
+                <source>content.webspace.settings.urls</source>
+                <target>Konfigurierte Domains / URLs</target>
+            </trans-unit>
+            <trans-unit id="17" resname="content.webspace.settings.url">
+                <source>content.webspace.settings.url</source>
+                <target>Domain (URL)</target>
+            </trans-unit>
+            <trans-unit id="18" resname="content.webspace.settings.main">
+                <source>content.webspace.settings.main</source>
+                <target>Primär</target>
+            </trans-unit>
+            <trans-unit id="19" resname="content-navigation.webspace.general">
+                <source>content-navigation.webspace.general</source>
+                <target>Allgemein</target>
+            </trans-unit>
+            <trans-unit id="20" resname="content-navigation.webspace.analytics">
+                <source>content-navigation.webspace.analytics</source>
+                <target>Analytics</target>
+            </trans-unit>
+            <trans-unit id="21" resname="content-navigation.webspace.urls">
+                <source>content-navigation.webspace.urls</source>
+                <target>Benutzerdefinierte URLs</target>
+            </trans-unit>
+            <trans-unit id="22" resname="navigation.webspaces.settings">
+                <source>navigation.webspaces.settings</source>
+                <target>Einstellungen</target>
+            </trans-unit>
+            <trans-unit id="23" resname="content.webspace.settings.redirect">
+                <source>content.webspace.settings.redirect</source>
+                <target>Weiterleitung</target>
+            </trans-unit>
+            <trans-unit id="24" resname="content.changed-warning.title">
+                <source>content.changed-warning.title</source>
+                <target>Achtung, es werden Inhalte überschrieben!</target>
+            </trans-unit>
+            <trans-unit id="25" resname="content.changed-warning.description">
+                <source>content.changed-warning.description</source>
+                <target>Diese Seite wurde zwischenzeitlich von einem anderen Benutzer geändert. Wenn die Seite gespeichert wird, gehen diese Daten verloren.</target>
+            </trans-unit>
+            <trans-unit id="26" resname="content.changed-warning.ok-button">
+                <source>content.changed-warning.ok-button</source>
+                <target>Seite speichern</target>
             </trans-unit>
         </body>
     </file>

@@ -82,6 +82,15 @@ interface BuilderInterface
     public function enableSorting(array $sorting);
 
     /**
+     * Set deep-link.
+     *
+     * @param string $deepLink
+     *
+     * @return BuilderInterface
+     */
+    public function setDeepLink($deepLink);
+
+    /**
      * Returns build configuration.
      *
      * @return ProviderConfigurationInterface

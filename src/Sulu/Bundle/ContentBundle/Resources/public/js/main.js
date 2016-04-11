@@ -18,6 +18,7 @@ require.config({
         "type/internalLinks": '../../sulucontent/js/validation/types/internalLinks',
         "type/singleInternalLink": '../../sulucontent/js/validation/types/singleInternalLink',
         "type/block": '../../sulucontent/js/validation/types/block',
+        "type/toggler": '../../sulucontent/js/validation/types/toggler',
         "extensions/sulu-buttons-contentbundle": '../../sulucontent/js/extensions/sulu-buttons'
     }
 });
@@ -116,6 +117,14 @@ define([
                 route: 'content/contents/:webspace/:language/edit::id/:content',
                 callback: function(webspace, language, id, content) {
                     return '<div data-aura-component="content@sulucontent" data-aura-webspace="' + webspace + '" data-aura-language="' + language + '" data-aura-content="' + content + '" data-aura-id="' + id + '" data-aura-preview="true"/>';
+                }
+            });
+
+            // show webspace settings
+            sandbox.mvc.routes.push({
+                route: 'content/webspace/settings::id/:content',
+                callback: function(id) {
+                    return '<div data-aura-component="webspace/settings@sulucontent" data-aura-id="' + id + '" data-aura-webspace="' + id + '" />';
                 }
             });
         }

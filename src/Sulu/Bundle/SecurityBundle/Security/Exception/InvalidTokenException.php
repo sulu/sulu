@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,7 +16,7 @@ namespace Sulu\Bundle\SecurityBundle\Security\Exception;
  */
 class InvalidTokenException extends SecurityException
 {
-    /** @var string  */
+    /** @var string */
     private $token;
 
     public function __construct($token)

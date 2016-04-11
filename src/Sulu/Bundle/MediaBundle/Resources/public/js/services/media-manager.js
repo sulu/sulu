@@ -96,8 +96,9 @@ define([
     MediaManager.prototype = {
 
         /**
-         * Load media by given id
-         * @param mediaId
+         * Load media by given id.
+         * @param {Integer} mediaId
+         * @param {String} locale
          * @returns promise
          */
         loadOrNew: function(mediaId, locale) {
@@ -109,6 +110,9 @@ define([
                 promise.resolve(media.toJSON());
             } else {
                 media = Media.findOrCreate({id: mediaId});
+                media.clear();
+                media.set({id: mediaId});
+
                 media.fetch({
                     data: (!!locale) ? {locale: locale} : null,
                     success: function(response) {

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -62,8 +62,7 @@ class SearchResultRepresentation extends PaginatedRepresentation
             $pageParameterName,
             $limitParameterName,
             $absolute,
-            $total,
-            $time
+            $total
         );
 
         $this->totals = $totals;

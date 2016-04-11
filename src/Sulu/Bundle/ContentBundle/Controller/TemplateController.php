@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -85,6 +85,7 @@ class TemplateController extends Controller
         $templateIndex = null;
         $webspace = $request->get('webspace');
         $language = $request->get('language');
+        $uuid = $request->get('uuid');
         $type = $request->get('type', 'page');
 
         if ($key === null) {
@@ -111,6 +112,7 @@ class TemplateController extends Controller
                 'template' => $template,
                 'webspaceKey' => $webspace,
                 'languageCode' => $language,
+                'uuid' => $uuid,
                 'userLocale' => $userLocale,
                 'templateKey' => $key,
                 'fireEvent' => $fireEvent,

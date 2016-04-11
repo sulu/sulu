@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -43,6 +43,10 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
         $container->setParameter(
             'sulu_snippet.content-type.template',
             $config['types']['snippet']['template']
+        );
+        $container->setParameter(
+            'sulu_snippet.content-type.default_enabled',
+            $config['types']['snippet']['default_enabled']
         );
         $container->setParameter(
             'sulu_snippet.twig.snippet.cache_lifetime',

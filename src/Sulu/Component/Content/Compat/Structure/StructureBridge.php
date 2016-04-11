@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -27,6 +27,9 @@ use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 
+/**
+ * @deprecated Should be replaced by a proper StructureInterface implementation
+ */
 class StructureBridge implements StructureInterface
 {
     /**
@@ -455,7 +458,7 @@ class StructureBridge implements StructureInterface
                     [
                         'enabledShadowLanguages' => $this->inspector->getShadowLocales($document),
                         'shadowOn' => $document->isShadowLocaleEnabled(),
-                        'shadowBaseLanguage' => $document->getShadowLocale() ?: false,
+                        'shadowBaseLanguage' => $document->getShadowLocale(),
                     ]
                 );
             }

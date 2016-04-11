@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -36,6 +36,9 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('analytics_key')->defaultValue('UA-SULU-PREVIEW-KEY')->end()
                 ->end()
             ->end()
+            ->arrayNode('analytics')
+                ->canBeDisabled()
+            ->end()
             ->arrayNode('twig')
                 ->addDefaultsIfNotSet()
                 ->children()
@@ -57,6 +60,12 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('cache_lifetime')->defaultValue(43200)->end()
                         ->end()
                     ->end()
+                ->end()
+            ->end()
+            ->arrayNode('default_locale')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->scalarNode('provider_service_id')->defaultValue('sulu_website.default_locale.portal_provider')->end()
                 ->end()
             ->end();
 

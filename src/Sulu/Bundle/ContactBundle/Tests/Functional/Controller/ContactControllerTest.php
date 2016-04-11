@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -137,7 +137,7 @@ class ContactControllerTest extends SuluTestCase
 
     public function setUp()
     {
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
         $this->initOrm();
     }
 
@@ -148,6 +148,7 @@ class ContactControllerTest extends SuluTestCase
         $contact->setFirstName('Max');
         $contact->setLastName('Mustermann');
         $contact->setPosition('CEO');
+        $contact->setBirthday(new \DateTime());
         $contact->setFormOfAddress(1);
         $contact->setSalutation('Sehr geehrter Herr Dr Mustermann');
 
@@ -517,7 +518,7 @@ class ContactControllerTest extends SuluTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
@@ -830,8 +831,11 @@ class ContactControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(400, $client->getResponse()->getStatusCode());
-        $this->assertEquals('The "Sulu\Bundle\ContactBundle\Entity\Contact"-entity requires a "contact"-argument', $response->message);
+        $this->assertHttpStatusCode(400, $client->getResponse());
+        $this->assertEquals(
+            'The "Sulu\Bundle\ContactBundle\Entity\Contact"-entity requires a "contact"-argument',
+            $response->message
+        );
     }
 
     public function testPostWithEmptyAdditionalData()
@@ -886,7 +890,7 @@ class ContactControllerTest extends SuluTestCase
         $client = $this->createTestClient();
         $client->request('GET', '/api/contacts?flat=true&search=Nothing&searchFields=fullName');
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(0, $response->total);
@@ -906,7 +910,7 @@ class ContactControllerTest extends SuluTestCase
         $client = $this->createTestClient();
         $client->request('GET', '/api/contacts?flat=true&search=Erika&searchFields=fullName&fields=fullName');
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
@@ -1542,7 +1546,7 @@ class ContactControllerTest extends SuluTestCase
             ]
         );
 
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
     }
 
     public function testGetList()
@@ -1655,12 +1659,12 @@ class ContactControllerTest extends SuluTestCase
         $client = $this->createTestClient();
         $client->request('DELETE', '/api/contacts/' . $this->contact->getId());
 
-        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(204, $client->getResponse());
 
         $client = $this->createTestClient();
         $client->request('GET', '/api/contacts/' . $this->contact->getId());
 
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
     }
 
     public function testDeleteNotExisting()
@@ -1668,7 +1672,7 @@ class ContactControllerTest extends SuluTestCase
         $client = $this->createTestClient();
         $client->request('DELETE', '/api/contacts/4711');
 
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
 
         $client->request('GET', '/api/contacts?flat=true');
         $response = json_decode($client->getResponse()->getContent());
@@ -2171,6 +2175,30 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(false, $response->addresses[0]->primaryAddress);
         $this->assertEquals(false, $response->addresses[1]->primaryAddress);
         $this->assertEquals(true, $response->addresses[2]->primaryAddress);
+    }
+
+    public function testPostEmptyBirthday()
+    {
+        $client = $this->createTestClient();
+
+        $client->request('GET', '/api/contacts/' . $this->contact->getId());
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertArrayHasKey('birthday', $response);
+
+        $data = [
+            'firstName' => 'John',
+            'lastName' => 'Doe',
+            'title' => $this->contactTitle->getId(),
+            'birthday' => '',
+        ];
+
+        $client->request('PUT', '/api/contacts/' . $this->contact->getId(), $data);
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertArrayNotHasKey('birthday', $response);
+
+        $client->request('GET', '/api/contacts/' . $this->contact->getId());
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertArrayNotHasKey('birthday', $response);
     }
 
     public function sortAddressesPrimaryLast()

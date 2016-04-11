@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,7 +15,7 @@ use Jackalope\Query\QueryManager;
 use Jackalope\Session;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
 use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -68,7 +68,7 @@ class SnippetLocaleCopyCommand extends ContainerAwareCommand
         $this->setName('sulu:snippet:locale-copy');
         $this->setDescription('Copy snippet nodes from one locale to another');
         $this->setHelp(
-            <<<EOT
+            <<<'EOT'
             The <info>%command.name%</info> command copies the internationalized properties matching <info>srcLocale</info>
 to <info>destLocale</info> on all snippet nodes from a specific type.
 
@@ -105,7 +105,7 @@ EOT
 
         $this->output = $output;
 
-        $this->copyNodes($srcLocale, $destLocale, $overwrite);
+        $this->copyDocuments($srcLocale, $destLocale, $overwrite);
 
         if (false === $dryRun) {
             $this->output->writeln('<info>Saving ...</info>');
@@ -116,24 +116,24 @@ EOT
         }
     }
 
-    private function copyNodes($srcLocale, $destLocale, $overwrite)
+    private function copyDocuments($srcLocale, $destLocale, $overwrite)
     {
-        $nodes = $this->snippetRepository->getSnippets($srcLocale);
+        $documents = $this->snippetRepository->getSnippets($srcLocale);
 
-        foreach ($nodes as $node) {
-            $this->copyNode($srcLocale, $destLocale, $node, $overwrite);
+        foreach ($documents as $document) {
+            $this->copyDocument($srcLocale, $destLocale, $document, $overwrite);
         }
     }
 
-    private function copyNode($srcLocale, $destLocale, StructureInterface $structure, $overwrite = false)
+    private function copyDocument($srcLocale, $destLocale, StructureBehavior $document, $overwrite = false)
     {
         if (!$overwrite) {
-            $destStructure = $this->contentMapper->load($structure->getUuid(), null, $destLocale, true);
+            $destStructure = $this->contentMapper->load($document->getUuid(), null, $destLocale, true);
 
             if (!($destStructure->getType() && $destStructure->getType()->getName() === 'ghost')) {
                 $this->output->writeln(
                     '<info>Processing aborted: </info>' .
-                    $structure->getNodeName() . ' <comment>(use overwrite option to force)</comment>'
+                    $document->getNodeName() . ' <comment>(use overwrite option to force)</comment>'
                 );
 
                 return;
@@ -141,14 +141,14 @@ EOT
         }
 
         $this->contentMapper->copyLanguage(
-            $structure->getUuid(),
-            $structure->getChanger(),
+            $document->getUuid(),
+            $document->getChanger(),
             null,
             $srcLocale,
             $destLocale,
             Structure::TYPE_SNIPPET
         );
 
-        $this->output->writeln('<info>Processing: </info>' . $structure->getNodeName());
+        $this->output->writeln('<info>Processing: </info>' . $document->getNodeName());
     }
 }

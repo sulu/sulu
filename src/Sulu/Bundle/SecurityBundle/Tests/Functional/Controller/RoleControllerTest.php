@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -30,7 +30,7 @@ class RoleControllerTest extends SuluTestCase
 
     public function setUp()
     {
-        $this->em = $this->db('ORM')->getOm();
+        $this->em = $this->getEntityManager();
         $this->purgeDatabase();
 
         $this->securityType1 = new SecurityType();
@@ -474,7 +474,7 @@ class RoleControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
         $this->assertContains('11230', $response->message);
     }
 
@@ -488,7 +488,7 @@ class RoleControllerTest extends SuluTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals(2, count($response->_embedded->roles));
 
         $client->request(
@@ -496,7 +496,7 @@ class RoleControllerTest extends SuluTestCase
             '/api/roles/' . $this->role1->getId()
         );
 
-        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(204, $client->getResponse());
 
         $client->request(
             'GET',
@@ -504,7 +504,7 @@ class RoleControllerTest extends SuluTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $this->assertEquals(1, count($response->_embedded->roles));
     }
 
@@ -519,7 +519,7 @@ class RoleControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(404, $client->getResponse());
         $this->assertContains('11230', $response->message);
     }
 
@@ -530,7 +530,7 @@ class RoleControllerTest extends SuluTestCase
         $client->request('GET', '/api/roles');
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertHttpStatusCode(200, $client->getResponse());
 
         $this->assertEquals(2, count($response->_embedded->roles));
 

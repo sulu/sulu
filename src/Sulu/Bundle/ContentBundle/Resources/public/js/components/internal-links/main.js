@@ -28,6 +28,7 @@ define([], function() {
             dataAttribute: 'internal-links',
             actionIcon: 'fa-link',
             dataDefault: [],
+            navigateEvent: 'sulu.router.navigate',
             translations: {
                 noContentSelected: 'internal-links.nolinks-selected',
                 addLinks: 'internal-links.add',
@@ -43,8 +44,12 @@ define([], function() {
                 ].join('');
             },
 
-            contentItem: function(value) {
-                return ['<span class="value">', value, '</span>'].join('');
+            contentItem: function(id, value) {
+                return [
+                    '<a href="#" data-id="', id, '" class="link">',
+                    '    <span class="value">', value, '</span>',
+                    '</a>'
+                ].join('');
             }
         },
 
@@ -59,9 +64,23 @@ define([], function() {
          * custom event handling
          */
         bindCustomEvents = function() {
-            this.sandbox.on('husky.overlay.internal-links.' + this.options.instanceName + '.add.initialized', initColumnNavigation.bind(this));
+            this.sandbox.on(
+                'husky.overlay.internal-links.' + this.options.instanceName + '.add.initialized',
+                initColumnNavigation.bind(this)
+            );
 
             this.sandbox.on('husky.column-navigation.' + this.options.instanceName + '.action', selectLink.bind(this));
+
+            this.sandbox.dom.on(this.$el, 'click', function(e) {
+                var id = this.sandbox.dom.data(e.currentTarget, 'id');
+
+                this.sandbox.emit(
+                    this.options.navigateEvent,
+                    'content/contents/' + this.options.webspace + '/' + this.options.locale + '/edit:' + id + '/content'
+                );
+
+                return false;
+            }.bind(this), 'a.link');
         },
 
         /**
@@ -125,11 +144,14 @@ define([], function() {
         getColumnNavigationUrl = function() {
             var url = '/admin/api/nodes',
                 urlParts = [
-                    'webspace=' + this.options.webspace,
                     'language=' + this.options.locale,
                     'fields=title,order',
                     'webspace-nodes=all'
                 ];
+            
+            if (!!this.options.webspace) {
+                urlParts.push('webspace=' + this.options.webspace);
+            }
 
             return url + '?' + urlParts.join('&');
         },
@@ -198,7 +220,10 @@ define([], function() {
         },
 
         getItemContent: function(item) {
-            return templates.contentItem(item.title);
+            return templates.contentItem(
+                item[this.options.idKey],
+                item.title
+            );
         },
 
         sortHandler: function(ids) {

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,6 +20,7 @@ class RolesContentNavigationProvider implements ContentNavigationProviderInterfa
     {
         $details = new ContentNavigationItem('content-navigation.security.details');
         $details->setAction('details');
+        $details->setPosition(10);
         $details->setComponent('roles@sulusecurity');
         $details->setComponentOptions(['display' => 'form']);
 

@@ -1,0 +1,21 @@
+/node_modules/
+/vendor/
+/composer.phar
+/composer.lock
+/.sass-cache/
+*~
+
+# IDEs
+.idea/*
+*.iml
+
+# Jackrabbit
+/bin/jackrabbit-standalone*
+/bin/jackrabbit/*
+
+# test cache
+/Tests/app/cache/*
+/Tests/app/logs/*
+
+# custom phpunit xml
+phpunit.xml

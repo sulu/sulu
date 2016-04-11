@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -69,6 +69,59 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
                     $this->assertEquals($request->query->all(), $newRequest->query->all());
                     $this->assertEquals($request->request->all(), $newRequest->request->all());
                     $this->assertEquals($request->cookies->all(), $newRequest->cookies->all());
+
+                    return true;
+                }
+            )
+        )->shouldBeCalledTimes(1);
+        $requestStack->pop()->shouldBeCalled();
+
+        $translator->getLocale()->willReturn('de');
+        $translator->setLocale('de_at')->shouldBeCalled();
+        $translator->setLocale('de')->shouldBeCalled();
+
+        $renderer = new PreviewRenderer(
+            $activeTheme->reveal(),
+            $controllerResolver->reveal(),
+            $webspaceManager->reveal(),
+            $requestStack->reveal(),
+            $translator->reveal()
+        );
+
+        $result = $renderer->render($structure->reveal());
+
+        $this->assertEquals('TEST', $result);
+    }
+
+    public function testRenderWithoutCurrentRequest()
+    {
+        $activeTheme = $this->prophesize(ActiveTheme::class);
+        $controllerResolver = $this->prophesize(ControllerResolver::class);
+        $webspaceManager = $this->prophesize(WebspaceManager::class);
+        $requestStack = $this->prophesize(RequestStack::class);
+        $structure = $this->prophesize(PageBridge::class);
+        $translator = $this->prophesize(TranslatorInterface::class);
+
+        $webspaceManager->findWebspaceByKey('sulu_io')->willReturn($this->getWebspace());
+
+        $structure->getController()->willReturn('TestController:test');
+        $structure->getLanguageCode()->willReturn('de_at');
+        $structure->getWebspaceKey()->willReturn('sulu_io');
+
+        $controllerResolver->getController(Argument::type(Request::class))
+            ->will(
+                function () {
+                    return [new TestController(), 'testAction'];
+                }
+            );
+
+        $requestStack->getCurrentRequest()->willReturn(null);
+        $requestStack->push(
+            Argument::that(
+                function (Request $newRequest) {
+                    $this->assertEquals([], $newRequest->query->all());
+                    $this->assertEquals([], $newRequest->request->all());
+                    $this->assertEquals([], $newRequest->cookies->all());
 
                     return true;
                 }

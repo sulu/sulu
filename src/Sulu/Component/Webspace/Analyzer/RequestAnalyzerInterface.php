@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -13,6 +13,7 @@ namespace Sulu\Component\Webspace\Analyzer;
 
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,6 +44,13 @@ interface RequestAnalyzerInterface
      * A redirect is when the given URL is just defined to be a redirect
      */
     const MATCH_TYPE_REDIRECT = 3;
+
+    /**
+     * Type for a wildcard url.
+     *
+     * The url contains a wildcard, which can be replaced with anything.
+     */
+    const MATCH_TYPE_WILDCARD = 4;
 
     /**
      * Analyzes the current request, and saves the values for portal, language, country and segment for further usage.
@@ -136,4 +144,21 @@ interface RequestAnalyzerInterface
      * @return string
      */
     public function getAnalyticsKey();
+
+    /**
+     * Returns portal-information of request.
+     *
+     * @return PortalInformation
+     */
+    public function getPortalInformation();
+
+    /**
+     * Returns request attribute with given name.
+     *
+     * @param string $name
+     * @param mixed|null $default
+     *
+     * @return mixed
+     */
+    public function getAttribute($name, $default = null);
 }

@@ -17,7 +17,7 @@ define([
     return function($el, options) {
         var defaults = {},
 
-            validator = /^(\/[a-zA-Z0-9-_]+)+$/,
+            validator = /^(\/[a-z0-9][a-z0-9-_]*)+$/,
 
             subType = {
                 setValue: function(value) {
@@ -40,7 +40,7 @@ define([
                     var val = this.getValue(),
                         part = App.dom.data($el, 'part');
 
-                    return part.length > 0 && val !== '/' && validator.exec(val);
+                    return part.length > 0 && val !== '/' && validator.test(val);
                 }
             };
 

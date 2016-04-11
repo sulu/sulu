@@ -2,27 +2,52 @@
     margin: 50px 0;
 }
 
-.media-edit-versions-links {
+.media-edit-links {
     margin: 20px 0 0;
     border-top: 2px solid $grayLighter;
     border-bottom: 1px solid $grayLighter;
 }
 
-.media-edit-versions-link {
-    color: black;
+.media-edit-link {
+    color: $grayLight;
     display: block;
     padding: 15px 3px;
     border-bottom: 1px solid $grayLighter;
+
+    .fa-cloud-download {
+        display: none;
+    }
+
+    &:hover {
+        .fa-cloud-download {
+            display: inline-block;
+        }
+    }
+
+    .media-edit-copied {
+        color: $grayLight;
+    }
+}
+
+a.media-edit-link,
+.media-edit-link a {
+    color: $black;
     text-decoration: none;
 }
 
-.media-edit-versions-title {
+.media-edit-title {
     .active & {
         font-weight: bold;
     }
 }
 
-.media-edit-versions-created {
+.media-edit-icons {
+    float: right;
+    color: $black;
+    cursor: pointer;
+}
+
+.media-edit-created {
     float: right;
     color: $grayLight;
 }
@@ -33,6 +58,22 @@
     width: 179px;
     height: 179px;
     position: relative;
+
+    &.icon {
+        color: $grayLight;
+        font-size: 150px;
+        text-align: center;
+        vertical-align: middle;
+        padding-top: 15px;
+    }
+
+    .file-version-change,
+    img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-size: $baseFontSize;
+    }
 
     #file-version-change {
         width: 100%;
@@ -71,4 +112,20 @@
 
 .overlay-footer .btn.media-reset-preview-action.hide {
     display: none;
+}
+
+#media-info {
+    textarea.description {
+        height: 90px;
+        min-height: 90px;
+    }
+
+    .media-info-preview {
+        text-align: center;
+
+        span.description {
+            font-size: 12px;
+            color: $grayLight;
+        }
+    }
 }

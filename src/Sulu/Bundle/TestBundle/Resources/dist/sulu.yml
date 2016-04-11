@@ -54,6 +54,13 @@ sulu_core:
         en: English
     translations: ['de', 'en']
     fallback_locale: 'en'
+    phpcr:
+        backend:
+            type: "%phpcr.transport%"
+            url:  "%phpcr.backend_url%"
+        workspace: "%phpcr.workspace%"
+        username: "%phpcr.username%"
+        password: "%phpcr.password%"
 
 sulu_content:
     search:
@@ -89,16 +96,28 @@ doctrine:
                 dir: "%kernel.root_dir%/../../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
                 alias: GedmoTree # this one is optional and will default to the name set for the mapping
                 is_bundle: false
+        dql:
+            string_functions:
+                group_concat: Oro\ORM\Query\AST\Functions\String\GroupConcat
+    dbal:
+        driver: "%database.driver%"
+        host: "%database.host%"
+        port: "%database.port%"
+        dbname: "%database.name%"
+        user: "%database.user%"
+        password: "%database.password%"
+        server_version: "%database.version%"
+        charset:  UTF8
 
 stof_doctrine_extensions:
     orm:
         default:
             tree: true
 
-parameters:
-    # Just a dirty hack to get the jms serializer bundle correctly working
-    # schmittjoh/JMSSerializerBundle#270 (comment)
-    jms_serializer.cache_naming_strategy.class: JMS\Serializer\Naming\IdenticalPropertyNamingStrategy
+# Just a dirty hack to get the jms serializer bundle correctly working
+# https://github.com/schmittjoh/JMSSerializerBundle/pull/270#issuecomment-21171800
+services:
+    jms_serializer.cache_naming_strategy: "@sulu_core.serialize_caching_strategy"
 
 sulu_test:
     enable_test_user_provider: true
@@ -128,3 +147,4 @@ dubture_f_fmpeg:
     ffprobe_binary: /usr/local/bin/ffprobe # path to ffprobe
     binary_timeout: 300 # Use 0 for infinite
     threads_count: 4
+

@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config, WebsocketManager) {
+define(['jquery', 'app-config', 'config', 'websocket-manager'], function($, AppConfig, Config, WebsocketManager) {
 
     'use strict';
 
@@ -35,7 +35,7 @@ define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config
             },
 
             stop = function() {
-                var def;
+                var def = $.Deferred();
                 if (!!this.initiated) {
                     def = this.client.send(MESSAGE_HANDLER_NAME, {
                         command: 'stop',
@@ -43,6 +43,7 @@ define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config
                     });
                     this.initiated = false;
                 }
+
                 return def.promise();
             },
 
@@ -101,11 +102,21 @@ define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config
                 if (!!this.data.id && !!this.initiated) {
                     var $element = $(e.currentTarget),
                         element = this.sandbox.dom.data($element, 'element'),
-                        sequence = this.getSequence($element);
+                        elementGroup = this.sandbox.dom.data($element, 'elementGroup'),
+                        sequence = this.getSequence($element),
+                        value;
 
-                    if (!!sequence) {
-                        update.call(this, sequence, element.getValue());
+                    if (!sequence || (!element && !elementGroup)) {
+                        return;
                     }
+
+                    if (!!elementGroup) {
+                        value = elementGroup.getValue();
+                    } else if (!!element) {
+                        value = element.getValue();
+                    }
+
+                    update.call(this, sequence, value);
                 }
             },
 
@@ -155,6 +166,7 @@ define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config
 
                 this.config = Config.get('sulu.content.preview');
 
+                bindCustomEvents.call(this);
                 this.client = WebsocketManager.getClient(WEBSOCKET_APP_NAME, this.config.websocket);
             },
 
@@ -163,7 +175,6 @@ define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config
                 this.options = options;
                 start.call(this).then(function() {
                     bindDomEvents.call(this);
-                    bindCustomEvents.call(this);
 
                     this.sandbox.emit('sulu.preview.initiated');
                 }.bind(this));

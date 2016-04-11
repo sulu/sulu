@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -48,7 +48,7 @@ class CleanupHistoryCommand extends ContainerAwareCommand
         $this->setName('sulu:content:cleanup-history');
         $this->setDescription('Cleanup resource-locator history');
         $this->setHelp(
-            <<<EOT
+            <<<'EOT'
 The <info>%command.name%</info> command cleanup the history of the resource-locator of a <info>locale</info>.
 
     %command.full_name% sulu_io de --dry-run

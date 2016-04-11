@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SecurityBundle\EventListener;
 
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
@@ -59,21 +60,21 @@ class SuluSecurityListener
 
         switch ($request->getMethod()) {
             case 'GET':
-                $permission = 'view';
+                $permission = PermissionTypes::VIEW;
                 break;
             case 'POST':
                 if ($controllerDefinition[1] == 'postAction') { // means that the ClassResourceInterface has to be used
-                    $permission = 'add';
+                    $permission = PermissionTypes::ADD;
                 } else {
-                    $permission = 'edit';
+                    $permission = PermissionTypes::EDIT;
                 }
                 break;
             case 'PUT':
             case 'PATCH':
-                $permission = 'edit';
+                $permission = PermissionTypes::EDIT;
                 break;
             case 'DELETE':
-                $permission = 'delete';
+                $permission = PermissionTypes::DELETE;
                 break;
         }
 

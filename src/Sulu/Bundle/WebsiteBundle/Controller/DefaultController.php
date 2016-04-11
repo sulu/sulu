@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use Sulu\Component\Content\Compat\StructureInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -45,89 +44,41 @@ class DefaultController extends WebsiteController
 
     /**
      * Creates a redirect for configured webspaces.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     *
+     * @deprecated since 1.2 use SuluWebsiteBundle:Redirect:redirectWebspace instead
      */
     public function redirectWebspaceAction(Request $request)
     {
-        $url = $this->resolveRedirectUrl(
-            $request->get('redirect'),
-            $request->getUri()
-        );
+        @trigger_error('SuluWebsiteBundle:Default:redirectWebspace is deprecated since version 1.2. Use the "SuluWebsiteBundle:Redirect:redirectWebspace" action instead.', E_USER_DEPRECATED);
 
-        return new RedirectResponse($url, 301);
+        return $this->forward(
+            'SuluWebsiteBundle:Redirect:redirectWebspace',
+            $request->attributes->all(),
+            $request->query->all()
+        );
     }
 
     /**
      * Creates a redirect for *.html to * (without html).
+     *
+     * @param Request $request
+     *
+     * @return Response
+     *
+     * @deprecated since 1.2 use SuluWebsiteBundle:Redirect:redirect instead
      */
     public function redirectAction(Request $request)
     {
-        return new RedirectResponse($request->get('url'), 301);
-    }
+        @trigger_error('SuluWebsiteBundle:Default:redirect is deprecated since version 1.2. Use the "SuluWebsiteBundle:Redirect:redirect" action instead.', E_USER_DEPRECATED);
 
-    /**
-     * Resolve the redirect URL, appending any additional path data.
-     *
-     * @param string $redirectUrl Redirect webspace URI
-     * @param string $requestUri The actual incoming request URI
-     *
-     * @return string URL to redirect to
-     */
-    protected function resolveRedirectUrl($redirectUrl, $requestUri)
-    {
-        $redirectInfo = $this->parseUrl($redirectUrl);
-        $requestInfo = $this->parseUrl($requestUri);
-
-        $url = sprintf('%s://%s', $requestInfo['scheme'], $requestInfo['host']);
-
-        if (isset($redirectInfo['host'])) {
-            $url = sprintf('%s://%s', $requestInfo['scheme'], $redirectInfo['host']);
-        }
-
-        if (isset($requestInfo['port'])) {
-            $url .= ':' . $requestInfo['port'];
-        }
-
-        if (
-            isset($redirectInfo['path'])
-            && (
-                // if requested url not starting with redirectUrl it need to be added
-                !isset($requestInfo['path'])
-                || strpos($requestInfo['path'], $redirectInfo['path'] . '/') !== 0
-            )
-        ) {
-            $url .= $redirectInfo['path'];
-        }
-
-        if (isset($requestInfo['path'])) {
-            $url .= $requestInfo['path'];
-            $url = rtrim($url, '/');
-        }
-
-        if (isset($requestInfo['query'])) {
-            $url .= '?' . $requestInfo['query'];
-        }
-
-        if (isset($requestInfo['fragment'])) {
-            $url .= '#' . $requestInfo['fragment'];
-        }
-
-        return $url;
-    }
-
-    /**
-     * Prefix http to the URL if it is missing and
-     * then parse the string using parse_url.
-     *
-     * @param string
-     *
-     * @return string
-     */
-    private function parseUrl($url)
-    {
-        if (!preg_match('{^https?://}', $url)) {
-            $url = 'http://' . $url;
-        }
-
-        return parse_url($url);
+        return $this->forward(
+            'SuluWebsiteBundle:Redirect:redirect',
+            $request->attributes->all(),
+            $request->query->all()
+        );
     }
 }

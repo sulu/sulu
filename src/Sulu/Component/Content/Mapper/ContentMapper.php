@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -39,9 +39,10 @@ use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Exception\InvalidOrderPositionException;
+use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Exception\TranslatedNodeNotFoundException;
 use Sulu\Component\Content\Extension\ExtensionInterface;
-use Sulu\Component\Content\Extension\ExtensionManager;
+use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Form\Exception\InvalidFormException;
 use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
@@ -67,9 +68,14 @@ class ContentMapper implements ContentMapperInterface
     private $contentTypeManager;
 
     /**
-     * @var ExtensionManager
+     * @var StructureManagerInterface
      */
     private $structureManager;
+
+    /**
+     * @var ExtensionManagerInterface
+     */
+    private $extensionManager;
 
     /**
      * @var SessionManagerInterface
@@ -94,7 +100,7 @@ class ContentMapper implements ContentMapperInterface
     /**
      * @var RlpStrategyInterface
      */
-    private $strategy;
+    private $rlpStrategy;
 
     /**
      * @Var DocumentManager
@@ -128,14 +134,16 @@ class ContentMapper implements ContentMapperInterface
         DocumentInspector $inspector,
         PropertyEncoder $encoder,
         StructureManagerInterface $structureManager,
+        ExtensionManagerInterface $extensionManager,
         ContentTypeManagerInterface $contentTypeManager,
         SessionManagerInterface $sessionManager,
         EventDispatcherInterface $eventDispatcher,
-        RlpStrategyInterface $strategy,
+        RlpStrategyInterface $rlpStrategy,
         NamespaceRegistry $namespaceRegistry
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
+        $this->extensionManager = $extensionManager;
         $this->sessionManager = $sessionManager;
         $this->webspaceManager = $webspaceManager;
         $this->documentManager = $documentManager;
@@ -143,10 +151,10 @@ class ContentMapper implements ContentMapperInterface
         $this->inspector = $inspector;
         $this->encoder = $encoder;
         $this->namespaceRegistry = $namespaceRegistry;
+        $this->rlpStrategy = $rlpStrategy;
 
         // deprecated
         $this->eventDispatcher = $eventDispatcher;
-        $this->strategy = $strategy;
     }
 
     /**
@@ -192,14 +200,14 @@ class ContentMapper implements ContentMapperInterface
         // map explicit arguments to data
         $data['parent'] = $parentUuid;
         $data['workflowStage'] = $state;
-        $data['structureType'] = $structureType;
+        $data['template'] = $structureType;
 
         if ($isShadow) {
-            $data['shadowLocaleEnabled'] = true;
+            $data['shadowOn'] = true;
         }
 
         if ($shadowBaseLanguage) {
-            $data['shadowLocale'] = $shadowBaseLanguage;
+            $data['shadowBaseLanguage'] = $shadowBaseLanguage;
         }
 
         if ($uuid) {
@@ -219,10 +227,6 @@ class ContentMapper implements ContentMapperInterface
             ));
         }
 
-        $options = [
-            'clear_missing_content' => !$partialUpdate,
-        ];
-
         // We eventually handle this from the controller, in which case we will not
         // have to deal with not knowing what sort of form we will have.
         if ($document instanceof WebspaceBehavior) {
@@ -234,8 +238,8 @@ class ContentMapper implements ContentMapperInterface
 
         $form = $this->formFactory->create($documentAlias, $document, $options);
 
-        $clearMissing = false;
-        $form->submit($data, $clearMissing);
+        $clearMissingContent = false;
+        $form->submit($data, $clearMissingContent);
 
         if (!$form->isValid()) {
             throw new InvalidFormException($form);
@@ -243,16 +247,12 @@ class ContentMapper implements ContentMapperInterface
 
         $this->documentManager->persist($document, $locale, [
             'user' => $userId,
+            'clear_missing_content' => !$partialUpdate,
         ]);
 
         $this->documentManager->flush();
 
-        $structure = $this->documentToStructure($document);
-
-        $event = new ContentNodeEvent($this->inspector->getNode($document), $structure);
-        $this->eventDispatcher->dispatch(ContentEvents::NODE_POST_SAVE, $event);
-
-        return $structure;
+        return $this->documentToStructure($document);
     }
 
     /**
@@ -287,7 +287,7 @@ class ContentMapper implements ContentMapperInterface
         }
 
         // save data of extensions
-        $extension = $this->structureManager->getExtension($document->getStructureType(), $extensionName);
+        $extension = $this->extensionManager->getExtension($document->getStructureType(), $extensionName);
         $node = $this->inspector->getNode($document);
 
         $extension->save($node, $data, $webspaceKey, $locale);
@@ -384,7 +384,7 @@ class ContentMapper implements ContentMapperInterface
      */
     public function loadByResourceLocator($resourceLocator, $webspaceKey, $locale, $segmentKey = null)
     {
-        $uuid = $this->getResourceLocator()->loadContentNodeUuid(
+        $uuid = $this->rlpStrategy->loadByResourceLocator(
             $resourceLocator,
             $webspaceKey,
             $locale,
@@ -600,20 +600,22 @@ class ContentMapper implements ContentMapperInterface
         $document = $this->documentManager->find($uuid, $srcLocale);
         $parentDocument = $this->inspector->getParent($document);
 
-        $resourceLocatorType = $this->getResourceLocator();
-
         foreach ($destLocales as $destLocale) {
             $document->setLocale($destLocale);
             $document->getStructure()->bind($document->getStructure()->toArray());
 
             // TODO: This can be removed if RoutingAuto replaces the ResourceLocator code.
             if ($document instanceof ResourceSegmentBehavior) {
-                $parentResourceLocator = $resourceLocatorType->getResourceLocatorByUuid(
-                    $parentDocument->getUUid(),
-                    $webspaceKey,
-                    $destLocale
-                );
-                $resourceLocator = $resourceLocatorType->getStrategy()->generate(
+                try {
+                    $parentResourceLocator = $this->rlpStrategy->loadByContentUuid(
+                        $this->inspector->getUuid($parentDocument),
+                        $webspaceKey,
+                        $destLocale
+                    );
+                } catch (ResourceLocatorNotFoundException $e) {
+                    $parentResourceLocator = null;
+                }
+                $resourceLocator = $this->rlpStrategy->generate(
                     $document->getTitle(),
                     $parentResourceLocator,
                     $webspaceKey,
@@ -683,7 +685,7 @@ class ContentMapper implements ContentMapperInterface
 
         // this should not be necessary (see https://github.com/sulu-io/sulu-document-manager/issues/39)
         foreach ($siblingDocuments as $siblingDocument) {
-            $this->documentManager->persist($siblingDocument, $locale);
+            $this->documentManager->persist($siblingDocument, null, ['auto_name' => false]);
         }
 
         $this->documentManager->flush();
@@ -749,9 +751,8 @@ class ContentMapper implements ContentMapperInterface
                 continue;
             }
 
-            $strategy = $this->getResourceLocator()->getStrategy();
             $nodeName = PathHelper::getNodeName($document->getResourceSegment());
-            $newResourceLocator = $strategy->generate(
+            $newResourceLocator = $this->rlpStrategy->generate(
                 $nodeName,
                 $parentDocument->getResourceSegment(),
                 $webspaceKey,
@@ -841,7 +842,7 @@ class ContentMapper implements ContentMapperInterface
 
                     $result[] = $item;
                 }
-            };
+            }
         }
 
         return $result;
@@ -1082,7 +1083,7 @@ class ContentMapper implements ContentMapperInterface
      */
     public function restoreHistoryPath($path, $userId, $webspaceKey, $locale, $segmentKey = null)
     {
-        $this->strategy->restoreByPath($path, $webspaceKey, $locale, $segmentKey);
+        $this->rlpStrategy->restoreByPath($path, $webspaceKey, $locale, $segmentKey);
 
         $content = $this->loadByResourceLocator($path, $webspaceKey, $locale, $segmentKey);
         $property = $content->getPropertyByTagName('sulu.rlp');

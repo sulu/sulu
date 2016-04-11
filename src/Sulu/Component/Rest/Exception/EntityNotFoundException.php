@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -34,12 +34,12 @@ class EntityNotFoundException extends RestException
      * @param string $entity The type of the entity, which was not found
      * @param int    $id     The id of the entity, which was not found
      */
-    public function __construct($entity, $id)
+    public function __construct($entity, $id, $previous = null)
     {
         $this->entity = $entity;
         $this->id = $id;
         $message = 'Entity with the type "' . $entity . '" and the id "' . $id . '" not found.';
-        parent::__construct($message, 0);
+        parent::__construct($message, 0, $previous);
     }
 
     /**

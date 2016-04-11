@@ -21,6 +21,11 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         copy: {
+            templates: {
+                files: [
+                    {expand: true, cwd: srcpath, src: ['**/*.html'], dest: destpath}
+                ]
+            },
             hooks: {
                 files: [
                     {
@@ -67,7 +72,7 @@ module.exports = function (grunt) {
             // TODO: options: { banner: '<%= meta.banner %>' },
             compress: {
                 files: {
-                    'dist/main.min.css': ['Resources/public/css/']
+                    'Resources/public/css/main.min.css': ['Resources/public/css/main.css']
                 }
             }
         },
@@ -97,9 +102,20 @@ module.exports = function (grunt) {
         }
     });
 
+    grunt.registerTask('build:css', [
+        'compass:dev',
+        'cssmin'
+    ]);
+
+    grunt.registerTask('build:js', [
+        'replace:build',
+        'copy:templates',
+        'uglify'
+    ]);
+
     grunt.registerTask('build', [
-        'uglify',
-        'replace:build'
+        'build:js',
+        'build:css'
     ]);
 
     grunt.registerTask('default', [

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -16,7 +16,8 @@ use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,10 +59,26 @@ class PreviewTest extends SuluTestCase
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');
         $this->preview = $this->getContainer()->get('sulu_content.preview');
 
-        /** @var AdminRequestAnalyzer $requestAnalyzer */
+        /** @var RequestAnalyzer $requestAnalyzer */
         $requestAnalyzer = $this->getContainer()->get('sulu_core.webspace.request_analyzer');
-        $requestAnalyzer->setWebspaceKey('sulu_io');
-        $requestAnalyzer->setLocalizationCode('en');
+
+        $webspace = $this->getContainer()->get('sulu_core.webspace.webspace_manager')->findWebspaceByKey('sulu_io');
+        $localization = $webspace->getLocalization('de_at');
+
+        $attributes = new \ReflectionProperty($requestAnalyzer, 'attributes');
+        $attributes->setAccessible(true);
+
+        $attributes->setValue(
+            $requestAnalyzer,
+            new RequestAttributes(
+                [
+                    'webspaceKey' => $webspace->getKey(),
+                    'webspace' => $webspace,
+                    'locale' => $localization->getLocalization(),
+                    'localization' => $localization,
+                ]
+            )
+        );
 
         $class = new \ReflectionClass(get_class($this->preview));
         $property = $class->getProperty('previewCache');
@@ -107,8 +124,8 @@ class PreviewTest extends SuluTestCase
             ],
         ];
 
-        $data[0] = $this->mapper->save($data[0], 'overview', 'sulu_io', 'en', 1);
-        $data[1] = $this->mapper->save($data[1], 'overview', 'sulu_io', 'en', 1);
+        $data[0] = $this->mapper->save($data[0], 'overview', 'sulu_io', 'de_at', 1);
+        $data[1] = $this->mapper->save($data[1], 'overview', 'sulu_io', 'de_at', 1);
 
         return $data;
     }
@@ -169,14 +186,14 @@ class PreviewTest extends SuluTestCase
     {
         $data = $this->prepareData();
 
-        $content = $this->preview->start(1, $data[0]->getUuid(), 'sulu_io', 'en');
+        $content = $this->preview->start(1, $data[0]->getUuid(), 'sulu_io', 'de_at');
 
         // check result
         $this->assertEquals('Test1', $content->getPropertyValue('title'));
         $this->assertEquals('Lorem Ipsum dolorem apsum', $content->getPropertyValue('article'));
 
         // check cache
-        $cachedPage = $this->previewCache->fetchStructure(1, $data[0]->getUuid(), 'sulu_io', 'en');
+        $cachedPage = $this->previewCache->fetchStructure(1, $data[0]->getUuid(), 'sulu_io', 'de_at');
         $this->assertNotNull($cachedPage);
         $this->assertEquals('Test1', $cachedPage->getPropertyValue('title'));
         $this->assertEquals('Lorem Ipsum dolorem apsum', $cachedPage->getPropertyValue('article'));
@@ -186,20 +203,20 @@ class PreviewTest extends SuluTestCase
     {
         $data = $this->prepareData();
 
-        $this->preview->start(1, $data[0]->getUuid(), 'sulu_io', 'en');
-        $this->assertTrue($this->previewCache->contains(1, $data[0]->getUuid(), 'sulu_io', 'en'));
+        $this->preview->start(1, $data[0]->getUuid(), 'sulu_io', 'de_at');
+        $this->assertTrue($this->previewCache->contains(1, $data[0]->getUuid(), 'sulu_io', 'de_at'));
 
-        $this->preview->stop(1, $data[0]->getUuid(), 'sulu_io', 'en');
-        $this->assertFalse($this->previewCache->contains(1, $data[0]->getUuid(), 'sulu_io', 'en'));
+        $this->preview->stop(1, $data[0]->getUuid(), 'sulu_io', 'de_at');
+        $this->assertFalse($this->previewCache->contains(1, $data[0]->getUuid(), 'sulu_io', 'de_at'));
     }
 
     public function testUpdate()
     {
         $data = $this->prepareData();
 
-        $this->preview->start(1, $data[0]->getUuid(), 'sulu_io', 'en');
-        $this->preview->updateProperty(1, $data[0]->getUuid(), 'sulu_io', 'en', 'title', 'aaaa');
-        $content = $this->preview->getChanges(1, $data[0]->getUuid(), 'sulu_io', 'en');
+        $this->preview->start(1, $data[0]->getUuid(), 'sulu_io', 'de_at');
+        $this->preview->updateProperty(1, $data[0]->getUuid(), 'sulu_io', 'de_at', 'title', 'aaaa');
+        $content = $this->preview->getChanges(1, $data[0]->getUuid(), 'sulu_io', 'de_at');
 
         // check result
         $this->assertEquals(
@@ -208,8 +225,8 @@ class PreviewTest extends SuluTestCase
         );
 
         // check cache
-        $this->assertTrue($this->previewCache->contains(1, $data[0]->getUuid(), 'sulu_io', 'en'));
-        $content = $this->previewCache->fetchStructure(1, $data[0]->getUuid(), 'sulu_io', 'en');
+        $this->assertTrue($this->previewCache->contains(1, $data[0]->getUuid(), 'sulu_io', 'de_at'));
+        $content = $this->previewCache->fetchStructure(1, $data[0]->getUuid(), 'sulu_io', 'de_at');
         $this->assertEquals('aaaa', $content->getPropertyValue('title'));
         $this->assertEquals('Lorem Ipsum dolorem apsum', $content->getPropertyValue('article'));
     }
@@ -218,12 +235,12 @@ class PreviewTest extends SuluTestCase
     {
         $data = $this->prepareData();
 
-        $this->preview->start(1, $data[0]->getUuid(), 'sulu_io', 'en');
+        $this->preview->start(1, $data[0]->getUuid(), 'sulu_io', 'de_at');
         $this->preview->updateProperty(
             1,
             $data[0]->getUuid(),
             'sulu_io',
-            'en',
+            'de_at',
             'block,0,article,0',
             'New-Block-Article-1-1'
         );
@@ -231,7 +248,7 @@ class PreviewTest extends SuluTestCase
             1,
             $data[0]->getUuid(),
             'sulu_io',
-            'en',
+            'de_at',
             'block,0,article,1',
             'New-Block-Article-1-2'
         );
@@ -239,7 +256,7 @@ class PreviewTest extends SuluTestCase
             1,
             $data[0]->getUuid(),
             'sulu_io',
-            'en',
+            'de_at',
             'block,0,title',
             'New-Block-Title-1'
         );
@@ -247,7 +264,7 @@ class PreviewTest extends SuluTestCase
             1,
             $data[0]->getUuid(),
             'sulu_io',
-            'en',
+            'de_at',
             'block,1,title',
             'New-Block-Title-2'
         );
@@ -255,7 +272,7 @@ class PreviewTest extends SuluTestCase
             1,
             $data[0]->getUuid(),
             'sulu_io',
-            'en'
+            'de_at'
         );
 
         // check result
@@ -287,8 +304,8 @@ class PreviewTest extends SuluTestCase
         );
 
         // check cache
-        $this->assertTrue($this->previewCache->contains(1, $data[0]->getUuid(), 'sulu_io', 'en'));
-        $content = $this->previewCache->fetchStructure(1, $data[0]->getUuid(), 'sulu_io', 'en');
+        $this->assertTrue($this->previewCache->contains(1, $data[0]->getUuid(), 'sulu_io', 'de_at'));
+        $content = $this->previewCache->fetchStructure(1, $data[0]->getUuid(), 'sulu_io', 'de_at');
         $this->assertEquals(
             [
                 [
@@ -316,12 +333,12 @@ class PreviewTest extends SuluTestCase
     {
         $data = $this->prepareData();
 
-        $this->preview->start(1, $data[0]->getUuid(), 'sulu_io', 'en');
+        $this->preview->start(1, $data[0]->getUuid(), 'sulu_io', 'de_at');
         $response = $this->preview->render(
             1,
             $data[0]->getUuid(),
             'sulu_io',
-            'en'
+            'de_at'
         );
 
         $expected = $this->render(
@@ -352,12 +369,12 @@ class PreviewTest extends SuluTestCase
         $data = $this->prepareData();
 
         // start preview from FORM
-        $content = $this->preview->start(1, $data[0]->getUuid(), 'sulu_io', 'en');
+        $content = $this->preview->start(1, $data[0]->getUuid(), 'sulu_io', 'de_at');
         $this->assertEquals('Test1', $content->getPropertyValue('title'));
         $this->assertEquals('Lorem Ipsum dolorem apsum', $content->getPropertyValue('article'));
 
         // render PREVIEW
-        $response = $this->preview->render(1, $data[0]->getUuid(), 'sulu_io', 'en');
+        $response = $this->preview->render(1, $data[0]->getUuid(), 'sulu_io', 'de_at');
         $expected = $this->render(
             'Test1',
             'Lorem Ipsum dolorem apsum',
@@ -381,16 +398,16 @@ class PreviewTest extends SuluTestCase
         $this->assertEquals($expected, $response);
 
         // change a property in FORM
-        $content = $this->preview->updateProperty(1, $data[0]->getUuid(), 'sulu_io', 'en', 'title', 'New Title');
+        $content = $this->preview->updateProperty(1, $data[0]->getUuid(), 'sulu_io', 'de_at', 'title', 'New Title');
         $this->assertEquals('New Title', $content->getPropertyValue('title'));
         $this->assertEquals('Lorem Ipsum dolorem apsum', $content->getPropertyValue('article'));
 
-        $content = $this->preview->updateProperty(1, $data[0]->getUuid(), 'sulu_io', 'en', 'article', 'asdf');
+        $content = $this->preview->updateProperty(1, $data[0]->getUuid(), 'sulu_io', 'de_at', 'article', 'asdf');
         $this->assertEquals('New Title', $content->getPropertyValue('title'));
         $this->assertEquals('asdf', $content->getPropertyValue('article'));
 
         // update PREVIEW
-        $changes = $this->preview->getChanges(1, $data[0]->getUuid(), 'sulu_io', 'en');
+        $changes = $this->preview->getChanges(1, $data[0]->getUuid(), 'sulu_io', 'de_at');
         $this->assertEquals(2, count($changes));
         $this->assertEquals(
             [['property' => 'title', 'html' => 'New Title'], ['property' => 'title', 'html' => 'PREF: New Title']],
@@ -399,11 +416,11 @@ class PreviewTest extends SuluTestCase
         $this->assertEquals([['property' => 'article', 'html' => 'asdf']], $changes['article']);
 
         // update PREVIEW
-        $changes = $this->preview->getChanges(1, $data[0]->getUuid(), 'sulu_io', 'en');
+        $changes = $this->preview->getChanges(1, $data[0]->getUuid(), 'sulu_io', 'de_at');
         $this->assertEquals(0, count($changes));
 
         // rerender PREVIEW
-        $response = $this->preview->render(1, $data[0]->getUuid(), 'sulu_io', 'en');
+        $response = $this->preview->render(1, $data[0]->getUuid(), 'sulu_io', 'de_at');
         $expected = $this->render(
             'New Title',
             'asdf',

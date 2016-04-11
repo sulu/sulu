@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -42,12 +42,33 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
     /**
      * Returns the portal with the given url (which has not necessarily to be the main url).
      *
-     * @param string $url         The url to search for
+     * @param string $url The url to search for
      * @param string $environment The environment in which the url should be searched
      *
      * @return PortalInformation|null
      */
     public function findPortalInformationByUrl($url, $environment);
+
+    /**
+     * Returns all portal which matches the given url (which has not necessarily to be the main url).
+     *
+     * @param string $url The url to search for
+     * @param string $environment The environment in which the url should be searched
+     *
+     * @return PortalInformation[]
+     */
+    public function findPortalInformationsByUrl($url, $environment);
+
+    /**
+     * Returns all portal which matches the given webspace-key and locale.
+     *
+     * @param string $webspaceKey The webspace-key which the portal should match
+     * @param string $locale The locale which the portal should match
+     * @param string $environment The environment in which the url should be searched
+     *
+     * @return \Sulu\Component\Webspace\PortalInformation[]
+     */
+    public function findPortalInformationsByWebspaceKeyAndLocale($webspaceKey, $locale, $environment);
 
     /**
      * Returns all possible urls for resourcelocator.
@@ -62,6 +83,27 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
      * @return array
      */
     public function findUrlsByResourceLocator(
+        $resourceLocator,
+        $environment,
+        $languageCode,
+        $webspaceKey = null,
+        $domain = null,
+        $scheme = 'http'
+    );
+
+    /**
+     * Returns the main url for resourcelocator.
+     *
+     * @param string $resourceLocator
+     * @param string $environment
+     * @param string $languageCode
+     * @param null|string $webspaceKey
+     * @param null|string $domain
+     * @param string $scheme
+     *
+     * @return string
+     */
+    public function findUrlByResourceLocator(
         $resourceLocator,
         $environment,
         $languageCode,
@@ -94,6 +136,15 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
      * @return PortalInformation[]
      */
     public function getPortalInformations($environment);
+
+    /**
+     * Returns the portal informations for the given webspace managed by this WebspaceManager.
+     *
+     * @param string $environment
+     *
+     * @return PortalInformation[]
+     */
+    public function getPortalInformationsByWebspaceKey($environment, $webspaceKey);
 
     /**
      * Returns all the webspaces managed by this specific instance.

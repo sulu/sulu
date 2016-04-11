@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -27,8 +27,6 @@ use Sulu\Component\Rest\ApiWrapper;
  */
 class AccountAddress extends ApiWrapper
 {
-    /**
-     */
     public function __construct(AccountAddressEntity $address)
     {
         $this->entity = $address;

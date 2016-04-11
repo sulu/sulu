@@ -5,13 +5,61 @@
 
     <parameters>
         <parameter key="sulu_website.data_collector.sulu_collector.class">Sulu\Bundle\WebsiteBundle\DataCollector\SuluCollector</parameter>
+        <parameter key="sulu_website.engine.initialize" type="constant">Sulu\Bundle\WebsiteBundle\Templating\EngineEvents::INITIALIZE</parameter>
     </parameters>
 
     <services>
         <!-- request analyzer data collector -->
         <service id="sulu_website.data_collector.sulu_collector" class="%sulu_website.data_collector.sulu_collector.class%">
-            <argument type="service" id="sulu_core.webspace.request_analyzer" />
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+
             <tag name="data_collector" template="SuluWebsiteBundle:Profiler:layout" id="sulu"/>
+            <tag name="sulu.context" context="website"/>
+        </service>
+
+        <service id="sulu_website.provider.content" class="Sulu\Bundle\WebsiteBundle\Routing\ContentRouteProvider">
+            <argument type="service" id="sulu.content.mapper"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument type="service" id="sulu_website.default_locale.provider"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager.url_replacer"/>
+
+            <tag name="sulu.context" context="website"/>
+        </service>
+
+        <service id="sulu_website.default_locale.portal_provider" class="Sulu\Bundle\WebsiteBundle\Locale\PortalDefaultLocaleProvider">
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <tag name="sulu.context" context="website"/>
+        </service>
+
+        <service id="sulu_website.default_locale.request_provider" class="Sulu\Bundle\WebsiteBundle\Locale\RequestDefaultLocaleProvider">
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument type="service" id="request_stack"/>
+            <tag name="sulu.context" context="website"/>
+        </service>
+
+        <service id="sulu_website.templating.event_aware_engine"
+                 class="Sulu\Bundle\WebsiteBundle\Templating\EventAwareEngine" decorates="templating">
+            <argument type="service" id="sulu_website.templating.event_aware_engine.inner"/>
+            <argument type="service" id="event_dispatcher"/>
+
+            <tag name="sulu.context" context="website"/>
+        </service>
+
+        <service id="sulu_website.event_listener.set_theme"
+                 class="Sulu\Bundle\WebsiteBundle\EventListener\SetThemeEventListener">
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument type="service" id="liip_theme.active_theme"/>
+
+            <tag name="kernel.event_listener" event="%sulu_website.engine.initialize%" method="setActiveTheme"/>
+            <tag name="sulu.context" context="website"/>
+        </service>
+
+        <service id="sulu_website.event_subscriber.generator"
+                 class="Sulu\Bundle\WebsiteBundle\EventSubscriber\GeneratorEventSubscriber">
+            <argument>%sulu.version%</argument>
+
+            <tag name="kernel.event_subscriber"/>
+            <tag name="sulu.context" context="website"/>
         </service>
     </services>
 </container>

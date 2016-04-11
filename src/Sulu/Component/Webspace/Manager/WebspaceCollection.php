@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Webspace\Manager;
 
-use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
@@ -88,20 +87,27 @@ class WebspaceCollection implements \IteratorAggregate
      * Returns the portal informations for the given environment.
      *
      * @param $environment string The environment to deliver
+     * @param array|null $types Defines which typr of portals are requested (null for all)
      *
-     * @throws \InvalidArgumentException
-     *
-     * @return PortalInformation[]
+     * @return \Sulu\Component\Webspace\PortalInformation[]
      */
-    public function getPortalInformations($environment)
+    public function getPortalInformations($environment, $types = null)
     {
         if (!isset($this->portalInformations[$environment])) {
             throw new \InvalidArgumentException(sprintf(
                 'Unknown portal environment "%s"', $environment
             ));
         }
+        if ($types === null) {
+            return $this->portalInformations[$environment];
+        }
 
-        return $this->portalInformations[$environment];
+        return array_filter(
+            $this->portalInformations[$environment],
+            function (PortalInformation $portalInformation) use ($types) {
+                return in_array($portalInformation->getType(), $types);
+            }
+        );
     }
 
     /**

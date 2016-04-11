@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Component\Webspace\Portal;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -51,10 +50,23 @@ class PortalLoader extends Loader
     {
         $this->collection = new RouteCollection();
 
+        /** @var Route[] $importedRoutes */
         $importedRoutes = $this->import($resource, null);
 
         foreach ($importedRoutes as $importedRouteName => $importedRoute) {
-            $this->generatePortalRoutes($importedRoute, $importedRouteName);
+            $this->collection->add(
+                $importedRouteName,
+                new PortalRoute(
+                    '{prefix}' . $importedRoute->getPath(),
+                    $importedRoute->getDefaults(),
+                    array_merge(['prefix' => '.*', 'host' => '.+'], $importedRoute->getRequirements()),
+                    $importedRoute->getOptions(),
+                    '{host}',
+                    $importedRoute->getSchemes(),
+                    $importedRoute->getMethods(),
+                    $importedRoute->getCondition()
+                )
+            );
         }
 
         return $this->collection;
@@ -66,20 +78,5 @@ class PortalLoader extends Loader
     public function supports($resource, $type = null)
     {
         return $type === 'portal';
-    }
-
-    /**
-     * @param $importedRoute
-     * @param $importedRouteName
-     */
-    private function generatePortalRoutes(Route $importedRoute, $importedRouteName)
-    {
-        foreach ($this->webspaceManager->getPortalInformations($this->environment) as $portalInformation) {
-            $route = clone $importedRoute;
-            $route->setHost($portalInformation->getHost());
-            $route->setPath($portalInformation->getPrefix() . $route->getPath());
-
-            $this->collection->add($portalInformation->getUrl() . '.' . $importedRouteName, $route);
-        }
     }
 }

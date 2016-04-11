@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -87,6 +87,11 @@ class Media extends ApiWrapper
     protected $fileVersion = null;
 
     /**
+     * @var FileVersionMeta
+     */
+    protected $localizedMeta = null;
+
+    /**
      * @var File
      */
     protected $file = null;
@@ -119,6 +124,22 @@ class Media extends ApiWrapper
     public function getLocale()
     {
         return $this->locale;
+    }
+
+    /**
+     * @VirtualProperty
+     *
+     * @return string
+     */
+    public function getFallbackLocale()
+    {
+        if (!$this->getLocalizedMeta()) {
+            return;
+        }
+
+        $fallbackLocale = $this->getLocalizedMeta()->getLocale();
+
+        return $fallbackLocale !== $this->locale ? $fallbackLocale : null;
     }
 
     /**
@@ -215,16 +236,11 @@ class Media extends ApiWrapper
      */
     public function getTitle()
     {
-        $title = null;
-        /** @var FileVersionMeta $meta */
-        foreach ($this->getFileVersion()->getMeta() as $key => $meta) {
-            // get title of the meta in locale, when not exists return title of the first meta
-            if ($meta->getLocale() == $this->locale || $key == 0) {
-                $title = $meta->getTitle();
-            }
+        if (!$this->getLocalizedMeta()) {
+            return;
         }
 
-        return $title;
+        return $this->getLocalizedMeta()->getTitle();
     }
 
     /**
@@ -247,16 +263,11 @@ class Media extends ApiWrapper
      */
     public function getDescription()
     {
-        $description = null;
-        /** @var FileVersionMeta $meta */
-        foreach ($this->getFileVersion()->getMeta() as $key => $meta) {
-            // get description of the meta in locale, when not exists return description of the first meta
-            if ($meta->getLocale() == $this->locale || $key == 0) {
-                $description = $meta->getDescription();
-            }
+        if (!$this->getLocalizedMeta()) {
+            return;
         }
 
-        return $description;
+        return $this->getLocalizedMeta()->getDescription();
     }
 
     /**
@@ -283,16 +294,42 @@ class Media extends ApiWrapper
      */
     public function getCopyright()
     {
-        $copyright = null;
-        /** @var FileVersionMeta $meta */
-        foreach ($this->getFileVersion()->getMeta() as $key => $meta) {
-            // get description of the meta in locale, when not exists return description of the first meta
-            if ($meta->getLocale() == $this->locale || $key == 0) {
-                $copyright = $meta->getCopyright();
-            }
+        if (!$this->getLocalizedMeta()) {
+            return;
         }
 
-        return $copyright;
+        return $this->getLocalizedMeta()->getCopyright();
+    }
+
+    /**
+     * @param string $credits
+     *
+     * @return $this
+     */
+    public function setCredits($credits)
+    {
+        $this->getMeta(true)->setCredits($credits);
+
+        return $this;
+    }
+
+    /**
+     * Returns copyright for media.
+     *
+     * @VirtualProperty
+     * @SerializedName("credits")
+     *
+     * @return string
+     *
+     * @throws FileVersionNotFoundException
+     */
+    public function getCredits()
+    {
+        if (!$this->getLocalizedMeta()) {
+            return;
+        }
+
+        return $this->getLocalizedMeta()->getCredits();
     }
 
     /**
@@ -789,36 +826,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     * Returns array representation of media.
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        return [
-            'id' => $this->getId(),
-            'locale' => $this->getLocale(),
-            'collection' => $this->getCollection(),
-            'size' => $this->getSize(),
-            'mimeType' => $this->getMimeType(),
-            'title' => $this->getTitle(),
-            'description' => $this->getDescription(),
-            'version' => $this->getVersion(),
-            'name' => $this->getName(),
-            'storageOptions' => $this->getStorageOptions(),
-            'publishLanguages' => $this->getPublishLanguages(),
-            'tags' => $this->getTags(),
-            'thumbnails' => $this->getThumbnails(),
-            'url' => $this->getUrl(),
-            'changed' => $this->getChanged(),
-            'changer' => $this->getChanger(),
-            'created' => $this->getCreated(),
-            'creator' => $this->getCreator(),
-            'downloadCounter' => $this->getDownloadCounter(),
-        ];
-    }
-
-    /**
      * @return FileVersion
      *
      * @throws \Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException
@@ -909,5 +916,31 @@ class Media extends ApiWrapper
 
         // return exists
         return $metaCollectionFiltered->first();
+    }
+
+    /**
+     * Searches the meta for the file version in the media locale. Might also return a fallback.
+     *
+     * @return FileVersionMeta
+     *
+     * @throws FileVersionNotFoundException
+     */
+    private function getLocalizedMeta()
+    {
+        if ($this->localizedMeta) {
+            return $this->localizedMeta;
+        }
+
+        $metas = $this->getFileVersion()->getMeta();
+        $this->localizedMeta = $metas[0];
+
+        foreach ($metas as $key => $meta) {
+            if ($meta->getLocale() == $this->locale) {
+                $this->localizedMeta = $meta;
+                break;
+            }
+        }
+
+        return $this->localizedMeta;
     }
 }

@@ -136,7 +136,8 @@ define([
          * @param data
          */
         initAvatarContainer: function(data) {
-            if (!!data.avatar) {
+            // if avatar is selected and is not a "dummy"
+            if (!!data.avatar && !!data.avatar.id) {
                 this.updateAvatarContainer(data.avatar.id, data.avatar.thumbnails[constants.imageFormat], data.avatar.url);
             }
 
@@ -151,10 +152,11 @@ define([
                     '/admin/api/media/' + curMediaId + '?action=new-version' :
                     '/admin/api/media?collection=' + this.formOptions.contactAvatarCollection;
 
+                url = url + '&locale=' + encodeURIComponent(this.sandbox.sulu.user.locale);
+                
                 // if possible, change the title of the avatar to the name of the contact
                 if (!!data.fullName) {
                     url = url + '&title=' + encodeURIComponent(data.fullName);
-                    url = url + '&locale=' + encodeURIComponent(this.sandbox.sulu.user.locale);
                 }
 
                 return url;
@@ -473,6 +475,8 @@ define([
             data.avatar = {
                 id: this.sandbox.dom.data(constants.avatarImageId, 'mediaId')
             };
+            data.position = this.sandbox.form.element.getValue('#contact-position');
+            data.title = this.sandbox.form.element.getValue('#contact-title');
 
             // FIXME auto complete in mapper
             // only get id, if auto-complete is not empty:
@@ -525,7 +529,7 @@ define([
                 this.sandbox.emit(
                     'husky.select.' + type + '.update',
                     response,
-                    [response[response.length - 1]], // preselected
+                    [response[response.length - 1].id], // preselected
                     true,
                     true
                 );

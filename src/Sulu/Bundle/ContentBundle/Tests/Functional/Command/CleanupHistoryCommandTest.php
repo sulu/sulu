@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,9 +11,12 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Command;
 
+use PHPCR\NodeInterface;
 use Sulu\Bundle\ContentBundle\Command\CleanupHistoryCommand;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -33,13 +36,19 @@ class CleanupHistoryCommandTest extends SuluTestCase
     /**
      * @var RlpStrategyInterface
      */
-    private $phpcrStrategy;
+    private $rlpStrategy;
+
+    /**
+     * @var DocumentManagerInterface
+     */
+    private $documentManager;
 
     public function setUp()
     {
         $application = new Application($this->getContainer()->get('kernel'));
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
-        $this->phpcrStrategy = $this->getContainer()->get('sulu.content.rlp.strategy.tree');
+        $this->rlpStrategy = $this->getContainer()->get('sulu.content.rlp.strategy.tree');
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
 
         $cleanupCommand = new CleanupHistoryCommand();
         $cleanupCommand->setApplication($application);
@@ -47,16 +56,39 @@ class CleanupHistoryCommandTest extends SuluTestCase
         $this->tester = new CommandTester($cleanupCommand);
     }
 
+    private function createContentNode(NodeInterface $parent, $webspaceKey, $title, $url, $locale)
+    {
+        $node = $parent->addNode($title);
+        $node->setProperty('i18n:' . $locale . '-template', 'default');
+        $node->setProperty('i18n:' . $locale . '-creator', 1);
+        $node->setProperty('i18n:' . $locale . '-created', new \DateTime());
+        $node->setProperty('i18n:' . $locale . '-changer', 1);
+        $node->setProperty('i18n:' . $locale . '-changed', new \DateTime());
+        $node->setProperty('i18n:' . $locale . '-title', $title);
+        $node->setProperty('i18n:' . $locale . '-state', WorkflowStage::PUBLISHED);
+        $node->setProperty('i18n:' . $locale . '-published', new \DateTime());
+        $node->setProperty('i18n:' . $locale . '-url', $url);
+        $node->addMixin('sulu:page');
+
+        return $node;
+    }
+
     private function initNoHistory($webspaceKey, $locale)
     {
         $this->initPhpcr();
+        $session = $this->sessionManager->getSession();
 
         $contentNode = $this->sessionManager->getContentNode($webspaceKey);
-        $this->phpcrStrategy->save($contentNode, '/team', 1, $webspaceKey, $locale);
-        $this->phpcrStrategy->save($contentNode, '/team/daniel', 1, $webspaceKey, $locale);
-        $this->phpcrStrategy->save($contentNode, '/team/johannes', 1, $webspaceKey, $locale);
+        $teamNode = $this->createContentNode($contentNode, $webspaceKey, 'team', '/team', $locale);
+        $this->createContentNode($teamNode, $webspaceKey, 'daniel', '/team/daniel', $locale);
+        $this->createContentNode($teamNode, $webspaceKey, 'johannes', '/team/johannes', $locale);
 
-        $session = $this->sessionManager->getSession();
+        $session->save();
+
+        $teamDocument = $this->documentManager->find($teamNode->getIdentifier(), 'en');
+        $teamDocument->setResourceSegment('/team');
+        $this->rlpStrategy->save($teamDocument, 1); // Will also create routes for child nodes
+
         $session->save();
         $session->refresh(false);
     }
@@ -64,16 +96,24 @@ class CleanupHistoryCommandTest extends SuluTestCase
     private function initHistory($webspaceKey, $locale)
     {
         $this->initPhpcr();
+        $session = $this->sessionManager->getSession();
 
         $contentNode = $this->sessionManager->getContentNode($webspaceKey);
-        $this->phpcrStrategy->save($contentNode, '/team', 1, $webspaceKey, $locale);
-        $this->phpcrStrategy->save($contentNode, '/team/daniel', 1, $webspaceKey, $locale);
-        $this->phpcrStrategy->save($contentNode, '/team/johannes', 1, $webspaceKey, $locale);
-        $this->phpcrStrategy->save($contentNode, '/about-us', 1, $webspaceKey, $locale);
+        $teamNode = $this->createContentNode($contentNode, $webspaceKey, 'team', '/team', $locale);
+        $this->createContentNode($teamNode, $webspaceKey, 'daniel', '/team/daniel', $locale);
+        $this->createContentNode($teamNode, $webspaceKey, 'johannes', '/team/johannes', $locale);
+        $this->createContentNode($contentNode, $webspaceKey, 'about-us', '/about-us', $locale);
 
-        $this->phpcrStrategy->move('/team', '/my-test', $contentNode, 1, $webspaceKey, $locale);
+        $session->save();
 
-        $session = $this->sessionManager->getSession();
+        $teamDocument = $this->documentManager->find($teamNode->getIdentifier());
+        $teamDocument->setResourceSegment('/team'); // Will also create routes for child nodes
+        $this->rlpStrategy->save($teamDocument, 1);
+        $session->save();
+        $session->refresh(false);
+
+        $teamDocument->setResourceSegment('/my-test');
+        $this->rlpStrategy->save($teamDocument, 1);
         $session->save();
         $session->refresh(false);
     }
@@ -81,7 +121,7 @@ class CleanupHistoryCommandTest extends SuluTestCase
     public function dataProviderOnlyRoot()
     {
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
-        $this->phpcrStrategy = $this->getContainer()->get('sulu.content.rlp.strategy.tree');
+        $this->rlpStrategy = $this->getContainer()->get('sulu.content.rlp.strategy.tree');
 
         $webspaceKey = 'sulu_io';
         $locale = 'de';

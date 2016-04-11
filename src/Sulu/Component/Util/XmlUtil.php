@@ -55,7 +55,7 @@ class XmlUtil
         $value = self::getValueFromXPath($path, $xpath, $context, $default);
 
         if ($value === null) {
-            return null;
+            return;
         }
 
         return 'true' === $value || true === $value;

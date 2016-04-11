@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="sulu_hash.auditable_hasher" class="Sulu\Component\Hash\AuditableHasher"/>
+
+        <service id="sulu_hash.event_subscriber.serializer" class="Sulu\Component\Hash\Serializer\Subscriber\HashSerializeEventSubscriber">
+            <argument type="service" id="sulu_hash.auditable_hasher"/>
+            <tag name="jms_serializer.event_subscriber" />
+        </service>
+
+        <service id="sulu_hash.request_hash_checker" class="Sulu\Component\Hash\RequestHashChecker">
+            <argument type="service" id="sulu_hash.auditable_hasher"/>
+        </service>
+    </services>
+</container>

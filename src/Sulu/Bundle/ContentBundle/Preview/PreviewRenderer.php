@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -77,8 +77,17 @@ class PreviewRenderer
         $webspace = $this->webspaceManager->findWebspaceByKey($content->getWebspaceKey());
         $this->activeTheme->setName($webspace->getTheme()->getKey());
 
+        $query = [];
+        $request = [];
+        $cookies = [];
+        if ($currentRequest !== null) {
+            $query = $currentRequest->query->all();
+            $request = $currentRequest->request->all();
+            $cookies = $currentRequest->cookies->all();
+        }
+
         // get controller and invoke action
-        $request = new Request($currentRequest->query->all(), $currentRequest->request->all(), [], $currentRequest->cookies->all());
+        $request = new Request($query, $request, [], $cookies);
         $request->attributes->set('_controller', $content->getController());
         $controller = $this->controllerResolver->getController($request);
 

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -40,7 +40,7 @@ class GenerateBundleCommand extends GeneratorCommand
                 new InputOption('structure', '', InputOption::VALUE_NONE, 'Whether to generate the whole directory structure'),
             ])
             ->setDescription('Generates a sulu bundle')
-            ->setHelp(<<<EOT
+            ->setHelp(<<<'EOT'
 The <info>generate:bundle</info> command helps you generates new bundles.
 
 By default, the command interacts with the developer to tweak the generation.
@@ -50,7 +50,7 @@ conventions):
 
 <info>php app/console generate:sulu:bundle --namespace=Acme/BlogBundle</info>
 
-Note that you can use <comment>/</comment> instead of <comment>\\ </comment>for the namespace delimiter to avoid any
+Note that you can use <comment>/</comment> instead of <comment>\ </comment>for the namespace delimiter to avoid any
 problem.
 
 If you want to disable any user interaction, use <comment>--no-interaction</comment> but don't forget to pass all needed options:

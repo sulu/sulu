@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -21,6 +21,7 @@ use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Document\Property\Property;
 use Sulu\Component\Content\Document\Structure\ManagedStructure;
 use Sulu\Component\Content\Document\Structure\Structure;
+use Sulu\Component\Content\Document\Structure\StructureInterface;
 use Sulu\Component\Content\Exception\MandatoryPropertyException;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
@@ -80,6 +81,8 @@ class StructureSubscriber implements EventSubscriberInterface
             Events::PERSIST => [
                 // persist should happen before content is mapped
                 ['handlePersist', 0],
+                // staged properties must be commited before title subscriber
+                ['handlePersistStagedProperties', 50],
                 // setting the structure should happen very early
                 ['handlePersistStructureType', 100],
             ],
@@ -98,11 +101,15 @@ class StructureSubscriber implements EventSubscriberInterface
         $options->setDefaults(
             [
                 'load_ghost_content' => true,
+                'clear_missing_content' => false,
+                'ignore_required' => false,
             ]
         );
         $options->setAllowedTypes(
             [
                 'load_ghost_content' => 'bool',
+                'clear_missing_content' => 'bool',
+                'ignore_required' => 'bool',
             ]
         );
     }
@@ -117,7 +124,7 @@ class StructureSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
 
-        if (!$document instanceof StructureBehavior) {
+        if (!$this->supportsBehavior($document)) {
             return;
         }
 
@@ -130,32 +137,44 @@ class StructureSubscriber implements EventSubscriberInterface
     }
 
     /**
+     * Commit the properties, which are only staged on the structure yet.
+     *
+     * @param PersistEvent $event
+     */
+    public function handlePersistStagedProperties(PersistEvent $event)
+    {
+        $document = $event->getDocument();
+
+        if (!$this->supportsBehavior($document)) {
+            return;
+        }
+
+        $document->getStructure()->commitStagedData($event->getOption('clear_missing_content'));
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handleHydrate(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();
 
-        if (!$document instanceof StructureBehavior) {
+        if (!$this->supportsBehavior($document)) {
             return;
         }
 
         $node = $event->getNode();
         $propertyName = $this->getStructureTypePropertyName($document, $event->getLocale());
-        $value = $node->getPropertyValueWithDefault($propertyName, null);
-        $document->setStructureType($value);
+        $structureType = $node->getPropertyValueWithDefault($propertyName, null);
+        $document->setStructureType($structureType);
 
         if (false === $event->getOption('load_ghost_content', false)) {
             if ($this->inspector->getLocalizationState($document) === LocalizationState::GHOST) {
-                $value = null;
+                $structureType = null;
             }
         }
 
-        if ($value) {
-            $container = $this->createStructure($document);
-        } else {
-            $container = new Structure();
-        }
+        $container = $this->getStructure($document, $structureType);
 
         // Set the property container
         $event->getAccessor()->set(
@@ -172,7 +191,7 @@ class StructureSubscriber implements EventSubscriberInterface
         // Set the structure type
         $document = $event->getDocument();
 
-        if (!$document instanceof StructureBehavior) {
+        if (!$this->supportsBehavior($document)) {
             return;
         }
 
@@ -186,13 +205,19 @@ class StructureSubscriber implements EventSubscriberInterface
 
         $node = $event->getNode();
         $locale = $event->getLocale();
+        $options = $event->getOptions();
 
-        $this->mapContentToNode($document, $node, $locale);
+        $this->mapContentToNode($document, $node, $locale, $options['ignore_required']);
 
         $node->setProperty(
             $this->getStructureTypePropertyName($document, $locale),
             $document->getStructureType()
         );
+    }
+
+    private function supportsBehavior($document)
+    {
+        return $document instanceof StructureBehavior;
     }
 
     private function getStructureTypePropertyName($document, $locale)
@@ -226,10 +251,11 @@ class StructureSubscriber implements EventSubscriberInterface
      * @param mixed $document
      * @param NodeInterface $node
      * @param string $locale
+     * @param bool $ignoreRequired
      *
      * @throws MandatoryPropertyException
      */
-    private function mapContentToNode($document, NodeInterface $node, $locale)
+    private function mapContentToNode($document, NodeInterface $node, $locale, $ignoreRequired)
     {
         $structure = $document->getStructure();
         $webspaceName = $this->inspector->getWebspace($document);
@@ -239,7 +265,7 @@ class StructureSubscriber implements EventSubscriberInterface
             $realProperty = $structure->getProperty($propertyName);
             $value = $realProperty->getValue();
 
-            if ($structureProperty->isRequired() && null === $value) {
+            if (false === $ignoreRequired && $structureProperty->isRequired() && null === $value) {
                 throw new MandatoryPropertyException(
                     sprintf(
                         'Property "%s" in structure "%s" is required but no value was given. Loaded from "%s"',
@@ -275,5 +301,31 @@ class StructureSubscriber implements EventSubscriberInterface
                 null
             );
         }
+    }
+
+    /**
+     * Return the a structure for the document.
+     *
+     * - If the Structure already exists on the document, use that.
+     * - If the Structure type is given, then create a ManagedStructure - this
+     *   means that the structure is already persisted on the node and it has data.
+     * - If none of the above applies then create a new, empty, Structure.
+     *
+     * @param object $document
+     * @param string $structureType
+     *
+     * @return StructureInterface
+     */
+    private function getStructure($document, $structureType)
+    {
+        if ($structureType) {
+            return $this->createStructure($document);
+        }
+
+        if ($document->getStructure()) {
+            return $document->getStructure();
+        }
+
+        return new Structure();
     }
 }

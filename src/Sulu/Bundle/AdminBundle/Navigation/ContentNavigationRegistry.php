@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -46,6 +46,16 @@ class ContentNavigationRegistry extends ContainerAware implements ContentNavigat
                 $this->container->get($providerId)->getNavigationItems($options)
             );
         }
+
+        usort(
+            $navigationItems,
+            function (ContentNavigationItem $a, ContentNavigationItem $b) {
+                $aPosition = $a->getPosition() ?: PHP_INT_MAX;
+                $bPosition = $b->getPosition() ?: PHP_INT_MAX;
+
+                return $aPosition - $bPosition;
+            }
+        );
 
         return $navigationItems;
     }

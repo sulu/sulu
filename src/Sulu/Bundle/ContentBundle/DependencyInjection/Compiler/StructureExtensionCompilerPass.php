@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -20,6 +20,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class StructureExtensionCompilerPass implements CompilerPassInterface
 {
+    const STRUCTURE_MANAGER_ID = 'sulu_content.extension.manager';
     const STRUCTURE_EXTENSION_TAG = 'sulu.structure.extension';
 
     /**
@@ -27,11 +28,11 @@ class StructureExtensionCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('sulu_content.extension.manager')) {
+        if (!$container->hasDefinition(self::STRUCTURE_MANAGER_ID)) {
             return;
         }
 
-        $definition = $container->getDefinition('sulu_content.extension.manager');
+        $definition = $container->getDefinition(self::STRUCTURE_MANAGER_ID);
         $taggedServices = $container->findTaggedServiceIds(self::STRUCTURE_EXTENSION_TAG);
         foreach ($taggedServices as $id => $tagAttributes) {
             foreach ($tagAttributes as $attributes) {

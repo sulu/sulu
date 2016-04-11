@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="sulu_website.webspace_navigation_provider"
+                 class="Sulu\Bundle\WebsiteBundle\Admin\WebspaceContentNavigationProvider">
+            <argument type="service" id="sulu_security.security_checker"/>
+            <tag name="sulu_admin.content_navigation" alias="webspace"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_website.analytics.repository"
+                 class="Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepository">
+            <factory service="doctrine.orm.entity_manager" method="getRepository"/>
+
+            <argument type="string">SuluWebsiteBundle:Analytics</argument>
+        </service>
+
+        <service id="sulu_website.domains.repository"
+                 class="Sulu\Bundle\WebsiteBundle\Entity\DomainRepository">
+            <factory service="doctrine.orm.entity_manager" method="getRepository"/>
+
+            <argument type="string">SuluWebsiteBundle:Domain</argument>
+        </service>
+
+        <service id="sulu_website.analytics.manager"
+                 class="Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManager">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu_website.analytics.repository"/>
+            <argument type="service" id="sulu_website.domains.repository"/>
+        </service>
+
+        <service id="sulu_website.analytics.response_listener"
+                 class="Sulu\Bundle\WebsiteBundle\EventListener\AppendAnalyticsListener">
+            <argument type="service" id="templating"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument type="service" id="sulu_website.analytics.repository"/>
+            <argument>%kernel.environment%</argument>
+
+            <tag name="sulu.context" context="website"/>
+            <tag name="kernel.event_listener" event="kernel.response" method="onResponse" priority="-5"/>
+        </service>
+
+        <service id="sulu_website.analytics.event_subscriber"
+                 class="Sulu\Bundle\WebsiteBundle\EventSubscriber\AnalyticsSerializeEventSubscriber">
+            <tag name="jms_serializer.event_subscriber"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+    </services>
+</container>

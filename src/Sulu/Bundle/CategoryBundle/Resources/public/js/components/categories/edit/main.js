@@ -13,10 +13,24 @@ define(function () {
 
     return {
 
+        collaboration: function() {
+            if (!this.options.data || !this.options.data.id) {
+                return;
+            }
+
+            return {
+                id: this.options.data.id,
+                type: 'categories'
+            };
+        },
+
         header: function () {
             return {
                 tabs: {
-                    url: '/admin/content-navigations?alias=category'
+                    url: '/admin/content-navigations?alias=category',
+                    componentOptions: {
+                        values: this.options.data
+                    }
                 },
                 toolbar: {
                     buttons: {

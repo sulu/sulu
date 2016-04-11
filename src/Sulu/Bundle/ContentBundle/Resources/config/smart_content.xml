@@ -25,6 +25,7 @@
         <service id="sulu_content.smart_content.data_provider.content.query_builder"
                  class="%sulu_content.smart_content.data_provider.content.query_builder.class%" public="false">
             <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu_content.extension.manager"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu.phpcr.session"/>
             <argument>%sulu.content.language.namespace%</argument>

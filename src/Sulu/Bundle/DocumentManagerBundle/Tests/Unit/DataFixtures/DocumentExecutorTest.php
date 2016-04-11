@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,7 +15,6 @@ use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentExecutor;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
 use Sulu\Component\DocumentManager\DocumentManager;
-use Sulu\Component\DocumentManager\NodeManager;
 use Symfony\Component\Console\Output\BufferedOutput;
 
 class DocumentExecutorTest extends \PHPUnit_Framework_TestCase
@@ -23,14 +22,12 @@ class DocumentExecutorTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->documentManager = $this->prophesize(DocumentManager::class);
-        $this->nodeManager = $this->prophesize(NodeManager::class);
         $this->initializer = $this->prophesize(Initializer::class);
         $this->output = new BufferedOutput();
         $this->fixture1 = $this->prophesize(DocumentFixtureInterface::class);
 
         $this->executer = new DocumentExecutor(
             $this->documentManager->reveal(),
-            $this->nodeManager->reveal(),
             $this->initializer->reveal(),
             $this->output
         );
@@ -41,9 +38,7 @@ class DocumentExecutorTest extends \PHPUnit_Framework_TestCase
      */
     public function testPurge()
     {
-        $this->nodeManager->purgeWorkspace()->shouldBeCalled();
-        $this->initializer->initialize($this->output)->shouldNotBeCalled();
-        $this->nodeManager->save()->shouldBeCalled();
+        $this->initializer->initialize($this->output, true)->shouldNotBeCalled();
         $this->executer->execute([], true, false, $this->output);
     }
 
@@ -52,9 +47,7 @@ class DocumentExecutorTest extends \PHPUnit_Framework_TestCase
      */
     public function testInitialize()
     {
-        $this->nodeManager->purgeWorkspace()->shouldNotBeCalled();
-        $this->nodeManager->save()->shouldNotBeCalled();
-        $this->initializer->initialize($this->output)->shouldBeCalled();
+        $this->initializer->initialize($this->output, false)->shouldBeCalled();
         $this->executer->execute([], false, true, $this->output);
     }
 

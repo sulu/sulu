@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Sulu.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryTrait;
 
@@ -93,7 +94,15 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         $permission = null
     ) {
         try {
-            list($collection, $types, $search, $orderBy, $orderSort, $ids) = $this->extractFilterVars($filter);
+            list(
+                $collection,
+                $systemCollections,
+                $types,
+                $search,
+                $orderBy,
+                $orderSort,
+                $ids
+                ) = $this->extractFilterVars($filter);
 
             // if empty array of ids is requested return empty array of medias
             if ($ids !== null && count($ids) === 0) {
@@ -101,7 +110,16 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             }
 
             if (!$ids) {
-                $ids = $this->getIds($collection, $types, $search, $orderBy, $orderSort, $limit, $offset);
+                $ids = $this->getIds(
+                    $collection,
+                    $systemCollections,
+                    $types,
+                    $search,
+                    $orderBy,
+                    $orderSort,
+                    $limit,
+                    $offset
+                );
             }
 
             $queryBuilder = $this->createQueryBuilder('media')
@@ -160,9 +178,19 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
      */
     public function count(array $filter)
     {
-        list($collection, $types, $search) = $this->extractFilterVars($filter);
+        list($collection, $systemCollections, $types, $search) = $this->extractFilterVars($filter);
 
-        $query = $this->getIdsQuery($collection, $types, $search, null, null, null, null, 'COUNT(media)');
+        $query = $this->getIdsQuery(
+            $collection,
+            $systemCollections,
+            $types,
+            $search,
+            null,
+            null,
+            null,
+            null,
+            'COUNT(media)'
+        );
         $result = $query->getSingleResult()[1];
 
         return intval($result);
@@ -178,13 +206,14 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     private function extractFilterVars(array $filter)
     {
         $collection = array_key_exists('collection', $filter) ? $filter['collection'] : null;
+        $systemCollections = array_key_exists('systemCollections', $filter) ? $filter['systemCollections'] : true;
         $types = array_key_exists('types', $filter) ? $filter['types'] : null;
         $search = array_key_exists('search', $filter) ? $filter['search'] : null;
         $orderBy = array_key_exists('orderBy', $filter) ? $filter['orderBy'] : null;
         $orderSort = array_key_exists('orderSort', $filter) ? $filter['orderSort'] : null;
         $ids = array_key_exists('ids', $filter) ? $filter['ids'] : null;
 
-        return [$collection, $types, $search, $orderBy, $orderSort, $ids];
+        return [$collection, $systemCollections, $types, $search, $orderBy, $orderSort, $ids];
     }
 
     /**
@@ -252,6 +281,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
      * create a query for ids with given filter.
      *
      * @param string $collection
+     * @param bool $systemCollections
      * @param array $types
      * @param string $search
      * @param string $orderBy
@@ -264,6 +294,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
      */
     private function getIdsQuery(
         $collection = null,
+        $systemCollections = true,
         $types = null,
         $search = null,
         $orderBy = null,
@@ -274,10 +305,18 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     ) {
         $queryBuilder = $this->createQueryBuilder('media')->select($select);
 
+        $queryBuilder->innerJoin('media.collection', 'collection');
+
         if (!empty($collection)) {
-            $queryBuilder->innerJoin('media.collection', 'collection');
             $queryBuilder->andWhere('collection.id = :collection');
             $queryBuilder->setParameter('collection', $collection);
+        }
+
+        if (!$systemCollections) {
+            $queryBuilder->leftJoin('collection.type', 'collectionType');
+            $queryBuilder->andWhere(
+                sprintf('collectionType.key != \'%s\'', SystemCollectionManagerInterface::COLLECTION_TYPE)
+            );
         }
 
         if (!empty($types)) {
@@ -315,6 +354,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
      * returns ids with given filters.
      *
      * @param string $collection
+     * @param bool $systemCollections
      * @param array $types
      * @param string $search
      * @param string $orderBy
@@ -326,6 +366,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
      */
     private function getIds(
         $collection = null,
+        $systemCollections = true,
         $types = null,
         $search = null,
         $orderBy = null,
@@ -333,7 +374,16 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         $limit = null,
         $offset = null
     ) {
-        $subQuery = $this->getIdsQuery($collection, $types, $search, $orderBy, $orderSort, $limit, $offset);
+        $subQuery = $this->getIdsQuery(
+            $collection,
+            $systemCollections,
+            $types,
+            $search,
+            $orderBy,
+            $orderSort,
+            $limit,
+            $offset
+        );
 
         return $subQuery->getScalarResult();
     }
