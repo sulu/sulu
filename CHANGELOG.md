@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-develop
+* 1.2.0 (2016-04-11)
     * BUGFIX      #2280 [ContentBundle]       Removed scrollbar from categories in overlay
     * BUGFIX      #2281 [ContentBundle]       Use correct link for content tab in page form
     * BUGFIX      #2273 [ContentBundle]       Fixed link generation for internal link type without webspace
@@ -23,6 +23,8 @@ CHANGELOG for Sulu
     * BUGFIX      #2238 [ContentBundle]       Fixed URL in SEO tab
     * BUGFIX      #2237 [MediaBundle]         Added locale to request for adding new media version
     * BUGFIX      #2236 [ContentBundle]       Fixed preview js errors
+
+* 1.2.0-RC4 (2016-04-04)
     * BUGFIX      #2233 [ContentBundle]       Fixed resource locators for saving without locale
     * BUGFIX      #2232 [ContentBundle]       Updated condition to open ghost overlay
     * BUGFIX      #2229 [WebsiteBundle]       Fixed escaping of seo tags
@@ -42,17 +44,21 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1980 [MediaBundle]         Sort assets by created date descending in lists
     * BUGFIX      #2193 [ContentBundle]       Ignore required properties on homepages during initialization.
     * BUGFIX      #2199 [SnippetBundle]       Fixed syntax mistake in snippet-controller
-    * ENHANCEMENT #2204 [WebsiteBundle]       Enhanced custom-route creation 
+    * ENHANCEMENT #2204 [WebsiteBundle]       Enhanced custom-route creation
     * FEATURE     #2201 [All]                 Added collaboration message to all sulu core-bundles
     * ENHANCEMENT #2196 [AdminBundle]         Restructured admin-navigation
     * FEATURE     #2197 [MediaBundle]         Added media field credits
-    * FEATURE     #2203 [WebsiteBundle]       Added host replacer to portal routes to support wildcard-urls 
-    * BUGFIX      #2190 [WebsiteBundle]       Fixed wrong translator locale by decorating translator
-    * ENHANCEMENT #2192 [WebsiteBundle]       Added X-Generator HTTP header for Sulu website detection
-    * ENHANCEMENT #2125 [All]                 Upgraded to DoctrinePHPCRBundle 1.3
-    * ENHANCEMENT #2086 [ContentBundle]       Improved presentation of info-text
+    * FEATURE     #2203 [WebsiteBundle]       Added host replacer to portal routes to support wildcard-urls
     * FEATURE     #2155 [MediaBundle]         Added media formats to masonry-view and edit-overlay
     * FEATURE     #2191 [All]                 Appveyor build for windows
+    * FEATURE     #1288 [CustomUrlBundle]     Integrated custom-urls into analytics
+
+* 1.2.0-RC3 (2016-03-29)
+    * BUGFIX      #2190 [WebsiteBundle]       Fixed wrong translator locale by decorating translator
+    * ENHANCEMENT #2192 [WebsiteBundle]       Added X-Generator HTTP header for Sulu website detection
+    * ENHANCEMENT #2086 [ContentBundle]       Improved presentation of info-text
+
+* 1.2.0-RC2 (2016-03-24)
     * BUGFIX      #2183 [ContentBundle]       Added missing locale for loading route document
     * BUGFIX      #2185 [MediaBundle]         Fixed throw exception if new version has a different media type
     * ENHANCEMENT #2182 [ContactBundle]       Added `sulu_resolve_contact` twig function
@@ -69,11 +75,12 @@ CHANGELOG for Sulu
     * BUGFIX      #2152 [ContentBundle]       Fixed not empty request body for delete history url
     * BUGFIX      #2141 [ContentBundle]       Fixed page gets immediately saved after generating URL
     * BUGFIX      #2156 [SecurityBundle]      Fixed behat context to create correct roles
-    * BUGFIX      #2152 [ContentBundle]       Fixed not empty request body for delete history url 
+    * BUGFIX      #2152 [ContentBundle]       Fixed not empty request body for delete history url
     * BUGFIX      #2157 [CustomUrlBundle]     Fixed route-validation in request processor
     * ENHANCEMENT #1288 [CoreBundle]          Introduced lazy initialization of request attributes
     * ENHANCEMENT #2132 [Test]                Removed external classes from and refactored functional test class hierarchy
-    * FEATURE     #1288 [CustomUrlBundle]     Integrated custom-urls into analytics
+
+* 1.2.0-RC1 (2016-03-18)
     * FEATURE     #1288 [All]                 Added deep-links for selection content-types
     * BUGFIX      #2131 [WebsiteBundle]       Fixed 'getTheme' error in ExceptionController
     * ENHANCEMENT #2131 [CoreBundle]          Added request attributes to extract data from request
@@ -132,7 +139,7 @@ CHANGELOG for Sulu
     * FEATURE     #1233 [ContentBundle]       Showing current collaborators of pages
     * ENHANCEMENT #1936 [Webspace]            Cleanup of WebsiteRequestAnalyzer
     * ENHANCEMENT #1937 [WebsiteBundle]       Removed unnecessary ob_clean in WebsiteController
-    * BUGFIX      #1931 [ContentBundle]       Fixed form deprecation messages   
+    * BUGFIX      #1931 [ContentBundle]       Fixed form deprecation messages
     * BUGFIX      #1930 [ContentBundle]       Fixed updating values in combination
                                               with template change
     * FEATURE     #1912 [WebsiteBundle]       Added analytics to webspace settings
@@ -150,7 +157,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1871 [ContentBundle]       Fixed url-generation and save button
     * BUGFIX      #1873 [ContactBundle]       Fixed remove title and position
     * BUGFIX      #1873 [ContactBundle]       Fixed remove contact birthday
-    
+
 * 1.1.11 (2016-04-04)
     * HOTFIX      #2143 [ContactBundle]     Fixed account cget filtering of ids
     * HOTFIX      #2102 [ContactBundle]     Added filter for account tags
