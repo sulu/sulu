@@ -39,24 +39,20 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $configs = $parameterBag->resolveValue($configs);
         $config = $this->processConfiguration(new Configuration(), $configs);
 
+        // for *SOME REASON* we need to set the ODM key on the DoctrinePhpcrBundle in order
+        // that the EntityManager serialization works correctly.
+        //
+        // otherwise this test fails:
+        //   Sulu\Bundle\SecurityBundle\Tests\Functional\Controller\GroupControllerTest::testPost
+        //   Undefined property: stdClass::$name
         if (isset($config['phpcr'])) {
-            $phpcrConfig = $config['phpcr'];
-
-            // TODO: Workaround for issue: https://github.com/doctrine/DoctrinePHPCRBundle/issues/178
-            if (!isset($phpcrConfig['backend']['check_login_on_server'])) {
-                $phpcrConfig['backend']['check_login_on_server'] = false;
-            }
-
             foreach (array_keys($container->getExtensions()) as $name) {
                 $prependConfig = [];
                 switch ($name) {
                     case 'doctrine_phpcr':
                         $prependConfig = [
-                            'session' => $phpcrConfig,
                             'odm' => [],
                         ];
-                        break;
-                    case 'cmf_core':
                         break;
                 }
 

@@ -51,16 +51,13 @@ class PageDocumentSerializationTest extends SuluTestCase
 
     /**
      * It can serialize content that contains objects.
-     *
-     * NOTE: We do not persist so that we can use any type
-     *       of content - persisting would cause the content
-     *       to be validated.
      */
     public function testSerialization()
     {
         $internalLink = $this->createPage([
             'title' => 'Hello',
         ]);
+        $this->manager->persist($internalLink, 'de');
 
         $page = $this->createPage([
             'title' => 'Foobar',
@@ -71,6 +68,8 @@ class PageDocumentSerializationTest extends SuluTestCase
             ],
             'integer' => 1234,
         ]);
+        $page->setResourceSegment('/bar');
+        $this->manager->persist($page, 'de');
 
         $result = $this->serializer->serialize($page, 'json');
 
@@ -135,10 +134,6 @@ class PageDocumentSerializationTest extends SuluTestCase
     private function createPage($data)
     {
         $page = new PageDocument();
-
-        $uuidReflection = new \ReflectionProperty(PageDocument::class, 'uuid');
-        $uuidReflection->setAccessible(true);
-        $uuidReflection->setValue($page, 1);
 
         $page->setTitle($data['title']);
         $page->setParent($this->parent);

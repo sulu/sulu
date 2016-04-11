@@ -23,6 +23,8 @@ use Sulu\Component\Content\Document\Subscriber\ResourceSegmentSubscriber;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\DocumentManager\DocumentManagerContext;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
@@ -74,7 +76,6 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->resourceSegmentSubscriber = new ResourceSegmentSubscriber(
             $this->encoder->reveal(),
-            $this->documentInspector->reveal(),
             $this->rlpStrategy->reveal()
         );
     }
@@ -87,6 +88,9 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $localizedPropertyName = sprintf('i18n:%s-%s', $locale, $propertyName);
 
         $event = $this->prophesize(AbstractMappingEvent::class);
+        $manager = $this->prophesize(DocumentManagerInterface::class);
+        $manager->getInspector()->willReturn($this->documentInspector->reveal());
+        $event->getManager()->willReturn($manager->reveal());
 
         $event->getDocument()->willReturn($this->document->reveal());
 
@@ -116,6 +120,9 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $localizedPropertyName = sprintf('i18n:%s-%s', $locale, $propertyName);
 
         $event = $this->prophesize(PersistEvent::class);
+        $manager = $this->prophesize(DocumentManagerInterface::class);
+        $manager->getInspector()->willReturn($this->documentInspector->reveal());
+        $event->getManager()->willReturn($manager->reveal());
 
         $event->getDocument()->willReturn($this->document->reveal());
 

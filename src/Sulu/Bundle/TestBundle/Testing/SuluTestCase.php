@@ -130,16 +130,21 @@ abstract class SuluTestCase extends KernelTestCase
     protected function initPhpcr()
     {
         /** @var SessionInterface $session */
-        $session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
+        $registry = $this->getContainer()->get('doctrine_phpcr');
 
-        if ($session->nodeExists('/cmf')) {
-            NodeHelper::purgeWorkspace($session);
+        foreach ($registry->getConnections() as $session) {
+            if ($session->nodeExists('/cmf')) {
+                $session->getNode('/cmf')->remove();
+            }
             $session->save();
         }
 
+
         if (!$this->importer) {
-            $this->importer = new PHPCRImporter($session);
+            $this->importer = new PHPCRImporter($this->getContainer()->get('doctrine_phpcr')->getConnection());
         }
+        $this->getContainer()->get('sulu_document_manager.initializer')->initialize();
+        return;
 
         // to update this file use following command
         // php vendor/symfony-cmf/testing/bin/console doctrine:phpcr:workspace:export -p /cmf \

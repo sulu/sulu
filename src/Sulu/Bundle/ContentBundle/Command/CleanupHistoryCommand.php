@@ -74,7 +74,7 @@ EOT
         $basePath = $input->getOption('base-path');
         $dryRun = $input->getOption('dry-run');
 
-        $this->session = $this->getContainer()->get('doctrine_phpcr')->getManager()->getPhpcrSession();
+        $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->output = $output;
 
