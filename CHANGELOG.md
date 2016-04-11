@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * BUGFIX      #2280 [ContentBundle]       Removed scrollbar from categories in overlay
+    * BUGFIX      #2281 [ContentBundle]       Use correct link for content tab in page form
     * BUGFIX      #2273 [ContentBundle]       Fixed link generation for internal link type without webspace
     * BUGFIX      #2274 [WebsiteBundle]       Fixed sulu-content-path with different webspace
     * BUGFIX      #2269 [WebsiteBundle]       Added query string to redirect for internal links

@@ -76,7 +76,7 @@ define([], function() {
 
                 this.sandbox.emit(
                     this.options.navigateEvent,
-                    'content/contents/' + this.options.webspace + '/' + this.options.locale + '/edit:' + id + '/details'
+                    'content/contents/' + this.options.webspace + '/' + this.options.locale + '/edit:' + id + '/content'
                 );
 
                 return false;
