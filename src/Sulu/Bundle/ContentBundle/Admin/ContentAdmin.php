@@ -82,7 +82,7 @@ class ContentAdmin extends Admin
                 $indexPageItem = new NavigationItem('navigation.webspaces.index-page');
                 $indexPageItem->setPosition(10);
                 $indexPageItem->setAction(
-                    'content/contents/' . $webspace->getKey() . '/edit:' . $indexUuid . '/details'
+                    'content/contents/' . $webspace->getKey() . '/edit:' . $indexUuid . '/content'
                 );
                 $webspaceItem->addChild($indexPageItem);
 
