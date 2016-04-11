@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Webspace\Tests\Unit;
 
-use Psr\Log\LoggerInterface;
 use Sulu\Component\Webspace\Loader\XmlFileLoader;
 use Sulu\Component\Webspace\Manager\WebspaceManager;
 use Sulu\Component\Webspace\Portal;
@@ -31,11 +30,6 @@ class WebspaceManagerTest extends WebspaceTestCase
      */
     protected $webspaceManager;
 
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
     public function setUp()
     {
         $this->cacheDir = $this->getResourceDirectory() . '/cache';
@@ -49,12 +43,9 @@ class WebspaceManagerTest extends WebspaceTestCase
         $locator->expects($this->any())->method('locate')->will($this->returnArgument(0));
         $this->loader = new XmlFileLoader($locator);
 
-        $this->logger = $this->getMock('\Psr\Log\LoggerInterface');
-
         $this->webspaceManager = new WebspaceManager(
             $this->loader,
             new Replacer(),
-            $this->logger,
             [
                 'cache_dir' => $this->cacheDir,
                 'config_dir' => $this->getResourceDirectory() . '/DataFixtures/Webspace/valid',
@@ -446,27 +437,14 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('massiveart.lo/{localization}/{segment}', $environmentDev->getUrls()[0]->getUrl());
     }
 
-    public function testInvalidPart()
+    public function testLoadMultiple()
     {
-        $this->logger = $this->getMockForAbstractClass(
-            '\Psr\Log\LoggerInterface',
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['warning']
-        );
-
-        $this->logger->expects($this->once())->method('warning')->will($this->returnValue(null));
-
         $this->webspaceManager = new WebspaceManager(
             $this->loader,
             new Replacer(),
-            $this->logger,
             [
                 'cache_dir' => $this->getResourceDirectory() . '/cache',
-                'config_dir' => $this->getResourceDirectory() . '/DataFixtures/Webspace/both',
+                'config_dir' => $this->getResourceDirectory() . '/DataFixtures/Webspace/multiple',
                 'cache_class' => 'WebspaceCollectionCache' . uniqid(),
             ]
         );

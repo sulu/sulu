@@ -22,7 +22,6 @@
             <!-- TODO use delegating loader -->
             <argument type="service" id="sulu_core.webspace.loader.xml"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager.url_replacer"/>
-            <argument type="service" id="logger"/>
             <argument type="collection">
                 <argument key="config_dir">%sulu_core.webspace.config_dir%</argument>
                 <argument key="cache_dir">%sulu.cache_dir%</argument>
