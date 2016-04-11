@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-develop
+## 1.2.0
 
 ### sulu_content_path
 
