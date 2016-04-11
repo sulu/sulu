@@ -119,7 +119,7 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $property = $this->getResourceSegmentProperty($document);
+        $property = $this->getResourceSegmentProperty($event->getManager()->getInspector(), $document);
         $this->persistDocument($document, $property);
     }
 
@@ -161,7 +161,7 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
      */
     private function getResourceSegmentProperty(DocumentInspector $inspector, $document)
     {
-        $structure = $this->documentInspector->getStructureMetadata($document);
+        $structure = $inspector->getStructureMetadata($document);
         $property = $structure->getPropertyByTagName('sulu.rlp');
 
         if (!$property) {

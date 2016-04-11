@@ -139,9 +139,12 @@ abstract class SuluTestCase extends KernelTestCase
             $session->save();
         }
 
+
         if (!$this->importer) {
-            $this->importer = new PHPCRImporter($session);
+            $this->importer = new PHPCRImporter($this->getContainer()->get('doctrine_phpcr')->getConnection());
         }
+        $this->getContainer()->get('sulu_document_manager.initializer')->initialize();
+        return;
 
         // to update this file use following command
         // php vendor/symfony-cmf/testing/bin/console doctrine:phpcr:workspace:export -p /cmf \

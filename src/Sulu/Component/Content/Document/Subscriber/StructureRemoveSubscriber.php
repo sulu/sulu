@@ -59,8 +59,8 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
         }
 
         if ($document instanceof StructureBehavior) {
-            $this->removeReferences($documentManager, $document);
-            $this->removeRoute($documentManager->getInspector(), $document);
+            $this->removeReferences($documentManager->getInspector(), $document);
+            $this->removeRoute($documentManager, $document);
         }
     }
 
@@ -69,9 +69,9 @@ class StructureRemoveSubscriber implements EventSubscriberInterface
      *
      * @param StructureBehavior $document
      */
-    private function removeRoute(StructureBehavior $document)
+    private function removeRoute(DocumentManagerInterface $documentManager, StructureBehavior $document)
     {
-        foreach ($this->inspector->getReferrers($document) as $referrer) {
+        foreach ($documentManager->getInspector()->getReferrers($document) as $referrer) {
             if ($referrer instanceof RouteBehavior) {
                 $documentManager->remove($referrer);
             }

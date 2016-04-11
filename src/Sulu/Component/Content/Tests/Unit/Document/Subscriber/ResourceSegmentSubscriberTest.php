@@ -76,7 +76,6 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->resourceSegmentSubscriber = new ResourceSegmentSubscriber(
             $this->encoder->reveal(),
-            $this->documentInspector->reveal(),
             $this->rlpStrategy->reveal()
         );
     }
@@ -90,7 +89,7 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $event = $this->prophesize(AbstractMappingEvent::class);
         $manager = $this->prophesize(DocumentManagerInterface::class);
-        $manager->getInspector()->willReturn($inspector);
+        $manager->getInspector()->willReturn($this->documentInspector->reveal());
         $event->getManager()->willReturn($manager->reveal());
 
         $event->getDocument()->willReturn($this->document->reveal());
@@ -122,7 +121,7 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $event = $this->prophesize(PersistEvent::class);
         $manager = $this->prophesize(DocumentManagerInterface::class);
-        $manager->getInspector()->willReturn($inspector);
+        $manager->getInspector()->willReturn($this->documentInspector->reveal());
         $event->getManager()->willReturn($manager->reveal());
 
         $event->getDocument()->willReturn($this->document->reveal());

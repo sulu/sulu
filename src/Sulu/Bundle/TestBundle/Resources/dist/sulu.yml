@@ -54,13 +54,24 @@ sulu_core:
         en: English
     translations: ['de', 'en']
     fallback_locale: 'en'
-    phpcr:
-        backend:
-            type: "%phpcr.transport%"
-            url:  "%phpcr.backend_url%"
-        workspace: "%phpcr.workspace%"
-        username: "%phpcr.username%"
-        password: "%phpcr.password%"
+
+doctrine_phpcr:
+    session:
+        sessions:
+            default:
+                backend:
+                    type: "%phpcr.transport%"
+                    url:  "%phpcr.backend_url%"
+                workspace: "%phpcr.workspace%"
+                username: "%phpcr.username%"
+                password: "%phpcr.password%"
+            live:
+                backend:
+                    type: "%phpcr.transport%"
+                    url:  "%phpcr.backend_url%"
+                workspace: live
+                username: "%phpcr.username%"
+                password: "%phpcr.password%"
 
 sulu_content:
     search:
