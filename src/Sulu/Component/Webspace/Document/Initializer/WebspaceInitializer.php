@@ -64,9 +64,20 @@ class WebspaceInitializer implements InitializerInterface
         $this->nodeManager = $nodeManager;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function initialize(OutputInterface $output)
     {
-        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
+        // sort the webspaces in order that they always appear
+        // in the same order across different platforms (which
+        // helps when testing).
+        $webspaces = iterator_to_array($this->webspaceManager->getWebspaceCollection());
+        usort($webspaces, function ($webspace1, $webspace2) {
+            return strcmp($webspace1->getName(), $webspace2->getName());
+        });
+
+        foreach ($webspaces as $webspace) {
             $this->initializeWebspace($output, $webspace);
         }
 
