@@ -238,7 +238,7 @@ define(['services/husky/util'], function(util) {
                 categories: [
                     '<div class="item">',
                     '    <div class="categories-loader"></div>',
-                    '    <div class="categories-container" style="display: none;">',
+                    '    <div class="categories" style="display: none;">',
                     '        <span class="desc"><%= categoriesLabelStr %></span>',
                     '        <div class="btn action fit select-categories-btn" id="select-categories-action"><%= categoriesButtonStr %></div>',
                     '        <div class="sublabel"><span><%= categoriesStr %> (<span class="amount-selected-categories"></span>):</span> <span class="selected-categories"></span></div>',
@@ -970,7 +970,7 @@ define(['services/husky/util'], function(util) {
             this.selectCategories(data);
 
             this.sandbox.stop(this.sandbox.dom.find('.categories-loader', this.$overlayContent));
-            this.sandbox.dom.find('.categories-container', this.$overlayContent).show();
+            this.sandbox.dom.find('.categories', this.$overlayContent).show();
         },
 
         /**
