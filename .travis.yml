@@ -6,7 +6,7 @@ php:
   - 5.5
 
 env:
-  - SULU_ORM=mysql SULU_PHPCR=jackrabbit
+  - SULU_ORM=mysql SULU_PHPCR=jackrabbit SYMFONY_DEPRECATIONS_HELPER=weak
 #  - SULU_ORM=postgres SULU_PHPCR=jackrabbit
 #  - SULU_ORM=mysql SULU_PHPCR=doctrine_dbal
 #  - SULU_ORM=postgres SULU_PHPCR=doctrine_dbal
