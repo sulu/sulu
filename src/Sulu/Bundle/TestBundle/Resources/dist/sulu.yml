@@ -58,6 +58,7 @@ sulu_core:
         backend:
             type: "%phpcr.transport%"
             url:  "%phpcr.backend_url%"
+            check_login_on_server: false
         workspace: "%phpcr.workspace%"
         username: "%phpcr.username%"
         password: "%phpcr.password%"
@@ -106,6 +107,7 @@ doctrine:
         dbname: "%database.name%"
         user: "%database.user%"
         password: "%database.password%"
+        path: "%database.path%"
         server_version: "%database.version%"
         charset:  UTF8
 

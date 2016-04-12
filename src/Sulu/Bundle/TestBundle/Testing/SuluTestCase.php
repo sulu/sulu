@@ -58,7 +58,20 @@ abstract class SuluTestCase extends KernelTestCase
     public function tearDown()
     {
         parent::tearDown();
-        $this->getEntityManager()->getConnection()->close();
+        // close the doctrine connection
+        foreach ($this->getContainer()->get('doctrine')->getConnections() as $connection) {
+            $connection->close();
+        }
+
+        // close the jackalope connections - can be removed when
+        // https://github.com/sulu/sulu/pull/2125 is merged.
+        // this has a negligble impact on memory usage in anycase.
+        foreach ($this->getContainer()->get('doctrine_phpcr')->getConnections() as $connection) {
+            try {
+                $connection->logout();
+            } catch (\Exception $e) {
+            }
+        }
     }
 
     /**

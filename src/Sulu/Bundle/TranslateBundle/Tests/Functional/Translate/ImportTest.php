@@ -324,15 +324,15 @@ class ImportTest extends SuluTestCase
         $this->import->resetPackages();
 
         $packages = $this->em->getRepository('SuluTranslateBundle:Package')->findAll();
-        $this->assertEquals(0, count($packages));
+        $this->assertCount(0, $packages);
 
         $catalogues = $this->em->getRepository('SuluTranslateBundle:Catalogue')->findAll();
         $this->assertEquals(0, count($catalogues));
 
-        $codes = $this->em->getRepository('SuluTranslateBundle:Code')->findAll();
-        $this->assertEquals(0, count($codes));
-
         $translations = $this->em->getRepository('SuluTranslateBundle:Translation')->findAll();
         $this->assertEquals(0, count($translations));
+
+        $codes = $this->em->getRepository('SuluTranslateBundle:Code')->findAll();
+        $this->assertEquals(0, count($codes));
     }
 }

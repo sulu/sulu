@@ -621,7 +621,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->initPhpcr();
 
         $link = $this->createPage('test-1', 'de');
-        usleep(1000000); // create a difference between link and page (created / changed)
+        sleep(1); // create a difference between link and page (created / changed)
         $page = $this->createInternalLinkPage('test-2', 'de', $link);
 
         $result = $this->contentRepository->find(
@@ -637,11 +637,40 @@ class ContentRepositoryTest extends SuluTestCase
             )->getMapping()
         );
 
-        $this->assertGreaterThan($link->getCreated(), $result['created']);
-        $this->assertGreaterThan($link->getChanged(), $result['changed']);
+        $created = $result['created'];
+        $changed = $result['changed'];
 
-        $this->assertEquals($page->getChanged(), $result['changed']);
-        $this->assertEquals($page->getCreated(), $result['created']);
+        // Jackalope Jackrabbit will return a \DateTime and DBAL will return a
+        // string. See: https://github.com/jackalope/jackalope-doctrine-dbal/issues/325
+        if (is_string($created)) {
+            $created = new \DateTime($result['created']);
+        }
+
+        if (is_string($changed)) {
+            $changed = new \DateTime($result['changed']);
+        }
+
+        $this->assertGreaterThan($link->getCreated(), $created);
+        $this->assertGreaterThan($link->getChanged(), $changed);
+
+        // Reload the document.
+        //
+        // Jackalope Doctrine DBAL will currently "normalize" to UTC when
+        // persisting and use the system TZ when loading, however there is/was
+        // an actual bug whereby the state of the objects DateTime object was
+        // changed such that it was incorrect in the loaded entity after
+        // persisting.
+        //
+        // Reloading the document is a workaround to ensure we have the correct
+        // value.
+        //
+        // PR: https://github.com/jackalope/jackalope-doctrine-dbal/pull/326 has
+        // already been merged for this, and we can remove this after upgrading
+        // to the next jackalope DBAL release.
+        $page = $this->documentManager->find($page->getUuid(), 'de');
+
+        $this->assertEquals($page->getCreated()->format('c'), $created->format('c'));
+        $this->assertEquals($page->getChanged()->format('c'), $changed->format('c'));
 
         $this->assertEquals($page->getUuid(), $result->getId());
         $this->assertEquals('/test-2', $result->getPath());

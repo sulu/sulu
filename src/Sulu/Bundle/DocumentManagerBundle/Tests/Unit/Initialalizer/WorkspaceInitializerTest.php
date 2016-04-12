@@ -74,16 +74,13 @@ class WorkspaceInitializerTest extends \PHPUnit_Framework_TestCase
             $this->session2->reveal(),
         ]);
 
-        $this->session1->getRootNode()->willThrow(new RepositoryException('Foo'));
-        $this->session2->getRootNode()->willReturn(true);
-
         $this->session1->getWorkspace()->willReturn($this->workspace1->reveal());
         $this->session2->getWorkspace()->willReturn($this->workspace2->reveal());
 
         $this->workspace1->getName()->willReturn('hello1');
         $this->workspace2->getName()->willReturn('hello2');
-        $this->workspace1->createWorkspace('hello1')->shouldBeCalled();
-        $this->workspace2->createWorkspace('hello2')->shouldNotBeCalled();
+        $this->workspace1->createWorkspace('hello1')->willThrow(new RepositoryException('foo'));
+        $this->workspace2->createWorkspace('hello2')->shouldBeCalled();
 
         $this->initializer->initialize($this->output);
     }

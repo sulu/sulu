@@ -1,6 +1,7 @@
 parameters:
     database.driver:   pdo_mysql
     database.host:     localhost
+    database.path:     ~
     database.user:     root
     database.name:     sulu_test
     database.port:     ~
