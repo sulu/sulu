@@ -38,18 +38,6 @@ class ResettingController extends Controller
     const MAX_NUMBER_EMAILS = 3;
 
     /**
-     * Returns the sender's email address.
-     *
-     * @param Request $request
-     *
-     * @return string
-     */
-    protected function getSenderAddress(Request $request)
-    {
-        return 'no-reply@' . $request->getHost();
-    }
-
-    /**
      * The interval in which the token is valid.
      *
      * @return \DateInterval
@@ -126,6 +114,42 @@ class ResettingController extends Controller
         }
 
         return $response;
+    }
+
+    /**
+     * Returns the sender's email address.
+     *
+     * @param Request $request
+     *
+     * @return string
+     */
+    protected function getSenderAddress(Request $request)
+    {
+        return 'no-reply@' . $request->getHost();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getSubject()
+    {
+        $this->get('translator')->trans(
+            static::$emailSubjectKey,
+            [],
+            static::$translationDomain
+        );
+    }
+
+    /**
+     * @return string
+     */
+    protected function getMessage()
+    {
+        $this->get('translator')->trans(
+            static::$emailMessageKey,
+            [],
+            static::$translationDomain
+        );
     }
 
     /**
@@ -244,16 +268,16 @@ class ResettingController extends Controller
             throw new TokenEmailsLimitReachedException(self::MAX_NUMBER_EMAILS, $user);
         }
         $mailer = $this->get('mailer');
-        $translator = $this->get('translator');
         $em = $this->getDoctrine()->getManager();
         $message = $mailer->createMessage()
             ->setSubject(
-                $translator->trans(static::$emailSubjectKey, [], static::$translationDomain)
+                $this->getSubject()
             )
             ->setFrom($from)
             ->setTo($to)
             ->setBody(
-                $translator->trans(static::$emailMessageKey, [], static::$translationDomain) . PHP_EOL .
+                $this->getMessage()
+                . PHP_EOL .
                 $this->generateUrl(static::$resetRouteId, ['token' => $user->getPasswordResetToken()], true)
             );
         $mailer->send($message);
