@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Component\Translation\Translator;
 
 /**
  * Class ResettingController.
@@ -129,11 +130,19 @@ class ResettingController extends Controller
     }
 
     /**
+     * @return Translator
+     */
+    protected function getTranslator()
+    {
+        $this->get('translator');
+    }
+
+    /**
      * @return string
      */
     protected function getSubject()
     {
-        return $this->get('translator')->trans(
+        return $this->getTranslator()->trans(
             static::$emailSubjectKey,
             [],
             static::$translationDomain
@@ -147,7 +156,7 @@ class ResettingController extends Controller
      */
     protected function getMessage($user)
     {
-        $message = $this->get('translator')->trans(
+        $message = $this->getTranslator()->trans(
             static::$emailMessageKey,
             [],
             static::$translationDomain
