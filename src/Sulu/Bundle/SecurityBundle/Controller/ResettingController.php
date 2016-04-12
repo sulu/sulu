@@ -141,15 +141,27 @@ class ResettingController extends Controller
     }
 
     /**
+     * @param UserInterface $user
+     *
      * @return string
      */
-    protected function getMessage()
+    protected function getMessage($user)
     {
-        return $this->get('translator')->trans(
+        $message = $this->get('translator')->trans(
             static::$emailMessageKey,
             [],
             static::$translationDomain
         );
+
+        $message .= PHP_EOL;
+
+        $message .= $this->generateUrl(
+            static::$resetRouteId,
+            ['token' => $user->getPasswordResetToken()],
+            true
+        );
+
+        return $message;
     }
 
     /**
@@ -276,9 +288,7 @@ class ResettingController extends Controller
             ->setFrom($from)
             ->setTo($to)
             ->setBody(
-                $this->getMessage()
-                . PHP_EOL .
-                $this->generateUrl(static::$resetRouteId, ['token' => $user->getPasswordResetToken()], true)
+                $this->getMessage($user)
             );
         $mailer->send($message);
         $user->setPasswordResetTokenEmailsSent($user->getPasswordResetTokenEmailsSent() + 1);
