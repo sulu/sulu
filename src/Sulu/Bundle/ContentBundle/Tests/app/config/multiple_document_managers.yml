@@ -1,0 +1,11 @@
+sulu_content:    
+    publish:
+        document_manager: live
+        cascade:
+            page: [ "route" ]
+
+monolog:
+    handlers:
+        main:
+            type:   stream
+            path:   "%kernel.logs_dir%/%kernel.environment%.log"

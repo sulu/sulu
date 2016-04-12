@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="sulu.content.path_cleaner.replacer_loader.file_locator.class">Symfony\Component\Config\FileLocator</parameter>
+        <parameter key="sulu.content.path_cleaner.replacer_loader.class">Sulu\Bundle\CoreBundle\DataFixtures\ReplacerXmlLoader</parameter>
+        <parameter key="sulu.content.path_cleaner.class">Sulu\Component\PHPCR\PathCleanup</parameter>
+
+        <parameter key="sulu.content.rlp.mapper.phpcr.class">Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper</parameter>
+        <parameter key="sulu.content.rlp.strategy.tree.class">Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy</parameter>
+    </parameters>
+
+    <services>
+
+        <!-- rlp mapper -->
+        <service id="sulu.content.rlp.mapper.phpcr" class="%sulu.content.rlp.mapper.phpcr.class%" public="false">
+            <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
+        </service>
+
+        <!-- rlp strategies -->
+        <service id="sulu.content.rlp.strategy.tree" class="%sulu.content.rlp.strategy.tree.class%">
+            <argument type="service" id="sulu.content.rlp.mapper.phpcr"/>
+            <argument type="service" id="sulu.content.path_cleaner"/>
+            <argument type="service" id="sulu.content.structure_manager" />
+            <argument type="service" id="sulu.content.type_manager"/>
+            <argument type="service" id="sulu.util.node_helper"/>
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
+        </service>
+
+        <service id="sulu.content.path_cleaner.replacer_loader.file_locator" class="%sulu.content.path_cleaner.replacer_loader.file_locator.class%" synthetic="false">
+        </service>
+
+        <service id="sulu.content.path_cleaner.replacer_loader" class="%sulu.content.path_cleaner.replacer_loader.class%" synthetic="false">
+            <argument type="service" id="sulu.content.path_cleaner.replacer_loader.file_locator"/>
+        </service>
+
+        <service id="sulu.content.path_cleaner" class="%sulu.content.path_cleaner.class%"/>
+
+    </services>
+</container>
+
+
