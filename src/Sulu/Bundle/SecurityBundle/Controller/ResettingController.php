@@ -133,7 +133,7 @@ class ResettingController extends Controller
      */
     protected function getSubject()
     {
-        $this->get('translator')->trans(
+        return $this->get('translator')->trans(
             static::$emailSubjectKey,
             [],
             static::$translationDomain
@@ -145,7 +145,7 @@ class ResettingController extends Controller
      */
     protected function getMessage()
     {
-        $this->get('translator')->trans(
+        return $this->get('translator')->trans(
             static::$emailMessageKey,
             [],
             static::$translationDomain
