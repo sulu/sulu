@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Component\Translation\Translator;
 
 /**
  * Class ResettingController.
@@ -36,18 +37,6 @@ class ResettingController extends Controller
     protected static $translationDomain = 'backend';
     protected static $resetRouteId = 'sulu_admin.reset';
     const MAX_NUMBER_EMAILS = 3;
-
-    /**
-     * Returns the sender's email address.
-     *
-     * @param Request $request
-     *
-     * @return string
-     */
-    protected function getSenderAddress(Request $request)
-    {
-        return 'no-reply@' . $request->getHost();
-    }
 
     /**
      * The interval in which the token is valid.
@@ -126,6 +115,62 @@ class ResettingController extends Controller
         }
 
         return $response;
+    }
+
+    /**
+     * Returns the sender's email address.
+     *
+     * @param Request $request
+     *
+     * @return string
+     */
+    protected function getSenderAddress(Request $request)
+    {
+        return 'no-reply@' . $request->getHost();
+    }
+
+    /**
+     * @return Translator
+     */
+    protected function getTranslator()
+    {
+        return $this->get('translator');
+    }
+
+    /**
+     * @return string
+     */
+    protected function getSubject()
+    {
+        return $this->getTranslator()->trans(
+            static::$emailSubjectKey,
+            [],
+            static::$translationDomain
+        );
+    }
+
+    /**
+     * @param UserInterface $user
+     *
+     * @return string
+     */
+    protected function getMessage($user)
+    {
+        $message = $this->getTranslator()->trans(
+            static::$emailMessageKey,
+            [],
+            static::$translationDomain
+        );
+
+        $message .= PHP_EOL;
+
+        $message .= $this->generateUrl(
+            static::$resetRouteId,
+            ['token' => $user->getPasswordResetToken()],
+            true
+        );
+
+        return $message;
     }
 
     /**
@@ -244,17 +289,15 @@ class ResettingController extends Controller
             throw new TokenEmailsLimitReachedException(self::MAX_NUMBER_EMAILS, $user);
         }
         $mailer = $this->get('mailer');
-        $translator = $this->get('translator');
         $em = $this->getDoctrine()->getManager();
         $message = $mailer->createMessage()
             ->setSubject(
-                $translator->trans(static::$emailSubjectKey, [], static::$translationDomain)
+                $this->getSubject()
             )
             ->setFrom($from)
             ->setTo($to)
             ->setBody(
-                $translator->trans(static::$emailMessageKey, [], static::$translationDomain) . PHP_EOL .
-                $this->generateUrl(static::$resetRouteId, ['token' => $user->getPasswordResetToken()], true)
+                $this->getMessage($user)
             );
         $mailer->send($message);
         $user->setPasswordResetTokenEmailsSent($user->getPasswordResetTokenEmailsSent() + 1);
