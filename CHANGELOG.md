@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2290 [WebsiteBundle]       Fixed redirect urls for webspace
     * HOTFIX      #2285 [SecurityBundle]      Made ResettingController translations more configurable
     * HOTFIX      #2291 [ContentBundle]       Fixed wrong spacing between more than two checkboxes
 
