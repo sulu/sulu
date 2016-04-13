@@ -134,7 +134,7 @@ class ResettingController extends Controller
      */
     protected function getTranslator()
     {
-        $this->get('translator');
+        return $this->get('translator');
     }
 
     /**
