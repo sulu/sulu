@@ -37,10 +37,6 @@ define([], function() {
         },
 
         wrapTabEvents = function() {
-            this.sandbox.on('husky.permission-form.loaded', function() {
-                this.sandbox.emit('sulu.preview.initialize');
-            }.bind(this));
-
             this.sandbox.on('husky.permission-form.changed', function() {
                 this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
             }.bind(this));

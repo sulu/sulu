@@ -27,7 +27,9 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('sulu_websocket');
 
-        $rootNode->children()
+        $rootNode
+            ->canBeEnabled()
+            ->children()
                 ->arrayNode('server')
                     ->addDefaultsIfNotSet()
                     ->children()

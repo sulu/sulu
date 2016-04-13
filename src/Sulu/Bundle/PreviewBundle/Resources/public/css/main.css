@@ -1,0 +1,155 @@
+/*----------------------------------------*/
+/* line 1, ../scss/modules/preview.scss */
+.sulu-preview {
+  width: 100%;
+  height: 100%;
+  padding-top: 50px;
+}
+/* line 6, ../scss/modules/preview.scss */
+.sulu-preview .container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  text-align: center;
+  white-space: nowrap;
+  overflow: auto;
+}
+/* line 14, ../scss/modules/preview.scss */
+.sulu-preview .container::before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -0.25em;
+}
+/* line 22, ../scss/modules/preview.scss */
+.sulu-preview .container .wrapper {
+  display: inline-block;
+  white-space: normal;
+  vertical-align: middle;
+  overflow: hidden;
+}
+/* line 30, ../scss/modules/preview.scss */
+.sulu-preview iframe {
+  border: 0;
+  width: 100%;
+  height: 100%;
+}
+/* line 37, ../scss/modules/preview.scss */
+.sulu-preview.auto .wrapper {
+  width: 100%;
+  height: 100%;
+}
+/* line 41, ../scss/modules/preview.scss */
+.sulu-preview.auto .viewport {
+  width: 100%;
+  height: 100%;
+}
+/* line 46, ../scss/modules/preview.scss */
+.sulu-preview.desktop {
+  background: #999;
+}
+/* line 48, ../scss/modules/preview.scss */
+.sulu-preview.desktop .wrapper {
+  width: 1024px;
+  height: 100%;
+}
+/* line 52, ../scss/modules/preview.scss */
+.sulu-preview.desktop .viewport {
+  width: 100%;
+  height: 100%;
+}
+/* line 57, ../scss/modules/preview.scss */
+.sulu-preview.smartphone {
+  background: #999;
+}
+/* line 59, ../scss/modules/preview.scss */
+.sulu-preview.smartphone .wrapper {
+  width: 378px;
+  height: 794px;
+  background-image: url("../img/smartphone_portrait.png");
+  background-size: 378px;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  padding-top: 115px;
+  padding-left: 30px;
+}
+/* line 69, ../scss/modules/preview.scss */
+.sulu-preview.smartphone .viewport {
+  width: 320px;
+  height: 568px;
+}
+/* line 74, ../scss/modules/preview.scss */
+.sulu-preview.tablet {
+  background: #999;
+}
+/* line 76, ../scss/modules/preview.scss */
+.sulu-preview.tablet .wrapper {
+  width: 836px;
+  height: 1282px;
+  background-image: url("../img/tablet_portrait.png");
+  background-size: 836px;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  padding-top: 122px;
+  padding-left: 30px;
+}
+/* line 86, ../scss/modules/preview.scss */
+.sulu-preview.tablet .viewport {
+  width: 768px;
+  height: 1024px;
+}
+/* line 92, ../scss/modules/preview.scss */
+.sulu-preview .preview-toolbar {
+  height: 50px;
+  margin-top: -50px;
+  background: #20272E;
+  position: relative;
+  padding-right: 50px;
+  padding-left: 50px;
+}
+/* line 99, ../scss/modules/preview.scss */
+.sulu-preview .preview-toolbar .toggler, .sulu-preview .preview-toolbar .new-window {
+  width: 50px;
+  height: 100%;
+  cursor: pointer;
+  color: white;
+  line-height: 50px;
+  text-align: center;
+  font-size: 20px;
+  position: absolute;
+  top: 0;
+}
+/* line 110, ../scss/modules/preview.scss */
+.sulu-preview .preview-toolbar .toggler {
+  font-size: 14px;
+  left: 0px;
+}
+/* line 114, ../scss/modules/preview.scss */
+.sulu-preview .preview-toolbar .new-window {
+  right: 0;
+}
+/* line 117, ../scss/modules/preview.scss */
+.sulu-preview .preview-toolbar .toolbar {
+  width: 100%;
+  height: 100%;
+  margin-left: -1px;
+}
+
+/* line 125, ../scss/modules/preview.scss */
+.v-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 101;
+  height: 40px;
+  width: 180px;
+}
+/* line 133, ../scss/modules/preview.scss */
+.v-center .btn {
+  margin-left: -90px;
+  margin-right: 90px;
+  overflow: hidden;
+  text-align: center;
+  color: #000;
+}

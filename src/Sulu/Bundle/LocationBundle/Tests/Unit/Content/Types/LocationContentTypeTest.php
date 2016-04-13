@@ -78,22 +78,6 @@ class LocationContentTypeTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideRead
      */
-    public function testReadForPreview($data)
-    {
-        $this->initReadTest($data);
-
-        $this->locationContent->readForPreview(
-            $data,
-            $this->suluProperty,
-            'webspace_key',
-            'fr',
-            'segment'
-        );
-    }
-
-    /**
-     * @dataProvider provideRead
-     */
     public function testWrite($data)
     {
         $this->suluProperty->expects($this->once())

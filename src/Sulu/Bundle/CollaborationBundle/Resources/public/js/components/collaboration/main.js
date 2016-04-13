@@ -27,7 +27,7 @@ define([
         },
 
         initialize: function() {
-            this.client = WebsocketManager.getClient(WEBSOCKET_APP_NAME, true);
+            this.client = WebsocketManager.getClient(WEBSOCKET_APP_NAME);
 
             this.bindEvents();
             this.bindMessageHandler();

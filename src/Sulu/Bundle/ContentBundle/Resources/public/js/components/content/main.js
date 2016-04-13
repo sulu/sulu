@@ -8,13 +8,12 @@
  */
 
 define([
+    'services/sulupreview/preview',
     'sulucontent/model/content',
-    'sulucontent/components/content/preview/main',
     'sulucontent/components/copy-locale-overlay/main',
     'sulucontent/components/open-ghost-overlay/main',
-    'sulusecurity/services/security-checker',
-    'config'
-], function(Content, Preview, CopyLocale, OpenGhost, SecurityChecker, Config) {
+    'sulusecurity/services/security-checker'
+], function(Preview, Content, CopyLocale, OpenGhost, SecurityChecker) {
 
     'use strict';
 
@@ -24,8 +23,6 @@ define([
 
         constants = {
             localizationUrl: '/admin/api/webspace/localizations',
-            previewExpandIcon: 'fa-step-backward',
-            previewCollapseIcon: 'fa-step-forward',
             tabPrefix: 'tab-',
             contentNodeType: 1,
             internalLinkNodeType: 2,
@@ -51,34 +48,6 @@ define([
         },
 
         templates = {
-            preview: [
-                '<div class="sulu-content-preview auto">',
-                '   <div class="preview-toolbar">',
-                '       <div class="' + constants.previewExpandIcon + ' toggler"></div>',
-                '       <div class="toolbar"></div>',
-                '       <div class="fa-external-link new-window"></div>',
-                '   </div>',
-                '   <div class="container">',
-                '       <div class="wrapper">',
-                '           <div class="viewport">',
-                '               <iframe src="<%= url %>"></iframe>',
-                '           </div>',
-                '       </div>',
-                '   </div>',
-                '</div>'
-            ].join(''),
-
-            previewOnRequest: [
-                '<div class="v-center">',
-                '   <div id="preview-start" class="btn grey large">',
-                '       <span class="fa-play"></span>',
-                '       <span class="text"><%= startLabel %></span>',
-                '   </div>',
-                '</div>'
-            ].join(''),
-
-            previewUrl: '<%= url %><%= uuid %>/render?webspace=<%= webspace %>&language=<%= language %>',
-
             referentialIntegrityMessage: function(pageTitles) {
                 var message = [];
 
@@ -105,15 +74,6 @@ define([
         initialize: function() {
             // init vars
             this.saved = true;
-            this.previewUrl = null;
-            this.previewWindow = null;
-            this.previewExpanded = false;
-            this.$preview = null;
-
-            this.previewMode = Config.get('sulu.content.preview').mode;
-
-            this.preview = new Preview();
-            this.preview.initialize(this.sandbox, this.options, this.$el);
 
             if (this.options.display === 'column') {
                 this.renderColumn();
@@ -124,22 +84,27 @@ define([
         },
 
         loadComponentData: function() {
-            var localization = $.Deferred();
-            var data = $.Deferred();
+            var localizationDeferred = $.Deferred();
+            var dataDeferred = $.Deferred();
 
             this.loadLocalizations().then(function() {
-                localization.resolve();
+                localizationDeferred.resolve();
             }.bind(this));
 
             if (this.options.display !== 'column') {
                 this.loadData().then(function() {
-                    data.resolve();
+
+                    if (!!this.options.preview) {
+                        this.preview = Preview.initialize(this.data.permissions, this.options.webspace);
+                    }
+
+                    dataDeferred.resolve();
                 }.bind(this));
             } else {
-                data.resolve();
+                dataDeferred.resolve();
             }
 
-            return $.when(localization, data);
+            return $.when(localizationDeferred, dataDeferred);
         },
 
         renderColumn: function() {
@@ -213,7 +178,7 @@ define([
             // getter for content data
             this.sandbox.on('sulu.content.contents.get-data', function(callback) {
                 // deep copy of object
-                callback(this.sandbox.util.deepCopy(this.data));
+                callback(this.sandbox.util.deepCopy(this.data), this.preview);
             }.bind(this));
 
             // setter for header bar buttons
@@ -300,11 +265,6 @@ define([
                 this.handleError(code, data, action);
             }, this);
 
-            // content delete
-            this.sandbox.on('sulu.preview.delete', function() {
-                this.sandbox.emit('sulu.content.content.delete', this.data.id);
-            }, this);
-
             // set default template
             this.sandbox.on('sulu.content.contents.default-template', function(name) {
                 this.template = name;
@@ -332,9 +292,6 @@ define([
                     this.setHeaderBar(false);
                 }
             }.bind(this));
-
-            // change url of preview
-            this.sandbox.on('sulu.content.preview.change-url', this.changePreviewUrl.bind(this));
 
             this.sandbox.on('sulu.permission-tab.saved', function(data, action) {
                 this.afterSaveAction(action, false);
@@ -483,7 +440,6 @@ define([
                             success: this.deleteSuccessCallback.bind(this),
                             error: function(model, response) {
                                 this.displayReferentialIntegrityDialog(model, response.responseJSON);
-                                this.sandbox.emit('sulu.preview.deleted', id);
                             }.bind(this)
                         });
                     } else {
@@ -496,7 +452,6 @@ define([
                             }.bind(this),
                             error: function(model, response) {
                                 this.displayReferentialIntegrityDialog(model, response.responseJSON);
-                                this.sandbox.emit('sulu.preview.deleted', id);
                             }.bind(this)
                         });
                     }
@@ -768,25 +723,14 @@ define([
             this.setState(this.data);
 
             if (!!this.options.preview && this.data.nodeType === constants.contentNodeType && !this.data.shadowOn) {
-                this.sandbox.on('sulu.preview.initiated', function() {
-                    this.renderPreview(this.data);
-                }.bind(this));
+                var objectClass = 'Sulu\\Bundle\\ContentBundle\\Document\\' + (isHomeDocument(this.data) ? 'Home' : 'Page') + 'Document';
 
-                this.sandbox.on('sulu.preview.changes', this.handleChanges.bind(this));
-
-                this.sandbox.on('sulu.preview.initialize', function(data, restart) {
-                    if (this.previewMode === 'auto') {
-                        // if mode is auto init immediately
-                        this.sandbox.emit('sulu.preview.initialize.force', data, restart);
-                    } else if (this.previewMode === 'on_request') {
-                        // if mode is on_request render the "start preview" button
-                        this.renderPreviewOnRequest(restart);
-                    }
-                }.bind(this));
-
-                this.sandbox.on('sulu.preview.initialize.force', function(data, restart) {
-                    this.previewInitialize(data, restart);
-                }.bind(this));
+                this.preview.start(
+                    objectClass,
+                    this.options.id,
+                    this.options.language,
+                    this.data
+                );
             } else {
                 this.sandbox.emit('sulu.sidebar.hide');
             }
@@ -808,183 +752,11 @@ define([
             this.setHeaderBar(true);
         },
 
-        previewInitialize: function(data, restart) {
-            data = this.sandbox.util.extend(true, {}, this.data, data);
-            if (!this.preview.initiated) {
-                this.preview.start(data, this.options);
-            } else if (!!restart) {
-                // force reload
-                this.sandbox.dom.remove(this.$preview);
-                this.$preview = null;
-                this.preview.restart(data, this.options, this.template);
-            }
-        },
-
-        renderPreviewOnRequest: function(restart) {
-            this.sandbox.emit('sulu.sidebar.change-width', 'max');
-            this.$preview = this.sandbox.dom.createElement(
-                this.sandbox.util.template(templates.previewOnRequest, {startLabel: this.sandbox.translate('content.contents.start-preview')})
-            );
-            this.sandbox.dom.on(this.sandbox.dom.find('#preview-start', this.$preview), 'click', function() {
-                // reload preview container
-                this.sandbox.dom.remove(this.$preview);
-                this.$preview = null;
-
-                // get current data
-                var data = this.sandbox.form.getData('#content-form-container');
-
-                // initialize preview
-                this.sandbox.emit('sulu.preview.initialize.force', data, restart);
-            }.bind(this));
-
-            this.sandbox.emit('sulu.sidebar.set-widget', null, this.$preview);
-        },
-
-        /**
-         * Render preview for loaded content node
-         * @param data
-         */
-        renderPreview: function(data) {
-            this.sandbox.emit('sulu.sidebar.change-width', 'max');
-            if (this.$preview === null) {
-                this.previewUrl = this.sandbox.util.template(templates.previewUrl, {
-                    url: '/admin/content/preview/',
-                    webspace: this.options.webspace,
-                    language: this.options.language,
-                    uuid: data.id
-                });
-                this.$preview = this.sandbox.dom.createElement(this.sandbox.util.template(templates.preview, {
-                    url: this.previewUrl
-                }));
-                this.bindPreviewEvents();
-                this.startPreviewToolbar();
-                this.sandbox.emit('sulu.sidebar.set-widget', null, this.$preview);
-            }
-        },
-
-        /**
-         * Starts the toolbar for the preview
-         */
-        startPreviewToolbar: function() {
-            var buttons = {
-                displayDevices: {},
-                refresh: {}
-            };
-
-            if (!!this.content.get('_permissions').live) {
-                buttons.cache = {
-                    options: {
-                        icon: 'recycle',
-                        title: 'sulu.website.cache.remove',
-                        callback: this.cacheClear.bind(this)
-                    }
-                };
-            }
-
-            this.sandbox.start([{
-                name: 'toolbar@husky',
-                options: {
-                    el: this.$preview.find('.toolbar'),
-                    instanceName: 'preview',
-                    skin: 'big',
-                    responsive: true,
-                    buttons: this.sandbox.sulu.buttons.get(buttons)
-                }
-            }]);
-        },
-
         /**
          * Clear website cache.
          */
         cacheClear: function() {
             this.sandbox.website.cacheClear();
-        },
-
-        /**
-         * Binds events on preview elements and components
-         */
-        bindPreviewEvents: function() {
-            this.$preview.find('.new-window').on('click', this.openPreviewInNewWindow.bind(this));
-            this.$preview.find('.toggler').on('click', this.togglePreview.bind(this));
-
-            this.sandbox.on('sulu.toolbar.refresh', this.refreshPreview.bind(this));
-            this.sandbox.on('sulu.toolbar.display-device', this.changePreviewStyle.bind(this));
-        },
-
-        /**
-         * Changes the url of the preview
-         * @param params {Object} object with parameteres like webspace language etc.
-         */
-        changePreviewUrl: function(params) {
-            if (this.$preview !== null && !!this.content) {
-                var $iframe,
-                    content = this.content.toJSON(),
-                    defaults = {
-                        url: '/admin/content/preview/',
-                        webspace: this.options.webspace,
-                        language: this.options.language,
-                        uuid: content.id,
-                        template: content.template
-                    };
-                defaults = this.sandbox.util.extend(true, {}, defaults, params);
-                this.previewUrl = this.sandbox.util.template(templates.previewUrl)(defaults);
-                $iframe = this.sandbox.dom.find('iframe', this.$preview);
-                this.sandbox.dom.attr($iframe, 'src', this.previewUrl);
-                if (!!this.previewWindow && this.previewWindow.closed === false) {
-                    this.previewWindow.close();
-                }
-            }
-        },
-
-        /**
-         * Changes the style of the the preview. E.g. from desktop to smartphone
-         * @param newStyle {String} the new style
-         */
-        changePreviewStyle: function(newStyle) {
-            if (this.$preview !== null) {
-                this.$preview.removeClass(this.$preview.data('sulu-preview-style'));
-                this.$preview.addClass(newStyle);
-                this.$preview.data('sulu-preview-style', newStyle);
-            }
-        },
-
-        /**
-         * Shrinks or expands the content-column and therefore also the preview
-         */
-        togglePreview: function() {
-            if (this.previewExpanded) {
-                this.sandbox.emit('sulu.app.toggle-column', false);
-                this.sandbox.dom.removeClass(this.$preview.find('.toggler'), constants.previewCollapseIcon);
-                this.sandbox.dom.prependClass(this.$preview.find('.toggler'), constants.previewExpandIcon);
-                this.previewExpanded = false;
-            } else {
-                this.sandbox.emit('sulu.app.toggle-column', true);
-                this.previewExpanded = true;
-                this.sandbox.dom.removeClass(this.$preview.find('.toggler'), constants.previewExpandIcon);
-                this.sandbox.dom.prependClass(this.$preview.find('.toggler'), constants.previewCollapseIcon);
-            }
-        },
-
-        /**
-         * Hides the sidebar and opens a new window with the preview in it
-         */
-        openPreviewInNewWindow: function() {
-            this.sandbox.emit('sulu.app.change-width', 'fixed');
-            this.sandbox.emit('husky.navigation.show');
-            this.sandbox.emit('sulu.sidebar.hide');
-            this.previewWindow = window.open(this.previewUrl);
-            this.previewWindow.onload = function() {
-                this.previewWindow.onunload = function() {
-                    this.previewWindow = null;
-
-                    this.sandbox.emit('sulu.sidebar.show');
-                    this.sandbox.emit('sulu.sidebar.change-width', 'max');
-                }.bind(this);
-            }.bind(this);
-        },
-
-        refreshPreview: function() {
-            this.getPreviewDocument().location.reload();
         },
 
         /**
@@ -1032,99 +804,7 @@ define([
                 this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
             }
 
-            this.sandbox.emit('sulu.preview.state.change', saved);
-
             this.saved = saved;
-        },
-
-        getPreviewDocument: function() {
-            if (!!this.previewWindow) {
-                return this.previewWindow.document;
-            } else {
-                return this.sandbox.dom.find('iframe', this.$preview).contents()[0];
-            }
-        },
-
-        handleChanges: function(changes) {
-            if (!!changes.reload) {
-                this.getPreviewDocument().location.reload();
-            } else {
-                // foreach property which was changed
-                for (var propertyName in changes) {
-                    if (changes.hasOwnProperty(propertyName)) {
-                        if (-1 !== propertyName.indexOf(',')) {
-                            this.handleSequence(propertyName, changes[propertyName]);
-                        } else {
-                            this.handleSingle(propertyName, changes[propertyName]);
-                        }
-                    }
-                }
-            }
-        },
-
-        handleSequence: function(propertyName, content) {
-            var sequence = propertyName.split(','),
-                filter = '',
-                item, before = 0,
-            // regex for integer
-                isInt = /^\d*$/;
-
-            for (item in sequence) {
-                // check of integer
-                if (!isInt.test(sequence[item])) {
-                    before = sequence[item];
-                    filter += ' *[property="' + sequence[item] + '"]';
-                } else {
-                    filter += ' *[rel="' + before + '"]:eq(' + (parseInt(sequence[item])) + ')';
-                }
-            }
-
-            this.handle(content, filter, function() {
-                return true;
-            });
-        },
-
-        handleSingle: function(propertyName, content) {
-            var filter = '*[property="' + propertyName + '"]';
-
-            this.handle(content, filter, function(element) {
-                // check all parents if they has not the attribute property
-                // thats currently not supported by the api
-                var currentNode = element.parentNode;
-                while (null !== currentNode.parentNode) {
-                    if (currentNode.hasAttribute('property') && currentNode.getAttribute('typeof') === 'collection') {
-                        return false;
-                    }
-                    currentNode = currentNode.parentNode;
-                }
-
-                return true;
-            });
-        },
-
-        handle: function(content, selector, validate) {
-            var i = 0,
-                elements = $(this.getPreviewDocument()).find(selector),
-                nodeArray = [].slice.call(elements);
-
-            nodeArray.forEach(function(element) {
-                if (!validate(element)) {
-                    return;
-                }
-
-                $.each(content[i], function(key, value) {
-                    if (key !== 'html') {
-                        $(element).attr(key, value);
-
-                        return;
-                    }
-
-                    element.innerHTML = value;
-                });
-
-                // FIXME jump to element: element.scrollIntoView();
-                i++;
-            });
         },
 
         getCopyLocaleUrl: function(id, src, dest) {
@@ -1263,7 +943,8 @@ define([
                     tabs: {
                         url: navigationUrl,
                         componentOptions: {
-                            values: this.content.toJSON()
+                            values: this.content.toJSON(),
+                            previewService: this.preview
                         }
                     },
 
@@ -1298,6 +979,11 @@ define([
                     },
                     sidebar: (!!this.options.preview) ? 'max' : false
                 };
+            }
+        },
+        destroy: function() {
+            if (!!this.preview) {
+                Preview.destroy(this.preview);
             }
         }
     };

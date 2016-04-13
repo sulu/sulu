@@ -33,19 +33,3 @@ sulu_content.seo:
 sulu_content.template.settings:
     pattern: /template/content/settings.html
     defaults: { _controller: SuluContentBundle:Template:settings }
-
-# Preview
-sulu_content.preview.render:
-    pattern: /preview/{contentUuid}/render
-    methods: GET
-    defaults: { _controller: SuluContentBundle:Preview:render }
-
-sulu_content.preview.update:
-    pattern: /preview/{contentUuid}/update
-    methods: POST
-    defaults: { _controller: SuluContentBundle:Preview:update }
-
-sulu_content.preview.changes:
-    pattern: /preview/{contentUuid}/changes
-    methods: GET
-    defaults: { _controller: SuluContentBundle:Preview:changes }

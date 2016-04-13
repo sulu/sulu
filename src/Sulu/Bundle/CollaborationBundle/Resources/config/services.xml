@@ -18,7 +18,7 @@
             <tag name="sulu.websocket.message.handler" dispatcher="admin" alias="sulu_collaboration" />
         </service>
 
-        <service id="sulu_collaboration.jsconfig" class="%sulu_content.jsconfig.class%">
+        <service id="sulu_collaboration.jsconfig" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">
             <argument type="string">sulu-collaboration</argument>
             <argument key="collaboration" type="collection">
                 <argument key="interval">%sulu_collaboration.interval%</argument>

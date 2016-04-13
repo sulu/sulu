@@ -67,14 +67,6 @@ abstract class SimpleContentType implements ContentTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
-    {
-        $property->setValue($data);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function hasValue(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         return $node->hasProperty($property->getName());

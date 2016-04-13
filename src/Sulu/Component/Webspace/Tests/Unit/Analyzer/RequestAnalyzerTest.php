@@ -127,12 +127,13 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
 
         $attributesBag = $this->prophesize(ParameterBag::class);
         $attributesBag->get('_sulu')->willReturn(null);
+        $attributesBag->has('_sulu')->willReturn(false);
         $attributesBag->set('_sulu', Argument::type(RequestAttributes::class))->shouldBeCalledTimes(1)->will(
             function ($arguments) use ($attributesBag) {
                 $attributesBag->get('_sulu')->willReturn($arguments[1]);
+                $attributesBag->has('_sulu')->willReturn(true);
             }
         );
-        $attributesBag->has('_sulu')->willReturn(true);
         $request->reveal()->attributes = $attributesBag->reveal();
 
         $requestStack = $this->prophesize(RequestStack::class);

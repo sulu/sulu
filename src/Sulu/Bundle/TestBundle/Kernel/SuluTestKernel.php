@@ -59,6 +59,8 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\TranslateBundle\SuluTranslateBundle(),
             new \Sulu\Bundle\HashBundle\SuluHashBundle(),
             new \Sulu\Bundle\CustomUrlBundle\SuluCustomUrlBundle(),
+            new \Sulu\Bundle\PreviewBundle\SuluPreviewBundle(),
+            new \Sulu\Bundle\RouteBundle\SuluRouteBundle(),
         ];
 
         if ($this->getContext() === self::CONTEXT_WEBSITE) {

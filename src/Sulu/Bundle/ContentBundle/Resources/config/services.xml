@@ -9,7 +9,6 @@
         <parameter key="sulu_content.rl_repository.class">Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepository</parameter>
         <parameter key="sulu_content.extension.seo.class">Sulu\Bundle\ContentBundle\Content\Structure\SeoStructureExtension</parameter>
         <parameter key="sulu_content.extension.excerpt.class">Sulu\Bundle\ContentBundle\Content\Structure\ExcerptStructureExtension</parameter>
-        <parameter key="sulu_content.jsconfig.class">Sulu\Bundle\AdminBundle\Admin\JsConfig</parameter>
     </parameters>
     <services>
         <!-- admin class -->
@@ -89,7 +88,7 @@
         </service>
 
         <!-- JsConfig -->
-        <service id="sulu_content.jsconfig" class="%sulu_content.jsconfig.class%">
+        <service id="sulu_content.jsconfig" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">
             <argument type="string">sulu-content</argument>
             <argument type="collection">
                 <argument key="locales" type="expression">service('sulu_core.webspace.webspace_manager').getAllLocalizations()</argument>
@@ -114,6 +113,23 @@
 
             <tag name="jms_serializer.event_subscriber" />
             <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <!-- preview -->
+        <service id="sulu_content.preview.object_provider" class="Sulu\Bundle\ContentBundle\Preview\PageObjectProvider">
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="serializer"/>
+
+            <tag name="sulu_preview.object_provider" class="Sulu\Bundle\ContentBundle\Document\HomeDocument"/>
+            <tag name="sulu_preview.object_provider" class="Sulu\Bundle\ContentBundle\Document\PageDocument"/>
+        </service>
+        <service id="sulu_content.preview.defaults_provider"
+                 class="Sulu\Bundle\ContentBundle\Preview\PageRouteDefaultsProvider">
+            <argument type="service" id="sulu_content.structure.factory"/>
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
+            <argument type="service" id="sulu.content.structure_manager"/>
+
+            <tag name="sulu_route.defaults_provider"/>
         </service>
     </services>
 </container>

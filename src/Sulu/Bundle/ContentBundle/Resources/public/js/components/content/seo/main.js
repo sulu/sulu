@@ -107,8 +107,6 @@ define([], function() {
                     this.initializeTitleCounter();
                     this.initializeDescriptionCounter();
                     this.initializeKeywordsCounter();
-
-                    this.sandbox.emit('sulu.preview.initialize');
                 }.bind(this));
             }.bind(this));
         },

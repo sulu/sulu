@@ -160,9 +160,6 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="request_stack"/>
             <argument>%kernel.environment%</argument>
-            <argument type="collection">
-                <argument type="string" key="analyticsKey">%sulu_website.preview_defaults.analytics_key%</argument>
-            </argument>
         </service>
 
         <service id="sulu_website.resolver.parameter" class="%sulu_website.resolver.parameter.class%">
@@ -197,6 +194,26 @@
             <argument type="service" id="sulu_website.router_listener.inner"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <!-- preview -->
+        <service id="sulu_website.event_listener.set_theme"
+                 class="Sulu\Bundle\WebsiteBundle\EventListener\SetThemeEventListener">
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument type="service" id="liip_theme.active_theme"/>
+
+            <tag name="kernel.event_listener" event="%sulu_preview.events.pre-render%"
+                 method="setActiveThemeOnPreviewPreRender"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_website.event_listener.translator"
+                 class="Sulu\Bundle\WebsiteBundle\EventListener\TranslatorEventListener">
+            <argument type="service" id="translator"/>
+
+            <tag name="kernel.event_listener" event="%sulu_preview.events.pre-render%"
+                 method="setLocaleOnPreviewPreRender"/>
+            <tag name="sulu.context" context="admin"/>
         </service>
     </services>
 </container>

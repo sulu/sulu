@@ -2,7 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * ENHANCEMENT #2289 [ContentBundle]       Added dipslay options support to date content type
+    * FEATURE     #2299 [PreviewBundle]       Implemented preview bundle 
+    * ENHANCEMENT #2289 [ContentBundle]       Added display options support to date content type
     * ENHANCEMENT #2316 [Symfony]             Added collector compiler pass
     * ENHANCEMENT #2279 [Webspace]            Do not hide invalid webspace exceptions
     * ENHANCEMENT #2288 [WebsiteBundle]       Fixed overriding request attributes and set them on the request

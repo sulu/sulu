@@ -1168,7 +1168,10 @@ define(['services/husky/util'], function(util) {
 
             // min source must be selected
             if (JSON.stringify(data) !== JSON.stringify(this.URI.data)) {
-                this.sandbox.emit(DATA_CHANGED.call(this), this.sandbox.dom.data(this.$el, 'smart-content'), this.$el);
+                var domData = this.sandbox.dom.data(this.$el, this.options.elementDataName);
+                if (!!domData) {
+                    this.sandbox.emit(DATA_CHANGED.call(this), domData, this.$el);
+                }
                 this.URI.data = this.sandbox.util.extend(true, {}, data);
                 this.URI.hasChanged = true;
             } else {

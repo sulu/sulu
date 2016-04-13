@@ -103,39 +103,12 @@ class LocationContentType extends ComplexContentType
     }
 
     /**
-     * @param $data
-     * @param PropertyInterface $property
-     * @param string            $webspaceKey
-     * @param string            $languageCode
-     * @param string            $segmentKey
-     * @param bool              $preview
-     */
-    protected function setData(
-        $data,
-        PropertyInterface $property,
-        $webspaceKey,
-        $languageCode,
-        $segmentKey,
-        $preview = false
-    ) {
-        $property->setValue($data);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $data = json_decode($node->getPropertyValueWithDefault($property->getName(), '{}'), true);
-        $this->setData($data, $property, $webspaceKey, $languageCode, $segmentKey);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
-    {
-        $this->setData($data, $property, $webspaceKey, $languageCode, $segmentKey, true);
+        $property->setValue($data);
     }
 
     /**

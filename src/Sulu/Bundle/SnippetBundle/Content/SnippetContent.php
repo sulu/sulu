@@ -76,18 +76,6 @@ class SnippetContent extends ComplexContentType
     }
 
     /**
-     * Set data to given property.
-     *
-     * @param array $data
-     * @param PropertyInterface $property
-     */
-    protected function setData($data, PropertyInterface $property)
-    {
-        $refs = isset($data) ? $data : [];
-        $property->setValue($refs);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
@@ -96,15 +84,8 @@ class SnippetContent extends ComplexContentType
         if ($node->hasProperty($property->getName())) {
             $refs = $node->getProperty($property->getName())->getString();
         }
-        $this->setData($refs, $property);
-    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
-    {
-        $this->setData($data, $property);
+        $property->setValue($refs);
     }
 
     /**
