@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-master
     * HOTFIX      #2285 [SecurityBundle]      Made ResettingController translations more configurable
+    * HOTFIX      #2291 [ContentBundle]       Fixed wrong spacing between more than two checkboxes
 
 * 1.2.0 (2016-04-11)
     * BUGFIX      #2280 [ContentBundle]       Removed scrollbar from categories in overlay
