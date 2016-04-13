@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #2291 [ContentBundle]       Fixed wrong spacing between more than two checkboxes
+
 * 1.2.0 (2016-04-11)
     * BUGFIX      #2280 [ContentBundle]       Removed scrollbar from categories in overlay
     * BUGFIX      #2281 [ContentBundle]       Use correct link for content tab in page form
