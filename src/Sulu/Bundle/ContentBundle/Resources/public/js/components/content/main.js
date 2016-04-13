@@ -766,6 +766,7 @@ define([
         render: function() {
             this.setTemplate(this.data);
             this.setState(this.data);
+            this.renderDraftLabel();
 
             if (!!this.options.preview && this.data.nodeType === constants.contentNodeType && !this.data.shadowOn) {
                 this.sandbox.on('sulu.preview.initiated', function() {
@@ -806,6 +807,13 @@ define([
             }
 
             this.setHeaderBar(true);
+        },
+
+        renderDraftLabel: function() {
+            this.sandbox.emit(
+                'sulu.header.tabs.label.show',
+                'blabla, draft: ' + this.data.changed + ' by ' + this.data.changer
+            );
         },
 
         previewInitialize: function(data, restart) {

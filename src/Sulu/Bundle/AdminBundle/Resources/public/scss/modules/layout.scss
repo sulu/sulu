@@ -224,6 +224,7 @@
 @media only screen and (max-width: 50px + $contentFixedWidth + $sidebarMaxCollapseWidth) {
     .has-visible-sidebar .content-column {
         &.fixed {
+            width: $contentFixedSmallWidth;
             #content, .sulu-title {
                 width: $contentFixedSmallWidth;
             }
