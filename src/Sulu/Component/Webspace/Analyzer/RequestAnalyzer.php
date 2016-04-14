@@ -31,11 +31,6 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     private $requestStack;
 
-    /**
-     * @var RequestAttributes
-     */
-    private $attributes;
-
     public function __construct(RequestStack $requestStack, array $requestProcessors)
     {
         $this->requestStack = $requestStack;
@@ -47,14 +42,16 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     public function analyze(Request $request)
     {
-        $this->attributes = new RequestAttributes(['host' => $request->getHost(), 'scheme' => $request->getScheme()]);
+        $attributes = new RequestAttributes(['host' => $request->getHost(), 'scheme' => $request->getScheme()]);
         foreach ($this->requestProcessors as $provider) {
-            $this->attributes = $this->attributes->merge($provider->process($request, $this->attributes));
+            $attributes = $attributes->merge($provider->process($request, $attributes));
         }
 
         foreach ($this->requestProcessors as $provider) {
-            $provider->validate($this->attributes);
+            $provider->validate($attributes);
         }
+
+        $request->attributes->set('_sulu', $attributes);
     }
 
     /**
@@ -64,11 +61,11 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     protected function getAttributes()
     {
-        if (!$this->attributes) {
+        if (null === $this->requestStack->getCurrentRequest()->attributes->get('_sulu')) {
             $this->analyze($this->requestStack->getCurrentRequest());
         }
 
-        return $this->attributes;
+        return $this->requestStack->getCurrentRequest()->attributes->get('_sulu');
     }
 
     /**
