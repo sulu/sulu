@@ -213,6 +213,7 @@ class WebspaceCollectionBuilder
                 $this->buildUrlRedirect(
                     $portal->getWebspace(),
                     $environment,
+                    $portal,
                     $urlAddress,
                     $urlRedirect,
                     $urlAnalyticsKey,
@@ -242,6 +243,7 @@ class WebspaceCollectionBuilder
     /**
      * @param Webspace $webspace
      * @param Environment $environment
+     * @param Portal $portal
      * @param string $urlAddress
      * @param string $urlRedirect
      * @param string $urlAnalyticsKey
@@ -250,6 +252,7 @@ class WebspaceCollectionBuilder
     private function buildUrlRedirect(
         Webspace $webspace,
         Environment $environment,
+        Portal $portal,
         $urlAddress,
         $urlRedirect,
         $urlAnalyticsKey,
@@ -258,7 +261,7 @@ class WebspaceCollectionBuilder
         $this->portalInformations[$environment->getType()][$urlAddress] = new PortalInformation(
             RequestAnalyzerInterface::MATCH_TYPE_REDIRECT,
             $webspace,
-            null,
+            $portal,
             null,
             $urlAddress,
             null,

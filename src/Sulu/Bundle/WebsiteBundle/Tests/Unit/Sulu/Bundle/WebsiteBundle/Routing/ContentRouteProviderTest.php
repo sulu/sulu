@@ -182,6 +182,96 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(0, $routes);
     }
 
+    public function testGetCollectionForRequestNoLocalizationPartial()
+    {
+        // Set up test
+        $path = '';
+        $prefix = '/de';
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $theme = new Theme();
+        $theme->setKey('theme');
+        $webspace = new Webspace();
+        $webspace->setTheme($theme);
+        $portal->setWebspace($webspace);
+
+        $contentMapper = $this->getContentMapperMock();
+        $requestAnalyzer = $this->getRequestAnalyzerMock(
+            $portal,
+            $path,
+            $prefix,
+            null,
+            RequestAnalyzerInterface::MATCH_TYPE_PARTIAL
+        );
+
+        $defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
+        $defaultLocaleProvider->getDefaultLocale()->willReturn(new Localization('de'));
+        $urlReplacer = $this->prophesize(ReplacerInterface::class);
+
+        $portalRouteProvider = new ContentRouteProvider(
+            $contentMapper,
+            $requestAnalyzer,
+            $defaultLocaleProvider->reveal(),
+            $urlReplacer->reveal()
+        );
+
+        $request = $this->getRequestMock($path);
+
+        // Test the route provider
+        $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
+
+        $this->assertCount(1, $routes);
+        $this->assertEquals(
+            'SuluWebsiteBundle:Redirect:redirectWebspace',
+            array_values(iterator_to_array($routes->getIterator()))[0]->getDefaults()['_controller']
+        );
+    }
+
+    public function testGetCollectionForRequestNoLocalizationRedirect()
+    {
+        // Set up test
+        $path = '';
+        $prefix = '/de';
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $theme = new Theme();
+        $theme->setKey('theme');
+        $webspace = new Webspace();
+        $webspace->setTheme($theme);
+        $portal->setWebspace($webspace);
+
+        $contentMapper = $this->getContentMapperMock();
+        $requestAnalyzer = $this->getRequestAnalyzerMock(
+            $portal,
+            $path,
+            $prefix,
+            null,
+            RequestAnalyzerInterface::MATCH_TYPE_REDIRECT
+        );
+
+        $defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
+        $defaultLocaleProvider->getDefaultLocale()->willReturn(new Localization('de'));
+        $urlReplacer = $this->prophesize(ReplacerInterface::class);
+
+        $portalRouteProvider = new ContentRouteProvider(
+            $contentMapper,
+            $requestAnalyzer,
+            $defaultLocaleProvider->reveal(),
+            $urlReplacer->reveal()
+        );
+
+        $request = $this->getRequestMock($path);
+
+        // Test the route provider
+        $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
+
+        $this->assertCount(1, $routes);
+        $this->assertEquals(
+            'SuluWebsiteBundle:Redirect:redirectWebspace',
+            array_values(iterator_to_array($routes->getIterator()))[0]->getDefaults()['_controller']
+        );
+    }
+
     public function testGetCollectionForRequestSlashOnly()
     {
         // Set up test
