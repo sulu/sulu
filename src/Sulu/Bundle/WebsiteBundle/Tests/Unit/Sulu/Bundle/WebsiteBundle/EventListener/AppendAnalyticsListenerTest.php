@@ -68,10 +68,11 @@ class AppendAnalyticsListenerTest extends \PHPUnit_Framework_TestCase
         $portalInformation = $this->prophesize(PortalInformation::class);
         $portalInformation->getUrlExpression()->willReturn('sulu.lo/{localization}');
         $portalInformation->getType()->willReturn(RequestAnalyzerInterface::MATCH_TYPE_FULL);
+        $portalInformation->getWebspaceKey()->willReturn('sulu_io');
         $requestAnalyzer->getPortalInformation()->willReturn($portalInformation->reveal());
         $requestAnalyzer->getAttribute('urlExpression')->willReturn('sulu.lo/{localization}');
 
-        $analyticsRepository->findByUrl('sulu.lo/{localization}', 'prod')->willReturn(['test' => 1]);
+        $analyticsRepository->findByUrl('sulu.lo/{localization}', 'sulu_io', 'prod')->willReturn(['test' => 1]);
         $listener = new AppendAnalyticsListener(
             $engine->reveal(),
             $requestAnalyzer->reveal(),
@@ -105,10 +106,11 @@ class AppendAnalyticsListenerTest extends \PHPUnit_Framework_TestCase
         $portalInformation = $this->prophesize(PortalInformation::class);
         $portalInformation->getUrlExpression()->willReturn('*.sulu.lo/*');
         $portalInformation->getType()->willReturn(RequestAnalyzerInterface::MATCH_TYPE_WILDCARD);
+        $portalInformation->getWebspaceKey()->willReturn('sulu_io');
         $requestAnalyzer->getPortalInformation()->willReturn($portalInformation->reveal());
         $requestAnalyzer->getAttribute('urlExpression')->willReturn('1.sulu.lo/2');
 
-        $analyticsRepository->findByUrl('1.sulu.lo/2', 'prod')->willReturn(['test' => 1]);
+        $analyticsRepository->findByUrl('1.sulu.lo/2', 'sulu_io', 'prod')->willReturn(['test' => 1]);
         $listener = new AppendAnalyticsListener(
             $engine->reveal(),
             $requestAnalyzer->reveal(),

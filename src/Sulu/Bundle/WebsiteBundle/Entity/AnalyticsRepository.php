@@ -61,20 +61,22 @@ class AnalyticsRepository extends EntityRepository
      * Returns analytics by url.
      *
      * @param string $url
+     * @param string $webspaceKey
      * @param string $environment
      *
      * @return Analytics[]
      */
-    public function findByUrl($url, $environment)
+    public function findByUrl($url, $webspaceKey, $environment)
     {
         $queryBuilder = $this->createQueryBuilder('a')
             ->addSelect('domains')
             ->leftJoin('a.domains', 'domains')
-            ->where('a.allDomains = 1')
-            ->orWhere('domains.url = :url AND domains.environment = :environment');
+            ->where('a.allDomains = 1 OR (domains.url = :url AND domains.environment = :environment)')
+            ->andWhere('a.webspaceKey = :webspaceKey');
 
         $query = $queryBuilder->getQuery();
         $query->setParameter('url', $url);
+        $query->setParameter('webspaceKey', $webspaceKey);
         $query->setParameter('environment', $environment);
 
         return $query->getResult();
