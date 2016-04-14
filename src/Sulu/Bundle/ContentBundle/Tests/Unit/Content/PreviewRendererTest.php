@@ -66,7 +66,13 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
         $requestStack->push(
             Argument::that(
                 function (Request $newRequest) use ($request) {
-                    $this->assertEquals($request->query->all(), $newRequest->query->all());
+                    $this->assertEquals(
+                        array_merge(
+                            ['webspace' => 'sulu_io', 'locale' => 'de_at'],
+                            $request->query->all()
+                        ),
+                        $newRequest->query->all()
+                    );
                     $this->assertEquals($request->request->all(), $newRequest->request->all());
                     $this->assertEquals($request->cookies->all(), $newRequest->cookies->all());
 
@@ -119,7 +125,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
         $requestStack->push(
             Argument::that(
                 function (Request $newRequest) {
-                    $this->assertEquals([], $newRequest->query->all());
+                    $this->assertEquals(['webspace' => 'sulu_io', 'locale' => 'de_at'], $newRequest->query->all());
                     $this->assertEquals([], $newRequest->request->all());
                     $this->assertEquals([], $newRequest->cookies->all());
 
