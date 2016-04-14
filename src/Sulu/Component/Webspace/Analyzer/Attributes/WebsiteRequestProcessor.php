@@ -80,6 +80,10 @@ class WebsiteRequestProcessor extends AbstractRequestProcessor
         usort(
             $portalInformations,
             function (PortalInformation $a, PortalInformation $b) {
+                if ($a->getPriority() === $b->getPriority()) {
+                    return strlen($a->getUrl()) < strlen($b->getUrl());
+                }
+
                 return $a->getPriority() < $b->getPriority();
             }
         );

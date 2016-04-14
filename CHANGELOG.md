@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2294 [WebsiteBundle]       Fixed detecting webspaces for URLs with same priority
     * HOTFIX      #2285 [SecurityBundle]      Made ResettingController translations more configurable
     * HOTFIX      #2291 [ContentBundle]       Fixed wrong spacing between more than two checkboxes
 

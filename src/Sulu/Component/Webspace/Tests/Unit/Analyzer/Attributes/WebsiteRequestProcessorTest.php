@@ -391,6 +391,67 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('sulu.lo', $portalInformation2->getUrl());
     }
 
+    public function testProcessSamePriorityDifferentLength()
+    {
+        $webspace = new Webspace();
+        $webspace->setKey('sulu');
+
+        $portal = new Portal();
+        $portal->setKey('sulu');
+
+        $localization = new Localization();
+        $localization->setCountry('at');
+        $localization->setLanguage('de');
+
+        $portalInformation1 = new PortalInformation(
+            RequestAnalyzerInterface::MATCH_TYPE_FULL,
+            $webspace,
+            $portal,
+            $localization,
+            'sulu.lo/de',
+            null,
+            null,
+            null,
+            false,
+            'sulu.lo/de',
+            5
+        );
+
+        $portalInformation2 = new PortalInformation(
+            RequestAnalyzerInterface::MATCH_TYPE_FULL,
+            $webspace,
+            $portal,
+            $localization,
+            'sulu.lo',
+            null,
+            null,
+            null,
+            false,
+            'sulu.lo',
+            5
+        );
+
+        $this->webspaceManager->findPortalInformationsByUrl(Argument::any(), 'prod')
+            ->willReturn([$portalInformation1, $portalInformation2]);
+        $this->webspaceManager->getPortalInformations('prod')
+            ->willReturn([$portalInformation1, $portalInformation2]);
+
+        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
+        $request->request = new ParameterBag(['post' => 1]);
+        $request->query = new ParameterBag(['get' => 1]);
+        $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
+        $request->expects($this->any())->method('getPathInfo')->will($this->returnValue('/de'));
+        $request->expects($this->any())->method('getScheme')->will($this->returnValue('http'));
+
+        $this->replacer->replaceHost(null, 'sulu.lo')->willReturn('sulu.lo');
+        $this->replacer->replaceHost('sulu.lo', 'sulu.lo')->willReturn('sulu.lo');
+        $this->replacer->replaceHost('sulu.lo/de', 'sulu.lo')->willReturn('sulu.lo/de');
+
+        $attributes = $this->provider->process($request, new RequestAttributes());
+
+        $this->assertEquals($portalInformation1, $attributes->getAttribute('portalInformation'));
+    }
+
     public function provideAnalyzeData()
     {
         $portalInformation = $this->prophesize(PortalInformation::class);
