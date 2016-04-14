@@ -14,6 +14,7 @@ CHANGELOG for Sulu
     * HOTFIX      #2294 [WebsiteBundle]       Fixed analytics with all domains only in created webspace
     * HOTFIX      #2285 [SecurityBundle]      Made ResettingController translations more configurable
     * HOTFIX      #2291 [ContentBundle]       Fixed wrong spacing between more than two checkboxes
+    * ENHANCEMENT #2288 [WebsiteBundle]       Fixed overriding request attributes and set them on the request
 
 * 1.2.0 (2016-04-11)
     * BUGFIX      #2280 [ContentBundle]       Removed scrollbar from categories in overlay

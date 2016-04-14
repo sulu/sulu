@@ -15,6 +15,7 @@ use Prophecy\Argument;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestProcessorInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -24,6 +25,10 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
     {
         $provider = $this->prophesize(RequestProcessorInterface::class);
         $request = $this->prophesize(Request::class);
+
+        $attributesBag = $this->prophesize(ParameterBag::class);
+        $attributesBag->set('_sulu', Argument::type(RequestAttributes::class))->shouldBeCalled();
+        $request->reveal()->attributes = $attributesBag->reveal();
 
         $provider->process($request->reveal(), Argument::type(RequestAttributes::class))
             ->shouldBeCalled()->willReturn(new RequestAttributes());
@@ -39,6 +44,15 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
     {
         $provider = $this->prophesize(RequestProcessorInterface::class);
         $request = $this->prophesize(Request::class);
+
+        $attributesBag = $this->prophesize(ParameterBag::class);
+        $attributesBag->get('_sulu')->willReturn(null);
+        $attributesBag->set('_sulu', Argument::type(RequestAttributes::class))->shouldBeCalled()->will(
+            function ($arguments) use ($attributesBag) {
+                $attributesBag->get('_sulu')->willReturn($arguments[1]);
+            }
+        );
+        $request->reveal()->attributes = $attributesBag->reveal();
 
         $provider->process($request->reveal(), Argument::type(RequestAttributes::class))
             ->shouldBeCalledTimes(1)->willReturn(new RequestAttributes(['test' => 1]));
@@ -56,6 +70,15 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
     {
         $provider = $this->prophesize(RequestProcessorInterface::class);
         $request = $this->prophesize(Request::class);
+
+        $attributesBag = $this->prophesize(ParameterBag::class);
+        $attributesBag->get('_sulu')->willReturn(null);
+        $attributesBag->set('_sulu', Argument::type(RequestAttributes::class))->shouldBeCalledTimes(1)->will(
+            function ($arguments) use ($attributesBag) {
+                $attributesBag->get('_sulu')->willReturn($arguments[1]);
+            }
+        );
+        $request->reveal()->attributes = $attributesBag->reveal();
 
         $provider->process($request->reveal(), Argument::type(RequestAttributes::class))
             ->shouldBeCalledTimes(1)->willReturn(new RequestAttributes(['test' => 1]));
@@ -77,6 +100,15 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $provider = $this->prophesize(RequestProcessorInterface::class);
         $request = $this->prophesize(Request::class);
 
+        $attributesBag = $this->prophesize(ParameterBag::class);
+        $attributesBag->get('_sulu')->willReturn(null);
+        $attributesBag->set('_sulu', Argument::type(RequestAttributes::class))->shouldBeCalledTimes(1)->will(
+            function ($arguments) use ($attributesBag) {
+                $attributesBag->get('_sulu')->willReturn($arguments[1]);
+            }
+        );
+        $request->reveal()->attributes = $attributesBag->reveal();
+
         $provider->process($request->reveal(), Argument::type(RequestAttributes::class))
             ->shouldBeCalledTimes(1)->willReturn(new RequestAttributes(['test' => 1]));
         $provider->validate(Argument::type(RequestAttributes::class))->shouldBeCalled()->willReturn(true);
@@ -94,6 +126,15 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $request = $this->prophesize(Request::class);
         $request->getHost()->willReturn('www.sulu.io');
         $request->getScheme()->willReturn('https');
+
+        $attributesBag = $this->prophesize(ParameterBag::class);
+        $attributesBag->get('_sulu')->willReturn(null);
+        $attributesBag->set('_sulu', Argument::type(RequestAttributes::class))->shouldBeCalledTimes(1)->will(
+            function ($arguments) use ($attributesBag) {
+                $attributesBag->get('_sulu')->willReturn($arguments[1]);
+            }
+        );
+        $request->reveal()->attributes = $attributesBag->reveal();
 
         $requestStack = $this->prophesize(RequestStack::class);
         $requestStack->getCurrentRequest()->willReturn($request->reveal());
@@ -144,6 +185,16 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
     {
         $provider = $this->prophesize(RequestProcessorInterface::class);
         $request = $this->prophesize(Request::class);
+
+        $attributesBag = $this->prophesize(ParameterBag::class);
+        $attributesBag->get('_sulu')->willReturn(null);
+        $attributesBag->set('_sulu', Argument::type(RequestAttributes::class))->shouldBeCalledTimes(1)->will(
+            function ($arguments) use ($attributesBag) {
+                $attributesBag->get('_sulu')->willReturn($arguments[1]);
+            }
+        );
+        $request->reveal()->attributes = $attributesBag->reveal();
+
         $provider->process($request->reveal(), Argument::type(RequestAttributes::class))
             ->shouldBeCalled()->willReturn(new RequestAttributes($attributes));
         $provider->validate(Argument::type(RequestAttributes::class))->shouldBeCalled()->willReturn(true);
