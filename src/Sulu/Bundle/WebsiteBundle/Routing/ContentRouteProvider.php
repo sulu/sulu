@@ -302,6 +302,7 @@ class ContentRouteProvider implements RouteProviderInterface
             $request->getPathInfo(), [
                 '_controller' => $content->getController(),
                 'structure' => $content,
+                'partial' => $request->get('partial', 'false') === 'true',
             ]
         );
     }

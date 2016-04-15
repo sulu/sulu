@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2306 [WebsiteBundle]       Fixed partial rendering using query parameter
     * HOTFIX      #2290 [WebsiteBundle]       Fixed redirect urls for webspace
     * HOTFIX      #2294 [WebsiteBundle]       Fixed detecting webspaces for URLs with same priority
     * HOTFIX      #2294 [WebsiteBundle]       Fixed analytics with all domains only in created webspace
