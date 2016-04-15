@@ -103,7 +103,6 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
 
         $loader->load('services.xml');
         $loader->load('smart_content.xml');
-        $loader->load('content_types.xml');
         $loader->load('preview.xml');
         $loader->load('structure.xml');
         $loader->load('extension.xml');
@@ -111,6 +110,8 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         $loader->load('compat.xml');
         $loader->load('document.xml');
         $loader->load('serializer.xml');
+
+        $this->processContent($config['content'], $loader, $container);
     }
 
     private function processPreview(ContainerBuilder $container, $config)
@@ -184,9 +185,63 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         );
     }
 
-    private function processSearch($config, LoaderInterface $loader, ContainerBuilder $container)
+    private function processSearch(array $config, LoaderInterface $loader, ContainerBuilder $container)
     {
         $container->setParameter('sulu_content.search.mapping', $config['search']['mapping']);
         $loader->load('search.xml');
+    }
+
+    private function processContent(array $config, LoaderInterface $loader, ContainerBuilder $container)
+    {
+        // Default Language
+        $container->setParameter('sulu.content.language.namespace', $config['language']['namespace']);
+        $container->setParameter('sulu.content.language.default', $config['language']['default']);
+
+        // Node names
+        $container->setParameter('sulu.content.node_names.base', $config['node_names']['base']);
+        $container->setParameter('sulu.content.node_names.content', $config['node_names']['content']);
+        $container->setParameter('sulu.content.node_names.route', $config['node_names']['route']);
+        $container->setParameter('sulu.content.node_names.snippet', $config['node_names']['snippet']);
+
+        // Content Types
+        $container->setParameter(
+            'sulu.content.type.text_line.template',
+            $config['types']['text_line']['template']
+        );
+        $container->setParameter(
+            'sulu.content.type.text_area.template',
+            $config['types']['text_area']['template']
+        );
+        $container->setParameter(
+            'sulu.content.type.text_editor.template',
+            $config['types']['text_editor']['template']
+        );
+        $container->setParameter(
+            'sulu.content.type.resource_locator.template',
+            $config['types']['resource_locator']['template']
+        );
+        $container->setParameter(
+            'sulu.content.type.block.template',
+            $config['types']['block']['template']
+        );
+
+        // Default template
+        $container->setParameter('sulu.content.structure.default_types', $config['structure']['default_type']);
+        $container->setParameter('sulu.content.structure.default_type.snippet', $config['structure']['default_type']['snippet']);
+        $container->setParameter('sulu.content.internal_prefix', $config['internal_prefix']);
+        $container->setParameter('sulu.content.structure.type_map', $config['structure']['type_map']);
+
+        // Template
+        $paths = [];
+        foreach ($config['structure']['paths'] as $pathConfig) {
+            $pathType = $pathConfig['type'];
+            if (!isset($paths[$pathType])) {
+                $paths[$pathType] = [];
+            }
+            $paths[$pathType][] = $pathConfig;
+        }
+
+        $container->setParameter('sulu.content.structure.paths', $paths);
+        $loader->load('content_types.xml');
     }
 }
