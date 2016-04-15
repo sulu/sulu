@@ -14,6 +14,7 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Doctrine;
 use PHPUnit_Framework_Assert;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\Event\ListBuilderCreateEvent;
 use Sulu\Component\Rest\ListBuilder\Event\ListBuilderEvents;
@@ -671,6 +672,27 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     public function testNoDistinct()
     {
         $this->queryBuilder->expects($this->once())->method('distinct')->with(false);
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testIdField()
+    {
+        $idField = $this->prophesize(DoctrineFieldDescriptorInterface::class);
+        $idField->getSelect()->willReturn('example.id');
+
+        $this->doctrineListBuilder->setIdField($idField->reveal());
+
+        $this->queryBuilder->expects($this->once())->method('select')->with('example.id');
+        $this->queryBuilder->expects($this->once())->method('where')->with('example.id IN (:ids)');
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testNoIdField()
+    {
+        $this->queryBuilder->expects($this->once())->method('select')->with('SuluCoreBundle:Example.id');
+        $this->queryBuilder->expects($this->once())->method('where')->with('SuluCoreBundle:Example.id IN (:ids)');
 
         $this->doctrineListBuilder->execute();
     }
