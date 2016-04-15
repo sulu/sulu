@@ -64,9 +64,13 @@ class WebspaceInitializer implements InitializerInterface
         $this->nodeManager = $nodeManager;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function initialize(OutputInterface $output)
     {
-        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
+        $webspaces = $this->webspaceManager->getWebspaceCollection();
+        foreach ($webspaces as $webspace) {
             $this->initializeWebspace($output, $webspace);
         }
 
