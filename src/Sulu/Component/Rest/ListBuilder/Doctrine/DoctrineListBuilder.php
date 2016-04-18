@@ -85,6 +85,11 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     private $distinct = false;
 
+    /**
+     * @var FieldDescriptorInterface
+     */
+    private $idField;
+
     public function __construct(EntityManager $em, $entityName, EventDispatcherInterface $eventDispatcher)
     {
         $this->em = $em;
@@ -146,7 +151,11 @@ class DoctrineListBuilder extends AbstractListBuilder
         $this->assignSortFields($this->queryBuilder);
 
         // use ids previously selected ids for query
-        $this->queryBuilder->where($this->entityName . '.id IN (:ids)')
+        $select = $this->entityName . '.id';
+        if (null !== $this->idField) {
+            $select = $this->idField->getSelect();
+        }
+        $this->queryBuilder->where($select . ' IN (:ids)')
             ->setParameter('ids', $ids);
 
         $this->queryBuilder->distinct($this->distinct);
@@ -162,7 +171,12 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function findIdsByGivenCriteria()
     {
-        $subQueryBuilder = $this->createSubQueryBuilder();
+        $select = null;
+        if (null !== $this->idField) {
+            $select = $this->idField->getSelect();
+        }
+
+        $subQueryBuilder = $this->createSubQueryBuilder($select);
         if ($this->limit != null) {
             $subQueryBuilder->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
         }
@@ -479,6 +493,16 @@ class DoctrineListBuilder extends AbstractListBuilder
     public function distinct($flag = true)
     {
         $this->distinct = $flag;
+    }
+
+    /**
+     * Set id-field of the "root" entity.
+     *
+     * @param FieldDescriptorInterface $idField
+     */
+    public function setIdField(FieldDescriptorInterface $idField)
+    {
+        $this->idField = $idField;
     }
 
     /**
