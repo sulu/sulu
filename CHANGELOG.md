@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-master
     * HOTFIX      #2303 [ContactBundle]       Fixed contact media search
+    * HOTFIX      #2304 [ContactBundle]       Fixed styling of options dropdown and fixed url-input dropdown
     * HOTFIX      #2290 [WebsiteBundle]       Fixed redirect urls for webspace
     * HOTFIX      #2294 [WebsiteBundle]       Fixed detecting webspaces for URLs with same priority
     * HOTFIX      #2294 [WebsiteBundle]       Fixed analytics with all domains only in created webspace

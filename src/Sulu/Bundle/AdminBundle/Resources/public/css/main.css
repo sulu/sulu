@@ -958,12 +958,11 @@ input, select {
 }
 /* line 13, ../scss/modules/headlines.scss */
 .options-dropdown-container span {
-  background-color: #f1f1f1;
   padding-left: 5px;
   padding-right: 5px;
 }
 
-/* line 22, ../scss/modules/headlines.scss */
+/* line 21, ../scss/modules/headlines.scss */
 .options-dropdown-toggler:hover .options-dropdown-container {
   display: block;
 }
