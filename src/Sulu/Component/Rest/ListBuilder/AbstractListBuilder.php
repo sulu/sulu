@@ -13,6 +13,7 @@ namespace Sulu\Component\Rest\ListBuilder;
 
 use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\General\PropertyMetadata;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 abstract class AbstractListBuilder implements ListBuilderInterface
 {
@@ -83,6 +84,16 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      * @var ExpressionInterface[]
      */
     protected $expressions = [];
+
+    /**
+     * @var UserInterface
+     */
+    protected $user;
+
+    /**
+     * @var string
+     */
+    protected $permission;
 
     /**
      * {@inheritdoc}
@@ -245,6 +256,15 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     public function getCurrentPage()
     {
         return $this->page;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setPermissionCheck(UserInterface $user, $permission)
+    {
+        $this->user = $user;
+        $this->permission = $permission;
     }
 
     /**

@@ -43,7 +43,6 @@ trait SecuredEntityRepositoryTrait
             'accessControl.entityClass = :entityClass AND accessControl.entityId = ' . $entityAlias . '.id'
         );
         $queryBuilder->leftJoin('accessControl.role', 'role');
-        // TODO remove hard coded permission value
         $queryBuilder->andWhere(
             'BIT_AND(accessControl.permissions, :permission) = :permission OR accessControl.permissions IS NULL'
         );
