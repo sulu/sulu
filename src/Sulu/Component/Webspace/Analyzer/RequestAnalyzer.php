@@ -61,11 +61,14 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     protected function getAttributes()
     {
-        if (null === $this->requestStack->getCurrentRequest()->attributes->get('_sulu')) {
-            $this->analyze($this->requestStack->getCurrentRequest());
+        $request = $this->requestStack->getCurrentRequest();
+        if (null === $request) {
+            return new RequestAttributes();
+        } elseif (null === $request->attributes->get('_sulu')) {
+            $this->analyze($request);
         }
 
-        return $this->requestStack->getCurrentRequest()->attributes->get('_sulu');
+        return $request->attributes->get('_sulu');
     }
 
     /**

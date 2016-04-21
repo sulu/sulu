@@ -346,4 +346,76 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
 
         $this->requestAnalyzer->analyze($request);
     }
+
+    /**
+     * @dataProvider provideAnalyze
+     */
+    public function testAnalyzeCurrentRequest($config, $expected = [])
+    {
+        $webspace = new Webspace();
+        $webspace->setKey('sulu');
+
+        $portal = new Portal();
+        $portal->setKey('sulu');
+
+        $localization = new Localization();
+        $localization->setCountry('at');
+        $localization->setLanguage('de');
+
+        $portalInformation = new PortalInformation(
+            $config['match_type'],
+            $webspace,
+            $portal,
+            $localization,
+            $config['portal_url'],
+            null,
+            $config['redirect']
+        );
+
+        $this->prepareWebspaceManager($portalInformation);
+
+        $requestBag = $this->prophesize(ParameterBag::class);
+        $requestBag->all()->willReturn(['post' => 1]);
+        $queryBag = $this->prophesize(ParameterBag::class);
+        $queryBag->all()->willReturn(['get' => 1]);
+        $attributesBag = $this->prophesize(ParameterBag::class);
+        $attributesBag->get('_sulu')->willReturn(null);
+        $attributesBag->set('_sulu', Argument::type(RequestAttributes::class))->shouldBeCalledTimes(1)->will(
+            function ($arguments) use ($attributesBag) {
+                $attributesBag->get('_sulu')->willReturn($arguments[1]);
+            }
+        );
+
+        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
+        $request->request = $requestBag->reveal();
+        $request->query = $queryBag->reveal();
+        $request->attributes = $attributesBag->reveal();
+
+        $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
+        $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
+        $request->expects($this->any())->method('getScheme')->willReturn('http');
+        $request->expects($this->once())->method('setLocale')->with('de_at');
+        $this->requestStack->getCurrentRequest()->willReturn($request);
+
+        // this current request will be analyzed
+        $this->requestStack->getCurrentRequest()->willReturn($request);
+
+        $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
+        $this->assertEquals('sulu', $this->requestAnalyzer->getWebspace()->getKey());
+        $this->assertEquals('sulu', $this->requestAnalyzer->getPortal()->getKey());
+        $this->assertEquals(null, $this->requestAnalyzer->getSegment());
+        $this->assertEquals($expected['portal_url'], $this->requestAnalyzer->getPortalUrl());
+        $this->assertEquals($expected['redirect'], $this->requestAnalyzer->getRedirect());
+        $this->assertEquals($expected['resource_locator'], $this->requestAnalyzer->getResourceLocator());
+        $this->assertEquals($expected['resource_locator_prefix'], $this->requestAnalyzer->getResourceLocatorPrefix());
+        $this->assertEquals(['post' => 1], $this->requestAnalyzer->getPostParameters());
+        $this->assertEquals(['get' => 1], $this->requestAnalyzer->getGetParameters());
+    }
+
+    public function testAnalyzeNoCurrentRequest()
+    {
+        $this->requestStack->getCurrentRequest()->willReturn(null);
+
+        $this->assertNull($this->requestAnalyzer->getAttribute('test'));
+    }
 }
