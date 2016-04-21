@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2319 [ContactBundle]       Validate unknown vat-number as valid
     * HOTFIX      #2306 [WebsiteBundle]       Fixed partial rendering using query parameter
     * HOTFIX      #2312 [Rest]                Added security checks to DoctrineListBuilder
     * HOTFIX      #2303 [ContactBundle]       Fixed contact media search
