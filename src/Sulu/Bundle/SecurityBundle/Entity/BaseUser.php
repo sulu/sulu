@@ -345,9 +345,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Get locked.
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public function getLocked()
     {
@@ -369,9 +367,7 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     }
 
     /**
-     * Get enabled.
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public function getEnabled()
     {

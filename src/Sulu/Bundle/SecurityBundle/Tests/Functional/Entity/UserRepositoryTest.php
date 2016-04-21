@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
+use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
@@ -21,11 +22,14 @@ use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Symfony\Component\Security\Core\Exception\DisabledException;
-use Symfony\Component\Security\Core\Exception\LockedException;
 
 class UserRepositoryTest extends SuluTestCase
 {
+    /**
+     * @var EntityManager
+     */
+    private $em;
+
     public function setUp()
     {
         $this->em = $this->getEntityManager();
@@ -137,144 +141,14 @@ class UserRepositoryTest extends SuluTestCase
         $this->em->flush();
     }
 
-    public function testFindBySystem()
-    {
-        //        $client = $this->createAuthenticatedClient();
-//
-//        // FIXME works when $this->getSystem() is set in user repository
-//        $em = $client->getContainer()->get('sulu_security.user_repository_factory')->getManager();
-//        /* @var UserRepository $repo */
-//        $repo = $em->getRepository('Sulu\Bundle\SecurityBundle\Entity\User');
-//        $employees = $repo->getUserInSystem();
-//
-//        // FIXME alternative would be to get the container via the factory but there following in the repo is null $this->requestAnalyzer->getWebspace()
-//        $repo = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
-//
-//        $this->assertEquals(1, count($employees));
-//        $this->assertEquals('admin', $employees[0]->getUsername());
-//        $this->assertEquals('1', $employees[0]->getId());
-//        $this->assertEquals('Max', $employees[0]->getContact()->getFirstName());
-//        $this->assertEquals('Muster', $employees[0]->getContact()->getLastName());
-//
-//        $employees = $repo->findAll();
-//        $this->assertEquals(2, count($employees));
-    }
-
-    public function testLoginFailDisabledUser()
-    {
-        $this->prepareUser('sulu', 'sulu', false);
-
-        $client = $this->createAuthenticatedClient();
-
-        /** @var UserRepository $userRepository */
-        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
-
-        $this->setExpectedException('Symfony\Component\Security\Core\Exception\DisabledException');
-        $userRepository->loadUserByUsername('sulu');
-    }
-
-    public function testLoginFailLockedUser()
-    {
-        $this->prepareUser('sulu', 'sulu', true, true);
-
-        $client = $this->createAuthenticatedClient();
-
-        /** @var UserRepository $userRepository */
-        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
-
-        $this->setExpectedException('Symfony\Component\Security\Core\Exception\LockedException');
-        $userRepository->loadUserByUsername('sulu');
-    }
-
-    public function testLoadUserByUsername()
-    {
-        $this->prepareUser('sulu', 'sulu');
-
-        $client = $this->createAuthenticatedClient();
-
-        /** @var UserRepository $userRepository */
-        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
-        $userRepository->init('Sulu');
-
-        $user = $userRepository->loadUserByUsername('sulu');
-
-        $this->assertEquals('max.mustermann@muster.at', $user->getContact()->getEmails()[0]->getEmail());
-    }
-
-    public function testLoadUserByUsernameWithLockedUser()
-    {
-        $this->setExpectedException(LockedException::class);
-        $this->prepareUser('sulu', 'sulu', true, true);
-
-        $client = $this->createAuthenticatedClient();
-
-        /** @var UserRepository $userRepository */
-        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
-
-        $userRepository->loadUserByUsername('sulu');
-    }
-
-    public function testLoadUserByUsernameWithDisabledUser()
-    {
-        $this->setExpectedException(DisabledException::class);
-        $this->prepareUser('sulu', 'sulu', false, false);
-
-        $client = $this->createAuthenticatedClient();
-
-        /** @var UserRepository $userRepository */
-        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
-
-        $userRepository->loadUserByUsername('sulu');
-    }
-
-    public function testRefreshUser()
-    {
-        $user = $this->prepareUser('sulu', 'sulu', true, false);
-
-        $client = $this->createAuthenticatedClient();
-
-        /** @var UserRepository $userRepository */
-        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
-
-        $this->assertEquals($user->getUsername(), $userRepository->refreshUser($user)->getUsername());
-    }
-
-    public function testRefreshUserWithLockedUser()
-    {
-        $this->setExpectedException(LockedException::class);
-
-        $user = $this->prepareUser('sulu', 'sulu', true, true);
-
-        $client = $this->createAuthenticatedClient();
-
-        /** @var UserRepository $userRepository */
-        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
-
-        $userRepository->refreshUser($user);
-    }
-
-    public function testRefreshUserWithDisabledUser()
-    {
-        $this->setExpectedException(DisabledException::class);
-
-        $user = $this->prepareUser('sulu', 'sulu', false, false);
-
-        $client = $this->createAuthenticatedClient();
-
-        /** @var UserRepository $userRepository */
-        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
-
-        $userRepository->refreshUser($user);
-    }
-
     public function testFindUserByEmail()
     {
-        $this->prepareUser('sulu', 'sulu');
+        $this->prepareUser('Sulu', 'sulu', 'sulu');
 
         $client = $this->createAuthenticatedClient();
 
         /** @var UserRepository $userRepository */
-        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
+        $userRepository = $client->getContainer()->get('sulu_security.user_repository');
 
         $user = $userRepository->findUserByEmail('user2@test.com');
 
@@ -284,12 +158,12 @@ class UserRepositoryTest extends SuluTestCase
 
     public function testFindUserWithSecurityByIdentifier()
     {
-        $this->prepareUser('sulu', 'sulu');
+        $this->prepareUser('Sulu', 'sulu', 'sulu');
 
         $client = $this->createAuthenticatedClient();
 
         /** @var UserRepository $userRepository */
-        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
+        $userRepository = $client->getContainer()->get('sulu_security.user_repository');
 
         $userByMail = $userRepository->findUserByIdentifier('user2@test.com');
         $userByUsername = $userRepository->findUserByIdentifier('test');
@@ -302,12 +176,12 @@ class UserRepositoryTest extends SuluTestCase
 
     public function testFindUserByToken()
     {
-        $this->prepareUser('sulu', 'sulu');
+        $this->prepareUser('Sulu', 'sulu', 'sulu');
 
         $client = $this->createAuthenticatedClient();
 
         /** @var UserRepository $userRepository */
-        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
+        $userRepository = $client->getContainer()->get('sulu_security.user_repository');
 
         $user = $userRepository->findUserByToken('mySuperSecretToken');
 
@@ -315,7 +189,26 @@ class UserRepositoryTest extends SuluTestCase
         $this->assertEquals('admin', $user->getUsername());
     }
 
-    private function prepareUser($username, $password, $enabled = true, $locked = false)
+    public function testFindUserBySystem()
+    {
+        $this->prepareUser('Sulu Role 2', 'sulu', 'sulu');
+        $this->prepareUser('Client Role', 'client', 'client', true, false, 'Client');
+
+        $client = $this->createAuthenticatedClient();
+        /** @var UserRepository $userRepository */
+        $userRepository = $client->getContainer()->get('sulu_security.user_repository');
+
+        $suluUsers = $userRepository->findUserBySystem('Sulu');
+        $this->assertCount(2, $suluUsers);
+        $this->assertEquals('admin', $suluUsers[0]->getUsername());
+        $this->assertEquals('sulu', $suluUsers[1]->getUsername());
+
+        $clientUsers = $userRepository->findUserBySystem('Client');
+        $this->assertCount(1, $clientUsers);
+        $this->assertEquals('client', $clientUsers[0]->getUsername());
+    }
+
+    private function prepareUser($roleName, $username, $password, $enabled = true, $locked = false, $system = 'Sulu')
     {
         $emailType = new EmailType();
         $emailType->setName('Private');
@@ -343,8 +236,8 @@ class UserRepositoryTest extends SuluTestCase
         $this->em->persist($user);
 
         $role = new Role();
-        $role->setName('Sulu');
-        $role->setSystem('Sulu');
+        $role->setName($roleName);
+        $role->setSystem($system);
         $this->em->persist($role);
 
         $userRole = new UserRole();
