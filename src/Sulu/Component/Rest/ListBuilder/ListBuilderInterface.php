@@ -13,6 +13,7 @@ namespace Sulu\Component\Rest\ListBuilder;
 
 use Sulu\Component\Rest\ListBuilder\Expression\ConjunctionExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * This interface defines the the ListBuilder functionality, for the creation of REST list responses.
@@ -153,6 +154,16 @@ interface ListBuilderInterface
      * @return int
      */
     public function getCurrentPage();
+
+    /**
+     * Sets the permission check for the ListBuilder.
+     *
+     * @param UserInterface $user The user for which the permission must be granted
+     * @param int $permission A value from the PermissionTypes
+     *
+     * @return ListBuilderInterface
+     */
+    public function setPermissionCheck(UserInterface $user, $permission);
 
     /**
      * Defines a constraint for the rows to return.

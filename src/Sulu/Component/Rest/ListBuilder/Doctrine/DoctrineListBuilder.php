@@ -29,6 +29,7 @@ use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineOrExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineWhereExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Exception\InvalidExpressionArgumentException;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
+use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryTrait;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -36,10 +37,17 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class DoctrineListBuilder extends AbstractListBuilder
 {
+    use SecuredEntityRepositoryTrait;
+
     /**
      * @var EventDispatcherInterface
      */
     private $eventDispatcher;
+
+    /**
+     * @var array
+     */
+    private $permissions;
 
     /**
      * @var EntityManager
@@ -90,11 +98,16 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     private $idField;
 
-    public function __construct(EntityManager $em, $entityName, EventDispatcherInterface $eventDispatcher)
-    {
+    public function __construct(
+        EntityManager $em,
+        $entityName,
+        EventDispatcherInterface $eventDispatcher,
+        array $permissions
+    ) {
         $this->em = $em;
         $this->entityName = $entityName;
         $this->eventDispatcher = $eventDispatcher;
+        $this->permissions = $permissions;
     }
 
     /**
@@ -300,8 +313,19 @@ class DoctrineListBuilder extends AbstractListBuilder
         $addJoins = $this->getNecessaryJoins($entityNames);
 
         // create querybuilder and add select
-        return $this->createQueryBuilder($addJoins, false)
-            ->select($select);
+        $queryBuilder = $this->createQueryBuilder($addJoins, false)->select($select);
+
+        if ($this->user && $this->permission && array_key_exists($this->permission, $this->permissions)) {
+            $this->addAccessControl(
+                $queryBuilder,
+                $this->user,
+                $this->permissions[$this->permission],
+                $this->entityName,
+                $this->entityName
+            );
+        }
+
+        return $queryBuilder;
     }
 
     /**
