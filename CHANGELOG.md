@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2306 [WebsiteBundle]       Fixed partial rendering using query parameter
     * HOTFIX      #2303 [ContactBundle]       Fixed contact media search
     * HOTFIX      #2304 [ContactBundle]       Fixed styling of options dropdown and fixed url-input dropdown
     * HOTFIX      #2290 [WebsiteBundle]       Fixed redirect urls for webspace
