@@ -56,6 +56,7 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
             new \Twig_SimpleFunction('sulu_navigation_flat', [$this, 'flatNavigationFunction']),
             new \Twig_SimpleFunction('sulu_navigation_tree', [$this, 'treeNavigationFunction']),
             new \Twig_SimpleFunction('sulu_breadcrumb', [$this, 'breadcrumbFunction']),
+            new \Twig_SimpleFunction('sulu_is_active_nav_element', [$this, 'isActiveNavElementFunction']),
         ];
     }
 
@@ -146,6 +147,23 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
             $webspaceKey,
             $locale
         );
+    }
+
+    /**
+     * @param string $requestUrl
+     * @param string $itemUrl
+     *
+     * @return bool
+     */
+    public function isActiveNavElementFunction($requestUrl, $itemUrl)
+    {
+        if ($requestUrl !== $itemUrl) {
+            if (substr($requestUrl, 0, strlen($itemUrl)) !== $itemUrl) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
