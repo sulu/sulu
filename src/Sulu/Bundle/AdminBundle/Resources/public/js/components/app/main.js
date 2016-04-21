@@ -21,9 +21,6 @@ define(function() {
             initialLoaderClass: 'initial-loader',
             maxWidthClass: 'max',
             columnSelector: '.content-column',
-            noLeftSpaceClass: 'no-left-space',
-            noRightSpaceClass: 'no-right-space',
-            noTopSpaceClass: 'no-top-space',
             noTransitionsClass: 'no-transitions',
             versionHistoryUrl: 'https://github.com/sulu-cmf/sulu-standard/releases',
             changeLanguageUrl: '/admin/security/profile/language'
@@ -72,17 +69,6 @@ define(function() {
          */
         CHANGE_WIDTH = function() {
             return createEventName('change-width');
-        },
-
-        /**
-         * listens on and changes the spacing of the content
-         * @event sulu.app.change-spacing
-         * @param {Boolean} false for no spacing left
-         * @param {Boolean} false for no spacing right
-         * @param {Boolean} false for no spacing top
-         */
-        CHANGE_SPACING = function() {
-            return createEventName('change-spacing');
         },
 
         /**
@@ -335,8 +321,6 @@ define(function() {
 
             this.sandbox.on(CHANGE_WIDTH.call(this), this.changeWidth.bind(this));
 
-            this.sandbox.on(CHANGE_SPACING.call(this), this.changeSpacing.bind(this));
-
             this.sandbox.on(TOGGLE_COLUMN.call(this), this.toggleColumn.bind(this));
         },
 
@@ -356,38 +340,6 @@ define(function() {
             } else {
                 this.sandbox.emit('husky.navigation.show');
                 this.sandbox.dom.removeClass($column, constants.smallFixedClass);
-            }
-        },
-
-        /**
-         * changes the spacing of the content
-         * @event sulu.app.change-spacing
-         * @param {Boolean} leftSpacing false for no spacing left
-         * @param {Boolean} rightSpacing false for no spacing right
-         * @param {Boolean} topSpacing false for no spacing top
-         */
-        changeSpacing: function(leftSpacing, rightSpacing, topSpacing) {
-            var $column = this.sandbox.dom.find(constants.columnSelector);
-            this.sandbox.dom.addClass($column, constants.noTransitionsClass);
-            // left space
-            if (leftSpacing === false) {
-                this.sandbox.dom.addClass($column, constants.noLeftSpaceClass);
-            } else if (leftSpacing === true) {
-                this.sandbox.dom.removeClass($column, constants.noLeftSpaceClass);
-            }
-
-            // right space
-            if (rightSpacing === false) {
-                this.sandbox.dom.addClass($column, constants.noRightSpaceClass);
-            } else if (rightSpacing === true) {
-                this.sandbox.dom.removeClass($column, constants.noRightSpaceClass);
-            }
-
-            // top space
-            if (topSpacing === false) {
-                this.sandbox.dom.addClass($column, constants.noTopSpaceClass);
-            } else if (topSpacing === true) {
-                this.sandbox.dom.removeClass($column, constants.noTopSpaceClass);
             }
         },
 

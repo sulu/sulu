@@ -52,9 +52,7 @@ define([
             return {
                 extendExisting: true,
                 content: {
-                    width: 'fixed',
-                    leftSpace: true,
-                    rightSpace: true
+                    width: 'fixed'
                 }
             };
         },

@@ -56,9 +56,7 @@ define([
 
         layout: {
             content: {
-                width: 'max',
-                leftSpace: true,
-                rightSpace: true
+                width: 'max'
             }
         },
 

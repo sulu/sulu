@@ -13,10 +13,7 @@ define(['app-config'], function(AppConfig) {
 
     return {
         layout: {
-            content: {
-                leftSpace: false,
-                rightSpace: false
-            }
+            content: {}
         },
 
         initialize: function() {

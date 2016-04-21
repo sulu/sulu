@@ -52,10 +52,10 @@ define([], function() {
 
         constants = {
             componentClass: 'sulu-header',
-            hasTabsClass: 'has-tabs',
             backClass: 'back',
             backIcon: 'chevron-left',
             toolbarClass: 'toolbar',
+            tabsRowClass: 'tabs-row',
             tabsClass: 'tabs',
             tabsSelector: '.tabs-container',
             toolbarSelector: '.toolbar-container',
@@ -91,7 +91,7 @@ define([], function() {
                 '</div>'
             ].join(''),
             tabsRow: [
-                '<div class="tabs-row">',
+                '<div class="' + constants.tabsRowClass + '">',
                 '    <div class="' + constants.tabsClass + '"></div>',
                 '</div>'
             ].join(''),
@@ -426,7 +426,6 @@ define([], function() {
                         fragment: this.sandbox.mvc.history.fragment
                     };
 
-                this.sandbox.dom.addClass(this.$el, constants.hasTabsClass);
 
                 // wait for initialized
                 this.sandbox.once('husky.tabs.header.initialized', function() {

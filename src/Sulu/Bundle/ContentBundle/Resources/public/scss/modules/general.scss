@@ -6,8 +6,8 @@
     @include clear-float;
 
     .highlight-section .content {
-        padding-top: 20px;
-        padding-bottom: 20px;
+        padding: 20px 0;
+        margin-left: $contentPaddingLeft;
     }
 }
 
@@ -71,4 +71,8 @@
 
 #changelog-container {
     color: $grayLight;
+}
+
+#content-column-container {
+    margin: (-1) * $contentPaddingTop (-1) * $contentPaddingRight 0 (-1) * $contentPaddingLeft;
 }

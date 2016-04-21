@@ -58,9 +58,7 @@ define([
         layout: function() {
             return {
                 content: {
-                    width: 'max',
-                    leftSpace: false,
-                    rightSpace: false
+                    width: 'max'
                 }
             };
         },
@@ -162,7 +160,7 @@ define([
                 var url = (!!curMediaId) ?
                     '/admin/api/media/' + curMediaId + '?action=new-version' :
                     '/admin/api/media?collection=' + this.formOptions.accountAvatarCollection;
-                
+
                 url = url + '&locale=' + encodeURIComponent(this.sandbox.sulu.user.locale);
 
                 // if possible, change the title of the logo to the name of the account

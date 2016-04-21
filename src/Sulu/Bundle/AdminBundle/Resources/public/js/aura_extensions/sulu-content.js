@@ -18,10 +18,7 @@ define(function() {
                 hidden: false
             },
             content: {
-                width: 'fixed',
-                leftSpace: true,
-                rightSpace: true,
-                topSpace: true
+                width: 'fixed'
             },
             sidebar: false
         }
@@ -107,9 +104,6 @@ define(function() {
          * @param {Boolean} [layout.content.shrinkable] If true an icon for shrinking the content-column
          *        will be displayed.
          * @param {String} [layout.content.width] The width-type, 'fixed' or 'max', of the content-column.
-         * @param {Boolean} [layout.content.leftSpace] If false content has no spacing on the left.
-         * @param {Boolean} [layout.content.rightSpace] If false content has no spacing on the right.
-         * @param {Boolean} [layout.content.topSpace] If false content has no spacing on top.
          * @param {Object|Boolean} [layout.sidebar] The object which holds the layout configuration for the sidebar.
          *        If false no sidebar will be displayed.
          * @param {String} [layout.sidebar.width] The width-type, 'fixed' or 'max', of the sidebar-column.
@@ -121,10 +115,7 @@ define(function() {
          *              collapsed: true
          *          },
          *          content: {
-         *              width: 'fixed',
-         *              topSpace: false,
-         *              leftSpace: false,
-         *              rightSpace: true
+         *              width: 'fixed'
          *          },
          *          sidebar: {
          *              width: 'max',
@@ -178,14 +169,10 @@ define(function() {
          * @param {Boolean} applyDefaults Iff true default actions will be executed
          */
         handleLayoutContent = function(content, applyDefaults) {
-            var width = content.width,
-                leftSpace = (applyDefaults) ? !!content.leftSpace : content.leftSpace,
-                rightSpace = (applyDefaults) ? !!content.rightSpace : content.rightSpace,
-                topSpace = (applyDefaults) ? !!content.topSpace : content.topSpace;
+            var width = content.width;
             if (applyDefaults === true || !!width) {
                 this.sandbox.emit('sulu.app.change-width', width, applyDefaults);
             }
-            this.sandbox.emit('sulu.app.change-spacing', leftSpace, rightSpace, topSpace);
         },
 
         /**
