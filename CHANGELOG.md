@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * HOTFIX      #2550 [MediaBundle]         made documents list show description on add
     * HOTFIX      #2547 [AdminBundle]         Included husky build which fixes the ie11 rendering issue of dropdowns
     * HOTFIX      #2547 [AdminBundle]         Included husky build which fixes globalizing bug
+    * BUGFIX            [WebsiteBundle]       Fixed a query issue on Postgresql
 
 * 1.2.6 (2016-07-05)
     * BUGFIX      #2530 [AdminBundle]         Included husky build which fixes the login translation issue
