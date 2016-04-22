@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX            [WebsiteBundle]       Fixed a query issue on Postgresql
     * ENHANCEMENT #2279 [Webspace]            Do not hide invalid webspace exceptions.
     * ENHANCEMENT #2288 [WebsiteBundle]       Fixed overriding request attributes and set them on the request
     * BUGFIX      #2288 [AdminBundle]         Removed deleting of entire dom tree on tab change

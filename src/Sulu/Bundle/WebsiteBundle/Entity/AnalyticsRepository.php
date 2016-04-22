@@ -70,7 +70,7 @@ class AnalyticsRepository extends EntityRepository
         $queryBuilder = $this->createQueryBuilder('a')
             ->addSelect('domains')
             ->leftJoin('a.domains', 'domains')
-            ->where('a.allDomains = 1')
+            ->where('a.allDomains = TRUE')
             ->orWhere('domains.url = :url AND domains.environment = :environment');
 
         $query = $queryBuilder->getQuery();
