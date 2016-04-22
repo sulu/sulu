@@ -51064,7 +51064,7 @@ define("datepicker-zh-TW", function(){});
                 };
 
                 if (!!app.config.culture && !!app.config.culture.name && app.config.culture.name !== 'en') {
-                    return require(['cultures/globalize.culture.' + app.config.culture.name]);
+                    return require(['cultures/globalize.culture.' + app.config.culture.name.replace("_", "-")]);
                 }
             },
 
