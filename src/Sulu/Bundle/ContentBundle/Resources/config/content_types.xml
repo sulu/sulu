@@ -12,8 +12,20 @@
         <parameter key="sulu.content.type.time.class">Sulu\Bundle\ContentBundle\Content\Types\Time</parameter>
         <parameter key="sulu.content.type.color.class">Sulu\Bundle\ContentBundle\Content\Types\Color</parameter>
         <parameter key="sulu.content.type.checkbox.class">Sulu\Bundle\ContentBundle\Content\Types\Checkbox</parameter>
+        <parameter key="sulu.content.type_manager.class">Sulu\Component\Content\ContentTypeManager</parameter>
+        <parameter key="sulu.content.type.text_line.class">Sulu\Component\Content\Types\TextLine</parameter>
+        <parameter key="sulu.content.type.text_area.class">Sulu\Component\Content\Types\TextArea</parameter>
+        <parameter key="sulu.content.type.text_editor.class">Sulu\Component\Content\Types\TextEditor</parameter>
+        <parameter key="sulu.content.type.resource_locator.class">Sulu\Component\Content\Types\ResourceLocator</parameter>
+        <parameter key="sulu.content.type.block.class">Sulu\Component\Content\Types\BlockContentType</parameter>
+
     </parameters>
     <services>
+        <!-- content type manager -->
+        <service id="sulu.content.type_manager" class="%sulu.content.type_manager.class%">
+            <argument type="service" id="service_container"/>
+        </service>
+
         <!-- content-types -->
         <service id="sulu.content.type.internal_links" class="%sulu.content.type.internal_links.class%">
             <argument type="service" id="sulu.content.query_executor"/>
@@ -67,6 +79,30 @@
         <service id="sulu.content.type.single_select" class="Sulu\Bundle\ContentBundle\Content\Types\SingleSelect">
             <argument>%sulu.content.type.single_select.template%</argument>
             <tag name="sulu.content.type" alias="single_select"/>
+        </service>
+        <service id="sulu.content.type.text_line" class="%sulu.content.type.text_line.class%">
+            <argument>%sulu.content.type.text_line.template%</argument>
+            <tag name="sulu.content.type" alias="text_line"/>
+        </service>
+        <service id="sulu.content.type.text_area" class="%sulu.content.type.text_line.class%">
+            <argument>%sulu.content.type.text_area.template%</argument>
+            <tag name="sulu.content.type" alias="text_area"/>
+        </service>
+        <service id="sulu.content.type.text_editor" class="%sulu.content.type.text_editor.class%">
+            <argument>%sulu.content.type.text_editor.template%</argument>
+            <tag name="sulu.content.type" alias="text_editor"/>
+        </service>
+        <service id="sulu.content.type.resource_locator" class="%sulu.content.type.resource_locator.class%">
+            <argument>%sulu.content.type.resource_locator.template%</argument>
+            <tag name="sulu.content.type" alias="resource_locator"/>
+        </service>
+
+        <!-- complex content types -->
+        <service id="sulu.content.type.block" class="%sulu.content.type.block.class%">
+            <argument type="service" id="sulu.content.type_manager"/>
+            <argument>%sulu.content.type.block.template%</argument>
+            <argument>%sulu.content.language.namespace%</argument>
+            <tag name="sulu.content.type" alias="block"/>
         </service>
     </services>
 </container>

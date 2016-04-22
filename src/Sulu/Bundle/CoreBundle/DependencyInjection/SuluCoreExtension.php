@@ -112,11 +112,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $this->initPhpcr($config['phpcr'], $container, $loader);
         }
 
-        // Content
-        if (isset($config['content'])) {
-            $this->initContent($config['content'], $container, $loader);
-        }
-
         // Webspace
         if (isset($config['webspace'])) {
             $this->initWebspace($config['webspace'], $container, $loader);
@@ -172,66 +167,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
     private function initPhpcr($phpcrConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
     {
         $loader->load('phpcr.xml');
-    }
-
-    /**
-     * @param $contentConfig
-     * @param ContainerBuilder     $container
-     * @param Loader\XmlFileLoader $loader
-     */
-    private function initContent($contentConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
-    {
-        // Default Language
-        $container->setParameter('sulu.content.language.namespace', $contentConfig['language']['namespace']);
-        $container->setParameter('sulu.content.language.default', $contentConfig['language']['default']);
-
-        // Node names
-        $container->setParameter('sulu.content.node_names.base', $contentConfig['node_names']['base']);
-        $container->setParameter('sulu.content.node_names.content', $contentConfig['node_names']['content']);
-        $container->setParameter('sulu.content.node_names.route', $contentConfig['node_names']['route']);
-        $container->setParameter('sulu.content.node_names.snippet', $contentConfig['node_names']['snippet']);
-
-        // Content Types
-        $container->setParameter(
-            'sulu.content.type.text_line.template',
-            $contentConfig['types']['text_line']['template']
-        );
-        $container->setParameter(
-            'sulu.content.type.text_area.template',
-            $contentConfig['types']['text_area']['template']
-        );
-        $container->setParameter(
-            'sulu.content.type.text_editor.template',
-            $contentConfig['types']['text_editor']['template']
-        );
-        $container->setParameter(
-            'sulu.content.type.resource_locator.template',
-            $contentConfig['types']['resource_locator']['template']
-        );
-        $container->setParameter(
-            'sulu.content.type.block.template',
-            $contentConfig['types']['block']['template']
-        );
-
-        // Default template
-        $container->setParameter('sulu.content.structure.default_types', $contentConfig['structure']['default_type']);
-        $container->setParameter('sulu.content.structure.default_type.snippet', $contentConfig['structure']['default_type']['snippet']);
-        $container->setParameter('sulu.content.internal_prefix', $contentConfig['internal_prefix']);
-        $container->setParameter('sulu.content.structure.type_map', $contentConfig['structure']['type_map']);
-
-        // Template
-        $paths = [];
-        foreach ($contentConfig['structure']['paths'] as $pathConfig) {
-            $pathType = $pathConfig['type'];
-            if (!isset($paths[$pathType])) {
-                $paths[$pathType] = [];
-            }
-            $paths[$pathType][] = $pathConfig;
-        }
-
-        $container->setParameter('sulu.content.structure.paths', $paths);
-
-        $loader->load('content.xml');
     }
 
     /**
