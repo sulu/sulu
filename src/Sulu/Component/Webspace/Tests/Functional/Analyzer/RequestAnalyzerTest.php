@@ -15,6 +15,7 @@ use PHPUnit_Framework_MockObject_MockObject;
 use Prophecy\Argument;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\Attributes\WebsiteRequestProcessor;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -207,13 +208,30 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
 
         $this->prepareWebspaceManager($portalInformation);
 
+        $requestBag = $this->prophesize(ParameterBag::class);
+        $requestBag->all()->willReturn(['post' => 1]);
+        $queryBag = $this->prophesize(ParameterBag::class);
+        $queryBag->all()->willReturn(['get' => 1]);
+        $attributesBag = $this->prophesize(ParameterBag::class);
+        $attributesBag->get('_sulu')->willReturn(null);
+        $attributesBag->has('_sulu')->willReturn(true);
+        $attributesBag->set('_sulu', Argument::type(RequestAttributes::class))->shouldBeCalledTimes(1)->will(
+            function ($arguments) use ($attributesBag) {
+                $attributesBag->get('_sulu')->willReturn($arguments[1]);
+            }
+        );
+
         $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
-        $request->request = new ParameterBag(['post' => 1]);
-        $request->query = new ParameterBag(['get' => 1]);
+        $request->request = $requestBag->reveal();
+        $request->query = $queryBag->reveal();
+        $request->attributes = $attributesBag->reveal();
+
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
         $request->expects($this->any())->method('getScheme')->willReturn('http');
         $request->expects($this->once())->method('setLocale')->with('de_at');
+        $this->requestStack->getCurrentRequest()->willReturn($request);
+
         $this->requestAnalyzer->analyze($request);
 
         $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
@@ -257,9 +275,23 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
 
         $requestFormat = false;
 
+        $requestBag = $this->prophesize(ParameterBag::class);
+        $requestBag->all()->willReturn(['post' => 1]);
+        $queryBag = $this->prophesize(ParameterBag::class);
+        $queryBag->all()->willReturn(['get' => 1]);
+        $attributesBag = $this->prophesize(ParameterBag::class);
+        $attributesBag->has('_sulu')->willReturn(true);
+        $attributesBag->get('_sulu')->willReturn(null);
+        $attributesBag->set('_sulu', Argument::type(RequestAttributes::class))->shouldBeCalledTimes(1)->will(
+            function ($arguments) use ($attributesBag) {
+                $attributesBag->get('_sulu')->willReturn($arguments[1]);
+            }
+        );
+
         $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
-        $request->request = new ParameterBag(['post' => 1]);
-        $request->query = new ParameterBag(['get' => 1]);
+        $request->request = $requestBag->reveal();
+        $request->query = $queryBag->reveal();
+        $request->attributes = $attributesBag->reveal();
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
         $request->expects($this->once())->method('setLocale')->with('de_at');
@@ -283,6 +315,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
             )
         );
 
+        $this->requestStack->getCurrentRequest()->willReturn($request);
         $this->requestAnalyzer->analyze($request);
 
         $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
@@ -312,8 +345,10 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
         $request->request = new ParameterBag(['post' => 1]);
         $request->query = new ParameterBag(['get' => 1]);
+        $request->attributes = new ParameterBag();
 
         $this->requestAnalyzer->analyze($request);
+        $this->requestAnalyzer->validate($request);
     }
 
     /**
@@ -346,13 +381,17 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
         $request->request = new ParameterBag(['post' => 1]);
         $request->query = new ParameterBag(['get' => 1]);
+        $request->attributes = new ParameterBag();
         $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
         $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
         $request->expects($this->any())->method('getScheme')->willReturn('http');
         $request->expects($this->once())->method('setLocale')->with('de_at');
 
         // this request will be analyzed only once
-        $this->requestStack->getCurrentRequest()->willReturn($request)->shouldBeCalledTimes(1);
+        $this->requestStack->getCurrentRequest()->willReturn($request)->shouldBeCalled();
+
+        $this->requestAnalyzer->analyze($request);
+        $this->requestAnalyzer->validate($request);
 
         $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
         $this->assertEquals('sulu', $this->requestAnalyzer->getWebspace()->getKey());

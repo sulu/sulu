@@ -15,7 +15,8 @@ use Liip\ThemeBundle\ActiveTheme;
 use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Preview\PreviewRenderer;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
-use Sulu\Component\Webspace\Manager\WebspaceManager;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Bundle\FrameworkBundle\Controller\ControllerResolver;
@@ -26,47 +27,109 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class PreviewRendererTest extends \PHPUnit_Framework_TestCase
 {
-    private function getWebspace()
+    /**
+     * @var ActiveTheme
+     */
+    private $activeTheme;
+
+    /**
+     * @var ControllerResolver
+     */
+    private $controllerResolver;
+
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var RequestAnalyzerInterface
+     */
+    private $requestAnalyzer;
+
+    /**
+     * @var Webspace
+     */
+    private $webspace;
+
+    /**
+     * @var PageBridge
+     */
+    private $structure;
+
+    /**
+     * @var PreviewRenderer
+     */
+    private $previewRenderer;
+
+    public function setUp()
     {
-        $webspace = new Webspace();
-        $webspace->setName('test');
+        $this->activeTheme = $this->prophesize(ActiveTheme::class);
+        $this->controllerResolver = $this->prophesize(ControllerResolver::class);
+        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
+        $this->requestStack = $this->prophesize(RequestStack::class);
+        $this->translator = $this->prophesize(TranslatorInterface::class);
+        $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
 
-        $theme = new Theme();
-        $theme->setKey('default');
-        $webspace->setTheme($theme);
-
-        return $webspace;
-    }
-
-    public function testRender()
-    {
-        $request = new Request(['test' => 1], ['test' => 2], [], ['test' => 3]);
-
-        $activeTheme = $this->prophesize(ActiveTheme::class);
-        $controllerResolver = $this->prophesize(ControllerResolver::class);
-        $webspaceManager = $this->prophesize(WebspaceManager::class);
-        $requestStack = $this->prophesize(RequestStack::class);
-        $structure = $this->prophesize(PageBridge::class);
-        $translator = $this->prophesize(TranslatorInterface::class);
-
-        $webspaceManager->findWebspaceByKey('sulu_io')->willReturn($this->getWebspace());
-
-        $structure->getController()->willReturn('TestController:test');
-        $structure->getLanguageCode()->willReturn('de_at');
-        $structure->getWebspaceKey()->willReturn('sulu_io');
-
-        $controllerResolver->getController(Argument::type(Request::class))
+        $this->controllerResolver->getController(Argument::type(Request::class))
             ->will(
                 function () {
                     return [new TestController(), 'testAction'];
                 }
             );
 
-        $requestStack->getCurrentRequest()->willReturn($request);
-        $requestStack->push(
+        $this->webspace = new Webspace();
+        $this->webspace->setName('test');
+        $theme = new Theme();
+        $theme->setKey('default');
+        $this->webspace->setTheme($theme);
+
+        $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn($this->webspace);
+
+        $this->structure = $this->prophesize(PageBridge::class);
+        $this->structure->getController()->willReturn('TestController:test');
+        $this->structure->getLanguageCode()->willReturn('de_at');
+        $this->structure->getWebspaceKey()->willReturn('sulu_io');
+
+        $this->translator->getLocale()->willReturn('de');
+        $this->translator->setLocale('de_at')->shouldBeCalled();
+        $this->translator->setLocale('de')->shouldBeCalled();
+
+        $this->previewRenderer = new PreviewRenderer(
+            $this->activeTheme->reveal(),
+            $this->controllerResolver->reveal(),
+            $this->webspaceManager->reveal(),
+            $this->requestStack->reveal(),
+            $this->translator->reveal(),
+            $this->requestAnalyzer->reveal()
+        );
+    }
+
+    public function testRender()
+    {
+        $request = new Request(['test' => 1], ['test' => 2], [], ['test' => 3]);
+
+        $this->requestStack->getCurrentRequest()->willReturn($request);
+        $this->requestStack->push(
             Argument::that(
                 function (Request $newRequest) use ($request) {
-                    $this->assertEquals($request->query->all(), $newRequest->query->all());
+                    $this->assertEquals(
+                        array_merge(
+                            ['webspace' => 'sulu_io', 'locale' => 'de_at'],
+                            $request->query->all()
+                        ),
+                        $newRequest->query->all()
+                    );
                     $this->assertEquals($request->request->all(), $newRequest->request->all());
                     $this->assertEquals($request->cookies->all(), $newRequest->cookies->all());
 
@@ -74,52 +137,20 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
                 }
             )
         )->shouldBeCalledTimes(1);
-        $requestStack->pop()->shouldBeCalled();
+        $this->requestStack->pop()->shouldBeCalled();
 
-        $translator->getLocale()->willReturn('de');
-        $translator->setLocale('de_at')->shouldBeCalled();
-        $translator->setLocale('de')->shouldBeCalled();
-
-        $renderer = new PreviewRenderer(
-            $activeTheme->reveal(),
-            $controllerResolver->reveal(),
-            $webspaceManager->reveal(),
-            $requestStack->reveal(),
-            $translator->reveal()
-        );
-
-        $result = $renderer->render($structure->reveal());
+        $result = $this->previewRenderer->render($this->structure->reveal());
 
         $this->assertEquals('TEST', $result);
     }
 
     public function testRenderWithoutCurrentRequest()
     {
-        $activeTheme = $this->prophesize(ActiveTheme::class);
-        $controllerResolver = $this->prophesize(ControllerResolver::class);
-        $webspaceManager = $this->prophesize(WebspaceManager::class);
-        $requestStack = $this->prophesize(RequestStack::class);
-        $structure = $this->prophesize(PageBridge::class);
-        $translator = $this->prophesize(TranslatorInterface::class);
-
-        $webspaceManager->findWebspaceByKey('sulu_io')->willReturn($this->getWebspace());
-
-        $structure->getController()->willReturn('TestController:test');
-        $structure->getLanguageCode()->willReturn('de_at');
-        $structure->getWebspaceKey()->willReturn('sulu_io');
-
-        $controllerResolver->getController(Argument::type(Request::class))
-            ->will(
-                function () {
-                    return [new TestController(), 'testAction'];
-                }
-            );
-
-        $requestStack->getCurrentRequest()->willReturn(null);
-        $requestStack->push(
+        $this->requestStack->getCurrentRequest()->willReturn(null);
+        $this->requestStack->push(
             Argument::that(
                 function (Request $newRequest) {
-                    $this->assertEquals([], $newRequest->query->all());
+                    $this->assertEquals(['webspace' => 'sulu_io', 'locale' => 'de_at'], $newRequest->query->all());
                     $this->assertEquals([], $newRequest->request->all());
                     $this->assertEquals([], $newRequest->cookies->all());
 
@@ -127,21 +158,9 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
                 }
             )
         )->shouldBeCalledTimes(1);
-        $requestStack->pop()->shouldBeCalled();
+        $this->requestStack->pop()->shouldBeCalled();
 
-        $translator->getLocale()->willReturn('de');
-        $translator->setLocale('de_at')->shouldBeCalled();
-        $translator->setLocale('de')->shouldBeCalled();
-
-        $renderer = new PreviewRenderer(
-            $activeTheme->reveal(),
-            $controllerResolver->reveal(),
-            $webspaceManager->reveal(),
-            $requestStack->reveal(),
-            $translator->reveal()
-        );
-
-        $result = $renderer->render($structure->reveal());
+        $result = $this->previewRenderer->render($this->structure->reveal());
 
         $this->assertEquals('TEST', $result);
     }

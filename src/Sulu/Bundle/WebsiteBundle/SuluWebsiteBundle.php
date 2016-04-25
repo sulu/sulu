@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle;
 
+use Sulu\Bundle\WebsiteBundle\DependencyInjection\Compiler\DeregisterDefaultRouteListenerCompilerPass;
 use Sulu\Component\Util\SuluVersionPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -25,5 +26,6 @@ class SuluWebsiteBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new SuluVersionPass());
+        $container->addCompilerPass(new DeregisterDefaultRouteListenerCompilerPass());
     }
 }

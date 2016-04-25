@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-master
     * HOTFIX      #2331 [AdminBundle]         Fixed admin-controller to return correct system
+    * HOTFIX      #2330 [WebsiteBundle]       Removed lazy analyzing of the request
     * HOTFIX      #2321 [WebsiteBundle]       Fixed request-analyze for not existing current request
     * HOTFIX      #2319 [ContactBundle]       Validate unknown vat-number as valid
     * HOTFIX      #2306 [WebsiteBundle]       Fixed partial rendering using query parameter
@@ -14,6 +15,7 @@ CHANGELOG for Sulu
     * HOTFIX      #2294 [WebsiteBundle]       Fixed analytics with all domains only in created webspace
     * HOTFIX      #2285 [SecurityBundle]      Made ResettingController translations more configurable
     * HOTFIX      #2291 [ContentBundle]       Fixed wrong spacing between more than two checkboxes
+    * ENHANCEMENT #2288 [WebsiteBundle]       Fixed overriding request attributes and set them on the request
 
 * 1.2.0 (2016-04-11)
     * BUGFIX      #2280 [ContentBundle]       Removed scrollbar from categories in overlay
