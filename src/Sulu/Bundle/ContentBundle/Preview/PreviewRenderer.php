@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Liip\ThemeBundle\ActiveTheme;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -47,18 +48,25 @@ class PreviewRenderer
      */
     private $translator;
 
+    /**
+     * @var RequestAnalyzerInterface
+     */
+    private $requestAnalyzer;
+
     public function __construct(
         ActiveTheme $activeTheme,
         ControllerResolverInterface $controllerResolver,
         WebspaceManagerInterface $webspaceManager,
         RequestStack $requestStack,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        RequestAnalyzerInterface $requestAnalyzer
     ) {
         $this->activeTheme = $activeTheme;
         $this->controllerResolver = $controllerResolver;
         $this->webspaceManager = $webspaceManager;
         $this->requestStack = $requestStack;
         $this->translator = $translator;
+        $this->requestAnalyzer = $requestAnalyzer;
     }
 
     /**
@@ -97,6 +105,8 @@ class PreviewRenderer
         $request->setLocale($content->getLanguageCode());
         $localeBefore = $this->translator->getLocale();
         $this->translator->setLocale($content->getLanguageCode());
+
+        $this->requestAnalyzer->analyze($request);
 
         $this->requestStack->push($request);
         /** @var Response $response */

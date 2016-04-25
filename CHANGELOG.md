@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-master
     * HOTFIX      #2331 [AdminBundle]         Fixed admin-controller to return correct system
+    * HOTFIX      #2330 [WebsiteBundle]       Removed lazy analyzing of the request
     * HOTFIX      #2321 [WebsiteBundle]       Fixed request-analyze for not existing current request
     * HOTFIX      #2319 [ContactBundle]       Validate unknown vat-number as valid
     * HOTFIX      #2306 [WebsiteBundle]       Fixed partial rendering using query parameter

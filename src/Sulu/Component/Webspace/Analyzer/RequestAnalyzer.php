@@ -47,31 +47,19 @@ class RequestAnalyzer implements RequestAnalyzerInterface
             $attributes = $attributes->merge($provider->process($request, $attributes));
         }
 
-        foreach ($this->requestProcessors as $provider) {
-            $provider->validate($attributes);
-        }
-
         $request->attributes->set('_sulu', $attributes);
     }
 
     /**
-     * Initializes the request attributes lazily.
-     *
-     * @return RequestAttributes
+     * {@inheritdoc}
      */
-    protected function getAttributes()
+    public function validate(Request $request)
     {
-        $request = $this->requestStack->getCurrentRequest();
-        
-        if (null === $request) {
-            return new RequestAttributes();
-        }
-        
-        if (null === $request->attributes->get('_sulu')) {
-            $this->analyze($this->requestStack->getCurrentRequest());
-        }
+        $attributes = $request->attributes->get('_sulu');
 
-        return $this->requestStack->getCurrentRequest()->attributes->get('_sulu');
+        foreach ($this->requestProcessors as $provider) {
+            $provider->validate($attributes);
+        }
     }
 
     /**
@@ -79,7 +67,17 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     public function getAttribute($name, $default = null)
     {
-        return $this->getAttributes()->getAttribute($name, $default);
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (null === $request) {
+            return $default;
+        }
+
+        if (!$request->attributes->has('_sulu')) {
+            return $default;
+        }
+
+        return $request->attributes->get('_sulu')->getAttribute($name, $default);
     }
 
     /**
