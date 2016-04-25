@@ -11,8 +11,6 @@
     <services>
         <!-- request analyzer data collector -->
         <service id="sulu_website.data_collector.sulu_collector" class="%sulu_website.data_collector.sulu_collector.class%">
-            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
-
             <tag name="data_collector" template="SuluWebsiteBundle:Profiler:layout" id="sulu"/>
             <tag name="sulu.context" context="website"/>
         </service>
