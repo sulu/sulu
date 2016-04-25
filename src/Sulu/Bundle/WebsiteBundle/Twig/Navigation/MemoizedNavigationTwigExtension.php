@@ -82,7 +82,7 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension implements Navigat
     {
         return $this->memoizeCache->memoize([$this->extension, 'breadcrumbFunction'], $this->lifeTime);
     }
-    
+
     /**
      * @param string $requestUrl
      * @param string $itemUrl
@@ -91,7 +91,7 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension implements Navigat
      */
     public function isActiveNavElementFunction($requestUrl, $itemUrl)
     {
-        return $this->memoizeCache->memoize([$this->extension, 'isActiveNavElementFunction'], $this->lifeTime);
+        return $this->memoizeCache->memoize([$this->extension, 'navigationIsActiveFunction'], $this->lifeTime);
     }
 
     /**

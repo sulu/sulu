@@ -83,5 +83,5 @@ interface NavigationTwigExtensionInterface extends \Twig_ExtensionInterface
      *
      * @return \Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem[]
      */
-    public function isActiveNavElementFunction($requestUrl, $itemUrl);
+    public function navigationIsActiveFunction($requestUrl, $itemUrl);
 }

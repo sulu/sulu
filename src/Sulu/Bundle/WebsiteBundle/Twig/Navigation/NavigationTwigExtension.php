@@ -56,7 +56,7 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
             new \Twig_SimpleFunction('sulu_navigation_flat', [$this, 'flatNavigationFunction']),
             new \Twig_SimpleFunction('sulu_navigation_tree', [$this, 'treeNavigationFunction']),
             new \Twig_SimpleFunction('sulu_breadcrumb', [$this, 'breadcrumbFunction']),
-            new \Twig_SimpleFunction('sulu_is_active_nav_element', [$this, 'isActiveNavElementFunction']),
+            new \Twig_SimpleFunction('sulu_navigation_is_active', [$this, 'navigationIsActiveFunction']),
         ];
     }
 
@@ -155,10 +155,10 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
      *
      * @return bool
      */
-    public function isActiveNavElementFunction($requestUrl, $itemUrl)
+    public function navigationIsActiveFunction($requestPath, $itemPath)
     {
-        if ($requestUrl !== $itemUrl) {
-            if (substr($requestUrl, 0, strlen($itemUrl)) !== $itemUrl) {
+        if ($requestPath !== $itemPath) {
+            if (substr($requestUrl, 0, strlen($itemUrl) + 1) !== $itemUrl . '/') {
                 return false;
             }
         }
