@@ -118,7 +118,6 @@ define([], function() {
             }.bind(this));
 
             this.sandbox.on(SHOW_LABEL.call(this), function(configs, id) {
-                configs.el = this.createLabelContainer(id);
                 this.startLabelComponent(configs);
             }.bind(this));
 
@@ -182,11 +181,12 @@ define([], function() {
 
         /**
          * Shows a label
-         * @param type
-         * @param description
-         * @param title
-         * @param id
-         * @param inNavigation
+         * @param {String} type
+         * @param {String} description
+         * @param {String} title
+         * @param {String} id
+         * @param {boolean} inNavigation
+         * @param {boolean} autoVanish
          */
         showLabel: function(type, description, title, id, inNavigation, autoVanish) {
             id = id || ++this.labelId;

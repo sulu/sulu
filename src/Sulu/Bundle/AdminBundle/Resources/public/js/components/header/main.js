@@ -52,10 +52,10 @@ define([], function() {
 
         constants = {
             componentClass: 'sulu-header',
-            hasTabsClass: 'has-tabs',
             backClass: 'back',
             backIcon: 'chevron-left',
             toolbarClass: 'toolbar',
+            tabsRowClass: 'tabs-row',
             tabsClass: 'tabs',
             tabsSelector: '.tabs-container',
             toolbarSelector: '.toolbar-container',
@@ -91,7 +91,7 @@ define([], function() {
                 '</div>'
             ].join(''),
             tabsRow: [
-                '<div class="tabs-row">',
+                '<div class="' + constants.tabsRowClass + '">',
                 '    <div class="' + constants.tabsClass + '"></div>',
                 '</div>'
             ].join(''),
@@ -201,6 +201,15 @@ define([], function() {
          */
         TABS_DEACTIVATE = function() {
             return createEventName.call(this, 'tabs.deactivate');
+        },
+
+        /**
+         * listens on show tab label
+         *
+         * @event sulu.header.[INSTANCE_NAME].tabs.label.show
+         */
+        TABS_LABEL_SHOW = function() {
+            return createEventName.call(this, 'tabs.label.show');
         },
 
         /**
@@ -426,7 +435,6 @@ define([], function() {
                         fragment: this.sandbox.mvc.history.fragment
                     };
 
-                this.sandbox.dom.addClass(this.$el, constants.hasTabsClass);
 
                 // wait for initialized
                 this.sandbox.once('husky.tabs.header.initialized', function() {
@@ -689,6 +697,10 @@ define([], function() {
             this.sandbox.on(TABS_DEACTIVATE.call(this), function() {
                 this.sandbox.emit('husky.tabs.header.activate');
             }.bind(this));
+
+            this.sandbox.on(TABS_LABEL_SHOW.call(this), function(description) {
+                this.showTabsLabel(description);
+            }.bind(this));
         },
 
         /**
@@ -730,6 +742,22 @@ define([], function() {
          */
         showTabs: function() {
             this.sandbox.dom.removeClass(this.$el, constants.hideTabsClass);
+        },
+
+        showTabsLabel: function(description) {
+            var $draftLabelContainer = $('<div/>');
+
+            this.$find('.' + constants.tabsRowClass).append($draftLabelContainer);
+
+            this.sandbox.emit('sulu.labels.label.show', {
+                el: $draftLabelContainer,
+                type: 'WARNING',
+                description: description,
+                title: '',
+                autoVanish: false,
+                hasClose: false,
+                size: 'small'
+            });
         }
     };
 });

@@ -150,13 +150,11 @@
     &.fixed {
         float: none;
         width: auto;
-
-        #content, .sulu-title {
-          width: $contentFixedWidth;
-        }
     }
 
     &.small-fixed {
+        width: $contentFixedSmallWidth;
+
         &.fixed:not(.no-right-space) #content,
         &.fixed .sulu-title {
             padding-right: $contentPaddingRightSmall;
@@ -164,11 +162,6 @@
         &.fixed:not(.no-left-space) #content,
         &.fixed .sulu-title {
             padding-left: $contentPaddingLeftSmall;
-        }
-        &.fixed {
-          #content, .sulu-title {
-            width: $contentFixedSmallWidth;
-          }
         }
         .fixed-width {
           width: $contentFixedSmallWidth;
@@ -224,9 +217,7 @@
 @media only screen and (max-width: 50px + $contentFixedWidth + $sidebarMaxCollapseWidth) {
     .has-visible-sidebar .content-column {
         &.fixed {
-            #content, .sulu-title {
-                width: $contentFixedSmallWidth;
-            }
+            width: $contentFixedSmallWidth;
         }
       .fixed-width {
           width: $contentFixedSmallWidth;
@@ -246,9 +237,6 @@
         &.fixed {
             float: none;
             width: 100%;
-            #content, .sulu-title {
-                width: 100%;
-            }
         }
         .fixed-width {
             width: 100%;
@@ -270,9 +258,6 @@
     .has-no-visible-sidebar .content-column {
         &.fixed {
             float: none;
-            #content, .sulu-title {
-                width: auto;
-            }
         }
         .fixed-width {
             width: auto;
@@ -290,10 +275,6 @@
     .has-visible-sidebar .sidebar-column.fixed + .content-column {
         &.fixed {
             float: none;
-            #content, .sulu-title {
-                max-width: $contentFixedWidth;
-                width: auto;
-            }
         }
         .fixed-width {
             max-width: $contentFixedWidth;
