@@ -2,7 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * ENHANCEMENT #2279 [Webspace]            Do not hide invalid webspace exceptions.
+    * ENHANCEMENT #2316 [Symfony]             Added collector compiler pass
+    * ENHANCEMENT #2279 [Webspace]            Do not hide invalid webspace exceptions
     * ENHANCEMENT #2288 [WebsiteBundle]       Fixed overriding request attributes and set them on the request
     * BUGFIX      #2288 [AdminBundle]         Removed deleting of entire dom tree on tab change
     * ENHANCEMENT #2278 [TestBundle]          Cache result of Sulu intitializer rather than using a fixture
