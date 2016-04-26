@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.2.1 (2016-04-26)
     * HOTFIX      #2334 [ContactBundle]       Fixed account-contact search
     * HOTFIX      #2335 [ContentBundle]       Fixed textarea vertical resize
     * HOTFIX      #2331 [AdminBundle]         Fixed admin-controller to return correct system
@@ -176,6 +176,9 @@ CHANGELOG for Sulu
     * BUGFIX      #1871 [ContentBundle]       Fixed url-generation and save button
     * BUGFIX      #1873 [ContactBundle]       Fixed remove title and position
     * BUGFIX      #1873 [ContactBundle]       Fixed remove contact birthday
+
+* 1.1.12 (2016-04-26)
+    * HOTFIX      #2285 [SecurityBundle]    Made ResettingController translations more configurable
 
 * 1.1.11 (2016-04-04)
     * HOTFIX      #2143 [ContactBundle]     Fixed account cget filtering of ids
