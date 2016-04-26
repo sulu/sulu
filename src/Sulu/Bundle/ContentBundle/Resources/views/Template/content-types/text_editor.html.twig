@@ -22,6 +22,8 @@
         {% if property.mandatory %}
             data-validation-required="true"
         {% endif %}
+        data-aura-webspace="{{ webspaceKey }}"
+        data-aura-locale="{{ languageCode }}"
 ></textarea>
 
 <div class="block-content" data-sort-mode-id="{{ id|raw }}"></div>
