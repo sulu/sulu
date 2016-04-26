@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Twig\Navigation;
 
+use PHPCR\Util\PathHelper;
 use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapperInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -39,7 +40,8 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
         ContentMapperInterface $contentMapper,
         NavigationMapperInterface $navigationMapper,
         RequestAnalyzerInterface $requestAnalyzer = null
-    ) {
+    )
+    {
         $this->contentMapper = $contentMapper;
         $this->navigationMapper = $navigationMapper;
         $this->requestAnalyzer = $requestAnalyzer;
@@ -150,20 +152,18 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
     }
 
     /**
-     * @param string $requestUrl
-     * @param string $itemUrl
+     * @param string $requestPath
+     * @param string $itemPath
      *
      * @return bool
      */
     public function navigationIsActiveFunction($requestPath, $itemPath)
     {
-        if ($requestPath !== $itemPath) {
-            if (substr($requestUrl, 0, strlen($itemUrl) + 1) !== $itemUrl . '/') {
-                return false;
-            }
+        if ($requestPath === $itemPath) {
+            return true;
         }
 
-        return true;
+        return preg_match(sprintf('/%s([\/]|$)/', preg_quote($itemPath, '/')), $requestPath);
     }
 
     /**
