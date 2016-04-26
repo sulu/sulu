@@ -53,16 +53,6 @@
 
             <tag name="sulu.websocket.message.handler" dispatcher="admin" alias="sulu_preview.preview"/>
         </service>
-
-        <!-- error-template -->
-        <service id="sulu_content.preview.exception_listener"
-                 class="Sulu\Bundle\PreviewBundle\EventListener\PreviewExceptionListener">
-            <argument type="service" id="templating"/>
-            <argument type="service" id="logger"/>
-            <argument type="string">%sulu_preview.error_template%</argument>
-
-            <tag name="kernel.event_listener" event="kernel.exception" method="onKernelException"/>
-        </service>
     </services>
 
 </container>

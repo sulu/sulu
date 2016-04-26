@@ -13,6 +13,9 @@ namespace Sulu\Bundle\PreviewBundle\Preview\Renderer;
 
 use Sulu\Bundle\PreviewBundle\Preview\Events;
 use Sulu\Bundle\PreviewBundle\Preview\Events\PreRenderEvent;
+use Sulu\Bundle\PreviewBundle\Preview\Exception\PortalNotFoundException;
+use Sulu\Bundle\PreviewBundle\Preview\Exception\RouteDefaultsProviderNotFoundException;
+use Sulu\Bundle\PreviewBundle\Preview\Exception\TwigException;
 use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProviderInterface;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -100,9 +103,12 @@ class PreviewRenderer implements PreviewRendererInterface
             $this->environment
         );
 
-        if (count($portalInformations) === 0 || !$this->routeDefaultsProvider->supports(get_class($object))) {
-            // TODO template for non renderable response
-            return '';
+        if (count($portalInformations) === 0) {
+            throw new PortalNotFoundException($object, $id, $webspaceKey, $locale);
+        }
+
+        if (!$this->routeDefaultsProvider->supports(get_class($object))) {
+            throw new RouteDefaultsProviderNotFoundException($object, $id, $webspaceKey, $locale);
         }
 
         /** @var PortalInformation $portalInformation */
@@ -148,7 +154,11 @@ class PreviewRenderer implements PreviewRendererInterface
 
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, new PreRenderEvent($attributes));
 
-        $response = $this->httpKernel->handle($request, HttpKernelInterface::SUB_REQUEST);
+        try {
+            $response = $this->httpKernel->handle($request, HttpKernelInterface::SUB_REQUEST, false);
+        } catch (\Twig_Error $e) {
+            throw new TwigException($e, $object, $id, $webspace, $locale);
+        }
 
         return $response->getContent();
     }

@@ -22,6 +22,18 @@
                 <source>sulu.preview.start</source>
                 <target>Commencez aperçu</target>
             </trans-unit>
+            <trans-unit id="6" resname="sulu.preview.no-preview">
+                <source>sulu.preview.no-preview</source>
+                <target>L’aperçu n’est pas disponible.</target>
+            </trans-unit>
+            <trans-unit id="7" resname="sulu.preview.no-defaults-provider">
+                <source>sulu.preview.no-defaults-provider</source>
+                <target>N’aucun RouteDefaultsProvider trouvé.</target>
+            </trans-unit>
+            <trans-unit id="8" resname="sulu.preview.change-webspace">
+                <source>sulu.preview.change-webspace</source>
+                <target>Modifie webspace s’il te plaît.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -7,7 +7,12 @@
  * with this source code in the file LICENSE.
  */
 
-define(['jquery', 'text!./skeleton.html', 'text!./on-request.html'], function($, skeletonTemplate, onRequestTemplate) {
+define([
+    'jquery',
+    'text!./skeleton.html',
+    'text!./on-request.html',
+    'text!./error.html'
+], function($, skeletonTemplate, onRequestTemplate, errorTemplate) {
 
     'use strict';
 
@@ -25,12 +30,19 @@ define(['jquery', 'text!./skeleton.html', 'text!./on-request.html'], function($,
             },
 
             translations: {
-                startLabel: 'sulu.preview.start'
+                startLabel: 'sulu.preview.start',
+                noPreviewLabel: 'sulu.preview.no-preview',
+                changeWebspaceLabel: 'sulu.preview.change-webspace',
+                defaultsProviderLabel: 'sulu.preview.no-defaults-provider'
             },
 
             templates: {
                 skeleton: skeletonTemplate,
-                onRequest: onRequestTemplate
+                onRequest: onRequestTemplate,
+                error: errorTemplate,
+                9901: '<h2><%= translations.changeWebspaceLabel %></h2>',
+                9902: '<h2><%= translations.defaultsProviderLabel %></h2>',
+                9903: '<h2><%= message %></h2>'
             }
         };
 
@@ -42,6 +54,7 @@ define(['jquery', 'text!./skeleton.html', 'text!./on-request.html'], function($,
             names: {
                 setContent: {postFix: 'set-content', type: 'on'},
                 updateContent: {postFix: 'update-content', type: 'on'},
+                error: {postFix: 'error', type: 'on'},
                 webspace: {postFix: 'webspace'},
                 render: {postFix: 'render'}
             },
@@ -84,6 +97,7 @@ define(['jquery', 'text!./skeleton.html', 'text!./on-request.html'], function($,
         bindCustomEvents: function() {
             this.events.setContent(this.setContent.bind(this));
             this.events.updateContent(this.updateContent.bind(this));
+            this.events.error(this.error.bind(this));
         },
 
         startToolbarComponent: function() {
@@ -138,6 +152,28 @@ define(['jquery', 'text!./skeleton.html', 'text!./on-request.html'], function($,
                         }
                     }
                 ]
+            );
+        },
+
+        /**
+         * Show error message with given code and message.
+         *
+         * @param {Integer} code
+         * @param {String} message
+         */
+        error: function(code, message) {
+            if (!this.templates[code]) {
+                return;
+            }
+
+            this.setContent(
+                this.templates.error(
+                    {
+                        code: code,
+                        content: this.templates[code]({message: message, translations: this.translations}),
+                        translations: this.translations
+                    }
+                )
             );
         },
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-    <file source-language="de" datatype="plaintext" original="file.ext">
+    <file source-language="en" datatype="plaintext" original="file.ext">
         <body>
             <trans-unit id="1" resname="sulu.preview.auto">
                 <source>sulu.preview.auto</source>
@@ -20,10 +20,20 @@
             </trans-unit>
             <trans-unit id="5" resname="sulu.preview.start">
                 <source>sulu.preview.start</source>
-                <target>Vorschau starten</target>
+                <target>Start preview</target>
+            </trans-unit>
+            <trans-unit id="6" resname="sulu.preview.no-preview">
+                <source>sulu.preview.no-preview</source>
+                <target>Preview not available</target>
+            </trans-unit>
+            <trans-unit id="7" resname="sulu.preview.no-defaults-provider">
+                <source>sulu.preview.no-defaults-provider</source>
+                <target>No "RouteDefaultsProvider" found</target>
+            </trans-unit>
+            <trans-unit id="8" resname="sulu.preview.change-webspace">
+                <source>sulu.preview.change-webspace</source>
+                <target>Please change webspace./target>
             </trans-unit>
         </body>
     </file>
 </xliff>
-
-
