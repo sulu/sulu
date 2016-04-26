@@ -58,6 +58,7 @@ class MediaManager implements MediaManagerInterface
     const ENTITY_NAME_TAG = 'SuluTagBundle:Tag';
     const ENTITY_NAME_FILEVERSIONCONTENTLANGUAGE = 'SuluMediaBundle:FileVersionContentLanguage';
     const ENTITY_NAME_FILEVERSIONPUBLISHLANGUAGE = 'SuluMediaBundle:FileVersionPublishLanguage';
+    const ENTITY_NAME_CATEGORY = 'SuluCategoryBundle:Category';
 
     /**
      * The repository for communication with the database.
@@ -706,7 +707,8 @@ class MediaManager implements MediaManagerInterface
                 ($attribute === 'size' && $value !== null) ||
                 ($attribute === 'description' && $value !== null) ||
                 ($attribute === 'copyright' && $value !== null) ||
-                ($attribute === 'credits' && $value !== null)
+                ($attribute === 'credits' && $value !== null) ||
+                ($attribute === 'categories' && $value !== null)
             ) {
                 switch ($attribute) {
                     case 'size':
@@ -783,6 +785,26 @@ class MediaManager implements MediaManagerInterface
                         if (isset($value['id'])) {
                             $type = $this->typeManager->get($value['id']);
                             $media->setType($type);
+                        }
+                        break;
+                    case 'categories':
+                        $categoryIds = [];
+                        $media->removeCategories();
+
+                        if (count($value)) {
+                            foreach ($value as $categoryId) {
+                                $categoryIds[] = $categoryId;
+                            }
+                        }
+
+                        if (!empty($categoryIds)) {
+                            /** @var CategoryRepositoryInterface $repository */
+                            $repository = $this->em->getRepository(self::ENTITY_NAME_CATEGORY);
+                            $categories = $repository->findCategoryByIds($categoryIds);
+
+                            foreach ($categories as $category) {
+                                $media->addCategory($category);
+                            }
                         }
                         break;
                 }

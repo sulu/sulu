@@ -61,6 +61,7 @@ class AbstractMediaController extends RestController
             'creator' => $request->get('creator'),
             'changed' => $request->get('changed'),
             'created' => $request->get('created'),
+            'categories' => $request->get('categories'),
         ];
     }
 

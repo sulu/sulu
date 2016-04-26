@@ -111,6 +111,7 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
             ->leftJoin($alias . '.files', 'file')
             ->leftJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version')
             ->leftJoin('fileVersion.tags', 'tag')
+            ->leftJoin('fileVersion.categories', 'categories')
             ->leftJoin('fileVersion.meta', 'fileVersionMeta')
             ->leftJoin('fileVersion.defaultMeta', 'fileVersionDefaultMeta')
             ->leftJoin('fileVersion.contentLanguages', 'fileVersionContentLanguage')
@@ -155,6 +156,14 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
             ->innerJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version');
 
         return 'fileVersion.tags';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function appendCategoriesRelation()
+    {
+        return 'fileVersion.categories';
     }
 
     /**
