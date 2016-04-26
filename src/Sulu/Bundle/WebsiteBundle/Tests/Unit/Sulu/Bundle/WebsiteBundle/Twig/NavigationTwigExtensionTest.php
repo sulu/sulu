@@ -43,4 +43,3 @@ class NavigationTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $extension->navigationIsActiveFunction($requestPath, $itemPath));
     }
 }
-
