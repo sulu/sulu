@@ -30,12 +30,12 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerI
 class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, AuthenticationFailureHandlerInterface
 {
     /**
-     * @var \Symfony\Component\Routing\RouterInterface
+     * @var RouterInterface
      */
     private $router;
 
     /**
-     * @var \Symfony\Component\HttpFoundation\Session\Session
+     * @var Session
      */
     private $session;
 
@@ -49,7 +49,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
      * Handler for AuthenticationSuccess. Returns a JsonResponse if request is an AJAX-request.
      * Returns a RedirectResponse otherwise.
      *
-     * @param Request        $request
+     * @param Request $request
      * @param TokenInterface $token
      *
      * @return Response
@@ -81,7 +81,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
      * Handler for AuthenticationFailure. Returns a JsonResponse if request is an AJAX-request.
      * Returns a Redirect-response otherwise.
      *
-     * @param Request                 $request
+     * @param Request $request
      * @param AuthenticationException $exception
      *
      * @return Response

@@ -126,13 +126,6 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
-        <service id="sulu_security.user_repository_factory" class="%sulu_security.user_repository_factory.class%">
-            <argument type="service" id="doctrine.orm.entity_manager"/>
-            <argument>%sulu_security.system%</argument>
-            <argument>%sulu.model.user.class%</argument>
-            <argument type="service" on-invalid="ignore" id="sulu_core.webspace.request_analyzer"/>
-        </service>
-
         <service id="sulu_security.group_repository" class="%sulu_security.group_repository.class%">
             <factory service="doctrine.orm.entity_manager" method="getRepository"/>
 
@@ -146,7 +139,15 @@
         </service>
 
         <service id="sulu_security.user_repository" class="%sulu_security.user_repository.class%">
-            <factory service="sulu_security.user_repository_factory" method="getRepository"/>
+            <factory service="doctrine.orm.entity_manager" method="getRepository"/>
+
+            <argument>%sulu.model.user.class%</argument>
+        </service>
+
+        <service id="sulu_security.user_provider" class="Sulu\Bundle\SecurityBundle\User\UserProvider">
+            <argument type="service" id="sulu_security.user_repository"/>
+            <argument type="service" id="request_stack"/>
+            <argument>%sulu_security.system%</argument>
         </service>
 
         <service id="sulu_security.build.user" class="%sulu_security.build.user.class%">
