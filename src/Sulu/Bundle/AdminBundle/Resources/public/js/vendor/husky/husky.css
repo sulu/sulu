@@ -7142,25 +7142,20 @@ input ~ .input-description {
 
 /* line 277, ../scss/modules/form.scss */
 textarea {
-  resize: both;
-}
-
-/* line 281, ../scss/modules/form.scss */
-textarea.vertical {
   resize: vertical;
 }
 
-/* line 285, ../scss/modules/form.scss */
+/* line 281, ../scss/modules/form.scss */
 textarea.horizontal {
   resize: horizontal;
 }
 
-/* line 289, ../scss/modules/form.scss */
+/* line 285, ../scss/modules/form.scss */
 textarea.noResize {
   resize: none;
 }
 
-/* line 293, ../scss/modules/form.scss */
+/* line 289, ../scss/modules/form.scss */
 textarea.form-element, textarea.husky-input {
   width: 100%;
   height: 40px;
@@ -7169,14 +7164,14 @@ textarea.form-element, textarea.husky-input {
   font-size: 14px;
   font-family: inherit;
 }
-/* line 300, ../scss/modules/form.scss */
+/* line 296, ../scss/modules/form.scss */
 textarea.form-element.small, textarea.small.husky-input {
   height: 70px;
   min-height: 70px;
   padding: 5px;
 }
 
-/* line 309, ../scss/modules/form.scss */
+/* line 305, ../scss/modules/form.scss */
 .custom-radio {
   width: 15px;
   height: 15px;
@@ -7186,12 +7181,12 @@ textarea.form-element.small, textarea.small.husky-input {
   display: inline-block;
   margin: 0 5px 0 0;
 }
-/* line 319, ../scss/modules/form.scss */
+/* line 315, ../scss/modules/form.scss */
 .custom-radio.no-spacing {
   top: 0;
   margin: 0;
 }
-/* line 324, ../scss/modules/form.scss */
+/* line 320, ../scss/modules/form.scss */
 .custom-radio input {
   width: 15px;
   height: 15px;
@@ -7204,11 +7199,11 @@ textarea.form-element.small, textarea.small.husky-input {
   margin: 0;
   padding: 0;
 }
-/* line 338, ../scss/modules/form.scss */
+/* line 334, ../scss/modules/form.scss */
 .custom-radio input:checked + .icon, .custom-radio input.is-checked + .icon {
   border-color: #fff;
 }
-/* line 341, ../scss/modules/form.scss */
+/* line 337, ../scss/modules/form.scss */
 .custom-radio input:checked + .icon::after, .custom-radio input.is-checked + .icon::after {
   content: "";
   display: block;
@@ -7217,7 +7212,7 @@ textarea.form-element.small, textarea.small.husky-input {
   border-radius: 15px;
   background-color: #5DC774;
 }
-/* line 352, ../scss/modules/form.scss */
+/* line 348, ../scss/modules/form.scss */
 .custom-radio input + .icon {
   display: block;
   position: absolute;
@@ -7233,29 +7228,29 @@ textarea.form-element.small, textarea.small.husky-input {
   margin: 0;
 }
 
-/* line 373, ../scss/modules/form.scss */
+/* line 369, ../scss/modules/form.scss */
 .cke.cke_chrome {
   box-shadow: none !important;
   border: 0 !important;
 }
-/* line 378, ../scss/modules/form.scss */
+/* line 374, ../scss/modules/form.scss */
 .cke .cke_inner {
   border: 1px solid #ddd !important;
   border-radius: 3px !important;
 }
-/* line 382, ../scss/modules/form.scss */
+/* line 378, ../scss/modules/form.scss */
 .cke .cke_inner,
 .cke .cke_wysiwyg_frame {
   border-bottom-left-radius: 3px !important;
   border-bottom-right-radius: 3px !important;
 }
 
-/* line 389, ../scss/modules/form.scss */
+/* line 385, ../scss/modules/form.scss */
 .cke_hidpi .cke_dialog_close_button {
   background-image: none !important;
 }
 
-/* line 395, ../scss/modules/form.scss */
+/* line 391, ../scss/modules/form.scss */
 span.error {
   font-size: 14px;
   color: #EA524E;
