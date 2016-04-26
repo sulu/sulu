@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-master
+## 1.2.1
 
 ### UserRepository
 
