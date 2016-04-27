@@ -432,16 +432,16 @@ class MediaControllerTest extends SuluTestCase
                 'id' => $response['categories'][1]['id'],
                 'key' => $response['categories'][1]['key'],
                 'name' => $response['categories'][1]['name'],
-            ]
+            ],
         ];
 
         $this->assertContains([
-            'id' =>$this->category->getId(),
+            'id' => $this->category->getId(),
             'key' =>  $this->category->getKey(),
             'name' => 'First Category',
         ], $categories);
         $this->assertContains([
-            'id' =>$this->category2->getId(),
+            'id' => $this->category2->getId(),
             'key' =>  $this->category2->getKey(),
             'name' => 'Second Category',
         ], $categories);
@@ -779,16 +779,16 @@ class MediaControllerTest extends SuluTestCase
                 'id' => $response->categories[1]->id,
                 'key' => $response->categories[1]->key,
                 'name' => $response->categories[1]->name,
-            ]
+            ],
         ];
 
         $this->assertContains([
-            'id' =>$this->category->getId(),
+            'id' => $this->category->getId(),
             'key' =>  $this->category->getKey(),
             'name' => 'First Category',
         ], $categories);
         $this->assertContains([
-            'id' =>$this->category2->getId(),
+            'id' => $this->category2->getId(),
             'key' =>  $this->category2->getKey(),
             'name' => 'Second Category',
         ], $categories);
