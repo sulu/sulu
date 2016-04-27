@@ -15,6 +15,8 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
+use Sulu\Bundle\CategoryBundle\Api\Category;
+use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
@@ -27,8 +29,6 @@ use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\Authentication\UserInterface;
-use Sulu\Bundle\CategoryBundle\Api\Category;
-use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
 
 /**
  * Class Media
@@ -969,7 +969,7 @@ class Media extends ApiWrapper
     }
 
     /**
-     * Returns the categories of the blog
+     * Returns the categories of the media.
      *
      * @VirtualProperty
      * @SerializedName("categories")
@@ -978,7 +978,7 @@ class Media extends ApiWrapper
      */
     public function getCategories()
     {
-        $apiCategories = array();
+        $apiCategories = [];
         $fileVersion = $this->getFileVersion();
         $categories = $fileVersion->getCategories();
 

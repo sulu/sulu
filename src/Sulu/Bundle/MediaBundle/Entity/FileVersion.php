@@ -120,7 +120,6 @@ class FileVersion implements AuditableInterface
      */
     private $categories;
 
-
     /**
      * Constructor.
      */
@@ -689,7 +688,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Remove categories
+     * Remove categories.
      */
     public function removeCategories()
     {
@@ -697,7 +696,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * Get categories
+     * Get categories.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
