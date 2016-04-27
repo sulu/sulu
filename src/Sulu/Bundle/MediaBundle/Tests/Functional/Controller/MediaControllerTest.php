@@ -309,15 +309,17 @@ class MediaControllerTest extends SuluTestCase
     public function testResponseHeader()
     {
         $media = $this->createMedia('photo');
-
         $date = new DateTime();
         $date->modify('+1 month');
-
         $client = $this->createAuthenticatedClient();
-
-        $client->request('GET', '/uploads/media/50x50/01/' . $media->getId() . '-photo.jpeg');
-
-        $this->assertEquals($date->format('Y-m-d'), $client->getResponse()->getExpires()->format('Y-m-d'));
+        $client->request(
+            'GET',
+            '/uploads/media/50x50/01/' . $media->getId() . '-photo.jpeg'
+        );
+        $this->assertEquals(
+            $date->format('Y-m-d'),
+            $client->getResponse()->getExpires()->format('Y-m-d')
+        );
     }
 
     /**
@@ -326,9 +328,10 @@ class MediaControllerTest extends SuluTestCase
     public function test404ResponseHeader()
     {
         $client = $this->createAuthenticatedClient();
-
-        $client->request('GET', '/uploads/media/50x50/01/0-photo.jpeg');
-
+        $client->request(
+            'GET',
+            '/uploads/media/50x50/01/0-photo.jpeg'
+        );
         $this->assertFalse($client->getResponse()->isCacheable());
         $this->assertEmpty($client->getResponse()->getExpires());
     }
@@ -339,14 +342,17 @@ class MediaControllerTest extends SuluTestCase
     public function testDownloadHeaderAttachment()
     {
         $media = $this->createMedia('photo');
-
         $client = $this->createAuthenticatedClient();
-
         ob_start();
-        $client->request('GET', '/media/' . $media->getId() . '/download/photo.jpeg');
+        $client->request(
+            'GET',
+            '/media/' . $media->getId() . '/download/photo.jpeg'
+        );
         ob_end_clean();
-
-        $this->assertEquals('attachment; filename="photo.jpeg"', $client->getResponse()->headers->get('Content-Disposition'));
+        $this->assertEquals(
+            'attachment; filename="photo.jpeg"',
+            $client->getResponse()->headers->get('Content-Disposition')
+        );
     }
 
     /**
@@ -355,14 +361,17 @@ class MediaControllerTest extends SuluTestCase
     public function testDownloadHeaderInline()
     {
         $media = $this->createMedia('photo');
-
         $client = $this->createAuthenticatedClient();
-
         ob_start();
-        $client->request('GET', '/media/' . $media->getId() . '/download/photo.jpeg?inline=1');
+        $client->request(
+            'GET',
+            '/media/' . $media->getId() . '/download/photo.jpeg?inline=1'
+        );
         ob_end_clean();
-
-        $this->assertEquals('inline; filename="photo.jpeg"', $client->getResponse()->headers->get('Content-Disposition'));
+        $this->assertEquals(
+            'inline; filename="photo.jpeg"',
+            $client->getResponse()->headers->get('Content-Disposition')
+        );
     }
 
     /**
@@ -371,14 +380,17 @@ class MediaControllerTest extends SuluTestCase
     public function testDownloadHeaderUmlauts()
     {
         $media = $this->createMedia('wöchentlich');
-
         $client = $this->createAuthenticatedClient();
-
         ob_start();
-        $client->request('GET', '/media/' . $media->getId() . '/download/wöchentlich.jpeg?inline=1');
+        $client->request(
+            'GET',
+            '/media/' . $media->getId() . '/download/wöchentlich.jpeg?inline=1'
+        );
         ob_end_clean();
-
-        $this->assertEquals('inline; filename="woechentlich.jpeg"; filename*=utf-8\'\'w%C3%B6chentlich.jpeg', $client->getResponse()->headers->get('Content-Disposition'));
+        $this->assertEquals(
+            'inline; filename="woechentlich.jpeg"; filename*=utf-8\'\'w%C3%B6chentlich.jpeg',
+            $client->getResponse()->headers->get('Content-Disposition')
+        );
     }
 
     /**
@@ -389,7 +401,10 @@ class MediaControllerTest extends SuluTestCase
         $media = $this->createMedia('photo');
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/media/' . $media->getId() . '?locale=en-gb');
+        $client->request(
+            'GET',
+            '/api/media/' . $media->getId() . '?locale=en-gb'
+        );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
@@ -457,7 +472,10 @@ class MediaControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/media');
+        $client->request(
+            'GET',
+            '/api/media'
+        );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
@@ -476,7 +494,10 @@ class MediaControllerTest extends SuluTestCase
         $media = $this->createMedia('photo');
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/media?collection=' . $this->collection->getId());
+        $client->request(
+            'GET',
+            '/api/media?collection=' . $this->collection->getId()
+        );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
@@ -498,7 +519,10 @@ class MediaControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/media?collection=' . $this->collection->getId() . '&types=image');
+        $client->request(
+            'GET',
+            '/api/media?collection=' . $this->collection->getId() . '&types=image'
+        );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
@@ -518,7 +542,10 @@ class MediaControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/media?collection=' . $this->collection->getId() . '&types=audio');
+        $client->request(
+            'GET',
+            '/api/media?collection=' . $this->collection->getId() . '&types=audio'
+        );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
@@ -538,7 +565,10 @@ class MediaControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/media?collection=' . $this->collection->getId() . '&types=image,audio');
+        $client->request(
+            'GET',
+            '/api/media?collection=' . $this->collection->getId() . '&types=image,audio'
+        );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
@@ -560,7 +590,10 @@ class MediaControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/media?ids=' . $media->getId());
+        $client->request(
+            'GET',
+            '/api/media?ids=' . $media->getId()
+        );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
@@ -580,7 +613,10 @@ class MediaControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/media?ids=' . $media2->getId() . ',' . $media1->getId());
+        $client->request(
+            'GET',
+            '/api/media?ids=' . $media2->getId() . ',' . $media1->getId()
+        );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
@@ -601,7 +637,10 @@ class MediaControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/media?flat=true&search=photo%2A');
+        $client->request(
+            'GET',
+            '/api/media?flat=true&search=photo%2A'
+        );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
@@ -610,9 +649,12 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals(2, $response['total']);
         $this->assertCount(2, $response['_embedded']['media']);
 
-        $titles = array_map(function ($media) {
-            return $media['name'];
-        }, $response['_embedded']['media']);
+        $titles = array_map(
+            function ($media) {
+                return $media['name'];
+            },
+            $response['_embedded']['media']
+        );
 
         $this->assertContains('photo2.jpeg', $titles);
         $this->assertContains('photo1.jpeg', $titles);
@@ -625,7 +667,10 @@ class MediaControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/media?ids=1232,3123,1234');
+        $client->request(
+            'GET',
+            '/api/media?ids=1232,3123,1234'
+        );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
@@ -643,7 +688,10 @@ class MediaControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/media/11230');
+        $client->request(
+            'GET',
+            '/api/media/11230'
+        );
 
         $this->assertHttpStatusCode(404, $client->getResponse());
 
@@ -663,17 +711,32 @@ class MediaControllerTest extends SuluTestCase
         $this->assertTrue(file_exists($imagePath));
         $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg', 160768);
 
-        $client->request('POST', '/api/media', [
-            'collection' => $this->collection->getId(), 'locale' => 'en-gb', 'title' => 'New Image Title', 'description' => 'New Image Description', 'copyright' => 'My copyright', 'credits' => 'My credits', 'contentLanguages' => [
-                'en-gb',
-            ], 'publishLanguages' => [
-                'en-gb', 'en-au', 'en', 'de',
-            ], 'categories' => [
-                $this->category->getId(), $this->category2->getId()
+        $client->request(
+            'POST',
+            '/api/media',
+            [
+                'collection' => $this->collection->getId(),
+                'locale' => 'en-gb',
+                'title' => 'New Image Title',
+                'description' => 'New Image Description',
+                'copyright' => 'My copyright',
+                'credits' => 'My credits',
+                'contentLanguages' => [
+                    'en-gb',
+                ],
+                'publishLanguages' => [
+                    'en-gb',
+                    'en-au',
+                    'en',
+                    'de',
+                ], 'categories' => [
+                    $this->category->getId(), $this->category2->getId()
+                ],
+            ],
+            [
+                'fileVersion' => $photo,
             ]
-        ], [
-            'fileVersion' => $photo,
-        ]);
+        );
 
         $this->assertEquals(1, count($client->getRequest()->files->all()));
 
@@ -690,13 +753,21 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('My credits', $response->credits);
         $this->assertNotEmpty($response->url);
         $this->assertNotEmpty($response->thumbnails);
-        $this->assertEquals([
-            'en-gb',
-        ], $response->contentLanguages);
-
-        $this->assertEquals([
-            'en-gb', 'en-au', 'en', 'de',
-        ], $response->publishLanguages);
+        $this->assertEquals(
+            [
+                'en-gb',
+            ],
+            $response->contentLanguages
+        );
+        $this->assertEquals(
+            [
+                'en-gb',
+                'en-au',
+                'en',
+                'de',
+            ],
+            $response->publishLanguages
+        );
 
         $categories = [
             [
@@ -736,11 +807,16 @@ class MediaControllerTest extends SuluTestCase
         $this->assertTrue(file_exists($imagePath));
         $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg', 160768);
 
-        $client->request('POST', '/api/media', [
-            'collection' => $this->collection->getId(),
-        ], [
-            'fileVersion' => $photo,
-        ]);
+        $client->request(
+            'POST',
+            '/api/media',
+            [
+                'collection' => $this->collection->getId(),
+            ],
+            [
+                'fileVersion' => $photo,
+            ]
+        );
 
         $this->assertEquals(1, count($client->getRequest()->files->all()));
 
@@ -766,11 +842,16 @@ class MediaControllerTest extends SuluTestCase
         $this->assertTrue(file_exists($filePath));
         $photo = new UploadedFile($filePath, 'small.txt', 'text/plain', 0);
 
-        $client->request('POST', '/api/media', [
-            'collection' => $this->collection->getId(),
-        ], [
-            'fileVersion' => $photo,
-        ]);
+        $client->request(
+            'POST',
+            '/api/media',
+            [
+                'collection' => $this->collection->getId(),
+            ],
+            [
+                'fileVersion' => $photo,
+            ]
+        );
 
         $this->assertEquals(1, count($client->getRequest()->files->all()));
 
@@ -796,15 +877,30 @@ class MediaControllerTest extends SuluTestCase
         $this->assertTrue(file_exists($imagePath));
         $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg', 160768);
 
-        $client->request('POST', '/api/media/' . $media->getId() . '?action=new-version', [
-            'collection' => $this->collection->getId(), 'locale' => 'en-gb', 'title' => 'New Image Title', 'description' => 'New Image Description', 'copyright' => 'My copyright', 'credits' => 'My credits', 'contentLanguages' => [
-                'en-gb',
-            ], 'publishLanguages' => [
-                'en-gb', 'en-au', 'en', 'de',
+        $client->request(
+            'POST',
+            '/api/media/' . $media->getId() . '?action=new-version',
+            [
+                'collection' => $this->collection->getId(),
+                'locale' => 'en-gb',
+                'title' => 'New Image Title',
+                'description' => 'New Image Description',
+                'copyright' => 'My copyright',
+                'credits' => 'My credits',
+                'contentLanguages' => [
+                    'en-gb',
+                ],
+                'publishLanguages' => [
+                    'en-gb',
+                    'en-au',
+                    'en',
+                    'de',
+                ],
             ],
-        ], [
-            'fileVersion' => $photo,
-        ]);
+            [
+                'fileVersion' => $photo,
+            ]
+        );
 
         $this->assertEquals(1, count($client->getRequest()->files->all()));
 
@@ -821,12 +917,21 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('New Image Description', $response->description);
         $this->assertEquals('My copyright', $response->copyright);
         $this->assertEquals('My credits', $response->credits);
-        $this->assertEquals([
-            'en-gb',
-        ], $response->contentLanguages);
-        $this->assertEquals([
-            'en-gb', 'en-au', 'en', 'de',
-        ], $response->publishLanguages);
+        $this->assertEquals(
+            [
+                'en-gb',
+            ],
+            $response->contentLanguages
+        );
+        $this->assertEquals(
+            [
+                'en-gb',
+                'en-au',
+                'en',
+                'de',
+            ],
+            $response->publishLanguages
+        );
     }
 
     /**
@@ -838,13 +943,27 @@ class MediaControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('PUT', '/api/media/' . $media->getId(), [
-            'collection' => $this->collection->getId(), 'locale' => 'en-gb', 'title' => 'Update Title', 'description' => 'Update Description', 'copyright' => 'My copyright', 'credits' => 'My credits', 'contentLanguages' => [
-                'en-gb',
-            ], 'publishLanguages' => [
-                'en-gb', 'en-au', 'en', 'de',
-            ],
-        ]);
+        $client->request(
+            'PUT',
+            '/api/media/' . $media->getId(),
+            [
+                'collection' => $this->collection->getId(),
+                'locale' => 'en-gb',
+                'title' => 'Update Title',
+                'description' => 'Update Description',
+                'copyright' => 'My copyright',
+                'credits' => 'My credits',
+                'contentLanguages' => [
+                    'en-gb',
+                ],
+                'publishLanguages' => [
+                    'en-gb',
+                    'en-au',
+                    'en',
+                    'de',
+                ],
+            ]
+        );
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -860,12 +979,21 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('My credits', $response->credits);
         $this->assertNotEmpty($response->url);
         $this->assertNotEmpty($response->thumbnails);
-        $this->assertEquals([
-            'en-gb',
-        ], $response->contentLanguages);
-        $this->assertEquals([
-            'en-gb', 'en-au', 'en', 'de',
-        ], $response->publishLanguages);
+        $this->assertEquals(
+            [
+                'en-gb',
+            ],
+            $response->contentLanguages
+        );
+        $this->assertEquals(
+            [
+                'en-gb',
+                'en-au',
+                'en',
+                'de',
+            ],
+            $response->publishLanguages
+        );
     }
 
     /**
@@ -881,11 +1009,16 @@ class MediaControllerTest extends SuluTestCase
         $this->assertTrue(file_exists($imagePath));
         $photo = new UploadedFile($imagePath, 'photo.jpeg', 'image/jpeg', 160768);
 
-        $client->request('POST', '/api/media/' . $media->getId() . '?action=new-version', [
-            'collection' => $this->collection->getId(),
-        ], [
-            'fileVersion' => $photo,
-        ]);
+        $client->request(
+            'POST',
+            '/api/media/' . $media->getId() . '?action=new-version',
+            [
+                'collection' => $this->collection->getId(),
+            ],
+            [
+                'fileVersion' => $photo,
+            ]
+        );
 
         $this->assertEquals(1, count($client->getRequest()->files->all()));
 
@@ -918,7 +1051,10 @@ class MediaControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/media/' . $media->getId());
+        $client->request(
+            'GET',
+            '/api/media/' . $media->getId()
+        );
 
         $this->assertHttpStatusCode(404, $client->getResponse());
 
@@ -943,7 +1079,10 @@ class MediaControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/media/' . $media->getId());
+        $client->request(
+            'GET',
+            '/api/media/' . $media->getId()
+        );
 
         $this->assertHttpStatusCode(404, $client->getResponse());
 
@@ -978,12 +1117,18 @@ class MediaControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
 
         ob_start();
-        $client->request('GET', '/media/' . $media->getId() . '/download/photo.jpeg');
+        $client->request(
+            'GET',
+            '/media/' . $media->getId() . '/download/photo.jpeg'
+        );
         ob_end_clean();
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $client->request('GET', '/api/media/' . $media->getId());
+        $client->request(
+            'GET',
+            '/api/media/' . $media->getId()
+        );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
@@ -1005,7 +1150,8 @@ class MediaControllerTest extends SuluTestCase
     {
         $destCollection = new Collection();
         $style = [
-            'type' => 'circle', 'color' => '#ffcc00',
+            'type' => 'circle',
+            'color' => '#ffcc00',
         ];
 
         $destCollection->setStyle(json_encode($style));
@@ -1018,7 +1164,10 @@ class MediaControllerTest extends SuluTestCase
         $media = $this->createMedia('photo');
 
         $client = $this->createAuthenticatedClient();
-        $client->request('POST', '/api/media/' . $media->getId() . '?action=move&destination=' . $destCollection->getId());
+        $client->request(
+            'POST',
+            '/api/media/' . $media->getId() . '?action=move&destination=' . $destCollection->getId()
+        );
 
         $response = json_decode($client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $client->getResponse());
