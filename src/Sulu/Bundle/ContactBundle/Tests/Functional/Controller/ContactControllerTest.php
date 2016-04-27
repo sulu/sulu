@@ -36,6 +36,9 @@ use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class ContactControllerTest extends SuluTestCase
@@ -916,6 +919,42 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(1, $response->total);
         $this->assertEquals(1, count($response->_embedded->contacts));
         $this->assertEquals('Erika Mustermann', $response->_embedded->contacts[0]->fullName);
+    }
+
+    public function testGetListBySystem()
+    {
+        $suluContact = new Contact();
+        $suluContact->setFirstName('Max');
+        $suluContact->setLastName('Mustermann');
+
+        $user = new User();
+        $user->setUsername('max');
+        $user->setPassword('max');
+        $user->setLocale('de');
+        $user->setSalt('salt');
+        $role = new Role();
+        $role->setName('User');
+        $role->setSystem('Sulu');
+        $userRole = new UserRole();
+        $userRole->setRole($role);
+        $userRole->setUser($user);
+        $userRole->setLocale('[]');
+        $user->setContact($suluContact);
+
+        $this->em->persist($suluContact);
+        $this->em->persist($user);
+        $this->em->persist($userRole);
+        $this->em->persist($role);
+        $this->em->flush();
+
+        $client = $this->createTestClient();
+        $client->request('GET', '/api/contacts?bySystem=true');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertCount(1, $response->_embedded->contacts);
+        $this->assertEquals('Max Mustermann', $response->_embedded->contacts[0]->fullName);
     }
 
     public function testPut()

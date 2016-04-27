@@ -1,7 +1,8 @@
 CHANGELOG for Sulu
 ==================
 
-* 1.2.1 (2016-04-26)
+* 1.2.1 (2016-04-27)
+    * HOTFIX      #2340 [ContactBundle]       Fixed listing of contacts with Sulu user
     * HOTFIX      #2334 [ContactBundle]       Fixed account-contact search
     * HOTFIX      #2335 [ContentBundle]       Fixed textarea vertical resize
     * HOTFIX      #2331 [AdminBundle]         Fixed admin-controller to return correct system
