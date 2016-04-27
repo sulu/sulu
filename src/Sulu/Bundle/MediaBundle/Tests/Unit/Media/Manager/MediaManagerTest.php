@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManager;
 use FFMpeg\FFProbe;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
@@ -109,6 +110,11 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
      */
     private $ffprobe;
 
+    /**
+     * @var ObjectProphecy
+     */
+    private $categoryManager;
+
     public function setUp()
     {
         parent::setUp();
@@ -121,6 +127,7 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $this->validator = $this->prophesize(FileValidatorInterface::class);
         $this->formatManager = $this->prophesize(FormatManagerInterface::class);
         $this->tagManager = $this->prophesize(TagManagerInterface::class);
+        $this->categoryManager = $this->prophesize(CategoryManagerInterface::class);
         $this->typeManager = $this->prophesize(TypeManagerInterface::class);
         $this->pathCleaner = $this->prophesize(PathCleanupInterface::class);
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
