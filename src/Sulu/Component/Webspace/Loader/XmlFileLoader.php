@@ -14,6 +14,7 @@ namespace Sulu\Component\Webspace\Loader;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Environment;
+use Sulu\Component\Webspace\Exception\InvalidWebspaceException;
 use Sulu\Component\Webspace\Loader\Exception\ExpectedDefaultTemplatesNotFound;
 use Sulu\Component\Webspace\Loader\Exception\InvalidAmountOfDefaultErrorTemplateException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidCustomUrlException;
@@ -91,7 +92,15 @@ class XmlFileLoader extends FileLoader
     private function parseXml($file)
     {
         // load xml file
-        $xmlDoc = XmlUtils::loadFile($file, __DIR__ . static::SCHEME_PATH);
+        try {
+            $xmlDoc = XmlUtils::loadFile($file, __DIR__ . static::SCHEME_PATH);
+        } catch (\InvalidArgumentException $e) {
+            throw new InvalidWebspaceException(sprintf(
+                'Could not parse webspace XML file "%s"',
+                $file
+            ), null, $e);
+        }
+
         $this->xpath = new \DOMXPath($xmlDoc);
         $this->xpath->registerNamespace('x', 'http://schemas.sulu.io/webspace/webspace');
 

@@ -56,13 +56,13 @@ abstract class AbstractRequestProcessor implements RequestProcessorInterface
 
         $attributes['portalUrl'] = $portalInformation->getUrl();
         $attributes['webspace'] = $portalInformation->getWebspace();
+        $attributes['portal'] = $portalInformation->getPortal();
 
         if ($portalInformation->getType() === RequestAnalyzerInterface::MATCH_TYPE_REDIRECT) {
             return new RequestAttributes(array_merge($attributes, $additionalAttributes));
         }
 
         $attributes['localization'] = $portalInformation->getLocalization();
-        $attributes['portal'] = $portalInformation->getPortal();
         $attributes['segment'] = $portalInformation->getSegment();
 
         list($resourceLocator, $format) = $this->getResourceLocatorFromRequest(

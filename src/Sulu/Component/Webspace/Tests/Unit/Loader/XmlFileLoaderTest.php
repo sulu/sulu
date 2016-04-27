@@ -311,10 +311,12 @@ class XmlFileLoaderTest extends WebspaceTestCase
         );
     }
 
+    /**
+     * @expectedException Sulu\Component\Webspace\Exception\InvalidWebspaceException
+     * @expectedExceptionMessage Could not parse webspace XML file
+     */
     public function testLoadInvalid()
     {
-        $this->setExpectedException('\InvalidArgumentException');
-
         $this->loader->load($this->getResourceDirectory() . '/DataFixtures/Webspace/invalid/massiveart.xml');
     }
 

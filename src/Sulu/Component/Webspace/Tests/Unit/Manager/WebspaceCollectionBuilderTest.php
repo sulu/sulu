@@ -42,11 +42,8 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
             $this->loader,
             new Replacer(),
-            $this->logger,
-            $this->getResourceDirectory() . '/DataFixtures/Webspace/both'
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/multiple'
         );
-
-        $this->logger->expects($this->once())->method('warning');
 
         $webspaceCollection = $webspaceCollectionBuilder->build();
 
@@ -171,7 +168,6 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
             $this->loader,
             new Replacer(),
-            $this->logger,
             $this->getResourceDirectory() . '/DataFixtures/Webspace/multiple-localization-urls'
         );
 
@@ -188,27 +184,11 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $this->assertEquals('en', $portalInformations['sulu.us']->getLocalization()->getLocalization());
     }
 
-    /**
-     * @expectedException \Sulu\Component\Webspace\Exception\NoValidWebspaceException
-     */
-    public function testBuildWithInvalidWebspacesOnly()
-    {
-        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
-            $this->loader,
-            new Replacer(),
-            $this->logger,
-            $this->getResourceDirectory() . '/DataFixtures/Webspace/not-valid'
-        );
-
-        $webspaceCollection = $webspaceCollectionBuilder->build();
-    }
-
     public function testBuildWithMainUrl()
     {
         $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
             $this->loader,
             new Replacer(),
-            $this->logger,
             $this->getResourceDirectory() . '/DataFixtures/Webspace/main'
         );
 
@@ -235,7 +215,6 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
             $this->loader,
             new Replacer(),
-            $this->logger,
             $this->getResourceDirectory() . '/DataFixtures/Webspace/custom-url'
         );
 

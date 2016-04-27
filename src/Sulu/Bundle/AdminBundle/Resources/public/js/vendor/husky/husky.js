@@ -46525,14 +46525,7 @@ define('__component__$url-input@husky',['services/husky/url-validator'], functio
 
         templates = {
             skeleton: [
-                '<div class="front"',
-                '<% if (items.length > 1) { %>',
-                '     data-aura-component="dropdown@husky"',
-                '     data-aura-trigger=".<%= constants.triggerClass %>"',
-                '     data-aura-instance-name="<%= options.instanceName %>"',
-                '     data-aura-data=\'<%= JSON.stringify(items) %>\'',
-                '<% } %>',
-                '     >',
+                '<div class="front">',
                 '    <a class="<%= constants.schemeClass %> <%= constants.linkClass %> text text-link"',
                 '       href="<%= url %>" target="_blank"><%= data.scheme %></a>',
                 '<% if (items.length > 1) { %>',
@@ -46568,7 +46561,6 @@ define('__component__$url-input@husky',['services/husky/url-validator'], functio
 
             this.prepareItems(this.options.schemes);
             this.render();
-            this.bindCustomEvents();
             this.bindDomEvents();
         },
 
@@ -46598,6 +46590,17 @@ define('__component__$url-input@husky',['services/husky/url-validator'], functio
                 data: data,
                 items: this.items
             }));
+
+            this.sandbox.start([{
+                name: 'dropdown@husky',
+                options: {
+                    el: this.$find('.front'),
+                    trigger: this.$find('.' + constants.triggerClass),
+                    instanceName: constants.instanceName,
+                    data: this.items,
+                    clickCallback: this.selectSchemeHandler.bind(this)
+                }
+            }]);
         },
 
         /**
@@ -46663,16 +46666,6 @@ define('__component__$url-input@husky',['services/husky/url-validator'], functio
             this.$find('.' + constants.specificPartClass).val(data.specificPart);
             this.$find('.' + constants.schemeClass).html(data.scheme);
             this.$find('.' + constants.schemeClass).attr('href', this.getUrl(data));
-        },
-
-        /**
-         * Bind necessary aura events.
-         */
-        bindCustomEvents: function() {
-            this.sandbox.on(
-                'husky.dropdown.' + this.options.instanceName + '.item.click',
-                this.selectSchemeHandler.bind(this)
-            );
         },
 
         /**
@@ -51071,7 +51064,7 @@ define("datepicker-zh-TW", function(){});
                 };
 
                 if (!!app.config.culture && !!app.config.culture.name && app.config.culture.name !== 'en') {
-                    return require(['cultures/globalize.culture.' + app.config.culture.name]);
+                    return require(['cultures/globalize.culture.' + app.config.culture.name.replace("_", "-")]);
                 }
             },
 
