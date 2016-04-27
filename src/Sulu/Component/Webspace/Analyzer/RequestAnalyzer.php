@@ -31,11 +31,6 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     private $requestStack;
 
-    /**
-     * @var RequestAttributes
-     */
-    private $attributes;
-
     public function __construct(RequestStack $requestStack, array $requestProcessors)
     {
         $this->requestStack = $requestStack;
@@ -47,28 +42,24 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     public function analyze(Request $request)
     {
-        $this->attributes = new RequestAttributes(['host' => $request->getHost(), 'scheme' => $request->getScheme()]);
+        $attributes = new RequestAttributes(['host' => $request->getHost(), 'scheme' => $request->getScheme()]);
         foreach ($this->requestProcessors as $provider) {
-            $this->attributes = $this->attributes->merge($provider->process($request, $this->attributes));
+            $attributes = $attributes->merge($provider->process($request, $attributes));
         }
 
-        foreach ($this->requestProcessors as $provider) {
-            $provider->validate($this->attributes);
-        }
+        $request->attributes->set('_sulu', $attributes);
     }
 
     /**
-     * Initializes the request attributes lazily.
-     *
-     * @return RequestAttributes
+     * {@inheritdoc}
      */
-    protected function getAttributes()
+    public function validate(Request $request)
     {
-        if (!$this->attributes) {
-            $this->analyze($this->requestStack->getCurrentRequest());
-        }
+        $attributes = $request->attributes->get('_sulu');
 
-        return $this->attributes;
+        foreach ($this->requestProcessors as $provider) {
+            $provider->validate($attributes);
+        }
     }
 
     /**
@@ -76,7 +67,17 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     public function getAttribute($name, $default = null)
     {
-        return $this->getAttributes()->getAttribute($name, $default);
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (null === $request) {
+            return $default;
+        }
+
+        if (!$request->attributes->has('_sulu')) {
+            return $default;
+        }
+
+        return $request->attributes->get('_sulu')->getAttribute($name, $default);
     }
 
     /**

@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Webspace\Manager;
 
-use Psr\Log\LoggerInterface;
 use Sulu\Component\Util\WildcardUrlUtil;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\Dumper\PhpWebspaceCollectionDumper;
@@ -43,11 +42,6 @@ class WebspaceManager implements WebspaceManagerInterface
     private $loader;
 
     /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
      * @var ReplacerInterface
      */
     private $urlReplacer;
@@ -55,12 +49,10 @@ class WebspaceManager implements WebspaceManagerInterface
     public function __construct(
         LoaderInterface $loader,
         ReplacerInterface $urlReplacer,
-        LoggerInterface $logger,
         $options = []
     ) {
         $this->loader = $loader;
         $this->urlReplacer = $urlReplacer;
-        $this->logger = $logger;
         $this->setOptions($options);
     }
 
@@ -111,10 +103,6 @@ class WebspaceManager implements WebspaceManagerInterface
         return array_filter(
             $this->getWebspaceCollection()->getPortalInformations($environment),
             function (PortalInformation $portalInformation) use ($url) {
-                if ($portalInformation->getType() === RequestAnalyzerInterface::MATCH_TYPE_REDIRECT) {
-                    return $url === $portalInformation->getUrl();
-                }
-
                 return $this->matchUrl($url, $portalInformation->getUrl());
             }
         );
@@ -279,7 +267,6 @@ class WebspaceManager implements WebspaceManagerInterface
                 $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
                     $this->loader,
                     $this->urlReplacer,
-                    $this->logger,
                     $this->options['config_dir']
                 );
                 $webspaceCollection = $webspaceCollectionBuilder->build();
@@ -301,11 +288,6 @@ class WebspaceManager implements WebspaceManagerInterface
         }
 
         return $this->webspaceCollection;
-    }
-
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
     }
 
     /**

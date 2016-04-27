@@ -11,14 +11,9 @@
 
 namespace Sulu\Component\Webspace\Manager;
 
-use Psr\Log\LoggerInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Environment;
-use Sulu\Component\Webspace\Exception\NoValidWebspaceException;
-use Sulu\Component\Webspace\Loader\Exception\InvalidCustomUrlException;
-use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
-use Sulu\Component\Webspace\Loader\Exception\WebspaceLocalizationNotUsedException;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Segment;
@@ -28,7 +23,6 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 
 class WebspaceCollectionBuilder
 {
@@ -43,13 +37,6 @@ class WebspaceCollectionBuilder
      * @var ReplacerInterface
      */
     private $urlReplacer;
-
-    /**
-     * Logger for logging the warnings.
-     *
-     * @var LoggerInterface
-     */
-    private $logger;
 
     /**
      * The path to the xml config files.
@@ -82,18 +69,15 @@ class WebspaceCollectionBuilder
     /**
      * @param LoaderInterface $loader The loader for the xml config files
      * @param ReplacerInterface $urlReplacer Factory for url-replacers
-     * @param LoggerInterface $logger For logging the warnings
      * @param $path string The path to the xml config files
      */
     public function __construct(
         LoaderInterface $loader,
         ReplacerInterface $urlReplacer,
-        LoggerInterface $logger,
         $path
     ) {
         $this->loader = $loader;
         $this->urlReplacer = $urlReplacer;
-        $this->logger = $logger;
         $this->path = $path;
     }
 
@@ -111,53 +95,14 @@ class WebspaceCollectionBuilder
         $this->portalInformations = [];
 
         foreach ($finder as $file) {
-            /* @var SplFileInfo $file */
-            try {
-                // add file resource for cache invalidation
-                $collection->addResource(new FileResource($file->getRealPath()));
+            // add file resource for cache invalidation
+            $collection->addResource(new FileResource($file->getRealPath()));
 
-                /** @var Webspace $webspace */
-                $webspace = $this->loader->load($file->getRealPath());
-                $this->webspaces[] = $webspace;
+            /** @var Webspace $webspace */
+            $webspace = $this->loader->load($file->getRealPath());
+            $this->webspaces[] = $webspace;
 
-                $this->buildPortals($webspace);
-            } catch (\InvalidArgumentException $e) {
-                $this->logger->warning(
-                    sprintf(
-                        'Error: "%s" in "%s". The file has been skipped.',
-                        $e->getMessage(),
-                        $file->getRealPath()
-                    )
-                );
-            } catch (InvalidUrlDefinitionException $e) {
-                $this->logger->warning(
-                    sprintf(
-                        'Error: "%s" in "%s". The file has been skipped.',
-                        $e->getMessage(),
-                        $file->getRealPath()
-                    )
-                );
-            } catch (InvalidCustomUrlException $e) {
-                $this->logger->warning(
-                    sprintf(
-                        'Error: "%s" in "%s". The file has been skipped.',
-                        $e->getMessage(),
-                        $file->getRealPath()
-                    )
-                );
-            } catch (WebspaceLocalizationNotUsedException $e) {
-                $this->logger->warning(
-                    sprintf(
-                        'Error: "%s" in "%s". The file has been skipped.',
-                        $e->getMessage(),
-                        $file->getRealPath()
-                    )
-                );
-            }
-        }
-
-        if (0 === count($this->webspaces)) {
-            throw new NoValidWebspaceException($this->path);
+            $this->buildPortals($webspace);
         }
 
         $environments = array_keys($this->portalInformations);
@@ -213,6 +158,7 @@ class WebspaceCollectionBuilder
                 $this->buildUrlRedirect(
                     $portal->getWebspace(),
                     $environment,
+                    $portal,
                     $urlAddress,
                     $urlRedirect,
                     $urlAnalyticsKey,
@@ -242,6 +188,7 @@ class WebspaceCollectionBuilder
     /**
      * @param Webspace $webspace
      * @param Environment $environment
+     * @param Portal $portal
      * @param string $urlAddress
      * @param string $urlRedirect
      * @param string $urlAnalyticsKey
@@ -250,6 +197,7 @@ class WebspaceCollectionBuilder
     private function buildUrlRedirect(
         Webspace $webspace,
         Environment $environment,
+        Portal $portal,
         $urlAddress,
         $urlRedirect,
         $urlAnalyticsKey,
@@ -258,7 +206,7 @@ class WebspaceCollectionBuilder
         $this->portalInformations[$environment->getType()][$urlAddress] = new PortalInformation(
             RequestAnalyzerInterface::MATCH_TYPE_REDIRECT,
             $webspace,
-            null,
+            $portal,
             null,
             $urlAddress,
             null,

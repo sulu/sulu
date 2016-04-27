@@ -18,6 +18,8 @@ use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class SnippetTwigExtensionTest extends SuluTestCase
 {
@@ -41,6 +43,11 @@ class SnippetTwigExtensionTest extends SuluTestCase
      */
     private $extension;
 
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
     protected function setUp()
     {
         $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
@@ -50,20 +57,23 @@ class SnippetTwigExtensionTest extends SuluTestCase
         $webspace = $this->getContainer()->get('sulu_core.webspace.webspace_manager')->findWebspaceByKey('sulu_io');
         $localization = $webspace->getLocalization('en');
 
-        $attributes = new \ReflectionProperty($this->requestAnalyzer, 'attributes');
-        $attributes->setAccessible(true);
-
-        $attributes->setValue(
-            $this->requestAnalyzer,
-            new RequestAttributes(
-                [
-                    'webspaceKey' => $webspace->getKey(),
-                    'webspace' => $webspace,
-                    'locale' => $localization->getLocalization(),
-                    'localization' => $localization,
-                ]
-            )
+        $request = new Request(
+            [],
+            [],
+            [
+                '_sulu' => new RequestAttributes(
+                    [
+                        'webspaceKey' => $webspace->getKey(),
+                        'webspace' => $webspace,
+                        'locale' => $localization->getLocalization(),
+                        'localization' => $localization,
+                    ]
+                ),
+            ]
         );
+
+        $this->requestStack = $this->getContainer()->get('request_stack');
+        $this->requestStack->push($request);
 
         $this->initPhpcr();
 

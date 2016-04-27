@@ -29,6 +29,7 @@
         <service id="sulu_core.doctrine_list_builder_factory" class="%sulu_core.doctrine_list_builder_factory.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="event_dispatcher"/>
+            <argument>%sulu_security.permissions%</argument>
         </service>
 
         <service id="sulu_core.rest.datetime_handler" class="%sulu_core.rest.datetime_handler.class%">

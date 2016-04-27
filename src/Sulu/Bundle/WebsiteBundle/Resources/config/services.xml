@@ -175,7 +175,6 @@
             <argument type="service" id="twig" />
             <argument>%kernel.debug%</argument>
             <argument type="service" id="sulu_website.resolver.parameter" />
-            <argument type="service" id="sulu.content.mapper" />
             <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
         </service>
 
@@ -190,6 +189,14 @@
                  class="Sulu\Bundle\WebsiteBundle\Translator\RequestAnalyzerTranslator" decorates="translator">
             <argument type="service" id="sulu_website.translator.request_analyzer.inner"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+        </service>
+
+        <service id="sulu_website.router_listener"
+                 class="Sulu\Bundle\WebsiteBundle\EventListener\RouterListener"
+                 decorates="router_listener">
+            <argument type="service" id="sulu_website.router_listener.inner"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <tag name="kernel.event_subscriber"/>
         </service>
     </services>
 </container>

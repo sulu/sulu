@@ -626,7 +626,6 @@ define([], function() {
         stopTabContent: function() {
             App.stop('.' + constants.tabsContentClass + ' *');
             App.stop('.' + constants.tabsContentClass);
-            this.sandbox.dom.empty(this.options.tabsContainer);
         },
 
         /**

@@ -45,4 +45,18 @@ interface UserInterface extends BaseUserInterface
      * @return string
      */
     public function getFullName();
+
+    /**
+     * Get locked.
+     *
+     * @return bool
+     */
+    public function getLocked();
+
+    /**
+     * Get enabled.
+     *
+     * @return bool
+     */
+    public function getEnabled();
 }

@@ -7,7 +7,6 @@
     <key>sulu_io</key>
 
     <localizations>
-        <localization language="en" country="us" shadow="auto"/>
         <localization language="de" country="at"/>
         <localization language="de"/>
     </localizations>
@@ -47,6 +46,7 @@
 
             <localizations>
                 <localization language="de" country="at" default="true" />
+                <localization language="de" />
             </localizations>
 
             <environments>

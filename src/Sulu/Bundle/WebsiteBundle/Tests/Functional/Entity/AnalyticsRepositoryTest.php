@@ -101,20 +101,53 @@ class AnalyticsRepositoryTest extends BaseFunctional
             ]
         );
 
-        $result = $this->analyticsRepository->findByUrl('www.sulu.io/{localization}', 'prod');
+        $result = $this->analyticsRepository->findByUrl('www.sulu.io/{localization}', 'sulu_io', 'prod');
         $this->assertCount(2, $result);
 
         $this->assertEquals('test-1', $result[0]->getTitle());
         $this->assertEquals('test-2', $result[1]->getTitle());
 
-        $result = $this->analyticsRepository->findByUrl('www.sulu.io/{localization}', 'dev');
+        $result = $this->analyticsRepository->findByUrl('www.sulu.io/{localization}', 'sulu_io', 'dev');
         $this->assertCount(1, $result);
 
         $this->assertEquals('test-2', $result[0]->getTitle());
 
-        $result = $this->analyticsRepository->findByUrl('www.sulu.ud', 'stage');
+        $result = $this->analyticsRepository->findByUrl('www.sulu.ud', 'sulu_io', 'stage');
         $this->assertCount(1, $result);
 
+        $this->assertEquals('test-2', $result[0]->getTitle());
+    }
+
+    public function testFindByUrlDifferentWebspaces()
+    {
+        $this->purgeDatabase();
+        $this->create(
+            'sulu_io',
+            [
+                'title' => 'test-1',
+                'type' => 'google',
+                'content' => 'UA123-123',
+                'allDomains' => true,
+                'domains' => [],
+            ]
+        );
+        $this->create(
+            'test_io',
+            [
+                'title' => 'test-2',
+                'type' => 'google',
+                'content' => 'UA123-123',
+                'allDomains' => true,
+                'domains' => [],
+            ]
+        );
+
+        $result = $this->analyticsRepository->findByUrl('www.sulu.io/{localization}', 'sulu_io', 'prod');
+        $this->assertCount(1, $result);
+        $this->assertEquals('test-1', $result[0]->getTitle());
+
+        $result = $this->analyticsRepository->findByUrl('www.sulu.io/{localization}', 'test_io', 'prod');
+        $this->assertCount(1, $result);
         $this->assertEquals('test-2', $result[0]->getTitle());
     }
 }

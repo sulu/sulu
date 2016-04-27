@@ -15,11 +15,13 @@ use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
+use PHPCR\ImportUUIDBehaviorInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\NodeHelper;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Security\Core\Tests\Authentication\Token\TestUser;
 
 /**
@@ -27,6 +29,8 @@ use Symfony\Component\Security\Core\Tests\Authentication\Token\TestUser;
  */
 abstract class SuluTestCase extends KernelTestCase
 {
+    private static $workspaceInitialized = false;
+
     /**
      * @var PHPCRImporter
      */
@@ -154,10 +158,26 @@ abstract class SuluTestCase extends KernelTestCase
             $this->importer = new PHPCRImporter($session);
         }
 
-        // to update this file use following command
-        // php vendor/symfony-cmf/testing/bin/console doctrine:phpcr:workspace:export -p /cmf \
-        // src/Sulu/Bundle/TestBundle/Resources/dump/initial-state.xml
-        $this->importer->import(__DIR__ . '/../Resources/dump/initial-state.xml');
+        // initialize the content repository.  in order to speed things up, for
+        // each process, we dump the initial state to an XML file and restore
+        // it thereafter.
+        $initializerDump = __DIR__ . '/../Resources/app/cache/initial.xml';
+        if (true === self::$workspaceInitialized) {
+            $session->importXml('/', $initializerDump, ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
+            $session->save();
+
+            return;
+        }
+
+        $filesystem = new Filesystem();
+        if (!$filesystem->exists(dirname($initializerDump))) {
+            $filesystem->mkdir(dirname($initializerDump));
+        }
+        $this->getContainer()->get('sulu_document_manager.initializer')->initialize();
+        $handle = fopen($initializerDump, 'w');
+        $session->exportSystemView('/cmf', $handle, false, false);
+        fclose($handle);
+        self::$workspaceInitialized = true;
     }
 
     /**

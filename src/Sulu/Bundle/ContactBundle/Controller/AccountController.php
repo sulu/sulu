@@ -145,8 +145,8 @@ class AccountController extends RestController implements ClassResourceInterface
             $fieldDescriptors = $this->getAccountContactFieldDescriptors();
             $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
+            $listBuilder->setIdField($fieldDescriptors['id']);
             $listBuilder->where($this->getFieldDescriptors()['id'], $id);
-
             $listBuilder->sort($fieldDescriptors['lastName'], $listBuilder::SORTORDER_ASC);
 
             $values = $listBuilder->execute();

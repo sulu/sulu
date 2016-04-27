@@ -1,5 +1,16 @@
 # Upgrade
 
+## 1.2.1
+
+### UserRepository
+
+The methods from the `UserProviderInterface` of Symfony have been moved to a
+separate `UserProvider` implementation. Also, the `getUserInSystem` method
+has been renamed to `findUserBySystem` and takes the system as an argument.
+
+If you want to use the `Sulu` system you should inject the
+`sulu_security.system` container parameter instead of hardcoding it.
+
 ## 1.2.0
 
 ### sulu_content_path
