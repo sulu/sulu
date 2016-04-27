@@ -166,10 +166,7 @@ define([
 
         layout: {
             content: {
-                width: 'max',
-                leftSpace: false,
-                rightSpace: false,
-                topSpace: false
+                width: 'max'
             }
         },
 

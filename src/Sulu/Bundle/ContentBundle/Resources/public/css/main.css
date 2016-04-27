@@ -167,8 +167,8 @@
 }
 /* line 8, ../scss/modules/general.scss */
 #content-form .highlight-section .content {
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding: 20px 0;
+  margin-left: 50px;
 }
 
 /* line 14, ../scss/modules/general.scss */
@@ -234,6 +234,11 @@
 /* line 72, ../scss/modules/general.scss */
 #changelog-container {
   color: #999;
+}
+
+/* line 76, ../scss/modules/general.scss */
+#content-column-container {
+  margin: -40px -50px 0 -50px;
 }
 
 /* line 1, ../scss/modules/seo.scss */

@@ -38,9 +38,7 @@ define(['underscore', 'config', 'text!./skeleton.html'], function(_, Config, ske
 
         layout: {
             content: {
-                width: 'max',
-                leftSpace: true,
-                rightSpace: true
+                width: 'max'
             }
         },
 

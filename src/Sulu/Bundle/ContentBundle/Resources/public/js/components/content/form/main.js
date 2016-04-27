@@ -21,9 +21,7 @@ define(['app-config', 'config', 'sulucontent/components/content/preview/main'], 
             return {
                 extendExisting: true,
                 content: {
-                    width: (!!this.options.preview) ? 'fixed' : 'max',
-                    rightSpace: false,
-                    leftSpace: false
+                    width: (!!this.options.preview) ? 'fixed' : 'max'
                 }
             };
         },

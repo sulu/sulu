@@ -38,10 +38,7 @@ define(['text!./skeleton.html'], function(skeleton) {
         },
 
         layout: {
-            content: {
-                leftSpace: false,
-                rightSpace: false
-            }
+            content: {}
         },
 
         initialize: function() {

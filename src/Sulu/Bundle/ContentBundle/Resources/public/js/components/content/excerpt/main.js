@@ -17,9 +17,7 @@ define([], function() {
             return {
                 extendExisting: true,
                 content: {
-                    width: 'fixed',
-                    rightSpace: false,
-                    leftSpace: false
+                    width: 'fixed'
                 }
             };
         },

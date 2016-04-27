@@ -181,9 +181,7 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
                 return {
                     extendExisting: true,
                     content: {
-                        width: 'fixed',
-                        leftSpace: true,
-                        rightSpace: true
+                        width: 'fixed'
                     }
                 };
             } else {

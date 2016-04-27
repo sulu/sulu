@@ -56,10 +56,7 @@ define(['config', 'app-config'], function(Config, AppConfig) {
         },
 
         layout: {
-            content: {
-                leftSpace: true,
-                rightSpace: true
-            }
+            content: {}
         },
 
         initialize: function() {

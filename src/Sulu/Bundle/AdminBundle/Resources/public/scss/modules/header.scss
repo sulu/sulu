@@ -1,11 +1,9 @@
 .sulu-header {
     width: 100%;
-    height: $headerHeight;
-    position: absolute;
-    top: 0;
-    left: 0;
     z-index: 120;
+    @include single-transition(width, $shrinkAnimationDuration);
 
+    // FIXME this class (and the corresponing element) should be removed, because the toolbar should hold these styles
     .blue-row {
         background: $blue;
         height: $headerHeight;
@@ -13,7 +11,7 @@
         position: absolute;
         top: 0;
         left: 0;
-        z-index: 900;
+        z-index: 9;
     }
     .toolbar-row {
         display: table;
@@ -21,34 +19,22 @@
         height: $headerHeight;
         width: 100%;
         position: relative;
+        z-index: 10;
         left: -1px;
-        z-index: 1000;
+
+        & > * {
+            display: table-cell;
+            vertical-align: top;
+        }
 
         .left-container {
-            display: table-cell;
             width: 50px;
-            background: $blue;
-            vertical-align: top;
-            position: relative;
-            z-index: 500;
             @include single-transition(width, $shrinkAnimationDuration);
         }
-        .toolbar-container {
-            display: table-cell;
-            vertical-align: top;
-            width: 100%;
-            position: relative;
-            z-index: 100;
-        }
         .right-container {
-            display: table-cell;
             width: 118px;
             padding-left: 10px;
             height: $headerHeight;
-            vertical-align: top;
-            position: relative;
-            z-index: 500;
-            background: $blue;
         }
         .back {
             color: $white;
@@ -83,10 +69,12 @@
         }
     }
     .tabs-row {
+        // FIXME it shouldn't be necessary to have relative positioning here, and it should be sufficient to only have
+        // a height transition, however, this is not possible due to the positioning of underlying elements
         position: relative;
-        top: 0px;
-        z-index: 500;
-        @include single-transition(top, $tabsHideAnimationDuration, $tabsHideAnimationDelay, ease);
+        top: 0;
+        max-height: 80px;
+        @include single-transition(all, $tabsHideAnimationDuration, $tabsHideAnimationDelay, ease);
 
         .tabs {
             padding: 0 50px;
@@ -98,23 +86,14 @@
 
     &.tabs-hidden {
         .tabs-row {
-            top: (-1) * $tabsHeight;
-        }
-    }
-
-    // add top space to the content-container beneath the header
-    & + .wrapper {
-        padding-top: $headerHeight;
-    }
-    &.has-tabs + .wrapper {
-        .page::before {
-            height: $tabsHeight;
+            max-height: 0;
+            top: (-1) * $headerHeight;
         }
     }
 }
 .fixed {
     .toolbar-row {
-        max-width: $contentFixedWidth + 100px;
+        max-width: $contentFixedWidth;
     }
 }
 .small-fixed {
