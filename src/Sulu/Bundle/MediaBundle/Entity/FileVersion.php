@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
@@ -677,10 +678,10 @@ class FileVersion implements AuditableInterface
     /**
      * Add categories
      *
-     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
+     * @param Category $categories
      * @return self
      */
-    public function addCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $categories)
+    public function addCategory(Category $categories)
     {
         $this->categories[] = $categories;
 
