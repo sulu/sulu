@@ -83,8 +83,9 @@ class ContentRouteProvider implements RouteProviderInterface
         $collection = new RouteCollection();
 
         // no portal information without localization supported
-        if ($this->requestAnalyzer->getCurrentLocalization() === null &&
-            $this->requestAnalyzer->getMatchType() !== RequestAnalyzerInterface::MATCH_TYPE_PARTIAL
+        if ($this->requestAnalyzer->getCurrentLocalization() === null
+            && $this->requestAnalyzer->getMatchType() !== RequestAnalyzerInterface::MATCH_TYPE_PARTIAL
+            && $this->requestAnalyzer->getMatchType() !== RequestAnalyzerInterface::MATCH_TYPE_REDIRECT
         ) {
             return $collection;
         }
@@ -301,6 +302,7 @@ class ContentRouteProvider implements RouteProviderInterface
             $request->getPathInfo(), [
                 '_controller' => $content->getController(),
                 'structure' => $content,
+                'partial' => $request->get('partial', 'false') === 'true',
             ]
         );
     }

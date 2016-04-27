@@ -207,10 +207,7 @@ class AdminController
     public function contextsAction(Request $request)
     {
         $contexts = $this->adminPool->getSecurityContexts();
-        $system = $request->get('system');
-
         $mappedContexts = [];
-
         foreach ($contexts as $system => $sections) {
             foreach ($sections as $section => $contexts) {
                 foreach ($contexts as $context => $permissionTypes) {
@@ -219,7 +216,8 @@ class AdminController
             }
         }
 
-        $response = isset($system) ? $mappedContexts[$system] : $mappedContexts;
+        $requestedSystem = $request->get('system');
+        $response = (null !== $requestedSystem) ? $mappedContexts[$requestedSystem] : $mappedContexts;
 
         return new JsonResponse($response);
     }

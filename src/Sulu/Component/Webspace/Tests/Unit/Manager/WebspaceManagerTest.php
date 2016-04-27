@@ -351,6 +351,106 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('sulu.lo', $environmentDev->getUrls()[0]->getUrl());
     }
 
+    public function testFindPortalInformationsByUrl()
+    {
+        $portalInformations = $this->webspaceManager->findPortalInformationsByUrl('sulu.at/test/test/test', 'prod');
+        $portalInformation = reset($portalInformations);
+        $this->assertEquals('de_at', $portalInformation->getLocalization()->getLocalization());
+        $this->assertNull($portalInformation->getSegment());
+
+        /** @var Webspace $webspace */
+        $webspace = $portalInformation->getWebspace();
+
+        $this->assertEquals('Sulu CMF', $webspace->getName());
+        $this->assertEquals('sulu_io', $webspace->getKey());
+        $this->assertEquals('sulu_io', $webspace->getSecurity()->getSystem());
+        $this->assertCount(2, $webspace->getLocalizations());
+        $this->assertEquals('en', $webspace->getLocalizations()[0]->getLanguage());
+        $this->assertEquals('us', $webspace->getLocalizations()[0]->getCountry());
+        $this->assertEquals('auto', $webspace->getLocalizations()[0]->getShadow());
+        $this->assertEquals('de', $webspace->getLocalizations()[1]->getLanguage());
+        $this->assertEquals('at', $webspace->getLocalizations()[1]->getCountry());
+        $this->assertEquals('', $webspace->getLocalizations()[1]->getShadow());
+        $this->assertEquals('sulu', $webspace->getTheme()->getKey());
+
+        /** @var Portal $portal */
+        $portal = $portalInformation->getPortal();
+
+        $this->assertEquals('Sulu CMF AT', $portal->getName());
+        $this->assertEquals('sulucmf_at', $portal->getKey());
+
+        $this->assertEquals('short', $portal->getResourceLocatorStrategy());
+
+        $this->assertEquals(2, count($portal->getLocalizations()));
+        $this->assertEquals('en', $portal->getLocalizations()[0]->getLanguage());
+        $this->assertEquals('us', $portal->getLocalizations()[0]->getCountry());
+        $this->assertEquals('', $portal->getLocalizations()[0]->getShadow());
+        $this->assertEquals('de', $portal->getLocalizations()[1]->getLanguage());
+        $this->assertEquals('at', $portal->getLocalizations()[1]->getCountry());
+        $this->assertEquals('', $portal->getLocalizations()[1]->getShadow());
+
+        $this->assertCount(3, $portal->getEnvironments());
+
+        $environmentProd = $portal->getEnvironment('prod');
+        $this->assertEquals('prod', $environmentProd->getType());
+        $this->assertCount(2, $environmentProd->getUrls());
+        $this->assertEquals('sulu.at', $environmentProd->getUrls()[0]->getUrl());
+        $this->assertEquals('www.sulu.at', $environmentProd->getUrls()[1]->getUrl());
+
+        $environmentDev = $portal->getEnvironment('dev');
+        $this->assertEquals('dev', $environmentDev->getType());
+        $this->assertCount(1, $environmentDev->getUrls());
+        $this->assertEquals('sulu.lo', $environmentDev->getUrls()[0]->getUrl());
+
+        $portalInformation = $this->webspaceManager->findPortalInformationByUrl('sulu.lo', 'dev');
+        $this->assertEquals('de_at', $portalInformation->getLocalization()->getLocalization());
+        $this->assertNull($portalInformation->getSegment());
+
+        /* @var Portal $portal */
+        /** @var Webspace $webspace */
+        $webspace = $portalInformation->getWebspace();
+
+        $this->assertEquals('Sulu CMF', $webspace->getName());
+        $this->assertEquals('sulu_io', $webspace->getKey());
+        $this->assertEquals('sulu_io', $webspace->getSecurity()->getSystem());
+        $this->assertCount(2, $webspace->getLocalizations());
+        $this->assertEquals('en', $webspace->getLocalizations()[0]->getLanguage());
+        $this->assertEquals('us', $webspace->getLocalizations()[0]->getCountry());
+        $this->assertEquals('auto', $webspace->getLocalizations()[0]->getShadow());
+        $this->assertEquals('de', $webspace->getLocalizations()[1]->getLanguage());
+        $this->assertEquals('at', $webspace->getLocalizations()[1]->getCountry());
+        $this->assertEquals('', $webspace->getLocalizations()[1]->getShadow());
+        $this->assertEquals('sulu', $webspace->getTheme()->getKey());
+
+        $portal = $portalInformation->getPortal();
+
+        $this->assertEquals('Sulu CMF AT', $portal->getName());
+        $this->assertEquals('sulucmf_at', $portal->getKey());
+
+        $this->assertEquals('short', $portal->getResourceLocatorStrategy());
+
+        $this->assertEquals(2, count($portal->getLocalizations()));
+        $this->assertEquals('en', $portal->getLocalizations()[0]->getLanguage());
+        $this->assertEquals('us', $portal->getLocalizations()[0]->getCountry());
+        $this->assertEquals('', $portal->getLocalizations()[0]->getShadow());
+        $this->assertEquals('de', $portal->getLocalizations()[1]->getLanguage());
+        $this->assertEquals('at', $portal->getLocalizations()[1]->getCountry());
+        $this->assertEquals('', $portal->getLocalizations()[1]->getShadow());
+
+        $this->assertEquals(3, count($portal->getEnvironments()));
+
+        $environmentProd = $portal->getEnvironment('prod');
+        $this->assertEquals('prod', $environmentProd->getType());
+        $this->assertCount(2, $environmentProd->getUrls());
+        $this->assertEquals('sulu.at', $environmentProd->getUrls()[0]->getUrl());
+        $this->assertEquals('www.sulu.at', $environmentProd->getUrls()[1]->getUrl());
+
+        $environmentDev = $portal->getEnvironment('dev');
+        $this->assertEquals('dev', $environmentDev->getType());
+        $this->assertCount(1, $environmentDev->getUrls());
+        $this->assertEquals('sulu.lo', $environmentDev->getUrls()[0]->getUrl());
+    }
+
     public function provideFindPortalInformationByUrl()
     {
         return [

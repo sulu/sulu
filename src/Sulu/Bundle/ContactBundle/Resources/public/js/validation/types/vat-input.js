@@ -73,10 +73,10 @@ define([
                             regex = /^[0-9A-Z]{2}[0-9]{9}$/;
                             break;
                         case 'GB':
-                            regex = /^([0-9]{9}|[0-9]{12})~(GD|HA)[0-9]{3}$/;
+                            regex = /^([A-Z0-9]{5}|[0-9]{9,12})$/;
                             break;
                         case 'IE':
-                            regex = /^[0-9][A-Z0-9\\+\\*][0-9]{5}[A-Z]$/;
+                            regex = /^[0-9][A-Z0-9]{7,8}$/;
                             break;
                         case 'IT':
                         case 'LV':
@@ -100,7 +100,7 @@ define([
                             regex = /^0?[0-9]{2,10}$/;
                             break;
                         default:
-                            return false;
+                            return true;
                     }
 
                     return regex.test(vat);

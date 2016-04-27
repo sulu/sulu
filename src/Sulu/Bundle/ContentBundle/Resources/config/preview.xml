@@ -34,6 +34,7 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="request_stack"/>
             <argument type="service" id="translator"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
         </service>
         <service id="sulu_content.preview.crawler" class="%sulu_content.preview.crawler.class%" public="false"/>
         <service id="sulu_content.preview" class="%sulu_content.preview.class%">

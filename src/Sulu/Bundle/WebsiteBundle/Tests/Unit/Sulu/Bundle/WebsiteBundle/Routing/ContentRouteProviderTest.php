@@ -24,6 +24,7 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\HttpFoundation\Request;
 
 class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -59,7 +60,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $urlReplacer->reveal()
         );
 
-        $request = $this->getRequestMock($path);
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => $path]);
 
         // Test the route provider
         $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
@@ -99,7 +100,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $urlReplacer->reveal()
         );
 
-        $request = $this->getRequestMock($path);
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => $path]);
 
         // Test the route provider
         $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
@@ -139,13 +140,58 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $urlReplacer->reveal()
         );
 
-        $request = $this->getRequestMock($path);
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => $path]);
 
         // Test the route provider
         $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
+        $defaults = $routes->getIterator()->current()->getDefaults();
 
         $this->assertCount(1, $routes);
-        $this->assertEquals(1, $routes->getIterator()->current()->getDefaults()['structure']->getUuid());
+        $this->assertEquals(1, $defaults['structure']->getUuid());
+        $this->assertEquals(false, $defaults['partial']);
+    }
+
+    public function testGetCollectionForRequestWithPartialFlag()
+    {
+        // Set up test
+        $path = '';
+        $prefix = '/de';
+        $uuid = 1;
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $theme = new Theme();
+        $theme->setKey('theme');
+        $webspace = new Webspace();
+        $webspace->setTheme($theme);
+        $portal->setWebspace($webspace);
+        $localization = new Localization();
+        $localization->setLanguage('de');
+
+        $structure = $this->getStructureMock($uuid);
+        $requestAnalyzer = $this->getRequestAnalyzerMock($portal, $path, $prefix, $localization);
+
+        $contentMapper = $this->getContentMapperMock();
+        $contentMapper->expects($this->any())->method('loadByResourceLocator')->will($this->returnValue($structure));
+
+        $defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
+        $urlReplacer = $this->prophesize(ReplacerInterface::class);
+
+        $portalRouteProvider = new ContentRouteProvider(
+            $contentMapper,
+            $requestAnalyzer,
+            $defaultLocaleProvider->reveal(),
+            $urlReplacer->reveal()
+        );
+
+        $request = new Request(['partial' => 'true'], [], [], [], [], ['REQUEST_URI' => $path]);
+
+        // Test the route provider
+        $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
+        $defaults = $routes->getIterator()->current()->getDefaults();
+
+        $this->assertCount(1, $routes);
+        $this->assertEquals(1, $defaults['structure']->getUuid());
+        $this->assertEquals(true, $defaults['partial']);
     }
 
     public function testGetCollectionForRequestNoLocalization()
@@ -174,12 +220,102 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $urlReplacer->reveal()
         );
 
-        $request = $this->getRequestMock($path);
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => $path]);
 
         // Test the route provider
         $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
 
         $this->assertCount(0, $routes);
+    }
+
+    public function testGetCollectionForRequestNoLocalizationPartial()
+    {
+        // Set up test
+        $path = '';
+        $prefix = '/de';
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $theme = new Theme();
+        $theme->setKey('theme');
+        $webspace = new Webspace();
+        $webspace->setTheme($theme);
+        $portal->setWebspace($webspace);
+
+        $contentMapper = $this->getContentMapperMock();
+        $requestAnalyzer = $this->getRequestAnalyzerMock(
+            $portal,
+            $path,
+            $prefix,
+            null,
+            RequestAnalyzerInterface::MATCH_TYPE_PARTIAL
+        );
+
+        $defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
+        $defaultLocaleProvider->getDefaultLocale()->willReturn(new Localization('de'));
+        $urlReplacer = $this->prophesize(ReplacerInterface::class);
+
+        $portalRouteProvider = new ContentRouteProvider(
+            $contentMapper,
+            $requestAnalyzer,
+            $defaultLocaleProvider->reveal(),
+            $urlReplacer->reveal()
+        );
+
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => $path]);
+
+        // Test the route provider
+        $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
+
+        $this->assertCount(1, $routes);
+        $this->assertEquals(
+            'SuluWebsiteBundle:Redirect:redirectWebspace',
+            array_values(iterator_to_array($routes->getIterator()))[0]->getDefaults()['_controller']
+        );
+    }
+
+    public function testGetCollectionForRequestNoLocalizationRedirect()
+    {
+        // Set up test
+        $path = '';
+        $prefix = '/de';
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $theme = new Theme();
+        $theme->setKey('theme');
+        $webspace = new Webspace();
+        $webspace->setTheme($theme);
+        $portal->setWebspace($webspace);
+
+        $contentMapper = $this->getContentMapperMock();
+        $requestAnalyzer = $this->getRequestAnalyzerMock(
+            $portal,
+            $path,
+            $prefix,
+            null,
+            RequestAnalyzerInterface::MATCH_TYPE_REDIRECT
+        );
+
+        $defaultLocaleProvider = $this->prophesize(DefaultLocaleProviderInterface::class);
+        $defaultLocaleProvider->getDefaultLocale()->willReturn(new Localization('de'));
+        $urlReplacer = $this->prophesize(ReplacerInterface::class);
+
+        $portalRouteProvider = new ContentRouteProvider(
+            $contentMapper,
+            $requestAnalyzer,
+            $defaultLocaleProvider->reveal(),
+            $urlReplacer->reveal()
+        );
+
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => $path]);
+
+        // Test the route provider
+        $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
+
+        $this->assertCount(1, $routes);
+        $this->assertEquals(
+            'SuluWebsiteBundle:Redirect:redirectWebspace',
+            array_values(iterator_to_array($routes->getIterator()))[0]->getDefaults()['_controller']
+        );
     }
 
     public function testGetCollectionForRequestSlashOnly()
@@ -226,7 +362,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $urlReplacer->reveal()
         );
 
-        $request = $this->getRequestMock($path);
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => $path]);
 
         // Test the route provider
         $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
@@ -270,7 +406,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $urlReplacer->reveal()
         );
 
-        $request = $this->getRequestMock($path);
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => $path]);
 
         // Test the route provider
         $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
@@ -322,7 +458,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $urlReplacer->reveal()
         );
 
-        $request = $this->getRequestMock($path);
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => $path]);
 
         // Test the route provider
         $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
@@ -367,7 +503,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $urlReplacer->reveal()
         );
 
-        $request = $this->getRequestMock($path);
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => $path]);
 
         // Test the route provider
         $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
@@ -416,7 +552,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $urlReplacer->reveal()
         );
 
-        $request = $this->getRequestMock($path);
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => $path]);
 
         // Test the route provider
         $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
@@ -471,7 +607,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $urlReplacer->reveal()
         );
 
-        $request = $this->getRequestMock($path);
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => $path]);
 
         // Test the route provider
         $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
@@ -525,7 +661,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $urlReplacer->reveal()
         );
 
-        $request = $this->getRequestMock($path, 'test1=value1');
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => $path, 'QUERY_STRING' => 'test1=value1']);
 
         // Test the route provider
         $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
@@ -579,7 +715,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $urlReplacer->reveal()
         );
 
-        $request = $this->getRequestMock($path);
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => $path]);
 
         // Test the route provider
         $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
@@ -634,7 +770,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $urlReplacer->reveal()
         );
 
-        $request = $this->getRequestMock($path);
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => $path]);
 
         // Test the route provider
         $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
@@ -689,7 +825,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $urlReplacer->reveal()
         );
 
-        $request = $this->getRequestMock($path);
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => $path]);
 
         // Test the route provider
         $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
@@ -741,7 +877,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $urlReplacer->reveal()
         );
 
-        $request = $this->getRequestMock($path);
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => $path]);
 
         // Test the route provider
         $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
@@ -842,20 +978,5 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         );
 
         return $contentMapper;
-    }
-
-    /**
-     * @param string $path
-     * @param string $queryString
-     *
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    protected function getRequestMock($path, $queryString = null)
-    {
-        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request', ['getRequestUri', 'getQueryString']);
-        $request->expects($this->any())->method('getRequestUri')->will($this->returnValue($path));
-        $request->expects($this->any())->method('getQueryString')->will($this->returnValue($queryString));
-
-        return $request;
     }
 }

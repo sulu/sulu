@@ -9,6 +9,25 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2278 [TestBundle]          Cache result of Sulu intitializer rather than using a fixture
     * BUGFIX      #2305 [WebsiteBundle]       Fixed handling of non-default formats in error pages
 
+* 1.2.1 (2016-04-26)
+    * HOTFIX      #2334 [ContactBundle]       Fixed account-contact search
+    * HOTFIX      #2335 [ContentBundle]       Fixed textarea vertical resize
+    * HOTFIX      #2331 [AdminBundle]         Fixed admin-controller to return correct system
+    * HOTFIX      #2330 [WebsiteBundle]       Removed lazy analyzing of the request
+    * HOTFIX      #2321 [WebsiteBundle]       Fixed request-analyze for not existing current request
+    * HOTFIX      #2324 [SecurityBundle]      Removed circular reference from website security
+    * HOTFIX      #2319 [ContactBundle]       Validate unknown vat-number as valid
+    * HOTFIX      #2306 [WebsiteBundle]       Fixed partial rendering using query parameter
+    * HOTFIX      #2312 [Rest]                Added security checks to DoctrineListBuilder
+    * HOTFIX      #2303 [ContactBundle]       Fixed contact media search
+    * HOTFIX      #2304 [ContactBundle]       Fixed styling of options dropdown and fixed url-input dropdown
+    * HOTFIX      #2290 [WebsiteBundle]       Fixed redirect urls for webspace
+    * HOTFIX      #2294 [WebsiteBundle]       Fixed detecting webspaces for URLs with same priority
+    * HOTFIX      #2294 [WebsiteBundle]       Fixed analytics with all domains only in created webspace
+    * HOTFIX      #2285 [SecurityBundle]      Made ResettingController translations more configurable
+    * HOTFIX      #2291 [ContentBundle]       Fixed wrong spacing between more than two checkboxes
+    * ENHANCEMENT #2288 [WebsiteBundle]       Fixed overriding request attributes and set them on the request
+
 * 1.2.0 (2016-04-11)
     * BUGFIX      #2280 [ContentBundle]       Removed scrollbar from categories in overlay
     * BUGFIX      #2281 [ContentBundle]       Use correct link for content tab in page form
@@ -165,6 +184,9 @@ CHANGELOG for Sulu
     * BUGFIX      #1871 [ContentBundle]       Fixed url-generation and save button
     * BUGFIX      #1873 [ContactBundle]       Fixed remove title and position
     * BUGFIX      #1873 [ContactBundle]       Fixed remove contact birthday
+
+* 1.1.12 (2016-04-26)
+    * HOTFIX      #2285 [SecurityBundle]    Made ResettingController translations more configurable
 
 * 1.1.11 (2016-04-04)
     * HOTFIX      #2143 [ContactBundle]     Fixed account cget filtering of ids

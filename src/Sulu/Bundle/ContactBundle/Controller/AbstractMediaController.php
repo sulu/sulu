@@ -160,6 +160,7 @@ abstract class AbstractMediaController extends RestController
 
                 $listBuilder = $factory->create($entityName);
                 $fieldDescriptors = $this->getFieldDescriptors($entityName);
+                $listBuilder->setIdField($fieldDescriptors['id']);
                 $listBuilder->where($fieldDescriptors['entity'], $id);
                 $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 

@@ -103,10 +103,6 @@ class WebspaceManager implements WebspaceManagerInterface
         return array_filter(
             $this->getWebspaceCollection()->getPortalInformations($environment),
             function (PortalInformation $portalInformation) use ($url) {
-                if ($portalInformation->getType() === RequestAnalyzerInterface::MATCH_TYPE_REDIRECT) {
-                    return $url === $portalInformation->getUrl();
-                }
-
                 return $this->matchUrl($url, $portalInformation->getUrl());
             }
         );

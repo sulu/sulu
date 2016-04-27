@@ -29,6 +29,7 @@ use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineOrExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineWhereExpression;
 use Sulu\Component\Rest\ListBuilder\Expression\Exception\InvalidExpressionArgumentException;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
+use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryTrait;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -36,10 +37,17 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class DoctrineListBuilder extends AbstractListBuilder
 {
+    use SecuredEntityRepositoryTrait;
+
     /**
      * @var EventDispatcherInterface
      */
     private $eventDispatcher;
+
+    /**
+     * @var array
+     */
+    private $permissions;
 
     /**
      * @var EntityManager
@@ -85,11 +93,21 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     private $distinct = false;
 
-    public function __construct(EntityManager $em, $entityName, EventDispatcherInterface $eventDispatcher)
-    {
+    /**
+     * @var FieldDescriptorInterface
+     */
+    private $idField;
+
+    public function __construct(
+        EntityManager $em,
+        $entityName,
+        EventDispatcherInterface $eventDispatcher,
+        array $permissions
+    ) {
         $this->em = $em;
         $this->entityName = $entityName;
         $this->eventDispatcher = $eventDispatcher;
+        $this->permissions = $permissions;
     }
 
     /**
@@ -146,7 +164,11 @@ class DoctrineListBuilder extends AbstractListBuilder
         $this->assignSortFields($this->queryBuilder);
 
         // use ids previously selected ids for query
-        $this->queryBuilder->where($this->entityName . '.id IN (:ids)')
+        $select = $this->entityName . '.id';
+        if (null !== $this->idField) {
+            $select = $this->idField->getSelect();
+        }
+        $this->queryBuilder->where($select . ' IN (:ids)')
             ->setParameter('ids', $ids);
 
         $this->queryBuilder->distinct($this->distinct);
@@ -162,7 +184,12 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function findIdsByGivenCriteria()
     {
-        $subQueryBuilder = $this->createSubQueryBuilder();
+        $select = null;
+        if (null !== $this->idField) {
+            $select = $this->idField->getSelect();
+        }
+
+        $subQueryBuilder = $this->createSubQueryBuilder($select);
         if ($this->limit != null) {
             $subQueryBuilder->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
         }
@@ -286,8 +313,19 @@ class DoctrineListBuilder extends AbstractListBuilder
         $addJoins = $this->getNecessaryJoins($entityNames);
 
         // create querybuilder and add select
-        return $this->createQueryBuilder($addJoins, false)
-            ->select($select);
+        $queryBuilder = $this->createQueryBuilder($addJoins, false)->select($select);
+
+        if ($this->user && $this->permission && array_key_exists($this->permission, $this->permissions)) {
+            $this->addAccessControl(
+                $queryBuilder,
+                $this->user,
+                $this->permissions[$this->permission],
+                $this->entityName,
+                $this->entityName
+            );
+        }
+
+        return $queryBuilder;
     }
 
     /**
@@ -479,6 +517,16 @@ class DoctrineListBuilder extends AbstractListBuilder
     public function distinct($flag = true)
     {
         $this->distinct = $flag;
+    }
+
+    /**
+     * Set id-field of the "root" entity.
+     *
+     * @param FieldDescriptorInterface $idField
+     */
+    public function setIdField(FieldDescriptorInterface $idField)
+    {
+        $this->idField = $idField;
     }
 
     /**
