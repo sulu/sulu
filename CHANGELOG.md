@@ -6,6 +6,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2288 [AdminBundle]         Removed deleting of entire dom tree on tab change
     * ENHANCEMENT #2278 [TestBundle]          Cache result of Sulu intitializer rather than using a fixture
     * BUGFIX      #2305 [WebsiteBundle]       Fixed handling of non-default formats in error pages
+    * ENHANCEMENT #2341 [MediaBundle]         Added category to medias
 
 * 1.2.0 (2016-04-11)
     * BUGFIX      #2280 [ContentBundle]       Removed scrollbar from categories in overlay

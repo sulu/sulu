@@ -112,6 +112,7 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
             ->leftJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version')
             ->leftJoin('fileVersion.tags', 'tag')
             ->leftJoin('fileVersion.categories', 'categories')
+            ->leftJoin('categories.translations', 'categoryTranslations')
             ->leftJoin('fileVersion.meta', 'fileVersionMeta')
             ->leftJoin('fileVersion.defaultMeta', 'fileVersionDefaultMeta')
             ->leftJoin('fileVersion.contentLanguages', 'fileVersionContentLanguage')

@@ -788,16 +788,10 @@ class MediaManager implements MediaManagerInterface
                         }
                         break;
                     case 'categories':
-                        $categoryIds = [];
+                        $categoryIds = $value;
                         $media->removeCategories();
 
-                        if (count($value)) {
-                            foreach ($value as $categoryId) {
-                                $categoryIds[] = $categoryId;
-                            }
-                        }
-
-                        if (!empty($categoryIds)) {
+                        if (is_array($categoryIds) && !empty($categoryIds)) {
                             /** @var CategoryRepositoryInterface $repository */
                             $repository = $this->em->getRepository(self::ENTITY_NAME_CATEGORY);
                             $categories = $repository->findCategoryByIds($categoryIds);
