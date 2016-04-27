@@ -10,6 +10,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2305 [WebsiteBundle]       Fixed handling of non-default formats in error pages
 
 * 1.2.1 (2016-04-26)
+    * HOTFIX      #2339 [ContactBundle]       Fixed listing of contacts with Sulu user
     * HOTFIX      #2334 [ContactBundle]       Fixed account-contact search
     * HOTFIX      #2335 [ContentBundle]       Fixed textarea vertical resize
     * HOTFIX      #2331 [AdminBundle]         Fixed admin-controller to return correct system
