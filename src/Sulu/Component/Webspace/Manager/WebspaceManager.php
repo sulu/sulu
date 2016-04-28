@@ -133,6 +133,21 @@ class WebspaceManager implements WebspaceManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function findPortalInformationsByPortalKeyAndLocale($portalKey, $locale, $environment)
+    {
+        return array_filter(
+            $this->getWebspaceCollection()->getPortalInformations($environment),
+            function (PortalInformation $portalInformation) use ($portalKey, $locale) {
+                return $portalInformation->getPortal()
+                    && $portalInformation->getPortal()->getKey() === $portalKey
+                    && $portalInformation->getLocale() === $locale;
+            }
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findUrlsByResourceLocator(
         $resourceLocator,
         $environment,

@@ -43,8 +43,8 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     public function analyze(Request $request)
     {
         $attributes = new RequestAttributes(['host' => $request->getHost(), 'scheme' => $request->getScheme()]);
-        foreach ($this->requestProcessors as $provider) {
-            $attributes = $attributes->merge($provider->process($request, $attributes));
+        foreach ($this->requestProcessors as $requestProcessor) {
+            $attributes = $attributes->merge($requestProcessor->process($request, $attributes));
         }
 
         $request->attributes->set('_sulu', $attributes);

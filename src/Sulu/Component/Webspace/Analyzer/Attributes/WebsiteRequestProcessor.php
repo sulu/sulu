@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Extracts attributes from request for the sulu-website.
  */
-class WebsiteRequestProcessor extends AbstractRequestProcessor
+class WebsiteRequestProcessor extends AbstractPortalInformationRequestProcessor
 {
     /**
      * @var WebspaceManagerInterface

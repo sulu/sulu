@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Base class for request processors.
  * Provides functionality to process a single portal-information.
  */
-abstract class AbstractRequestProcessor implements RequestProcessorInterface
+abstract class AbstractPortalInformationRequestProcessor implements RequestProcessorInterface
 {
     /**
      * Returns the request attributes for given portal information.

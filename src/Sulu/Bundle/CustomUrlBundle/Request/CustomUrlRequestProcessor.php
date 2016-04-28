@@ -15,7 +15,7 @@ use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\CustomUrl\Generator\GeneratorInterface;
 use Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface;
 use Sulu\Component\Localization\Localization;
-use Sulu\Component\Webspace\Analyzer\Attributes\AbstractRequestProcessor;
+use Sulu\Component\Webspace\Analyzer\Attributes\AbstractPortalInformationRequestProcessor;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Set localization in case of custom-url route.
  */
-class CustomUrlRequestProcessor extends AbstractRequestProcessor
+class CustomUrlRequestProcessor extends AbstractPortalInformationRequestProcessor
 {
     /**
      * @var CustomUrlManagerInterface
