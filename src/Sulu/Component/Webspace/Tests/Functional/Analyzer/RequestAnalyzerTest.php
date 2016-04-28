@@ -15,7 +15,7 @@ use PHPUnit_Framework_MockObject_MockObject;
 use Prophecy\Argument;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Localization\Localization;
-use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
+use Sulu\Component\Webspace\Analyzer\Attributes\PortalInformationRequestProcessor;
 use Sulu\Component\Webspace\Analyzer\Attributes\WebsiteRequestProcessor;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -25,6 +25,7 @@ use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
@@ -67,6 +68,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
                 new WebsiteRequestProcessor(
                     $this->webspaceManager->reveal(), $this->contentMapper->reveal(), $this->replacer->reveal(), 'prod'
                 ),
+                new PortalInformationRequestProcessor(),
             ]
         );
     }
@@ -160,7 +162,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
                     'resource_locator_prefix' => '/test',
                     'resource_locator' => '/path/to',
                     'portal_url' => 'sulu.lo/test',
-                    'format' => null,
+                    'format' => 'html',
                 ],
             ],
             [
@@ -208,33 +210,14 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
 
         $this->prepareWebspaceManager($portalInformation);
 
-        $requestBag = $this->prophesize(ParameterBag::class);
-        $requestBag->all()->willReturn(['post' => 1]);
-        $queryBag = $this->prophesize(ParameterBag::class);
-        $queryBag->all()->willReturn(['get' => 1]);
-        $attributesBag = $this->prophesize(ParameterBag::class);
-        $attributesBag->get('_sulu')->willReturn(null);
-        $attributesBag->has('_sulu')->willReturn(false);
-        $attributesBag->set('_sulu', Argument::type(RequestAttributes::class))->shouldBeCalledTimes(1)->will(
-            function ($arguments) use ($attributesBag) {
-                $attributesBag->get('_sulu')->willReturn($arguments[1]);
-                $attributesBag->has('_sulu')->willReturn(true);
-            }
-        );
+        $request = new Request(['get' => 1], ['post' => 1], [], [], [], ['REQUEST_URI' => $config['path_info']]);
+        $request->headers->set('HOST', 'sulu.lo');
 
-        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
-        $request->request = $requestBag->reveal();
-        $request->query = $queryBag->reveal();
-        $request->attributes = $attributesBag->reveal();
-
-        $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
-        $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
-        $request->expects($this->any())->method('getScheme')->willReturn('http');
-        $request->expects($this->once())->method('setLocale')->with('de_at');
         $this->requestStack->getCurrentRequest()->willReturn($request);
 
         $this->requestAnalyzer->analyze($request);
 
+        $this->assertEquals('de_at', $request->getLocale());
         $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
         $this->assertEquals('sulu', $this->requestAnalyzer->getWebspace()->getKey());
         $this->assertEquals('sulu', $this->requestAnalyzer->getPortal()->getKey());
@@ -274,52 +257,14 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
 
         $this->prepareWebspaceManager($portalInformation);
 
-        $requestFormat = false;
-
-        $requestBag = $this->prophesize(ParameterBag::class);
-        $requestBag->all()->willReturn(['post' => 1]);
-        $queryBag = $this->prophesize(ParameterBag::class);
-        $queryBag->all()->willReturn(['get' => 1]);
-        $attributesBag = $this->prophesize(ParameterBag::class);
-        $attributesBag->has('_sulu')->willReturn(false);
-        $attributesBag->get('_sulu')->willReturn(null);
-        $attributesBag->set('_sulu', Argument::type(RequestAttributes::class))->shouldBeCalledTimes(1)->will(
-            function ($arguments) use ($attributesBag) {
-                $attributesBag->get('_sulu')->willReturn($arguments[1]);
-                $attributesBag->has('_sulu')->willReturn(true);
-            }
-        );
-
-        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
-        $request->request = $requestBag->reveal();
-        $request->query = $queryBag->reveal();
-        $request->attributes = $attributesBag->reveal();
-        $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
-        $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
-        $request->expects($this->once())->method('setLocale')->with('de_at');
-        $request->expects($this->any())->method('getScheme')->willReturn('http');
-
-        if ($expected['format']) {
-            $request->expects($this->once())->method('setRequestFormat')->will(
-                $this->returnCallback(
-                    function ($format) use (&$requestFormat) {
-                        $requestFormat = $format;
-                    }
-                )
-            );
-        }
-
-        $request->expects($this->once())->method('getRequestFormat')->will(
-            $this->returnCallback(
-                function () use (&$requestFormat) {
-                    return $requestFormat;
-                }
-            )
-        );
+        $request = new Request(['get' => 1], ['post' => 1], [], [], [], ['REQUEST_URI' => $config['path_info']]);
+        $request->headers->set('HOST', 'sulu.lo');
 
         $this->requestStack->getCurrentRequest()->willReturn($request);
         $this->requestAnalyzer->analyze($request);
 
+        $this->assertEquals($expected['format'], $request->getRequestFormat());
+        $this->assertEquals('de_at', $request->getLocale());
         $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
         $this->assertEquals('sulu', $this->requestAnalyzer->getWebspace()->getKey());
         $this->assertEquals('sulu', $this->requestAnalyzer->getPortal()->getKey());
@@ -380,14 +325,8 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
 
         $this->prepareWebspaceManager($portalInformation);
 
-        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
-        $request->request = new ParameterBag(['post' => 1]);
-        $request->query = new ParameterBag(['get' => 1]);
-        $request->attributes = new ParameterBag();
-        $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
-        $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
-        $request->expects($this->any())->method('getScheme')->willReturn('http');
-        $request->expects($this->once())->method('setLocale')->with('de_at');
+        $request = new Request(['get' => 1], ['post' => 1], [], [], [], ['REQUEST_URI' => $config['path_info']]);
+        $request->headers->set('HOST', 'sulu.lo');
 
         // this request will be analyzed only once
         $this->requestStack->getCurrentRequest()->willReturn($request)->shouldBeCalled();
@@ -395,6 +334,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $this->requestAnalyzer->analyze($request);
         $this->requestAnalyzer->validate($request);
 
+        $this->assertEquals('de_at', $request->getLocale());
         $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
         $this->assertEquals('sulu', $this->requestAnalyzer->getWebspace()->getKey());
         $this->assertEquals('sulu', $this->requestAnalyzer->getPortal()->getKey());

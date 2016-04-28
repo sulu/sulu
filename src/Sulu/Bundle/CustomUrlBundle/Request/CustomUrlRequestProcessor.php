@@ -15,8 +15,8 @@ use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\CustomUrl\Generator\GeneratorInterface;
 use Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface;
 use Sulu\Component\Localization\Localization;
-use Sulu\Component\Webspace\Analyzer\Attributes\AbstractRequestProcessor;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestProcessorInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\PortalInformation;
@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Set localization in case of custom-url route.
  */
-class CustomUrlRequestProcessor extends AbstractRequestProcessor
+class CustomUrlRequestProcessor implements RequestProcessorInterface
 {
     /**
      * @var CustomUrlManagerInterface
@@ -68,10 +68,7 @@ class CustomUrlRequestProcessor extends AbstractRequestProcessor
         if (substr($url, -5, 5) === '.html') {
             $url = substr($url, 0, -5);
         }
-        $portalInformations = $this->webspaceManager->findPortalInformationsByUrl(
-            $url,
-            $this->environment
-        );
+        $portalInformations = $this->webspaceManager->findPortalInformationsByUrl($url, $this->environment);
 
         if (count($portalInformations) === 0) {
             return new RequestAttributes();
@@ -91,7 +88,7 @@ class CustomUrlRequestProcessor extends AbstractRequestProcessor
             }
 
             if (null !== $attributes = $this->matchCustomUrl($url, $portalInformation, $request)) {
-                return $attributes;
+                return new RequestAttributes($attributes);
             }
         }
 
@@ -124,14 +121,10 @@ class CustomUrlRequestProcessor extends AbstractRequestProcessor
         );
 
         if (!$routeDocument) {
-            return;
+            return [];
         } elseif ($routeDocument->isHistory()) {
             // redirect happen => no portal is needed
-            return $this->processPortalInformation(
-                $request,
-                $portalInformation,
-                ['customUrlRoute' => $routeDocument]
-            );
+            return ['customUrlRoute' => $routeDocument];
         }
 
         $customUrlDocument = $this->customUrlManager->findByUrl(
@@ -146,15 +139,10 @@ class CustomUrlRequestProcessor extends AbstractRequestProcessor
             || $customUrlDocument->getTargetDocument()->getWorkflowStage() !== WorkflowStage::PUBLISHED
         ) {
             // error happen because this custom-url is not published => no portal is needed
-            return $this->processPortalInformation(
-                $request,
-                $portalInformation,
-                ['customUrlRoute' => $routeDocument, 'customUrl' => $customUrlDocument]
-            );
+            return ['customUrlRoute' => $routeDocument, 'customUrl' => $customUrlDocument];
         }
 
         $localization = $this->parse($customUrlDocument->getTargetLocale());
-        $request->setLocale($localization->getLocalization());
 
         $portalInformations = $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale(
             $portalInformation->getWebspace()->getKey(),
@@ -163,26 +151,19 @@ class CustomUrlRequestProcessor extends AbstractRequestProcessor
         );
 
         if (0 === count($portalInformations)) {
-            return $this->processPortalInformation(
-                $request,
-                $portalInformation,
-                ['customUrlRoute' => $routeDocument, 'customUrl' => $customUrlDocument]
-            );
+            return ['customUrlRoute' => $routeDocument, 'customUrl' => $customUrlDocument];
         }
 
-        return $this->processPortalInformation(
-            $request,
-            reset($portalInformations),
-            [
-                'localization' => $localization,
-                'customUrlRoute' => $routeDocument,
-                'customUrl' => $customUrlDocument,
-                'urlExpression' => $this->generator->generate(
-                    $customUrlDocument->getBaseDomain(),
-                    $customUrlDocument->getDomainParts()
-                ),
-            ]
-        );
+        return [
+            'portalInformation' => $portalInformation,
+            'localization' => $localization,
+            'customUrlRoute' => $routeDocument,
+            'customUrl' => $customUrlDocument,
+            'urlExpression' => $this->generator->generate(
+                $customUrlDocument->getBaseDomain(),
+                $customUrlDocument->getDomainParts()
+            ),
+        ];
     }
 
     /**

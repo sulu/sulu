@@ -15,6 +15,7 @@ CHANGELOG for Sulu
     * FEATURE     #2333 [PreviewBundle]       Added preview render error templates 
     * ENHANCEMENT #2353 [WebsocketBundle]     Changed configuration to default disable websocket 
     * BUGFIX      #2351 [ContentBundle]       Removed strange condition for data-changed 
+    * BUGFIX      #2352 [CoreBundle]          Fixed RequestAnalyzer for use with ESI
     * FEATURE     #2349 [RouteBundle]         Added route-bundle 
     * FEATURE     #2299 [PreviewBundle]       Implemented preview bundle 
     * ENHANCEMENT #2289 [ContentBundle]       Added display options support to date content type
