@@ -6534,16 +6534,17 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
 html,
 body {
   height: 100%;
+  overflow: hidden;
 }
 
-/* line 17, ../scss/modules/core.scss */
+/* line 18, ../scss/modules/core.scss */
 body {
   font-size: 14px;
   color: #000;
   background: #f1f1f1;
 }
 
-/* line 23, ../scss/modules/core.scss */
+/* line 24, ../scss/modules/core.scss */
 hr.divider {
   color: #fff;
   height: 0;
@@ -6551,17 +6552,17 @@ hr.divider {
   border-top: none;
   margin: 0px 0 20px 0;
 }
-/* line 29, ../scss/modules/core.scss */
+/* line 30, ../scss/modules/core.scss */
 hr.divider.dark {
   color: #ccc;
   border-color: #ccc;
 }
-/* line 33, ../scss/modules/core.scss */
+/* line 34, ../scss/modules/core.scss */
 hr.divider.small {
   margin-bottom: 10px;
 }
 
-/* line 41, ../scss/modules/core.scss */
+/* line 42, ../scss/modules/core.scss */
 .options-dropdown-container {
   position: absolute;
   right: 0;
@@ -6569,13 +6570,13 @@ hr.divider.small {
   z-index: 10;
 }
 
-/* line 48, ../scss/modules/core.scss */
+/* line 49, ../scss/modules/core.scss */
 .options-toggle {
   background-color: #f1f1f1;
   font-size: 16px;
   color: black;
 }
-/* line 53, ../scss/modules/core.scss */
+/* line 54, ../scss/modules/core.scss */
 .options-toggle::after {
   content: "";
   display: inline-block;
@@ -9033,17 +9034,18 @@ a.btn-black, a.btn-highlight {
 .tabs-container {
   background-color: #fff;
   position: relative;
+  overflow: auto;
   /**
   *** Deactivated Skin
   **/
 }
-/* line 10, ../scss/modules/tabs.scss */
+/* line 11, ../scss/modules/tabs.scss */
 .tabs-container ul {
   padding: 0;
   margin: 0;
   white-space: nowrap;
 }
-/* line 15, ../scss/modules/tabs.scss */
+/* line 16, ../scss/modules/tabs.scss */
 .tabs-container ul li {
   display: inline-block;
   list-style-type: none;
@@ -9054,19 +9056,19 @@ a.btn-black, a.btn-highlight {
   min-width: 60px;
   cursor: pointer;
 }
-/* line 25, ../scss/modules/tabs.scss */
+/* line 26, ../scss/modules/tabs.scss */
 .tabs-container ul li a {
   color: black;
   text-decoration: none;
   font-size: 14px;
   outline: 0;
 }
-/* line 33, ../scss/modules/tabs.scss */
+/* line 34, ../scss/modules/tabs.scss */
 .tabs-container ul li.is-selected a {
   color: #52B6CA;
   font-weight: bold;
 }
-/* line 41, ../scss/modules/tabs.scss */
+/* line 42, ../scss/modules/tabs.scss */
 .tabs-container .marker {
   height: 2px;
   background: #52B6CA;
@@ -9075,21 +9077,26 @@ a.btn-black, a.btn-highlight {
   width: 0px;
   left: 0px;
 }
-/* line 50, ../scss/modules/tabs.scss */
+/* line 51, ../scss/modules/tabs.scss */
 .tabs-container .marker.animate {
   -moz-transition: left 350ms ease, width 350ms ease;
   -o-transition: left 350ms ease, width 350ms ease;
   -webkit-transition: left 350ms ease, width 350ms ease;
   transition: left 350ms ease, width 350ms ease;
 }
-/* line 60, ../scss/modules/tabs.scss */
+/* line 61, ../scss/modules/tabs.scss */
 .tabs-container.deactivated ul li a, .tabs-container.deactivated ul li a:hover {
   color: #999;
   cursor: default;
 }
-/* line 64, ../scss/modules/tabs.scss */
+/* line 65, ../scss/modules/tabs.scss */
 .tabs-container.deactivated ul li.is-selected a {
   color: #52B6CA;
+}
+/* line 71, ../scss/modules/tabs.scss */
+.has-language-chooser .tabs-container {
+  width: calc(100% - 100px);
+  border-right: 1px solid #e9e9e9;
 }
 
 /*styles related to the whole container*/
