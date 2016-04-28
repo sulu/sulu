@@ -13,6 +13,9 @@ namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
 use DateTime;
 use Doctrine\ORM\EntityManager;
+use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
@@ -63,6 +66,16 @@ class MediaControllerTest extends SuluTestCase
     private $videoType;
 
     /**
+     * @var Category
+     */
+    private $category;
+
+    /**
+     * @var Category
+     */
+    private $category2;
+
+    /**
      * @var string
      */
     protected $mediaDefaultTitle = 'photo';
@@ -79,6 +92,7 @@ class MediaControllerTest extends SuluTestCase
         $this->em = $this->getEntityManager();
         $this->cleanImage();
         $this->setUpCollection();
+        $this->setUpCategory();
         $this->setUpMedia();
     }
 
@@ -106,6 +120,63 @@ class MediaControllerTest extends SuluTestCase
         if ($counter != 0) {
             rmdir($directory);
         }
+    }
+
+    /**
+     * set up two categories.
+     */
+    private function setUpCategory()
+    {
+        /* First Category
+        -------------------------------------*/
+        $category = new Category();
+        $category->setKey('first-category-key');
+        $category->setDefaultLocale('en');
+
+        $this->category = $category;
+
+        // name for first category
+        $categoryTrans = new CategoryTranslation();
+        $categoryTrans->setLocale('en');
+        $categoryTrans->setTranslation('First Category');
+        $categoryTrans->setCategory($category);
+        $category->addTranslation($categoryTrans);
+
+        // meta for first category
+        $categoryMeta = new CategoryMeta();
+        $categoryMeta->setLocale('en');
+        $categoryMeta->setKey('description');
+        $categoryMeta->setValue('Description of Category');
+        $categoryMeta->setCategory($category);
+        $category->addMeta($categoryMeta);
+
+        /* Second Category
+        -------------------------------------*/
+        $category2 = new Category();
+        $category2->setKey('second-category-key');
+        $category2->setDefaultLocale('de');
+
+        $this->category2 = $category2;
+
+        // name for second category
+        $categoryTrans2 = new CategoryTranslation();
+        $categoryTrans2->setLocale('de');
+        $categoryTrans2->setTranslation('Second Category');
+        $categoryTrans2->setCategory($category2);
+        $category2->addTranslation($categoryTrans2);
+
+        // meta for second category
+        $categoryMeta2 = new CategoryMeta();
+        $categoryMeta2->setLocale('de');
+        $categoryMeta2->setKey('description');
+        $categoryMeta2->setValue('Description of second Category');
+        $categoryMeta2->setCategory($category2);
+        $category2->addMeta($categoryMeta2);
+
+        $this->em->persist($category2);
+        $this->em->persist($category);
+
+        $this->em->flush();
     }
 
     protected function setUpMedia()
@@ -157,6 +228,8 @@ class MediaControllerTest extends SuluTestCase
         $fileVersion->setFile($file);
         $fileVersion->setSize(1124214);
         $fileVersion->setDownloadCounter(2);
+        $fileVersion->addCategory($this->category);
+        $fileVersion->addCategory($this->category2);
         $fileVersion->setChanged(new \DateTime('1937-04-20'));
         $fileVersion->setCreated(new \DateTime('1937-04-20'));
         $fileVersion->setStorageOptions('{"segment":"1","fileName":"' . $name . '.jpeg"}');
@@ -194,8 +267,7 @@ class MediaControllerTest extends SuluTestCase
     {
         $this->collection = new Collection();
         $style = [
-            'type' => 'circle',
-            'color' => '#ffcc00',
+            'type' => 'circle', 'color' => '#ffcc00',
         ];
 
         $this->collection->setStyle(json_encode($style));
@@ -237,17 +309,13 @@ class MediaControllerTest extends SuluTestCase
     public function testResponseHeader()
     {
         $media = $this->createMedia('photo');
-
         $date = new DateTime();
         $date->modify('+1 month');
-
         $client = $this->createAuthenticatedClient();
-
         $client->request(
             'GET',
             '/uploads/media/50x50/01/' . $media->getId() . '-photo.jpeg'
         );
-
         $this->assertEquals(
             $date->format('Y-m-d'),
             $client->getResponse()->getExpires()->format('Y-m-d')
@@ -260,12 +328,10 @@ class MediaControllerTest extends SuluTestCase
     public function test404ResponseHeader()
     {
         $client = $this->createAuthenticatedClient();
-
         $client->request(
             'GET',
             '/uploads/media/50x50/01/0-photo.jpeg'
         );
-
         $this->assertFalse($client->getResponse()->isCacheable());
         $this->assertEmpty($client->getResponse()->getExpires());
     }
@@ -276,16 +342,13 @@ class MediaControllerTest extends SuluTestCase
     public function testDownloadHeaderAttachment()
     {
         $media = $this->createMedia('photo');
-
         $client = $this->createAuthenticatedClient();
-
         ob_start();
         $client->request(
             'GET',
             '/media/' . $media->getId() . '/download/photo.jpeg'
         );
         ob_end_clean();
-
         $this->assertEquals(
             'attachment; filename="photo.jpeg"',
             $client->getResponse()->headers->get('Content-Disposition')
@@ -298,16 +361,13 @@ class MediaControllerTest extends SuluTestCase
     public function testDownloadHeaderInline()
     {
         $media = $this->createMedia('photo');
-
         $client = $this->createAuthenticatedClient();
-
         ob_start();
         $client->request(
             'GET',
             '/media/' . $media->getId() . '/download/photo.jpeg?inline=1'
         );
         ob_end_clean();
-
         $this->assertEquals(
             'inline; filename="photo.jpeg"',
             $client->getResponse()->headers->get('Content-Disposition')
@@ -320,16 +380,13 @@ class MediaControllerTest extends SuluTestCase
     public function testDownloadHeaderUmlauts()
     {
         $media = $this->createMedia('wöchentlich');
-
         $client = $this->createAuthenticatedClient();
-
         ob_start();
         $client->request(
             'GET',
             '/media/' . $media->getId() . '/download/wöchentlich.jpeg?inline=1'
         );
         ob_end_clean();
-
         $this->assertEquals(
             'inline; filename="woechentlich.jpeg"; filename*=utf-8\'\'w%C3%B6chentlich.jpeg',
             $client->getResponse()->headers->get('Content-Disposition')
@@ -364,6 +421,30 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals($this->mediaDefaultDescription, $response['description']);
         $this->assertNotEmpty($response['url']);
         $this->assertNotEmpty($response['thumbnails']);
+
+        $categories = [
+            [
+                'id' => $response['categories'][0]['id'],
+                'key' => $response['categories'][0]['key'],
+                'name' => $response['categories'][0]['name'],
+            ],
+            [
+                'id' => $response['categories'][1]['id'],
+                'key' => $response['categories'][1]['key'],
+                'name' => $response['categories'][1]['name'],
+            ],
+        ];
+
+        $this->assertContains([
+            'id' => $this->category->getId(),
+            'key' => $this->category->getKey(),
+            'name' => 'First Category',
+        ], $categories);
+        $this->assertContains([
+            'id' => $this->category2->getId(),
+            'key' => $this->category2->getKey(),
+            'name' => 'Second Category',
+        ], $categories);
     }
 
     public function testGetByIdWithFallback()
@@ -648,6 +729,8 @@ class MediaControllerTest extends SuluTestCase
                     'en-au',
                     'en',
                     'de',
+                ], 'categories' => [
+                    $this->category->getId(), $this->category2->getId(),
                 ],
             ],
             [
@@ -660,7 +743,6 @@ class MediaControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-
         $this->assertEquals('photo.jpeg', $response->name);
         $this->assertNotNull($response->id);
         $this->assertEquals('en-gb', $response->locale);
@@ -671,14 +753,12 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('My credits', $response->credits);
         $this->assertNotEmpty($response->url);
         $this->assertNotEmpty($response->thumbnails);
-
         $this->assertEquals(
             [
                 'en-gb',
             ],
             $response->contentLanguages
         );
-
         $this->assertEquals(
             [
                 'en-gb',
@@ -688,6 +768,30 @@ class MediaControllerTest extends SuluTestCase
             ],
             $response->publishLanguages
         );
+
+        $categories = [
+            [
+                'id' => $response->categories[0]->id,
+                'key' => $response->categories[0]->key,
+                'name' => $response->categories[0]->name,
+            ],
+            [
+                'id' => $response->categories[1]->id,
+                'key' => $response->categories[1]->key,
+                'name' => $response->categories[1]->name,
+            ],
+        ];
+
+        $this->assertContains([
+            'id' => $this->category->getId(),
+            'key' => $this->category->getKey(),
+            'name' => 'First Category',
+        ], $categories);
+        $this->assertContains([
+            'id' => $this->category2->getId(),
+            'key' => $this->category2->getKey(),
+            'name' => 'Second Category',
+        ], $categories);
     }
 
     /**

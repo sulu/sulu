@@ -9,6 +9,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2288 [AdminBundle]         Removed deleting of entire dom tree on tab change
     * ENHANCEMENT #2278 [TestBundle]          Cache result of Sulu intitializer rather than using a fixture
     * BUGFIX      #2305 [WebsiteBundle]       Fixed handling of non-default formats in error pages
+    * ENHANCEMENT #2341 [MediaBundle]         Added category to medias
 
 * 1.2.1 (2016-04-26)
     * HOTFIX      #2334 [ContactBundle]       Fixed account-contact search

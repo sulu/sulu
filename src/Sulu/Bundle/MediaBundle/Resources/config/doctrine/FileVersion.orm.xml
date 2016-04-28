@@ -51,6 +51,7 @@
                 <join-column name="idFiles" referenced-column-name="id" on-delete="CASCADE" nullable="true"/>
             </join-columns>
         </many-to-one>
+
         <many-to-many field="tags" target-entity="Sulu\Bundle\TagBundle\Entity\Tag">
             <join-table name="me_file_version_tags">
                 <join-columns>
@@ -60,6 +61,21 @@
                     <join-column name="idTags" referenced-column-name="id"/>
                 </inverse-join-columns>
             </join-table>
+        </many-to-many>
+
+        <many-to-many field="categories" target-entity="Sulu\Bundle\CategoryBundle\Entity\Category">
+            <join-table name="me_file_version_categories">
+                <join-columns>
+                    <join-column name="idFileVersions" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="idCategories" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
+                </inverse-join-columns>
+            </join-table>
+
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
         </many-to-many>
 
     </entity>

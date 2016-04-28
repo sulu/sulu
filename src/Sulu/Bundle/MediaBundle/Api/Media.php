@@ -15,6 +15,8 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
+use Sulu\Bundle\CategoryBundle\Api\Category;
+use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
@@ -942,5 +944,51 @@ class Media extends ApiWrapper
         }
 
         return $this->localizedMeta;
+    }
+
+    /**
+     * Adds a category to the entity.
+     *
+     * @param CategoryEntity $category
+     */
+    public function addCategory(CategoryEntity $category)
+    {
+        $fileVersion = $this->getFileVersion();
+        $fileVersion->addCategory($category);
+
+        return $this;
+    }
+
+    /**
+     * Removes all category from the entity.
+     */
+    public function removeCategories()
+    {
+        $fileVersion = $this->getFileVersion();
+        $fileVersion->removeCategories();
+    }
+
+    /**
+     * Returns the categories of the media.
+     *
+     * @VirtualProperty
+     * @SerializedName("categories")
+     *
+     * @return Category[]
+     */
+    public function getCategories()
+    {
+        $apiCategories = [];
+        $fileVersion = $this->getFileVersion();
+        $categories = $fileVersion->getCategories();
+
+        // return Category API item
+        if (count($categories)) {
+            foreach ($categories as $category) {
+                $apiCategories[] = new Category($category, $this->locale);
+            }
+        }
+
+        return $apiCategories;
     }
 }

@@ -278,6 +278,10 @@
                 <source>sulu.media.formats</source>
                 <target>Medienformate</target>
             </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f221238" resname="sulu.media.categories">
+                <source>sulu.media.categories</source>
+                <target>Kategorien</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

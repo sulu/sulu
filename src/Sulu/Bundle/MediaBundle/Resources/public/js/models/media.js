@@ -22,6 +22,7 @@ define(['mvc/relationalmodel'], function (RelationalModel) {
                 name: '',
                 description: '',
                 tags: [],
+                categories: [],
                 copyright: '',
                 credits: '',
                 versions: {}
