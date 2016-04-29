@@ -27,6 +27,7 @@ class NavigationTwigExtensionTest extends \PHPUnit_Framework_TestCase
             [false, '/news', '/product/item'],
             [false, '/news', '/news-1'],
             [false, '/news', '/news-1/item'],
+            [true, '/', '/'],
         ];
     }
 
