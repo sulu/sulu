@@ -11,6 +11,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2278 [TestBundle]          Cache result of Sulu intitializer rather than using a fixture
     * BUGFIX      #2305 [WebsiteBundle]       Fixed handling of non-default formats in error pages
     * ENHANCEMENT #2341 [MediaBundle]         Added category to medias
+    * ENHANCEMENT #2323 [WebsiteBundle]       Added TWIG-Extension to check if parent nav-item is active
 
 * 1.2.1 (2016-04-26)
     * HOTFIX      #2334 [ContactBundle]       Fixed account-contact search
