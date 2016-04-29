@@ -10,12 +10,30 @@
 
 namespace Unit\Sulu\Bundle\WebsiteBundle\EventListener;
 
+use Liip\ThemeBundle\ActiveTheme;
+use Sulu\Bundle\PreviewBundle\Preview\Events\PreRenderEvent;
 use Sulu\Bundle\WebsiteBundle\EventListener\SetThemeEventListener;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Theme;
+use Sulu\Component\Webspace\Webspace;
 
 class SetThemeEventListenerTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var ActiveTheme
+     */
     protected $activeTheme;
+
+    /**
+     * @var RequestAnalyzerInterface
+     */
     protected $requestAnalyzer;
+
+    /**
+     * @var SetThemeEventListener
+     */
+    private $listener;
 
     public function setUp()
     {
@@ -50,7 +68,7 @@ class SetThemeEventListenerTest extends \PHPUnit_Framework_TestCase
             ->method('setName')
             ->with('test');
 
-        $this->listener->setActiveTheme($this->event);
+        $this->listener->setActiveThemeOnEngineInitialize();
     }
 
     public function testEventListenerNotMaster()
@@ -61,6 +79,20 @@ class SetThemeEventListenerTest extends \PHPUnit_Framework_TestCase
         $this->webspace->expects($this->never())
             ->method('getTheme');
 
-        $this->listener->setActiveTheme($this->event);
+        $this->listener->setActiveThemeOnEngineInitialize();
+    }
+
+    public function testEventListenerOnPreview()
+    {
+        $webspace = new Webspace();
+        $theme = new Theme();
+        $theme->setKey('test');
+        $webspace->setTheme($theme);
+
+        $this->activeTheme->expects($this->once())->method('setName')->with('test');
+
+        $this->listener->setActiveThemeOnPreviewPreRender(
+            new PreRenderEvent(new RequestAttributes(['webspace' => $webspace]))
+        );
     }
 }

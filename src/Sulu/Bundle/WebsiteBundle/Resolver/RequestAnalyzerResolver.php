@@ -31,11 +31,6 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
     private $environment;
 
     /**
-     * @var array
-     */
-    private $previewDefaults;
-
-    /**
      * @var RequestStack
      */
     private $requestStack;
@@ -43,14 +38,11 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
         RequestStack $requestStack,
-        $environment,
-        $previewDefaults = []
+        $environment
     ) {
         $this->webspaceManager = $webspaceManager;
         $this->requestStack = $requestStack;
         $this->environment = $environment;
-
-        $this->previewDefaults = array_merge(['analyticsKey' => ''], $previewDefaults);
     }
 
     /**
@@ -76,38 +68,6 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
                 'routeParameters' => [
                     'host' => $requestAnalyzer->getPortalInformation()->getHost(),
                     'prefix' => $requestAnalyzer->getPortalInformation()->getPrefix(),
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function resolveForPreview($webspaceKey, $locale)
-    {
-        // take first portal url
-        $portalInformations = $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale(
-            $webspaceKey,
-            $locale,
-            $this->environment
-        );
-        $portalInformation = array_values($portalInformations)[0];
-
-        return [
-            'request' => [
-                'webspaceKey' => $webspaceKey,
-                'locale' => $locale,
-                'defaultLocale' => $locale,
-                'portalUrl' => $portalInformation->getUrl(),
-                'resourceLocatorPrefix' => '',
-                'resourceLocator' => '',
-                'get' => $this->requestStack->getCurrentRequest()->query->all(),
-                'post' => $this->requestStack->getCurrentRequest()->request->all(),
-                'analyticsKey' => $this->previewDefaults['analyticsKey'],
-                'routeParameters' => [
-                    'host' => $portalInformation->getHost(),
-                    'prefix' => ltrim($portalInformation->getPrefix(), '/'),
                 ],
             ],
         ];

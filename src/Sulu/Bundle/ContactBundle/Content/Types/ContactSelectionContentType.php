@@ -96,20 +96,9 @@ class ContactSelectionContentType extends ComplexContentType
         if ($node->hasProperty($property->getName())) {
             $values = $node->getPropertyValue($property->getName());
         }
-        $this->setData($values, $property);
-    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function readForPreview(
-        $data,
-        PropertyInterface $property,
-        $webspaceKey,
-        $languageCode,
-        $segmentKey
-    ) {
-        $this->setData($data, $property);
+        $refs = isset($values) ? $values : [];
+        $property->setValue($refs);
     }
 
     /**
@@ -212,17 +201,5 @@ class ContactSelectionContentType extends ComplexContentType
             'contact' => new PropertyParameter('contact', true),
             'account' => new PropertyParameter('account', true),
         ];
-    }
-
-    /**
-     * Set data to given property.
-     *
-     * @param array $data
-     * @param PropertyInterface $property
-     */
-    protected function setData($data, PropertyInterface $property)
-    {
-        $refs = isset($data) ? $data : [];
-        $property->setValue($refs);
     }
 }

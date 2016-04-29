@@ -246,8 +246,6 @@ define([
                 this.updateTabVisibilityForShadowCheckbox(true);
 
                 this.updateChangelog(data);
-
-                this.sandbox.emit('sulu.preview.initialize');
             }.bind(this));
         },
 

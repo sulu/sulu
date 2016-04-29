@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\EventListener;
 
 use Liip\ThemeBundle\ActiveTheme;
+use Sulu\Bundle\PreviewBundle\Preview\Events\PreRenderEvent;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
@@ -29,10 +30,12 @@ class SetThemeEventListener
      */
     private $activeTheme;
 
-    public function __construct(
-        RequestAnalyzerInterface $requestAnalyzer,
-        ActiveTheme $activeTheme
-    ) {
+    /**
+     * @param RequestAnalyzerInterface $requestAnalyzer
+     * @param ActiveTheme $activeTheme
+     */
+    public function __construct(RequestAnalyzerInterface $requestAnalyzer, ActiveTheme $activeTheme)
+    {
         $this->requestAnalyzer = $requestAnalyzer;
         $this->activeTheme = $activeTheme;
     }
@@ -40,7 +43,7 @@ class SetThemeEventListener
     /**
      * Set the active theme if there is a portal.
      */
-    public function setActiveTheme()
+    public function setActiveThemeOnEngineInitialize()
     {
         $portal = $this->requestAnalyzer->getPortal();
 
@@ -50,5 +53,15 @@ class SetThemeEventListener
 
         $themeKey = $portal->getWebspace()->getTheme()->getKey();
         $this->activeTheme->setName($themeKey);
+    }
+
+    /**
+     * Set the active theme for a preview rendering.
+     *
+     * @param PreRenderEvent $event
+     */
+    public function setActiveThemeOnPreviewPreRender(PreRenderEvent $event)
+    {
+        $this->activeTheme->setName($event->getAttribute('webspace')->getTheme()->getKey());
     }
 }

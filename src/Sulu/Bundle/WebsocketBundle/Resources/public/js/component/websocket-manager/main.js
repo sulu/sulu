@@ -11,12 +11,13 @@
  * Provides Websocket connections
  */
 define([
-    'websocket/wrapper'
-], function(Client) {
+    'websocket/wrapper',
+    'websocket/dummy'
+], function(Client, DummyClient) {
 
     'use strict';
 
-    var defaults = {port: 9876, httpHost: 'localhost', ssl: false};
+    var defaults = {enabled: false, port: 9876, httpHost: 'localhost', ssl: false};
 
     return {
         apps: {},
@@ -49,17 +50,21 @@ define([
             return this.url + this.apps[appName].route;
         },
 
-        getClient: function(appName, tryWebsocket) {
+        getClient: function(appName) {
             if (!this.clients[appName]) {
-                this.clients[appName] = this.createClient(appName, tryWebsocket);
+                this.clients[appName] = this.createClient(appName);
                 this.clients[appName].connect();
             }
 
             return this.clients[appName];
         },
 
-        createClient: function(appName, tryWebsocket) {
-            return new Client(this.apps[appName], this.getUrl(appName), tryWebsocket);
+        createClient: function(appName) {
+            return new Client(this.apps[appName], this.getUrl(appName), this.getConfig('enabled'));
+        },
+
+        createDummyClient: function(appName) {
+            return new DummyClient(this.apps[appName]);
         }
     };
 });

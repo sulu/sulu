@@ -95,7 +95,6 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
         $this->processTemplates($container, $config);
-        $this->processPreview($container, $config);
 
         if (isset($bundles['SuluSearchBundle'])) {
             $this->processSearch($config, $loader, $container);
@@ -104,28 +103,12 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         $loader->load('services.xml');
         $loader->load('smart_content.xml');
         $loader->load('content_types.xml');
-        $loader->load('preview.xml');
         $loader->load('structure.xml');
         $loader->load('extension.xml');
         $loader->load('form.xml');
         $loader->load('compat.xml');
         $loader->load('document.xml');
         $loader->load('serializer.xml');
-    }
-
-    private function processPreview(ContainerBuilder $container, $config)
-    {
-        $container->setParameter('sulu.content.preview.mode', $config['preview']['mode']);
-        $container->setParameter('sulu.content.preview.websocket', $config['preview']['websocket']);
-        $container->setParameter('sulu.content.preview.delay', $config['preview']['delay']);
-        $errorTemplate = null;
-        if (isset($config['preview']['error_template'])) {
-            $errorTemplate = $config['preview']['error_template'];
-        }
-        $container->setParameter(
-            'sulu.content.preview.error_template',
-            $errorTemplate
-        );
     }
 
     private function processTemplates(ContainerBuilder $container, $config)

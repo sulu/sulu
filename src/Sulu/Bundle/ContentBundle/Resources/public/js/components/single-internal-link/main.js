@@ -155,6 +155,8 @@ define([], function() {
                 setData.call(this, '');
                 this.$input.val('');
 
+                this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
+
                 return false;
             }.bind(this));
         },

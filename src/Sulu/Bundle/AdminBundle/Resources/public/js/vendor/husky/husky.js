@@ -36881,7 +36881,15 @@ define('__component__$toolbar@husky',[],function() {
                         this.items[button].dropdownItems = items;
                         createDropdownMenu.call(this, this.items[button].$el, this.items[button]);
                         if (!!itemId) {
-                            this.sandbox.emit(ITEM_CHANGE.call(this), this.items[button].id, itemId);
+                            changeButton.call(this, this.items[button].id, itemId).then(function(item) {
+                                if (!this.items[button].dropdownOptions
+                                    || typeof this.items[button].dropdownOptions.preSelectedCallback !== 'function'
+                                ) {
+                                    return;
+                                }
+
+                                this.items[button].dropdownOptions.preSelectedCallback(item);
+                            }.bind(this));
                         }
                     } else {
                         deleteDropdown.call(this, this.items[button]);
@@ -36904,11 +36912,16 @@ define('__component__$toolbar@husky',[],function() {
                 return;
             }
 
-            var button = this.items[buttonId];
+            var button = this.items[buttonId],
+                deferred = $.Deferred();
 
             button.initialized.then(function() {
                 // update icon
                 var index = getItemIndexById.call(this, itemId, button);
+                if (index === true) {
+                    index = 0;
+                }
+
                 changeMainListItem.call(this, button.$el, button.dropdownItems[index]);
                 this.sandbox.emit(ITEM_MARK.call(this), button.dropdownItems[index].id);
                 if (executeCallback === true || !!button.dropdownItems[index].callback
@@ -36916,7 +36929,11 @@ define('__component__$toolbar@husky',[],function() {
                 ) {
                     button.dropdownItems[index].callback();
                 }
+
+                deferred.resolve(button.dropdownItems[index]);
             }.bind(this));
+
+            return deferred.promise();
         },
 
         /**

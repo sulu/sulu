@@ -54,23 +54,12 @@ class CategoryList extends ComplexContentType
     }
 
     /**
-     * Sets the given array as values on the property.
-     *
-     * @param array             $data
-     * @param PropertyInterface $property
-     */
-    protected function setData($data, PropertyInterface $property)
-    {
-        $property->setValue($data);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $categoryIds = $node->getPropertyValueWithDefault($property->getName(), []);
-        $this->setData($categoryIds, $property);
+        $property->setValue($categoryIds);
     }
 
     /**
@@ -92,14 +81,6 @@ class CategoryList extends ComplexContentType
         }
 
         return $data;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
-    {
-        $this->setData($data, $property);
     }
 
     /**

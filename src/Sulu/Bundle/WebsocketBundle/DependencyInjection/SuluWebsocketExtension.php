@@ -29,6 +29,7 @@ class SuluWebsocketExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        $container->setParameter('sulu_websocket.enabled', $config['enabled']);
         $container->setParameter('sulu_websocket.server.ip_address', $config['server']['ip_address']);
         $container->setParameter('sulu_websocket.server.port', $config['server']['port']);
         $container->setParameter('sulu_websocket.server.http_host', $config['server']['http_host']);

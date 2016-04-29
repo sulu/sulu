@@ -1,5 +1,32 @@
 # Upgrade
 
+## dev-develop
+
+### Configuration
+
+The configuration of `sulu_content.preview` and `sulu_website.preview_defaults` has been moved to:
+
+```
+$ app/console config:dump-reference sulu_preview
+# Default configuration for extension with alias: "sulu_preview"
+sulu_preview:
+    defaults:
+        analytics_key:        UA-SULU-PREVIEW-KEY
+    error_template:       ~ # Example: ClientWebsiteBundle:Preview:error.html.twig
+    mode:                 auto
+
+    # Used for the delayed send of changes
+    delay:                500
+```
+
+The flag `sulu_content.preview.websocket` has been replaced with `sulu_websocket.enabled`. This flag is
+now default `false`.
+
+### Content-Types
+
+The Interface or content-types has been cleaned. The function `ContentTypeInterface::readForPreview` will never
+be called in the future and can therefor be removed.
+
 ## 1.2.1
 
 ### UserRepository
@@ -14,7 +41,7 @@ If you want to use the `Sulu` system you should inject the
 ## 1.2.0
 
 ### sulu_content_path
-
+src/Sulu/Bundle/WebsiteBundle/Resources/config/services.xml
 The twig function `sulu_content_path('/path')` now always returning the full-qualified-domain
 `http://www.sulu.io/de/path`.
 

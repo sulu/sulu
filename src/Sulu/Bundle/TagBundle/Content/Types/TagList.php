@@ -54,31 +54,12 @@ class TagList extends ComplexContentType
     }
 
     /**
-     * Sets the given array as values on the property.
-     *
-     * @param array             $data
-     * @param PropertyInterface $property
-     */
-    protected function setData($data, PropertyInterface $property)
-    {
-        $property->setValue($data);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $tags = $this->tagManager->resolveTagIds($node->getPropertyValueWithDefault($property->getName(), []));
-        $this->setData($tags, $property);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
-    {
-        $this->setData($data, $property);
+        $property->setValue($tags);
     }
 
     /**

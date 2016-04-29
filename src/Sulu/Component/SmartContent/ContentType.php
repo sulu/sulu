@@ -113,23 +113,6 @@ class ContentType extends ComplexContentType
     /**
      * {@inheritdoc}
      */
-    public function readForPreview(
-        $data,
-        PropertyInterface $property,
-        $webspaceKey,
-        $languageCode,
-        $segmentKey
-    ) {
-        if ($data instanceof ArrayableInterface) {
-            $data = $data->toArray();
-        }
-
-        $property->setValue($data);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,

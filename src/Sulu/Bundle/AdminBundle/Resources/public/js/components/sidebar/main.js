@@ -371,6 +371,7 @@ define([], function() {
                     }.bind(this));
                 }
             } else {
+                $element = $($element);
                 this.emptySidebar(true);
                 this.showColumn();
                 this.widgets.push({
@@ -378,6 +379,7 @@ define([], function() {
                     $el: $element
                 });
                 this.sandbox.dom.append(this.$el, $element);
+                this.sandbox.start(this.$el);
                 this.sandbox.dom.css(this.$el, 'display', 'block');
             }
         },

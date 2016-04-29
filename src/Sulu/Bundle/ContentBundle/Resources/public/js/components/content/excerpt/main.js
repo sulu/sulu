@@ -82,8 +82,6 @@ define([], function() {
                 this.sandbox.form.setData(this.formId, data).then(function() {
                     this.sandbox.start(this.$el, {reset: true});
                     this.dfdListenForChange.resolve();
-
-                    this.sandbox.emit('sulu.preview.initialize');
                 }.bind(this));
             }.bind(this));
         },

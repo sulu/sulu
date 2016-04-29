@@ -1,0 +1,1 @@
+define(["websocket/abstract","jquery"],function(a,b){var c=function(b,c){a.call(this,b,c),this.type=a.TYPE_AJAX};return c.prototype=Object.create(a.prototype),c.prototype.doSend=function(){var a=b.Deferred();return a.resolve(),a.promise()},c});
