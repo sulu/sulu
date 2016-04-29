@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-master
     * ENHANCEMENT #2346 [ResourceBundle]    Added fixtures for de_CH
+    * ENHANCEMENT #2346 [AdminBundle]       Use always users locale for globalize culture
     * HOTFIX      #2285 [SecurityBundle]    Made ResettingController translations more configurable
 
 * 1.2.1 (2016-04-27)
