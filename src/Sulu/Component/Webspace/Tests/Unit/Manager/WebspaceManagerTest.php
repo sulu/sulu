@@ -505,6 +505,21 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('de_at', $portalInformation->getLocale());
     }
 
+    public function testFindPortalInformationsByPortalKeyAndLocale()
+    {
+        $portalInformations = $this->webspaceManager->findPortalInformationsByPortalKeyAndLocale(
+            'sulucmf_at',
+            'de_at',
+            'dev'
+        );
+
+        $this->assertCount(1, $portalInformations);
+
+        $portalInformation = reset($portalInformations);
+        $this->assertEquals('sulucmf_at', $portalInformation->getPortal()->getKey());
+        $this->assertEquals('de_at', $portalInformation->getLocale());
+    }
+
     public function testFindPortalInformationByUrlWithSegment()
     {
         $portalInformation = $this->webspaceManager->findPortalInformationByUrl('en.massiveart.us/w/about-us', 'prod');

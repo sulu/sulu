@@ -2,8 +2,9 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
-    * ENHANCEMENT #2346 [ResourceBundle]    Added fixtures for de_CH
-    * ENHANCEMENT #2346 [AdminBundle]       Use always users locale for globalize culture
+    * ENHANCEMENT #2346 [ResourceBundle]      Added fixtures for de_CH
+    * ENHANCEMENT #2346 [AdminBundle]         Use always users locale for globalize culture
+    * HOTFIX      #2344 [WebsiteBundle]       Fixed request analyzer for use with ESI
 
 * 1.2.1 (2016-04-27)
     * HOTFIX      #2340 [ContactBundle]       Fixed listing of contacts with Sulu user

@@ -16,30 +16,22 @@ use Sulu\Component\Webspace\PortalInformation;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Base class for request processors.
- * Provides functionality to process a single portal-information.
+ * Adds more information about the Portal if the portalInformation attribute has already been set.
  */
-abstract class AbstractRequestProcessor implements RequestProcessorInterface
+class PortalInformationRequestProcessor implements RequestProcessorInterface
 {
     /**
-     * Returns the request attributes for given portal information.
-     *
-     * @param Request $request
-     * @param PortalInformation $portalInformation
-     * @param array $additionalAttributes
-     *
-     * @return RequestAttributes
+     * {@inheritdoc}
      */
-    protected function processPortalInformation(
-        Request $request,
-        PortalInformation $portalInformation,
-        $additionalAttributes = []
-    ) {
-        $attributes = ['requestUri' => $request->getUri()];
+    public function process(Request $request, RequestAttributes $requestAttributes)
+    {
+        $portalInformation = $requestAttributes->getAttribute('portalInformation');
 
-        if ($portalInformation === null) {
-            return new RequestAttributes(array_merge($attributes, $additionalAttributes));
+        if (!$portalInformation instanceof PortalInformation) {
+            return new RequestAttributes();
         }
+
+        $attributes = ['requestUri' => $request->getUri()];
 
         if (null !== $localization = $portalInformation->getLocalization()) {
             $request->setLocale($portalInformation->getLocalization()->getLocalization());
@@ -59,7 +51,7 @@ abstract class AbstractRequestProcessor implements RequestProcessorInterface
         $attributes['portal'] = $portalInformation->getPortal();
 
         if ($portalInformation->getType() === RequestAnalyzerInterface::MATCH_TYPE_REDIRECT) {
-            return new RequestAttributes(array_merge($attributes, $additionalAttributes));
+            return new RequestAttributes($attributes);
         }
 
         $attributes['localization'] = $portalInformation->getLocalization();
@@ -70,6 +62,7 @@ abstract class AbstractRequestProcessor implements RequestProcessorInterface
             $request
         );
 
+        $attributes['urlExpression'] = $portalInformation->getUrlExpression();
         $attributes['resourceLocator'] = $resourceLocator;
         $attributes['format'] = $format;
 
@@ -84,7 +77,15 @@ abstract class AbstractRequestProcessor implements RequestProcessorInterface
             $request->setRequestFormat($format);
         }
 
-        return new RequestAttributes(array_merge($attributes, $additionalAttributes));
+        return new RequestAttributes($attributes);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validate(RequestAttributes $attributes)
+    {
+        return true;
     }
 
     /**
