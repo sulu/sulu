@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Takes the parameters from the requests, and tries to find a suiting portal. It checks for the parameters _locale and
  * _portal. Based on these it will load the best matching portal information, and uses it to analyze the request.
  */
-class ParameterRequestProcessor extends AbstractPortalInformationRequestProcessor
+class ParameterRequestProcessor implements RequestProcessorInterface
 {
     /**
      * @var WebspaceManagerInterface
@@ -57,7 +57,11 @@ class ParameterRequestProcessor extends AbstractPortalInformationRequestProcesso
             return new RequestAttributes();
         }
 
-        return $this->processPortalInformation($request, reset($portalInformations));
+        return new RequestAttributes(
+            [
+                'portalInformation' => reset($portalInformations),
+            ]
+        );
     }
 
     /**

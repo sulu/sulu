@@ -37,5 +37,11 @@
             <tag name="sulu.context" context="website"/>
             <tag name="sulu.request_attributes" priority="0"/>
         </service>
+
+        <service id="sulu_core.request_processor.portal_information"
+                 class="Sulu\Component\Webspace\Analyzer\Attributes\PortalInformationRequestProcessor">
+            <tag name="sulu.context" context="website"/>
+            <tag name="sulu.request_attributes" priority="-128"/>
+        </service>
     </services>
 </container>

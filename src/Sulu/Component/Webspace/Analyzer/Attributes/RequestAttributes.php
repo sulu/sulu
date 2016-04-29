@@ -51,6 +51,6 @@ class RequestAttributes
      */
     public function merge(RequestAttributes $requestAttributes)
     {
-        return new self(array_merge($this->attributes, $requestAttributes->attributes));
+        return new self(array_merge($requestAttributes->attributes, $this->attributes));
     }
 }
