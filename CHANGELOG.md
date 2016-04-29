@@ -179,6 +179,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1873 [ContactBundle]       Fixed remove contact birthday
 
 * 1.1.12 (2016-04-26)
+
     * HOTFIX      #2285 [SecurityBundle]    Made ResettingController translations more configurable
 
 * 1.1.11 (2016-04-04)

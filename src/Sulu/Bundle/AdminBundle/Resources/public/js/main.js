@@ -102,7 +102,7 @@ require(['husky', 'app-config'], function(Husky, AppConfig) {
                 enable: AppConfig.getDebug()
             },
             culture: {
-                name: locale,
+                name: AppConfig.getUser().locale,
                 messages: messages,
                 defaultMessages: defaultMessages
             }
