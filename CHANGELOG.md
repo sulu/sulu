@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * FEATURE     #2333 [PreviewBundle]       Added preview render error templates 
+    * ENHANCEMENT #2353 [WebsocketBundle]     Changed configuration to default disable websocket 
     * BUGFIX      #2351 [ContentBundle]       Removed strange condition for data-changed 
     * FEATURE     #2349 [RouteBundle]         Added route-bundle 
     * FEATURE     #2299 [PreviewBundle]       Implemented preview bundle 
