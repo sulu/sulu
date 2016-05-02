@@ -34,6 +34,10 @@
                 <source>sulu.preview.change-webspace</source>
                 <target>Modifie webspace s’il te plaît.</target>
             </trans-unit>
+            <trans-unit id="9" resname="sulu.preview.no-object-provider">
+                <source>sulu.preview.no-object-provider</source>
+                <target>N’aucun "ObjectProvider" trouvé.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

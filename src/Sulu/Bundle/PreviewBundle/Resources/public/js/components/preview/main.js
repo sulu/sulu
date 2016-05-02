@@ -33,6 +33,7 @@ define([
                 startLabel: 'sulu.preview.start',
                 noPreviewLabel: 'sulu.preview.no-preview',
                 changeWebspaceLabel: 'sulu.preview.change-webspace',
+                objectProviderLabel: 'sulu.preview.no-object-provider',
                 defaultsProviderLabel: 'sulu.preview.no-defaults-provider'
             },
 
@@ -40,6 +41,7 @@ define([
                 skeleton: skeletonTemplate,
                 onRequest: onRequestTemplate,
                 error: errorTemplate,
+                9900: '<h2><%= translations.objectProviderLabel %></h2>',
                 9901: '<h2><%= translations.changeWebspaceLabel %></h2>',
                 9902: '<h2><%= translations.defaultsProviderLabel %></h2>',
                 9903: '<h2><%= message %></h2>'

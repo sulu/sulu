@@ -28,11 +28,15 @@
             </trans-unit>
             <trans-unit id="7" resname="sulu.preview.no-defaults-provider">
                 <source>sulu.preview.no-defaults-provider</source>
-                <target>No "RouteDefaultsProvider" found</target>
+                <target>No "RouteDefaultsProvider" found.</target>
             </trans-unit>
             <trans-unit id="8" resname="sulu.preview.change-webspace">
                 <source>sulu.preview.change-webspace</source>
                 <target>Please change webspace./target>
+            </trans-unit>
+            <trans-unit id="9" resname="sulu.preview.no-object-provider">
+                <source>sulu.preview.no-object-provider</source>
+                <target>No "ObjectProvider" found.</target>
             </trans-unit>
         </body>
     </file>
