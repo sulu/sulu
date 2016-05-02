@@ -41,6 +41,7 @@ define([
                 skeleton: skeletonTemplate,
                 onRequest: onRequestTemplate,
                 error: errorTemplate,
+                defaultError: '<h2><%= message %></h2>',
                 9900: '<h2><%= translations.objectProviderLabel %></h2>',
                 9901: '<h2><%= translations.changeWebspaceLabel %></h2>',
                 9902: '<h2><%= translations.defaultsProviderLabel %></h2>',
@@ -164,15 +165,16 @@ define([
          * @param {String} message
          */
         error: function(code, message) {
-            if (!this.templates[code]) {
-                return;
+            var errorTemplate = this.templates['defaultError'];
+            if (!!this.templates[code]) {
+                errorTemplate = this.templates[code];
             }
 
             this.setContent(
                 this.templates.error(
                     {
                         code: code,
-                        content: this.templates[code]({message: message, translations: this.translations}),
+                        content: errorTemplate({message: message, translations: this.translations}),
                         translations: this.translations
                     }
                 )
