@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2351 [ContentBundle]       Removed strange condition for data-changed 
     * FEATURE     #2349 [RouteBundle]         Added route-bundle 
     * FEATURE     #2299 [PreviewBundle]       Implemented preview bundle 
     * ENHANCEMENT #2289 [ContentBundle]       Added display options support to date content type
