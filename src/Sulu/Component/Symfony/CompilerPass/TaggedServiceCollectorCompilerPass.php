@@ -75,6 +75,10 @@ class TaggedServiceCollectorCompilerPass implements CompilerPassInterface
             }
         }
 
+        if (0 === count($references)) {
+            return;
+        }
+
         krsort($references);
         $references = call_user_func_array('array_merge', $references);
 

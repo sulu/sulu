@@ -242,7 +242,9 @@ define([
                 }
 
                 Mediator.emit('sulu.preview.set-content', message.response);
-            });
+            }).fail(function(handler, message) {
+                Mediator.emit('sulu.preview.error', message.code, message.message);
+            }.bind(this));
         }.bind(this));
     };
 
@@ -255,7 +257,9 @@ define([
         this.promise.then(function() {
             this.client.send(constants.MESSAGE_HANDLER_NAME, {
                 command: 'stop'
-            });
+            }).fail(function(handler, message) {
+                Mediator.emit('sulu.preview.error', message.code, message.message);
+            }.bind(this));
         }.bind(this));
     };
 
@@ -378,6 +382,8 @@ define([
             }
 
             Mediator.emit('sulu.preview.set-content', message.response);
+        }.bind(this)).fail(function(handler, message) {
+            Mediator.emit('sulu.preview.error', message.code, message.message);
         }.bind(this));
     };
 

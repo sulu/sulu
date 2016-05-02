@@ -8,11 +8,11 @@
             </trans-unit>
             <trans-unit id="2" resname="sulu.preview.desktop">
                 <source>sulu.preview.desktop</source>
-                <target>Bureau</target>
+                <target>Desktop</target>
             </trans-unit>
             <trans-unit id="3" resname="sulu.preview.tablet">
                 <source>sulu.preview.tablet</source>
-                <target>Tablette</target>
+                <target>Tablet</target>
             </trans-unit>
             <trans-unit id="4" resname="sulu.preview.smartphone">
                 <source>sulu.preview.smartphone</source>
@@ -20,7 +20,23 @@
             </trans-unit>
             <trans-unit id="5" resname="sulu.preview.start">
                 <source>sulu.preview.start</source>
-                <target>Commencez aperçu</target>
+                <target>Start preview</target>
+            </trans-unit>
+            <trans-unit id="6" resname="sulu.preview.no-preview">
+                <source>sulu.preview.no-preview</source>
+                <target>Preview not available</target>
+            </trans-unit>
+            <trans-unit id="7" resname="sulu.preview.no-defaults-provider">
+                <source>sulu.preview.no-defaults-provider</source>
+                <target>No "RouteDefaultsProvider" found.</target>
+            </trans-unit>
+            <trans-unit id="8" resname="sulu.preview.change-webspace">
+                <source>sulu.preview.change-webspace</source>
+                <target>Please change webspace./target>
+            </trans-unit>
+            <trans-unit id="9" resname="sulu.preview.no-object-provider">
+                <source>sulu.preview.no-object-provider</source>
+                <target>No "ObjectProvider" found.</target>
             </trans-unit>
         </body>
     </file>
