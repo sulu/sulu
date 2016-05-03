@@ -16,13 +16,15 @@ use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
-use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -51,15 +53,15 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
     /**
      * returns all fields that can be used by list.
      *
-     * @Get("media/fields")
+     * @param Request $request
      *
-     * @return mixed
+     * @return Response
+     *
+     * @Get("media/fields")
      */
-    public function getFieldsAction()
+    public function getFieldsAction(Request $request)
     {
-        $fieldDescriptors = array_values($this->getMediaManager()->getFieldDescriptors());
-
-        return $this->handleView($this->view($fieldDescriptors, 200));
+        return $this->handleView($this->view(array_values($this->getFieldDescriptors($this->getLocale($request))), 200));
     }
 
     /**
@@ -68,7 +70,7 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
      * @param $id
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function getAction($id, Request $request)
     {
@@ -101,85 +103,102 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
     }
 
     /**
-     * lists all media.
+     * Lists all media.
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function cgetAction(Request $request)
     {
-        try {
-            $collectionId = $request->get('collection');
+        $fieldDescriptors = $this->getFieldDescriptors($this->getLocale($request));
+        $listBuilder = $this->getListBuilder($request, $fieldDescriptors);
+        $listBuilder->addSelectField($fieldDescriptors['version']);
+        $listBuilder->addSelectField($fieldDescriptors['name']);
+        $listBuilder->addSelectField($fieldDescriptors['locale']);
+        $listBuilder->addSelectField($fieldDescriptors['id']);
+        $listResponse = $listBuilder->execute();
 
-            if ($collectionId) {
-                $collection = $this->getCollectionManager()->getById($collectionId, $this->getLocale($request));
-                if ($collection->getType()->getKey() === SystemCollectionManagerInterface::COLLECTION_TYPE) {
-                    $this->getSecurityChecker()->checkPermission(
-                        'sulu.media.system_collections',
-                        PermissionTypes::VIEW
-                    );
-                }
+        $ids = array_map(
+            function ($item) {
+                return $item['id'];
+            },
+            $listResponse
+        );
+
+        $formats = $this->getMediaManager()->getFormatUrls($ids, $this->getLocale($request));
+        for ($i = 0, $length = count($listResponse); $i < $length; ++$i) {
+            if (array_key_exists($listResponse[$i]['id'], $formats)) {
+                $listResponse[$i]['thumbnails'] = $formats[$listResponse[$i]['id']];
             }
-
-            /** @var ListRestHelperInterface $listRestHelper */
-            $listRestHelper = $this->get('sulu_core.list_rest_helper');
-
-            $limit = $request->get('limit', $listRestHelper->getLimit());
-            $offset = ($request->get('page', 1) - 1) * $limit;
-            $ids = $request->get('ids');
-            $search = $request->get('search');
-            $orderSort = $request->get('orderSort');
-            $orderBy = $request->get('orderBy');
-            $types = $request->get('types');
-            if ($types !== null) {
-                $types = explode(',', $types);
-            }
-
-            $mediaManager = $this->getMediaManager();
-
-            if ($ids !== null) {
-                $ids = explode(',', $ids);
-                $media = $mediaManager->getByIds($ids, $this->getLocale($request));
-            } else {
-                $media = $mediaManager->get(
-                    $this->getLocale($request),
-                    [
-                        'collection' => $collectionId,
-                        'types' => $types,
-                        'search' => str_replace('*', '%', $search),
-                        'orderBy' => $orderBy,
-                        'orderSort' => $orderSort,
-                        'systemCollections' => $this->getSecurityChecker()->hasPermission(
-                            'sulu.media.system_collections',
-                            PermissionTypes::VIEW
-                        ),
-                    ],
-                    $limit,
-                    $offset
-                );
-            }
-
-            $all = $mediaManager->getCount();
-
-            $list = new ListRepresentation(
-                $media,
-                self::$entityKey,
-                'cget_media',
-                $request->query->all(),
-                $listRestHelper->getPage(),
-                $listRestHelper->getLimit(),
-                $all
+            $listResponse[$i]['url'] = $this->getMediaManager()->getUrl(
+                $listResponse[$i]['id'],
+                $listResponse[$i]['name'],
+                $listResponse[$i]['version']
             );
-
-            $view = $this->view($list, 200);
-        } catch (MediaNotFoundException $e) {
-            $view = $this->view($e->toArray(), 404);
-        } catch (MediaException $e) {
-            $view = $this->view($e->toArray(), 400);
         }
 
-        return $this->handleView($view);
+        $list = new ListRepresentation(
+            $listResponse,
+            self::$entityKey,
+            'cget_media',
+            $request->query->all(),
+            $listBuilder->getCurrentPage(),
+            $listBuilder->getLimit(),
+            $listBuilder->count()
+        );
+
+        return $this->handleView($this->view($list, 200));
+    }
+
+    /**
+     * Returns a list-builder for media list.
+     *
+     * @param Request $request
+     * @param FieldDescriptorInterface[] $fieldDescriptors
+     *
+     * @return DoctrineListBuilder
+     */
+    private function getListBuilder(Request $request, array $fieldDescriptors)
+    {
+        $restHelper = $this->get('sulu_core.doctrine_rest_helper');
+        $factory = $this->get('sulu_core.doctrine_list_builder_factory');
+        $listBuilder = $factory->create(self::$entityName);
+        $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+
+        // default sort by created
+        if (!$request->get('sortBy')) {
+            $listBuilder->sort($fieldDescriptors['created'], 'desc');
+        }
+
+        $collectionId = $request->get('collection');
+        if ($collectionId) {
+            $collection = $this->getCollectionManager()->getById($collectionId, $this->getLocale($request));
+            if ($collection->getType()->getKey() === SystemCollectionManagerInterface::COLLECTION_TYPE) {
+                $this->getSecurityChecker()->checkPermission(
+                    'sulu.media.system_collections',
+                    PermissionTypes::VIEW
+                );
+            }
+            $listBuilder->addSelectField($fieldDescriptors['collection']);
+            $listBuilder->where($fieldDescriptors['collection'], $collectionId);
+        }
+
+        // If no limit is set in request and limit is set by ids
+        $requestLimit = $request->get('limit');
+        $ids = array_filter(explode(',', $request->get('ids')));
+        $numberIds = count($ids);
+
+        if ($numberIds > 0) {
+            // correct request limit if more ids are requested
+            if (!$requestLimit && $numberIds > $listBuilder->getLimit()) {
+                $listBuilder->limit($numberIds);
+            }
+
+            $listBuilder->in($fieldDescriptors['id'], $ids);
+        }
+
+        return $listBuilder;
     }
 
     /**
@@ -368,5 +387,17 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
     protected function getSecurityChecker()
     {
         return $this->get('sulu_security.security_checker');
+    }
+
+    /**
+     * Returns field-descriptors for media.
+     *
+     * @param string $locale
+     *
+     * @return FieldDescriptorInterface[]
+     */
+    protected function getFieldDescriptors($locale)
+    {
+        return $this->get('sulu_core.list_builder.field_descriptor_factory')->getFieldDescriptorForClass(Media::class, ['locale' => $locale]);
     }
 }

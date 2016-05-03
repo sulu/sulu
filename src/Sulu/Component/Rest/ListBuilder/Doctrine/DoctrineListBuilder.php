@@ -248,21 +248,10 @@ class DoctrineListBuilder extends AbstractListBuilder
     protected function getJoins()
     {
         $joins = [];
+        $fields = array_merge($this->sortFields, $this->selectFields, $this->searchFields, $this->expressionFields);
 
-        foreach ($this->sortFields as $sortField) {
-            $joins = array_merge($joins, $sortField->getJoins());
-        }
-
-        foreach ($this->selectFields as $field) {
+        foreach ($fields as $field) {
             $joins = array_merge($joins, $field->getJoins());
-        }
-
-        foreach ($this->searchFields as $searchField) {
-            $joins = array_merge($joins, $searchField->getJoins());
-        }
-
-        foreach ($this->expressionFields as $expressionField) {
-            $joins = array_merge($joins, $expressionField->getJoins());
         }
 
         return $joins;
@@ -596,5 +585,110 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         throw new InvalidExpressionArgumentException('or', 'expressions');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addSelectField(FieldDescriptorInterface $fieldDescriptor)
+    {
+        if (!$fieldDescriptor instanceof DoctrineFieldDescriptorInterface) {
+            return;
+        }
+
+        return parent::addSelectField($fieldDescriptor);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addField(FieldDescriptorInterface $fieldDescriptor)
+    {
+        if (!$fieldDescriptor instanceof DoctrineFieldDescriptorInterface) {
+            return;
+        }
+
+        return parent::addField($fieldDescriptor);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addSearchField(FieldDescriptorInterface $fieldDescriptor)
+    {
+        if (!$fieldDescriptor instanceof DoctrineFieldDescriptorInterface) {
+            return;
+        }
+
+        return parent::addSearchField($fieldDescriptor);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function addFieldDescriptor(FieldDescriptorInterface $fieldDescriptor)
+    {
+        if (!$fieldDescriptor instanceof DoctrineFieldDescriptorInterface) {
+            return;
+        }
+
+        parent::addFieldDescriptor($fieldDescriptor);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addGroupBy(FieldDescriptorInterface $fieldDescriptor)
+    {
+        if (!$fieldDescriptor instanceof DoctrineFieldDescriptorInterface) {
+            return;
+        }
+
+        parent::addGroupBy($fieldDescriptor);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setSelectFields($fieldDescriptors)
+    {
+        parent::setSelectFields(
+            array_filter(
+                $fieldDescriptors,
+                function (FieldDescriptorInterface $field) {
+                    return $field instanceof DoctrineFieldDescriptorInterface;
+                }
+            )
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setFields($fieldDescriptors)
+    {
+        parent::setFields(
+            array_filter(
+                $fieldDescriptors,
+                function (FieldDescriptorInterface $field) {
+                    return $field instanceof DoctrineFieldDescriptorInterface;
+                }
+            )
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setFieldDescriptors(array $fieldDescriptors)
+    {
+        parent::setFieldDescriptors(
+            array_filter(
+                $fieldDescriptors,
+                function (FieldDescriptorInterface $field) {
+                    return $field instanceof DoctrineFieldDescriptorInterface;
+                }
+            )
+        );
     }
 }

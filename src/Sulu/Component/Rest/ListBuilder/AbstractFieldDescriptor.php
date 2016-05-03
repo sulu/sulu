@@ -14,6 +14,9 @@ use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Expose;
 use Sulu\Component\Rest\ListBuilder\Metadata\PropertyMetadata;
 
+/**
+ * Base class for all field-descriptor.
+ */
 abstract class AbstractFieldDescriptor implements FieldDescriptorInterface
 {
     /**

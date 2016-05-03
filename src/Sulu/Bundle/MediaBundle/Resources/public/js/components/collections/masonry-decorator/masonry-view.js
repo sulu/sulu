@@ -264,7 +264,7 @@ define([
                         this.options.fields.description,
                         this.options.separators.description
                     ),
-                    isVideo = (item.type.name === 'video'),
+                    isVideo = (item.type === 'video'),
                     deferred = $.Deferred(),
                     items = [
                         {
@@ -293,7 +293,7 @@ define([
                     item.id,
                     image,
                     title,
-                    item.fallbackLocale,
+                    item.locale !== this.options.locale ? item.locale : null,
                     description,
                     isVideo,
                     appendAtBottom,
@@ -342,7 +342,7 @@ define([
             this.$items[id] = this.sandbox.dom.createElement(
                 this.sandbox.util.template(templates.item, {
                     image: image,
-                    title: this.sandbox.util.cropMiddle(String(title), 24),
+                    title: this.sandbox.util.cropMiddle(String(title), 20),
                     fallbackLocale: fallbackLocale,
                     description: this.sandbox.util.cropMiddle(String(description), 32),
                     isVideo: isVideo,

@@ -13,6 +13,7 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Metadata;
 use Metadata\Driver\FileLocatorInterface;
 use Metadata\MetadataFactory;
 use Prophecy\Argument;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCaseFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCountFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
@@ -166,6 +167,35 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->assertFieldDescriptors($expected, $fieldDescriptor);
+    }
+
+    public function testGetFieldDescriptorForClassCase()
+    {
+        $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
+            ->willReturn(__DIR__ . '/Resources/case.xml');
+
+        $provider = new ChainProvider($this->chain);
+        $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
+        $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
+
+        $this->assertEquals(['tag'], array_keys($fieldDescriptor));
+
+        $expected = [
+            'tag' => [
+                'name' => 'tag',
+                'translation' => 'Tag',
+                'instance' => DoctrineCaseFieldDescriptor::class,
+                'disabled' => true,
+
+            ],
+        ];
+
+        $this->assertFieldDescriptors($expected, $fieldDescriptor);
+
+        $this->assertEquals(
+            '(CASE WHEN SuluTagBundle:Tag.name IS NOT NULL THEN SuluTagBundle:Tag.name ELSE SuluTagBundle:Tag.name END)',
+            $fieldDescriptor['tag']->getSelect()
+        );
     }
 
     public function testGetFieldDescriptorForClassIdentity()
