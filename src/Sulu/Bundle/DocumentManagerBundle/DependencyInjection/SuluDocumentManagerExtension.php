@@ -21,6 +21,37 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
 {
     public function prepend(ContainerBuilder $container)
     {
+        $configs = $container->getExtensionConfig($this->getAlias());
+        $parameterBag = $container->getParameterBag();
+        $configs = $parameterBag->resolveValue($configs);
+        $config = $this->processConfiguration(new Configuration(), $configs);
+
+        // FIXME: The entire foreach can be removed when upgrading to DoctrinePhpcrBundle 1.3
+        // see https://github.com/doctrine/DoctrinePHPCRBundle/issues/178
+        foreach ($config['sessions'] as &$session) {
+            if (isset($session['backend'])) {
+                $session['backend']['check_login_on_server'] = false;
+            }
+        }
+
+        if ($container->hasExtension('doctrine_phpcr')) {
+            $doctrinePhpcrConfig = [
+                'odm' => [],
+                'session' => [
+                    'sessions' => $config['sessions'],
+                ],
+            ];
+
+            if (isset($config['default_session'])) {
+                $doctrinePhpcrConfig['session']['default_session'] = $config['default_session'];
+            }
+
+            $container->prependExtensionConfig(
+                'doctrine_phpcr',
+                $doctrinePhpcrConfig
+            );
+        }
+
         if ($container->hasExtension('jms_serializer')) {
             $container->prependExtensionConfig(
                 'jms_serializer',
