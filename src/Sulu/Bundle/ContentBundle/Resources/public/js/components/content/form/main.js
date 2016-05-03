@@ -206,6 +206,12 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
                     this.initSortableBlock();
                     this.bindFormEvents();
 
+                    dfd.resolve();
+
+                    if (!this.preview) {
+                        return;
+                    }
+
                     // FIXME getData errors because type is not loaded ... after change template
                     // need a fix in validation
                     setTimeout(function() {
@@ -213,8 +219,6 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
 
                         this.preview.updateContext({template: this.template}, data);
                     }.bind(this), 10);
-
-                    dfd.resolve();
                 }.bind(this));
             }.bind(this));
 
@@ -284,7 +288,9 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
                     var changes = this.sandbox.form.getData(this.formId),
                         propertyName = this.sandbox.dom.data(event.currentTarget, 'mapperProperty');
 
-                    this.preview.updateProperty(propertyName, changes[propertyName]);
+                    if (!!this.preview) {
+                        this.preview.updateProperty(propertyName, changes[propertyName]);
+                    }
                     this.sandbox.emit('sulu.content.changed');
                 }.bind(this));
             }
@@ -296,7 +302,9 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
                 var changes = this.sandbox.form.getData(this.formId);
                 this.initSortableBlock();
 
-                this.preview.updateProperty(propertyName, changes[propertyName]);
+                if (!!this.preview) {
+                    this.preview.updateProperty(propertyName, changes[propertyName]);
+                }
                 this.setHeaderBar(false);
             }.bind(this));
 
@@ -314,7 +322,9 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
                 try {
                     changes = this.sandbox.form.getData(this.formId);
 
-                    this.preview.updateProperty(propertyName, changes[propertyName]);
+                    if (!!this.preview) {
+                        this.preview.updateProperty(propertyName, changes[propertyName]);
+                    }
                 } catch (ex) {
                     // ignore exceptions
                 }
