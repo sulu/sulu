@@ -117,7 +117,7 @@
             <translation locale="de">vor</translation>
             <translation locale="de_ch">vor</translation>
             <translation locale="en">before</translation>
-            <translation locale="fr">TODvorO</translation>
+            <translation locale="fr">avant</translation>
         </translations>
     </operator>
     <operator type="date" inputType="datepicker" operator="=">
