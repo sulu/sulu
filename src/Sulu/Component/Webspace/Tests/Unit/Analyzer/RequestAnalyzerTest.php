@@ -163,7 +163,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
             [['redirect' => 1], 'getRedirect', 1],
             [[], 'getRedirect', null],
             [['resourceLocator' => 1], 'getResourceLocator', 1],
-            [[], 'getResourceLocator', null],
+            [[], 'getResourceLocator', false],
             [['resourceLocatorPrefix' => 1], 'getResourceLocatorPrefix', 1],
             [[], 'getResourceLocatorPrefix', null],
             [['postParameter' => 1], 'getPostParameters', 1],
@@ -195,6 +195,6 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $requestAnalyzer->analyze($request);
         $requestAnalyzer->validate($request);
 
-        $this->assertEquals($expected, $requestAnalyzer->{$method}());
+        $this->assertSame($expected, $requestAnalyzer->{$method}());
     }
 }

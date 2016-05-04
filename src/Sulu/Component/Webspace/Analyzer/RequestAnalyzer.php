@@ -141,7 +141,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     public function getResourceLocator()
     {
-        return $this->getAttribute('resourceLocator');
+        return $this->getAttribute('resourceLocator', false);
     }
 
     /**
