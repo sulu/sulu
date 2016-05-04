@@ -102,18 +102,18 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
         foreach ($config['locales'] as $locale => $localeName) {
-            if (!ctype_lower($locale)) {
+            if (strtolower($locale) != $locale) {
                 throw new InvalidConfigurationException('Invalid locale in configuration: ' . $locale);
             }
         }
 
         foreach ($config['translations'] as $translation) {
-            if (!ctype_lower($translation)) {
+            if (strtolower($translation) != $translation) {
                 throw new InvalidConfigurationException('Invalid translation in configuration: ' . $translation);
             }
         }
 
-        if (!ctype_lower($config['fallback_locale'])) {
+        if (strtolower($config['fallback_locale']) != $config['fallback_locale']) {
             throw new InvalidConfigurationException(
                 'Invalid fallback_locale in configuration: ' . $config['fallback_locale']
             );

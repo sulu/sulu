@@ -2,8 +2,10 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
-    * ENHANCEMENT #2346 [ResourceBundle]    Added fixtures for de_CH
-    * ENHANCEMENT #2346 [AdminBundle]       Use always users locale for globalize culture
+    * BUGFIX      #2364 [ResourceBundle]      Moved fixtures from de_CH to de_ch
+    * BUGFIX      #2364 [CoreBundle]          DependencyInjection: Throw exception when locales/translations are misconfigured
+    * ENHANCEMENT #2346 [ResourceBundle]      Added fixtures for de_CH
+    * ENHANCEMENT #2346 [AdminBundle]         Use always users locale for globalize culture
 
 * 1.2.1 (2016-04-27)
     * HOTFIX      #2340 [ContactBundle]       Fixed listing of contacts with Sulu user
