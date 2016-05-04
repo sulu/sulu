@@ -14,6 +14,7 @@ namespace Sulu\Bundle\CoreBundle\DependencyInjection;
 use InvalidArgumentException;
 use Sulu\Component\Rest\Csv\ObjectNotSupportedException;
 use Sulu\Component\Rest\Exception\InvalidHashException;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -99,6 +100,24 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+
+        foreach ($config['locales'] as $locale => $localeName) {
+            if (strtolower($locale) !== $locale) {
+                throw new InvalidConfigurationException('Invalid locale in configuration: ' . $locale);
+            }
+        }
+
+        foreach ($config['translations'] as $translation) {
+            if (strtolower($translation) !== $translation) {
+                throw new InvalidConfigurationException('Invalid translation in configuration: ' . $translation);
+            }
+        }
+
+        if (strtolower($config['fallback_locale']) !== $config['fallback_locale']) {
+            throw new InvalidConfigurationException(
+                'Invalid fallback_locale in configuration: ' . $config['fallback_locale']
+            );
+        }
 
         $container->setParameter('sulu_core.locales', array_unique(array_keys($config['locales'])));
         $container->setParameter('sulu_core.translated_locales', $config['locales']);
