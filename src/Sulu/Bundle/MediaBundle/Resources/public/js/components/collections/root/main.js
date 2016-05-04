@@ -166,7 +166,6 @@ define([
                     view: UserSettingsManager.getMediaListView(),
                     pagination: UserSettingsManager.getMediaListPagination(),
                     resultKey: 'media',
-                    sortable: false,
                     actionCallback: this.actionCallback.bind(this),
                     viewOptions: {
                         table: {
@@ -182,7 +181,8 @@ define([
                             noImgIcon: function(item) {
                                 return FileIcons.getByMimeType(item.mimeType);
                             },
-                            emptyIcon: 'fa-file-o'
+                            emptyIcon: 'fa-file-o',
+                            locale: UserSettingsManager.getMediaLocale()
                         }
                     },
                     paginationOptions: {

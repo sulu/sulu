@@ -23,6 +23,7 @@ use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
@@ -111,12 +112,8 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
      */
     public function cgetAction(Request $request)
     {
-        $fieldDescriptors = $this->getFieldDescriptors($this->getLocale($request));
+        $fieldDescriptors = $this->getFieldDescriptors($this->getLocale($request), false);
         $listBuilder = $this->getListBuilder($request, $fieldDescriptors);
-        $listBuilder->addSelectField($fieldDescriptors['version']);
-        $listBuilder->addSelectField($fieldDescriptors['name']);
-        $listBuilder->addSelectField($fieldDescriptors['locale']);
-        $listBuilder->addSelectField($fieldDescriptors['id']);
         $listResponse = $listBuilder->execute();
 
         $ids = array_map(
@@ -187,16 +184,22 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
         // If no limit is set in request and limit is set by ids
         $requestLimit = $request->get('limit');
         $ids = array_filter(explode(',', $request->get('ids')));
-        $numberIds = count($ids);
+        $idsCount = count($ids);
 
-        if ($numberIds > 0) {
+        if ($idsCount > 0) {
             // correct request limit if more ids are requested
-            if (!$requestLimit && $numberIds > $listBuilder->getLimit()) {
-                $listBuilder->limit($numberIds);
+            if (!$requestLimit && $idsCount > $listBuilder->getLimit()) {
+                $listBuilder->limit($idsCount);
             }
 
             $listBuilder->in($fieldDescriptors['id'], $ids);
         }
+
+        // field which will be needed afterwards to generate route
+        $listBuilder->addSelectField($fieldDescriptors['version']);
+        $listBuilder->addSelectField($fieldDescriptors['name']);
+        $listBuilder->addSelectField($fieldDescriptors['locale']);
+        $listBuilder->addSelectField($fieldDescriptors['id']);
 
         return $listBuilder;
     }
@@ -393,11 +396,17 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
      * Returns field-descriptors for media.
      *
      * @param string $locale
+     * @param bool $all
      *
      * @return FieldDescriptorInterface[]
      */
-    protected function getFieldDescriptors($locale)
+    protected function getFieldDescriptors($locale, $all = true)
     {
-        return $this->get('sulu_core.list_builder.field_descriptor_factory')->getFieldDescriptorForClass(Media::class, ['locale' => $locale]);
+        return $this->get('sulu_core.list_builder.field_descriptor_factory')
+            ->getFieldDescriptorForClass(
+                Media::class,
+                ['locale' => $locale],
+                $all ? null : DoctrineFieldDescriptorInterface::class
+            );
     }
 }

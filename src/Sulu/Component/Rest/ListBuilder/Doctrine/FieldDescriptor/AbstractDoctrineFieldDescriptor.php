@@ -10,12 +10,12 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 
-use Sulu\Component\Rest\ListBuilder\AbstractFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 
 /**
  * Extends field-descriptor with database information.
  */
-abstract class AbstractDoctrineFieldDescriptor extends AbstractFieldDescriptor implements DoctrineFieldDescriptorInterface
+abstract class AbstractDoctrineFieldDescriptor extends FieldDescriptor implements DoctrineFieldDescriptorInterface
 {
     /**
      * {@inheritdoc}
