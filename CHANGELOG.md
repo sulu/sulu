@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2362 [Website]           Fixed hreflang-tag for homepage
     * ENHANCEMENT #2346 [ResourceBundle]    Added fixtures for de_CH
     * ENHANCEMENT #2346 [AdminBundle]       Use always users locale for globalize culture
     * HOTFIX      #2347 [ContentBundle]       Fixed ghost children loading
