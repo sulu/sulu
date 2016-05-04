@@ -312,13 +312,6 @@ class BaseDataProviderTest extends \PHPUnit_Framework_TestCase
             BaseDataProvider::class,
             [$repository->reveal(), $serializer->reveal()]
         );
-        $provider->expects($this->any())->method('convertToArray')->will(
-            $this->returnCallback(
-                function ($item) {
-                    return ['id' => $item->getId()];
-                }
-            )
-        );
 
         $result = $provider->resolveResourceItems(
             $filters,
