@@ -931,11 +931,8 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             'getResourceLocator',
             'getResourceLocatorPrefix',
             'getAttribute',
+            'getCurrentLocalization',
         ];
-
-        if ($language != null) {
-            $methods[] = 'getCurrentLocalization';
-        }
 
         $portalManager = $this->getMockForAbstractClass(
             RequestAnalyzer::class,

@@ -90,7 +90,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
             false,
             true,
             true,
-            ['resolveTagIds', 'resolveTagNames']
+            ['resolveTagIds', 'resolveTagName']
         );
 
         $this->requestStack = $this->getMockBuilder(RequestStack::class)->getMock();
