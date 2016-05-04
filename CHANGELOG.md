@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * HOTFIX      #2362 [Website]             Fixed hreflang-tag for homepage
     * BUGFIX      #2364 [CoreBundle]          DependencyInjection: Throw exception when locales/translations are misconfigured
     * BUGFIX      #2364 [ResourceBundle]      Moved fixtures from de_CH to de_ch
+    * HOTFIX      #2363 [WebsiteBundle]       Fixed sulu-content-path for webspaces with different domains for locales
     * ENHANCEMENT #2346 [ResourceBundle]      Added fixtures for de_CH
     * ENHANCEMENT #2346 [AdminBundle]         Use always users locale for globalize culture
     * HOTFIX      #2347 [ContentBundle]       Fixed ghost children loading
