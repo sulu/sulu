@@ -2004,6 +2004,8 @@ class NodeControllerTest extends SuluTestCase
         $client->request('PUT', '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en', $data[0]);
         $result = json_decode($client->getResponse()->getContent(), true);
 
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
         $this->assertEquals('/dornbirn', $result['path']);
         $this->assertEquals('Dornbirn', $result['title']);
     }

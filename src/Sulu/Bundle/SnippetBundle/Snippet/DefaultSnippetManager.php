@@ -60,7 +60,7 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
     public function save($webspaceKey, $type, $uuid, $locale)
     {
         /** @var SnippetDocument $document */
-        $document = $this->documentManager->find($uuid, $locale, ['rehydrate' => true]);
+        $document = $this->documentManager->find($uuid, $locale);
 
         if (!$document) {
             throw new SnippetNotFoundException($uuid);
@@ -100,7 +100,7 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
 
         $uuid = $snippetNode->getIdentifier();
         /** @var SnippetDocument $document */
-        $document = $this->documentManager->find($uuid, $locale, ['rehydrate' => true]);
+        $document = $this->documentManager->find($uuid, $locale);
 
         if (null !== $document && $document->getStructureType() !== $type) {
             throw new WrongSnippetTypeException($document->getStructureType(), $type, $document);

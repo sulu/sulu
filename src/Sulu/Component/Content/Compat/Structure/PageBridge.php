@@ -35,6 +35,20 @@ class PageBridge extends StructureBridge implements PageInterface
         return $this->inspector->getLocalizedUrlsForPage($this->getDocument());
     }
 
+    public function getLanguageCode()
+    {
+        if (!$this->document) {
+            return $this->locale;
+        }
+
+        // return original locale for shadow or ghost pages
+        if ($this->getIsShadow() || ($this->getType() && $this->getType()->getName() === 'ghost')) {
+            return $this->inspector->getOriginalLocale($this->getDocument());
+        }
+
+        return parent::getLanguageCode();
+    }
+
     /**
      * {@inheritdoc}
      */

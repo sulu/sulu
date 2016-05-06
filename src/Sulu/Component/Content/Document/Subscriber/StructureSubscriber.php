@@ -174,7 +174,7 @@ class StructureSubscriber implements EventSubscriberInterface
             }
         }
 
-        $container = $this->getStructure($document, $structureType);
+        $container = $this->getStructure($document, $structureType, $event->getOption('rehydrate'));
 
         // Set the property container
         $event->getAccessor()->set(
@@ -313,16 +313,17 @@ class StructureSubscriber implements EventSubscriberInterface
      *
      * @param object $document
      * @param string $structureType
+     * @param bool $rehydrate
      *
      * @return StructureInterface
      */
-    private function getStructure($document, $structureType)
+    private function getStructure($document, $structureType, $rehydrate)
     {
         if ($structureType) {
             return $this->createStructure($document);
         }
 
-        if ($document->getStructure()) {
+        if (!$rehydrate && $document->getStructure()) {
             return $document->getStructure();
         }
 
