@@ -200,6 +200,7 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
         $listBuilder->addSelectField($fieldDescriptors['name']);
         $listBuilder->addSelectField($fieldDescriptors['locale']);
         $listBuilder->addSelectField($fieldDescriptors['id']);
+        $listBuilder->addSelectField($fieldDescriptors['collection']);
 
         return $listBuilder;
     }
