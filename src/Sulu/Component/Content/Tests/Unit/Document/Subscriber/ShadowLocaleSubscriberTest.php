@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
-use Prophecy\Argument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
@@ -76,8 +75,6 @@ class ShadowLocaleSubscriberTest extends \PHPUnit_Framework_TestCase
         $event->getOption('load_shadow_content')->willReturn(false);
 
         $event->getNode()->shouldNotBeCalled();
-        $this->documentRegistry->updateLocale(Argument::cetera())->shouldNotBeCalled();
-
         $this->shadowLocaleSubscriber->handleHydrate($event->reveal());
     }
 }

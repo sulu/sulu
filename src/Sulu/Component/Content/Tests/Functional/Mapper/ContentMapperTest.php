@@ -2020,9 +2020,8 @@ class ContentMapperTest extends SuluTestCase
         $result = [];
         foreach ($data as $item) {
             $itemStructure = $this->mapper->save($item['data'], 'overview', 'sulu_io', 'de', 1, true, null, $uuid);
-            $this->saveData($item['children'], $itemStructure->getUuid());
-
             $result[] = $itemStructure;
+            $result = array_merge($result, $this->saveData($item['children'], $itemStructure->getUuid()));
         }
 
         return $result;
@@ -2035,9 +2034,7 @@ class ContentMapperTest extends SuluTestCase
     public function testLoadNodeAndAncestors()
     {
         $data = $this->prepareBigTreeTestData();
-        $child = $data[1]->getChildren()[0]->getChildren()[2]->getChildren()[1];
-
-        $ancestors = $this->mapper->loadNodeAndAncestors($child->getUuid(), 'de', 'sulu_io', false);
+        $ancestors = $this->mapper->loadNodeAndAncestors($data[8]->getUuid(), 'de', 'sulu_io', false);
 
         $documentNames = [];
         foreach ($ancestors as $ancestor) {
@@ -2141,9 +2138,7 @@ class ContentMapperTest extends SuluTestCase
     public function testNodeAndAncestorsExcludedGhosts()
     {
         $data = $this->prepareBigTreeTestData();
-        $child = $data[1]->getChildren()[0]->getChildren()[2]->getChildren()[1];
-
-        $result = $this->mapper->loadNodeAndAncestors($child->getUuid(), 'en', 'sulu_io', true);
+        $result = $this->mapper->loadNodeAndAncestors($data[8]->getUuid(), 'en', 'sulu_io', true);
 
         // at least homepage will be found
         $this->assertCount(1, $result);

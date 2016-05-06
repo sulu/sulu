@@ -85,31 +85,21 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
 
         $locale = $event->getLocale();
 
-        if (!$locale) {
+        if (!$locale || false === $event->getOption('load_ghost_content', true)) {
             return;
         }
 
+        // change locale of document of ghost content should be loaded
         $newLocale = $this->getAvailableLocalization($document, $locale);
         $event->setLocale($newLocale);
-
-        if ($newLocale === $locale) {
-            return;
-        }
-
-        if ($event->getOption('load_ghost_content', true) === true) {
-            $this->documentRegistry->updateLocale($document, $newLocale, $locale);
-
-            return;
-        }
-
-        $this->documentRegistry->updateLocale($document, $locale, $locale);
+        $document->setLocale($newLocale);
     }
 
     /**
      * Return available localizations.
      *
      * @param StructureBehavior $document
-     * @param string            $locale
+     * @param string $locale
      *
      * @return string
      */

@@ -49,6 +49,7 @@ class SnippetDocument implements
     private $structureType;
     private $structure;
     private $locale;
+    private $originalLocale;
     private $path;
     private $nodeName;
 
@@ -200,6 +201,22 @@ class SnippetDocument implements
     public function setLocale($locale)
     {
         $this->locale = $locale;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOriginalLocale()
+    {
+        return $this->originalLocale;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOriginalLocale($originalLocale)
+    {
+        $this->originalLocale = $originalLocale;
     }
 
     /**

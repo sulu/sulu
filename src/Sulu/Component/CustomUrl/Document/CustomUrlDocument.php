@@ -62,6 +62,11 @@ class CustomUrlDocument implements
     /**
      * @var string
      */
+    protected $originalLocale;
+
+    /**
+     * @var string
+     */
     protected $locale;
 
     /**
@@ -223,13 +228,27 @@ class CustomUrlDocument implements
     }
 
     /**
-     * Set target document.
-     *
-     * @param PageDocument $targetDocument
+     * {@inheritdoc}
      */
     public function setTargetDocument($targetDocument)
     {
         $this->targetDocument = $targetDocument;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOriginalLocale()
+    {
+        return $this->originalLocale;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOriginalLocale($originalLocale)
+    {
+        $this->originalLocale = $originalLocale;
     }
 
     /**
