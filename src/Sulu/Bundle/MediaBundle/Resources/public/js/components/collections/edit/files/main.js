@@ -308,6 +308,18 @@ define([
                             noImgIcon: function(item) {
                                 return FileIcons.getByMimeType(item.mimeType);
                             },
+                            badges: [
+                                {
+                                    column: 'title',
+                                    callback: function(item, badge) {
+                                        if (item.locale !== UserSettingsManager.getMediaLocale()) {
+                                            badge.title = item.locale;
+
+                                            return badge;
+                                        }
+                                    }.bind(this)
+                                }
+                            ],
                             emptyIcon: 'fa-file-o'
                         },
                         'datagrid/decorators/masonry-view': {

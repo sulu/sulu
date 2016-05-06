@@ -448,8 +448,8 @@ define([
                                     {
                                         column: 'title',
                                         callback: function(item, badge) {
-                                            if (!!item.fallbackLocale) {
-                                                badge.title = item.fallbackLocale;
+                                            if (item.locale !== this.options.locale) {
+                                                badge.title = item.locale;
 
                                                 return badge;
                                             }

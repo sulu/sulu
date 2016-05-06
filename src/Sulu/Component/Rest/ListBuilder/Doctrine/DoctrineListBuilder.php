@@ -193,6 +193,11 @@ class DoctrineListBuilder extends AbstractListBuilder
         if ($this->limit != null) {
             $subQueryBuilder->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
         }
+
+        foreach ($this->sortFields as $index => $sortField) {
+            $subQueryBuilder->addSelect($sortField->getSelect() . ' AS ' . $sortField->getName());
+        }
+
         $this->assignSortFields($subQueryBuilder);
         $ids = $subQueryBuilder->getQuery()->getArrayResult();
         // if no results are found - return
@@ -222,8 +227,26 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         foreach ($this->sortFields as $index => $sortField) {
-            $queryBuilder->addOrderBy($sortField->getSelect(), $this->sortOrders[$index]);
+            $statement = $sortField->getSelect() . ' AS ' . $sortField->getName();
+            if (!$this->hasSelectStatement($queryBuilder, $statement)) {
+                $queryBuilder->addSelect($sortField->getSelect() . ' AS HIDDEN ' . $sortField->getName());
+            }
+
+            $queryBuilder->addOrderBy($sortField->getName(), $this->sortOrders[$index]);
         }
+    }
+
+    protected function hasSelectStatement(QueryBuilder $queryBuilder, $statement)
+    {
+        foreach ($queryBuilder->getDQLPart('select') as $selectPart) {
+            foreach ($selectPart->getParts() as $part) {
+                if ($part === $statement) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**

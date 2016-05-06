@@ -13,6 +13,7 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Doctrine;
 
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query\Expr\Select;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit_Framework_Assert;
 use Prophecy\Argument;
@@ -333,7 +334,12 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
             null
         )->shouldBeCalled();
 
-        $this->queryBuilder->addOrderBy(self::$translationEntityName . '.desc', 'ASC')->shouldBeCalled();
+        $this->queryBuilder->getDQLPart('select')->willReturn([]);
+        // will be called for result (should not be displayed)
+        $this->queryBuilder->addSelect('SuluCoreBundle:ExampleTranslation.desc AS HIDDEN desc_alias')->shouldBeCalled();
+        // will be called for id query
+        $this->queryBuilder->addSelect('SuluCoreBundle:ExampleTranslation.desc AS desc_alias')->shouldBeCalled();
+        $this->queryBuilder->addOrderBy('desc_alias', 'ASC')->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
     }
@@ -379,7 +385,26 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $this->doctrineListBuilder->sort(new DoctrineFieldDescriptor('desc', 'desc', self::$entityName));
 
-        $this->queryBuilder->addOrderBy(self::$entityName . '.desc', 'ASC')->shouldBeCalled();
+        $this->queryBuilder->getDQLPart('select')->willReturn([]);
+        // will be called for result (should not be displayed)
+        $this->queryBuilder->addSelect('SuluCoreBundle:Example.desc AS HIDDEN desc')->shouldBeCalled();
+        // will be called for id query
+        $this->queryBuilder->addSelect('SuluCoreBundle:Example.desc AS desc')->shouldBeCalled();
+        $this->queryBuilder->addOrderBy('desc', 'ASC')->shouldBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testSortWithExistingSelect()
+    {
+        $this->doctrineListBuilder->sort(new DoctrineFieldDescriptor('desc', 'desc', self::$entityName));
+
+        $this->queryBuilder->getDQLPart('select')->willReturn([new Select('SuluCoreBundle:Example.desc AS desc')]);
+        // will NOT be called for result (should not be displayed)
+        $this->queryBuilder->addSelect('SuluCoreBundle:Example.desc AS HIDDEN desc')->shouldNotBeCalled();
+        // will be called for id query
+        $this->queryBuilder->addSelect('SuluCoreBundle:Example.desc AS desc')->shouldBeCalled();
+        $this->queryBuilder->addOrderBy('desc', 'ASC')->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
     }
