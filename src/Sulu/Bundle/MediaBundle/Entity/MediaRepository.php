@@ -152,6 +152,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
 
             if ($ids !== null) {
                 $queryBuilder->andWhere('media.id IN (:mediaIds)');
+                $queryBuilder->setParameter('mediaIds', $ids);
             }
 
             if ($orderBy !== null) {
@@ -162,12 +163,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 $this->addAccessControl($queryBuilder, $user, $permission, Collection::class, 'collection');
             }
 
-            $query = $queryBuilder->getQuery();
-            if ($ids !== null) {
-                $query->setParameter('mediaIds', $ids);
-            }
-
-            return $query->getResult();
+            return $queryBuilder->getQuery()->getResult();
         } catch (NoResultException $ex) {
             return;
         }
