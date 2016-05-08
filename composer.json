@@ -47,6 +47,7 @@
         "matthiasnoback/symfony-config-test": "^1.0",
         "matthiasnoback/symfony-dependency-injection-test": "^0.7.3",
         "phpunit/phpunit": ">=4.8.0",
+        "symfony/phpunit-bridge": "~2.8",
         "sensio/framework-extra-bundle": "~3.0",
         "symfony/monolog-bundle": "2.4.*",
         "twig/twig": "~1.11",
