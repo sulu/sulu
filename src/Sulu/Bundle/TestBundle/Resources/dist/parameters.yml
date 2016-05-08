@@ -8,7 +8,7 @@ parameters:
     database.password: ~
     database.version:  5.5
 
-    phpcr.transport:   jackrabbit
+    phpcr.transport:   doctrinedbal
     phpcr.backend_url: http://localhost:8080/server/
     phpcr.username:    admin
     phpcr.password:    admin
