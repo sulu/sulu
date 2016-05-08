@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2369 [All]                 Install the symfony phpunit bridge again
     * ENHANCEMENT #2356 [PreviewBundle]       Added default error message 
     * BUGFIX      #2354 [ContentBundle]       Fixed javascript error preview is null for new page form 
     * FEATURE     #2333 [PreviewBundle]       Added preview render error templates 
