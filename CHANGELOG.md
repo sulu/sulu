@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-master
     * ENHANCEMENT #2373 [MediaBundle]         Added batch indexing for medias
+    * HOTFIX      #2371 [MediaBundle]         Fixed appveyor tests for collections
     * HOTFIX      #2365                       Fixed missing and wrong method mocks
     * ENHANCEMENT #2359 [MediaBundle]         Added ability to sort medias
     * HOTFIX      #2368 [ContentBundle]       Fixed copying shadow properties
