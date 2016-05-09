@@ -54,14 +54,6 @@ sulu_core:
         en: English
     translations: ['de', 'en']
     fallback_locale: 'en'
-    phpcr:
-        backend:
-            type: "%phpcr.transport%"
-            url:  "%phpcr.backend_url%"
-            check_login_on_server: false
-        workspace: "%phpcr.workspace%"
-        username: "%phpcr.username%"
-        password: "%phpcr.password%"
 
 sulu_content:
     search:
@@ -126,6 +118,26 @@ sulu_test:
 
 sulu_document_manager:
     debug: false
+    sessions:
+        default:
+            backend:
+                type: "%phpcr.transport%"
+                url:  "%phpcr.backend_url%"
+            username: "%phpcr.username%"
+            password: "%phpcr.password%"
+            workspace: "%phpcr.workspace.default%"
+        live:
+            backend:
+                type: "%phpcr.transport%"
+                url:  "%phpcr.backend_url%"
+            username: "%phpcr.username%"
+            password: "%phpcr.password%"
+            workspace: "%phpcr.workspace.live%"
+    managers:
+        default:
+            session: default
+        live:
+            session: live
     mapping:
         page:
             class: Sulu\Bundle\ContentBundle\Document\PageDocument

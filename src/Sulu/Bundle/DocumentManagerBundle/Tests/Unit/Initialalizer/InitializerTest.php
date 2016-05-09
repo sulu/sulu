@@ -18,6 +18,9 @@ use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * TODO: Test purge.
+ */
 class InitializerTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
