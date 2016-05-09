@@ -236,7 +236,13 @@ define(function() {
         },
 
         getItemContent: function(item) {
-            return templates.contentItem(item.id, item.collection, item.title, item.thumbnails, item.fallbackLocale);
+            return templates.contentItem(
+                item.id,
+                item.collection,
+                item.title,
+                item.thumbnails,
+                item.locale !== this.options.locale ? item.locale : null
+            );
         },
 
         sortHandler: function(ids) {

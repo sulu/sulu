@@ -193,6 +193,11 @@ class DoctrineListBuilder extends AbstractListBuilder
         if ($this->limit != null) {
             $subQueryBuilder->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
         }
+
+        foreach ($this->sortFields as $index => $sortField) {
+            $subQueryBuilder->addSelect($sortField->getSelect() . ' AS ' . $sortField->getName());
+        }
+
         $this->assignSortFields($subQueryBuilder);
         $ids = $subQueryBuilder->getQuery()->getArrayResult();
         // if no results are found - return
@@ -222,8 +227,26 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         foreach ($this->sortFields as $index => $sortField) {
-            $queryBuilder->addOrderBy($sortField->getSelect(), $this->sortOrders[$index]);
+            $statement = $sortField->getSelect() . ' AS ' . $sortField->getName();
+            if (!$this->hasSelectStatement($queryBuilder, $statement)) {
+                $queryBuilder->addSelect($sortField->getSelect() . ' AS HIDDEN ' . $sortField->getName());
+            }
+
+            $queryBuilder->addOrderBy($sortField->getName(), $this->sortOrders[$index]);
         }
+    }
+
+    protected function hasSelectStatement(QueryBuilder $queryBuilder, $statement)
+    {
+        foreach ($queryBuilder->getDQLPart('select') as $selectPart) {
+            foreach ($selectPart->getParts() as $part) {
+                if ($part === $statement) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -248,21 +271,10 @@ class DoctrineListBuilder extends AbstractListBuilder
     protected function getJoins()
     {
         $joins = [];
+        $fields = array_merge($this->sortFields, $this->selectFields, $this->searchFields, $this->expressionFields);
 
-        foreach ($this->sortFields as $sortField) {
-            $joins = array_merge($joins, $sortField->getJoins());
-        }
-
-        foreach ($this->selectFields as $field) {
+        foreach ($fields as $field) {
             $joins = array_merge($joins, $field->getJoins());
-        }
-
-        foreach ($this->searchFields as $searchField) {
-            $joins = array_merge($joins, $searchField->getJoins());
-        }
-
-        foreach ($this->expressionFields as $expressionField) {
-            $joins = array_merge($joins, $expressionField->getJoins());
         }
 
         return $joins;

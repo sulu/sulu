@@ -139,7 +139,7 @@ class MediaControllerTest extends SuluTestCase
         $this->em->flush();
     }
 
-    protected function createMedia($name)
+    protected function createMedia($name, $locale = 'en-gb')
     {
         $media = new Media();
         $media->setType($this->imageType);
@@ -167,7 +167,7 @@ class MediaControllerTest extends SuluTestCase
 
         // create meta
         $fileVersionMeta = new FileVersionMeta();
-        $fileVersionMeta->setLocale('en-gb');
+        $fileVersionMeta->setLocale($locale);
         $fileVersionMeta->setTitle($name);
         $fileVersionMeta->setDescription($this->mediaDefaultDescription);
         $fileVersionMeta->setFileVersion($fileVersion);
@@ -500,6 +500,41 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('photo.jpeg', $response->_embedded->media[0]->name);
     }
 
+    public function testcGetFallbacks()
+    {
+        $mediaEN = $this->createMedia('test-en', 'en');
+        $mediaDE = $this->createMedia('test-de', 'de');
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/media?locale=de&'
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertNotEmpty($response);
+
+        $medias = array_map(
+            function ($item) {
+                return ['id' => $item->id, 'name' => $item->name, 'title' => $item->title, 'locale' => $item->locale];
+            },
+            $response->_embedded->media
+        );
+
+        $this->assertEquals(2, $response->total);
+        $this->assertCount(2, $medias);
+        $this->assertContains(
+            ['id' => $mediaEN->getId(), 'name' => 'test-en.jpeg', 'title' => 'test-en', 'locale' => 'en'],
+            $medias
+        );
+        $this->assertContains(
+            ['id' => $mediaDE->getId(), 'name' => 'test-de.jpeg', 'title' => 'test-de', 'locale' => 'de'],
+            $medias
+        );
+    }
+
     /**
      * Test GET all Media.
      */
@@ -529,6 +564,7 @@ class MediaControllerTest extends SuluTestCase
     {
         $media1 = $this->createMedia('photo1');
         $media2 = $this->createMedia('photo2');
+        $this->createMedia('photo3');
 
         $client = $this->createAuthenticatedClient();
 
@@ -541,24 +577,30 @@ class MediaControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
+        $medias = array_map(
+            function ($item) {
+                return ['id' => $item->id, 'name' => $item->name];
+            },
+            $response->_embedded->media
+        );
+
         $this->assertEquals(2, $response->total);
-        $this->assertEquals($media2->getId(), $response->_embedded->media[0]->id);
-        $this->assertEquals('photo2.jpeg', $response->_embedded->media[0]->name);
-        $this->assertEquals($media1->getId(), $response->_embedded->media[1]->id);
-        $this->assertEquals('photo1.jpeg', $response->_embedded->media[1]->name);
+        $this->assertCount(2, $medias);
+
+        $this->assertContains(['id' => $media1->getId(), 'name' => 'photo1.jpeg'], $medias);
+        $this->assertContains(['id' => $media2->getId(), 'name' => 'photo2.jpeg'], $medias);
     }
 
     public function testCgetSearch()
     {
-        $media1 = $this->createMedia('photo1');
-        $media2 = $this->createMedia('photo2');
-        $media3 = $this->createMedia('picture3');
+        $this->createMedia('photo1');
+        $this->createMedia('photo2');
+        $this->createMedia('picture3');
 
         $client = $this->createAuthenticatedClient();
-
         $client->request(
             'GET',
-            '/api/media?flat=true&search=photo%2A'
+            '/api/media?searchFields=title&search=photo%2A'
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());

@@ -992,6 +992,10 @@
                 <source>navigation.modules</source>
                 <target></target>
             </trans-unit>
+            <trans-unit id="c229c52dae1354cc4123c0b4820e23233" resname="public.version">
+                <source>public.version</source>
+                <target>Version</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

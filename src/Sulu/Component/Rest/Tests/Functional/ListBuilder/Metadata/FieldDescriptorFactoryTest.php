@@ -13,12 +13,14 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Metadata;
 use Metadata\Driver\FileLocatorInterface;
 use Metadata\MetadataFactory;
 use Prophecy\Argument;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCaseFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCountFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineGroupConcatFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineIdentityFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Driver\XmlDriver as DoctrineXmlDriver;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactory;
@@ -168,6 +170,35 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertFieldDescriptors($expected, $fieldDescriptor);
     }
 
+    public function testGetFieldDescriptorForClassCase()
+    {
+        $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
+            ->willReturn(__DIR__ . '/Resources/case.xml');
+
+        $provider = new ChainProvider($this->chain);
+        $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
+        $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
+
+        $this->assertEquals(['tag'], array_keys($fieldDescriptor));
+
+        $expected = [
+            'tag' => [
+                'name' => 'tag',
+                'translation' => 'Tag',
+                'instance' => DoctrineCaseFieldDescriptor::class,
+                'disabled' => true,
+
+            ],
+        ];
+
+        $this->assertFieldDescriptors($expected, $fieldDescriptor);
+
+        $this->assertEquals(
+            '(CASE WHEN SuluTagBundle:Tag.name IS NOT NULL THEN SuluTagBundle:Tag.name ELSE SuluTagBundle:Tag.name END)',
+            $fieldDescriptor['tag']->getSelect()
+        );
+    }
+
     public function testGetFieldDescriptorForClassIdentity()
     {
         $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
@@ -254,6 +285,42 @@ class FieldDescriptorFactoryTest extends \PHPUnit_Framework_TestCase
         $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
 
         $this->assertEmpty($fieldDescriptor);
+    }
+
+    public function testGetFieldDescriptorForClassMixed()
+    {
+        $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
+            ->willReturn(__DIR__ . '/Resources/mixed.xml');
+
+        $provider = new ChainProvider($this->chain);
+        $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
+        $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class);
+
+        $this->assertCount(2, $fieldDescriptor);
+        $this->assertFieldDescriptor(
+            ['name' => 'id', 'translation' => 'Id', 'disabled' => true],
+            $fieldDescriptor['id']
+        );
+        $this->assertFieldDescriptor(
+            ['name' => 'name', 'translation' => 'Name', 'disabled' => true, 'instance' => FieldDescriptor::class],
+            $fieldDescriptor['name']
+        );
+    }
+
+    public function testGetFieldDescriptorForClassMixedByType()
+    {
+        $this->locator->findFileForClass(new \ReflectionClass(new \stdClass()), 'xml')
+            ->willReturn(__DIR__ . '/Resources/mixed.xml');
+
+        $provider = new ChainProvider($this->chain);
+        $factory = new FieldDescriptorFactory($provider, $this->configCachePath, $this->debug);
+        $fieldDescriptor = $factory->getFieldDescriptorForClass(\stdClass::class, [], DoctrineFieldDescriptor::class);
+
+        $this->assertCount(1, $fieldDescriptor);
+        $this->assertFieldDescriptor(
+            ['name' => 'id', 'translation' => 'Id', 'disabled' => true],
+            $fieldDescriptor['id']
+        );
     }
 
     private function assertFieldDescriptors(array $expected, array $fieldDescriptors)

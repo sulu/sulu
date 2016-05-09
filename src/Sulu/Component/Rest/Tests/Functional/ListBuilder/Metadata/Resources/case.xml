@@ -1,0 +1,29 @@
+<class xmlns="http://schemas.sulu.io/class/general"
+       xmlns:orm="http://schemas.sulu.io/class/doctrine">
+    <properties>
+        <case-property name="tag">
+            <orm:field>
+                <orm:field-name>name</orm:field-name>
+                <orm:entity-name>SuluTagBundle:Tag</orm:entity-name>
+
+                <orm:joins>
+                    <orm:join>
+                        <orm:entity-name>SuluTagBundle:Tag</orm:entity-name>
+                        <orm:field-name>%sulu.model.contact.class%.tag</orm:field-name>
+                    </orm:join>
+                </orm:joins>
+            </orm:field>
+            <orm:field>
+                <orm:field-name>name</orm:field-name>
+                <orm:entity-name>SuluTagBundle:Tag</orm:entity-name>
+
+                <orm:joins>
+                    <orm:join>
+                        <orm:entity-name>SuluTagBundle:Tag</orm:entity-name>
+                        <orm:field-name>%sulu.model.contact.class%.defaultTag</orm:field-name>
+                    </orm:join>
+                </orm:joins>
+            </orm:field>
+        </case-property>
+    </properties>
+</class>

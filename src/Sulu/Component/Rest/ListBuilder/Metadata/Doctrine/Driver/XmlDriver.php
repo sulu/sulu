@@ -17,6 +17,7 @@ use Metadata\MergeableClassMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\JoinMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\PropertyMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\CaseTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\CountTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\GroupConcatTypeMetadata;
@@ -104,6 +105,8 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
                 return $this->getGroupConcatenationType($xpath, $propertyNode);
             case 'identity-property':
                 return $this->getIdentityType($xpath, $propertyNode);
+            case 'case-property':
+                return $this->getCaseType($xpath, $propertyNode);
             case 'count-property':
                 return $this->getCountType($xpath, $propertyNode);
             default:
@@ -182,6 +185,28 @@ class XmlDriver extends AbstractFileDriver implements DriverInterface
         }
 
         return new IdentityTypeMetadata($field);
+    }
+
+    /**
+     * Extracts case-type for property-node.
+     *
+     * @param \DOMXPath $xpath
+     * @param \DOMElement $propertyNode
+     *
+     * @return CaseTypeMetadata
+     */
+    protected function getCaseType(\DOMXPath $xpath, \DOMElement $propertyNode)
+    {
+        $type = new CaseTypeMetadata();
+        foreach ($xpath->query('orm:field', $propertyNode) as $fieldNode) {
+            if (null === $case = $this->getField($xpath, $fieldNode)) {
+                continue;
+            }
+
+            $type->addCase($case);
+        }
+
+        return $type;
     }
 
     /**

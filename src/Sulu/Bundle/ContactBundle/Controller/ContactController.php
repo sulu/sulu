@@ -477,11 +477,12 @@ class ContactController extends RestController implements ClassResourceInterface
     {
         $ids = array_filter(array_column($contacts, 'avatar'));
         $avatars = $this->get('sulu_media.media_manager')->getFormatUrls($ids, $locale);
-        $i = 0;
         foreach ($contacts as $key => $contact) {
-            if (array_key_exists('avatar', $contact) && $contact['avatar']) {
-                $contacts[$key]['avatar'] = $avatars[$i];
-                $i += 1;
+            if (array_key_exists('avatar', $contact)
+                && $contact['avatar']
+                && array_key_exists($contact['avatar'], $avatars)
+            ) {
+                $contacts[$key]['avatar'] = $avatars[$contact['avatar']];
             }
         }
 

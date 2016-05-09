@@ -10,14 +10,20 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Metadata;
 
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCaseFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCountFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineGroupConcatFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineIdentityFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\FieldMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\JoinMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\PropertyMetadata as DoctrinePropertyMetadata;
+use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\CaseTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\ConcatenationTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\CountTypeMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\Doctrine\Type\GroupConcatTypeMetadata;
@@ -56,12 +62,18 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getFieldDescriptorForClass($className, $options = [])
+    public function getFieldDescriptorForClass($className, $options = [], $type = null)
     {
         $cacheKey = md5(json_encode($options));
 
         $cache = new ConfigCache(
-            sprintf('%s/%s-%s.php', $this->cachePath, str_replace('\\', '-', $className), $cacheKey),
+            sprintf(
+                '%s/%s-%s-%s.php',
+                $this->cachePath,
+                str_replace('\\', '-', $className),
+                str_replace('\\', '-', $type),
+                $cacheKey
+            ),
             $this->debug
         );
 
@@ -74,16 +86,20 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
         $fieldDescriptors = [];
         /** @var PropertyMetadata $propertyMetadata */
         foreach ($metadata->propertyMetadata as $propertyMetadata) {
-            if (!$propertyMetadata->has(DoctrinePropertyMetadata::class)
-                || !$propertyMetadata->has(GeneralPropertyMetadata::class)
-            ) {
+            /** @var GeneralPropertyMetadata $generalMetadata */
+            $generalMetadata = $propertyMetadata->get(GeneralPropertyMetadata::class);
+
+            if (!$propertyMetadata->has(DoctrinePropertyMetadata::class)) {
+                $fieldDescriptor = $this->getGeneralFieldDescriptor($generalMetadata, $options);
+                if (!$type || is_a($fieldDescriptor, $type)) {
+                    $fieldDescriptors[$generalMetadata->getName()] = $fieldDescriptor;
+                }
+
                 continue;
             }
 
             /** @var DoctrinePropertyMetadata $doctrineMetadata */
             $doctrineMetadata = $propertyMetadata->get(DoctrinePropertyMetadata::class);
-            /** @var GeneralPropertyMetadata $generalMetadata */
-            $generalMetadata = $propertyMetadata->get(GeneralPropertyMetadata::class);
 
             $fieldDescriptor = null;
             if ($doctrineMetadata->getType() instanceof ConcatenationTypeMetadata) {
@@ -115,9 +131,17 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
                     $generalMetadata,
                     $doctrineMetadata->getType()->getField()
                 );
+            } elseif ($doctrineMetadata->getType() instanceof CaseTypeMetadata) {
+                $fieldDescriptor = $this->getCaseFieldDescriptor(
+                    $generalMetadata,
+                    $doctrineMetadata->getType(),
+                    $options
+                );
             }
 
-            if (null !== $fieldDescriptor) {
+            if (null !== $fieldDescriptor
+                && (!$type || is_a($fieldDescriptor, $type))
+            ) {
                 $fieldDescriptor->setMetadata($propertyMetadata);
                 $fieldDescriptors[$generalMetadata->getName()] = $fieldDescriptor;
             }
@@ -215,7 +239,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
      * @param ConcatenationTypeMetadata $type
      * @param array $options
      *
-     * @return DoctrineFieldDescriptor
+     * @return DoctrineConcatenationFieldDescriptor
      */
     protected function getConcatenationFieldDescriptor(
         GeneralPropertyMetadata $generalMetadata,
@@ -250,7 +274,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
      * @param GroupConcatTypeMetadata $type
      * @param array $options
      *
-     * @return DoctrineFieldDescriptor
+     * @return DoctrineGroupConcatFieldDescriptor
      */
     protected function getGroupConcatenationFieldDescriptor(
         GeneralPropertyMetadata $generalMetadata,
@@ -280,7 +304,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
      * @param IdentityTypeMetadata $type
      * @param array $options
      *
-     * @return DoctrineFieldDescriptor
+     * @return DoctrineIdentityFieldDescriptor
      */
     private function getIdentityFieldDescriptor(
         GeneralPropertyMetadata $generalMetadata,
@@ -289,23 +313,76 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
     ) {
         $fieldMetadata = $type->getField();
 
-        $joins = [];
-        foreach ($fieldMetadata->getJoins() as $joinMetadata) {
-            $joins[$joinMetadata->getEntityName()] = new DoctrineJoinDescriptor(
-                $this->resolveOptions($joinMetadata->getEntityName(), $options),
-                $this->resolveOptions($joinMetadata->getEntityField(), $options),
-                $this->resolveOptions($joinMetadata->getCondition(), $options),
-                $joinMetadata->getMethod(),
-                $joinMetadata->getConditionMethod()
-            );
-        }
-
         return new DoctrineIdentityFieldDescriptor(
             $this->resolveOptions($fieldMetadata->getName(), $options),
             $this->resolveOptions($generalMetadata->getName(), $options),
             $this->resolveOptions($fieldMetadata->getEntityName(), $options),
             $generalMetadata->getTranslation(),
-            $joins,
+            $this->getDoctrineJoins($fieldMetadata->getJoins(), $options),
+            $this->isDisabled($generalMetadata),
+            $this->isDefault($generalMetadata),
+            $generalMetadata->getType(),
+            $generalMetadata->getWidth(),
+            $generalMetadata->getMinWidth(),
+            $generalMetadata->isSortable(),
+            $generalMetadata->isEditable(),
+            $generalMetadata->getCssClass()
+        );
+    }
+
+    /**
+     * Returns case field-descriptor for given general metadata.
+     *
+     * @param GeneralPropertyMetadata $generalMetadata
+     * @param CaseTypeMetadata $type
+     * @param array $options
+     *
+     * @return DoctrineCaseFieldDescriptor
+     */
+    private function getCaseFieldDescriptor(
+        GeneralPropertyMetadata $generalMetadata,
+        CaseTypeMetadata $type,
+        $options
+    ) {
+        $case1 = $type->getCase(0);
+        $case2 = $type->getCase(1);
+
+        return new DoctrineCaseFieldDescriptor(
+            $this->resolveOptions($generalMetadata->getName(), $options),
+            new DoctrineDescriptor(
+                $case1->getEntityName(),
+                $case1->getName(),
+                $this->getDoctrineJoins($case1->getJoins(), $options)
+            ),
+            new DoctrineDescriptor(
+                $case2->getEntityName(),
+                $case2->getName(),
+                $this->getDoctrineJoins($case2->getJoins(), $options)
+            ),
+            $generalMetadata->getTranslation(),
+            $this->isDisabled($generalMetadata),
+            $this->isDefault($generalMetadata),
+            $generalMetadata->getType(),
+            $generalMetadata->getWidth(),
+            $generalMetadata->getMinWidth(),
+            $generalMetadata->isSortable(),
+            $generalMetadata->isEditable(),
+            $generalMetadata->getCssClass()
+        );
+    }
+
+    /**
+     * Returns general field-descriptor.
+     *
+     * @param $generalMetadata
+     *
+     * @return FieldDescriptorInterface
+     */
+    private function getGeneralFieldDescriptor(GeneralPropertyMetadata $generalMetadata, $options)
+    {
+        return new FieldDescriptor(
+            $this->resolveOptions($generalMetadata->getName(), $options),
+            $generalMetadata->getTranslation(),
             $this->isDisabled($generalMetadata),
             $this->isDefault($generalMetadata),
             $generalMetadata->getType(),
@@ -332,6 +409,31 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface
         }
 
         return $string;
+    }
+
+    /**
+     * Creates doctrine-joins.
+     *
+     * @param JoinMetadata[] $joinMetadata
+     * @param array $options
+     *
+     * @return DoctrineFieldDescriptor[]
+     */
+    private function getDoctrineJoins(array $joinMetadata, array $options)
+    {
+        $joins = [];
+        foreach ($joinMetadata as $metadata) {
+            $name = $this->resolveOptions($metadata->getEntityName(), $options);
+            $joins[$name] = new DoctrineJoinDescriptor(
+                $name,
+                $this->resolveOptions($metadata->getEntityField(), $options),
+                $this->resolveOptions($metadata->getCondition(), $options),
+                $metadata->getMethod(),
+                $metadata->getConditionMethod()
+            );
+        }
+
+        return $joins;
     }
 
     /**
