@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-master
     * HOTFIX      #2365                       Fixed missing and wrong method mocks
     * ENHANCEMENT #2359 [MediaBundle]         Added ability to sort medias
+    * HOTFIX      #2368 [ContentBundle]       Fixed copying shadow properties
     * HOTFIX      #2362 [Website]             Fixed hreflang-tag for homepage
     * BUGFIX      #2364 [CoreBundle]          DependencyInjection: Throw exception when locales/translations are misconfigured
     * BUGFIX      #2364 [ResourceBundle]      Moved fixtures from de_CH to de_ch

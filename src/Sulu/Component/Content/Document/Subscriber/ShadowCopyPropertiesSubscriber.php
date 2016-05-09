@@ -47,7 +47,10 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return [Events::PERSIST => 'handlePersist'];
+        return [
+            // has to happen after MappingSubscriber, because properties to copy have old values otherwise
+            Events::PERSIST => ['handlePersist', -256],
+        ];
     }
 
     /**
