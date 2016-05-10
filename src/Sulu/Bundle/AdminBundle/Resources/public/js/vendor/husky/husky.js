@@ -39578,6 +39578,7 @@ define('__component__$dependent-select@husky',[],function() {
  * @param {Boolean} [options.isNative] should use native select
  * @param {Boolean} [options.showToolTip] Show tool-tip on hover - only works for single-selects
  * @param {Array} [options.defaultValue] Array of default items that should be selected if no item has been preselected
+ * @param {Number} [options.dropdownPadding] The amount of padding on top or bottom of the dropdown list
  */
 
 define('__component__$select@husky',[], function() {
@@ -39615,7 +39616,8 @@ define('__component__$select@husky',[], function() {
             showToolTip: false,
             translations: translations,
             isNative: false,
-            defaultValue: null
+            defaultValue: null,
+            dropdownPadding: 0,
         },
 
         constants = {
@@ -40726,24 +40728,30 @@ define('__component__$select@husky',[], function() {
                 return;
             }
 
-            this.sandbox.logger.log('show dropdown ' + this.options.instanceName);
             this.sandbox.dom.removeClass(this.$dropdownContainer, 'hidden');
             this.sandbox.dom.on(this.sandbox.dom.window, 'click.dropdown.' + this.options.instanceName, this.hideDropDown.bind(this));
             this.dropdownVisible = true;
 
             this.sandbox.dom.removeClass(this.$dropdownContainer, constants.dropdownTopClass);
-            var ddHeight = this.sandbox.dom.height(this.$dropdownContainer),
-                ddTop = this.sandbox.dom.offset(this.$dropdownContainer).top,
+            var dropdownHeight = this.sandbox.dom.height(this.$dropdownContainer),
+                dropdownTop = this.sandbox.dom.offset(this.$dropdownContainer).top,
                 windowHeight = this.sandbox.dom.height(this.sandbox.dom.window),
-                scrollTop = this.sandbox.dom.scrollTop(this.sandbox.dom.window);
+                scrollTop = this.sandbox.dom.scrollTop(this.sandbox.dom.window),
+                dropdownMaxHeight = windowHeight - dropdownTop;
+
             if (this.options.direction === 'top') {
                 this.sandbox.dom.addClass(this.$dropdownContainer, constants.dropdownTopClass);
-            } else if (this.options.direction !== 'bottom') {
-                // check if dropdown container overlaps bottom of browser
-                if (ddHeight + ddTop > windowHeight + scrollTop) {
-                    this.sandbox.dom.addClass(this.$dropdownContainer, constants.dropdownTopClass);
-                }
+            } else if (
+                this.options.direction !== 'bottom'
+                && dropdownHeight + dropdownTop > windowHeight + scrollTop
+                // only change direction if there is more space on the other side    
+                && windowHeight / 2 < dropdownTop - scrollTop
+            ) {
+                this.sandbox.dom.addClass(this.$dropdownContainer, constants.dropdownTopClass);
+                dropdownMaxHeight = dropdownHeight + this.$dropdownContainer.offset().top;
             }
+
+            this.$dropdownContainer.css({maxHeight: dropdownMaxHeight - this.options.dropdownPadding + 'px'});
         },
 
         // hide dropDown
@@ -40755,7 +40763,6 @@ define('__component__$select@husky',[], function() {
                     this.sandbox.dom.off(this.sandbox.dom.window, 'click.dropdown.' + this.options.instanceName);
                 }
             }
-            this.sandbox.logger.log('hide dropdown ' + this.options.instanceName);
             this.sandbox.dom.addClass(this.$dropdownContainer, 'hidden');
             this.dropdownVisible = false;
             return true;
