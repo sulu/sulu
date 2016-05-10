@@ -354,6 +354,7 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                             defaultLabel: this.sandbox.translate('security.permission.role.chooseLanguage'),
                             checkedAllLabel: this.sandbox.translate('security.permission.role.allLanguages'),
                             value: 'name',
+                            dropdownPadding: 50,
                             data: localizations.map(function (localization) {
                                 return {
                                     id: localization.localization,

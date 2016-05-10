@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2375 [SecurityBundle]      Fixed visibility of entries in language dropdown
     * ENHANCEMENT #2373 [MediaBundle]         Added batch indexing for medias
     * HOTFIX      #2371 [MediaBundle]         Fixed appveyor tests for collections
     * HOTFIX      #2365                       Fixed missing and wrong method mocks
