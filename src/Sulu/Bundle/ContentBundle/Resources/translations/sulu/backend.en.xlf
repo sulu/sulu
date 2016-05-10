@@ -671,6 +671,18 @@
                 <source>content.text_editor.error.removed-multiple</source>
                 <target>%s links are broken.</target>
             </trans-unit>
+            <trans-unit id="41" resname="sulu-content.save-draft">
+                <source>sulu-content.save-draft</source>
+                <target>Save as draft</target>
+            </trans-unit>
+            <trans-unit id="42" resname="sulu-content.save-publish">
+                <source>sulu-content.save-publish</source>
+                <target>Save and publish</target>
+            </trans-unit>
+            <trans-unit id="43" resname="sulu-content.publish">
+                <source>sulu-content.publish</source>
+                <target>Publish</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -713,6 +713,9 @@ class NodeRepositoryTest extends SuluTestCase
         }
 
         $this->documentManager->persist($document, $locale, $persistOptions);
+        if ($state === WorkflowStage::PUBLISHED) {
+            $this->documentManager->publish($document, $locale);
+        }
         $this->documentManager->flush();
 
         return $document;

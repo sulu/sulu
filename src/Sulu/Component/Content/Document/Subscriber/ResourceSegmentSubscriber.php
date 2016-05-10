@@ -25,6 +25,7 @@ use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\CopyEvent;
 use Sulu\Component\DocumentManager\Event\MoveEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -76,13 +77,12 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
             // persist should happen before content is mapped
             Events::PERSIST => [
                 ['handlePersistDocument', 10],
-                // has to happen after MappingSubscriber, because the mapped data is needed
-                ['handlePersistRoute', -200],
             ],
             // hydrate should happen afterwards
             Events::HYDRATE => ['handleHydrate', -200],
-            Events::MOVE => ['moveRoutes', -128],
-            Events::COPY => ['copyRoutes', -128],
+            Events::MOVE => ['updateMovedDocument', -128],
+            Events::COPY => ['updateCopiedDocument', -128],
+            Events::PUBLISH => 'handlePersistRoute',
         ];
     }
 
@@ -146,9 +146,9 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
     /**
      * Creates or updates the route for the document.
      *
-     * @param PersistEvent $event
+     * @param PublishEvent $event
      */
-    public function handlePersistRoute(PersistEvent $event)
+    public function handlePersistRoute(PublishEvent $event)
     {
         /** @var ResourceSegmentBehavior $document */
         $document = $event->getDocument();
@@ -177,9 +177,9 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
      *
      * @param MoveEvent $event
      */
-    public function moveRoutes(MoveEvent $event)
+    public function updateMovedDocument(MoveEvent $event)
     {
-        $this->recreateRoutes($event->getDocument());
+        $this->updateRoute($event->getDocument(), true);
     }
 
     /**
@@ -187,14 +187,14 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
      *
      * @param CopyEvent $event
      */
-    public function copyRoutes(CopyEvent $event)
+    public function updateCopiedDocument(CopyEvent $event)
     {
-        $this->recreateRoutes(
-            $event->getDocument(),
+        $this->updateRoute(
             $this->documentManager->find(
                 $event->getCopiedPath(),
                 $this->documentInspector->getLocale($event->getDocument())
-            )
+            ),
+            false
         );
     }
 
@@ -248,53 +248,46 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Recreates the routes for the destination document with the data from the source document.
+     * Updates the route for the given document after a move or copy.
      *
-     * Note that both documents can be the same (e.g. happening on a move). If the second parameter is omitted it has
-     * the same value as the first one.
-     *
-     * @param object $sourceDocument
-     * @param object $destinationDocument
+     * @param object $document
+     * @param bool $generateRoutes If set to true a route in the routing tree will also be created
      */
-    private function recreateRoutes($sourceDocument, $destinationDocument = null)
+    private function updateRoute($document, $generateRoutes)
     {
-        $destinationDocument = $destinationDocument ?: $sourceDocument;
-
-        if (!$sourceDocument instanceof ResourceSegmentBehavior
-            || !$destinationDocument instanceof ResourceSegmentBehavior
-        ) {
+        if (!$document instanceof ResourceSegmentBehavior) {
             return;
         }
 
-        $locales = $this->documentInspector->getLocales($destinationDocument);
-        $webspaceKey = $this->documentInspector->getWebspace($destinationDocument);
-        $sourceUuid = $this->documentInspector->getUuid($sourceDocument);
-        $destinationUuid = $this->documentInspector->getUuid($destinationDocument);
-        $destinationParentUuid = $this->documentInspector->getUuid(
-            $this->documentInspector->getParent($destinationDocument)
-        );
+        $locales = $this->documentInspector->getLocales($document);
+        $webspaceKey = $this->documentInspector->getWebspace($document);
+        $uuid = $this->documentInspector->getUuid($document);
+        $parentUuid = $this->documentInspector->getUuid($this->documentInspector->getParent($document));
 
         foreach ($locales as $locale) {
-            $localizedDocument = $this->documentManager->find($destinationUuid, $locale);
+            $localizedDocument = $this->documentManager->find($uuid, $locale);
 
             if ($localizedDocument->getRedirectType() !== RedirectType::NONE) {
                 continue;
             }
 
             try {
-                $parentPart = $this->rlpStrategy->loadByContentUuid($destinationParentUuid, $webspaceKey, $locale);
+                $parentPart = $this->rlpStrategy->loadByContentUuid($parentUuid, $webspaceKey, $locale);
             } catch (ResourceLocatorNotFoundException $e) {
                 $parentPart = null;
             }
 
-            $childPart = $this->rlpStrategy->loadByContentUuid($sourceUuid, $webspaceKey, $locale);
-            $childPart = $this->rlpStrategy->getChildPart($childPart);
+            $childPart = $this->rlpStrategy->getChildPart($localizedDocument->getResourceSegment());
 
             $localizedDocument->setResourceSegment(
                 $this->rlpStrategy->generate($childPart, $parentPart, $webspaceKey, $locale)
             );
 
             $this->documentManager->persist($localizedDocument, $locale);
+
+            if ($generateRoutes) {
+                $this->rlpStrategy->save($localizedDocument, null);
+            }
         }
     }
 }

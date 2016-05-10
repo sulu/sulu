@@ -604,6 +604,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $this->get('sulu_hash.request_hash_checker')->checkHash($request, $document, $document->getUuid());
 
         $this->persistDocument($request, $type, $document, $language);
+        $this->handleActionParameter($request->get('action'), $document, $language);
         $this->getDocumentManager()->flush();
 
         $view = $this->view($document);
@@ -632,6 +633,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $document = $this->getDocumentManager()->create($type);
 
         $this->persistDocument($request, $type, $document, $language);
+        $this->handleActionParameter($request->get('action'), $document, $language);
         $this->getDocumentManager()->flush();
 
         $view = $this->view($document);
@@ -961,11 +963,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
     {
         $data = $request->request->all();
 
-        $workflowStage = $this->getRequestParameter($request, 'state');
-        if (null !== $workflowStage) {
-            $data['workflowStage'] = $workflowStage;
-        }
-
         if ($request->query->has('parent')) {
             $data['parent'] = $request->query->get('parent');
         }
@@ -989,5 +986,21 @@ class NodeController extends RestController implements ClassResourceInterface, S
                 'clear_missing_content' => false,
             ]
         );
+    }
+
+    /**
+     * Delegates actions by given actionParameter, which can be retrieved from the request.
+     *
+     * @param string $actionParameter
+     * @param object $document
+     * @param string $locale
+     */
+    private function handleActionParameter($actionParameter, $document, $locale)
+    {
+        switch ($actionParameter) {
+            case 'publish':
+                $this->getDocumentManager()->publish($document, $locale);
+                break;
+        }
     }
 }

@@ -7,8 +7,8 @@
 The sessions for PHPCR were configured at `sulu_core.phpcr` in the
 configuration. This happens now at `sulu_document_manager.sessions`. You can
 define multiple sessions here using different names and refer to one of them as
-default session using the `sulu_document_manager.default_session`
-configuration.
+default session using the `sulu_document_manager.default_session` and to
+another as live session using the `sulu_document_manager.live_session`.
 
 ### Documemt Manager Initializer
 

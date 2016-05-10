@@ -41,10 +41,9 @@ define([
             deleteDoIt: 'content.delete-do-it'
         },
 
-        states = {
-            0: 'stateTest',
-            1: 'stateTest',
-            2: 'statePublish'
+        actions = {
+            draft: 'draft',
+            publish: 'publish'
         },
 
         templates = {
@@ -67,12 +66,15 @@ define([
 
         isHomeDocument = function(data) {
             return data.url === '/';
+        },
+
+        setSaveToolbarItems = function(item, value) {
+            this.sandbox.emit('sulu.header.toolbar.item.' + (!!value ? 'enable' : 'disable'), item, false);
         };
 
     return {
 
         initialize: function() {
-            // init vars
             this.saved = true;
 
             if (this.options.display === 'column') {
@@ -185,11 +187,6 @@ define([
                 this.setHeaderBar(saved);
             }.bind(this));
 
-            // setter for state bar buttons
-            this.sandbox.on('sulu.content.contents.set-state', function(data) {
-                this.setState(data);
-            }.bind(this));
-
             // delegate save to tab
             this.sandbox.on('sulu.toolbar.save', function(action) {
                 this.sandbox.emit('sulu.tab.save', action);
@@ -290,14 +287,6 @@ define([
                 // when navigation item is already opended do nothing - relevant for homepage
                 if (event.id !== this.options.id) {
                     this.sandbox.emit('sulu.app.ui.reset', {navigation: 'auto', content: 'auto'});
-                }
-            }.bind(this));
-
-            // get changed state
-            this.sandbox.on('sulu.header.state.changed', function(state) {
-                if (this.state !== state) {
-                    this.state = state;
-                    this.setHeaderBar(false);
                 }
             }.bind(this));
 
@@ -525,28 +514,6 @@ define([
             this.sandbox.emit('sulu.content.content.deleted');
         },
 
-        changeState: function(state) {
-            this.sandbox.emit('sulu.content.contents.state.change');
-
-            this.content.stateSave(this.options.webspace, this.options.language, state, null, {
-                success: function() {
-                    this.sandbox.emit('sulu.content.contents.state.changed', state);
-                    this.sandbox.emit('sulu.labels.success.show',
-                        'labels.state-changed.success-desc',
-                        'labels.success',
-                        'sulu.content.contents.state.label');
-                }.bind(this),
-                error: function() {
-                    this.sandbox.emit('sulu.content.contents.state.changeFailed');
-                    this.sandbox.emit('sulu.labels.error.show',
-                        'labels.state-changed.error-desc',
-                        'labels.error',
-                        'sulu.content.contents.state.label');
-                    this.sandbox.logger.log("error while saving profile");
-                }.bind(this)
-            });
-        },
-
         /**
          * Asks if the content should be overriden, if the content has been changed on the server.
          * @param {Object} data
@@ -579,7 +546,8 @@ define([
                                 );
                             }.bind(this)
                         },
-                        true
+                        true,
+                        action
                     );
                 }.bind(this),
                 {
@@ -644,13 +612,15 @@ define([
                     error: function(model, response) {
                         this.sandbox.emit('sulu.content.contents.error', response.responseJSON.code, data, action);
                     }.bind(this)
-                }
+                },
+                false,
+                action
             );
 
             return def;
         },
 
-        saveContent: function(data, options, force) {
+        saveContent: function(data, options, force, action) {
             if (typeof force === 'undefined') {
                 force = false;
             }
@@ -659,11 +629,11 @@ define([
                 this.options.webspace,
                 this.options.language,
                 this.options.parent,
-                this.state,
                 (isHomeDocument(data) ? 'home' : null),
                 null,
                 options,
-                force
+                force,
+                action
             );
         },
 
@@ -728,7 +698,6 @@ define([
 
         render: function() {
             this.setTemplate(this.data);
-            this.setState(this.data);
 
             if (!!this.options.preview && this.data.nodeType === constants.contentNodeType && !this.data.shadowOn) {
                 var objectClass = 'Sulu\\Bundle\\ContentBundle\\Document\\' + (isHomeDocument(this.data) ? 'Home' : 'Page') + 'Document';
@@ -786,30 +755,22 @@ define([
         },
 
         /**
-         * Sets state to header
-         * @param {Object} data
-         */
-        setState: function(data) {
-            this.state = data.nodeState;
-
-            if (this.state !== '' && this.state !== undefined && this.state !== null) {
-                this.sandbox.emit('sulu.header.toolbar.item.change', 'state', states[this.state]);
-            }
-        },
-
-        /**
          * Sets header bar
          * @param {Boolean} saved
          */
         setHeaderBar: function(saved) {
-            if (saved === this.saved) {
-                return;
-            }
+            var saveDraft = !saved,
+                savePublish = !saved,
+                publish = !!saved && !this.data.publishedState;
 
-            if (saved === true) {
-                this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
-            } else {
+            setSaveToolbarItems.call(this, 'saveDraft', saveDraft);
+            setSaveToolbarItems.call(this, 'savePublish', savePublish);
+            setSaveToolbarItems.call(this, 'publish', publish);
+
+            if (!!saveDraft || !!savePublish || !!publish) {
                 this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
+            } else {
+                this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', false);
             }
 
             this.saved = saved;
@@ -886,7 +847,37 @@ define([
 
                 if (SecurityChecker.hasPermission(this.data, 'edit')) {
                     buttons.save = {
-                        parent: 'saveWithOptions'
+                        options: {
+                            icon: 'floppy-o',
+                            title: 'public.save',
+                            disabled: true,
+                            dropdownItems: {
+                                saveDraft: {
+                                    options: {
+                                        title: 'sulu-content.save-draft',
+                                        callback: function() {
+                                            this.sandbox.emit('sulu.toolbar.save', actions.draft);
+                                        }.bind(this)
+                                    }
+                                },
+                                savePublish: {
+                                    options: {
+                                        title: 'sulu-content.save-publish',
+                                        callback: function() {
+                                            this.sandbox.emit('sulu.toolbar.save', actions.publish);
+                                        }.bind(this)
+                                    }
+                                },
+                                publish: {
+                                    options: {
+                                        title: 'sulu-content.publish',
+                                        callback: function() {
+                                            this.sandbox.emit('sulu.toolbar.save', actions.publish);
+                                        }.bind(this)
+                                    }
+                                }
+                            }
+                        }
                     };
 
                     buttons.template = {
@@ -935,17 +926,8 @@ define([
                     };
                 }
 
-                if (SecurityChecker.hasPermission(this.data, 'edit')) {
-                    buttons.state = {
-                        options: {
-                            disabled: isHomeDocument(this.data),
-                            dropdownItems: {
-                                statePublish: {},
-                                stateTest: {}
-                            }
-                        }
-                    };
-                }
+                buttons.statePublished = {};
+                buttons.stateTest = {};
 
                 header = {
                     noBack: isHomeDocument(this.data),

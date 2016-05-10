@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Content\Tests\Functional\SmartContent;
 
-use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -84,11 +83,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
      */
     private $tag3;
 
-    /**
-     * @var HomeDocument
-     */
-    private $homeDocument;
-
     public function setUp()
     {
         parent::setUp();
@@ -127,8 +121,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $em->persist($this->tag3);
 
         $em->flush();
-
-        $this->homeDocument = $this->documentManager->find('/cmf/sulu_io/contents', 'en');
     }
 
     public function propertiesProvider()
@@ -175,6 +167,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $document->setWorkflowStage(WorkflowStage::PUBLISHED);
 
             $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+            $this->documentManager->publish($document, 'en');
 
             $documents[$document->getUuid()] = $document;
         }
@@ -241,6 +234,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $news->setStructureType('simple');
         $news->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($news, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($news, 'en');
         $this->documentManager->flush();
 
         /** @var PageDocument $products */
@@ -250,6 +244,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $products->setStructureType('simple');
         $products->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($products, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($products, 'en');
         $this->documentManager->flush();
 
         $documents = [];
@@ -261,7 +256,9 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $document->setResourceSegment('/news/news-' . $i);
             $document->setStructureType('simple');
             $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+            $document->setParent($news);
             $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents/news']);
+            $this->documentManager->publish($document, 'en');
             $this->documentManager->flush();
 
             $documents[$document->getUuid()] = $document;
@@ -372,6 +369,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $document->setStructureType('simple');
             $document->setWorkflowStage(WorkflowStage::PUBLISHED);
             $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+            $this->documentManager->publish($document, 'en');
             $this->documentManager->flush();
 
             $documents[$document->getUuid()] = $document;
@@ -610,6 +608,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $document->setStructureType('simple');
             $document->setWorkflowStage(WorkflowStage::PUBLISHED);
             $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+            $this->documentManager->publish($document, 'en');
             $this->documentManager->flush();
 
             $documents[$document->getUuid()] = $document;
@@ -715,6 +714,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $document->setStructureType('simple');
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($document, 'en');
         $this->documentManager->flush();
         $documents[$document->getResourceSegment()] = $document;
 
@@ -724,6 +724,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $document->setStructureType('simple');
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($document, 'en');
         $this->documentManager->flush();
         $documents[$document->getResourceSegment()] = $document;
 
@@ -733,6 +734,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $document->setStructureType('simple');
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($document, 'en');
         $this->documentManager->flush();
         $documents[$document->getResourceSegment()] = $document;
 
@@ -742,6 +744,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $document->setStructureType('simple');
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($document, 'en');
         $documents[$document->getResourceSegment()] = $document;
         $this->documentManager->flush();
 
@@ -1049,7 +1052,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $parent = null,
         $isShadow = false,
         $shadowLocale = '',
-        $state = Structure::STATE_PUBLISHED
+        $state = WorkflowStage::PUBLISHED
     ) {
         if (!$isShadow) {
             /** @var PageDocument $document */
@@ -1064,18 +1067,23 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $document->setStructureType('simple');
             $document->setWorkflowStage($state);
 
+            $persistOptions = [];
             if ($parent) {
                 $document->setParent($this->documentManager->find($parent));
-            } elseif (!$uuid) {
-                $document->setParent($this->homeDocument);
+            } elseif (!$document->getParent()) {
+                $persistOptions['parent_path'] = '/cmf/sulu_io/contents';
             }
-            $this->documentManager->persist($document, $locale);
+            $this->documentManager->persist($document, $locale, $persistOptions);
         } else {
-            $document = $this->documentManager->find($uuid, $shadowLocale);
+            $document = $this->documentManager->find($uuid, $locale);
             $document->setShadowLocaleEnabled(true);
             $document->setShadowLocale($shadowLocale);
             $document->setLocale($locale);
             $this->documentManager->persist($document, $locale);
+        }
+
+        if ($state === WorkflowStage::PUBLISHED) {
+            $this->documentManager->publish($document, $locale);
         }
 
         $this->documentManager->flush();

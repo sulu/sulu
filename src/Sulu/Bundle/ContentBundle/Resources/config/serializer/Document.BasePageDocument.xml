@@ -37,7 +37,7 @@
         <property name="structureType" type="string" groups="preview"/>
         <property name="originalLocale" type="string" groups="preview"/>
         <property name="locale" type="string" groups="preview"/>
-        <property name="path" type="string"/>
+        <property name="path" exclude="true"/>
         <property name="internal" type="boolean" groups="defaultPage"/>
         <property name="webspaceName" type="string"/>
         <property name="extensions" type="Sulu\Component\Content\Document\Extension\ExtensionContainer" serialized-name="ext" groups="defaultPage,preview"/>

@@ -58,6 +58,10 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
 
             // navigate away
             this.sandbox.on('sulu.content.navigate', this.navigate, this);
+
+            this.sandbox.on('sulu.header.saved', function(data) {
+                this.showState(!!data.publishedState);
+            }, this);
         },
 
         initializeResourceLocator: function() {
@@ -91,6 +95,8 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
                 // the form is in edit mode, if and ID is given, and therefore the page has already existed
                 this.add = false;
             }
+
+            this.showState(!!this.data.publishedState);
 
             if (!!this.data.template) {
                 this.checkRenderTemplate(this.data.template);
@@ -388,6 +394,16 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
             }
 
             return url;
+        },
+
+        showState: function(published) {
+            if (!!published) {
+                this.sandbox.emit('sulu.header.toolbar.item.hide', 'stateTest');
+                this.sandbox.emit('sulu.header.toolbar.item.show', 'statePublished');
+            } else {
+                this.sandbox.emit('sulu.header.toolbar.item.hide', 'statePublished');
+                this.sandbox.emit('sulu.header.toolbar.item.show', 'stateTest');
+            }
         },
 
         setHeaderBar: function(saved) {

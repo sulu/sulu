@@ -59,18 +59,22 @@ class TreeStrategyTest extends SuluTestCase
         // create routes for content
         $news = $this->createDocument($parentDocument, 'news', '/news');
         $this->documentManager->persist($news, 'de');
+        $this->documentManager->publish($news, 'de');
         $this->documentManager->flush();
 
         $news1 = $this->createDocument($news, 'news-1', '/news/news-1');
         $this->documentManager->persist($news1, 'de');
+        $this->documentManager->publish($news1, 'de');
         $this->documentManager->flush();
 
         $sub1 = $this->createDocument($news1, 'sub-1', '/news/news-1/sub-1');
         $this->documentManager->persist($sub1, 'de');
+        $this->documentManager->publish($sub1, 'de');
         $this->documentManager->flush();
 
         $sub2 = $this->createDocument($news1, 'sub-1', '/news/news-1/sub-2');
         $this->documentManager->persist($sub2, 'de');
+        $this->documentManager->publish($sub2, 'de');
         $this->documentManager->flush();
 
         // move route
@@ -104,30 +108,37 @@ class TreeStrategyTest extends SuluTestCase
 
         $news = $this->createDocument($parentDocument, 'news', '/news');
         $this->documentManager->persist($news, 'de');
+        $this->documentManager->publish($news, 'de');
         $this->documentManager->flush();
 
         $news1 = $this->createDocument($news, 'news-1', '/news/news-1');
         $this->documentManager->persist($news1, 'de');
+        $this->documentManager->publish($news1, 'de');
         $this->documentManager->flush();
 
         $news1sub1 = $this->createDocument($news1, 'sub-1', '/news/news-1/sub-1');
         $this->documentManager->persist($news1sub1, 'de');
+        $this->documentManager->publish($news1sub1, 'de');
         $this->documentManager->flush();
 
         $news1sub2 = $this->createDocument($news1, 'sub-2', '/news/news-1/sub-2');
         $this->documentManager->persist($news1sub2, 'de');
+        $this->documentManager->publish($news1sub2, 'de');
         $this->documentManager->flush();
 
         $news2 = $this->createDocument($news, 'news-2', '/news/news-2');
         $this->documentManager->persist($news2, 'de');
+        $this->documentManager->publish($news2, 'de');
         $this->documentManager->flush();
 
         $news2sub1 = $this->createDocument($news2, 'news-2', '/news/news-2/sub-1');
         $this->documentManager->persist($news2sub1, 'de');
+        $this->documentManager->publish($news2sub1, 'de');
         $this->documentManager->flush();
 
         $news2sub2 = $this->createDocument($news2, 'news-2', '/news/news-2/sub-2');
         $this->documentManager->persist($news2sub2, 'de');
+        $this->documentManager->publish($news2sub2, 'de');
         $this->documentManager->flush();
 
         // move route

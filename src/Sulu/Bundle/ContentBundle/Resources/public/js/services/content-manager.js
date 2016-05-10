@@ -13,7 +13,7 @@ define(['jquery'], function ($) {
     var baseUrl = '/admin/api/nodes';
 
     return {
-        save: function(data, locale, webspace, successCallback, errorCallback) {
+        save: function(data, locale, webspace, options, successCallback, errorCallback) {
             var method = 'POST', url = baseUrl, requestParameters = [];
 
             if (!!data.id) {
@@ -27,6 +27,14 @@ define(['jquery'], function ($) {
 
             if (!!webspace) {
                 requestParameters.push('webspace=' + webspace);
+            }
+
+            if (!!options.action) {
+                requestParameters.push('action=' + options.action);
+            }
+
+            if (!!options.force) {
+                requestParameters.push('force=' + options.force);
             }
 
             $.ajax(

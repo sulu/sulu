@@ -20,6 +20,7 @@ use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -31,6 +32,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class RouteSubscriber implements EventSubscriberInterface
 {
     const DOCUMENT_HISTORY_FIELD = 'history';
+
+    const NODE_HISTORY_FIELD = 'sulu:history';
 
     /**
      * @var DocumentManagerInterface
@@ -67,6 +70,7 @@ class RouteSubscriber implements EventSubscriberInterface
             Events::PERSIST => ['handlePersist', 5],
             Events::HYDRATE => 'handleHydrate',
             Events::REMOVE => ['handleRemove', 550],
+            Events::PUBLISH => 'handlePublish',
         ];
     }
 
@@ -83,7 +87,7 @@ class RouteSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $document->setHistory($event->getNode()->getPropertyValue('sulu:history'));
+        $document->setHistory($event->getNode()->getPropertyValue(self::NODE_HISTORY_FIELD));
     }
 
     /**
@@ -100,7 +104,7 @@ class RouteSubscriber implements EventSubscriberInterface
         }
 
         $node = $event->getNode();
-        $node->setProperty('sulu:history', $document->isHistory());
+        $node->setProperty(self::NODE_HISTORY_FIELD, $document->isHistory());
 
         $targetDocument = $document->getTargetDocument();
 
@@ -132,6 +136,7 @@ class RouteSubscriber implements EventSubscriberInterface
                     'auto_create' => true,
                 ]
             );
+            $this->documentManager->publish($newRouteDocument, $locale);
 
             // change routes in old position to history
             $this->changeOldPathToHistoryRoutes($document, $newRouteDocument);
@@ -152,6 +157,22 @@ class RouteSubscriber implements EventSubscriberInterface
         }
 
         $this->recursivelyRemoveRoutes($document);
+    }
+
+    /**
+     * Handles the history field for the route on publish.
+     *
+     * @param PublishEvent $event
+     */
+    public function handlePublish(PublishEvent $event)
+    {
+        $document = $event->getDocument();
+
+        if (!$document instanceof RouteBehavior) {
+            return;
+        }
+
+        $event->getNode()->setProperty(self::NODE_HISTORY_FIELD, $document->isHistory());
     }
 
     /**
@@ -182,12 +203,14 @@ class RouteSubscriber implements EventSubscriberInterface
     private function changeOldPathToHistoryRoutes(RouteBehavior $oldDocument, RouteBehavior $newDocument)
     {
         $oldDocument->setTargetDocument($newDocument);
+        $oldDocument->setHistory(true);
         $oldRouteNode = $this->documentInspector->getNode($oldDocument);
-        $oldRouteNode->setProperty('sulu:history', true);
+        $oldRouteNode->setProperty(self::NODE_HISTORY_FIELD, true);
 
         foreach ($this->documentInspector->getReferrers($oldDocument) as $referrer) {
             if ($referrer instanceof RouteBehavior) {
                 $referrer->setTargetDocument($newDocument);
+                $referrer->setHistory(true);
                 $this->documentManager->persist(
                     $referrer,
                     null,
@@ -195,6 +218,7 @@ class RouteSubscriber implements EventSubscriberInterface
                         'path' => $this->documentInspector->getPath($referrer),
                     ]
                 );
+                $this->documentManager->publish($referrer, null);
             }
         }
     }

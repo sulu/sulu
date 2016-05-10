@@ -26,6 +26,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('default_session')->end()
+                ->scalarNode('live_session')->end()
                 ->arrayNode('sessions')
                     ->useAttributeAsKey('name')
                     ->prototype('array')

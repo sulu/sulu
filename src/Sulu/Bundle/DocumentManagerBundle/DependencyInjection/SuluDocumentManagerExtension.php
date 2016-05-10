@@ -114,6 +114,19 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
         }
         $container->setParameter('sulu_document_manager.mapping', $realMapping);
         $container->setParameter('sulu_document_manager.namespace_mapping', $config['namespace']);
+
+        $defaultSession = 'doctrine_phpcr.session';
+        $container->setAlias('sulu_document_manager.default_session', $defaultSession);
+
+        $liveSession = $defaultSession;
+        if (isset($config['live_session'])) {
+            $liveSession = sprintf('doctrine_phpcr.%s_session', $config['live_session']);
+        }
+
+        $container->setAlias(
+            'sulu_document_manager.live_session',
+            $liveSession
+        );
     }
 
     private function configurePathSegmentRegistry($config, ContainerBuilder $container)

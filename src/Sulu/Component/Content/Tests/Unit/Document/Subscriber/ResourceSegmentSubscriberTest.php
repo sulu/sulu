@@ -29,6 +29,7 @@ use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\CopyEvent;
 use Sulu\Component\DocumentManager\Event\MoveEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 
 class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
@@ -149,9 +150,9 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->resourceSegmentSubscriber->handlePersistDocument($event->reveal());
     }
 
-    public function testPersistDocumentWithoutLocale()
+    public function testPersistRouteWithoutLocale()
     {
-        $event = $this->prophesize(PersistEvent::class);
+        $event = $this->prophesize(PublishEvent::class);
         $document = $this->prophesize(ResourceSegmentBehavior::class);
         $document->willImplement(StructureBehavior::class);
 
@@ -164,7 +165,7 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testPersistRoute()
     {
-        $event = $this->prophesize(PersistEvent::class);
+        $event = $this->prophesize(PublishEvent::class);
         $event->getLocale()->willReturn('de');
 
         $this->document->getRedirectType()->willReturn(RedirectType::NONE);
@@ -176,7 +177,7 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testPersistRouteForRedirect()
     {
-        $event = $this->prophesize(PersistEvent::class);
+        $event = $this->prophesize(PublishEvent::class);
         $event->getLocale()->willReturn('de');
 
         $this->document->getRedirectType()->willReturn(RedirectType::INTERNAL);
@@ -186,7 +187,7 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->resourceSegmentSubscriber->handlePersistRoute($event->reveal());
     }
 
-    public function testMoveRoutes()
+    public function testUpdateMovedDocument()
     {
         $parentDocument = new \stdClass();
 
@@ -204,10 +205,11 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $germanDocument->getRedirectType()->willReturn(RedirectType::NONE);
         $this->documentManager->find('uuid', 'de')->willReturn($germanDocument);
         $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'de')->willReturn('/german/parent');
-        $this->rlpStrategy->loadByContentUuid('uuid', 'sulu_io', 'de')->willReturn('/german/child');
+        $germanDocument->getResourceSegment()->willReturn('/german/child');
         $this->rlpStrategy->getChildPart('/german/child')->willReturn('child');
         $this->rlpStrategy->generate('child', '/german/parent', 'sulu_io', 'de')->willReturn('/german/parent/child');
         $germanDocument->setResourceSegment('/german/parent/child')->shouldBeCalled();
+        $this->rlpStrategy->save($germanDocument, null)->shouldBeCalled();
         $this->documentManager->persist($germanDocument, 'de')->shouldBeCalled();
 
         $englishDocument = $this->prophesize(ResourceSegmentBehavior::class)
@@ -215,16 +217,17 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $englishDocument->getRedirectType()->willReturn(RedirectType::NONE);
         $this->documentManager->find('uuid', 'en')->willReturn($englishDocument);
         $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'en')->willReturn('/english/parent');
-        $this->rlpStrategy->loadByContentUuid('uuid', 'sulu_io', 'en')->willReturn('/english/child');
+        $englishDocument->getResourceSegment()->willReturn('/english/child');
         $this->rlpStrategy->getChildPart('/english/child')->willReturn('child');
         $this->rlpStrategy->generate('child', '/english/parent', 'sulu_io', 'en')->willReturn('/english/parent/child');
         $englishDocument->setResourceSegment('/english/parent/child')->shouldBeCalled();
+        $this->rlpStrategy->save($englishDocument, null)->shouldBeCalled();
         $this->documentManager->persist($englishDocument, 'en')->shouldBeCalled();
 
-        $this->resourceSegmentSubscriber->moveRoutes($event->reveal());
+        $this->resourceSegmentSubscriber->updateMovedDocument($event->reveal());
     }
 
-    public function testMoveRoutesWithRedirects()
+    public function testUpdateMovedDocumentWithRedirects()
     {
         $parentDocument = new \stdClass();
 
@@ -242,38 +245,41 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $germanDocument->getRedirectType()->willReturn(RedirectType::NONE);
         $this->documentManager->find('uuid', 'de')->willReturn($germanDocument);
         $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'de')->willReturn('/german/parent');
-        $this->rlpStrategy->loadByContentUuid('uuid', 'sulu_io', 'de')->willReturn('/german/child');
+        $germanDocument->getResourceSegment()->willReturn('/german/child');
         $this->rlpStrategy->getChildPart('/german/child')->willReturn('child');
         $this->rlpStrategy->generate('child', '/german/parent', 'sulu_io', 'de')->willReturn('/german/parent/child');
         $germanDocument->setResourceSegment('/german/parent/child')->shouldBeCalled();
+        $this->rlpStrategy->save($germanDocument, null)->shouldBeCalled();
         $this->documentManager->persist($germanDocument, 'de')->shouldBeCalled();
 
         $englishDocument = $this->prophesize(ResourceSegmentBehavior::class)
             ->willImplement(RedirectTypeBehavior::class);
         $englishDocument->getRedirectType()->willReturn(RedirectType::INTERNAL);
         $this->documentManager->find('uuid', 'en')->willReturn($englishDocument);
+        $this->rlpStrategy->save($englishDocument, null)->shouldNotBeCalled();
         $this->documentManager->persist($englishDocument, 'en')->shouldNotBeCalled();
 
         $frenchDocument = $this->prophesize(ResourceSegmentBehavior::class)
             ->willImplement(RedirectTypeBehavior::class);
         $frenchDocument->getRedirectType()->willReturn(RedirectType::INTERNAL);
         $this->documentManager->find('uuid', 'fr')->willReturn($frenchDocument);
+        $this->rlpStrategy->save($frenchDocument, null)->shouldNotBeCalled();
         $this->documentManager->persist($frenchDocument, 'fr')->shouldNotBeCalled();
 
-        $this->resourceSegmentSubscriber->moveRoutes($event->reveal());
+        $this->resourceSegmentSubscriber->updateMovedDocument($event->reveal());
     }
 
-    public function testMoveRoutesForWrongDocument()
+    public function testUpdateMovedDocumentForWrongDocument()
     {
         $event = $this->prophesize(MoveEvent::class);
         $event->getDocument()->willReturn(new \stdClass());
 
         $this->documentInspector->getLocales(Argument::cetera())->shouldNotBeCalled();
 
-        $this->resourceSegmentSubscriber->moveRoutes($event->reveal());
+        $this->resourceSegmentSubscriber->updateMovedDocument($event->reveal());
     }
 
-    public function testMoveRoutesWithGhostParent()
+    public function testUpdateMovedDocumentWithGhostParent()
     {
         $parentDocument = new \stdClass();
 
@@ -292,16 +298,17 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->documentManager->find('uuid', 'de')->willReturn($germanDocument);
         $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'de')
             ->willThrow(ResourceLocatorNotFoundException::class);
-        $this->rlpStrategy->loadByContentUuid('uuid', 'sulu_io', 'de')->willReturn('/german/child');
+        $germanDocument->getResourceSegment()->willReturn('/german/child');
         $this->rlpStrategy->getChildPart('/german/child')->willReturn('child');
         $this->rlpStrategy->generate('child', null, 'sulu_io', 'de')->willReturn('/child');
         $germanDocument->setResourceSegment('/child')->shouldBeCalled();
+        $this->rlpStrategy->save($germanDocument, null)->shouldBeCalled();
         $this->documentManager->persist($germanDocument, 'de')->shouldBeCalled();
 
-        $this->resourceSegmentSubscriber->moveRoutes($event->reveal());
+        $this->resourceSegmentSubscriber->updateMovedDocument($event->reveal());
     }
 
-    public function testCopyRoutes()
+    public function testUpdateCopiedDocument()
     {
         $parentDocument = new \stdClass();
         $copiedDocument = $this->prophesize(ResourceSegmentBehavior::class);
@@ -325,7 +332,7 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $germanDocument->getRedirectType()->willReturn(RedirectType::NONE);
         $this->documentManager->find('copy-uuid', 'de')->willReturn($germanDocument);
         $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'de')->willReturn('/german/parent');
-        $this->rlpStrategy->loadByContentUuid('uuid', 'sulu_io', 'de')->willReturn('/german/child');
+        $germanDocument->getResourceSegment()->willReturn('/german/child');
         $this->rlpStrategy->getChildPart('/german/child')->willReturn('child');
         $this->rlpStrategy->generate('child', '/german/parent', 'sulu_io', 'de')->willReturn('/german/parent/child');
         $germanDocument->setResourceSegment('/german/parent/child')->shouldBeCalled();
@@ -336,16 +343,16 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $englishDocument->getRedirectType()->willReturn(RedirectType::NONE);
         $this->documentManager->find('copy-uuid', 'en')->willReturn($englishDocument);
         $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'en')->willReturn('/english/parent');
-        $this->rlpStrategy->loadByContentUuid('uuid', 'sulu_io', 'en')->willReturn('/english/child');
+        $englishDocument->getResourceSegment()->willReturn('/english/child');
         $this->rlpStrategy->getChildPart('/english/child')->willReturn('child');
         $this->rlpStrategy->generate('child', '/english/parent', 'sulu_io', 'en')->willReturn('/english/parent/child');
         $englishDocument->setResourceSegment('/english/parent/child')->shouldBeCalled();
         $this->documentManager->persist($englishDocument, 'en')->shouldBeCalled();
 
-        $this->resourceSegmentSubscriber->copyRoutes($event->reveal());
+        $this->resourceSegmentSubscriber->updateCopiedDocument($event->reveal());
     }
 
-    public function testCopyRoutesWithRedirects()
+    public function testUpdateCopiedDocumentWithRedirects()
     {
         $parentDocument = new \stdClass();
         $copiedDocument = $this->prophesize(ResourceSegmentBehavior::class);
@@ -369,7 +376,7 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $germanDocument->getRedirectType()->willReturn(RedirectType::NONE);
         $this->documentManager->find('copy-uuid', 'de')->willReturn($germanDocument);
         $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'de')->willReturn('/german/parent');
-        $this->rlpStrategy->loadByContentUuid('uuid', 'sulu_io', 'de')->willReturn('/german/child');
+        $germanDocument->getResourceSegment()->willReturn('/german/child');
         $this->rlpStrategy->getChildPart('/german/child')->willReturn('child');
         $this->rlpStrategy->generate('child', '/german/parent', 'sulu_io', 'de')->willReturn('/german/parent/child');
         $germanDocument->setResourceSegment('/german/parent/child')->shouldBeCalled();
@@ -387,10 +394,10 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->documentManager->find('copy-uuid', 'fr')->willReturn($frenchDocument);
         $this->documentManager->persist($frenchDocument, 'fr')->shouldNotBeCalled();
 
-        $this->resourceSegmentSubscriber->copyRoutes($event->reveal());
+        $this->resourceSegmentSubscriber->updateCopiedDocument($event->reveal());
     }
 
-    public function testCopyRoutesForWrongDocument()
+    public function testUpdateCopiedDocumentForWrongDocument()
     {
         $document = new \stdClass();
 
@@ -401,10 +408,10 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->documentInspector->getLocales(Argument::cetera())->shouldNotBeCalled();
 
-        $this->resourceSegmentSubscriber->copyRoutes($event->reveal());
+        $this->resourceSegmentSubscriber->updateCopiedDocument($event->reveal());
     }
 
-    public function testCopyRoutesWithGhostParent()
+    public function testUpdateCopiedDocumentWithGhostParent()
     {
         $parentDocument = new \stdClass();
         $copiedDocument = $this->prophesize(ResourceSegmentBehavior::class);
@@ -429,12 +436,12 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->documentManager->find('copy-uuid', 'de')->willReturn($germanDocument);
         $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'de')
             ->willThrow(ResourceLocatorNotFoundException::class);
-        $this->rlpStrategy->loadByContentUuid('uuid', 'sulu_io', 'de')->willReturn('/german/child');
+        $germanDocument->getResourceSegment()->willReturn('/german/child');
         $this->rlpStrategy->getChildPart('/german/child')->willReturn('child');
         $this->rlpStrategy->generate('child', null, 'sulu_io', 'de')->willReturn('/child');
         $germanDocument->setResourceSegment('/child')->shouldBeCalled();
         $this->documentManager->persist($germanDocument, 'de')->shouldBeCalled();
 
-        $this->resourceSegmentSubscriber->copyRoutes($event->reveal());
+        $this->resourceSegmentSubscriber->updateCopiedDocument($event->reveal());
     }
 }

@@ -424,6 +424,9 @@ define([
                 data,
                 this.options.language,
                 this.options.webspace,
+                {
+                    action: action
+                },
                 function(response) {
                     this.sandbox.emit('sulu.content.contents.saved', response.id, response, action);
                 }.bind(this),

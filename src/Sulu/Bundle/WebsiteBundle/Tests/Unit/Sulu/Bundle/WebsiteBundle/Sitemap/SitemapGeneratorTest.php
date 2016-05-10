@@ -189,6 +189,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $newsDocument->setNavigationContexts(['footer']);
         $newsDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($newsDocument, $locale, ['parent_path' => '/cmf/test_io/contents']);
+        $this->documentManager->publish($newsDocument, $locale);
         $this->documentManager->flush();
 
         /** @var PageDocument $productDocument */
@@ -210,6 +211,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $document->setParent($newsDocument);
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($document, $locale);
+        $this->documentManager->publish($document, $locale);
         $this->documentManager->flush();
 
         $document = $this->documentManager->create('page');
@@ -220,6 +222,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $document->setParent($newsDocument);
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($document, $locale);
+        $this->documentManager->publish($document, $locale);
         $this->documentManager->flush();
 
         $document = $this->documentManager->create('page');
@@ -232,6 +235,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $document->setParent($productDocument);
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($document, $locale);
+        $this->documentManager->publish($document, $locale);
         $this->documentManager->flush();
 
         $document = $this->documentManager->create('page');
@@ -244,6 +248,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $document->setParent($productDocument);
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($document, $locale);
+        $this->documentManager->publish($document, $locale);
         $this->documentManager->flush();
 
         $document = $this->documentManager->create('page');
@@ -257,6 +262,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $document->setParent($productDocument);
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($document, $locale);
+        $this->documentManager->publish($document, $locale);
         $this->documentManager->flush();
     }
 
