@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #2376 [ContentBundle]       Added cleanup for structure reindex provider
+
 * 1.2.2 (2016-05-09)
     * HOTFIX      #2375 [SecurityBundle]      Fixed visibility of entries in language dropdown
     * ENHANCEMENT #2373 [MediaBundle]         Added batch indexing for medias
