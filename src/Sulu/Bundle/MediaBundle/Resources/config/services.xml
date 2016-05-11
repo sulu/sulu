@@ -94,6 +94,7 @@
             <argument type="service" id="sulu_media.media_repository" />
             <argument type="service" id="sulu_media.collection_repository" />
             <argument type="service" id="sulu.repository.user" />
+            <argument type="service" id="sulu_category.category_repository"/>
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="sulu_media.storage" />
             <argument type="service" id="sulu_media.file_validator" />
