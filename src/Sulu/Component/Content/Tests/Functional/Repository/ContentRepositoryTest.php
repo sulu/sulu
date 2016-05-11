@@ -669,7 +669,17 @@ class ContentRepositoryTest extends SuluTestCase
         $user = $this->prophesize(UserInterface::class);
         $user->getRoleObjects()->willReturn([$role1->reveal(), $role2->reveal()]);
 
-        $page = $this->createPage('test-1', 'de', [], null, [1 => 'edit', 2 => 'view archive', 3 => 'add']);
+        $page = $this->createPage(
+            'test-1',
+            'de',
+            [],
+            null,
+            [
+                1 => ['edit' => true],
+                2 => ['view' => true, 'archive' => true],
+                3 => ['add' => true],
+            ]
+        );
 
         $result = $this->contentRepository->find(
             $page->getUuid(),
