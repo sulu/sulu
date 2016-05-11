@@ -14,7 +14,10 @@ use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Expose;
 use Sulu\Component\Rest\ListBuilder\Metadata\PropertyMetadata;
 
-abstract class AbstractFieldDescriptor implements FieldDescriptorInterface
+/**
+ * Base class for all field-descriptor.
+ */
+class FieldDescriptor implements FieldDescriptorInterface
 {
     /**
      * The name of the field in the database.

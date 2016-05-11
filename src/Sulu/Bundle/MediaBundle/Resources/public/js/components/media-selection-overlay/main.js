@@ -439,7 +439,6 @@ define([
                         resultKey: 'media',
                         instanceName: 'media-selection-overlay.' + this.options.instanceName,
                         preselected: this.options.preselectedIds,
-                        sortable: false,
                         viewSpacingBottom: 180,
                         viewOptions: {
                             table: {
@@ -448,8 +447,8 @@ define([
                                     {
                                         column: 'title',
                                         callback: function(item, badge) {
-                                            if (!!item.fallbackLocale) {
-                                                badge.title = item.fallbackLocale;
+                                            if (item.locale !== this.options.locale) {
+                                                badge.title = item.locale;
 
                                                 return badge;
                                             }
@@ -460,7 +459,8 @@ define([
                             'datagrid/decorators/masonry-view': {
                                 selectable: true,
                                 selectOnAction: true,
-                                unselectOnBackgroundClick: false
+                                unselectOnBackgroundClick: false,
+                                locale: this.options.locale
                             }
                         },
                         paginationOptions: {

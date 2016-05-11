@@ -70,11 +70,6 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
      */
     private $isSaved = false;
 
-    /**
-     * @var bool
-     */
-    private $isMoved = false;
-
     protected function setUp()
     {
         $this->mapper = $this->getMock(
@@ -92,9 +87,6 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
         $this->mapper->expects($this->any())
             ->method('save')
             ->will($this->returnCallback([$this, 'saveCallback']));
-        $this->mapper->expects($this->any())
-            ->method('move')
-            ->will($this->returnCallback([$this, 'moveCallback']));
         $this->mapper->expects($this->any())
             ->method('loadByContentUuid')
             ->will($this->returnValue('/test'));
@@ -160,11 +152,6 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
     public function saveCallback()
     {
         $this->isSaved = true;
-    }
-
-    public function moveCallback()
-    {
-        $this->isMoved = true;
     }
 
     protected function tearDown()

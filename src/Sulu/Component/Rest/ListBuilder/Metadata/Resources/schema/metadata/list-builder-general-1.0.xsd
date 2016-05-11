@@ -18,6 +18,8 @@
             <xs:element type="propertyType" name="property" maxOccurs="unbounded" minOccurs="0"/>
             <xs:element type="concatenationPropertyType" name="concatenation-property" maxOccurs="unbounded"
                         minOccurs="0"/>
+            <xs:element type="casePropertyType" name="case-property" maxOccurs="unbounded"
+                        minOccurs="0"/>
             <xs:element type="groupConcatPropertyType" name="group-concat-property" maxOccurs="unbounded"
                         minOccurs="0"/>
             <xs:element type="identityPropertyType" name="identity-property" maxOccurs="unbounded"
@@ -47,6 +49,11 @@
     </xs:complexType>
 
     <xs:complexType name="concatenationPropertyType">
+        <xs:group ref="concatenationPropertyGroup"/>
+        <xs:attributeGroup ref="propertyAttributeGroup"/>
+    </xs:complexType>
+
+    <xs:complexType name="casePropertyType">
         <xs:group ref="concatenationPropertyGroup"/>
         <xs:attributeGroup ref="propertyAttributeGroup"/>
     </xs:complexType>

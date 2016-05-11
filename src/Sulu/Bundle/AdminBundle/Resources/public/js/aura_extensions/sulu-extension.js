@@ -271,7 +271,7 @@
                  * @param order
                  */
                 insertOrderParamsInUrl = function(url, order) {
-                    if (!!order && !!order.length) {
+                    if (!!order) {
                         var idxBy = url.indexOf('sortBy'),
                             idxOrder = url.indexOf('sortOrder'),
                             divider = '&';

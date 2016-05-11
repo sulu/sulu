@@ -213,8 +213,15 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertCount(3, $result);
 
+        $this->assertEquals('de', $result[0]->getLocale());
         $this->assertEquals('test-1', $result[0]['title']);
+        $this->assertEquals('ghost', $result[0]->getLocalizationType()->getName());
+        $this->assertEquals('en', $result[0]->getLocalizationType()->getValue());
+        $this->assertEquals('de', $result[1]->getLocale());
+        $this->assertNull($result[1]->getLocalizationType());
         $this->assertEquals('test-2', $result[1]['title']);
+        $this->assertEquals('de', $result[2]->getLocale());
+        $this->assertNull($result[2]->getLocalizationType());
         $this->assertEquals('test-3', $result[2]['title']);
     }
 

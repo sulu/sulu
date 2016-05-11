@@ -20,7 +20,23 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2341 [MediaBundle]         Added category to medias
     * ENHANCEMENT #2323 [WebsiteBundle]       Added TWIG-Extension to check if parent nav-item is active
 
-* 1.2.1 (2016-04-26)
+* 1.2.2 (2016-05-09)
+    * HOTFIX      #2375 [SecurityBundle]      Fixed visibility of entries in language dropdown
+    * ENHANCEMENT #2373 [MediaBundle]         Added batch indexing for medias
+    * HOTFIX      #2371 [MediaBundle]         Fixed appveyor tests for collections
+    * HOTFIX      #2365                       Fixed missing and wrong method mocks
+    * ENHANCEMENT #2359 [MediaBundle]         Added ability to sort medias
+    * HOTFIX      #2368 [ContentBundle]       Fixed copying shadow properties
+    * HOTFIX      #2362 [Website]             Fixed hreflang-tag for homepage
+    * BUGFIX      #2364 [CoreBundle]          DependencyInjection: Throw exception when locales/translations are misconfigured
+    * BUGFIX      #2364 [ResourceBundle]      Moved fixtures from de_CH to de_ch
+    * HOTFIX      #2363 [WebsiteBundle]       Fixed sulu-content-path for webspaces with different domains for locales
+    * ENHANCEMENT #2346 [ResourceBundle]      Added fixtures for de_CH
+    * ENHANCEMENT #2346 [AdminBundle]         Use always users locale for globalize culture
+    * HOTFIX      #2347 [ContentBundle]       Fixed ghost children loading
+
+* 1.2.1 (2016-04-27)
+    * HOTFIX      #2340 [ContactBundle]       Fixed listing of contacts with Sulu user
     * HOTFIX      #2334 [ContactBundle]       Fixed account-contact search
     * HOTFIX      #2335 [ContentBundle]       Fixed textarea vertical resize
     * HOTFIX      #2331 [AdminBundle]         Fixed admin-controller to return correct system

@@ -1235,11 +1235,9 @@ class AccountController extends RestController implements ClassResourceInterface
     {
         $ids = array_filter(array_column($accounts, 'logo'));
         $logos = $this->get('sulu_media.media_manager')->getFormatUrls($ids, $locale);
-        $i = 0;
         foreach ($accounts as $key => $account) {
-            if (array_key_exists('logo', $account) && $account['logo']) {
-                $accounts[$key]['logo'] = $logos[$i];
-                $i += 1;
+            if (array_key_exists('logo', $account) && $account['logo'] && array_key_exists($account['logo'], $logos)) {
+                $accounts[$key]['logo'] = $logos[$account['logo']];
             }
         }
 

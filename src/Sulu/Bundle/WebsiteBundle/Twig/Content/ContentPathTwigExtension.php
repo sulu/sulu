@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Twig\Content;
 
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
@@ -26,11 +25,6 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
     private $requestAnalyzer;
 
     /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
-
-    /**
      * @var WebspaceManagerInterface
      */
     private $webspaceManager;
@@ -41,12 +35,10 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
     private $environment;
 
     public function __construct(
-        ContentMapperInterface $contentMapper,
         WebspaceManagerInterface $webspaceManager,
         $environment,
         RequestAnalyzerInterface $requestAnalyzer = null
     ) {
-        $this->contentMapper = $contentMapper;
         $this->webspaceManager = $webspaceManager;
         $this->environment = $environment;
         $this->requestAnalyzer = $requestAnalyzer;
@@ -66,41 +58,43 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
     /**
      * {@inheritdoc}
      */
-    public function getContentPath($url, $webspaceKey = null, $locale = null, $domain = null, $scheme = null)
+    public function getContentPath($route, $webspaceKey = null, $locale = null, $domain = null, $scheme = null)
     {
-        if (!$this->requestAnalyzer) {
-            return $url;
+        // if the request analyzer null or a route is passed which is relative or inclusive a domain nothing should be
+        // done (this is important for external-links in navigations)
+        if (!$this->requestAnalyzer || strpos($route, '/') !== 0) {
+            return $route;
         }
 
-        $domain = $domain ?: $this->requestAnalyzer->getAttribute('host');
         $scheme = $scheme ?: $this->requestAnalyzer->getAttribute('scheme');
         $locale = $locale ?: $this->requestAnalyzer->getCurrentLocalization()->getLocale();
+        $webspaceKey = $webspaceKey ?: $this->requestAnalyzer->getWebspace()->getKey();
 
-        if ($webspaceKey !== null) {
-            if (!$this->webspaceManager->findWebspaceByKey($webspaceKey)->hasDomain($domain, $this->environment)) {
-                $domain = null;
-            }
-
+        $url = null;
+        $host = $this->requestAnalyzer->getAttribute('host');
+        if ($domain || $this->webspaceManager->findWebspaceByKey($webspaceKey)->hasDomain($host, $this->environment)) {
             $url = $this->webspaceManager->findUrlByResourceLocator(
-                $url,
+                $route,
                 $this->environment,
                 $locale,
                 $webspaceKey,
-                $domain,
-                $scheme
-            );
-        } elseif (strpos($url, '/') === 0) {
-            $url = $this->webspaceManager->findUrlByResourceLocator(
-                $url,
-                $this->environment,
-                $locale,
-                $this->requestAnalyzer->getWebspace()->getKey(),
-                $domain,
+                $domain ?: $this->requestAnalyzer->getAttribute('host'),
                 $scheme
             );
         }
 
-        return $url;
+        if (!$url && !$domain) {
+            $url = $this->webspaceManager->findUrlByResourceLocator(
+                $route,
+                $this->environment,
+                $locale,
+                $webspaceKey,
+                null,
+                $scheme
+            );
+        }
+
+        return $url ?: $route;
     }
 
     /**

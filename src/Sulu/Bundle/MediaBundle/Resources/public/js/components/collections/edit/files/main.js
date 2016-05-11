@@ -294,11 +294,11 @@ define([
                 },
                 {
                     el: this.$find(constants.datagridSelector),
-                    url: '/admin/api/media?orderBy=media.created&orderSort=desc&locale=' + UserSettingsManager.getMediaLocale() + '&collection=' + this.options.id,
+                    url: '/admin/api/media?locale=' + UserSettingsManager.getMediaLocale() + '&collection=' + this.options.id,
+                    searchFields: ['name', 'title', 'description'],
                     view: view,
                     pagination: UserSettingsManager.getMediaListPagination(),
                     resultKey: 'media',
-                    sortable: false,
                     actionCallback: function(clickedId) {
                         this.editMedia(clickedId);
                     }.bind(this),
@@ -308,13 +308,26 @@ define([
                             noImgIcon: function(item) {
                                 return FileIcons.getByMimeType(item.mimeType);
                             },
+                            badges: [
+                                {
+                                    column: 'title',
+                                    callback: function(item, badge) {
+                                        if (item.locale !== UserSettingsManager.getMediaLocale()) {
+                                            badge.title = item.locale;
+
+                                            return badge;
+                                        }
+                                    }.bind(this)
+                                }
+                            ],
                             emptyIcon: 'fa-file-o'
                         },
                         'datagrid/decorators/masonry-view': {
                             noImgIcon: function(item) {
                                 return FileIcons.getByMimeType(item.mimeType);
                             },
-                            emptyIcon: 'fa-file-o'
+                            emptyIcon: 'fa-file-o',
+                            locale: UserSettingsManager.getMediaLocale()
                         }
                     },
                     paginationOptions: {

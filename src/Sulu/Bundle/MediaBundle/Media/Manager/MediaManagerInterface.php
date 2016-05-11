@@ -15,7 +15,6 @@ use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 interface MediaManagerInterface
@@ -102,22 +101,6 @@ interface MediaManagerInterface
     public function move($id, $locale, $destCollection);
 
     /**
-     * Return the FieldDescriptor by name.
-     *
-     * @param string $key
-     *
-     * @return DoctrineFieldDescriptor
-     */
-    public function getFieldDescriptor($key);
-
-    /**
-     * Return the FieldDescriptors.
-     *
-     * @return array
-     */
-    public function getFieldDescriptors();
-
-    /**
      * Increase the download counter of a fileVersion.
      *
      * @param int $fileVersionId
@@ -130,6 +113,7 @@ interface MediaManagerInterface
      * Takes an array of media ids and returns an array of formats and urls.
      *
      * @param array $ids
+     * @param string $locale
      *
      * @return array
      */
@@ -143,4 +127,15 @@ interface MediaManagerInterface
      * @return Media
      */
     public function addFormatsAndUrl(Media $media);
+
+    /**
+     * Returns download url for given id and filename.
+     *
+     * @param string $id
+     * @param string $fileName
+     * @param string $version
+     *
+     * @return string
+     */
+    public function getUrl($id, $fileName, $version);
 }

@@ -633,7 +633,7 @@ class ContentRepository implements ContentRepositoryInterface
         }
 
         $content = new Content(
-            $locale,
+            $originalLocale,
             $webspaceKey,
             $row->getValue('uuid'),
             $this->resolvePath($row, $webspaceKey),
