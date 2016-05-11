@@ -14,6 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Media\Manager;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use FFMpeg\FFProbe;
+use Sulu\Bundle\CategoryBundle\Category\CategoryRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
@@ -62,6 +63,11 @@ class MediaManager implements MediaManagerInterface
      * @var CollectionRepository
      */
     protected $collectionRepository;
+
+    /**
+     * @var CategoryRepositoryInterface
+     */
+    protected $categoryRepository;
 
     /**
      * @var EntityManager
@@ -160,6 +166,7 @@ class MediaManager implements MediaManagerInterface
         MediaRepositoryInterface $mediaRepository,
         CollectionRepositoryInterface $collectionRepository,
         UserRepositoryInterface $userRepository,
+        CategoryRepositoryInterface $categoryRepository,
         EntityManager $em,
         StorageInterface $storage,
         FileValidatorInterface $validator,
@@ -177,6 +184,7 @@ class MediaManager implements MediaManagerInterface
         $this->mediaRepository = $mediaRepository;
         $this->collectionRepository = $collectionRepository;
         $this->userRepository = $userRepository;
+        $this->categoryRepository = $categoryRepository;
         $this->em = $em;
         $this->storage = $storage;
         $this->validator = $validator;
@@ -596,8 +604,7 @@ class MediaManager implements MediaManagerInterface
 
                         if (is_array($categoryIds) && !empty($categoryIds)) {
                             /** @var CategoryRepositoryInterface $repository */
-                            $repository = $this->em->getRepository(self::ENTITY_NAME_CATEGORY);
-                            $categories = $repository->findCategoryByIds($categoryIds);
+                            $categories = $this->categoryRepository->findCategoryByIds($categoryIds);
 
                             foreach ($categories as $category) {
                                 $media->addCategory($category);
