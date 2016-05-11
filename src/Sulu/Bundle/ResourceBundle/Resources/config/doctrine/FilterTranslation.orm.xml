@@ -6,10 +6,10 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="name" type="string" length="255" nullable="true"/>
-        <field name="locale" type="string" length="10"/>
-        <field name="shortDescription" type="text" nullable="true"/>
-        <field name="longDescription" type="text" nullable="true"/>
+        <field name="name" column="name" type="string" length="255" nullable="true"/>
+        <field name="locale" column="locale" type="string" length="10"/>
+        <field name="shortDescription" column="shortDescription" type="text" nullable="true"/>
+        <field name="longDescription" column="longDescription" type="text" nullable="true"/>
 
         <many-to-one target-entity="Sulu\Bundle\ResourceBundle\Entity\Filter" field="filter"
                      inversed-by="translations">
