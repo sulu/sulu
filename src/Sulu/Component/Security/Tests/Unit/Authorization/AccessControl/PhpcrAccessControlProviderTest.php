@@ -45,7 +45,7 @@ class PhpcrAccessControlProviderTest extends \PHPUnit_Framework_TestCase
         $document->willImplement(SecurityBehavior::class);
 
         $this->documentManager->find('1', null, ['rehydrate' => false])->willReturn($document);
-        $document->setPermissions(['role' => ['view']])->shouldBeCalled();
+        $document->setPermissions(['role' => ['view' => true, 'edit' => false]])->shouldBeCalled();
         $this->documentManager->persist($document)->shouldBeCalled();
         $this->documentManager->flush()->shouldBeCalled();
 
