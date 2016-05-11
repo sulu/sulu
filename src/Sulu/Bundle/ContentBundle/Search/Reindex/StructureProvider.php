@@ -99,6 +99,14 @@ class StructureProvider implements LocalizedReindexProviderInterface
     /**
      * {@inheritdoc}
      */
+    public function cleanUp($classFqn)
+    {
+        $this->documentManager->clear();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getCount($classFqn)
     {
         $query = $this->getQuery($classFqn);

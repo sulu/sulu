@@ -233,4 +233,12 @@ class StructureProviderTest extends \PHPUnit_Framework_TestCase
             $this->structure->reveal(),
         ], $results);
     }
+
+    public function testCleanup()
+    {
+        $classFqn = 'Foo';
+        $this->provider->cleanUp($classFqn);
+
+        $this->documentManager->clear()->shouldBeCalled();
+    }
 }
