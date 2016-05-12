@@ -232,7 +232,7 @@ class FieldDescriptor implements FieldDescriptorInterface
      */
     public function compare(FieldDescriptorInterface $other)
     {
-        if (!$other instanceof FieldDescriptor) {
+        if (!$other instanceof self) {
             return false;
         }
 

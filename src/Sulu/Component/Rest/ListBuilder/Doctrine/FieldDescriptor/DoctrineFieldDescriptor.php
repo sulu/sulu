@@ -118,7 +118,7 @@ class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
      */
     public function compare(FieldDescriptorInterface $other)
     {
-        if (!$other instanceof DoctrineFieldDescriptor) {
+        if (!$other instanceof self) {
             return false;
         }
 

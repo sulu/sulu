@@ -216,12 +216,8 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      */
     public function sort(FieldDescriptorInterface $fieldDescriptor, $order = self::SORTORDER_ASC)
     {
-        // Do not continue if filter is not sortable.
-        if (!$fieldDescriptor->getSortable()) {
-            return;
-        }
-
         $existingIndex = $this->retrieveIndexOfFieldDescriptor($fieldDescriptor, $this->sortFields);
+
         if ($existingIndex !== false) {
             $this->sortOrders[$existingIndex] = $order;
         } else {
@@ -346,17 +342,17 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      * Returns index of given FieldDescriptor in given array of descriptors.
      * If no match is found, false will be returned.
      *
-     * @param FieldDescriptorInterface $currentFieldDescriptor
-     * @param FieldDescriptorInterface[] $fieldDescriptorArray
+     * @param FieldDescriptorInterface $fieldDescriptor
+     * @param FieldDescriptorInterface[] $fieldDescriptors
      *
      * @return bool|int|string
      */
     protected function retrieveIndexOfFieldDescriptor(
-        FieldDescriptorInterface $currentFieldDescriptor,
-        array $fieldDescriptorArray
+        FieldDescriptorInterface $fieldDescriptor,
+        array $fieldDescriptors
     ) {
-        foreach ($fieldDescriptorArray as $index => $fieldDescriptor) {
-            if ($currentFieldDescriptor->compare($fieldDescriptor)) {
+        foreach ($fieldDescriptors as $index => $other) {
+            if ($fieldDescriptor->compare($other)) {
                 return $index;
             }
         }

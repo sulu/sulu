@@ -116,11 +116,11 @@ class DoctrineIdentityFieldDescriptor extends AbstractDoctrineFieldDescriptor
      */
     public function compare(FieldDescriptorInterface $other)
     {
-        if (!$other instanceof DoctrineIdentityFieldDescriptor) {
+        if (!$other instanceof self) {
             return false;
         }
 
         return $this->getEntityName() === $other->getEntityName()
-        && $this->getFieldName() === $other->getFieldName();
+            && $this->getFieldName() === $other->getFieldName();
     }
 }
