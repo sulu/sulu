@@ -145,8 +145,6 @@
 
         <!-- portal loader -->
         <service id="sulu_website.routing.portal_loader" class="%sulu_website.routing.portal_loader.class%">
-            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument>%kernel.environment%</argument>
             <tag name="routing.loader"/>
         </service>
 
