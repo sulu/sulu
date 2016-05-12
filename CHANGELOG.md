@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-master
     * HOTFIX      #2378 [ContentBundle]       Fixed writing security to page documents
     * HOTFIX      #2376 [ContentBundle]       Added cleanup for structure reindex provider
+    * HOTFIX      #2384 [WebsiteBundle]       Added condition to custom-routes to match only full-matches
 
 * 1.2.2 (2016-05-09)
     * HOTFIX      #2375 [SecurityBundle]      Fixed visibility of entries in language dropdown
