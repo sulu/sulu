@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2381 [ContentBundle]       Fixed auto-name subscriber to rename at the very end of persist
     * HOTFIX      #2378 [ContentBundle]       Fixed writing security to page documents
     * HOTFIX      #2376 [ContentBundle]       Added cleanup for structure reindex provider
 
