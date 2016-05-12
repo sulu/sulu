@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2386 [ContentBundle]       Use DocumentManager for NodeController postAction
     * BUGFIX      #2325 [WebsiteBundle]       Fixed a query issue on Postgresql
     * BUGFIX      #2379 [MediaBundle]         Inject CategoryRepository in MediaManager to avoid using removed constant
     * BUGFIX      #2369 [All]                 Install the symfony phpunit bridge again
