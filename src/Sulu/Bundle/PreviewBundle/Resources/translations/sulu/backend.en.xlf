@@ -32,7 +32,7 @@
             </trans-unit>
             <trans-unit id="8" resname="sulu.preview.change-webspace">
                 <source>sulu.preview.change-webspace</source>
-                <target>Please change webspace./target>
+                <target>Please change webspace.</target>
             </trans-unit>
             <trans-unit id="9" resname="sulu.preview.no-object-provider">
                 <source>sulu.preview.no-object-provider</source>
