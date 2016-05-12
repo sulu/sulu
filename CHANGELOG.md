@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2388 [Rest]                Fixed bug when applying same sortfield multiple times
     * HOTFIX      #2378 [ContentBundle]       Fixed writing security to page documents
 
 * 1.2.2 (2016-05-09)

@@ -226,4 +226,17 @@ class FieldDescriptor implements FieldDescriptorInterface
     {
         $this->metadata = $metadata;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function compare(FieldDescriptorInterface $other)
+    {
+        if (!$other instanceof FieldDescriptor) {
+            return false;
+        }
+
+        return $this->getName() === $other->getName()
+            && $this->getType() === $other->getType();
+    }
 }
