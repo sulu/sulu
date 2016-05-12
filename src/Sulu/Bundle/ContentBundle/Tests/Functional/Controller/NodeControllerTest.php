@@ -1783,7 +1783,6 @@ class NodeControllerTest extends SuluTestCase
         $this->assertFalse($data['publishedState']);
         $this->assertEquals(['main', 'footer'], $data['navContexts']);
         $this->assertFalse($data['hasSub']);
-        $this->assertEquals(0, count($data['_embedded']['nodes']));
         $this->assertArrayHasKey('_links', $data);
 
         // get child nodes from root

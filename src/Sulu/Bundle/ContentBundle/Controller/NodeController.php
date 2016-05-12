@@ -21,9 +21,8 @@ use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
-use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Form\Exception\InvalidFormException;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 use Sulu\Component\Content\Repository\Mapping\MappingInterface;
@@ -93,7 +92,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
     /**
      * returns entry point (webspace as node).
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -290,7 +289,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * Returns a tree along the given path with the siblings of all nodes on the path.
      * This functionality is required for preloading the content navigation.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -364,7 +363,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
     /**
      * returns a content item for startpage.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -381,7 +380,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
     /**
      * returns all content items as JSON String.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -504,7 +503,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
     /**
      * Returns the title of the pages for a given smart content configuration.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
@@ -578,7 +577,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
     /**
      * saves node with given uuid and data.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      * @param string $uuid
      *
      * @return Response
@@ -604,28 +603,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
         $this->get('sulu_hash.request_hash_checker')->checkHash($request, $document, $document->getUuid());
 
-        $data = $request->request->all();
-        $data['workflowStage'] = $this->getRequestParameter($request, 'state');
-
-        $form = $this->createForm($type, $document, [
-            // disable csrf protection, since we can't produce a token, because the form is cached on the client
-            'csrf_protection' => false,
-            'webspace_key' => $this->getWebspace($request),
-        ]);
-        $form->submit($data, false);
-
-        if (!$form->isValid()) {
-            throw new InvalidFormException($form);
-        }
-
-        $this->getDocumentManager()->persist(
-            $document,
-            $language,
-            [
-                'user' => $this->getUser()->getId(),
-                'clear_missing_content' => false,
-            ]
-        );
+        $this->persistDocument($request, $type, $document, $language);
         $this->getDocumentManager()->flush();
 
         $view = $this->view($document);
@@ -639,53 +617,36 @@ class NodeController extends RestController implements ClassResourceInterface, S
     /**
      * Updates a content item and returns result as JSON String.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     *
+     * @throws InvalidFormException
+     * @throws MissingParameterException
      */
     public function postAction(Request $request)
     {
-        try {
-            $language = $this->getLanguage($request);
-            $webspace = $this->getWebspace($request);
-            $isShadow = $this->getRequestParameter($request, 'isShadow', false);
-            $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
-            $parent = $this->getRequestParameter($request, 'parent');
-            $state = $this->getRequestParameter($request, 'state');
-            if ($state !== null) {
-                $state = intval($state);
-            }
+        $type = 'page';
+        $language = $this->getLanguage($request);
 
-            $data = $request->request->all();
+        $document = $this->getDocumentManager()->create($type);
 
-            $template = isset($data['template']) ? $data['template'] : null;
+        $this->persistDocument($request, $type, $document, $language);
+        $this->getDocumentManager()->flush();
 
-            $mapperRequest = ContentMapperRequest::create()
-                ->setTemplateKey($template)
-                ->setWebspaceKey($webspace)
-                ->setUserId($this->getUser()->getId())
-                ->setState($state)
-                ->setIsShadow($isShadow)
-                ->setShadowBaseLanguage($shadowBaseLanguage)
-                ->setLocale($language)
-                ->setParentUuid($parent)
-                ->setData($data);
+        $view = $this->view($document);
+        $view->setSerializationContext(
+            SerializationContext::create()->setSerializeNull(true)->setGroups(['defaultPage'])
+        );
 
-            $result = $this->getRepository()->saveNodeRequest($mapperRequest);
-
-            return $this->handleView($this->view($result));
-        } catch (ResourceLocatorNotValidException $e) {
-            $restException = new RestException('The chosen ResourceLocator is not valid');
-
-            return $this->handleView($this->view($restException->toArray(), 409));
-        }
+        return $this->handleView($view);
     }
 
     /**
      * deletes node with given uuid.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param string                                    $uuid
+     * @param Request $request
+     * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -979,5 +940,46 @@ class NodeController extends RestController implements ClassResourceInterface, S
         }
 
         return $webspaceContents;
+    }
+
+    /**
+     * Persists the document using the given information.
+     *
+     * @param Request $request
+     * @param $type
+     * @param $document
+     * @param $language
+     *
+     * @throws InvalidFormException
+     * @throws MissingParameterException
+     */
+    private function persistDocument(Request $request, $type, $document, $language)
+    {
+        $data = $request->request->all();
+        $data['workflowStage'] = $this->getRequestParameter($request, 'state', false, WorkflowStage::TEST);
+
+        if ($request->query->has('parent')) {
+            $data['parent'] = $request->query->get('parent');
+        }
+
+        $form = $this->createForm($type, $document, [
+            // disable csrf protection, since we can't produce a token, because the form is cached on the client
+            'csrf_protection' => false,
+            'webspace_key' => $this->getWebspace($request),
+        ]);
+        $form->submit($data, false);
+
+        if (!$form->isValid()) {
+            throw new InvalidFormException($form);
+        }
+
+        $this->getDocumentManager()->persist(
+            $document,
+            $language,
+            [
+                'user' => $this->getUser()->getId(),
+                'clear_missing_content' => false,
+            ]
+        );
     }
 }
