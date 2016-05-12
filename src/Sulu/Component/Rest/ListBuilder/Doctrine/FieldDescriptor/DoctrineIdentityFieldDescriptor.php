@@ -12,6 +12,7 @@
 namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 
 /**
  * This class defines the necessary information for a field to resolve it within a Doctrine Query for the ListBuilder.
@@ -108,5 +109,18 @@ class DoctrineIdentityFieldDescriptor extends AbstractDoctrineFieldDescriptor
     public function getJoins()
     {
         return $this->joins;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function compare(FieldDescriptorInterface $other)
+    {
+        if (!$other instanceof self) {
+            return false;
+        }
+
+        return $this->getEntityName() === $other->getEntityName()
+            && $this->getFieldName() === $other->getFieldName();
     }
 }

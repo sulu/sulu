@@ -216,8 +216,15 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      */
     public function sort(FieldDescriptorInterface $fieldDescriptor, $order = self::SORTORDER_ASC)
     {
-        $this->sortFields[] = $fieldDescriptor;
-        $this->sortOrders[] = $order;
+        $existingIndex = $this->retrieveIndexOfFieldDescriptor($fieldDescriptor, $this->sortFields);
+
+        if ($existingIndex !== false) {
+            $this->sortOrders[$existingIndex] = $order;
+        } else {
+            // Else add to list of sort-fields.
+            $this->sortFields[] = $fieldDescriptor;
+            $this->sortOrders[] = $order;
+        }
 
         return $this;
     }
@@ -329,5 +336,27 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     public function addExpression(ExpressionInterface $expression)
     {
         $this->expressions[] = $expression;
+    }
+
+    /**
+     * Returns index of given FieldDescriptor in given array of descriptors.
+     * If no match is found, false will be returned.
+     *
+     * @param FieldDescriptorInterface $fieldDescriptor
+     * @param FieldDescriptorInterface[] $fieldDescriptors
+     *
+     * @return bool|int|string
+     */
+    protected function retrieveIndexOfFieldDescriptor(
+        FieldDescriptorInterface $fieldDescriptor,
+        array $fieldDescriptors
+    ) {
+        foreach ($fieldDescriptors as $index => $other) {
+            if ($fieldDescriptor->compare($other)) {
+                return $index;
+            }
+        }
+
+        return false;
     }
 }
