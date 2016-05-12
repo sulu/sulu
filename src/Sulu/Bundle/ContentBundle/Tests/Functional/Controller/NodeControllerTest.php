@@ -1974,6 +1974,40 @@ class NodeControllerTest extends SuluTestCase
         $this->assertContains('Sulu CMF', $titles);
     }
 
+    public function testInternalLinkAutoName()
+    {
+        $data = [
+            [
+                'template' => 'internallinks',
+                'title' => 'test1',
+                'url' => '/test1',
+                'internalLinks' => [],
+            ],
+            [
+                'template' => 'default',
+                'title' => 'test2',
+                'url' => '/test1/test2',
+            ],
+        ];
+
+        $client = $this->createAuthenticatedClient();
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data[0]);
+        $data[0] = json_decode($client->getResponse()->getContent(), true);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&parent=' . $data[0]['id'], $data[1]);
+        $data[1] = json_decode($client->getResponse()->getContent(), true);
+
+        $data[0]['internalLinks'][] = $data[1]['id'];
+        $client->request('PUT', '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en', $data[0]);
+        $data[0] = json_decode($client->getResponse()->getContent(), true);
+
+        $data[0]['title'] = 'Dornbirn';
+        $client->request('PUT', '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en', $data[0]);
+        $result = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals('/dornbirn', $result['path']);
+        $this->assertEquals('Dornbirn', $result['title']);
+    }
+
     private function setUpContent($data)
     {
         /** @var ContentMapperInterface $mapper */
