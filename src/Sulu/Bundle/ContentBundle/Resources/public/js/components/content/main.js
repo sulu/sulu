@@ -95,7 +95,7 @@ define([
                 this.loadData().then(function() {
 
                     if (!!this.options.preview) {
-                        this.preview = Preview.initialize(this.data.permissions, this.options.webspace);
+                        this.preview = Preview.initialize(this.data._permissions, this.options.webspace);
                     }
 
                     dataDeferred.resolve();

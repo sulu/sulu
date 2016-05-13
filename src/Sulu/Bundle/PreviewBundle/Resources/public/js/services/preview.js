@@ -260,6 +260,15 @@ define([
             }).fail(function(handler, message) {
                 Mediator.emit('sulu.preview.error', message.code, message.message);
             }.bind(this));
+
+            Mediator.off('sulu.preview.webspace');
+            Mediator.off('sulu.preview.render');
+            Mediator.off('sulu.preview.update');
+
+            if (!!this.$element) {
+                this.$element.off('keyup');
+                this.$element.off('change');
+            }
         }.bind(this));
     };
 
@@ -326,6 +335,8 @@ define([
      * @param {String} prefix
      */
     Preview.prototype.bindDomEvents = function($element, prefix) {
+        this.$element = $element;
+
         var changeFilter = '.preview-change-update, input[type="checkbox"].preview-update, input[type="radio"].preview-update, select.preview-update, div.preview-update',
             keyupFilter = '.preview-update:not(' + changeFilter + ', .no-preview-update)';
 
