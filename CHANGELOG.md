@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2396 [PreviewBundle]       Fixed leaking events of preview
     * BUGFIX      #2389 [MediaBundle]         Removed twice adding of navigation item
     * ENHANCEMENT #2386 [ContentBundle]       Use DocumentManager for NodeController postAction
     * BUGFIX      #2325 [WebsiteBundle]       Fixed a query issue on Postgresql
