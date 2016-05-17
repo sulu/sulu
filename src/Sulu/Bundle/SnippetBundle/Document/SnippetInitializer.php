@@ -31,7 +31,7 @@ class SnippetInitializer implements InitializerInterface
         $this->pathBuilder = $pathBuilder;
     }
 
-    public function initialize(OutputInterface $output)
+    public function initialize(OutputInterface $output, $purge = false)
     {
         $snippetPath = $this->pathBuilder->build(['%base%', '%snippet%']);
 

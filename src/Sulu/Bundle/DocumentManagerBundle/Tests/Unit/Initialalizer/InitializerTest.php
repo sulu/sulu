@@ -13,24 +13,45 @@ namespace vendor\sulu\sulu\src\Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Init
 
 use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\InitializerInterface;
-use Sulu\Bundle\DocumentManagerBundle\Initializer\PurgerInterface;
-use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class InitializerTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    /**
+     * @var InitializerInterface
+     */
+    private $initializer1;
+
+    /**
+     * @var InitializerInterface
+     */
+    private $initializer2;
+
+    /**
+     * @var InitializerInterface
+     */
+    private $initializer3;
+
+    /**
+     * @var Initializer
+     */
+    private $initializer;
+
     public function setUp()
     {
         $this->container = $this->prophesize(ContainerInterface::class);
         $this->initializer1 = $this->prophesize(InitializerInterface::class);
         $this->initializer2 = $this->prophesize(InitializerInterface::class);
         $this->initializer3 = $this->prophesize(InitializerInterface::class);
-        $this->purger = $this->prophesize(PurgerInterface::class);
 
         $this->initializer = new Initializer(
             $this->container->reveal(),
-            $this->purger->reveal(),
             [
                 'service1' => 50,
                 'service2' => 10,
@@ -43,21 +64,18 @@ class InitializerTest extends \PHPUnit_Framework_TestCase
         $this->container->get('service3')->willReturn($this->initializer3->reveal());
     }
 
-    /**
-     * It should execute the initializers in the correct order.
-     */
     public function testInitialize()
     {
         $calls = [];
         $output = new NullOutput();
 
-        $this->initializer1->initialize($output)->will(function () use (&$calls) {
+        $this->initializer1->initialize($output, false)->will(function () use (&$calls) {
             $calls[] = 'service1';
         });
-        $this->initializer2->initialize($output)->will(function () use (&$calls) {
+        $this->initializer2->initialize($output, false)->will(function () use (&$calls) {
             $calls[] = 'service2';
         });
-        $this->initializer3->initialize($output)->will(function () use (&$calls) {
+        $this->initializer3->initialize($output, false)->will(function () use (&$calls) {
             $calls[] = 'service3';
         });
 
@@ -68,17 +86,23 @@ class InitializerTest extends \PHPUnit_Framework_TestCase
         ], $calls);
     }
 
-    /**
-     * It should purge the repository if the $purge argument is true.
-     */
-    public function testPurge()
+    public function testInitializeWithPurge()
     {
         $calls = [];
-        $output = new BufferedOutput();
+        $output = new NullOutput();
 
-        $this->initializer->initialize($output, true);
+        $this->initializer1->initialize($output, true)->will(function () use (&$calls) {
+            $calls[] = 'service1';
+        });
+        $this->initializer2->initialize($output, true)->will(function () use (&$calls) {
+            $calls[] = 'service2';
+        });
+        $this->initializer3->initialize($output, true)->will(function () use (&$calls) {
+            $calls[] = 'service3';
+        });
 
-        $this->assertContains('!! Purging workspaces', $output->fetch());
-        $this->purger->purge()->shouldHaveBeenCalled();
+        $this->initializer->initialize(null, true);
+
+        $this->assertEquals(['service1', 'service3', 'service2'], $calls);
     }
 }

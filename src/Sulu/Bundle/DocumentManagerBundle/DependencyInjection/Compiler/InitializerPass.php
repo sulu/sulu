@@ -38,6 +38,6 @@ class InitializerPass implements CompilerPassInterface
             $map[$id] = $priority;
         }
 
-        $initializerDef->replaceArgument(2, $map);
+        $initializerDef->replaceArgument(1, $map);
     }
 }

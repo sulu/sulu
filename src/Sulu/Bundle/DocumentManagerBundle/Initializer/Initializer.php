@@ -37,16 +37,10 @@ class Initializer
      */
     private $initializerMap;
 
-    /**
-     * @var PurgerInterface
-     */
-    private $purger;
-
-    public function __construct(ContainerInterface $container, PurgerInterface $purger, array $initializerMap = [])
+    public function __construct(ContainerInterface $container, array $initializerMap = [])
     {
         $this->container = $container;
         $this->initializerMap = $initializerMap;
-        $this->purger = $purger;
     }
 
     /**
@@ -59,20 +53,14 @@ class Initializer
     {
         $output = $output ?: new NullOutput();
 
-        if (true === $purge) {
-            $output->write('!! Purging workspaces');
-            $this->purger->purge();
-            $output->writeln(' [OK]');
-        }
-
         arsort($this->initializerMap);
 
         foreach (array_keys($this->initializerMap) as $initializerId) {
             $output->writeln(sprintf('<comment>%s</>', $initializerId));
             $initializer = $this->container->get($initializerId);
-            $initializer->initialize($output);
+            $initializer->initialize($output, $purge);
         }
         $output->write(PHP_EOL);
-        $output->writeln('<comment>*</> Legend: [+] Added [*] Updated [ ] No change');
+        $output->writeln('<comment>*</> Legend: [+] Added [*] Updated [-] Purged [ ] No change');
     }
 }

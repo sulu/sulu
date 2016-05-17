@@ -101,15 +101,15 @@
         </service>
 
         <!-- Initializer -->
-        <service id="sulu_document_manager.initializer.root_path_purger" class="Sulu\Bundle\DocumentManagerBundle\Initializer\RootPathPurger">
+        <service id="sulu_document_manager.initializer.root_path_purge_initializer" class="Sulu\Bundle\DocumentManagerBundle\Initializer\RootPathPurgeInitializer">
             <argument type="service" id="doctrine_phpcr" />
             <argument type="service" id="sulu_document_manager.path_segment_registry" />
             <argument>base</argument>
+            <tag name="sulu_document_manager.initializer" priority="250"/>
         </service>
 
         <service id="sulu_document_manager.initializer" class="Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer">
             <argument type="service" id="service_container" />
-            <argument type="service" id="sulu_document_manager.initializer.root_path_purger" />
             <argument type="collection" />
         </service>
 
