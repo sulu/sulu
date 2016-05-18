@@ -87,7 +87,7 @@ class WebspaceInitializer implements InitializerInterface
             $webspaceLocales[] = $localization->getLocalization();
         }
 
-        $homeType = $webspace->getTheme()->getDefaultTemplate('homepage');
+        $homeType = $webspace->getTheme()->getDefaultTemplate('home');
         if ($this->nodeManager->has($homePath)) {
             $homeDocument = $this->documentManager->find($homePath, 'fr', [
                 'load_ghost_content' => false,

@@ -111,17 +111,9 @@ class DocumentInspector extends BaseDocumentInspector
      */
     public function getStructureMetadata(StructureBehavior $document)
     {
-        $alias = $this->getMetadata($document)->getAlias();
-        $structureType = $document->getStructureType();
-        if (null === $structureType) {
-            $webspace = $this->webspaceManager->findWebspaceByKey($this->getWebspace($document));
-            $structureType = $webspace->getTheme()->getDefaultTemplate($alias);
-            $document->setStructureType($structureType);
-        }
-
         return $this->structureFactory->getStructureMetadata(
             $this->getMetadata($document)->getAlias(),
-            $structureType
+            $structureType = $document->getStructureType()
         );
     }
 

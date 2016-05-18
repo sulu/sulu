@@ -10,6 +10,7 @@
             <argument type="service" id="sulu.content.type_manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_content.compat.structure.legacy_property_factory" />
+            <argument type="service" id="sulu_core.webspace.webspace_manager" />
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 

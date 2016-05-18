@@ -2841,7 +2841,7 @@ class ContentMapperTest extends SuluTestCase
 
         $this->assertEquals($data[5]->getUuid(), $result->getUuid());
         $this->assertEquals('/page-1/sub-1-1', $result->getPath());
-        $this->assertEquals(2, $result->getChanger());
+        $this->assertEquals(1, $result->getChanger());
 
         $result = $this->mapper->load($result->getUuid(), 'sulu_io', 'en', true);
 
