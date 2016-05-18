@@ -716,21 +716,18 @@ class ContentMapper implements ContentMapperInterface
         $localizations = $webspace->getAllLocalizations();
 
         // load from phpcr
-        $document = $this->documentManager->find($uuid, $locale);
+        $originalDocument = $this->documentManager->find($uuid, $locale);
         $parentDocument = $this->documentManager->find($destParentUuid, $locale);
 
         if ($move) {
             // move node
-            $this->documentManager->move($document, $destParentUuid);
+            $this->documentManager->move($originalDocument, $destParentUuid);
         } else {
             // copy node
-            $copiedPath = $this->documentManager->copy($document, $destParentUuid);
-            $document = $this->documentManager->find($copiedPath, $locale);
+            $copiedPath = $this->documentManager->copy($originalDocument, $destParentUuid);
+            $originalDocument = $this->documentManager->find($copiedPath, $locale);
             $this->documentManager->refresh($parentDocument);
         }
-
-        $originalDocument = $document;
-        $originalLocale = $locale;
 
         // modifiy the resource locators -- note this can be removed once the routing auto
         // system is implemented.
@@ -738,7 +735,7 @@ class ContentMapper implements ContentMapperInterface
             $locale = $locale->getLocale();
 
             // prepare parent content node
-            $document = $this->documentManager->find($document->getUuid(), $locale);
+            $document = $this->documentManager->find($originalDocument->getUuid(), $locale);
             $parentDocument = $this->documentManager->find($parentDocument->getUuid(), $locale);
 
             if (!$document instanceof ResourceSegmentBehavior) {
@@ -771,8 +768,6 @@ class ContentMapper implements ContentMapperInterface
         }
 
         $this->documentManager->flush();
-
-        $this->documentManager->find($document->getUuid(), $originalLocale);
 
         return $this->documentToStructure($originalDocument);
     }

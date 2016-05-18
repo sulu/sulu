@@ -398,10 +398,7 @@ define([], function() {
 
             if (!this.options.tabsData) {
                 def.resolve();
-            } else if (this.options.tabsData.length === 1) {
-                def.resolve();
-                this.tabChangedHandler(this.options.tabsData[0]);
-            } else if (this.options.tabsData.length > 1) {
+            } else if (this.options.tabsData.length > 0) {
                 this.startTabsComponent(def);
             } else {
                 def.resolve();

@@ -65,7 +65,7 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
         $seo->setDisplay(['edit']);
         $seo->setDisplayConditions(
             [
-                new DisplayCondition('template', DisplayCondition::OPERATOR_NOT_EQUAL, null),
+                new DisplayCondition('title', DisplayCondition::OPERATOR_NOT_EQUAL, null),
                 new DisplayCondition('linked', DisplayCondition::OPERATOR_EQUAL, null),
                 new DisplayCondition('shadowOn', DisplayCondition::OPERATOR_EQUAL, false),
             ]
@@ -79,7 +79,7 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
         $excerpt->setDisplay(['edit']);
         $excerpt->setDisplayConditions(
             [
-                new DisplayCondition('template', DisplayCondition::OPERATOR_NOT_EQUAL, null),
+                new DisplayCondition('title', DisplayCondition::OPERATOR_NOT_EQUAL, null),
                 new DisplayCondition('linked', DisplayCondition::OPERATOR_NOT_EQUAL, 'internal'),
                 new DisplayCondition('shadowOn', DisplayCondition::OPERATOR_EQUAL, false),
             ]
@@ -93,7 +93,7 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
         $settings->setDisplay(['edit']);
         $settings->setDisplayConditions(
             [
-                new DisplayCondition('template', DisplayCondition::OPERATOR_NOT_EQUAL, null),
+                new DisplayCondition('title', DisplayCondition::OPERATOR_NOT_EQUAL, null),
             ]
         );
         $navigation = [$content, $seo, $excerpt, $settings];
@@ -115,7 +115,7 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
             );
             $permissions->setDisplayConditions(
                 [
-                    new DisplayCondition('template', DisplayCondition::OPERATOR_NOT_EQUAL, null),
+                    new DisplayCondition('title', DisplayCondition::OPERATOR_NOT_EQUAL, null),
                 ]
             );
 
