@@ -216,6 +216,79 @@ class LinkTagTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testValidate()
+    {
+        $content = $this->createContent('123-123-123', 'Pagetitle', '/test');
+        $this->contentRepository->findByUuids(['123-123-123'], 'de', Argument::type(Mapping::class))
+            ->willReturn([$content]);
+
+        $result = $this->linkTag->validateAll(
+            [
+                '<sulu:link href="123-123-123" title="Test-Title">Test-Content</sulu:link>' => [
+                    'href' => '123-123-123',
+                    'title' => 'Test-Title',
+                    'content' => 'Test-Content',
+                ],
+            ]
+        );
+
+        $this->assertEquals(
+            ['<sulu:link href="123-123-123" title="Test-Title">Test-Content</sulu:link>' => true],
+            $result
+        );
+    }
+
+    public function testValidateInvalid()
+    {
+        $this->contentRepository->findByUuids(['123-123-123'], 'de', Argument::type(Mapping::class))
+            ->willReturn([]);
+
+        $result = $this->linkTag->validateAll(
+            [
+                '<sulu:link href="123-123-123" title="Test-Title">Test-Content</sulu:link>' => [
+                    'href' => '123-123-123',
+                    'title' => 'Test-Title',
+                    'content' => 'Test-Content',
+                ],
+            ]
+        );
+
+        $this->assertEquals(
+            ['<sulu:link href="123-123-123" title="Test-Title">Test-Content</sulu:link>' => false],
+            $result
+        );
+    }
+
+    public function testValidateMixed()
+    {
+        $content = $this->createContent('123-123-123', 'Pagetitle', '/test');
+        $this->contentRepository->findByUuids(['123-123-123', '312-312-312'], 'de', Argument::type(Mapping::class))
+            ->willReturn([$content]);
+
+        $result = $this->linkTag->validateAll(
+            [
+                '<sulu:link href="123-123-123" title="Test-Title">Test-Content</sulu:link>' => [
+                    'href' => '123-123-123',
+                    'title' => 'Test-Title',
+                    'content' => 'Test-Content',
+                ],
+                '<sulu:link href="312-312-312" title="Test-Title">Test-Content</sulu:link>' => [
+                    'href' => '312-312-312',
+                    'title' => 'Test-Title',
+                    'content' => 'Test-Content',
+                ],
+            ]
+        );
+
+        $this->assertEquals(
+            [
+                '<sulu:link href="123-123-123" title="Test-Title">Test-Content</sulu:link>' => true,
+                '<sulu:link href="312-312-312" title="Test-Title">Test-Content</sulu:link>' => false,
+            ],
+            $result
+        );
+    }
+
     private function createContent($id, $title, $url, $webspaceKey = 'sulu_io', $locale = 'de')
     {
         $content = new Content(

@@ -226,6 +226,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
                         'exclude-shadows' => !$mapping->shouldHydrateShadow(),
                         'fields' => implode(',', $mapping->getProperties()),
                         'tree' => true,
+                        'webspace-nodes' => $webspaceNodes,
                     ]
                 )
             );

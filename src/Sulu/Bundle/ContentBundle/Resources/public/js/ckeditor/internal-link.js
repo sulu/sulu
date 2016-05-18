@@ -31,6 +31,11 @@ define(function() {
             tag.setAttribute('href', link.href);
             tag.setAttribute('target', link.target);
             tag.setText(link.title);
+
+            // only valid pages can be selected.
+            tag.removeAttribute('data-invalid');
+
+            editor.fire('change');
         };
 
     return function(sandbox) {
@@ -130,6 +135,7 @@ define(function() {
 
             onLoad: function() {
                 CKEDITOR.addCss('sulu\\:link { text-decoration: underline; color: #428bca; }');
+                CKEDITOR.addCss('sulu\\:link[data-invalid="true"] { color: #EA524E; text-decoration: line-through; }');
             }
         };
     };

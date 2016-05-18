@@ -64,7 +64,7 @@ class LinkTag implements TagInterface
     /**
      * {@inheritdoc}
      */
-    public function parseAll($attributesByTag)
+    public function parseAll(array $attributesByTag)
     {
         $request = $this->requestStack->getCurrentRequest();
         $locale = $request->getLocale();
@@ -103,6 +103,22 @@ class LinkTag implements TagInterface
                 (!empty($attributes['target']) ? ' target="' . $attributes['target'] . '"' : ''),
                 $text
             );
+        }
+
+        return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validateAll(array $attributesByTag)
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $contents = $this->preloadContent($attributesByTag, $request->getLocale());
+
+        $result = [];
+        foreach ($attributesByTag as $tag => $attributes) {
+            $result[$tag] = array_key_exists($attributes['href'], $contents);
         }
 
         return $result;

@@ -141,10 +141,6 @@ EOT
         )->willReturn(
             ['<sulu:media src="1" title="test" />' => '<img src="/img/test.jpg" title="test"/>']
         );
-        $this->mediaTag->parseAll(
-            '<sulu:media src="1" title="test" />',
-            ['src' => '1', 'title' => 'test']
-        )->willReturn('<img src="/img/test.jpg" title="test"/>');
 
         $response = $this->parser->parse(
             <<<'EOT'
@@ -186,5 +182,131 @@ EOT
         );
 
         $this->assertContains('<a href="/test" title="test">link content</a>', $response);
+    }
+
+    public function testValidate()
+    {
+        $this->linkTag->validateAll(
+            [
+                '<sulu:link href="123-123-123" title="test">link content</sulu:link>' => [
+                    'href' => '123-123-123',
+                    'title' => 'test',
+                    'content' => 'link content',
+                ],
+            ]
+        )->willReturn(
+            ['<sulu:link href="123-123-123" title="test">link content</sulu:link>' => true]
+        );
+
+        $response = $this->parser->validate(
+            <<<'EOT'
+<html>
+    <body>
+        <sulu:link href="123-123-123" title="test">link content</sulu:link>
+    </body>
+</html>
+EOT
+        );
+
+        $this->assertTrue($response->isValid());
+        $this->assertContains(
+            '<sulu:link href="123-123-123" title="test">link content</sulu:link>',
+            $response->getContent()
+        );
+    }
+
+    public function testValidateInvalid()
+    {
+        $this->linkTag->validateAll(
+            [
+                '<sulu:link href="123-123-123" title="test">link content</sulu:link>' => [
+                    'href' => '123-123-123',
+                    'title' => 'test',
+                    'content' => 'link content',
+                ],
+            ]
+        )->willReturn(
+            ['<sulu:link href="123-123-123" title="test">link content</sulu:link>' => false]
+        );
+
+        $response = $this->parser->validate(
+            <<<'EOT'
+<html>
+    <body>
+        <sulu:link href="123-123-123" title="test">link content</sulu:link>
+    </body>
+</html>
+EOT
+        );
+
+        $this->assertFalse($response->isValid());
+        $this->assertContains(
+            '<sulu:link href="123-123-123" title="test" data-invalid="true">link content</sulu:link>',
+            $response->getContent()
+        );
+    }
+
+    public function testValidateInvalidWithDataAttribute()
+    {
+        $this->linkTag->validateAll(
+            [
+                '<sulu:link href="123-123-123" title="test" data-invalid="true">link content</sulu:link>' => [
+                    'href' => '123-123-123',
+                    'title' => 'test',
+                    'content' => 'link content',
+                    'data-invalid' => true,
+                ],
+            ]
+        )->willReturn(
+            ['<sulu:link href="123-123-123" title="test" data-invalid="true">link content</sulu:link>' => false]
+        );
+
+        $response = $this->parser->validate(
+            <<<'EOT'
+<html>
+    <body>
+        <sulu:link href="123-123-123" title="test" data-invalid="true">link content</sulu:link>
+    </body>
+</html>
+EOT
+        );
+
+        $this->assertFalse($response->isValid());
+        $this->assertContains(
+            '<sulu:link href="123-123-123" title="test" data-invalid="true">link content</sulu:link>',
+            $response->getContent()
+        );
+    }
+
+    public function testValidateDifferentInvalidTags()
+    {
+        $this->linkTag->validateAll(
+            ['<sulu:link href="123-123-123" title="test"/>' => ['href' => '123-123-123', 'title' => 'test']]
+        )->willReturn(
+            ['<sulu:link href="123-123-123" title="test"/>' => false]
+        );
+        $this->mediaTag->validateAll(
+            ['<sulu:media src="1" title="test"/>' => ['src' => '1', 'title' => 'test']]
+        )->willReturn(
+            ['<sulu:media src="1" title="test"/>' => false]
+        );
+
+        $response = $this->parser->validate(
+            <<<'EOT'
+<html>
+    <body>
+        <sulu:link href="123-123-123" title="test"/>
+        <sulu:media src="1" title="test"/>
+    </body>
+</html>
+EOT
+        );
+
+        $this->assertFalse($response->isValid());
+        $this->assertContains(
+            '<sulu:link href="123-123-123" title="test" data-invalid="true"/>',
+            $response->getContent()
+        );
+        $this->assertContains('<sulu:media src="1" title="test" data-invalid="true"/>', $response->getContent());
     }
 }

@@ -23,5 +23,14 @@ interface TagInterface
      *
      * @return array Tag array to replace all occurrences.
      */
-    public function parseAll($attributesByTag);
+    public function parseAll(array $attributesByTag);
+
+    /**
+     * Returns array of validity.
+     *
+     * @param array $attributesByTag
+     *
+     * @return array Tag array which indicates validity of each tag.
+     */
+    public function validateAll(array $attributesByTag);
 }

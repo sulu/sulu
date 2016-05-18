@@ -24,4 +24,13 @@ interface MarkupParserInterface
      * @return string
      */
     public function parse($content);
+
+    /**
+     * Validates document and returns validity and content with marker of invalid tags.
+     *
+     * @param string $content
+     *
+     * @return ValidateResult
+     */
+    public function validate($content);
 }
