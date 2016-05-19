@@ -248,7 +248,8 @@ define([
                                             }.bind(this)
                                         );
                                     } else {
-                                        this.load(data, this.options.webspace, item.id, true);
+                                        // new page will be created
+                                        this.load({id: data.id}, this.options.webspace, item.id, true);
                                     }
                                 }.bind(this));
                         } else {

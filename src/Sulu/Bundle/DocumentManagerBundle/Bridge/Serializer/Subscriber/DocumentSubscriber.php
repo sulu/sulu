@@ -88,8 +88,8 @@ class DocumentSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if ($this->registry->hasNode($node)) {
-            $registeredDocument = $this->registry->getDocumentForNode($node);
+        if ($this->registry->hasNode($node, $document->getLocale())) {
+            $registeredDocument = $this->registry->getDocumentForNode($node, $document->getLocale());
             $this->registry->deregisterDocument($registeredDocument);
         }
 

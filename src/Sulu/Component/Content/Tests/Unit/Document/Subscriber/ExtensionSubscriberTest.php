@@ -206,4 +206,12 @@ class TestExtensionDocument implements ExtensionBehavior
     public function setLocale($locale)
     {
     }
+
+    public function getOriginalLocale()
+    {
+    }
+
+    public function setOriginalLocale($locale)
+    {
+    }
 }

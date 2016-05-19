@@ -256,6 +256,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     public function testHydrateNotImplementing()
     {
         $this->hydrateEvent->getDocument()->willReturn($this->notImplementing);
+
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 
@@ -268,6 +269,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
         $this->hydrateEvent->getLocale()->willReturn('fr');
         $this->hydrateEvent->getOption('load_ghost_content', false)->willReturn(true);
+        $this->hydrateEvent->getOption('rehydrate')->willReturn(false);
 
         // set the structure type
         $this->encoder->contentName('template')->willReturn('i18n:fr-template');
@@ -289,6 +291,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
         $this->hydrateEvent->getLocale()->willReturn('fr');
         $this->hydrateEvent->getOption('load_ghost_content', false)->willReturn(true);
+        $this->hydrateEvent->getOption('rehydrate')->willReturn(false);
 
         // set the structure type
         $this->encoder->contentName('template')->willReturn('i18n:fr-template');
@@ -306,12 +309,13 @@ class StructureSubscriberTest extends SubscriberTestCase
      * If the document already has a structure and there is no structure on the node (i.e.
      * it is a new document) then use the Structure which is already set.
      */
-    public function testHydrateNewStructureRehydrate()
+    public function testHydrateNewStructureNoRehydrate()
     {
         $this->hydrateEvent->getDocument()->willReturn($this->document->reveal());
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
         $this->hydrateEvent->getLocale()->willReturn('fr');
         $this->hydrateEvent->getOption('load_ghost_content', false)->willReturn(true);
+        $this->hydrateEvent->getOption('rehydrate')->willReturn(false);
 
         // set the structure type
         $this->encoder->contentName('template')->willReturn('i18n:fr-template');
@@ -323,6 +327,30 @@ class StructureSubscriberTest extends SubscriberTestCase
         // set the property container
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
         $this->accessor->set('structure', $this->structure->reveal())->shouldHaveBeenCalled();
+    }
+
+    /**
+     * If the document already has a structure and there is no structure on the node (i.e.
+     * it is a new document) then use the Structure which is already set.
+     */
+    public function testHydrateNewStructureRehydrate()
+    {
+        $this->hydrateEvent->getDocument()->willReturn($this->document->reveal());
+        $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
+        $this->hydrateEvent->getLocale()->willReturn('fr');
+        $this->hydrateEvent->getOption('load_ghost_content', false)->willReturn(true);
+        $this->hydrateEvent->getOption('rehydrate')->willReturn(true);
+
+        // set the structure type
+        $this->encoder->contentName('template')->willReturn('i18n:fr-template');
+        $this->node->getPropertyValueWithDefault('i18n:fr-template', null)->willReturn(null);
+
+        $this->document->setStructureType(null)->shouldBeCalled();
+        $this->document->getStructure()->willReturn($this->structure->reveal());
+
+        // set the property container
+        $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
+        $this->accessor->set('structure', new Structure())->shouldHaveBeenCalled();
     }
 
     private function setupPropertyWrite()

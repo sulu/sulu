@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-master
     * HOTFIX      #2401 [MediaBundle]         Fixed search in media bundle
+    * HOTFIX      #2367 [ContentBundle]       Fixed copy internal-link into new language
     * HOTFIX      #2381 [ContentBundle]       Fixed auto-name subscriber to rename at the very end of persist
     * HOTFIX      #2388 [Rest]                Fixed bug when applying same sortfield multiple times
     * HOTFIX      #2378 [ContentBundle]       Fixed writing security to page documents
