@@ -134,8 +134,8 @@ define([
                 'internalLink',
                 new InternalLinkPlugin(app.sandboxes.create('plugin-internal-link'))
             );
-            sandbox.ckeditor.addToolbarButton('links', 'InternalLink');
-            sandbox.ckeditor.addToolbarButton('links', 'RemoveInternalLink');
+            sandbox.ckeditor.addToolbarButton('links', 'InternalLink', 'arrow-circle-down');
+            sandbox.ckeditor.addToolbarButton('links', 'RemoveInternalLink', 'arrow-circle-o-down');
         }
     };
 });

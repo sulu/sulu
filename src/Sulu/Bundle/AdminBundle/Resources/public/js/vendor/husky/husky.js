@@ -47329,17 +47329,18 @@ define('__component__$url-input@husky',['services/husky/url-validator'], functio
 
             initialize: function(app) {
 
-                var toolbar = {
+                var availableToolbar = {
                         semantics: ['Format'],
                         basicstyles: ['Superscript', 'Subscript', 'Italic', 'Bold', 'Underline', 'Strike'],
                         blockstyles: ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
                         list: ['NumberedList', 'BulletedList'],
                         paste: ['PasteFromWord'],
-                        links: ['Link', 'Unlink'],
+                        links: ['Link'],
                         insert: ['Table'],
                         styles: ['Styles'],
                         code: ['Source']
                     },
+                    toolbar,
                     plugins = ['justify', 'format', 'sourcearea', 'link', 'table', 'pastefromword', 'autogrow'],
                     icons = {
                         Format: 'font',
@@ -47350,9 +47351,30 @@ define('__component__$url-input@husky',['services/husky/url-validator'], functio
                         JustifyBlock: 'align-justify',
                         NumberedList: 'list-ol',
                         BulletedList: 'list',
-                        PasteFromWord: 'file-word-o',
+                        PasteFromWord: 'clipboard',
                         Styles: 'header',
                         Source: 'code'
+                    },
+                    relations = {
+                        Link: ['Unlink']
+                    },
+                    expandToolbar = function(toolbar) {
+                        for (var section in toolbar) {
+                            var index = -1;
+
+                            while (index++ < toolbar[section].length) {
+                                if (!relations[toolbar[section][index]]) {
+                                    continue;
+                                }
+
+                                toolbar[section].splice.apply(
+                                    toolbar[section],
+                                    [index + 1, 0].concat(relations[toolbar[section][index]])
+                                );
+                            }
+                        }
+
+                        return toolbar
                     };
 
                 app.sandbox.ckeditor = {
@@ -47363,20 +47385,36 @@ define('__component__$url-input@husky',['services/husky/url-validator'], functio
                         CKEDITOR.plugins.add(name, plugin);
                     },
 
-                    addToolbarButton: function(toolbarName, button, icon) {
-                        if (!toolbar[toolbarName]) {
-                            toolbar[toolbarName] = [];
+                    addToolbarButton: function(toolbarName, button, icon, buttonRelations) {
+                        if (!availableToolbar[toolbarName]) {
+                            availableToolbar[toolbarName] = [];
                         }
 
-                        toolbar[toolbarName].push(button);
+                        availableToolbar[toolbarName].push(button);
 
                         if (!!icon) {
                             icons[button] = icon;
                         }
+
+                        if (!!relations) {
+                            relations[button] = buttonRelations;
+                        }
+                    },
+
+                    setToolbar: function(newToolbar) {
+                        toolbar = Util.deepCopy(newToolbar);
+                    },
+
+                    getAvailableToolbar: function() {
+                        return Util.deepCopy(availableToolbar);
                     },
 
                     getToolbar: function() {
-                        return Util.deepCopy(toolbar);
+                        if (!toolbar) {
+                            return expandToolbar(this.getAvailableToolbar());
+                        }
+
+                        return expandToolbar(Util.deepCopy(toolbar));
                     },
 
                     getIcon: function(button) {
@@ -47422,22 +47460,22 @@ define('__component__$url-input@husky',['services/husky/url-validator'], functio
                             // check if the definition is from the dialog we're
                             // interested in (the "Link" dialog).
                             if (dialogName == 'link') {
-                                    // get a reference to the "Link Info" and "Target" tab.
+                                // get a reference to the "Link Info" and "Target" tab.
                                 var infoTab = dialogDefinition.getContents('info'),
                                     targetTab = dialogDefinition.getContents('target'),
 
-                                    // get a reference to the link type
+                                // get a reference to the link type
                                     linkOptions = infoTab.get('linkType'),
                                     targetOptions = targetTab.get('linkTargetType'),
 
-                                    // list of included link options
+                                // list of included link options
                                     includedLinkOptions = [
                                         'url',
                                         'email'
                                     ],
                                     selectedLinkOption = [],
 
-                                    // list of included link target options
+                                // list of included link target options
                                     includedTargetOptions = [
                                         'notSet',
                                         '_blank',

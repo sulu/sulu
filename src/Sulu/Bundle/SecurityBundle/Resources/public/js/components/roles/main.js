@@ -8,7 +8,7 @@
  */
 
 
-define(['sulusecurity/models/role'], function(Role) {
+define(['services/sulusecurity/role-router', 'sulusecurity/models/role'], function(RoleRouter, Role) {
 
     'use strict';
 
@@ -46,13 +46,9 @@ define(['sulusecurity/models/role'], function(Role) {
         },
 
         bindCustomEvents: function() {
-            this.sandbox.on('sulu.roles.new', function() {
-                this.add();
-            }.bind(this));
-
-            this.sandbox.on('sulu.roles.load', function(id) {
-                this.load(id);
-            }.bind(this));
+            this.sandbox.on('sulu.roles.new', RoleRouter.toAdd);
+            this.sandbox.on('sulu.roles.load', RoleRouter.toEdit);
+            this.sandbox.on('sulu.roles.list', RoleRouter.toList);
 
             this.sandbox.on('sulu.roles.save', function(data, action) {
                 this.save(data, action);
@@ -63,24 +59,11 @@ define(['sulusecurity/models/role'], function(Role) {
                 this.del(id);
             }.bind(this));
 
-            this.sandbox.on('sulu.roles.list', function() {
-                this.sandbox.emit('sulu.router.navigate', 'settings/roles');
-            }.bind(this));
 
             this.sandbox.on('sulu.roles.delete', function(ids) {
                 this.loading = 'add';
                 this.del(ids);
             }.bind(this));
-        },
-
-        // redirects to a new form, when the sulu.roles.new event is thrown
-        add: function() {
-            this.sandbox.emit('sulu.router.navigate', 'settings/roles/new');
-        },
-
-        // redirects to the form with the role data, when the sulu.roles.load event with an id is thrown
-        load: function(id) {
-            this.sandbox.emit('sulu.router.navigate', 'settings/roles/edit:' + id + '/details');
         },
 
         // saves the data, which is thrown together with a sulu.roles.save event
@@ -90,16 +73,19 @@ define(['sulusecurity/models/role'], function(Role) {
 
             this.role.save(data, {
                 success: function(data) {
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
+
                     if (!!this.options.id) {
                         this.sandbox.emit('sulu.role.saved', data.id);
                         this.sandbox.emit('sulu.header.saved', data.toJSON());
                     }
+                    
                     if (action === 'back') {
-                        this.sandbox.emit('sulu.roles.list');
+                        RoleRouter.toList();
                     } else if (action === 'new') {
-                        this.sandbox.emit('sulu.router.navigate', 'settings/roles/new', true, true);
+                        RoleRouter.toAdd();
                     } else if (!this.options.id) {
-                        this.sandbox.emit('sulu.router.navigate', 'settings/roles/edit:' + data.id + '/details');
+                        RoleRouter.toEdit(data.id);
                     }
                 }.bind(this),
                 error: function(model, response) {
@@ -157,7 +143,7 @@ define(['sulusecurity/models/role'], function(Role) {
             this.role.destroy({
                 success: function() {
                     if (!!navigate) {
-                        this.sandbox.emit('sulu.router.navigate', 'settings/roles');
+                        RoleRouter.toList();
                     } else {
                         this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.record.remove', id);
                     }
