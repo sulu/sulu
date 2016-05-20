@@ -55,7 +55,8 @@
             <orm:entity-name>SuluMediaBundle:Media</orm:entity-name>
         </identity-property>
 
-        <property name="thumbnails" list:translation="media.media.thumbnails" display="always" list:type="thumbnails"/>
+        <property name="thumbnails" list:translation="media.media.thumbnails" display="always" list:sortable="false"
+                  list:type="thumbnails"/>
         <property name="url" display="never"/>
 
         <property name="type" list:translation="public.type" display="always">
