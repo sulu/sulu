@@ -14,7 +14,6 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepositoryInterface;
-use Sulu\Component\Content\Structure;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,13 +38,8 @@ class NodeResourcelocatorController extends RestController implements ClassResou
         $uuid = $this->getRequestParameter($this->getRequest(), 'uuid');
         $parts = $this->getRequestParameter($this->getRequest(), 'parts', true);
         $templateKey = $this->getRequestParameter($this->getRequest(), 'template', true);
-
-        list($webspaceKey, $languageCode) = $this->getWebspaceAndLanguage();
-        if ($templateKey === null) {
-            $webspaceManager = $this->container->get('sulu_core.webspace.webspace_manager');
-            $webspace = $webspaceManager->findWebspaceByKey($webspaceKey);
-            $templateKey = $webspace->getTheme()->getDefaultTemplate(Structure::TYPE_PAGE);
-        }
+        $webspaceKey = $this->getRequestParameter($this->getRequest(), 'webspace', true);
+        $languageCode = $this->getRequestParameter($this->getRequest(), 'language', true);
 
         $result = $this->getResourceLocatorRepository()->generate(
             $parts,

@@ -63,12 +63,16 @@ class {{ cache_class }} extends {{ base_class }}
 
 {% endfor %}
         // add theme
-        $theme = new Theme();
-        $theme->setKey('{{ webspace.theme.key }}');
-{% for code,template in webspace.theme.errorTemplates %}        $theme->addErrorTemplate({{ (code=='default'?"'default'":code)|raw }}, '{{ template }}');
+{% if webspace.theme != null %}
+        $theme = new Theme('{{ webspace.theme.key }}');
+        $webspace->setTheme($theme);
+{% endif %}
+
+
+{% for code,template in webspace.errorTemplates %}        $webspace->addErrorTemplate({{ (code=='default'?"'default'":code)|raw }}, '{{ template }}');
 {% endfor %}
-{% for type,template in webspace.theme.defaultTemplates %}        $theme->addDefaultTemplate('{{ type }}', '{{ template }}');
-{% endfor %}        $webspace->setTheme($theme);
+{% for type,template in webspace.defaultTemplates %}        $webspace->addDefaultTemplate('{{ type }}', '{{ template }}');
+{% endfor %}
 
         // add navigation
         $navigation = new Navigation();

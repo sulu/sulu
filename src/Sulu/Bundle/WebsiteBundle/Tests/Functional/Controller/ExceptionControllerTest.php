@@ -84,8 +84,8 @@ class ExceptionControllerTest extends \PHPUnit_Framework_TestCase
         $exception = FlattenException::create(new \Exception(), 400);
 
         $webspace = new Webspace();
+        $webspace->addErrorTemplate(400, 'error400.html.twig');
         $theme = new Theme();
-        $theme->addErrorTemplate(400, 'error400.html.twig');
         $webspace->setTheme($theme);
 
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);

@@ -13,6 +13,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2426 [RouteBundle]         Fixed route-provider when no resource-locator prefix isset
     * BUGFIX      #2418 [ContentBundle]       Removed ContentMapperRequest
     * ENHANCEMENT #2414 [ContentBundle]       Removed save method of ContentMapper
+    * ENHANCEMENT #2408 [CoreBundle]          Extracted theming into own bundle
     * BUGFIX      #2367 [ContentBundle]       Fixed copy internal-link into new language
     * BUGFIX      #2396                       Fixed composer-events
     * ENHANCEMENT #2403 [ContentBundle]       Added lazy start of ckeditor for content form

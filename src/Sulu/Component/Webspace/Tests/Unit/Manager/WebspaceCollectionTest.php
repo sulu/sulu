@@ -44,8 +44,7 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $portal->setName('Portal1');
         $portal->setKey('portal1');
 
-        $theme = new Theme();
-        $theme->setKey('portal1theme');
+        $theme = new Theme('portal1theme');
 
         $environment = new Environment();
         $url = new Url();

@@ -60,7 +60,7 @@ class ExceptionController extends BaseExceptionController
 
         $template = null;
         if ($webspace = $this->requestAnalyzer->getWebspace()) {
-            $template = $webspace->getTheme()->getErrorTemplate($code);
+            $template = $webspace->getErrorTemplate($code);
         }
 
         $baseTemplate = $this->findTemplate($request, $request->getRequestFormat(), $code, $showException);

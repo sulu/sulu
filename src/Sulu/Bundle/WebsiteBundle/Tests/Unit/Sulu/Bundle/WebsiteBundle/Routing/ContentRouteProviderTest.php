@@ -36,8 +36,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme();
-        $theme->setKey('theme');
+        $theme = new Theme('theme');
         $webspace = new Webspace();
         $webspace->setTheme($theme);
         $portal->setWebspace($webspace);
@@ -76,8 +75,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme();
-        $theme->setKey('theme');
+        $theme = new Theme('theme');
         $webspace = new Webspace();
         $webspace->setTheme($theme);
         $portal->setWebspace($webspace);
@@ -116,8 +114,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme();
-        $theme->setKey('theme');
+        $theme = new Theme('theme');
         $webspace = new Webspace();
         $webspace->setTheme($theme);
         $portal->setWebspace($webspace);
@@ -159,8 +156,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme();
-        $theme->setKey('theme');
+        $theme = new Theme('theme');
         $webspace = new Webspace();
         $webspace->setTheme($theme);
         $portal->setWebspace($webspace);
@@ -201,8 +197,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $prefix = '/de';
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme();
-        $theme->setKey('theme');
+        $theme = new Theme('theme');
         $webspace = new Webspace();
         $webspace->setTheme($theme);
         $portal->setWebspace($webspace);
@@ -235,8 +230,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $prefix = '/de';
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme();
-        $theme->setKey('theme');
+        $theme = new Theme('theme');
         $webspace = new Webspace();
         $webspace->setTheme($theme);
         $portal->setWebspace($webspace);
@@ -280,8 +274,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $prefix = '/de';
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme();
-        $theme->setKey('theme');
+        $theme = new Theme('theme');
         $webspace = new Webspace();
         $webspace->setTheme($theme);
         $portal->setWebspace($webspace);
@@ -326,8 +319,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme();
-        $theme->setKey('theme');
+        $theme = new Theme('theme');
         $webspace = new Webspace();
         $webspace->setTheme($theme);
         $portal->setWebspace($webspace);
@@ -382,8 +374,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme();
-        $theme->setKey('theme');
+        $theme = new Theme('theme');
         $webspace = new Webspace();
         $webspace->setTheme($theme);
         $portal->setWebspace($webspace);
@@ -423,8 +414,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme();
-        $theme->setKey('theme');
+        $theme = new Theme('theme');
         $webspace = new Webspace();
         $webspace->setTheme($theme);
         $portal->setWebspace($webspace);
@@ -478,8 +468,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme();
-        $theme->setKey('theme');
+        $theme = new Theme('theme');
         $webspace = new Webspace();
         $webspace->setTheme($theme);
         $portal->setWebspace($webspace);
@@ -519,8 +508,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme();
-        $theme->setKey('theme');
+        $theme = new Theme('theme');
         $webspace = new Webspace();
         $webspace->setTheme($theme);
         $portal->setWebspace($webspace);
@@ -572,8 +560,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme();
-        $theme->setKey('theme');
+        $theme = new Theme('theme');
         $webspace = new Webspace();
         $webspace->setTheme($theme);
         $portal->setWebspace($webspace);
@@ -626,8 +613,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme();
-        $theme->setKey('theme');
+        $theme = new Theme('theme');
         $webspace = new Webspace();
         $webspace->setTheme($theme);
         $portal->setWebspace($webspace);
@@ -680,8 +666,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme();
-        $theme->setKey('theme');
+        $theme = new Theme('theme');
         $webspace = new Webspace();
         $webspace->setTheme($theme);
         $portal->setWebspace($webspace);
@@ -734,8 +719,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme();
-        $theme->setKey('theme');
+        $theme = new Theme('theme');
         $webspace = new Webspace();
         $webspace->setTheme($theme);
         $portal->setWebspace($webspace);
@@ -789,8 +773,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme();
-        $theme->setKey('theme');
+        $theme = new Theme('theme');
         $webspace = new Webspace();
         $webspace->setTheme($theme);
         $portal->setWebspace($webspace);
@@ -844,8 +827,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme();
-        $theme->setKey('theme');
+        $theme = new Theme('theme');
         $webspace = new Webspace();
         $webspace->setTheme($theme);
         $portal->setWebspace($webspace);

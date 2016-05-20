@@ -91,7 +91,7 @@ class TemplateController extends Controller
         if ($key === null) {
             if ($type === 'page') {
                 $webspaceManager = $this->container->get('sulu_core.webspace.webspace_manager');
-                $key = $webspaceManager->findWebspaceByKey($webspace)->getTheme()->getDefaultTemplate($type);
+                $key = $webspaceManager->findWebspaceByKey($webspace)->getDefaultTemplate($type);
                 $fireEvent = true;
             } else {
                 $defaultTypes = $this->container->getParameter('sulu.content.structure.default_types');

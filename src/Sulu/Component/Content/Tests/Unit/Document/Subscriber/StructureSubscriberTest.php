@@ -26,7 +26,6 @@ use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
 
 class StructureSubscriberTest extends SubscriberTestCase
@@ -356,9 +355,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->inspector->getMetadata($this->document->reveal())->willReturn($metadata->reveal());
 
         $webspace = new Webspace();
-        $theme = new Theme();
-        $theme->addDefaultTemplate('page', 'default');
-        $webspace->setTheme($theme);
+        $webspace->addDefaultTemplate('page', 'default');
 
         $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn($webspace);
 

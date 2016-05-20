@@ -38,7 +38,7 @@ class Webspace implements ArrayableInterface
      *
      * @var Localization[]
      */
-    private $localizations;
+    private $localizations = [];
 
     /**
      * The default localization defined for this webspace.
@@ -80,7 +80,7 @@ class Webspace implements ArrayableInterface
      *
      * @var Portal[]
      */
-    private $portals;
+    private $portals = [];
 
     /**
      * The security system for this webspace.
@@ -95,6 +95,20 @@ class Webspace implements ArrayableInterface
      * @var Navigation
      */
     private $navigation;
+
+    /**
+     * A list of exception templates.
+     *
+     * @var array
+     */
+    private $errorTemplates = [];
+
+    /**
+     * Template which is selected by default if no other template is chosen.
+     *
+     * @var string[]
+     */
+    private $defaultTemplates = [];
 
     /**
      * Sets the key of the webspace.
@@ -322,7 +336,7 @@ class Webspace implements ArrayableInterface
     /**
      * Sets the default segment of this webspace.
      *
-     * @param \Sulu\Component\Webspace\Segment $defaultSegment
+     * @param Segment $defaultSegment
      */
     public function setDefaultSegment($defaultSegment)
     {
@@ -332,7 +346,7 @@ class Webspace implements ArrayableInterface
     /**
      * Returns the default segment for this webspace.
      *
-     * @return \Sulu\Component\Webspace\Segment
+     * @return Segment
      */
     public function getDefaultSegment()
     {
@@ -342,9 +356,9 @@ class Webspace implements ArrayableInterface
     /**
      * Sets the theme for this portal.
      *
-     * @param \Sulu\Component\Webspace\Theme $theme
+     * @param Theme|null $theme this parameter is options
      */
-    public function setTheme(Theme $theme)
+    public function setTheme(Theme $theme = null)
     {
         $this->theme = $theme;
     }
@@ -352,7 +366,7 @@ class Webspace implements ArrayableInterface
     /**
      * Returns the theme for this portal.
      *
-     * @return \Sulu\Component\Webspace\Theme
+     * @return Theme
      */
     public function getTheme()
     {
@@ -420,6 +434,84 @@ class Webspace implements ArrayableInterface
     }
 
     /**
+     * Add a new error template for given code.
+     *
+     * @param string $code
+     * @param string $template
+     */
+    public function addErrorTemplate($code, $template)
+    {
+        $this->errorTemplates[$code] = $template;
+    }
+
+    /**
+     * Returns a error template for given code.
+     *
+     * @param string $code
+     *
+     * @return string|null
+     */
+    public function getErrorTemplate($code)
+    {
+        if (array_key_exists($code, $this->errorTemplates)) {
+            return $this->errorTemplates[$code];
+        }
+
+        if (array_key_exists('default', $this->errorTemplates)) {
+            return $this->errorTemplates['default'];
+        }
+
+        return;
+    }
+
+    /**
+     * Returns a array of error template.
+     *
+     * @return string[]
+     */
+    public function getErrorTemplates()
+    {
+        return $this->errorTemplates;
+    }
+
+    /**
+     * Add a new default template for given type.
+     *
+     * @param string $type
+     * @param string $template
+     */
+    public function addDefaultTemplate($type, $template)
+    {
+        $this->defaultTemplates[$type] = $template;
+    }
+
+    /**
+     * Returns a error template for given code.
+     *
+     * @param string $type
+     *
+     * @return string|null
+     */
+    public function getDefaultTemplate($type)
+    {
+        if (array_key_exists($type, $this->defaultTemplates)) {
+            return $this->defaultTemplates[$type];
+        }
+
+        return;
+    }
+
+    /**
+     * Returns a array of default template.
+     *
+     * @return string
+     */
+    public function getDefaultTemplates()
+    {
+        return $this->defaultTemplates;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function toArray($depth = null)
@@ -428,6 +520,8 @@ class Webspace implements ArrayableInterface
         $res['key'] = $this->getKey();
         $res['name'] = $this->getName();
         $res['localizations'] = [];
+        $res['errorTemplates'] = $this->getErrorTemplates();
+        $res['defaultTemplates'] = $this->getDefaultTemplates();
 
         foreach ($this->getLocalizations() as $localization) {
             $res['localizations'][] = $localization->toArray();
@@ -447,7 +541,7 @@ class Webspace implements ArrayableInterface
             }
         }
 
-        $res['theme'] = $this->getTheme()->toArray();
+        $res['theme'] = !$this->theme ? null : $this->getTheme()->toArray();
 
         $res['portals'] = [];
 

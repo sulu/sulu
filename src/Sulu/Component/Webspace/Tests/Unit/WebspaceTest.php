@@ -77,6 +77,8 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
                     'asd',
                 ],
             ],
+            'errorTemplates' => [],
+            'defaultTemplates' => [],
             'portals' => [
                 ['one'],
             ],
@@ -178,5 +180,47 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($this->webspace->hasDomain('sulu.lo', 'prod'));
         $this->assertTrue($this->webspace->hasDomain('1.sulu.lo', 'prod'));
+    }
+
+    public function testAddErrorTemplate()
+    {
+        $errorTemplates = ['404' => 'template404'];
+        $webspace = new Webspace();
+        $webspace->addErrorTemplate('404', 'template404');
+
+        $this->assertEquals('template404', $webspace->getErrorTemplate(404));
+        $this->assertEquals($errorTemplates, $webspace->getErrorTemplates());
+        $data = $webspace->toArray();
+        $this->assertEquals($errorTemplates, $data['errorTemplates']);
+    }
+
+    public function testAddErrorTemplateDefault()
+    {
+        $errorTemplates = ['404' => 'template404', 'default' => 'template'];
+
+        $webspace = new Webspace();
+        $webspace->addErrorTemplate('default', 'template');
+        $webspace->addErrorTemplate('404', 'template404');
+
+        $this->assertEquals('template404', $webspace->getErrorTemplate(404));
+        $this->assertEquals('template', $webspace->getErrorTemplate(500));
+        $this->assertEquals($errorTemplates, $webspace->getErrorTemplates());
+        $data = $webspace->toArray();
+        $this->assertEquals($errorTemplates, $data['errorTemplates']);
+    }
+
+    public function testAddDefaultTemplate()
+    {
+        $defaultTemplates = ['page' => 'default', 'homepage' => 'overview'];
+
+        $webspace = new Webspace();
+        $webspace->addDefaultTemplate('page', 'default');
+        $webspace->addDefaultTemplate('homepage', 'overview');
+        $this->assertEquals($defaultTemplates, $webspace->getDefaultTemplates());
+        $this->assertEquals($defaultTemplates['page'], $webspace->getDefaultTemplate('page'));
+        $this->assertEquals($defaultTemplates['homepage'], $webspace->getDefaultTemplate('homepage'));
+        $this->assertNull($webspace->getDefaultTemplate('other-type'));
+        $data = $webspace->toArray();
+        $this->assertEquals($defaultTemplates, $data['defaultTemplates']);
     }
 }

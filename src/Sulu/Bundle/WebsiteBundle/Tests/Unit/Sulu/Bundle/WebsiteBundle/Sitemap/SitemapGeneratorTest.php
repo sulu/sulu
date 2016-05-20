@@ -145,8 +145,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->webspace->setLocalizations([$local1, $local2]);
         $this->webspace->setName('Default');
 
-        $theme = new Theme();
-        $theme->setKey('test');
+        $theme = new Theme('test');
         $theme->addDefaultTemplate('page', 'default');
         $this->webspace->setTheme($theme);
 

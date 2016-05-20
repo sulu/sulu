@@ -41,7 +41,8 @@ use Symfony\Component\Config\Util\XmlUtils;
 
 class XmlFileLoader extends FileLoader
 {
-    const SCHEME_PATH = '/schema/webspace/webspace-1.0.xsd';
+    const SCHEME_PATH_1_0 = '/schema/webspace/webspace-1.0.xsd';
+    const SCHEME_PATH_1_1 = '/schema/webspace/webspace-1.1.xsd';
 
     /**
      * @var \DOMXPath
@@ -91,14 +92,26 @@ class XmlFileLoader extends FileLoader
      */
     private function parseXml($file)
     {
+        $exception = null;
+
         // load xml file
         try {
-            $xmlDoc = XmlUtils::loadFile($file, __DIR__ . static::SCHEME_PATH);
+            $xmlDoc = XmlUtils::loadFile($file, __DIR__ . static::SCHEME_PATH_1_1);
         } catch (\InvalidArgumentException $e) {
-            throw new InvalidWebspaceException(sprintf(
-                'Could not parse webspace XML file "%s"',
-                $file
-            ), null, $e);
+            $exception = new InvalidWebspaceException(
+                sprintf(
+                    'Could not parse webspace XML file "%s"',
+                    $file
+                ), null, $e
+            );
+        }
+
+        if (null !== $exception) {
+            try {
+                $xmlDoc = XmlUtils::loadFile($file, __DIR__ . static::SCHEME_PATH_1_0);
+            } catch (\InvalidArgumentException $e) {
+                throw $exception;
+            }
         }
 
         $this->xpath = new \DOMXPath($xmlDoc);
@@ -110,6 +123,9 @@ class XmlFileLoader extends FileLoader
         $this->webspace->setKey($this->xpath->query('/x:webspace/x:key')->item(0)->nodeValue);
         $this->webspace->setTheme($this->generateTheme());
         $this->webspace->setNavigation($this->generateNavigation());
+
+        $this->generateErrorTemplates($this->webspace);
+        $this->generateDefaultTemplates($this->webspace);
 
         // set security
         $this->generateSecurity();
@@ -127,6 +143,16 @@ class XmlFileLoader extends FileLoader
         $this->validate();
 
         return $this->webspace;
+    }
+
+    private function tryLoad($file, $scheme)
+    {
+        // load xml file
+        try {
+            return XmlUtils::loadFile($file, __DIR__ . $scheme);
+        } catch (\InvalidArgumentException $e) {
+            return;
+        }
     }
 
     /**
@@ -318,35 +344,42 @@ class XmlFileLoader extends FileLoader
      */
     private function generateTheme()
     {
-        $theme = new Theme();
-        $theme->setKey($this->xpath->query('/x:webspace/x:theme/x:key')->item(0)->nodeValue);
-        $this->generateErrorTemplates($theme);
-        $this->generateDefaultTemplates($theme);
+        $nodes = $this->xpath->query('/x:webspace/x:theme/x:key');
+        if ($nodes->length === 0) {
+            return;
+        }
 
-        return $theme;
+        return new Theme($nodes->item(0)->nodeValue);
     }
 
-    private function generateErrorTemplates(Theme $theme)
+    private function generateErrorTemplates(Webspace $webspace)
     {
         $defaultErrorTemplates = 0;
 
-        foreach ($this->xpath->query('/x:webspace/x:theme/x:error-templates/x:error-template') as $errorTemplateNode) {
-            /* @var \DOMNode $errorTemplateNode */
-            $template = $errorTemplateNode->nodeValue;
-            if (($codeNode = $errorTemplateNode->attributes->getNamedItem('code')) !== null) {
-                $code = $codeNode->nodeValue;
-            } elseif (($defaultNode = $errorTemplateNode->attributes->getNamedItem('default')) !== null) {
-                $default = $defaultNode->nodeValue === 'true';
-                if (!$default) {
-                    throw new InvalidDefaultErrorTemplateException($template, $this->webspace->getKey());
-                }
-                ++$defaultErrorTemplates;
-                $code = 'default';
-            } else {
-                throw new InvalidErrorTemplateException($template, $this->webspace->getKey());
-            }
+        $paths = [
+            '/x:webspace/x:error-templates/x:error-template',
+            '/x:webspace/x:theme/x:error-templates/x:error-template',
+        ];
 
-            $theme->addErrorTemplate($code, $template);
+        foreach ($paths as $path) {
+            foreach ($this->xpath->query($path) as $errorTemplateNode) {
+                /* @var \DOMNode $errorTemplateNode */
+                $template = $errorTemplateNode->nodeValue;
+                if (($codeNode = $errorTemplateNode->attributes->getNamedItem('code')) !== null) {
+                    $code = $codeNode->nodeValue;
+                } elseif (($defaultNode = $errorTemplateNode->attributes->getNamedItem('default')) !== null) {
+                    $default = $defaultNode->nodeValue === 'true';
+                    if (!$default) {
+                        throw new InvalidDefaultErrorTemplateException($template, $this->webspace->getKey());
+                    }
+                    ++$defaultErrorTemplates;
+                    $code = 'default';
+                } else {
+                    throw new InvalidErrorTemplateException($template, $this->webspace->getKey());
+                }
+
+                $webspace->addErrorTemplate($code, $template);
+            }
         }
 
         // only one or none default error-template is legal
@@ -354,36 +387,39 @@ class XmlFileLoader extends FileLoader
             throw new InvalidAmountOfDefaultErrorTemplateException($this->webspace->getKey());
         }
 
-        return $theme;
+        return $webspace;
     }
 
-    private function generateDefaultTemplates(Theme $theme)
+    private function generateDefaultTemplates(Webspace $webspace)
     {
         $expected = ['page', 'home'];
-        $found = [];
-        $nodes = $this->xpath->query('/x:webspace/x:theme/x:default-templates/x:default-template');
 
-        foreach ($nodes as $node) {
-            /* @var \DOMNode $node */
-            $template = $node->nodeValue;
-            $type = $node->attributes->getNamedItem('type')->nodeValue;
+        $paths = [
+            '/x:webspace/x:default-templates/x:default-template',
+            '/x:webspace/x:theme/x:default-templates/x:default-template',
+        ];
 
-            // FIXME legacy (document-type is home)
-            if ($type === 'homepage') {
-                $type = 'home';
+        foreach ($paths as $path) {
+            foreach ($this->xpath->query($path) as $node) {
+                /* @var \DOMNode $node */
+                $template = $node->nodeValue;
+                $type = $node->attributes->getNamedItem('type')->nodeValue;
+
+                $webspace->addDefaultTemplate($type, $template);
+                if ($type === 'homepage') {
+                    $webspace->addDefaultTemplate('home', $template);
+                }
             }
-
-            $theme->addDefaultTemplate($type, $template);
-            $found[] = $type;
         }
 
+        $found = array_keys($webspace->getDefaultTemplates());
         foreach ($expected as $item) {
             if (!in_array($item, $found)) {
                 throw new ExpectedDefaultTemplatesNotFound($this->webspace->getKey(), $expected, $found);
             }
         }
 
-        return $theme;
+        return $webspace;
     }
 
     private function generateNavigation()

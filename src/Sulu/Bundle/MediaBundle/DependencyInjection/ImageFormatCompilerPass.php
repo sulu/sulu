@@ -34,7 +34,7 @@ class ImageFormatCompilerPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $this->container = $container;
-        
+
         $formats = $this->loadThemeFormats(
             $container->getParameter('sulu_media.format_manager.default_imagine_options')
         );
