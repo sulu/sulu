@@ -102,12 +102,12 @@
             /**
              * loads an url and matches it against user settings
              * @param key Defines which setting to compare with
-             * @param excludeAttributes Defines which Attributes should NOT be taken from user-settings and from fields API instead
+             * @param includedAttributes Defines which Attributes should  be taken from user-settings and from fields API instead
              * @param url Where
              * @param callback
              * @param filter callback to filter result
              */
-            app.sandbox.sulu.loadUrlAndMergeWithSetting = function(key, excludeAttributes, url, callback, filter) {
+            app.sandbox.sulu.loadUrlAndMergeWithSetting = function(key, includedAttributes, url, callback, filter) {
                 this.sandbox.util.load(url)
                     .then(function(data) {
                         if (!!filter && typeof filter === 'function') {
@@ -134,7 +134,7 @@
 
                                     newSetting = serverFields[serverindex];
                                     for (var attrname in userFields[index]) {
-                                        if (excludeAttributes.indexOf(attrname) < 0) {
+                                        if (includedAttributes.indexOf(attrname) !== -1) {
                                             newSetting[attrname] = userFields[index][attrname];
                                         }
                                     }
@@ -495,7 +495,7 @@
                     this.sandbox.sulu.loadUrlAndMergeWithSetting.call(
                         this,
                         fieldsKey,
-                        ['translation', 'default', 'editable', 'validation', 'width', 'type'],
+                        ['disabled'],
                         url,
                         callback.bind(this),
                         function(item) {
@@ -518,7 +518,7 @@
                 this.sandbox.sulu.loadUrlAndMergeWithSetting.call(
                     this,
                     key,
-                    ['translation', 'default', 'editable', 'validation', 'width', 'type'],
+                    ['disabled'],
                     url,
                     function(data) {
                         // the default options
