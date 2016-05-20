@@ -44,19 +44,9 @@ class WebspaceStructureProviderTest extends \PHPUnit_Framework_TestCase
         $structureManager = $this->prophesize('Sulu\Component\Content\Compat\StructureManagerInterface');
         $structureManager->getStructures()->willReturn($structures);
 
-        $webspaceManager = $this->prophesize('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
-        $webspaceManager->findWebspaceByKey('sulu_io')->willReturn($webspace->reveal());
-
-        $activeTheme = $this->prophesize('Liip\ThemeBundle\ActiveTheme');
-        $activeTheme->getName()->willReturn('before');
-        $activeTheme->setName('test')->shouldBeCalled();
-        $activeTheme->setName('before')->shouldBeCalled();
-
         $structureProvider = new WebspaceStructureProvider(
             $twig->reveal(),
             $structureManager->reveal(),
-            $webspaceManager->reveal(),
-            $activeTheme->reveal(),
             $cache
         );
 
@@ -89,19 +79,9 @@ class WebspaceStructureProviderTest extends \PHPUnit_Framework_TestCase
         $structureManager->getStructure('t2')->shouldNotBeCalled();
         $structureManager->getStructure('t3')->willReturn($structures[2]);
 
-        $webspaceManager = $this->prophesize('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
-        $webspaceManager->findWebspaceByKey('sulu_io')->shouldNotBeCalled();
-
-        $activeTheme = $this->prophesize('Liip\ThemeBundle\ActiveTheme');
-        $activeTheme->getName()->shouldNotBeCalled();
-        $activeTheme->setName('test')->shouldNotBeCalled();
-        $activeTheme->setName('before')->shouldNotBeCalled();
-
         $structureProvider = new WebspaceStructureProvider(
             $twig->reveal(),
             $structureManager->reveal(),
-            $webspaceManager->reveal(),
-            $activeTheme->reveal(),
             $cache
         );
 

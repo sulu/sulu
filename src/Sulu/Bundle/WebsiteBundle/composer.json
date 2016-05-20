@@ -17,8 +17,7 @@
         "sulu/sulu": "dev-develop",
 
         "doctrine/orm": "2.4.*",
-        "symfony-cmf/routing-bundle": "1.2.*",
-        "liip/theme-bundle": "1.1.*"
+        "symfony-cmf/routing-bundle": "1.2.*"
     },
     "require-dev": {
         "symfony/symfony": "2.5.*",
