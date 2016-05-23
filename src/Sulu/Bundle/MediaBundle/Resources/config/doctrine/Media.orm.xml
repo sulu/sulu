@@ -6,6 +6,7 @@
     <entity name="Sulu\Bundle\MediaBundle\Entity\Media" table="me_media" repository-class="Sulu\Bundle\MediaBundle\Entity\MediaRepository">
         <indexes>
             <index columns="changed"/>
+            <index columns="created"/>
         </indexes>
 
         <id name="id" type="integer" column="id">

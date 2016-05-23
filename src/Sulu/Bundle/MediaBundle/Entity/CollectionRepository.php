@@ -283,4 +283,18 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
 
         return $queryBuilder->getQuery()->getResult();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findCollectionTypeById($id)
+    {
+        $queryBuilder = $this->createQueryBuilder('collection')
+            ->select('collectionType.key')
+            ->leftJoin('collection.type', 'collectionType')
+            ->where('collection.id = :id')
+            ->setParameter('id', $id);
+
+        return $queryBuilder->getQuery()->getSingleScalarResult();
+    }
 }
