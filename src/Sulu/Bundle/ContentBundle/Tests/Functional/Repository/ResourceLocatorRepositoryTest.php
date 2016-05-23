@@ -12,9 +12,10 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Repository;
 
 use PHPCR\SessionInterface;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 /**
  * @group functional
@@ -23,9 +24,9 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 class ResourceLocatorRepositoryTest extends SuluTestCase
 {
     /**
-     * @var ContentMapperInterface
+     * @var DocumentManagerInterface
      */
-    private $mapper;
+    private $documentManager;
 
     /**
      * @var SessionInterface
@@ -40,37 +41,26 @@ class ResourceLocatorRepositoryTest extends SuluTestCase
     protected function setUp()
     {
         $this->initPhpcr();
-        $this->mapper = $this->getContainer()->get('sulu.content.mapper');
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->session = $this->getContainer()->get('doctrine_phpcr.default_session');
         $this->repository = $this->getContainer()->get('sulu_content.rl_repository');
     }
 
-    /**
-     * @return \Sulu\Component\Content\Compat\StructureInterface
-     */
-    private function prepareGenerateTestData()
-    {
-        return $this->mapper->save(
-            [
-                'title' => 'test',
-                'url' => '/test',
-            ],
-            'overview',
-            'sulu_io',
-            'en',
-            1
-        );
-    }
-
     public function testGenerate()
     {
-        $structure = $this->prepareGenerateTestData();
+        /** @var PageDocument $document */
+        $document = $this->documentManager->create('page');
+        $document->setTitle('test');
+        $document->setResourceSegment('/test');
+        $document->setStructureType('overview');
+        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->flush();
 
         $result = $this->repository->generate(
             [
                 'title' => 'test',
             ],
-            $structure->getUuid(),
+            $document->getUuid(),
             null,
             'sulu_io',
             'en',
@@ -80,52 +70,39 @@ class ResourceLocatorRepositoryTest extends SuluTestCase
         $this->assertEquals('/test/test', $result['resourceLocator']);
     }
 
+    public function testGenerateSlash()
+    {
+        $result = $this->repository->generate(['title' => 'Title / Header'], null, null, 'sulu_io', 'en', 'overview');
+
+        $this->assertEquals('/title-header', $result['resourceLocator']);
+    }
+
     /**
      * @return \Sulu\Component\Content\Compat\StructureInterface
      */
     private function prepareHistoryTestData()
     {
-        $structure = $this->mapper->save(
-            [
-                'title' => 'test-1',
-                'url' => '/test',
-            ],
-            'overview',
-            'sulu_io',
-            'en',
-            1
-        );
-        sleep(1);
+        /** @var PageDocument $document */
+        $document = $this->documentManager->create('page');
+        $document->setTitle('test-1');
+        $document->setResourceSegment('/test');
+        $document->setStructureType('overview');
+        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->flush();
 
-        $structure = $this->mapper->save(
-            [
-                'title' => 'test-1',
-                'url' => '/test-1',
-            ],
-            'overview',
-            'sulu_io',
-            'en',
-            1,
-            true,
-            $structure->getUuid()
-        );
+        sleep(1); // required because of jackrabbit
 
-        sleep(1);
+        $document->setResourceSegment('/test-1');
+        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->flush();
 
-        $structure = $this->mapper->save(
-            [
-                'title' => 'test-1',
-                'url' => '/test-2',
-            ],
-            'overview',
-            'sulu_io',
-            'en',
-            1,
-            true,
-            $structure->getUuid()
-        );
+        sleep(1); // required because of jackrabbit
 
-        return $structure;
+        $document->setResourceSegment('/test-2');
+        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->flush();
+
+        return $document;
     }
 
     public function testGetHistory()

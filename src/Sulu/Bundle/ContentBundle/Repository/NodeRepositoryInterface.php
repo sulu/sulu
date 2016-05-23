@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\ContentBundle\Repository;
 
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
-
 /**
  * repository for node objects.
  */
@@ -123,31 +121,6 @@ interface NodeRepositoryInterface
     public function getIndexNode($webspaceKey, $languageCode);
 
     /**
-     * save node with given uuid or creates a new one.
-     *
-     * @param array  $data
-     * @param string $templateKey
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param int    $userId
-     * @param string $uuid
-     * @param string $parentUuid
-     * @param null   $state
-     *
-     * @return array
-     */
-    public function saveNode(
-        $data,
-        $templateKey,
-        $webspaceKey,
-        $languageCode,
-        $userId,
-        $uuid = null,
-        $parentUuid = null,
-        $state = null
-    );
-
-    /**
      * removes given node.
      *
      * @param string $uuid
@@ -183,15 +156,6 @@ interface NodeRepositoryInterface
         $excludeGhosts = false,
         $appendWebspaceNode = false
     );
-
-    /**
-     * executes a content request and prepares api result.
-     *
-     * @param ContentMapperRequest $mapperRequest
-     *
-     * @return array
-     */
-    public function saveNodeRequest(ContentMapperRequest $mapperRequest);
 
     /**
      * returns data of given extension api ready.
