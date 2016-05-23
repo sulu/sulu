@@ -132,7 +132,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
             $resources = [new FileResource($filePath)];
 
             $cache->write(
-                sprintf('<?php $metadata = \'%s\';', serialize($metadata)),
+                sprintf('<?php $metadata = <<<EOT' . PHP_EOL . '%s' . PHP_EOL . 'EOT' . PHP_EOL . ';', serialize($metadata)),
                 $resources
             );
         }

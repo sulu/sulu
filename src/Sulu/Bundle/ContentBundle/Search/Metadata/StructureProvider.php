@@ -359,13 +359,33 @@ class StructureProvider implements ProviderInterface
 
     private function getContentField(PropertyMetadata $property)
     {
+        $expression = $this->getExpression($property);
+
         $field = $this->factory->createMetadataExpression(
             sprintf(
-                'object.getStructure().%s.getValue()',
+                $expression,
                 $property->getName()
             )
         );
 
         return $field;
+    }
+
+    private function getExpression(PropertyMetadata $property)
+    {
+        // if this is a property of a block, it has no tags
+        $expression = 'object.getStructure().%s.getValue()';
+        if (!$property->hasTag('sulu.search.field')) {
+            return $expression;
+        }
+
+        $tag = $property->getTag('sulu.search.field');
+        $tagAttributes = $tag['attributes'];
+
+        if (isset($tagAttributes['expr'])) {
+            $expression = $tagAttributes['expr'];
+        }
+
+        return $expression;
     }
 }
