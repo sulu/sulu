@@ -55,7 +55,7 @@ class RequestAttributesTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame($result2, $instance2);
         $this->assertNotSame($result2, $instance3);
 
-        $this->assertEquals(2, $result2->getAttribute('test1'));
+        $this->assertEquals(1, $result2->getAttribute('test1'));
         $this->assertEquals(3, $result2->getAttribute('test2'));
         $this->assertEquals(null, $result2->getAttribute('test3'));
     }

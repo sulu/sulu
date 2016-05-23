@@ -93,7 +93,7 @@
             <tag name="sulu.context" context="website"/>
             <tag name="router" priority="30"/>
         </service>
-        
+
         <service id="sulu_custom_urls.request_processor"
                  class="Sulu\Bundle\CustomUrlBundle\Request\CustomUrlRequestProcessor">
             <argument type="service" id="sulu_custom_urls.manager"/>
@@ -102,7 +102,7 @@
             <argument type="string">%kernel.environment%</argument>
 
             <tag name="sulu.context" context="website"/>
-            <tag name="sulu.request_attributes"/>
+            <tag name="sulu.request_attributes" priority="32"/>
         </service>
     </services>
 </container>

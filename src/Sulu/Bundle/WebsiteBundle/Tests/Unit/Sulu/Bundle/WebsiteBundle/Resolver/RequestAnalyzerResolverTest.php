@@ -89,6 +89,7 @@ class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
         $webspace->setKey('sulu_io');
 
         $portal = new Portal();
+        $portal->setKey('sulu_io_portal');
         $locale = new Localization();
         $locale->setLanguage('de');
         $locale->setDefault(true);
@@ -119,6 +120,7 @@ class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
             [
                 'request' => [
                     'webspaceKey' => 'sulu_io',
+                    'portalKey' => 'sulu_io_portal',
                     'locale' => 'de_at',
                     'defaultLocale' => 'de',
                     'portalUrl' => 'sulu.io/de',
