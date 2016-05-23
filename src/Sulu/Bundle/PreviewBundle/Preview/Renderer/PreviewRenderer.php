@@ -155,7 +155,7 @@ class PreviewRenderer implements PreviewRendererInterface
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, new PreRenderEvent($attributes));
 
         try {
-            $response = $this->httpKernel->handle($request, HttpKernelInterface::SUB_REQUEST, false);
+            $response = $this->httpKernel->handle($request, HttpKernelInterface::MASTER_REQUEST, false);
         } catch (\Twig_Error $e) {
             throw new TwigException($e, $object, $id, $webspace, $locale);
         }

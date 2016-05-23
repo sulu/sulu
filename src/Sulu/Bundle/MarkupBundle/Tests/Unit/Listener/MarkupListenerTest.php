@@ -64,7 +64,7 @@ class MarkupListenerTest extends \PHPUnit_Framework_TestCase
         $this->event->getRequest()->willReturn($this->request->reveal());
         $this->event->getResponse()->willReturn($this->response->reveal());
 
-        $this->listener = new MarkupListener(['html' => $this->markupParser->reveal()]);
+        $this->listener = new MarkupListener(['html' => $this->markupParser->reveal()], ['text/html' => 'html']);
     }
 
     public function testReplaceMarkup()

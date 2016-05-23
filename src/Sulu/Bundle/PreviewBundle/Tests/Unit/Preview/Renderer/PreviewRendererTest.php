@@ -115,7 +115,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
             ->shouldBeCalled();
 
-        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::SUB_REQUEST, false)
+        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
             ->shouldBeCalled()->willReturn(new Response('<title>Hallo</title>'));
 
         $request = new Request();
@@ -141,7 +141,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
             ->shouldNotBeCalled();
 
-        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::SUB_REQUEST, false)
+        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
             ->shouldNotBeCalled();
 
         $request = new Request();
@@ -175,7 +175,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
             ->shouldNotBeCalled();
 
-        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::SUB_REQUEST, false)
+        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
             ->shouldNotBeCalled();
 
         $request = new Request();
@@ -209,7 +209,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
             ->shouldBeCalled();
 
-        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::SUB_REQUEST, false)
+        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
             ->shouldBeCalled()->willThrow(new \Twig_Error_Runtime('Test error'));
 
         $request = new Request();

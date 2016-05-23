@@ -714,7 +714,15 @@ class ContentRepositoryTest extends SuluTestCase
         );
     }
 
-    public function testFindParentsWithSiblingsByUuid()
+    public function provideWebspaceKeys()
+    {
+        return [['sulu_io'], ['test_io']];
+    }
+
+    /**
+     * @dataProvider provideWebspaceKeys
+     */
+    public function testFindParentsWithSiblingsByUuid($webspaceKey)
     {
         $this->initPhpcr();
 
@@ -735,7 +743,7 @@ class ContentRepositoryTest extends SuluTestCase
         $result = $this->contentRepository->findParentsWithSiblingsByUuid(
             $page10->getUuid(),
             'de',
-            'sulu_io',
+            $webspaceKey,
             MappingBuilder::create()->getMapping()
         );
 
