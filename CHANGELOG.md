@@ -26,6 +26,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2305 [WebsiteBundle]       Fixed handling of non-default formats in error pages
     * ENHANCEMENT #2341 [MediaBundle]         Added category to medias
     * ENHANCEMENT #2323 [WebsiteBundle]       Added TWIG-Extension to check if parent nav-item is active
+    * ENHANCEMENT #2377 [CoreBundle]          Made --router and --env optional when running the console commands server:run, server:start, server:stop and server:status
 
 * 1.2.2 (2016-05-09)
     * HOTFIX      #2375 [SecurityBundle]      Fixed visibility of entries in language dropdown
