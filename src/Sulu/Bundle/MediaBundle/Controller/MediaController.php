@@ -16,6 +16,7 @@ use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
@@ -116,18 +117,18 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
         $listBuilder = $this->getListBuilder($request, $fieldDescriptors);
         $listResponse = $listBuilder->execute();
 
-        $ids = array_map(
-            function ($item) {
-                return $item['id'];
-            },
-            $listResponse
-        );
-
-        $formats = $this->getMediaManager()->getFormatUrls($ids, $this->getLocale($request));
         for ($i = 0, $length = count($listResponse); $i < $length; ++$i) {
-            if (array_key_exists($listResponse[$i]['id'], $formats)) {
-                $listResponse[$i]['thumbnails'] = $formats[$listResponse[$i]['id']];
+            $format = $this->getFormatManager()->getFormats(
+                $listResponse[$i]['id'],
+                $listResponse[$i]['name'],
+                $listResponse[$i]['storageOptions'],
+                $listResponse[$i]['version'],
+                $listResponse[$i]['mimeType']
+            );
+            if (0 < count($format)) {
+                $listResponse[$i]['thumbnails'] = $format;
             }
+
             $listResponse[$i]['url'] = $this->getMediaManager()->getUrl(
                 $listResponse[$i]['id'],
                 $listResponse[$i]['name'],
@@ -170,8 +171,8 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
 
         $collectionId = $request->get('collection');
         if ($collectionId) {
-            $collection = $this->getCollectionManager()->getById($collectionId, $this->getLocale($request));
-            if ($collection->getType()->getKey() === SystemCollectionManagerInterface::COLLECTION_TYPE) {
+            $collectionType = $this->getCollectionRepository()->findCollectionTypeById($collectionId);
+            if ($collectionType === SystemCollectionManagerInterface::COLLECTION_TYPE) {
                 $this->getSecurityChecker()->checkPermission(
                     'sulu.media.system_collections',
                     PermissionTypes::VIEW
@@ -199,6 +200,8 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
         $listBuilder->addSelectField($fieldDescriptors['version']);
         $listBuilder->addSelectField($fieldDescriptors['name']);
         $listBuilder->addSelectField($fieldDescriptors['locale']);
+        $listBuilder->addSelectField($fieldDescriptors['mimeType']);
+        $listBuilder->addSelectField($fieldDescriptors['storageOptions']);
         $listBuilder->addSelectField($fieldDescriptors['id']);
         $listBuilder->addSelectField($fieldDescriptors['collection']);
 
@@ -383,6 +386,14 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
     protected function getCollectionManager()
     {
         return $this->get('sulu_media.collection_manager');
+    }
+
+    /**
+     * @return CollectionRepositoryInterface
+     */
+    protected function getCollectionRepository()
+    {
+        return $this->get('sulu_media.collection_repository');
     }
 
     /**
