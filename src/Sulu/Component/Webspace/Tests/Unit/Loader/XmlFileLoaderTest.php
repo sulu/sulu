@@ -52,7 +52,7 @@ class XmlFileLoaderTest extends WebspaceTestCase
 
         $this->assertEquals('sulu', $webspace->getTheme()->getKey());
         $this->assertEquals(
-            ['page' => 'default', 'homepage' => 'overview'],
+            ['page' => 'default', 'home' => 'overview'],
             $webspace->getTheme()->getDefaultTemplates()
         );
 

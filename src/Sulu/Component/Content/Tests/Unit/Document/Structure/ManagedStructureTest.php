@@ -117,11 +117,13 @@ class ManagedStructureTest extends \PHPUnit_Framework_TestCase
     {
         $name = 'test';
         $contentTypeName = 'hello';
-        $locale = 'fr';
+        $locale = 'de';
 
         $this->inspector->getLocale($this->document->reveal())->willReturn($locale);
+        $this->inspector->getLocale($this->document->reveal())->willReturn($locale);
         $this->propertyMetadata->isLocalized()->willReturn(true);
-        $this->doGetProperty($name, $contentTypeName, $locale);
+
+        $this->doGetProperty($name, $contentTypeName, $locale, true);
     }
 
     /**
@@ -131,11 +133,13 @@ class ManagedStructureTest extends \PHPUnit_Framework_TestCase
     {
         $name = 'test';
         $contentTypeName = 'hello';
+        $locale = 'de';
 
         $this->document->getLocale()->shouldNotBeCalled();
+        $this->inspector->getLocale($this->document->reveal())->willReturn($locale);
         $this->propertyMetadata->isLocalized()->willReturn(false);
 
-        $this->doGetProperty($name, $contentTypeName, null);
+        $this->doGetProperty($name, $contentTypeName, $locale, false);
     }
 
     /**
@@ -145,27 +149,29 @@ class ManagedStructureTest extends \PHPUnit_Framework_TestCase
     {
         $name = 'test';
         $contentTypeName = 'hello';
+        $locale = 'de';
 
         $this->document->getLocale()->shouldNotBeCalled();
         $this->propertyMetadata->isLocalized()->willReturn(false);
+        $this->inspector->getLocale($this->document->reveal())->willReturn($locale);
 
-        $this->doGetProperty($name, $contentTypeName, null);
+        $this->doGetProperty($name, $contentTypeName, $locale, false);
     }
 
-    private function doGetProperty($name, $contentTypeName, $locale)
+    private function doGetProperty($name, $contentTypeName, $locale, $localized)
     {
         $this->propertyMetadata->getType()->willReturn($contentTypeName);
         $this->structureMetadata->getProperty($name)->willReturn($this->propertyMetadata);
         $this->contentTypeManager->get($contentTypeName)->willReturn($this->contentType->reveal());
 
-        if ($locale) {
+        if ($localized) {
             $this->propertyFactory->createTranslatedProperty(
                 $this->propertyMetadata->reveal(),
                 $locale,
                 Argument::type(StructureBridge::class)
             )->willReturn($this->legacyProperty->reveal());
         } else {
-            $this->propertyFactory->createProperty($this->propertyMetadata->reveal(), $locale)->willReturn(
+            $this->propertyFactory->createProperty($this->propertyMetadata->reveal())->willReturn(
                 $this->legacyProperty->reveal()
             );
         }

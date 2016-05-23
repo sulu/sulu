@@ -20,6 +20,7 @@ use Sulu\Component\Content\Document\Subscriber\WorkflowStageSubscriber;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\DocumentInspector as BaseDocumentInspector;
 use Sulu\Component\DocumentManager\DocumentRegistry;
@@ -112,7 +113,7 @@ class DocumentInspector extends BaseDocumentInspector
     {
         return $this->structureFactory->getStructureMetadata(
             $this->getMetadata($document)->getAlias(),
-            $document->getStructureType()
+            $structureType = $document->getStructureType()
         );
     }
 
@@ -143,8 +144,8 @@ class DocumentInspector extends BaseDocumentInspector
             }
         }
 
-        $originalLocale = $this->documentRegistry->getOriginalLocaleForDocument($document);
-        $currentLocale = $this->documentRegistry->getLocaleForDocument($document);
+        $originalLocale = $document->getOriginalLocale();
+        $currentLocale = $document->getLocale();
 
         if ($originalLocale === $currentLocale) {
             return LocalizationState::LOCALIZED;
@@ -161,6 +162,10 @@ class DocumentInspector extends BaseDocumentInspector
      */
     public function getLocale($document)
     {
+        if ($document instanceof LocaleBehavior) {
+            return $document->getLocale();
+        }
+
         if ($this->documentRegistry->hasDocument($document)) {
             return $this->documentRegistry->getLocaleForDocument($document);
         }

@@ -359,7 +359,7 @@ class XmlFileLoader extends FileLoader
 
     private function generateDefaultTemplates(Theme $theme)
     {
-        $expected = ['page', 'homepage'];
+        $expected = ['page', 'home'];
         $found = [];
         $nodes = $this->xpath->query('/x:webspace/x:theme/x:default-templates/x:default-template');
 
@@ -367,6 +367,11 @@ class XmlFileLoader extends FileLoader
             /* @var \DOMNode $node */
             $template = $node->nodeValue;
             $type = $node->attributes->getNamedItem('type')->nodeValue;
+
+            // FIXME legacy (document-type is home)
+            if ($type === 'homepage') {
+                $type = 'home';
+            }
 
             $theme->addDefaultTemplate($type, $template);
             $found[] = $type;

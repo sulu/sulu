@@ -601,11 +601,15 @@ class ContentMapper implements ContentMapperInterface
         $parentDocument = $this->inspector->getParent($document);
 
         foreach ($destLocales as $destLocale) {
-            $document->setLocale($destLocale);
-            $document->getStructure()->bind($document->getStructure()->toArray());
+            $destDocument = $this->documentManager->find(
+                $uuid,
+                $destLocale
+            );
+            $destDocument->setLocale($destLocale);
+            $destDocument->getStructure()->bind($document->getStructure()->toArray());
 
             // TODO: This can be removed if RoutingAuto replaces the ResourceLocator code.
-            if ($document instanceof ResourceSegmentBehavior) {
+            if ($destDocument instanceof ResourceSegmentBehavior) {
                 try {
                     $parentResourceLocator = $this->rlpStrategy->loadByContentUuid(
                         $this->inspector->getUuid($parentDocument),
@@ -616,16 +620,16 @@ class ContentMapper implements ContentMapperInterface
                     $parentResourceLocator = null;
                 }
                 $resourceLocator = $this->rlpStrategy->generate(
-                    $document->getTitle(),
+                    $destDocument->getTitle(),
                     $parentResourceLocator,
                     $webspaceKey,
                     $destLocale
                 );
 
-                $document->setResourceSegment($resourceLocator);
+                $destDocument->setResourceSegment($resourceLocator);
             }
 
-            $this->documentManager->persist($document, $destLocale);
+            $this->documentManager->persist($destDocument, $destLocale);
         }
         $this->documentManager->flush();
 
@@ -712,34 +716,31 @@ class ContentMapper implements ContentMapperInterface
         $localizations = $webspace->getAllLocalizations();
 
         // load from phpcr
-        $document = $this->documentManager->find($uuid, $locale);
+        $originalDocument = $this->documentManager->find($uuid, $locale);
         $parentDocument = $this->documentManager->find($destParentUuid, $locale);
 
         if ($move) {
             // move node
-            $this->documentManager->move($document, $destParentUuid);
+            $this->documentManager->move($originalDocument, $destParentUuid);
         } else {
             // copy node
-            $copiedPath = $this->documentManager->copy($document, $destParentUuid);
-            $document = $this->documentManager->find($copiedPath, $locale);
+            $copiedPath = $this->documentManager->copy($originalDocument, $destParentUuid);
+            $originalDocument = $this->documentManager->find($copiedPath, $locale);
             $this->documentManager->refresh($parentDocument);
         }
-
-        $originalLocale = $locale;
 
         // modifiy the resource locators -- note this can be removed once the routing auto
         // system is implemented.
         foreach ($localizations as $locale) {
-            $locale = $locale->getLocalization();
+            $locale = $locale->getLocale();
+
+            // prepare parent content node
+            $document = $this->documentManager->find($originalDocument->getUuid(), $locale);
+            $parentDocument = $this->documentManager->find($parentDocument->getUuid(), $locale);
 
             if (!$document instanceof ResourceSegmentBehavior) {
                 break;
             }
-
-            // prepare parent content node
-            // finding the document will update the locale without reloading from PHPCR
-            $this->documentManager->find($document->getUuid(), $locale);
-            $this->documentManager->find($parentDocument->getUuid(), $locale);
 
             // TODO: This could be optimized
             $localizationState = $this->inspector->getLocalizationState($document);
@@ -768,9 +769,7 @@ class ContentMapper implements ContentMapperInterface
 
         $this->documentManager->flush();
 
-        $this->documentManager->find($document->getUuid(), $originalLocale);
-
-        return $this->documentToStructure($document);
+        return $this->documentToStructure($originalDocument);
     }
 
     /**

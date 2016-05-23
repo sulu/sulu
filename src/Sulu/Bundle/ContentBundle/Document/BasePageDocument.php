@@ -194,6 +194,13 @@ class BasePageDocument implements
     protected $locale;
 
     /**
+     * Document's original locale.
+     *
+     * @var string
+     */
+    protected $originalLocale;
+
+    /**
      * Document's children.
      *
      * @var ChildrenCollection
@@ -498,6 +505,22 @@ class BasePageDocument implements
     public function setLocale($locale)
     {
         $this->locale = $locale;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOriginalLocale()
+    {
+        return $this->originalLocale;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOriginalLocale($originalLocale)
+    {
+        $this->originalLocale = $originalLocale;
     }
 
     /**

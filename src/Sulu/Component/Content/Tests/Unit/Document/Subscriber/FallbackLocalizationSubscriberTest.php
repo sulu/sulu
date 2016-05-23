@@ -105,6 +105,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     {
         $this->inspector->getLocales($this->document)->willReturn(['de', 'en']);
         $this->hydrateEvent->setLocale('en')->shouldBeCalled();
+        $this->hydrateEvent->getOption('load_ghost_content', true)->willReturn(true);
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 
@@ -115,11 +116,6 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     {
         $this->inspector->getWebspace($this->document->reveal())->willReturn(null);
         $this->inspector->getLocales($this->document)->willReturn(['de', 'fr']);
-        $this->registry->updateLocale(
-            $this->document->reveal(),
-            'de',
-            'en'
-        )->shouldBeCalled();
         $this->hydrateEvent->setLocale('de')->shouldBeCalled();
         $this->hydrateEvent->getOption('load_ghost_content', true)->willReturn(true);
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
@@ -132,14 +128,9 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     {
         $this->inspector->getWebspace($this->document->reveal())->willReturn(null);
         $this->inspector->getLocales($this->document)->willReturn(['de', 'fr']);
-        $this->hydrateEvent->setLocale('de')->shouldBeCalled();
+        $this->hydrateEvent->setLocale('de')->shouldNotBeCalled();
 
         $this->hydrateEvent->getOption('load_ghost_content', true)->willReturn(false);
-        $this->registry->updateLocale(
-            $this->document->reveal(),
-            self::FIX_LOCALE,
-            self::FIX_LOCALE
-        )->shouldBeCalled();
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 
@@ -169,11 +160,6 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
         $this->localization1->getParent()->willReturn($this->localization2->reveal());
         $this->hydrateEvent->getOption('load_ghost_content', true)->willReturn(true);
 
-        $this->registry->updateLocale(
-            $this->document->reveal(),
-            'de',
-            'en'
-        )->shouldBeCalled();
         $this->hydrateEvent->setLocale('de')->shouldBeCalled();
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
@@ -196,11 +182,6 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
             $this->localization2->reveal(),
         ]);
 
-        $this->registry->updateLocale(
-            $this->document->reveal(),
-            'de',
-            'en'
-        )->shouldBeCalled();
         $this->hydrateEvent->setLocale('de')->shouldBeCalled();
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
@@ -226,11 +207,6 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
             $this->localization2->reveal(),
         ]);
 
-        $this->registry->updateLocale(
-            $this->document->reveal(),
-            'de',
-            'en'
-        )->shouldBeCalled();
         $this->hydrateEvent->setLocale('de')->shouldBeCalled();
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }

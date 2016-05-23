@@ -398,10 +398,7 @@ define([], function() {
 
             if (!this.options.tabsData) {
                 def.resolve();
-            } else if (this.options.tabsData.length === 1) {
-                def.resolve();
-                this.tabChangedHandler(this.options.tabsData[0]);
-            } else if (this.options.tabsData.length > 1) {
+            } else if (this.options.tabsData.length > 0) {
                 this.startTabsComponent(def);
             } else {
                 def.resolve();
@@ -426,10 +423,12 @@ define([], function() {
                         fragment: this.sandbox.mvc.history.fragment
                     };
 
-                this.sandbox.dom.addClass(this.$el, constants.hasTabsClass);
-
                 // wait for initialized
-                this.sandbox.once('husky.tabs.header.initialized', function() {
+                this.sandbox.once('husky.tabs.header.initialized', function(selectedItem, visibleTabs) {
+                    if (visibleTabs > 1) {
+                        this.sandbox.dom.addClass(this.$el, constants.hasTabsClass);
+                    }
+
                     def.resolve();
                 }.bind(this));
 
@@ -554,6 +553,15 @@ define([], function() {
         },
 
         saved: function(data) {
+            // wait for initialized
+            this.sandbox.once('husky.tabs.header.updated', function(visibleTabs) {
+                if (visibleTabs > 1) {
+                    this.sandbox.dom.addClass(this.$el, constants.hasTabsClass);
+                } else {
+                    this.sandbox.dom.removeClass(this.$el, constants.hasTabsClass);
+                }
+            }.bind(this));
+
             this.sandbox.emit('husky.tabs.header.update', data);
         },
 

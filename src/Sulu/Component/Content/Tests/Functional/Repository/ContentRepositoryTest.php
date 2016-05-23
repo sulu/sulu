@@ -1075,6 +1075,7 @@ class ContentRepositoryTest extends SuluTestCase
             ['load_ghost_content' => false]
         );
 
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $document->setShadowLocaleEnabled(true);
         $document->setTitle(strrev($title));
         $document->setShadowLocale($locale);
@@ -1099,6 +1100,7 @@ class ContentRepositoryTest extends SuluTestCase
         $document->setResourceSegment($data['url']);
         $document->setLocale($locale);
         $document->setRedirectType(RedirectType::INTERNAL);
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $document->setRedirectTarget($link);
         $document->getStructure()->bind($data);
         $this->documentManager->persist(

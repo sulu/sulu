@@ -62,7 +62,7 @@ class StructureBridge implements StructureInterface
      *
      * @var string
      */
-    private $locale;
+    protected $locale;
 
     /**
      * @param StructureMetadata $structure
@@ -107,7 +107,7 @@ class StructureBridge implements StructureInterface
             return $this->locale;
         }
 
-        return $this->inspector->getOriginalLocale($this->getDocument());
+        return $this->inspector->getLocale($this->getDocument());
     }
 
     /**
@@ -294,7 +294,7 @@ class StructureBridge implements StructureInterface
     {
         $children = [];
 
-        foreach ($this->getDocument()->getChildren($this->getDocument()) as $child) {
+        foreach ($this->getDocument()->getChildren() as $child) {
             $children[] = $this->documentToStructure($child);
         }
 

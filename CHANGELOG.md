@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2367 [ContentBundle]       Fixed copy internal-link into new language
     * BUGFIX      #2396                       Fixed composer-events
     * BUGFIX      #2396 [PreviewBundle]       Fixed leaking events of preview
     * BUGFIX      #2389 [MediaBundle]         Removed twice adding of navigation item

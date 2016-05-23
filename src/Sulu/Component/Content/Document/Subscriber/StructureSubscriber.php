@@ -18,7 +18,6 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\LocalizedStructureBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\LocalizationState;
-use Sulu\Component\Content\Document\Property\Property;
 use Sulu\Component\Content\Document\Structure\ManagedStructure;
 use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Document\Structure\StructureInterface;
@@ -28,6 +27,7 @@ use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class StructureSubscriber implements EventSubscriberInterface
@@ -55,21 +55,29 @@ class StructureSubscriber implements EventSubscriberInterface
     private $encoder;
 
     /**
-     * @param PropertyEncoder             $encoder
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
+     * @param PropertyEncoder $encoder
      * @param ContentTypeManagerInterface $contentTypeManager
      * @param DocumentInspector $inspector
      * @param LegacyPropertyFactory $legacyPropertyFactory
+     * @param WebspaceManagerInterface $webspaceManager
      */
     public function __construct(
         PropertyEncoder $encoder,
         ContentTypeManagerInterface $contentTypeManager,
         DocumentInspector $inspector,
-        LegacyPropertyFactory $legacyPropertyFactory
+        LegacyPropertyFactory $legacyPropertyFactory,
+        WebspaceManagerInterface $webspaceManager
     ) {
         $this->encoder = $encoder;
         $this->contentTypeManager = $contentTypeManager;
         $this->inspector = $inspector;
         $this->legacyPropertyFactory = $legacyPropertyFactory;
+        $this->webspaceManager = $webspaceManager;
     }
 
     /**
@@ -166,6 +174,12 @@ class StructureSubscriber implements EventSubscriberInterface
         $node = $event->getNode();
         $propertyName = $this->getStructureTypePropertyName($document, $event->getLocale());
         $structureType = $node->getPropertyValueWithDefault($propertyName, null);
+
+        $rehydrate = $event->getOption('rehydrate');
+        if (!$structureType && $rehydrate) {
+            $structureType = $this->getDefaultStructureType($document);
+        }
+
         $document->setStructureType($structureType);
 
         if (false === $event->getOption('load_ghost_content', false)) {
@@ -174,7 +188,7 @@ class StructureSubscriber implements EventSubscriberInterface
             }
         }
 
-        $container = $this->getStructure($document, $structureType);
+        $container = $this->getStructure($document, $structureType, $rehydrate);
 
         // Set the property container
         $event->getAccessor()->set(
@@ -212,6 +226,22 @@ class StructureSubscriber implements EventSubscriberInterface
         $node->setProperty(
             $this->getStructureTypePropertyName($document, $locale),
             $document->getStructureType()
+        );
+    }
+
+    /**
+     * Return the default structure for the given StructureBehavior implementing document.
+     *
+     * @param StructureBehavior $document
+     *
+     * @return string
+     */
+    private function getDefaultStructureType(StructureBehavior $document)
+    {
+        $webspace = $this->webspaceManager->findWebspaceByKey($this->inspector->getWebspace($document));
+
+        return $webspace->getTheme()->getDefaultTemplate(
+            $this->inspector->getMetadata($document)->getAlias()
         );
     }
 
@@ -313,16 +343,17 @@ class StructureSubscriber implements EventSubscriberInterface
      *
      * @param object $document
      * @param string $structureType
+     * @param bool $rehydrate
      *
      * @return StructureInterface
      */
-    private function getStructure($document, $structureType)
+    private function getStructure($document, $structureType, $rehydrate)
     {
         if ($structureType) {
             return $this->createStructure($document);
         }
 
-        if ($document->getStructure()) {
+        if (!$rehydrate && $document->getStructure()) {
             return $document->getStructure();
         }
 

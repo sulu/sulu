@@ -516,6 +516,9 @@ class NodeRepositoryTest extends SuluTestCase
         $result = $this->nodeRepository->moveNode($data[0]->getUuid(), $data[1]->getUuid(), 'sulu_io', 'en', 2);
         $structure = $this->nodeRepository->getNode($data[0]->getUuid(), 'sulu_io', 'en');
 
+        // ensure excerpt data will be loaded
+        $this->assertNotNull($structure['ext']['excerpt']);
+
         // check result
         $this->assertEquals($structure, $result);
 
