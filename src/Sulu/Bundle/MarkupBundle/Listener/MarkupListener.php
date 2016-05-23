@@ -25,20 +25,11 @@ class MarkupListener
     private $markupParser;
 
     /**
-     * @var array
-     */
-    private $mimeTypeFormatMap;
-
-    /**
      * @param MarkupParserInterface[] $markupParser
-     * @param array $mimeTypeFormatMap
      */
-    public function __construct(
-        array $markupParser,
-        array $mimeTypeFormatMap = ['text/html' => 'html', 'application/xml' => 'xml', 'text/xml' => 'xml']
-    ) {
+    public function __construct(array $markupParser)
+    {
         $this->markupParser = $markupParser;
-        $this->mimeTypeFormatMap = $mimeTypeFormatMap;
     }
 
     /**
@@ -48,16 +39,12 @@ class MarkupListener
      */
     public function replaceMarkup(FilterResponseEvent $event)
     {
-        $response = $event->getResponse();
-        $mimeType = explode(';', $response->headers->get('Content-Type'))[0];
-        if (!array_key_exists($mimeType, $this->mimeTypeFormatMap)
-            || !array_key_exists($this->mimeTypeFormatMap[$mimeType], $this->markupParser)
-        ) {
+        $format = $event->getRequest()->getRequestFormat();
+        if (!array_key_exists($format, $this->markupParser)) {
             return;
         }
 
-        $format = $this->mimeTypeFormatMap[$mimeType];
-
+        $response = $event->getResponse();
         $response->setContent($this->markupParser[$format]->parse($response->getContent()));
     }
 }

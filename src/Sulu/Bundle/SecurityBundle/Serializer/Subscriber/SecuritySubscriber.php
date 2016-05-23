@@ -19,6 +19,7 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -72,7 +73,8 @@ class SecuritySubscriber implements EventSubscriberInterface
             && $document instanceof LocaleBehavior
             && $document instanceof WebspaceBehavior
             && $this->tokenStorage !== null
-            && $this->tokenStorage->getToken() !== null)
+            && $this->tokenStorage->getToken() !== null
+            && $this->tokenStorage->getToken()->getUser() instanceof UserInterface)
         ) {
             return;
         }

@@ -22,13 +22,20 @@ class TagNotFoundException extends \Exception
     private $tagName;
 
     /**
-     * @param string $tagName
+     * @var string
      */
-    public function __construct($tagName)
+    private $type;
+
+    /**
+     * @param string $tagName
+     * @param int $type
+     */
+    public function __construct($tagName, $type)
     {
-        parent::__construct(sprintf('Tag "%s" not found', $tagName));
+        parent::__construct(sprintf('Tag "%s" for type "%s" not found', $tagName, $type));
 
         $this->tagName = $tagName;
+        $this->type = $type;
     }
 
     /**
@@ -39,5 +46,15 @@ class TagNotFoundException extends \Exception
     public function getTagName()
     {
         return $this->tagName;
+    }
+
+    /**
+     * Returns type of content.
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }

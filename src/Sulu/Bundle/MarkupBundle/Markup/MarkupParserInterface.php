@@ -17,7 +17,7 @@ namespace Sulu\Bundle\MarkupBundle\Markup;
 interface MarkupParserInterface
 {
     /**
-     * Parses html-document and returns completed html.
+     * Parses document and returns completed document.
      *
      * @param string $content
      *

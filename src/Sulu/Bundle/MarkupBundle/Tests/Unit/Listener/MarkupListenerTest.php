@@ -69,7 +69,7 @@ class MarkupListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testReplaceMarkup()
     {
-        $this->responseHeaders->get('Content-Type')->willReturn('text/html; charset: UTF-8');
+        $this->request->getRequestFormat()->willReturn('html');
         $this->response->getContent()->willReturn('<html><sulu:link href="123-123-123"/></html>');
 
         $this->markupParser->parse('<html><sulu:link href="123-123-123"/></html>')
