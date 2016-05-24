@@ -130,7 +130,7 @@ class ContentRepository implements ContentRepositoryInterface
             throw new ItemNotFoundException();
         }
 
-        return $this->resolveContent($rows->getRows()->current(), $locale, $locales, $webspaceKey, $mapping, $user);
+        return $this->resolveContent($rows->getRows()->current(), $locale, $locales, $mapping, $user);
     }
 
     /**
@@ -150,7 +150,7 @@ class ContentRepository implements ContentRepositoryInterface
         $queryBuilder->where($this->qomFactory->childNode('node', $path));
         $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
 
-        return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $webspaceKey, $mapping, $user);
+        return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
     }
 
     /**
@@ -165,7 +165,7 @@ class ContentRepository implements ContentRepositoryInterface
         );
         $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
 
-        return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $webspaceKey, $mapping, $user);
+        return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
     }
 
     /**
@@ -186,7 +186,7 @@ class ContentRepository implements ContentRepositoryInterface
             ->orderBy($this->qomFactory->propertyValue('node', 'jcr:path'))
             ->where($this->qomFactory->childNode('node', $path));
 
-        while ($path !== $contentPath) {
+        while (PathHelper::getPathDepth($path) > PathHelper::getPathDepth($contentPath)) {
             $path = PathHelper::getParentPath($path);
             $queryBuilder->orWhere($this->qomFactory->childNode('node', $path));
         }
@@ -194,7 +194,7 @@ class ContentRepository implements ContentRepositoryInterface
         $mapping->addProperties(['order']);
         $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
 
-        $result = $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $webspaceKey, $mapping, $user);
+        $result = $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
 
         return $this->generateTreeByPath($result);
     }
@@ -218,7 +218,7 @@ class ContentRepository implements ContentRepositoryInterface
         }
         $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
 
-        return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, null, $mapping, $user);
+        return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
     }
 
     /**
@@ -248,7 +248,7 @@ class ContentRepository implements ContentRepositoryInterface
         }
         $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
 
-        return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, null, $mapping, $user);
+        return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
     }
 
     /**
@@ -265,7 +265,7 @@ class ContentRepository implements ContentRepositoryInterface
 
         $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
 
-        return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $webspaceKey, $mapping, $user);
+        return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
     }
 
     /**
@@ -284,7 +284,7 @@ class ContentRepository implements ContentRepositoryInterface
 
         $this->appendMapping($queryBuilder, $mapping, $locale, $locales);
 
-        return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $webspaceKey, $mapping, $user);
+        return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
     }
 
     /**
@@ -368,7 +368,6 @@ class ContentRepository implements ContentRepositoryInterface
      *
      * @param QueryBuilder $queryBuilder
      * @param string $locale
-     * @param string $webspaceKey
      * @param MappingInterface $mapping
      * @param UserInterface $user
      *
@@ -378,15 +377,14 @@ class ContentRepository implements ContentRepositoryInterface
         QueryBuilder $queryBuilder,
         $locale,
         $locales,
-        $webspaceKey,
         MappingInterface $mapping,
         UserInterface $user = null
     ) {
         return array_values(
             array_filter(
                 array_map(
-                    function (Row $row) use ($mapping, $webspaceKey, $locale, $locales, $user) {
-                        return $this->resolveContent($row, $locale, $locales, $webspaceKey, $mapping, $user);
+                    function (Row $row) use ($mapping, $locale, $locales, $user) {
+                        return $this->resolveContent($row, $locale, $locales, $mapping, $user);
                     },
                     iterator_to_array($queryBuilder->execute())
                 )
@@ -573,7 +571,6 @@ class ContentRepository implements ContentRepositoryInterface
      * @param Row $row
      * @param string $locale
      * @param string $locales
-     * @param string $webspaceKey
      * @param MappingInterface $mapping Includes array of property names.
      * @param UserInterface $user
      *
@@ -583,13 +580,10 @@ class ContentRepository implements ContentRepositoryInterface
         Row $row,
         $locale,
         $locales,
-        $webspaceKey,
         MappingInterface $mapping,
         UserInterface $user = null
     ) {
-        if (!$webspaceKey) {
-            $webspaceKey = $this->nodeHelper->extractWebspaceFromPath($row->getPath());
-        }
+        $webspaceKey = $this->nodeHelper->extractWebspaceFromPath($row->getPath());
 
         $originalLocale = $locale;
         $ghostLocale = $this->localizationFinder->findAvailableLocale(

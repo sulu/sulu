@@ -115,11 +115,51 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
             ->shouldBeCalled();
 
-        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::SUB_REQUEST, false)
+        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
             ->shouldBeCalled()->willReturn(new Response('<title>Hallo</title>'));
 
         $request = new Request();
         $this->requestStack->getCurrentRequest()->willReturn($request);
+
+        $response = $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true);
+        $this->assertEquals('<title>Hallo</title>', $response);
+    }
+
+    public function testRenderWithoutRequest()
+    {
+        $object = $this->prophesize(\stdClass::class);
+
+        $portalInformation = $this->prophesize(PortalInformation::class);
+        $webspace = $this->prophesize(Webspace::class);
+        $localization = new Localization('de');
+        $webspace->getLocalization('de')->willReturn($localization);
+        $portalInformation->getWebspace()->willReturn($webspace->reveal());
+        $portalInformation->getPortal()->willReturn($this->prophesize(Portal::class)->reveal());
+        $portalInformation->getUrl()->willReturn('sulu.lo');
+        $portalInformation->getPrefix()->willReturn('/de');
+
+        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
+            ->willReturn([$portalInformation->reveal()]);
+
+        $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
+        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, $object)
+            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
+
+        $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
+            ->shouldBeCalled();
+
+        $this->httpKernel->handle(
+            Argument::that(
+                function (Request $request) {
+                    return false === $request->get('_profiler');
+                }
+            ),
+            HttpKernelInterface::MASTER_REQUEST,
+            false
+        )
+            ->shouldBeCalled()->willReturn(new Response('<title>Hallo</title>'));
+
+        $this->requestStack->getCurrentRequest()->willReturn(null);
 
         $response = $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true);
         $this->assertEquals('<title>Hallo</title>', $response);
@@ -141,7 +181,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
             ->shouldNotBeCalled();
 
-        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::SUB_REQUEST, false)
+        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
             ->shouldNotBeCalled();
 
         $request = new Request();
@@ -175,7 +215,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
             ->shouldNotBeCalled();
 
-        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::SUB_REQUEST, false)
+        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
             ->shouldNotBeCalled();
 
         $request = new Request();
@@ -209,7 +249,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
             ->shouldBeCalled();
 
-        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::SUB_REQUEST, false)
+        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
             ->shouldBeCalled()->willThrow(new \Twig_Error_Runtime('Test error'));
 
         $request = new Request();

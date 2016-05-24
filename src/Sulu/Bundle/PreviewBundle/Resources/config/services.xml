@@ -53,6 +53,12 @@
 
             <tag name="sulu.websocket.message.handler" dispatcher="admin" alias="sulu_preview.preview"/>
         </service>
+
+        <!-- disable profiler for websocket-mode -->
+        <service id="sulu_markup.preview.profile_matcher"
+                 class="Sulu\Bundle\PreviewBundle\Profiler\PreviewProfilerMatcher" public="false">
+            <tag name="sulu.context" context="admin"/>
+        </service>
     </services>
 
 </container>
