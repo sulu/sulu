@@ -9,13 +9,17 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SnippetBundle\Tests\Unit;
+namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Twig;
 
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Twig\SnippetTwigExtension;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +27,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class SnippetTwigExtensionTest extends SuluTestCase
 {
+    /**
+     * @var DocumentManagerInterface
+     */
+    private $documentManager;
+
     /**
      * @var ContentMapperInterface
      */
@@ -50,6 +59,7 @@ class SnippetTwigExtensionTest extends SuluTestCase
 
     protected function setUp()
     {
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
         $this->requestAnalyzer = $this->getContainer()->get('sulu_core.webspace.request_analyzer');
         $this->structureResolver = $this->getContainer()->get('sulu_website.resolver.structure');
@@ -84,27 +94,6 @@ class SnippetTwigExtensionTest extends SuluTestCase
         );
     }
 
-    public function loadProvider()
-    {
-        $data = ['title' => 'test-title', 'description' => 'test-description'];
-        $data = $this->getContainer()->get('sulu.content.mapper')->save(
-            $data,
-            'car',
-            'default',
-            'en',
-            1,
-            true,
-            null,
-            null,
-            Structure::STATE_PUBLISHED,
-            null,
-            null,
-            Structure::TYPE_SNIPPET
-        );
-
-        return [[$data]];
-    }
-
     public function testLoadSnippetNotExists()
     {
         $snippet = $this->extension->loadSnippet('123-123-123');
@@ -113,23 +102,16 @@ class SnippetTwigExtensionTest extends SuluTestCase
 
     public function testLoadSnippet()
     {
-        $data = ['title' => 'test-title', 'description' => 'test-description'];
-        $data = $this->getContainer()->get('sulu.content.mapper')->save(
-            $data,
-            'car',
-            'default',
-            'en',
-            1,
-            true,
-            null,
-            null,
-            Structure::STATE_PUBLISHED,
-            null,
-            null,
-            Structure::TYPE_SNIPPET
-        );
+        /** @var SnippetDocument $snippet */
+        $snippet = $this->documentManager->create('snippet');
+        $snippet->setStructureType('car');
+        $snippet->setTitle('test-title');
+        $snippet->getStructure()->bind(['description' => 'test-description']);
+        $snippet->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($snippet, 'en');
+        $this->documentManager->flush();
 
-        $snippet = $this->extension->loadSnippet($data->getUuid());
+        $snippet = $this->extension->loadSnippet($snippet->getUuid());
 
         $this->assertArrayHasKey('content', $snippet);
         $this->assertArrayHasKey('view', $snippet);
@@ -151,38 +133,22 @@ class SnippetTwigExtensionTest extends SuluTestCase
 
     public function testLoadSnippetLocale()
     {
-        $dataDe = ['title' => 'de-test-title', 'description' => 'de-test-description'];
-        $dataDe = $this->contentMapper->save(
-            $dataDe,
-            'car',
-            'default',
-            'de',
-            1,
-            true,
-            null,
-            null,
-            Structure::STATE_PUBLISHED,
-            null,
-            null,
-            Structure::TYPE_SNIPPET
-        );
-        $dataEn = ['title' => 'en-test-title', 'description' => 'en-test-description'];
-        $dataEn = $this->contentMapper->save(
-            $dataEn,
-            'car',
-            'default',
-            'en',
-            1,
-            true,
-            $dataDe->getUuid(),
-            null,
-            Structure::STATE_PUBLISHED,
-            null,
-            null,
-            Structure::TYPE_SNIPPET
-        );
+        /** @var PageDocument $document */
+        $document = $this->documentManager->create('snippet');
+        $document->setTitle('de-test-title');
+        $document->getStructure()->bind(['description' => 'de-test-description']);
+        $document->setStructureType('car');
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($document, 'de');
+        $this->documentManager->flush();
 
-        $snippet = $this->extension->loadSnippet($dataDe->getUuid(), 'en');
+        $document = $this->documentManager->find($document->getUuid(), 'en');
+        $document->setTitle('en-test-title');
+        $document->getStructure()->bind(['description' => 'en-test-description']);
+        $this->documentManager->persist($document, 'en');
+        $this->documentManager->flush();
+
+        $snippet = $this->extension->loadSnippet($document->getUuid(), 'en');
 
         $this->assertArrayHasKey('content', $snippet);
         $this->assertArrayHasKey('view', $snippet);
@@ -201,7 +167,7 @@ class SnippetTwigExtensionTest extends SuluTestCase
         $this->assertEquals([], $snippet['view']['title']);
         $this->assertEquals([], $snippet['view']['description']);
 
-        $snippet = $this->extension->loadSnippet($dataDe->getUuid(), 'de');
+        $snippet = $this->extension->loadSnippet($document->getUuid(), 'de');
 
         $this->assertArrayHasKey('content', $snippet);
         $this->assertArrayHasKey('view', $snippet);

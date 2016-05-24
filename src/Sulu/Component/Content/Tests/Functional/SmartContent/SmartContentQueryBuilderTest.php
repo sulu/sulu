@@ -11,17 +11,19 @@
 
 namespace Sulu\Component\Content\Tests\Functional\SmartContent;
 
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\SmartContent\QueryBuilder as SmartContentQueryBuilder;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
@@ -37,9 +39,9 @@ class SmartContentQueryBuilderTest extends SuluTestCase
     private $contentQuery;
 
     /**
-     * @var ContentMapperInterface
+     * @var DocumentManagerInterface
      */
-    private $mapper;
+    private $documentManager;
 
     /**
      * @var StructureManagerInterface
@@ -88,7 +90,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $this->purgeDatabase();
         $this->initPhpcr();
 
-        $this->mapper = $this->getContainer()->get('sulu.content.mapper');
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
         $this->extensionManager = $this->getContainer()->get('sulu_content.extension.manager');
         $this->webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
@@ -123,7 +125,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
     public function propertiesProvider()
     {
-        $nodes = [];
+        $documents = [];
         $max = 15;
         for ($i = 0; $i < $max; ++$i) {
             $data = [
@@ -157,25 +159,26 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                 $data['article'] = 'Text article ' . $i;
             }
 
-            $request = ContentMapperRequest::create()
-                ->setData($data)
-                ->setTemplateKey($template)
-                ->setWebspaceKey('sulu_io')
-                ->setLocale('en')
-                ->setUserId(1)
-                ->setType('page')
-                ->setState(Structure::STATE_PUBLISHED);
+            /** @var PageDocument $document */
+            $document = $this->documentManager->create('page');
+            $document->setTitle($data['title']);
+            $document->getStructure()->bind($data);
+            $document->setStructureType($template);
+            $document->setWorkflowStage(WorkflowStage::PUBLISHED);
 
-            $node = $this->mapper->saveRequest($request);
-            $nodes[$node->getUuid()] = $node;
+            $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+
+            $documents[$document->getUuid()] = $document;
         }
 
-        return $nodes;
+        $this->documentManager->flush();
+
+        return $documents;
     }
 
     public function testProperties()
     {
-        $nodes = $this->propertiesProvider();
+        $documents = $this->propertiesProvider();
 
         $builder = new SmartContentQueryBuilder(
             $this->structureManager,
@@ -192,81 +195,71 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             ]
         );
 
-        $tStart = microtime(true);
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $tDiff = microtime(true) - $tStart;
 
         foreach ($result as $item) {
-            /** @var StructureInterface $expected */
-            $expected = $nodes[$item['uuid']];
+            /** @var PageDocument $expectedDocument */
+            $expectedDocument = $documents[$item['uuid']];
 
-            $this->assertEquals($expected->getUuid(), $item['uuid']);
-            $this->assertEquals($expected->getNodeType(), $item['nodeType']);
-            $this->assertEquals($expected->getPath(), $item['path']);
-            $this->assertEquals($expected->getChanged(), $item['changed']);
-            $this->assertEquals($expected->getChanger(), $item['changer']);
-            $this->assertEquals($expected->getCreated(), $item['created']);
-            $this->assertEquals($expected->getCreator(), $item['creator']);
-            $this->assertEquals($expected->getLanguageCode(), $item['locale']);
-            $this->assertEquals($expected->getKey(), $item['template']);
+            $this->assertEquals($expectedDocument->getUuid(), $item['uuid']);
+            $this->assertEquals($expectedDocument->getRedirectType(), $item['nodeType']);
+            $this->assertEquals($expectedDocument->getChanged(), $item['changed']);
+            $this->assertEquals($expectedDocument->getChanger(), $item['changer']);
+            $this->assertEquals($expectedDocument->getCreated(), $item['created']);
+            $this->assertEquals($expectedDocument->getCreator(), $item['creator']);
+            $this->assertEquals($expectedDocument->getLocale(), $item['locale']);
+            $this->assertEquals($expectedDocument->getStructureType(), $item['template']);
 
-            $this->assertEquals($expected->title, $item['title']);
-            $this->assertEquals($expected->url, $item['url']);
+            $this->assertEquals($expectedDocument->getPath(), '/cmf/sulu_io/contents' . $item['path']);
 
-            if ($expected->hasProperty('article')) {
-                $this->assertEquals($expected->article, $item['my_article']);
+            $this->assertEquals($expectedDocument->getTitle(), $item['title']);
+            $this->assertEquals($expectedDocument->getResourceSegment(), $item['url']);
+
+            if ($expectedDocument->getStructure()->hasProperty('article')) {
+                $this->assertEquals(
+                    $expectedDocument->getStructure()->getProperty('article')->getValue(),
+                    $item['my_article']
+                );
             }
         }
     }
 
     public function datasourceProvider()
     {
-        $news = $this->mapper->save(
-            ['title' => 'News', 'url' => '/news'],
-            'simple',
-            'sulu_io',
-            'en',
-            1,
-            true,
-            null,
-            null,
-            Structure::STATE_PUBLISHED
-        );
-        $products = $this->mapper->save(
-            ['title' => 'Products', 'url' => '/products'],
-            'simple',
-            'sulu_io',
-            'en',
-            1,
-            true,
-            null,
-            null,
-            Structure::STATE_PUBLISHED
-        );
+        /** @var PageDocument $news */
+        $news = $this->documentManager->create('page');
+        $news->setTitle('News');
+        $news->setResourceSegment('/news');
+        $news->setStructureType('simple');
+        $news->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($news, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->flush();
 
-        $nodes = [];
+        /** @var PageDocument $products */
+        $products = $this->documentManager->create('page');
+        $products->setTitle('Products');
+        $products->setResourceSegment('/products');
+        $products->setStructureType('simple');
+        $products->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($products, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->flush();
+
+        $documents = [];
         $max = 15;
         for ($i = 0; $i < $max; ++$i) {
-            $data = [
-                'title' => 'News ' . $i,
-                'url' => '/news/news-' . $i,
-            ];
-            $template = 'simple';
-            $node = $this->mapper->save(
-                $data,
-                $template,
-                'sulu_io',
-                'en',
-                1,
-                true,
-                null,
-                $news->getUuid(),
-                Structure::STATE_PUBLISHED
-            );
-            $nodes[$node->getUuid()] = $node;
+            /** @var PageDocument $document */
+            $document = $this->documentManager->create('page');
+            $document->setTitle('News ' . $i);
+            $document->setResourceSegment('/news/news-' . $i);
+            $document->setStructureType('simple');
+            $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+            $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents/news']);
+            $this->documentManager->flush();
+
+            $documents[$document->getUuid()] = $document;
         }
 
-        return [$news, $products, $nodes];
+        return [$news, $products, $documents];
     }
 
     public function testDatasource()
@@ -283,27 +276,23 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         // test news
         $builder->init(['config' => ['dataSource' => $news->getUuid()]]);
 
-        $tStart = microtime(true);
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $tDiff = microtime(true) - $tStart;
 
         $this->assertEquals(count($nodes), count($result));
         foreach ($result as $item) {
-            /** @var StructureInterface $expected */
-            $expected = $nodes[$item['uuid']];
+            /** @var PageDocument $expectedDocument */
+            $expectedDocument = $nodes[$item['uuid']];
 
-            $this->assertEquals($expected->getUuid(), $item['uuid']);
-            $this->assertEquals($expected->getNodeType(), $item['nodeType']);
-            $this->assertEquals($expected->getPath(), $item['path']);
-            $this->assertEquals($expected->title, $item['title']);
+            $this->assertEquals($expectedDocument->getUuid(), $item['uuid']);
+            $this->assertEquals($expectedDocument->getRedirectType(), $item['nodeType']);
+            $this->assertEquals($expectedDocument->getPath(), '/cmf/sulu_io/contents' . $item['path']);
+            $this->assertEquals($expectedDocument->getTitle(), $item['title']);
         }
 
         // test products
         $builder->init(['config' => ['dataSource' => $products->getUuid()]]);
 
-        $tStart = microtime(true);
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $tDiff = microtime(true) - $tStart;
 
         $this->assertEquals(0, count($result));
     }
@@ -321,9 +310,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         );
         $builder->init(['config' => ['dataSource' => $root->getIdentifier(), 'includeSubFolders' => true]]);
 
-        $tStart = microtime(true);
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $tDiff = microtime(true) - $tStart;
 
         // nodes + news + products
         $this->assertEquals(count($nodes) + 2, count($result));
@@ -338,15 +325,15 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $expected = $nodes[$item['uuid']];
 
             $this->assertEquals($expected->getUuid(), $item['uuid']);
-            $this->assertEquals($expected->getNodeType(), $item['nodeType']);
-            $this->assertEquals($expected->getPath(), $item['path']);
-            $this->assertEquals($expected->title, $item['title']);
+            $this->assertEquals($expected->getRedirectType(), $item['nodeType']);
+            $this->assertEquals($expected->getPath(), '/cmf/sulu_io/contents' . $item['path']);
+            $this->assertEquals($expected->getTitle(), $item['title']);
         }
     }
 
     public function tagsProvider()
     {
-        $nodes = [];
+        $documents = [];
         $max = 15;
         $t1t2 = 0;
         $t1 = 0;
@@ -363,31 +350,26 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                 ++$t2;
             }
 
-            $data = [
-                'title' => 'News ' . rand(1, 100),
-                'url' => '/news/news-' . $i,
-                'ext' => [
+            /** @var PageDocument $document */
+            $document = $this->documentManager->create('page');
+            $document->setTitle('News ' . rand(1, 100));
+            $document->setResourceSegment('/news/news-' . $i);
+            $document->setExtensionsData(
+                [
                     'excerpt' => [
                         'tags' => $tags,
                     ],
-                ],
-            ];
-            $template = 'simple';
-            $node = $this->mapper->save(
-                $data,
-                $template,
-                'sulu_io',
-                'en',
-                1,
-                true,
-                null,
-                null,
-                Structure::STATE_PUBLISHED
+                ]
             );
-            $nodes[$node->getUuid()] = $node;
+            $document->setStructureType('simple');
+            $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+            $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+            $this->documentManager->flush();
+
+            $documents[$document->getUuid()] = $document;
         }
 
-        return [$nodes, $t1, $t2, $t1t2];
+        return [$documents, $t1, $t2, $t1t2];
     }
 
     public function testTags()
@@ -610,24 +592,22 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             ],
         ];
 
-        $template = 'simple';
-        $nodes = [];
+        $documents = [];
         foreach ($data as $item) {
-            $node = $this->mapper->save(
-                $item,
-                $template,
-                'sulu_io',
-                'en',
-                1,
-                true,
-                null,
-                null,
-                Structure::STATE_PUBLISHED
-            );
-            $nodes[$node->getUuid()] = $node;
+            /** @var PageDocument $document */
+            $document = $this->documentManager->create('page');
+            $document->setTitle($item['title']);
+            $document->setResourceSegment($item['url']);
+            $document->setExtensionsData($item['ext']);
+            $document->setStructureType('simple');
+            $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+            $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+            $this->documentManager->flush();
+
+            $documents[$document->getUuid()] = $document;
         }
 
-        return $nodes;
+        return $documents;
     }
 
     public function testCategories()
@@ -720,68 +700,44 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
     public function orderByProvider()
     {
-        $node = $this->mapper->save(
-            [
-                'title' => 'ASDF',
-                'url' => '/asdf-1',
-            ],
-            'simple',
-            'sulu_io',
-            'en',
-            1,
-            true,
-            null,
-            null,
-            Structure::STATE_PUBLISHED
-        );
-        $nodes[$node->url] = $node;
-        $node = $this->mapper->save(
-            [
-                'title' => 'QWERTZ',
-                'url' => '/qwertz-1',
-            ],
-            'simple',
-            'sulu_io',
-            'en',
-            1,
-            true,
-            null,
-            null,
-            Structure::STATE_PUBLISHED
-        );
-        $nodes[$node->url] = $node;
-        $node = $this->mapper->save(
-            [
-                'title' => 'qwertz',
-                'url' => '/qwertz',
-            ],
-            'simple',
-            'sulu_io',
-            'en',
-            1,
-            true,
-            null,
-            null,
-            Structure::STATE_PUBLISHED
-        );
-        $nodes[$node->url] = $node;
-        $node = $this->mapper->save(
-            [
-                'title' => 'asdf',
-                'url' => '/asdf',
-            ],
-            'simple',
-            'sulu_io',
-            'en',
-            1,
-            true,
-            null,
-            null,
-            Structure::STATE_PUBLISHED
-        );
-        $nodes[$node->url] = $node;
+        /** @var PageDocument $document */
+        $document = $this->documentManager->create('page');
+        $document->setTitle('ASDF');
+        $document->setResourceSegment('/asdf-1');
+        $document->setStructureType('simple');
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->flush();
+        $documents[$document->getResourceSegment()] = $document;
 
-        return [$nodes];
+        $document = $this->documentManager->create('page');
+        $document->setTitle('QWERTZ');
+        $document->setResourceSegment('/qwertz-1');
+        $document->setStructureType('simple');
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->flush();
+        $documents[$document->getResourceSegment()] = $document;
+
+        $document = $this->documentManager->create('page');
+        $document->setTitle('qwertz');
+        $document->setResourceSegment('/qwertz');
+        $document->setStructureType('simple');
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->flush();
+        $documents[$document->getResourceSegment()] = $document;
+
+        $document = $this->documentManager->create('page');
+        $document->setTitle('asdf');
+        $document->setResourceSegment('/asdf');
+        $document->setStructureType('simple');
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $documents[$document->getResourceSegment()] = $document;
+        $this->documentManager->flush();
+
+        return [$documents];
     }
 
     public function testOrderBy()
@@ -888,7 +844,8 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
     public function testExtension()
     {
-        $nodes = $this->propertiesProvider();
+        /** @var PageDocument[] $documents */
+        $documents = $this->propertiesProvider();
 
         $builder = new SmartContentQueryBuilder(
             $this->structureManager,
@@ -907,17 +864,14 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             ]
         );
 
-        $tStart = microtime(true);
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
-        $tDiff = microtime(true) - $tStart;
 
         foreach ($result as $item) {
-            /** @var StructureInterface $expected */
-            $expected = $nodes[$item['uuid']];
+            $expectedDocument = $documents[$item['uuid']];
 
-            $this->assertEquals($expected->title, $item['my_title']);
-            $this->assertEquals($expected->getExt()['excerpt']['title'], $item['ext_title']);
-            $this->assertEquals($expected->getExt()['excerpt']['tags'], $item['ext_tags']);
+            $this->assertEquals($expectedDocument->getTitle(), $item['my_title']);
+            $this->assertEquals($expectedDocument->getExtensionsData()['excerpt']['title'], $item['ext_title']);
+            $this->assertEquals($expectedDocument->getExtensionsData()['excerpt']['tags'], $item['ext_tags']);
         }
     }
 
@@ -1089,35 +1043,37 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $shadowLocale = '',
         $state = Structure::STATE_PUBLISHED
     ) {
-        $node = $this->mapper->save(
-            $data,
-            'simple',
-            'sulu_io',
-            $locale,
-            1,
-            true,
-            $uuid,
-            $parent,
-            $state
-        );
+        if (!$isShadow) {
+            /** @var PageDocument $document */
+            try {
+                $document = $this->documentManager->find($uuid, $locale);
+            } catch (DocumentNotFoundException $e) {
+                $document = $this->documentManager->create('page');
+            }
+            $document->getStructure()->bind($data);
+            $document->setTitle($data['title']);
+            $document->setResourceSegment($data['url']);
+            $document->setStructureType('simple');
+            $document->setWorkflowStage($state);
 
-        if ($isShadow) {
-            $node = $this->mapper->save(
-                ['title' => $data['title']],
-                'simple',
-                'sulu_io',
-                $locale,
-                1,
-                true,
-                $uuid,
-                $parent,
-                $state,
-                $isShadow,
-                $shadowLocale
-            );
+            $persistOptions = [];
+            if (!$parent) {
+                $persistOptions['parent_path'] = '/cmf/sulu_io/contents';
+            } else {
+                $document->setParent($this->documentManager->find($parent));
+            }
+            $this->documentManager->persist($document, $locale, $persistOptions);
+        } else {
+            $document = $this->documentManager->find($uuid, $shadowLocale);
+            $document->setShadowLocaleEnabled(true);
+            $document->setShadowLocale($shadowLocale);
+            $document->setLocale($locale);
+            $this->documentManager->persist($document, $locale);
         }
 
-        return [$node->getPropertyValue('url') => $node];
+        $this->documentManager->flush();
+
+        return [$document->getResourceSegment() => $document];
     }
 
     public function testShadow()

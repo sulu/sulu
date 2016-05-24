@@ -13,17 +13,21 @@ namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Document\RedirectType;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -34,16 +38,6 @@ use Sulu\Component\Webspace\Webspace;
 
 class SitemapGeneratorTest extends SuluTestCase
 {
-    /**
-     * @var StructureInterface[]
-     */
-    private $dataEn;
-
-    /**
-     * @var StructureInterface[]
-     */
-    private $dataEnUs;
-
     /**
      * @var Webspace
      */
@@ -84,6 +78,21 @@ class SitemapGeneratorTest extends SuluTestCase
      */
     private $extensionManager;
 
+    /**
+     * @var string
+     */
+    private $languageNamespace;
+
+    /**
+     * @var NodeInterface
+     */
+    private $contents;
+
+    /**
+     * @var DocumentManagerInterface
+     */
+    private $documentManager;
+
     protected function setUp()
     {
         $this->initPhpcr();
@@ -94,9 +103,10 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
         $this->extensionManager = $this->getContainer()->get('sulu_content.extension.manager');
         $this->languageNamespace = $this->getContainer()->getParameter('sulu.content.language.namespace');
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
 
-        $this->dataEn = $this->prepareTestData();
-        $this->dataEnUs = $this->prepareTestData('en_us');
+        $this->prepareTestData('en');
+        $this->prepareTestData('en_us');
 
         $this->contents = $this->session->getNode('/cmf/test_io/contents');
 
@@ -171,139 +181,86 @@ class SitemapGeneratorTest extends SuluTestCase
      *
      * @return StructureInterface[]
      */
-    private function prepareTestData($locale = 'en')
+    private function prepareTestData($locale)
     {
-        $data = [
-            'news' => [
-                'title' => 'News ' . $locale,
-                'url' => '/news',
-                'nodeType' => Structure::NODE_TYPE_CONTENT,
-                'navContexts' => ['footer'],
-            ],
-            'products' => [
-                'title' => 'Products ' . $locale,
-                'url' => '/products',
-                'nodeType' => Structure::NODE_TYPE_CONTENT,
-                'navContexts' => ['main'],
-            ],
-            'news/news-1' => [
-                'title' => 'News-1 ' . $locale,
-                'url' => '/news/news-1',
-                'nodeType' => Structure::NODE_TYPE_CONTENT,
-                'navContexts' => ['main', 'footer'],
-            ],
-            'news/news-2' => [
-                'title' => 'News-2 ' . $locale,
-                'url' => '/news/news-2',
-                'nodeType' => Structure::NODE_TYPE_CONTENT,
-                'navContexts' => ['main'],
-            ],
-            'products/products-1' => [
-                'title' => 'Products-1 ' . $locale,
-                'external' => '123-123-123',
-                'url' => '/products/product-1',
-                'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
-                'navContexts' => ['main', 'footer'],
-            ],
-            'products/products-2' => [
-                'title' => 'Products-2 ' . $locale,
-                'url' => '/products/product-2',
-                'external' => 'http://www.asdf.at',
-                'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
-                'navContexts' => ['main'],
-            ],
-            'products/products-3' => [
-                'title' => 'Products-3 ' . $locale,
-                'url' => '/products/product-3',
-                'external' => 'http://www.asdf.at',
-                'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
-                'navContexts' => ['main'],
-            ],
-        ];
+        // TODO set published state?
+        /** @var PageDocument $newsDocument */
+        $newsDocument = $this->documentManager->create('page');
+        $newsDocument->setStructureType('overview');
+        $newsDocument->setTitle('News ' . $locale);
+        $newsDocument->setResourceSegment('/news');
+        $newsDocument->setNavigationContexts(['footer']);
+        $newsDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($newsDocument, $locale, ['parent_path' => '/cmf/test_io/contents']);
+        $this->documentManager->flush();
 
-        $data['news'] = $this->mapper->save(
-            $data['news'],
-            'overview',
-            'test_io',
-            $locale,
-            1,
-            true,
-            null,
-            null,
-            StructureInterface::STATE_PUBLISHED
-        );
-        $data['news/news-1'] = $this->mapper->save(
-            $data['news/news-1'],
-            'simple',
-            'test_io',
-            $locale,
-            1,
-            true,
-            null,
-            $data['news']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
-        );
-        $data['news/news-2'] = $this->mapper->save(
-            $data['news/news-2'],
-            'simple',
-            'test_io',
-            $locale,
-            1,
-            true,
-            null,
-            $data['news']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
-        );
+        /** @var PageDocument $productDocument */
+        $productDocument = $this->documentManager->create('page');
+        $productDocument->setStructureType('overview');
+        $productDocument->setTitle('Products ' . $locale);
+        $productDocument->setResourceSegment('/products');
+        $productDocument->setNavigationContexts(['main']);
+        $productDocument->setWorkflowStage(WorkflowStage::TEST);
+        $this->documentManager->persist($productDocument, $locale, ['parent_path' => '/cmf/test_io/contents']);
+        $this->documentManager->flush();
 
-        $data['products'] = $this->mapper->save(
-            $data['products'],
-            'overview',
-            'test_io',
-            $locale,
-            1,
-            true,
-            null,
-            null,
-            StructureInterface::STATE_TEST
-        );
+        /** @var PageDocument $document */
+        $document = $this->documentManager->create('page');
+        $document->setStructureType('simple');
+        $document->setTitle('News-1 ' . $locale);
+        $document->setResourceSegment('/news/news-1');
+        $document->setNavigationContexts(['main', 'footer']);
+        $document->setParent($newsDocument);
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($document, $locale);
+        $this->documentManager->flush();
 
-        $data['products/products-1']['internal_link'] = $data['products']->getUuid();
-        $data['products/products-1'] = $this->mapper->save(
-            $data['products/products-1'],
-            'overview',
-            'test_io',
-            $locale,
-            1,
-            true,
-            null,
-            $data['products']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
-        );
-        $data['products/products-2'] = $this->mapper->save(
-            $data['products/products-2'],
-            'overview',
-            'test_io',
-            $locale,
-            1,
-            true,
-            null,
-            $data['products']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
-        );
-        $data['products/products-3']['internal_link'] = $data['news']->getUuid();
-        $data['products/products-3'] = $this->mapper->save(
-            $data['products/products-3'],
-            'overview',
-            'test_io',
-            $locale,
-            1,
-            true,
-            null,
-            $data['products']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
-        );
+        $document = $this->documentManager->create('page');
+        $document->setStructureType('simple');
+        $document->setTitle('News-2 ' . $locale);
+        $document->setResourceSegment('/news/news-2');
+        $document->setNavigationContexts(['main']);
+        $document->setParent($newsDocument);
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($document, $locale);
+        $this->documentManager->flush();
 
-        return $data;
+        $document = $this->documentManager->create('page');
+        $document->setStructureType('overview');
+        $document->setTitle('Products-1 ' . $locale);
+        $document->setResourceSegment('/products/product-1');
+        $document->setRedirectType(RedirectType::INTERNAL);
+        $document->setRedirectTarget($productDocument);
+        $document->setNavigationContexts(['main', 'footer']);
+        $document->setParent($productDocument);
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($document, $locale);
+        $this->documentManager->flush();
+
+        $document = $this->documentManager->create('page');
+        $document->setStructureType('overview');
+        $document->setTitle('Products-2 ' . $locale);
+        $document->setResourceSegment('/products/product-w');
+        $document->setRedirectType(RedirectType::EXTERNAL);
+        $document->setRedirectExternal('http://www.asdf.at');
+        $document->setNavigationContexts(['main']);
+        $document->setParent($productDocument);
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($document, $locale);
+        $this->documentManager->flush();
+
+        $document = $this->documentManager->create('page');
+        $document->setStructureType('overview');
+        $document->setRedirectTarget('overview');
+        $document->setTitle('Products-3 ' . $locale);
+        $document->setResourceSegment('/products/product-3');
+        $document->setRedirectType(RedirectType::INTERNAL);
+        $document->setRedirectTarget($newsDocument);
+        $document->setNavigationContexts(['main']);
+        $document->setParent($productDocument);
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($document, $locale);
+        $this->documentManager->flush();
     }
 
     public function testGenerateAllFlat()

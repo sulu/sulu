@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2414 [ContentBundle]       Removed save method of ContentMapper
     * BUGFIX      #2367 [ContentBundle]       Fixed copy internal-link into new language
     * BUGFIX      #2396                       Fixed composer-events
     * BUGFIX      #2396 [PreviewBundle]       Fixed leaking events of preview

@@ -20,7 +20,6 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Exception\InvalidOrderPositionException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
@@ -532,45 +531,6 @@ class NodeRepository implements NodeRepositoryInterface
         }
 
         return $results;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function saveNode(
-        $data,
-        $templateKey,
-        $webspaceKey,
-        $languageCode,
-        $userId,
-        $uuid = null,
-        $parentUuid = null,
-        $state = null,
-        $isShadow = false,
-        $shadowBaseLanguage = null
-    ) {
-        $node = $this->getMapper()->save(
-            $data,
-            $templateKey,
-            $webspaceKey,
-            $languageCode,
-            $userId,
-            true,
-            $uuid,
-            $parentUuid,
-            $state,
-            $isShadow,
-            $shadowBaseLanguage
-        );
-
-        return $this->prepareNode($node, $webspaceKey, $languageCode);
-    }
-
-    public function saveNodeRequest(ContentMapperRequest $mapperRequest)
-    {
-        $node = $this->getMapper()->saveRequest($mapperRequest);
-
-        return $this->prepareNode($node, $mapperRequest->getWebspaceKey(), $mapperRequest->getLocale());
     }
 
     /**
