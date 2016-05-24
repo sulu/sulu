@@ -146,6 +146,7 @@ class PreviewRenderer implements PreviewRendererInterface
         // Controller arguments
         $defaults['object'] = $object;
         $defaults['preview'] = true;
+        $defaults['_profiler'] = (null !== $this->requestStack->getCurrentRequest());
         $defaults['partial'] = $partial;
         $defaults['_sulu'] = $attributes;
 

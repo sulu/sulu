@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\MarkupBundle\Markup;
 
 /**
- * Parses html content and replaces special tags.
+ * Parses response and replaces special tags.
  */
 interface MarkupParserInterface
 {
