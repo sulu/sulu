@@ -201,24 +201,21 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
                 this.createConfiguration(this.formId);
 
                 this.setFormData(data).then(function() {
-                    this.sandbox.start(this.$el, {reset: true});
+                    this.sandbox.start(this.$el, {reset: true}).then(function(){
+                        this.initSortableBlock();
+                        this.bindFormEvents();
 
-                    this.initSortableBlock();
-                    this.bindFormEvents();
-
-                    dfd.resolve();
-
-                    if (!this.preview) {
-                        return;
-                    }
-
-                    // FIXME getData errors because type is not loaded ... after change template
-                    // need a fix in validation
-                    setTimeout(function() {
                         var data = this.sandbox.form.getData(this.formId);
 
+                        this.sandbox.emit('sulu.content.initialized', data);
+                        dfd.resolve();
+
+                        if (!this.preview) {
+                            return;
+                        }
+
                         this.preview.updateContext({template: this.template}, data);
-                    }.bind(this), 10);
+                    }.bind(this));
                 }.bind(this));
             }.bind(this));
 

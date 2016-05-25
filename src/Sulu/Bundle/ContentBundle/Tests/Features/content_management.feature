@@ -25,7 +25,7 @@ Feature: Content management
         And I expect the "husky.column-navigation.node.loaded" event
         And I expect to see "Article 1"
         When I double click the column navigation item "Article 1"
-        And I expect the "sulu.preview.initiated" event
+        And I expect the "sulu.content.initialized" event
         Then I expect the value of the property "title" is "Article 1"
         Then I expect the value of the property "url" is "/article-1"
         Then I expect the value of the property "body" is "This is article 1"
@@ -41,7 +41,7 @@ Feature: Content management
         And I expect to see "Article 1"
         And I expect to see "Article 2"
         When I double click the column navigation item "Dornbirn"
-        And I expect the "sulu.preview.initiated" event
+        And I expect the "sulu.content.initialized" event
         Then I expect the value of the property "title" is "Dornbirn"
         And I expect the value of the property "body" is "Dornbirn is great"
 
