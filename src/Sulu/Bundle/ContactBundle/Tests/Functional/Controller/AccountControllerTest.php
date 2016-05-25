@@ -397,6 +397,10 @@ class AccountControllerTest extends SuluTestCase
         $account->setName('test');
         $this->em->persist($account);
 
+        $account2 = new Account();
+        $account2->setName('test2');
+        $this->em->persist($account2);
+
         $contact = new Contact();
         $contact->setFirstName('Max');
         $contact->setLastName('Mustermann');
@@ -410,11 +414,19 @@ class AccountControllerTest extends SuluTestCase
         $account->addAccountContact($accountContact);
         $this->em->persist($accountContact);
 
+        $accountContact2 = new AccountContact();
+        $accountContact2->setContact($contact);
+        $accountContact2->setAccount($account2);
+        $accountContact2->setMain(false);
+        $account2->addAccountContact($accountContact2);
+        $this->em->persist($accountContact2);
+
         $contact = new Contact();
         $contact->setFirstName('Erika');
         $contact->setLastName('Mustermann');
         $contact->setFormOfAddress(1);
         $this->em->persist($contact);
+
         $accountContact = new AccountContact();
         $accountContact->setContact($contact);
         $accountContact->setAccount($account);
@@ -464,6 +476,7 @@ class AccountControllerTest extends SuluTestCase
         $contact->setLastName('Mustermann');
         $contact->setFormOfAddress(1);
         $this->em->persist($contact);
+
         $accountContact = new AccountContact();
         $accountContact->setContact($contact);
         $accountContact->setAccount($account);
