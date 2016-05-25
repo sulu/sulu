@@ -14,8 +14,8 @@ namespace Sulu\Bundle\ContentBundle\Behat;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
-use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 /**
  * Behat context class for the ContentBundle.
@@ -92,20 +92,18 @@ EOT;
      */
     public function iAmEditingAPageOfType($arg1)
     {
-        $request = ContentMapperRequest::create()
-            ->setTemplateKey($arg1)
-            ->setType('page')
-            ->setWebspaceKey('sulu_io')
-            ->setUserId($this->getUserId())
-            ->setState(StructureInterface::STATE_PUBLISHED)
-            ->setLocale('de')
-            ->setData([
-                'title' => 'Behat Test Content',
-                'url' => '/behat-test-content',
-            ]);
+        /** @var PageDocument $document */
+        $document = $this->getDocumentManager()->create('page');
+        $document->setStructureType($arg1);
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $document->setTitle('Behat Test Content');
+        $document->setResourceSegment('/behat-test-content');
 
-        $page = $this->getContentMapper()->saveRequest($request);
-        $this->visitPath('/admin/#content/contents/sulu_io/de/edit:' . $page->getUuid() . '/content');
+        $this->getDocumentManager()->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->getDocumentManager()->flush();
+
+        $this->visitPath('/admin/#content/contents/sulu_io/de/edit:' . $document
+                ->getUuid() . '/content');
         $this->getSession()->wait(5000, '$("#content-form").length');
         sleep(1); // wait one more second to avoid flaky tests
     }
