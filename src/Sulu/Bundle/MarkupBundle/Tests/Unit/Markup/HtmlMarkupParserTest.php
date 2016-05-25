@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MarkupBundle\Tests\Unit\Markup;
 
 use Prophecy\Argument;
 use Sulu\Bundle\MarkupBundle\Markup\HtmlMarkupParser;
+use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
 use Sulu\Bundle\MarkupBundle\Tag\TagInterface;
 use Sulu\Bundle\MarkupBundle\Tag\TagNotFoundException;
 use Sulu\Bundle\MarkupBundle\Tag\TagRegistryInterface;
@@ -59,20 +60,21 @@ class HtmlMarkupParserTest extends \PHPUnit_Framework_TestCase
     public function testParse()
     {
         $this->linkTag->parseAll(
-            ['<sulu:link href="123-123-123" title="test" />' => ['href' => '123-123-123', 'title' => 'test']]
+            ['<sulu:link href="123-123-123" title="test" />' => ['href' => '123-123-123', 'title' => 'test']],
+            'de'
         )->willReturn(
             ['<sulu:link href="123-123-123" title="test" />' => '<a href="/test" title="test">page title</a>']
         );
 
-        $response = $this->parser->parse(
-            <<<'EOT'
+        $content = <<<'EOT'
 <html>
     <body>
         <sulu:link href="123-123-123" title="test" />
     </body>
 </html>
-EOT
-        );
+EOT;
+
+        $response = $this->parser->parse($content, 'de');
 
         $this->assertContains('<a href="/test" title="test">page title</a>', $response);
     }
@@ -83,7 +85,8 @@ EOT
             [
                 '<sulu:link href="123-123-123" title="test" />' => ['href' => '123-123-123', 'title' => 'test'],
                 '<sulu:link href="312-312-312" title="test" />' => ['href' => '312-312-312', 'title' => 'test'],
-            ]
+            ],
+            'de'
         )->willReturn(
             [
                 '<sulu:link href="123-123-123" title="test" />' => '<a href="/test" title="test">page title</a>',
@@ -91,16 +94,16 @@ EOT
             ]
         );
 
-        $response = $this->parser->parse(
-            <<<'EOT'
+        $content = <<<'EOT'
 <html>
     <body>
         <sulu:link href="123-123-123" title="test" />
         <sulu:link href="312-312-312" title="test" />
     </body>
 </html>
-EOT
-        );
+EOT;
+
+        $response = $this->parser->parse($content, 'de');
 
         $this->assertContains('<a href="/test" title="test">page title</a>', $response);
         $this->assertContains('<a href="/test-2" title="test">page-2 title</a>', $response);
@@ -109,21 +112,22 @@ EOT
     public function testParseSame()
     {
         $this->linkTag->parseAll(
-            ['<sulu:link href="123-123-123" title="test" />' => ['href' => '123-123-123', 'title' => 'test']]
+            ['<sulu:link href="123-123-123" title="test" />' => ['href' => '123-123-123', 'title' => 'test']],
+            'de'
         )->willReturn(
             ['<sulu:link href="123-123-123" title="test" />' => '<a href="/test" title="test">page title</a>']
         )->shouldBeCalledTimes(1);
 
-        $response = $this->parser->parse(
-            <<<'EOT'
+        $content = <<<'EOT'
 <html>
     <body>
         <sulu:link href="123-123-123" title="test" />
         <sulu:link href="123-123-123" title="test" />
     </body>
 </html>
-EOT
-        );
+EOT;
+
+        $response = $this->parser->parse($content, 'de');
 
         $this->assertEquals(2, preg_match_all('/<a href="\/test" title="test">page title<\/a>/', $response));
         $this->assertNotContains('<sulu:link href="123-123-123" title="test" />', $response);
@@ -132,26 +136,28 @@ EOT
     public function testParseDifferentTags()
     {
         $this->linkTag->parseAll(
-            ['<sulu:link href="123-123-123" title="test" />' => ['href' => '123-123-123', 'title' => 'test']]
+            ['<sulu:link href="123-123-123" title="test" />' => ['href' => '123-123-123', 'title' => 'test']],
+            'de'
         )->willReturn(
             ['<sulu:link href="123-123-123" title="test" />' => '<a href="/test" title="test">page title</a>']
         );
         $this->mediaTag->parseAll(
-            ['<sulu:media src="1" title="test" />' => ['src' => '1', 'title' => 'test']]
+            ['<sulu:media src="1" title="test" />' => ['src' => '1', 'title' => 'test']],
+            'de'
         )->willReturn(
             ['<sulu:media src="1" title="test" />' => '<img src="/img/test.jpg" title="test"/>']
         );
 
-        $response = $this->parser->parse(
-            <<<'EOT'
+        $content = <<<'EOT'
 <html>
     <body>
         <sulu:link href="123-123-123" title="test" />
         <sulu:media src="1" title="test" />
     </body>
 </html>
-EOT
-        );
+EOT;
+
+        $response = $this->parser->parse($content, 'de');
 
         $this->assertContains('<a href="/test" title="test">page title</a>', $response);
         $this->assertContains('<img src="/img/test.jpg" title="test"/>', $response);
@@ -166,20 +172,21 @@ EOT
                     'title' => 'test',
                     'content' => 'link content',
                 ],
-            ]
+            ],
+            'de'
         )->willReturn(
             ['<sulu:link href="123-123-123" title="test">link content</sulu:link>' => '<a href="/test" title="test">link content</a>']
         );
 
-        $response = $this->parser->parse(
-            <<<'EOT'
+        $content = <<<'EOT'
 <html>
     <body>
         <sulu:link href="123-123-123" title="test">link content</sulu:link>
     </body>
 </html>
-EOT
-        );
+EOT;
+
+        $response = $this->parser->parse($content, 'de');
 
         $this->assertContains('<a href="/test" title="test">link content</a>', $response);
     }
@@ -193,29 +200,26 @@ EOT
                     'title' => 'test',
                     'content' => 'link content',
                 ],
-            ]
+            ],
+            'de'
         )->willReturn(
-            ['<sulu:link href="123-123-123" title="test">link content</sulu:link>' => true]
+            ['<sulu:link href="123-123-123" title="test">link content</sulu:link>' => MarkupParserInterface::VALIDATE_OK]
         );
 
-        $response = $this->parser->validate(
-            <<<'EOT'
+        $content = <<<'EOT'
 <html>
     <body>
         <sulu:link href="123-123-123" title="test">link content</sulu:link>
     </body>
 </html>
-EOT
-        );
+EOT;
 
-        $this->assertTrue($response->isValid());
-        $this->assertContains(
-            '<sulu:link href="123-123-123" title="test">link content</sulu:link>',
-            $response->getContent()
-        );
+        $response = $this->parser->validate($content, 'de');
+
+        $this->assertEmpty($response);
     }
 
-    public function testValidateInvalid()
+    public function testValidateInvalidTest()
     {
         $this->linkTag->validateAll(
             [
@@ -224,89 +228,95 @@ EOT
                     'title' => 'test',
                     'content' => 'link content',
                 ],
-            ]
+            ],
+            'de'
         )->willReturn(
-            ['<sulu:link href="123-123-123" title="test">link content</sulu:link>' => false]
+            ['<sulu:link href="123-123-123" title="test">link content</sulu:link>' => MarkupParserInterface::VALIDATE_UNPUBLISHED]
         );
 
-        $response = $this->parser->validate(
-            <<<'EOT'
+        $content = <<<'EOT'
 <html>
     <body>
         <sulu:link href="123-123-123" title="test">link content</sulu:link>
     </body>
 </html>
-EOT
-        );
+EOT;
 
-        $this->assertFalse($response->isValid());
-        $this->assertContains(
-            '<sulu:link href="123-123-123" title="test" data-invalid="true">link content</sulu:link>',
-            $response->getContent()
+        $response = $this->parser->validate($content, 'de');
+
+        $this->assertCount(1, $response);
+        $this->assertEquals(
+            MarkupParserInterface::VALIDATE_UNPUBLISHED,
+            $response['<sulu:link href="123-123-123" title="test">link content</sulu:link>']
         );
     }
 
-    public function testValidateInvalidWithDataAttribute()
+    public function testValidateInvalidRemoved()
     {
         $this->linkTag->validateAll(
             [
-                '<sulu:link href="123-123-123" title="test" data-invalid="true">link content</sulu:link>' => [
+                '<sulu:link href="123-123-123" title="test">link content</sulu:link>' => [
                     'href' => '123-123-123',
                     'title' => 'test',
                     'content' => 'link content',
-                    'data-invalid' => true,
                 ],
-            ]
+            ],
+            'de'
         )->willReturn(
-            ['<sulu:link href="123-123-123" title="test" data-invalid="true">link content</sulu:link>' => false]
+            ['<sulu:link href="123-123-123" title="test">link content</sulu:link>' => MarkupParserInterface::VALIDATE_REMOVED]
         );
 
-        $response = $this->parser->validate(
-            <<<'EOT'
+        $content = <<<'EOT'
 <html>
     <body>
-        <sulu:link href="123-123-123" title="test" data-invalid="true">link content</sulu:link>
+        <sulu:link href="123-123-123" title="test">link content</sulu:link>
     </body>
 </html>
-EOT
-        );
+EOT;
 
-        $this->assertFalse($response->isValid());
-        $this->assertContains(
-            '<sulu:link href="123-123-123" title="test" data-invalid="true">link content</sulu:link>',
-            $response->getContent()
+        $response = $this->parser->validate($content, 'de');
+
+        $this->assertCount(1, $response);
+        $this->assertEquals(
+            MarkupParserInterface::VALIDATE_REMOVED,
+            $response['<sulu:link href="123-123-123" title="test">link content</sulu:link>']
         );
     }
 
     public function testValidateDifferentInvalidTags()
     {
         $this->linkTag->validateAll(
-            ['<sulu:link href="123-123-123" title="test"/>' => ['href' => '123-123-123', 'title' => 'test']]
+            ['<sulu:link href="123-123-123" title="test"/>' => ['href' => '123-123-123', 'title' => 'test']],
+            'de'
         )->willReturn(
-            ['<sulu:link href="123-123-123" title="test"/>' => false]
+            ['<sulu:link href="123-123-123" title="test"/>' => MarkupParserInterface::VALIDATE_REMOVED]
         );
         $this->mediaTag->validateAll(
-            ['<sulu:media src="1" title="test"/>' => ['src' => '1', 'title' => 'test']]
+            ['<sulu:media src="1" title="test"/>' => ['src' => '1', 'title' => 'test']],
+            'de'
         )->willReturn(
-            ['<sulu:media src="1" title="test"/>' => false]
+            ['<sulu:media src="1" title="test"/>' => MarkupParserInterface::VALIDATE_UNPUBLISHED]
         );
 
-        $response = $this->parser->validate(
-            <<<'EOT'
+        $content = <<<'EOT'
 <html>
     <body>
         <sulu:link href="123-123-123" title="test"/>
         <sulu:media src="1" title="test"/>
     </body>
 </html>
-EOT
-        );
+EOT;
 
-        $this->assertFalse($response->isValid());
-        $this->assertContains(
-            '<sulu:link href="123-123-123" title="test" data-invalid="true"/>',
-            $response->getContent()
+        $response = $this->parser->validate($content, 'de');
+
+        $this->assertCount(2, $response);
+        $this->assertEquals(
+            MarkupParserInterface::VALIDATE_REMOVED,
+            $response['<sulu:link href="123-123-123" title="test"/>']
         );
-        $this->assertContains('<sulu:media src="1" title="test" data-invalid="true"/>', $response->getContent());
+        $this->assertEquals(
+            MarkupParserInterface::VALIDATE_UNPUBLISHED,
+            $response['<sulu:media src="1" title="test"/>']
+        );
     }
 }

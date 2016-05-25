@@ -16,21 +16,29 @@ namespace Sulu\Bundle\MarkupBundle\Markup;
  */
 interface MarkupParserInterface
 {
+    const VALIDATE_OK = 'ok';
+    const VALIDATE_UNPUBLISHED = 'unpublished';
+    const VALIDATE_REMOVED = 'removed';
+
     /**
      * Parses document and returns completed document.
      *
      * @param string $content
+     * @param string $locale
      *
      * @return string
      */
-    public function parse($content);
+    public function parse($content, $locale);
 
     /**
      * Validates document and returns validity and content with marker of invalid tags.
      *
-     * @param string $content
+     * If resulting array is empty the content is valid.
      *
-     * @return ValidateResult
+     * @param string $content
+     * @param string $locale
+     *
+     * @return array
      */
-    public function validate($content);
+    public function validate($content, $locale);
 }

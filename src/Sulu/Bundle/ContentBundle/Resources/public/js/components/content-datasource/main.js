@@ -19,6 +19,7 @@ define([], function() {
                 selected: null,
                 webspace: null,
                 locale: null,
+                showStatus: false,
                 instanceNamePrefix: 'smart-content-',
                 selectCallback: function(item) {
                 }
@@ -77,6 +78,7 @@ define([], function() {
                     hasSubName: 'hasChildren',
                     resultKey: this.options.resultKey,
                     selected: this.selected,
+                    showStatus: this.options.showStatus,
                     actionCallback: function(item) {
                         this.selected = item.id;
                         this.options.selectCallback(item.id, item.path, item.title, item);

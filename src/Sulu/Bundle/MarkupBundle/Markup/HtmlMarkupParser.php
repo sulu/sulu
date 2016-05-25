@@ -21,7 +21,6 @@ class HtmlMarkupParser implements MarkupParserInterface
     const ATTRIBUTE_REGEX = '/(?<name>\b[\w-]+\b)\s*=\s*"(?<value>[^"]*)"/';
     const CONTENT_REGEX = '/(?:>(?<content>[^<]*)<)/';
     const TAG_REGEX = '/(?<tag><%s:(?<name>[a-z]+)[^\/>]*(?:\/>|>[^<]*<\/%s:[^\/>]*>))/';
-    const INVALID_REGEX = '/(<%s:[a-z]+\b[^\/>]*)(\/>|>[^<]*<\/%s:[^\/>]*>)/';
 
     /**
      * @var TagRegistryInterface
@@ -46,7 +45,7 @@ class HtmlMarkupParser implements MarkupParserInterface
     /**
      * {@inheritdoc}
      */
-    public function parse($content)
+    public function parse($content, $locale)
     {
         $sortedTags = $this->getTags($content);
 
@@ -55,7 +54,7 @@ class HtmlMarkupParser implements MarkupParserInterface
         }
 
         foreach ($sortedTags as $name => $tags) {
-            $tags = $this->tagRegistry->getTag($name, 'html')->parseAll($tags);
+            $tags = $this->tagRegistry->getTag($name, 'html')->parseAll($tags, $locale);
 
             foreach ($tags as $tag => $newTag) {
                 $content = str_replace($tag, $newTag, $content);
@@ -68,33 +67,28 @@ class HtmlMarkupParser implements MarkupParserInterface
     /**
      * {@inheritdoc}
      */
-    public function validate($content)
+    public function validate($content, $locale)
     {
         $sortedTags = $this->getTags($content);
 
         if (0 === count($sortedTags)) {
-            return new ValidateResult(true, $content);
+            return [];
         }
 
-        $valid = true;
-        $regex = sprintf(self::INVALID_REGEX, $this->namespace, $this->namespace);
+        $result = [];
         foreach ($sortedTags as $name => $tags) {
-            $validatedTags = $this->tagRegistry->getTag($name, 'html')->validateAll($tags);
-
-            foreach ($validatedTags as $tag => $tagValid) {
-                if ($tagValid) {
-                    continue;
-                }
-
-                $valid = false;
-                if (!array_key_exists('data-invalid', $tags[$tag]) || !$tags[$tag]['data-invalid']) {
-                    $newTag = preg_replace($regex, '$1 data-invalid="true"$2', $tag);
-                    $content = str_replace($tag, $newTag, $content);
-                }
-            }
+            $result = array_merge(
+                $result,
+                array_filter(
+                    $this->tagRegistry->getTag($name, 'html')->validateAll($tags, $locale),
+                    function ($item) {
+                        return $item !== self::VALIDATE_OK;
+                    }
+                )
+            );
         }
 
-        return new ValidateResult($valid, $content);
+        return $result;
     }
 
     /**

@@ -88,6 +88,7 @@ define(['underscore', 'text!./form.html'], function(_, formTemplate) {
 
             return _.defaults(data, {
                 href: this.href,
+                published: this.hrefPublished,
                 title: !!this.options.link.title ? this.options.link.title : this.hrefTitle
             });
         },
@@ -186,13 +187,15 @@ define(['underscore', 'text!./form.html'], function(_, formTemplate) {
                             resultKey: 'nodes',
                             instanceName: 'internal-link',
                             instanceNamePrefix: '',
-                            selectCallback: function(id, path, title) {
+                            showStatus: true,
+                            selectCallback: function(id, path, title, item) {
                                 var $value = $('#internal-link-href-value');
                                 $value.val(title);
                                 $('#internal-link-href-button-clear').show();
 
                                 this.href = id;
                                 this.hrefTitle = title;
+                                this.hrefPublished = item.publishedState;
                                 this.sandbox.emit('husky.overlay.internal-link.slide-to', 0);
                                 $('.href-container').removeClass('husky-validate-error');
                             }.bind(this)

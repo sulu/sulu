@@ -643,6 +643,30 @@
                 <source>content.ckeditor.internal-link.remove</source>
                 <target>Remove Internal Link</target>
             </trans-unit>
+            <trans-unit id="35" resname="content.text_editor.error.unpublished">
+                <source>content.text_editor.error.unpublished</source>
+                <target>Page not published</target>
+            </trans-unit>
+            <trans-unit id="36" resname="content.text_editor.error.unpublished-single">
+                <source>content.text_editor.error.unpublished-single</source>
+                <target>One linked page is not published.</target>
+            </trans-unit>
+            <trans-unit id="37" resname="content.text_editor.error.unpublished-multiple">
+                <source>content.text_editor.error.unpublished-multiple</source>
+                <target>%s linked pages are not published.</target>
+            </trans-unit>
+            <trans-unit id="38" resname="content.text_editor.error.removed">
+                <source>content.text_editor.error.removed</source>
+                <target>Link broken</target>
+            </trans-unit>
+            <trans-unit id="39" resname="content.text_editor.error.removed-single">
+                <source>content.text_editor.error.removed-single</source>
+                <target>One link is broken.</target>
+            </trans-unit>
+            <trans-unit id="40" resname="content.text_editor.error.removed-multiple">
+                <source>content.text_editor.error.removed-multiple</source>
+                <target>%s links are broken.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

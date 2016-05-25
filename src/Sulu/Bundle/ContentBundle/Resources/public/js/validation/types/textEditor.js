@@ -11,20 +11,38 @@
 define([
     'jquery',
     'type/default',
-    'form/util'
-], function($, Default, Util) {
+    'form/util',
+    'services/husky/translator',
+    'services/husky/util'
+], function($, Default, Util, Translator, HuskyUtil) {
 
     'use strict';
 
     var handler = function(data, $el) {
             App.emit('sulu.content.changed');
+            showErrors($el, data);
+        },
 
-            var $previous = $el.prev();
-            if (-1 === data.indexOf('data-invalid="true"')) {
-                $previous.hide();
-            } else {
-                $previous.show();
+        showErrors = function($element, data) {
+            var $errorElements = $element.parent().find('.validate-error').children();
+            $errorElements.hide();
+
+            showError($element, data, 'unpublished');
+            showError($element, data, 'removed');
+        },
+
+        showError = function($element, data, type) {
+            if (-1 === data.indexOf(type + '="true"')) {
+                return;
             }
+
+            var $errorElement = $element.parent().find('.' + type),
+                match = data.match(new RegExp(type + '="true"', 'g')),
+                translateKey = 'content.text_editor.error.' + type + (1 === match.length ? '-single' : '-multiple');
+
+            $errorElement.text(HuskyUtil.sprintf(Translator.translate(translateKey), match.length));
+
+            $errorElement.show();
         },
 
         changedHandler = function(data, $el) {
@@ -44,10 +62,6 @@ define([
                 instanceName: null
             },
 
-            setValue = function(value) {
-                Util.setValue(this.$el, this.getViewData.call(this, value));
-            },
-
             subType = {
                 initializeSub: function() {
                     // remove event with same name and register new one
@@ -60,38 +74,13 @@ define([
                 },
 
                 needsValidation: function() {
-                    return true;
+                    return false;
                 },
 
                 setValue: function(value) {
-                    setValue.call(this, value);
+                    Util.setValue(this.$el, this.getViewData(value));
 
-                    // show broken links
-                    this.validate();
-                },
-
-                getModelData: function(value) {
-                    return value.replace('data-invalid="true"', '');
-                },
-
-                validate: function() {
-                    var response = $.ajax('/admin/markup/validate', {
-                            type: "POST",
-                            data: this.getValue(),
-                            async: false
-                        }),
-                        data = response.responseJSON;
-
-                    setValue.call(this, data.content);
-
-                    var $previous = this.$el.prev();
-                    if (!data.valid) {
-                        $previous.show();
-                    } else {
-                        $previous.hide();
-                    }
-
-                    return true;
+                    showErrors($el, value);
                 }
             };
 

@@ -1,4 +1,8 @@
-define(function() {
+define([
+    'underscore',
+    'services/husky/translator',
+    'text!sulucontentcss/ckeditor-internal-link.css'
+], function(_, Translator, editorCSS) {
 
     'use strict';
 
@@ -33,16 +37,34 @@ define(function() {
             tag.setText(link.title);
 
             // only valid pages can be selected.
-            tag.removeAttribute('data-invalid');
+            tag.removeAttribute('removed');
+            tag.removeAttribute('unpublished');
+
+            if (!link.published) {
+                tag.setAttribute('unpublished', 'true');
+            }
 
             editor.fire('change');
         };
 
     return function(sandbox) {
         return {
+            tagName: 'sulu:link',
+
             init: function(editor) {
+                // extend dtd
+                CKEDITOR.dtd[this.tagName] = 1;
+                CKEDITOR.dtd.body['sulu:link'] = 1;
+                CKEDITOR.dtd.div['sulu:link'] = 1;
+                CKEDITOR.dtd.li['sulu:link'] = 1;
+                CKEDITOR.dtd.p['sulu:link'] = 1;
+                CKEDITOR.dtd.$block['sulu:link'] = 1;
+                CKEDITOR.dtd.$removeEmpty['sulu:link'] = 1;
+
                 editor.addCommand('internalLinkDialog', {
                     dialogName: 'internalLinkDialog',
+                    allowedContent: 'sulu:link[title,target,unpublished,removed,!href]',
+                    requiredContent: 'sulu:link[href]',
                     exec: function() {
                         var $element = $('<div/>');
                         $('body').append($element);
@@ -134,8 +156,12 @@ define(function() {
             },
 
             onLoad: function() {
-                CKEDITOR.addCss('sulu\\:link { text-decoration: underline; color: #428bca; }');
-                CKEDITOR.addCss('sulu\\:link[data-invalid="true"] { color: #EA524E; text-decoration: line-through; }');
+                CKEDITOR.addCss(_.template(editorCSS, {
+                    translations: {
+                        unpublished: Translator.translate('content.text_editor.error.unpublished'),
+                        removed: Translator.translate('content.text_editor.error.removed')
+                    }
+                }));
             }
         };
     };

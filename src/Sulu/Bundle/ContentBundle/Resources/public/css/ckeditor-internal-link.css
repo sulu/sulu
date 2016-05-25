@@ -1,0 +1,50 @@
+sulu\:link {
+    text-decoration: underline;
+    color: #428bca;
+}
+
+sulu\:link[unpublished="true"]:before {
+    color: #E8CE33;
+    content: "•";
+    display: inline-block;
+    margin-right: 3px;
+    font-size: 20px;
+    line-height: 13px;
+    vertical-align: text-bottom;
+}
+
+sulu\:link[unpublished="true"]:empty:before {
+    content: "";
+}
+
+sulu\:link[removed="true"] {
+    color: #EA524E;
+    text-decoration: line-through;
+}
+
+sulu\:link[unpublished="true"]:after,
+sulu\:link[removed="true"]:after {
+    display: none;
+    position: absolute;
+    background-color: #21272E;
+    border-radius: 2px;
+    color: #ffffff;
+    padding: 5px;
+    white-space: pre-wrap;
+    margin-left: 5px;
+    font-size: 11px;
+    line-height: 11px;
+}
+
+sulu\:link[unpublished="true"]:hover:after,
+sulu\:link[removed="true"]:hover:after {
+    display: inline-block;
+}
+
+sulu\:link[unpublished="true"]:after {
+    content: '<%= translations.unpublished %>';
+}
+
+sulu\:link[removed="true"]:after {
+    content: '<%= translations.removed %>';
+}

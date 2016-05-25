@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Content\Types;
 
+use PHPCR\NodeInterface;
+use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\SimpleContentType;
@@ -20,16 +22,102 @@ use Sulu\Component\Content\SimpleContentType;
  */
 class TextEditor extends SimpleContentType
 {
+    const INVALID_REGEX = '/(<%s:[a-z]+\b[^\/>]*)(\/>|>[^<]*<\/%s:[^\/>]*>)/';
+
     /**
      * @var string
      */
     private $template;
 
-    public function __construct($template)
+    /**
+     * @var MarkupParserInterface
+     */
+    private $markupParser;
+
+    /**
+     * @var string
+     */
+    private $markupNamespace;
+
+    public function __construct($template, MarkupParserInterface $markupParser, $markupNamespace = 'sulu')
     {
         parent::__construct('TextEditor', '');
 
         $this->template = $template;
+        $this->markupParser = $markupParser;
+        $this->markupNamespace = $markupNamespace;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
+    {
+        $value = $node->getPropertyValueWithDefault($property->getName(), $this->defaultValue);
+        $property->setValue($this->validate($value, $languageCode));
+
+        return $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function write(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey
+    ) {
+        $value = $property->getValue();
+        if ($value !== null) {
+            $node->setProperty($property->getName(), $this->removeValidation($value));
+        } else {
+            $this->remove($node, $property, $webspaceKey, $languageCode, $segmentKey);
+        }
+    }
+
+    /**
+     * Returns validated content.
+     *
+     * @param string $content
+     * @param string $locale
+     *
+     * @return string
+     */
+    private function validate($content, $locale)
+    {
+        $validation = $this->markupParser->validate($content, $locale);
+
+        $regex = sprintf(self::INVALID_REGEX, $this->markupNamespace, $this->markupNamespace);
+        foreach ($validation as $tag => $state) {
+            if (false === strpos($tag, $state . '="true"')) {
+                $newTag = preg_replace($regex, '$1 ' . $state . '="true"$2', $tag);
+                $content = str_replace($tag, $newTag, $content);
+            }
+        }
+
+        return $content;
+    }
+
+    /**
+     * Removes validation attributes.
+     *
+     * @param string $content
+     *
+     * @return string
+     */
+    private function removeValidation($content)
+    {
+        $attributes = array_map(
+            function ($attribute) {
+                return sprintf(' %s="true"', $attribute);
+            },
+            [MarkupParserInterface::VALIDATE_REMOVED, MarkupParserInterface::VALIDATE_UNPUBLISHED]
+        );
+
+        return str_replace($attributes, '', $content);
     }
 
     /**
