@@ -5,7 +5,12 @@
            xmlns="http://schemas.sulu.io/template/template"
            xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-   <xs:element name="template" type="templateType"/>
+    <!--
+    Import XML namespace (used by xincludes)
+    -->
+    <xs:import namespace='http://www.w3.org/XML/1998/namespace' schemaLocation='xml.xsd'/>
+
+    <xs:element name="template" type="templateType"/>
 
     <xs:complexType name="templateType">
         <xs:choice maxOccurs="unbounded">
