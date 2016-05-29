@@ -10,6 +10,13 @@
     -->
     <xs:import namespace='http://www.w3.org/XML/1998/namespace' schemaLocation='xml.xsd'/>
 
+    <!--
+    Attribute group for attributes that are allowed for all elements
+    -->
+    <xs:attributeGroup name="defaultAttributes">
+        <xs:anyAttribute namespace='http://www.w3.org/XML/1998/namespace'/>
+    </xs:attributeGroup>
+
     <xs:element name="template" type="templateType"/>
 
     <xs:complexType name="templateType">
@@ -31,6 +38,7 @@
                 </xs:complexType>
             </xs:element>
         </xs:choice>
+        <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
     <xs:complexType name="metaType">
@@ -39,12 +47,14 @@
             <xs:element type="langType" name="info_text"/>
             <xs:element type="langType" name="placeholder"/>
         </xs:choice>
+        <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
     <xs:complexType name="langType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute name="lang" use="required" type="xs:string" />
+                <xs:attributeGroup ref="defaultAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -55,6 +65,7 @@
             <xs:element type="blockType" name="block" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="sectionType" name="section" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
+        <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
     <xs:complexType name="sectionType">
@@ -66,6 +77,7 @@
         <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute type="xs:string" name="cssClass" use="optional"/>
         <xs:attribute type="xs:integer" name="colspan" use="optional"/>
+        <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
     <xs:complexType name="propertiesType">
@@ -73,6 +85,7 @@
             <xs:element type="propertyType" name="property"/>
             <xs:element type="blockType" name="block"/>
         </xs:choice>
+        <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
     <xs:complexType name="propertyType" mixed="true">
@@ -91,6 +104,7 @@
         <xs:attribute type="xs:positiveInteger" name="maxOccurs" use="optional"/>
         <xs:attribute type="xs:string" name="cssClass" use="optional"/>
         <xs:attribute type="xs:integer" name="colspan" use="optional"/>
+        <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
     <xs:complexType name="blockType">
@@ -108,12 +122,14 @@
         <xs:attribute type="xs:positiveInteger" name="maxOccurs" use="optional"/>
         <xs:attribute type="xs:string" name="cssClass" use="optional"/>
         <xs:attribute type="xs:integer" name="colspan" use="optional"/>
+        <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
     <xs:complexType name="blockTypesType">
         <xs:sequence minOccurs="1" maxOccurs="1">
             <xs:element type="blockTypeType" name="type" minOccurs="1" maxOccurs="unbounded"/>
         </xs:sequence>
+        <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
     <xs:complexType name="blockTypeType">
@@ -123,6 +139,7 @@
         </xs:sequence>
 
         <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
     <xs:complexType name="tagType">
@@ -139,6 +156,7 @@
         <xs:sequence>
             <xs:element type="paramType" name="param" maxOccurs="unbounded" minOccurs="0"/>
         </xs:sequence>
+        <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
     <xs:complexType name="paramType">
@@ -149,6 +167,7 @@
         <xs:attribute name="type" type="paramTypeType" default="string"/>
         <xs:attribute name="name" type="xs:string" use="required"/>
         <xs:attribute name="value" type="xs:string" use="optional"/>
+        <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
     <xs:simpleType name="paramTypeType">
@@ -162,6 +181,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="name" use="required"/>
+                <xs:attributeGroup ref="defaultAttributes"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
