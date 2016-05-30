@@ -45,10 +45,11 @@ abstract class PreviewRendererException extends PreviewException
      * @param string $id
      * @param string $webspaceKey
      * @param string $locale
+     * @param \Exception $previous
      */
-    public function __construct($message, $code, $object, $id, $webspaceKey, $locale)
+    public function __construct($message, $code, $object, $id, $webspaceKey, $locale, \Exception $previous = null)
     {
-        parent::__construct($message, $code);
+        parent::__construct($message, $code, $previous);
 
         $this->object = $object;
         $this->id = $id;

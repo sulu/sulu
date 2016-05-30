@@ -7,6 +7,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2367 [ContentBundle]       Fixed copy internal-link into new language
     * BUGFIX      #2396                       Fixed composer-events
     * ENHANCEMENT #2403 [ContentBundle]       Added lazy start of ckeditor for content form
+    * BUGFIX      #2397 [PreviewBundle]       Added catching of "Unable to find template" exception
     * BUGFIX      #2396 [PreviewBundle]       Fixed leaking events of preview
     * BUGFIX      #2389 [MediaBundle]         Removed twice adding of navigation item
     * ENHANCEMENT #2386 [ContentBundle]       Use DocumentManager for NodeController postAction
