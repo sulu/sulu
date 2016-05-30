@@ -11,7 +11,10 @@
 
 namespace Sulu\Component\Security\Authentication;
 
+use Sulu\Bundle\SecurityBundle\Entity\Group;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
+use Sulu\Bundle\SecurityBundle\Entity\RoleSetting;
+use Sulu\Bundle\SecurityBundle\Entity\SecurityType;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
@@ -108,18 +111,18 @@ interface RoleInterface extends AuditableInterface, SecurityIdentityInterface
     /**
      * Add permissions.
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\Permission $permissions
+     * @param Permission $permissions
      *
      * @return RoleInterface
      */
-    public function addPermission(\Sulu\Bundle\SecurityBundle\Entity\Permission $permissions);
+    public function addPermission(Permission $permissions);
 
     /**
      * Remove permissions.
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\Permission $permissions
+     * @param Permission $permissions
      */
-    public function removePermission(\Sulu\Bundle\SecurityBundle\Entity\Permission $permissions);
+    public function removePermission(Permission $permissions);
 
     /**
      * Get permissions.
@@ -131,18 +134,18 @@ interface RoleInterface extends AuditableInterface, SecurityIdentityInterface
     /**
      * Add userRoles.
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\UserRole $userRoles
+     * @param UserRole $userRoles
      *
      * @return UserRole
      */
-    public function addUserRole(\Sulu\Bundle\SecurityBundle\Entity\UserRole $userRoles);
+    public function addUserRole(UserRole $userRoles);
 
     /**
      * Remove userRoles.
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\UserRole $userRoles
+     * @param UserRole $userRoles
      */
-    public function removeUserRole(\Sulu\Bundle\SecurityBundle\Entity\UserRole $userRoles);
+    public function removeUserRole(UserRole $userRoles);
 
     /**
      * Get userRoles.
@@ -154,18 +157,18 @@ interface RoleInterface extends AuditableInterface, SecurityIdentityInterface
     /**
      * Add groups.
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\Group $groups
+     * @param Group $groups
      *
      * @return RoleInterface
      */
-    public function addGroup(\Sulu\Bundle\SecurityBundle\Entity\Group $groups);
+    public function addGroup(Group $groups);
 
     /**
      * Remove groups.
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\Group $groups
+     * @param Group $groups
      */
-    public function removeGroup(\Sulu\Bundle\SecurityBundle\Entity\Group $groups);
+    public function removeGroup(Group $groups);
 
     /**
      * Get groups.
@@ -177,16 +180,25 @@ interface RoleInterface extends AuditableInterface, SecurityIdentityInterface
     /**
      * Set securityType.
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\SecurityType $securityType
+     * @param SecurityType $securityType
      *
      * @return RoleInterface
      */
-    public function setSecurityType(\Sulu\Bundle\SecurityBundle\Entity\SecurityType $securityType = null);
+    public function setSecurityType(SecurityType $securityType = null);
 
     /**
      * Get securityType.
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\SecurityType
+     * @return SecurityType
      */
     public function getSecurityType();
+
+    /**
+     * Returns setting by name.
+     *
+     * @param string $key
+     *
+     * @return RoleSetting|null
+     */
+    public function getSetting($key);
 }

@@ -102,6 +102,12 @@
 
             <tag name="sulu.js_config"/>
         </service>
+        <service id="sulu_content.jsconfig.ckeditor_toolbar" class="Sulu\Bundle\ContentBundle\Admin\CKEditorJsConfig">
+            <argument type="service" id="security.token_storage"/>
+
+            <tag name="sulu.js_config"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
 
         <!-- Content Repository -->
         <service id="sulu_content.content_repository" class="Sulu\Component\Content\Repository\ContentRepository">

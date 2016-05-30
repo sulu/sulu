@@ -651,6 +651,7 @@
                 <source>content.ckeditor.internal-link.remove</source>
                 <target>Interner Link löschen</target>
             </trans-unit>
+<<<<<<< af824bc1767073d7bacea25636f36c730e07ae1b
             <trans-unit id="35" resname="content.text_editor.error.unpublished">
                 <source>content.text_editor.error.unpublished</source>
                 <target>Seite nicht publiziert</target>
@@ -674,6 +675,26 @@
             <trans-unit id="40" resname="content.text_editor.error.removed-multiple">
                 <source>content.text_editor.error.removed-multiple</source>
                 <target>%s Links sind nicht mehr gültig.</target>
+            </trans-unit>
+            <trans-unit id="41" resname="content-navigation.security.ckeditor">
+                <source>content-navigation.security.ckeditor</source>
+                <target>Text-Editor</target>
+            </trans-unit>
+            <trans-unit id="42" resname="security.roles.ckeditor.title">
+                <source>security.roles.ckeditor.title</source>
+                <target>Einstellungen für Text-Editor</target>
+            </trans-unit>
+            <trans-unit id="43" resname="security.roles.ckeditor.type">
+                <source>security.roles.ckeditor.type</source>
+                <target>Sektion</target>
+            </trans-unit>
+            <trans-unit id="44" resname="security.roles.ckeditor.horizontal">
+                <source>security.roles.ckeditor.horizontal</source>
+                <target>Funktion</target>
+            </trans-unit>
+            <trans-unit id="45" resname="security.roles.ckeditor.info">
+                <source>security.roles.ckeditor.info</source>
+                <target>Die Konfiguration gilt für jeden Text-Editor im System, der von dieser Rolle verwendet wird.</target>
             </trans-unit>
         </body>
     </file>

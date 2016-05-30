@@ -187,4 +187,22 @@ class Role extends BaseRole
     {
         return $this->settings;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSetting($key)
+    {
+        $filteredSettings = $this->settings->filter(
+            function (RoleSetting $setting) use ($key) {
+                return $setting->getKey() === $key;
+            }
+        );
+
+        if ($filteredSettings->count() === 0) {
+            return;
+        }
+
+        return $filteredSettings->first();
+    }
 }

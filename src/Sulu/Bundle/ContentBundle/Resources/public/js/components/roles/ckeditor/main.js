@@ -22,12 +22,13 @@ define([
         defaults: {
             options: {},
             translations: {
+                title: 'security.roles.ckeditor.title',
                 all: 'security.roles.all',
                 none: 'security.roles.none',
-                general: 'security.roles.ckeditor.general',
                 type: 'security.roles.ckeditor.type',
                 horizontal: 'security.roles.ckeditor.horizontal',
-                vertical: 'security.roles.ckeditor.vertical'
+                info: 'security.roles.ckeditor.info',
+                warning: 'security.warning'
             },
             templates: {
                 skeleton: skeletonTemplate
@@ -160,6 +161,7 @@ define([
                 data: {value: this.data.toolbar}
             }).then(function() {
                 this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
+                this.sandbox.emit('sulu.labels.warning.show', this.translations.warning);
 
                 if (action === 'back') {
                     RoleRouter.toList();
