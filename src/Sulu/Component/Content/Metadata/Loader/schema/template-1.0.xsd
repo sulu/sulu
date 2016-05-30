@@ -35,6 +35,7 @@
                     <xs:choice maxOccurs="unbounded">
                         <xs:element type="langType" name="title"/>
                     </xs:choice>
+                    <xs:attributeGroup ref="defaultAttributes"/>
                 </xs:complexType>
             </xs:element>
         </xs:choice>
