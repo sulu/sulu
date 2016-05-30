@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
 
 /**
@@ -19,29 +21,35 @@ use JMS\Serializer\Annotation\Exclude;
 class Role extends BaseRole
 {
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $permissions;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      * @Exclude
      */
     private $userRoles;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $groups;
+
+    /**
+     * @var Collection
+     */
+    private $settings;
 
     /**
      * Constructor.
      */
     public function __construct()
     {
-        $this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->userRoles = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->permissions = new ArrayCollection();
+        $this->userRoles = new ArrayCollection();
+        $this->groups = new ArrayCollection();
+        $this->settings = new ArrayCollection();
     }
 
     /**
@@ -71,7 +79,7 @@ class Role extends BaseRole
     /**
      * Get permissions.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getPermissions()
     {
@@ -105,7 +113,7 @@ class Role extends BaseRole
     /**
      * Get userRoles.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getUserRoles()
     {
@@ -139,10 +147,44 @@ class Role extends BaseRole
     /**
      * Get groups.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getGroups()
     {
         return $this->groups;
+    }
+
+    /**
+     * Add setting.
+     *
+     * @param RoleSetting $setting
+     *
+     * @return Role
+     */
+    public function addSetting(RoleSetting $setting)
+    {
+        $this->settings[] = $setting;
+
+        return $this;
+    }
+
+    /**
+     * Remove setting.
+     *
+     * @param RoleSetting $setting
+     */
+    public function removeSetting(RoleSetting $setting)
+    {
+        $this->settings->removeElement($setting);
+    }
+
+    /**
+     * Get settings.
+     *
+     * @return Collection
+     */
+    public function getSettings()
+    {
+        return $this->settings;
     }
 }
