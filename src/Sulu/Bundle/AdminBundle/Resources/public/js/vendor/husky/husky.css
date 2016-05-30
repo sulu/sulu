@@ -7172,7 +7172,13 @@ textarea.form-element.small, textarea.small.husky-input {
   padding: 5px;
 }
 
-/* line 305, ../scss/modules/form.scss */
+/* line 303, ../scss/modules/form.scss */
+textarea.ckeditor-preview {
+  height: 70px;
+  min-height: 70px;
+}
+
+/* line 310, ../scss/modules/form.scss */
 .custom-radio {
   width: 15px;
   height: 15px;
@@ -7182,12 +7188,12 @@ textarea.form-element.small, textarea.small.husky-input {
   display: inline-block;
   margin: 0 5px 0 0;
 }
-/* line 315, ../scss/modules/form.scss */
+/* line 320, ../scss/modules/form.scss */
 .custom-radio.no-spacing {
   top: 0;
   margin: 0;
 }
-/* line 320, ../scss/modules/form.scss */
+/* line 325, ../scss/modules/form.scss */
 .custom-radio input {
   width: 15px;
   height: 15px;
@@ -7200,11 +7206,11 @@ textarea.form-element.small, textarea.small.husky-input {
   margin: 0;
   padding: 0;
 }
-/* line 334, ../scss/modules/form.scss */
+/* line 339, ../scss/modules/form.scss */
 .custom-radio input:checked + .icon, .custom-radio input.is-checked + .icon {
   border-color: #fff;
 }
-/* line 337, ../scss/modules/form.scss */
+/* line 342, ../scss/modules/form.scss */
 .custom-radio input:checked + .icon::after, .custom-radio input.is-checked + .icon::after {
   content: "";
   display: block;
@@ -7213,7 +7219,7 @@ textarea.form-element.small, textarea.small.husky-input {
   border-radius: 15px;
   background-color: #5DC774;
 }
-/* line 348, ../scss/modules/form.scss */
+/* line 353, ../scss/modules/form.scss */
 .custom-radio input + .icon {
   display: block;
   position: absolute;
@@ -7229,29 +7235,29 @@ textarea.form-element.small, textarea.small.husky-input {
   margin: 0;
 }
 
-/* line 369, ../scss/modules/form.scss */
+/* line 374, ../scss/modules/form.scss */
 .cke.cke_chrome {
   box-shadow: none !important;
   border: 0 !important;
 }
-/* line 374, ../scss/modules/form.scss */
+/* line 379, ../scss/modules/form.scss */
 .cke .cke_inner {
   border: 1px solid #ddd !important;
   border-radius: 3px !important;
 }
-/* line 378, ../scss/modules/form.scss */
+/* line 383, ../scss/modules/form.scss */
 .cke .cke_inner,
 .cke .cke_wysiwyg_frame {
   border-bottom-left-radius: 3px !important;
   border-bottom-right-radius: 3px !important;
 }
 
-/* line 385, ../scss/modules/form.scss */
+/* line 390, ../scss/modules/form.scss */
 .cke_hidpi .cke_dialog_close_button {
   background-image: none !important;
 }
 
-/* line 391, ../scss/modules/form.scss */
+/* line 396, ../scss/modules/form.scss */
 span.error {
   font-size: 14px;
   color: #EA524E;
