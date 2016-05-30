@@ -1261,6 +1261,236 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($result);
     }
 
+    public function testReadTemplateWithXInclude()
+    {
+        $template = [
+            'key' => 'template',
+            'view' => 'page.html.twig',
+            'controller' => 'SuluContentBundle:Default:index',
+            'cacheLifetime' => 2400,
+            'tags' => [
+                [
+                    'name' => 'some.random.structure.tag',
+                    'attributes' => [
+                        'foo' => 'bar',
+                        'bar' => 'foo',
+                    ],
+                ],
+            ],
+            'meta' => [
+                'title' => [
+                    'de' => 'Das ist das Template 1',
+                    'en' => 'That´s the template 1',
+                ],
+            ],
+            'properties' => [
+                'title' => [
+                    'name' => 'title',
+                    'type' => 'text_line',
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'colspan' => null,
+                    'cssClass' => null,
+                    'mandatory' => true,
+                    'multilingual' => true,
+                    'tags' => [
+                        [
+                            'name' => 'sulu.node.title',
+                            'priority' => 10,
+                            'attributes' => [],
+                        ],
+                        [
+                            'name' => 'some.random.tag',
+                            'priority' => null,
+                            'attributes' => [
+                                'one' => '1',
+                                'two' => '2',
+                                'three' => 'three',
+                            ],
+                        ],
+                    ],
+                    'params' => [],
+                    'meta' => [
+                        'title' => [
+                            'de' => 'Titel',
+                            'en' => 'Title',
+                        ],
+                        'info_text' => [
+                            'de' => 'Titel-Info-DE',
+                            'en' => 'Title-Info-EN',
+                        ],
+                        'placeholder' => [
+                            'de' => 'Platzhalter-Info-DE',
+                            'en' => 'Placeholder-Info-EN',
+                        ],
+                    ],
+                ],
+                'url' => [
+                    'name' => 'url',
+                    'type' => 'resource_locator',
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'colspan' => null,
+                    'cssClass' => null,
+                    'mandatory' => true,
+                    'multilingual' => true,
+                    'tags' => [
+                        [
+                            'name' => 'sulu.rlp',
+                            'priority' => 1,
+                            'attributes' => [],
+                        ],
+                    ],
+                    'params' => [],
+                    'meta' => [],
+                ],
+                'article' => [
+                    'name' => 'article',
+                    'type' => 'text_area',
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'colspan' => null,
+                    'cssClass' => null,
+                    'mandatory' => false,
+                    'multilingual' => true,
+                    'tags' => [
+                        [
+                            'name' => 'sulu.node.title',
+                            'priority' => 5,
+                            'attributes' => [],
+                        ],
+                    ],
+                    'params' => [],
+                    'meta' => [],
+                ],
+                'pages' => [
+                    'name' => 'pages',
+                    'type' => 'smart_content_selection',
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'colspan' => null,
+                    'cssClass' => null,
+                    'mandatory' => false,
+                    'multilingual' => true,
+                    'tags' => [
+                        [
+                            'name' => 'sulu.node.title',
+                            'priority' => null,
+                            'attributes' => [],
+                        ],
+                    ],
+                    'params' => [],
+                    'meta' => [],
+                ],
+                'article_number' => [
+                    'name' => 'article_number',
+                    'type' => 'text_line',
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'colspan' => null,
+                    'cssClass' => null,
+                    'mandatory' => false,
+                    'multilingual' => false,
+                    'tags' => [],
+                    'params' => [],
+                    'meta' => [],
+                ],
+                'images' => [
+                    'name' => 'images',
+                    'type' => 'image_selection',
+                    'minOccurs' => 0,
+                    'maxOccurs' => 2,
+                    'colspan' => null,
+                    'cssClass' => null,
+                    'mandatory' => false,
+                    'multilingual' => true,
+                    'tags' => [],
+                    'params' => [
+                        [
+                            'name' => 'minLinks',
+                            'value' => 1,
+                            'type' => 'string',
+                            'meta' => [],
+                        ],
+                        [
+                            'name' => 'maxLinks',
+                            'value' => 10,
+                            'type' => 'string',
+                            'meta' => [],
+                        ],
+                        [
+                            'name' => 'displayOptions',
+                            'value' => [
+                                [
+                                    'name' => 'leftTop',
+                                    'value' => true,
+                                    'type' => 'string',
+                                    'meta' => [],
+                                ],
+                                [
+                                    'name' => 'top',
+                                    'value' => false,
+                                    'type' => 'string',
+                                    'meta' => [],
+                                ],
+                                [
+                                    'name' => 'rightTop',
+                                    'value' => true,
+                                    'type' => 'string',
+                                    'meta' => [],
+                                ],
+                                [
+                                    'name' => 'left',
+                                    'value' => false,
+                                    'type' => 'string',
+                                    'meta' => [],
+                                ],
+                                [
+                                    'name' => 'middle',
+                                    'value' => false,
+                                    'type' => 'string',
+                                    'meta' => [],
+                                ],
+                                [
+                                    'name' => 'right',
+                                    'value' => false,
+                                    'type' => 'string',
+                                    'meta' => [],
+                                ],
+                                [
+                                    'name' => 'leftBottom',
+                                    'value' => true,
+                                    'type' => 'string',
+                                    'meta' => [],
+                                ],
+                                [
+                                    'name' => 'bottom',
+                                    'value' => false,
+                                    'type' => 'string',
+                                    'meta' => [],
+                                ],
+                                [
+                                    'name' => 'rightBottom',
+                                    'value' => true,
+                                    'type' => 'string',
+                                    'meta' => [],
+                                ],
+                            ],
+                            'type' => 'collection',
+                            'meta' => [],
+                        ],
+                    ],
+                    'meta' => [],
+                ],
+            ],
+        ];
+
+        $result = $this->loadFixture('template_with_xinclude.xml');
+        $this->assertEquals($template, $result);
+        $x = $this->arrayRecursiveDiff($result, $template);
+        $this->assertEquals(0, count($x));
+    }
+
     private function arrayRecursiveDiff($aArray1, $aArray2)
     {
         $aReturn = [];
