@@ -42932,7 +42932,7 @@ define('__component__$ckeditor@husky',[], function() {
         destroyEditor: function() {
             if (!!this.editor) {
                 this.editorContent = this.editor.getData();
-                if (this.editor.window.getFrame()) {
+                if (!!this.editor.window && !!this.editor.window.getFrame()) {
                     this.editor.destroy();
                 } else {
                     delete CKEDITOR.instances[this.editor.name];

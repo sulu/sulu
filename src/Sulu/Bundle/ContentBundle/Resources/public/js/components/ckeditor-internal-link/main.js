@@ -66,9 +66,21 @@ define(['underscore', 'text!./form.html'], function(_, formTemplate) {
         },
 
         save: function() {
-            if (this.sandbox.form.validate(formSelector)) {
-                this.options.saveCallback(this.getData());
+            if (!this.validate()) {
+                return false;
             }
+
+            this.options.saveCallback(this.getData());
+        },
+
+        validate: function() {
+            if (!this.href) {
+                $('.href-container').addClass('husky-validate-error');
+
+                return false;
+            }
+
+            return this.sandbox.form.validate(formSelector);
         },
 
         getData: function() {
@@ -182,6 +194,7 @@ define(['underscore', 'text!./form.html'], function(_, formTemplate) {
                                 this.href = id;
                                 this.hrefTitle = title;
                                 this.sandbox.emit('husky.overlay.internal-link.slide-to', 0);
+                                $('.href-container').removeClass('husky-validate-error');
                             }.bind(this)
                         }
                     }
