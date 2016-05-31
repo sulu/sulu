@@ -74,6 +74,7 @@ define(['services/sulusecurity/role-router', 'sulusecurity/models/role'], functi
             this.role.save(data, {
                 success: function(data) {
                     this.sandbox.emit('sulu.header.toolbar.item.enable', 'save');
+                    this.sandbox.emit('sulu.labels.warning.show', 'security.warning');
 
                     if (!!this.options.id) {
                         this.sandbox.emit('sulu.role.saved', data.id);
