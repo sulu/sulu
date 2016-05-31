@@ -2,11 +2,8 @@
 <phpunit bootstrap="./tests/bootstrap.php" colors="true">
 
     <testsuites>
-        <testsuite name="unit">
-            <directory suffix="Test.php">./src/Sulu/Component/*/Tests/Unit</directory>
-        </testsuite>
-        <testsuite name="functional">
-            <directory suffix="Test.php">./src/Sulu/Component/*/Tests/Functional</directory>
+        <testsuite name="components">
+            <directory suffix="Test.php">./src/Sulu/Component/*/Tests</directory>
         </testsuite>
     </testsuites>
 

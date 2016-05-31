@@ -133,7 +133,7 @@ define([
         saveTab: function() {
             var promise = $.Deferred();
             this.sandbox.once('sulu.tab.saved', function(savedData, updateData) {
-                if (!!updateData){
+                if (!!updateData) {
                     this.changeData(savedData)
                 }
                 promise.resolve(savedData);
