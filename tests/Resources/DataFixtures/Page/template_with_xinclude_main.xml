@@ -6,11 +6,8 @@
 
     <key>template</key>
 
-    <index name="foo_index" />
-
     <meta>
         <title lang="de">Das ist das Template 1</title>
         <title lang="en">That´s the template 1</title>
     </meta>
-
 </template>

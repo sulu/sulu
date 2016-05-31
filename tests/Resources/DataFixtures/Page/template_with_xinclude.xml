@@ -9,13 +9,9 @@
     <view>page.html.twig</view>
     <controller>SuluContentBundle:Default:index</controller>
     <cacheLifetime>2400</cacheLifetime>
-    <xi:include href='template_with_xinclude_main.xml'
-                xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)xpointer(/sulu:template/sulu:index)"/>
 
     <xi:include href='template_with_xinclude_main.xml'
                 xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)xpointer(/sulu:template/sulu:meta)"/>
-
-    <tag name="some.random.structure.tag" foo="bar" bar="foo"/>
 
     <xi:include href='template_with_xinclude_properties.xml'/>
 </template>
