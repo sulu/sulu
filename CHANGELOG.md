@@ -16,6 +16,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2369 [All]                 Install the symfony phpunit bridge again
     * ENHANCEMENT #2356 [PreviewBundle]       Added default error message 
     * BUGFIX      #2354 [ContentBundle]       Fixed javascript error preview is null for new page form 
+    * FEATURE     #2336 [ContentBundle]       Enabled internal link in ckeditor
     * ENHANCEMENT #2338 [MarkupBundle]        Implemented markup bundle
     * FEATURE     #2333 [PreviewBundle]       Added preview render error templates 
     * ENHANCEMENT #2353 [WebsocketBundle]     Changed configuration to default disable websocket 

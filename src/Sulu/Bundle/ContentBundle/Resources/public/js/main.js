@@ -26,8 +26,9 @@ require.config({
 define([
     'config',
     'extensions/sulu-buttons-contentbundle',
+    'sulucontent/ckeditor/internal-link',
     'css!sulucontentcss/main'
-], function(Config, ContentButtons) {
+], function(Config, ContentButtons, InternalLinkPlugin) {
     return {
 
         name: "Sulu Content Bundle",
@@ -127,6 +128,14 @@ define([
                     return '<div data-aura-component="webspace/settings@sulucontent" data-aura-id="' + id + '" data-aura-webspace="' + id + '" />';
                 }
             });
+
+            // ckeditor
+            sandbox.ckeditor.addPlugin(
+                'internalLink',
+                new InternalLinkPlugin(app.sandboxes.create('plugin-internal-link'))
+            );
+            sandbox.ckeditor.addToolbarButton('links', 'InternalLink');
+            sandbox.ckeditor.addToolbarButton('links', 'RemoveInternalLink');
         }
     };
 });

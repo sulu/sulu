@@ -19,6 +19,7 @@ define([], function() {
                 selected: null,
                 webspace: null,
                 locale: null,
+                instanceNamePrefix: 'smart-content-',
                 selectCallback: function(item) {
                 }
             },
@@ -69,7 +70,7 @@ define([], function() {
             this.columnNavigationOptions = this.sandbox.util.extend(true, {}, columnNavigationDefaults,
                 {
                     el: this.$columnNavigationElement,
-                    instanceName: 'smart-content-' + this.options.instanceName,
+                    instanceName: this.options.instanceNamePrefix + this.options.instanceName,
                     url: this.getUrl(),
                     linkedName: 'linked',
                     typeName: 'type',

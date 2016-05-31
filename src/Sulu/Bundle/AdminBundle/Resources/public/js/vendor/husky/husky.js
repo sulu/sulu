@@ -42775,40 +42775,28 @@ define('__component__$ckeditor@husky',[], function() {
          * @returns {Object} configuration object for ckeditor
          */
         getConfig = function() {
-            var config = this.sandbox.util.extend(false, {}, this.options);
+            var config = this.sandbox.util.extend(false, {}, this.options),
+                toolbarBuilder = this.sandbox.ckeditor.getToolbarBuilder();
 
-            if (!config.toolbar) {
-                config.toolbar = [
-                    {name: 'semantics', items: ['Format']},
-                    {name: 'basicstyles', items: ['Superscript', 'Subscript', 'Italic', 'Bold', 'Underline', 'Strike']},
-                    {name: 'blockstyles', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
-                    {name: 'list', items: ['NumberedList', 'BulletedList']}
-                ];
+            if (!!config.toolbar) {
+                toolbarBuilder = this.sandbox.ckeditor.createToolbarBuilder(config.toolbar);
             }
 
-            // activate paste from Word
-            if (this.options.pasteFromWord === true) {
-                config.toolbar.push({
-                    name: 'paste',
-                    items: ['PasteFromWord']
-                });
+            // deactivate paste from Word
+            if (!this.options.pasteFromWord === true) {
+                toolbarBuilder.remove('paste', ['PasteFromWord']);
             }
 
-            // activate embed links
-            if (this.options.link === true) {
-                config.toolbar.push({
-                    name: 'links',
-                    items: ['Link', 'Unlink']
-                });
-                config.linkShowTargetTab = false;
+            // deactivate embed links
+            config.linkShowTargetTab = false;
+            if (!this.options.link) {
+                toolbarBuilder.remove('links', ['Link', 'Unlink']);
+                config.linkShowTargetTab = true;
             }
 
             // activate tables
-            if (this.options.table === true) {
-                config.toolbar.push({
-                    name: 'insert',
-                    items: ['Table']
-                });
+            if (!this.options.table) {
+                toolbarBuilder.remove('insert', ['Table']);
             }
 
             // set height
@@ -42831,15 +42819,12 @@ define('__component__$ckeditor@husky',[], function() {
                 config.enterMode = CKEDITOR['ENTER_' + this.options.enterMode.toUpperCase()];
             }
 
-            // Styles
-            if (!!config.stylesSet && config.stylesSet.length > 0) {
-                config.toolbar.push({
-                    name: 'styles',
-                    items: ['Styles']
-                });
+            // deactivate styles
+            if (!config.stylesSet || 0 === config.stylesSet.length) {
+                toolbarBuilder.remove('styles', ['Styles']);
             }
 
-            config.toolbar.push({name: 'code', items: ['Source']});
+            config.toolbar = toolbarBuilder.get();
 
             delete config.initializedCallback;
             delete config.baseUrl;
@@ -42947,7 +42932,7 @@ define('__component__$ckeditor@husky',[], function() {
         destroyEditor: function() {
             if (!!this.editor) {
                 this.editorContent = this.editor.getData();
-                if (this.editor.window.getFrame()) {
+                if (!!this.editor.window && !!this.editor.window.getFrame()) {
                     this.editor.destroy();
                 } else {
                     delete CKEDITOR.instances[this.editor.name];
@@ -47043,7 +47028,7 @@ define('__component__$url-input@husky',['services/husky/url-validator'], functio
         }
     });
 
-    define('husky_extensions/ckeditor-extension',['ckeditor', 'jqueryAdapter'], function() {
+    define('husky_extensions/ckeditor-extension',['underscore', 'services/husky/util', 'ckeditor', 'jqueryAdapter'], function(_, Util) {
 
         var getConfig = function() {
             return {
@@ -47053,13 +47038,71 @@ define('__component__$url-input@husky',['services/husky/url-validator'], functio
                 removeButtons: '',
                 removePlugins: 'elementspath,magicline',
                 removeDialogTabs: 'image:advanced;link:advanced',
-                extraPlugins: 'justify,format,sourcearea,link,table,pastefromword,autogrow',
-                extraAllowedContent: 'img(*)[*]; span(*)[*]; div(*)[*]',
+                allowedContent: true,
                 resize_enabled: false,
                 enterMode: 'P',
                 uiColor: '#ffffff',
                 skin: 'husky'
             };
+        };
+
+        /**
+         * Builder to extend basic toolbar.
+         *
+         * @param toolbar
+         *
+         * @constructor
+         */
+        function ToolbarBuilder(toolbar) {
+            this.toolbar = toolbar;
+        }
+
+        /**
+         * Add toolbar items.
+         *
+         * @param {String} name
+         * @param {String[]} items
+         */
+        ToolbarBuilder.prototype.add = function(name, items) {
+            if (!this.toolbar[name]) {
+                this.toolbar[name] = [];
+            }
+
+            this.toolbar[name] = this.toolbar[name].concat(items);
+        };
+
+        /**
+         * Remove toolbar items.
+         *
+         * @param {String} name
+         * @param {String[]} items
+         */
+        ToolbarBuilder.prototype.remove = function(name, items) {
+            if (!this.toolbar[name]) {
+                this.toolbar[name] = [];
+            }
+
+            this.toolbar[name] = _.difference(this.toolbar[name], items);
+        };
+
+        /**
+         * Returns toolbar.
+         *
+         * @returns {{name, items}[]}
+         */
+        ToolbarBuilder.prototype.get = function() {
+            return _.map(this.toolbar, function(items, name) {
+                return {name: name, items: items};
+            });
+        };
+
+        /**
+         * Returns raw toolbar data.
+         *
+         * @returns {Object}
+         */
+        ToolbarBuilder.getRaw = function() {
+            return this.toolbar;
         };
 
         return {
@@ -47068,13 +47111,82 @@ define('__component__$url-input@husky',['services/husky/url-validator'], functio
 
             initialize: function(app) {
 
+                var toolbar = {
+                        semantics: ['Format'],
+                        basicstyles: ['Superscript', 'Subscript', 'Italic', 'Bold', 'Underline', 'Strike'],
+                        blockstyles: ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+                        list: ['NumberedList', 'BulletedList'],
+                        paste: ['PasteFromWord'],
+                        links: ['Link', 'Unlink'],
+                        insert: ['Table'],
+                        styles: ['Styles'],
+                        code: ['Source']
+                    },
+                    plugins = ['justify', 'format', 'sourcearea', 'link', 'table', 'pastefromword', 'autogrow'],
+                    icons = {
+                        Format: 'font',
+                        Strike: 'strikethrough',
+                        JustifyLeft: 'align-left',
+                        JustifyCenter: 'align-center',
+                        JustifyRight: 'align-right',
+                        JustifyBlock: 'align-justify',
+                        NumberedList: 'list-ol',
+                        BulletedList: 'list',
+                        PasteFromWord: 'file-word-o',
+                        Styles: 'header',
+                        Source: 'code'
+                    };
+
                 app.sandbox.ckeditor = {
+
+                    addPlugin: function(name, plugin) {
+                        plugins.push(name);
+
+                        CKEDITOR.plugins.add(name, plugin);
+                    },
+
+                    addToolbarButton: function(toolbarName, button, icon) {
+                        if (!toolbar[toolbarName]) {
+                            toolbar[toolbarName] = [];
+                        }
+
+                        toolbar[toolbarName].push(button);
+
+                        if (!!icon) {
+                            icons[button] = icon;
+                        }
+                    },
+
+                    getToolbar: function() {
+                        return Util.deepCopy(toolbar);
+                    },
+
+                    getIcon: function(button) {
+                        if (icons.hasOwnProperty(button)) {
+                            return icons[button];
+                        }
+
+                        return button.toLowerCase();
+                    },
+
+                    getToolbarBuilder: function() {
+                        return new ToolbarBuilder(this.getToolbar());
+                    },
+
+                    createToolbarBuilder: function(toolbar) {
+                        var toolbarSections = {};
+                        for (var i = 0, length = toolbar.length; i < length; ++i) {
+                            toolbarSections[toolbar[i].name] = toolbar[i].items;
+                        }
+
+                        return new ToolbarBuilder(toolbarSections);
+                    },
 
                     // callback when editor is ready
                     init: function(selector, callback, config) {
+                        var configuration = app.sandbox.util.extend(true, {}, getConfig.call(), config), $editor;
+                        configuration.extraPlugins = plugins.join(',');
 
-                        var configuration = app.sandbox.util.extend(true, {}, getConfig.call(), config),
-                            $editor;
                         if (!!callback && typeof callback === 'function') {
                             $editor = $(selector).ckeditor(callback, configuration);
                         } else {
@@ -47148,8 +47260,6 @@ define('__component__$url-input@husky',['services/husky/url-validator'], functio
             }
 
         };
-
-
     });
 })();
 

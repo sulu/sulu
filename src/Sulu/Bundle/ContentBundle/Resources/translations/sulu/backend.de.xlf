@@ -619,6 +619,38 @@
                 <source>content.changed-warning.ok-button</source>
                 <target>Seite speichern</target>
             </trans-unit>
+            <trans-unit id="27" resname="content.ckeditor.internal-link">
+                <source>content.ckeditor.internal-link</source>
+                <target>Interner Link</target>
+            </trans-unit>
+            <trans-unit id="28" resname="content.ckeditor.internal-link.edit">
+                <source>content.ckeditor.internal-link.edit</source>
+                <target>Interner Link bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="29" resname="content.ckeditor.internal-link.alt-title">
+                <source>content.ckeditor.internal-link.alt-title</source>
+                <target>Alternativer Titel</target>
+            </trans-unit>
+            <trans-unit id="30" resname="content.ckeditor.internal-link.href">
+                <source>content.ckeditor.internal-link.href</source>
+                <target>Zielseite</target>
+            </trans-unit>
+            <trans-unit id="31" resname="content.ckeditor.internal-link.target">
+                <source>content.ckeditor.internal-link.target</source>
+                <target>Ziel</target>
+            </trans-unit>
+            <trans-unit id="32" resname="content.ckeditor.internal-link.target-blank">
+                <source>content.ckeditor.internal-link.target-blank</source>
+                <target>Neues Fenster (_blank)</target>
+            </trans-unit>
+            <trans-unit id="33" resname="content.ckeditor.internal-link.target-self">
+                <source>content.ckeditor.internal-link.target-self</source>
+                <target>Gleiches Fenster (_self)</target>
+            </trans-unit>
+            <trans-unit id="34" resname="content.ckeditor.internal-link.remove">
+                <source>content.ckeditor.internal-link.remove</source>
+                <target>Interner Link löschen</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
