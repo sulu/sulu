@@ -12,6 +12,7 @@ namespace Sulu\Component\Hash\Serializer\Subscriber;
 
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
+use JMS\Serializer\GenericSerializationVisitor;
 use Sulu\Component\Content\Document\Behavior\LocalizedAuditableBehavior;
 use Sulu\Component\Hash\HasherInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
@@ -57,6 +58,10 @@ class HashSerializeEventSubscriber implements EventSubscriberInterface
         }
 
         if (!$object instanceof AuditableInterface && !$object instanceof LocalizedAuditableBehavior) {
+            return;
+        }
+
+        if (!$event->getVisitor() instanceof GenericSerializationVisitor) {
             return;
         }
 

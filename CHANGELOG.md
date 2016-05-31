@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2427 [Hash]                Fixed bug when using non generic visitor in HashSerializeEventSubscriber
     * HOTFIX      #2401 [MediaBundle]         Fixed slow media queries
     * HOTFIX      #2415 [ContactBundle]       Fixed account contacts api response
     * HOTFIX      #2401 [MediaBundle]         Fixed search in media bundle
