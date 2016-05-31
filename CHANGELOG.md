@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2426 [RouteBundle]         Fixed route-provider when no resource-locator prefix isset
     * BUGFIX      #2418 [ContentBundle]       Removed ContentMapperRequest
     * ENHANCEMENT #2414 [ContentBundle]       Removed save method of ContentMapper
     * BUGFIX      #2367 [ContentBundle]       Fixed copy internal-link into new language

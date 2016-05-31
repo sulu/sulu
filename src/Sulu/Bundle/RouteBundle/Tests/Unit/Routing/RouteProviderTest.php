@@ -173,4 +173,30 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
             $routes[0]->getDefaults()
         );
     }
+
+    public function testGetRouteCollectionForRequestNoPrefix()
+    {
+        $request = $this->prophesize(Request::class);
+        $request->getPathInfo()->willReturn('/test');
+        $request->getLocale()->willReturn('de');
+
+        $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn(null);
+
+        $routeEntity = $this->prophesize(RouteInterface::class);
+        $routeEntity->getEntityClass()->willReturn('Example');
+        $routeEntity->getEntityId()->willReturn('1');
+        $routeEntity->isHistory()->willReturn(false);
+
+        $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal());
+        $this->defaultsProvider->supports('Example')->willReturn(true);
+        $this->defaultsProvider->getByEntity('Example', '1')->willReturn(['test' => 1]);
+
+        $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
+
+        $this->assertCount(1, $collection);
+        $routes = array_values(iterator_to_array($collection->getIterator()));
+
+        $this->assertEquals('/test', $routes[0]->getPath());
+        $this->assertEquals(['test' => 1], $routes[0]->getDefaults());
+    }
 }
