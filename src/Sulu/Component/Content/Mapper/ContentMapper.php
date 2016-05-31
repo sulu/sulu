@@ -469,14 +469,6 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function move($uuid, $destParentUuid, $userId, $webspaceKey, $locale)
-    {
-        return $this->copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $locale);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function copy($uuid, $destParentUuid, $userId, $webspaceKey, $locale)
     {
         return $this->copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $locale, false);

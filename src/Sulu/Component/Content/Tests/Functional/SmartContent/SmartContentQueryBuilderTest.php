@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\Tests\Functional\SmartContent;
 
+use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -83,6 +84,11 @@ class SmartContentQueryBuilderTest extends SuluTestCase
      */
     private $tag3;
 
+    /**
+     * @var HomeDocument
+     */
+    private $homeDocument;
+
     public function setUp()
     {
         parent::setUp();
@@ -121,6 +127,8 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $em->persist($this->tag3);
 
         $em->flush();
+
+        $this->homeDocument = $this->documentManager->find('/cmf/sulu_io/contents', 'en');
     }
 
     public function propertiesProvider()
@@ -1056,13 +1064,12 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $document->setStructureType('simple');
             $document->setWorkflowStage($state);
 
-            $persistOptions = [];
-            if (!$parent) {
-                $persistOptions['parent_path'] = '/cmf/sulu_io/contents';
-            } else {
+            if ($parent) {
                 $document->setParent($this->documentManager->find($parent));
+            } elseif (!$uuid) {
+                $document->setParent($this->homeDocument);
             }
-            $this->documentManager->persist($document, $locale, $persistOptions);
+            $this->documentManager->persist($document, $locale);
         } else {
             $document = $this->documentManager->find($uuid, $shadowLocale);
             $document->setShadowLocaleEnabled(true);

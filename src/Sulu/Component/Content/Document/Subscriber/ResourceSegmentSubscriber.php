@@ -19,7 +19,9 @@ use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\DocumentManager\Event\MoveEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
@@ -32,14 +34,19 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ResourceSegmentSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    /**
      * @var PropertyEncoder
      */
     private $encoder;
+
+    /**
+     * @var DocumentManagerInterface
+     */
+    private $documentManager;
+
+    /**
+     * @var DocumentInspector
+     */
+    private $documentInspector;
 
     /**
      * @var RlpStrategyInterface
@@ -48,10 +55,12 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
 
     public function __construct(
         PropertyEncoder $encoder,
+        DocumentManagerInterface $documentManager,
         DocumentInspector $documentInspector,
         RlpStrategyInterface $rlpStrategy
     ) {
         $this->encoder = $encoder;
+        $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
         $this->rlpStrategy = $rlpStrategy;
     }
@@ -70,6 +79,7 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
             ],
             // hydrate should happen afterwards
             Events::HYDRATE => ['handleHydrate', -200],
+            Events::MOVE => ['moveRoutes', -128],
         ];
     }
 
@@ -157,6 +167,43 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
         }
 
         $this->persistRoute($document);
+    }
+
+    /**
+     * Moves the routes for all localizations of the document in the event.
+     *
+     * @param MoveEvent $event
+     */
+    public function moveRoutes(MoveEvent $event)
+    {
+        $document = $event->getDocument();
+
+        if (!$document instanceof ResourceSegmentBehavior) {
+            return;
+        }
+
+        $locales = $this->documentInspector->getLocales($document);
+        $webspaceKey = $this->documentInspector->getWebspace($document);
+        $childUuid = $this->documentInspector->getUuid($document);
+        $parentUuid = $this->documentInspector->getUuid($this->documentInspector->getParent($document));
+
+        foreach ($locales as $locale) {
+            $localizedDocument = $this->documentManager->find($childUuid, $locale);
+
+            if ($localizedDocument->getRedirectType() !== RedirectType::NONE) {
+                continue;
+            }
+
+            $parentPart = $this->rlpStrategy->loadByContentUuid($parentUuid, $webspaceKey, $locale);
+            $childPart = $this->rlpStrategy->loadByContentUuid($childUuid, $webspaceKey, $locale);
+            $childPart = $this->rlpStrategy->getChildPart($childPart);
+
+            $localizedDocument->setResourceSegment(
+                $this->rlpStrategy->generate($childPart, $parentPart, $webspaceKey, $locale)
+            );
+
+            $this->documentManager->persist($localizedDocument, $locale);
+        }
     }
 
     /**

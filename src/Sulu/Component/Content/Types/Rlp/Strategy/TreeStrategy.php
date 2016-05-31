@@ -42,6 +42,17 @@ class TreeStrategy extends RlpStrategy
         );
     }
 
+    public function getChildPart($resourceSegment)
+    {
+        $divider = strrpos($resourceSegment, '/');
+
+        if ($divider === false) {
+            return $resourceSegment;
+        }
+
+        return substr($resourceSegment, $divider + 1);
+    }
+
     /**
      * {@inheritdoc}
      */

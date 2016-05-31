@@ -155,6 +155,12 @@ abstract class RlpStrategy implements RlpStrategyInterface
         if (!$this->mapper->unique($path, $webspaceKey, $languageCode)) {
             $treeContent = $this->loadByResourceLocator($path, $webspaceKey, $languageCode);
 
+            // FIXME Required because jackalope-doctrine-dbal does not return references which only exist in the current
+            // session. If it would loadByContent would already return some value, which would make this check obsolete.
+            if ($treeContent === $this->documentInspector->getUuid($document)) {
+                return;
+            }
+
             throw new ResourceLocatorAlreadyExistsException($path, $treeContent);
         }
 

@@ -727,11 +727,13 @@ class NodeController extends RestController implements ClassResourceInterface, S
         try {
             switch ($action) {
                 case 'move':
-                    $srcLocale = $this->getRequestParameter($request, 'destination', true);
-                    $language = $this->getLanguage($request);
+                    $data = $this->getDocumentManager()->find($uuid, $this->getLanguage($request));
 
-                    // call repository method
-                    $data = $repository->moveNode($uuid, $srcLocale, $webspace, $language, $userId);
+                    $this->getDocumentManager()->move(
+                        $data,
+                        $this->getRequestParameter($request, 'destination', true)
+                    );
+                    $this->getDocumentManager()->flush();
                     break;
                 case 'copy':
                     $srcLocale = $this->getRequestParameter($request, 'destination', true);
@@ -760,6 +762,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
             // prepare view
             $view = $this->view($data, $data !== null ? 200 : 204);
+            $view->setSerializationContext(SerializationContext::create()->setGroups(['defaultPage']));
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
         }

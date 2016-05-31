@@ -756,21 +756,6 @@ class NodeRepository implements NodeRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function moveNode($uuid, $destinationUuid, $webspaceKey, $languageCode, $userId)
-    {
-        try {
-            // call mapper function
-            $structure = $this->getMapper()->move($uuid, $destinationUuid, $userId, $webspaceKey, $languageCode);
-        } catch (\Exception $ex) {
-            throw new RestException($ex->getMessage(), 1, $ex);
-        }
-
-        return $this->prepareNode($structure, $webspaceKey, $languageCode);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function copyNode($uuid, $destinationUuid, $webspaceKey, $languageCode, $userId)
     {
         try {

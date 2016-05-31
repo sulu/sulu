@@ -27,6 +27,15 @@ interface RlpStrategyInterface
     public function getName();
 
     /**
+     * Returns the child part from the given resource segment.
+     *
+     * @param $resourceSegment
+     *
+     * @return string
+     */
+    public function getChildPart($resourceSegment);
+
+    /**
      * returns whole path for given ContentNode.
      *
      * @param string $title title of new node

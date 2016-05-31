@@ -121,4 +121,21 @@ class TreeStrategyTest extends \PHPUnit_Framework_TestCase
         $result = $this->strategy->generate('asdf', null, 'default', 'de');
         $this->assertEquals('/asdf', $result);
     }
+
+    public static function provideGetChildPart()
+    {
+        return [
+            ['/test/asdf', 'asdf'],
+            ['/asdf', 'asdf'],
+            ['asdf', 'asdf'],
+        ];
+    }
+
+    /**
+     * @dataProvider provideGetChildPart
+     */
+    public function testGetChildPart($resourceSegment, $childPart)
+    {
+        $this->assertEquals($childPart, $this->strategy->getChildPart($resourceSegment));
+    }
 }

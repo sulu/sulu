@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Rlp\Strategy;
 
+use PHPCR\NodeInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
@@ -262,7 +263,10 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
 
     public function testSaveAlreadyExists()
     {
-        $this->setExpectedException(ResourceLocatorAlreadyExistsException::class);
+        $this->setExpectedException(
+            ResourceLocatorAlreadyExistsException::class,
+            'The ResouceLocator "/products/machines" already exists at the node "this-is-a-uuid". Please choose a'
+            . ' different resource locator or delete the existing one before reassigning it.');
 
         $this->mapper->expects($this->any())
             ->method('loadByContent')

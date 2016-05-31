@@ -27,6 +27,7 @@
         <service id="sulu_resource_segment.document.subscriber.resource_segment"
                  class="Sulu\Component\Content\Document\Subscriber\ResourceSegmentSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
+            <argument type="service" id="sulu_document_manager.document_manager"/>
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu.content.rlp.strategy.tree" />
             <argument type="service" id="sulu_document_manager.document_inspector"/>
