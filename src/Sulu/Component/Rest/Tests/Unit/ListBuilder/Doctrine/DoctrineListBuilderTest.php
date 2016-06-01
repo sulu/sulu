@@ -411,6 +411,38 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
         $this->doctrineListBuilder->execute();
     }
 
+    /**
+     * Test if multiple calls to sort with same field descriptor will lead to multiple order by calls.
+     */
+    public function testSortWithMultipleSort()
+    {
+        $this->queryBuilder->getDQLPart('select')->willReturn([new Select('SuluCoreBundle:Example.desc AS desc')]);
+
+        $this->doctrineListBuilder->sort(new DoctrineFieldDescriptor('desc', 'desc', self::$entityName));
+        $this->doctrineListBuilder->sort(new DoctrineFieldDescriptor('desc', 'desc', self::$entityName));
+
+        $this->queryBuilder->addSelect('SuluCoreBundle:Example.desc AS desc')->shouldBeCalledTimes(1);
+        $this->queryBuilder->addOrderBy('desc', 'ASC')->shouldBeCalledTimes(2);
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    /**
+     * Test if sort is correnctly overwritten, when field descriptor is provided multiple times.
+     */
+    public function testChangeSortOrder()
+    {
+        $this->queryBuilder->getDQLPart('select')->willReturn([new Select('SuluCoreBundle:Example.desc AS desc')]);
+
+        $this->doctrineListBuilder->sort(new DoctrineFieldDescriptor('desc', 'desc', self::$entityName), 'ASC');
+        $this->doctrineListBuilder->sort(new DoctrineFieldDescriptor('desc', 'desc', self::$entityName), 'DESC');
+
+        $this->queryBuilder->addSelect('SuluCoreBundle:Example.desc AS desc')->shouldBeCalledTimes(1);
+        $this->queryBuilder->addOrderBy('desc', 'DESC')->shouldBeCalledTimes(2);
+
+        $this->doctrineListBuilder->execute();
+    }
+
     public function testSortWithoutDefault()
     {
         // when no sort is applied, results should be orderd by id by default

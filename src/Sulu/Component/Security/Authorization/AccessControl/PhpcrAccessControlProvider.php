@@ -47,13 +47,8 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
      */
     public function setPermissions($type, $identifier, $permissions)
     {
-        $allowedPermissions = [];
-        foreach ($permissions as $roleId => $rolePermissions) {
-            $allowedPermissions[$roleId] = $this->getAllowedPermissions($rolePermissions);
-        }
-
         $document = $this->documentManager->find($identifier, null, ['rehydrate' => false]);
-        $document->setPermissions($allowedPermissions);
+        $document->setPermissions($permissions);
 
         $this->documentManager->persist($document);
         $this->documentManager->flush();
@@ -92,24 +87,5 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
         }
 
         return $class->implementsInterface(SecurityBehavior::class);
-    }
-
-    /**
-     * Extracts the keys of the allowed permissions into an own array.
-     *
-     * @param $permissions
-     *
-     * @return array
-     */
-    private function getAllowedPermissions($permissions)
-    {
-        $allowedPermissions = [];
-        foreach ($permissions as $permission => $allowed) {
-            if ($allowed) {
-                $allowedPermissions[] = $permission;
-            }
-        }
-
-        return $allowedPermissions;
     }
 }

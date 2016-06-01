@@ -5,6 +5,8 @@
 
     <entity name="Sulu\Bundle\MediaBundle\Entity\FileVersion" table="me_file_versions">
         <indexes>
+            <index columns="mimeType"/>
+            <index columns="size"/>
             <index columns="version"/>
         </indexes>
 

@@ -163,6 +163,7 @@ define([
                 {
                     el: this.$find(constants.datagridSelector),
                     url: '/admin/api/media?orderBy=media.created&orderSort=desc&locale=' + UserSettingsManager.getMediaLocale(),
+                    searchFields: ['name', 'title', 'description'],
                     view: UserSettingsManager.getMediaListView(),
                     pagination: UserSettingsManager.getMediaListPagination(),
                     resultKey: 'media',

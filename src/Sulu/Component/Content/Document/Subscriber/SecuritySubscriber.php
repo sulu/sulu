@@ -73,7 +73,8 @@ class SecuritySubscriber implements EventSubscriberInterface
         $node = $event->getNode();
 
         foreach ($document->getPermissions() as $roleId => $permission) {
-            $node->setProperty('sec:role-' . $roleId, $permission); // TODO use PropertyEncoder, once it is refactored
+            // TODO use PropertyEncoder, once it is refactored
+            $node->setProperty('sec:role-' . $roleId, $this->getAllowedPermissions($permission));
         }
     }
 
@@ -104,5 +105,24 @@ class SecuritySubscriber implements EventSubscriberInterface
         }
 
         $document->setPermissions($permissions);
+    }
+
+    /**
+     * Extracts the keys of the allowed permissions into an own array.
+     *
+     * @param $permissions
+     *
+     * @return array
+     */
+    private function getAllowedPermissions($permissions)
+    {
+        $allowedPermissions = [];
+        foreach ($permissions as $permission => $allowed) {
+            if ($allowed) {
+                $allowedPermissions[] = $permission;
+            }
+        }
+
+        return $allowedPermissions;
     }
 }

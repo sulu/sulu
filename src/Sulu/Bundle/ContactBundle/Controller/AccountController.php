@@ -140,18 +140,23 @@ class AccountController extends RestController implements ClassResourceInterface
             /** @var DoctrineListBuilderFactory $factory */
             $factory = $this->get('sulu_core.doctrine_list_builder_factory');
 
-            $listBuilder = $factory->create($this->getAccountEntityName());
+            $listBuilder = $factory->create(self::$accountContactEntityName);
 
             $fieldDescriptors = $this->getAccountContactFieldDescriptors();
             $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
+            $listBuilder->addSelectField($fieldDescriptors['contactId']);
             $listBuilder->setIdField($fieldDescriptors['id']);
-            $listBuilder->where($this->getFieldDescriptors()['id'], $id);
+            $listBuilder->where($fieldDescriptors['account'], $id);
             $listBuilder->sort($fieldDescriptors['lastName'], $listBuilder::SORTORDER_ASC);
 
             $values = $listBuilder->execute();
 
             foreach ($values as &$value) {
+                // Substitute id since we are interested in the contact id not the accountContact id.
+                $value['id'] = $value['contactId'];
+                unset($value['contactId']);
+
                 if ($account->getMainContact() != null && $value['id'] === $account->getMainContact()->getId()) {
                     $value['isMainContact'] = true;
                 } else {
@@ -950,12 +955,6 @@ class AccountController extends RestController implements ClassResourceInterface
     {
         $this->accountContactFieldDescriptors = [];
         $contactJoin = [
-            self::$accountContactEntityName => new DoctrineJoinDescriptor(
-                self::$accountContactEntityName,
-                $this->getAccountEntityName() . '.accountContacts',
-                null,
-                DoctrineJoinDescriptor::JOIN_METHOD_INNER
-            ),
             $this->container->getParameter('sulu.model.contact.class') => new DoctrineJoinDescriptor(
                 $this->container->getParameter('sulu.model.contact.class'),
                 self::$accountContactEntityName . '.contact'
@@ -965,15 +964,42 @@ class AccountController extends RestController implements ClassResourceInterface
         $this->accountContactFieldDescriptors['id'] = new DoctrineFieldDescriptor(
             'id',
             'id',
-            $this->container->getParameter('sulu.model.contact.class'),
+            self::$accountContactEntityName,
             'contact.contacts.main-contact',
-            $contactJoin,
+            [],
             false,
             false,
             '',
             '',
             '',
             false
+        );
+
+        $this->accountContactFieldDescriptors['contactId'] = new DoctrineFieldDescriptor(
+            'id',
+            'contactId',
+            $this->container->getParameter('sulu.model.contact.class'),
+            'contact.contacts.main-contact',
+            [],
+            false,
+            false,
+            '',
+            '',
+            '',
+            false
+        );
+
+        $this->accountContactFieldDescriptors['account'] = new DoctrineFieldDescriptor(
+            'id',
+            'accountId',
+            $this->container->getParameter('sulu_contact.account.entity'),
+            '',
+            [
+                $this->container->getParameter('sulu_contact.account.entity') => new DoctrineJoinDescriptor(
+                    $this->container->getParameter('sulu_contact.account.entity'),
+                    self::$accountContactEntityName . '.account'
+                ),
+            ]
         );
 
         $this->accountContactFieldDescriptors['firstName'] = new DoctrineFieldDescriptor(
@@ -1057,14 +1083,7 @@ class AccountController extends RestController implements ClassResourceInterface
             'isMainContact',
             self::$accountContactEntityName,
             'contact.contacts.main-contact',
-            [
-                self::$accountContactEntityName => new DoctrineJoinDescriptor(
-                    self::$accountContactEntityName,
-                    $this->getAccountEntityName() . '.accountContacts',
-                    null,
-                    DoctrineJoinDescriptor::JOIN_METHOD_INNER
-                ),
-            ],
+            [],
             false,
             true,
             'radio',

@@ -55,7 +55,8 @@
             <orm:entity-name>SuluMediaBundle:Media</orm:entity-name>
         </identity-property>
 
-        <property name="thumbnails" list:translation="media.media.thumbnails" display="always" list:type="thumbnails"/>
+        <property name="thumbnails" list:translation="media.media.thumbnails" display="always" list:type="thumbnails"
+                  list:sortable="false"/>
         <property name="url" display="never"/>
 
         <property name="type" list:translation="public.type" display="always">
@@ -88,6 +89,13 @@
 
         <property name="mimeType" list:translation="media.media.mime-type" display="always">
             <orm:field-name>mimeType</orm:field-name>
+            <orm:entity-name>SuluMediaBundle:FileVersion</orm:entity-name>
+
+            <orm:joins ref="fileVersion"/>
+        </property>
+
+        <property name="storageOptions" display="never">
+            <orm:field-name>storageOptions</orm:field-name>
             <orm:entity-name>SuluMediaBundle:FileVersion</orm:entity-name>
 
             <orm:joins ref="fileVersion"/>

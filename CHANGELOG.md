@@ -36,6 +36,18 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2323 [WebsiteBundle]       Added TWIG-Extension to check if parent nav-item is active
     * ENHANCEMENT #2377 [CoreBundle]          Made --router and --env optional when running the console commands server:run, server:start, server:stop and server:status
 
+* 1.2.3 (2016-06-01)
+    * HOTFIX      #2427 [Hash]                Fixed bug when using non generic visitor in HashSerializeEventSubscriber
+    * HOTFIX      #2401 [MediaBundle]         Fixed slow media queries
+    * HOTFIX      #2415 [ContactBundle]       Fixed account contacts api response
+    * HOTFIX      #2401 [MediaBundle]         Fixed search in media bundle
+    * HOTFIX      #2381 [ContentBundle]       Fixed auto-name subscriber to rename at the very end of persist
+    * HOTFIX      #2388 [Rest]                Fixed bug when applying same sortfield multiple times
+    * HOTFIX      #2378 [ContentBundle]       Fixed writing security to page documents
+    * HOTFIX      #2376 [ContentBundle]       Added cleanup for structure reindex provider
+    * HOTFIX      #2382 [ResourceBundle]      Added column definitions to resource-bundle
+    * HOTFIX      #2384 [WebsiteBundle]       Added condition to custom-routes to match only full-matches
+
 * 1.2.2 (2016-05-09)
     * HOTFIX      #2375 [SecurityBundle]      Fixed visibility of entries in language dropdown
     * ENHANCEMENT #2373 [MediaBundle]         Added batch indexing for medias
