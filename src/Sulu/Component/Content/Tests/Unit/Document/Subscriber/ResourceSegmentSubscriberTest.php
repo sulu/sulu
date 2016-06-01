@@ -25,6 +25,7 @@ use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\DocumentManager\Event\CopyEvent;
 use Sulu\Component\DocumentManager\Event\MoveEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
@@ -269,5 +270,108 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->documentInspector->getLocales(Argument::cetera())->shouldNotBeCalled();
 
         $this->resourceSegmentSubscriber->moveRoutes($event->reveal());
+    }
+
+    public function testCopyRoutes()
+    {
+        $parentDocument = new \stdClass();
+        $copiedDocument = $this->prophesize(ResourceSegmentBehavior::class);
+
+        $event = $this->prophesize(CopyEvent::class);
+        $event->getDocument()->willReturn($this->document->reveal());
+        $event->getCopiedPath()->willReturn('/cmf/sulu_io/contents/page/parent/child');
+        $this->documentInspector->getLocale($this->document->reveal())->willReturn('de');
+        $this->documentManager->find('/cmf/sulu_io/contents/page/parent/child', 'de')
+            ->willReturn($copiedDocument->reveal());
+        $this->documentInspector->getUuid($copiedDocument->reveal())->willReturn('copy-uuid');
+
+        $this->documentInspector->getLocales($copiedDocument->reveal())->willReturn(['de', 'en']);
+        $this->documentInspector->getWebspace($copiedDocument->reveal())->willReturn('sulu_io');
+        $this->documentInspector->getParent($copiedDocument->reveal())->willReturn($parentDocument);
+        $this->documentInspector->getUuid($this->document->reveal())->willReturn('uuid');
+        $this->documentInspector->getUuid($parentDocument)->willReturn('parent-uuid');
+
+        $germanDocument = $this->prophesize(ResourceSegmentBehavior::class)
+            ->willImplement(RedirectTypeBehavior::class);
+        $germanDocument->getRedirectType()->willReturn(RedirectType::NONE);
+        $this->documentManager->find('copy-uuid', 'de')->willReturn($germanDocument);
+        $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'de')->willReturn('/german/parent');
+        $this->rlpStrategy->loadByContentUuid('uuid', 'sulu_io', 'de')->willReturn('/german/child');
+        $this->rlpStrategy->getChildPart('/german/child')->willReturn('child');
+        $this->rlpStrategy->generate('child', '/german/parent', 'sulu_io', 'de')->willReturn('/german/parent/child');
+        $germanDocument->setResourceSegment('/german/parent/child')->shouldBeCalled();
+        $this->documentManager->persist($germanDocument, 'de')->shouldBeCalled();
+
+        $englishDocument = $this->prophesize(ResourceSegmentBehavior::class)
+            ->willImplement(RedirectTypeBehavior::class);
+        $englishDocument->getRedirectType()->willReturn(RedirectType::NONE);
+        $this->documentManager->find('copy-uuid', 'en')->willReturn($englishDocument);
+        $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'en')->willReturn('/english/parent');
+        $this->rlpStrategy->loadByContentUuid('uuid', 'sulu_io', 'en')->willReturn('/english/child');
+        $this->rlpStrategy->getChildPart('/english/child')->willReturn('child');
+        $this->rlpStrategy->generate('child', '/english/parent', 'sulu_io', 'en')->willReturn('/english/parent/child');
+        $englishDocument->setResourceSegment('/english/parent/child')->shouldBeCalled();
+        $this->documentManager->persist($englishDocument, 'en')->shouldBeCalled();
+
+        $this->resourceSegmentSubscriber->copyRoutes($event->reveal());
+    }
+
+    public function testCopyRoutesWithRedirects()
+    {
+        $parentDocument = new \stdClass();
+        $copiedDocument = $this->prophesize(ResourceSegmentBehavior::class);
+
+        $event = $this->prophesize(CopyEvent::class);
+        $event->getDocument()->willReturn($this->document->reveal());
+        $event->getCopiedPath()->willReturn('/cmf/sulu_io/contents/page/parent/child');
+        $this->documentInspector->getLocale($this->document->reveal())->willReturn('de');
+        $this->documentManager->find('/cmf/sulu_io/contents/page/parent/child', 'de')
+            ->willReturn($copiedDocument->reveal());
+        $this->documentInspector->getUuid($copiedDocument->reveal())->willReturn('copy-uuid');
+
+        $this->documentInspector->getLocales($copiedDocument->reveal())->willReturn(['de', 'en', 'fr']);
+        $this->documentInspector->getWebspace($copiedDocument->reveal())->willReturn('sulu_io');
+        $this->documentInspector->getParent($copiedDocument->reveal())->willReturn($parentDocument);
+        $this->documentInspector->getUuid($this->document->reveal())->willReturn('uuid');
+        $this->documentInspector->getUuid($parentDocument)->willReturn('parent-uuid');
+
+        $germanDocument = $this->prophesize(ResourceSegmentBehavior::class)
+            ->willImplement(RedirectTypeBehavior::class);
+        $germanDocument->getRedirectType()->willReturn(RedirectType::NONE);
+        $this->documentManager->find('copy-uuid', 'de')->willReturn($germanDocument);
+        $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'de')->willReturn('/german/parent');
+        $this->rlpStrategy->loadByContentUuid('uuid', 'sulu_io', 'de')->willReturn('/german/child');
+        $this->rlpStrategy->getChildPart('/german/child')->willReturn('child');
+        $this->rlpStrategy->generate('child', '/german/parent', 'sulu_io', 'de')->willReturn('/german/parent/child');
+        $germanDocument->setResourceSegment('/german/parent/child')->shouldBeCalled();
+        $this->documentManager->persist($germanDocument, 'de')->shouldBeCalled();
+
+        $englishDocument = $this->prophesize(ResourceSegmentBehavior::class)
+            ->willImplement(RedirectTypeBehavior::class);
+        $englishDocument->getRedirectType()->willReturn(RedirectType::INTERNAL);
+        $this->documentManager->find('copy-uuid', 'en')->willReturn($englishDocument);
+        $this->documentManager->persist($englishDocument, 'en')->shouldNotBeCalled();
+
+        $frenchDocument = $this->prophesize(ResourceSegmentBehavior::class)
+            ->willImplement(RedirectTypeBehavior::class);
+        $frenchDocument->getRedirectType()->willReturn(RedirectType::INTERNAL);
+        $this->documentManager->find('copy-uuid', 'fr')->willReturn($frenchDocument);
+        $this->documentManager->persist($frenchDocument, 'fr')->shouldNotBeCalled();
+
+        $this->resourceSegmentSubscriber->copyRoutes($event->reveal());
+    }
+
+    public function testCopyRoutesForWrongDocument()
+    {
+        $document = new \stdClass();
+
+        $event = $this->prophesize(CopyEvent::class);
+        $event->getCopiedPath()->willReturn('/cmf/sulu_io/contents/page/parent/child');
+        $event->getDocument()->willReturn($document);
+        $this->documentInspector->getLocale($document)->willReturn('de');
+
+        $this->documentInspector->getLocales(Argument::cetera())->shouldNotBeCalled();
+
+        $this->resourceSegmentSubscriber->copyRoutes($event->reveal());
     }
 }
