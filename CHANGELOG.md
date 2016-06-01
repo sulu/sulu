@@ -9,6 +9,7 @@ CHANGELOG for Sulu
     * HOTFIX      #2440 [MediaBundle]         Fixed media-selection sorting
     * HOTFIX      #2441 [ContentBundle]       Fixed block to handle non html text correctly
     * ENHANCEMENT #2432 [SecurityBundle]      New behat step for admin login with default locale
+    * HOTFIX      #2430 [WebsiteBundle]       Fixed error-template always from default-theme
 
 * 1.2.3 (2016-06-01)
     * HOTFIX      #2427 [Hash]                Fixed bug when using non generic visitor in HashSerializeEventSubscriber

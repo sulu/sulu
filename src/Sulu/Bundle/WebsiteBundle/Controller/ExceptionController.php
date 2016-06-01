@@ -18,12 +18,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
+use Symfony\Component\Templating\EngineInterface;
 
 /**
  * Custom exception controller.
  */
 class ExceptionController extends BaseExceptionController
 {
+    /**
+     * @var EngineInterface
+     */
+    private $engine;
+
     /**
      * @var RequestAnalyzerInterface
      */
@@ -35,13 +41,13 @@ class ExceptionController extends BaseExceptionController
     private $parameterResolver;
 
     public function __construct(
-        \Twig_Environment $twig,
+        EngineInterface $engine,
         $debug,
         ParameterResolverInterface $parameterResolver,
         RequestAnalyzerInterface $requestAnalyzer = null
     ) {
-        parent::__construct($twig, $debug);
-
+        $this->engine = $engine;
+        $this->debug = $debug;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->parameterResolver = $parameterResolver;
     }
@@ -49,50 +55,52 @@ class ExceptionController extends BaseExceptionController
     /**
      * {@inheritdoc}
      */
-    public function showAction(
-        Request $request,
-        FlattenException $exception,
-        DebugLoggerInterface $logger = null
-    ) {
+    public function showAction(Request $request, FlattenException $exception, DebugLoggerInterface $logger = null)
+    {
         $code = $exception->getStatusCode();
-        $showException = $request->attributes->get('showException', $this->debug);
+        $showException = $request->get('showException', $this->debug);
         $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
+        $baseTemplate = $this->findTemplate($request, $request->getRequestFormat(), $code, $showException);
+        $statusText = array_key_exists($code, Response::$statusTexts) ? Response::$statusTexts[$code] : '';
 
         $template = null;
-        if ($webspace = $this->requestAnalyzer->getWebspace()) {
-            $template = $webspace->getTheme()->getErrorTemplate($code);
+        if ($this->requestAnalyzer && $this->requestAnalyzer->getWebspace()) {
+            $template = $this->requestAnalyzer->getWebspace()->getTheme()->getErrorTemplate($code);
         }
 
-        $baseTemplate = $this->findTemplate($request, $request->getRequestFormat(), $code, $showException);
-
-        if ($showException || $request->getRequestFormat() !== 'html' || $template === null) {
-            return new Response($this->twig->render(
-                (string) $baseTemplate,
-                [
-                    'status_code' => $code,
-                    'status_text' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
-                    'exception' => $exception,
-                    'logger' => $logger,
-                    'currentContent' => $currentContent,
-                ]
-            ));
+        if ($showException || null === $template || $request->getRequestFormat() !== 'html') {
+            return new Response(
+                $this->engine->render(
+                    (string) $baseTemplate,
+                    [
+                        'status_code' => $code,
+                        'status_text' => $statusText,
+                        'exception' => $exception,
+                        'logger' => $logger,
+                        'currentContent' => $currentContent,
+                    ]
+                )
+            );
         }
 
-        $parameter = [
-            'status_code' => $code,
-            'status_text' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
-            'exception' => $exception,
-            'currentContent' => $currentContent,
-        ];
-
-        $data = $this->parameterResolver->resolve($parameter, $this->requestAnalyzer);
-
-        return new Response(
-            $this->twig->render(
-                $template,
-                $data
-            ),
-            $code
+        $parameters = $this->parameterResolver->resolve(
+            [
+                'status_code' => $code,
+                'status_text' => $statusText,
+                'exception' => $exception,
+                'currentContent' => $currentContent,
+            ],
+            $this->requestAnalyzer
         );
+
+        return new Response($this->engine->render($template, $parameters), $code);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function templateExists($template)
+    {
+        return $this->engine->exists($template);
     }
 }

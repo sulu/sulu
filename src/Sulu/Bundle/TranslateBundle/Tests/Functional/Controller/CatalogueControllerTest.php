@@ -23,7 +23,7 @@ class CatalogueControllerTest extends SuluTestCase
     private $package;
 
     /**
-     * @Var Catalogue
+     * @var Catalogue
      */
     private $catalogue;
 

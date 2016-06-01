@@ -169,7 +169,7 @@
 
         <!-- exception controller -->
         <service id="sulu_website.exception.controller" class="%sulu_website.exception.controller.class%">
-            <argument type="service" id="twig" />
+            <argument type="service" id="templating" />
             <argument>%kernel.debug%</argument>
             <argument type="service" id="sulu_website.resolver.parameter" />
             <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
