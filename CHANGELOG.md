@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * ENHANCEMENT #2432 [SecurityBundle]      New behat step for admin login with default locale
+
 * 1.2.3 (2016-06-01)
     * HOTFIX      #2427 [Hash]                Fixed bug when using non generic visitor in HashSerializeEventSubscriber
     * HOTFIX      #2401 [MediaBundle]         Fixed slow media queries
