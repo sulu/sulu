@@ -1261,6 +1261,62 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull($result);
     }
 
+    public function testReadTemplateWithXInclude()
+    {
+        $template = [
+            'key' => 'template',
+            'view' => 'page.html.twig',
+            'controller' => 'SuluContentBundle:Default:index',
+            'cacheLifetime' => 2400,
+            'tags' => [],
+            'meta' => [
+                'title' => [
+                    'de' => 'Das ist das Template 1',
+                    'en' => 'That´s the template 1',
+                ],
+            ],
+            'properties' => [
+                'title' => [
+                    'name' => 'title',
+                    'type' => 'text_line',
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'colspan' => null,
+                    'cssClass' => null,
+                    'mandatory' => true,
+                    'multilingual' => true,
+                    'tags' => [],
+                    'params' => [],
+                    'meta' => [],
+                ],
+                'url' => [
+                    'name' => 'url',
+                    'type' => 'resource_locator',
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'colspan' => null,
+                    'cssClass' => null,
+                    'mandatory' => true,
+                    'multilingual' => true,
+                    'tags' => [
+                        [
+                            'name' => 'sulu.rlp',
+                            'priority' => 1,
+                            'attributes' => [],
+                        ],
+                    ],
+                    'params' => [],
+                    'meta' => [],
+                ],
+            ],
+        ];
+
+        $result = $this->loadFixture('template_with_xinclude.xml');
+        $this->assertEquals($template, $result);
+        $x = $this->arrayRecursiveDiff($result, $template);
+        $this->assertEquals(0, count($x));
+    }
+
     private function arrayRecursiveDiff($aArray1, $aArray2)
     {
         $aReturn = [];

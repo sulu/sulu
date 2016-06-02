@@ -82,7 +82,12 @@ class XmlLegacyLoader implements LoaderInterface
         $schemaPath = __DIR__ . static::SCHEME_PATH;
 
         // read file
-        $xmlDocument = XmlUtils::loadFile($resource, $schemaPath);
+        $xmlDocument = XmlUtils::loadFile($resource, function (\DOMDocument $dom) use ($resource, $schemaPath) {
+            $dom->documentURI = $resource;
+            $dom->xinclude();
+
+            return @$dom->schemaValidate($schemaPath);
+        });
 
         // generate xpath for file
         $xpath = new \DOMXPath($xmlDocument);
