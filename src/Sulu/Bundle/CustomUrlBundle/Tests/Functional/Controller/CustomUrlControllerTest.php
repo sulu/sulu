@@ -641,6 +641,7 @@ class CustomUrlControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
         $client->request('GET', '/api/webspaces/sulu_io/custom-urls');
+        $requestTime = new \DateTime();
 
         $response = $client->getResponse();
         $responseDataComplete = json_decode($response->getContent(), true);
@@ -659,8 +660,8 @@ class CustomUrlControllerTest extends SuluTestCase
             $this->assertArrayHasKey('creator', $responseData);
             $this->assertArrayHasKey('changer', $responseData);
 
-            $this->assertEquals(new \DateTime(), new \DateTime($responseData['created']), '', 2);
-            $this->assertEquals(new \DateTime(), new \DateTime($responseData['changed']), '', 2);
+            $this->assertEquals($requestTime, new \DateTime($responseData['created']), '', 2);
+            $this->assertEquals($requestTime, new \DateTime($responseData['changed']), '', 2);
             if (array_key_exists('targetDocument', $data)) {
                 $this->assertEquals('Homepage', $responseData['targetTitle']);
             } else {
