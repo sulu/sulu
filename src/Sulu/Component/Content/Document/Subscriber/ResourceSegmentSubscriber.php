@@ -17,6 +17,7 @@ use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\RedirectType;
+use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
@@ -280,7 +281,12 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
                 continue;
             }
 
-            $parentPart = $this->rlpStrategy->loadByContentUuid($destinationParentUuid, $webspaceKey, $locale);
+            try {
+                $parentPart = $this->rlpStrategy->loadByContentUuid($destinationParentUuid, $webspaceKey, $locale);
+            } catch (ResourceLocatorNotFoundException $e) {
+                $parentPart = null;
+            }
+
             $childPart = $this->rlpStrategy->loadByContentUuid($sourceUuid, $webspaceKey, $locale);
             $childPart = $this->rlpStrategy->getChildPart($childPart);
 
