@@ -2064,51 +2064,6 @@ class ContentMapperTest extends SuluTestCase
         return $data;
     }
 
-    public function testMove()
-    {
-        $data = $this->prepareCopyMoveTestData();
-
-        $page2Sub = $this->mapper->load($data[6]->getUuid(), 'sulu_io', 'de');
-        $page2SubSub = $this->mapper->load($data[7]->getUuid(), 'sulu_io', 'de');
-        $page2SubSubSub = $this->mapper->load($data[8]->getUuid(), 'sulu_io', 'de');
-        $this->assertEquals('/page-2/subpage', $page2Sub->url);
-        $this->assertEquals('/page-2/subpage/subpage', $page2SubSub->url);
-        $this->assertEquals('/page-2/subpage/subpage/subpage', $page2SubSubSub->url);
-
-        $result = $this->mapper->move($data[6]->getUuid(), $data[0]->getUuid(), 2, 'sulu_io', 'de');
-
-        $this->assertEquals($data[6]->getUuid(), $result->getUuid());
-        $this->assertEquals('/page-1/subpage', $result->getPath());
-        $this->assertEquals('/page-1/subpage', $result->url);
-        $this->assertEquals(2, $result->getChanger());
-
-        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(3, count($test));
-
-        $test = $this->mapper->loadByParent($data[6]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(1, count($test));
-
-        $test = $this->mapper->loadByParent($data[7]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(1, count($test));
-
-        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(2, count($test));
-
-        $test = $this->mapper->load($data[6]->getUuid(), 'sulu_io', 'de');
-        $this->assertEquals('/page-1/subpage', $test->getResourceLocator());
-        $this->assertEquals(2, $test->getChanger());
-
-        // We need to clear the document manager in order for the moved children to be reloaded
-        $this->documentManager->clear();
-
-        $page2Sub = $this->mapper->load($data[6]->getUuid(), 'sulu_io', 'de');
-        $page2SubSub = $this->mapper->load($data[7]->getUuid(), 'sulu_io', 'de');
-        $page2SubSubSub = $this->mapper->load($data[8]->getUuid(), 'sulu_io', 'de');
-        $this->assertEquals('/page-1/subpage', $page2Sub->url);
-        $this->assertEquals('/page-1/subpage/subpage', $page2SubSub->url);
-        $this->assertEquals('/page-1/subpage/subpage/subpage', $page2SubSubSub->url);
-    }
-
     public function testRenameRlp()
     {
         $data = $this->prepareCopyMoveTestData();
@@ -2161,11 +2116,10 @@ class ContentMapperTest extends SuluTestCase
     {
         $data = $this->prepareCopyMoveTestData();
 
-        $result = $this->mapper->move($data[6]->getUuid(), $data[0]->getUuid(), 2, 'sulu_io', 'de');
+        $this->documentManager->move($data[6], $data[0]->getUuid());
+        $this->documentManager->flush();
 
-        $this->assertEquals($data[6]->getUuid(), $result->getUuid());
-        $this->assertEquals('/page-1/subpage', $result->getPath());
-        $this->assertEquals(2, $result->getChanger());
+        $this->assertEquals('/page-1/subpage', $data[6]->getResourceSegment());
 
         $test = $this->mapper->loadByParent($data[0]->getUuid(), 'sulu_io', 'de', 4, false);
         $this->assertEquals(3, count($test));
@@ -2175,192 +2129,6 @@ class ContentMapperTest extends SuluTestCase
 
         $test = $this->mapper->load($data[6]->getUuid(), 'sulu_io', 'de');
         $this->assertEquals('/page-1/subpage', $test->getResourceLocator());
-        $this->assertEquals(2, $test->getChanger());
-    }
-
-    public function testMoveExistingName()
-    {
-        $data = $this->prepareCopyMoveTestData();
-        $userToken = $this->createUserTokenWithId(2);
-        $this->tokenStorage->setToken($userToken);
-        $result = $this->mapper->move($data[5]->getUuid(), $data[0]->getUuid(), 2, 'sulu_io', 'de');
-
-        $this->assertEquals($data[5]->getUuid(), $result->getUuid());
-        $this->assertEquals('/page-1/sub-1-1', $result->getPath());
-        $this->assertEquals(2, $result->getChanger());
-
-        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(3, count($test));
-
-        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(2, count($test));
-
-        $test = $this->mapper->load($data[5]->getUuid(), 'sulu_io', 'de');
-        $this->assertEquals('/page-1/sub-1-1', $test->getResourceLocator());
-        $this->assertEquals(2, $test->getChanger());
-    }
-
-    public function testMoveGhostPage()
-    {
-        $data = $this->prepareCopyMoveTestData();
-
-        $result = $this->mapper->move($data[5]->getUuid(), $data[0]->getUuid(), 2, 'sulu_io', 'en');
-
-        $this->assertEquals($data[5]->getUuid(), $result->getUuid());
-        $this->assertEquals('/page-1/sub-1-1', $result->getPath());
-        $this->assertEquals(1, $result->getChanger());
-
-        $result = $this->mapper->load($result->getUuid(), 'sulu_io', 'en', true);
-
-        $this->assertEquals($data[5]->getUuid(), $result->getUuid());
-        $this->assertEquals('/page-1/sub-1-1', $result->getPath());
-        $this->assertEquals(2, $result->getChanger());
-        $this->assertEquals('ghost', $result->getType()->getName());
-        $this->assertEquals('de', $result->getType()->getValue());
-
-        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(3, count($test));
-
-        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(2, count($test));
-
-        $test = $this->mapper->load($data[5]->getUuid(), 'sulu_io', 'de');
-        $this->assertEquals('/page-1/sub-1-1', $test->getResourceLocator());
-        $this->assertEquals(2, $test->getChanger());
-    }
-
-    public function testCopy()
-    {
-        $data = $this->prepareCopyMoveTestData();
-
-        $page2Sub = $this->mapper->load($data[6]->getUuid(), 'sulu_io', 'de');
-        $page2SubSub = $this->mapper->load($data[7]->getUuid(), 'sulu_io', 'de');
-        $page2SubSubSub = $this->mapper->load($data[8]->getUuid(), 'sulu_io', 'de');
-        $this->assertEquals('/page-2/subpage', $page2Sub->url);
-        $this->assertEquals('/page-2/subpage/subpage', $page2SubSub->url);
-        $this->assertEquals('/page-2/subpage/subpage/subpage', $page2SubSubSub->url);
-
-        $result = $this->mapper->copy($data[6]->getUuid(), $data[0]->getUuid(), 2, 'sulu_io', 'de');
-
-        $this->assertNotEquals($data[6]->getUuid(), $result->getUuid());
-        $this->assertEquals('/page-1/subpage', $result->getPath());
-        $this->assertEquals(2, $result->getChanger());
-
-        $test = $this->mapper->loadByParent($result->getUuid(), 'sulu_io', 'de', 2);
-        $this->assertCount(2, $test);
-        $this->assertEquals('/page-1/subpage/subsubpage', $test[0]->url);
-        $this->assertEquals('/page-1/subpage/subsubpage/subsubsubpage', $test[1]->url);
-
-        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(3, count($test));
-
-        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(3, count($test));
-
-        $test = $this->mapper->load($data[6]->getUuid(), 'sulu_io', 'de');
-        $this->assertEquals('/page-2/subpage', $test->getResourceLocator());
-        $this->assertEquals(1, $test->getChanger());
-
-        $test = $this->mapper->load($result->getUuid(), 'sulu_io', 'de');
-        $this->assertEquals('/page-1/subpage', $test->getResourceLocator());
-        $this->assertEquals(2, $test->getChanger());
-
-        $page2Sub = $this->mapper->load($data[6]->getUuid(), 'sulu_io', 'de');
-        $page2SubSub = $this->mapper->load($data[7]->getUuid(), 'sulu_io', 'de');
-        $page2SubSubSub = $this->mapper->load($data[8]->getUuid(), 'sulu_io', 'de');
-        $this->assertEquals('/page-2/subpage', $page2Sub->url);
-        $this->assertEquals('/page-2/subpage/subpage', $page2SubSub->url);
-        $this->assertEquals('/page-2/subpage/subpage/subpage', $page2SubSubSub->url);
-    }
-
-    public function testCopyExistingName()
-    {
-        $data = $this->prepareCopyMoveTestData();
-
-        $page2Sub = $this->mapper->load($data[6]->getUuid(), 'sulu_io', 'de');
-        $page2SubSub = $this->mapper->load($data[7]->getUuid(), 'sulu_io', 'de');
-        $page2SubSubSub = $this->mapper->load($data[8]->getUuid(), 'sulu_io', 'de');
-        $this->assertEquals('/page-2/subpage', $page2Sub->url);
-        $this->assertEquals('/page-2/subpage/subpage', $page2SubSub->url);
-        $this->assertEquals('/page-2/subpage/subpage/subpage', $page2SubSubSub->url);
-
-        $this->tokenStorage->setToken($this->createUserTokenWithId(2));
-        $result = $this->mapper->copy($data[5]->getUuid(), $data[0]->getUuid(), 2, 'sulu_io', 'de');
-
-        $this->assertNotEquals($data[5]->getUuid(), $result->getUuid());
-        $this->assertEquals('/page-1/sub-1-1', $result->url);
-        $this->assertEquals('/page-1/sub-1-1', $result->getPath());
-        $this->assertEquals(2, $result->getChanger());
-
-        $test = $this->mapper->loadByParent($result->getUuid(), 'sulu_io', 'de', 2);
-        $this->assertCount(2, $test);
-        $this->assertEquals('/page-1/sub-1-1/subpage', $test[0]->url);
-        $this->assertEquals('/page-1/sub-1-1/subpage/subsubpage', $test[1]->url);
-
-        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(3, count($test));
-
-        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'sulu_io', 'de', 4, false);
-        $this->assertEquals(3, count($test));
-
-        $test = $this->mapper->load($data[5]->getUuid(), 'sulu_io', 'de');
-        $this->assertEquals('/page-2/sub-1', $test->getResourceLocator());
-        $this->assertEquals(1, $test->getChanger());
-
-        $test = $this->mapper->load($result->getUuid(), 'sulu_io', 'de');
-        $this->assertEquals('/page-1/sub-1-1', $test->getResourceLocator());
-        $this->assertEquals(2, $test->getChanger());
-
-        $page2Sub = $this->mapper->load($data[6]->getUuid(), 'sulu_io', 'de');
-        $page2SubSub = $this->mapper->load($data[7]->getUuid(), 'sulu_io', 'de');
-        $page2SubSubSub = $this->mapper->load($data[8]->getUuid(), 'sulu_io', 'de');
-        $this->assertEquals('/page-2/subpage', $page2Sub->url);
-        $this->assertEquals('/page-2/subpage/subpage', $page2SubSub->url);
-        $this->assertEquals('/page-2/subpage/subpage/subpage', $page2SubSubSub->url);
-    }
-
-    public function testCopyWithShadow()
-    {
-        // save content
-        $germanPage = $this->save(['title' => 'test', 'url' => '/test-de'], 'overview', 'sulu_io', 'de', 1);
-        $englishPage = $this->save(
-            ['title' => 'test', 'url' => '/test-en'],
-            'default',
-            'sulu_io',
-            'en',
-            1,
-            true,
-            $germanPage->getUuid(),
-            null,
-            null
-        );
-        $englishPage = $this->save(
-            ['title' => 'test', 'url' => '/test-en'],
-            'default',
-            'sulu_io',
-            'en',
-            1,
-            true,
-            $germanPage->getUuid(),
-            null,
-            null,
-            true,
-            'de'
-        );
-
-        $copiedGermanDocument = $this->mapper->copy(
-            $germanPage->getUuid(),
-            $this->getHomeUuid(),
-            1,
-            'sulu_io',
-            'de'
-        );
-        // check cached value of german page
-        $this->assertStringStartsWith('/test-de', $copiedGermanDocument->getUrl());
-
-        $copiedEnglishDocument = $this->mapper->load($copiedGermanDocument->getUuid(), 'sulu_io', 'en');
-        //check cached value of english page
-        $this->assertStringStartsWith('/test-en', $copiedEnglishDocument->getUrl());
     }
 
     public function testOrderBefore()
@@ -2652,7 +2420,8 @@ class ContentMapperTest extends SuluTestCase
         $data[3] = $this->save($data[3], 'overview', 'sulu_io', 'de', 1, true, null, $data[0]->getUuid());
 
         // move /a/b to /a/d/b
-        $this->mapper->move($data[1]->getUuid(), $data[3]->getUuid(), 1, 'sulu_io', 'de');
+        $this->documentManager->move($data[1], $data[3]->getUuid());
+        $this->documentManager->flush();
 
         // delete /a/d
         $this->mapper->delete($data[3]->getUuid(), 'sulu_io');

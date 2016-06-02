@@ -168,32 +168,6 @@ interface ContentMapperInterface
     public function delete($uuid, $webspaceKey);
 
     /**
-     * moves given node to a new parent node.
-     *
-     * @param string $uuid
-     * @param string $destParentUuid
-     * @param int    $userId
-     * @param string $webspaceKey
-     * @param string $languageCode
-     *
-     * @return StructureInterface
-     */
-    public function move($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode);
-
-    /**
-     * copies given node to a new parent node.
-     *
-     * @param string $uuid
-     * @param string $destParentUuid
-     * @param int    $userId
-     * @param string $webspaceKey
-     * @param string $languageCode
-     *
-     * @return StructureInterface
-     */
-    public function copy($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode);
-
-    /**
      * Copies the content from one node from one localization to the other.
      *
      * @param string $uuid

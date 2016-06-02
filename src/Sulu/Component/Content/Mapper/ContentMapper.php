@@ -17,7 +17,6 @@ use Jackalope\Query\Row;
 use PHPCR\NodeInterface;
 use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
-use PHPCR\Util\PathHelper;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
@@ -469,22 +468,6 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function move($uuid, $destParentUuid, $userId, $webspaceKey, $locale)
-    {
-        return $this->copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $locale);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function copy($uuid, $destParentUuid, $userId, $webspaceKey, $locale)
-    {
-        return $this->copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $locale, false);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function copyLanguage(
         $uuid,
         $userId,
@@ -595,81 +578,6 @@ class ContentMapper implements ContentMapperInterface
         $this->documentManager->flush();
 
         return $this->documentToStructure($document);
-    }
-
-    /**
-     * Copy or move a node by UUID to a detination parent.
-     *
-     * Note that the bulk of this method is about the resource locator and can
-     * be removed if we integrate the RoutingAuto component.
-     *
-     * @param string $webspaceKey
-     * @param string $locale
-     * @param bool $move
-     *
-     * @return StructureInterface
-     */
-    private function copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $locale, $move = true)
-    {
-        // find localizations
-        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
-        $localizations = $webspace->getAllLocalizations();
-
-        // load from phpcr
-        $originalDocument = $this->documentManager->find($uuid, $locale);
-        $parentDocument = $this->documentManager->find($destParentUuid, $locale);
-
-        if ($move) {
-            // move node
-            $this->documentManager->move($originalDocument, $destParentUuid);
-        } else {
-            // copy node
-            $copiedPath = $this->documentManager->copy($originalDocument, $destParentUuid);
-            $originalDocument = $this->documentManager->find($copiedPath, $locale);
-            $this->documentManager->refresh($parentDocument);
-        }
-
-        // modifiy the resource locators -- note this can be removed once the routing auto
-        // system is implemented.
-        foreach ($localizations as $locale) {
-            $locale = $locale->getLocale();
-
-            // prepare parent content node
-            $document = $this->documentManager->find($originalDocument->getUuid(), $locale);
-            $parentDocument = $this->documentManager->find($parentDocument->getUuid(), $locale);
-
-            if (!$document instanceof ResourceSegmentBehavior) {
-                break;
-            }
-
-            // TODO: This could be optimized
-            $localizationState = $this->inspector->getLocalizationState($document);
-            if ($localizationState === LocalizationState::GHOST) {
-                continue;
-            }
-
-            if ($document->getRedirectType() !== RedirectType::NONE) {
-                continue;
-            }
-
-            $nodeName = PathHelper::getNodeName($document->getResourceSegment());
-            $newResourceLocator = $this->rlpStrategy->generate(
-                $nodeName,
-                $parentDocument->getResourceSegment(),
-                $webspaceKey,
-                $locale
-            );
-
-            $document->setResourceSegment($newResourceLocator);
-
-            $this->documentManager->persist($document, $locale, [
-                'user' => $userId,
-            ]);
-        }
-
-        $this->documentManager->flush();
-
-        return $this->documentToStructure($originalDocument);
     }
 
     /**

@@ -189,7 +189,7 @@ class DocumentInspector extends BaseDocumentInspector
     /**
      * Return the concrete localizations for the given document.
      *
-     * @param StructureBehavior $document
+     * @param object $document
      *
      * @return array
      */

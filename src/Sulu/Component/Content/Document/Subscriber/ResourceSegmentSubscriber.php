@@ -17,9 +17,13 @@ use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\RedirectType;
+use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\DocumentManager\Event\CopyEvent;
+use Sulu\Component\DocumentManager\Event\MoveEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
@@ -32,14 +36,19 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ResourceSegmentSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    /**
      * @var PropertyEncoder
      */
     private $encoder;
+
+    /**
+     * @var DocumentManagerInterface
+     */
+    private $documentManager;
+
+    /**
+     * @var DocumentInspector
+     */
+    private $documentInspector;
 
     /**
      * @var RlpStrategyInterface
@@ -48,10 +57,12 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
 
     public function __construct(
         PropertyEncoder $encoder,
+        DocumentManagerInterface $documentManager,
         DocumentInspector $documentInspector,
         RlpStrategyInterface $rlpStrategy
     ) {
         $this->encoder = $encoder;
+        $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
         $this->rlpStrategy = $rlpStrategy;
     }
@@ -70,6 +81,8 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
             ],
             // hydrate should happen afterwards
             Events::HYDRATE => ['handleHydrate', -200],
+            Events::MOVE => ['moveRoutes', -128],
+            Events::COPY => ['copyRoutes', -128],
         ];
     }
 
@@ -160,6 +173,32 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
     }
 
     /**
+     * Moves the routes for all localizations of the document in the event.
+     *
+     * @param MoveEvent $event
+     */
+    public function moveRoutes(MoveEvent $event)
+    {
+        $this->recreateRoutes($event->getDocument());
+    }
+
+    /**
+     * Copy the routes for all localization of the document in the event.
+     *
+     * @param CopyEvent $event
+     */
+    public function copyRoutes(CopyEvent $event)
+    {
+        $this->recreateRoutes(
+            $event->getDocument(),
+            $this->documentManager->find(
+                $event->getCopiedPath(),
+                $this->documentInspector->getLocale($event->getDocument())
+            )
+        );
+    }
+
+    /**
      * Returns the property of the document's structure containing the ResourceSegment.
      *
      * @param $document
@@ -206,5 +245,56 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
     private function persistRoute(ResourceSegmentBehavior $document)
     {
         $this->rlpStrategy->save($document, null);
+    }
+
+    /**
+     * Recreates the routes for the destination document with the data from the source document.
+     *
+     * Note that both documents can be the same (e.g. happening on a move). If the second parameter is omitted it has
+     * the same value as the first one.
+     *
+     * @param object $sourceDocument
+     * @param object $destinationDocument
+     */
+    private function recreateRoutes($sourceDocument, $destinationDocument = null)
+    {
+        $destinationDocument = $destinationDocument ?: $sourceDocument;
+
+        if (!$sourceDocument instanceof ResourceSegmentBehavior
+            || !$destinationDocument instanceof ResourceSegmentBehavior
+        ) {
+            return;
+        }
+
+        $locales = $this->documentInspector->getLocales($destinationDocument);
+        $webspaceKey = $this->documentInspector->getWebspace($destinationDocument);
+        $sourceUuid = $this->documentInspector->getUuid($sourceDocument);
+        $destinationUuid = $this->documentInspector->getUuid($destinationDocument);
+        $destinationParentUuid = $this->documentInspector->getUuid(
+            $this->documentInspector->getParent($destinationDocument)
+        );
+
+        foreach ($locales as $locale) {
+            $localizedDocument = $this->documentManager->find($destinationUuid, $locale);
+
+            if ($localizedDocument->getRedirectType() !== RedirectType::NONE) {
+                continue;
+            }
+
+            try {
+                $parentPart = $this->rlpStrategy->loadByContentUuid($destinationParentUuid, $webspaceKey, $locale);
+            } catch (ResourceLocatorNotFoundException $e) {
+                $parentPart = null;
+            }
+
+            $childPart = $this->rlpStrategy->loadByContentUuid($sourceUuid, $webspaceKey, $locale);
+            $childPart = $this->rlpStrategy->getChildPart($childPart);
+
+            $localizedDocument->setResourceSegment(
+                $this->rlpStrategy->generate($childPart, $parentPart, $webspaceKey, $locale)
+            );
+
+            $this->documentManager->persist($localizedDocument, $locale);
+        }
     }
 }
