@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2439 [ContentBundle]       Fixed tab visibility for create new page localization
     * ENHANCEMENT #2428 [Content]             Removed move and copy method from ContentMapper
     * BUGFIX      #2426 [RouteBundle]         Fixed route-provider when no resource-locator prefix isset
     * BUGFIX      #2418 [ContentBundle]       Removed ContentMapperRequest
