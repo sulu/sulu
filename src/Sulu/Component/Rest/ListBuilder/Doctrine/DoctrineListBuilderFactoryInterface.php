@@ -11,10 +11,17 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 
+use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
+
 /**
  * Defines the interface for the Factory of the DoctrineListBuilde.
  */
 interface DoctrineListBuilderFactoryInterface
 {
+    /**
+     * @param string $entityName
+     *
+     * @return ListBuilderInterface
+     */
     public function create($entityName);
 }
