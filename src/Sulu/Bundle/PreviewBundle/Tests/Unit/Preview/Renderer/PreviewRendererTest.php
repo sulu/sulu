@@ -16,7 +16,9 @@ use Sulu\Bundle\PreviewBundle\Preview\Events;
 use Sulu\Bundle\PreviewBundle\Preview\Events\PreRenderEvent;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\PortalNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\RouteDefaultsProviderNotFoundException;
+use Sulu\Bundle\PreviewBundle\Preview\Exception\TemplateNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TwigException;
+use Sulu\Bundle\PreviewBundle\Preview\Exception\UnexpectedException;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRenderer;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
 use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProviderInterface;
@@ -29,6 +31,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class PreviewRendererTest extends \PHPUnit_Framework_TestCase
@@ -251,6 +254,112 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
 
         $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
             ->shouldBeCalled()->willThrow(new \Twig_Error_Runtime('Test error'));
+
+        $request = new Request();
+        $this->requestStack->getCurrentRequest()->willReturn($request);
+
+        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true);
+    }
+
+    public function testRenderInvalidArgumentException()
+    {
+        $this->setExpectedException(TemplateNotFoundException::class, '', 9904);
+
+        $object = $this->prophesize(\stdClass::class);
+
+        $portalInformation = $this->prophesize(PortalInformation::class);
+        $webspace = $this->prophesize(Webspace::class);
+        $localization = new Localization('de');
+        $webspace->getLocalization('de')->willReturn($localization);
+        $portalInformation->getWebspace()->willReturn($webspace->reveal());
+        $portalInformation->getPortal()->willReturn($this->prophesize(Portal::class)->reveal());
+        $portalInformation->getUrl()->willReturn('sulu.lo');
+        $portalInformation->getPrefix()->willReturn('/de');
+
+        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
+            ->willReturn([$portalInformation->reveal()]);
+
+        $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
+        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, $object)
+            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
+
+        $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
+            ->shouldBeCalled();
+
+        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
+            ->shouldBeCalled()->willThrow(new \InvalidArgumentException());
+
+        $request = new Request();
+        $this->requestStack->getCurrentRequest()->willReturn($request);
+
+        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true);
+    }
+
+    public function testRenderHttpExceptionWithPreviousException()
+    {
+        $this->setExpectedException(TemplateNotFoundException::class, '', 9904);
+
+        $object = $this->prophesize(\stdClass::class);
+
+        $portalInformation = $this->prophesize(PortalInformation::class);
+        $webspace = $this->prophesize(Webspace::class);
+        $localization = new Localization('de');
+        $webspace->getLocalization('de')->willReturn($localization);
+        $portalInformation->getWebspace()->willReturn($webspace->reveal());
+        $portalInformation->getPortal()->willReturn($this->prophesize(Portal::class)->reveal());
+        $portalInformation->getUrl()->willReturn('sulu.lo');
+        $portalInformation->getPrefix()->willReturn('/de');
+
+        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
+            ->willReturn([$portalInformation->reveal()]);
+
+        $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
+        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, $object)
+            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
+
+        $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
+            ->shouldBeCalled();
+
+        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
+            ->shouldBeCalled()->willThrow(
+                new HttpException(406, 'Error encountered when rendering content', new \InvalidArgumentException())
+            );
+
+        $request = new Request();
+        $this->requestStack->getCurrentRequest()->willReturn($request);
+
+        $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true);
+    }
+
+    public function testRenderHttpExceptionWithoutPreviousException()
+    {
+        $this->setExpectedException(UnexpectedException::class, '', 9905);
+
+        $object = $this->prophesize(\stdClass::class);
+
+        $portalInformation = $this->prophesize(PortalInformation::class);
+        $webspace = $this->prophesize(Webspace::class);
+        $localization = new Localization('de');
+        $webspace->getLocalization('de')->willReturn($localization);
+        $portalInformation->getWebspace()->willReturn($webspace->reveal());
+        $portalInformation->getPortal()->willReturn($this->prophesize(Portal::class)->reveal());
+        $portalInformation->getUrl()->willReturn('sulu.lo');
+        $portalInformation->getPrefix()->willReturn('/de');
+
+        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
+            ->willReturn([$portalInformation->reveal()]);
+
+        $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
+        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, $object)
+            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
+
+        $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
+            ->shouldBeCalled();
+
+        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
+            ->shouldBeCalled()->willThrow(
+                new HttpException(406, 'Error encountered when rendering content')
+            );
 
         $request = new Request();
         $this->requestStack->getCurrentRequest()->willReturn($request);

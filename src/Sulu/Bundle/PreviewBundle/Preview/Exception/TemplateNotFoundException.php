@@ -12,22 +12,22 @@
 namespace Sulu\Bundle\PreviewBundle\Preview\Exception;
 
 /**
- * This exception will be thrown when preview rendering fails.
+ * This exception will be thrown when the twig-template was not found.
  */
-class TwigException extends PreviewRendererException
+class TemplateNotFoundException extends PreviewRendererException
 {
     /**
-     * @param \Twig_Error $exception
+     * @param \InvalidArgumentException $exception
      * @param int $object
      * @param mixed $id
      * @param string $webspaceKey
      * @param string $locale
      */
-    public function __construct(\Twig_Error $exception, $object, $id, $webspaceKey, $locale)
+    public function __construct(\InvalidArgumentException $exception, $object, $id, $webspaceKey, $locale)
     {
         parent::__construct(
             $exception->getMessage(),
-            self::BASE_CODE + 3,
+            self::BASE_CODE + 4,
             $object,
             $id,
             $webspaceKey,

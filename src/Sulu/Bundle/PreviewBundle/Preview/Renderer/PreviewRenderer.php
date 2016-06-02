@@ -15,7 +15,9 @@ use Sulu\Bundle\PreviewBundle\Preview\Events;
 use Sulu\Bundle\PreviewBundle\Preview\Events\PreRenderEvent;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\PortalNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\RouteDefaultsProviderNotFoundException;
+use Sulu\Bundle\PreviewBundle\Preview\Exception\TemplateNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TwigException;
+use Sulu\Bundle\PreviewBundle\Preview\Exception\UnexpectedException;
 use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProviderInterface;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -23,6 +25,8 @@ use Sulu\Component\Webspace\PortalInformation;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
@@ -156,11 +160,37 @@ class PreviewRenderer implements PreviewRendererInterface
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, new PreRenderEvent($attributes));
 
         try {
-            $response = $this->httpKernel->handle($request, HttpKernelInterface::MASTER_REQUEST, false);
+            $response = $this->handle($request);
         } catch (\Twig_Error $e) {
             throw new TwigException($e, $object, $id, $webspace, $locale);
+        } catch (\InvalidArgumentException $e) {
+            throw new TemplateNotFoundException($e, $object, $id, $webspace, $locale);
+        } catch (\Exception $e) {
+            throw new UnexpectedException($e, $object, $id, $webspace, $locale);
         }
 
         return $response->getContent();
+    }
+
+    /**
+     * Handles given request and returns response.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     *
+     * @throws \Exception
+     */
+    private function handle(Request $request)
+    {
+        try {
+            return $this->httpKernel->handle($request, HttpKernelInterface::MASTER_REQUEST, false);
+        } catch (HttpException $e) {
+            if ($e->getPrevious()) {
+                throw $e->getPrevious();
+            }
+
+            throw $e;
+        }
     }
 }
