@@ -1,7 +1,7 @@
 define([
     'underscore',
     'services/husky/translator',
-    'text!sulucontentcss/ckeditor-internal-link.css'
+    'text!sulucontentcss/ckeditor-plugin.css'
 ], function(_, Translator, editorCSS) {
 
     'use strict';
@@ -53,12 +53,12 @@ define([
             init: function(editor) {
                 // extend dtd
                 CKEDITOR.dtd[this.tagName] = 1;
-                CKEDITOR.dtd.body['sulu:link'] = 1;
-                CKEDITOR.dtd.div['sulu:link'] = 1;
-                CKEDITOR.dtd.li['sulu:link'] = 1;
-                CKEDITOR.dtd.p['sulu:link'] = 1;
-                CKEDITOR.dtd.$block['sulu:link'] = 1;
-                CKEDITOR.dtd.$removeEmpty['sulu:link'] = 1;
+                CKEDITOR.dtd.body[this.tagName] = 1;
+                CKEDITOR.dtd.div[this.tagName] = 1;
+                CKEDITOR.dtd.li[this.tagName] = 1;
+                CKEDITOR.dtd.p[this.tagName] = 1;
+                CKEDITOR.dtd.$block[this.tagName] = 1;
+                CKEDITOR.dtd.$removeEmpty[this.tagName] = 1;
 
                 editor.addCommand('internalLinkDialog', {
                     dialogName: 'internalLinkDialog',
@@ -156,6 +156,7 @@ define([
 
             onLoad: function() {
                 CKEDITOR.addCss(_.template(editorCSS, {
+                    tag: 'link',
                     translations: {
                         unpublished: Translator.translate('content.text_editor.error.unpublished'),
                         removed: Translator.translate('content.text_editor.error.removed')

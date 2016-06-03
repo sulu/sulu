@@ -617,11 +617,11 @@
             </trans-unit>
             <trans-unit id="27" resname="content.ckeditor.internal-link">
                 <source>content.ckeditor.internal-link</source>
-                <target>Internal Link</target>
+                <target>Internal Sulu Link</target>
             </trans-unit>
             <trans-unit id="28" resname="content.ckeditor.internal-link.edit">
                 <source>content.ckeditor.internal-link.edit</source>
-                <target>Edit Internal Link</target>
+                <target>Edit Internal Sulu Link</target>
             </trans-unit>
             <trans-unit id="29" resname="content.ckeditor.internal-link.alt-title">
                 <source>content.ckeditor.internal-link.alt-title</source>
@@ -645,7 +645,7 @@
             </trans-unit>
             <trans-unit id="34" resname="content.ckeditor.internal-link.remove">
                 <source>content.ckeditor.internal-link.remove</source>
-                <target>Remove Internal Link</target>
+                <target>Remove Internal Sulu Link</target>
             </trans-unit>
             <trans-unit id="35" resname="content.text_editor.error.unpublished">
                 <source>content.text_editor.error.unpublished</source>

@@ -286,6 +286,30 @@
                 <source>sulu.media.categories</source>
                 <target>Catégories</target>
             </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f111111" resname="media.ckeditor.media-link">
+                <source>media.ckeditor.media-link</source>
+                <target>Lien média</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f111112" resname="media-selection.overlay.selected-title">
+                <source>media-selection.overlay.selected-title</source>
+                <target>Fichiers selectionnés</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f111113" resname="media.ckeditor.media-link.dialog.selected-title">
+                <source>media.ckeditor.media-link.dialog.selected-title</source>
+                <target>Fichier selectionné</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f111114" resname="media.ckeditor.media-link.dialog.remove">
+                <source>media.ckeditor.media-link.dialog.remove</source>
+                <target>Enlever lien</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f111115" resname="media.ckeditor.media-link.edit">
+                <source>media.ckeditor.media-link.edit</source>
+                <target>Éditer lien média</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f111116" resname="media.ckeditor.media-link.edit.remove">
+                <source>media.ckeditor.media-link.edit.remove</source>
+                <target>Enlever lien média</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

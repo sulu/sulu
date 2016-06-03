@@ -1,9 +1,9 @@
-sulu\:link {
+sulu\:<%= tag %> {
     text-decoration: underline;
     color: #428bca;
 }
 
-sulu\:link[sulu\:validation-state~="unpublished"]:before {
+sulu\:<%= tag %>[sulu\:validation-state~="unpublished"]:before {
     color: #E8CE33;
     content: "•";
     display: inline-block;
@@ -13,17 +13,17 @@ sulu\:link[sulu\:validation-state~="unpublished"]:before {
     vertical-align: text-bottom;
 }
 
-sulu\:link[sulu\:validation-state~="unpublished"]:empty:before {
+sulu\:<%= tag %>[sulu\:validation-state~="unpublished"]:empty:before {
     content: "";
 }
 
-sulu\:link[sulu\:validation-state~="removed"] {
+sulu\:<%= tag %>[sulu\:validation-state~="removed"] {
     color: #EA524E;
     text-decoration: line-through;
 }
 
-sulu\:link[sulu\:validation-state~="unpublished"]:after,
-sulu\:link[sulu\:validation-state~="removed"]:after {
+sulu\:<%= tag %>[sulu\:validation-state~="unpublished"]:after,
+sulu\:<%= tag %>[sulu\:validation-state~="removed"]:after {
     display: none;
     position: absolute;
     background-color: #21272E;
@@ -36,15 +36,15 @@ sulu\:link[sulu\:validation-state~="removed"]:after {
     line-height: 11px;
 }
 
-sulu\:link[sulu\:validation-state~="unpublished"]:hover:after,
-sulu\:link[sulu\:validation-state~="removed"]:hover:after {
+sulu\:<%= tag %>[sulu\:validation-state~="unpublished"]:hover:after,
+sulu\:<%= tag %>[sulu\:validation-state~="removed"]:hover:after {
     display: inline-block;
 }
 
-sulu\:link[sulu\:validation-state~="unpublished"]:after {
+sulu\:<%= tag %>[sulu\:validation-state~="unpublished"]:after {
     content: '<%= translations.unpublished %>';
 }
 
-sulu\:link[sulu\:validation-state~="removed"]:after {
+sulu\:<%= tag %>[sulu\:validation-state~="removed"]:after {
     content: '<%= translations.removed %>';
 }
