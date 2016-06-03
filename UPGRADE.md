@@ -2,6 +2,25 @@
 
 ## dev-develop
 
+### Indexing title of pages for search
+
+It was possible to define that the title field of a page should be
+indexed as title, although this value was already the default:
+
+```
+<property name="title" type="text_line" mandatory="true">
+    <meta>
+        <title lang="en">Title</title>
+    </meta>
+    <tag name="sulu.search.field" type="string" role="title" />
+</property>
+ ```
+
+ This setting does not work anymore, because the title is now handled
+ separately from the rest of the structure, and the title is not indexed
+ anymore with this tag. Just remove it, and it will be the same as
+ before.
+
 ### Configuration
 
 The configuration of `sulu_content.preview` and `sulu_website.preview_defaults` has been moved to:
