@@ -587,8 +587,8 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals(2, $response->total);
         $this->assertCount(2, $medias);
 
-        $this->assertContains(['id' => $media1->getId(), 'name' => 'photo1.jpeg'], $medias);
-        $this->assertContains(['id' => $media2->getId(), 'name' => 'photo2.jpeg'], $medias);
+        $this->assertEquals(['id' => $media1->getId(), 'name' => 'photo1.jpeg'], $medias[1]);
+        $this->assertEquals(['id' => $media2->getId(), 'name' => 'photo2.jpeg'], $medias[0]);
     }
 
     public function testCgetSearch()
