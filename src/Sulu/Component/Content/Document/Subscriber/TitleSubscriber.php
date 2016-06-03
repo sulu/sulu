@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
+use Sulu\Component\DocumentManager\Behavior\Mapping\LocalizedTitleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -52,16 +53,29 @@ class TitleSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
 
-        if (!$this->supports($document) || !$event->getLocale()) {
+        if (!$this->supports($document)) {
             return;
         }
 
-        $document->setTitle(
-            $event->getNode()->getPropertyValueWithDefault(
-                $this->propertyEncoder->localizedContentName(self::PROPERTY_NAME, $event->getLocale()),
-                ''
-            )
-        );
+        if ($document instanceof LocalizedTitleBehavior) {
+            if (!$event->getLocale()) {
+                return;
+            }
+
+            $document->setTitle(
+                $event->getNode()->getPropertyValueWithDefault(
+                    $this->propertyEncoder->localizedContentName(static::PROPERTY_NAME, $event->getLocale()),
+                    ''
+                )
+            );
+        } else {
+            $document->setTitle(
+                $event->getNode()->getPropertyValueWithDefault(
+                    $this->propertyEncoder->contentName(static::PROPERTY_NAME),
+                    ''
+                )
+            );
+        }
     }
 
     /**
@@ -73,14 +87,25 @@ class TitleSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
 
-        if (!$this->supports($document) || !$event->getLocale()) {
+        if (!$this->supports($document)) {
             return;
         }
 
-        $event->getNode()->setProperty(
-            $this->propertyEncoder->localizedContentName(self::PROPERTY_NAME, $event->getLocale()),
-            $document->getTitle()
-        );
+        if ($document instanceof LocalizedTitleBehavior) {
+            if (!$event->getLocale()) {
+                return;
+            }
+
+            $event->getNode()->setProperty(
+                $this->propertyEncoder->localizedContentName(static::PROPERTY_NAME, $event->getLocale()),
+                $document->getTitle()
+            );
+        } else {
+            $event->getNode()->setProperty(
+                $this->propertyEncoder->contentName(static::PROPERTY_NAME),
+                $document->getTitle()
+            );
+        }
     }
 
     /**

@@ -275,6 +275,9 @@ class CustomUrlManager implements CustomUrlManagerInterface
      */
     private function bind(CustomUrlDocument $document, $data, $locale)
     {
+        $document->setTitle($data['title']);
+        unset($data['title']);
+
         $metadata = $this->metadataFactory->getMetadataForAlias('custom_url');
 
         $accessor = PropertyAccess::createPropertyAccessor();

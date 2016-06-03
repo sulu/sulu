@@ -28,6 +28,7 @@ use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Document\Structure\StructureInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\LocalizedTitleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
@@ -53,7 +54,8 @@ class BasePageDocument implements
     OrderBehavior,
     WebspaceBehavior,
     SecurityBehavior,
-    LocalizedAuditableBehavior
+    LocalizedAuditableBehavior,
+    LocalizedTitleBehavior
 {
     /**
      * The name of this node.
