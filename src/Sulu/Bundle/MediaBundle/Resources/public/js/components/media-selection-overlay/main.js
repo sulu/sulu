@@ -12,6 +12,8 @@
  *
  * @class MediaSelection
  * @constructor
+ *
+ * @deprecated use media-selection/overlay@sulumedia instead
  */
 define([
     'config',
