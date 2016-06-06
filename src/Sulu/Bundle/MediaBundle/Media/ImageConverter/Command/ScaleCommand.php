@@ -29,7 +29,7 @@ class ScaleCommand implements CommandInterface
             'mode' => $image::THUMBNAIL_OUTBOUND,
         ], $parameters);
 
-        list($newWidth, $newHeight) = $this->getHeightWidth($parameters, $image->getSize());
+        list($newWidth, $newHeight) = $this->getHeightWidth($parameters, $image->getSize(), $parameters['mode']);
 
         $image = $image->thumbnail(new Box($newWidth, $newHeight), $parameters['mode']);
     }
@@ -40,7 +40,7 @@ class ScaleCommand implements CommandInterface
      *
      * @return array
      */
-    protected function getHeightWidth($parameters, $size)
+    protected function getHeightWidth($parameters, $size, $mode)
     {
         $newWidth = $parameters['x'];
         $newHeight = $parameters['y'];
@@ -64,7 +64,7 @@ class ScaleCommand implements CommandInterface
         // if image is smaller keep ratio
         // e.g. when a square image is requested (200x200) and the original image is smaller (150x100)
         //      it still returns a squared image (100x100)
-        if ($parameters['forceRatio']) {
+        if ($mode === ImageInterface::THUMBNAIL_OUTBOUND && $parameters['forceRatio']) {
             if ($newWidth > $size->getWidth()) {
                 list($newHeight, $newWidth) = $this->getSizeInSameRatio(
                     $newHeight,
@@ -99,6 +99,13 @@ class ScaleCommand implements CommandInterface
         }
 
         $size2 = $originalSize;
+
+        if ($size1 < 1) {
+            $size1 = 1;
+        }
+        if ($size2 < 1) {
+            $size2 = 1;
+        }
 
         return [$size1, $size2];
     }

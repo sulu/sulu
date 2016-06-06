@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2454 [MediaBundle]         Fixed inset image scale image-size 0
     * HOTFIX      #2440 [MediaBundle]         Fixed media-selection sorting
     * HOTFIX      #2441 [ContentBundle]       Fixed block to handle non html text correctly
     * ENHANCEMENT #2432 [SecurityBundle]      New behat step for admin login with default locale
