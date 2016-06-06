@@ -2,6 +2,13 @@
 
 ## dev-develop
 
+### TitleBehavior is not localized anymore
+
+If you have implemented your own Documents with an `TitleBehavior`,
+you will recognize that the title in PHPCR is not translated anymore.
+If you still want this Behavior you have to switch to the
+`LocalizedTitleBehavior`.
+
 ### Indexing title of pages for search
 
 It was possible to define that the title field of a page should be

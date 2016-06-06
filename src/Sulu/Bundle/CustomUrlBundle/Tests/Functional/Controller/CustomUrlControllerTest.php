@@ -291,6 +291,35 @@ class CustomUrlControllerTest extends SuluTestCase
             ],
             [
                 [
+                    'test-11.sulu.io/test-21' => [
+                        'title' => 'Test-1',
+                        'published' => true,
+                        'baseDomain' => '*.sulu.io',
+                        'domainParts' => ['prefix' => 'test-11', 'suffix' => ['test-21']],
+                        'targetDocument' => true,
+                        'targetLocale' => 'de',
+                        'canonical' => true,
+                        'redirect' => true,
+                        'noFollow' => true,
+                        'noIndex' => true,
+                    ],
+                ],
+                [
+                    'title' => 'Test-2',
+                    'published' => true,
+                    'baseDomain' => '*.sulu.io',
+                    'domainParts' => ['prefix' => 'test-12', 'suffix' => ['test-22']],
+                    'targetDocument' => true,
+                    'targetLocale' => 'de',
+                    'canonical' => true,
+                    'redirect' => true,
+                    'noFollow' => true,
+                    'noIndex' => true,
+                ],
+                'test-12.sulu.io/test-22',
+            ],
+            [
+                [
                     'test-1.sulu.io/test-1' => [
                         'title' => 'Test-1',
                         'published' => true,
