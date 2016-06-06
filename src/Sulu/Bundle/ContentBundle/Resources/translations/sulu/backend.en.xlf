@@ -246,7 +246,7 @@
                 <source>smart-content.choose-data-source.reset</source>
                 <target>Reset</target>
             </trans-unit>
-            <trans-unit id="90a3276459ba0f52ef7a41320298d5d" resname="smart-content.choose-data-source.back">
+            <trans-unit id="90a3276459ba0f52ef7a41320298d5d" resname="smart-content.choose-data-source.cancel">
                 <source>smart-content.choose-data-source.back</source>
                 <target>Back</target>
             </trans-unit>
@@ -529,7 +529,7 @@
             </trans-unit>
             <trans-unit id="e4b14069a8a085ede2092hf51234dh45" resname="smart-content.categories.use-any-category">
                 <source>smart-content.categories.use-any-category</source>
-                <target>Use pages that use ANY tag</target>
+                <target>Use pages that use ANY category</target>
             </trans-unit>
             <trans-unit id="e4b14069a8a085ede2092hf51234dh46" resname="smart-content.categories.use-all-categories">
                 <source>smart-content.categories.use-all-categories</source>
