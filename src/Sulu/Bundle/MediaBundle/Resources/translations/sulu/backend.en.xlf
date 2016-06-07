@@ -310,6 +310,14 @@
                 <source>media.ckeditor.media-link.edit.remove</source>
                 <target>Remove Asset Link</target>
             </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f111117" resname="media-selection.overlay.title">
+                <source>mediamedia-selection.overlay.title</source>
+                <target>Assets</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f111118" resname="media-selection.overlay.save">
+                <source>mediamedia-selection.overlay.save</source>
+                <target>Apply</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -113,29 +113,35 @@ class MediaController extends AbstractMediaController implements
      */
     public function cgetAction(Request $request)
     {
-        $ids = array_filter(explode(',', $request->get('ids')));
-
         $fieldDescriptors = $this->getFieldDescriptors($this->getLocale($request), false);
+        $ids = array_filter(explode(',', $request->get('ids')));
         $listBuilder = $this->getListBuilder($request, $fieldDescriptors, $ids);
-        $listResponse = $listBuilder->execute();
+        $listResponse = [];
+        $count = 0;
 
-        for ($i = 0, $length = count($listResponse); $i < $length; ++$i) {
-            $format = $this->getFormatManager()->getFormats(
-                $listResponse[$i]['id'],
-                $listResponse[$i]['name'],
-                $listResponse[$i]['storageOptions'],
-                $listResponse[$i]['version'],
-                $listResponse[$i]['mimeType']
-            );
-            if (0 < count($format)) {
-                $listResponse[$i]['thumbnails'] = $format;
+        if ($request->get('ids') === null || count($ids) > 0) {
+            $listResponse = $listBuilder->execute();
+            $count = $listBuilder->count();
+
+            for ($i = 0, $length = count($listResponse); $i < $length; ++$i) {
+                $format = $this->getFormatManager()->getFormats(
+                    $listResponse[$i]['id'],
+                    $listResponse[$i]['name'],
+                    $listResponse[$i]['storageOptions'],
+                    $listResponse[$i]['version'],
+                    $listResponse[$i]['mimeType']
+                );
+
+                if (0 < count($format)) {
+                    $listResponse[$i]['thumbnails'] = $format;
+                }
+
+                $listResponse[$i]['url'] = $this->getMediaManager()->getUrl(
+                    $listResponse[$i]['id'],
+                    $listResponse[$i]['name'],
+                    $listResponse[$i]['version']
+                );
             }
-
-            $listResponse[$i]['url'] = $this->getMediaManager()->getUrl(
-                $listResponse[$i]['id'],
-                $listResponse[$i]['name'],
-                $listResponse[$i]['version']
-            );
         }
 
         if (0 < count($ids)) {
@@ -154,7 +160,7 @@ class MediaController extends AbstractMediaController implements
             $request->query->all(),
             $listBuilder->getCurrentPage(),
             $listBuilder->getLimit(),
-            $listBuilder->count()
+            $count
         );
 
         return $this->handleView($this->view($list, 200));

@@ -143,6 +143,10 @@ define([
             }.bind(this));
 
             return item;
+        },
+
+        REFRESH = function() {
+            return this.createEventName('masonry.refresh');
         };
 
     return function() {
@@ -166,6 +170,10 @@ define([
                 this.options = this.sandbox.util.extend(true, {}, defaults, options);
 
                 this.setVariables();
+
+                this.sandbox.on(REFRESH.call(this.datagrid), function() {
+                    this.sandbox.masonry.refresh('#' + this.masonryGridId, true);
+                }.bind(this));
             },
 
             /**
@@ -191,6 +199,7 @@ define([
 
                 this.renderRecords(data.embedded, true);
                 this.rendered = true;
+
             },
 
             /**

@@ -61,9 +61,12 @@ define([
         defaults: {
             options: {
                 preselected: [],
-                singleSelect: true,
+                singleSelect: false,
                 removeable: true,
                 instanceName: null,
+                types: null,
+                removeOnClose: false,
+                openOnStart: false,
                 saveCallback: function(label) {
                 },
                 removeCallback: function() {
@@ -72,7 +75,7 @@ define([
 
             templates: {
                 skeleton: skeletonTemplate,
-                uploadUrl: '/admin/api/media?collection=<%= id %>&locale=<%= locale %>'
+                uploadUrl: '/admin/api/media?collection=<%= id %>&locale=<%= locale %><% if (!!types) {%>&types=<%= types %><% } %>'
             },
 
             translations: {
@@ -88,6 +91,22 @@ define([
             }
         },
 
+        events: {
+            names: {
+                setItems: {
+                    postFix: 'set-items',
+                    type: 'on'
+                },
+                open: {
+                    postFix: 'open',
+                    type: 'on'
+                }
+            },
+            namespace: 'sulu.media-selection-overlay.'
+        },
+
+        loadedItems: {},
+
         initialize: function() {
             this.initializeDialog();
             this.bindCustomEvents();
@@ -95,6 +114,12 @@ define([
 
         bindCustomEvents: function() {
             this.sandbox.on('husky.data-navigation.' + this.options.instanceName + '.selected', this.dataNavigationSelectHandler.bind(this));
+
+            if (!!this.options.removeOnClose) {
+                this.sandbox.on('husky.overlay.' + this.options.instanceName + '.closed', function() {
+                    this.sandbox.stop();
+                }.bind(this));
+            }
 
             // if files got uploaded to the server add them to the datagrid
             this.sandbox.on(
@@ -161,6 +186,31 @@ define([
                     'infinite-scroll'
                 );
             }.bind(this));
+
+            this.events.setItems(this.setItems.bind(this));
+            this.events.open(function() {
+                this.sandbox.emit('husky.overlay.' + this.options.instanceName + '.open');
+            }.bind(this));
+
+            this.sandbox.on('husky.datagrid.' + this.options.instanceName + '.item.select', function(id, item) {
+                if (!this.addItem(item)) {
+                    return;
+                }
+
+                this.sandbox.emit('husky.datagrid.' + this.options.instanceName + '-selected.record.add', item);
+            }.bind(this));
+
+            this.sandbox.on('husky.datagrid.' + this.options.instanceName + '.item.deselect', function(id) {
+                this.removeItem(id);
+
+                this.sandbox.emit('husky.datagrid.' + this.options.instanceName + '-selected.record.remove', id);
+            }.bind(this));
+
+            this.sandbox.on('husky.datagrid.' + this.options.instanceName + '.loaded', function(data) {
+                _.each(data._embedded.media, function(item) {
+                    this.loadedItems[item.id] = item;
+                }.bind(this));
+            }.bind(this));
         },
 
         save: function() {
@@ -168,15 +218,48 @@ define([
         },
 
         getData: function() {
-            return this.items;
+            return _.map(this.items, function(item) {
+                if (!this.loadedItems || !this.loadedItems[item.id]) {
+                    return item;
+                }
+
+                return this.loadedItems[item.id];
+            }.bind(this));
         },
 
         setItems: function(items) {
             this.items = items;
+
+            var ids = _.map(this.items, function(item) {
+                return parseInt(item.id);
+            });
+
+            this.sandbox.emit('husky.datagrid.' + this.options.instanceName + '.selected.update', ids);
+            this.sandbox.emit('husky.datagrid.' + this.options.instanceName + '-selected.url.update', {
+                ids: ids.join(',') || ' '
+            });
         },
 
         addItem: function(item) {
+            if (this.has(item.id)) {
+                return false;
+            }
+
             this.items.push(item);
+
+            return true;
+        },
+
+        removeItem: function(id) {
+            this.items = _.filter(this.items, function(item) {
+                return item.id !== id;
+            });
+        },
+
+        has: function(id) {
+            return !!_.filter(this.items, function(item) {
+                return item.id === id;
+            }).length;
         },
 
         dataNavigationSelectHandler: function(collection) {
@@ -186,13 +269,11 @@ define([
                 id = collection.id;
                 title = collection.title;
 
-                $('.list-toolbar-container').show();
                 this.sandbox.emit('husky.toolbar.' + this.options.instanceName + '.item.show', 'add');
                 this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.enable');
 
                 this.hideSelected();
             } else {
-                $('.list-toolbar-container').hide();
                 this.sandbox.emit('husky.toolbar.' + this.options.instanceName + '.item.hide', 'add');
                 this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.disable');
 
@@ -210,17 +291,22 @@ define([
 
         hideSelected: function() {
             this.$el.find('.selected-container').hide();
+
+            this.sandbox.emit('husky.datagrid.' + this.options.instanceName + '-selected.masonry.refresh');
         },
 
         showSelected: function() {
             this.$el.find('.selected-container').show();
+
+            this.sandbox.emit('husky.datagrid.' + this.options.instanceName + '-selected.masonry.refresh');
         },
 
         changeUploadCollection: function(id) {
             this.sandbox.emit(
                 'husky.dropzone.' + this.options.instanceName + '.change-url', this.templates.uploadUrl({
                     id: id,
-                    locale: this.options.locale
+                    locale: this.options.locale,
+                    types: this.options.types
                 })
             );
         },
@@ -269,8 +355,8 @@ define([
                 {
                     name: 'overlay@husky',
                     options: {
-                        openOnStart: true,
-                        removeOnClose: true,
+                        openOnStart: this.options.openOnStart,
+                        removeOnClose: this.options.removeOnClose,
                         el: $element,
                         container: this.$el,
                         skin: 'wide',
@@ -282,14 +368,24 @@ define([
                                 data: this.templates.skeleton(
                                     {title: this.translations.allMedias, selectedTitle: this.translations.selectedTitle}
                                 ),
-                                buttons: buttons
+                                buttons: buttons,
+                                okCallback: function() {
+                                    this.save();
+                                }.bind(this)
                             }
                         ]
                     }
                 }
             ]).then(function() {
                 this.setItems(this.options.preselected);
-                this.initializeFormComponents();
+
+                if (!!this.options.singleSelect) {
+                    return this.initializeFormComponents();
+                }
+
+                this.sandbox.once('husky.overlay.' + this.options.instanceName + '.opened', function() {
+                    this.initializeFormComponents();
+                }.bind(this));
             }.bind(this));
         },
 
@@ -325,18 +421,13 @@ define([
                             paramName: 'fileVersion',
                             instanceName: this.options.instanceName,
                             dropzoneEnabled: false,
-                            cancelUploadOnOverlayClick: true,
-                            maxFiles: !!this.options.singleSelect ? 1 : null
+                            cancelUploadOnOverlayClick: true
                         }
                     }
                 ]
             );
 
-            if (!!this.items.length) {
-                var ids = _.map(this.items, function(item) {
-                    return item.id;
-                });
-
+            if (!!this.items.length || !this.options.singleSelect) {
                 this.sandbox.start([
                     {
                         name: 'datagrid@husky',
@@ -345,7 +436,9 @@ define([
                             url: [
                                 '/admin/api/media?locale=', this.options.locale,
                                 '&fields=id,thumbnails,title,size',
-                                '&orderBy=media.created&orderSort=DESC&ids=', ids.join(',')
+                                '&orderBy=media.created&orderSort=DESC&ids=', _.map(this.items, function(item) {
+                                    return item.id;
+                                }).join(',')
                             ].join(''),
                             matchings: fields,
                             view: 'datagrid/decorators/masonry-view',
@@ -365,7 +458,7 @@ define([
                 ]);
 
                 this.sandbox.once('husky.datagrid.' + this.options.instanceName + '-selected.loaded', function(data) {
-                    if(data.total === 0){
+                    if (this.options.singleSelect && data.total === 0) {
                         // the selected value is not valid - selected datagrid should never be displayed
                         return this.$el.find('.selected-container').remove();
                     }
@@ -415,20 +508,18 @@ define([
                     instanceName: this.options.instanceName,
                     viewSpacingBottom: 180,
                     selectedCounter: false,
-                    actionCallback: function(id, item) {
-                        if (!this.options.singleSelect) {
-                            return;
-                        }
-
+                    preselected: _.map(this.items, function(item) {
+                        return parseInt(item.id);
+                    }),
+                    actionCallback: !!this.options.singleSelect ? function(id, item) {
                         this.setItems([item]);
                         this.save();
-                    }.bind(this),
+                    }.bind(this) : null,
                     viewOptions: {
                         table: {
-                            selectable: !this.options.singleSelect,
-                            actionIconColumn: !!this.options.singleSelect ? 'title':null,
                             actionIcon: 'check',
-                            selectItem: !this.options.singleSelect,
+                            actionIconColumn: !!this.options.singleSelect ? 'title' : null,
+                            selectItem: !this.options.singleSelect ? {type: 'checkbox', inFirstCell: false} : false,
                             badges: [
                                 {
                                     column: 'title',

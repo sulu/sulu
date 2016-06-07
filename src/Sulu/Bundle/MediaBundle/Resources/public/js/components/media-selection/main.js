@@ -13,7 +13,7 @@
  * @class MediaSelection
  * @constructor
  */
-define(function() {
+define(['underscore'], function(_) {
 
     'use strict';
 
@@ -97,42 +97,14 @@ define(function() {
                 setData.call(this, {ids: ids}, false);
             }, this);
 
-            // add image to the selected images grid
-            this.sandbox.on(
-                'sulu.media-selection-overlay.' + this.options.instanceName + '.record-selected',
-                function(itemId, item) {
-                    var data = this.getData(),
-                        index = data.ids.indexOf(itemId);
-
-                    if (index > -1) {
-                        return;
-                    }
-
-                    data.ids.push(itemId);
-                    this.setData(data, false);
-                    this.addItem(item);
-                }.bind(this)
-            );
-
-            // remove image to the selected images grid
-            this.sandbox.on(
-                'sulu.media-selection-overlay.' + this.options.instanceName + '.record-deselected',
-                function(itemId) {
-                    var data = this.getData(),
-                        index = data.ids.indexOf(itemId);
-
-                    if (index > -1) {
-                        data.ids.splice(index, 1);
-                    }
-
-                    this.setData(data, false);
-                    this.removeItemById(itemId);
-                }.bind(this)
-            );
-
             this.sandbox.on('sulu.media-selection.' + this.options.instanceName + '.add-button-clicked', function() {
+                var items = _.map(this.getData().ids, function(id) {
+                    return {id: id};
+                });
+
                 this.sandbox.emit(
-                    'sulu.media-selection-overlay.' + this.options.instanceName + '.set-selected', this.getData().ids
+                    'sulu.media-selection-overlay.' + this.options.instanceName + '.set-items',
+                    items
                 );
                 this.sandbox.emit('sulu.media-selection-overlay.' + this.options.instanceName + '.open');
             }.bind(this));
@@ -162,13 +134,30 @@ define(function() {
             var $container = this.sandbox.dom.createElement('<div/>');
             this.sandbox.dom.append(this.$el, $container);
             this.sandbox.start([{
-                name: 'media-selection-overlay@sulumedia',
+                name: 'media-selection/overlay@sulumedia',
                 options: {
                     el: $container,
                     instanceName: this.options.instanceName,
-                    preSelectedIds: this.getData().ids,
+                    preSelectedIds: _.map(this.getData().ids, function(id) {
+                        return {id: id};
+                    }),
+                    removeOnClose: false,
+                    autoStart: false,
+                    removeable: false,
                     types: this.options.types,
-                    locale: this.options.locale
+                    locale: this.options.locale,
+                    saveCallback: function(items) {
+                        var data = this.getData();
+                        _.each(data.ids, this.removeItemById.bind(this));
+
+                        data.ids = _.map(items, function(item) {
+                            this.addItem(item);
+
+                            return item.id;
+                        }.bind(this));
+
+                        this.setData(data, false);
+                    }.bind(this)
                 }
             }]);
         },
