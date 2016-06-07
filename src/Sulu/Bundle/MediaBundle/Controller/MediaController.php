@@ -63,7 +63,9 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
      */
     public function getFieldsAction(Request $request)
     {
-        return $this->handleView($this->view(array_values($this->getFieldDescriptors($this->getLocale($request))), 200));
+        return $this->handleView(
+            $this->view(array_values($this->getFieldDescriptors($this->getLocale($request))), 200)
+        );
     }
 
     /**
@@ -114,26 +116,33 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
     public function cgetAction(Request $request)
     {
         $fieldDescriptors = $this->getFieldDescriptors($this->getLocale($request), false);
-        $listBuilder = $this->getListBuilder($request, $fieldDescriptors);
-        $listResponse = $listBuilder->execute();
+        $ids = array_filter(explode(',', $request->get('ids')));
+        $listBuilder = $this->getListBuilder($request, $fieldDescriptors, $ids);
+        $listResponse = [];
+        $count = 0;
 
-        for ($i = 0, $length = count($listResponse); $i < $length; ++$i) {
-            $format = $this->getFormatManager()->getFormats(
-                $listResponse[$i]['id'],
-                $listResponse[$i]['name'],
-                $listResponse[$i]['storageOptions'],
-                $listResponse[$i]['version'],
-                $listResponse[$i]['mimeType']
-            );
-            if (0 < count($format)) {
-                $listResponse[$i]['thumbnails'] = $format;
+        if ($request->get('ids') === null || count($ids) > 0) {
+            $listResponse = $listBuilder->execute();
+            $count = $listBuilder->count();
+
+            for ($i = 0, $length = count($listResponse); $i < $length; ++$i) {
+                $format = $this->getFormatManager()->getFormats(
+                    $listResponse[$i]['id'],
+                    $listResponse[$i]['name'],
+                    $listResponse[$i]['storageOptions'],
+                    $listResponse[$i]['version'],
+                    $listResponse[$i]['mimeType']
+                );
+                if (0 < count($format)) {
+                    $listResponse[$i]['thumbnails'] = $format;
+                }
+
+                $listResponse[$i]['url'] = $this->getMediaManager()->getUrl(
+                    $listResponse[$i]['id'],
+                    $listResponse[$i]['name'],
+                    $listResponse[$i]['version']
+                );
             }
-
-            $listResponse[$i]['url'] = $this->getMediaManager()->getUrl(
-                $listResponse[$i]['id'],
-                $listResponse[$i]['name'],
-                $listResponse[$i]['version']
-            );
         }
 
         $list = new ListRepresentation(
@@ -143,7 +152,7 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
             $request->query->all(),
             $listBuilder->getCurrentPage(),
             $listBuilder->getLimit(),
-            $listBuilder->count()
+            $count
         );
 
         return $this->handleView($this->view($list, 200));
@@ -157,7 +166,7 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
      *
      * @return DoctrineListBuilder
      */
-    private function getListBuilder(Request $request, array $fieldDescriptors)
+    private function getListBuilder(Request $request, array $fieldDescriptors, $ids)
     {
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
@@ -184,7 +193,6 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
 
         // If no limit is set in request and limit is set by ids
         $requestLimit = $request->get('limit');
-        $ids = array_filter(explode(',', $request->get('ids')));
         $idsCount = count($ids);
 
         if ($idsCount > 0) {

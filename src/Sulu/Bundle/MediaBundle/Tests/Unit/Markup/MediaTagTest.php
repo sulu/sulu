@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Markup;
 
-use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Markup\MediaTag;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;

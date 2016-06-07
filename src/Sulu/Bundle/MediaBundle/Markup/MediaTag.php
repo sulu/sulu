@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Markup;
 
-use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
 use Sulu\Bundle\MarkupBundle\Tag\TagInterface;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
@@ -100,7 +99,7 @@ class MediaTag implements TagInterface
 
         $result = [];
         foreach ($attributesByTag as $tag => $attributes) {
-            if(!array_key_exists($attributes['id'], $medias)){
+            if (!array_key_exists($attributes['id'], $medias)) {
                 $result[$tag] = self::VALIDATE_REMOVED;
             }
         }

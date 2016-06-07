@@ -85,6 +85,9 @@ define([
                                         remove: 'media.ckeditor.media-link.dialog.remove',
                                         selectedTitle: 'media.ckeditor.media-link.dialog.selected-title'
                                     },
+                                    removeOnClose: true,
+                                    openOnStart: true,
+                                    singleSelect: true,
                                     saveCallback: function(items) {
                                         sandbox.stop($element);
 
