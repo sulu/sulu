@@ -13,7 +13,6 @@ namespace Sulu\Bundle\CoreBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ServerStatusCommand as BaseServerStatusCommand;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ServerStatusCommand extends BaseServerStatusCommand
@@ -24,8 +23,8 @@ class ServerStatusCommand extends BaseServerStatusCommand
     {
         parent::configure();
 
-        $this->addOption('port', 'p', InputOption::VALUE_REQUIRED, 'Address port number');
-
+        // We'll determine the port dynamically
+        $this->getDefinition()->getOption('port')->setDefault(null);
         $this->getDefinition()->getArgument('address')->setDefault('127.0.0.1');
     }
 
