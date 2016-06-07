@@ -24,6 +24,7 @@ use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
@@ -132,7 +133,14 @@ class StructureProvider implements ProviderInterface
         }
 
         if ($indexName === 'page') {
-            $indexMeta->setIndexName(new Expression('"page_"~object.getWebspaceName()'));
+            $indexMeta->setIndexName(
+                new Expression(
+                    sprintf(
+                        '"page_"~object.getWebspaceName()~(object.getWorkflowStage() == %s ? "_published" : "")',
+                        WorkflowStage::PUBLISHED
+                    )
+                )
+            );
         } else {
             $indexMeta->setIndexName(new Value($indexName));
         }

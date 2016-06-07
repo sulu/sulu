@@ -15,6 +15,7 @@ use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -40,21 +41,40 @@ class StructureSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            Events::PERSIST => ['handlePersist', -10],
+            Events::PERSIST => ['indexPersistedDocument', -10],
+            Events::PUBLISH => ['indexPublishedDocument', -256],
             Events::REMOVE => ['handlePreRemove', 600],
         ];
     }
 
     /**
-     * Deindex/index document in search implementation depending
-     * on the publish state.
+     * Indexes a persisted document.
      *
      * @param PersistEvent $event
      */
-    public function handlePersist(PersistEvent $event)
+    public function indexPersistedDocument(PersistEvent $event)
     {
-        $document = $event->getDocument();
+        $this->indexDocument($event->getDocument());
+    }
 
+    /**
+     * Indexes a published document.
+     *
+     * @param PublishEvent $event
+     */
+    public function indexPublishedDocument(PublishEvent $event)
+    {
+        $this->indexDocument($event->getDocument());
+    }
+
+    /**
+     * Index document in search implementation depending
+     * on the publish state.
+     *
+     * @param object $document
+     */
+    private function indexDocument($document)
+    {
         if (!$document instanceof StructureBehavior) {
             return;
         }
