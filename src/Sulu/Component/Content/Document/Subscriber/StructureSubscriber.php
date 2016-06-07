@@ -292,6 +292,10 @@ class StructureSubscriber implements EventSubscriberInterface
         $metadata = $this->inspector->getStructureMetadata($document);
 
         foreach ($metadata->getProperties() as $propertyName => $structureProperty) {
+            if ($propertyName === TitleSubscriber::PROPERTY_NAME) {
+                continue;
+            }
+
             $realProperty = $structure->getProperty($propertyName);
             $value = $realProperty->getValue();
 

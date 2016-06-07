@@ -22,8 +22,6 @@
                 <title lang="en">Title</title>
             </meta>
 
-            <tag name="sulu.search.field" type="string" role="title" />
-
             <tag name="sulu.rlp.part"/>
         </property>
 

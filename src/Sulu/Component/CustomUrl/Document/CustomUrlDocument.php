@@ -17,6 +17,7 @@ use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
+use Sulu\Component\DocumentManager\Behavior\Path\AutoNameBehavior;
 
 /**
  * Contains information about custom-urls and the relations to the routes.
@@ -27,7 +28,8 @@ class CustomUrlDocument implements
     TimestampBehavior,
     BlameBehavior,
     ParentBehavior,
-    LocaleBehavior
+    LocaleBehavior,
+    AutoNameBehavior
 {
     /**
      * @var string
