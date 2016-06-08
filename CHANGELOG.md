@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2460 [MediaBundle]         Fixed deprecation of getEntityManager in MediaPreviewController
     * HOTFIX      #2454 [MediaBundle]         Fixed inset image scale image-size 0
     * HOTFIX      #2440 [MediaBundle]         Fixed media-selection sorting
     * HOTFIX      #2441 [ContentBundle]       Fixed block to handle non html text correctly
