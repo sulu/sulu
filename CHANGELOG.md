@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2461 [PreviewBundle]       Added function that avoid navigating in the preview
     * BUGFIX      #2455 [CoreBundle]          Fixed ServerStatusCommand for Symfony 2.8.7
     * BUGFIX      #2443 [WebsiteBundle]       Added portal check for portal-routes
     * FEATURE     #2424 [Content]             Add support for XInclude

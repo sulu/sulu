@@ -76,8 +76,6 @@ define([
         renderOnRequest: function() {
             this.$preview = $(this.templates.onRequest({translations: this.translations}));
             this.html(this.$preview);
-            
-            this.$find('.preview-start').one('click', this.render.bind(this));
         },
 
         render: function() {
@@ -190,6 +188,17 @@ define([
 
             document.open();
             document.write(html);
+
+            this.avoidNavigate(document);
+        },
+
+        /**
+         * Disables all links in the preview document.
+         */
+        avoidNavigate: function(document) {
+            $(document).find('a').click(function() {
+                return false;
+            });
         },
 
         /**
