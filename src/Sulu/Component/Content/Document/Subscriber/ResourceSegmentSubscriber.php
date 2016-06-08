@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
+use PHPCR\NodeInterface;
+use PHPCR\SessionInterface;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
@@ -56,16 +58,30 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
      */
     private $rlpStrategy;
 
+    /**
+     * @var SessionInterface
+     */
+    private $defaultSession;
+
+    /**
+     * @var SessionInterface
+     */
+    private $liveSession;
+
     public function __construct(
         PropertyEncoder $encoder,
         DocumentManagerInterface $documentManager,
         DocumentInspector $documentInspector,
-        RlpStrategyInterface $rlpStrategy
+        RlpStrategyInterface $rlpStrategy,
+        SessionInterface $defaultSession,
+        SessionInterface $liveSession
     ) {
         $this->encoder = $encoder;
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
         $this->rlpStrategy = $rlpStrategy;
+        $this->defaultSession = $defaultSession;
+        $this->liveSession = $liveSession;
     }
 
     /**
@@ -262,7 +278,11 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
         $locales = $this->documentInspector->getLocales($document);
         $webspaceKey = $this->documentInspector->getWebspace($document);
         $uuid = $this->documentInspector->getUuid($document);
+        $path = $this->documentInspector->getPath($document);
         $parentUuid = $this->documentInspector->getUuid($this->documentInspector->getParent($document));
+
+        $defaultNode = $this->defaultSession->getNode($path);
+        $liveNode = $this->liveSession->getNode($path);
 
         foreach ($locales as $locale) {
             $localizedDocument = $this->documentManager->find($uuid, $locale);
@@ -271,23 +291,66 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
                 continue;
             }
 
+            $resourceSegmentPropertyName = $this->encoder->localizedSystemName(
+                $this->getResourceSegmentProperty($localizedDocument)->getName(),
+                $locale
+            );
+
             try {
                 $parentPart = $this->rlpStrategy->loadByContentUuid($parentUuid, $webspaceKey, $locale);
             } catch (ResourceLocatorNotFoundException $e) {
                 $parentPart = null;
             }
 
-            $childPart = $this->rlpStrategy->getChildPart($localizedDocument->getResourceSegment());
-
-            $localizedDocument->setResourceSegment(
-                $this->rlpStrategy->generate($childPart, $parentPart, $webspaceKey, $locale)
+            $this->updateResourceSegmentProperty(
+                $defaultNode,
+                $resourceSegmentPropertyName,
+                $parentPart,
+                $webspaceKey,
+                $locale
             );
 
-            $this->documentManager->persist($localizedDocument, $locale);
+            if ($liveNode->hasProperty($resourceSegmentPropertyName)) {
+                $this->updateResourceSegmentProperty(
+                    $liveNode,
+                    $resourceSegmentPropertyName,
+                    $parentPart,
+                    $webspaceKey,
+                    $locale
+                );
 
-            if ($generateRoutes) {
-                $this->rlpStrategy->save($localizedDocument, null);
+                // if the method is called with the generateRoutes flag it will create a new route
+                // this happens on a move, but not on copy, because copy results in a draft page without url
+                if ($generateRoutes) {
+                    $localizedDocument->setResourceSegment($liveNode->getPropertyValue($resourceSegmentPropertyName));
+                    $this->rlpStrategy->save($localizedDocument, null);
+                    $localizedDocument->setResourceSegment($defaultNode->getPropertyValue($resourceSegmentPropertyName));
+                }
             }
         }
+    }
+
+    /**
+     * Updates the property for the resource segment on the given node.
+     *
+     * @param NodeInterface $node
+     * @param string $resourceSegmentPropertyName
+     * @param string $parentPart
+     * @param string $webspaceKey
+     * @param string $locale
+     */
+    private function updateResourceSegmentProperty(
+        NodeInterface $node,
+        $resourceSegmentPropertyName,
+        $parentPart,
+        $webspaceKey,
+        $locale
+    ) {
+        $childPart = $this->rlpStrategy->getChildPart($node->getPropertyValue($resourceSegmentPropertyName));
+
+        $node->setProperty(
+            $resourceSegmentPropertyName,
+            $this->rlpStrategy->generate($childPart, $parentPart, $webspaceKey, $locale)
+        );
     }
 }

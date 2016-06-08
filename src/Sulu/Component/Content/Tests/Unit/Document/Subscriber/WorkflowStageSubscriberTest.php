@@ -99,7 +99,8 @@ class WorkflowStageSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->liveSession->getNode('/some/path')->willReturn($this->liveNode->reveal());
     }
 
-    public function testSetWorkflowStageOnDocument() {
+    public function testSetWorkflowStageOnDocument()
+    {
         $publishedDate = new \DateTime();
         $event = $this->getHydrateEventMock();
         $this->defaultNode
@@ -181,7 +182,6 @@ class WorkflowStageSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->workflowStageSubscriber->setWorkflowStageToPublished($event->reveal());
     }
-
 
     public function testSetWorkflowStageToPublishedWithWrongDocument()
     {

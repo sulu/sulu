@@ -106,6 +106,7 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
 
     /**
      * Sets the workflow stage for the passed document to test.
+     *
      * @param PersistEvent $event
      */
     public function setWorkflowStageToTest(PersistEvent $event)
