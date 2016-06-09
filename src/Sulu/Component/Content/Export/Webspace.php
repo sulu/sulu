@@ -196,9 +196,7 @@ class Webspace implements WebspaceInterface
         $contentData = [];
 
         foreach ($properties as $property) {
-            if (
-                $this->contentExportManager->hasExport($property->getType(), $format)
-            ) {
+            if ($this->contentExportManager->hasExport($property->getType(), $format)) {
                 $propertyValue = $propertyValues[$property->getName()];
                 if ($property instanceof BlockMetadata) {
                     $data = $this->getBlockPropertyData($property, $propertyValue, $format);
@@ -355,6 +353,7 @@ class Webspace implements WebspaceInterface
             'changed' => $this->createProperty('changed', $changed, $settingOptions),
             'creator' => $this->createProperty('creator', $document->getCreator(), $settingOptions),
             'changer' => $this->createProperty('changer', $document->getChanger(), $settingOptions),
+            'locale' => $this->createProperty('locale', $document->getLocale(), $settingOptions),
             'navigationContexts' => $this->createProperty(
                 'navigationContexts',
                 json_encode($document->getNavigationContexts()),
@@ -366,14 +365,30 @@ class Webspace implements WebspaceInterface
                 $settingOptions
             ),
             'shadowLocale' => $this->createProperty('shadowLocale', $document->getShadowLocale(), $settingOptions),
+            'originalLocale' => $this->createProperty(
+                'originalLocale',
+                $document->getOriginalLocale(),
+                $settingOptions
+            ),
+            'resourceSegment' => $this->createProperty(
+                'resourceSegment',
+                $document->getResourceSegment(),
+                $settingOptions
+            ),
             'webspaceName' => $this->createProperty('webspaceName', $document->getWebspaceName(), $settingOptions),
             'redirectExternal' => $this->createProperty(
                 'redirectExternal',
                 $document->getRedirectExternal(),
-                $settingOptions),
+                $settingOptions
+            ),
             'redirectType' => $this->createProperty('redirectType', $document->getRedirectType(), $settingOptions),
-            'redirectTarget' => $this->createProperty('redirectTarget', $document->getRedirectTarget(), $settingOptions),
+            'redirectTarget' => $this->createProperty(
+                'redirectTarget',
+                $document->getRedirectTarget(),
+                $settingOptions
+            ),
             'workflowStage' => $this->createProperty('workflowStage', $document->getWorkflowStage(), $settingOptions),
+            'path' => $this->createProperty('path', $document->getPath(), $settingOptions),
             'parent' => $this->createProperty('parent', $parent, $settingOptions),
         ];
     }
@@ -474,7 +489,7 @@ class Webspace implements WebspaceInterface
             }
 
             if (!empty($wheres)) {
-                return ($not ? 'NOT ' : '') .  '(' . implode(' OR ', $wheres) . ')';
+                return ($not ? 'NOT ' : '') . '(' . implode(' OR ', $wheres) . ')';
             }
         }
     }

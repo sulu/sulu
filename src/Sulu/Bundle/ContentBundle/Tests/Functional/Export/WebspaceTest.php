@@ -257,7 +257,12 @@ class WebspaceTest extends SuluTestCase
                             $blockPropertyData = [];
                             foreach ($block as $blockName => $blockProperty) {
                                 list($type, $options) = $this->getTypeOptionsByName($blockName, $name);
-                                $blockPropertyData[$blockName] = $this->createItemArray($blockName, $type, $options, $blockProperty);
+                                $blockPropertyData[$blockName] = $this->createItemArray(
+                                    $blockName,
+                                    $type,
+                                    $options,
+                                    $blockProperty
+                                );
                             }
                             $blockChildren[] = $blockPropertyData;
                         }
@@ -350,12 +355,31 @@ class WebspaceTest extends SuluTestCase
                 'locale' => 'en',
                 'settings' => [
                     'structureType' => $this->createItemArray('structureType', '', false, 'overview'),
-                    'created' => $this->createItemArray('created', '', false, $documents[$key]->getCreated()->format('c')),
-                    'changed' => $this->createItemArray('changed', '', false, $documents[$key]->getChanged()->format('c')),
+                    'created' => $this->createItemArray(
+                        'created',
+                        '',
+                        false,
+                        $documents[$key]->getCreated()->format('c')
+                    ),
+                    'changed' => $this->createItemArray(
+                        'changed',
+                        '',
+                        false,
+                        $documents[$key]->getChanged()->format('c')
+                    ),
                     'creator' => $this->createItemArray('creator', '', false, $this->creator, null, true),
                     'changer' => $this->createItemArray('changer', '', false, $this->creator, null, true),
-                    'published' => $this->createItemArray('published', '', false, $documents[$key]->getPublished()->format('c')),
+                    'published' => $this->createItemArray(
+                        'published',
+                        '',
+                        false,
+                        $documents[$key]->getPublished()->format('c')
+                    ),
                     'shadowLocale' => $this->createItemArray('shadowLocale', '', false, ''),
+                    'originalLocale' => $this->createItemArray('originalLocale', '', false, 'en'),
+                    'locale' => $this->createItemArray('locale', '', false, 'en'),
+                    'path' => $this->createItemArray('path', '', false, '/cmf/sulu_io/contents/' . strtolower($page['title'])),
+                    'resourceSegment' => $this->createItemArray('resourceSegment', '', false, $page['url']),
                     'redirectExternal' => $this->createItemArray('redirectExternal', '', false, ''),
                     'redirectTarget' => $this->createItemArray('redirectTarget', '', false, ''),
                     'redirectType' => $this->createItemArray('redirectType', '', false, 1),
@@ -390,7 +414,8 @@ class WebspaceTest extends SuluTestCase
         $value = null,
         $children = null,
         $forceValue = false
-    ) {
+    )
+    {
         if (is_bool($options)) {
             $options = [
                 'translate' => $options,
@@ -443,7 +468,8 @@ class WebspaceTest extends SuluTestCase
         $isShadow = null,
         $shadowBaseLanguage = null,
         $documentAlias = Structure::TYPE_PAGE
-    ) {
+    )
+    {
         /** @var PageDocument $document */
         try {
             $document = $this->documentManager->find($uuid, $locale);
