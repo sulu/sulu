@@ -27,7 +27,7 @@ define([
             preselectedIds: [],
             instanceName: null,
             types: null,
-            locale: ''
+            locale: UserSettingsManager.getMediaLocale()
         },
 
         /**
