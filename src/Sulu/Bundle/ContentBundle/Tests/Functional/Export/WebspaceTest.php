@@ -414,8 +414,7 @@ class WebspaceTest extends SuluTestCase
         $value = null,
         $children = null,
         $forceValue = false
-    )
-    {
+    ) {
         if (is_bool($options)) {
             $options = [
                 'translate' => $options,
@@ -468,8 +467,7 @@ class WebspaceTest extends SuluTestCase
         $isShadow = null,
         $shadowBaseLanguage = null,
         $documentAlias = Structure::TYPE_PAGE
-    )
-    {
+    ) {
         /** @var PageDocument $document */
         try {
             $document = $this->documentManager->find($uuid, $locale);
