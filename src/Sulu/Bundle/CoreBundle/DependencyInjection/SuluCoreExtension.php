@@ -12,7 +12,13 @@
 namespace Sulu\Bundle\CoreBundle\DependencyInjection;
 
 use InvalidArgumentException;
+use Oro\ORM\Query\AST\Functions\String\GroupConcat;
+use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
+use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Component\Rest\Csv\ObjectNotSupportedException;
+use Sulu\Component\Rest\DQL\Cast;
 use Sulu\Component\Rest\Exception\InvalidHashException;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
@@ -40,7 +46,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $configs = $parameterBag->resolveValue($configs);
         $config = $this->processConfiguration(new Configuration(), $configs);
 
-        if (isset($config['phpcr'])) {
+        if (isset($config['phpcr']) && $container->hasExtension('doctrine_phpcr')) {
             $phpcrConfig = $config['phpcr'];
 
             // TODO: Workaround for issue: https://github.com/doctrine/DoctrinePHPCRBundle/issues/178
@@ -48,23 +54,13 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                 $phpcrConfig['backend']['check_login_on_server'] = false;
             }
 
-            foreach (array_keys($container->getExtensions()) as $name) {
-                $prependConfig = [];
-                switch ($name) {
-                    case 'doctrine_phpcr':
-                        $prependConfig = [
-                            'session' => $phpcrConfig,
-                            'odm' => [],
-                        ];
-                        break;
-                    case 'cmf_core':
-                        break;
-                }
-
-                if ($prependConfig) {
-                    $container->prependExtensionConfig($name, $prependConfig);
-                }
-            }
+            $container->prependExtensionConfig(
+                'doctrine_phpcr',
+                [
+                    'session' => $phpcrConfig,
+                    'odm' => [],
+                ]
+            );
         }
 
         if ($container->hasExtension('massive_build')) {
@@ -77,6 +73,9 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $container->prependExtensionConfig(
                 'fos_rest',
                 [
+                    'routing_loader' => [
+                        'default_format' => 'json',
+                    ],
                     'exception' => [
                         'enabled' => true,
                         'codes' => [
@@ -86,6 +85,87 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                     ],
                     'service' => [
                         'exception_handler' => 'sulu_core.rest.exception_wrapper_handler',
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('doctrine')) {
+            $container->prependExtensionConfig(
+                'doctrine',
+                [
+                    'orm' => [
+                        'mappings' => [
+                            'gedmo_tree' => [
+                                'type' => 'xml',
+                                'prefix' => 'Gedmo\\Tree\\Entity',
+                                'dir' => '%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity',
+                                'alias' => 'GedmoTree',
+                                'is_bundle' => false,
+                            ],
+                        ],
+                        'dql' => [
+                            'string_functions' => [
+                                'group_concat' => GroupConcat::class,
+                                'CAST' => Cast::class,
+                            ],
+                        ],
+                        'resolve_target_entities' => [
+                            CollectionInterface::class => Collection::class,
+                            AccountInterface::class => Account::class,
+                        ],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('stof_doctrine_extensions')) {
+            $container->prependExtensionConfig('stof_doctrine_extensions', ['orm' => ['default' => ['tree' => true]]]);
+        }
+
+        if ($container->hasExtension('jms_serializer')) {
+            $container->prependExtensionConfig('jms_serializer', ['metadata' => ['debug' => '%kernel.debug%']]);
+        }
+
+        if ($container->hasExtension('cmf_core')) {
+            $container->prependExtensionConfig('cmf_core', ['publish_workflow' => ['enabled' => false]]);
+        }
+
+        if ($container->hasExtension('fos_rest')) {
+            $container->prependExtensionConfig('fos_rest', ['view' => ['formats' => ['json' => true, 'csv' => true]]]);
+        }
+
+        if ($container->hasExtension('massive_build')) {
+            $container->prependExtensionConfig(
+                'massive_build',
+                [
+                    'targets' => [
+                        'prod' => [
+                            'dependencies' => [
+                                'database' => [],
+                                'phpcr' => [],
+                                'fixtures' => [],
+                                'phpcr_migrations' => [],
+                                'system_collections' => [],
+                            ],
+                        ],
+                        'dev' => [
+                            'dependencies' => [
+                                'database' => [],
+                                'fixtures' => [],
+                                'phpcr' => [],
+                                'user' => [],
+                                'phpcr_migrations' => [],
+                                'system_collections' => [],
+                            ],
+                        ],
+                        'maintain' => [
+                            'dependencies' => [
+                                'node_order' => [],
+                                'search_index' => [],
+                                'phpcr_migrations' => [],
+                            ],
+                        ],
                     ],
                 ]
             );

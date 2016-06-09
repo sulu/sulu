@@ -38,6 +38,8 @@
 
         <service id="sulu_core.rest.view_handler.csv" class="Sulu\Component\Rest\Csv\CsvHandler">
             <argument type="service" id="serializer"/>
+
+            <tag name="sulu.context" context="admin"/>
         </service>
     </services>
 </container>

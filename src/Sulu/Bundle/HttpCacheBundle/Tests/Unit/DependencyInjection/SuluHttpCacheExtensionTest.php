@@ -39,7 +39,7 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
 
         $this->assertTrue($this->container->has('sulu_http_cache.handler'));
         $this->assertTrue($this->container->has('sulu_http_cache.handler.aggregate'));
-        $this->assertFalse($this->container->has('sulu_http_cache.handler.paths'));
+        $this->assertTrue($this->container->has('sulu_http_cache.handler.paths'));
         $this->assertFalse($this->container->has('sulu_http_cache.handler.tags'));
     }
 

@@ -11,6 +11,10 @@
 
 namespace Sulu\Bundle\ContentBundle\DependencyInjection;
 
+use Sulu\Bundle\ContentBundle\Document\HomeDocument;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Bundle\ContentBundle\Document\RouteDocument;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -28,20 +32,25 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
     public function prepend(ContainerBuilder $container)
     {
         if ($container->hasExtension('sulu_core')) {
-            $prepend = [
-                'content' => [
-                    'structure' => [
-                        'paths' => [
-                            [
-                                'path' => __DIR__ . '/../Content/templates',
-                                'type' => 'page',
+            $container->prependExtensionConfig(
+                'sulu_core',
+                [
+                    'content' => [
+                        'structure' => [
+                            'paths' => [
+                                [
+                                    'path' => __DIR__ . '/../Content/templates',
+                                    'type' => 'page',
+                                ],
+                            ],
+                            'type_map' => [
+                                'page' => PageBridge::class,
+                                'home' => PageBridge::class,
                             ],
                         ],
                     ],
-                ],
-            ];
-
-            $container->prependExtensionConfig('sulu_core', $prepend);
+                ]
+            );
         }
 
         if ($container->hasExtension('jms_serializer')) {
@@ -76,6 +85,32 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
                         'codes' => [
                             'Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException' => 409,
                         ],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('sulu_content')) {
+            $container->prependExtensionConfig(
+                'sulu_content',
+                [
+                    'search' => [
+                        'mapping' => [
+                            PageDocument::class => ['index' => 'page'],
+                        ],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('sulu_document_manager')) {
+            $container->prependExtensionConfig(
+                'sulu_document_manager',
+                [
+                    'mapping' => [
+                        'page' => ['class' => PageDocument::class, 'phpcr_type' => 'sulu:page'],
+                        'home' => ['class' => HomeDocument::class, 'phpcr_type' => 'sulu:home'],
+                        'route' => ['class' => RouteDocument::class, 'phpcr_type' => 'sulu:path'],
                     ],
                 ]
             );

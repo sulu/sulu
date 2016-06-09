@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\SnippetBundle\DependencyInjection;
 
+use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
+use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -28,6 +30,49 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
             $container->prependExtensionConfig(
                 'sulu_search',
                 ['indexes' => ['snippet' => ['security_context' => 'sulu.global.snippets']]]
+            );
+        }
+
+        if ($container->hasExtension('sulu_core')) {
+            $container->prependExtensionConfig(
+                'sulu_core',
+                [
+                    'content' => [
+                        'structure' => [
+                            'paths' => [
+                                [
+                                    'path' => __DIR__ . '/../Content/templates',
+                                    'type' => 'page',
+                                ],
+                            ],
+                            'type_map' => ['snippet' => SnippetBridge::class],
+                        ],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('sulu_content')) {
+            $container->prependExtensionConfig(
+                'sulu_content',
+                [
+                    'search' => [
+                        'mapping' => [
+                            SnippetDocument::class => ['index' => 'snippet'],
+                        ],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('sulu_document_manager')) {
+            $container->prependExtensionConfig(
+                'sulu_document_manager',
+                [
+                    'mapping' => [
+                        'snippet' => ['class' => SnippetDocument::class, 'phpcr_type' => 'sulu:snippet'],
+                    ],
+                ]
             );
         }
     }
