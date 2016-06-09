@@ -372,6 +372,7 @@ class Webspace implements WebspaceInterface
                 $document->getRedirectExternal(),
                 $settingOptions),
             'redirectType' => $this->createProperty('redirectType', $document->getRedirectType(), $settingOptions),
+            'redirectTarget' => $this->createProperty('redirectTarget', $document->getRedirectTarget(), $settingOptions),
             'workflowStage' => $this->createProperty('workflowStage', $document->getWorkflowStage(), $settingOptions),
             'parent' => $this->createProperty('parent', $parent, $settingOptions),
         ];
