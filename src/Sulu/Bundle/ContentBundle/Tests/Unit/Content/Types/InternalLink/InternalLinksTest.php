@@ -11,15 +11,13 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\InternalLink;
 
+use PHPCR\NodeInterface;
+use PHPCR\SessionInterface;
 use Psr\Log\NullLogger;
 use Sulu\Bundle\ContentBundle\Content\Types\InternalLinks;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
-
-//FIXME remove on update to phpunit 3.8, caused by https://github.com/sebastianbergmann/phpunit/issues/604
-interface NodeInterface extends \PHPCR\NodeInterface, \Iterator
-{
-}
 
 /**
  * @group unit
@@ -44,13 +42,13 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->contentQuery = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Query\ContentQueryExecutor',
+            ContentQueryExecutorInterface::class,
             [],
             '',
             false
         );
         $this->contentQueryBuilder = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Query\ContentQueryBuilderInterface',
+            ContentQueryBuilderInterface::class,
             [],
             '',
             false
@@ -61,7 +59,7 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
     public function testWriteWithNoneExistingUUID()
     {
         $subNode1 = $this->getMockForAbstractClass(
-            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\InternalLink\NodeInterface',
+            NodeInterface::class,
             [],
             '',
             true,
@@ -70,7 +68,7 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
         );
         $subNode1->expects($this->any())->method('getIdentifier')->will($this->returnValue('123-123-123'));
         $subNode2 = $this->getMockForAbstractClass(
-            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\InternalLink\NodeInterface',
+            NodeInterface::class,
             [],
             '',
             true,
@@ -80,7 +78,7 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
         $subNode2->expects($this->any())->method('getIdentifier')->will($this->returnValue('123-456-789'));
 
         $node = $this->getMockForAbstractClass(
-            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\InternalLink\NodeInterface',
+            NodeInterface::class,
             [],
             '',
             true,
@@ -89,7 +87,7 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
         );
 
         $session = $this->getMockForAbstractClass(
-            'PHPCR\SessionInterface',
+            SessionInterface::class,
             [],
             '',
             true,
@@ -103,7 +101,7 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
         );
 
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Compat\PropertyInterface',
+            PropertyInterface::class,
             [],
             '',
             true,
