@@ -28,7 +28,7 @@ set_time_limit(0);
 // require the autoloader
 $autoloadFile = __DIR__ . '/../vendor/autoload.php';
 if (!file_exists($autoloadFile)) {
-    writeln(sprintf(
+    echo(sprintf(
         'Could not find autoload file "%s", make sure you have ' .
         'installed the projects dependencies (i.e. `composer install`).',
         $autoloadFile
