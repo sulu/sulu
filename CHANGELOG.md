@@ -2,7 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
-    * HOTFIX      #XXXX [MediaBundle]         Fixed media-selection-overlay missing locale
+    * HOTFIX      #2467 [MediaBundle]         Fixed media-selection-overlay missing locale
     * HOTFIX      #2460 [MediaBundle]         Fixed deprecation of getEntityManager in MediaPreviewController
     * HOTFIX      #2454 [MediaBundle]         Fixed inset image scale image-size 0
     * HOTFIX      #2440 [MediaBundle]         Fixed media-selection sorting
