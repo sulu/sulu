@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #2466 [ContentBundle]       Webspace xliff 1.2 Export
     * ENHANCEMENT #2462 [All]                 Removed unnecessary NodeInterface definitions in tests
     * BUGFIX      #2455 [CoreBundle]          Fixed ServerStatusCommand for Symfony 2.8.7
     * BUGFIX      #2443 [WebsiteBundle]       Added portal check for portal-routes
@@ -395,7 +396,6 @@ CHANGELOG for Sulu
     * BUGFIX      #1733 [ContentBundle]   Added empty locale condition to fix empty locale bug
     * ENHANCEMENT #1719 [SearchBundle]    Updated search to only return granted documents
     * BUGFIX      #1733 [ContactBundle]   Added delete warning and download icon for contact avatar and account logo
-    * FEATURE     #1686 [ContentBundle]   Webspace xliff 1.2 Export
     * BUGFIX      #1733 [MediaBundle]     Fixed a few media-selection bugs
     * ENHANCEMENT #1605 [MediaBundle]     Adjust media-selection-overlay title
     * BUGFIX      #1716 [ContactBundle]   Fixed wrong contact entity identifier
