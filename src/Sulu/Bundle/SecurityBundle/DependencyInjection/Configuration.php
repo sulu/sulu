@@ -81,7 +81,7 @@ class Configuration implements ConfigurationInterface
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->scalarNode('model')->defaultValue('Sulu\Bundle\SecurityBundle\Entity\AccessControl')->end()
-                                ->scalarNode('repository')->defaultValue('Sulu\Bundle\SecurityBundle\Entity\AccessControlRepository')->end()
+                                ->scalarNode('repository')->defaultValue('Sulu\Bundle\SecurityBundle\Entity\InheritedAccessControlRepository')->end()
                             ->end()
                         ->end()
                     ->end()
