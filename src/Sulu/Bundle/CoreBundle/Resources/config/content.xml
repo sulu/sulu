@@ -18,6 +18,7 @@
         <parameter key="sulu.content.type.text_line.class">Sulu\Component\Content\Types\TextLine</parameter>
         <parameter key="sulu.content.type.text_area.class">Sulu\Component\Content\Types\TextArea</parameter>
         <parameter key="sulu.content.type.text_editor.class">Sulu\Component\Content\Types\TextEditor</parameter>
+        <parameter key="sulu.content.type.text_markdown.class">Sulu\Component\Content\Types\TextMarkdown</parameter>
         <parameter key="sulu.content.type.resource_locator.class">Sulu\Component\Content\Types\ResourceLocator</parameter>
         <parameter key="sulu.content.type.block.class">Sulu\Component\Content\Types\BlockContentType</parameter>
 
@@ -110,6 +111,10 @@
         <service id="sulu.content.type.text_editor" class="%sulu.content.type.text_editor.class%">
             <argument>%sulu.content.type.text_editor.template%</argument>
             <tag name="sulu.content.type" alias="text_editor"/>
+        </service>
+        <service id="sulu.content.type.text_markdown" class="%sulu.content.type.text_markdown.class%">
+            <argument>%sulu.content.type.text_markdown.template%</argument>
+            <tag name="sulu.content.type" alias="text_markdown"/>
         </service>
         <service id="sulu.content.type.resource_locator" class="%sulu.content.type.resource_locator.class%">
             <argument>%sulu.content.type.resource_locator.template%</argument>

@@ -224,6 +224,10 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $contentConfig['types']['text_editor']['template']
         );
         $container->setParameter(
+            'sulu.content.type.text_markdown.template',
+            $contentConfig['types']['text_markdown']['template']
+        );
+        $container->setParameter(
             'sulu.content.type.resource_locator.template',
             $contentConfig['types']['resource_locator']['template']
         );
