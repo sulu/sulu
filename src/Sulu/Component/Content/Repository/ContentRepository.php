@@ -37,7 +37,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
  */
 class ContentRepository implements ContentRepositoryInterface
 {
-    private static $nonFallbackProperties = [
+    protected static $nonFallbackProperties = [
         'uuid',
         'state',
         'order',
@@ -52,42 +52,42 @@ class ContentRepository implements ContentRepositoryInterface
     /**
      * @var SessionManagerInterface
      */
-    private $sessionManager;
+    protected $sessionManager;
 
     /**
      * @var PropertyEncoder
      */
-    private $propertyEncoder;
+    protected $propertyEncoder;
 
     /**
      * @var WebspaceManagerInterface
      */
-    private $webspaceManager;
+    protected $webspaceManager;
 
     /**
      * @var SessionInterface
      */
-    private $session;
+    protected $session;
 
     /**
      * @var QueryObjectModelFactoryInterface
      */
-    private $qomFactory;
+    protected $qomFactory;
 
     /**
      * @var LocalizationFinderInterface
      */
-    private $localizationFinder;
+    protected $localizationFinder;
 
     /**
      * @var StructureManagerInterface
      */
-    private $structureManager;
+    protected $structureManager;
 
     /**
      * @var SuluNodeHelper
      */
-    private $nodeHelper;
+    protected $nodeHelper;
 
     public function __construct(
         SessionManagerInterface $sessionManager,
@@ -294,7 +294,7 @@ class ContentRepository implements ContentRepositoryInterface
      *
      * @return Content[]
      */
-    private function generateTreeByPath(array $contents)
+    protected function generateTreeByPath(array $contents)
     {
         $childrenByPath = [];
 
@@ -339,7 +339,7 @@ class ContentRepository implements ContentRepositoryInterface
      *
      * @throws ItemNotFoundException
      */
-    private function resolvePathByUuid($uuid)
+    protected function resolvePathByUuid($uuid)
     {
         $queryBuilder = new QueryBuilder($this->qomFactory);
 
@@ -373,7 +373,7 @@ class ContentRepository implements ContentRepositoryInterface
      *
      * @return Content[]
      */
-    private function resolveQueryBuilder(
+    protected function resolveQueryBuilder(
         QueryBuilder $queryBuilder,
         $locale,
         $locales,
@@ -401,7 +401,7 @@ class ContentRepository implements ContentRepositoryInterface
      *
      * @return QueryBuilder
      */
-    private function getQueryBuilder($locale, $locales, UserInterface $user = null)
+    protected function getQueryBuilder($locale, $locales, UserInterface $user = null)
     {
         $queryBuilder = new QueryBuilder($this->qomFactory);
 
@@ -441,7 +441,7 @@ class ContentRepository implements ContentRepositoryInterface
      *
      * @return string[]
      */
-    private function getLocalesByWebspaceKey($webspaceKey)
+    protected function getLocalesByWebspaceKey($webspaceKey)
     {
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
 
@@ -460,7 +460,7 @@ class ContentRepository implements ContentRepositoryInterface
      *
      * @return string[]
      */
-    private function getLocalesByPortalKey($portalKey)
+    protected function getLocalesByPortalKey($portalKey)
     {
         $portal = $this->webspaceManager->findPortalByKey($portalKey);
 
@@ -477,7 +477,7 @@ class ContentRepository implements ContentRepositoryInterface
      *
      * @return string[]
      */
-    private function getLocales()
+    protected function getLocales()
     {
         return array_map(
             function (Localization $localization) {
@@ -495,7 +495,7 @@ class ContentRepository implements ContentRepositoryInterface
      * @param string $locale
      * @param string[] $locales
      */
-    private function appendMapping(QueryBuilder $queryBuilder, MappingInterface $mapping, $locale, $locales)
+    protected function appendMapping(QueryBuilder $queryBuilder, MappingInterface $mapping, $locale, $locales)
     {
         if ($mapping->onlyPublished()) {
             $queryBuilder->andWhere(
@@ -527,7 +527,7 @@ class ContentRepository implements ContentRepositoryInterface
      * @param string $propertyName
      * @param string[] $locales
      */
-    private function appendSingleMapping(QueryBuilder $queryBuilder, $propertyName, $locales)
+    protected function appendSingleMapping(QueryBuilder $queryBuilder, $propertyName, $locales)
     {
         foreach ($locales as $locale) {
             $alias = sprintf('%s%s', $locale, str_replace('-', '_', ucfirst($propertyName)));
@@ -546,7 +546,7 @@ class ContentRepository implements ContentRepositoryInterface
      * @param QueryBuilder $queryBuilder
      * @param string[] $locales
      */
-    private function appendUrlMapping(QueryBuilder $queryBuilder, $locales)
+    protected function appendUrlMapping(QueryBuilder $queryBuilder, $locales)
     {
         $structures = $this->structureManager->getStructures(Structure::TYPE_PAGE);
         $urlNames = [];
@@ -576,7 +576,7 @@ class ContentRepository implements ContentRepositoryInterface
      *
      * @return Content
      */
-    private function resolveContent(
+    protected function resolveContent(
         Row $row,
         $locale,
         $locales,
@@ -669,7 +669,7 @@ class ContentRepository implements ContentRepositoryInterface
      *
      * @return string[]
      */
-    private function resolveAvailableLocales(Row $row)
+    protected function resolveAvailableLocales(Row $row)
     {
         $locales = [];
         foreach ($row->getValues() as $key => $value) {
@@ -737,7 +737,7 @@ class ContentRepository implements ContentRepositoryInterface
      *
      * @return mixed
      */
-    private function resolveProperty(Row $row, $name, $locale, $shadowLocale = null)
+    protected function resolveProperty(Row $row, $name, $locale, $shadowLocale = null)
     {
         if (array_key_exists(sprintf('node.%s', $name), $row->getValues())) {
             return $row->getValue($name);
@@ -765,7 +765,7 @@ class ContentRepository implements ContentRepositoryInterface
      *
      * @return string
      */
-    private function resolveUrl(Row $row, $locale)
+    protected function resolveUrl(Row $row, $locale)
     {
         if ($this->resolveProperty($row, $locale . 'State', $locale) !== WorkflowStage::PUBLISHED) {
             return;
@@ -795,7 +795,7 @@ class ContentRepository implements ContentRepositoryInterface
      *
      * @return string
      */
-    private function resolvePath(Row $row, $webspaceKey)
+    protected function resolvePath(Row $row, $webspaceKey)
     {
         return '/' . ltrim(str_replace($this->sessionManager->getContentPath($webspaceKey), '', $row->getPath()), '/');
     }
@@ -808,7 +808,7 @@ class ContentRepository implements ContentRepositoryInterface
      *
      * @return array
      */
-    private function resolvePermissions(Row $row, UserInterface $user = null)
+    protected function resolvePermissions(Row $row, UserInterface $user = null)
     {
         $permissions = [];
         if (null !== $user) {
@@ -829,7 +829,7 @@ class ContentRepository implements ContentRepositoryInterface
      *
      * @return bool
      */
-    private function resolveHasChildren(Row $row)
+    protected function resolveHasChildren(Row $row)
     {
         $queryBuilder = new QueryBuilder($this->qomFactory);
 
