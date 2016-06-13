@@ -15,12 +15,13 @@ use PHPCR\NodeInterface;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 
 /**
  * Content Type for the CategoryList, uses the CategoryManager-Service and the Datagrid from Husky.
  */
-class CategoryList extends ComplexContentType
+class CategoryList extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
      * Responsible for persisting the categories in the database.
@@ -135,5 +136,23 @@ class CategoryList extends ComplexContentType
     public function getTemplate()
     {
         return $this->template;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exportData($propertyValue)
+    {
+        if (is_array($propertyValue) && count($propertyValue) > 0) {
+            if (isset($propertyValue[0]) && isset($propertyValue[0]['id'])) {
+                foreach ($propertyValue as &$propertyValueItem) {
+                    $propertyValueItem = $propertyValueItem['id'];
+                }
+            }
+
+            return json_encode($propertyValue);
+        }
+
+        return '';
     }
 }

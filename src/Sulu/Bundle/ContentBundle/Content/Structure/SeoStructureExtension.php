@@ -13,11 +13,12 @@ namespace Sulu\Bundle\ContentBundle\Content\Structure;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Extension\AbstractExtension;
+use Sulu\Component\Content\Extension\ExportExtensionInterface;
 
 /**
  * extends structure with seo content.
  */
-class SeoStructureExtension extends AbstractExtension
+class SeoStructureExtension extends AbstractExtension implements ExportExtensionInterface
 {
     /**
      * name of structure extension.
@@ -75,5 +76,60 @@ class SeoStructureExtension extends AbstractExtension
             'noFollow' => $this->loadProperty($node, 'noFollow', false),
             'hideInSitemap' => $this->loadProperty($node, 'hideInSitemap', false),
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function export($properties, $format = null)
+    {
+        $data = [];
+
+        foreach ($properties as $key => $property) {
+            $value = $property;
+            if (is_bool($value)) {
+                $value = (int) $value;
+            }
+
+            $data[$key] = [
+                'name' => $key,
+                'value' => $value,
+                'type' => '', // TODO content type
+                'options' => $this->getExportOption($key, $format),
+            ];
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param $key
+     * @param $format
+     *
+     * @return array
+     */
+    protected function getExportOption($key, $format)
+    {
+        if ($format == '1.2.xliff') {
+            $translate = true;
+
+            if (in_array(
+                $key,
+                [
+                    'hideInSitemap',
+                    'noIndex',
+                    'noFollow',
+                    'canonicalUrl',
+                ]
+            )) {
+                $translate = false;
+            }
+
+            return [
+                'translate' => $translate,
+            ];
+        }
+
+        return;
     }
 }
