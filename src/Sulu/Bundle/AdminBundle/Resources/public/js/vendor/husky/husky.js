@@ -42720,7 +42720,6 @@ define('__component__$ckeditor@husky',[], function() {
             table: true,
             link: true,
             pasteFromWord: true,
-            height: 65,
             autoStart: true
         },
 
@@ -51100,25 +51099,12 @@ define("datepicker-zh-TW", function(){});
     });
 
     define('husky_extensions/globalize',['globalize_lib'], function() {
-        var normalizeCultureName = function(cultureName) {
-            cultureName = cultureName.replace('_', '-');
-
-            if (cultureName.indexOf('-') > -1) {
-                cultureName =
-                    cultureName.substring(0, cultureName.indexOf('-')) +
-                    cultureName.substring(cultureName.indexOf('-'), cultureName.length).toUpperCase();
-            }
-
-            return cultureName;
-        };
-
         return  {
             name: 'husky-validation',
 
             initialize: function(app) {
                 app.sandbox.globalize = {
                     addCultureInfo: function(cultureName, messages) {
-                        cultureName = normalizeCultureName(cultureName);
                         Globalize.addCultureInfo(cultureName, {
                             messages: messages
                         });
@@ -51140,12 +51126,12 @@ define("datepicker-zh-TW", function(){});
 
                 app.sandbox.translate = function(key) {
                     var translation;
-                    if (!app.config.culture || !Globalize.culture().name) {
+                    if (!app.config.culture || !app.config.culture.name) {
                         return key;
                     }
 
                     try {
-                        translation = Globalize.localize(key, Globalize.culture().name);
+                        translation = Globalize.localize(key, app.config.culture.name);
                     } catch (e) {
                         app.logger.warn('Globalize threw an error when translating key "' + key + '", failling back to key. Error: ' + e);
                         return key;
@@ -51263,17 +51249,15 @@ define("datepicker-zh-TW", function(){});
                  * @param defaultMessages will be used as fallback messages
                  */
                 app.setLanguage = function(cultureName, messages, defaultMessages) {
-                    cultureName = normalizeCultureName(cultureName);
-
-                    if (cultureName !== 'en') {
-                        require(['cultures/globalize.culture.' + cultureName]);
-                    }
-
                     Globalize.culture(cultureName);
 
                     app.sandbox.globalize.addCultureInfo(cultureName, messages);
                     app.sandbox.globalize.addCultureInfo('default', defaultMessages);
                 };
+
+                if (!!app.config.culture && !!app.config.culture.name && app.config.culture.name !== 'en') {
+                    return require(['cultures/globalize.culture.' + app.config.culture.name.replace("_", "-")]);
+                }
             },
 
             afterAppStart: function(app) {
