@@ -45,9 +45,9 @@ class PreviewRenderer implements PreviewRendererInterface
     private $requestStack;
 
     /**
-     * @var HttpKernelInterface
+     * @var KernelFactoryInterface
      */
-    private $httpKernel;
+    private $kernelFactory;
 
     /**
      * @var WebspaceManagerInterface
@@ -72,7 +72,7 @@ class PreviewRenderer implements PreviewRendererInterface
     /**
      * @param RouteDefaultsProviderInterface $routeDefaultsProvider
      * @param RequestStack $requestStack
-     * @param HttpKernelInterface $httpKernel
+     * @param KernelFactoryInterface $kernelFactory
      * @param WebspaceManagerInterface $webspaceManager
      * @param EventDispatcherInterface $eventDispatcher
      * @param array $previewDefaults
@@ -81,7 +81,7 @@ class PreviewRenderer implements PreviewRendererInterface
     public function __construct(
         RouteDefaultsProviderInterface $routeDefaultsProvider,
         RequestStack $requestStack,
-        HttpKernelInterface $httpKernel,
+        KernelFactoryInterface $kernelFactory,
         WebspaceManagerInterface $webspaceManager,
         EventDispatcherInterface $eventDispatcher,
         array $previewDefaults,
@@ -89,7 +89,7 @@ class PreviewRenderer implements PreviewRendererInterface
     ) {
         $this->routeDefaultsProvider = $routeDefaultsProvider;
         $this->requestStack = $requestStack;
-        $this->httpKernel = $httpKernel;
+        $this->kernelFactory = $kernelFactory;
         $this->webspaceManager = $webspaceManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->previewDefaults = $previewDefaults;
@@ -150,7 +150,6 @@ class PreviewRenderer implements PreviewRendererInterface
         // Controller arguments
         $defaults['object'] = $object;
         $defaults['preview'] = true;
-        $defaults['_profiler'] = (null !== $this->requestStack->getCurrentRequest());
         $defaults['partial'] = $partial;
         $defaults['_sulu'] = $attributes;
 
@@ -183,8 +182,10 @@ class PreviewRenderer implements PreviewRendererInterface
      */
     private function handle(Request $request)
     {
+        $kernel = $this->kernelFactory->create($this->environment);
+
         try {
-            return $this->httpKernel->handle($request, HttpKernelInterface::MASTER_REQUEST, false);
+            return $kernel->handle($request, HttpKernelInterface::MASTER_REQUEST, false);
         } catch (HttpException $e) {
             if ($e->getPrevious()) {
                 throw $e->getPrevious();
