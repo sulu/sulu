@@ -33,7 +33,6 @@ use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Security;
 use Sulu\Component\Webspace\Segment;
-use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\Loader\FileLoader;
@@ -59,8 +58,8 @@ class XmlFileLoader extends FileLoader
     /**
      * Loads a webspace from a xml file.
      *
-     * @param mixed  $resource The resource
-     * @param string $type     The resource type
+     * @param mixed $resource The resource
+     * @param string $type The resource type
      *
      * @return Webspace The webspace object for the given resource
      */
@@ -75,8 +74,8 @@ class XmlFileLoader extends FileLoader
     /**
      * Returns true if this class supports the given resource.
      *
-     * @param mixed  $resource A resource
-     * @param string $type     The resource type
+     * @param mixed $resource A resource
+     * @param string $type The resource type
      *
      * @return bool true if this class supports the given resource, false otherwise
      */
@@ -92,29 +91,7 @@ class XmlFileLoader extends FileLoader
      */
     private function parseXml($file)
     {
-        $exception = null;
-
-        // load xml file
-        try {
-            $xmlDoc = XmlUtils::loadFile($file, __DIR__ . static::SCHEME_PATH_1_1);
-        } catch (\InvalidArgumentException $e) {
-            $exception = new InvalidWebspaceException(
-                sprintf(
-                    'Could not parse webspace XML file "%s"',
-                    $file
-                ), null, $e
-            );
-        }
-
-        if (null !== $exception) {
-            try {
-                $xmlDoc = XmlUtils::loadFile($file, __DIR__ . static::SCHEME_PATH_1_0);
-            } catch (\InvalidArgumentException $e) {
-                throw $exception;
-            }
-        }
-
-        $this->xpath = new \DOMXPath($xmlDoc);
+        $this->xpath = new \DOMXPath($this->tryLoad($file));
         $this->xpath->registerNamespace('x', 'http://schemas.sulu.io/webspace/webspace');
 
         // set simple webspace properties
@@ -145,14 +122,38 @@ class XmlFileLoader extends FileLoader
         return $this->webspace;
     }
 
-    private function tryLoad($file, $scheme)
+    /**
+     * Returns xml-doc when one scheme matches.
+     *
+     * @param string $file
+     *
+     * @return \DOMDocument
+     *
+     * @throws InvalidWebspaceException
+     */
+    private function tryLoad($file)
     {
+        $exception = null;
+
         // load xml file
-        try {
-            return XmlUtils::loadFile($file, __DIR__ . $scheme);
-        } catch (\InvalidArgumentException $e) {
-            return;
+        foreach ([self::SCHEME_PATH_1_1, self::SCHEME_PATH_1_0] as $schemePath) {
+            try {
+                return XmlUtils::loadFile($file, __DIR__ . $schemePath);
+            } catch (\InvalidArgumentException $e) {
+                if (null !== $exception) {
+                    continue;
+                }
+
+                $exception = new InvalidWebspaceException(
+                    sprintf(
+                        'Could not parse webspace XML file "%s"',
+                        $file
+                    ), null, $e
+                );
+            }
         }
+
+        throw $exception;
     }
 
     /**
@@ -191,7 +192,7 @@ class XmlFileLoader extends FileLoader
 
     /**
      * @param \DOMNode $portalNode
-     * @param Portal   $portal
+     * @param Portal $portal
      */
     private function generatePortalLocalizations(\DOMNode $portalNode, Portal $portal)
     {
@@ -208,8 +209,8 @@ class XmlFileLoader extends FileLoader
 
     /**
      * @param \DOMNodeList $localizationNodes
-     * @param Portal       $portal
-     * @param bool         $flat
+     * @param Portal $portal
+     * @param bool $flat
      *
      * @internal param \DOMXpath $xpath
      */
@@ -224,8 +225,8 @@ class XmlFileLoader extends FileLoader
 
     /**
      * @param \DOMElement|\DOMNode $localizationNode
-     * @param bool                 $flat
-     * @param null                 $parent
+     * @param bool $flat
+     * @param null $parent
      *
      * @internal param \DOMXPath $xpath
      *
@@ -340,16 +341,21 @@ class XmlFileLoader extends FileLoader
     /**
      * @internal param \DOMNode $webspaceNode
      *
-     * @return Theme
+     * @return string
      */
     private function generateTheme()
     {
         $nodes = $this->xpath->query('/x:webspace/x:theme/x:key');
+        if ($nodes->length > 0) {
+            return $nodes->item(0)->nodeValue;
+        }
+
+        $nodes = $this->xpath->query('/x:webspace/x:theme');
         if ($nodes->length === 0) {
             return;
         }
 
-        return new Theme($nodes->item(0)->nodeValue);
+        return $nodes->item(0)->nodeValue;
     }
 
     private function generateErrorTemplates(Webspace $webspace)
@@ -457,7 +463,7 @@ class XmlFileLoader extends FileLoader
 
     /**
      * @param \DOMNode $portalNode
-     * @param Portal   $portal
+     * @param Portal $portal
      */
     private function generateEnvironments(\DOMNode $portalNode, Portal $portal)
     {
@@ -474,7 +480,7 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
-     * @param \DOMNode    $environmentNode
+     * @param \DOMNode $environmentNode
      * @param Environment $environment
      *
      * @throws Exception\InvalidUrlDefinitionException

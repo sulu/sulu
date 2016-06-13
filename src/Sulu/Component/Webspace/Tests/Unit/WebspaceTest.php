@@ -39,9 +39,9 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
     private $security;
 
     /**
-     * @var Theme
+     * @var string
      */
-    private $theme;
+    private $theme = 'test';
 
     /**
      * @var Segment
@@ -58,7 +58,6 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
         $this->localization = $this->prophesize('Sulu\Component\Localization\Localization');
         $this->security = $this->prophesize('Sulu\Component\Webspace\Security');
         $this->segment = $this->prophesize('Sulu\Component\Webspace\Segment');
-        $this->theme = $this->prophesize('Sulu\Component\Webspace\Theme');
     }
 
     public function testToArray()
@@ -82,9 +81,7 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
             'portals' => [
                 ['one'],
             ],
-            'theme' => [
-                'dsa',
-            ],
+            'theme' => 'test',
             'navigation' => [
                 'contexts' => [],
             ],
@@ -93,7 +90,6 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
         $this->security->getSystem()->willReturn($expected['security']['system']);
         $this->localization->toArray()->willReturn($expected['localizations'][0]);
         $this->segment->toArray()->willReturn($expected['segments'][0]);
-        $this->theme->toArray()->willReturn($expected['theme']);
         $this->portal->toArray()->willReturn($expected['portals'][0]);
 
         $this->webspace->setKey($expected['key']);
@@ -114,7 +110,7 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
                 $this->portal->reveal(),
             ]
         );
-        $this->webspace->setTheme($this->theme->reveal());
+        $this->webspace->setTheme($this->theme);
 
         $res = $this->webspace->toArray();
         $this->assertEquals($expected, $res);

@@ -18,8 +18,7 @@
         <segment key="s">summer</segment>
     </segments>
 
-    <theme>
-        <key>massiveart</key>
+    <theme>massiveart
     </theme>
 
     <default-templates>

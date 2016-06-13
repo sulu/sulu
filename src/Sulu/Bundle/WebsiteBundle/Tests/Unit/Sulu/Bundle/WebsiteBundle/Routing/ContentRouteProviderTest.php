@@ -21,7 +21,6 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Portal;
-use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,9 +35,8 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme('theme');
         $webspace = new Webspace();
-        $webspace->setTheme($theme);
+        $webspace->setTheme('theme');
         $portal->setWebspace($webspace);
         $localization = new Localization();
         $localization->setLanguage('de');
@@ -75,9 +73,8 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme('theme');
         $webspace = new Webspace();
-        $webspace->setTheme($theme);
+        $webspace->setTheme('theme');
         $portal->setWebspace($webspace);
         $localization = new Localization();
         $localization->setLanguage('de');
@@ -114,9 +111,8 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme('theme');
         $webspace = new Webspace();
-        $webspace->setTheme($theme);
+        $webspace->setTheme('theme');
         $portal->setWebspace($webspace);
         $localization = new Localization();
         $localization->setLanguage('de');
@@ -156,9 +152,8 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme('theme');
         $webspace = new Webspace();
-        $webspace->setTheme($theme);
+        $webspace->setTheme('theme');
         $portal->setWebspace($webspace);
         $localization = new Localization();
         $localization->setLanguage('de');
@@ -197,9 +192,8 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $prefix = '/de';
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme('theme');
         $webspace = new Webspace();
-        $webspace->setTheme($theme);
+        $webspace->setTheme('theme');
         $portal->setWebspace($webspace);
 
         $contentMapper = $this->getContentMapperMock();
@@ -230,9 +224,8 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $prefix = '/de';
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme('theme');
         $webspace = new Webspace();
-        $webspace->setTheme($theme);
+        $webspace->setTheme('theme');
         $portal->setWebspace($webspace);
 
         $contentMapper = $this->getContentMapperMock();
@@ -274,9 +267,8 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $prefix = '/de';
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme('theme');
         $webspace = new Webspace();
-        $webspace->setTheme($theme);
+        $webspace->setTheme('theme');
         $portal->setWebspace($webspace);
 
         $contentMapper = $this->getContentMapperMock();
@@ -319,9 +311,8 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme('theme');
         $webspace = new Webspace();
-        $webspace->setTheme($theme);
+        $webspace->setTheme('theme');
         $portal->setWebspace($webspace);
         $localization = new Localization();
         $localization->setLanguage('de');
@@ -374,9 +365,8 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme('theme');
         $webspace = new Webspace();
-        $webspace->setTheme($theme);
+        $webspace->setTheme('theme');
         $portal->setWebspace($webspace);
         $localization = new Localization();
         $localization->setLanguage('de');
@@ -414,9 +404,8 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme('theme');
         $webspace = new Webspace();
-        $webspace->setTheme($theme);
+        $webspace->setTheme('theme');
         $portal->setWebspace($webspace);
 
         $structure = $this->getStructureMock($uuid);
@@ -468,9 +457,8 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme('theme');
         $webspace = new Webspace();
-        $webspace->setTheme($theme);
+        $webspace->setTheme('theme');
         $portal->setWebspace($webspace);
         $localization = new Localization();
         $localization->setLanguage('de');
@@ -508,9 +496,8 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme('theme');
         $webspace = new Webspace();
-        $webspace->setTheme($theme);
+        $webspace->setTheme('theme');
         $portal->setWebspace($webspace);
 
         $requestAnalyzer = $this->getRequestAnalyzerMock(
@@ -560,9 +547,8 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme('theme');
         $webspace = new Webspace();
-        $webspace->setTheme($theme);
+        $webspace->setTheme('theme');
         $portal->setWebspace($webspace);
 
         $structure = $this->getStructureMock(
@@ -613,9 +599,8 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme('theme');
         $webspace = new Webspace();
-        $webspace->setTheme($theme);
+        $webspace->setTheme('theme');
         $portal->setWebspace($webspace);
 
         $structure = $this->getStructureMock(
@@ -666,9 +651,8 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme('theme');
         $webspace = new Webspace();
-        $webspace->setTheme($theme);
+        $webspace->setTheme('theme');
         $portal->setWebspace($webspace);
 
         $structure = $this->getStructureMock(
@@ -719,9 +703,8 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme('theme');
         $webspace = new Webspace();
-        $webspace->setTheme($theme);
+        $webspace->setTheme('theme');
         $portal->setWebspace($webspace);
         $localization = new Localization();
         $localization->setLanguage('de');
@@ -773,9 +756,8 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme('theme');
         $webspace = new Webspace();
-        $webspace->setTheme($theme);
+        $webspace->setTheme('theme');
         $portal->setWebspace($webspace);
         $localization = new Localization();
         $localization->setLanguage('de');
@@ -827,9 +809,8 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $uuid = 1;
         $portal = new Portal();
         $portal->setKey('portal');
-        $theme = new Theme('theme');
         $webspace = new Webspace();
-        $webspace->setTheme($theme);
+        $webspace->setTheme('theme');
         $portal->setWebspace($webspace);
         $localization = new Localization();
         $localization->setLanguage('de');

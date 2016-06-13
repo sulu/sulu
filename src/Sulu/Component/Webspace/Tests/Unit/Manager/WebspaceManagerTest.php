@@ -77,7 +77,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('ca', $webspace->getLocalizations()[1]->getCountry());
         $this->assertEquals(null, $webspace->getLocalizations()[1]->getShadow());
 
-        $this->assertEquals('massiveart', $webspace->getTheme()->getKey());
+        $this->assertEquals('massiveart', $webspace->getTheme());
 
         $this->assertEquals(2, count($webspace->getNavigation()->getContexts()));
 
@@ -177,7 +177,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('at', $webspace->getLocalizations()[1]->getCountry());
         $this->assertEquals('', $webspace->getLocalizations()[1]->getShadow());
 
-        $this->assertEquals('sulu', $webspace->getTheme()->getKey());
+        $this->assertEquals('sulu', $webspace->getTheme());
 
         $portal = $webspace->getPortals()[0];
 
@@ -271,7 +271,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('de', $webspace->getLocalizations()[1]->getLanguage());
         $this->assertEquals('at', $webspace->getLocalizations()[1]->getCountry());
         $this->assertEquals('', $webspace->getLocalizations()[1]->getShadow());
-        $this->assertEquals('sulu', $webspace->getTheme()->getKey());
+        $this->assertEquals('sulu', $webspace->getTheme());
 
         /** @var Portal $portal */
         $portal = $portalInformation->getPortal();
@@ -320,7 +320,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('de', $webspace->getLocalizations()[1]->getLanguage());
         $this->assertEquals('at', $webspace->getLocalizations()[1]->getCountry());
         $this->assertEquals('', $webspace->getLocalizations()[1]->getShadow());
-        $this->assertEquals('sulu', $webspace->getTheme()->getKey());
+        $this->assertEquals('sulu', $webspace->getTheme());
 
         $portal = $portalInformation->getPortal();
 
@@ -371,7 +371,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('de', $webspace->getLocalizations()[1]->getLanguage());
         $this->assertEquals('at', $webspace->getLocalizations()[1]->getCountry());
         $this->assertEquals('', $webspace->getLocalizations()[1]->getShadow());
-        $this->assertEquals('sulu', $webspace->getTheme()->getKey());
+        $this->assertEquals('sulu', $webspace->getTheme());
 
         /** @var Portal $portal */
         $portal = $portalInformation->getPortal();
@@ -420,7 +420,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('de', $webspace->getLocalizations()[1]->getLanguage());
         $this->assertEquals('at', $webspace->getLocalizations()[1]->getCountry());
         $this->assertEquals('', $webspace->getLocalizations()[1]->getShadow());
-        $this->assertEquals('sulu', $webspace->getTheme()->getKey());
+        $this->assertEquals('sulu', $webspace->getTheme());
 
         $portal = $portalInformation->getPortal();
 
@@ -599,7 +599,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('de', $webspace->getLocalizations()[1]->getLanguage());
         $this->assertEquals('at', $webspace->getLocalizations()[1]->getCountry());
         $this->assertEquals('', $webspace->getLocalizations()[1]->getShadow());
-        $this->assertEquals('sulu', $webspace->getTheme()->getKey());
+        $this->assertEquals('sulu', $webspace->getTheme());
     }
 
     public function testLocalizations()

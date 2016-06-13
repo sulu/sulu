@@ -50,7 +50,7 @@ class XmlFileLoaderTest extends WebspaceTestCase
 
         $this->assertEquals('de_at', $webspace->getDefaultLocalization()->getLocalization());
 
-        $this->assertEquals('sulu', $webspace->getTheme()->getKey());
+        $this->assertEquals('sulu', $webspace->getTheme());
         $this->assertEquals(
             ['page' => 'default', 'homepage' => 'overview', 'home' => 'overview'],
             $webspace->getDefaultTemplates()
@@ -140,7 +140,7 @@ class XmlFileLoaderTest extends WebspaceTestCase
         $this->assertEquals('summer', $webspace->getSegments()[1]->getName());
         $this->assertEquals(false, $webspace->getSegments()[1]->isDefault());
 
-        $this->assertEquals('massiveart', $webspace->getTheme()->getKey());
+        $this->assertEquals('massiveart', $webspace->getTheme());
 
         $this->assertEquals('tree', $webspace->getPortals()[0]->getResourceLocatorStrategy());
 
@@ -257,7 +257,7 @@ class XmlFileLoaderTest extends WebspaceTestCase
 
         $this->assertEquals('de_at', $webspace->getDefaultLocalization()->getLocalization());
 
-        $this->assertEquals('sulu', $webspace->getTheme()->getKey());
+        $this->assertEquals('sulu', $webspace->getTheme());
         $this->assertEquals(
             ['page' => 'default', 'homepage' => 'overview', 'home' => 'overview'],
             $webspace->getDefaultTemplates()
@@ -340,7 +340,7 @@ class XmlFileLoaderTest extends WebspaceTestCase
 
         $this->assertEquals('de_at', $webspace->getDefaultLocalization()->getLocalization());
 
-        $this->assertEquals('sulu', $webspace->getTheme()->getKey());
+        $this->assertEquals('sulu', $webspace->getTheme());
 
         $this->assertEquals('short', $webspace->getPortals()[0]->getResourceLocatorStrategy());
 

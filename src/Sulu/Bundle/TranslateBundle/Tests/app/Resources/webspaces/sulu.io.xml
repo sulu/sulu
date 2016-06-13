@@ -15,9 +15,7 @@
         </localization>
     </localizations>
 
-    <theme>
-        <key>default</key>
-    </theme>
+    <theme>default</theme>
 
     <portals>
         <portal>

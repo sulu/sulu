@@ -6,9 +6,7 @@
     <name>Massive Art</name>
     <key>massiveart</key>
 
-    <theme>
-        <key>massiveart</key>
-    </theme>
+    <theme>massiveart</theme>
 
     <default-templates>
         <default-template type="page">default</default-template>

@@ -10,9 +10,7 @@
         <localization language="en"/>
     </localizations>
 
-    <theme>
-        <key>default</key>
-    </theme>
+    <theme>default</theme>
 
     <default-templates>
         <default-template type="page">default</default-template>

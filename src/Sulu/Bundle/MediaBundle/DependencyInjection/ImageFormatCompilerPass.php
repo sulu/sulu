@@ -35,7 +35,7 @@ class ImageFormatCompilerPass implements CompilerPassInterface
     {
         $this->container = $container;
 
-        $formats = $this->loadThemeFormats(
+        $formats = $this->loadImageFormats(
             $container->getParameter('sulu_media.format_manager.default_imagine_options')
         );
         if ($container->hasParameter('sulu_media.image.formats')) {
@@ -50,7 +50,7 @@ class ImageFormatCompilerPass implements CompilerPassInterface
      *
      * @return array
      */
-    protected function loadThemeFormats($defaultOptions)
+    protected function loadImageFormats($defaultOptions)
     {
         $activeFormats = [];
         $this->setFormatsFromFile(__DIR__ . '/../Resources/config/image-formats.xml', $activeFormats, $defaultOptions);

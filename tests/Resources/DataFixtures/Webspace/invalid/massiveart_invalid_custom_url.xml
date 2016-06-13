@@ -23,9 +23,7 @@
         <segment key="s">summer</segment>
     </segments>
 
-    <theme>
-        <key>massiveart</key>
-    </theme>
+    <theme>massiveart</theme>
 
     <default-templates>
         <default-template type="page">default</default-template>

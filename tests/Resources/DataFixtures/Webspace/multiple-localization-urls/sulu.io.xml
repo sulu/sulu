@@ -11,9 +11,7 @@
         <localization language="de" default="true"/>
     </localizations>
 
-    <theme>
-        <key>sulu</key>
-    </theme>
+    <theme>sulu</theme>
 
     <default-templates>
         <default-template type="page">default</default-template>

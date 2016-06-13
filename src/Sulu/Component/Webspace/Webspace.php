@@ -71,7 +71,7 @@ class Webspace implements ArrayableInterface
     /**
      * The theme of the webspace.
      *
-     * @var Theme
+     * @var string
      */
     private $theme;
 
@@ -356,9 +356,9 @@ class Webspace implements ArrayableInterface
     /**
      * Sets the theme for this portal.
      *
-     * @param Theme|null $theme this parameter is options
+     * @param string|null $theme this parameter is options
      */
-    public function setTheme(Theme $theme = null)
+    public function setTheme($theme = null)
     {
         $this->theme = $theme;
     }
@@ -366,7 +366,7 @@ class Webspace implements ArrayableInterface
     /**
      * Returns the theme for this portal.
      *
-     * @return Theme
+     * @return string
      */
     public function getTheme()
     {
@@ -541,10 +541,9 @@ class Webspace implements ArrayableInterface
             }
         }
 
-        $res['theme'] = !$this->theme ? null : $this->getTheme()->toArray();
+        $res['theme'] = !$this->theme ? null : $this->theme;
 
         $res['portals'] = [];
-
         foreach ($this->getPortals() as $portal) {
             $res['portals'][] = $portal->toArray();
         }

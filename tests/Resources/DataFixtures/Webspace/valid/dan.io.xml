@@ -15,9 +15,7 @@
         <localization language="de" country="at" default="true"/>
     </localizations>
 
-    <theme>
-        <key>dan</key>
-    </theme>
+    <theme>dan</theme>
 
     <default-templates>
         <default-template type="page">default</default-template>
