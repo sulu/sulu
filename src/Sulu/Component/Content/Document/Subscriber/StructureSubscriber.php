@@ -240,7 +240,7 @@ class StructureSubscriber implements EventSubscriberInterface
     {
         $webspace = $this->webspaceManager->findWebspaceByKey($this->inspector->getWebspace($document));
 
-        return $webspace->getTheme()->getDefaultTemplate(
+        return $webspace->getDefaultTemplate(
             $this->inspector->getMetadata($document)->getAlias()
         );
     }

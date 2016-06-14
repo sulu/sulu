@@ -15,7 +15,6 @@ use Prophecy\Argument;
 use Sulu\Bundle\WebsiteBundle\Controller\ExceptionController;
 use Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\HttpFoundation\Request;
@@ -84,9 +83,8 @@ class ExceptionControllerTest extends \PHPUnit_Framework_TestCase
         $exception = FlattenException::create(new \Exception(), 400);
 
         $webspace = new Webspace();
-        $theme = new Theme();
-        $theme->addErrorTemplate(400, 'error400.html.twig');
-        $webspace->setTheme($theme);
+        $webspace->addErrorTemplate(400, 'error400.html.twig');
+        $webspace->setTheme('test');
 
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);
 

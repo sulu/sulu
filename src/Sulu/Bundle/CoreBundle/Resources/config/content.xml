@@ -76,8 +76,6 @@
         <service id="sulu.content.webspace_structure_provider" class="%sulu.content.webspace_structure_provider.class%">
             <argument type="service" id="twig"/>
             <argument type="service" id="sulu.content.structure_manager"/>
-            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument type="service" id="liip_theme.active_theme"/>
             <argument type="service" id="sulu.content.webspace_structure_provider.cache"/>
         </service>
 

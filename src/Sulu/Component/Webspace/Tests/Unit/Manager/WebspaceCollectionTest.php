@@ -20,7 +20,6 @@ use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Segment;
-use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
 
@@ -43,9 +42,6 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $portal = new Portal();
         $portal->setName('Portal1');
         $portal->setKey('portal1');
-
-        $theme = new Theme();
-        $theme->setKey('portal1theme');
 
         $environment = new Environment();
         $url = new Url();
@@ -94,7 +90,7 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $segmentWinter->setDefault(false);
         $webspace->addSegment($segmentSummer);
         $webspace->addSegment($segmentWinter);
-        $webspace->setTheme($theme);
+        $webspace->setTheme('portal1theme');
         $webspace->addPortal($portal);
         $webspace->setKey('default');
         $webspace->setName('Default');
@@ -164,7 +160,7 @@ class WebspaceCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Winter', $webspace['segments'][1]['name']);
         $this->assertEquals('w', $webspace['segments'][1]['key']);
         $this->assertEquals(false, $webspace['segments'][1]['default']);
-        $this->assertEquals('portal1theme', $webspace['theme']['key']);
+        $this->assertEquals('portal1theme', $webspace['theme']);
 
         $this->assertEquals(1, count($webspace['navigation']));
         $this->assertEquals(1, count($webspace['navigation']['contexts']));

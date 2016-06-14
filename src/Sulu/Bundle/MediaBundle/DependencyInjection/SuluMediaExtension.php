@@ -63,6 +63,12 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        // image-formats
+        $container->setParameter(
+            'sulu_media.image_format_file',
+            $container->getParameterBag()->resolveValue($config['image_format_file'])
+        );
+
         // system collections
         $container->setParameter('sulu_media.system_collections', $config['system_collections']);
 

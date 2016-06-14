@@ -21,8 +21,7 @@
         "willdurand/hateoas-bundle": "0.3.*",
 
         "sulu/category-bundle": "@dev",
-        "sulu/media-bundle": "@dev",
-        "liip/theme-bundle": "@dev"
+        "sulu/media-bundle": "@dev"
     },
     "require-dev": {
         "sensio/framework-extra-bundle":  "~3.0",

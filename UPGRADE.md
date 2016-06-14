@@ -28,6 +28,35 @@ indexed as title, although this value was already the default:
  anymore with this tag. Just remove it, and it will be the same as
  before.
 
+### Webspaces
+
+We have deprecated (1.0) the schema for webspaces and created a new version (1.1) of it. 
+
+```
+<?xml version="1.0" encoding="utf-8"?>
+<webspace xmlns="http://schemas.sulu.io/webspace/webspace"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.1.xsd">
+          
+          ...
+          
+</webspace>
+```
+
+You should update your webspace.xml files soonish. To do that you simply have to move the `default-templates` and
+`error-templates` from the `theme` node and put it into the `webspace` node after the `theme`.
+ 
+The theme is now optional and can be used with a theme-bundle. Sulu has extracted this functionality to make it
+replaceable with any theming bundle you want. To keep the old directory-structure and functionality please read the
+next part of this file.
+
+### Theming
+
+If you have multiple themes (or you don't want to change the folder structure of you project) you have to include the
+bundle https://github.com/sulu/SuluThemeBundle in your abstract kernel.
+
+This bundle contains all the code which is necessary to use theming in your application.
+
 ### Configuration
 
 The configuration of `sulu_content.preview` and `sulu_website.preview_defaults` has been moved to:
