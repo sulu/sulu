@@ -90,7 +90,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
             );
         }
 
-        if ($container->hasExtension('sulu_content')) {
+        if ($container->hasExtension('sulu_search')) {
             $container->prependExtensionConfig(
                 'sulu_content',
                 [
