@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2481 [WebsiteBundle]       Fixed handling of non-default formats in error pages 
     * HOTFIX      #2467 [MediaBundle]         Fixed media-selection-overlay missing locale
     * HOTFIX      #2460 [MediaBundle]         Fixed deprecation of getEntityManager in MediaPreviewController
     * HOTFIX      #2454 [MediaBundle]         Fixed inset image scale image-size 0
