@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2479 [ContentBundle]       Removed restore history route function
     * ENHANCEMENT #2462 [All]                 Removed unnecessary NodeInterface definitions in tests
     * ENHANCEMENT #2461 [PreviewBundle]       Added function that avoid navigating in the preview
     * ENHANCEMENT #2357 [PreviewBundle]       Using Website-Kernel to render preview

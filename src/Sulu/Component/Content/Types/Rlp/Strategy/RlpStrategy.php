@@ -297,12 +297,4 @@ abstract class RlpStrategy implements RlpStrategyInterface
     {
         $this->mapper->deleteByPath($path, $webspaceKey, $languageCode, $segmentKey);
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function restoreByPath($path, $webspaceKey, $languageCode, $segmentKey = null)
-    {
-        $this->mapper->restoreByPath($path, $webspaceKey, $languageCode, $segmentKey);
-    }
 }

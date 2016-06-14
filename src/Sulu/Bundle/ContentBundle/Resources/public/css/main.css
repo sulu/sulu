@@ -150,36 +150,29 @@
 /* line 34, ../scss/modules/resource-locator.scss */
 .resource-locator-history .url,
 .resource-locator-history .date,
-.resource-locator-history .options-restore,
 .resource-locator-history .options-delete {
   display: block;
   padding-top: 10px;
   padding-bottom: 10px;
   border-bottom: 1px solid #ddd;
 }
-/* line 44, ../scss/modules/resource-locator.scss */
+/* line 43, ../scss/modules/resource-locator.scss */
 .resource-locator-history .url,
 .resource-locator-history .date {
   float: left;
-  width: 45%;
+  width: 47.5%;
 }
-/* line 50, ../scss/modules/resource-locator.scss */
-.resource-locator-history .options-restore {
-  float: left;
-  width: 5%;
-  text-align: center;
-}
-/* line 56, ../scss/modules/resource-locator.scss */
+/* line 49, ../scss/modules/resource-locator.scss */
 .resource-locator-history .options-delete {
   float: right;
   width: 5%;
   text-align: center;
 }
-/* line 62, ../scss/modules/resource-locator.scss */
+/* line 55, ../scss/modules/resource-locator.scss */
 .resource-locator-history .url {
   text-align: left;
 }
-/* line 65, ../scss/modules/resource-locator.scss */
+/* line 58, ../scss/modules/resource-locator.scss */
 .resource-locator-history .date {
   text-align: center;
 }

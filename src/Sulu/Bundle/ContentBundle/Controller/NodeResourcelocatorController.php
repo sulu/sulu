@@ -16,7 +16,6 @@ use PHPCR\SessionInterface;
 use Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepositoryInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * handles resource locator api.
@@ -82,24 +81,6 @@ class NodeResourcelocatorController extends RestController implements ClassResou
         $this->getSession()->save();
 
         return $this->handleView($this->view());
-    }
-
-    /**
-     * restores url with given path.
-     *
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function putRestoreAction(Request $request)
-    {
-        list($webspaceKey, $languageCode) = $this->getWebspaceAndLanguage();
-        $path = $this->getRequestParameter($request, 'path', true);
-
-        $result = $this->getResourceLocatorRepository()->restore($path, $this->getUser()->getId(), $webspaceKey, $languageCode);
-        $this->getSession()->save();
-
-        return $this->handleView($this->view($result));
     }
 
     /**

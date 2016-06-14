@@ -116,21 +116,6 @@ class ResourceLocatorRepositoryTest extends SuluTestCase
         $this->assertEquals('/test', $result['_embedded']['resourcelocators'][1]['resourceLocator']);
     }
 
-    public function testRestore()
-    {
-        $structure = $this->prepareHistoryTestData();
-
-        $result = $this->repository->restore('/test', 1, 'sulu_io', 'en');
-
-        $this->assertEquals('/test', $result['resourceLocator']);
-
-        $result = $this->repository->getHistory($structure->getUuid(), 'sulu_io', 'en');
-
-        $this->assertEquals(2, count($result['_embedded']['resourcelocators']));
-        $this->assertEquals('/test-2', $result['_embedded']['resourcelocators'][0]['resourceLocator']);
-        $this->assertEquals('/test-1', $result['_embedded']['resourcelocators'][1]['resourceLocator']);
-    }
-
     public function testDelete()
     {
         $structure = $this->prepareHistoryTestData();
