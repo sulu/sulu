@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Bundle\TwigBundle\Controller\ExceptionController as BaseExceptionController;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,22 +34,15 @@ class ExceptionController extends BaseExceptionController
      */
     private $parameterResolver;
 
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
-
     public function __construct(
         \Twig_Environment $twig,
         $debug,
         ParameterResolverInterface $parameterResolver,
-        ContentMapperInterface $contentMapper,
         RequestAnalyzerInterface $requestAnalyzer = null
     ) {
         parent::__construct($twig, $debug);
 
         $this->requestAnalyzer = $requestAnalyzer;
-        $this->contentMapper = $contentMapper;
         $this->parameterResolver = $parameterResolver;
     }
 
@@ -64,17 +56,27 @@ class ExceptionController extends BaseExceptionController
     ) {
         $code = $exception->getStatusCode();
         $showException = $request->attributes->get('showException', $this->debug);
+        $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
 
         $template = null;
-        if ($this->requestAnalyzer->getWebspace()) {
-            $template = $this->requestAnalyzer->getWebspace()->getTheme()->getErrorTemplate($code);
+        if ($webspace = $this->requestAnalyzer->getWebspace()) {
+            $template = $webspace->getTheme()->getErrorTemplate($code);
         }
+
+        $baseTemplate = $this->findTemplate($request, $request->getRequestFormat(), $code, $showException);
 
         if ($showException || $request->getRequestFormat() !== 'html' || $template === null) {
-            return parent::showAction($request, $exception, $logger);
+            return new Response($this->twig->render(
+                (string) $baseTemplate,
+                [
+                    'status_code' => $code,
+                    'status_text' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
+                    'exception' => $exception,
+                    'logger' => $logger,
+                    'currentContent' => $currentContent,
+                ]
+            ));
         }
-
-        $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
 
         $parameter = [
             'status_code' => $code,
@@ -82,10 +84,8 @@ class ExceptionController extends BaseExceptionController
             'exception' => $exception,
             'currentContent' => $currentContent,
         ];
-        $data = $this->parameterResolver->resolve(
-            $parameter,
-            $this->requestAnalyzer
-        );
+
+        $data = $this->parameterResolver->resolve($parameter, $this->requestAnalyzer);
 
         return new Response(
             $this->twig->render(
