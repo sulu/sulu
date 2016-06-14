@@ -390,47 +390,6 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function restoreByPath($path, $webspaceKey, $languageCode, $segmentKey = null)
-    {
-        $rootNode = $this->getWebspaceRouteNode($webspaceKey, $languageCode, $segmentKey);
-        $newRouteNode = $rootNode->getNode(ltrim($path, '/'));
-        $currentRouteNode = $newRouteNode->getPropertyValue('sulu:content');
-        $contentNode = $currentRouteNode->getPropertyValue('sulu:content');
-
-        // change other history connections
-        $this->iterateRouteNodes(
-            $currentRouteNode,
-            function ($resourceLocator, NodeInterface $node) use (&$newRouteNode) {
-                if ($node->getPropertyValue('sulu:history') === true) {
-                    $node->setProperty('sulu:content', $newRouteNode);
-                }
-
-                return false;
-            },
-            $webspaceKey,
-            $languageCode,
-            $segmentKey
-        );
-
-        // change history
-        $newRouteNode->setProperty('sulu:history', false);
-        $currentRouteNode->setProperty('sulu:history', true);
-
-        // set creation date
-        $newRouteNode->setProperty('sulu:created', new DateTime());
-        $currentRouteNode->setProperty('sulu:created', new DateTime());
-
-        // set content
-        $newRouteNode->setProperty('sulu:content', $contentNode);
-        $currentRouteNode->setProperty('sulu:content', $newRouteNode);
-
-        // save session
-        $this->sessionManager->getSession()->save();
-    }
-
-    /**
      * check if path is unique from given $root node.
      *
      * @param NodeInterface $root route node

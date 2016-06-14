@@ -33,7 +33,6 @@
 
     .url,
     .date,
-    .options-restore,
     .options-delete {
         display: block;
         padding-top: 10px;
@@ -44,13 +43,7 @@
     .url,
     .date {
         float: left;
-        width: 45%;
-    }
-
-    .options-restore {
-        float: left;
-        width: 5%;
-        text-align: center;
+        width: 47.5%;
     }
 
     .options-delete {

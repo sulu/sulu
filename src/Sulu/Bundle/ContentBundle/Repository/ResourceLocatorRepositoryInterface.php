@@ -51,17 +51,4 @@ interface ResourceLocatorRepositoryInterface
      * @return mixed
      */
     public function delete($path, $webspaceKey, $languageCode, $segmentKey = null);
-
-    /**
-     * restores given resource locator.
-     *
-     * @param string      $path
-     * @param int         $userId
-     * @param string      $webspaceKey
-     * @param string      $languageCode
-     * @param null|string $segmentKey
-     *
-     * @return mixed
-     */
-    public function restore($path, $userId, $webspaceKey, $languageCode, $segmentKey = null);
 }

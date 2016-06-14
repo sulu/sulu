@@ -13,7 +13,6 @@ namespace Sulu\Bundle\ContentBundle\Repository;
 
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 
@@ -33,11 +32,6 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     private $rlpStrategy;
 
     /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
-
-    /**
      * @var string[]
      */
     private $apiBasePath = [
@@ -51,12 +45,10 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
      */
     public function __construct(
         RlpStrategyInterface $rlpStrategy,
-        StructureManagerInterface $structureManager,
-        ContentMapperInterface $contentMapper
+        StructureManagerInterface $structureManager
     ) {
         $this->rlpStrategy = $rlpStrategy;
         $this->structureManager = $structureManager;
-        $this->contentMapper = $contentMapper;
     }
 
     /**
@@ -98,7 +90,6 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
         foreach ($urls as $url) {
             $defaultParameter = '&language=' . $languageCode . '&webspace=' . $webspaceKey;
             $deleteParameter = '?path=' . $url->getResourceLocator() . $defaultParameter;
-            $restoreParameter = '/restore?path=' . $url->getResourceLocator() . $defaultParameter;
 
             $result[] = [
                 'id' => $url->getId(),
@@ -106,7 +97,6 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
                 'created' => $url->getCreated(),
                 '_links' => [
                     'delete' => $this->getBasePath(null, 0) . $deleteParameter,
-                    'restore' => $this->getBasePath(null, 0) . $restoreParameter,
                 ],
             ];
         }
@@ -128,16 +118,6 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     public function delete($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
         $this->rlpStrategy->deleteByPath($path, $webspaceKey, $languageCode, $segmentKey);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function restore($path, $userId, $webspaceKey, $languageCode, $segmentKey = null)
-    {
-        $this->contentMapper->restoreHistoryPath($path, $userId, $webspaceKey, $languageCode, $segmentKey);
-
-        return ['resourceLocator' => $path, '_links' => []];
     }
 
     /**
