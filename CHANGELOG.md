@@ -2,12 +2,14 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2481 [WebsiteBundle]       Fixed handling of non-default formats in error pages 
     * HOTFIX      #2467 [MediaBundle]         Fixed media-selection-overlay missing locale
     * HOTFIX      #2460 [MediaBundle]         Fixed deprecation of getEntityManager in MediaPreviewController
     * HOTFIX      #2454 [MediaBundle]         Fixed inset image scale image-size 0
     * HOTFIX      #2440 [MediaBundle]         Fixed media-selection sorting
     * HOTFIX      #2441 [ContentBundle]       Fixed block to handle non html text correctly
     * ENHANCEMENT #2432 [SecurityBundle]      New behat step for admin login with default locale
+    * HOTFIX      #2430 [WebsiteBundle]       Fixed error-template always from default-theme
 
 * 1.2.3 (2016-06-01)
     * HOTFIX      #2427 [Hash]                Fixed bug when using non generic visitor in HashSerializeEventSubscriber
