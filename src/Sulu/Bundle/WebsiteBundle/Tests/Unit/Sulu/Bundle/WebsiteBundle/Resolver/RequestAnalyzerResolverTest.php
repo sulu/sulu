@@ -129,10 +129,6 @@ class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
                     'get' => ['p' => 1],
                     'post' => [],
                     'analyticsKey' => 'analyticsKey',
-                    'routeParameters' => [
-                        'host' => 'sulu.lo',
-                        'prefix' => 'de_at',
-                    ],
                 ],
             ],
             $result

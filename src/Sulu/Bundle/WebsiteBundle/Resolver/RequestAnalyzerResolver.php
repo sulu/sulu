@@ -66,10 +66,6 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
                 'get' => $requestAnalyzer->getGetParameters(),
                 'post' => $requestAnalyzer->getPostParameters(),
                 'analyticsKey' => $requestAnalyzer->getAnalyticsKey(),
-                'routeParameters' => [
-                    'host' => $requestAnalyzer->getPortalInformation()->getHost(),
-                    'prefix' => $requestAnalyzer->getPortalInformation()->getPrefix(),
-                ],
             ],
         ];
     }
