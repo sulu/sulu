@@ -458,7 +458,6 @@ define([
                             instanceName: 'overlay',
                             actionIcon: 'fa-check-circle',
                             showOptions: false,
-                            showStatus: false,
                             responsive: false,
                             sortable: false,
                             skin: 'fixed-height-small',
@@ -616,7 +615,7 @@ define([
                 urlParts = [
                     'webspace=' + this.options.webspace,
                     'language=' + this.options.language,
-                    'fields=title,order',
+                    'fields=title,order,published',
                     'exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false'),
                     'exclude-shadows=' + (!this.showGhostPages ? 'true' : 'false'),
                      (this.showWebspaceNode ? 'webspace-nodes=single' : '')

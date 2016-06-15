@@ -9667,16 +9667,16 @@ a.btn-black, a.btn-highlight {
     transform: scale(1);
   }
 }
-/* line 5, ../scss/modules/column-navigation.scss */
+/* line 7, ../scss/modules/column-navigation.scss */
 .husky-column-navigation {
   height: 100%;
 }
-/* line 10, ../scss/modules/column-navigation.scss */
+/* line 12, ../scss/modules/column-navigation.scss */
 .husky-column-navigation.fixed-height-small .column-navigation-wrapper .column-navigation {
   height: 350px;
 }
 
-/* line 17, ../scss/modules/column-navigation.scss */
+/* line 19, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper {
   position: relative;
   top: 0px;
@@ -9684,7 +9684,7 @@ a.btn-black, a.btn-highlight {
   width: 100%;
   height: 100%;
 }
-/* line 24, ../scss/modules/column-navigation.scss */
+/* line 26, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation {
   height: 100%;
   width: 100%;
@@ -9698,11 +9698,11 @@ a.btn-black, a.btn-highlight {
   min-height: 200px;
   max-height: 750px;
 }
-/* line 38, ../scss/modules/column-navigation.scss */
+/* line 40, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation.overflow .column:last-child {
   border-right: none;
 }
-/* line 43, ../scss/modules/column-navigation.scss */
+/* line 45, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column-navigation-loader {
   position: absolute;
   left: 0;
@@ -9710,7 +9710,7 @@ a.btn-black, a.btn-highlight {
   margin-top: -70px;
   width: 100%;
 }
-/* line 51, ../scss/modules/column-navigation.scss */
+/* line 53, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column {
   border-right: 1px solid #ddd;
   overflow-y: auto;
@@ -9723,7 +9723,7 @@ a.btn-black, a.btn-highlight {
   left: 0px;
   width: 250px;
 }
-/* line 63, ../scss/modules/column-navigation.scss */
+/* line 65, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column .no-page {
   position: absolute;
   top: 50%;
@@ -9734,25 +9734,25 @@ a.btn-black, a.btn-highlight {
   height: 160px;
   margin-top: -55px;
 }
-/* line 73, ../scss/modules/column-navigation.scss */
+/* line 75, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column .no-page .icon {
   font-size: 72px;
   line-height: 80px;
 }
-/* line 77, ../scss/modules/column-navigation.scss */
+/* line 79, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column .no-page .text {
   padding-top: 5px;
   font-size: 14px;
   font-weight: bold;
 }
-/* line 84, ../scss/modules/column-navigation.scss */
+/* line 86, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
   font-size: 14px;
 }
-/* line 90, ../scss/modules/column-navigation.scss */
+/* line 92, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul li {
   padding: 15px 11px 15px 15px;
   height: 50px;
@@ -9765,71 +9765,87 @@ a.btn-black, a.btn-highlight {
   -ms-user-select: none;
   -o-user-select: none;
 }
-/* line 99, ../scss/modules/column-navigation.scss */
+/* line 101, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul li:hover {
   background-color: #f1f1f1;
 }
-/* line 101, ../scss/modules/column-navigation.scss */
+/* line 103, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul li:hover .action {
   display: block;
 }
-/* line 105, ../scss/modules/column-navigation.scss */
+/* line 107, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul li.selected {
   background-color: #f1f1f1;
 }
-/* line 108, ../scss/modules/column-navigation.scss */
+/* line 110, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul li.selected .item-text {
   font-weight: bold;
 }
-/* line 113, ../scss/modules/column-navigation.scss */
+/* line 115, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul li.marked .marked-icon {
   display: block;
 }
-/* line 116, ../scss/modules/column-navigation.scss */
+/* line 118, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul li.marked .action {
   display: none;
 }
-/* line 121, ../scss/modules/column-navigation.scss */
+/* line 123, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul .inactive {
   color: #ccc;
 }
-/* line 125, ../scss/modules/column-navigation.scss */
+/* line 127, ../scss/modules/column-navigation.scss */
+.column-navigation-wrapper .column-navigation .column ul .not-published-state,
 .column-navigation-wrapper .column-navigation .column ul .not-published {
-  color: #E8CE33;
-  font-size: 40px;
+  border: 1px #fff solid;
+  border-radius: 6px;
+  width: 11px;
+  height: 11px;
+  margin-top: 4px;
 }
-/* line 130, ../scss/modules/column-navigation.scss */
+/* line 136, ../scss/modules/column-navigation.scss */
+.column-navigation-wrapper .column-navigation .column ul .not-published-state {
+  background-color: #E8CE33;
+}
+/* line 140, ../scss/modules/column-navigation.scss */
+.column-navigation-wrapper .column-navigation .column ul .not-published {
+  background-color: #5DC774;
+}
+/* line 144, ../scss/modules/column-navigation.scss */
+.column-navigation-wrapper .column-navigation .column ul .not-published + .not-published-state {
+  margin-left: -11px;
+}
+/* line 148, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul .orderer {
   display: none;
 }
-/* line 136, ../scss/modules/column-navigation.scss */
+/* line 154, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column.order-mode .orderer {
   display: block;
 }
-/* line 139, ../scss/modules/column-navigation.scss */
+/* line 157, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column.order-mode .icons-left .col-icon {
   display: none;
 }
-/* line 142, ../scss/modules/column-navigation.scss */
+/* line 160, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column.order-mode ul li .action {
   display: none;
 }
-/* line 148, ../scss/modules/column-navigation.scss */
+/* line 166, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .item-text {
   display: block;
   overflow: hidden;
   word-wrap: break-word;
   float: left;
 }
-/* line 155, ../scss/modules/column-navigation.scss */
+/* line 173, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .col-icon {
   float: left;
 }
-/* line 159, ../scss/modules/column-navigation.scss */
+/* line 177, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .item-text.ghost {
   color: #999;
 }
-/* line 163, ../scss/modules/column-navigation.scss */
+/* line 181, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .ghost {
   background: #52B6CA;
   padding: 0 2px;
@@ -9839,7 +9855,7 @@ a.btn-black, a.btn-highlight {
   border-radius: 3px;
   font-size: 10px;
 }
-/* line 172, ../scss/modules/column-navigation.scss */
+/* line 190, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .marked-icon {
   width: 14px;
   margin-right: 5px;
@@ -9847,43 +9863,43 @@ a.btn-black, a.btn-highlight {
   color: #999;
   display: none;
 }
-/* line 179, ../scss/modules/column-navigation.scss */
+/* line 197, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .icons-right {
   position: absolute;
   right: 5px;
   top: 15px;
   height: 20px;
 }
-/* line 184, ../scss/modules/column-navigation.scss */
+/* line 202, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .icons-right * {
   line-height: 20px;
 }
-/* line 188, ../scss/modules/column-navigation.scss */
+/* line 206, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .icons-left {
   display: block;
   float: left;
   height: 20px;
   font-size: 14px;
 }
-/* line 193, ../scss/modules/column-navigation.scss */
+/* line 211, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .icons-left > * {
   line-height: 20px;
 }
-/* line 196, ../scss/modules/column-navigation.scss */
+/* line 214, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .icons-left .col-icon {
   margin-right: 5px;
 }
-/* line 199, ../scss/modules/column-navigation.scss */
+/* line 217, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .icons-left .ghost {
   line-height: 15px;
 }
-/* line 202, ../scss/modules/column-navigation.scss */
+/* line 220, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .icons-left .custom-checkbox {
   line-height: 15px;
   margin-right: 8px;
   margin-top: 2px;
 }
-/* line 208, ../scss/modules/column-navigation.scss */
+/* line 226, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .action {
   background-color: #52B6CA;
   padding: 0px 10px;
@@ -9893,14 +9909,14 @@ a.btn-black, a.btn-highlight {
   display: none;
   margin-right: 0;
 }
-/* line 217, ../scss/modules/column-navigation.scss */
+/* line 235, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .husky-column-navigation-loader {
   position: relative;
   top: 2px;
   left: -2px;
   padding-left: 2px;
 }
-/* line 224, ../scss/modules/column-navigation.scss */
+/* line 242, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .arrow {
   display: inline-block;
   width: 11px;
@@ -9910,36 +9926,36 @@ a.btn-black, a.btn-highlight {
   color: #000;
   margin: 0;
 }
-/* line 234, ../scss/modules/column-navigation.scss */
+/* line 252, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column-item {
   cursor: pointer;
 }
-/* line 237, ../scss/modules/column-navigation.scss */
+/* line 255, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column-item.disabled {
   color: #ccc;
 }
-/* line 242, ../scss/modules/column-navigation.scss */
+/* line 260, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .orderer {
   display: block;
   float: left;
   width: 40px;
   padding: 0 10px 0 0;
 }
-/* line 247, ../scss/modules/column-navigation.scss */
+/* line 265, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .orderer .form-element, .column-navigation-wrapper .column-navigation .orderer .husky-input {
   height: 20px;
   padding-left: 3px;
   padding-right: 3px;
 }
-/* line 254, ../scss/modules/column-navigation.scss */
+/* line 272, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .fa-external-link {
   margin-top: 1px;
 }
-/* line 259, ../scss/modules/column-navigation.scss */
+/* line 277, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .options {
   width: 251px;
 }
-/* line 262, ../scss/modules/column-navigation.scss */
+/* line 280, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .options .add {
   display: inline-block;
   width: 50%;
@@ -9948,7 +9964,7 @@ a.btn-black, a.btn-highlight {
   color: #fff;
   font-size: 16px;
 }
-/* line 271, ../scss/modules/column-navigation.scss */
+/* line 289, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .options .ok {
   display: block;
   width: 100%;
@@ -9957,7 +9973,7 @@ a.btn-black, a.btn-highlight {
   color: #fff;
   font-size: 16px;
 }
-/* line 280, ../scss/modules/column-navigation.scss */
+/* line 298, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .options .settings {
   display: inline-block;
   width: 50%;
@@ -9965,11 +9981,11 @@ a.btn-black, a.btn-highlight {
   padding: 5px 0;
   font-size: 16px;
 }
-/* line 288, ../scss/modules/column-navigation.scss */
+/* line 306, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .options .first {
   border-bottom-left-radius: 3px;
 }
-/* line 292, ../scss/modules/column-navigation.scss */
+/* line 310, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .options .last {
   border-bottom-right-radius: 3px;
 }

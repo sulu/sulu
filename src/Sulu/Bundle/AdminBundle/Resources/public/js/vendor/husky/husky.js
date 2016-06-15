@@ -41460,6 +41460,7 @@ define('__component__$password-fields@husky',[], function() {
  * @params {String} [options.idName] name of id-key
  * @params {String} [options.pathName] name of path-key
  * @params {String} [options.linkedName] name of linked-key
+ * @params {String} [options.publishedStateName] name of draft-key
  * @params {String} [options.publishedName] name of published-key
  * @params {String} [options.titleName] name of title-key
  * @params {String} [options.noPageDescription] translation key for the "No-Page"-description
@@ -41498,7 +41499,8 @@ define('__component__$column-navigation@husky',[],function() {
             idName: 'id',
             pathName: 'path',
             linkedName: 'linked',
-            publishedName: 'publishedState',
+            publishedStateName: 'publishedState',
+            publishedName: 'published',
             titleName: 'title',
             typeName: 'type',
             noPageDescription: 'public.no-pages',
@@ -42170,9 +42172,18 @@ define('__component__$column-navigation@husky',[],function() {
                     }
                 }
                 // unpublished
-                if (!data[this.options.publishedName]) {
-                    this.sandbox.dom.append($container,
-                        '<span class="not-published col-icon"  title="' + this.sandbox.translate(this.options.tooltipTranslations.unpublished) + '">&bull;</span>');
+                if (!data[this.options.publishedStateName]) {
+                    if (!!data[this.options.publishedName]) {
+                        this.sandbox.dom.append(
+                            $container,
+                            '<span class="not-published col-icon"  title="' + this.sandbox.translate(this.options.tooltipTranslations.unpublished) + '"></span>'
+                        );
+                    }
+
+                    this.sandbox.dom.append(
+                        $container,
+                        '<span class="not-published-state col-icon"  title="' + this.sandbox.translate(this.options.tooltipTranslations.unpublished) + '"></span>'
+                    );
                 }
             }
             if (!!this.options.orderable) {

@@ -60,7 +60,7 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
             this.sandbox.on('sulu.content.navigate', this.navigate, this);
 
             this.sandbox.on('sulu.header.saved', function(data) {
-                this.showState(!!data.publishedState);
+                this.showState(!!data.published);
             }, this);
         },
 
@@ -96,7 +96,7 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
                 this.add = false;
             }
 
-            this.showState(!!this.data.publishedState);
+            this.showState(!!this.data.published);
 
             if (!!this.data.template) {
                 this.checkRenderTemplate(this.data.template);

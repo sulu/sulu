@@ -210,7 +210,6 @@ define([], function() {
                             actionIcon: 'fa-plus-circle',
                             resultKey: this.options.resultKey,
                             showOptions: false,
-                            showStatus: false,
                             responsive: false,
                             sortable: false,
                             skin: 'fixed-height-small',
