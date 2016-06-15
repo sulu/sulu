@@ -13,13 +13,15 @@ namespace Sulu\Bundle\MarkupBundle\Tests\Unit\Markup;
 
 use Prophecy\Argument;
 use Sulu\Bundle\MarkupBundle\Markup\HtmlMarkupParser;
-use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
 use Sulu\Bundle\MarkupBundle\Tag\TagInterface;
 use Sulu\Bundle\MarkupBundle\Tag\TagNotFoundException;
 use Sulu\Bundle\MarkupBundle\Tag\TagRegistryInterface;
 
 class HtmlMarkupParserTest extends \PHPUnit_Framework_TestCase
 {
+    const VALIDATE_UNPUBLISHED = 'unpublished';
+    const VALIDATE_REMOVED = 'removed';
+
     /**
      * @var TagInterface
      */
@@ -202,9 +204,7 @@ EOT;
                 ],
             ],
             'de'
-        )->willReturn(
-            ['<sulu:link href="123-123-123" title="test">link content</sulu:link>' => MarkupParserInterface::VALIDATE_OK]
-        );
+        )->willReturn([]);
 
         $content = <<<'EOT'
 <html>
@@ -231,7 +231,7 @@ EOT;
             ],
             'de'
         )->willReturn(
-            ['<sulu:link href="123-123-123" title="test">link content</sulu:link>' => MarkupParserInterface::VALIDATE_UNPUBLISHED]
+            ['<sulu:link href="123-123-123" title="test">link content</sulu:link>' => self::VALIDATE_UNPUBLISHED]
         );
 
         $content = <<<'EOT'
@@ -246,7 +246,7 @@ EOT;
 
         $this->assertCount(1, $response);
         $this->assertEquals(
-            MarkupParserInterface::VALIDATE_UNPUBLISHED,
+            self::VALIDATE_UNPUBLISHED,
             $response['<sulu:link href="123-123-123" title="test">link content</sulu:link>']
         );
     }
@@ -263,7 +263,7 @@ EOT;
             ],
             'de'
         )->willReturn(
-            ['<sulu:link href="123-123-123" title="test">link content</sulu:link>' => MarkupParserInterface::VALIDATE_REMOVED]
+            ['<sulu:link href="123-123-123" title="test">link content</sulu:link>' => self::VALIDATE_REMOVED]
         );
 
         $content = <<<'EOT'
@@ -278,7 +278,7 @@ EOT;
 
         $this->assertCount(1, $response);
         $this->assertEquals(
-            MarkupParserInterface::VALIDATE_REMOVED,
+            self::VALIDATE_REMOVED,
             $response['<sulu:link href="123-123-123" title="test">link content</sulu:link>']
         );
     }
@@ -289,13 +289,13 @@ EOT;
             ['<sulu:link href="123-123-123" title="test"/>' => ['href' => '123-123-123', 'title' => 'test']],
             'de'
         )->willReturn(
-            ['<sulu:link href="123-123-123" title="test"/>' => MarkupParserInterface::VALIDATE_REMOVED]
+            ['<sulu:link href="123-123-123" title="test"/>' => self::VALIDATE_REMOVED]
         );
         $this->mediaTag->validateAll(
             ['<sulu:media src="1" title="test"/>' => ['src' => '1', 'title' => 'test']],
             'de'
         )->willReturn(
-            ['<sulu:media src="1" title="test"/>' => MarkupParserInterface::VALIDATE_UNPUBLISHED]
+            ['<sulu:media src="1" title="test"/>' => self::VALIDATE_UNPUBLISHED]
         );
 
         $content = <<<'EOT'
@@ -311,11 +311,11 @@ EOT;
 
         $this->assertCount(2, $response);
         $this->assertEquals(
-            MarkupParserInterface::VALIDATE_REMOVED,
+            self::VALIDATE_REMOVED,
             $response['<sulu:link href="123-123-123" title="test"/>']
         );
         $this->assertEquals(
-            MarkupParserInterface::VALIDATE_UNPUBLISHED,
+            self::VALIDATE_UNPUBLISHED,
             $response['<sulu:media src="1" title="test"/>']
         );
     }

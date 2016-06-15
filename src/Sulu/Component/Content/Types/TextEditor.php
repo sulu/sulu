@@ -92,8 +92,8 @@ class TextEditor extends SimpleContentType
 
         $regex = sprintf(self::INVALID_REGEX, $this->markupNamespace, $this->markupNamespace);
         foreach ($validation as $tag => $state) {
-            if (false === strpos($tag, $state . '="true"')) {
-                $newTag = preg_replace($regex, '$1 ' . $state . '="true"$2', $tag);
+            if (false === strpos($tag, 'sulu:validation-state="' . $state . '"')) {
+                $newTag = preg_replace($regex, '$1 sulu:validation-state="' . $state . '"$2', $tag);
                 $content = str_replace($tag, $newTag, $content);
             }
         }
@@ -110,14 +110,7 @@ class TextEditor extends SimpleContentType
      */
     private function removeValidation($content)
     {
-        $attributes = array_map(
-            function ($attribute) {
-                return sprintf(' %s="true"', $attribute);
-            },
-            [MarkupParserInterface::VALIDATE_REMOVED, MarkupParserInterface::VALIDATE_UNPUBLISHED]
-        );
-
-        return str_replace($attributes, '', $content);
+        return preg_replace('/sulu:validation-state="[a-zA-Z ]*"/', '', $content);
     }
 
     /**

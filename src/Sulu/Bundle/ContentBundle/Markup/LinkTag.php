@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ContentBundle\Markup;
 
-use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
 use Sulu\Bundle\MarkupBundle\Tag\TagInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Repository\Content;
@@ -25,6 +24,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class LinkTag implements TagInterface
 {
+    const VALIDATE_UNPUBLISHED = 'unpublished';
+    const VALIDATE_REMOVED = 'removed';
+
     /**
      * @var ContentRepositoryInterface
      */
@@ -117,11 +119,12 @@ class LinkTag implements TagInterface
 
         $result = [];
         foreach ($attributesByTag as $tag => $attributes) {
-            $state = MarkupParserInterface::VALIDATE_OK;
             if (!array_key_exists($attributes['href'], $contents)) {
-                $state = MarkupParserInterface::VALIDATE_REMOVED;
-            } elseif ($contents[$attributes['href']]->getWorkflowStage() === WorkflowStage::TEST) {
-                $state = MarkupParserInterface::VALIDATE_UNPUBLISHED;
+                $state = self::VALIDATE_REMOVED;
+            } elseif (WorkflowStage::TEST === $contents[$attributes['href']]->getWorkflowStage()) {
+                $state = self::VALIDATE_UNPUBLISHED;
+            } else {
+                continue;
             }
 
             $result[$tag] = $state;

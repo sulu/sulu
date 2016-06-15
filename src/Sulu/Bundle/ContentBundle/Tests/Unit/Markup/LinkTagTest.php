@@ -13,7 +13,6 @@ namespace Sulu\Bundle\ContentBundle\Tests\Unit\Markup;
 
 use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Markup\LinkTag;
-use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Content\Repository\ContentRepositoryInterface;
@@ -235,10 +234,7 @@ class LinkTagTest extends \PHPUnit_Framework_TestCase
             'de'
         );
 
-        $this->assertEquals(
-            ['<sulu:link href="123-123-123" title="Test-Title">Test-Content</sulu:link>' => MarkupParserInterface::VALIDATE_OK],
-            $result
-        );
+        $this->assertEquals([], $result);
     }
 
     public function testValidateInvalid()
@@ -258,7 +254,7 @@ class LinkTagTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            ['<sulu:link href="123-123-123" title="Test-Title">Test-Content</sulu:link>' => MarkupParserInterface::VALIDATE_REMOVED],
+            ['<sulu:link href="123-123-123" title="Test-Title">Test-Content</sulu:link>' => LinkTag::VALIDATE_REMOVED],
             $result
         );
     }
@@ -287,8 +283,7 @@ class LinkTagTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             [
-                '<sulu:link href="123-123-123" title="Test-Title">Test-Content</sulu:link>' => MarkupParserInterface::VALIDATE_OK,
-                '<sulu:link href="312-312-312" title="Test-Title">Test-Content</sulu:link>' => MarkupParserInterface::VALIDATE_REMOVED,
+                '<sulu:link href="312-312-312" title="Test-Title">Test-Content</sulu:link>' => LinkTag::VALIDATE_REMOVED,
             ],
             $result
         );

@@ -19,7 +19,6 @@ define([], function() {
                 selected: null,
                 webspace: null,
                 locale: null,
-                showStatus: false,
                 instanceNamePrefix: 'smart-content-',
                 selectCallback: function(item) {
                 }
@@ -32,9 +31,12 @@ define([], function() {
         columnNavigationDefaults = {
             responsive: false,
             actionIcon: 'fa-check',
+            linkedName: 'linked',
+            typeName: 'type',
+            hasSubName: 'hasChildren',
             showOptions: false,
             sortable: false,
-            showStatus: false
+            showStatus: true
         },
 
         /**
@@ -73,12 +75,8 @@ define([], function() {
                     el: this.$columnNavigationElement,
                     instanceName: this.options.instanceNamePrefix + this.options.instanceName,
                     url: this.getUrl(),
-                    linkedName: 'linked',
-                    typeName: 'type',
-                    hasSubName: 'hasChildren',
                     resultKey: this.options.resultKey,
                     selected: this.selected,
-                    showStatus: this.options.showStatus,
                     actionCallback: function(item) {
                         this.selected = item.id;
                         this.options.selectCallback(item.id, item.path, item.title, item);

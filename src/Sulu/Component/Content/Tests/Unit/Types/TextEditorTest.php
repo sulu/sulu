@@ -18,6 +18,9 @@ use Sulu\Component\Content\Types\TextEditor;
 
 class TextEditorTest extends \PHPUnit_Framework_TestCase
 {
+    const VALIDATE_REMOVED = 'removed';
+    const VALIDATE_UNPUBLISHED = 'unpublished';
+
     /**
      * @var string
      */
@@ -85,16 +88,16 @@ EOT;
 
         $this->markupParser->validate($content, 'de')->willReturn(
             [
-                '<sulu:link href="123">Hello</sulu:link>' => MarkupParserInterface::VALIDATE_REMOVED,
-                '<sulu:link href="789">Sulu</sulu:link>' => MarkupParserInterface::VALIDATE_UNPUBLISHED,
+                '<sulu:link href="123">Hello</sulu:link>' => self::VALIDATE_REMOVED,
+                '<sulu:link href="789">Sulu</sulu:link>' => self::VALIDATE_UNPUBLISHED,
             ]
         );
 
         $this->property->setValue(
             <<<'EOT'
-<sulu:link href="123" removed="true">Hello</sulu:link>
+<sulu:link href="123" sulu:validation-state="removed">Hello</sulu:link>
 <sulu:link href="456">Hikaro</sulu:link>
-<sulu:link href="789" unpublished="true">Sulu</sulu:link>
+<sulu:link href="789" sulu:validation-state="unpublished">Sulu</sulu:link>
 EOT
         )->shouldBeCalled();
 
@@ -112,9 +115,9 @@ EOT;
         $this->property->getName()->willReturn('i18n:de-description');
         $this->property->getValue()->willReturn(
             <<<'EOT'
-<sulu:link href="123" removed="true">Hello</sulu:link>
+<sulu:link href="123" sulu:validation-state="removed">Hello</sulu:link>
 <sulu:link href="456">Hikaro</sulu:link>
-<sulu:link href="789" unpublished="true">Sulu</sulu:link>
+<sulu:link href="789" sulu:validation-state="unpublished">Sulu</sulu:link>
 EOT
         );
 

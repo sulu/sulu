@@ -16,10 +16,6 @@ namespace Sulu\Bundle\MarkupBundle\Markup;
  */
 interface MarkupParserInterface
 {
-    const VALIDATE_OK = 'ok';
-    const VALIDATE_UNPUBLISHED = 'unpublished';
-    const VALIDATE_REMOVED = 'removed';
-
     /**
      * Parses document and returns completed document.
      *

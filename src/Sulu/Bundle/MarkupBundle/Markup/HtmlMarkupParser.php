@@ -79,12 +79,7 @@ class HtmlMarkupParser implements MarkupParserInterface
         foreach ($sortedTags as $name => $tags) {
             $result = array_merge(
                 $result,
-                array_filter(
-                    $this->tagRegistry->getTag($name, 'html')->validateAll($tags, $locale),
-                    function ($item) {
-                        return $item !== self::VALIDATE_OK;
-                    }
-                )
+                $this->tagRegistry->getTag($name, 'html')->validateAll($tags, $locale)
             );
         }
 

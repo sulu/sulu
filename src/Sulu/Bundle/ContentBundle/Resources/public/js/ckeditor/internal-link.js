@@ -37,11 +37,10 @@ define([
             tag.setText(link.title);
 
             // only valid pages can be selected.
-            tag.removeAttribute('removed');
-            tag.removeAttribute('unpublished');
+            tag.removeAttribute('sulu:validation-state');
 
             if (!link.published) {
-                tag.setAttribute('unpublished', 'true');
+                tag.setAttribute('sulu:validation-state', 'unpublished');
             }
 
             editor.fire('change');
@@ -63,7 +62,7 @@ define([
 
                 editor.addCommand('internalLinkDialog', {
                     dialogName: 'internalLinkDialog',
-                    allowedContent: 'sulu:link[title,target,unpublished,removed,!href]',
+                    allowedContent: 'sulu:link[title,target,sulu:validation-state,!href]',
                     requiredContent: 'sulu:link[href]',
                     exec: function() {
                         var $element = $('<div/>');

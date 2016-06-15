@@ -32,12 +32,12 @@ define([
         },
 
         showError = function($element, data, type) {
-            if (-1 === data.indexOf(type + '="true"')) {
+            if (-1 === data.indexOf('sulu:validation-state="' + type + '"')) {
                 return;
             }
 
             var $errorElement = $element.parent().find('.' + type),
-                match = data.match(new RegExp(type + '="true"', 'g')),
+                match = data.match(new RegExp('sulu:validation-state="' + type + '"', 'g')),
                 translateKey = 'content.text_editor.error.' + type + (1 === match.length ? '-single' : '-multiple');
 
             $errorElement.text(HuskyUtil.sprintf(Translator.translate(translateKey), match.length));
