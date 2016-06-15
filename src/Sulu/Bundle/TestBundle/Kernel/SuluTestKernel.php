@@ -21,10 +21,8 @@ class SuluTestKernel extends SuluKernel
     {
         $bundles = [
             // Dependencies
-            new \Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle(),
             new \Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle(),
-            new \FOS\RestBundle\FOSRestBundle(),
             new \JMS\SerializerBundle\JMSSerializerBundle(),
             new \Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
@@ -67,6 +65,12 @@ class SuluTestKernel extends SuluKernel
             // smyfony-cmf
             $bundles[] = new \Symfony\Cmf\Bundle\CoreBundle\CmfCoreBundle();
             $bundles[] = new \Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle();
+        }
+
+        if ($this->getContext() === self::CONTEXT_ADMIN) {
+            // rest
+            $bundles[] = new \Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle();
+            $bundles[] = new \FOS\RestBundle\FOSRestBundle();
         }
 
         return $bundles;

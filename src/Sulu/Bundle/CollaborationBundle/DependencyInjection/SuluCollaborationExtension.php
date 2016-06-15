@@ -13,11 +13,42 @@ namespace Sulu\Bundle\CollaborationBundle\DependencyInjection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class SuluCollaborationExtension extends Extension
+class SuluCollaborationExtension extends Extension implements PrependExtensionInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function prepend(ContainerBuilder $container)
+    {
+        if ($container->hasExtension('doctrine_cache')) {
+            $container->prependExtensionConfig(
+                'doctrine_cache',
+                [
+                    'providers' => [
+                        'sulu_collaboration_entity' => [
+                            'file_system' => ['directory' => '%sulu.cache_dir%/collaboration/entity'],
+                        ],
+                        'sulu_collaboration_connection' => [
+                            'file_system' => ['directory' => '%sulu.cache_dir%/collaboration/connection'],
+                        ],
+                    ],
+                ]
+            );
+
+            $container->prependExtensionConfig(
+                'sulu_collaboration',
+                [
+                    'entity_cache' => 'doctrine_cache.providers.sulu_collaboration_entity',
+                    'connection_cache' => 'doctrine_cache.providers.sulu_collaboration_connection',
+                ]
+            );
+        }
+    }
+
     /**
      * {@inheritdoc}
      */

@@ -30,6 +30,8 @@
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="form.factory" />
             <argument type="service" id="sulu_hash.request_hash_checker"/>
+
+            <tag name="sulu.context" context="admin"/>
         </service>
 
         <service id="sulu_snippet.twig.snippet" class="%sulu_snippet.twig.snippet.class%">

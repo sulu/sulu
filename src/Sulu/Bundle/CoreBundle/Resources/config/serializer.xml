@@ -29,5 +29,11 @@
                  public="false">
             <argument type="service" id="sulu_core.serialize_naming_strategy"/>
         </service>
+
+        <!--
+        Just a dirty hack to get the jms serializer bundle correctly working
+        https://github.com/schmittjoh/JMSSerializerBundle/pull/270#issuecomment-21171800
+        -->
+        <service id="jms_serializer.cache_naming_strategy" alias="sulu_core.serialize_caching_strategy"/>
     </services>
 </container>

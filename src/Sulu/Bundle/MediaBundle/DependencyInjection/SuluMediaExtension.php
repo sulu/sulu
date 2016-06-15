@@ -50,6 +50,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                             ],
                         ],
                     ],
+                    'search' => ['enabled' => $container->hasExtension('massive_search')],
                 ]
             );
         }

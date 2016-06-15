@@ -22,3 +22,7 @@ security:
 sulu_security:
     checker:
         enabled: true
+
+fos_rest:
+    routing_loader:
+        default_format: json
