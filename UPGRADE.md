@@ -2,6 +2,22 @@
 
 ## dev-develop
 
+### Twig variable `request.routeParameters` removed
+
+The `request.routeParameters` variable has been removed because it is not longer required when generate an url.
+
+**Before**
+
+```twig
+{{ path('client_website.search', request.routeParameters) }}
+```
+
+**After**
+
+```twig
+{{ path('client_website.search') }}
+```
+
 ### TitleBehavior is not localized anymore
 
 If you have implemented your own Documents with an `TitleBehavior`,

@@ -164,6 +164,12 @@
             <argument type="service" id="sulu_website.resolver.request_analyzer"/>
         </service>
 
+        <service id="sulu_website.routing.request_listener" class="Sulu\Bundle\WebsiteBundle\Routing\RequestListener">
+            <argument type="service" id="router"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer" />
+            <tag name="kernel.event_listener" event="kernel.request" method="onRequest" />
+        </service>
+
         <!-- exception controller -->
         <service id="sulu_website.exception.controller" class="%sulu_website.exception.controller.class%">
             <argument type="service" id="twig" />
