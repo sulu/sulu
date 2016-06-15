@@ -99,7 +99,7 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
 
     private function createExternalUser()
     {
-        $context = $this->getContainer()->get('security.token_storage');
+        $tokenStorage = $this->getContainer()->get('security.token_storage');
         $token = new UsernamePasswordToken('test', 'test', 'test_provider', []);
         $user = new SymfonyUser('test', 'test');
         $token->setUser($user);
