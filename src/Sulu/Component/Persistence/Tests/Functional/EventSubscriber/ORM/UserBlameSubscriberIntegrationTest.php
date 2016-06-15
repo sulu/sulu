@@ -33,7 +33,7 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
 
     public function testUserBlame()
     {
-        $context = $this->getContainer()->get('security.context');
+        $tokenStorage = $this->getContainer()->get('security.token_storage');
         $token = new UsernamePasswordToken('test', 'test', 'test_provider', []);
         $user = new User();
         $user->setUsername('dantleech');
@@ -49,7 +49,7 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
         $this->getEntityManager()->flush();
         $token->setUser($user);
 
-        $context->setToken($token);
+        $tokenStorage->setToken($token);
         $contact = new Contact();
         $contact->setFirstName('Max');
         $contact->setLastName('Mustermann');
@@ -99,10 +99,10 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
 
     private function createExternalUser()
     {
-        $context = $this->getContainer()->get('security.context');
+        $context = $this->getContainer()->get('security.token_storage');
         $token = new UsernamePasswordToken('test', 'test', 'test_provider', []);
         $user = new SymfonyUser('test', 'test');
         $token->setUser($user);
-        $context->setToken($token);
+        $tokenStorage->setToken($token);
     }
 }
