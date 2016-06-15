@@ -31,10 +31,8 @@ class RequestListener
      * @param RouterInterface $router
      * @param RequestAnalyzerInterface $requestAnalyzer
      */
-    public function __construct(
-        RouterInterface $router,
-        RequestAnalyzerInterface $requestAnalyzer
-    ) {
+    public function __construct(RouterInterface $router, RequestAnalyzerInterface $requestAnalyzer)
+    {
         $this->router = $router;
         $this->requestAnalyzer = $requestAnalyzer;
     }
