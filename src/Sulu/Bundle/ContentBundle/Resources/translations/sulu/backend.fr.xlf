@@ -643,6 +643,30 @@
                 <source>content.ckeditor.internal-link.remove</source>
                 <target>Lien interne supprimer</target>
             </trans-unit>
+            <trans-unit id="35" resname="content.text_editor.error.unpublished">
+                <source>content.text_editor.error.unpublished</source>
+                <target>Page web non publiée</target>
+            </trans-unit>
+            <trans-unit id="36" resname="content.text_editor.error.unpublished-single">
+                <source>content.text_editor.error.unpublished-single</source>
+                <target>Une page web liée n’est pas publiée.</target>
+            </trans-unit>
+            <trans-unit id="37" resname="content.text_editor.error.unpublished-multiple">
+                <source>content.text_editor.error.unpublished-multiple</source>
+                <target>%s pages web liées ne sont pas publiées.</target>
+            </trans-unit>
+            <trans-unit id="38" resname="content.text_editor.error.removed">
+                <source>content.text_editor.error.removed</source>
+                <target>Lien non valable</target>
+            </trans-unit>
+            <trans-unit id="39" resname="content.text_editor.error.removed-single">
+                <source>content.text_editor.error.removed-single</source>
+                <target>Un lien n’est plus valable.</target>
+            </trans-unit>
+            <trans-unit id="40" resname="content.text_editor.error.removed-multiple">
+                <source>content.text_editor.error.removed-multiple</source>
+                <target>%s liens ne sont plus valables.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

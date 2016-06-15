@@ -18,9 +18,9 @@ use Sulu\Bundle\MarkupBundle\Tag\TagRegistryInterface;
  */
 class HtmlMarkupParser implements MarkupParserInterface
 {
-    const ATTRIBUTE_REGEX = '/(?<name>\b\w+\b)\s*=\s*"(?<value>[^"]*)"/';
-    const CONTENT_REGEX = '/(?:>(?<content>.*)<)/';
-    const TAG_REGEX = '/(?<tag><%s:(?<name>[a-z]*)[^\/>]*(?:\/>|>.*<\/%s:[^\/>]*>))/';
+    const ATTRIBUTE_REGEX = '/(?<name>\b[\w-]+\b)\s*=\s*"(?<value>[^"]*)"/';
+    const CONTENT_REGEX = '/(?:>(?<content>[^<]*)<)/';
+    const TAG_REGEX = '/(?<tag><%s:(?<name>[a-z]+)[^\/>]*(?:\/>|>[^<]*<\/%s:[^\/>]*>))/';
 
     /**
      * @var TagRegistryInterface
@@ -43,14 +43,60 @@ class HtmlMarkupParser implements MarkupParserInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function parse($content, $locale)
+    {
+        $sortedTags = $this->getTags($content);
+
+        if (0 === count($sortedTags)) {
+            return $content;
+        }
+
+        foreach ($sortedTags as $name => $tags) {
+            $tags = $this->tagRegistry->getTag($name, 'html')->parseAll($tags, $locale);
+
+            foreach ($tags as $tag => $newTag) {
+                $content = str_replace($tag, $newTag, $content);
+            }
+        }
+
+        return $content;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validate($content, $locale)
+    {
+        $sortedTags = $this->getTags($content);
+
+        if (0 === count($sortedTags)) {
+            return [];
+        }
+
+        $result = [];
+        foreach ($sortedTags as $name => $tags) {
+            $result = array_merge(
+                $result,
+                $this->tagRegistry->getTag($name, 'html')->validateAll($tags, $locale)
+            );
+        }
+
+        return $result;
+    }
+
+    /**
+     * Returns found tags and their attributes.
+     *
      * @param string $content
      *
-     * @return string
+     * @return array
      */
-    public function parse($content)
+    private function getTags($content)
     {
         if (!preg_match_all(sprintf(self::TAG_REGEX, $this->namespace, $this->namespace), $content, $matches)) {
-            return $content;
+            return [];
         }
 
         $sortedTags = [];
@@ -64,15 +110,7 @@ class HtmlMarkupParser implements MarkupParserInterface
             $sortedTags[$name][$tag] = $this->getAttributes($tag);
         }
 
-        foreach ($sortedTags as $name => $tags) {
-            $tags = $this->tagRegistry->getTag($name, 'html')->parseAll($tags);
-
-            foreach ($tags as $tag => $newTag) {
-                $content = str_replace($tag, $newTag, $content);
-            }
-        }
-
-        return $content;
+        return $sortedTags;
     }
 
     /**
@@ -90,7 +128,13 @@ class HtmlMarkupParser implements MarkupParserInterface
 
         $attributes = [];
         for ($i = 0, $length = count($matches['name']); $i < $length; ++$i) {
-            $attributes[$matches['name'][$i]] = $matches['value'][$i];
+            $value = $matches['value'][$i];
+
+            if ($value === 'true' || $value === 'false') {
+                $value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+            }
+
+            $attributes[$matches['name'][$i]] = $value;
         }
 
         if (preg_match(self::CONTENT_REGEX, $tag, $matches)) {

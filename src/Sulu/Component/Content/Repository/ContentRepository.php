@@ -412,7 +412,6 @@ class ContentRepository implements ContentRepositoryInterface
             ->addSelect('node', $this->propertyEncoder->localizedContentName('state', $locale), 'state')
             ->addSelect('node', $this->propertyEncoder->localizedContentName('shadow-on', $locale), 'shadowOn')
             ->addSelect('node', $this->propertyEncoder->localizedContentName('shadow-base', $locale), 'shadowBase')
-            ->addSelect('node', $this->propertyEncoder->localizedContentName('shadow-base', $locale), 'shadowBase')
             ->addSelect('node', $this->propertyEncoder->systemName('order'), 'order')
             ->from($this->qomFactory->selector('node', 'nt:unstructured'))
             ->orderBy($this->qomFactory->propertyValue('node', 'sulu:order'));

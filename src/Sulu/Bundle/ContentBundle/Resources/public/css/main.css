@@ -15,14 +15,18 @@
   padding-top: 20px;
   padding-bottom: 20px;
 }
+/* line 13, ../scss/modules/general.scss */
+#content-form .validate-error {
+  color: #EA524E;
+}
 
-/* line 14, ../scss/modules/general.scss */
+/* line 18, ../scss/modules/general.scss */
 .sortable-placeholder {
   margin-bottom: 20px;
 }
 
 /* smart content extension for internal links */
-/* line 20, ../scss/modules/general.scss */
+/* line 24, ../scss/modules/general.scss */
 .smart-header .add {
   display: block;
   position: absolute;
@@ -37,19 +41,19 @@
   border-radius: 2px;
 }
 
-/* line 38, ../scss/modules/general.scss */
+/* line 42, ../scss/modules/general.scss */
 .internal-links-overlay .overlay-content,
 .single-internal-overlay .overlay-content,
 .node .overlay-content {
   margin: 0px;
 }
-/* line 42, ../scss/modules/general.scss */
+/* line 46, ../scss/modules/general.scss */
 .internal-links-overlay .overlay-header,
 .single-internal-overlay .overlay-header,
 .node .overlay-header {
   margin-bottom: 0px !important;
 }
-/* line 46, ../scss/modules/general.scss */
+/* line 50, ../scss/modules/general.scss */
 .internal-links-overlay .overlay-footer,
 .single-internal-overlay .overlay-footer,
 .node .overlay-footer {
@@ -57,26 +61,26 @@
 }
 
 /* smart content for column view */
-/* line 52, ../scss/modules/general.scss */
+/* line 56, ../scss/modules/general.scss */
 .column-navigation-wrapper {
   overflow: inherit;
 }
 
 /* block add-button */
-/* line 58, ../scss/modules/general.scss */
+/* line 62, ../scss/modules/general.scss */
 .text-block-footer.full .action .dropdown-label {
   background-color: #ccc;
   cursor: default;
 }
 
 /** multiple property */
-/* line 66, ../scss/modules/general.scss */
+/* line 70, ../scss/modules/general.scss */
 #sulu-content-container .multiple-property .move::before {
   left: -18px;
   top: 2px;
 }
 
-/* line 72, ../scss/modules/general.scss */
+/* line 76, ../scss/modules/general.scss */
 #changelog-container {
   color: #999;
 }

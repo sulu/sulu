@@ -107,6 +107,7 @@
         </service>
         <service id="sulu.content.type.text_editor" class="%sulu.content.type.text_editor.class%">
             <argument>%sulu.content.type.text_editor.template%</argument>
+            <argument type="service" id="sulu_markup.parser"/>
             <tag name="sulu.content.type" alias="text_editor"/>
         </service>
         <service id="sulu.content.type.resource_locator" class="%sulu.content.type.resource_locator.class%">

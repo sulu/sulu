@@ -14,6 +14,8 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2428 [Content]             Removed move and copy method from ContentMapper
     * BUGFIX      #2426 [RouteBundle]         Fixed route-provider when no resource-locator prefix isset
     * BUGFIX      #2418 [ContentBundle]       Removed ContentMapperRequest
+    * FEATURE     #2402 [MarkupBundle]        Added validation for markup
+    * FEATURE     #2336 [ContentBundle]       Enabled internal link in ckeditor
     * ENHANCEMENT #2414 [ContentBundle]       Removed save method of ContentMapper
     * ENHANCEMENT #2408 [CoreBundle]          Extracted theming into own bundle
     * BUGFIX      #2367 [ContentBundle]       Fixed copy internal-link into new language
@@ -29,7 +31,6 @@ CHANGELOG for Sulu
     * BUGFIX      #2369 [All]                 Install the symfony phpunit bridge again
     * ENHANCEMENT #2356 [PreviewBundle]       Added default error message 
     * BUGFIX      #2354 [ContentBundle]       Fixed javascript error preview is null for new page form 
-    * FEATURE     #2336 [ContentBundle]       Enabled internal link in ckeditor
     * ENHANCEMENT #2338 [MarkupBundle]        Implemented markup bundle
     * FEATURE     #2333 [PreviewBundle]       Added preview render error templates 
     * ENHANCEMENT #2353 [WebsocketBundle]     Changed configuration to default disable websocket 
