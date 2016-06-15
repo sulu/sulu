@@ -1188,7 +1188,10 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
         $templateReader = new XmlLegacyLoader();
         $result = $templateReader->load(
-            $this->getResourceDirectory() . '/DataFixtures/Page/template_missing_rlp_tag.xml',
+            implode(
+                DIRECTORY_SEPARATOR,
+                [$this->getResourceDirectory(), 'DataFixtures', 'Page', 'template_missing_rlp_tag.xml']
+            ),
             'page'
         );
     }
@@ -1197,7 +1200,10 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $templateReader = new XmlLegacyLoader();
         $result = $templateReader->load(
-            $this->getResourceDirectory() . '/DataFixtures/Page/template_missing_rlp_tag_internal.xml',
+            implode(
+                DIRECTORY_SEPARATOR,
+                [$this->getResourceDirectory(), 'DataFixtures', 'Page', 'template_missing_rlp_tag_internal.xml']
+            ),
             'page'
         );
 
@@ -1214,7 +1220,10 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
         $templateReader = new XmlLegacyLoader();
         $result = $templateReader->load(
-            $this->getResourceDirectory() . '/DataFixtures/Page/template_missing_rlp_tag.xml',
+            implode(
+                DIRECTORY_SEPARATOR,
+                [$this->getResourceDirectory(), 'DataFixtures', 'Page', 'template_missing_rlp_tag.xml']
+            ),
             'home'
         );
     }
@@ -1223,7 +1232,10 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $templateReader = new XmlLegacyLoader();
         $result = $templateReader->load(
-            $this->getResourceDirectory() . '/DataFixtures/Page/template_missing_rlp_tag_internal.xml',
+            implode(
+                DIRECTORY_SEPARATOR,
+                [$this->getResourceDirectory(), 'DataFixtures', 'Page', 'template_missing_rlp_tag_internal.xml']
+            ),
             'home'
         );
 
@@ -1235,7 +1247,10 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $templateReader = new XmlLegacyLoader();
         $result = $templateReader->load(
-            $this->getResourceDirectory() . '/DataFixtures/Page/template_missing_rlp_tag.xml',
+            implode(
+                DIRECTORY_SEPARATOR,
+                [$this->getResourceDirectory(), 'DataFixtures', 'Page', 'template_missing_rlp_tag.xml']
+            ),
             'snippet'
         );
 
@@ -1253,7 +1268,10 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $templateReader = new XmlLegacyLoader();
         $result = $templateReader->load(
-            $this->getResourceDirectory() . '/DataFixtures/Page/template_missing_rlp_tag_internal.xml',
+            implode(
+                DIRECTORY_SEPARATOR,
+                [$this->getResourceDirectory(), 'DataFixtures', 'Page', 'template_missing_rlp_tag_internal.xml']
+            ),
             'snippet'
         );
 
@@ -1263,6 +1281,10 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testReadTemplateWithXInclude()
     {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $this->markTestSkipped('Xinclude are not supported with php(unit) and windows.');
+        }
+
         $template = [
             'key' => 'template',
             'view' => 'page.html.twig',
@@ -1345,7 +1367,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $xmlLegacyLoader = new XmlLegacyLoader();
         $result = $xmlLegacyLoader->load(
-            $this->getResourceDirectory() . '/DataFixtures/Page/' . $name
+            implode(DIRECTORY_SEPARATOR, [$this->getResourceDirectory(), 'DataFixtures', 'Page', $name])
         );
 
         return $result;
@@ -1353,6 +1375,9 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
     private function getResourceDirectory()
     {
-        return __DIR__ . '/../../../../../../../../tests/Resources';
+        return implode(
+            DIRECTORY_SEPARATOR,
+            [__DIR__, '..', '..', '..', '..', '..', '..', '..', '..', 'tests', 'Resources']
+        );
     }
 }

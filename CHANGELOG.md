@@ -12,6 +12,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2495 [ContactBundle]       Added cascade-persist for contact addresses
     * ENHANCEMENT #2483 [All]                 Replace security.context with security.token_storage service
     * ENHANCEMENT #2464 [All]                 Moved configuration from installation folder to sulu-core
+    * BUGFIX      #2482 [Content]             Fixed appveyor tests
     * ENHANCEMENT #2479 [ContentBundle]       Removed restore history route function
     * ENHANCEMENT #2462 [All]                 Removed unnecessary NodeInterface definitions in tests
     * ENHANCEMENT #2461 [PreviewBundle]       Added function that avoid navigating in the preview
