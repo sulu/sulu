@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2486 [WebsiteBundle]       Fixed portal redirect when using subfolder
     * ENHANCEMENT #2483 [All]                 Replace security.context with security.token_storage service
     * ENHANCEMENT #2479 [ContentBundle]       Removed restore history route function
     * ENHANCEMENT #2462 [All]                 Removed unnecessary NodeInterface definitions in tests
