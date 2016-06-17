@@ -3,7 +3,8 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Sulu\Bundle\MediaBundle\Entity\Media" table="me_media" repository-class="Sulu\Bundle\MediaBundle\Entity\MediaRepository">
+    <mapped-superclass name="Sulu\Bundle\MediaBundle\Entity\Media" table="me_media"
+            repository-class="Sulu\Bundle\MediaBundle\Entity\MediaRepository">
         <indexes>
             <index columns="changed"/>
             <index columns="created"/>
@@ -33,5 +34,5 @@
         <one-to-one field="previewImage" target-entity="Sulu\Bundle\MediaBundle\Entity\Media">
             <join-column name="idPreviewImage" referenced-column-name="id"/>
         </one-to-one>
-    </entity>
+    </mapped-superclass>
 </doctrine-mapping>

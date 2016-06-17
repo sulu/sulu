@@ -11,19 +11,17 @@
 
 namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 
+use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-/**
- * This is the class that loads and manages your bundle configuration.
- *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
- */
 class SuluMediaExtension extends Extension implements PrependExtensionInterface
 {
+    use PersistenceExtensionTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -147,11 +145,14 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         if (true === $config['search']['enabled']) {
             if (!class_exists('Sulu\Bundle\SearchBundle\SuluSearchBundle')) {
                 throw new \InvalidArgumentException(
-                    'You have enabled sulu search integration for the SuluMediaBundle, but the SuluSearchBundle must be installed'
+                    'You have enabled sulu search integration for the SuluMediaBundle, ' .
+                    'but the SuluSearchBundle must be installed'
                 );
             }
 
             $loader->load('search.xml');
         }
+
+        $this->configurePersistence($config['objects'], $container);
     }
 }
