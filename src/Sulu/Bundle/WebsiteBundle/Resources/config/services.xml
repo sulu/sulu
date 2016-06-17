@@ -159,6 +159,16 @@
             <argument>%kernel.environment%</argument>
         </service>
 
+        <service id="sulu_website.resolver.template_attribute"
+                 class="Sulu\Bundle\WebsiteBundle\Resolver\TemplateAttributeResolver">
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument type="service" id="sulu_website.resolver.request_analyzer"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager" />
+            <argument type="service" id="router"/>
+            <argument type="service" id="request_stack"/>
+            <argument>%kernel.environment%</argument>
+        </service>
+
         <service id="sulu_website.resolver.parameter" class="%sulu_website.resolver.parameter.class%">
             <argument type="service" id="sulu_website.resolver.structure"/>
             <argument type="service" id="sulu_website.resolver.request_analyzer"/>
