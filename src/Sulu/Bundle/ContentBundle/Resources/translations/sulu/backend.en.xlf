@@ -667,6 +667,26 @@
                 <source>content.text_editor.error.removed-multiple</source>
                 <target>%s links are broken.</target>
             </trans-unit>
+            <trans-unit id="41" resname="content-navigation.security.ckeditor">
+                <source>content-navigation.security.ckeditor</source>
+                <target>Text editor</target>
+            </trans-unit>
+            <trans-unit id="42" resname="security.roles.ckeditor.title">
+                <source>security.roles.ckeditor.title</source>
+                <target>Text editor settings</target>
+            </trans-unit>
+            <trans-unit id="43" resname="security.roles.ckeditor.type">
+                <source>security.roles.ckeditor.type</source>
+                <target>Section</target>
+            </trans-unit>
+            <trans-unit id="44" resname="security.roles.ckeditor.horizontal">
+                <source>security.roles.ckeditor.horizontal</source>
+                <target>Function</target>
+            </trans-unit>
+            <trans-unit id="45" resname="security.roles.ckeditor.info">
+                <source>security.roles.ckeditor.info</source>
+                <target>These settings apply for any text editor throughout the system used by this role.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

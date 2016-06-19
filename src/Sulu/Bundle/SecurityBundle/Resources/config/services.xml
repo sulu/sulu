@@ -144,6 +144,13 @@
             <argument>%sulu.model.user.class%</argument>
         </service>
 
+        <service id="sulu_security.role_setting_repository"
+                 class="Sulu\Bundle\SecurityBundle\Entity\RoleSettingRepository">
+            <factory service="doctrine.orm.entity_manager" method="getRepository"/>
+
+            <argument>SuluSecurityBundle:RoleSetting</argument>
+        </service>
+
         <service id="sulu_security.user_provider" class="Sulu\Bundle\SecurityBundle\User\UserProvider">
             <argument type="service" id="sulu_security.user_repository"/>
             <argument type="service" id="request_stack"/>

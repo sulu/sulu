@@ -9,7 +9,9 @@
 
 require.config({
     paths: {
-        sulusecurity: '../../sulusecurity/js'
+        sulusecurity: '../../sulusecurity/js',
+
+        'services/sulusecurity/role-router': '../../sulusecurity/js/services/role-router'
     }
 });
 
