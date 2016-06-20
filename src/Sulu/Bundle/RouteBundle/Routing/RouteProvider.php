@@ -64,7 +64,8 @@ class RouteProvider implements RouteProviderInterface
         $collection = new RouteCollection();
         $path = $request->getPathInfo();
         $prefix = $this->requestAnalyzer->getResourceLocatorPrefix();
-        if (!empty($prefix)) {
+
+        if (!empty($prefix) && strpos($path, $prefix) === 0) {
             $path = PathHelper::relativizePath($path, $prefix);
         }
 

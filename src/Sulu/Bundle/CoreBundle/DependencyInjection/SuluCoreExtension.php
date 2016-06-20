@@ -248,8 +248,9 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         /**
-         * Just a dirty hack to get the jms serializer bundle correctly working
-         * https://github.com/schmittjoh/JMSSerializerBundle/pull/270#issuecomment-21171800
+         * Just a dirty hack to get the jms serializer bundle correctly working.
+         *
+         * {@link https://github.com/schmittjoh/JMSSerializerBundle/pull/270#issuecomment-21171800}
          */
         $container->setAlias('jms_serializer.cache_naming_strategy', 'sulu_core.serialize_caching_strategy');
 
