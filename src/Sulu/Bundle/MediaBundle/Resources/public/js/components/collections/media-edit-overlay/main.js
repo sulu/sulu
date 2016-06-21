@@ -21,8 +21,22 @@ define([
     'text!./versions.html',
     'text!./preview.html',
     'text!./formats.html',
-    'text!./categories.html'
-], function(config, mediaManager, fileIcons, infoTemplate, copyrightTemplate, versionsTemplate, previewTemplate, formatsTemplate, categoriesTemplate) {
+    'text!./categories.html',
+    'text!./statistics.html',
+    'text!./account-external.html'
+], function(
+        config,
+        mediaManager,
+        fileIcons,
+        infoTemplate,
+        copyrightTemplate,
+        versionsTemplate,
+        previewTemplate,
+        formatsTemplate,
+        categoriesTemplate,
+        statisticsTemplate,
+        accountExternalTemplate
+    ) {
 
     'use strict';
 
@@ -191,7 +205,7 @@ define([
          * @param media {Object} the id of the media to edit
          */
         editSingleMedia: function(media) {
-            var $info, $copyright, $versions, $preview, $formats, $categories;
+            var $info, $copyright, $versions, $preview, $formats, $categories, $statistics, $accountExternal;
 
             this.media = media;
 
@@ -231,19 +245,48 @@ define([
                 translate: this.sandbox.translate
             }));
 
-            this.startSingleOverlay($info, $copyright, $formats, $versions, $preview, $categories);
+            $statistics = this.sandbox.dom.createElement(_.template(statisticsTemplate, {
+                media: this.media,
+                translate: this.sandbox.translate
+            }));
+
+            $accountExternal = this.sandbox.dom.createElement(_.template(accountExternalTemplate, {
+                media: this.media,
+                translate: this.sandbox.translate
+            }));
+
+            this.startSingleOverlay($info,
+                $copyright,
+                $formats,
+                $versions,
+                $preview,
+                $categories,
+                $statistics,
+                $accountExternal
+            );
         },
 
         /**
          * Starts the actual overlay for single-edit
          */
-        startSingleOverlay: function($info, $copyright, $formats, $versions, $preview, $categories) {
+        startSingleOverlay: function(
+            $info,
+            $copyright,
+            $formats,
+            $versions,
+            $preview,
+            $categories,
+            $statistics,
+            $accountExternal
+        ) {
             var $container = this.sandbox.dom.createElement('<div class="' + constants.singleEditClass + '" id="media-form"/>');
             this.sandbox.dom.append(this.$el, $container);
             this.bindSingleOverlayEvents();
 
             var tabs = [
                 {title: this.sandbox.translate('public.info'), data: $info},
+                {title: this.sandbox.translate('sulu.media.account-external'), data: $accountExternal},
+                {title: this.sandbox.translate('sulu.media.statistics'), data: $statistics},
                 {title: this.sandbox.translate('sulu.media.licence'), data: $copyright}
             ];
 
