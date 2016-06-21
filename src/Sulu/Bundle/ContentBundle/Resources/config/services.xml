@@ -53,6 +53,13 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
+        <!-- roles -->
+        <service id="sulu_content.roles_content_navigation_provider"
+                 class="Sulu\Bundle\ContentBundle\Admin\RolesContentNavigationProvider">
+            <tag name="sulu_admin.content_navigation" alias="roles"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
         <!-- nodes -->
         <service id="sulu_content.node_repository" class="%sulu_content.node_repository.class%">
             <argument type="service" id="sulu.content.mapper"/>
@@ -94,6 +101,12 @@
             </argument>
 
             <tag name="sulu.js_config"/>
+        </service>
+        <service id="sulu_content.jsconfig.ckeditor_toolbar" class="Sulu\Bundle\ContentBundle\Admin\CKEditorJsConfig">
+            <argument type="service" id="security.token_storage"/>
+
+            <tag name="sulu.js_config"/>
+            <tag name="sulu.context" context="admin"/>
         </service>
 
         <!-- Content Repository -->

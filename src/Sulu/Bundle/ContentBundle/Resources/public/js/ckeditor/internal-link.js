@@ -1,7 +1,7 @@
 define([
     'underscore',
     'services/husky/translator',
-    'text!sulucontentcss/ckeditor-internal-link.css'
+    'text!sulucontentcss/ckeditor-plugin.css'
 ], function(_, Translator, editorCSS) {
 
     'use strict';
@@ -44,6 +44,14 @@ define([
             }
 
             editor.fire('change');
+        },
+        remove = function(editor, selection) {
+            var link = getLinkBySelection(selection),
+                element = selection.getStartElement(),
+                linkElement = element.getAscendant('sulu:link', true);
+
+            linkElement.remove();
+            editor.insertText(link.title);
         };
 
     return function(sandbox) {
@@ -53,12 +61,12 @@ define([
             init: function(editor) {
                 // extend dtd
                 CKEDITOR.dtd[this.tagName] = 1;
-                CKEDITOR.dtd.body['sulu:link'] = 1;
-                CKEDITOR.dtd.div['sulu:link'] = 1;
-                CKEDITOR.dtd.li['sulu:link'] = 1;
-                CKEDITOR.dtd.p['sulu:link'] = 1;
-                CKEDITOR.dtd.$block['sulu:link'] = 1;
-                CKEDITOR.dtd.$removeEmpty['sulu:link'] = 1;
+                CKEDITOR.dtd.body[this.tagName] = 1;
+                CKEDITOR.dtd.div[this.tagName] = 1;
+                CKEDITOR.dtd.li[this.tagName] = 1;
+                CKEDITOR.dtd.p[this.tagName] = 1;
+                CKEDITOR.dtd.$block[this.tagName] = 1;
+                CKEDITOR.dtd.$removeEmpty[this.tagName] = 1;
 
                 editor.addCommand('internalLinkDialog', {
                     dialogName: 'internalLinkDialog',
@@ -79,6 +87,9 @@ define([
                                     saveCallback: function(link) {
                                         sandbox.stop($element);
                                         render(editor, editor.getSelection(), link);
+                                    },
+                                    removeCallback: function() {
+                                        remove(editor, editor.getSelection());
                                     }
                                 }
                             }
@@ -87,13 +98,7 @@ define([
                 });
                 editor.addCommand('removeInternalLink', {
                     exec: function() {
-                        var selection = editor.getSelection(),
-                            link = getLinkBySelection(selection),
-                            element = selection.getStartElement(),
-                            linkElement = element.getAscendant('sulu:link', true);
-
-                        linkElement.remove();
-                        editor.insertText(link.title);
+                        remove(editor, editor.getSelection());
                     },
                     refresh: function() {
                         var selection = editor.getSelection(),
@@ -117,14 +122,6 @@ define([
                         label: sandbox.translate('content.ckeditor.internal-link'),
                         command: 'internalLinkDialog',
                         icon: '/bundles/sulucontent/img/icon_link_internal.png'
-                    }
-                );
-                editor.ui.addButton(
-                    'RemoveInternalLink',
-                    {
-                        label: sandbox.translate('content.ckeditor.internal-link.remove'),
-                        command: 'removeInternalLink',
-                        icon: '/bundles/sulucontent/img/icon_remove_link_internal.png'
                     }
                 );
 
@@ -156,6 +153,7 @@ define([
 
             onLoad: function() {
                 CKEDITOR.addCss(_.template(editorCSS, {
+                    tag: 'link',
                     translations: {
                         unpublished: Translator.translate('content.text_editor.error.unpublished'),
                         removed: Translator.translate('content.text_editor.error.removed')

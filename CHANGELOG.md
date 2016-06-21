@@ -11,12 +11,15 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2462 [All]                 Removed unnecessary NodeInterface definitions in tests
     * ENHANCEMENT #2461 [PreviewBundle]       Added function that avoid navigating in the preview
     * ENHANCEMENT #2357 [PreviewBundle]       Using Website-Kernel to render preview
+    * FEATURE     #2442 [MediaBundle]         Enabled media link in ckeditor
+    * ENHANCEMENT #2442 [MediaBundle]         Enhanced behaviour of media-selection
     * BUGFIX      #2455 [CoreBundle]          Fixed ServerStatusCommand for Symfony 2.8.7
     * BUGFIX      #2443 [WebsiteBundle]       Added portal check for portal-routes
     * FEATURE     #2424 [Content]             Add support for XInclude
     * BUGFIX      #2439 [ContentBundle]       Fixed tab visibility for create new page localization
     * ENHANCEMENT #2428 [Content]             Removed move and copy method from ContentMapper
     * BUGFIX      #2426 [RouteBundle]         Fixed route-provider when no resource-locator prefix isset
+    * FEATURE     #2404 [ContentBundle]       Implemented configurable ckeditor toolbar per role
     * BUGFIX      #2418 [ContentBundle]       Removed ContentMapperRequest
     * FEATURE     #2402 [MarkupBundle]        Added validation for markup
     * FEATURE     #2336 [ContentBundle]       Enabled internal link in ckeditor

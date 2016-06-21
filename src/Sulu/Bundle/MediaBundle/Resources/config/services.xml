@@ -222,5 +222,15 @@
         <service id="sulu_media.system_collections.builder" class="Sulu\Component\Media\SystemCollections\SystemCollectionBuilder">
             <tag name="massive_build.builder" />
         </service>
+
+        <!-- markup -->
+        <service id="sulu_media.markup" class="Sulu\Bundle\MediaBundle\Markup\MediaTag">
+            <argument type="service" id="sulu_core.doctrine_list_builder_factory"/>
+            <argument type="service" id="sulu_core.list_builder.field_descriptor_factory"/>
+            <argument type="service" id="sulu_media.media_manager"/>
+            <argument type="string">%kernel.environment%</argument>
+
+            <tag name="sulu_markup.tag" tag="media" type="html"/>
+        </service>
     </services>
 </container>

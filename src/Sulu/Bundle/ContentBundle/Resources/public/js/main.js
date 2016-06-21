@@ -38,9 +38,10 @@ define([
             'use strict';
 
             var sandbox = app.sandbox;
+            var ckeditorConfig = Config.get('sulu_content.ckeditor_toolbar');
+
             sandbox.sulu.buttons.push(ContentButtons.getButtons());
             sandbox.sulu.buttons.dropdownItems.push(ContentButtons.getDropdownItems());
-
             app.components.addSource('sulucontent', '/bundles/sulucontent/js/components');
 
             Config.set('sulusearch.page.options', {
@@ -134,8 +135,11 @@ define([
                 'internalLink',
                 new InternalLinkPlugin(app.sandboxes.create('plugin-internal-link'))
             );
-            sandbox.ckeditor.addToolbarButton('links', 'InternalLink');
-            sandbox.ckeditor.addToolbarButton('links', 'RemoveInternalLink');
+            sandbox.ckeditor.addToolbarButton('links', 'InternalLink', 'arrow-down');
+
+            if (!!ckeditorConfig && !!ckeditorConfig.userToolbar) {
+                app.sandbox.ckeditor.setToolbar(ckeditorConfig.userToolbar);
+            }
         }
     };
 });

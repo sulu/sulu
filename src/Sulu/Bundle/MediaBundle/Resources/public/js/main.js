@@ -12,6 +12,9 @@ require.config({
         sulumedia: '../../sulumedia/js',
         sulumediacss: '../../sulumedia/css',
 
+        // if content will be registered later
+        sulucontentcss: '../../sulucontent/css',
+
         'extensions/masonry': '../../sulumedia/js/extensions/masonry',
         'extensions/sulu-buttons-mediabundle': '../../sulumedia/js/extensions/sulu-buttons',
 
@@ -32,8 +35,9 @@ define([
     'services/sulumedia/overlay-manager',
     'extensions/masonry',
     'extensions/sulu-buttons-mediabundle',
+    'sulumedia/ckeditor/media-link',
     'css!sulumediacss/main'
-], function(MediaRouter, OverlayManager, MasonryExtension, MediaButtons) {
+], function(MediaRouter, OverlayManager, MasonryExtension, MediaButtons, MediaLinkPlugin) {
 
     'use strict';
 
@@ -79,6 +83,13 @@ define([
                     MediaRouter.toCollection(id);
                 }
             });
+
+            // ckeditor
+            sandbox.ckeditor.addPlugin(
+                'mediaLink',
+                new MediaLinkPlugin(app.sandboxes.create('plugin-media-link'))
+            );
+            sandbox.ckeditor.addToolbarButton('links', 'MediaLink', 'image');
 
             app.components.before('initialize', function() {
                 if (this.name !== 'Sulu App') {
