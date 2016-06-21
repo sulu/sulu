@@ -63,6 +63,8 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             );
         }
 
+        $templatesPath = '%kernel.root_dir%/../vendor/sulu/sulu/src/Sulu/Bundle/CoreBundle/Content/templates';
+
         $container->prependExtensionConfig(
             'sulu_core',
             [
@@ -70,11 +72,11 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                     'structure' => [
                         'paths' => [
                             'sulu' => [
-                                'path' => '%kernel.root_dir%/../vendor/sulu/sulu/src/Sulu/Bundle/CoreBundle/Content/templates',
+                                'path' => $templatesPath,
                                 'type' => 'page',
+                            ],
                         ],
                     ],
-                ],
                 ],
             ]
         );
@@ -336,10 +338,22 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         );
 
         // Default template
-        $container->setParameter('sulu.content.structure.default_types', $contentConfig['structure']['default_type']);
-        $container->setParameter('sulu.content.structure.default_type.snippet', $contentConfig['structure']['default_type']['snippet']);
-        $container->setParameter('sulu.content.internal_prefix', $contentConfig['internal_prefix']);
-        $container->setParameter('sulu.content.structure.type_map', $contentConfig['structure']['type_map']);
+        $container->setParameter(
+            'sulu.content.structure.default_types',
+            $contentConfig['structure']['default_type']
+        );
+        $container->setParameter(
+            'sulu.content.structure.default_type.snippet',
+            $contentConfig['structure']['default_type']['snippet']
+        );
+        $container->setParameter(
+            'sulu.content.internal_prefix',
+            $contentConfig['internal_prefix']
+        );
+        $container->setParameter(
+            'sulu.content.structure.type_map',
+            $contentConfig['structure']['type_map']
+        );
 
         // Template
         $paths = [];
@@ -385,8 +399,14 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $generalMetadataCacheFolder = $this->createOrGetFolder('%sulu.cache_dir%/list-builder/general', $container);
         $doctrineMetadataCacheFolder = $this->createOrGetFolder('%sulu.cache_dir%/list-builder/doctrine', $container);
 
-        $container->setParameter('sulu_core.list_builder.metadata.provider.general.cache_dir', $generalMetadataCacheFolder);
-        $container->setParameter('sulu_core.list_builder.metadata.provider.doctrine.cache_dir', $doctrineMetadataCacheFolder);
+        $container->setParameter(
+            'sulu_core.list_builder.metadata.provider.general.cache_dir',
+            $generalMetadataCacheFolder
+        );
+        $container->setParameter(
+            'sulu_core.list_builder.metadata.provider.doctrine.cache_dir',
+            $doctrineMetadataCacheFolder
+        );
     }
 
     /**
