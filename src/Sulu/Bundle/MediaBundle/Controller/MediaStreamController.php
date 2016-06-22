@@ -152,9 +152,7 @@ class MediaStreamController extends Controller
         /*
          * @var MediaInterface
          */
-        $mediaEntity = $this->getDoctrine()
-            ->getRepository('sulu.repository.media')
-            ->findMediaById($id);
+        $mediaEntity = $this->container->get('sulu.repository.media')->findMediaById($id);
 
         $currentFileVersion = null;
         $version = $version === null ? $mediaEntity->getFiles()[0]->getVersion() : $version;
