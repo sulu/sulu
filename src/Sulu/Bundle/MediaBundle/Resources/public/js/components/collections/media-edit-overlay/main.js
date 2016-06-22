@@ -527,6 +527,12 @@ define([
             if (this.sandbox.form.validate(constants.formSelector)) {
                 var formData = this.sandbox.form.getData(constants.formSelector),
                     mediaData = this.sandbox.util.extend(false, {}, this.media, formData);
+                console.log('FORMDATA ------------------------------');
+                console.log(formData);
+                console.log('MEDIADATA ------------------------------');
+                console.log(mediaData);
+                console.log('MEDIA ------------------------------');
+                console.log(this.media);
 
                 // check if form-data is different to source-media
                 if (JSON.stringify(this.media) !== JSON.stringify(mediaData)) {
@@ -595,6 +601,8 @@ define([
          * Data contains the account that is currently set. This can then be set with options.value.
          */
         initCompanyAutocomplete: function(data) {
+            console.log('media data currently set');
+            console.log(data);
 
             var options = config.get('sulucontact.components.autocomplete.default.account');
             options.el = '#media-edit-account-external-account';
@@ -614,6 +622,8 @@ define([
          */
         setAccountToMedia: function(data) {
             this.media.account = data;
+            console.log('media data with new account set');
+            console.log(this.media);
         },
 
         /**
