@@ -50,30 +50,15 @@ class AbstractMediaController extends RestController
      */
     protected function getData(Request $request, $fallback = true)
     {
-        return [
-            'id' => $request->get('id'),
-            'locale' => $request->get('locale', $fallback ? $this->getLocale($request) : null),
-            'type' => $request->get('type'),
-            'collection' => $request->get('collection'),
-            'versions' => $request->get('versions'),
-            'version' => $request->get('version'),
-            'size' => $request->get('size'),
-            'contentLanguages' => $request->get('contentLanguages', []),
-            'publishLanguages' => $request->get('publishLanguages', []),
-            'tags' => $request->get('tags'),
-            'formats' => $request->get('formats', []),
-            'url' => $request->get('url'),
-            'name' => $request->get('name'),
-            'title' => $request->get('title', $fallback ? $this->getTitleFromUpload($request, 'fileVersion') : null),
-            'description' => $request->get('description'),
-            'copyright' => $request->get('copyright'),
-            'credits' => $request->get('credits'),
-            'changer' => $request->get('changer'),
-            'creator' => $request->get('creator'),
-            'changed' => $request->get('changed'),
-            'created' => $request->get('created'),
-            'categories' => $request->get('categories'),
-        ];
+        $data = $request->request->all();
+        $data['locale'] = $request->get('locale', $fallback ? $this->getLocale($request) : null);
+        $data['collection'] = $request->get('collection');
+        $data['contentLanguages'] = $request->get('contentLanguages', []);
+        $data['publishLanguages'] = $request->get('publishLanguages', []);
+        $data['title'] = $request->get('title', $fallback ? $this->getTitleFromUpload($request, 'fileVersion') : null);
+        $data['formats'] = $request->get('formats', []);
+
+        return $data;
     }
 
     /**
