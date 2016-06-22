@@ -12,8 +12,9 @@
 namespace Sulu\Bundle\TestBundle\Testing;
 
 use Doctrine\ORM\EntityManager;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Component\Contact\Model\ContactRepositoryInterface;
+use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -35,11 +36,26 @@ class TestUserProvider implements UserProviderInterface
     private $entityManager;
 
     /**
+     * @var ContactRepositoryInterface
+     */
+    private $contactRepository;
+
+    /**
+     * @var UserRepositoryInterface
+     */
+    private $userRepository;
+
+    /**
      * @param EntityManager $entityManager
      */
-    public function __construct(EntityManager $em)
-    {
+    public function __construct(
+        EntityManager $em,
+        ContactRepositoryInterface $contactRepository,
+        UserRepositoryInterface $userRepository
+    ) {
         $this->entityManager = $em;
+        $this->contactRepository = $contactRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -56,12 +72,12 @@ class TestUserProvider implements UserProviderInterface
             ->findOneByUsername('test');
 
         if (!$user) {
-            $contact = new Contact();
+            $contact = $this->contactRepository->createNew();
             $contact->setFirstName('Max');
             $contact->setLastName('Mustermann');
             $this->entityManager->persist($contact);
 
-            $user = new User();
+            $user = $this->userRepository->createNew();
             $this->setCredentials($user);
             $user->setSalt('');
             $user->setLocale('en');
