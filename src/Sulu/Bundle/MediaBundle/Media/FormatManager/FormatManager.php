@@ -16,7 +16,7 @@ use Imagine\Image\ImageInterface;
 use Imagine\Imagick\Imagine;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
-use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Media\Exception\GhostScriptNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidImageFormat;
@@ -144,48 +144,48 @@ class FormatManager implements FormatManagerInterface
         $setExpireHeaders = false;
 
         try {
-            // load Media
+            // Load Media.
             $media = $this->mediaRepository->findMediaById($id);
 
             if (!$media) {
                 throw new ImageProxyMediaNotFoundException('Media was not found');
             }
 
-            // load Media Data
+            // Load Media Data.
             list($fileName, $version, $storageOptions, $mimeType) = $this->getMediaData($media);
 
             try {
-                // check if file has supported preview
+                // Check if file has supported preview.
                 if (!$this->checkPreviewSupported($mimeType)) {
                     throw new InvalidMimeTypeForPreviewException($mimeType);
                 }
 
-                // get format options
+                // Get format options.
                 $format = $this->getFormat($formatName);
                 $formatOptions = $format['options'];
 
-                // load Original
+                // Load Original.
                 $uri = $this->originalStorage->load($fileName, $version, $storageOptions);
                 $original = $this->createTmpFile($this->getFile($uri, $mimeType));
 
-                // prepare Media
+                // Prepare Media.
                 $this->prepareMedia($mimeType, $original);
 
-                // convert Media to format
+                // Convert Media to format.
                 $image = $this->converter->convert($original, $format);
 
-                // remove profiles and comments
+                // Remove profiles and comments.
                 $image->strip();
 
-                // set Interlacing to plane for smaller image size
+                // Set Interlacing to plane for smaller image size.
                 if (count($image->layers()) == 1) {
                     $image->interlace(ImageInterface::INTERLACE_PLANE);
                 }
 
-                // set extension
+                // Set extension.
                 $imageExtension = $this->getImageExtension($fileName);
 
-                // get image
+                // Get image.
                 $responseContent = $image->get(
                     $imageExtension,
                     $this->getOptionsFromImage($image, $imageExtension, $formatOptions)
@@ -195,7 +195,7 @@ class FormatManager implements FormatManagerInterface
                 $status = 200;
                 $setExpireHeaders = true;
 
-                // save image
+                // Save image.
                 if ($this->saveImage) {
                     $this->formatCache->save(
                         $this->createTmpFile($responseContent),
@@ -205,9 +205,13 @@ class FormatManager implements FormatManagerInterface
                         $formatName
                     );
                 }
-            } catch (MediaException $e) {
-                // return when available a file extension icon
-                list($responseContent, $status, $imageExtension) = $this->returnFileExtensionIcon($formatName, $this->getRealFileExtension($fileName), $e);
+            } catch (MediaException $exc) {
+                // Return when available a file extension icon.
+                list($responseContent, $status, $imageExtension) = $this->returnFileExtensionIcon(
+                    $formatName,
+                    $this->getRealFileExtension($fileName),
+                    $exc
+                );
             }
             $responseMimeType = 'image/' . $imageExtension;
         } catch (MediaException $e) {
@@ -216,18 +220,18 @@ class FormatManager implements FormatManagerInterface
             $responseMimeType = 'text/plain';
         }
 
-        // clear temp files
+        // Clear temp files.
         $this->clearTempFiles();
 
-        // set header
+        // Set header.
         $headers = $this->getResponseHeaders($responseMimeType, $setExpireHeaders);
 
-        // return image
+        // Return image.
         return new Response($responseContent, $status, $headers);
     }
 
     /**
-     * return the options for the given format.
+     * Return the options for the given format.
      *
      * @param $format
      *
@@ -474,7 +478,7 @@ class FormatManager implements FormatManagerInterface
     }
 
     /**
-     * create a local temp file for the original.
+     * Create a local temp file for the original.
      *
      * @param $content
      *
@@ -505,13 +509,13 @@ class FormatManager implements FormatManagerInterface
     }
 
     /**
-     * @param Media $media
+     * @param MediaInterface $media
      *
      * @return array
      *
-     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException
+     * @throws ImageProxyMediaNotFoundException
      */
-    protected function getMediaData($media)
+    protected function getMediaData(MediaInterface $media)
     {
         $fileName = null;
         $storageOptions = null;

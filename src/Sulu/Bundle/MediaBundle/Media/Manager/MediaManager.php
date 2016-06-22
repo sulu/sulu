@@ -747,7 +747,7 @@ class MediaManager implements MediaManagerInterface
     public function addFormatsAndUrl(Media $media)
     {
         // Get preview image and set either preview thumbnails if set, else rendered images
-        /** @var \Sulu\Bundle\MediaBundle\Entity\Media $previewImage */
+        /** @var \Sulu\Bundle\MediaBundle\Entity\MediaInterface $previewImage */
         $previewImage = $media->getEntity()->getPreviewImage();
 
         if ($previewImage !== null) {

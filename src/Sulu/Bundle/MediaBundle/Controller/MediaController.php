@@ -38,7 +38,10 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Makes media available through a REST API.
  */
-class MediaController extends AbstractMediaController implements ClassResourceInterface, SecuredControllerInterface, SecuredObjectControllerInterface
+class MediaController extends AbstractMediaController implements
+    ClassResourceInterface,
+    SecuredControllerInterface,
+    SecuredObjectControllerInterface
 {
     use RequestParametersTrait;
 
@@ -63,7 +66,9 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
      */
     public function getFieldsAction(Request $request)
     {
-        return $this->handleView($this->view(array_values($this->getFieldDescriptors($this->getLocale($request))), 200));
+        return $this->handleView(
+            $this->view(array_values($this->getFieldDescriptors($this->getLocale($request))), 200)
+        );
     }
 
     /**
@@ -161,7 +166,7 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
     {
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
-        $listBuilder = $factory->create(self::$entityName);
+        $listBuilder = $factory->create($this->getParameter('sulu.model.media.class'));
         $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
         // default sort by created
@@ -416,7 +421,7 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
     {
         return $this->get('sulu_core.list_builder.field_descriptor_factory')
             ->getFieldDescriptorForClass(
-                Media::class,
+                $this->getParameter('sulu.model.media.class'),
                 ['locale' => $locale],
                 $all ? null : DoctrineFieldDescriptorInterface::class
             );

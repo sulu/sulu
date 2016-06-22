@@ -2,9 +2,11 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2497 [MediaBundle]         Implemented MediaInterface for inheritance
     * FEATURE     #2489 [WebsiteBundle]       Add a template attribute resolver service.
     * ENHANCEMENT #2492 [TestBundle]          Added website test case.
     * ENHANCEMENT #2491 [MediaBundle]         Made media entit extendable
+    * ENHANCEMENT #2495 [ContactBundle]       Added cascade-persist for contact addresses
     * ENHANCEMENT #2483 [All]                 Replace security.context with security.token_storage service
     * ENHANCEMENT #2464 [All]                 Moved configuration from installation folder to sulu-core
     * ENHANCEMENT #2479 [ContentBundle]       Removed restore history route function

@@ -17,7 +17,7 @@
                 <cascade-persist />
             </cascade>
         </one-to-many>
-        <many-to-one field="media" target-entity="Sulu\Bundle\MediaBundle\Entity\Media" inversed-by="files">
+        <many-to-one field="media" target-entity="Sulu\Bundle\MediaBundle\Entity\MediaInterface" inversed-by="files">
             <join-columns>
                 <join-column name="idMedia" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
             </join-columns>
