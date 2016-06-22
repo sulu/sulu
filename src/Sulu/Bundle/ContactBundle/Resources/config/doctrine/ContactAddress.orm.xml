@@ -15,6 +15,7 @@
         <field name="main" type="boolean" column="main" nullable="false" />
 
         <many-to-one field="address" target-entity="Sulu\Bundle\ContactBundle\Entity\Address" inversed-by="contactAddresses">
+            <cascade><cascade-persist/></cascade>
             <join-columns>
                 <join-column name="idAddresses" referenced-column-name="id" nullable="false" on-delete="CASCADE"></join-column>
             </join-columns>

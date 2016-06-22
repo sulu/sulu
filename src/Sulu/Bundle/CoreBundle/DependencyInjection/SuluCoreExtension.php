@@ -249,13 +249,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $this->initFields($config['fields_defaults'], $container);
         }
 
-        /**
-         * Just a dirty hack to get the jms serializer bundle correctly working.
-         *
-         * @link https://github.com/schmittjoh/JMSSerializerBundle/pull/270#issuecomment-21171800
-         */
-        $container->setAlias('jms_serializer.cache_naming_strategy', 'sulu_core.serialize_caching_strategy');
-
         $this->initListBuilder($container, $loader);
 
         $loader->load('rest.xml');
