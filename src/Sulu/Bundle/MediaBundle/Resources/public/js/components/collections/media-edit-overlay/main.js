@@ -402,6 +402,11 @@ define([
 
             this.sandbox.once('husky.overlay.media-edit.initialized', function() {
                 this.sandbox.emit('husky.overlay.media-edit.loading.close');
+                this.initCompanyAutocomplete(this.media);
+            }.bind(this));
+
+            this.sandbox.on('husky.auto-complete.media-account.select', function(data){
+                this.setAccountToMedia(data);
             }.bind(this));
 
             this.sandbox.once('husky.overlay.media-edit.opened', function() {
@@ -584,6 +589,31 @@ define([
                     }
                 }
             ]);
+        },
+
+        /**
+         * Data contains the account that is currently set. This can then be set with options.value.
+         */
+        initCompanyAutocomplete: function(data) {
+
+            var options = config.get('sulucontact.components.autocomplete.default.account');
+            options.el = '#media-edit-account-external-account';
+            options.value = !!data.account ? data.account : '';
+            options.instanceName = 'media-account';
+
+            this.sandbox.start([
+                {
+                    name: 'auto-complete@husky',
+                    options: options
+                }
+            ]);
+        },
+
+        /**
+         * Set the current selected account object on the media.
+         */
+        setAccountToMedia: function(data) {
+            this.media.account = data;
         },
 
         /**
