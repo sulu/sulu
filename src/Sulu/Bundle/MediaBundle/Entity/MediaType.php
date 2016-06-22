@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
-use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
 /**
  * MediaType.
