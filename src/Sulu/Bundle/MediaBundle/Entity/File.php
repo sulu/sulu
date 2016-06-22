@@ -11,7 +11,12 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection as DoctrineCollection;
+use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * File.
@@ -39,22 +44,22 @@ class File implements AuditableInterface
     private $id;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var DoctrineCollection
      */
     private $fileVersions;
 
     /**
-     * @var \Sulu\Bundle\MediaBundle\Entity\Media
+     * @var MediaInterface
      */
     private $media;
 
     /**
-     * @var \Sulu\Component\Security\Authentication\UserInterface
+     * @var UserInterface
      */
     private $changer;
 
     /**
-     * @var \Sulu\Component\Security\Authentication\UserInterface
+     * @var UserInterface
      */
     private $creator;
 
@@ -63,7 +68,7 @@ class File implements AuditableInterface
      */
     public function __construct()
     {
-        $this->fileVersions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->fileVersions = new ArrayCollection();
     }
 
     /**
@@ -93,7 +98,7 @@ class File implements AuditableInterface
      *
      * @return $this
      */
-    public function setChanged($changed)
+    public function setChanged(\DateTime $changed)
     {
         $this->changed = $changed;
 
@@ -137,11 +142,11 @@ class File implements AuditableInterface
     /**
      * Add fileVersions.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersions
+     * @param FileVersion $fileVersions
      *
      * @return File
      */
-    public function addFileVersion(\Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersions)
+    public function addFileVersion(FileVersion $fileVersions)
     {
         $this->fileVersions[] = $fileVersions;
 
@@ -151,9 +156,9 @@ class File implements AuditableInterface
     /**
      * Remove fileVersions.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersions
+     * @param FileVersion $fileVersions
      */
-    public function removeFileVersion(\Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersions)
+    public function removeFileVersion(FileVersion $fileVersions)
     {
         $this->fileVersions->removeElement($fileVersions);
     }
@@ -188,11 +193,11 @@ class File implements AuditableInterface
     /**
      * Set media.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\Media $media
+     * @param MediaInterface $media
      *
      * @return File
      */
-    public function setMedia(\Sulu\Bundle\MediaBundle\Entity\Media $media)
+    public function setMedia(MediaInterface $media)
     {
         $this->media = $media;
 
@@ -202,7 +207,7 @@ class File implements AuditableInterface
     /**
      * Get media.
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\Media
+     * @return Media
      */
     public function getMedia()
     {
@@ -212,11 +217,11 @@ class File implements AuditableInterface
     /**
      * Set changer.
      *
-     * @param \Sulu\Component\Security\Authentication\UserInterface $changer
+     * @param UserInterface $changer
      *
      * @return File
      */
-    public function setChanger(\Sulu\Component\Security\Authentication\UserInterface $changer = null)
+    public function setChanger(UserInterface $changer = null)
     {
         $this->changer = $changer;
 
@@ -226,7 +231,7 @@ class File implements AuditableInterface
     /**
      * Get changer.
      *
-     * @return \Sulu\Component\Security\Authentication\UserInterface
+     * @return UserInterface
      */
     public function getChanger()
     {
@@ -236,11 +241,11 @@ class File implements AuditableInterface
     /**
      * Set creator.
      *
-     * @param \Sulu\Component\Security\Authentication\UserInterface $creator
+     * @param UserInterface $creator
      *
      * @return File
      */
-    public function setCreator(\Sulu\Component\Security\Authentication\UserInterface $creator = null)
+    public function setCreator(UserInterface $creator = null)
     {
         $this->creator = $creator;
 
@@ -250,7 +255,7 @@ class File implements AuditableInterface
     /**
      * Get creator.
      *
-     * @return \Sulu\Component\Security\Authentication\UserInterface
+     * @return UserInterface
      */
     public function getCreator()
     {

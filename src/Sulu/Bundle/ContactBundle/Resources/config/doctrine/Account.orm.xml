@@ -35,7 +35,7 @@
             <gedmo:tree-parent/>
         </many-to-one>
 
-        <many-to-one field="logo" target-entity="Sulu\Bundle\MediaBundle\Entity\Media">
+        <many-to-one field="logo" target-entity="Sulu\Bundle\MediaBundle\Entity\MediaInterface">
             <join-columns>
                 <join-column name="logo" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
             </join-columns>
@@ -55,7 +55,7 @@
             </order-by>
         </many-to-many>
 
-        <many-to-many field="medias" target-entity="Sulu\Bundle\MediaBundle\Entity\Media">
+        <many-to-many field="medias" target-entity="Sulu\Bundle\MediaBundle\Entity\MediaInterface">
             <join-table name="co_account_medias">
                 <join-columns>
                     <join-column name="idAccounts" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>

@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Twig;
 
 use Sulu\Bundle\MediaBundle\Api\Media as MediaApi;
-use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 
 /**
@@ -46,7 +46,7 @@ class MediaTwigExtension extends \Twig_Extension
     /**
      * resolves media id or object.
      *
-     * @param int|MediaEntity $media id to resolve
+     * @param int|MediaInterface $media id to resolve
      * @param string $locale
      *
      * @return MediaApi
@@ -63,7 +63,7 @@ class MediaTwigExtension extends \Twig_Extension
     /**
      * resolves media id or object.
      *
-     * @param int[]|MediaEntity[] $medias ids to resolve
+     * @param int[]|MediaInterface[] $medias ids to resolve
      * @param string $locale
      *z
      *
@@ -102,7 +102,7 @@ class MediaTwigExtension extends \Twig_Extension
 
     private function resolveMediaObject($media, $locale)
     {
-        if ($media instanceof MediaEntity) {
+        if ($media instanceof MediaInterface) {
             return $this->mediaManager->addFormatsAndUrl(
                 new MediaApi($media, $locale)
             );

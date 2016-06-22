@@ -22,7 +22,7 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
-use Sulu\Bundle\MediaBundle\Entity\Media as Entity;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
@@ -98,7 +98,7 @@ class Media extends ApiWrapper
      */
     protected $file = null;
 
-    public function __construct(Entity $media, $locale, $version = null)
+    public function __construct(MediaInterface $media, $locale, $version = null)
     {
         $this->entity = $media;
         $this->locale = $locale;

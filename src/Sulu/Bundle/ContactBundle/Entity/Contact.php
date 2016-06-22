@@ -21,7 +21,7 @@ use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
-use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Component\Contact\Model\ContactInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
@@ -225,7 +225,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $bankAccounts;
 
     /**
-     * @var Media
+     * @var MediaInterface
      */
     protected $avatar;
 
@@ -930,7 +930,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     /**
      * {@inheritdoc}
      */
-    public function addMedia(Media $media)
+    public function addMedia(MediaInterface $media)
     {
         $this->medias[] = $media;
     }
@@ -938,7 +938,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     /**
      * {@inheritdoc}
      */
-    public function removeMedia(Media $media)
+    public function removeMedia(MediaInterface $media)
     {
         $this->medias->removeElement($media);
     }

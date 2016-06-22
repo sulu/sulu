@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
 /**
  * MediaType.
@@ -118,11 +119,11 @@ class MediaType
     /**
      * Add media.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\Media $media
+     * @param MediaInterface $media
      *
      * @return MediaType
      */
-    public function addMedia(\Sulu\Bundle\MediaBundle\Entity\Media $media)
+    public function addMedia(MediaInterface $media)
     {
         $this->media[] = $media;
 
@@ -132,9 +133,9 @@ class MediaType
     /**
      * Remove media.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\Media $media
+     * @param MediaInterface $media
      */
-    public function removeMedia(\Sulu\Bundle\MediaBundle\Entity\Media $media)
+    public function removeMedia(MediaInterface $media)
     {
         $this->media->removeElement($media);
     }
