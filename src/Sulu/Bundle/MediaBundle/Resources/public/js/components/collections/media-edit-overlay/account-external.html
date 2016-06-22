@@ -1,0 +1,43 @@
+<form id="media-account-external" class="grid">
+    <div class="grid-row">
+        <div class="grid-col-12">
+            <div class="form-group m-bottom-20">
+                <label for="media-edit-account-extenal-account">
+                    <%= translate('sulu.media.account-external.account') %>
+                </label>
+                <div id="media-edit-account-external-account"
+                     class="form-element"
+                     data-mapper-property="account">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="grid-row">
+        <div class="grid-col-12">
+            <div class="form-group m-bottom-20">
+                <label for="media-edit-account-extenal-external-url">
+                    <%= translate('sulu.media.account-external.external-url') %>
+                </label>
+                <input id="media-edit-account-extenal-external-url"
+                       class="form-element"
+                       data-mapper-property="externalLinkUrl"
+                       data-validation-required="true"
+                       data-validation-max-length="500" />
+            </div>
+        </div>
+    </div>
+    <div class="grid-row">
+        <div class="grid-col-12">
+            <div class="form-group m-bottom-20">
+                <label for="media-edit-account-extenal-external-name">
+                    <%= translate('sulu.media.account-external.external-name') %>
+                </label>
+                <input id="media-edit-account-extenal-external-name"
+                       class="form-element"
+                       data-mapper-property="externalLinkName"
+                       data-validation-required="true"
+                       data-validation-max-length="255" />
+            </div>
+        </div>
+    </div>
+</form>
