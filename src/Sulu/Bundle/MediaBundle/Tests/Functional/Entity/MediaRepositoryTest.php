@@ -56,7 +56,7 @@ class MediaRepositoryTest extends SuluTestCase
         $this->setUpCollections();
         $this->setUpMedia();
 
-        $this->mediaRepository = $this->getContainer()->get('sulu_media.media_repository');
+        $this->mediaRepository = $this->getContainer()->get('sulu.repository.media');
     }
 
     protected function setUpMedia()

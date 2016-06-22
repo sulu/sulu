@@ -167,7 +167,7 @@ class MediaController extends AbstractMediaController implements
     {
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
-        $listBuilder = $factory->create(self::$entityName);
+        $listBuilder = $factory->create($this->getParameter('sulu.model.media.class'));
         $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
         // default sort by created
@@ -422,7 +422,7 @@ class MediaController extends AbstractMediaController implements
     {
         return $this->get('sulu_core.list_builder.field_descriptor_factory')
             ->getFieldDescriptorForClass(
-                Media::class,
+                $this->getParameter('sulu.model.media.class'),
                 ['locale' => $locale],
                 $all ? null : DoctrineFieldDescriptorInterface::class
             );
