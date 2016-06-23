@@ -36,7 +36,7 @@ class MediaTypeUpdateCommand extends ContainerAwareCommand
         /** @var TypeManagerInterface $typeManager */
         $typeManager = $this->getContainer()->get('sulu_media.type_manager');
         $counter = 0;
-        /** @var Media $media */
+        /** @var MediaInterface $media */
         foreach ($medias as $media) {
             /** @var File $file */
             foreach ($media->getFiles() as $file) {

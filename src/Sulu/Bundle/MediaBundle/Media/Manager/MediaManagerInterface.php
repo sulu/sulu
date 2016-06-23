@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Sulu\Bundle\MediaBundle\Api\Media;
-use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -54,7 +54,7 @@ interface MediaManagerInterface
      *
      * @param int $id
      *
-     * @return MediaEntity
+     * @return MediaInterface
      */
     public function getEntityById($id);
 

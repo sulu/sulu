@@ -4,7 +4,6 @@
         <parameter key="sulu_media.admin.class">Sulu\Bundle\MediaBundle\Admin\MediaAdmin</parameter>
         <parameter key="sulu_media.media_manager.class">Sulu\Bundle\MediaBundle\Media\Manager\MediaManager</parameter>
         <parameter key="sulu_media.admin.content_navigation_provider.class">Sulu\Bundle\MediaBundle\Admin\MediaContentNavigationProvider</parameter>
-        <parameter key="sulu_media.media_repository.class">Sulu\Bundle\MediaBundle\Entity\MediaRepository</parameter>
         <parameter key="sulu_media.collection_repository.class">Sulu\Bundle\MediaBundle\Entity\CollectionRepository</parameter>
         <parameter key="sulu_media.storage.class">Sulu\Bundle\MediaBundle\Media\Storage\LocalStorage</parameter>
         <parameter key="sulu_media.file_validator.class">Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidator</parameter>
@@ -21,7 +20,6 @@
         <parameter key="sulu_media.collection_manager.class">Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager</parameter>
         <parameter key="sulu_media.type_manager.class">Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManager</parameter>
         <parameter key="sulu_media.collection_entity">SuluMediaBundle:Collection</parameter>
-        <parameter key="sulu_media.media_entity">SuluMediaBundle:Media</parameter>
         <parameter key="sulu_media.entity.file_version_meta">SuluMediaBundle:FileVersionMeta</parameter>
         <parameter key="sulu_media.twig_extension.disposition_type.class">Sulu\Bundle\MediaBundle\Twig\DispositionTypeTwigExtension</parameter>
         <parameter key="sulu_media.twig_extension.media.class">Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension</parameter>
@@ -41,10 +39,6 @@
             <argument type="service" id="sulu_security.security_checker"/>
             <tag name="sulu_admin.content_navigation" alias="media"/>
             <tag name="sulu.context" context="admin"/>
-        </service>
-        <service id="sulu_media.media_repository" class="%sulu_media.media_repository.class%">
-            <factory service="doctrine.orm.entity_manager" method="getRepository"/>
-            <argument>%sulu_media.media_entity%</argument>
         </service>
         <service id="sulu_media.collection_repository" class="%sulu_media.collection_repository.class%">
             <factory service="doctrine.orm.entity_manager" method="getRepository"/>
@@ -91,7 +85,7 @@
         </service>
 
         <service id="sulu_media.media_manager" class="%sulu_media.media_manager.class%">
-            <argument type="service" id="sulu_media.media_repository" />
+            <argument type="service" id="sulu.repository.media" />
             <argument type="service" id="sulu_media.collection_repository" />
             <argument type="service" id="sulu.repository.user" />
             <argument type="service" id="sulu_category.category_repository"/>
@@ -117,7 +111,7 @@
         </service>
 
         <service id="sulu_media.format_manager" class="%sulu_media.format_manager.class%">
-            <argument type="service" id="sulu_media.media_repository" />
+            <argument type="service" id="sulu.repository.media" />
             <argument type="service" id="sulu_media.storage" />
             <argument type="service" id="sulu_media.format_cache" />
             <argument type="service" id="sulu_media.image.converter" />
@@ -137,7 +131,7 @@
 
         <service id="sulu_media.collection_manager" class="%sulu_media.collection_manager.class%">
             <argument type="service" id="sulu_media.collection_repository" />
-            <argument type="service" id="sulu_media.media_repository" />
+            <argument type="service" id="sulu.repository.media" />
             <argument type="service" id="sulu_media.format_manager" />
             <argument type="service" id="sulu.repository.user" />
             <argument type="service" id="doctrine.orm.entity_manager" />
@@ -193,7 +187,7 @@
         <service id="sulu_media.smart_content.data_provider.media.repository" class="Sulu\Bundle\MediaBundle\Entity\MediaDataProviderRepository">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_media.media_manager"/>
-            <argument type="string">%sulu_media.media_entity%</argument>
+            <argument type="string">%sulu.model.media.class%</argument>
             <argument type="string">%sulu_media.collection_entity%</argument>
         </service>
 
