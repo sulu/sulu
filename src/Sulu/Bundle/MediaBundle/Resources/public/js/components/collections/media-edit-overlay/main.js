@@ -595,7 +595,6 @@ define([
          * Data contains the account that is currently set. This can then be set with options.value.
          */
         initCompanyAutocomplete: function(data) {
-
             var options = config.get('sulucontact.components.autocomplete.default.account');
             options.el = '#media-edit-account-external-account';
             options.value = !!data.account ? data.account : '';
