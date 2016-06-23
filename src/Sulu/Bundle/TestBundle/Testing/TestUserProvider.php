@@ -47,13 +47,15 @@ class TestUserProvider implements UserProviderInterface
 
     /**
      * @param EntityManager $entityManager
+     * @param ContactRepositoryInterface $contactRepository
+     * @param UserRepositoryInterface $userRepository
      */
     public function __construct(
-        EntityManager $em,
+        EntityManager $entityManager,
         ContactRepositoryInterface $contactRepository,
         UserRepositoryInterface $userRepository
     ) {
-        $this->entityManager = $em;
+        $this->entityManager = $entityManager;
         $this->contactRepository = $contactRepository;
         $this->userRepository = $userRepository;
     }
@@ -67,9 +69,7 @@ class TestUserProvider implements UserProviderInterface
             return $this->user;
         }
 
-        $user = $this->entityManager
-            ->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')
-            ->findOneByUsername('test');
+        $user = $this->userRepository->findOneByUsername('test');
 
         if (!$user) {
             $contact = $this->contactRepository->createNew();
@@ -141,11 +141,13 @@ class TestUserProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        return $class === 'Sulu\Bundle\CoreBundle\Entity\TestUser';
+        return $class instanceof UserInterface;
     }
 
     /**
      * Sets the standard credentials for the user.
+     *
+     * @param UserInterface $user
      */
     private function setCredentials(UserInterface $user)
     {
