@@ -1,5 +1,13 @@
 # Upgrade
 
+## dev-master
+
+### ContactRepository
+
+A Interface for the ContactRepository has been created. Due to the refactoring
+the function `appendJoins` has been changed from public to protected.
+Therefore this function cannot be called anymore.
+
 ## 1.2.1
 
 ### UserRepository

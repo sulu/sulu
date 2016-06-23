@@ -2,6 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-master
+    * HOTFIX      #2498 [TestBundle]          Fixed TestUserProvider to create accounts with repository to support
+                                              sulu inheritance
     * BUGFIX      #2389 [MediaBundle]         Removed twice adding of navigation item
     * HOTFIX      #2481 [WebsiteBundle]       Fixed handling of non-default formats in error pages 
     * HOTFIX      #2467 [MediaBundle]         Fixed media-selection-overlay missing locale
