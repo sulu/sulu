@@ -25,7 +25,10 @@ define(['mvc/relationalmodel'], function (RelationalModel) {
                 categories: [],
                 copyright: '',
                 credits: '',
-                versions: {}
+                versions: {},
+                externalLinkName: '',
+                externalLinkUrl: '',
+                account: {}
             };
         }
     });
