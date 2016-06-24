@@ -304,7 +304,11 @@
             </trans-unit>
             <trans-unit id="253g88cl4d64382l337tr55563f223248" resname="sulu.media.statistics">
                 <source>sulu.media.statistics</source>
-                <target>Statistik</target>
+                <target>Statistiken</target>
+            </trans-unit>
+            <trans-unit id="253g88cl4d64322l317tr34563u223248" resname="sulu.media.no-statistics-yet">
+                <source>sulu.media.no-statistics-yet</source>
+                <target>Zur zeit stehen keine Statistiken zur Verfügung.</target>
             </trans-unit>
         </body>
     </file>

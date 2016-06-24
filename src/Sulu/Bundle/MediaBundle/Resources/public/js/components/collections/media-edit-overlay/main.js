@@ -592,7 +592,7 @@ define([
         },
 
         /**
-         * Data contains the account that is currently set. This can then be set with options.value.
+         * Function to initialize the auto-complete component. Used for account setting in media-edit-overlay.
          */
         initCompanyAutocomplete: function(data) {
             var options = config.get('sulucontact.components.autocomplete.default.account');
@@ -611,8 +611,8 @@ define([
         /**
          * Set the current selected account object on the media.
          */
-        setAccountToMedia: function(data) {
-            this.media.account = data;
+        setAccountToMedia: function(account) {
+            this.media.account = account;
         },
 
         /**
