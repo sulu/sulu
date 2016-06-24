@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2505 [MediaBundle]         Used intl-component to generate countries for location-content-type
     * ENHANCEMENT #2500 [MediaBundle]         Refactored handling of post data for media
     * ENHANCEMENT #2497 [MediaBundle]         Implemented MediaInterface for inheritance
     * BUGFIX      #2504 [WebsiteBundle]       Fixed http-cache clear if var dir exists
