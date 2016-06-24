@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * ENHANCEMENT #2500 [MediaBundle]         Refactored handling of post data for media
     * ENHANCEMENT #2497 [MediaBundle]         Implemented MediaInterface for inheritance
+    * BUGFIX      #2504 [WebsiteBundle]       Fixed http-cache clear if var dir exists
     * FEATURE     #2489 [WebsiteBundle]       Add a template attribute resolver service.
     * ENHANCEMENT #2492 [TestBundle]          Added website test case.
     * ENHANCEMENT #2491 [MediaBundle]         Made media entit extendable
