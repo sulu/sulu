@@ -26,7 +26,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->arrayNode('namespace')
-                ->useAttributeAsKey('role')
+                    ->useAttributeAsKey('role')
                     ->defaultValue([
                         'extension_localized' => 'i18n',
                         'system' => 'sulu',
@@ -41,6 +41,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(false)
                 ->end()
                 ->arrayNode('path_segments')
+                    ->useAttributeAsKey('key')
                     ->prototype('scalar')->end()
                 ->end()
                 ->arrayNode('mapping')
