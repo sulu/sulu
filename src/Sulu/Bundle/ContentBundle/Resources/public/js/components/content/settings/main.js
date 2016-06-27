@@ -150,6 +150,10 @@ define([
                 this.sandbox.emit('sulu.content.changed');
                 this.sandbox.emit('sulu.content.contents.set-header-bar', false);
             }.bind(this));
+
+            this.sandbox.on('sulu.header.state.changed', function(state) {
+                this.state = state;
+            }.bind(this));
         },
 
         bindDomEvents: function() {
@@ -389,6 +393,10 @@ define([
             data.nodeType = parseInt(this.sandbox.dom.val('input[name="nodeType"]:checked'));
             data.shadowOn = this.sandbox.dom.prop('#shadow_on_checkbox', 'checked');
             data.shadowBaseLanguage = null;
+
+            if (!!this.state) {
+                data.state = this.state;
+            }
 
             if (data.nodeType === TYPE_INTERNAL) {
                 data.title = this.sandbox.dom.val('#internal-title');

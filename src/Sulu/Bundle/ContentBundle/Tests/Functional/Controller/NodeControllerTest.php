@@ -853,6 +853,26 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals(1, $response['nodeState']);
     }
 
+    public function testPutWithoutState()
+    {
+        $data = [
+            'title' => 'Testtitle',
+            'template' => 'default',
+            'url' => '/test',
+        ];
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&state=2', $data);
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(2, $response['nodeState']);
+
+        $client->request('PUT', '/api/nodes/' . $response['id'] . '?webspace=sulu_io&language=en', $data);
+        $client->request('GET', '/api/nodes/' . $response['id'] . '?language=en', $data);
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(2, $response['nodeState']);
+    }
+
     public function testPutWithValidHash()
     {
         $data = [
