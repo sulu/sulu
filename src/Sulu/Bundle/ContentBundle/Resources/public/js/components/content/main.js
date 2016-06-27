@@ -12,8 +12,9 @@ define([
     'sulucontent/model/content',
     'sulucontent/components/copy-locale-overlay/main',
     'sulucontent/components/open-ghost-overlay/main',
+    'sulusecurity/services/user-manager',
     'sulusecurity/services/security-checker'
-], function(Preview, Content, CopyLocale, OpenGhost, SecurityChecker) {
+], function(Preview, Content, CopyLocale, OpenGhost, UserManager, SecurityChecker) {
 
     'use strict';
 
@@ -38,7 +39,8 @@ define([
             deleteReferencedByFollowing: 'content.delete-referenced-by-following',
             deleteConfirmText: 'content.delete-confirm-text',
             deleteConfirmTitle: 'content.delete-confirm-title',
-            deleteDoIt: 'content.delete-do-it'
+            deleteDoIt: 'content.delete-do-it',
+            draftLabel: 'sulu-content.draft-label'
         },
 
         actions = {
@@ -255,6 +257,7 @@ define([
                     this.data = data;
                     this.content.set(data);
                     this.setHeaderBar(true);
+                    this.showDraftLabel();
 
                     // FIXME select should be able to override text in a item
                     this.sandbox.dom.html('li[data-id="' + this.options.language + '"] a', this.options.language);
@@ -702,6 +705,7 @@ define([
 
         render: function() {
             this.setTemplate(this.data);
+            this.showDraftLabel();
 
             if (!!this.options.preview && this.data.nodeType === constants.contentNodeType && !this.data.shadowOn) {
                 var objectClass = 'Sulu\\Bundle\\ContentBundle\\Document\\' + (isHomeDocument(this.data) ? 'Home' : 'Page') + 'Document';
@@ -994,6 +998,27 @@ define([
 
             this.sandbox.util.each(hiddenItems, function(index, hiddenItem) {
                 this.sandbox.emit('sulu.header.toolbar.item.hide', hiddenItem);
+            }.bind(this));
+        },
+
+        showDraftLabel: function() {
+            this.sandbox.emit('sulu.header.tabs.label.hide');
+
+            if (!this.data.id || !!this.data.publishedState) {
+                return;
+            }
+
+            UserManager.find(this.data.changer).then(function(response) {
+                this.sandbox.emit(
+                    'sulu.header.tabs.label.show',
+                    this.sandbox.util.sprintf(
+                        this.sandbox.translate(translationKeys.draftLabel),
+                        {
+                            changed: this.sandbox.date.format(this.data.changed, true),
+                            user: response.username
+                        }
+                    )
+                );
             }.bind(this));
         },
 

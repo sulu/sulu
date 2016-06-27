@@ -687,6 +687,10 @@
                 <source>sulu-content.published-shadow</source>
                 <target>The publishing state will be retrieved from the state of the main page.</target>
             </trans-unit>
+            <trans-unit id="45" resname="sulu-content.draft-label">
+                <source>sulu-content.draft-label</source>
+                <target><![CDATA[You are working on a draft, last saved: %(changed)s by <b>%(user)s</b>]]></target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

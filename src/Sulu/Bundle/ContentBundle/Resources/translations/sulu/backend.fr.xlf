@@ -687,6 +687,10 @@
                 <source>sulu-content.published-shadow</source>
                 <target>Le status de la publication est importer de la page principale.</target>
             </trans-unit>
+            <trans-unit id="45" resname="sulu-content.draft-label">
+                <source>sulu-content.draft-label</source>
+                <target><![CDATA[Tu travailles à une ébauche sauvegarder en dernier par <b>%(user)s</b> à %(changed)s.]]></target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

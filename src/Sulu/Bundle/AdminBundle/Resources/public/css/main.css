@@ -857,21 +857,25 @@ input, select {
 .sulu-header.has-tabs + .wrapper .page::before {
   height: 50px;
 }
-
 /* line 116, ../scss/modules/header.scss */
+.sulu-header.has-tabs.has-label + .wrapper .page::before {
+  height: 80px;
+}
+
+/* line 122, ../scss/modules/header.scss */
 .fixed .toolbar-row {
   max-width: 1020px;
 }
 
-/* line 121, ../scss/modules/header.scss */
+/* line 127, ../scss/modules/header.scss */
 .small-fixed .tabs-row .tabs {
   padding-left: 10px;
 }
-/* line 124, ../scss/modules/header.scss */
+/* line 130, ../scss/modules/header.scss */
 .small-fixed .sulu-header .left-container {
   width: 0px;
 }
-/* line 126, ../scss/modules/header.scss */
+/* line 132, ../scss/modules/header.scss */
 .small-fixed .sulu-header .left-container * {
   display: none;
 }

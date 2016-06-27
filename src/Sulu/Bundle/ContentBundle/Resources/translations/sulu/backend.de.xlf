@@ -695,6 +695,10 @@
                 <source>sulu-content.published-shadow</source>
                 <target>Der Veröffentlichungsstatus wird vom Status der Hauptseite übernommen.</target>
             </trans-unit>
+            <trans-unit id="45" resname="sulu-content.draft-label">
+                <source>sulu-content.draft-label</source>
+                <target><![CDATA[Du arbeitest an einem Entwurf, zuletzt gespeichert: %(changed)s von <b>%(user)s</b>]]></target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
