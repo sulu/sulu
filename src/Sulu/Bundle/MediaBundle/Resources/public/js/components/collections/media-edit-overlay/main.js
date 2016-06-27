@@ -529,7 +529,7 @@ define([
                     mediaData = this.sandbox.util.extend(false, {}, this.media, formData);
 
                 // check if form-data is different to source-media
-                if (JSON.stringify(this.media) !== JSON.stringify(mediaData)) {
+                if ((JSON.stringify(this.media) !== JSON.stringify(mediaData)) || this.mediaChanged) {
                     mediaManager.save(mediaData).then(function() {
                         promise.resolve();
                     });
@@ -600,6 +600,9 @@ define([
             options.value = !!data.account ? data.account : '';
             options.instanceName = 'media-account';
 
+            // Set a marker to watch if the account has been changed otherwise than over formData.
+            this.mediaChanged = false;
+
             this.sandbox.start([
                 {
                     name: 'auto-complete@husky',
@@ -613,6 +616,7 @@ define([
          */
         setAccountToMedia: function(account) {
             this.media.account = account;
+            this.mediaChanged = true;
         },
 
         /**
