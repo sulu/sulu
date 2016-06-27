@@ -21,7 +21,6 @@ use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
-use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Form\Exception\InvalidFormException;
 use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
@@ -961,7 +960,11 @@ class NodeController extends RestController implements ClassResourceInterface, S
     private function persistDocument(Request $request, $type, $document, $language)
     {
         $data = $request->request->all();
-        $data['workflowStage'] = $this->getRequestParameter($request, 'state', false, WorkflowStage::TEST);
+
+        $workflowStage = $this->getRequestParameter($request, 'state');
+        if (null !== $workflowStage) {
+            $data['workflowStage'] = $workflowStage;
+        }
 
         if ($request->query->has('parent')) {
             $data['parent'] = $request->query->get('parent');
