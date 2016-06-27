@@ -691,6 +691,10 @@
                 <source>sulu-content.publish</source>
                 <target>Veröffentlichen</target>
             </trans-unit>
+            <trans-unit id="44" resname="sulu-content.published-shadow">
+                <source>sulu-content.published-shadow</source>
+                <target>Der Veröffentlichungsstatus wird vom Status der Hauptseite übernommen.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -103,6 +103,8 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
             } else {
                 this.checkRenderTemplate();
             }
+
+            this.sandbox.emit('sulu.content.contents.show-save-items', 'content');
         },
 
         checkRenderTemplate: function(item) {

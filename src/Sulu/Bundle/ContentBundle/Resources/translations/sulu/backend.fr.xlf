@@ -673,7 +673,7 @@
             </trans-unit>
             <trans-unit id="41" resname="sulu-content.save-draft">
                 <source>sulu-content.save-draft</source>
-                <target>Sauvegarder comme conception/target>
+                <target>Sauvegarder comme conception</target>
             </trans-unit>
             <trans-unit id="42" resname="sulu-content.save-publish">
                 <source>sulu-content.save-publish</source>
@@ -682,6 +682,10 @@
             <trans-unit id="43" resname="sulu-content.publish">
                 <source>sulu-content.publish</source>
                 <target>Publier</target>
+            </trans-unit>
+            <trans-unit id="44" resname="sulu-content.published-shadow">
+                <source>sulu-content.published-shadow</source>
+                <target>Le status de la publication est importer de la page principale.</target>
             </trans-unit>
         </body>
     </file>

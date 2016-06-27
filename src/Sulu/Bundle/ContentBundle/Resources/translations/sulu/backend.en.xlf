@@ -683,6 +683,10 @@
                 <source>sulu-content.publish</source>
                 <target>Publish</target>
             </trans-unit>
+            <trans-unit id="44" resname="sulu-content.published-shadow">
+                <source>sulu-content.published-shadow</source>
+                <target>The publishing state will be retrieved from the state of the main page.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -70,6 +70,7 @@ define([], function() {
                 this.dfdListenForChange = this.sandbox.data.deferred();
                 this.createForm(this.initData(data));
                 this.listenForChange();
+                this.sandbox.emit('sulu.content.contents.show-save-items', 'content');
             }.bind(this));
         },
 

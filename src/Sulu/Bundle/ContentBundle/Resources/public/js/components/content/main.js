@@ -282,6 +282,10 @@ define([
                 }
             }, this);
 
+            this.sandbox.on('sulu.content.contents.show-save-items', function(state) {
+                this.showSaveItems(state);
+            }.bind(this));
+
             // expand navigation if navigation item is clicked
             this.sandbox.on('husky.navigation.item.select', function(event) {
                 // when navigation item is already opended do nothing - relevant for homepage
@@ -851,6 +855,9 @@ define([
                             icon: 'floppy-o',
                             title: 'public.save',
                             disabled: true,
+                            callback: function() {
+                                this.sandbox.emit('sulu.toolbar.save', actions.publish);
+                            }.bind(this),
                             dropdownItems: {
                                 saveDraft: {
                                     options: {
@@ -961,6 +968,33 @@ define([
             }
 
             return header;
+        },
+
+        showSaveItems: function(state) {
+            var allItems = ['saveDraft', 'savePublish', 'publish', 'saveOnly'], hiddenItems, shownItems;
+
+            if (!state) {
+                state = 'content';
+            }
+
+            switch (state) {
+                case 'content':
+                    hiddenItems = [];
+                    break;
+                case 'shadow':
+                    hiddenItems = ['saveDraft', 'savePublish', 'publish'];
+                    break;
+            }
+
+            shownItems = _.difference(allItems, hiddenItems);
+
+            this.sandbox.util.each(shownItems, function(index, shownItem) {
+                this.sandbox.emit('sulu.header.toolbar.item.show', shownItem);
+            }.bind(this));
+
+            this.sandbox.util.each(hiddenItems, function(index, hiddenItem) {
+                this.sandbox.emit('sulu.header.toolbar.item.hide', hiddenItem);
+            }.bind(this));
         },
 
         layout: function() {
