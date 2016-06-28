@@ -33484,15 +33484,6 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
             },
 
             /**
-             * Deletes all records, sets given records and updates the view
-             * @event husky.datagrid.records.set
-             * @param {Array} array of data-records
-             */
-            RECORDS_SET = function() {
-                return this.createEventName('records.set');
-            },
-
-            /**
              * raised when limit of request changed
              * @event husky.datagrid.page-size.changed
              * @param {Integer} pageSize new size
@@ -34497,7 +34488,6 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 this.sandbox.on(RECORDS_ADD.call(this), this.addRecordsHandler.bind(this));
                 this.sandbox.on(RECORD_REMOVE.call(this), this.removeRecordHandler.bind(this));
                 this.sandbox.on(RECORDS_CHANGE.call(this), this.changeRecordsHandler.bind(this));
-                this.sandbox.on(RECORDS_SET.call(this), this.setRecordsHandler.bind(this));
                 this.sandbox.on(NUMBER_SELECTIONS.call(this), this.updateSelectedCounter.bind(this));
                 this.sandbox.on(MEDIUM_LOADER_SHOW.call(this), this.showMediumLoader.bind(this));
                 this.sandbox.on(MEDIUM_LOADER_HIDE.call(this), this.hideMediumLoader.bind(this));
@@ -34671,7 +34661,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
 
             /**
              * Merges one or more data-records with a given ones and updates the view
-             * @param {Object|Array} records the new data-record or an array of data-records
+             * @param records {Object|Array} the new data-record or an array of data-records
              */
             changeRecordsHandler: function(records) {
                 if (!this.sandbox.dom.isArray(records)) {
@@ -34686,23 +34676,8 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
             },
 
             /**
-             * Deletes all records, sets given records and updates the view
-             * @param {Array} records array of data-records
-             */
-            setRecordsHandler: function(records) {
-                // Delete all records.
-                this.data.embedded = [];
-
-                // Add the records.
-                this.pushRecords(records);
-
-                this.rerenderView();
-                this.rerenderPagination();
-            },
-
-            /**
              * calls the clickCallback for an item
-             * @param {Number|String} id the id of the item
+             * @param id {Number|String} the id of the item
              */
             itemClicked: function(id) {
                 if (typeof this.options.clickCallback === 'function') {
@@ -51104,26 +51079,15 @@ define("datepicker-zh-TW", function(){});
                 app.setLanguage = function(cultureName, messages, defaultMessages) {
                     cultureName = normalizeCultureName(cultureName);
 
+                    if (cultureName !== 'en') {
+                        require(['cultures/globalize.culture.' + cultureName]);
+                    }
 
                     Globalize.culture(cultureName);
 
                     app.sandbox.globalize.addCultureInfo(cultureName, messages);
                     app.sandbox.globalize.addCultureInfo('default', defaultMessages);
                 };
-
-                app.loadLanguage = function(cultureName) {
-                    var deferred = $.Deferred();
-
-                    if (cultureName !== 'en') {
-                        require(['cultures/globalize.culture.' + cultureName], function() {
-                            deferred.resolve();
-                        });
-                    } else {
-                        deferred.resolve();
-                    }
-
-                    return deferred.promise();
-                }
             },
 
             afterAppStart: function(app) {
@@ -51132,13 +51096,11 @@ define("datepicker-zh-TW", function(){});
                         app.config.culture.messages = {};
                     }
 
-                    app.loadLanguage(app.config.culture.name).then(function() {
-                        app.setLanguage(
-                            app.config.culture.name,
-                            app.config.culture.messages,
-                            app.config.culture.defaultMessages
-                        );
-                    });
+                    app.setLanguage(
+                        app.config.culture.name,
+                        app.config.culture.messages,
+                        app.config.culture.defaultMessages
+                    );
                 }
 
                 app.sandbox.globalize.setCurrency('');
