@@ -151,6 +151,15 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
     }
 
     /**
+     * @Given I am logged in as an administrator with default locale
+     */
+    public function iAmLoggedInAsAnAdministratorWithDefaultLocale()
+    {
+        $locale = $this->getContainer()->getParameter('locale');
+        $this->logInAsAdministrator($locale);
+    }
+
+    /**
      * @Given I am editing the permission of a user with username :username
      */
     public function iAmEditingThePermissionsOfAUser($username)

@@ -68,7 +68,7 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
 
             $mediaEntity->setPreviewImage($previewImage->getEntity());
 
-            $this->getDoctrine()->getEntityManager()->flush();
+            $this->getDoctrine()->getManager()->flush();
 
             $view = $this->view($previewImage, 200);
         } catch (MediaNotFoundException $e) {

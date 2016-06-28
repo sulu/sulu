@@ -153,13 +153,15 @@ define([
          * @returns {Boolean} true iff a title has been found
          */
         setCollapsedText = function($field, $block) {
-            var type;
+            var type, text;
 
             if (!!$field.data('element')) {
                 type = !!$field.data('element').getType ? $field.data('element').getType() : null;
                 if (!!type && type.name === 'textEditor') {
-                    if (!!$($field.data('element').getValue()).text()) {
-                        $block.find('.collapsed-container .text').html($($field.data('element').getValue()).text());
+                    text = $('<div/>').append($field.data('element').getValue()).text();
+
+                    if (!!text) {
+                        $block.find('.collapsed-container .text').html(text);
                         return true;
                     }
                 }

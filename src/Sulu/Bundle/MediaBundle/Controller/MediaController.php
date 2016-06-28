@@ -118,8 +118,10 @@ class MediaController extends AbstractMediaController implements
      */
     public function cgetAction(Request $request)
     {
+        $ids = array_filter(explode(',', $request->get('ids')));
+
         $fieldDescriptors = $this->getFieldDescriptors($this->getLocale($request), false);
-        $listBuilder = $this->getListBuilder($request, $fieldDescriptors);
+        $listBuilder = $this->getListBuilder($request, $fieldDescriptors, $ids);
         $listResponse = $listBuilder->execute();
 
         for ($i = 0, $length = count($listResponse); $i < $length; ++$i) {
@@ -139,6 +141,15 @@ class MediaController extends AbstractMediaController implements
                 $listResponse[$i]['name'],
                 $listResponse[$i]['version']
             );
+        }
+
+        if (0 < count($ids)) {
+            $result = [];
+            foreach ($listResponse as $item) {
+                $result[array_search($item['id'], $ids)] = $item;
+            }
+            ksort($result);
+            $listResponse = array_values($result);
         }
 
         $list = new ListRepresentation(
@@ -162,7 +173,7 @@ class MediaController extends AbstractMediaController implements
      *
      * @return DoctrineListBuilder
      */
-    private function getListBuilder(Request $request, array $fieldDescriptors)
+    private function getListBuilder(Request $request, array $fieldDescriptors, $ids)
     {
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
@@ -189,7 +200,6 @@ class MediaController extends AbstractMediaController implements
 
         // If no limit is set in request and limit is set by ids
         $requestLimit = $request->get('limit');
-        $ids = array_filter(explode(',', $request->get('ids')));
         $idsCount = count($ids);
 
         if ($idsCount > 0) {

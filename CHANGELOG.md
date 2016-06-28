@@ -61,6 +61,18 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2323 [WebsiteBundle]       Added TWIG-Extension to check if parent nav-item is active
     * ENHANCEMENT #2377 [CoreBundle]          Made --router and --env optional when running the console commands server:run, server:start, server:stop and server:status
 
+* 1.2.4 (2016-06-28)
+    * HOTFIX      #2498 [TestBundle]          Fixed TestUserProvider to create accounts with repository to support
+                                              sulu inheritance
+    * BUGFIX      #2389 [MediaBundle]         Removed twice adding of navigation item
+    * HOTFIX      #2481 [WebsiteBundle]       Fixed handling of non-default formats in error pages 
+    * HOTFIX      #2467 [MediaBundle]         Fixed media-selection-overlay missing locale
+    * HOTFIX      #2460 [MediaBundle]         Fixed deprecation of getEntityManager in MediaPreviewController
+    * HOTFIX      #2454 [MediaBundle]         Fixed inset image scale image-size 0
+    * HOTFIX      #2440 [MediaBundle]         Fixed media-selection sorting
+    * HOTFIX      #2441 [ContentBundle]       Fixed block to handle non html text correctly
+    * ENHANCEMENT #2432 [SecurityBundle]      New behat step for admin login with default locale
+
 * 1.2.3 (2016-06-01)
     * HOTFIX      #2427 [Hash]                Fixed bug when using non generic visitor in HashSerializeEventSubscriber
     * HOTFIX      #2401 [MediaBundle]         Fixed slow media queries
