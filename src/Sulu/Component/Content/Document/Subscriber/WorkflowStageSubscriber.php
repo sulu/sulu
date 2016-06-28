@@ -81,7 +81,7 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
 
-        if (!$this->supports($document)) {
+        if (!$this->supports($event)) {
             return;
         }
 
@@ -113,7 +113,7 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
 
-        if (!$this->supports($document)) {
+        if (!$this->supports($event)) {
             return;
         }
 
@@ -129,7 +129,7 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
 
-        if (!$this->supports($document)) {
+        if (!$this->supports($event)) {
             return;
         }
 
@@ -139,13 +139,13 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
     /**
      * Determines if the given document is supported by this subscriber.
      *
-     * @param object $document
+     * @param HydrateEvent|PublishEvent|PersistEvent $event
      *
      * @return bool
      */
-    private function supports($document)
+    private function supports($event)
     {
-        return $document instanceof WorkflowStageBehavior;
+        return $event->getLocale() && $event->getDocument() instanceof WorkflowStageBehavior;
     }
 
     /**

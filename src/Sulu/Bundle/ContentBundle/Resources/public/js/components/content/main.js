@@ -242,6 +242,12 @@ define([
                 if (item.id === 'tab-excerpt') {
                     this.template = this.data.originTemplate;
                 }
+
+                if (item.id === 'tab-permissions') {
+                    this.showSaveItems('permissions');
+                } else {
+                    this.showSaveItems('content');
+                }
             }.bind(this));
 
             // change template
@@ -707,6 +713,10 @@ define([
             this.setTemplate(this.data);
             this.showDraftLabel();
 
+            if (this.options.content === 'permissions') {
+                this.showSaveItems('permissions');
+            }
+
             if (!!this.options.preview && this.data.nodeType === constants.contentNodeType && !this.data.shadowOn) {
                 var objectClass = 'Sulu\\Bundle\\ContentBundle\\Document\\' + (isHomeDocument(this.data) ? 'Home' : 'Page') + 'Document';
 
@@ -851,9 +861,38 @@ define([
                     navigationUrl += '?' + navigationUrlParams.join('&');
                 }
 
-                var buttons = {}, editDropdown = {};
+                var buttons = {}, editDropdown = {}, saveDropdown = {};
 
                 if (SecurityChecker.hasPermission(this.data, 'edit')) {
+                    saveDropdown.saveDraft = {
+                        options: {
+                            title: 'sulu-content.save-draft',
+                            callback: function() {
+                                this.sandbox.emit('sulu.toolbar.save', actions.draft);
+                            }.bind(this)
+                        }
+                    };
+
+                    if (SecurityChecker.hasPermission(this.data, 'live')) {
+                        saveDropdown.savePublish = {
+                            options: {
+                                title: 'sulu-content.save-publish',
+                                callback: function () {
+                                    this.sandbox.emit('sulu.toolbar.save', actions.publish);
+                                }.bind(this)
+                            }
+                        };
+
+                        saveDropdown.publish = {
+                            options: {
+                                title: 'sulu-content.publish',
+                                callback: function () {
+                                    this.sandbox.emit('sulu.toolbar.save', actions.publish);
+                                }.bind(this)
+                            }
+                        };
+                    }
+
                     buttons.save = {
                         options: {
                             icon: 'floppy-o',
@@ -862,32 +901,7 @@ define([
                             callback: function() {
                                 this.sandbox.emit('sulu.toolbar.save', actions.publish);
                             }.bind(this),
-                            dropdownItems: {
-                                saveDraft: {
-                                    options: {
-                                        title: 'sulu-content.save-draft',
-                                        callback: function() {
-                                            this.sandbox.emit('sulu.toolbar.save', actions.draft);
-                                        }.bind(this)
-                                    }
-                                },
-                                savePublish: {
-                                    options: {
-                                        title: 'sulu-content.save-publish',
-                                        callback: function() {
-                                            this.sandbox.emit('sulu.toolbar.save', actions.publish);
-                                        }.bind(this)
-                                    }
-                                },
-                                publish: {
-                                    options: {
-                                        title: 'sulu-content.publish',
-                                        callback: function() {
-                                            this.sandbox.emit('sulu.toolbar.save', actions.publish);
-                                        }.bind(this)
-                                    }
-                                }
-                            }
+                            dropdownItems: saveDropdown
                         }
                     };
 
@@ -986,6 +1000,7 @@ define([
                     hiddenItems = [];
                     break;
                 case 'shadow':
+                case 'permissions':
                     hiddenItems = ['saveDraft', 'savePublish', 'publish'];
                     break;
             }

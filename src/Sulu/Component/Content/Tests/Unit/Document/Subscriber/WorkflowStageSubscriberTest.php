@@ -124,6 +124,19 @@ class WorkflowStageSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->workflowStageSubscriber->setWorkflowStageOnDocument($event->reveal());
     }
 
+    public function testSetWorkflowStageOnDocumentWithoutLocale()
+    {
+        $event = $this->prophesize(HydrateEvent::class);
+        $event->getLocale()->willReturn(null);
+
+        $document = $this->prophesize(WorkflowStageBehavior::class);
+        $event->getDocument()->willReturn($document->reveal());
+
+        $this->documentAccessor->set('published', Argument::any())->shouldNotBeCalled();
+
+        $this->workflowStageSubscriber->setWorkflowStageOnDocument($event->reveal());
+    }
+
     public function testSetWorkflowStageToTest()
     {
         $event = $this->getPersistEventMock();
@@ -145,6 +158,19 @@ class WorkflowStageSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $event = $this->getPersistEventMock();
         $event->getDocument()->willReturn(new \stdClass());
+
+        $this->workflowStageSubscriber->setWorkflowStageToTest($event->reveal());
+    }
+
+    public function testSetWorkflowStageToTestWithoutLocale()
+    {
+        $event = $this->prophesize(PersistEvent::class);
+        $event->getLocale()->willReturn(null);
+
+        $document = $this->prophesize(WorkflowStageBehavior::class);
+        $event->getDocument()->willReturn($document->reveal());
+
+        $this->documentAccessor->set('published', Argument::any())->shouldNotBeCalled();
 
         $this->workflowStageSubscriber->setWorkflowStageToTest($event->reveal());
     }
@@ -187,6 +213,19 @@ class WorkflowStageSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $event = $this->getPublishEventMock();
         $event->getDocument()->willReturn(new \stdClass());
+
+        $this->workflowStageSubscriber->setWorkflowStageToPublished($event->reveal());
+    }
+
+    public function testSetWorkflowStageToPublishedWithoutLocale()
+    {
+        $event = $this->prophesize(PublishEvent::class);
+        $event->getLocale()->willReturn(null);
+
+        $document = $this->prophesize(WorkflowStageBehavior::class);
+        $event->getDocument()->willReturn($document->reveal());
+
+        $this->documentAccessor->set('published', Argument::any())->shouldNotBeCalled();
 
         $this->workflowStageSubscriber->setWorkflowStageToPublished($event->reveal());
     }

@@ -38,6 +38,7 @@ use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
@@ -589,6 +590,9 @@ class NodeController extends RestController implements ClassResourceInterface, S
     public function putAction(Request $request, $uuid)
     {
         $language = $this->getLanguage($request);
+        $action = $request->get('action');
+
+        $this->checkActionParameterSecurity($action, $language, $uuid);
 
         $document = $this->getDocumentManager()->find(
             $uuid,
@@ -604,7 +608,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $this->get('sulu_hash.request_hash_checker')->checkHash($request, $document, $document->getUuid());
 
         $this->persistDocument($request, $type, $document, $language);
-        $this->handleActionParameter($request->get('action'), $document, $language);
+        $this->handleActionParameter($action, $document, $language);
         $this->getDocumentManager()->flush();
 
         $view = $this->view($document);
@@ -629,11 +633,14 @@ class NodeController extends RestController implements ClassResourceInterface, S
     {
         $type = 'page';
         $language = $this->getLanguage($request);
+        $action = $request->get('action');
+
+        $this->checkActionParameterSecurity($action, $language);
 
         $document = $this->getDocumentManager()->create($type);
 
         $this->persistDocument($request, $type, $document, $language);
-        $this->handleActionParameter($request->get('action'), $document, $language);
+        $this->handleActionParameter($action, $document, $language);
         $this->getDocumentManager()->flush();
 
         $view = $this->view($document);
@@ -985,6 +992,38 @@ class NodeController extends RestController implements ClassResourceInterface, S
                 'user' => $this->getUser()->getId(),
                 'clear_missing_content' => false,
             ]
+        );
+    }
+
+    /**
+     * Checks if the user has the required permissions for the given action with the given locale. The additional
+     * uuid parameter will also include checks for the document identified by it.
+     *
+     * @param string $actionParameter
+     * @param string $locale
+     * @param string $uuid
+     */
+    private function checkActionParameterSecurity($actionParameter, $locale, $uuid = null)
+    {
+        $permission = null;
+        switch ($actionParameter) {
+            case 'publish':
+                $permission = 'live';
+                break;
+        }
+
+        if (!$permission) {
+            return;
+        }
+
+        $this->get('sulu_security.security_checker')->checkPermission(
+            new SecurityCondition(
+                $this->getSecurityContext(),
+                $locale,
+                $this->getSecuredClass(),
+                $uuid
+            ),
+            $permission
         );
     }
 
