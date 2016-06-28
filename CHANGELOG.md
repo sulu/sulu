@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * ENHANCEMENT #2507 [SearchBundle]        Changed search adapter to fit new features of MassiveSearchBundle (limit + offset)
+    * ENHANCEMENT #2508 [DocumentManager]     Set default structure-type if non given
     * ENHANCEMENT #2506 [ContentBundle]       Extracted seo-tab to reuse it in other bundles
     * ENHANCEMENT #2500 [MediaBundle]         Refactored handling of post data for media
     * ENHANCEMENT #2497 [MediaBundle]         Implemented MediaInterface for inheritance
