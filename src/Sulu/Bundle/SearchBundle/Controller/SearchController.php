@@ -116,7 +116,7 @@ class SearchController
 
         $time = microtime(true) - $startTime;
 
-        $adapter = new ArrayAdapter($query->execute());
+        $adapter = new ArrayAdapter(iterator_to_array($query->execute()));
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage($limit);
         $pager->setCurrentPage($page);
