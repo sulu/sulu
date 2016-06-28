@@ -10,8 +10,10 @@
     <controller>SuluContentBundle:Default:index</controller>
     <cacheLifetime>2400</cacheLifetime>
 
-    <xi:include href='template_with_xinclude_main.xml'
-                xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)xpointer(/sulu:template/sulu:meta)"/>
+    <xi:include href="template_with_xinclude_main.xml"
+                xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)xpointer(/sulu:template/sulu:meta)">
+        <xi:fallback/>
+    </xi:include>
 
-    <xi:include href='template_with_xinclude_properties.xml'/>
+    <xi:include href="template_with_xinclude_properties.xml"/>
 </template>

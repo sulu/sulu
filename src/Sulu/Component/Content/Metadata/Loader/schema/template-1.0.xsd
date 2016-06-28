@@ -18,6 +18,7 @@
     </xs:attributeGroup>
 
     <xs:element name="template" type="templateType"/>
+    <xs:element name="properties" type="rootPropertiesType"/>
 
     <xs:complexType name="templateType">
         <xs:choice maxOccurs="unbounded">
