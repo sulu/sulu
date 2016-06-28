@@ -19,16 +19,18 @@ require.config({
         "type/singleInternalLink": '../../sulucontent/js/validation/types/singleInternalLink',
         "type/block": '../../sulucontent/js/validation/types/block',
         "type/toggler": '../../sulucontent/js/validation/types/toggler',
-        "extensions/sulu-buttons-contentbundle": '../../sulucontent/js/extensions/sulu-buttons'
+        "extensions/sulu-buttons-contentbundle": '../../sulucontent/js/extensions/sulu-buttons',
+        "extensions/seo-tab": '../../sulucontent/js/extensions/seo-tab'
     }
 });
 
 define([
     'config',
     'extensions/sulu-buttons-contentbundle',
+    'extensions/seo-tab',
     'sulucontent/ckeditor/internal-link',
     'css!sulucontentcss/main'
-], function(Config, ContentButtons, InternalLinkPlugin) {
+], function(Config, ContentButtons, SeoTab, InternalLinkPlugin) {
     return {
 
         name: "Sulu Content Bundle",
@@ -36,6 +38,8 @@ define([
         initialize: function(app) {
 
             'use strict';
+
+            SeoTab.initialize(app);
 
             var sandbox = app.sandbox;
             sandbox.sulu.buttons.push(ContentButtons.getButtons());
