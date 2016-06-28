@@ -12,6 +12,7 @@ define(['jquery', 'text!/admin/content/template/content/seo.html'], function($, 
     'use strict';
 
     var formId = '#seo-form',
+
         seoTab = {
 
             name: 'seo-tab',
@@ -29,15 +30,13 @@ define(['jquery', 'text!/admin/content/template/content/seo.html'], function($, 
                 }
             },
 
-            layout: function() {
-                return {
-                    extendExisting: true,
-                    content: {
-                        width: 'fixed',
-                        rightSpace: true,
-                        leftSpace: true
-                    }
-                };
+            layout: {
+                extendExisting: true,
+                content: {
+                    width: 'fixed',
+                    rightSpace: true,
+                    leftSpace: true
+                }
             },
 
             initialize: function() {
@@ -60,10 +59,6 @@ define(['jquery', 'text!/admin/content/template/content/seo.html'], function($, 
                 this.render(this.data);
                 this.bindCustomEvents();
                 this.bindDomEvents();
-            },
-
-            tabInitialize: function() {
-                this.sandbox.emit('sulu.tab.initialize', this.name);
             },
 
             bindCustomEvents: function() {
@@ -175,20 +170,12 @@ define(['jquery', 'text!/admin/content/template/content/seo.html'], function($, 
                 }.bind(this), '.trigger-save-button');
             },
 
-            setHeaderBar: function() {
-                this.sandbox.emit('sulu.tab.dirty');
-            },
-
             toggleWarning: function($el, warn) {
                 if (warn) {
                     $el.addClass('seo-warning');
                 } else {
                     $el.removeClass('seo-warning');
                 }
-            },
-
-            saved: function(data) {
-                this.sandbox.emit('sulu.tab.saved', data);
             },
 
             loadComponentData: function() {
@@ -199,14 +186,60 @@ define(['jquery', 'text!/admin/content/template/content/seo.html'], function($, 
                 return promise;
             },
 
+            /**
+             * This method function can be overwritten by the implementation to initialize the component.
+             *
+             * For best-practice the default implementation should be used.
+             */
+            tabInitialize: function() {
+                this.sandbox.emit('sulu.tab.initialize', this.name);
+            },
+
+            /**
+             * This method function can be overwritten by the implementation to enable save-button.
+             *
+             * For best-practice the default implementation should be used.
+             */
+            setHeaderBar: function() {
+                this.sandbox.emit('sulu.tab.dirty');
+            },
+
+            /**
+             * This method function can be overwritten by the implementation to process the data which was returned
+             * by the rest-api.
+             *
+             * For best-practice the default implementation should be used.
+             *
+             * @param {object} data
+             */
+            saved: function(data) {
+                this.sandbox.emit('sulu.tab.saved', data);
+            },
+
+            /**
+             * This method function has to be overwritten by the implementation to convert the data from "options.data".
+             *
+             * @param {object} data
+             */
             parseData: function(data) {
                 throw new Error('"parseData" not implemented');
             },
 
+            /**
+             * This method function has to be overwritten by the implementation to save the data.
+             *
+             * @param {object} data
+             * @param {string} action
+             */
             save: function(data, action) {
                 throw new Error('"save" not implemented');
             },
 
+            /**
+             * This method function has to be overwritten by the implementation to generate the seo-url.
+             *
+             * @param {object} data
+             */
             getUrl: function(data) {
                 throw new Error('"getUrl" not implemented');
             }
