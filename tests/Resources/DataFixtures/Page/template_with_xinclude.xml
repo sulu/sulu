@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <template xmlns="http://schemas.sulu.io/template/template"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xI="http://www.w3.org/2001/XInclude"
+          xmlns:xi="http://www.w3.org/2001/XInclude"
           xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
 
     <key>template</key>
@@ -10,15 +10,10 @@
     <controller>SuluContentBundle:Default:index</controller>
     <cacheLifetime>2400</cacheLifetime>
 
-    <xi:include href='template_with_xinclude_main.xml'
+    <xi:include href="template_with_xinclude_main.xml"
                 xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)xpointer(/sulu:template/sulu:meta)">
         <xi:fallback/>
     </xi:include>
 
-    <xi:include href='template_with_xinclude_properties.xml'
-                xpointer="xmlns(sulu=http://schemas.sulu.io/template/template)xpointer(/sulu:template/sulu:properties)">
-        <xi:fallback>
-            <properties/>
-        </xi:fallback>
-    </xi:include>
+    <xi:include href="template_with_xinclude_properties.xml"/>
 </template>
