@@ -86,10 +86,7 @@ abstract class SuluTestCase extends KernelTestCase
      */
     protected function getTestUser()
     {
-        $user = $this->getEntityManager()->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')
-            ->findOneByUsername('test');
-
-        return $user;
+        return $this->getContainer()->get('test_user_provider')->getUser();
     }
 
     /**
