@@ -511,7 +511,7 @@ define([
          */
         restartColumnNavigation: function() {
             this.sandbox.stop('#content-column');
-
+            this.setShowWebspaceNode(false);
             this.startColumnNavigation();
         },
 
