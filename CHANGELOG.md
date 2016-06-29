@@ -2,7 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * BUGFIX      #-    [TestBundle]          Fixed getTestUser function
+    * BUGFIX      #2517 [TestBundle]          Fixed getTestUser function
     * ENHANCEMENT #2507 [SearchBundle]        Changed search adapter to fit new features of MassiveSearchBundle (limit + offset)
     * ENHANCEMENT #2508 [DocumentManager]     Set default structure-type if non given
     * ENHANCEMENT #2506 [ContentBundle]       Extracted seo-tab to reuse it in other bundles
