@@ -61,7 +61,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     private $viewHandler;
 
     /**
-     * @Var SnippetRepository
+     * @var SnippetRepository
      */
     private $snippetRepository;
 
