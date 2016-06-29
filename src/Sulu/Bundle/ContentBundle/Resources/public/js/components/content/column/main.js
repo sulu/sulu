@@ -179,6 +179,7 @@ define([
             this.sandbox.sulu.triggerDeleteSuccessLabel();
 
             this.showGhostPages = true;
+            this.showWebspaceNode = false;
             this.setShowGhostPages();
         },
 
@@ -190,6 +191,13 @@ define([
             if (showGhostPages !== null) {
                 this.showGhostPages = JSON.parse(showGhostPages);
             }
+        },
+
+        /**
+         * Sets the show-ghost-pages configuration to stored user settings if there is one
+         */
+        setShowWebspaceNode: function(show) {
+            this.showWebspaceNode = show;
         },
 
         /**
@@ -432,6 +440,7 @@ define([
          * @param {String} id of selected item
          */
         startOverlayColumnNavigation: function(id) {
+            this.setShowWebspaceNode(true);
             var url = this.getUrl(id);
 
             this.sandbox.start(
@@ -609,7 +618,8 @@ define([
                     'language=' + this.options.language,
                     'fields=title,order',
                     'exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false'),
-                    'exclude-shadows=' + (!this.showGhostPages ? 'true' : 'false')
+                    'exclude-shadows=' + (!this.showGhostPages ? 'true' : 'false'),
+                     (this.showWebspaceNode ? 'webspace-nodes=single' : '')
                 ];
 
             if (!!selected) {
