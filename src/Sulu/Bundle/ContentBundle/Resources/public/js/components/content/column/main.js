@@ -194,7 +194,7 @@ define([
         },
 
         /**
-         * Sets the show-ghost-pages configuration to stored user settings if there is one
+         * Sets the showWebspaceNode variable
          */
         setShowWebspaceNode: function(show) {
             this.showWebspaceNode = show;
