@@ -286,6 +286,30 @@
                 <source>sulu.media.categories</source>
                 <target>Kategorien</target>
             </trans-unit>
+            <trans-unit id="243g88cf2f64352s337lr55563f222228" resname="sulu.media.account-external">
+                <source>sulu.media.account-external</source>
+                <target>Anbieter</target>
+            </trans-unit>
+            <trans-unit id="253g88cf4d64382l337lr55563f222221" resname="sulu.media.account-external.account">
+                <source>sulu.media.account-external.account</source>
+                <target>Anbieter</target>
+            </trans-unit>
+            <trans-unit id="253g88cf4d64382l337lr55563f245627" resname="sulu.media.account-external.external-url">
+                <source>sulu.media.account-external.external-url</source>
+                <target>Anbieter weiterleitung - URL</target>
+            </trans-unit>
+            <trans-unit id="253g88cf4d64382l337lr55563f229821" resname="sulu.media.account-external.external-name">
+                <source>sulu.media.account-external.external-name</source>
+                <target>Anbieter weiterleitung - Titel</target>
+            </trans-unit>
+            <trans-unit id="253g88cl4d64382l337tr55563f223248" resname="sulu.media.statistics">
+                <source>sulu.media.statistics</source>
+                <target>Statistiken</target>
+            </trans-unit>
+            <trans-unit id="253g88cl4d64322l317tr34563u223248" resname="sulu.media.no-statistics-yet">
+                <source>sulu.media.no-statistics-yet</source>
+                <target>Zur zeit stehen keine Statistiken zur Verfügung.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
