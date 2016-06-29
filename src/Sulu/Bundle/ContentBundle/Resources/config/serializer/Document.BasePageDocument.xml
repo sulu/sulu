@@ -43,7 +43,6 @@
         <property name="extensions" type="Sulu\Component\Content\Document\Extension\ExtensionContainer" serialized-name="ext" groups="defaultPage,preview"/>
         <property name="structure" type="Sulu\Component\Content\Document\Structure\Structure" groups="preview"/>
         <property name="children" exclude="true" type="Sulu\Component\DocumentManager\Collection\ChildrenCollection"/>
-        <property name="parent" exclude="true"/>
         <property name="suluOrder" type="integer" serialized-name="order" groups="defaultPage,smallPage"/>
         <property name="permissions" exclude="true"/>
 
