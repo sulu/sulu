@@ -53,7 +53,8 @@
         "twig/twig": "~1.11",
         "zendframework/zend-stdlib": "~2.3",
         "zendframework/zendsearch": "@dev",
-        "doctrine/doctrine-fixtures-bundle": "2.2.*"
+        "doctrine/doctrine-fixtures-bundle": "2.2.*",
+        "phpdocumentor/reflection-docblock": "~3.0.3"
     },
     "replace": {
         "sulu/media-bundle": "self.version",

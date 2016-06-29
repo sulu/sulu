@@ -99,7 +99,7 @@ class ContentMapper implements ContentMapperInterface
     private $rlpStrategy;
 
     /**
-     * @Var DocumentManager
+     * @var DocumentManager
      */
     private $documentManager;
 

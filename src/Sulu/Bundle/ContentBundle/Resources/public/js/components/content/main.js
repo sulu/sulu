@@ -191,6 +191,11 @@ define([
                 this.setState(data);
             }.bind(this));
 
+            // delegate save to tab
+            this.sandbox.on('sulu.toolbar.save', function(action) {
+                this.sandbox.emit('sulu.tab.save', action);
+            }, this);
+
             // change language
             this.sandbox.on('sulu.header.language-changed', function(item) {
                 this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.id);
@@ -943,6 +948,11 @@ define([
 
                     tabs: {
                         url: navigationUrl,
+                        options: {
+                            data: function() {
+                                return this.sandbox.util.deepCopy(this.content.toJSON());
+                            }.bind(this)
+                        },
                         componentOptions: {
                             values: this.content.toJSON(),
                             previewService: this.preview

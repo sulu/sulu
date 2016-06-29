@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Command;
 
+use Imagine\Image\ImageInterface;
+
 /**
  * Class ScaleCommandTest
  * Test the scale command service.
@@ -94,6 +96,53 @@ class ScaleCommandTest extends AbstractCommandTest
                 // Tested Result
                 'width' => 700,
                 'height' => 500,
+            ],
+            [
+                // Command Options
+                'options' => [
+                    'mode' => ImageInterface::THUMBNAIL_INSET,
+                    'x' => 200,
+                    'y' => 200,
+                ],
+                // Tested Result
+                'width' => 200,
+                'height' => 4,
+                // Source image
+                'imageHeight' => 6,
+                'imageWidth' => 300,
+            ],
+            [
+                // Command Options
+                'options' => [
+                    'mode' => ImageInterface::THUMBNAIL_INSET,
+                    'x' => 600,
+                    'y' => 600,
+                ],
+                // Tested Result
+                'width' => 600,
+                'height' => 429,
+            ],
+            [
+                // Command Options
+                'options' => [
+                    'mode' => ImageInterface::THUMBNAIL_INSET,
+                    'x' => 1000,
+                    'y' => 1000,
+                ],
+                // Tested Result
+                'width' => 700,
+                'height' => 500,
+            ],
+            [
+                // Command Options
+                'options' => [
+                    'mode' => ImageInterface::THUMBNAIL_INSET,
+                    'x' => 300,
+                    'y' => 300,
+                ],
+                // Tested Result
+                'width' => 300,
+                'height' => 214,
             ],
         ];
     }

@@ -2,6 +2,9 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2507 [SearchBundle]        Changed search adapter to fit new features of MassiveSearchBundle (limit + offset)
+    * ENHANCEMENT #2508 [DocumentManager]     Set default structure-type if non given
+    * ENHANCEMENT #2506 [ContentBundle]       Extracted seo-tab to reuse it in other bundles
     * ENHANCEMENT #2500 [MediaBundle]         Refactored handling of post data for media
     * ENHANCEMENT #2497 [MediaBundle]         Implemented MediaInterface for inheritance
     * BUGFIX      #2504 [WebsiteBundle]       Fixed http-cache clear if var dir exists
@@ -12,6 +15,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2495 [ContactBundle]       Added cascade-persist for contact addresses
     * ENHANCEMENT #2483 [All]                 Replace security.context with security.token_storage service
     * ENHANCEMENT #2464 [All]                 Moved configuration from installation folder to sulu-core
+    * BUGFIX      #2482 [Content]             Fixed appveyor tests
     * ENHANCEMENT #2479 [ContentBundle]       Removed restore history route function
     * ENHANCEMENT #2462 [All]                 Removed unnecessary NodeInterface definitions in tests
     * ENHANCEMENT #2461 [PreviewBundle]       Added function that avoid navigating in the preview
@@ -57,6 +61,18 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2341 [MediaBundle]         Added category to medias
     * ENHANCEMENT #2323 [WebsiteBundle]       Added TWIG-Extension to check if parent nav-item is active
     * ENHANCEMENT #2377 [CoreBundle]          Made --router and --env optional when running the console commands server:run, server:start, server:stop and server:status
+
+* 1.2.4 (2016-06-28)
+    * HOTFIX      #2498 [TestBundle]          Fixed TestUserProvider to create accounts with repository to support
+                                              sulu inheritance
+    * BUGFIX      #2389 [MediaBundle]         Removed twice adding of navigation item
+    * HOTFIX      #2481 [WebsiteBundle]       Fixed handling of non-default formats in error pages 
+    * HOTFIX      #2467 [MediaBundle]         Fixed media-selection-overlay missing locale
+    * HOTFIX      #2460 [MediaBundle]         Fixed deprecation of getEntityManager in MediaPreviewController
+    * HOTFIX      #2454 [MediaBundle]         Fixed inset image scale image-size 0
+    * HOTFIX      #2440 [MediaBundle]         Fixed media-selection sorting
+    * HOTFIX      #2441 [ContentBundle]       Fixed block to handle non html text correctly
+    * ENHANCEMENT #2432 [SecurityBundle]      New behat step for admin login with default locale
 
 * 1.2.3 (2016-06-01)
     * HOTFIX      #2427 [Hash]                Fixed bug when using non generic visitor in HashSerializeEventSubscriber

@@ -110,12 +110,15 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->inspector->getStructureMetadata(Argument::any())->willReturn($this->structureMetadata);
         $this->persistEvent->getLocale()->willReturn('en');
 
+        $this->structureMetadata->getName()->willReturn('foobar');
+
         $this->subscriber = new StructureSubscriber(
             $this->encoder->reveal(),
             $this->contentTypeManager->reveal(),
             $this->inspector->reveal(),
             $this->propertyFactory->reveal(),
-            $this->webspaceManager->reveal()
+            $this->webspaceManager->reveal(),
+            ['article' => 'foobar']
         );
     }
 
@@ -306,6 +309,35 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->node->getPropertyValueWithDefault('i18n:fr-template', null)->willReturn(null);
 
         $this->document->setStructureType(null)->shouldBeCalled();
+        $this->document->getStructure()->willReturn(null);
+
+        // set the property container
+        $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
+        $this->accessor->set('structure', Argument::type(Structure::class))->shouldHaveBeenCalled();
+    }
+
+    /**
+     * It should create a new default Structure when there is no structure property.
+     */
+    public function testHydrateNewStructureDefaultArray()
+    {
+        $metadata = $this->prophesize(Metadata::class);
+        $metadata->getAlias()->willReturn('article');
+
+        $this->inspector->getMetadata($this->document->reveal())->willReturn($metadata->reveal());
+        $this->inspector->getWebspace($this->document->reveal())->willReturn(null);
+
+        $this->hydrateEvent->getDocument()->willReturn($this->document->reveal());
+        $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
+        $this->hydrateEvent->getLocale()->willReturn('fr');
+        $this->hydrateEvent->getOption('load_ghost_content', false)->willReturn(true);
+        $this->hydrateEvent->getOption('rehydrate')->willReturn(true);
+
+        // set the structure type
+        $this->encoder->contentName('template')->willReturn('i18n:fr-template');
+        $this->node->getPropertyValueWithDefault('i18n:fr-template', null)->willReturn(null);
+
+        $this->document->setStructureType('foobar')->shouldBeCalled();
         $this->document->getStructure()->willReturn(null);
 
         // set the property container
