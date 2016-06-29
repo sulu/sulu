@@ -25,6 +25,7 @@ use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Event\ReorderEvent;
+use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 use Sulu\Component\DocumentManager\NodeHelperInterface;
 
 class PublishSubscriberTest extends \PHPUnit_Framework_TestCase
@@ -269,7 +270,7 @@ class PublishSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->publishSubscriber->reorderNodeInPublicWorkspace($event->reveal());
     }
 
-    public function testSetNodeFromPublicWorkspace()
+    public function testSetNodeFromPublicWorkspaceForPublishing()
     {
         $document = $this->prophesize(PathBehavior::class);
         $document->getPath()->willReturn('/cmf/sulu');
@@ -281,7 +282,22 @@ class PublishSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $event->setNode($this->node->reveal())->shouldBeCalled();
 
-        $this->publishSubscriber->setNodeFromPublicWorkspace($event->reveal());
+        $this->publishSubscriber->setNodeFromPublicWorkspaceForPublishing($event->reveal());
+    }
+
+    public function testSetNodeFromPublicWorkspaceForUnpublishing()
+    {
+        $document = $this->prophesize(PathBehavior::class);
+        $document->getPath()->willReturn('/cmf/sulu');
+
+        $event = $this->prophesize(UnpublishEvent::class);
+        $event->getDocument()->willReturn($document->reveal());
+
+        $this->liveSession->getNode('/cmf/sulu')->willReturn($this->node->reveal());
+
+        $event->setNode($this->node->reveal())->shouldBeCalled();
+
+        $this->publishSubscriber->setNodeFromPublicWorkspaceForUnpublishing($event->reveal());
     }
 
     public function testFlushPublicWorkspace()

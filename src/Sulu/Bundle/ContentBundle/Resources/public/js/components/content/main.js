@@ -10,11 +10,12 @@
 define([
     'services/sulupreview/preview',
     'sulucontent/model/content',
+    'sulucontent/services/content-manager',
     'sulucontent/components/copy-locale-overlay/main',
     'sulucontent/components/open-ghost-overlay/main',
     'sulusecurity/services/user-manager',
     'sulusecurity/services/security-checker'
-], function(Preview, Content, CopyLocale, OpenGhost, UserManager, SecurityChecker) {
+], function(Preview, Content, ContentManager, CopyLocale, OpenGhost, UserManager, SecurityChecker) {
 
     'use strict';
 
@@ -442,7 +443,7 @@ define([
         del: function(id) {
             this.sandbox.sulu.showDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
-                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'settings');
+                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'edit');
                     if (!this.content || id !== this.content.get('id')) {
                         var content = new Content({id: id});
                         content.fullDestroy(this.options.webspace, this.options.language, false, {
@@ -941,6 +942,36 @@ define([
                             }.bind(this)
                         }
                     };
+                }
+
+                if (SecurityChecker.hasPermission(this.data, 'live') && !isHomeDocument(this.data)) {
+                    editDropdown.unpublish = {
+                        options: {
+                            title: this.sandbox.translate('sulu-content.unpublish'),
+                            callback: function() {
+                                this.sandbox.emit('sulu.header.toolbar.item.loading', 'edit');
+                                ContentManager.unpublish(this.data.id, this.options.language)
+                                    .always(function() {
+                                        this.sandbox.emit('sulu.header.toolbar.item.enable', 'edit');
+                                    }.bind(this))
+                                    .then(function(response) {
+                                        this.sandbox.emit(
+                                            'sulu.labels.success.show',
+                                            'labels.success.content-unpublish-desc',
+                                            'labels.success'
+                                        );
+                                        this.sandbox.emit('sulu.content.contents.saved', response.id, response);
+                                    }.bind(this))
+                                    .fail(function() {
+                                        this.sandbox.emit(
+                                            'sulu.labels.error.show',
+                                            'labels.error.content-unpublish-desc',
+                                            'labels.error'
+                                        );
+                                    }.bind(this));
+                            }.bind(this)
+                        }
+                    }
                 }
 
                 if (!this.sandbox.util.isEmpty(editDropdown)) {

@@ -699,6 +699,14 @@
                 <source>sulu-content.draft-label</source>
                 <target><![CDATA[Du arbeitest an einem Entwurf, zuletzt gespeichert: %(changed)s von <b>%(user)s</b>]]></target>
             </trans-unit>
+            <trans-unit id="46" resname="sulu-content.unpublish">
+                <source>sulu-content.unpublish</source>
+                <target>Veröffentlichung widerrufen</target>
+            </trans-unit>
+            <trans-unit id="47" resname="labels.error.content-unpublish-desc">
+                <source>labels.error.content-unpublish-desc</source>
+                <target>Veröffentlichung der Seite konnte nicht widerrufen werden.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

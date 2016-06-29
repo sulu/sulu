@@ -47,6 +47,25 @@ define(['jquery'], function ($) {
                     error: errorCallback
                 }
             );
+        },
+
+        unpublish: function(id, locale) {
+            var deferred = $.Deferred();
+            $.ajax(
+                [baseUrl, '/', id, '?', 'action=unpublish&language=' + locale].join(''),
+                {
+                    method: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function(response) {
+                        deferred.resolve(response);
+                    },
+                    error: function(xhr) {
+                        deferred.reject(xhr);
+                    }
+                }
+            );
+
+            return deferred.promise();
         }
     }
 });

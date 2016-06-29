@@ -1735,6 +1735,32 @@ class NodeControllerTest extends SuluTestCase
         $this->assertStringStartsWith('/test_en/test_en', $englishDocument->getResourceSegment());
     }
 
+    public function testUnpublish()
+    {
+        $document = $this->createPageDocument();
+        $document->setTitle('test_de');
+        $document->setStructureType('default');
+        $this->documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($document, 'de');
+        $this->documentManager->flush();
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'POST',
+            '/api/nodes/' . $document->getUuid() . '?action=unpublish&language=de'
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $defaultNode = $this->session->getNodeByIdentifier($document->getUuid());
+        $this->assertFalse($defaultNode->hasProperty('i18n:de-published'));
+        $this->assertEquals(WorkflowStage::TEST, $defaultNode->getPropertyValue('i18n:de-state'));
+
+        $liveNode = $this->liveSession->getNodeByIdentifier($document->getUuid());
+        $this->assertEmpty($liveNode->getProperties('i18n:de-*'));
+    }
+
     public function testOrder()
     {
         $data = $this->importer->import(__DIR__ . '/../../app/Resources/exports/order.xml');
