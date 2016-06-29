@@ -3,7 +3,7 @@
     <class name="Sulu\Component\Webspace\Webspace" exclusion-policy="ALL">
         <property name="name" type="string" expose="true"/>
         <property name="key" type="string" expose="true"/>
-        <property name="theme" type="Sulu\Component\Webspace\Theme" expose="true"/>
+        <property name="theme" type="string" expose="true"/>
         <property name="localizations" expose="true">
             <type><![CDATA[array<Sulu\Component\Localization\Localization>]]></type>
         </property>
