@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
-use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
@@ -185,7 +185,7 @@ interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
     public function getType();
 
     /**
-     * @param Collection $children
+     * @param DoctrineCollection $children
      */
-    public function setChildren(Collection $children);
+    public function setChildren(DoctrineCollection $children);
 }
