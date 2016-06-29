@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Component\Security\Authentication\UserInterface;
 
@@ -37,7 +36,7 @@ class Media implements MediaInterface
     protected $changed;
 
     /**
-     * @var Collection
+     * @var ArrayCollection
      */
     protected $files;
 

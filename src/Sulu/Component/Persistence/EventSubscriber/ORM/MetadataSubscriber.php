@@ -94,6 +94,10 @@ class MetadataSubscriber implements EventSubscriber
      */
     private function setAssociationMappings(ClassMetadataInfo $metadata, Configuration $configuration)
     {
+        if (!class_exists($metadata->getName())) {
+            return;
+        }
+
         foreach (class_parents($metadata->getName()) as $parent) {
             $parentMetadata = new ClassMetadata(
                 $parent,
