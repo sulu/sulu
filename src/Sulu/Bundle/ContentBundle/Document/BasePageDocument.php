@@ -30,7 +30,6 @@ use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocalizedTitleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
-use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\Collection\ChildrenCollection;
@@ -40,7 +39,6 @@ use Sulu\Component\DocumentManager\Collection\ChildrenCollection;
  */
 class BasePageDocument implements
     NodeNameBehavior,
-    ParentBehavior,
     LocalizedStructureBehavior,
     ResourceSegmentBehavior,
     NavigationContextBehavior,
@@ -91,13 +89,6 @@ class BasePageDocument implements
      * @var int
      */
     protected $changer;
-
-    /**
-     * Document's parent.
-     *
-     * @var object
-     */
-    protected $parent;
 
     /**
      * Title of document.
@@ -307,22 +298,6 @@ class BasePageDocument implements
     public function getChanger()
     {
         return $this->changer;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setParent($parent)
-    {
-        $this->parent = $parent;
     }
 
     /**
