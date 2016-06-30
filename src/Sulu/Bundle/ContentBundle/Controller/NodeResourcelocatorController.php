@@ -12,8 +12,8 @@
 namespace Sulu\Bundle\ContentBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use PHPCR\SessionInterface;
 use Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepositoryInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 
@@ -78,7 +78,7 @@ class NodeResourcelocatorController extends RestController implements ClassResou
         $path = $this->getRequestParameter($this->getRequest(), 'path', true);
 
         $this->getResourceLocatorRepository()->delete($path, $webspaceKey, $languageCode);
-        $this->getSession()->save();
+        $this->getDocumentManager()->flush();
 
         return $this->handleView($this->view());
     }
@@ -105,10 +105,10 @@ class NodeResourcelocatorController extends RestController implements ClassResou
     }
 
     /**
-     * @return SessionInterface
+     * @return DocumentManagerInterface
      */
-    private function getSession()
+    private function getDocumentManager()
     {
-        return $this->get('doctrine_phpcr.default_session');
+        return $this->get('sulu_document_manager.document_manager');
     }
 }
