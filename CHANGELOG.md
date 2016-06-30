@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2522 [All]                 Use correct default phpcr session
     * ENHANCEMENT #2518 [ContentBundle]       Moved parent from BasePageDocument to PageDocument
     * ENHANCEMENT #2507 [SearchBundle]        Changed search adapter to fit new features of MassiveSearchBundle (limit + offset)
     * ENHANCEMENT #2508 [DocumentManager]     Set default structure-type if non given
