@@ -2,6 +2,13 @@
 
 ## dev-develop
 
+### Documemt Manager Initializer
+
+The `initialize` method of the `InitializerInterface` has now also a `$purge`
+parameter, which tells the initializer if it should purge something. The
+Initializer can use this information or simply ignore it, but existing
+Initializers have to adapt to the new interface.
+
 ### Twig variable `request.routeParameters` removed
 
 The `request.routeParameters` variable has been removed because it is not longer required when generate an url.

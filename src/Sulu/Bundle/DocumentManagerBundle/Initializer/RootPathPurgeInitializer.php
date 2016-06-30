@@ -15,11 +15,12 @@ use Doctrine\Common\Persistence\ConnectionRegistry;
 use PHPCR\RepositoryException;
 use PHPCR\SessionInterface;
 use Sulu\Component\DocumentManager\PathSegmentRegistry;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Purges the root path only.
+ * Purges the root path if the purge flag has been set.
  */
-class RootPathPurger implements PurgerInterface
+class RootPathPurgeInitializer implements InitializerInterface
 {
     /**
      * @var string
@@ -46,8 +47,14 @@ class RootPathPurger implements PurgerInterface
     /**
      * {@inheritdoc}
      */
-    public function purge()
+    public function initialize(OutputInterface $output, $purge = false)
     {
+        if (!$purge) {
+            $output->writeln('  [ ] Purging workspaces');
+
+            return;
+        }
+
         $sessions = $this->connections->getConnections();
         $rootPath = '/' . $this->pathSegments->getPathSegment($this->rootRole);
 
@@ -66,5 +73,7 @@ class RootPathPurger implements PurgerInterface
                 $session->save();
             }
         }
+
+        $output->writeln('  [-] Purging workspaces');
     }
 }

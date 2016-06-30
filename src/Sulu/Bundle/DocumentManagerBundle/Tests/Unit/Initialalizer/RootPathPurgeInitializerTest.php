@@ -15,10 +15,11 @@ use Doctrine\Common\Persistence\ConnectionRegistry;
 use PHPCR\NodeInterface;
 use PHPCR\RepositoryException;
 use PHPCR\SessionInterface;
-use Sulu\Bundle\DocumentManagerBundle\Initializer\RootPathPurger;
+use Sulu\Bundle\DocumentManagerBundle\Initializer\RootPathPurgeInitializer;
 use Sulu\Component\DocumentManager\PathSegmentRegistry;
+use Symfony\Component\Console\Output\OutputInterface;
 
-class RootPathPurgerTest extends \PHPUnit_Framework_TestCase
+class RootPathPurgeInitializerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var SessionInterface
@@ -41,9 +42,14 @@ class RootPathPurgerTest extends \PHPUnit_Framework_TestCase
     private $segmentRegistry;
 
     /**
-     * @var RootPathPurger
+     * @var RootPathPurgeInitializer
      */
-    private $purger;
+    private $rootPathPurgeInitializer;
+
+    /**
+     * @var OutputInterface
+     */
+    private $output;
 
     /**
      * @var NodeInterface
@@ -56,9 +62,10 @@ class RootPathPurgerTest extends \PHPUnit_Framework_TestCase
         $this->session2 = $this->prophesize(SessionInterface::class);
         $this->node = $this->prophesize(NodeInterface::class);
         $this->connectionRegistry = $this->prophesize(ConnectionRegistry::class);
+        $this->output = $this->prophesize(OutputInterface::class);
 
         $this->segmentRegistry = $this->prophesize(PathSegmentRegistry::class);
-        $this->purger = new RootPathPurger(
+        $this->rootPathPurgeInitializer = new RootPathPurgeInitializer(
             $this->connectionRegistry->reveal(),
             $this->segmentRegistry->reveal()
         );
@@ -86,7 +93,7 @@ class RootPathPurgerTest extends \PHPUnit_Framework_TestCase
         $this->node->remove()->shouldBeCalled();
         $this->session2->save()->shouldBeCalled();
 
-        $this->purger->purge();
+        $this->rootPathPurgeInitializer->initialize($this->output->reveal(), true);
     }
 
     /**
@@ -112,6 +119,12 @@ class RootPathPurgerTest extends \PHPUnit_Framework_TestCase
         $this->node->remove()->shouldBeCalled();
         $this->session2->save()->shouldBeCalled();
 
-        $this->purger->purge();
+        $this->rootPathPurgeInitializer->initialize($this->output->reveal(), true);
+    }
+
+    public function testInitializeWithFalsePurgeFlag()
+    {
+        $this->connectionRegistry->getConnections()->shouldNotBeCalled();
+        $this->rootPathPurgeInitializer->initialize($this->output->reveal(), false);
     }
 }
