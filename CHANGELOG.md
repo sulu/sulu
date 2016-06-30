@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.2.5 (2016-06-30)
     * HOTFIX      #---- [AdminBundle]         Fixed loading of user localization
 
 * 1.2.4 (2016-06-28)
