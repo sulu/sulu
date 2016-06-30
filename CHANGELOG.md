@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #---- [AdminBundle]         Fixed loading of user localization
+
 * 1.2.4 (2016-06-28)
     * HOTFIX      #2498 [TestBundle]          Fixed TestUserProvider to create accounts with repository to support
                                               sulu inheritance
