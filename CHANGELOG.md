@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2523 [SecurityBundle]      Fixed error with non-visible permission types in matrix
     * ENHANCEMENT #2518 [ContentBundle]       Moved parent from BasePageDocument to PageDocument
     * ENHANCEMENT #2507 [SearchBundle]        Changed search adapter to fit new features of MassiveSearchBundle (limit + offset)
     * ENHANCEMENT #2508 [DocumentManager]     Set default structure-type if non given

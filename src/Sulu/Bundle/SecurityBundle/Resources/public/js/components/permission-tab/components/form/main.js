@@ -65,7 +65,7 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
 
                     // set the data for all available roles
                     this.sandbox.util.each(roles, function(index, role) {
-                        var data = {}, matrixRoleData = [];
+                        var permissionRoleData = {}, matrixRoleData = [];
 
                         // set the captions and values for the matrix
                         verticalCaptions.push(role.name);
@@ -74,7 +74,7 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
 
                         // initialize the data
                         this.sandbox.util.each(permissionTypes, function(index, permission) {
-                            data[permission.value] = false;
+                            permissionRoleData[permission.value] = false;
                         }.bind(this));
 
                         // set the data from the permissions
@@ -83,8 +83,7 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
                             this.sandbox.util.each(
                                 permissionResponseData.permissions[role.id],
                                 function(index, value) {
-                                    data[index] = value;
-                                    matrixRoleData.push(value);
+                                    setPermissionTypeData(permissionRoleData, matrixRoleData, index, value);
                                 }
                             );
                         } else {
@@ -96,12 +95,11 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
                             );
 
                             this.sandbox.util.each(contextPermissions, function (index, value) {
-                                data[index] = value;
-                                matrixRoleData.push(value);
+                                setPermissionTypeData(permissionRoleData, matrixRoleData, index, value);
                             });
                         }
 
-                        permissionData.permissions[role.id] = data;
+                        permissionData.permissions[role.id] = permissionRoleData;
                         matrixData[index] = matrixRoleData;
                     }.bind(this));
 
@@ -141,6 +139,13 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
                     setPermission.call(this, data.section, value.value, data.activated);
                 });
             }
+        },
+
+        setPermissionTypeData = function (permissionRoleData, matrixRoleData, index, value) {
+            if (!!permissionRoleData.hasOwnProperty(index)) {
+                matrixRoleData.push(value);
+            }
+            permissionRoleData[index] = value;
         },
 
         setPermission = function(section, value, activated) {
