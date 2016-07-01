@@ -32,15 +32,22 @@ class IndexConfiguration
     private $securityContext;
 
     /**
+     * @var array
+     */
+    private $contexts;
+
+    /**
      * @param string $indexName The name of the index
      * @param string $name The name of the index for the user interface
      * @param string $securityContext The required security context to access the index
+     * @param array $contexts The contexts for which this index should be returned
      */
-    public function __construct($indexName, $name = null, $securityContext = null)
+    public function __construct($indexName, $name = null, $securityContext = null, array $contexts = [])
     {
         $this->indexName = $indexName;
         $this->name = $name;
         $this->securityContext = $securityContext;
+        $this->contexts = $contexts;
     }
 
     /**
@@ -72,5 +79,15 @@ class IndexConfiguration
     public function getSecurityContext()
     {
         return $this->securityContext;
+    }
+
+    /**
+     * Returns the contexts for which the index should be returned.
+     *
+     * @return array
+     */
+    public function getContexts()
+    {
+        return $this->contexts;
     }
 }

@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\SearchBundle\Controller;
 
 use FOS\RestBundle\View\View;
-use FOS\RestBundle\View\ViewHandler;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\SerializationContext;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
@@ -22,7 +22,7 @@ use Pagerfanta\Pagerfanta;
 use Sulu\Bundle\SearchBundle\Rest\SearchResultRepresentation;
 use Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfiguration;
 use Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfigurationProviderInterface;
-use Sulu\Component\Rest\ListBuilder\ListRestHelper;
+use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,12 +49,12 @@ class SearchController
     private $securityChecker;
 
     /**
-     * @var ViewHandler
+     * @var ViewHandlerInterface
      */
     private $viewHandler;
 
     /**
-     * @var ListRestHelper
+     * @var ListRestHelperInterface
      */
     private $listRestHelper;
 
@@ -67,16 +67,16 @@ class SearchController
      * @param SearchManagerInterface $searchManager
      * @param ProviderInterface $metadataProvider
      * @param SecurityCheckerInterface $securityChecker
-     * @param ViewHandler $viewHandler
-     * @param ListRestHelper $listRestHelper
+     * @param ViewHandlerInterface $viewHandler
+     * @param ListRestHelperInterface $listRestHelper
      * @param IndexConfigurationProviderInterface $indexConfigurationProvider
      */
     public function __construct(
         SearchManagerInterface $searchManager,
         ProviderInterface $metadataProvider,
         SecurityCheckerInterface $securityChecker,
-        ViewHandler $viewHandler,
-        ListRestHelper $listRestHelper,
+        ViewHandlerInterface $viewHandler,
+        ListRestHelperInterface $listRestHelper,
         IndexConfigurationProviderInterface $indexConfigurationProvider
     ) {
         $this->searchManager = $searchManager;
@@ -173,7 +173,7 @@ class SearchController
     /**
      * Return the category totals for the search results.
      *
-     * @param Hit []
+     * @param Hit[]
      *
      * @return array
      */
@@ -207,7 +207,11 @@ class SearchController
                 continue;
             }
 
-            if ($this->securityChecker->hasPermission($indexConfiguration->getSecurityContext(), PermissionTypes::VIEW)) {
+            $contexts = $indexConfiguration->getContexts();
+
+            if ($this->securityChecker->hasPermission($indexConfiguration->getSecurityContext(), PermissionTypes::VIEW)
+                && (empty($contexts) || array_search('admin', $contexts) !== false)
+            ) {
                 $allowedIndexNames[] = $indexName;
             }
         }
