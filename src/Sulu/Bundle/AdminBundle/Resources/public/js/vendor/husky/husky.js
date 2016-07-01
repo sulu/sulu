@@ -30622,8 +30622,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             actionIconColumn: null,
             croppedMaxLength: 35,
             openPathToSelectedChildren: true,
-            cropContents: true,
-            editableOptions: {}
+            cropContents: true
         },
 
         constants = {
@@ -30695,21 +30694,12 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             textContainer: '<span class="' + constants.textContainerClass + '"><%= content %></span>',
             headerCellLoader: '<div class="' + constants.headerCellLoaderClass + '"></div>',
             removeCellContent: '<span class="fa-<%= icon %> ' + constants.rowRemoverClass + '"></span>',
-            editableCellContent: {
-                string: [
-                    '<span class="' + constants.editableItemClass + '"><%= value %></span>',
-                    '<div class="' + constants.inputWrapperClass + '">',
-                    '   <input type="text" class="form-element husky-validate ' + constants.editableInputClass + '" value="<%= value %>">',
-                    '</div>'
-                ].join(''),
-                select: [
-                    '<select class="form-element husky-validate ' + constants.editableInputClass + '">',
-                    '<% _.each(options.values, function(title, index) { %>',
-                    '   <option value="<%= index %>" <% if (value === index) { %>selected<% } %>><%= translate(title) %></option>',
-                    '<% }); %>',
-                    '</select>'
-                ].join('')
-            },
+            editableCellContent: [
+                '<span class="' + constants.editableItemClass + '"><%= value %></span>',
+                '<div class="' + constants.inputWrapperClass + '">',
+                '   <input type="text" class="form-element husky-validate ' + constants.editableInputClass + '" value="<%= value %>">',
+                '</div>'
+            ].join(''),
             img: [
                 '<div class="' + constants.gridImageClass + '">',
                 '   <img alt="<%= alt %>" src="<%= src %>"/>',
@@ -31324,7 +31314,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 );
             }
             if (this.options.editable === true && column.editable === true) {
-                content = this.getEditableCellContent(content, column.attribute, column.type);
+                content = this.getEditableCellContent(content);
             } else {
                 content = this.sandbox.util.template(templates.textContainer)({
                     content: content
@@ -31389,18 +31379,11 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Takes a string and retruns the markup for an editable cell
          * @param content {String} the original value
-         * @param type {String} the type of value
-         * @param columnName {String} the name of value
          * @returns {String|Object} html or a dom object
          */
-        getEditableCellContent: function(content, columnName, type) {
-            type = !!type ? type : 'string';
-            var options = !!this.options.editableOptions[columnName] ? this.options.editableOptions[columnName] : {};
-
-            return this.sandbox.util.template(templates.editableCellContent[type], {
-                value: content,
-                options: options,
-                translate: this.sandbox.translate
+        getEditableCellContent: function(content) {
+            return this.sandbox.util.template(templates.editableCellContent)({
+                value: content
             });
         },
 
@@ -31627,7 +31610,6 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 this.sandbox.dom.on(this.table.$body, 'click', this.editableItemClickHandler.bind(this), '.' + constants.editableItemClass);
                 this.sandbox.dom.on(this.table.$body, 'focusout', this.editableInputFocusoutHandler.bind(this), '.' + constants.editableInputClass);
                 this.sandbox.dom.on(this.table.$body, 'keydown', this.editableInputKeyHandler.bind(this), '.' + constants.editableInputClass);
-                this.sandbox.dom.on(this.table.$body, 'change', this.editableInputEventHandler.bind(this), '.' + constants.editableInputClass);
             }
             if (!!this.icons) {
                 this.sandbox.dom.on(this.table.$body, 'click', this.iconClickHandler.bind(this), '.' + constants.gridIconClass);
@@ -31751,7 +31733,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             var $parent = this.sandbox.dom.parents(event.currentTarget, '.' + constants.rowClass),
                 recordId = this.sandbox.dom.data($parent, 'id');
 
-            if (!!this.editStatuses[recordId] || $(event.currentTarget).is('select')) {
+            if (!!this.editStatuses[recordId]) {
                 this.editRow(recordId);
             }
 
@@ -33721,6 +33703,15 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
             },
 
             /**
+             * Deletes all records, sets given records and updates the view
+             * @event husky.datagrid.records.set
+             * @param {Array} array of data-records
+             */
+            RECORDS_SET = function() {
+                return this.createEventName('records.set');
+            },
+
+            /**
              * raised when limit of request changed
              * @event husky.datagrid.page-size.changed
              * @param {Integer} pageSize new size
@@ -34725,6 +34716,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 this.sandbox.on(RECORDS_ADD.call(this), this.addRecordsHandler.bind(this));
                 this.sandbox.on(RECORD_REMOVE.call(this), this.removeRecordHandler.bind(this));
                 this.sandbox.on(RECORDS_CHANGE.call(this), this.changeRecordsHandler.bind(this));
+                this.sandbox.on(RECORDS_SET.call(this), this.setRecordsHandler.bind(this));
                 this.sandbox.on(NUMBER_SELECTIONS.call(this), this.updateSelectedCounter.bind(this));
                 this.sandbox.on(MEDIUM_LOADER_SHOW.call(this), this.showMediumLoader.bind(this));
                 this.sandbox.on(MEDIUM_LOADER_HIDE.call(this), this.hideMediumLoader.bind(this));
@@ -34898,7 +34890,7 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
 
             /**
              * Merges one or more data-records with a given ones and updates the view
-             * @param records {Object|Array} the new data-record or an array of data-records
+             * @param {Object|Array} records the new data-record or an array of data-records
              */
             changeRecordsHandler: function(records) {
                 if (!this.sandbox.dom.isArray(records)) {
@@ -34913,8 +34905,23 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
             },
 
             /**
+             * Deletes all records, sets given records and updates the view
+             * @param {Array} records array of data-records
+             */
+            setRecordsHandler: function(records) {
+                // Delete all records.
+                this.data.embedded = [];
+
+                // Add the records.
+                this.pushRecords(records);
+
+                this.rerenderView();
+                this.rerenderPagination();
+            },
+
+            /**
              * calls the clickCallback for an item
-             * @param id {Number|String} the id of the item
+             * @param {Number|String} id the id of the item
              */
             itemClicked: function(id) {
                 if (typeof this.options.clickCallback === 'function') {
@@ -43097,13 +43104,11 @@ define('__component__$ckeditor@husky',[], function() {
         renderStartTemplate: function() {
             var $content = $(this.$el.val()),
                 text = $content.text(),
-                $trigger = $(
-                    '<textarea class="form-element ckeditor-preview">' + text + '</textarea>'
-                );
+                $trigger = $('<textarea class="form-element ckeditor-preview">' + text + '</textarea>');
 
             this.$el.parent().append($trigger);
 
-            $trigger.one('click', function(e) {
+            $trigger.one('click, focus', function(e) {
                 $(e.currentTarget).remove();
 
                 this.startEditor();
@@ -51336,12 +51341,25 @@ define("datepicker-zh-TW", function(){});
     });
 
     define('husky_extensions/globalize',['globalize_lib'], function() {
+        var normalizeCultureName = function(cultureName) {
+            cultureName = cultureName.replace('_', '-');
+
+            if (cultureName.indexOf('-') > -1) {
+                cultureName =
+                    cultureName.substring(0, cultureName.indexOf('-')) +
+                    cultureName.substring(cultureName.indexOf('-'), cultureName.length).toUpperCase();
+            }
+
+            return cultureName;
+        };
+
         return  {
             name: 'husky-validation',
 
             initialize: function(app) {
                 app.sandbox.globalize = {
                     addCultureInfo: function(cultureName, messages) {
+                        cultureName = normalizeCultureName(cultureName);
                         Globalize.addCultureInfo(cultureName, {
                             messages: messages
                         });
@@ -51363,12 +51381,12 @@ define("datepicker-zh-TW", function(){});
 
                 app.sandbox.translate = function(key) {
                     var translation;
-                    if (!app.config.culture || !app.config.culture.name) {
+                    if (!app.config.culture || !Globalize.culture().name) {
                         return key;
                     }
 
                     try {
-                        translation = Globalize.localize(key, app.config.culture.name);
+                        translation = Globalize.localize(key, Globalize.culture().name);
                     } catch (e) {
                         app.logger.warn('Globalize threw an error when translating key "' + key + '", failling back to key. Error: ' + e);
                         return key;
@@ -51486,14 +51504,27 @@ define("datepicker-zh-TW", function(){});
                  * @param defaultMessages will be used as fallback messages
                  */
                 app.setLanguage = function(cultureName, messages, defaultMessages) {
+                    cultureName = normalizeCultureName(cultureName);
+
+
                     Globalize.culture(cultureName);
 
                     app.sandbox.globalize.addCultureInfo(cultureName, messages);
                     app.sandbox.globalize.addCultureInfo('default', defaultMessages);
                 };
 
-                if (!!app.config.culture && !!app.config.culture.name && app.config.culture.name !== 'en') {
-                    return require(['cultures/globalize.culture.' + app.config.culture.name.replace("_", "-")]);
+                app.loadLanguage = function(cultureName) {
+                    var deferred = $.Deferred();
+
+                    if (cultureName !== 'en') {
+                        require(['cultures/globalize.culture.' + cultureName], function() {
+                            deferred.resolve();
+                        });
+                    } else {
+                        deferred.resolve();
+                    }
+
+                    return deferred.promise();
                 }
             },
 
@@ -51503,11 +51534,13 @@ define("datepicker-zh-TW", function(){});
                         app.config.culture.messages = {};
                     }
 
-                    app.setLanguage(
-                        app.config.culture.name,
-                        app.config.culture.messages,
-                        app.config.culture.defaultMessages
-                    );
+                    app.loadLanguage(app.config.culture.name).then(function() {
+                        app.setLanguage(
+                            app.config.culture.name,
+                            app.config.culture.messages,
+                            app.config.culture.defaultMessages
+                        );
+                    });
                 }
 
                 app.sandbox.globalize.setCurrency('');
