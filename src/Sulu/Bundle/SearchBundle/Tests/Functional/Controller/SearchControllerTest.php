@@ -191,6 +191,7 @@ class SearchControllerTest extends SuluTestCase
         $result = json_decode($response->getContent(), true);
 
         $this->assertEquals('product', $result[0]['indexName']);
+        $this->assertEquals([], $result[0]['contexts']);
     }
 
     private function createUser()

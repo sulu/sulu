@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2526 [SearchBundle]        Introduced contexts for indexes to restrict selections
     * ENHANCEMENT #2520 [ContentBundle]       Delete routes using the DocumentManager
     * BUGFIX      #2523 [SecurityBundle]      Fixed error with non-visible permission types in matrix
     * ENHANCEMENT #2522 [All]                 Use correct default phpcr session
