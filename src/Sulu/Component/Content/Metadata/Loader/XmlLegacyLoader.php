@@ -165,11 +165,12 @@ class XmlLegacyLoader implements LoaderInterface
             foreach (['key', 'view', 'controller', 'cacheLifetime'] as $requiredProperty) {
                 if (!isset($result[$requiredProperty])) {
                     throw new InvalidXmlException(
-                        $type, sprintf(
-                        'Property "%s" is required in XML template file "%s"',
-                        $requiredProperty,
-                        $resource
-                    )
+                        $type,
+                        sprintf(
+                            'Property "%s" is required in XML template file "%s"',
+                            $requiredProperty,
+                            $resource
+                        )
                     );
                 }
             }
