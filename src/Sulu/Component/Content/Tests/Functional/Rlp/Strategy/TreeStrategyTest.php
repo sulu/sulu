@@ -45,7 +45,7 @@ class TreeStrategyTest extends SuluTestCase
         $this->rlpStrategy = $this->getContainer()->get('sulu.content.rlp.strategy.tree');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->documentInspector = $this->getContainer()->get('sulu_document_manager.document_inspector');
-        $this->session = $this->getContainer()->get('doctrine_phpcr.default_session');
+        $this->session = $this->getContainer()->get('doctrine_phpcr.session');
 
         $this->initPhpcr();
     }
