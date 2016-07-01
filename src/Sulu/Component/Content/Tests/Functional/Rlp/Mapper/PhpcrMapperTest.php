@@ -69,7 +69,7 @@ class PhpcrMapperTest extends SuluTestCase
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->documentInspector = $this->getContainer()->get('sulu_document_manager.document_inspector');
-        $this->session = $this->getContainer()->get('doctrine_phpcr.default_session');
+        $this->session = $this->getContainer()->get('doctrine_phpcr.session');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
 
         $this->prepareTestData();
