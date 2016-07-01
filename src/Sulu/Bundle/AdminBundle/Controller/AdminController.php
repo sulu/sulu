@@ -30,77 +30,77 @@ class AdminController
     /**
      * @var AuthorizationCheckerInterface
      */
-    private $authorizationChecker;
+    protected $authorizationChecker;
 
     /**
      * @var UrlGeneratorInterface
      */
-    private $urlGenerator;
+    protected $urlGenerator;
 
     /**
      * @var TokenStorageInterface
      */
-    private $tokenStorage;
+    protected $tokenStorage;
 
     /**
      * @var AdminPool
      */
-    private $adminPool;
+    protected $adminPool;
 
     /**
      * @var JsConfigPool
      */
-    private $jsConfigPool;
+    protected $jsConfigPool;
 
     /**
      * @var SerializerInterface
      */
-    private $serializer;
+    protected $serializer;
 
     /**
      * @var EngineInterface
      */
-    private $engine;
+    protected $engine;
 
     /**
      * @var string
      */
-    private $environment;
+    protected $environment;
 
     /**
      * @var string
      */
-    private $adminName;
+    protected $adminName;
 
     /**
      * @var array
      */
-    private $locales;
+    protected $locales;
 
     /**
      * @var string
      */
-    private $suluVersion;
+    protected $suluVersion;
 
     /**
      * @var array
      */
-    private $translatedLocales;
+    protected $translatedLocales;
 
     /**
      * @var array
      */
-    private $translations;
+    protected $translations;
 
     /**
      * @var string
      */
-    private $fallbackLocale;
+    protected $fallbackLocale;
 
     /**
      * @var LocalizationManagerInterface
      */
-    private $localizationManager;
+    protected $localizationManager;
 
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker,
