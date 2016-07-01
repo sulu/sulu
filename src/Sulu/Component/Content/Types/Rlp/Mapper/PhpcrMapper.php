@@ -15,7 +15,6 @@ use DateTime;
 use PHPCR\ItemExistsException;
 use PHPCR\NodeInterface;
 use PHPCR\PathNotFoundException;
-use PHPCR\SessionInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
@@ -336,40 +335,12 @@ class PhpcrMapper extends RlpMapper
             );
         }
 
-        $session = $this->sessionManager->getSession();
-        $routeNode = $session->getNode($this->getPath($path, $webspaceKey, $languageCode, $segmentKey));
-        $this->deleteByNode($routeNode, $session, $webspaceKey, $languageCode, $segmentKey);
-    }
+        $routeDocument = $this->documentManager->find(
+            $this->getPath($path, $webspaceKey, $languageCode, $segmentKey),
+            $languageCode
+        );
 
-    /**
-     * {@inheritdoc}
-     */
-    private function deleteByNode(
-        NodeInterface $node,
-        SessionInterface $session,
-        $webspaceKey,
-        $languageCode,
-        $segmentKey = null
-    ) {
-        if ($node->getPropertyValue('sulu:history') !== true) {
-            // search for history nodes
-            $this->iterateRouteNodes(
-                $node,
-                function ($resourceLocator, NodeInterface $historyNode) use (
-                    $session,
-                    $webspaceKey,
-                    $languageCode,
-                    $segmentKey
-                ) {
-                    // delete history nodes
-                    $this->deleteByNode($historyNode, $session, $webspaceKey, $languageCode, $segmentKey);
-                },
-                $webspaceKey,
-                $languageCode,
-                $segmentKey
-            );
-        }
-        $node->remove();
+        $this->documentManager->remove($routeDocument);
     }
 
     /**
@@ -414,7 +385,6 @@ class PhpcrMapper extends RlpMapper
      */
     private function getWebspaceRouteNode($webspaceKey, $languageCode, $segmentKey)
     {
-        // trailing slash
         return $this->sessionManager->getRouteNode($webspaceKey, $languageCode, $segmentKey);
     }
 
