@@ -137,6 +137,16 @@ class StructureProvider implements ProviderInterface
             $indexMeta->setIndexName(new Value($indexName));
         }
 
+        $indexMeta->addFieldMapping(
+            'uuid',
+            [
+                'field' => $this->factory->createMetadataExpression('object.getUuid()'),
+                'type' => 'string',
+                'aggregate' => false,
+                'indexed' => false,
+            ]
+        );
+
         foreach ($structure->getProperties() as $property) {
             if ($property instanceof BlockMetadata) {
                 $propertyMapping = new ComplexMetadata();
@@ -201,7 +211,7 @@ class StructureProvider implements ProviderInterface
                         'type' => 'string',
                         'field' => $this->factory->createMetadataField('title'),
                         'aggregate' => true,
-                        'indexed' => false,
+                        'indexed' => true,
                     ]
                 );
             }
@@ -312,7 +322,7 @@ class StructureProvider implements ProviderInterface
                             'field' => $this->getContentField($property),
                             'type' => 'string',
                             'aggregate' => true,
-                            'indexed' => false,
+                            'indexed' => true,
                         ]
                     );
                     break;
@@ -324,7 +334,7 @@ class StructureProvider implements ProviderInterface
                             'field' => $this->getContentField($property),
                             'type' => 'string',
                             'aggregate' => true,
-                            'indexed' => false,
+                            'indexed' => true,
                         ]
                     );
                     break;

@@ -32,6 +32,11 @@
             <argument>%sulu_security.permissions%</argument>
         </service>
 
+        <service id="sulu_core.search_list_builder_factory"
+                 class="Sulu\Component\Rest\ListBuilder\Search\SearchListBuilderFactory">
+            <argument type="service" id="massive_search.search_manager"/>
+        </service>
+
         <service id="sulu_core.rest.datetime_handler" class="%sulu_core.rest.datetime_handler.class%">
             <tag name="jms_serializer.subscribing_handler" />
         </service>
