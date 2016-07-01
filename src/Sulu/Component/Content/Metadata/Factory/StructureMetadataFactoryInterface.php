@@ -24,7 +24,7 @@ interface StructureMetadataFactoryInterface
      * @throws Exception\StructureTypeNotFoundException If the structure was not found
      * @throws Exception\DocumentTypeNotFoundException  If the document type was not mapped
      *
-     * @return StructureMetadata[]
+     * @return StructureMetadata
      */
     public function getStructureMetadata($type, $structureType);
 
