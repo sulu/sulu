@@ -28,6 +28,7 @@ require.config({
         'aura_extensions/event-extension': 'aura_extensions/event-extension',
         'aura_extensions/sticky-toolbar': 'aura_extensions/sticky-toolbar',
         'aura_extensions/clipboard': 'aura_extensions/clipboard',
+        'aura_extensions/form-tab': 'aura_extensions/form-tab',
 
         '__component__$app@suluadmin': 'components/app/main',
         '__component__$overlay@suluadmin': 'components/overlay/main',
@@ -50,6 +51,7 @@ require.config({
         'aura_extensions/event-extension',
         'aura_extensions/sticky-toolbar',
         'aura_extensions/clipboard',
+        'aura_extensions/form-tab',
         'widget-groups',
 
         '__component__$app@suluadmin',
@@ -117,6 +119,7 @@ require(['husky', 'app-config'], function(Husky, AppConfig) {
         app.use('aura_extensions/event-extension');
         app.use('aura_extensions/sticky-toolbar');
         app.use('aura_extensions/clipboard');
+        app.use('aura_extensions/form-tab');
 
         bundles.forEach(function(bundle) {
             app.use('/bundles/' + bundle + '/js/main.js');
