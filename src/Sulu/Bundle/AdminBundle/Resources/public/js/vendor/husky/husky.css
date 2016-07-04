@@ -10649,45 +10649,61 @@ a.btn-black, a.btn-highlight {
 .husky-label-warning,
 .husky-label-success {
   width: 100%;
-  height: 70px;
   position: relative;
   top: 0;
   left: 0;
   color: #fff;
-  padding-left: 55px;
   font-size: 12px;
   z-index: 200;
 }
-/* line 16, ../scss/modules/label.scss */
+/* line 12, ../scss/modules/label.scss */
+.husky-label-error.big,
+.husky-label-warning.big,
+.husky-label-success.big {
+  height: 70px;
+}
+/* line 15, ../scss/modules/label.scss */
+.husky-label-error.small,
+.husky-label-warning.small,
+.husky-label-success.small {
+  height: 30px;
+}
+/* line 19, ../scss/modules/label.scss */
+.husky-label-error:before,
+.husky-label-warning:before,
+.husky-label-success:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+/* line 26, ../scss/modules/label.scss */
 .husky-label-error strong,
 .husky-label-warning strong,
 .husky-label-success strong {
   font-weight: bold;
   padding-right: 3px;
 }
-/* line 20, ../scss/modules/label.scss */
+/* line 30, ../scss/modules/label.scss */
 .husky-label-error .text,
 .husky-label-warning .text,
 .husky-label-success .text {
-  display: table-cell;
+  display: inline-block;
   vertical-align: middle;
-  height: 70px;
 }
-/* line 25, ../scss/modules/label.scss */
+/* line 34, ../scss/modules/label.scss */
 .husky-label-error .close,
 .husky-label-warning .close,
 .husky-label-success .close {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 70px;
-  line-height: 70px;
+  width: 55px;
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
   cursor: pointer;
-  padding: 0 20px;
   font-size: 15px;
 }
 
-/* line 41, ../scss/modules/label.scss */
+/* line 48, ../scss/modules/label.scss */
 .husky-label-error .counter,
 .husky-label-warning .counter,
 .husky-label-success .counter,
@@ -10699,7 +10715,7 @@ a.btn-black, a.btn-highlight {
   height: 100%;
   line-height: 70px;
 }
-/* line 42, ../scss/modules/label.scss */
+/* line 49, ../scss/modules/label.scss */
 .husky-label-error .counter span,
 .husky-label-warning .counter span,
 .husky-label-success .counter span,
@@ -10716,7 +10732,7 @@ a.btn-black, a.btn-highlight {
   font-weight: bold;
 }
 
-/* line 64, ../scss/modules/label.scss */
+/* line 71, ../scss/modules/label.scss */
 .husky-label-success-icon {
   height: 100px;
   background: #5DC774;
@@ -10724,7 +10740,7 @@ a.btn-black, a.btn-highlight {
   padding: 0 10px;
   position: relative;
 }
-/* line 70, ../scss/modules/label.scss */
+/* line 77, ../scss/modules/label.scss */
 .husky-label-success-icon::before {
   content: "";
   display: inline-block;
@@ -10741,7 +10757,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transition: margin-top 500ms;
   transition: margin-top 500ms;
 }
-/* line 83, ../scss/modules/label.scss */
+/* line 90, ../scss/modules/label.scss */
 .husky-label-success-icon .text {
   color: #fff;
   font-size: 10px;
@@ -10754,7 +10770,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transition: opacity 500ms;
   transition: opacity 500ms;
 }
-/* line 92, ../scss/modules/label.scss */
+/* line 99, ../scss/modules/label.scss */
 .husky-label-success-icon .counter {
   right: auto;
   left: 0;
@@ -10763,30 +10779,30 @@ a.btn-black, a.btn-highlight {
   padding: 5px;
 }
 
-/* line 101, ../scss/modules/label.scss */
+/* line 108, ../scss/modules/label.scss */
 .husky-label-error {
   background: #EA524E;
 }
-/* line 103, ../scss/modules/label.scss */
+/* line 110, ../scss/modules/label.scss */
 .husky-label-error .counter {
   color: #EA524E;
 }
 
-/* line 108, ../scss/modules/label.scss */
+/* line 115, ../scss/modules/label.scss */
 .husky-label-warning {
   background: #F2D212;
   color: #000;
 }
-/* line 111, ../scss/modules/label.scss */
+/* line 118, ../scss/modules/label.scss */
 .husky-label-warning .counter {
   color: #F2D212;
 }
 
-/* line 116, ../scss/modules/label.scss */
+/* line 123, ../scss/modules/label.scss */
 .husky-label-success {
   background: #5DC774;
 }
-/* line 118, ../scss/modules/label.scss */
+/* line 125, ../scss/modules/label.scss */
 .husky-label-success .counter {
   color: #5DC774;
 }
