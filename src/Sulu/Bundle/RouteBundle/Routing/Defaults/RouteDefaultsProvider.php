@@ -37,13 +37,13 @@ class RouteDefaultsProvider implements RouteDefaultsProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getByEntity($entityClass, $id, $object = null)
+    public function getByEntity($entityClass, $id, $locale, $object = null)
     {
         if (!$this->supports($entityClass)) {
             return;
         }
 
-        return $this->getDefaultProvider($entityClass)->getByEntity($entityClass, $id, $object);
+        return $this->getDefaultProvider($entityClass)->getByEntity($entityClass, $id, $locale, $object);
     }
 
     /**

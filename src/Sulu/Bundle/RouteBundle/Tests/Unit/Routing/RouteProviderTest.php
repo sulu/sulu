@@ -99,7 +99,7 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal());
         $this->defaultsProvider->supports('Example')->willReturn(true);
-        $this->defaultsProvider->getByEntity('Example', '1')->willReturn(['test' => 1]);
+        $this->defaultsProvider->getByEntity('Example', '1', 'de')->willReturn(['test' => 1]);
 
         $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
 
@@ -189,7 +189,7 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal());
         $this->defaultsProvider->supports('Example')->willReturn(true);
-        $this->defaultsProvider->getByEntity('Example', '1')->willReturn(['test' => 1]);
+        $this->defaultsProvider->getByEntity('Example', '1', 'de')->willReturn(['test' => 1]);
 
         $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
 
