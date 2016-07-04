@@ -98,7 +98,11 @@ class RouteProvider implements RouteProviderInterface
             uniqid('sulu_route_', true),
             new Route(
                 $request->getPathInfo(),
-                $this->routeDefaultsProvider->getByEntity($route->getEntityClass(), $route->getEntityId())
+                $this->routeDefaultsProvider->getByEntity(
+                    $route->getEntityClass(),
+                    $route->getEntityId(),
+                    $request->getLocale()
+                )
             )
         );
 

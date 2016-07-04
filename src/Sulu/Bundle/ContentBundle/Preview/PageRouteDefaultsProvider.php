@@ -63,7 +63,7 @@ class PageRouteDefaultsProvider implements RouteDefaultsProviderInterface
      * This function wont work for website mode.
      * To enable this the object would have to loaded in case the argument $object is null.
      */
-    public function getByEntity($entityClass, $id, $object = null)
+    public function getByEntity($entityClass, $id, $locale, $object = null)
     {
         $metadata = $this->structureMetadataFactory->getStructureMetadata('page', $object->getStructureType());
 

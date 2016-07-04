@@ -145,7 +145,7 @@ class PreviewRenderer implements PreviewRendererInterface
             ]
         );
 
-        $defaults = $this->routeDefaultsProvider->getByEntity(get_class($object), $id, $object);
+        $defaults = $this->routeDefaultsProvider->getByEntity(get_class($object), $id, $locale, $object);
 
         // Controller arguments
         $defaults['object'] = $object;

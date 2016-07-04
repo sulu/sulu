@@ -66,18 +66,18 @@ class DefaultsProviderTest extends \PHPUnit_Framework_TestCase
             $provider->getByEntity('test', '1', null)->shouldNotBeCalled();
         }
 
-        $this->assertNull($this->defaultsProvider->getByEntity('Test', '1'));
+        $this->assertNull($this->defaultsProvider->getByEntity('Test', '1', 'de'));
     }
 
     public function testGetByEntity()
     {
         $this->providers[0]->supports('Test')->shouldBeCalled()->willReturn(true);
-        $this->providers[0]->getByEntity('Test', '1', null)->shouldBeCalled()->willReturn(['test' => 1]);
+        $this->providers[0]->getByEntity('Test', '1', 'de', null)->shouldBeCalled()->willReturn(['test' => 1]);
         $this->providers[1]->supports('Test')->shouldNotBeCalled()->willReturn(false);
-        $this->providers[1]->getByEntity('test', '1', null)->shouldNotBeCalled();
+        $this->providers[1]->getByEntity('test', '1', 'de', null)->shouldNotBeCalled();
         $this->providers[2]->supports('Test')->shouldNotBeCalled()->willReturn(false);
-        $this->providers[2]->getByEntity('test', '1', null)->shouldNotBeCalled();
+        $this->providers[2]->getByEntity('test', '1', 'de', null)->shouldNotBeCalled();
 
-        $this->assertEquals(['test' => 1], $this->defaultsProvider->getByEntity('Test', '1'));
+        $this->assertEquals(['test' => 1], $this->defaultsProvider->getByEntity('Test', '1', 'de'));
     }
 }

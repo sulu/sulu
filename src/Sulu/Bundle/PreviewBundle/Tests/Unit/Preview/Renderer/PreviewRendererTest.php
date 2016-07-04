@@ -121,7 +121,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
             ->willReturn([$portalInformation->reveal()]);
 
         $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
-        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, $object)
+        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
             ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
 
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
@@ -154,7 +154,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
             ->willReturn([$portalInformation->reveal()]);
 
         $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
-        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, $object)
+        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
             ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
 
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
@@ -186,7 +186,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
             ->willReturn([]);
 
         $this->routeDefaultsProvider->supports(get_class($object->reveal()))->shouldNotBeCalled();
-        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, $object)
+        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
             ->shouldNotBeCalled();
 
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
@@ -220,7 +220,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
             ->willReturn([$portalInformation->reveal()]);
 
         $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(false);
-        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, $object)
+        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
             ->shouldNotBeCalled();
 
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
@@ -254,7 +254,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
             ->willReturn([$portalInformation->reveal()]);
 
         $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
-        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, $object)
+        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
             ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
 
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
@@ -288,7 +288,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
             ->willReturn([$portalInformation->reveal()]);
 
         $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
-        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, $object)
+        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
             ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
 
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
@@ -322,7 +322,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
             ->willReturn([$portalInformation->reveal()]);
 
         $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
-        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, $object)
+        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
             ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
 
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
@@ -358,7 +358,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
             ->willReturn([$portalInformation->reveal()]);
 
         $this->routeDefaultsProvider->supports(get_class($object->reveal()))->willReturn(true);
-        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, $object)
+        $this->routeDefaultsProvider->getByEntity(get_class($object->reveal()), 1, 'de', $object)
             ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
 
         $this->eventDispatcher->dispatch(Events::PRE_RENDER, Argument::type(PreRenderEvent::class))
