@@ -27884,6 +27884,12 @@ define('type/url-input',[
  * with this source code in the file LICENSE.
  */
 
+require.config({
+    paths: {
+        'sprintf': 'bower_components/sprintf/sprintf'
+    }
+});
+
 define('services/husky/util',['sprintf'], function(sprintf) {
 
     'use strict';
@@ -37334,7 +37340,12 @@ define('__component__$toolbar@husky',[],function() {
          * @param $button
          */
         hideItem = function($button) {
+            var $list = $button.parent('.toolbar-dropdown-menu');
             this.sandbox.dom.addClass($button, 'hidden');
+
+            if ($list.length > 0) {
+                updateDropdownArrow.call(this, $list);
+            }
         },
 
         /**
@@ -37342,7 +37353,12 @@ define('__component__$toolbar@husky',[],function() {
          * @param $button
          */
         showItem = function($button) {
+            var $list = $button.parent('.toolbar-dropdown-menu');
             this.sandbox.dom.removeClass($button, 'hidden');
+
+            if ($list.length > 0) {
+                updateDropdownArrow.call(this, $list);
+            }
         },
 
         /**
@@ -37402,8 +37418,11 @@ define('__component__$toolbar@husky',[],function() {
                 visible;
             if (!!this.sandbox.dom.find('.dropdown-toggle', $list).length) {
                 // abort if disabled or dropdown-arrow wasn't clicked and but the onlyOnClickOnArrow option was true
-                if (!item || item.disabled ||
-                    (item.dropdownOptions.onlyOnClickOnArrow === true && !this.sandbox.dom.hasClass(event.target, 'dropdown-toggle'))) {
+                if (!item
+                    || item.disabled
+                    || (item.dropdownOptions.onlyOnClickOnArrow === true && !this.sandbox.dom.hasClass(event.target, 'dropdown-toggle'))
+                    || !countVisibleItemsInDropdown($list.children('.toolbar-dropdown-menu'))
+                ) {
                     return false;
                 }
 
@@ -37469,8 +37488,12 @@ define('__component__$toolbar@husky',[],function() {
                 $parent = (!!this.items[item.parentId]) ? this.items[item.parentId].$el : null;
 
             // stop if loading or the dropdown gets opened
-            if (item.loading || (!!item.dropdownItems && item.dropdownOptions.onlyOnClickOnArrow !== true) ||
-                this.sandbox.dom.hasClass(event.target, 'dropdown-toggle')) {
+            if (item.loading || (
+                    !!item.dropdownItems
+                    && item.dropdownOptions.onlyOnClickOnArrow !== true
+                    && !!countVisibleItemsInDropdown($(event.currentTarget).children('.toolbar-dropdown-menu'))
+                ) || this.sandbox.dom.hasClass(event.target, 'dropdown-toggle')
+            ) {
                 return false;
             }
             hideDropdowns.call(this);
@@ -37651,6 +37674,21 @@ define('__component__$toolbar@husky',[],function() {
                 }
                 this.sandbox.dom.append($list, $item);
             }.bind(this));
+
+            updateDropdownArrow.call(this, $list);
+        },
+
+        countVisibleItemsInDropdown = function($list) {
+            return $list.children('li:not(.hidden)').length;
+        },
+
+        updateDropdownArrow = function($list) {
+            var $dropdownToggle = $list.siblings('.dropdown-toggle');
+            if (!!countVisibleItemsInDropdown($list)) {
+                $dropdownToggle.css('display', '');
+            } else {
+                $dropdownToggle.css('display', 'none');
+            }
         },
 
         /**
@@ -44202,6 +44240,7 @@ define('__component__$overlay@husky',[], function() {
  * @param {Number} [options.showDuration] duration of the show effect in ms
  * @param {Function} [options.closeCallback] callback to execute if the close-button is clicked
  * @param {String} [options.insertMethod] insert method to use for inserting the label (append or prepend)
+ * @param {String} [options.additionalLabelClasses] Additional classes which will be appended to the label
  */
 define('__component__$label@husky',[],function() {
 
@@ -44221,7 +44260,8 @@ define('__component__$label@husky',[],function() {
         vanishDuration: 250,
         showDuration: 250,
         closeCallback: null,
-        insertMethod: 'append'
+        insertMethod: 'append',
+        additionalLabelClasses: 'big'
     },
 
     insertMethods = {
@@ -44268,14 +44308,15 @@ define('__component__$label@husky',[],function() {
      * generates template template
      */
     templates = {
-        basic: ['<div class="' + constants.textClass + '">',
+        basic: [
+                '<div class="' + constants.closeClass + '">',
+                '   <% if (!!hasClose) { %><span class="' + constants.closeIconClass + '"></span><% } %>',
+                '</div>',
+                '<div class="' + constants.textClass + '">',
                 '   <% if (!!title) { %><strong><%= title %></strong><% } %>',
                 '   <span><%= description %></span>',
                 '   <div class="' + constants.counterClass + '"><span><%= counter %></span></div>',
-                '</div>'].join(''),
-        closeButton: ['<div class="' + constants.closeClass + '">',
-                      '<span class="' + constants.closeIconClass + '"></span>',
-                      '</div>'].join('')
+                '</div>'].join('')
     },
 
     eventNamespace = 'husky.label.',
@@ -44429,7 +44470,6 @@ define('__component__$label@husky',[],function() {
         render: function() {
             this.renderElement();
             this.renderContent();
-            this.renderClose();
 
             this.updateCounterVisibility();
             this.insertLabel();
@@ -44440,7 +44480,11 @@ define('__component__$label@husky',[],function() {
          * Renders the main element
          */
         renderElement: function() {
-            this.label.$el = this.sandbox.dom.createElement('<div class="'+ this.options.labelClass +'"/>');
+            this.label.$el = this.sandbox.dom.createElement(
+                '<div class="' + this.options.labelClass
+                    + (!!this.options.additionalLabelClasses ? ' ' + this.options.additionalLabelClasses : '')
+                    + '"/>'
+            );
             this.label.$el.hide();
         },
 
@@ -44454,9 +44498,12 @@ define('__component__$label@husky',[],function() {
                 this.label.$content = this.sandbox.dom.createElement(this.sandbox.util.template(templates.basic, {
                     title: this.options.title,
                     description: this.options.description,
-                    counter: this.options.counter
+                    counter: this.options.counter,
+                    hasClose: this.options.hasClose
                 }));
             }
+
+            this.label.$close = this.label.$content.find('.' + constants.closeIconClass);
 
             //append content to main element
             this.sandbox.dom.append(this.label.$el, this.label.$content);
@@ -44470,18 +44517,6 @@ define('__component__$label@husky',[],function() {
                 this.sandbox.dom.show(this.label.$el.find('.' + constants.counterClass));
             } else {
                 this.sandbox.dom.hide(this.label.$el.find('.' + constants.counterClass));
-            }
-        },
-
-        /**
-         * Renders the close button
-         */
-        renderClose: function() {
-            if (this.options.hasClose === true) {
-                this.label.$close = this.sandbox.dom.createElement(templates.closeButton);
-
-                //append close to main element
-                this.sandbox.dom.append(this.label.$el, this.label.$close);
             }
         },
 
@@ -51351,12 +51386,31 @@ define("datepicker-zh-TW", function(){});
             }
 
             return cultureName;
+        },
+
+        initializeLanguages = function(app) {
+            if (!!app.config.culture) {
+                if (!app.config.culture.messages) {
+                    app.config.culture.messages = {};
+                }
+
+                app.loadLanguage(app.config.culture.name).then(function() {
+                    app.setLanguage(
+                        app.config.culture.name,
+                        app.config.culture.messages,
+                        app.config.culture.defaultMessages
+                    );
+                });
+            }
+
+            app.sandbox.globalize.setCurrency('');
         };
 
-        return  {
+        return {
             name: 'husky-validation',
 
             initialize: function(app) {
+
                 app.sandbox.globalize = {
                     addCultureInfo: function(cultureName, messages) {
                         cultureName = normalizeCultureName(cultureName);
@@ -51525,25 +51579,9 @@ define("datepicker-zh-TW", function(){});
                     }
 
                     return deferred.promise();
-                }
-            },
+                };
 
-            afterAppStart: function(app) {
-                if (!!app.config.culture && !!app.config.culture) {
-                    if (!app.config.culture.messages) {
-                        app.config.culture.messages = {};
-                    }
-
-                    app.loadLanguage(app.config.culture.name).then(function() {
-                        app.setLanguage(
-                            app.config.culture.name,
-                            app.config.culture.messages,
-                            app.config.culture.defaultMessages
-                        );
-                    });
-                }
-
-                app.sandbox.globalize.setCurrency('');
+                initializeLanguages(app);
             }
         };
     });
