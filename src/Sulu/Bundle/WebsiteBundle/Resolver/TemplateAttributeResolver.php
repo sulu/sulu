@@ -127,6 +127,7 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
         if ($request->get('_route')) {
             $portalInformations = $this->webspaceManager->getPortalInformations($this->environment);
             $routeParams = $request->get('_route_params');
+            $routeName = $request->get('_route');
 
             foreach ($portalInformations as $portalInformation) {
                 if (
@@ -138,7 +139,7 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
                     }
 
                     $url = $this->router->generate(
-                        $request->get('_route'),
+                        $routeName,
                         $routeParams,
                         true
                     );

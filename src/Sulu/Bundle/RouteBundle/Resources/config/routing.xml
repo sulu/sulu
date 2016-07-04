@@ -19,6 +19,7 @@
             <argument type="service" id="sulu.repository.route"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument type="service" id="sulu_route.routing.defaults_provider"/>
+            <argument type="service" id="request_stack"/>
 
             <tag name="sulu.context" context="website"/>
         </service>
