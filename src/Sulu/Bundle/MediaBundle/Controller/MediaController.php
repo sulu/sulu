@@ -48,11 +48,6 @@ class MediaController extends AbstractMediaController implements
     /**
      * @var string
      */
-    protected static $entityName = 'SuluMediaBundle:Media';
-
-    /**
-     * @var string
-     */
     protected static $entityKey = 'media';
 
     /**
@@ -265,7 +260,8 @@ class MediaController extends AbstractMediaController implements
             try {
                 $this->getMediaManager()->delete($id, true);
             } catch (MediaNotFoundException $e) {
-                throw new EntityNotFoundException(self::$entityName, $id); // will throw 404 Entity not found
+                $entityName = $this->getParameter('sulu.model.media.class');
+                throw new EntityNotFoundException($entityName, $id); // will throw 404 Entity not found
             } catch (MediaException $e) {
                 throw new RestException($e->getMessage(), $e->getCode()); // will throw 400 Bad Request
             }
