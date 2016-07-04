@@ -21,13 +21,8 @@ class WebsiteKernelFactory implements KernelFactoryInterface
      */
     public function create($environment)
     {
-        $kernel = new \WebsiteKernel($environment, $environment === 'dev');
+        $kernel = new PreviewKernel($environment, $environment === 'dev');
         $kernel->boot();
-        $container = $kernel->getContainer();
-
-        if ($container->has('profiler')) {
-            $container->get('profiler')->disable();
-        }
 
         return $kernel;
     }
