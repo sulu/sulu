@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\ContentBundle\Document\Subscriber;
 
 use PHPCR\NodeInterface;
-use PHPCR\NodeType\NodeTypeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
@@ -198,14 +197,7 @@ class PublishSubscriber implements EventSubscriberInterface
             }
 
             $currentLiveNode = $currentLiveNode->addNode($pathSegment);
-            $currentLiveNode->setMixins(
-                array_map(
-                    function (NodeTypeInterface $nodeType) {
-                        return $nodeType->getName();
-                    },
-                    $currentDefaultNode->getMixinNodeTypes()
-                )
-            );
+            $currentLiveNode->setMixins(['mix:referenceable']);
             $currentLiveNode->setProperty('jcr:uuid', $currentDefaultNode->getIdentifier());
         }
     }

@@ -38,7 +38,6 @@
 
         <service id="sulu_document_manager.metadata_factory" class="Sulu\Component\DocumentManager\Metadata\MetadataFactory" public="false">
             <argument type="service" id="sulu_document_manager.metadata_factory.base" />
-            <argument type="service" id="sulu_document_manager.document_strategy" />
         </service>
 
         <service id="sulu_document_manager.slugifier" class="Symfony\Cmf\Bundle\CoreBundle\Slugifier\CallbackSlugifier" public="false">
@@ -54,10 +53,6 @@
         </service>
 
         <service id="sulu_document_manager.name_resolver" class="Sulu\Component\DocumentManager\NameResolver" public="false" />
-
-        <service id="sulu_document_manager.document_strategy" class="Sulu\Component\DocumentManager\Strategy\MixinStrategy">
-            <argument type="service" id="sulu_document_manager.metadata_factory.base" />
-        </service>
 
         <!-- Utilities -->
         <service id="sulu_document_manager.path_segment_registry" class="Sulu\Component\DocumentManager\PathSegmentRegistry">
@@ -129,6 +124,11 @@
         <service id="sulu_document_manager.subscriber.phpcr.reorder" class="Sulu\Component\DocumentManager\Subscriber\Phpcr\ReorderSubscriber">
             <argument type="service" id="sulu_document_manager.node_helper" />
             <tag name="sulu_document_manager.event_subscriber" />
+        </service>
+
+        <service id="sulu_document_manager.subscriber.phpcr.mixin" class="Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\MixinSubscriber">
+            <argument type="service" id="sulu_document_manager.metadata_factory"/>
+            <tag name="sulu_document_manager.event_subscriber"/>
         </service>
 
         <!-- PHPCR subscribers -->

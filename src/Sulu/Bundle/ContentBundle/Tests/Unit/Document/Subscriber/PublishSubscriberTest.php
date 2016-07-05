@@ -89,7 +89,6 @@ class PublishSubscriberTest extends \PHPUnit_Framework_TestCase
         $defaultRootNode = $this->prophesize(NodeInterface::class);
         $defaultCmfNode = $this->prophesize(NodeInterface::class);
         $defaultSuluNode = $this->prophesize(NodeInterface::class);
-        $defaultSuluNode->getMixinNodeTypes()->willReturn([$mixinNodeType1->reveal(), $mixinNodeType2->reveal()]);
         $defaultSuluNode->getIdentifier()->willReturn('uuid');
         $defaultCmfNode->getNode('sulu')->willReturn($defaultSuluNode->reveal());
         $defaultRootNode->getNode('cmf')->willReturn($defaultCmfNode->reveal());
@@ -104,7 +103,7 @@ class PublishSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->liveSession->getRootNode()->willReturn($liveRootNode->reveal());
 
         $liveSuluNode = $this->prophesize(NodeInterface::class);
-        $liveSuluNode->setMixins(['mixin1', 'mixin2'])->shouldBeCalled();
+        $liveSuluNode->setMixins(['mix:referenceable'])->shouldBeCalled();
         $liveSuluNode->setProperty('jcr:uuid', 'uuid')->shouldBeCalled();
         $liveCmfNode->addNode('sulu')->willReturn($liveSuluNode->reveal());
 
@@ -224,7 +223,6 @@ class PublishSubscriberTest extends \PHPUnit_Framework_TestCase
         $defaultRootNode = $this->prophesize(NodeInterface::class);
         $defaultCmfNode = $this->prophesize(NodeInterface::class);
         $defaultSuluNode = $this->prophesize(NodeInterface::class);
-        $defaultSuluNode->getMixinNodeTypes()->willReturn([$mixinNodeType1->reveal(), $mixinNodeType2->reveal()]);
         $defaultSuluNode->getIdentifier()->willReturn('uuid');
         $defaultCmfNode->getNode('sulu')->willReturn($defaultSuluNode->reveal());
         $defaultRootNode->getNode('cmf')->willReturn($defaultCmfNode->reveal());
@@ -240,7 +238,7 @@ class PublishSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->liveSession->getRootNode()->willReturn($liveRootNode->reveal());
 
         $liveSuluNode = $this->prophesize(NodeInterface::class);
-        $liveSuluNode->setMixins(['mixin1', 'mixin2'])->shouldBeCalled();
+        $liveSuluNode->setMixins(['mix:referenceable'])->shouldBeCalled();
         $liveSuluNode->setProperty('jcr:uuid', 'uuid')->shouldBeCalled();
         $liveCmfNode->addNode('sulu')->willReturn($liveSuluNode->reveal());
 

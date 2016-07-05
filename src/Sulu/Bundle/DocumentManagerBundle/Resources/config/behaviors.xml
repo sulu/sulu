@@ -12,13 +12,11 @@
             <argument type="service" id="sulu_document_manager.slugifier" />
             <argument type="service" id="sulu_document_manager.name_resolver" />
             <argument type="service" id="sulu_document_manager.node_manager" />
-            <argument type="service" id="sulu_document_manager.document_strategy" />
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_document_manager.subscriber.behavior.path.explicit"
                  class="Sulu\Component\DocumentManager\Subscriber\Behavior\Path\ExplicitSubscriber">
-            <argument type="service" id="sulu_document_manager.document_strategy" />
             <argument type="service" id="sulu_document_manager.node_manager" />
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
