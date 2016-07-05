@@ -181,15 +181,16 @@ define([
         /**
          * Set content of preview document.
          *
-         * @param {String} html
+         * @param {String} htmlFile The html file including doctype etc.
          */
-        setContent: function(html) {
-            var document = this.getPreviewDocument();
+        setContent: function(htmlFile) {
+            var previewDoc = this.getPreviewDocument();
 
-            document.open();
-            document.write(html);
+            previewDoc.open();
+            previewDoc.write(htmlFile);
+            previewDoc.close();
 
-            this.avoidNavigate(document);
+            this.avoidNavigate(previewDoc);
         },
 
         /**
