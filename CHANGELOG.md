@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * FEATURE     #2557 [SecurityBundle]      Set user last login by a listener
     * ENHANCEMENT #2540 [AdminBundle]         Removed deprecation notices
     * BUGFIX      #2536 [AdminBundle]         changed icon markup in search component (husky)
+    * BUGFIX      #2538 [ContentBundle]       Display url in single-internal-link instead of path
     * BUGFIX      #2534 [ContactBundle]       Fixed static usage of media repository
     * FEATURE     #2532 [RouteBundle]         Allow route generation for entity routes
     * ENHANCEMENT #2533 [RouteBundle]         Added locale to route-defaults
