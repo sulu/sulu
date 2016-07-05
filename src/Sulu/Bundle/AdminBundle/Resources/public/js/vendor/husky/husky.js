@@ -18314,7 +18314,8 @@ define('type/decimal',[
     return function($el, options) {
         var defaults = {
                 format: 'n', // n, d, c, p
-                regExp: /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/
+                regExp: /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/,
+                nullable: false
             },
 
             typeInterface = {
@@ -18324,7 +18325,7 @@ define('type/decimal',[
                 validate: function() {
                     var val = this.getValue();
 
-                    if (val === '') {
+                    if (val === '' || (this.options.nullable === true && val === null)) {
                         return true;
                     }
 
@@ -18333,6 +18334,10 @@ define('type/decimal',[
 
                 getModelData: function(val) {
                     if(val === '') {
+                        if (this.options.nullable === true) {
+                            return null;
+                        }
+                        
                         return '';
                     }
                     return Globalize.parseFloat(val);
@@ -36152,8 +36157,8 @@ define('__component__$search@husky',[], function() {
 
     var templates = {
             skeleton: [
-                '<button class="fa-search fa-flip-horizontal search-icon" />',
-                '<button class="fa-times-circle remove-icon" />',
+                '<a href="#" class="fa-search fa-flip-horizontal search-icon" />',
+                '<a href="#" class="fa-times-circle remove-icon" />',
                 '<input id="search-input" type="text" class="form-element input-round search-input" placeholder="<%= placeholderText %>"/>'
             ].join('')
         },
@@ -36236,12 +36241,14 @@ define('__component__$search@husky',[], function() {
         // bind dom elements
         bindDOMEvents: function() {
             this.sandbox.dom.on(this.$el, 'click', this.selectInput.bind(this), 'input');
-            this.sandbox.dom.on(this.$el, 'mousedown', this.submitSearch.bind(this), '.search-icon');
-            this.sandbox.dom.on(this.$el, 'mousedown', this.removeSearch.bind(this), '.remove-icon');
             this.sandbox.dom.on(this.$el, 'keyup onchange', this.checkKeyPressed.bind(this), '#search-input');
             this.sandbox.dom.on(this.$find('input'), 'focus', function() {
                 this.sandbox.dom.addClass(this.$el, 'focus');
             }.bind(this));
+
+            this.sandbox.dom.on(this.$el, 'click', this.submitSearch.bind(this), '.search-icon');
+            this.sandbox.dom.on(this.$el, 'click', this.removeSearch.bind(this), '.remove-icon');
+
             this.sandbox.dom.on(this.$find('input'), 'blur', function() {
                 this.sandbox.dom.removeClass(this.$el, 'focus');
             }.bind(this));
@@ -36291,7 +36298,11 @@ define('__component__$search@husky',[], function() {
             }
         },
 
-        submitSearch: function() {
+        submitSearch: function(event) {
+            if (!!event) {
+                this.sandbox.dom.preventDefault(event);
+            }
+
             // get search value
             var searchString = this.sandbox.dom.val(this.sandbox.dom.find('#search-input', this.$el));
 
@@ -36311,7 +36322,9 @@ define('__component__$search@husky',[], function() {
         },
 
         removeSearch: function(event, noEmit) {
-            if (!event) {
+            if (!!event) {
+                this.sandbox.dom.preventDefault(event);
+            } else {
                 event = {
                     target: this.sandbox.dom.find('.remove-icon', this.$el),
                     currentTarget: this.sandbox.dom.find('.remove-icon', this.$el)
