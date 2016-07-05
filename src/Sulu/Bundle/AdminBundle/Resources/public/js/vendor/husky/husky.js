@@ -50949,12 +50949,31 @@ define("datepicker-zh-TW", function(){});
             }
 
             return cultureName;
+        },
+
+        initializeLanguages = function(app) {
+            if (!!app.config.culture) {
+                if (!app.config.culture.messages) {
+                    app.config.culture.messages = {};
+                }
+
+                app.loadLanguage(app.config.culture.name).then(function() {
+                    app.setLanguage(
+                        app.config.culture.name,
+                        app.config.culture.messages,
+                        app.config.culture.defaultMessages
+                    );
+                });
+            }
+
+            app.sandbox.globalize.setCurrency('');
         };
 
-        return  {
+        return {
             name: 'husky-validation',
 
             initialize: function(app) {
+
                 app.sandbox.globalize = {
                     addCultureInfo: function(cultureName, messages) {
                         cultureName = normalizeCultureName(cultureName);
@@ -51123,25 +51142,9 @@ define("datepicker-zh-TW", function(){});
                     }
 
                     return deferred.promise();
-                }
-            },
+                };
 
-            afterAppStart: function(app) {
-                if (!!app.config.culture && !!app.config.culture) {
-                    if (!app.config.culture.messages) {
-                        app.config.culture.messages = {};
-                    }
-
-                    app.loadLanguage(app.config.culture.name).then(function() {
-                        app.setLanguage(
-                            app.config.culture.name,
-                            app.config.culture.messages,
-                            app.config.culture.defaultMessages
-                        );
-                    });
-                }
-
-                app.sandbox.globalize.setCurrency('');
+                initializeLanguages(app);
             }
         };
     });
