@@ -307,11 +307,16 @@ textarea {
   /* 3 */
 }
 
+/* line 286, ../scss/normalize.scss */
+button:focus {
+  outline: 0;
+}
+
 /**
  * Address Firefox 4+ setting `line-height` on `input` using `!important` in
  * the UA stylesheet.
  */
-/* line 291, ../scss/normalize.scss */
+/* line 295, ../scss/normalize.scss */
 button,
 input {
   line-height: normal;
@@ -323,7 +328,7 @@ input {
  * Correct `button` style inheritance in Chrome, Safari 5+, and IE 8+.
  * Correct `select` style inheritance in Firefox 4+ and Opera.
  */
-/* line 303, ../scss/normalize.scss */
+/* line 307, ../scss/normalize.scss */
 button,
 select {
   text-transform: none;
@@ -339,7 +344,7 @@ select {
 /**
  * Deactivate inner-shadow for inputs on mobile devices
  */
-/* line 327, ../scss/normalize.scss */
+/* line 331, ../scss/normalize.scss */
 input[type="text"],
 input[type="email"],
 input[type="search"],
@@ -353,7 +358,7 @@ textarea {
 /**
  * Re-set default cursor for disabled elements.
  */
-/* line 340, ../scss/normalize.scss */
+/* line 344, ../scss/normalize.scss */
 button[disabled],
 html input[disabled] {
   cursor: default;
@@ -363,7 +368,7 @@ html input[disabled] {
  * 1. Address box sizing set to `content-box` in IE 8/9.
  * 2. Remove excess padding in IE 8/9.
  */
-/* line 350, ../scss/normalize.scss */
+/* line 354, ../scss/normalize.scss */
 input[type="checkbox"],
 input[type="radio"] {
   box-sizing: border-box;
@@ -379,7 +384,7 @@ input[type="radio"] {
  * 2. Address `box-sizing` set to `border-box` in Safari 5 and Chrome
  *    (include `-moz` to future-proof).
  */
-/* line 364, ../scss/normalize.scss */
+/* line 368, ../scss/normalize.scss */
 input[type="search"] {
   -webkit-appearance: textfield;
   /* 1 */
@@ -393,7 +398,7 @@ input[type="search"] {
  * Remove inner padding and search cancel button in Safari 5 and Chrome
  * on OS X.
  */
-/* line 376, ../scss/normalize.scss */
+/* line 380, ../scss/normalize.scss */
 input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-decoration {
   -webkit-appearance: none;
@@ -402,7 +407,7 @@ input[type="search"]::-webkit-search-decoration {
 /**
  * Remove inner padding and border in Firefox 4+.
  */
-/* line 385, ../scss/normalize.scss */
+/* line 389, ../scss/normalize.scss */
 button::-moz-focus-inner,
 input::-moz-focus-inner {
   border: 0;
@@ -413,7 +418,7 @@ input::-moz-focus-inner {
  * 1. Remove default vertical scrollbar in IE 8/9.
  * 2. Improve readability and alignment in all browsers.
  */
-/* line 396, ../scss/normalize.scss */
+/* line 400, ../scss/normalize.scss */
 textarea {
   overflow: auto;
   /* 1 */
@@ -427,7 +432,7 @@ textarea {
 /**
  * Remove most spacing between table cells.
  */
-/* line 409, ../scss/normalize.scss */
+/* line 413, ../scss/normalize.scss */
 table {
   border-collapse: collapse;
   border-spacing: 0;
@@ -8947,42 +8952,40 @@ a.btn-black, a.btn-highlight {
 /* line 43, ../scss/modules/search.scss */
 .search-container .search-icon, .search-container .remove-icon {
   background: transparent;
-  border: 0px;
-  line-height: 25px;
+  border: 0;
+  display: inline-block;
+  line-height: 30px;
+  vertical-align: middle;
+  text-decoration: none;
+  cursor: pointer;
+  outline: 0;
 }
-/* line 49, ../scss/modules/search.scss */
+/* line 54, ../scss/modules/search.scss */
 .search-container .search-icon {
   position: absolute;
   padding-left: 8px;
   padding-right: 15px;
   font-size: 16px;
-  vertical-align: middle;
-  text-decoration: none;
-  cursor: pointer;
 }
-/* line 59, ../scss/modules/search.scss */
+/* line 61, ../scss/modules/search.scss */
 .search-container .remove-icon {
   display: none;
   position: absolute;
   right: 10px;
-  vertical-align: middle;
-  margin: auto;
   background-color: #fff;
   padding-left: 3px;
-  text-decoration: none;
-  cursor: pointer;
 }
-/* line 74, ../scss/modules/search.scss */
+/* line 72, ../scss/modules/search.scss */
 .search-container.gray .search-icon {
   font-size: 16px;
   color: rgba(255, 255, 255, 0.5);
 }
-/* line 78, ../scss/modules/search.scss */
+/* line 76, ../scss/modules/search.scss */
 .search-container.gray .remove-icon {
   color: rgba(255, 255, 255, 0.5);
   background-color: transparent;
 }
-/* line 82, ../scss/modules/search.scss */
+/* line 80, ../scss/modules/search.scss */
 .search-container.gray .search-input {
   background-color: rgba(255, 255, 255, 0.5);
 }
@@ -9006,32 +9009,32 @@ a.btn-black, a.btn-highlight {
 .search-container.gray .search-input::-webkit-input-placeholder {
   color: rgba(255, 255, 255, 0.5);
 }
-/* line 89, ../scss/modules/search.scss */
+/* line 87, ../scss/modules/search.scss */
 .search-container.gray.focus .search-input {
   background-color: #fff;
 }
-/* line 92, ../scss/modules/search.scss */
+/* line 90, ../scss/modules/search.scss */
 .search-container.gray.focus .search-icon,
 .search-container.gray.focus .remove-icon {
   color: #3e3e3e;
 }
-/* line 101, ../scss/modules/search.scss */
+/* line 99, ../scss/modules/search.scss */
 .search-container.white .search-input {
   background-color: #fff;
 }
-/* line 103, ../scss/modules/search.scss */
+/* line 101, ../scss/modules/search.scss */
 .search-container.white .search-input:focus {
   background-color: #fff;
 }
-/* line 110, ../scss/modules/search.scss */
+/* line 108, ../scss/modules/search.scss */
 .search-container.small .search-input {
   font-size: 12px;
 }
-/* line 113, ../scss/modules/search.scss */
+/* line 111, ../scss/modules/search.scss */
 .search-container.small .search-icon {
   font-size: 12px;
 }
-/* line 119, ../scss/modules/search.scss */
+/* line 117, ../scss/modules/search.scss */
 .search-container.outline .input-round {
   border: 1px #999 solid;
 }

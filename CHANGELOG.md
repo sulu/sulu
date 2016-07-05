@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2536 [AdminBundle]         changed icon markup in search component (husky)
     * BUGFIX      #2534 [ContactBundle]       Fixed static usage of media repository
     * ENHANCEMENT #2533 [RouteBundle]         Added locale to route-defaults
     * BUGFIX      #2535 [PreviewBundle]       Wrapped website-kernel and append preview-specific configs
