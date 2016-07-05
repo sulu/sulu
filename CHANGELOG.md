@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2540 [AdminBundle]         Removed deprecation notices
     * BUGFIX      #2536 [AdminBundle]         changed icon markup in search component (husky)
     * BUGFIX      #2534 [ContactBundle]       Fixed static usage of media repository
     * ENHANCEMENT #2533 [RouteBundle]         Added locale to route-defaults

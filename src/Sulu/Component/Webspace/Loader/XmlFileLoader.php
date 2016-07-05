@@ -615,7 +615,7 @@ class XmlFileLoader extends FileLoader
         $locales = array_unique(
             array_map(
                 function (Localization $localization) {
-                    return $localization->getLocalization();
+                    return $localization->getLocale(Localization::UNDERSCORE);
                 },
                 $this->webspace->getAllLocalizations()
             )
@@ -627,7 +627,7 @@ class XmlFileLoader extends FileLoader
                 $portalLocales,
                 array_map(
                     function (Localization $localization) {
-                        return $localization->getLocalization();
+                        return $localization->getLocale(Localization::UNDERSCORE);
                     },
                     $portal->getLocalizations()
                 )
