@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.2.6 (2016-07-05)
     * BUGFIX      #2530 [AdminBundle]         Included husky build which fixes the login translation issue
 
 * 1.2.5 (2016-06-30)
