@@ -17,6 +17,7 @@ use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProviderInterface;
 use Sulu\Bundle\RouteBundle\Routing\RouteProvider;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class RouteProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -40,18 +41,25 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
      */
     private $defaultsProvider;
 
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
     protected function setUp()
     {
         $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->defaultsProvider = $this->prophesize(RouteDefaultsProviderInterface::class);
+        $this->requestStack = $this->prophesize(RequestStack::class);
 
         $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
 
         $this->routeProvider = new RouteProvider(
             $this->routeRepository->reveal(),
             $this->requestAnalyzer->reveal(),
-            $this->defaultsProvider->reveal()
+            $this->defaultsProvider->reveal(),
+            $this->requestStack->reveal()
         );
     }
 
@@ -95,6 +103,8 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $routeEntity = $this->prophesize(RouteInterface::class);
         $routeEntity->getEntityClass()->willReturn('Example');
         $routeEntity->getEntityId()->willReturn('1');
+        $routeEntity->getId()->willReturn(1);
+        $routeEntity->getPath()->willReturn('/test');
         $routeEntity->isHistory()->willReturn(false);
 
         $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal());
@@ -124,6 +134,8 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $routeEntity = $this->prophesize(RouteInterface::class);
         $routeEntity->getEntityClass()->willReturn('Example');
         $routeEntity->getEntityId()->willReturn('1');
+        $routeEntity->getId()->willReturn(1);
+        $routeEntity->getPath()->willReturn('/test');
         $routeEntity->getTarget()->willReturn($targetEntity->reveal());
         $routeEntity->isHistory()->willReturn(true);
 
@@ -156,6 +168,8 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $routeEntity = $this->prophesize(RouteInterface::class);
         $routeEntity->getEntityClass()->willReturn('Example');
         $routeEntity->getEntityId()->willReturn('1');
+        $routeEntity->getId()->willReturn(1);
+        $routeEntity->getPath()->willReturn('/test');
         $routeEntity->getTarget()->willReturn($targetEntity->reveal());
         $routeEntity->isHistory()->willReturn(true);
 
@@ -185,6 +199,8 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $routeEntity = $this->prophesize(RouteInterface::class);
         $routeEntity->getEntityClass()->willReturn('Example');
         $routeEntity->getEntityId()->willReturn('1');
+        $routeEntity->getId()->willReturn(1);
+        $routeEntity->getPath()->willReturn('/test');
         $routeEntity->isHistory()->willReturn(false);
 
         $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal());

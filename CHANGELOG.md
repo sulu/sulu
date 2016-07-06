@@ -2,8 +2,10 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2540 [AdminBundle]         Removed deprecation notices
     * BUGFIX      #2536 [AdminBundle]         changed icon markup in search component (husky)
     * BUGFIX      #2534 [ContactBundle]       Fixed static usage of media repository
+    * FEATURE     #2532 [RouteBundle]         Allow route generation for entity routes
     * ENHANCEMENT #2533 [RouteBundle]         Added locale to route-defaults
     * BUGFIX      #2535 [PreviewBundle]       Wrapped website-kernel and append preview-specific configs
     * BUGFIX      #2530 [AdminBundle]         Included husky build which fixes the login translation issue
