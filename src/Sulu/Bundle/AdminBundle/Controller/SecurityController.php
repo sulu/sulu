@@ -13,7 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * Controller to render the login template or the reset-password template
@@ -32,8 +32,8 @@ class SecurityController extends Controller
     {
         $session = $request->getSession();
 
-        if (!$request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
-            $session->remove(SecurityContext::AUTHENTICATION_ERROR);
+        if (!$request->attributes->has(Security::AUTHENTICATION_ERROR)) {
+            $session->remove(Security::AUTHENTICATION_ERROR);
         }
 
         return $this->render($this->getTemplate(), $this->getParameters());
