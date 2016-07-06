@@ -413,6 +413,13 @@ define([
                             type: 'title'
                         },
                         {
+                            name: 'description',
+                            translation: 'public.description',
+                            disabled: false,
+                            default: false,
+                            sortable: true
+                        },
+                        {
                             name: 'size',
                             translation: 'media.media.size',
                             disabled: false,
