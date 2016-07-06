@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #2550 [MediaBundle]         made documents list show description on add
+
 * 1.2.6 (2016-07-05)
     * BUGFIX      #2530 [AdminBundle]         Included husky build which fixes the login translation issue
 
