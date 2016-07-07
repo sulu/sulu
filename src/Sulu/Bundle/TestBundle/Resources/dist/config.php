@@ -9,7 +9,13 @@
  * with this source code in the file LICENSE.
  */
 
+$filesystem = new \Symfony\Component\Filesystem\Filesystem();
+
 $context = $container->getParameter('sulu.context');
 
-$loader->import('parameters.yml');
+if ($filesystem->exists('parameters.yml')) {
+    $loader->import('parameters.yml');
+} else {
+    $loader->import('parameters.yml.dist');
+}
 $loader->import('context_' . $context . '.yml');
