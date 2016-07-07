@@ -12,10 +12,9 @@
 $filesystem = new \Symfony\Component\Filesystem\Filesystem();
 
 $context = $container->getParameter('sulu.context');
-
-if ($filesystem->exists('parameters.yml')) {
-    $loader->import('parameters.yml');
-} else {
-    $loader->import('parameters.yml.dist');
+$path = __DIR__ . DIRECTORY_SEPARATOR;
+if (!$filesystem->exists($path . 'parameters.yml')) {
+    $filesystem->copy($path . 'parameters.yml.dist', $path . 'parameters.yml');
 }
+$loader->import('parameters.yml');
 $loader->import('context_' . $context . '.yml');
