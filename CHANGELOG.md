@@ -35,6 +35,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2621 [ContentBundle]       Added migration for publishing
     * ENHANCEMENT #2623 [DocumentManager]     Add publishing toolbar buttons to extensions in document manager bundle
     * ENHANCEMENT #2614 [ContentBundle]       Removed unused code and tests
+    * ENHANCEMENT #2555 [ContactBundle]       Allow country to be nullable in address entity
     * BUGFIX      #2603 [ContentBundle]       Fixed resource locator generation for pages with ghost-parent
     * BUGFIX      #2613 [ContactBundle]       Fixed categories save bug in contacts
     * BUGFIX      #2539 [SecurityBundle]      Made TokenStorage dependency for SecuritySubscriber optional
