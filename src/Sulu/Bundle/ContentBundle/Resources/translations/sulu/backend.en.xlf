@@ -499,6 +499,10 @@
                 <source>labels.success.content-save-desc</source>
                 <target>Page sucessfully saved</target>
             </trans-unit>
+            <trans-unit id="497e046d51783a9899fa59d31dcfc3e8" resname="labels.success.copy-locale-desc">
+                <source>labels.success.copy-locale-desc</source>
+                <target>Page successfully copied</target>
+            </trans-unit>
             <trans-unit id="e4b14069a8a085ede2092hf51234dh40" resname="smart-content.categories.label">
                 <source>smart-content.categories.label</source>
                 <target>Filter by categories</target>

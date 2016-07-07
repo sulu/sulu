@@ -93,7 +93,6 @@ define([
 
             if (this.options.display !== 'column') {
                 this.loadData().then(function() {
-
                     if (!!this.options.preview) {
                         this.preview = Preview.initialize(this.data._permissions, this.options.webspace);
                     }
@@ -221,7 +220,10 @@ define([
                                         // new page will be created
                                         this.load({id: data.id}, this.options.webspace, item.id, true);
                                     }
-                                }.bind(this));
+                                }.bind(this)).fail(function() {
+                                    // the open-ghost page got canceled, so reset the language changer
+                                    this.sandbox.emit('sulu.header.change-language', this.options.language);
+                            }.bind(this));
                         } else {
                             this.load(data, this.options.webspace, item.id, true);
                         }
@@ -703,7 +705,7 @@ define([
                 'sulu.router.navigate',
                 'content/contents/' + (!webspace ? this.options.webspace : webspace) +
                 '/' + (!language ? this.options.language : language) + '/edit:' + item.id + '/' + action,
-                undefined, undefined, forceReload
+                true, forceReload
             );
         },
 
@@ -915,8 +917,10 @@ define([
                         options: {
                             title: this.sandbox.translate('toolbar.copy-locale'),
                             callback: function() {
-                                CopyLocale.startCopyLocalesOverlay.call(this).then(function() {
-                                    this.load(this.data, this.options.webspace, this.options.language, true);
+                                CopyLocale.startCopyLocalesOverlay.call(this).then(function(newLocales) {
+                                    this.content.attributes.concreteLanguages = _.uniq(this.data.concreteLanguages.concat(newLocales));
+                                    this.data = this.content.toJSON();
+                                    this.sandbox.emit('sulu.labels.success.show', 'labels.success.copy-locale-desc', 'labels.success');
                                 }.bind(this));
                             }.bind(this)
                         }

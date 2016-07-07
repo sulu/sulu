@@ -141,6 +141,16 @@ define([], function() {
         },
 
         /**
+         * changes the html value of the language changer
+         *
+         * @event sulu.header.[INSTANCE_NAME].change-language
+         * @param {string} the language to change to
+         */
+        CHANGE_LANGUAGE = function() {
+            return createEventName.call(this, 'change-language');
+        },
+
+        /**
          * emited if switched to a tab with no specified component
          *
          * @event sulu.header.[INSTANCE_NAME].tab-changed
@@ -328,7 +338,7 @@ define([], function() {
         },
 
         /**
-         * Destorys the component
+         * Destroys the component
          */
         destroy: function() {
             this.removeTitle();
@@ -376,7 +386,7 @@ define([], function() {
 
         /**
          * Sets a new title
-         * @param title {String} the new title to set
+         * @param {String} title the new title to set
          */
         setTitle: function(title) {
             this.options.title = title;
@@ -548,6 +558,7 @@ define([], function() {
             this.sandbox.on(SET_TOOLBAR.call(this), this.setToolbar.bind(this));
             this.sandbox.on(SET_TITLE.call(this), this.setTitle.bind(this));
             this.sandbox.on(SAVED.call(this), this.saved.bind(this));
+            this.sandbox.on(CHANGE_LANGUAGE.call(this), this.setLanguageChanger.bind(this));
             this.bindAbstractToolbarEvents();
             this.bindAbstractTabsEvents();
         },
@@ -641,8 +652,16 @@ define([], function() {
          * @param item
          */
         languageChanged: function(item) {
-            this.sandbox.dom.html(this.$find(constants.languageChangerTitleSelector), item.title);
+            this.setLanguageChanger(item.title);
             this.sandbox.emit(LANGUAGE_CHANGED.call(this), item);
+        },
+
+        /**
+         * Changes the html of the language changer to a given string
+         * @param {String} newLanguage the string to show in the language changer
+         */
+        setLanguageChanger: function(newLanguage) {
+            this.sandbox.dom.html(this.$find(constants.languageChangerTitleSelector), newLanguage);
         },
 
         /**
