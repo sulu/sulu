@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #2557 [SecurityBundle]      Set user last login by a listener
     * ENHANCEMENT #2540 [AdminBundle]         Removed deprecation notices
     * BUGFIX      #2536 [AdminBundle]         changed icon markup in search component (husky)
     * BUGFIX      #2534 [ContactBundle]       Fixed static usage of media repository
