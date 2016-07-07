@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * FEATURE     #2557 [SecurityBundle]      Set user last login by a listener
+    * BUGFIX      #2558 [CollaborationBundle] made own username show up as collaborator in warning
     * ENHANCEMENT #2540 [AdminBundle]         Removed deprecation notices
     * BUGFIX      #2536 [AdminBundle]         changed icon markup in search component (husky)
     * BUGFIX      #2534 [ContactBundle]       Fixed static usage of media repository
