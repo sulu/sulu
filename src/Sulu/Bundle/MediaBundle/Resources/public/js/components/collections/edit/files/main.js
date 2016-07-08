@@ -117,7 +117,9 @@ define([
             this.sandbox.on('sulu.medias.media.saved', function(id, media) {
                 // change medias if media is saved without locale or locale is current media-locale
                 if (!media.locale || media.locale === UserSettingsManager.getMediaLocale()) {
-                    this.sandbox.emit('husky.datagrid.records.change', media);
+                    this.sandbox.emit('husky.datagrid.records.change', his.sandbox.util.extend(true, {}, media, {
+                        type: (!!media.type.name) ? media.type.name : media.type
+                    }));
                 }
             }.bind(this));
         },
