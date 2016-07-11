@@ -81,6 +81,17 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2323 [WebsiteBundle]       Added TWIG-Extension to check if parent nav-item is active
     * ENHANCEMENT #2377 [CoreBundle]          Made --router and --env optional when running the console commands server:run, server:start, server:stop and server:status
 
+* 1.2.7 (2016-07-11)
+    * HOTFIX      #2550 [MediaBundle]         made documents list show description on add
+    * HOTFIX      #2547 [AdminBundle]         Included husky build which fixes the ie11 rendering issue of dropdowns
+    * HOTFIX      #2547 [AdminBundle]         Included husky build which fixes globalizing bug
+
+* 1.2.6 (2016-07-05)
+    * BUGFIX      #2530 [AdminBundle]         Included husky build which fixes the login translation issue
+
+* 1.2.5 (2016-06-30)
+    * HOTFIX      #---- [AdminBundle]         Fixed loading of user localization
+
 * 1.2.4 (2016-06-28)
     * HOTFIX      #2498 [TestBundle]          Fixed TestUserProvider to create accounts with repository to support
                                               sulu inheritance
