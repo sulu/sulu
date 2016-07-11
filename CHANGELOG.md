@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 1.2.7 (2016-07-11)
     * HOTFIX      #2550 [MediaBundle]         made documents list show description on add
     * HOTFIX      #2547 [AdminBundle]         Included husky build which fixes the ie11 rendering issue of dropdowns
     * HOTFIX      #2547 [AdminBundle]         Included husky build which fixes globalizing bug
