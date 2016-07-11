@@ -6,6 +6,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2544 [PreviewBundle]       Bugfix for preview in firefox
     * BUGFIX      #2551 [SecurityBundle]      added search fields and search instancename for roles list search
     * BUGFIX      #2556 [ContentBundle]       removed the change content-change event from the texteditor's focusout
+    * BUGFIX      #2558 [CollaborationBundle] made own username show up as collaborator in warning
     * ENHANCEMENT #2540 [AdminBundle]         Removed deprecation notices
     * BUGFIX      #2536 [AdminBundle]         changed icon markup in search component (husky)
     * BUGFIX      #2538 [ContentBundle]       Display url in single-internal-link instead of path
