@@ -12,6 +12,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2530 [AdminBundle]         Included husky build which fixes the login translation issue
     * FEATURE     #2528 [AdminBundle]         Added form-abstraction for simple data-mapper forms
     * ENHANCEMENT #2526 [SearchBundle]        Introduced contexts for indexes to restrict selections
+    * BUGFIX      #2104 [ContentBundle]       Show Webspace node on 'copy' and 'move' overlays  
     * ENHANCEMENT #2520 [ContentBundle]       Delete routes using the DocumentManager
     * BUGFIX      #2523 [SecurityBundle]      Fixed error with non-visible permission types in matrix
     * ENHANCEMENT #2522 [All]                 Use correct default phpcr session
