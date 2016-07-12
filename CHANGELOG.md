@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGIFX      #2579 [ContentBundle]       Removed smart-content component destroy callback conflict
     * FEATURE     #2557 [SecurityBundle]      Set user last login by a listener
     * ENHANCEMENT #2544 [PreviewBundle]       Bugfix for preview in firefox
     * BUGFIX      #2551 [SecurityBundle]      added search fields and search instancename for roles list search
