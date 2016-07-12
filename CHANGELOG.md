@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * 1.2.7 (2016-07-12)
+    * HOTFIX      #2585 [CoreBundle]          add fixtures without purging database
     * HOTFIX      #2550 [MediaBundle]         made documents list show description on add
     * HOTFIX      #2547 [AdminBundle]         Included husky build which fixes the ie11 rendering issue of dropdowns
     * HOTFIX      #2547 [AdminBundle]         Included husky build which fixes globalizing bug
