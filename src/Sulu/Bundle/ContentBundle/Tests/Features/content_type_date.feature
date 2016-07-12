@@ -21,4 +21,5 @@ Feature: Date content type
         And I should see the date picker
         And I click on the element ".day"
         And I click the save icon
+        And I click toolbar item "savePublish"
         Then I expect a success notification to appear

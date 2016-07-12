@@ -139,4 +139,18 @@ EOT;
     {
         $this->getSession()->executeScript("CKEDITOR.instances['" . $ckEditorId . "'].insertHtml('" . $text . "');");
     }
+
+    /**
+     * @Then I expect the page state to be :state
+     */
+    public function iExpectThePageStateToBe($state)
+    {
+        if ($state === 'Published') {
+            $this->assertSelector('[data-id=\'statePublished\']:visible');
+            $this->assertSelectorIsHidden('[data-id=\'stateTest\']');
+        } else {
+            $this->assertSelector('[data-id=\'stateTest\']:visible');
+            $this->assertSelectorIsHidden('[data-id=\'statePublished\']');
+        }
+    }
 }

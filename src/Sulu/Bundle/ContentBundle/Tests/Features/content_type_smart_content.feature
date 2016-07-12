@@ -45,5 +45,6 @@ Feature: Smart content content type
         And I should see "Article 2"
         And I should see "Article 3"
         And I click the save icon
+        And I click toolbar item "savePublish"
         Then I expect a success notification to appear
 

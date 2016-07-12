@@ -18,6 +18,7 @@ Feature: Time content type
         Given I am editing a page of type "time_page"
         When I fill in "husky-input-time" with "<time>"
         And I click the save icon
+        And I click toolbar item "savePublish"
         Then I expect a success notification to appear
         Examples:
             | time |
@@ -32,6 +33,7 @@ Feature: Time content type
         Given I am editing a page of type "time_page"
         When I fill in "husky-input-time" with "<time>"
         And I click the save icon
+        And I click toolbar item "savePublish"
         Then there should be 1 form errors
         Examples:
             | time |
