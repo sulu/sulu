@@ -70,8 +70,12 @@ class ContentContext extends BaseStructureContext implements SnippetAcceptingCon
 </template>
 EOT;
 
-        $template = sprintf($template,
-            $arg1, $arg1, $arg1, $string->getRaw()
+        $template = sprintf(
+            $template,
+            $arg1,
+            $arg1,
+            $arg1,
+            $string->getRaw()
         );
 
         $this->createStructureTemplate('page', $arg1, $template);
@@ -102,8 +106,10 @@ EOT;
         $this->getDocumentManager()->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
         $this->getDocumentManager()->flush();
 
-        $this->visitPath('/admin/#content/contents/sulu_io/de/edit:' . $document
-                ->getUuid() . '/content');
+        $this->visitPath(
+            '/admin/#content/contents/sulu_io/de/edit:'
+            . $document->getUuid() . '/content'
+        );
         $this->getSession()->wait(5000, '$("#content-form").length');
         sleep(1); // wait one more second to avoid flaky tests
     }
