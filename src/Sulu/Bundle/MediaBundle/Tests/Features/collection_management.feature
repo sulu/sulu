@@ -54,6 +54,7 @@ Feature: Collection management
         And I click the column navigation item "Collections"
         And I wait for the column navigation column 2
         And I double click the column navigation item "Foobar"
+        And I expect the "husky.datagrid.initialized" event
         And I am on "/admin/"
         And I wait a second
         And I am editing the media collection "Foobar"

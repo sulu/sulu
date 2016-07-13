@@ -8,5 +8,10 @@ Feature: Change the language of the backoffice
 
     Scenario: Change the language
         Given I am on "/admin"
+        And I expect to see "en"
+        And I expect to see "Contacts"
+        And I expect to see "Settings"
         And I select "de" from the husky "locale-dropdown"
-        # It doesn't work: https://github.com/sulu-cmf/sulu/issues/574
+        Then I expect to see "de"
+        And I expect to see "Kontakte"
+        And I expect to see "Einstellungen"
