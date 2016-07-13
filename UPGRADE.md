@@ -34,6 +34,11 @@ app/console massive:search:reindex
 app/webconsole massive:search:reindex
 ```
 
+Also the `persist` call of the `DocumentManager` changed it behavior.
+After persisting a document it will not be available on the website
+immediately. Instead you also need to call `publish` with the same
+document and locale.
+
 ### PHPCR Sessions
 
 The sessions for PHPCR were configured at `sulu_core.phpcr` in the
