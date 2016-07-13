@@ -117,8 +117,7 @@ define([], function() {
                 this.showLabel('SUCCESS_ICON', description, title, id, true, autoVanish);
             }.bind(this));
 
-            this.sandbox.on(SHOW_LABEL.call(this), function(configs, id) {
-                configs.el = this.createLabelContainer(id);
+            this.sandbox.on(SHOW_LABEL.call(this), function(configs) {
                 this.startLabelComponent(configs);
             }.bind(this));
 

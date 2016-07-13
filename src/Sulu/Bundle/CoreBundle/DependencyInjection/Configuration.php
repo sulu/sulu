@@ -32,7 +32,6 @@ class Configuration implements ConfigurationInterface
         $rootNode->addDefaultsIfNotSet();
 
         $children = $rootNode->children();
-        $this->getPhpcrConfiguration($children);
         $this->getContentConfiguration($children);
         $this->getWebspaceConfiguration($children);
         $this->getFieldsConfiguration($children);
@@ -82,31 +81,6 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
         ->end();
-    }
-
-    /**
-     * @param NodeBuilder $rootNode
-     */
-    private function getPhpcrConfiguration(NodeBuilder $rootNode)
-    {
-        $rootNode->arrayNode('phpcr')
-            ->addDefaultsIfNotSet()
-            ->children()
-                ->scalarNode('workspace')
-                    ->isRequired()
-                    ->cannotBeEmpty()
-                ->end()
-                ->scalarNode('username')
-                    ->defaultNull()
-                ->end()
-                ->scalarNode('password')
-                    ->defaultNull()
-                ->end()
-                ->arrayNode('backend')
-                    ->useAttributeAsKey('name')
-                    ->prototype('variable')
-                ->end()
-            ->end();
     }
 
     /**

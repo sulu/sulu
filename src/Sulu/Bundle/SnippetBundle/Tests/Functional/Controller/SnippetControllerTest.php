@@ -308,32 +308,6 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $result['nodeState']);
     }
 
-    /**
-     * @dataProvider providePost
-     */
-    public function testPostTest($params, $data)
-    {
-        $params = array_merge([
-            'language' => 'de',
-            'state' => StructureInterface::STATE_TEST,
-        ], $params);
-
-        $data = [
-            'template' => 'car',
-            'title' => 'My New Car',
-        ];
-
-        $query = http_build_query($params);
-        $this->client->request('POST', '/snippets?' . $query, $data);
-        $response = $this->client->getResponse();
-
-        $this->assertHttpStatusCode(200, $response);
-        $result = json_decode($response->getContent(), true);
-        $this->assertEquals($data['title'], $result['title']);
-        $this->assertEquals($params['language'], reset($result['concreteLanguages']));
-        $this->assertEquals(StructureInterface::STATE_TEST, $result['nodeState']);
-    }
-
     public function testPut()
     {
         $data = [
@@ -390,23 +364,6 @@ class SnippetControllerTest extends SuluTestCase
 
         $this->assertContains($params['language'], $result['concreteLanguages']);
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $result['nodeState']);
-    }
-
-    public function testPutTest()
-    {
-        $data = [];
-        $params = [
-            'language' => 'de',
-            'state' => StructureInterface::STATE_TEST,
-        ];
-
-        $query = http_build_query($params);
-        $this->client->request('PUT', sprintf('/snippets/%s?%s', $this->hotel1->getUuid(), $query), $data);
-        $response = $this->client->getResponse();
-
-        $this->assertHttpStatusCode(200, $response);
-        $result = json_decode($response->getContent(), true);
-        $this->assertEquals(StructureInterface::STATE_TEST, $result['nodeState']);
     }
 
     public function testPutWithValidHash()

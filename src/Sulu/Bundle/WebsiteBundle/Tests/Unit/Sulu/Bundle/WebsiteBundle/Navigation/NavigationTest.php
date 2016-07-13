@@ -110,6 +110,7 @@ class NavigationTest extends SuluTestCase
         $documents['news']->setNavigationContexts(['footer']);
         $documents['news']->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($documents['news'], 'en');
+        $this->documentManager->publish($documents['news'], 'en');
         $this->documentManager->flush();
 
         $documents['news/news-1'] = $this->createPageDocument();
@@ -121,6 +122,7 @@ class NavigationTest extends SuluTestCase
         $documents['news/news-1']->setNavigationContexts(['main', 'footer']);
         $documents['news/news-1']->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($documents['news/news-1'], 'en');
+        $this->documentManager->publish($documents['news/news-1'], 'en');
         $this->documentManager->flush();
 
         $documents['news/news-2'] = $this->createPageDocument();
@@ -132,6 +134,7 @@ class NavigationTest extends SuluTestCase
         $documents['news/news-2']->setNavigationContexts(['main']);
         $documents['news/news-2']->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($documents['news/news-2'], 'en');
+        $this->documentManager->publish($documents['news/news-2'], 'en');
         $this->documentManager->flush();
 
         $documents['products'] = $this->createPageDocument();
@@ -143,6 +146,7 @@ class NavigationTest extends SuluTestCase
         $documents['products']->setNavigationContexts(['main']);
         $documents['products']->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($documents['products'], 'en');
+        $this->documentManager->publish($documents['products'], 'en');
         $this->documentManager->flush();
 
         $documents['products/product-1'] = $this->createPageDocument();
@@ -154,6 +158,7 @@ class NavigationTest extends SuluTestCase
         $documents['products/product-1']->setNavigationContexts(['main', 'footer']);
         $documents['products/product-1']->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($documents['products/product-1'], 'en');
+        $this->documentManager->publish($documents['products/product-1'], 'en');
         $this->documentManager->flush();
 
         $documents['products/product-2'] = $this->createPageDocument();
@@ -165,6 +170,7 @@ class NavigationTest extends SuluTestCase
         $documents['products/product-2']->setNavigationContexts(['main']);
         $documents['products/product-2']->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($documents['products/product-2'], 'en');
+        $this->documentManager->publish($documents['products/product-2'], 'en');
         $this->documentManager->flush();
 
         return $documents;
@@ -267,6 +273,7 @@ class NavigationTest extends SuluTestCase
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $document->setParent($this->data['news/news-1']);
         $this->documentManager->persist($document, 'en');
+        $this->documentManager->publish($document, 'en');
         $this->documentManager->flush();
 
         $result = $this->navigation->getNavigation(
@@ -396,6 +403,7 @@ class NavigationTest extends SuluTestCase
 
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($document, 'en');
+        $this->documentManager->publish($document, 'en');
         $this->documentManager->flush();
 
         $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'sulu_io', 'en', 1);
@@ -413,6 +421,7 @@ class NavigationTest extends SuluTestCase
         $document->setResourceSegment('/products/products-3');
         $document->setNavigationContexts(['main']);
         $this->documentManager->persist($document, 'en');
+        $this->documentManager->publish($document, 'en');
         $this->documentManager->flush();
 
         $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'sulu_io', 'en', 1);

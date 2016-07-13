@@ -18,6 +18,7 @@ define(function() {
         tabInitialize: function() {
             this.sandbox.emit('sulu.app.ui.reset', {navigation: 'small', content: 'auto'});
             this.sandbox.emit('husky.toolbar.header.item.disable', 'template', false);
+            this.sandbox.emit('sulu.content.contents.show-save-items', 'content');
         },
 
         getUrl: function() {

@@ -74,6 +74,7 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
                 'locale' => 'de',
                 'data' => '{}',
                 'parent' => null,
+                'published' => true,
             ], $structureData);
 
             $parentUuid = null;
@@ -112,6 +113,11 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
             }
 
             $this->getDocumentManager()->persist($document, 'de', $persistOptions);
+
+            if ($structureData['published']) {
+                $this->getDocumentManager()->publish($document, 'de');
+            }
+
             $this->getDocumentManager()->flush();
         }
     }

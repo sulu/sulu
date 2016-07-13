@@ -498,6 +498,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
                 'clear_missing_content' => false,
             ]
         );
+        $this->documentManager->publish($document, $locale);
         $this->documentManager->flush();
 
         return $form;

@@ -58,6 +58,10 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
 
             // navigate away
             this.sandbox.on('sulu.content.navigate', this.navigate, this);
+
+            this.sandbox.on('sulu.header.saved', function(data) {
+                this.showState(!!data.published);
+            }, this);
         },
 
         initializeResourceLocator: function() {
@@ -92,11 +96,15 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
                 this.add = false;
             }
 
+            this.showState(!!this.data.published);
+
             if (!!this.data.template) {
                 this.checkRenderTemplate(this.data.template);
             } else {
                 this.checkRenderTemplate();
             }
+
+            this.sandbox.emit('sulu.content.contents.show-save-items', 'content');
         },
 
         checkRenderTemplate: function(item) {
@@ -388,6 +396,16 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
             }
 
             return url;
+        },
+
+        showState: function(published) {
+            if (!!published) {
+                this.sandbox.emit('sulu.header.toolbar.item.hide', 'stateTest');
+                this.sandbox.emit('sulu.header.toolbar.item.show', 'statePublished');
+            } else {
+                this.sandbox.emit('sulu.header.toolbar.item.hide', 'statePublished');
+                this.sandbox.emit('sulu.header.toolbar.item.show', 'stateTest');
+            }
         },
 
         setHeaderBar: function(saved) {

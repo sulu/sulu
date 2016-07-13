@@ -36,4 +36,5 @@ Feature: Single Internal links content type
         And I double click the column navigation item "Articles"
         And I expect the "sulu.content.changed" event
         And I click the save icon
+        And I click toolbar item "savePublish"
         Then I expect a success notification to appear

@@ -42,8 +42,8 @@ define(['underscore', 'config', 'text!./form.html'], function(_, Config, form) {
             }
         },
         constants = {
-            targetRootUrl: '/admin/api/nodes?webspace={webspace}&language={locale}&fields=title,order&webspace-nodes=single',
-            targetSelectedUrl: '/admin/api/nodes/{datasource}?tree=true&webspace={webspace}&language={locale}&fields=title,order&webspace-nodes=single'
+            targetRootUrl: '/admin/api/nodes?webspace={webspace}&language={locale}&fields=title,order,published&webspace-nodes=single',
+            targetSelectedUrl: '/admin/api/nodes/{datasource}?tree=true&webspace={webspace}&language={locale}&fields=title,order,published&webspace-nodes=single'
         };
 
     return {

@@ -43,14 +43,13 @@ define([
 
             var sandbox = app.sandbox;
             sandbox.sulu.buttons.push(ContentButtons.getButtons());
-            sandbox.sulu.buttons.dropdownItems.push(ContentButtons.getDropdownItems());
 
             app.components.addSource('sulucontent', '/bundles/sulucontent/js/components');
 
             Config.set('sulusearch.page.options', {
                 image: false
             });
-            
+
             sandbox.urlManager.setUrl(
                 'page',
                 function(data) {

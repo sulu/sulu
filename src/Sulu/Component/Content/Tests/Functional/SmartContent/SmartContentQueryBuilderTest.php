@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Content\Tests\Functional\SmartContent;
 
-use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -84,11 +83,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
      */
     private $tag3;
 
-    /**
-     * @var HomeDocument
-     */
-    private $homeDocument;
-
     public function setUp()
     {
         parent::setUp();
@@ -127,8 +121,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $em->persist($this->tag3);
 
         $em->flush();
-
-        $this->homeDocument = $this->documentManager->find('/cmf/sulu_io/contents', 'en');
     }
 
     public function propertiesProvider()
@@ -175,6 +167,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $document->setWorkflowStage(WorkflowStage::PUBLISHED);
 
             $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+            $this->documentManager->publish($document, 'en');
 
             $documents[$document->getUuid()] = $document;
         }
@@ -241,6 +234,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $news->setStructureType('simple');
         $news->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($news, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($news, 'en');
         $this->documentManager->flush();
 
         /** @var PageDocument $products */
@@ -250,6 +244,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $products->setStructureType('simple');
         $products->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($products, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($products, 'en');
         $this->documentManager->flush();
 
         $documents = [];
@@ -261,7 +256,9 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $document->setResourceSegment('/news/news-' . $i);
             $document->setStructureType('simple');
             $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+            $document->setParent($news);
             $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents/news']);
+            $this->documentManager->publish($document, 'en');
             $this->documentManager->flush();
 
             $documents[$document->getUuid()] = $document;
@@ -372,6 +369,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $document->setStructureType('simple');
             $document->setWorkflowStage(WorkflowStage::PUBLISHED);
             $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+            $this->documentManager->publish($document, 'en');
             $this->documentManager->flush();
 
             $documents[$document->getUuid()] = $document;
@@ -610,6 +608,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $document->setStructureType('simple');
             $document->setWorkflowStage(WorkflowStage::PUBLISHED);
             $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+            $this->documentManager->publish($document, 'en');
             $this->documentManager->flush();
 
             $documents[$document->getUuid()] = $document;
@@ -710,38 +709,42 @@ class SmartContentQueryBuilderTest extends SuluTestCase
     {
         /** @var PageDocument $document */
         $document = $this->documentManager->create('page');
-        $document->setTitle('ASDF');
-        $document->setResourceSegment('/asdf-1');
+        $document->setTitle('A');
+        $document->setResourceSegment('/a');
         $document->setStructureType('simple');
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($document, 'en');
         $this->documentManager->flush();
         $documents[$document->getResourceSegment()] = $document;
 
         $document = $this->documentManager->create('page');
-        $document->setTitle('QWERTZ');
-        $document->setResourceSegment('/qwertz-1');
+        $document->setTitle('Z');
+        $document->setResourceSegment('/z');
         $document->setStructureType('simple');
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($document, 'en');
         $this->documentManager->flush();
         $documents[$document->getResourceSegment()] = $document;
 
         $document = $this->documentManager->create('page');
-        $document->setTitle('qwertz');
-        $document->setResourceSegment('/qwertz');
+        $document->setTitle('y');
+        $document->setResourceSegment('/y');
         $document->setStructureType('simple');
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($document, 'en');
         $this->documentManager->flush();
         $documents[$document->getResourceSegment()] = $document;
 
         $document = $this->documentManager->create('page');
-        $document->setTitle('asdf');
-        $document->setResourceSegment('/asdf');
+        $document->setTitle('b');
+        $document->setResourceSegment('/b');
         $document->setStructureType('simple');
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($document, 'en');
         $documents[$document->getResourceSegment()] = $document;
         $this->documentManager->flush();
 
@@ -767,10 +770,10 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
-        $this->assertEquals('ASDF', $result[0]['title']);
-        $this->assertEquals('asdf', $result[1]['title']);
-        $this->assertEquals('QWERTZ', $result[2]['title']);
-        $this->assertEquals('qwertz', $result[3]['title']);
+        $this->assertEquals('A', $result[0]['title']);
+        $this->assertEquals('b', $result[1]['title']);
+        $this->assertEquals('y', $result[2]['title']);
+        $this->assertEquals('Z', $result[3]['title']);
 
         // order by title and desc
         $builder->init(
@@ -784,10 +787,10 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
-        $this->assertEquals('QWERTZ', $result[0]['title']);
-        $this->assertEquals('qwertz', $result[1]['title']);
-        $this->assertEquals('ASDF', $result[2]['title']);
-        $this->assertEquals('asdf', $result[3]['title']);
+        $this->assertEquals('Z', $result[0]['title']);
+        $this->assertEquals('y', $result[1]['title']);
+        $this->assertEquals('b', $result[2]['title']);
+        $this->assertEquals('A', $result[3]['title']);
     }
 
     public function testOrderByOrder()
@@ -796,13 +799,13 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         list($nodes) = $this->orderByProvider();
         $session = $this->sessionManager->getSession();
 
-        $node = $session->getNodeByIdentifier($nodes['/qwertz']->getUuid());
+        $node = $session->getNodeByIdentifier($nodes['/y']->getUuid());
         $node->setProperty('sulu:order', 10);
-        $node = $session->getNodeByIdentifier($nodes['/asdf']->getUuid());
+        $node = $session->getNodeByIdentifier($nodes['/b']->getUuid());
         $node->setProperty('sulu:order', 20);
-        $node = $session->getNodeByIdentifier($nodes['/asdf-1']->getUuid());
+        $node = $session->getNodeByIdentifier($nodes['/a']->getUuid());
         $node->setProperty('sulu:order', 30);
-        $node = $session->getNodeByIdentifier($nodes['/qwertz-1']->getUuid());
+        $node = $session->getNodeByIdentifier($nodes['/z']->getUuid());
         $node->setProperty('sulu:order', 40);
         $session->save();
         $session->refresh(false);
@@ -827,10 +830,10 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
-        $this->assertEquals('qwertz', $result[0]['title']);
-        $this->assertEquals('asdf', $result[1]['title']);
-        $this->assertEquals('ASDF', $result[2]['title']);
-        $this->assertEquals('QWERTZ', $result[3]['title']);
+        $this->assertEquals('y', $result[0]['title']);
+        $this->assertEquals('b', $result[1]['title']);
+        $this->assertEquals('A', $result[2]['title']);
+        $this->assertEquals('Z', $result[3]['title']);
 
         // order by default
         $builder->init(
@@ -844,10 +847,10 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         );
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
-        $this->assertEquals('QWERTZ', $result[0]['title']);
-        $this->assertEquals('ASDF', $result[1]['title']);
-        $this->assertEquals('asdf', $result[2]['title']);
-        $this->assertEquals('qwertz', $result[3]['title']);
+        $this->assertEquals('Z', $result[0]['title']);
+        $this->assertEquals('A', $result[1]['title']);
+        $this->assertEquals('b', $result[2]['title']);
+        $this->assertEquals('y', $result[3]['title']);
     }
 
     public function testExtension()
@@ -1049,7 +1052,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $parent = null,
         $isShadow = false,
         $shadowLocale = '',
-        $state = Structure::STATE_PUBLISHED
+        $state = WorkflowStage::PUBLISHED
     ) {
         if (!$isShadow) {
             /** @var PageDocument $document */
@@ -1064,18 +1067,23 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $document->setStructureType('simple');
             $document->setWorkflowStage($state);
 
+            $persistOptions = [];
             if ($parent) {
                 $document->setParent($this->documentManager->find($parent));
-            } elseif (!$uuid) {
-                $document->setParent($this->homeDocument);
+            } elseif (!$document->getParent()) {
+                $persistOptions['parent_path'] = '/cmf/sulu_io/contents';
             }
-            $this->documentManager->persist($document, $locale);
+            $this->documentManager->persist($document, $locale, $persistOptions);
         } else {
-            $document = $this->documentManager->find($uuid, $shadowLocale);
+            $document = $this->documentManager->find($uuid, $locale);
             $document->setShadowLocaleEnabled(true);
             $document->setShadowLocale($shadowLocale);
             $document->setLocale($locale);
             $this->documentManager->persist($document, $locale);
+        }
+
+        if ($state === WorkflowStage::PUBLISHED) {
+            $this->documentManager->publish($document, $locale);
         }
 
         $this->documentManager->flush();

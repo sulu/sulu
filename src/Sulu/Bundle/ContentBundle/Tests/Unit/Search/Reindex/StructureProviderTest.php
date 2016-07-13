@@ -82,7 +82,8 @@ class StructureProviderTest extends \PHPUnit_Framework_TestCase
             $this->documentManager->reveal(),
             $this->metadataFactory->reveal(),
             $this->structureFactory->reveal(),
-            $this->inspector->reveal()
+            $this->inspector->reveal(),
+            'admin'
         );
 
         $this->query = $this->prophesize(Query::class);

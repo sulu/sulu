@@ -53,10 +53,13 @@ define([], function() {
         constants = {
             componentClass: 'sulu-header',
             hasTabsClass: 'has-tabs',
+            hasLabelClass: 'has-label',
             backClass: 'back',
             backIcon: 'chevron-left',
             toolbarClass: 'toolbar',
+            tabsRowClass: 'tabs-row',
             tabsClass: 'tabs',
+            tabsLabelContainer: 'tabs-label',
             tabsSelector: '.tabs-container',
             toolbarSelector: '.toolbar-container',
             rightSelector: '.right-container',
@@ -91,8 +94,8 @@ define([], function() {
                 '</div>'
             ].join(''),
             tabsRow: [
-                '<div class="tabs-row">',
-                '    <div class="' + constants.tabsClass + '"></div>',
+                '<div class="', constants.tabsRowClass, '">',
+                '    <div class="', constants.tabsClass, '"></div>',
                 '</div>'
             ].join(''),
             languageChanger: [
@@ -211,6 +214,24 @@ define([], function() {
          */
         TABS_DEACTIVATE = function() {
             return createEventName.call(this, 'tabs.deactivate');
+        },
+
+        /**
+         * listens on showing tab labels
+         *
+         * @event sulu.header.[INSTANCE_NAME].tabs.label.show
+         */
+        TABS_LABEL_SHOW = function() {
+            return createEventName.call(this, 'tabs.label.show');
+        },
+
+        /**
+         * listens on hiding tab labels
+         *
+         * @event sulu.header.[INSTANCE_NAME].tabs.label.hide
+         */
+        TABS_LABEL_HIDE = function() {
+            return createEventName.call(this, 'tabs.label.hide');
         },
 
         /**
@@ -716,6 +737,14 @@ define([], function() {
             this.sandbox.on(TABS_DEACTIVATE.call(this), function() {
                 this.sandbox.emit('husky.tabs.header.activate');
             }.bind(this));
+
+            this.sandbox.on(TABS_LABEL_SHOW.call(this), function(description) {
+                this.showTabsLabel(description);
+            }.bind(this));
+
+            this.sandbox.on(TABS_LABEL_HIDE.call(this), function() {
+                this.hideTabsLabel();
+            }.bind(this));
         },
 
         /**
@@ -757,6 +786,40 @@ define([], function() {
          */
         showTabs: function() {
             this.sandbox.dom.removeClass(this.$el, constants.hideTabsClass);
+        },
+
+        /**
+         * Shows a tabs label with the given text.
+         *
+         * @param {String} description
+         */
+        showTabsLabel: function(description) {
+            var $tabsLabelContainer = $('<div class="' + constants.tabsLabelContainer + '"/>');
+
+            this.$find('.' + constants.tabsRowClass).append($tabsLabelContainer);
+
+            this.sandbox.emit(
+                'sulu.labels.label.show',
+                {
+                    el: $tabsLabelContainer,
+                    type: 'WARNING',
+                    description: description,
+                    title: '',
+                    autoVanish: false,
+                    hasClose: false,
+                    additionalLabelClasses: 'small'
+                }
+            );
+
+            this.sandbox.dom.addClass(this.$el, constants.hasLabelClass);
+        },
+
+        /**
+         * Hides all the tabs labels.
+         */
+        hideTabsLabel: function() {
+            this.sandbox.stop('.' + constants.tabsLabelContainer);
+            this.$el.removeClass(constants.hasLabelClass);
         }
     };
 });

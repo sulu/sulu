@@ -41,6 +41,7 @@ class TitleSubscriber implements EventSubscriberInterface
             // should happen after content is hydrated
             Events::HYDRATE => ['setTitleOnDocument', -10],
             Events::PERSIST => ['setTitleOnNode', 10],
+            Events::PUBLISH => ['setTitleOnNode', 10],
         ];
     }
 
@@ -83,7 +84,7 @@ class TitleSubscriber implements EventSubscriberInterface
      *
      * @param PersistEvent $event
      */
-    public function setTitleOnNode(PersistEvent $event)
+    public function setTitleOnNode(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();
 

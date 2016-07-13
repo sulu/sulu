@@ -106,9 +106,22 @@
     & + .wrapper {
         padding-top: $headerHeight;
     }
+
     &.has-tabs + .wrapper {
         .page::before {
             height: $tabsHeight;
+        }
+    }
+
+    &.has-label + .wrapper {
+        .page::before {
+            height: $labelHeight;
+        }
+    }
+
+    &.has-tabs.has-label + .wrapper {
+        .page::before {
+            height: $tabsHeight + $labelHeight;
         }
     }
 }
