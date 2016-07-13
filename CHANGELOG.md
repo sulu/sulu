@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * BUGFIX      #2581 [PreviewBundle]       Deactivated WebProfilerToolbar for preview
     * BUGIFX      #2579 [ContentBundle]       Removed smart-content component destroy callback conflict
+    * FEATURE     #2572 [AdminBundle]         Included husky build with autocomplete form mapper validation type
     * FEATURE     #2557 [SecurityBundle]      Set user last login by a listener
     * ENHANCEMENT #2544 [PreviewBundle]       Bugfix for preview in firefox
     * BUGFIX      #2551 [SecurityBundle]      added search fields and search instancename for roles list search
