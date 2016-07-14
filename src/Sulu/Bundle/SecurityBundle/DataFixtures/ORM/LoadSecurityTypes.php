@@ -24,10 +24,13 @@ class LoadSecurityTypes extends ContainerAware implements FixtureInterface, Orde
      */
     public function load(ObjectManager $manager)
     {
-        // force id = 1
-        $metadata = $manager->getClassMetaData(get_class(new SecurityType()));
-        $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+        // get already present
+        $qb = $manager->createQueryBuilder();
+        $qb->from(SecurityType::class, 's', 's.id');
+        $qb->select('s');
+        $present = $qb->getQuery()->getResult();
 
+        // load xml
         $file = $this->container->getParameter('sulu_security.security_types.fixture');
         $doc = new \DOMDocument();
         $doc->load($file);
@@ -38,19 +41,21 @@ class LoadSecurityTypes extends ContainerAware implements FixtureInterface, Orde
         if (!is_null($elements)) {
             /** @var $element \DOMNode */
             foreach ($elements as $element) {
-                $securityType = new SecurityType();
-                $children = $element->childNodes;
                 /** @var $child \DOMNode */
-                foreach ($children as $child) {
+                foreach ($element->childNodes as $child) {
                     if (isset($child->nodeName)) {
                         if ($child->nodeName == 'id') {
-                            $securityType->setId($child->nodeValue);
+                            $typeId = $child->nodeValue;
                         }
                         if ($child->nodeName == 'name') {
-                            $securityType->setName($child->nodeValue);
+                            $typeName = $child->nodeValue;
                         }
                     }
                 }
+
+                $securityType = (array_key_exists($typeId, $present)) ? $present[$typeId] : new SecurityType();
+                $securityType->setId($typeId);
+                $securityType->setName($typeName);
                 $manager->persist($securityType);
             }
         }
