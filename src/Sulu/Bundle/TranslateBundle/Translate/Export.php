@@ -14,6 +14,7 @@ namespace Sulu\Bundle\TranslateBundle\Translate;
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\TranslateBundle\Entity\Translation;
 use Sulu\Bundle\TranslateBundle\Translate\Dumper\JsonFileDumper;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Translation\Dumper\XliffFileDumper;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -85,6 +86,14 @@ class Export
      * @var bool
      */
     private $frontend;
+
+    /**
+     * The output to write information about the export to. This variable
+     * must be set before starting the export.
+     *
+     * @var OutputInterface
+     */
+    private $output;
 
     public function __construct(EntityManager $em)
     {
@@ -249,6 +258,22 @@ class Export
     }
 
     /**
+     * @return OutputInterface
+     */
+    public function getOutput()
+    {
+        return $this->output;
+    }
+
+    /**
+     * @param Output $output
+     */
+    public function setOutput($output)
+    {
+        $this->output = $output;
+    }
+
+    /**
      * Executes the export.
      */
     public function execute()
@@ -266,11 +291,14 @@ class Export
         $messages = [];
         foreach ($translations as $translation) {
             /** @var $translation Translation */
-            if (!array_key_exists($translation->getCode()->getCode(), $messages)) {
-                $messages[$translation->getCode()->getCode()] = $translation->getValue();
-            } else {
-                throw new \InvalidArgumentException($translation->getCode()->getCode() . ', translation-code seems to come up multiple times');
+            if (array_key_exists($translation->getCode()->getCode(), $messages)) {
+                $this->writeOverwrittenMessage(
+                    $translation->getCode()->getCode(),
+                    $messages[$translation->getCode()->getCode()],
+                    $translation->getValue()
+                );
             }
+            $messages[$translation->getCode()->getCode()] = $translation->getValue();
         }
 
         $messageCatalogue = new MessageCatalogue(
@@ -289,8 +317,26 @@ class Export
                 break;
         }
 
-        $dumper->dump($messageCatalogue, [
-            'path' => $this->getPath(),
-        ]);
+        $dumper->dump(
+            $messageCatalogue,
+            [
+                'path' => $this->getPath(),
+            ]
+        );
+    }
+
+    /**
+     * Writes a message to the output that a given translation key has been overwritten.
+     *
+     * @param string $translationKey The translation key which has been overwritten
+     * @param string $from The value old value of the translation key
+     * @param string $to The new value of the translation key
+     */
+    private function writeOverwrittenMessage($translationKey, $from, $to)
+    {
+        $this->output->writeln('<comment>"' . $translationKey . '" overwritten</comment>');
+        $this->output->writeln('From: "' . $from . '"');
+        $this->output->writeln('To: "' . $to . '"');
+        $this->output->writeln('');
     }
 }

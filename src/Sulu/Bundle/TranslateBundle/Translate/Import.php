@@ -20,6 +20,7 @@ use Sulu\Bundle\TranslateBundle\Translate\Exception\PackageNotFoundException;
 use Symfony\Component\Console\Helper\ProgressHelper;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\Output;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
@@ -87,7 +88,7 @@ class Import
     private $backendDomain;
 
     /**
-     * @var Output
+     * @var OutputInterface
      */
     private $output;
 

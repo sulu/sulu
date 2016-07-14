@@ -92,6 +92,7 @@ class ExportCommand extends ContainerAwareCommand
         $export = $this->getContainer()->get('sulu_translate.export');
 
         $export->setLocale($locale);
+        $export->setOutput($output);
 
         // Parse format
         switch ($format) {
@@ -120,6 +121,6 @@ class ExportCommand extends ContainerAwareCommand
         }
         $export->execute();
 
-        $output->writeln('Successfully exported translations to file!');
+        $output->writeln('<info>Successfully exported translations to file!</info>');
     }
 }
