@@ -217,12 +217,12 @@ define(['jquery', 'text!/admin/content/template/content/seo.html'], function($, 
             },
 
             /**
-             * This method function has to be overwritten by the implementation to convert the data from "options.data".
+             * This method function can to be overwritten by the implementation to convert the data from "options.data".
              *
              * @param {object} data
              */
             parseData: function(data) {
-                throw new Error('"parseData" not implemented');
+                return data;
             },
 
             /**
