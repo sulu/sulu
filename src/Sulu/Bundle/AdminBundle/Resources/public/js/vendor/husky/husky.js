@@ -30926,6 +30926,9 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
 
             record.id = (!!record[this.keys.id]) ? record[this.keys.id] : constants.newRecordId;
             this.sandbox.dom.data($row, 'id', record.id);
+            if (!!record.parent) {
+                this.sandbox.dom.data($row, 'parent', record.parent);
+            }
 
             // render the parents before rendering the children
             if (hasParent) {
@@ -30986,11 +30989,30 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                     this.table.rows[record.parent].childrenExpanded = true;
                     this.changeChildrenToggleIcon(record.parent, true);
                 }
-                this.sandbox.dom.after($parentElement, this.table.rows[record.id].$el);
-                // else just append or prepend it
+                // insert the row after the last child element of the parent, or directly after the parent
+                // if no such child exists
+                this.sandbox.dom.after(this.getLastChildElementOfParent($parentElement) || $parentElement,
+                    this.table.rows[record.id].$el);
             } else {
                 insertMethod(this.table.$body, this.table.rows[record.id].$el);
             }
+        },
+
+        /**
+         * Given a parent element the method returns the last child element. If no child element
+         * exsits null is returned
+         * @param $parent {Object} the valid parent element
+         * @returns {Object} the last child element or null
+         */
+        getLastChildElementOfParent: function($parent) {
+            var $children = $parent.siblings().filter(function() {
+                return $(this).data('parent') === $parent.data('id');
+            });
+            if ($children.length > 0) {
+                return $children.last();
+            }
+
+            return null;
         },
 
         /**
