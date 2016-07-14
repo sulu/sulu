@@ -27,6 +27,10 @@ fos_rest:
     routing_loader:
         default_format: json
 
+sulu_document_manager:
+    default_session: default
+    live_session: live
+
 # Just a dirty hack to get the jms serializer bundle correctly working
 # https://github.com/schmittjoh/JMSSerializerBundle/pull/270#issuecomment-21171800
 services:

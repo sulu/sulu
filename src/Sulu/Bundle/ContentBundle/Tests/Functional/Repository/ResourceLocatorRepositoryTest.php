@@ -47,6 +47,7 @@ class ResourceLocatorRepositoryTest extends SuluTestCase
         $document->setResourceSegment('/test');
         $document->setStructureType('overview');
         $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($document, 'en');
         $this->documentManager->flush();
 
         $result = $this->repository->generate(
@@ -81,18 +82,21 @@ class ResourceLocatorRepositoryTest extends SuluTestCase
         $document->setResourceSegment('/test');
         $document->setStructureType('overview');
         $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($document, 'en');
         $this->documentManager->flush();
 
         sleep(1); // required because of jackrabbit
 
         $document->setResourceSegment('/test-1');
         $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($document, 'en');
         $this->documentManager->flush();
 
         sleep(1); // required because of jackrabbit
 
         $document->setResourceSegment('/test-2');
         $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($document, 'en');
         $this->documentManager->flush();
 
         return $document;

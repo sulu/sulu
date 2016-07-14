@@ -13,7 +13,6 @@ namespace Sulu\Component\HttpCache\EventSubscriber;
 
 use Sulu\Component\Content\Mapper\ContentEvents;
 use Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent;
-use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
 use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -38,7 +37,6 @@ class ContentMapperSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            ContentEvents::NODE_POST_SAVE => 'onContentNodePostSave',
             ContentEvents::NODE_PRE_DELETE => 'onContentNodePreDelete',
             ContentEvents::NODE_POST_DELETE => 'onContentNodePostDelete',
         ];
@@ -50,14 +48,6 @@ class ContentMapperSubscriber implements EventSubscriberInterface
     public function __construct(HandlerInvalidateStructureInterface $handler)
     {
         $this->handler = $handler;
-    }
-
-    /**
-     * @param ContentNodeEvent $event
-     */
-    public function onContentNodePostSave(ContentNodeEvent $event)
-    {
-        $this->handler->invalidateStructure($event->getStructure());
     }
 
     /**

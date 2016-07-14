@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Functional\Rlp\Strategy;
 
 use PHPCR\SessionInterface;
+use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
@@ -63,6 +64,11 @@ class PhpcrMapperTest extends SuluTestCase
      */
     private $sessionManager;
 
+    /**
+     * @var HomeDocument
+     */
+    private $homeDocument;
+
     public function setUp()
     {
         $this->initPhpcr();
@@ -71,6 +77,7 @@ class PhpcrMapperTest extends SuluTestCase
         $this->documentInspector = $this->getContainer()->get('sulu_document_manager.document_inspector');
         $this->session = $this->getContainer()->get('doctrine_phpcr.session');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
+        $this->homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $this->prepareTestData();
 
@@ -94,13 +101,13 @@ class PhpcrMapperTest extends SuluTestCase
         $drill1 = $machines->addNode('drill-1');
         $drill1->addMixin('mix:referenceable');
 
-        $parentDocument = $this->documentManager->find('/cmf/sulu_io/contents');
-
-        $this->document1 = $this->createDocument($parentDocument, 'content1', '/content1');
+        $this->document1 = $this->createDocument($this->homeDocument, 'content1', '/content1');
         $this->documentManager->persist($this->document1, 'de');
+        $this->documentManager->publish($this->document1, 'de');
 
-        $this->document2 = $this->createDocument($parentDocument, 'content2', '/content2');
+        $this->document2 = $this->createDocument($this->homeDocument, 'content2', '/content2');
         $this->documentManager->persist($this->document2, 'de');
+        $this->documentManager->publish($this->document2, 'de');
 
         $this->documentManager->flush();
     }
@@ -314,10 +321,13 @@ class PhpcrMapperTest extends SuluTestCase
 
         $document2 = $this->createDocument($this->document1, 'content2', '/news');
         $this->documentManager->persist($document2, 'en');
+        $this->documentManager->publish($document2, 'en');
         $document3 = $this->createDocument($document2, 'content3', '/news/news-1');
         $this->documentManager->persist($document3, 'en');
+        $this->documentManager->publish($document3, 'en');
         $document4 = $this->createDocument($document3, 'content4', '/news/news-1/sub-1');
         $this->documentManager->persist($document4, 'en');
+        $this->documentManager->publish($document4, 'en');
         $this->documentManager->flush();
 
         $this->document1->setResourceSegment('/news/news-1/sub-2');
@@ -390,6 +400,15 @@ class PhpcrMapperTest extends SuluTestCase
         $this->assertTrue($result[3]->getCreated() > $result[4]->getCreated());
     }
 
+    public function testLoadHistoryByContentUuidWithoutRoutes()
+    {
+        $document = $this->createDocument($this->homeDocument, 'Test', '/test');
+        $this->documentManager->persist($document, 'de');
+        $this->documentManager->flush();
+
+        $this->assertEmpty($this->phpcrMapper->loadHistoryByContentUuid($document->getUuid(), 'sulu_io', 'de'));
+    }
+
     public function testDeleteByPath()
     {
         $session = $this->sessionManager->getSession();
@@ -454,7 +473,7 @@ class PhpcrMapperTest extends SuluTestCase
         $rootNode = $session->getNode('/cmf/sulu_io/routes/de');
 
         $childDocument = $this->createDocument($this->document1, 'test', '/news/test');
-        $this->documentManager->persist($childDocument);
+        $this->documentManager->persist($childDocument, 'de');
         $this->documentManager->flush();
         $session->save();
         $session->refresh(false);

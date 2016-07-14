@@ -2,6 +2,51 @@
 
 ## dev-develop
 
+### Publishing
+
+For the publishing a separate workspace was introduced. This has to be
+initialized using the following command:
+
+```bash
+app/console sulu:document:init
+```
+
+Then you have to export the current default workspace:
+
+```bash
+app/console doctrine:phpcr:workspace:export -p /cmf cmf.xml
+app/console doctrine:phpcr:workspace:export -p /jcr:versions versions.xml
+```
+
+And import it into the new live workspace:
+
+```bash
+app/console doctrine:phpcr:workspace:import -p / cmf.xml --session=live
+app/console doctrine:phpcr:workspace:import -p / versions.xml --session=live
+```
+
+Because the search index is now split into draft and live pages you have
+to reindex all the content:
+
+```bash
+app/console massive:search:purge --all
+app/console massive:search:reindex
+app/webconsole massive:search:reindex
+```
+
+Also the `persist` call of the `DocumentManager` changed it behavior.
+After persisting a document it will not be available on the website
+immediately. Instead you also need to call `publish` with the same
+document and locale.
+
+### PHPCR Sessions
+
+The sessions for PHPCR were configured at `sulu_core.phpcr` in the
+configuration. This happens now at `sulu_document_manager.sessions`. You can
+define multiple sessions here using different names and refer to one of them as
+default session using the `sulu_document_manager.default_session` and to
+another as live session using the `sulu_document_manager.live_session`.
+
 ### Documemt Manager Initializer
 
 The `initialize` method of the `InitializerInterface` has now also a `$purge`

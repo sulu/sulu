@@ -28,4 +28,5 @@ Feature: Content type media selection
         And I click the close icon in container ".media-selection-overlay-content"
         Then I expect to see "1" ".items-list li" elements
         And I click the save icon
+        And I click toolbar item "savePublish"
         And I expect a success notification to appear

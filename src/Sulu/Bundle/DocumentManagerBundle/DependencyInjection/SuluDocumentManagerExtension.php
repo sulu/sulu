@@ -21,6 +21,37 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
 {
     public function prepend(ContainerBuilder $container)
     {
+        $configs = $container->getExtensionConfig($this->getAlias());
+        $parameterBag = $container->getParameterBag();
+        $configs = $parameterBag->resolveValue($configs);
+        $config = $this->processConfiguration(new Configuration(), $configs);
+
+        // FIXME: The entire foreach can be removed when upgrading to DoctrinePhpcrBundle 1.3
+        // see https://github.com/doctrine/DoctrinePHPCRBundle/issues/178
+        foreach ($config['sessions'] as &$session) {
+            if (isset($session['backend'])) {
+                $session['backend']['check_login_on_server'] = false;
+            }
+        }
+
+        if ($container->hasExtension('doctrine_phpcr')) {
+            $doctrinePhpcrConfig = [
+                'odm' => [],
+                'session' => [
+                    'sessions' => $config['sessions'],
+                ],
+            ];
+
+            if (isset($config['default_session'])) {
+                $doctrinePhpcrConfig['session']['default_session'] = $config['default_session'];
+            }
+
+            $container->prependExtensionConfig(
+                'doctrine_phpcr',
+                $doctrinePhpcrConfig
+            );
+        }
+
         if ($container->hasExtension('jms_serializer')) {
             $container->prependExtensionConfig(
                 'jms_serializer',
@@ -83,6 +114,19 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
         }
         $container->setParameter('sulu_document_manager.mapping', $realMapping);
         $container->setParameter('sulu_document_manager.namespace_mapping', $config['namespace']);
+
+        $defaultSession = 'doctrine_phpcr.session';
+        $container->setAlias('sulu_document_manager.default_session', $defaultSession);
+
+        $liveSession = $defaultSession;
+        if (isset($config['live_session'])) {
+            $liveSession = sprintf('doctrine_phpcr.%s_session', $config['live_session']);
+        }
+
+        $container->setAlias(
+            'sulu_document_manager.live_session',
+            $liveSession
+        );
     }
 
     private function configurePathSegmentRegistry($config, ContainerBuilder $container)

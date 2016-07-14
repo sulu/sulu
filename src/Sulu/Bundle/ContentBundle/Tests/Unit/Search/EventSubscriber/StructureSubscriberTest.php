@@ -13,10 +13,11 @@ namespace Sulu\Bundle\ContentBundle\Search\EventSubscriber;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
-use Sulu\Component\Content\Tests\Unit\Document\Subscriber\SubscriberTestCase;
+use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 
-class StructureSubscriberTest extends SubscriberTestCase
+class StructureSubscriberTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var SearchManagerInterface
@@ -30,46 +31,80 @@ class StructureSubscriberTest extends SubscriberTestCase
 
     public function setUp()
     {
-        parent::setUp();
-
         $this->searchManager = $this->prophesize(SearchManagerInterface::class);
         $this->subscriber = new StructureSubscriber($this->searchManager->reveal());
     }
 
-    public function testHandlePersist()
+    public function testIndexPersistedDocument()
     {
         $document = $this->prophesize(StructureBehavior::class);
-        $this->persistEvent->getDocument()->willReturn($document->reveal());
+        $persistEvent = $this->getPersistEventMock($document->reveal());
 
         $this->searchManager->index($document)->shouldBeCalled();
 
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
+        $this->subscriber->indexPersistedDocument($persistEvent->reveal());
     }
 
-    public function testHandlePersistUnsecuredDocument()
+    public function testIndexPersistedDocumentUnsecuredDocument()
     {
         $document = $this->prophesize(StructureBehavior::class);
         $document->willImplement(SecurityBehavior::class);
         $document->getPermissions()->willReturn([]);
 
-        $this->persistEvent->getDocument()->willReturn($document->reveal());
+        $persistEvent = $this->getPersistEventMock($document->reveal());
 
         $this->searchManager->index($document)->shouldBeCalled();
 
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
+        $this->subscriber->indexPersistedDocument($persistEvent->reveal());
     }
 
-    public function testHandlePersistSecuredDocument()
+    public function testIndexPersistedDocumentSecuredDocument()
     {
         $document = $this->prophesize(StructureBehavior::class);
         $document->willImplement(SecurityBehavior::class);
         $document->getPermissions()->willReturn(['some' => 'permissions']);
 
-        $this->persistEvent->getDocument()->willReturn($document);
+        $persistEvent = $this->getPersistEventMock($document->reveal());
 
         $this->searchManager->index($document)->shouldNotBeCalled();
 
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
+        $this->subscriber->indexPersistedDocument($persistEvent->reveal());
+    }
+
+    public function testIndexPublishedDocument()
+    {
+        $document = $this->prophesize(StructureBehavior::class);
+        $publishEvent = $this->getPublishEventMock($document->reveal());
+
+        $this->searchManager->index($document)->shouldBeCalled();
+
+        $this->subscriber->indexPublishedDocument($publishEvent->reveal());
+    }
+
+    public function testIndexPublishedDocumentUnsecuredDocument()
+    {
+        $document = $this->prophesize(StructureBehavior::class);
+        $document->willImplement(SecurityBehavior::class);
+        $document->getPermissions()->willReturn([]);
+
+        $publishEvent = $this->getPublishEventMock($document->reveal());
+
+        $this->searchManager->index($document)->shouldBeCalled();
+
+        $this->subscriber->indexPublishedDocument($publishEvent->reveal());
+    }
+
+    public function testIndexPublishedDocumentSecuredDocument()
+    {
+        $document = $this->prophesize(StructureBehavior::class);
+        $document->willImplement(SecurityBehavior::class);
+        $document->getPermissions()->willReturn(['some' => 'permissions']);
+
+        $publishEvent = $this->getPublishEventMock($document->reveal());
+
+        $this->searchManager->index($document)->shouldNotBeCalled();
+
+        $this->subscriber->indexPublishedDocument($publishEvent->reveal());
     }
 
     public function testHandlePreRemove()
@@ -82,5 +117,21 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->searchManager->deindex($document)->shouldBeCalled();
 
         $this->subscriber->handlePreRemove($removeEvent->reveal());
+    }
+
+    private function getPersistEventMock($document)
+    {
+        $persistEvent = $this->prophesize(PersistEvent::class);
+        $persistEvent->getDocument()->willReturn($document);
+
+        return $persistEvent;
+    }
+
+    private function getPublishEventMock($document)
+    {
+        $publishEvent = $this->prophesize(PublishEvent::class);
+        $publishEvent->getDocument()->willReturn($document);
+
+        return $publishEvent;
     }
 }

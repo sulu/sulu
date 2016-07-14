@@ -2,9 +2,19 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2586 [AdminBundle]         fixed behat tests
+    * BUGFIX      #2581 [PreviewBundle]       Deactivated WebProfilerToolbar for preview
+    * BUGIFX      #2579 [ContentBundle]       Removed smart-content component destroy callback conflict
+    * FEATURE     #2572 [AdminBundle]         Included husky build with autocomplete form mapper validation type
     * FEATURE     #2557 [SecurityBundle]      Set user last login by a listener
+    * ENHANCEMENT #2544 [PreviewBundle]       Bugfix for preview in firefox
+    * BUGFIX      #2551 [SecurityBundle]      added search fields and search instancename for roles list search
+    * BUGFIX      #2556 [ContentBundle]       removed the change content-change event from the texteditor's focusout
+    * BUGFIX      #2558 [CollaborationBundle] made own username show up as collaborator in warning
+    * BUGFIX      #2554 [ContentBundle]       made changing to copied locales possible
     * ENHANCEMENT #2540 [AdminBundle]         Removed deprecation notices
     * BUGFIX      #2536 [AdminBundle]         changed icon markup in search component (husky)
+    * BUGFIX      #2538 [ContentBundle]       Display url in single-internal-link instead of path
     * BUGFIX      #2534 [ContactBundle]       Fixed static usage of media repository
     * FEATURE     #2532 [RouteBundle]         Allow route generation for entity routes
     * ENHANCEMENT #2533 [RouteBundle]         Added locale to route-defaults
@@ -12,6 +22,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2530 [AdminBundle]         Included husky build which fixes the login translation issue
     * FEATURE     #2528 [AdminBundle]         Added form-abstraction for simple data-mapper forms
     * ENHANCEMENT #2526 [SearchBundle]        Introduced contexts for indexes to restrict selections
+    * BUGFIX      #2104 [ContentBundle]       Show Webspace node on 'copy' and 'move' overlays  
     * ENHANCEMENT #2520 [ContentBundle]       Delete routes using the DocumentManager
     * BUGFIX      #2523 [SecurityBundle]      Fixed error with non-visible permission types in matrix
     * ENHANCEMENT #2522 [All]                 Use correct default phpcr session
@@ -77,6 +88,17 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2341 [MediaBundle]         Added category to medias
     * ENHANCEMENT #2323 [WebsiteBundle]       Added TWIG-Extension to check if parent nav-item is active
     * ENHANCEMENT #2377 [CoreBundle]          Made --router and --env optional when running the console commands server:run, server:start, server:stop and server:status
+
+* 1.2.7 (2016-07-11)
+    * HOTFIX      #2550 [MediaBundle]         made documents list show description on add
+    * HOTFIX      #2547 [AdminBundle]         Included husky build which fixes the ie11 rendering issue of dropdowns
+    * HOTFIX      #2547 [AdminBundle]         Included husky build which fixes globalizing bug
+
+* 1.2.6 (2016-07-05)
+    * BUGFIX      #2530 [AdminBundle]         Included husky build which fixes the login translation issue
+
+* 1.2.5 (2016-06-30)
+    * HOTFIX      #---- [AdminBundle]         Fixed loading of user localization
 
 * 1.2.4 (2016-06-28)
     * HOTFIX      #2498 [TestBundle]          Fixed TestUserProvider to create accounts with repository to support

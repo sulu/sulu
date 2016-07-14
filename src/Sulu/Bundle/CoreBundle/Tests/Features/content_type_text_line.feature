@@ -19,4 +19,5 @@ Feature: Text line content type
         And I fill in "text_line" with "This is a line of text"
         And wait a second
         And I click the save icon
+        And I click toolbar item "savePublish"
         Then I expect a success notification to appear

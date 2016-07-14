@@ -65,7 +65,7 @@ class ShadowLocaleSubscriberTest extends \PHPUnit_Framework_TestCase
         $event->getLocale()->willReturn(null);
         $event->getNode()->shouldNotBeCalled();
 
-        $this->shadowLocaleSubscriber->handlePersist($event->reveal());
+        $this->shadowLocaleSubscriber->saveShadowProperties($event->reveal());
     }
 
     public function testHandlePersistForNonConcreteLocale()
@@ -93,7 +93,7 @@ class ShadowLocaleSubscriberTest extends \PHPUnit_Framework_TestCase
         $event->getDocument()->willReturn($document->reveal());
         $event->getLocale()->willReturn('de');
 
-        $this->shadowLocaleSubscriber->handlePersist($event->reveal());
+        $this->shadowLocaleSubscriber->saveShadowProperties($event->reveal());
     }
 
     public function testHandlePersistForSameLocale()
@@ -110,7 +110,7 @@ class ShadowLocaleSubscriberTest extends \PHPUnit_Framework_TestCase
         $event->getDocument()->willReturn($document->reveal());
         $event->getLocale()->willReturn('de');
 
-        $this->shadowLocaleSubscriber->handlePersist($event->reveal());
+        $this->shadowLocaleSubscriber->saveShadowProperties($event->reveal());
     }
 
     public function testHandleHydrate()

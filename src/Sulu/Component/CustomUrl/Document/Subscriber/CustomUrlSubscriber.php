@@ -130,6 +130,7 @@ class CustomUrlSubscriber implements EventSubscriberInterface
                     'auto_create' => true,
                 ]
             );
+            $this->documentManager->publish($oldRoute, $locale);
         }
     }
 
@@ -167,6 +168,7 @@ class CustomUrlSubscriber implements EventSubscriberInterface
                 'auto_create' => true,
             ]
         );
+        $this->documentManager->publish($routeDocument, $persistedLocale);
 
         return $routeDocument;
     }

@@ -499,6 +499,10 @@
                 <source>labels.success.content-save-desc</source>
                 <target>Page sucessfully saved</target>
             </trans-unit>
+            <trans-unit id="497e046d51783a9899fa59d31dcfc3e8" resname="labels.success.copy-locale-desc">
+                <source>labels.success.copy-locale-desc</source>
+                <target>Page successfully copied</target>
+            </trans-unit>
             <trans-unit id="e4b14069a8a085ede2092hf51234dh40" resname="smart-content.categories.label">
                 <source>smart-content.categories.label</source>
                 <target>Filter by categories</target>
@@ -666,6 +670,26 @@
             <trans-unit id="40" resname="content.text_editor.error.removed-multiple">
                 <source>content.text_editor.error.removed-multiple</source>
                 <target>%s links are broken.</target>
+            </trans-unit>
+            <trans-unit id="41" resname="sulu-content.save-draft">
+                <source>sulu-content.save-draft</source>
+                <target>Save as draft</target>
+            </trans-unit>
+            <trans-unit id="42" resname="sulu-content.save-publish">
+                <source>sulu-content.save-publish</source>
+                <target>Save and publish</target>
+            </trans-unit>
+            <trans-unit id="43" resname="sulu-content.publish">
+                <source>sulu-content.publish</source>
+                <target>Publish</target>
+            </trans-unit>
+            <trans-unit id="44" resname="sulu-content.published-shadow">
+                <source>sulu-content.published-shadow</source>
+                <target>The publishing state will be retrieved from the state of the main page.</target>
+            </trans-unit>
+            <trans-unit id="45" resname="sulu-content.draft-label">
+                <source>sulu-content.draft-label</source>
+                <target><![CDATA[You are working on a draft, last saved: %(changed)s by <b>%(user)s</b>]]></target>
             </trans-unit>
         </body>
     </file>

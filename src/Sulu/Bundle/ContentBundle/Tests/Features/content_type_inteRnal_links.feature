@@ -38,4 +38,5 @@ Feature: Internal links content type
         And I click the ok button
         And I should see "Articles"
         And I click the save icon
+        And I click toolbar item "savePublish"
         Then I expect a success notification to appear

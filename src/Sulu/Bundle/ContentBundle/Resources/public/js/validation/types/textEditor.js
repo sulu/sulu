@@ -54,7 +54,7 @@ define([
         focusoutHandler = function(data, $el) {
             App.emit('sulu.preview.update', $el, data);
 
-            handler(data, $el);
+            showErrors($el, data);
         };
 
     return function($el, options) {

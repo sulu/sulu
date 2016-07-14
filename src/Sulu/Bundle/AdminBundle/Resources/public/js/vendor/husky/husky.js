@@ -14739,9 +14739,8 @@ define("underscore", (function (global) {
 }));
 
 /**
- * @license RequireJS text 2.0.14 Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
- * Available via the MIT or new BSD license.
- * see: http://github.com/requirejs/text for details
+ * @license text 2.0.15 Copyright jQuery Foundation and other contributors.
+ * Released under MIT license, http://github.com/requirejs/text/LICENSE
  */
 /*jslint regexp: true */
 /*global require, XMLHttpRequest, ActiveXObject,
@@ -14762,8 +14761,26 @@ define('text',['module'], function (module) {
         buildMap = {},
         masterConfig = (module.config && module.config()) || {};
 
+    function useDefault(value, defaultValue) {
+        return value === undefined || value === '' ? defaultValue : value;
+    }
+
+    //Allow for default ports for http and https.
+    function isSamePort(protocol1, port1, protocol2, port2) {
+        if (port1 === port2) {
+            return true;
+        } else if (protocol1 === protocol2) {
+            if (protocol1 === 'http') {
+                return useDefault(port1, '80') === useDefault(port2, '80');
+            } else if (protocol1 === 'https') {
+                return useDefault(port1, '443') === useDefault(port2, '443');
+            }
+        }
+        return false;
+    }
+
     text = {
-        version: '2.0.14',
+        version: '2.0.15',
 
         strip: function (content) {
             //Strips <?xml ...?> declarations so that external SVG and XML
@@ -14881,7 +14898,7 @@ define('text',['module'], function (module) {
 
             return (!uProtocol || uProtocol === protocol) &&
                    (!uHostName || uHostName.toLowerCase() === hostname.toLowerCase()) &&
-                   ((!uPort && !uHostName) || uPort === port);
+                   ((!uPort && !uHostName) || isSamePort(uProtocol, uPort, protocol, port));
         },
 
         finishLoad: function (name, strip, content, onLoad) {
@@ -27582,6 +27599,77 @@ define('type/husky-select',[
 });
 
 /*
+ * This file is part of the Husky Validation.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+define('type/husky-auto-complete',[
+    'type/default',
+    'form/util'
+], function(Default) {
+
+    'use strict';
+
+    return function($el, options) {
+        var defaults = {
+                id: 'id',
+                name: 'name',
+                required: false
+            },
+
+            typeInterface = {
+                setValue: function(data) {
+                    var $input = $el.find('input');
+
+                    if (!$input.length) {
+                        $el.data('value', data);
+                        $el.attr('data-value', JSON.stringify(data));
+                    }
+
+                    $input.data('id', data[this.options.id]);
+                    $input.attr('data-id', data[this.options.id]);
+                    $input.typeahead('val', data[this.options.name]);
+                },
+
+                getValue: function() {
+                    var $input = $el.find('input');
+
+                    if (!$input.data('id') || $input.data('id') === 'null') {
+                        return;
+                    }
+
+                    var value = {};
+
+                    value[this.options.id] = $input.data('id');
+                    value[this.options.name] = $input.val();
+
+                    return value;
+                },
+
+                needsValidation: function() {
+                    var val = this.getValue();
+                    return !!val;
+                },
+
+                validate: function() {
+                    var value = this.getValue();
+                    if (typeof value === 'object' && value.hasOwnProperty('id')) {
+                        return !!value.id;
+                    } else {
+                        return value !== '' && typeof value !== 'undefined';
+                    }
+                }
+            };
+
+        return new Default($el, defaults, options, 'husky-auto-complete', typeInterface);
+    };
+});
+
+/*
  * This file is part of the Sulu CMS.
  *
  * (c) MASSIVE ART WebServices GmbH
@@ -30633,7 +30721,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             actionIconColumn: null,
             croppedMaxLength: 35,
             openPathToSelectedChildren: true,
-            cropContents: true
+            cropContents: true,
+            editableOptions: {}
         },
 
         constants = {
@@ -30705,12 +30794,21 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             textContainer: '<span class="' + constants.textContainerClass + '"><%= content %></span>',
             headerCellLoader: '<div class="' + constants.headerCellLoaderClass + '"></div>',
             removeCellContent: '<span class="fa-<%= icon %> ' + constants.rowRemoverClass + '"></span>',
-            editableCellContent: [
-                '<span class="' + constants.editableItemClass + '"><%= value %></span>',
-                '<div class="' + constants.inputWrapperClass + '">',
-                '   <input type="text" class="form-element husky-validate ' + constants.editableInputClass + '" value="<%= value %>">',
-                '</div>'
-            ].join(''),
+            editableCellContent: {
+                string: [
+                    '<span class="' + constants.editableItemClass + '"><%= value %></span>',
+                    '<div class="' + constants.inputWrapperClass + '">',
+                    '   <input type="text" class="form-element husky-validate ' + constants.editableInputClass + '" value="<%= value %>">',
+                    '</div>'
+                ].join(''),
+                select: [
+                    '<select class="form-element husky-validate ' + constants.editableInputClass + '">',
+                    '<% _.each(options.values, function(title, index) { %>',
+                    '   <option value="<%= index %>" <% if (value === index) { %>selected<% } %>><%= translate(title) %></option>',
+                    '<% }); %>',
+                    '</select>'
+                ].join('')
+            },
             img: [
                 '<div class="' + constants.gridImageClass + '">',
                 '   <img alt="<%= alt %>" src="<%= src %>"/>',
@@ -31325,7 +31423,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 );
             }
             if (this.options.editable === true && column.editable === true) {
-                content = this.getEditableCellContent(content);
+                content = this.getEditableCellContent(content, column.attribute, column.type);
             } else {
                 content = this.sandbox.util.template(templates.textContainer)({
                     content: content
@@ -31390,11 +31488,18 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Takes a string and retruns the markup for an editable cell
          * @param content {String} the original value
+         * @param type {String} the type of value
+         * @param columnName {String} the name of value
          * @returns {String|Object} html or a dom object
          */
-        getEditableCellContent: function(content) {
-            return this.sandbox.util.template(templates.editableCellContent)({
-                value: content
+        getEditableCellContent: function(content, columnName, type) {
+            type = !!type ? type : 'string';
+            var options = !!this.options.editableOptions[columnName] ? this.options.editableOptions[columnName] : {};
+
+            return this.sandbox.util.template(templates.editableCellContent[type], {
+                value: content,
+                options: options,
+                translate: this.sandbox.translate
             });
         },
 
@@ -31621,6 +31726,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 this.sandbox.dom.on(this.table.$body, 'click', this.editableItemClickHandler.bind(this), '.' + constants.editableItemClass);
                 this.sandbox.dom.on(this.table.$body, 'focusout', this.editableInputFocusoutHandler.bind(this), '.' + constants.editableInputClass);
                 this.sandbox.dom.on(this.table.$body, 'keydown', this.editableInputKeyHandler.bind(this), '.' + constants.editableInputClass);
+                this.sandbox.dom.on(this.table.$body, 'change', this.editableInputEventHandler.bind(this), '.' + constants.editableInputClass);
             }
             if (!!this.icons) {
                 this.sandbox.dom.on(this.table.$body, 'click', this.iconClickHandler.bind(this), '.' + constants.gridIconClass);
@@ -31744,7 +31850,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             var $parent = this.sandbox.dom.parents(event.currentTarget, '.' + constants.rowClass),
                 recordId = this.sandbox.dom.data($parent, 'id');
 
-            if (!!this.editStatuses[recordId]) {
+            if (!!this.editStatuses[recordId] || $(event.currentTarget).is('select')) {
                 this.editRow(recordId);
             }
 
@@ -37445,8 +37551,6 @@ define('__component__$toolbar@husky',[],function() {
                 hideDropdowns.call(this);
 
                 if (!visible) {
-                    this.sandbox.dom.addClass($list, 'is-expanded');
-                    this.sandbox.dom.show(this.sandbox.dom.find(selectors.dropdownMenu, $list));
                     // TODO: check if dropdown overlaps screen: set ul to .right-aligned
 
                     // on every click remove sub-menu
@@ -37455,6 +37559,12 @@ define('__component__$toolbar@husky',[],function() {
                     if (this.options.responsive === true) {
                         lockToolbarScroll.call(this);
                     }
+
+                    // IMPORTANT (FIX FOR IE11/EDGE rendering Bug): The following
+                    // two lines must remain at end of the method. More specifically
+                    // they must come after "lockToolbarScroll"
+                    this.sandbox.dom.addClass($list, 'is-expanded');
+                    this.sandbox.dom.show(this.sandbox.dom.find(selectors.dropdownMenu, $list));
 
                     this.sandbox.emit(DROPDOWN_OPENED.call(this));
                 }
@@ -38922,6 +39032,7 @@ define('__component__$auto-complete@husky',[], function() {
  * @param {Array} [options.delimiters] Array of key-codes which trigger a tag input
  * @param {Boolean} [options.noNewTags] If true only auto-completed tags are accepted
  * @param {String} [options.footerContent] Could be a template or just text
+ * @param {String} [options.valueKey] Name of value-property in suggestion
  */
 define('__component__$auto-complete-list@husky',[], function() {
 
@@ -38962,7 +39073,8 @@ define('__component__$auto-complete-list@husky',[], function() {
                 autoCompleteIcon: 'search',
                 suggestionIcon: 'tag',
                 delimiters: [9, 188, 13],
-                noNewTags: false
+                noNewTags: false,
+                valueKey: 'name'
             },
 
             templates = {
@@ -39208,7 +39320,8 @@ define('__component__$auto-complete-list@husky',[], function() {
                                 suggestionIcon: this.options.suggestionIcon,
                                 autoCompleteIcon: this.options.autoCompleteIcon,
                                 resultKey: this.options.resultKey,
-                                footerContent: this.options.footerContent
+                                footerContent: this.options.footerContent,
+                                valueKey: this.options.valueKey
                             },
                             this.options.autocompleteOptions
                         )
@@ -39273,7 +39386,7 @@ define('__component__$auto-complete-list@husky',[], function() {
 
                 //if an autocomplete-suggestion gets clicked on, it gets added to the list
                 this.sandbox.on('husky.auto-complete.' + this.options.instanceName + '.select', function(d) {
-                    this.pushTag(d.name);
+                    this.pushTag(d[this.options.valueKey]);
                 }.bind(this));
 
                 this.sandbox.dom.on(this.$input, 'keydown', function(event) {
@@ -39411,7 +39524,7 @@ define('__component__$auto-complete-list@husky',[], function() {
                             name: this.options.suggestions[i],
                             $el: this.sandbox.dom.createElement('<li/>')
                         };
-                        this.sandbox.dom.html(this.suggestions[i].$el, this.suggestions[i].name);
+                        this.sandbox.dom.html(this.suggestions[i].$el, this.suggestions[i][this.options.valueKey]);
                     }
                 }
             },
@@ -39513,7 +39626,7 @@ define('__component__$auto-complete-list@husky',[], function() {
             bindSuggestionEvents: function(suggestion) {
                 this.sandbox.dom.on(suggestion.$el, 'click', function() {
                     if (!this.sandbox.dom.hasClass(suggestion, this.options.suggestionDeactivatedClass)) {
-                        this.pushTag(suggestion.name);
+                        this.pushTag(suggestion[this.options.valueKey]);
                         this.deactivateSuggestion(suggestion);
                         this.sandbox.emit(SUGGESTION_ADDED.call(this), suggestion);
                     }
@@ -39565,7 +39678,7 @@ define('__component__$auto-complete-list@husky',[], function() {
             suggestionContainedInTags: function(suggestion) {
                 var tags = this.getTags(), i, length;
                 for (i = -1, length = tags.length; ++i < length;) {
-                    if (tags[i] === suggestion.name) {
+                    if (tags[i] === suggestion[this.options.valueKey]) {
                         return true;
                     }
                 }
@@ -41347,6 +41460,7 @@ define('__component__$password-fields@husky',[], function() {
  * @params {String} [options.idName] name of id-key
  * @params {String} [options.pathName] name of path-key
  * @params {String} [options.linkedName] name of linked-key
+ * @params {String} [options.publishedStateName] name of draft-key
  * @params {String} [options.publishedName] name of published-key
  * @params {String} [options.titleName] name of title-key
  * @params {String} [options.noPageDescription] translation key for the "No-Page"-description
@@ -41385,7 +41499,8 @@ define('__component__$column-navigation@husky',[],function() {
             idName: 'id',
             pathName: 'path',
             linkedName: 'linked',
-            publishedName: 'publishedState',
+            publishedStateName: 'publishedState',
+            publishedName: 'published',
             titleName: 'title',
             typeName: 'type',
             noPageDescription: 'public.no-pages',
@@ -42057,9 +42172,18 @@ define('__component__$column-navigation@husky',[],function() {
                     }
                 }
                 // unpublished
-                if (!data[this.options.publishedName]) {
-                    this.sandbox.dom.append($container,
-                        '<span class="not-published col-icon"  title="' + this.sandbox.translate(this.options.tooltipTranslations.unpublished) + '">&bull;</span>');
+                if (!data[this.options.publishedStateName]) {
+                    if (!!data[this.options.publishedName]) {
+                        this.sandbox.dom.append(
+                            $container,
+                            '<span class="not-published col-icon"  title="' + this.sandbox.translate(this.options.tooltipTranslations.unpublished) + '"></span>'
+                        );
+                    }
+
+                    this.sandbox.dom.append(
+                        $container,
+                        '<span class="not-published-state col-icon"  title="' + this.sandbox.translate(this.options.tooltipTranslations.unpublished) + '"></span>'
+                    );
                 }
             }
             if (!!this.options.orderable) {
@@ -43159,7 +43283,7 @@ define('__component__$ckeditor@husky',[], function() {
 
             this.$el.parent().append($trigger);
 
-            $trigger.one('click, focus', function(e) {
+            $trigger.one('focus', function(e) {
                 $(e.currentTarget).remove();
 
                 this.startEditor();
@@ -51573,7 +51697,6 @@ define("datepicker-zh-TW", function(){});
                 app.setLanguage = function(cultureName, messages, defaultMessages) {
                     cultureName = normalizeCultureName(cultureName);
 
-
                     Globalize.culture(cultureName);
 
                     app.sandbox.globalize.addCultureInfo(cultureName, messages);
@@ -51582,6 +51705,8 @@ define("datepicker-zh-TW", function(){});
 
                 app.loadLanguage = function(cultureName) {
                     var deferred = $.Deferred();
+
+                    cultureName = normalizeCultureName(cultureName);
 
                     if (cultureName !== 'en') {
                         require(['cultures/globalize.culture.' + cultureName], function() {

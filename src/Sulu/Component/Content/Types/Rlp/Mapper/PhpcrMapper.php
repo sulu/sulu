@@ -93,6 +93,7 @@ class PhpcrMapper extends RlpMapper
                     'auto_create' => true,
                 ]
             );
+            $this->documentManager->publish($routeDocument, $locale);
         } catch (ItemExistsException $e) {
             throw new ResourceLocatorAlreadyExistsException($document->getResourceSegment(), $routeDocumentPath);
         }
@@ -210,6 +211,11 @@ class PhpcrMapper extends RlpMapper
 
         // iterate over history of path node
         $result = [];
+
+        if (!$pathNode) {
+            return $result;
+        }
+
         $this->iterateRouteNodes(
             $pathNode,
             function ($resourceLocator, NodeInterface $node) use (&$result) {

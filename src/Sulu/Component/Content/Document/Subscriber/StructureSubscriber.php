@@ -96,12 +96,13 @@ class StructureSubscriber implements EventSubscriberInterface
         return [
             Events::PERSIST => [
                 // persist should happen before content is mapped
-                ['handlePersist', 0],
+                ['saveStructureData', 0],
                 // staged properties must be commited before title subscriber
                 ['handlePersistStagedProperties', 50],
                 // setting the structure should happen very early
                 ['handlePersistStructureType', 100],
             ],
+            Events::PUBLISH => 'saveStructureData',
             // hydrate should happen afterwards
             Events::HYDRATE => ['handleHydrate', 0],
             Events::CONFIGURE_OPTIONS => 'configureOptions',
@@ -208,7 +209,7 @@ class StructureSubscriber implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function handlePersist(PersistEvent $event)
+    public function saveStructureData(AbstractMappingEvent $event)
     {
         // Set the structure type
         $document = $event->getDocument();

@@ -148,6 +148,9 @@ class WebspaceInitializerTest extends \PHPUnit_Framework_TestCase
             ]
         )->shouldBeCalled();
 
+        $this->documentManager->publish(Argument::type(HomeDocument::class), 'de')->shouldBeCalledTimes(2);
+        $this->documentManager->publish(Argument::type(HomeDocument::class), 'en')->shouldBeCalledTimes(1);
+
         $this->documentManager->persist(
             Argument::type(RouteDocument::class),
             'de',
@@ -163,6 +166,9 @@ class WebspaceInitializerTest extends \PHPUnit_Framework_TestCase
             'de',
             ['path' => '/cmf/webspace2/routes/de', 'auto_create' => true]
         )->shouldBeCalled();
+
+        $this->documentManager->publish(Argument::type(RouteDocument::class), 'de')->shouldBeCalledTimes(2);
+        $this->documentManager->publish(Argument::type(RouteDocument::class), 'en')->shouldBeCalledTimes(1);
 
         $this->documentManager->flush()->shouldBeCalled();
 
