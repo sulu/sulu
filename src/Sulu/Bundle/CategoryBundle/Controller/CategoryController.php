@@ -297,8 +297,8 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
 
         $listBuilder = $factory->create(self::$entityName);
-
         $fieldDescriptors = $this->getManager()->getFieldDescriptors($this->getLocale($request));
+        $listBuilder->sort($fieldDescriptors['depth']);
 
         $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 

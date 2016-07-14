@@ -271,15 +271,18 @@ class CategoryControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            '/api/categories?flat=true&sortBy=depth&sortOrder=desc'
+            '/api/categories?flat=true&sortBy=name&sortOrder=asc'
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(4, count($response->_embedded->categories));
-        $this->assertEquals($this->category4->getId(), $response->_embedded->categories[0]->id);
-        $this->assertEquals('Fourth Category', $response->_embedded->categories[0]->name);
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $categories = $response['_embedded']['categories'];
+        $this->assertEquals(4, count($categories));
+        $this->assertArrayNotHasKey('name', $categories[0]);
+        $this->assertEquals('First Category', $categories[1]['name']);
+        $this->assertEquals('Third Category', $categories[2]['name']);
+        $this->assertEquals('Fourth Category', $categories[3]['name']);
     }
 
     public function testPost()
