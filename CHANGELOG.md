@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * 1.3.0-RC1 (2016-07-22)
     * HOTFIX      #2632 [Content]             Fix usage of document inspector in StructureBridge
     * BUGFIX      #2655 [MediaBundle]         Fixed media selection for none images and selected media list
+    * BUGFIX      #2598 [MediaBundle]         fixed thumbnail rendering in media edit
     * BUGFIX      #2634 [Rest]                hide exception details on rest-api error in prod environment
     * FEATURE     #2642 [AdminBundle]         Added different badges color support
     * BUGFIX      #2618 [Localization]        Removed the system localizations from LocalizationController
