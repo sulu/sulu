@@ -82,6 +82,10 @@ define(['jquery'], function($) {
                 this.sandbox.dom.on(this.options.formId, 'keyup change', function() {
                     this.setHeaderBar();
                 }.bind(this), '.trigger-save-button');
+
+                this.sandbox.on('sulu.content.changed', function() {
+                    this.setHeaderBar();
+                }.bind(this));
             },
 
             loadComponentData: function() {
