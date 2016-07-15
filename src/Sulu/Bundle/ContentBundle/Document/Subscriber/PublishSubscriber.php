@@ -21,6 +21,7 @@ use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Event\ReorderEvent;
+use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\NodeHelperInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -73,7 +74,11 @@ class PublishSubscriber implements EventSubscriberInterface
             Events::MOVE => 'moveNodeInPublicWorkspace',
             Events::COPY => 'copyNodeInPublicWorkspace',
             Events::REORDER => 'reorderNodeInPublicWorkspace',
-            Events::PUBLISH => ['setNodeFromPublicWorkspace', 512],
+            Events::PUBLISH => ['setNodeFromPublicWorkspaceForPublishing', 512],
+            Events::UNPUBLISH => [
+                ['setNodeFromPublicWorkspaceForUnpublishing', 512],
+                ['removePropertiesFromPublicWorkspace', 0],
+            ],
             Events::FLUSH => 'flushPublicWorkspace',
         ];
     }
@@ -158,9 +163,41 @@ class PublishSubscriber implements EventSubscriberInterface
      *
      * @param PublishEvent $event
      */
-    public function setNodeFromPublicWorkspace(PublishEvent $event)
+    public function setNodeFromPublicWorkspaceForPublishing(PublishEvent $event)
     {
-        $event->setNode($this->getLiveNode($event->getDocument()));
+        $this->setNodeFromPublicWorkspace($event);
+    }
+
+    /**
+     * Sets the correct node from the live session for the UnpublishEvent.
+     *
+     * @param UnpublishEvent $event
+     */
+    public function setNodeFromPublicWorkspaceForUnpublishing(UnpublishEvent $event)
+    {
+        $this->setNodeFromPublicWorkspace($event);
+    }
+
+    /**
+     * Removes all the properties for the given locale from the node, so that the content is not accessible anymore from
+     * the live workspace.
+     *
+     * @param UnpublishEvent $event
+     */
+    public function removePropertiesFromPublicWorkspace(UnpublishEvent $event)
+    {
+        $node = $event->getNode();
+        $locale = $event->getLocale();
+
+        // remove all localized system properties from the node
+        foreach ($node->getProperties($this->propertyEncoder->localizedSystemName('', $locale) . '*') as $property) {
+            $property->remove();
+        }
+
+        // remove all localized content properties from the node
+        foreach ($node->getProperties($this->propertyEncoder->localizedContentName('', $locale) . '*') as $property) {
+            $property->remove();
+        }
     }
 
     /**
@@ -212,5 +249,15 @@ class PublishSubscriber implements EventSubscriberInterface
     private function getLiveNode(PathBehavior $document)
     {
         return $this->liveSession->getNode($document->getPath());
+    }
+
+    /**
+     * Sets the node from the live workspace on the given event.
+     *
+     * @param PublishEvent|UnpublishEvent $event
+     */
+    private function setNodeFromPublicWorkspace($event)
+    {
+        $event->setNode($this->getLiveNode($event->getDocument()));
     }
 }

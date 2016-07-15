@@ -724,7 +724,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
     public function postTriggerAction($uuid, Request $request)
     {
         // extract parameter
-        $webspace = $this->getWebspace($request);
         $action = $this->getRequestParameter($request, 'action', true);
         $language = $this->getLanguage($request);
         $userId = $this->getUser()->getId();
@@ -756,15 +755,24 @@ class NodeController extends RestController implements ClassResourceInterface, S
                     break;
                 case 'order':
                     $position = (int) $this->getRequestParameter($request, 'position', true);
+                    $webspace = $this->getWebspace($request);
 
                     // call repository method
                     $data = $repository->orderAt($uuid, $position, $webspace, $language, $userId);
                     break;
                 case 'copy-locale':
                     $destLocale = $this->getRequestParameter($request, 'dest', true);
+                    $webspace = $this->getWebspace($request);
 
                     // call repository method
                     $data = $repository->copyLocale($uuid, $userId, $webspace, $language, explode(',', $destLocale));
+                    break;
+                case 'unpublish':
+                    $document = $this->getDocumentManager()->find($uuid, $language);
+                    $this->getDocumentManager()->unpublish($document, $language);
+                    $this->getDocumentManager()->flush();
+
+                    $data = $this->getDocumentManager()->find($uuid, $language);
                     break;
                 default:
                     throw new RestException('Unrecognized action: ' . $action);

@@ -20,6 +20,7 @@ use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
+use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -67,6 +68,7 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
             Events::HYDRATE => 'setWorkflowStageOnDocument',
             Events::PERSIST => 'setWorkflowStageToTest',
             Events::PUBLISH => 'setWorkflowStageToPublished',
+            Events::UNPUBLISH => 'setWorkflowStageToTestAndResetPublishedDate',
         ];
     }
 
@@ -134,6 +136,29 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
         }
 
         $this->setWorkflowStage($document, $event->getAccessor(), WorkflowStage::PUBLISHED, $event->getLocale(), true);
+    }
+
+    /**
+     * Resets the workflowstage to test and the published date to null.
+     *
+     * @param UnpublishEvent $event
+     */
+    public function setWorkflowStageToTestAndResetPublishedDate(UnpublishEvent $event)
+    {
+        $document = $event->getDocument();
+
+        if (!$this->supports($event)) {
+            return;
+        }
+
+        $locale = $event->getLocale();
+
+        $node = $this->defaultSession->getNode($this->documentInspector->getPath($document));
+        $node->setProperty(
+            $this->propertyEncoder->localizedSystemName(self::WORKFLOW_STAGE_FIELD, $locale),
+            WorkflowStage::TEST
+        );
+        $node->setProperty($this->propertyEncoder->localizedSystemName(self::PUBLISHED_FIELD, $locale), null);
     }
 
     /**

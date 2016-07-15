@@ -22,6 +22,7 @@ use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
+use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 
 class WorkflowStageSubscriberTest extends \PHPUnit_Framework_TestCase
@@ -228,6 +229,37 @@ class WorkflowStageSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->documentAccessor->set('published', Argument::any())->shouldNotBeCalled();
 
         $this->workflowStageSubscriber->setWorkflowStageToPublished($event->reveal());
+    }
+
+    public function testSetWorkflowStageToTestAndResetPublishedDate()
+    {
+        $document = $this->prophesize(WorkflowStageBehavior::class);
+        $this->documentInspector->getPath($document->reveal())->willReturn('/cmf/sulu_io/contents');
+
+        $event = $this->prophesize(UnpublishEvent::class);
+        $event->getLocale()->willReturn('de');
+        $event->getDocument()->willReturn($document->reveal());
+
+        $node = $this->prophesize(NodeInterface::class);
+        $node->setProperty('i18n:de-state', WorkflowStage::TEST)->shouldBeCalled();
+        $node->setProperty('i18n:de-published', null)->shouldBeCalled();
+
+        $this->defaultSession->getNode('/cmf/sulu_io/contents')->willReturn($node->reveal());
+
+        $this->workflowStageSubscriber->setWorkflowStageToTestAndResetPublishedDate($event->reveal());
+    }
+
+    public function testSetWorkflowStageToTestAndResetPublishedDateWithoutLocale()
+    {
+        $event = $this->prophesize(UnpublishEvent::class);
+        $event->getLocale()->willReturn(null);
+
+        $document = $this->prophesize(WorkflowStageBehavior::class);
+        $event->getDocument()->willReturn($document->reveal());
+
+        $this->defaultSession->getNode(Argument::cetera())->shouldNotBeCalled();
+
+        $this->workflowStageSubscriber->setWorkflowStageToTestAndResetPublishedDate($event->reveal());
     }
 
     /**
