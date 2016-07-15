@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2606 [PreviewBundle]       Added cache clear for preview kernel
     * BUGFIX      #2596 [PreviewBundle]       Fixed preview for prod environment
     * BUGFIX      #2586 [AdminBundle]         fixed behat tests
     * BUGFIX      #2581 [PreviewBundle]       Deactivated WebProfilerToolbar for preview
