@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * BUGFIX      #2539 [SecurityBundle]      Made TokenStorage dependency for SecuritySubscriber optional
     * BUGFIX      #2606 [PreviewBundle]       Added cache clear for preview kernel
+    * ENHANCEMENT #2608 [TranslateBundle]     removed translation import command and refactored translate bundle
     * BUGFIX      #2596 [PreviewBundle]       Fixed preview for prod environment
     * FEATURE     #2515 [ContentBundle]       Added unpublishing functionality for pages
     * ENHANCEMENT #2604 [ContentBundle]       fixed publishing on excerpt tab and add excerpt js extension
