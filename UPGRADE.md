@@ -2,6 +2,14 @@
 
 ## dev-develop
 
+### Translations
+The command `sulu:translate:import` got removed, as the export command
+(`sulu:translate:export`) now takes its translations directly from
+the translation files and not from the database anymore. This change
+would only cause conflicts, if one had a dependency directly on the
+translations in the database. If so, please use the files in the
+`Resources` folders.
+
 ### Publishing
 
 For the publishing a separate workspace was introduced. This has to be

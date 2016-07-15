@@ -13,6 +13,7 @@
 /src/Sulu/Bundle/TestBundle/Resources/app/cache
 /src/Sulu/Component/Rest/Tests/Functional/ListBuilder/Metadata/cache
 /src/Sulu/Bundle/TestBundle/Resources/app/cache/
+*~
 
 npm-debug.log
 
