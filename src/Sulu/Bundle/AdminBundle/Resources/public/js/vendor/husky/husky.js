@@ -30991,8 +30991,10 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 }
                 // insert the row after the last child element of the parent, or directly after the parent
                 // if no such child exists
-                this.sandbox.dom.after(this.getLastChildElementOfParent($parentElement) || $parentElement,
-                    this.table.rows[record.id].$el);
+                this.sandbox.dom.after(
+                    this.getLastChildElementOfParent($parentElement) || $parentElement,
+                    this.table.rows[record.id].$el
+                );
             } else {
                 insertMethod(this.table.$body, this.table.rows[record.id].$el);
             }
