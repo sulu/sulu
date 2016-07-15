@@ -2,13 +2,14 @@ CHANGELOG for Sulu
 ==================
 
 * 1.2.7 (2016-07-12)
-    * HOTFIX      #2605 [CategoryBundle]      Fixed order in combination with depth
-    * HOTFIX      #2600 [CategoryBundle]      fixed order of categories in content-type
-    * HOTFIX      #2585 [CoreBundle]          add fixtures without purging database
-    * HOTFIX      #2550 [MediaBundle]         made documents list show description on add
-    * HOTFIX      #2547 [AdminBundle]         Included husky build which fixes the ie11 rendering issue of dropdowns
-    * HOTFIX      #2547 [AdminBundle]         Included husky build which fixes globalizing bug
-    * BUGFIX            [WebsiteBundle]       Fixed a query issue on Postgresql
+    * HOTFIX      #2610 [DocumentManagerBundle] Fixed serialization of concrete locales
+    * HOTFIX      #2605 [CategoryBundle]        Fixed order in combination with depth
+    * HOTFIX      #2600 [CategoryBundle]        fixed order of categories in content-type
+    * HOTFIX      #2585 [CoreBundle]            add fixtures without purging database
+    * HOTFIX      #2550 [MediaBundle]           made documents list show description on add
+    * HOTFIX      #2547 [AdminBundle]           Included husky build which fixes the ie11 rendering issue of dropdowns
+    * HOTFIX      #2547 [AdminBundle]           Included husky build which fixes globalizing bug
+    * BUGFIX            [WebsiteBundle]         Fixed a query issue on Postgresql
 
 * 1.2.6 (2016-07-05)
     * BUGFIX      #2530 [AdminBundle]         Included husky build which fixes the login translation issue
