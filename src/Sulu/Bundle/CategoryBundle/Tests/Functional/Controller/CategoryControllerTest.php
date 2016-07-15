@@ -612,7 +612,7 @@ class CategoryControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/categories?locale=de&flat=true'
+            '/api/categories?locale=de&flat=true&sortBy=name'
         );
 
         $response = json_decode($client->getResponse()->getContent());

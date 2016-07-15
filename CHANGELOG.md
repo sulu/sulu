@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * 1.2.7 (2016-07-12)
+    * HOTFIX      #2612 [CategoryBundle]        Added sort criteria for fallback test
     * HOTFIX      #2610 [DocumentManagerBundle] Fixed serialization of concrete locales
     * HOTFIX      #2605 [CategoryBundle]        Fixed order in combination with depth
     * HOTFIX      #2600 [CategoryBundle]        fixed order of categories in content-type
