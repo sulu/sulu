@@ -38,8 +38,14 @@ define([
                     App.emit('sulu.content.changed');
                 },
 
-                setValue: function(value) {
-                    App.dom.data($el, 'selected', value);
+                setValue: function(categories) {
+                    // At the moment setValue gets called with objects but the
+                    // datagrid works only with ids internally.
+                    // TODO: find a common representation
+                    categories = categories.map(function(category) {
+                        return (!!category.id) ? category.id : category;
+                    });
+                    App.dom.data($el, 'selected', categories);
                 },
 
                 getValue: function() {

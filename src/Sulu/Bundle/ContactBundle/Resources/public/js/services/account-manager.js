@@ -67,8 +67,8 @@ define([
 
             if (!!data.categories) {
                 account.get('categories').reset();
-                Util.foreach(data.categories, function(categoryId) {
-                    var category = Category.findOrCreate({id: categoryId});
+                Util.foreach(data.categories, function(category) {
+                    category = Category.findOrCreate({id: category});
                     account.get('categories').add(category);
                 }.bind(this));
             }

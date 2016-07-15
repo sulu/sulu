@@ -12,6 +12,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2623 [DocumentManager]     Add publishing toolbar buttons to extensions in document manager bundle
     * ENHANCEMENT #2614 [ContentBundle]       Removed unused code and tests
     * BUGFIX      #2603 [ContentBundle]       Fixed resource locator generation for pages with ghost-parent
+    * BUGFIX      #2613 [ContactBundle]       fixed categories save bug in contacts
     * BUGFIX      #2539 [SecurityBundle]      Made TokenStorage dependency for SecuritySubscriber optional
     * BUGFIX      #2609 [ContentBundle]       fixed excerpt extension save button activation
     * ENHANCEMENT #2616 [MediaBundle]         Avoid exception when media is serialized without all data loaded
