@@ -2,6 +2,11 @@
 
 ## dev-develop
 
+### NodeRepository
+
+The `orderBefore` method of the `NodeRepository` has been removed. Use the
+`reorder` method of the `DocumentManager` instead.
+
 ### Translations
 The command `sulu:translate:import` got removed, as the export command
 (`sulu:translate:export`) now takes its translations directly from
