@@ -99,10 +99,17 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2323 [WebsiteBundle]       Added TWIG-Extension to check if parent nav-item is active
     * ENHANCEMENT #2377 [CoreBundle]          Made --router and --env optional when running the console commands server:run, server:start, server:stop and server:status
 
-* 1.2.7 (2016-07-11)
-    * HOTFIX      #2550 [MediaBundle]         made documents list show description on add
-    * HOTFIX      #2547 [AdminBundle]         Included husky build which fixes the ie11 rendering issue of dropdowns
-    * HOTFIX      #2547 [AdminBundle]         Included husky build which fixes globalizing bug
+* 1.2.7 (2016-07-15)
+    * HOTFIX      #2617 [ContactBundle]         Setting default country by country-code instead of id
+    * HOTFIX      #2612 [CategoryBundle]        Added sort criteria for fallback test
+    * HOTFIX      #2610 [DocumentManagerBundle] Fixed serialization of concrete locales
+    * HOTFIX      #2605 [CategoryBundle]        Fixed order in combination with depth
+    * HOTFIX      #2600 [CategoryBundle]        fixed order of categories in content-type
+    * HOTFIX      #2585 [CoreBundle]            add fixtures without purging database
+    * HOTFIX      #2550 [MediaBundle]           made documents list show description on add
+    * HOTFIX      #2547 [AdminBundle]           Included husky build which fixes the ie11 rendering issue of dropdowns
+    * HOTFIX      #2547 [AdminBundle]           Included husky build which fixes globalizing bug
+    * BUGFIX            [WebsiteBundle]         Fixed a query issue on Postgresql
 
 * 1.2.6 (2016-07-05)
     * BUGFIX      #2530 [AdminBundle]         Included husky build which fixes the login translation issue

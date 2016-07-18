@@ -229,7 +229,7 @@ class DocumentInspector extends BaseDocumentInspector
             $locales = array_diff($locales, $this->getShadowLocales($document));
         }
 
-        return $locales;
+        return array_values($locales);
     }
 
     /**

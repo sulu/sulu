@@ -142,7 +142,13 @@ class CategoryManager implements CategoryManagerInterface
                         ),
                     ]
                 ),
-                'public.name'
+                'public.name',
+                false,
+                false,
+                '',
+                '',
+                '',
+                false
             );
             $this->fieldDescriptors['locale'] = new DoctrineCaseFieldDescriptor(
                 'locale',

@@ -163,6 +163,13 @@ now default `false`.
 The Interface or content-types has been cleaned. The function `ContentTypeInterface::readForPreview` will never
 be called in the future and can therefor be removed.
 
+## 1.2.7
+
+### Default Country
+
+The default country for addresses in the ContactBundle is set by the ISO 3166 country-code
+instead the of database-id now.
+
 ## 1.2.4
 
 ### ContactRepository
