@@ -679,34 +679,6 @@
                 <source>content.text_editor.error.removed-multiple</source>
                 <target>%s Links sind nicht mehr gültig.</target>
             </trans-unit>
-            <trans-unit id="41" resname="sulu-content.save-draft">
-                <source>sulu-content.save-draft</source>
-                <target>Als Entwurf speichern</target>
-            </trans-unit>
-            <trans-unit id="42" resname="sulu-content.save-publish">
-                <source>sulu-content.save-publish</source>
-                <target>Speichern und veröffentlichen</target>
-            </trans-unit>
-            <trans-unit id="43" resname="sulu-content.publish">
-                <source>sulu-content.publish</source>
-                <target>Veröffentlichen</target>
-            </trans-unit>
-            <trans-unit id="44" resname="sulu-content.published-shadow">
-                <source>sulu-content.published-shadow</source>
-                <target>Der Veröffentlichungsstatus wird vom Status der Hauptseite übernommen.</target>
-            </trans-unit>
-            <trans-unit id="45" resname="sulu-content.draft-label">
-                <source>sulu-content.draft-label</source>
-                <target><![CDATA[Du arbeitest an einem Entwurf, zuletzt gespeichert: %(changed)s von <b>%(user)s</b>]]></target>
-            </trans-unit>
-            <trans-unit id="46" resname="sulu-content.unpublish">
-                <source>sulu-content.unpublish</source>
-                <target>Veröffentlichung widerrufen</target>
-            </trans-unit>
-            <trans-unit id="47" resname="labels.error.content-unpublish-desc">
-                <source>labels.error.content-unpublish-desc</source>
-                <target>Veröffentlichung der Seite konnte nicht widerrufen werden.</target>
-            </trans-unit>
         </body>
     </file>
 </xliff>

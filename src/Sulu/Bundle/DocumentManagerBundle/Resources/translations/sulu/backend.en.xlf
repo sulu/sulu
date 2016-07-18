@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="de" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1" resname="sulu-document-manager.save-draft">
+                <source>sulu-document-manager.save-draft</source>
+                <target>Save as draft</target>
+            </trans-unit>
+            <trans-unit id="2" resname="sulu-document-manager.save-publish">
+                <source>sulu-document-manager.save-publish</source>
+                <target>Save and publish</target>
+            </trans-unit>
+            <trans-unit id="3" resname="sulu-document-manager.publish">
+                <source>sulu-document-manager.publish</source>
+                <target>Publish</target>
+            </trans-unit>
+            <trans-unit id="4" resname="sulu-document-manager.published-shadow">
+                <source>sulu-document-manager.published-shadow</source>
+                <target>The publishing state will be retrieved from the state of the main page.</target>
+            </trans-unit>
+            <trans-unit id="5" resname="sulu-document-manager.draft-label">
+                <source>sulu-document-manager.draft-label</source>
+                <target><![CDATA[You are working on a draft, last saved: %(changed)s by <b>%(user)s</b>]]></target>
+            </trans-unit>
+            <trans-unit id="6" resname="sulu-document-manager.unpublish">
+                <source>sulu-document-manager.unpublish</source>
+                <target>Unpublish</target>
+            </trans-unit>
+            <trans-unit id="7" resname="labels.error.unpublish-desc">
+                <source>labels.error.unpublish-desc</source>
+                <target>Page could not be unpublished.</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
