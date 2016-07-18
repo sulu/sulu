@@ -756,23 +756,6 @@ class NodeRepository implements NodeRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function orderBefore($uuid, $beforeUuid, $webspaceKey, $languageCode, $userId)
-    {
-        try {
-            // call mapper function
-            $structure = $this->getMapper()->orderBefore($uuid, $beforeUuid, $userId, $webspaceKey, $languageCode);
-        } catch (DocumentManagerException $ex) {
-            throw new RestException($ex->getMessage(), 1, $ex);
-        } catch (RepositoryException $ex) {
-            throw new RestException($ex->getMessage(), 1, $ex);
-        }
-
-        return $this->prepareNode($structure, $webspaceKey, $languageCode);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function orderAt($uuid, $position, $webspaceKey, $languageCode, $userId)
     {
         try {

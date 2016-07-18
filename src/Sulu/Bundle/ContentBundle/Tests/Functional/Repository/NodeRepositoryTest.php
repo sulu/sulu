@@ -451,32 +451,6 @@ class NodeRepositoryTest extends SuluTestCase
         return $data;
     }
 
-    public function testOrderBefore()
-    {
-        $data = $this->prepareOrderBeforeData();
-
-        $result = $this->nodeRepository->orderBefore($data[3]->getUuid(), $data[0]->getUuid(), 'sulu_io', 'en', 2);
-        $this->assertEquals('Test4', $result['title']);
-        $this->assertEquals('/test4', $result['path']);
-        $this->assertEquals('/news/test4', $result['url']);
-        //$this->assertEquals(2, $result['changer']);
-
-        $result = $this->nodeRepository->orderBefore($data[2]->getUuid(), $data[3]->getUuid(), 'sulu_io', 'en', 2);
-        $this->assertEquals('Test3', $result['title']);
-        $this->assertEquals('/test3', $result['path']);
-        $this->assertEquals('/news/test3', $result['url']);
-        //$this->assertEquals(2, $result['changer']);
-
-        $test = $this->nodeRepository->getNodes(null, 'sulu_io', 'en');
-        $this->assertEquals(4, count($test['_embedded']['nodes']));
-        $nodes = $test['_embedded']['nodes'];
-
-        $this->assertEquals('Test3', $nodes[0]['title']);
-        $this->assertEquals('Test4', $nodes[1]['title']);
-        $this->assertEquals('Test1', $nodes[2]['title']);
-        $this->assertEquals('Test2', $nodes[3]['title']);
-    }
-
     public function testOrderAt()
     {
         $data = $this->prepareOrderBeforeData();
@@ -499,88 +473,6 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('Test2', $nodes[1]['title']);
         $this->assertEquals('Test3', $nodes[2]['title']);
         $this->assertEquals('Test1', $nodes[3]['title']);
-    }
-
-    public function testOrderBeforeNonExistingSource()
-    {
-        $data = $this->prepareOrderBeforeData();
-        $this->setExpectedException('Sulu\Component\Rest\Exception\RestException');
-
-        $this->nodeRepository->orderBefore('123-123-123', $data[0]->getUuid(), 'sulu_io', 'en', 2);
-    }
-
-    public function testOrderBeforeNonExistingDestination()
-    {
-        $data = $this->prepareOrderBeforeData();
-        $this->setExpectedException('Sulu\Component\Rest\Exception\RestException');
-
-        $this->nodeRepository->orderBefore($data[0]->getUuid(), '123-123-123', 'sulu_io', 'en', 2);
-    }
-
-    public function testOrderBeforeInExternalLink()
-    {
-        $data = $this->prepareOrderBeforeData();
-
-        $newData = [
-            'title' => 'Test4',
-            'external' => 'www.google.at',
-            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
-        ];
-
-        $data[3] = $this->save(
-            $newData,
-            'external-link',
-            'sulu_io',
-            'en',
-            1,
-            true,
-            $data[3]->getUuid(),
-            null,
-            StructureInterface::STATE_PUBLISHED
-        );
-
-        $newData = [
-            'title' => 'Test3',
-            'internal_link' => $data[0]->getUuid(),
-            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
-        ];
-
-        $data[2] = $this->save(
-            $newData,
-            'internal-link',
-            'sulu_io',
-            'en',
-            1,
-            true,
-            $data[2]->getUuid(),
-            null,
-            StructureInterface::STATE_PUBLISHED
-        );
-
-        $result = $this->nodeRepository->orderBefore($data[3]->getUuid(), $data[0]->getUuid(), 'sulu_io', 'en', 2);
-        $this->assertEquals('Test4', $result['title']);
-        $this->assertEquals('/test4', $result['path']);
-        $this->assertEquals('www.google.at', $result['external']);
-        //$this->assertEquals(2, $result['changer']);
-
-        $result = $this->nodeRepository->orderBefore($data[2]->getUuid(), $data[3]->getUuid(), 'sulu_io', 'en', 2);
-        $this->assertEquals('Test3', $result['title']);
-        $this->assertEquals('/test3', $result['path']);
-        $this->assertEquals($data[0]->getUuid(), $result['internal_link']);
-        //$this->assertEquals(2, $result['changer']);
-
-        $test = $this->nodeRepository->getNodes(null, 'sulu_io', 'en');
-        $this->assertEquals(4, count($test['_embedded']['nodes']));
-        $nodes = $test['_embedded']['nodes'];
-
-        $this->assertEquals('Test3', $nodes[0]['title']);
-        $this->assertFalse($nodes[0]['hasSub']);
-        $this->assertEquals('Test4', $nodes[1]['title']);
-        $this->assertFalse($nodes[0]['hasSub']);
-        $this->assertEquals('Test1', $nodes[2]['title']);
-        $this->assertFalse($nodes[0]['hasSub']);
-        $this->assertEquals('Test2', $nodes[3]['title']);
-        $this->assertFalse($nodes[0]['hasSub']);
     }
 
     public function testCopyLocale()
