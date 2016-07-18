@@ -54,9 +54,9 @@ Feature: Collection management
         And I click the column navigation item "Collections"
         And I wait for the column navigation column 2
         And I double click the column navigation item "Foobar"
-        And I am on "/admin/"
-        And I wait a second
+        And I expect a data-navigation to appear
         And I am editing the media collection "Foobar"
+        And I click on the element ".fa-chevron-left"
         Then I expect to see "1" ".data-navigation-item" elements
 
     Scenario: Delete item
