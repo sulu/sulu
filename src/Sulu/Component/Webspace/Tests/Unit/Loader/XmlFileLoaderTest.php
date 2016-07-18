@@ -124,14 +124,14 @@ class XmlFileLoaderTest extends WebspaceTestCase
 
         $this->assertEquals('fr', $webspace->getLocalizations()[1]->getLanguage());
         $this->assertEquals('ca', $webspace->getLocalizations()[1]->getCountry());
-        $this->assertEquals(false, $webspace->getLocalizations()[1]->isDefault());
+        $this->assertEquals(true, $webspace->getLocalizations()[1]->isDefault());
 
         $this->assertEquals('de', $webspace->getLocalizations()[2]->getLanguage());
         $this->assertEquals(null, $webspace->getLocalizations()[2]->getCountry());
         $this->assertEquals(null, $webspace->getLocalizations()[2]->getShadow());
-        $this->assertEquals(true, $webspace->getLocalizations()[2]->isDefault());
+        $this->assertEquals(false, $webspace->getLocalizations()[2]->isDefault());
 
-        $this->assertEquals('de', $webspace->getDefaultLocalization()->getLocalization());
+        $this->assertEquals('fr_ca', $webspace->getDefaultLocalization()->getLocalization());
 
         $this->assertEquals('w', $webspace->getSegments()[0]->getKey());
         $this->assertEquals('winter', $webspace->getSegments()[0]->getName());
