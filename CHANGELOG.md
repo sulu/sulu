@@ -16,6 +16,7 @@ CHANGELOG for Sulu
     * BUGIFX      #2579 [ContentBundle]       Removed smart-content component destroy callback conflict
     * FEATURE     #2572 [AdminBundle]         Included husky build with autocomplete form mapper validation type
     * BUGFIX      #2564 [CustomUrlBundle]     made width of custom url inputs flexible
+    * BUGFIX      #2580 [AdminBundle]         made the navigation adapt on history back
     * FEATURE     #2557 [SecurityBundle]      Set user last login by a listener
     * ENHANCEMENT #2544 [PreviewBundle]       Bugfix for preview in firefox
     * BUGFIX      #2551 [SecurityBundle]      added search fields and search instancename for roles list search
