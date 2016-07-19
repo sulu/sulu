@@ -263,6 +263,33 @@ class DocumentInspector extends BaseDocumentInspector
     }
 
     /**
+     * Return the published locales for the given document.
+     *
+     * @param ShadowLocaleBehavior $document
+     *
+     * @return array
+     */
+    public function getPublishedLocales(ShadowLocaleBehavior $document)
+    {
+        $node = $this->getNode($document);
+        $locales = $this->getLocales($document);
+        $publishedLocales = [];
+
+        foreach ($locales as $locale) {
+            $publishedPropertyName = $this->encoder->localizedSystemName(
+                WorkflowStageSubscriber::PUBLISHED_FIELD,
+                $locale
+            );
+
+            if ($node->getPropertyValueWithDefault($publishedPropertyName, false)) {
+                $publishedLocales[] = $locale;
+            }
+        }
+
+        return $publishedLocales;
+    }
+
+    /**
      * Returns urls for given page for all locales in webspace.
      *
      * TODO: Implement a router service instead of this.

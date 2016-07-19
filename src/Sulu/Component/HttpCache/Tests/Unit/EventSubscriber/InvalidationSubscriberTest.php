@@ -12,22 +12,38 @@
 namespace Sulu\Component\HttpCache\Tests\Unit\EventListener;
 
 use Prophecy\Argument;
+use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
-use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
+use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
+use Sulu\Component\DocumentManager\Event\RemoveEvent;
+use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\HttpCache\EventSubscriber\InvalidationSubscriber;
+use Sulu\Component\HttpCache\HandlerInvalidatePathInterface;
 use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @var InvalidationSubscriber
+     */
+    private $invalidationSubscriber;
+
+    /**
+     * @var HandlerInvalidatePathInterface
+     */
+    private $pathHandler;
+
+    /**
      * @var HandlerInvalidateStructureInterface
      */
-    private $handler;
+    private $structureHandler;
 
     /**
      * @var StructureManagerInterface
@@ -40,57 +56,308 @@ class InvalidationSubscriberTest extends \PHPUnit_Framework_TestCase
     private $documentInspector;
 
     /**
-     * @var InvalidationSubscriber
+     * @var RlpStrategyInterface
      */
-    private $invalidationSubscriber;
+    private $rlpStrategy;
+
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
+     * @var string
+     */
+    private $env = 'prod';
 
     public function setUp()
     {
-        $this->handler = $this->prophesize(HandlerInvalidateStructureInterface::class);
+        $this->pathHandler = $this->prophesize(HandlerInvalidatePathInterface::class);
+        $this->structureHandler = $this->prophesize(HandlerInvalidateStructureInterface::class);
         $this->structureManager = $this->prophesize(StructureManagerInterface::class);
         $this->documentInspector = $this->prophesize(DocumentInspector::class);
+        $this->rlpStrategy = $this->prophesize(RlpStrategyInterface::class);
+        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
 
         $this->invalidationSubscriber = new InvalidationSubscriber(
-            $this->handler->reveal(),
+            $this->pathHandler->reveal(),
+            $this->structureHandler->reveal(),
             $this->structureManager->reveal(),
-            $this->documentInspector->reveal()
+            $this->documentInspector->reveal(),
+            $this->rlpStrategy->reveal(),
+            $this->webspaceManager->reveal(),
+            $this->env
         );
     }
 
-    public function testInvalidateDocumentForPublishing()
+    public function testInvalidateDocumentBeforePublishing()
     {
+        $documentLocale = 'en';
+        $documentUuid = '743389e6-2ac5-4673-9835-3e709a27a03d';
+        $documentWebspace = 'sulu_io';
+
+        $resourceLocator1 = '/path/to/1';
+        $resourceLocator2 = '/path/to/2';
+
+        $url1 = '{host}/path/to/1';
+        $url2 = '{host}/path/to/2';
+        $url3 = '{host}/other/to/2';
+
+        $document = $this->prophesize(BasePageDocument::class);
+        $document->getPublished()->willReturn(true);
+        $document->getUuid()->willReturn($documentUuid);
+        $document->getWebspaceName()->willReturn($documentWebspace);
+        $this->documentInspector->getLocale($document)->willReturn($documentLocale);
+
         $event = $this->prophesize(PublishEvent::class);
-        $document = $this->prophesize(StructureBehavior::class);
-        $metadata = $this->prophesize(Metadata::class);
-        $structureMetadata = $this->prophesize(StructureMetadata::class);
-        $structureBridge = $this->prophesize(StructureBridge::class);
-
-        $metadata->getAlias()->willReturn('page');
-        $event->getDocument()->willReturn($document->reveal());
-
-        $this->documentInspector->getMetadata($document->reveal())->willReturn($metadata->reveal());
-        $this->documentInspector->getStructureMetadata($document->reveal())->willReturn($structureMetadata->reveal());
-
-        $this->structureManager->wrapStructure(
-            'page',
-            $structureMetadata->reveal()
-        )->willReturn($structureBridge->reveal());
-
-        $structureBridge->setDocument($document->reveal())->shouldBeCalled();
-        $this->handler->invalidateStructure($structureBridge->reveal())->shouldBeCalled();
-
-        $this->invalidationSubscriber->invalidateDocumentForPublishing($event->reveal());
-    }
-
-    public function testInvalidateDocumentForPublishingWithWrongDocument()
-    {
-        $event = $this->prophesize(PublishEvent::class);
-        $document = new \stdClass();
-
         $event->getDocument()->willReturn($document);
 
-        $this->handler->invalidateStructure(Argument::cetera())->shouldNotBeCalled();
+        $structureMetadata = $this->prophesize(StructureMetadata::class);
+        $this->documentInspector->getStructureMetadata($document)->willReturn($structureMetadata);
+        $metadata = $this->prophesize(Metadata::class);
+        $metadata->getAlias()->willReturn('alias');
+        $this->documentInspector->getMetadata($document)->willReturn($metadata);
 
-        $this->invalidationSubscriber->invalidateDocumentForPublishing($event->reveal());
+        $structureBridge = $this->prophesize(StructureBridge::class);
+        $this->structureManager->wrapStructure('alias', $structureMetadata)->willReturn($structureBridge);
+        $structureBridge->setDocument($document)->shouldBeCalled();
+        $this->structureHandler->invalidateStructure($structureBridge)->shouldBeCalled();
+
+        $this->rlpStrategy->loadByContentUuid($documentUuid, $documentWebspace, $documentLocale)->willReturn($resourceLocator2);
+        $rli = $this->prophesize(ResourceLocatorInformation::class);
+        $rli->getResourceLocator()->willReturn($resourceLocator1);
+        $this->rlpStrategy->loadHistoryByContentUuid($documentUuid, $documentWebspace, $documentLocale)->willReturn([$rli]);
+
+        $this->webspaceManager->findUrlsByResourceLocator(
+            $resourceLocator1,
+            $this->env,
+            $documentLocale,
+            $documentWebspace
+        )->willReturn([$url1]);
+
+        $this->webspaceManager->findUrlsByResourceLocator(
+            $resourceLocator2,
+            $this->env,
+            $documentLocale,
+            $documentWebspace
+        )->willReturn([$url2, $url3]);
+
+        $this->pathHandler->invalidatePath($url1)->shouldBeCalled();
+        $this->pathHandler->invalidatePath($url2)->shouldBeCalled();
+        $this->pathHandler->invalidatePath($url3)->shouldBeCalled();
+
+        $this->invalidationSubscriber->invalidateDocumentBeforePublishing($event->reveal());
+    }
+
+    public function testInvalidateDocumentBeforePublishingDocumentNotPublished()
+    {
+        $document = $this->prophesize(BasePageDocument::class);
+        $document->getPublished()->willReturn(false);
+
+        $event = $this->prophesize(PublishEvent::class);
+        $event->getDocument()->willReturn($document);
+
+        $structureMetadata = $this->prophesize(StructureMetadata::class);
+        $this->documentInspector->getStructureMetadata($document)->willReturn($structureMetadata);
+        $metadata = $this->prophesize(Metadata::class);
+        $metadata->getAlias()->willReturn('alias');
+        $this->documentInspector->getMetadata($document)->willReturn($metadata);
+
+        $structureBridge = $this->prophesize(StructureBridge::class);
+        $this->structureManager->wrapStructure('alias', $structureMetadata)->willReturn($structureBridge);
+        $structureBridge->setDocument($document)->shouldBeCalled();
+        $this->structureHandler->invalidateStructure($structureBridge)->shouldBeCalled();
+
+        $this->pathHandler->invalidatePath(Argument::any())->shouldNotBeCalled();
+
+        $this->invalidationSubscriber->invalidateDocumentBeforePublishing($event->reveal());
+    }
+
+    public function testInvalidateDocumentBeforePublishingWrongDocument()
+    {
+        $document = new \stdClass();
+        $event = $this->prophesize(PublishEvent::class);
+        $event->getDocument()->willReturn($document);
+
+        $this->pathHandler->invalidatePath(Argument::any())->shouldNotBeCalled();
+
+        $this->invalidationSubscriber->invalidateDocumentBeforePublishing($event->reveal());
+    }
+
+    public function testInvalidateDocumentBeforeUnpublishing()
+    {
+        $documentLocale = 'en';
+        $documentUuid = '743389e6-2ac5-4673-9835-3e709a27a03d';
+        $documentWebspace = 'sulu_io';
+
+        $resourceLocator1 = '/path/to/1';
+        $resourceLocator2 = '/path/to/2';
+
+        $url1 = '{host}/path/to/1';
+        $url2 = '{host}/path/to/2';
+
+        $document = $this->prophesize(BasePageDocument::class);
+        $document->getPublished()->willReturn(true);
+        $document->getUuid()->willReturn($documentUuid);
+        $document->getWebspaceName()->willReturn($documentWebspace);
+        $this->documentInspector->getLocale($document)->willReturn($documentLocale);
+
+        $event = $this->prophesize(UnpublishEvent::class);
+        $event->getDocument()->willReturn($document);
+
+        $structureMetadata = $this->prophesize(StructureMetadata::class);
+        $this->documentInspector->getStructureMetadata($document)->willReturn($structureMetadata);
+        $metadata = $this->prophesize(Metadata::class);
+        $metadata->getAlias()->willReturn('alias');
+        $this->documentInspector->getMetadata($document)->willReturn($metadata);
+
+        $structureBridge = $this->prophesize(StructureBridge::class);
+        $this->structureManager->wrapStructure('alias', $structureMetadata)->willReturn($structureBridge);
+        $structureBridge->setDocument($document)->shouldBeCalled();
+        $this->structureHandler->invalidateStructure($structureBridge)->shouldBeCalled();
+
+        $this->rlpStrategy->loadByContentUuid($documentUuid, $documentWebspace, $documentLocale)->willReturn($resourceLocator2);
+        $rli = $this->prophesize(ResourceLocatorInformation::class);
+        $rli->getResourceLocator()->willReturn($resourceLocator1);
+        $this->rlpStrategy->loadHistoryByContentUuid($documentUuid, $documentWebspace, $documentLocale)->willReturn([$rli]);
+
+        $this->webspaceManager->findUrlsByResourceLocator(
+            $resourceLocator1,
+            $this->env,
+            $documentLocale,
+            $documentWebspace
+        )->willReturn([$url1]);
+
+        $this->webspaceManager->findUrlsByResourceLocator(
+            $resourceLocator2,
+            $this->env,
+            $documentLocale,
+            $documentWebspace
+        )->willReturn([$url2]);
+
+        $this->pathHandler->invalidatePath($url1)->shouldBeCalled();
+        $this->pathHandler->invalidatePath($url2)->shouldBeCalled();
+
+        $this->invalidationSubscriber->invalidateDocumentBeforeUnpublishing($event->reveal());
+    }
+
+    public function testInvalidateDocumentBeforeUnpublishingDocumentNotPublished()
+    {
+        $document = $this->prophesize(BasePageDocument::class);
+        $document->getPublished()->willReturn(false);
+
+        $event = $this->prophesize(UnpublishEvent::class);
+        $event->getDocument()->willReturn($document);
+
+        $structureMetadata = $this->prophesize(StructureMetadata::class);
+        $this->documentInspector->getStructureMetadata($document)->willReturn($structureMetadata);
+        $metadata = $this->prophesize(Metadata::class);
+        $metadata->getAlias()->willReturn('alias');
+        $this->documentInspector->getMetadata($document)->willReturn($metadata);
+
+        $structureBridge = $this->prophesize(StructureBridge::class);
+        $this->structureManager->wrapStructure('alias', $structureMetadata)->willReturn($structureBridge);
+        $structureBridge->setDocument($document)->shouldBeCalled();
+        $this->structureHandler->invalidateStructure($structureBridge)->shouldBeCalled();
+
+        $this->pathHandler->invalidatePath(Argument::any())->shouldNotBeCalled();
+
+        $this->invalidationSubscriber->invalidateDocumentBeforeUnpublishing($event->reveal());
+    }
+
+    public function testInvalidateDocumentBeforeUnpublishingWrongDocument()
+    {
+        $document = new \stdClass();
+        $event = $this->prophesize(PublishEvent::class);
+        $event->getDocument()->willReturn($document);
+
+        $this->pathHandler->invalidatePath(Argument::any())->shouldNotBeCalled();
+
+        $this->invalidationSubscriber->invalidateDocumentBeforePublishing($event->reveal());
+    }
+
+    public function testInvalidateDocumentBeforeRemoving()
+    {
+        $documentLocales = ['en', 'de'];
+        $documentUuid = '743389e6-2ac5-4673-9835-3e709a27a03d';
+        $documentWebspace = 'sulu_io';
+
+        $resourceLocatorEn1 = '/path/to/1';
+        $resourceLocatorDe1 = '/pfad/zu/1';
+        $resourceLocatorEn2 = '/path/to/2';
+
+        $urlEn1 = '{host}/path/to/1';
+        $urlDe1 = '{host}/other/to/2';
+        $urlEn2 = '{host}/path/to/2';
+
+        $document = $this->prophesize(BasePageDocument::class);
+        $document->getPublished()->willReturn(true);
+        $document->getUuid()->willReturn($documentUuid);
+        $document->getWebspaceName()->willReturn($documentWebspace);
+        $this->documentInspector->getPublishedLocales($document)->willReturn($documentLocales);
+
+        $event = $this->prophesize(RemoveEvent::class);
+        $event->getDocument()->willReturn($document);
+
+        $structureMetadata = $this->prophesize(StructureMetadata::class);
+        $this->documentInspector->getStructureMetadata($document)->willReturn($structureMetadata);
+        $metadata = $this->prophesize(Metadata::class);
+        $metadata->getAlias()->willReturn('alias');
+        $this->documentInspector->getMetadata($document)->willReturn($metadata);
+
+        $structureBridge = $this->prophesize(StructureBridge::class);
+        $this->structureManager->wrapStructure('alias', $structureMetadata)->willReturn($structureBridge);
+        $structureBridge->setDocument($document)->shouldBeCalled();
+        $this->structureHandler->invalidateStructure($structureBridge)->shouldBeCalled();
+
+        $this->rlpStrategy->loadByContentUuid($documentUuid, $documentWebspace, $documentLocales[0])->willReturn($resourceLocatorEn1);
+        $rli = $this->prophesize(ResourceLocatorInformation::class);
+        $rli->getResourceLocator()->willReturn($resourceLocatorEn2);
+        $this->rlpStrategy->loadHistoryByContentUuid($documentUuid, $documentWebspace, $documentLocales[0])->willReturn([$rli]);
+
+        // de resource-locator related
+        $this->rlpStrategy->loadByContentUuid($documentUuid, $documentWebspace, $documentLocales[1])->willReturn($resourceLocatorDe1);
+        $rli = $this->prophesize(ResourceLocatorInformation::class);
+        $this->rlpStrategy->loadHistoryByContentUuid($documentUuid, $documentWebspace, $documentLocales[1])->willReturn([]);
+
+        // en url related
+        $this->webspaceManager->findUrlsByResourceLocator(
+            $resourceLocatorEn1,
+            $this->env,
+            $documentLocales[0],
+            $documentWebspace
+        )->willReturn([$urlEn1]);
+
+        $this->webspaceManager->findUrlsByResourceLocator(
+            $resourceLocatorEn2,
+            $this->env,
+            $documentLocales[0],
+            $documentWebspace
+        )->willReturn([$urlEn2]);
+
+        // de url related
+        $this->webspaceManager->findUrlsByResourceLocator(
+            $resourceLocatorDe1,
+            $this->env,
+            $documentLocales[1],
+            $documentWebspace
+        )->willReturn([$urlDe1]);
+
+        $this->pathHandler->invalidatePath($urlEn1)->shouldBeCalled();
+        $this->pathHandler->invalidatePath($urlDe1)->shouldBeCalled();
+        $this->pathHandler->invalidatePath($urlEn2)->shouldBeCalled();
+
+        $this->invalidationSubscriber->invalidateDocumentBeforeRemoving($event->reveal());
+    }
+
+    public function testInvalidateDocumentBeforeRemovingWrongDocument()
+    {
+        $document = new \stdClass();
+        $event = $this->prophesize(RemoveEvent::class);
+        $event->getDocument()->willReturn($document);
+
+        $this->pathHandler->invalidatePath(Argument::any())->shouldNotBeCalled();
+
+        $this->invalidationSubscriber->invalidateDocumentBeforeRemoving($event->reveal());
     }
 }

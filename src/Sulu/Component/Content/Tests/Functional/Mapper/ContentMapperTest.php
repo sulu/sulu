@@ -2507,6 +2507,7 @@ class ContentMapperTest extends SuluTestCase
         $this->documentManager->publish($page, 'de');
         $this->documentManager->flush();
 
+        $page = $this->documentManager->find($page->getUuid(), 'en', ['load_ghost_content' => false]);
         $page->setTitle('Description');
         $page->setResourceSegment('/description');
         $page->setWorkflowStage(WorkflowStage::TEST);
@@ -2563,7 +2564,7 @@ class ContentMapperTest extends SuluTestCase
         $documentAlias = Structure::TYPE_PAGE
     ) {
         try {
-            $document = $this->documentManager->find($uuid, $locale);
+            $document = $this->documentManager->find($uuid, $locale, ['load_ghost_content' => false]);
         } catch (DocumentNotFoundException $e) {
             $document = $this->documentManager->create($documentAlias);
         }

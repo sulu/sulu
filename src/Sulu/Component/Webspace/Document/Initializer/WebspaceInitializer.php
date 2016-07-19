@@ -13,7 +13,6 @@ namespace Sulu\Component\Webspace\Document\Initializer;
 
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\InitializerInterface;
-use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
@@ -88,6 +87,8 @@ class WebspaceInitializer implements InitializerInterface
         }
 
         $homeType = $webspace->getDefaultTemplate('home');
+        $existingLocales = [];
+        $homeDocument = null;
         if ($this->nodeManager->has($homePath)) {
             $homeDocument = $this->documentManager->find($homePath, null, [
                 'load_ghost_content' => false,
@@ -95,12 +96,6 @@ class WebspaceInitializer implements InitializerInterface
                 'path' => $homePath,
             ]);
             $existingLocales = $this->inspector->getLocales($homeDocument);
-        } else {
-            $homeDocument = new HomeDocument();
-            $homeDocument->setTitle('Homepage');
-            $homeDocument->setStructureType($homeType);
-            $homeDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
-            $existingLocales = [];
         }
 
         foreach ($webspaceLocales as $webspaceLocale) {
@@ -111,12 +106,21 @@ class WebspaceInitializer implements InitializerInterface
 
             $output->writeln(sprintf('  [+] <info>homepage</info>: [%s] %s (%s)', $homeType, $homePath, $webspaceLocale));
 
-            $this->documentManager->persist($homeDocument, $webspaceLocale, [
-                'path' => $homePath,
-                'auto_create' => true,
-                'ignore_required' => true,
-            ]);
+            $persistOptions = ['ignore_required' => true];
+            if (!$homeDocument) {
+                $homeDocument = new HomeDocument();
+                $persistOptions['path'] = $homePath;
+                $persistOptions['auto_create'] = true;
+            } else {
+                $homeDocument = $this->documentManager->find($homePath, $webspaceLocale, [
+                    'load_ghost_content' => false,
+                ]);
+            }
 
+            $homeDocument->setTitle('Homepage');
+            $homeDocument->setStructureType($homeType);
+
+            $this->documentManager->persist($homeDocument, $webspaceLocale, $persistOptions);
             $this->documentManager->publish($homeDocument, $webspaceLocale);
 
             $routePath = $routesPath . '/' . $webspaceLocale;

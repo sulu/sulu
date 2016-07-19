@@ -1527,6 +1527,7 @@ class NodeControllerTest extends SuluTestCase
         $this->documentManager->publish($document, 'en');
         $this->documentManager->flush();
 
+        $document = $this->documentManager->find($document->getUuid(), 'de', ['load_ghost_content' => false]);
         $document->setTitle('test_de');
         $document->setResourceSegment('/test_de');
         $document->setStructureType('default');
@@ -1541,7 +1542,6 @@ class NodeControllerTest extends SuluTestCase
         $this->documentManager->publish($document, 'de');
         $this->documentManager->flush();
 
-        $document = $this->documentManager->find($document->getUuid(), 'de');
         $document->setShadowLocaleEnabled(true);
         $document->setShadowLocale('en');
         $this->documentManager->persist($document, 'de');
@@ -1572,6 +1572,7 @@ class NodeControllerTest extends SuluTestCase
     {
         $document = $this->createPageDocument();
         $document->setTitle('test_de');
+        $document->setResourceSegment('/test_de');
         $document->setStructureType('default');
         $this->documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
         $this->documentManager->publish($document, 'de');
