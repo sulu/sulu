@@ -2,6 +2,14 @@
 
 ## dev-develop
 
+### PHPCR
+
+To adapt to the new PHPCR structure execute the migrations:
+
+```
+app/console phpcr:migrations:migrate
+```
+
 ### NodeRepository
 
 The `orderBefore` method of the `NodeRepository` has been removed. Use the
@@ -17,26 +25,8 @@ translations in the database. If so, please use the files in the
 
 ### Publishing
 
-For the publishing a separate workspace was introduced. This has to be
-initialized using the following command:
-
-```bash
-app/console sulu:document:init
-```
-
-Then you have to export the current default workspace:
-
-```bash
-app/console doctrine:phpcr:workspace:export -p /cmf cmf.xml
-app/console doctrine:phpcr:workspace:export -p /jcr:versions versions.xml
-```
-
-And import it into the new live workspace:
-
-```bash
-app/console doctrine:phpcr:workspace:import -p / cmf.xml --session=live
-app/console doctrine:phpcr:workspace:import -p / versions.xml --session=live
-```
+For the publishing a separate workspace was introduced. This workspace
+will be created and correctly filled by the PHPCR migrations.
 
 Because the search index is now split into draft and live pages you have
 to reindex all the content:
