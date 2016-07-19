@@ -106,17 +106,21 @@
   cursor: pointer;
 }
 /* line 103, ../scss/modules/collection.scss */
+.masonry-container .masonry-grid .masonry-item.action-navigator {
+  cursor: pointer;
+}
+/* line 107, ../scss/modules/collection.scss */
 .masonry-container .masonry-grid .masonry-item .action-navigator, .masonry-container .masonry-grid .masonry-item .download-navigator {
   cursor: pointer;
   color: #000;
 }
 
-/* line 112, ../scss/modules/collection.scss */
+/* line 116, ../scss/modules/collection.scss */
 .sticky-toolbar.fixed .list-toolbar-container.collection {
   width: 92.75%;
 }
 
-/* line 118, ../scss/modules/collection.scss */
+/* line 122, ../scss/modules/collection.scss */
 .toolbar-hidden .collection-header-container {
   top: -60px;
 }

@@ -611,7 +611,7 @@
                 <source>content.changed-warning.description</source>
                 <target>Cette page a été changée par un autre utilisateur dans l’intervalle. En cas que cette page est sauvegardée, ces données se perdent.</target>
             </trans-unit>
-            <trans-unit id="26" resname="content.changed-warning.ok-buttoyn">
+            <trans-unit id="26" resname="content.changed-warning.ok-button">
                 <source>content.changed-warning.ok-button</source>
                 <target>Enregistrer la page</target>
             </trans-unit>

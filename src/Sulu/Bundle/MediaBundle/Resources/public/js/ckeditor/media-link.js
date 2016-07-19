@@ -1,6 +1,6 @@
 define([
     'services/husky/translator',
-    'text!sulucontentcss/ckeditor-plugin.css'
+    'text!sulumediacss/ckeditor/media-link-plugin.css'
 ], function(Translator, editorCSS) {
 
     'use strict';
@@ -20,6 +20,7 @@ define([
                 title: selection.getSelectedText()
             };
         },
+
         render = function(editor, selection, link) {
             var tag = selection.getStartElement();
 
@@ -36,6 +37,7 @@ define([
 
             editor.fire('change');
         },
+
         remove = function(editor, selection) {
             var link = getLinkBySelection(selection),
                 element = selection.getStartElement(),
@@ -50,7 +52,35 @@ define([
             tagName: 'sulu:media',
 
             init: function(editor) {
-                // extend dtd
+                this.extendCkEditorDtd();
+
+                editor.addCommand('mediaLinkDialog', this.getMediaLinkDialogCommand(editor));
+                editor.addCommand('removeMediaLink', this.getRemoveMediaLinkCommand(editor));
+
+                editor.ui.addButton(
+                    'MediaLink',
+                    {
+                        label: sandbox.translate('sulu-media.ckeditor.media-link'),
+                        command: 'mediaLinkDialog',
+                        icon: '/bundles/sulumedia/img/icon_link_media.png'
+                    }
+                );
+
+                if (editor.contextMenu) {
+                    this.addSuluMenuGroup(editor);
+
+                    editor.contextMenu.addListener(function(element) {
+                        if (element.getAscendant('sulu:media', true)) {
+                            return {
+                                mediaLinkItem: CKEDITOR.TRISTATE_OFF,
+                                removeMediaLinkItem: CKEDITOR.TRISTATE_OFF
+                            };
+                        }
+                    });
+                }
+            },
+
+            extendCkEditorDtd: function() {
                 CKEDITOR.dtd[this.tagName] = 1;
                 CKEDITOR.dtd.body[this.tagName] = 1;
                 CKEDITOR.dtd.div[this.tagName] = 1;
@@ -58,8 +88,10 @@ define([
                 CKEDITOR.dtd.p[this.tagName] = 1;
                 CKEDITOR.dtd.$block[this.tagName] = 1;
                 CKEDITOR.dtd.$removeEmpty[this.tagName] = 1;
+            },
 
-                editor.addCommand('mediaLinkDialog', {
+            getMediaLinkDialogCommand: function(editor) {
+                return {
                     dialogName: 'mediaLinkDialog',
                     allowedContent: 'sulu:media[title,removed,!id]',
                     requiredContent: 'sulu:media[id]',
@@ -67,7 +99,7 @@ define([
                         var $element = $('<div/>'),
                             link = getLinkBySelection(editor.getSelection());
 
-                        $('body').append($element);
+                        $('#content').append($element);
 
                         sandbox.start([
                             {
@@ -80,10 +112,10 @@ define([
                                     removeable: !!link.id,
                                     instanceName: 'media-link',
                                     translations: {
-                                        title: 'media.ckeditor.media-link',
-                                        save: 'media.ckeditor.media-link.dialog.save',
-                                        remove: 'media.ckeditor.media-link.dialog.remove',
-                                        selectedTitle: 'media.ckeditor.media-link.dialog.selected-title'
+                                        title: 'sulu-media.ckeditor.media-link',
+                                        save: 'sulu-media.ckeditor.media-link.dialog.save',
+                                        remove: 'sulu-media.ckeditor.media-link.dialog.remove',
+                                        selectedTitle: 'sulu-media.ckeditor.media-link.dialog.selected-title'
                                     },
                                     removeOnClose: true,
                                     openOnStart: true,
@@ -103,8 +135,11 @@ define([
                             }
                         ]);
                     }
-                });
-                editor.addCommand('removeMediaLink', {
+                };
+            },
+
+            getRemoveMediaLinkCommand: function(editor) {
+                return {
                     exec: function() {
                         remove(editor, editor.getSelection());
                     },
@@ -122,46 +157,27 @@ define([
                     },
                     contextSensitive: 1,
                     startDisabled: 1
+                };
+            },
+
+            addSuluMenuGroup: function(editor) {
+                editor.addMenuGroup('suluGroup');
+                editor.addMenuItem('mediaLinkItem', {
+                    label: sandbox.translate('sulu-media.ckeditor.media-link.edit'),
+                    icon: '/bundles/sulumedia/img/icon_link_media.png',
+                    command: 'mediaLinkDialog',
+                    group: 'suluGroup'
                 });
-
-                editor.ui.addButton(
-                    'MediaLink',
-                    {
-                        label: sandbox.translate('media.ckeditor.media-link'),
-                        command: 'mediaLinkDialog',
-                        icon: '/bundles/sulumedia/img/icon_link_media.png'
-                    }
-                );
-
-                if (editor.contextMenu) {
-                    editor.addMenuGroup('suluGroup');
-                    editor.addMenuItem('mediaLinkItem', {
-                        label: sandbox.translate('media.ckeditor.media-link.edit'),
-                        icon: '/bundles/sulumedia/img/icon_link_media.png',
-                        command: 'mediaLinkDialog',
-                        group: 'suluGroup'
-                    });
-                    editor.addMenuItem('removeMediaLinkItem', {
-                        label: sandbox.translate('media.ckeditor.media-link.edit.remove'),
-                        icon: '/bundles/sulumedia/img/icon_remove_link_media.png',
-                        command: 'removeMediaLink',
-                        group: 'suluGroup'
-                    });
-
-                    editor.contextMenu.addListener(function(element) {
-                        if (element.getAscendant('sulu:media', true)) {
-                            return {
-                                mediaLinkItem: CKEDITOR.TRISTATE_OFF,
-                                removeMediaLinkItem: CKEDITOR.TRISTATE_OFF
-                            };
-                        }
-                    });
-                }
+                editor.addMenuItem('removeMediaLinkItem', {
+                    label: sandbox.translate('sulu-media.ckeditor.media-link.edit.remove'),
+                    icon: '/bundles/sulumedia/img/icon_remove_link_media.png',
+                    command: 'removeMediaLink',
+                    group: 'suluGroup'
+                });
             },
 
             onLoad: function() {
                 CKEDITOR.addCss(_.template(editorCSS, {
-                    tag: 'media',
                     translations: {
                         unpublished: Translator.translate('content.text_editor.error.unpublished'),
                         removed: Translator.translate('content.text_editor.error.removed')

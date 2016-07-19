@@ -79,11 +79,11 @@ define([
             },
 
             translations: {
-                title: 'media-selection.overlay.title',
-                save: 'media-selection.overlay.save',
+                title: 'sulu-media.selection.overlay.title',
+                save: 'sulu-media.selection.overlay.save',
                 remove: 'public.remove',
                 uploadInfo: 'media-selection.list-toolbar.upload-info',
-                selectedTitle: 'media-selection.overlay.selected-title',
+                selectedTitle: 'sulu-media.selection.overlay.selected-title',
                 allMedias: 'media-selection.overlay.all-medias',
                 noData: 'navigation.media.collections.empty',
                 navigationTitle: 'navigation.media.collections',

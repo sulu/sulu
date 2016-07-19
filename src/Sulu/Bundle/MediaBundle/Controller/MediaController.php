@@ -116,32 +116,27 @@ class MediaController extends AbstractMediaController implements
         $fieldDescriptors = $this->getFieldDescriptors($this->getLocale($request), false);
         $ids = array_filter(explode(',', $request->get('ids')));
         $listBuilder = $this->getListBuilder($request, $fieldDescriptors, $ids);
-        $listResponse = [];
-        $count = 0;
+        $listResponse = $listBuilder->execute();
+        $count = $listBuilder->count();
 
-        if ($request->get('ids') === null || count($ids) > 0) {
-            $listResponse = $listBuilder->execute();
-            $count = $listBuilder->count();
+        for ($i = 0, $length = count($listResponse); $i < $length; ++$i) {
+            $format = $this->getFormatManager()->getFormats(
+                $listResponse[$i]['id'],
+                $listResponse[$i]['name'],
+                $listResponse[$i]['storageOptions'],
+                $listResponse[$i]['version'],
+                $listResponse[$i]['mimeType']
+            );
 
-            for ($i = 0, $length = count($listResponse); $i < $length; ++$i) {
-                $format = $this->getFormatManager()->getFormats(
-                    $listResponse[$i]['id'],
-                    $listResponse[$i]['name'],
-                    $listResponse[$i]['storageOptions'],
-                    $listResponse[$i]['version'],
-                    $listResponse[$i]['mimeType']
-                );
-
-                if (0 < count($format)) {
-                    $listResponse[$i]['thumbnails'] = $format;
-                }
-
-                $listResponse[$i]['url'] = $this->getMediaManager()->getUrl(
-                    $listResponse[$i]['id'],
-                    $listResponse[$i]['name'],
-                    $listResponse[$i]['version']
-                );
+            if (0 < count($format)) {
+                $listResponse[$i]['thumbnails'] = $format;
             }
+
+            $listResponse[$i]['url'] = $this->getMediaManager()->getUrl(
+                $listResponse[$i]['id'],
+                $listResponse[$i]['name'],
+                $listResponse[$i]['version']
+            );
         }
 
         if (0 < count($ids)) {

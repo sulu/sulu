@@ -12,9 +12,6 @@ require.config({
         sulumedia: '../../sulumedia/js',
         sulumediacss: '../../sulumedia/css',
 
-        // if content will be registered later
-        sulucontentcss: '../../sulucontent/css',
-
         'extensions/masonry': '../../sulumedia/js/extensions/masonry',
         'extensions/sulu-buttons-mediabundle': '../../sulumedia/js/extensions/sulu-buttons',
 

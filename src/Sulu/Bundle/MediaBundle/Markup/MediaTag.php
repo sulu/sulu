@@ -12,10 +12,8 @@
 namespace Sulu\Bundle\MediaBundle\Markup;
 
 use Sulu\Bundle\MarkupBundle\Tag\TagInterface;
-use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
-use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 
 /**
  * Extends the sulu markup with the "sulu:link" tag.
@@ -30,14 +28,9 @@ class MediaTag implements TagInterface
     protected static $entityName = 'SuluMediaBundle:Media';
 
     /**
-     * @var DoctrineListBuilderFactory
+     * @var MediaRepositoryInterface
      */
-    private $listBuilderFactory;
-
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
+    private $mediaRepository;
 
     /**
      * @var MediaManagerInterface
@@ -45,17 +38,14 @@ class MediaTag implements TagInterface
     private $mediaManager;
 
     /**
-     * @param DoctrineListBuilderFactory $listBuilderFactory
-     * @param FieldDescriptorFactoryInterface $fieldDescriptorFactory
+     * @param MediaRepositoryInterface $mediaRepository
      * @param MediaManagerInterface $mediaManager
      */
     public function __construct(
-        DoctrineListBuilderFactory $listBuilderFactory,
-        FieldDescriptorFactoryInterface $fieldDescriptorFactory,
+        MediaRepositoryInterface $mediaRepository,
         MediaManagerInterface $mediaManager
     ) {
-        $this->listBuilderFactory = $listBuilderFactory;
-        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
+        $this->mediaRepository = $mediaRepository;
         $this->mediaManager = $mediaManager;
     }
 
@@ -68,23 +58,7 @@ class MediaTag implements TagInterface
 
         $result = [];
         foreach ($attributesByTag as $tag => $attributes) {
-            if (!array_key_exists($attributes['id'], $medias)) {
-                $result[$tag] = array_key_exists('content', $attributes) ? $attributes['content'] :
-                    (array_key_exists('title', $attributes) ? $attributes['title'] : '');
-
-                continue;
-            }
-
-            $media = $medias[$attributes['id']];
-            $title = !empty($attributes['title']) ? $attributes['title'] : $media['title'];
-            $text = !empty($attributes['content']) ? $attributes['content'] : $media['title'];
-
-            $result[$tag] = sprintf(
-                '<a href="%s" title="%s">%s</a>',
-                $media['url'],
-                $title,
-                $text
-            );
+            $result[$tag] = $this->createMarkupForAttributes($attributes, $medias);
         }
 
         return $result;
@@ -108,6 +82,43 @@ class MediaTag implements TagInterface
     }
 
     /**
+     * For given attributes of a tag, this method constructs the actual markup.
+     *
+     * @param $attributes array The attributes of a media tag
+     * @param $medias array The array of medias corresponding the the ids of all passed attributes
+     *
+     * @return string The markup for the given attributes
+     */
+    private function createMarkupForAttributes($attributes, $medias)
+    {
+        if (!array_key_exists($attributes['id'], $medias)) {
+            if (array_key_exists('content', $attributes)) {
+                return $attributes['content'];
+            }
+            if (array_key_exists('title', $attributes)) {
+                return $attributes['title'];
+            }
+
+            return '';
+        }
+
+        $media = $medias[$attributes['id']];
+        $title = !empty($attributes['title']) ? $attributes['title'] : $media['title'];
+        $text = !empty($attributes['content']) ? $attributes['content'] : $media['title'];
+
+        if (empty($title)) {
+            $title = $media['defaultTitle'];
+        }
+
+        return sprintf(
+            '<a href="%s" title="%s">%s</a>',
+            $media['url'],
+            $title,
+            $text
+        );
+    }
+
+    /**
      * Return assets by id for given attributes.
      *
      * @param array $attributesByTag
@@ -128,22 +139,7 @@ class MediaTag implements TagInterface
             )
         );
 
-        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptorForClass(
-            Media::class,
-            ['locale' => $locale]
-        );
-
-        $listBuilder = $this->listBuilderFactory->create(self::$entityName);
-        $listBuilder->setFieldDescriptors($fieldDescriptors);
-        $listBuilder->in($fieldDescriptors['id'], $ids);
-        $listBuilder->limit(count($ids));
-
-        $listBuilder->addSelectField($fieldDescriptors['id']);
-        $listBuilder->addSelectField($fieldDescriptors['version']);
-        $listBuilder->addSelectField($fieldDescriptors['name']);
-        $listBuilder->addSelectField($fieldDescriptors['title']);
-
-        $medias = $listBuilder->execute();
+        $medias = $this->mediaRepository->findMediaDisplayInfo($ids, $locale);
 
         $result = [];
         foreach ($medias as $media) {

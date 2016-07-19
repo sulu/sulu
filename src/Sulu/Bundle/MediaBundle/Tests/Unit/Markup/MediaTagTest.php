@@ -11,26 +11,16 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Markup;
 
-use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Markup\MediaTag;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
-use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
-use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 
 class MediaTagTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var DoctrineListBuilderFactory
+     * @var MediaRepositoryInterface
      */
-    private $listBuilderFactory;
-
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
+    private $mediaRepository;
 
     /**
      * @var MediaManagerInterface
@@ -42,68 +32,15 @@ class MediaTagTest extends \PHPUnit_Framework_TestCase
      */
     private $mediaTag;
 
-    /**
-     * @var ListBuilderInterface
-     */
-    private $listBuilder;
-
-    /**
-     * @var FieldDescriptorInterface[]
-     */
-    private $fieldDescriptors;
-
     protected function setUp()
     {
-        $this->listBuilderFactory = $this->prophesize(DoctrineListBuilderFactory::class);
-        $this->fieldDescriptorFactory = $this->prophesize(FieldDescriptorFactoryInterface::class);
+        $this->mediaRepository = $this->prophesize(MediaRepositoryInterface::class);
         $this->mediaManager = $this->prophesize(MediaManagerInterface::class);
 
         $this->mediaTag = new MediaTag(
-            $this->listBuilderFactory->reveal(),
-            $this->fieldDescriptorFactory->reveal(),
+            $this->mediaRepository->reveal(),
             $this->mediaManager->reveal()
         );
-
-        $this->listBuilder = $this->prophesize(ListBuilderInterface::class);
-        $this->listBuilderFactory->create('SuluMediaBundle:Media')
-            ->shouldBeCalledTimes(1)->willReturn($this->listBuilder->reveal());
-
-        $this->fieldDescriptors = $this->createFieldDescriptors();
-        $this->fieldDescriptorFactory->getFieldDescriptorForClass(Media::class, ['locale' => 'de'])
-            ->willReturn($this->fieldDescriptors);
-
-        $this->listBuilder->setFieldDescriptors($this->fieldDescriptors)->shouldBeCalled();
-        $this->listBuilder->addSelectField($this->fieldDescriptors['id'])->shouldBeCalled();
-        $this->listBuilder->addSelectField($this->fieldDescriptors['version'])->shouldBeCalled();
-        $this->listBuilder->addSelectField($this->fieldDescriptors['name'])->shouldBeCalled();
-        $this->listBuilder->addSelectField($this->fieldDescriptors['title'])->shouldBeCalled();
-    }
-
-    /**
-     * Returns field-descriptor for media.
-     *
-     * @return FieldDescriptorInterface[]
-     */
-    private function createFieldDescriptors()
-    {
-        return [
-            'id' => $this->createFieldDescriptor('id'),
-            'title' => $this->createFieldDescriptor('title'),
-            'name' => $this->createFieldDescriptor('name'),
-            'version' => $this->createFieldDescriptor('version'),
-        ];
-    }
-
-    /**
-     * Returns new field-descriptor for given field.
-     *
-     * @param string $field
-     *
-     * @return FieldDescriptorInterface
-     */
-    private function createFieldDescriptor($field)
-    {
-        return new DoctrineFieldDescriptor($field, $field, 'SuluMediaBundle:Media');
     }
 
     /**
@@ -164,9 +101,8 @@ class MediaTagTest extends \PHPUnit_Framework_TestCase
     {
         $media = $this->createMedia($attributes['id'], 'Media-Title', 'Media-Name', 1);
 
-        $this->listBuilder->in($this->fieldDescriptors['id'], [$attributes['id']])->shouldBeCalled();
-        $this->listBuilder->limit(1)->shouldBeCalled();
-        $this->listBuilder->execute()->willReturn([$media]);
+        $this->mediaRepository->findMediaDisplayInfo([$media['id']], 'de')->shouldBeCalled();
+        $this->mediaRepository->findMediaDisplayInfo([$media['id']], 'de')->willReturn([$media]);
         $this->mediaManager->getUrl($media['id'], $media['name'], $media['version'])->willReturn('/test-url');
 
         $result = $this->mediaTag->parseAll([$tag => $attributes], 'de');
@@ -179,9 +115,11 @@ class MediaTagTest extends \PHPUnit_Framework_TestCase
         $media1 = $this->createMedia(1, 'Media-Title-1', 'Media-Name-1', 1);
         $media2 = $this->createMedia(2, 'Media-Title-2', 'Media-Name-2', 1);
 
-        $this->listBuilder->in($this->fieldDescriptors['id'], [1, 2])->shouldBeCalled();
-        $this->listBuilder->limit(2)->shouldBeCalled();
-        $this->listBuilder->execute()->willReturn([$media1, $media2]);
+        $this->mediaRepository->findMediaDisplayInfo([$media1['id'], $media2['id']], 'de')->shouldBeCalled();
+        $this->mediaRepository->findMediaDisplayInfo(
+            [$media1['id'], $media2['id']],
+            'de'
+        )->willReturn([$media1, $media2]);
 
         $this->mediaManager->getUrl($media1['id'], $media1['name'], $media1['version'])->willReturn('/test-1');
         $this->mediaManager->getUrl($media2['id'], $media2['name'], $media2['version'])->willReturn('/test-2');
@@ -211,9 +149,8 @@ class MediaTagTest extends \PHPUnit_Framework_TestCase
 
     public function testParseAllMultipleTagsMissingContent()
     {
-        $this->listBuilder->in($this->fieldDescriptors['id'], [1])->shouldBeCalled();
-        $this->listBuilder->limit(1)->shouldBeCalled();
-        $this->listBuilder->execute()->willReturn([]);
+        $this->mediaRepository->findMediaDisplayInfo(['1'], 'de')->shouldBeCalled();
+        $this->mediaRepository->findMediaDisplayInfo(['1'], 'de')->willReturn([]);
 
         $tag1 = '<sulu:link id="1">Test-Content</sulu:link>';
         $tag2 = '<sulu:link id="1" title="Test-Title"/>';
@@ -244,9 +181,9 @@ class MediaTagTest extends \PHPUnit_Framework_TestCase
     public function testValidate()
     {
         $media = $this->createMedia(1, 'Media-Title', 'Media-Name', 1);
-        $this->listBuilder->in($this->fieldDescriptors['id'], [1])->shouldBeCalled();
-        $this->listBuilder->limit(1)->shouldBeCalled();
-        $this->listBuilder->execute()->willReturn([$media]);
+
+        $this->mediaRepository->findMediaDisplayInfo([$media['id']], 'de')->shouldBeCalled();
+        $this->mediaRepository->findMediaDisplayInfo([$media['id']], 'de')->willReturn([$media]);
 
         $result = $this->mediaTag->validateAll(
             [
@@ -267,9 +204,8 @@ class MediaTagTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateInvalid()
     {
-        $this->listBuilder->in($this->fieldDescriptors['id'], [1])->shouldBeCalled();
-        $this->listBuilder->limit(1)->shouldBeCalled();
-        $this->listBuilder->execute()->willReturn([]);
+        $this->mediaRepository->findMediaDisplayInfo(['1'], 'de')->shouldBeCalled();
+        $this->mediaRepository->findMediaDisplayInfo(['1'], 'de')->willReturn([]);
 
         $result = $this->mediaTag->validateAll(
             [
@@ -291,9 +227,9 @@ class MediaTagTest extends \PHPUnit_Framework_TestCase
     public function testValidateMixed()
     {
         $media = $this->createMedia(1, 'Media-Title', 'Media-Name', 1);
-        $this->listBuilder->in($this->fieldDescriptors['id'], [1, 2])->shouldBeCalled();
-        $this->listBuilder->limit(2)->shouldBeCalled();
-        $this->listBuilder->execute()->willReturn([$media]);
+
+        $this->mediaRepository->findMediaDisplayInfo([$media['id'], '2'], 'de')->shouldBeCalled();
+        $this->mediaRepository->findMediaDisplayInfo([$media['id'], '2'], 'de')->willReturn([$media]);
 
         $result = $this->mediaTag->validateAll(
             [

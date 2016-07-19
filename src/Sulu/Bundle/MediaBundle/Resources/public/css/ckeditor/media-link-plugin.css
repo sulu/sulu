@@ -1,0 +1,30 @@
+sulu\:media {
+    text-decoration: underline;
+    color: #428bca;
+}
+
+sulu\:media[sulu\:validation-state~="removed"] {
+    color: #EA524E;
+    text-decoration: line-through;
+}
+
+sulu\:media[sulu\:validation-state~="removed"]:after {
+    display: none;
+    position: absolute;
+    background-color: #21272E;
+    border-radius: 2px;
+    color: #ffffff;
+    padding: 5px;
+    white-space: pre-wrap;
+    margin-left: 5px;
+    font-size: 11px;
+    line-height: 11px;
+}
+
+sulu\:media[sulu\:validation-state~="removed"]:hover:after {
+    display: inline-block;
+}
+
+sulu\:media[sulu\:validation-state~="removed"]:after {
+    content: '<%= translations.removed %>';
+}
