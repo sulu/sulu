@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -72,11 +73,11 @@ class ContentRouteProvider implements RouteProviderInterface
      * Finds the correct route for the current request.
      * It loads the correct data with the content mapper.
      *
-     * @param Request $request A request against which to match.
+     * @param Request $request A request against which to match
      *
      * @return \Symfony\Component\Routing\RouteCollection with all Routes that
      *                                                    could potentially match $request. Empty collection if nothing can
-     *                                                    match.
+     *                                                    match
      */
     public function getRouteCollectionForRequest(Request $request)
     {
@@ -225,10 +226,10 @@ class ContentRouteProvider implements RouteProviderInterface
      * @param array $names      the list of names to retrieve
      * @param array $parameters DEPRECATED the parameters as they are passed to
      *                          the UrlGeneratorInterface::generate call. (Only one array, not one
-     *                          for each entry in $names.
+     *                          for each entry in $names
      *
      * @return \Symfony\Component\Routing\Route[] iterable thing with the keys
-     *                                            the names of the $names argument.
+     *                                            the names of the $names argument
      */
     public function getRoutesByNames($names, $parameters = [])
     {

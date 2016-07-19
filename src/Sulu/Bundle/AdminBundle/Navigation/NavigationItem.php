@@ -425,7 +425,7 @@ class NavigationItem implements \Iterator
      *
      * @param NavigationItem $navigationItem The navigationItem we look for
      *
-     * @return NavigationItem|null Null if the NavigationItem is not found, otherwise the found NavigationItem.
+     * @return NavigationItem|null Null if the NavigationItem is not found, otherwise the found NavigationItem
      */
     public function findChildren(NavigationItem $navigationItem)
     {
@@ -476,7 +476,7 @@ class NavigationItem implements \Iterator
      *
      * @link http://php.net/manual/en/iterator.current.php
      *
-     * @return mixed Can return any type.
+     * @return mixed Can return any type
      */
     public function current()
     {
@@ -498,7 +498,7 @@ class NavigationItem implements \Iterator
      *
      * @link http://php.net/manual/en/iterator.key.php
      *
-     * @return mixed scalar on success, or null on failure.
+     * @return mixed scalar on success, or null on failure
      */
     public function key()
     {
@@ -511,7 +511,7 @@ class NavigationItem implements \Iterator
      * @link http://php.net/manual/en/iterator.valid.php
      *
      * @return bool The return value will be casted to boolean and then evaluated.
-     *              Returns true on success or false on failure.
+     *              Returns true on success or false on failure
      */
     public function valid()
     {

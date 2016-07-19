@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -35,12 +36,12 @@ interface DataProviderInterface
     /**
      * Resolves given filters and returns filtered data items.
      *
-     * @param array $filters Contains the filter configuration.
-     * @param PropertyParameter[] $propertyParameter Contains the parameter of resolved property.
-     * @param int|null $limit Indicates maximum size of result set.
-     * @param int $page Indicates page of result set.
-     * @param int|null $pageSize Indicates page-size of result set.
-     * @param array $options Options like webspace or locale.
+     * @param array $filters Contains the filter configuration
+     * @param PropertyParameter[] $propertyParameter Contains the parameter of resolved property
+     * @param int|null $limit Indicates maximum size of result set
+     * @param int $page Indicates page of result set
+     * @param int|null $pageSize Indicates page-size of result set
+     * @param array $options Options like webspace or locale
      *
      * @return DataProviderResult
      */
@@ -56,12 +57,12 @@ interface DataProviderInterface
     /**
      * Resolves given filters and returns filtered resource items with ArrayAccess.
      *
-     * @param array $filters Contains the filter configuration.
-     * @param PropertyParameter[] $propertyParameter Contains the parameter of resolved property.
-     * @param int|null $limit Indicates maximum size of result set.
-     * @param int $page Indicates page of result set.
-     * @param int|null $pageSize Indicates page-size of result set.
-     * @param array $options Options like webspace or locale.
+     * @param array $filters Contains the filter configuration
+     * @param PropertyParameter[] $propertyParameter Contains the parameter of resolved property
+     * @param int|null $limit Indicates maximum size of result set
+     * @param int $page Indicates page of result set
+     * @param int|null $pageSize Indicates page-size of result set
+     * @param array $options Options like webspace or locale
      *
      * @return DataProviderResult
      */
@@ -77,9 +78,9 @@ interface DataProviderInterface
     /**
      * Resolves datasource and returns the data of it.
      *
-     * @param mixed $datasource Identification of datasource.
-     * @param PropertyParameter[] $propertyParameter Contains the parameter of resolved property.
-     * @param array $options Options like webspace or locale.
+     * @param mixed $datasource Identification of datasource
+     * @param PropertyParameter[] $propertyParameter Contains the parameter of resolved property
+     * @param array $options Options like webspace or locale
      *
      * @return DatasourceItemInterface
      */

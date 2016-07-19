@@ -47,7 +47,7 @@ class PathsHandler implements HandlerFlushInterface, HandlerInvalidateStructureI
     /**
      * @param WebspaceManagerInterface $webspaceManager
      * @param ProxyClientInterface     $proxyClient
-     * @param string                   $environment     - kernel envionment, dev, prod, etc.
+     * @param string                   $environment     - kernel envionment, dev, prod, etc
      */
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
