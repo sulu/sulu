@@ -6,6 +6,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2603 [ContentBundle]       Fixed resource locator generation for pages with ghost-parent
     * BUGFIX      #2539 [SecurityBundle]      Made TokenStorage dependency for SecuritySubscriber optional
     * BUGFIX      #2609 [ContentBundle]       fixed excerpt extension save button activation
+    * ENHANCEMENT #2616 [MediaBundle]         Avoid exception when media is serialized without all data loaded
     * BUGFIX      #2606 [PreviewBundle]       Added cache clear for preview kernel
     * ENHANCEMENT #2608 [TranslateBundle]     removed translation import command and refactored translate bundle
     * BUGFIX      #2596 [PreviewBundle]       Fixed preview for prod environment
