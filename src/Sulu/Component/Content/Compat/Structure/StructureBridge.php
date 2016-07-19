@@ -303,7 +303,7 @@ class StructureBridge implements StructureInterface
 
     public function getParent()
     {
-        return $this->documentToStructure($this->documentInspector->getParent($this->getDocument()));
+        return $this->documentToStructure($this->inspector->getParent($this->getDocument()));
     }
 
     /**
