@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -490,7 +491,7 @@ class ContentRepository implements ContentRepositoryInterface
      * Append mapping selects to given query-builder.
      *
      * @param QueryBuilder $queryBuilder
-     * @param MappingInterface $mapping Includes array of property names.
+     * @param MappingInterface $mapping Includes array of property names
      * @param string $locale
      * @param string[] $locales
      */
@@ -570,7 +571,7 @@ class ContentRepository implements ContentRepositoryInterface
      * @param Row $row
      * @param string $locale
      * @param string $locales
-     * @param MappingInterface $mapping Includes array of property names.
+     * @param MappingInterface $mapping Includes array of property names
      * @param UserInterface $user
      *
      * @return Content
@@ -688,7 +689,7 @@ class ContentRepository implements ContentRepositoryInterface
      * @param Row $row
      * @param string $locale
      * @param string $webspaceKey
-     * @param MappingInterface $mapping Includes array of property names.
+     * @param MappingInterface $mapping Includes array of property names
      * @param StructureType $type
      * @param UserInterface $user
      *

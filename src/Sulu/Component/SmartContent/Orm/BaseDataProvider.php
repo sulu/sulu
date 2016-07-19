@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -155,7 +156,7 @@ abstract class BaseDataProvider implements DataProviderInterface
      *
      * @return ProviderConfigurationInterface
      *
-     * @deprecated use self::createConfigurationBuilder instead.
+     * @deprecated use self::createConfigurationBuilder instead
      */
     protected function initConfiguration($tags, $categories, $limit, $presentAs, $paginated, $sorting)
     {

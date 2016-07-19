@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -203,7 +204,7 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
      * @param string $title
      * @param string $locale
      * @param int $userId
-     * @param int|null $parent id of parent collection or null for root.
+     * @param int|null $parent id of parent collection or null for root
      *
      * @return Collection
      */
@@ -224,7 +225,7 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
      * @param string $key
      * @param array $localizedTitles
      * @param int $userId
-     * @param int|null $parent id of parent collection or null for root.
+     * @param int|null $parent id of parent collection or null for root
      *
      * @return Collection
      */
@@ -254,8 +255,8 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
      * @param string $key
      * @param string $locale
      * @param int $userId
-     * @param int|null $parent id of parent collection or null for root.
-     * @param int|null $id if not null a colleciton will be updated.
+     * @param int|null $parent id of parent collection or null for root
+     * @param int|null $id if not null a colleciton will be updated
      *
      * @return Collection
      */

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -43,7 +44,7 @@ class LocalizationProvider implements LocalizationProviderInterface
     /**
      * Converts locale string to localization object.
      *
-     * @param string $locale E.g. de_at or de.
+     * @param string $locale E.g. de_at or de
      *
      * @return Localization
      */
