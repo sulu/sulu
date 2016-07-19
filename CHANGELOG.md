@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2611 [HttpCacheBundle]     fill host-placeholder before clearing cache
     * BUGFIX      #2625 [ContentBundle]       Removed force flag for webspace key parameter
     * ENHANCEMENT #2621 [ContentBundle]       Added migration for publishing
+    * ENHANCEMENT #2623 [DocumentManager]     Add publishing toolbar buttons to extensions in document manager bundle
     * ENHANCEMENT #2614 [ContentBundle]       Removed unused code and tests
     * BUGFIX      #2603 [ContentBundle]       Fixed resource locator generation for pages with ghost-parent
     * BUGFIX      #2539 [SecurityBundle]      Made TokenStorage dependency for SecuritySubscriber optional

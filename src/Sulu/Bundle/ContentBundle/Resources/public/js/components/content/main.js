@@ -41,12 +41,7 @@ define([
             deleteConfirmText: 'content.delete-confirm-text',
             deleteConfirmTitle: 'content.delete-confirm-title',
             deleteDoIt: 'content.delete-do-it',
-            draftLabel: 'sulu-content.draft-label'
-        },
-
-        actions = {
-            draft: 'draft',
-            publish: 'publish'
+            draftLabel: 'sulu-document-manager.draft-label'
         },
 
         templates = {
@@ -865,33 +860,11 @@ define([
                 var buttons = {}, editDropdown = {}, saveDropdown = {};
 
                 if (SecurityChecker.hasPermission(this.data, 'edit')) {
-                    saveDropdown.saveDraft = {
-                        options: {
-                            title: 'sulu-content.save-draft',
-                            callback: function() {
-                                this.sandbox.emit('sulu.toolbar.save', actions.draft);
-                            }.bind(this)
-                        }
-                    };
+                    saveDropdown.saveDraft = {};
 
                     if (SecurityChecker.hasPermission(this.data, 'live')) {
-                        saveDropdown.savePublish = {
-                            options: {
-                                title: 'sulu-content.save-publish',
-                                callback: function () {
-                                    this.sandbox.emit('sulu.toolbar.save', actions.publish);
-                                }.bind(this)
-                            }
-                        };
-
-                        saveDropdown.publish = {
-                            options: {
-                                title: 'sulu-content.publish',
-                                callback: function () {
-                                    this.sandbox.emit('sulu.toolbar.save', actions.publish);
-                                }.bind(this)
-                            }
-                        };
+                        saveDropdown.savePublish = {};
+                        saveDropdown.publish = {};
                     }
 
                     buttons.save = {
@@ -899,9 +872,6 @@ define([
                             icon: 'floppy-o',
                             title: 'public.save',
                             disabled: true,
-                            callback: function() {
-                                this.sandbox.emit('sulu.toolbar.save', actions.publish);
-                            }.bind(this),
                             dropdownItems: saveDropdown
                         }
                     };
@@ -947,7 +917,7 @@ define([
                 if (SecurityChecker.hasPermission(this.data, 'live') && !isHomeDocument(this.data)) {
                     editDropdown.unpublish = {
                         options: {
-                            title: this.sandbox.translate('sulu-content.unpublish'),
+                            title: this.sandbox.translate('sulu-document-manager.unpublish'),
                             callback: function() {
                                 this.sandbox.emit('sulu.header.toolbar.item.loading', 'edit');
                                 ContentManager.unpublish(this.data.id, this.options.language)
@@ -965,7 +935,7 @@ define([
                                     .fail(function() {
                                         this.sandbox.emit(
                                             'sulu.labels.error.show',
-                                            'labels.error.content-unpublish-desc',
+                                            'labels.error.unpublish-desc',
                                             'labels.error'
                                         );
                                     }.bind(this));
