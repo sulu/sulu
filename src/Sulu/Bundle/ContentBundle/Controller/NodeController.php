@@ -404,7 +404,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * @throws MissingParameterException
      * @throws ParameterDataTypeException
      *
-     * @deprecated this will be removed when the content-repository is able to solve all requirements.
+     * @deprecated this will be removed when the content-repository is able to solve all requirements
      */
     public function cgetNodes(Request $request)
     {

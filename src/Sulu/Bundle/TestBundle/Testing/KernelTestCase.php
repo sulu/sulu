@@ -117,8 +117,8 @@ abstract class KernelTestCase extends \PHPUnit_Framework_TestCase
      * client is making a request against, you must use the container obtained
      * from the client via. $client->getContainer().
      *
-     * @param array $options Kernel options (sulu context, environment, etc).
-     * @param array $server Server parameters (e.g. PHP_AUTH_USER, etc).
+     * @param array $options Kernel options (sulu context, environment, etc)
+     * @param array $server Server parameters (e.g. PHP_AUTH_USER, etc)
      *
      * @return Client
      */

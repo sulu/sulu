@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -84,8 +85,8 @@ class TagTwigExtension extends \Twig_Extension
     /**
      * Extends current URL with given tag.
      *
-     * @param array $tag will be included in the URL.
-     * @param string $tagsParameter GET parameter name.
+     * @param array $tag will be included in the URL
+     * @param string $tagsParameter GET parameter name
      *
      * @return string
      */
@@ -97,8 +98,8 @@ class TagTwigExtension extends \Twig_Extension
     /**
      * Set tag to current URL.
      *
-     * @param array $tag will be included in the URL.
-     * @param string $tagsParameter GET parameter name.
+     * @param array $tag will be included in the URL
+     * @param string $tagsParameter GET parameter name
      *
      * @return string
      */
@@ -110,7 +111,7 @@ class TagTwigExtension extends \Twig_Extension
     /**
      * Remove tag from current URL.
      *
-     * @param string $tagsParameter GET parameter name.
+     * @param string $tagsParameter GET parameter name
      *
      * @return string
      */
