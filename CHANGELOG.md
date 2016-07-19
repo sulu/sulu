@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2625 [ContentBundle]       Removed force flag for webspace key parameter
     * ENHANCEMENT #2614 [ContentBundle]       Removed unused code and tests
     * BUGFIX      #2603 [ContentBundle]       Fixed resource locator generation for pages with ghost-parent
     * BUGFIX      #2539 [SecurityBundle]      Made TokenStorage dependency for SecuritySubscriber optional
