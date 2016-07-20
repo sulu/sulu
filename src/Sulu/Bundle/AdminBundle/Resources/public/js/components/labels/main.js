@@ -106,15 +106,15 @@ define([], function() {
          */
         bindCustomEvents: function() {
             this.sandbox.on(SHOW_ERROR.call(this), function(description, title, id, autoVanish) {
-                this.showLabel('ERROR', description, title, id, false, autoVanish);
+                this.showLabel('ERROR', description, (title || 'labels.error'), id, false, autoVanish);
             }.bind(this));
 
             this.sandbox.on(SHOW_WARNING.call(this), function(description, title, id, autoVanish) {
-                this.showLabel('WARNING', description, title, id, false, autoVanish);
+                this.showLabel('WARNING', description, (title || 'labels.warning'), id, false, autoVanish);
             }.bind(this));
 
             this.sandbox.on(SHOW_SUCCESS.call(this), function(description, title, id, autoVanish) {
-                this.showLabel('SUCCESS_ICON', description, title, id, true, autoVanish);
+                this.showLabel('SUCCESS_ICON', description, (title || 'labels.success'), id, true, autoVanish);
             }.bind(this));
 
             this.sandbox.on(SHOW_LABEL.call(this), function(configs) {

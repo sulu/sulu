@@ -7,7 +7,10 @@
  * with this source code in the file LICENSE.
  */
 
-define(['config'], function(Config) {
+define([
+    'config',
+    'services/sulusecurity/role-manager'
+], function(Config, RoleManager) {
 
     'use strict';
 
@@ -27,7 +30,8 @@ define(['config'], function(Config) {
 
         initialize: function() {
             this.saved = true;
-            permissionData = this.options.data.permissions;
+            this.data = this.options.data();
+            permissionData = this.data.permissions;
 
             // wait for dropdown to initialize, then get the value and continue
             this.sandbox.on('husky.select.system.initialize', function() {
@@ -37,8 +41,6 @@ define(['config'], function(Config) {
 
                 this.bindDOMEvents();
                 this.bindCustomEvents();
-
-                this.setHeaderBar(true);
                 this.listenForChange();
             }.bind(this));
 
@@ -56,23 +58,7 @@ define(['config'], function(Config) {
                 this.changePermission(data);
             }.bind(this));
 
-            this.sandbox.on('sulu.toolbar.save', function(action) {
-                this.save(action);
-            }.bind(this));
-
-            this.sandbox.on('sulu.toolbar.delete', function() {
-                this.sandbox.emit('sulu.role.delete', this.sandbox.dom.val('#id'));
-            }.bind(this));
-
-            this.sandbox.on('sulu.role.saved', function(id) {
-                this.options.data.id = id;
-                this.setHeaderBar(true);
-            }, this);
-
-            // back to list
-            this.sandbox.on('sulu.header.back', function() {
-                this.sandbox.emit('sulu.roles.list');
-            }, this);
+            this.sandbox.on('sulu.tab.save', this.save.bind(this));
 
             this.sandbox.on('husky.select.system.selected.item', function() {
                 // FIXME correct after selection component has been fixed (https://github.com/massiveart/husky/issues/310)
@@ -214,8 +200,9 @@ define(['config'], function(Config) {
             return contextKey;
         },
 
-        save: function(action) {
+        save: function() {
             if (!!this.sandbox.form.validate(formSelector)) {
+                this.sandbox.emit('sulu.tab.saving');
                 // FIXME  Use datamapper instead
                 var data = {
                     id: this.sandbox.dom.val('#id'),
@@ -224,44 +211,36 @@ define(['config'], function(Config) {
                     system: this.sandbox.dom.data('#system', 'selection-values')[0],
                     permissions: permissionData
                 };
-                this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
-                this.sandbox.emit('sulu.roles.save', data, action);
+                this.data = this.sandbox.util.extend(true, {}, this.data, data);
+                RoleManager.save(this.data).then(function(savedData) {
+                    this.sandbox.emit('sulu.tab.saved', savedData, true);
+                }.bind(this)).fail(function(response) {
+                    this.sandbox.emit('sulu.tab.save-error', response.responseJSON.code);
+                }.bind(this));
             }
         },
 
         render: function() {
-            this.$el.html(this.renderTemplate('/admin/security/template/role/form', {data: this.options.data}));
+            this.$el.html(this.renderTemplate('/admin/security/template/role/form', {data: this.data}));
             //starts the dropdown-component
             this.sandbox.start(this.$el);
         },
 
-        // @var Bool saved - defines if saved state should be shown
-        setHeaderBar: function(saved) {
-            if (saved !== this.saved) {
-                if (!!saved) {
-                    this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true);
-                } else {
-                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
-                }
-            }
-            this.saved = saved;
-        },
-
         listenForChange: function() {
             this.sandbox.dom.on('#role-form', 'change', function() {
-                this.setHeaderBar(false);
+                this.sandbox.emit('sulu.tab.dirty');
             }.bind(this), 'select, input');
             this.sandbox.dom.on('#role-form', 'keyup', function() {
-                this.setHeaderBar(false);
+                this.sandbox.emit('sulu.tab.dirty');
             }.bind(this), 'input');
             this.sandbox.on('husky.matrix.changed', function() {
-                this.setHeaderBar(false);
+                this.sandbox.emit('sulu.tab.dirty');
             }.bind(this));
             this.sandbox.on('husky.select.system.selected.item', function(value) {
-                this.setHeaderBar(false);
+                this.sandbox.emit('sulu.tab.dirty');
             }.bind(this));
             this.sandbox.on('husky.select.security-type.selected.item', function(value) {
-                this.setHeaderBar(false);
+                this.sandbox.emit('sulu.tab.dirty');
             }.bind(this));
         }
     };

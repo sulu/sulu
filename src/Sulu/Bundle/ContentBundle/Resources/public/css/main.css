@@ -428,3 +428,8 @@
   margin: 0;
   color: #3e3e3e;
 }
+
+/* line 2, ../scss/modules/ckeditor.scss */
+#ckeditor-form .input-description.matrix {
+  margin-top: -20px;
+}

@@ -122,6 +122,19 @@
                 <source>security.reset.mail-message</source>
                 <target>To reset your Sulu password please click on the following link or copy/paste it to your browser:</target>
             </trans-unit>
+            <trans-unit id="1cd67d24ab0a432414bc0685517c721d" resname="security.warning">
+                <source>security.warning</source>
+                <target>To see the changes of the security settings the system has to be reloaded.</target>
+            </trans-unit>
+
+            <trans-unit id="1cd67d24ab0a432414ba0685517c632c" resname="sulu-security.role.removed">
+                <source>sulu-security.role.removed</source>
+                <target>Role deleted successfully</target>
+            </trans-unit>
+            <trans-unit id="1cd67d24ab0a432414ba0685517c632a" resname="sulu-security.role.saved">
+                <source>sulu-security.role.saved</source>
+                <target>Role saved successfully</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
