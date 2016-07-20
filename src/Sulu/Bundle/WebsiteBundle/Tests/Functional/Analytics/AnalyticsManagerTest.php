@@ -68,6 +68,15 @@ class AnalyticsManagerTest extends BaseFunctional
             ]
         );
         $this->entities[] = $this->create(
+            'sulu_io',
+            [
+                'title' => 'test-4',
+                'type' => 'google_tag_manager',
+                'content' => 'GTM-XXXX',
+                'domains' => [['url' => 'www.sulu.io', 'environment' => 'prod']],
+            ]
+        );
+        $this->entities[] = $this->create(
             'test_io',
             [
                 'title' => 'test piwik',
@@ -84,10 +93,11 @@ class AnalyticsManagerTest extends BaseFunctional
     public function testFindAll()
     {
         $result = $this->analyticsManager->findAll('sulu_io');
-        $this->assertCount(3, $result);
+        $this->assertCount(4, $result);
         $this->assertEquals('test-1', $result[0]->getTitle());
         $this->assertEquals('test-2', $result[1]->getTitle());
         $this->assertEquals('test-3', $result[2]->getTitle());
+        $this->assertEquals('test-4', $result[3]->getTitle());
 
         $result = $this->analyticsManager->findAll('test_io');
         $this->assertCount(1, $result);
