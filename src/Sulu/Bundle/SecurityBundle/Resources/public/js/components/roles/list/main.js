@@ -7,7 +7,10 @@
  * with this source code in the file LICENSE.
  */
 
-define(function() {
+define([
+    'services/sulusecurity/role-router',
+    'services/sulusecurity/role-manager'
+], function(RoleRouter, RoleManager) {
 
     'use strict';
 
@@ -17,21 +20,32 @@ define(function() {
         },
 
         bindCustomEvents = function() {
-            this.sandbox.on('sulu.toolbar.add', function() {
-                this.sandbox.emit('sulu.roles.new');
-            }.bind(this));
+            this.sandbox.on('sulu.toolbar.add', RoleRouter.toAdd);
 
             this.sandbox.on('sulu.toolbar.delete', function() {
                 this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.items.get-selected', function(ids) {
-                    this.sandbox.emit('sulu.roles.delete', ids);
+                    this.sandbox.sulu.showDeleteDialog(function(wasConfirmed) {
+                        if (wasConfirmed) {
+                            deleteRoles.call(this, ids);
+                        }
+                    }.bind(this));
                 }.bind(this));
             }.bind(this));
-
-            // checkbox clicked
 
             this.sandbox.on('husky.datagrid.' + constants.datagridInstanceName + '.number.selections', function(number) {
                 var postfix = number > 0 ? 'enable' : 'disable';
                 this.sandbox.emit('sulu.header.toolbar.item.' + postfix, 'deleteSelected', false);
+            }.bind(this));
+        },
+
+        deleteRoles = function(ids) {
+            RoleManager.delete(ids).then(function() {
+                this.sandbox.emit('sulu.labels.success.show', 'sulu-security.role.removed');
+                this.sandbox.util.foreach(ids, function(id) {
+                    this.sandbox.emit('husky.datagrid.' + constants.datagridInstanceName + '.record.remove', id);
+                }.bind(this));
+            }.bind(this)).fail(function() {
+                this.sandbox.emit('sulu.labels.error.show');
             }.bind(this));
         };
 
@@ -104,9 +118,7 @@ define(function() {
                     searchFields: ['id', 'name', 'system'],
                     resultKey: 'roles',
                     instanceName: constants.datagridInstanceName,
-                    actionCallback: function(id) {
-                        this.sandbox.emit('sulu.roles.load', id);
-                    }.bind(this)
+                    actionCallback: RoleRouter.toEdit
                 },
                 'roles',
                 '#roles-list-info'

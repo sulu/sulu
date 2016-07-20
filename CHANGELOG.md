@@ -74,6 +74,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2439 [ContentBundle]       Fixed tab visibility for create new page localization
     * ENHANCEMENT #2428 [Content]             Removed move and copy method from ContentMapper
     * BUGFIX      #2426 [RouteBundle]         Fixed route-provider when no resource-locator prefix isset
+    * FEATURE     #2404 [ContentBundle]       Implemented configurable ckeditor toolbar per role
     * BUGFIX      #2418 [ContentBundle]       Removed ContentMapperRequest
     * FEATURE     #2402 [MarkupBundle]        Added validation for markup
     * FEATURE     #2336 [ContentBundle]       Enabled internal link in ckeditor
