@@ -30040,9 +30040,10 @@ define('__component__$navigation@husky',[],function() {
                 this.sandbox.dom.removeClass(this.$navigation, 'collapseIcon');
                 this.removeHeightforExpanded();
                 if (!this.collapsed) {
+                    this.sandbox.dom.css(this.$el, {'width': ''});
                     this.sandbox.emit(EVENT_COLLAPSED, CONSTANTS.COLLAPSED_WIDTH);
                     this.sandbox.emit(EVENT_SIZE_CHANGE, CONSTANTS.COLLAPSED_WIDTH);
-                    this.collapsed = !this.collapsed;
+                    this.collapsed = true;
                     this.tooltipsEnabled = false;
                 }
             }
