@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #2632 [Content]             Fix usage of document inspector in StructureBridge
+
 * 1.2.7 (2016-07-15)
     * HOTFIX      #2617 [ContactBundle]         Setting default country by country-code instead of id
     * HOTFIX      #2612 [CategoryBundle]        Added sort criteria for fallback test

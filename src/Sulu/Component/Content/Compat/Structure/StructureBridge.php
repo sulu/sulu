@@ -301,9 +301,12 @@ class StructureBridge implements StructureInterface
         return $children;
     }
 
+    /**
+     * @return $this
+     */
     public function getParent()
     {
-        return $this->documentToStructure($this->documentInspector->getParent($this->getDocument()));
+        return $this->documentToStructure($this->inspector->getParent($this->getDocument()));
     }
 
     /**
@@ -613,7 +616,7 @@ class StructureBridge implements StructureInterface
     /**
      * Magic getter.
      *
-     * @deprecated Do not use magic getters. Use ArrayAccess instead.
+     * @deprecated Do not use magic getters. Use ArrayAccess instead
      */
     public function __get($name)
     {
@@ -698,6 +701,11 @@ class StructureBridge implements StructureInterface
         );
     }
 
+    /**
+     * @param StructureBehavior $document The document to convert
+     *
+     * @return $this
+     */
     protected function documentToStructure(StructureBehavior $document)
     {
         return new $this(
