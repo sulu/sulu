@@ -12376,6 +12376,86 @@ label.husky-toggler-label ~ .input-description {
   line-height: 15px;
 }
 
+/* line 25, ../scss/modules/badge.scss */
+.badge-none {
+  background-color: transparent;
+}
+
+/* line 29, ../scss/modules/badge.scss */
+.badge-color-none {
+  color: transparent;
+}
+
+/* line 25, ../scss/modules/badge.scss */
+.badge-black {
+  background-color: #000;
+}
+
+/* line 29, ../scss/modules/badge.scss */
+.badge-color-black {
+  color: #000;
+}
+
+/* line 25, ../scss/modules/badge.scss */
+.badge-white {
+  background-color: white;
+}
+
+/* line 29, ../scss/modules/badge.scss */
+.badge-color-white {
+  color: white;
+}
+
+/* line 25, ../scss/modules/badge.scss */
+.badge-gray-light {
+  background-color: #999;
+}
+
+/* line 29, ../scss/modules/badge.scss */
+.badge-color-gray-light {
+  color: #999;
+}
+
+/* line 25, ../scss/modules/badge.scss */
+.badge-gray {
+  background-color: #666;
+}
+
+/* line 29, ../scss/modules/badge.scss */
+.badge-color-gray {
+  color: #666;
+}
+
+/* line 25, ../scss/modules/badge.scss */
+.badge-yellow {
+  background-color: #F2D212;
+}
+
+/* line 29, ../scss/modules/badge.scss */
+.badge-color-yellow {
+  color: #F2D212;
+}
+
+/* line 25, ../scss/modules/badge.scss */
+.badge-blue {
+  background-color: #52B6CA;
+}
+
+/* line 29, ../scss/modules/badge.scss */
+.badge-color-blue {
+  color: #52B6CA;
+}
+
+/* line 25, ../scss/modules/badge.scss */
+.badge-red {
+  background-color: #EA524E;
+}
+
+/* line 29, ../scss/modules/badge.scss */
+.badge-color-red {
+  color: #EA524E;
+}
+
 /* line 57, ../scss/husky.scss */
 [class^="fa-"] {
   text-decoration: none;
