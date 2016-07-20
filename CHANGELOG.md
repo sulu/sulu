@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2640 [ContentBundle]       Fixed reordering for published workspace
     * BUGFIX      #2611 [HttpCacheBundle]     fill host-placeholder before clearing cache
     * BUGFIX      #2625 [ContentBundle]       Removed force flag for webspace key parameter
     * ENHANCEMENT #2621 [ContentBundle]       Added migration for publishing

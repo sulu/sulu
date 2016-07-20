@@ -250,9 +250,14 @@ class PublishSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testReorderInPublicWorkspace()
     {
+        $document = $this->prophesize(PathBehavior::class);
+        $document->getPath()->willReturn('/cmf/sulu_io/contents/page');
+
         $event = $this->prophesize(ReorderEvent::class);
         $event->getDestId()->willReturn('uuid');
-        $event->getNode()->willReturn($this->node->reveal());
+        $event->getDocument()->willReturn($document->reveal());
+
+        $this->liveSession->getNode('/cmf/sulu_io/contents/page')->willReturn($this->node->reveal());
 
         $parentNode = $this->prophesize(NodeInterface::class);
         $this->node->getParent()->willReturn($parentNode->reveal());
