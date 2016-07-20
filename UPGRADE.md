@@ -15,6 +15,13 @@ app/console phpcr:migrations:migrate
 The `orderBefore` method of the `NodeRepository` has been removed. Use the
 `reorder` method of the `DocumentManager` instead.
 
+### LocalizationProvider
+The core LocalizationProvider (which provided the system locales)
+got removed. At this point the WebspaceLocalizationProvider is the
+only LocalizationProvider in Sulu. If the system locales 
+(locales in which translations for the admin panel are available) are
+needed, please refer directly to the config `sulu_core.translations`.
+
 ### Translations
 The command `sulu:translate:import` got removed, as the export command
 (`sulu:translate:export`) now takes its translations directly from
