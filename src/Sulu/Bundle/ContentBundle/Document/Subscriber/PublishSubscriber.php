@@ -147,7 +147,7 @@ class PublishSubscriber implements EventSubscriberInterface
      */
     public function reorderNodeInPublicWorkspace(ReorderEvent $event)
     {
-        $node = $event->getNode();
+        $node = $this->getLiveNode($event->getDocument());
 
         $this->nodeHelper->reorder($node, $event->getDestId());
 
