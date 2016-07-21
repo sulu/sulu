@@ -39,13 +39,13 @@
   background: none;
 }
 /* line 41, ../scss/modules/collection.scss */
-.masonry-container #masonry-grid {
+.masonry-container .masonry-grid {
   margin-bottom: -20px;
   position: relative;
   text-align: center;
 }
 /* line 46, ../scss/modules/collection.scss */
-.masonry-container #masonry-grid .masonry-item {
+.masonry-container .masonry-grid .masonry-item {
   width: 190px;
   background-color: #fff;
   border-radius: 3px;
@@ -56,48 +56,48 @@
   transition: opacity 100ms, top 100ms, left 100ms;
 }
 /* line 53, ../scss/modules/collection.scss */
-.masonry-container #masonry-grid .masonry-item.loading {
+.masonry-container .masonry-grid .masonry-item.loading {
   opacity: 0;
 }
 /* line 57, ../scss/modules/collection.scss */
-.masonry-container #masonry-grid .masonry-item .masonry-head {
+.masonry-container .masonry-grid .masonry-item .masonry-head {
   background-color: #ddd;
   width: 100%;
 }
 /* line 61, ../scss/modules/collection.scss */
-.masonry-container #masonry-grid .masonry-item .masonry-head .head-icon {
+.masonry-container .masonry-grid .masonry-item .masonry-head .head-icon {
   color: white;
   font-size: 70px;
   margin: 30px;
 }
 /* line 67, ../scss/modules/collection.scss */
-.masonry-container #masonry-grid .masonry-item .masonry-head .head-image {
+.masonry-container .masonry-grid .masonry-item .masonry-head .head-image {
   vertical-align: middle;
 }
 /* line 72, ../scss/modules/collection.scss */
-.masonry-container #masonry-grid .masonry-item .masonry-info {
+.masonry-container .masonry-grid .masonry-item .masonry-info {
   width: 100%;
   height: 45px;
   margin-top: 10px;
 }
 /* line 77, ../scss/modules/collection.scss */
-.masonry-container #masonry-grid .masonry-item .masonry-info span.description {
+.masonry-container .masonry-grid .masonry-item .masonry-info span.description {
   font-size: 12px;
   color: #999;
 }
 /* line 83, ../scss/modules/collection.scss */
-.masonry-container #masonry-grid .masonry-item .masonry-footer {
+.masonry-container .masonry-grid .masonry-item .masonry-footer {
   width: 100%;
   height: 15px;
   margin-bottom: 10px;
   padding: 0 10px;
 }
 /* line 89, ../scss/modules/collection.scss */
-.masonry-container #masonry-grid .masonry-item .masonry-footer .footer-checkbox {
+.masonry-container .masonry-grid .masonry-item .masonry-footer .footer-checkbox {
   float: left;
 }
 /* line 93, ../scss/modules/collection.scss */
-.masonry-container #masonry-grid .masonry-item .masonry-footer .footer-icon {
+.masonry-container .masonry-grid .masonry-item .masonry-footer .footer-icon {
   position: relative;
   top: 2px;
   font-size: 17px;
@@ -106,17 +106,21 @@
   cursor: pointer;
 }
 /* line 103, ../scss/modules/collection.scss */
-.masonry-container #masonry-grid .masonry-item .action-navigator, .masonry-container #masonry-grid .masonry-item .download-navigator {
+.masonry-container .masonry-grid .masonry-item.action-navigator {
+  cursor: pointer;
+}
+/* line 107, ../scss/modules/collection.scss */
+.masonry-container .masonry-grid .masonry-item .action-navigator, .masonry-container .masonry-grid .masonry-item .download-navigator {
   cursor: pointer;
   color: #000;
 }
 
-/* line 112, ../scss/modules/collection.scss */
+/* line 116, ../scss/modules/collection.scss */
 .sticky-toolbar.fixed .list-toolbar-container.collection {
   width: 92.75%;
 }
 
-/* line 118, ../scss/modules/collection.scss */
+/* line 122, ../scss/modules/collection.scss */
 .toolbar-hidden .collection-header-container {
   top: -60px;
 }
@@ -163,78 +167,78 @@
   }
 }
 
-/* line 35, ../scss/modules/media-selection.scss */
+/* line 34, ../scss/modules/media-selection.scss */
 .media-selection-overlay-container.dropzone-overlay-opened .media-selection-overlay-content {
   overflow: hidden;
 }
-/* line 40, ../scss/modules/media-selection.scss */
+/* line 39, ../scss/modules/media-selection.scss */
 .media-selection-overlay-container .slides {
   margin: 0;
   padding: 0;
 }
-/* line 45, ../scss/modules/media-selection.scss */
+/* line 44, ../scss/modules/media-selection.scss */
 .media-selection-overlay-container .overlay-header {
   display: none;
 }
-/* line 49, ../scss/modules/media-selection.scss */
+/* line 48, ../scss/modules/media-selection.scss */
 .media-selection-overlay-container .overlay-content {
   height: 100%;
   min-height: 400px;
   margin: 0;
   background-color: #f1f1f1;
 }
-/* line 56, ../scss/modules/media-selection.scss */
+/* line 55, ../scss/modules/media-selection.scss */
 .media-selection-overlay-container .overlay-footer {
   display: none;
 }
-/* line 60, ../scss/modules/media-selection.scss */
+/* line 59, ../scss/modules/media-selection.scss */
 .media-selection-overlay-container .data-navigation {
   padding-top: 0;
 }
-/* line 65, ../scss/modules/media-selection.scss */
+/* line 64, ../scss/modules/media-selection.scss */
 .media-selection-overlay-container .husky-thumbnails .item.large {
   margin-right: 24px;
 }
 @media (max-width: 1024px) {
-  /* line 70, ../scss/modules/media-selection.scss */
+  /* line 69, ../scss/modules/media-selection.scss */
   .media-selection-overlay-container .husky-thumbnails .item.large:nth-child(2n) {
     margin-right: 0;
   }
 }
 @media (min-width: 1024px) and (max-width: 1600px) {
-  /* line 76, ../scss/modules/media-selection.scss */
+  /* line 75, ../scss/modules/media-selection.scss */
   .media-selection-overlay-container .husky-thumbnails .item.large:nth-child(3n) {
     margin-right: 0;
   }
 }
 @media (min-width: 1600px) {
-  /* line 82, ../scss/modules/media-selection.scss */
+  /* line 81, ../scss/modules/media-selection.scss */
   .media-selection-overlay-container .husky-thumbnails .item.large:nth-child(5n) {
     margin-right: 0;
   }
 }
-/* line 88, ../scss/modules/media-selection.scss */
+/* line 87, ../scss/modules/media-selection.scss */
 .media-selection-overlay-container .selected-elements {
   display: none;
 }
 
-/* line 93, ../scss/modules/media-selection.scss */
+/* line 92, ../scss/modules/media-selection.scss */
 .media-selection-overlay {
   height: 100%;
 }
 
-/* line 97, ../scss/modules/media-selection.scss */
+/* line 96, ../scss/modules/media-selection.scss */
 .media-selection-overlay-navigation-container {
   width: 250px;
   height: 100%;
 }
 
-/* line 102, ../scss/modules/media-selection.scss */
+/* line 101, ../scss/modules/media-selection.scss */
 .media-selection-overlay-toolbar-container {
   display: inline-block;
 }
 
-/* line 106, ../scss/modules/media-selection.scss */
+/* line 105, ../scss/modules/media-selection.scss */
 .media-selection-overlay-content {
   height: 100%;
   padding: 15px 0 10px 20px;
@@ -242,13 +246,13 @@
   position: relative;
 }
 
-/* line 113, ../scss/modules/media-selection.scss */
+/* line 112, ../scss/modules/media-selection.scss */
 .media-selection-overlay-content-area {
   overflow: auto;
   height: calc(100% - 55px);
 }
 
-/* line 118, ../scss/modules/media-selection.scss */
+/* line 117, ../scss/modules/media-selection.scss */
 .media-selection-overlay-close {
   position: absolute;
   top: 10px;
@@ -258,47 +262,47 @@
   z-index: 100;
 }
 
-/* line 128, ../scss/modules/media-selection.scss */
+/* line 127, ../scss/modules/media-selection.scss */
 .media-selection-overlay-add .heading {
   width: 100%;
   border-bottom: 2px #ccc solid;
 }
-/* line 132, ../scss/modules/media-selection.scss */
+/* line 131, ../scss/modules/media-selection.scss */
 .media-selection-overlay-add h3 {
   font-size: 16px;
   margin-top: 20px;
   margin-bottom: 10px;
 }
-/* line 137, ../scss/modules/media-selection.scss */
+/* line 136, ../scss/modules/media-selection.scss */
 .media-selection-overlay-add .overlay-loader {
   margin: 20px 0;
 }
 
-/* line 142, ../scss/modules/media-selection.scss */
+/* line 141, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container {
   padding-right: 20px;
 }
-/* line 145, ../scss/modules/media-selection.scss */
+/* line 144, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container > .husky-dropzone {
   display: none;
   margin-top: 30px;
   margin-bottom: 20px;
 }
-/* line 150, ../scss/modules/media-selection.scss */
+/* line 149, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container > .husky-dropzone.dropped {
   display: block;
 }
-/* line 155, ../scss/modules/media-selection.scss */
+/* line 154, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container > div {
   width: 100% !important;
 }
-/* line 158, ../scss/modules/media-selection.scss */
+/* line 157, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container .husky-overlay-wrapper {
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
 }
-/* line 163, ../scss/modules/media-selection.scss */
+/* line 162, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container .husky-overlay-container {
   position: absolute !important;
   top: 0 !important;
@@ -309,43 +313,43 @@
   height: 100%;
   background-color: rgba(255, 255, 255, 0.95);
 }
-/* line 173, ../scss/modules/media-selection.scss */
+/* line 172, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container .husky-overlay-container .slides {
   margin: 0;
   padding: 0;
 }
-/* line 178, ../scss/modules/media-selection.scss */
+/* line 177, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container .husky-overlay-container .slide {
   width: 100% !important;
 }
-/* line 183, ../scss/modules/media-selection.scss */
+/* line 182, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container .husky-overlay-backdrop {
   display: none !important;
 }
-/* line 187, ../scss/modules/media-selection.scss */
+/* line 186, ../scss/modules/media-selection.scss */
 .media-selection-overlay-dropzone-container .overlay-content {
   height: auto !important;
   background-color: transparent;
 }
 
-/* line 193, ../scss/modules/media-selection.scss */
+/* line 192, ../scss/modules/media-selection.scss */
 .media-selection-overlay-content-title {
   margin-bottom: 20px !important;
   border-bottom: none !important;
 }
 
-/* line 198, ../scss/modules/media-selection.scss */
+/* line 197, ../scss/modules/media-selection.scss */
 .media-selection-overlay-datagrid-container {
   padding-right: 20px;
   padding-bottom: 20px;
 }
 
-/* line 203, ../scss/modules/media-selection.scss */
+/* line 202, ../scss/modules/media-selection.scss */
 .media-selection-overlay-datagrid-header {
   white-space: nowrap;
 }
 
-/* line 207, ../scss/modules/media-selection.scss */
+/* line 206, ../scss/modules/media-selection.scss */
 .media-selection-overlay-selected-info {
   display: inline-block;
   vertical-align: top;
@@ -353,6 +357,163 @@
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: center;
+}
+
+/* line 2, ../scss/modules/single-media-selection.scss */
+.single-media-selection {
+  height: 500px;
+}
+/* line 5, ../scss/modules/single-media-selection.scss */
+.single-media-selection, .single-media-selection .slide, .single-media-selection .overlay-footer {
+  width: 930px !important;
+}
+/* line 9, ../scss/modules/single-media-selection.scss */
+.single-media-selection .slide {
+  height: 429px;
+}
+/* line 13, ../scss/modules/single-media-selection.scss */
+.single-media-selection .list-container, .single-media-selection .navigation-container {
+  height: 328px;
+}
+@media (max-width: 1024px) {
+  /* line 18, ../scss/modules/single-media-selection.scss */
+  .single-media-selection, .single-media-selection .slide, .single-media-selection .overlay-footer {
+    width: 720px !important;
+  }
+}
+@media (min-width: 1600px) {
+  /* line 24, ../scss/modules/single-media-selection.scss */
+  .single-media-selection, .single-media-selection .slide, .single-media-selection .overlay-footer {
+    width: 1360px !important;
+  }
+}
+@media (min-height: 700px) {
+  /* line 2, ../scss/modules/single-media-selection.scss */
+  .single-media-selection {
+    height: 600px;
+  }
+  /* line 32, ../scss/modules/single-media-selection.scss */
+  .single-media-selection .slide {
+    height: 529px;
+  }
+  /* line 36, ../scss/modules/single-media-selection.scss */
+  .single-media-selection .list-container, .single-media-selection .navigation-container {
+    height: 428px;
+  }
+}
+@media (min-height: 800px) {
+  /* line 2, ../scss/modules/single-media-selection.scss */
+  .single-media-selection {
+    height: 700px;
+  }
+  /* line 44, ../scss/modules/single-media-selection.scss */
+  .single-media-selection .slide {
+    height: 629px;
+  }
+  /* line 48, ../scss/modules/single-media-selection.scss */
+  .single-media-selection .list-container, .single-media-selection .navigation-container {
+    height: 528px;
+  }
+}
+@media (min-height: 900px) {
+  /* line 2, ../scss/modules/single-media-selection.scss */
+  .single-media-selection {
+    height: 800px;
+  }
+  /* line 56, ../scss/modules/single-media-selection.scss */
+  .single-media-selection .slide {
+    height: 729px;
+  }
+  /* line 60, ../scss/modules/single-media-selection.scss */
+  .single-media-selection .list-container, .single-media-selection .navigation-container {
+    height: 628px;
+  }
+}
+/* line 67, ../scss/modules/single-media-selection.scss */
+.single-media-selection.dropzone-overlay-opened .list-container {
+  overflow: hidden;
+}
+/* line 72, ../scss/modules/single-media-selection.scss */
+.single-media-selection .dropzone-container {
+  padding-right: 20px;
+}
+/* line 75, ../scss/modules/single-media-selection.scss */
+.single-media-selection .dropzone-container > .husky-dropzone {
+  display: none;
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+/* line 80, ../scss/modules/single-media-selection.scss */
+.single-media-selection .dropzone-container > .husky-dropzone.dropped {
+  display: block;
+}
+/* line 85, ../scss/modules/single-media-selection.scss */
+.single-media-selection .dropzone-container > div {
+  width: 100% !important;
+}
+/* line 88, ../scss/modules/single-media-selection.scss */
+.single-media-selection .dropzone-container .husky-overlay-wrapper {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+/* line 93, ../scss/modules/single-media-selection.scss */
+.single-media-selection .dropzone-container .husky-overlay-container {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  z-index: 15 !important;
+  width: 100% !important;
+  padding: 110px 20px !important;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 0;
+  border: 0;
+}
+/* line 105, ../scss/modules/single-media-selection.scss */
+.single-media-selection .dropzone-container .husky-overlay-container .slides {
+  margin: 0;
+  padding: 0;
+}
+/* line 110, ../scss/modules/single-media-selection.scss */
+.single-media-selection .dropzone-container .husky-overlay-container .slide {
+  width: 100% !important;
+}
+/* line 115, ../scss/modules/single-media-selection.scss */
+.single-media-selection .dropzone-container .husky-overlay-backdrop {
+  display: none !important;
+}
+/* line 119, ../scss/modules/single-media-selection.scss */
+.single-media-selection .dropzone-container .overlay-content {
+  height: auto !important;
+  background-color: transparent;
+}
+/* line 125, ../scss/modules/single-media-selection.scss */
+.single-media-selection .overlay-content {
+  padding: 0px;
+  margin: 0px;
+}
+/* line 131, ../scss/modules/single-media-selection.scss */
+.single-media-selection .container .navigation-container {
+  float: left;
+  width: 250px;
+}
+/* line 136, ../scss/modules/single-media-selection.scss */
+.single-media-selection .container .list-container {
+  float: right;
+  position: relative;
+  width: calc(100% - 250px);
+  padding: 20px;
+  overflow: scroll;
+}
+/* line 144, ../scss/modules/single-media-selection.scss */
+.single-media-selection .container::before, .single-media-selection .container::after {
+  content: " ";
+  display: table;
+}
+/* line 149, ../scss/modules/single-media-selection.scss */
+.single-media-selection .container::after {
+  clear: both;
 }
 
 /* line 6, ../scss/modules/collection-select-overlay.scss */

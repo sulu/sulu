@@ -32,7 +32,7 @@ interface MediaRepositoryInterface extends RepositoryInterface
     public function findMediaById($id);
 
     /**
-     * finds all media, can be filtered with parent.
+     * Finds all media, can be filtered with parent.
      *
      * @param array $filter
      * @param int $limit
@@ -49,6 +49,18 @@ interface MediaRepositoryInterface extends RepositoryInterface
         UserInterface $user = null,
         $permission = null
     );
+
+    /**
+     * Finds all the information needed to generate an url
+     * to the media and to display the media. The method finds
+     * the information for all medias with given ids.
+     *
+     * @param $ids array The ids of the medias for which the info should be found
+     * @param $locale string The locale in which the display info should be loaded
+     *
+     * @return array
+     */
+    public function findMediaDisplayInfo($ids, $locale);
 
     /**
      * @param string $filename

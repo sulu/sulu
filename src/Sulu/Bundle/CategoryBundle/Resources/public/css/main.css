@@ -7,5 +7,5 @@
 /* line 5, ../scss/modules/table-view.scss */
 .categories-container {
   max-height: 350px;
-  overflow: scroll;
+  overflow: auto;
 }

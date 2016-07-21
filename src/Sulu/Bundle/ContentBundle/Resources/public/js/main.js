@@ -142,7 +142,7 @@ define([
                 'internalLink',
                 new InternalLinkPlugin(app.sandboxes.create('plugin-internal-link'))
             );
-            sandbox.ckeditor.addToolbarButton('links', 'InternalLink', 'arrow-down', ['RemoveInternalLink']);
+            sandbox.ckeditor.addToolbarButton('links', 'InternalLink', 'arrow-down');
 
             if (!!ckeditorConfig && !!ckeditorConfig.userToolbar) {
                 sandbox.ckeditor.setToolbar(ckeditorConfig.userToolbar);

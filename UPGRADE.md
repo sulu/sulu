@@ -10,6 +10,10 @@ To adapt to the new PHPCR structure execute the migrations:
 app/console phpcr:migrations:migrate
 ```
 
+### Media selection overlay
+The frontend component 'media-selection-overlay@sulumedia' got removed,
+please use 'media-selection/overlay@sulumedia' instead.
+
 ### NodeRepository
 
 The `orderBefore` method of the `NodeRepository` has been removed. Use the
