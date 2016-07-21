@@ -17,6 +17,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2616 [MediaBundle]         Avoid exception when media is serialized without all data loaded
     * BUGFIX      #2606 [PreviewBundle]       Added cache clear for preview kernel
     * ENHANCEMENT #2608 [TranslateBundle]     removed translation import command and refactored translate bundle
+    * BUGFIX      #2590 [CoreBundle]          Clear symfony cache before system collection initialization
     * BUGFIX      #2596 [PreviewBundle]       Fixed preview for prod environment
     * FEATURE     #2515 [ContentBundle]       Added unpublishing functionality for pages
     * ENHANCEMENT #2604 [ContentBundle]       fixed publishing on excerpt tab and add excerpt js extension
