@@ -57,6 +57,7 @@ Feature: Collection management
         And I expect a data-navigation to appear
         And I am editing the media collection "Foobar"
         And I click on the element ".fa-chevron-left"
+        And I expect the "husky.navigation.select-id" event
         Then I expect to see "1" ".data-navigation-item" elements
 
     Scenario: Delete item
