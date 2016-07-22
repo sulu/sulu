@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * BUGFIX      #2663 [MediaBundle]         made masonry view work for media with no thumbnail
+
 * 1.3.0-RC1 (2016-07-22)
     * HOTFIX      #2632 [Content]             Fix usage of document inspector in StructureBridge
     * BUGFIX      #2655 [MediaBundle]         Fixed media selection for none images and selected media list
