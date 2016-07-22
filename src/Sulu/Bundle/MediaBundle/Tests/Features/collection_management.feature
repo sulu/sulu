@@ -79,14 +79,17 @@ Feature: Collection management
         When I click on the element ".masonry-item .head-image"
         And I expect an overlay to appear
         Then I expect the "husky.tabs.overlaymedia-edit.initialized" event
+        And I expect the "husky.dropzone.file-version.initialized" event
         And I fill in husky field "title" with "image of Dornbirn"
         And I select "de" from the husky "language-changer .husky-select"
+        And I expect the "husky.datagrid.records.change" event
         Then I expect the "husky.tabs.overlaymedia-edit.initialized" event
+        And I expect the "husky.dropzone.file-version.initialized" event
         And I fill in husky field "title" with "Foto von Dornbirn" in the overlay
         And I confirm
-        Then I should see "image of Dornbirn"
+        Then I expect a success notification to appear
+        And I should see "image of Dornbirn"
         And I click on the element ".language-changer"
         And I click on the element "[data-id='de']"
         And I expect the "husky.datagrid.updated" event
         And I should see "Foto von Dornbirn"
-
