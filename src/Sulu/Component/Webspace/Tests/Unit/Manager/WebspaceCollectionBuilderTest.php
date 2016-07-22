@@ -11,15 +11,19 @@
 
 namespace Sulu\Component\Webspace\Tests\Unit;
 
+use Prophecy\Argument;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Sulu\Component\Webspace\Loader\XmlFileLoader;
+use Sulu\Component\Webspace\Loader\DelegatingFileLoader;
+use Sulu\Component\Webspace\Loader\XmlFileLoader10;
+use Sulu\Component\Webspace\Loader\XmlFileLoader11;
 use Sulu\Component\Webspace\Manager\WebspaceCollectionBuilder;
 use Sulu\Component\Webspace\Url\Replacer;
+use Symfony\Component\Config\FileLocatorInterface;
 
 class WebspaceCollectionBuilderTest extends WebspaceTestCase
 {
     /**
-     * @var XmlFileLoader
+     * @var DelegatingFileLoader
      */
     private $loader;
 
@@ -30,9 +34,15 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
     public function setUp()
     {
-        $locator = $this->getMock('\Symfony\Component\Config\FileLocatorInterface', ['locate']);
-        $locator->expects($this->any())->method('locate')->will($this->returnArgument(0));
-        $this->loader = new XmlFileLoader($locator);
+        $locator = $this->prophesize(FileLocatorInterface::class);
+        $locator->locate(Argument::any())->will(function($arguments) {
+            return $arguments[0];
+        });
+
+        $this->loader = new DelegatingFileLoader([
+            new XmlFileLoader11($locator->reveal()),
+            new XmlFileLoader10($locator->reveal()),
+        ]);
 
         $this->logger = $this->getMockBuilder('\Psr\Log\LoggerInterface')->getMock();
     }

@@ -35,25 +35,29 @@ use Sulu\Component\Webspace\Security;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\Config\Util\XmlUtils;
 
-class XmlFileLoader extends FileLoader
+/**
+ * This file loader is responsible for webspace configuration files in the xml format using the 1.0 version of the
+ * webspace schema definition.
+ */
+class XmlFileLoader10 extends BaseXmlFileLoader
 {
-    const SCHEME_PATH_1_0 = '/schema/webspace/webspace-1.0.xsd';
-    const SCHEME_PATH_1_1 = '/schema/webspace/webspace-1.1.xsd';
+    const SCHEMA_LOCATION = '/schema/webspace/webspace-1.0.xsd';
+
+    const SCHEMA_URI = 'http://schemas.sulu.io/webspace/webspace-1.0.xsd';
 
     /**
      * @var \DOMXPath
      */
-    private $xpath;
+    protected $xpath;
 
     /**
      * The webspace which is created by this file loader.
      *
      * @var Webspace
      */
-    private $webspace;
+    protected $webspace;
 
     /**
      * Loads a webspace from a xml file.
@@ -81,15 +85,17 @@ class XmlFileLoader extends FileLoader
      */
     public function supports($resource, $type = null)
     {
-        return is_string($resource) && 'xml' === pathinfo($resource, PATHINFO_EXTENSION);
+        return parent::supports($resource, $type);
     }
 
     /**
+     * Parses the entire file and returns a webspace object.
+     *
      * @param $file
      *
-     * @return Portal
+     * @return Webspace
      */
-    private function parseXml($file)
+    protected function parseXml($file)
     {
         $this->xpath = new \DOMXPath($this->tryLoad($file));
         $this->xpath->registerNamespace('x', 'http://schemas.sulu.io/webspace/webspace');
@@ -101,7 +107,7 @@ class XmlFileLoader extends FileLoader
         $this->webspace->setTheme($this->generateTheme());
         $this->webspace->setNavigation($this->generateNavigation());
 
-        $this->generateErrorTemplates($this->webspace);
+        $this->generateTemplates($this->webspace);
         $this->generateDefaultTemplates($this->webspace);
 
         // set security
@@ -131,35 +137,26 @@ class XmlFileLoader extends FileLoader
      *
      * @throws InvalidWebspaceException
      */
-    private function tryLoad($file)
+    protected function tryLoad($file)
     {
-        $exception = null;
-
-        // load xml file
-        foreach ([self::SCHEME_PATH_1_1, self::SCHEME_PATH_1_0] as $schemePath) {
-            try {
-                return XmlUtils::loadFile($file, __DIR__ . $schemePath);
-            } catch (\InvalidArgumentException $e) {
-                if (null !== $exception) {
-                    continue;
-                }
-
-                $exception = new InvalidWebspaceException(
-                    sprintf(
-                        'Could not parse webspace XML file "%s"',
-                        $file
-                    ), null, $e
-                );
-            }
+        try {
+            return XmlUtils::loadFile($file, __DIR__ . static::SCHEMA_LOCATION);
+        } catch (\InvalidArgumentException $e) {
+            throw new InvalidWebspaceException(
+                sprintf(
+                    'Could not parse webspace XML file "%s"',
+                    $file
+                ),
+                null,
+                $e
+            );
         }
-
-        throw $exception;
     }
 
     /**
      * Validate result.
      */
-    private function validate()
+    protected function validate()
     {
         $this->validateWebspaceDefaultLocalization();
         $this->validateDefaultPortalLocalization();
@@ -168,11 +165,13 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
+     * Sets the default localization for the given portal.
+     *
      * @param $portal Portal
      *
      * @return bool True when successful, otherwise false
      */
-    private function loadPortalLocalizationDefaultFromWebspace($portal)
+    protected function loadPortalLocalizationDefaultFromWebspace($portal)
     {
         $webspaceDefaultLocalization = $this->webspace->getDefaultLocalization();
 
@@ -191,10 +190,12 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
+     * Generates all localizations for the given portal.
+     *
      * @param \DOMNode $portalNode
      * @param Portal $portal
      */
-    private function generatePortalLocalizations(\DOMNode $portalNode, Portal $portal)
+    protected function generatePortalLocalizations(\DOMNode $portalNode, Portal $portal)
     {
         if ($this->xpath->query('x:localizations', $portalNode)->length > 0) {
             // set localizations from portal, if they are set
@@ -208,13 +209,13 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
+     * Generates the localizations for the given portal from the given DOMNodeList.
+     *
      * @param \DOMNodeList $localizationNodes
      * @param Portal $portal
      * @param bool $flat
-     *
-     * @internal param \DOMXpath $xpath
      */
-    private function generateLocalizationsFromNodeList(\DOMNodeList $localizationNodes, Portal $portal, $flat = false)
+    protected function generateLocalizationsFromNodeList(\DOMNodeList $localizationNodes, Portal $portal, $flat = false)
     {
         foreach ($localizationNodes as $localizationNode) {
             $localization = $this->generateLocalizationFromNode($localizationNode, $flat);
@@ -224,15 +225,15 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
+     * Generates a localization from the given node.
+     *
      * @param \DOMElement|\DOMNode $localizationNode
      * @param bool $flat
      * @param null $parent
      *
-     * @internal param \DOMXPath $xpath
-     *
      * @return Localization
      */
-    private function generateLocalizationFromNode(\DOMElement $localizationNode, $flat = false, $parent = null)
+    protected function generateLocalizationFromNode(\DOMElement $localizationNode, $flat = false, $parent = null)
     {
         $localization = new Localization();
         $localization->setLanguage($localizationNode->attributes->getNamedItem('language')->nodeValue);
@@ -277,7 +278,10 @@ class XmlFileLoader extends FileLoader
         return $localization;
     }
 
-    private function generateSecurity()
+    /**
+     * Generates and sets the security object from the XML document.
+     */
+    protected function generateSecurity()
     {
         $securitySystemNode = $this->xpath->query('/x:webspace/x:security/x:system');
         if ($securitySystemNode->length > 0) {
@@ -287,7 +291,10 @@ class XmlFileLoader extends FileLoader
         }
     }
 
-    private function generateWebspaceLocalizations()
+    /**
+     * Generates the localization for the webspace from the XML document.
+     */
+    protected function generateWebspaceLocalizations()
     {
         foreach ($this->xpath->query('/x:webspace/x:localizations/x:localization') as $localizationNode) {
             $localization = $this->generateLocalizationFromNode($localizationNode);
@@ -296,7 +303,10 @@ class XmlFileLoader extends FileLoader
         }
     }
 
-    private function generateSegments()
+    /**
+     * Generates the available segments for the webspace from the XML document.
+     */
+    protected function generateSegments()
     {
         foreach ($this->xpath->query('/x:webspace/x:segments/x:segment') as $segmentNode) {
             /** @var \DOMNode $segmentNode */
@@ -315,7 +325,10 @@ class XmlFileLoader extends FileLoader
         }
     }
 
-    private function generatePortals()
+    /**
+     * Generate all the portals for the webspace.
+     */
+    protected function generatePortals()
     {
         foreach ($this->xpath->query('/x:webspace/x:portals/x:portal') as $portalNode) {
             /** @var \DOMNode $portalNode */
@@ -339,11 +352,11 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
-     * @internal param \DOMNode $webspaceNode
+     * Generates the theme for the webspace.
      *
      * @return string
      */
-    private function generateTheme()
+    protected function generateTheme()
     {
         $nodes = $this->xpath->query('/x:webspace/x:theme/x:key');
         if ($nodes->length > 0) {
@@ -358,33 +371,35 @@ class XmlFileLoader extends FileLoader
         return $nodes->item(0)->nodeValue;
     }
 
-    private function generateErrorTemplates(Webspace $webspace)
+    /**
+     * Generates the available template types for the given webspace.
+     *
+     * @param Webspace $webspace
+     *
+     * @return Webspace
+     *
+     * @throws InvalidAmountOfDefaultErrorTemplateException
+     * @throws InvalidDefaultErrorTemplateException
+     * @throws InvalidErrorTemplateException
+     */
+    protected function generateTemplates(Webspace $webspace)
     {
         $defaultErrorTemplates = 0;
 
-        $paths = [
-            '/x:webspace/x:error-templates/x:error-template',
-            '/x:webspace/x:theme/x:error-templates/x:error-template',
-        ];
-
-        foreach ($paths as $path) {
-            foreach ($this->xpath->query($path) as $errorTemplateNode) {
-                /* @var \DOMNode $errorTemplateNode */
-                $template = $errorTemplateNode->nodeValue;
-                if (($codeNode = $errorTemplateNode->attributes->getNamedItem('code')) !== null) {
-                    $code = $codeNode->nodeValue;
-                } elseif (($defaultNode = $errorTemplateNode->attributes->getNamedItem('default')) !== null) {
-                    $default = $defaultNode->nodeValue === 'true';
-                    if (!$default) {
-                        throw new InvalidDefaultErrorTemplateException($template, $this->webspace->getKey());
-                    }
-                    ++$defaultErrorTemplates;
-                    $code = 'default';
-                } else {
-                    throw new InvalidErrorTemplateException($template, $this->webspace->getKey());
+        foreach ($this->xpath->query('/x:webspace/x:theme/x:error-templates/x:error-template') as $errorTemplateNode) {
+            /* @var \DOMNode $errorTemplateNode */
+            $template = $errorTemplateNode->nodeValue;
+            if (($codeNode = $errorTemplateNode->attributes->getNamedItem('code')) !== null) {
+                $webspace->addTemplate('error-' . $codeNode->nodeValue, $template);
+            } elseif (($defaultNode = $errorTemplateNode->attributes->getNamedItem('default')) !== null) {
+                $default = $defaultNode->nodeValue === 'true';
+                if (!$default) {
+                    throw new InvalidDefaultErrorTemplateException($template, $this->webspace->getKey());
                 }
-
-                $webspace->addErrorTemplate($code, $template);
+                ++$defaultErrorTemplates;
+                $webspace->addTemplate('error', $template);
+            } else {
+                throw new InvalidErrorTemplateException($template, $this->webspace->getKey());
             }
         }
 
@@ -396,25 +411,27 @@ class XmlFileLoader extends FileLoader
         return $webspace;
     }
 
-    private function generateDefaultTemplates(Webspace $webspace)
+    /**
+     * Generates the default templates for the webspace.
+     *
+     * @param Webspace $webspace
+     *
+     * @return Webspace
+     *
+     * @throws ExpectedDefaultTemplatesNotFound
+     */
+    protected function generateDefaultTemplates(Webspace $webspace)
     {
         $expected = ['page', 'home'];
 
-        $paths = [
-            '/x:webspace/x:default-templates/x:default-template',
-            '/x:webspace/x:theme/x:default-templates/x:default-template',
-        ];
+        foreach ($this->xpath->query('/x:webspace/x:theme/x:default-templates/x:default-template') as $node) {
+            /* @var \DOMNode $node */
+            $template = $node->nodeValue;
+            $type = $node->attributes->getNamedItem('type')->nodeValue;
 
-        foreach ($paths as $path) {
-            foreach ($this->xpath->query($path) as $node) {
-                /* @var \DOMNode $node */
-                $template = $node->nodeValue;
-                $type = $node->attributes->getNamedItem('type')->nodeValue;
-
-                $webspace->addDefaultTemplate($type, $template);
-                if ($type === 'homepage') {
-                    $webspace->addDefaultTemplate('home', $template);
-                }
+            $webspace->addDefaultTemplate($type, $template);
+            if ($type === 'homepage') {
+                $webspace->addDefaultTemplate('home', $template);
             }
         }
 
@@ -428,7 +445,12 @@ class XmlFileLoader extends FileLoader
         return $webspace;
     }
 
-    private function generateNavigation()
+    /**
+     * Generates the availabel navigation contexts for the webspace.
+     *
+     * @return Navigation
+     */
+    protected function generateNavigation()
     {
         $contexts = [];
 
@@ -443,7 +465,15 @@ class XmlFileLoader extends FileLoader
         return new Navigation($contexts);
     }
 
-    private function loadMeta($path, \DOMNode $context = null)
+    /**
+     * Loads the meta information like a translatable title from the webspace.
+     *
+     * @param $path
+     * @param \DOMNode|null $context
+     *
+     * @return array
+     */
+    protected function loadMeta($path, \DOMNode $context = null)
     {
         $result = [];
 
@@ -462,10 +492,12 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
+     * Generates the definitions for the available environments for this webspace.
+     *
      * @param \DOMNode $portalNode
      * @param Portal $portal
      */
-    private function generateEnvironments(\DOMNode $portalNode, Portal $portal)
+    protected function generateEnvironments(\DOMNode $portalNode, Portal $portal)
     {
         foreach ($this->xpath->query('x:environments/x:environment', $portalNode) as $environmentNode) {
             /** @var \DOMNode $environmentNode */
@@ -480,12 +512,14 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
+     * Generates the URLs for the given environment.
+     *
      * @param \DOMNode $environmentNode
      * @param Environment $environment
      *
      * @throws Exception\InvalidUrlDefinitionException
      */
-    private function generateUrls(\DOMNode $environmentNode, Environment $environment)
+    protected function generateUrls(\DOMNode $environmentNode, Environment $environment)
     {
         foreach ($this->xpath->query('x:urls/x:url', $environmentNode) as $urlNode) {
             // check if the url is valid, and throw an exception otherwise
@@ -511,12 +545,16 @@ class XmlFileLoader extends FileLoader
     }
 
     /**
+     * Generates the custom URLs from the XML document.
+     *
+     * A custom URL must contain at lease one *, which will be used as a placeholder.
+     *
      * @param \DOMNode $environmentNode
      * @param Environment $environment
      *
      * @throws InvalidCustomUrlException
      */
-    private function generateCustomUrls(\DOMNode $environmentNode, Environment $environment)
+    protected function generateCustomUrls(\DOMNode $environmentNode, Environment $environment)
     {
         foreach ($this->xpath->query('x:custom-urls/x:custom-url', $environmentNode) as $urlNode) {
             /** @var \DOMNode $urlNode */
@@ -532,7 +570,16 @@ class XmlFileLoader extends FileLoader
         }
     }
 
-    private function getOptionalNodeAttribute(\DOMNode $node, $name, $default = null)
+    /**
+     * Returns an optional value from the given node. The default value will be used if the node does not exist.
+     *
+     * @param \DOMNode $node
+     * @param string $name
+     * @param mixed $default
+     *
+     * @return mixed
+     */
+    protected function getOptionalNodeAttribute(\DOMNode $node, $name, $default = null)
     {
         $attribute = $node->attributes->getNamedItem($name);
         if ($attribute) {
@@ -549,7 +596,7 @@ class XmlFileLoader extends FileLoader
      *
      * @return bool
      */
-    private function checkUrlNode(\DOMNode $urlNode)
+    protected function checkUrlNode(\DOMNode $urlNode)
     {
         $hasLocalization = ($urlNode->attributes->getNamedItem('localization') != null)
             || (strpos($urlNode->nodeValue, '{localization}') !== false);
@@ -572,7 +619,7 @@ class XmlFileLoader extends FileLoader
      *
      * @throws Exception\InvalidWebspaceDefaultLocalizationException
      */
-    private function validateWebspaceDefaultLocalization()
+    protected function validateWebspaceDefaultLocalization()
     {
         try {
             $this->validateDefaultLocalization($this->webspace->getLocalizations());
@@ -587,7 +634,7 @@ class XmlFileLoader extends FileLoader
      * @throws Exception\PortalDefaultLocalizationNotFoundException
      * @throws Exception\InvalidPortalDefaultLocalizationException
      */
-    private function validateDefaultPortalLocalization()
+    protected function validateDefaultPortalLocalization()
     {
         // check all portal localizations
         foreach ($this->webspace->getPortals() as $portal) {
@@ -610,7 +657,7 @@ class XmlFileLoader extends FileLoader
      * @throws Exception\PortalDefaultLocalizationNotFoundException
      * @throws Exception\InvalidPortalDefaultLocalizationException
      */
-    private function validateLocalizations()
+    protected function validateLocalizations()
     {
         $locales = array_unique(
             array_map(
@@ -647,7 +694,7 @@ class XmlFileLoader extends FileLoader
      * @throws Exception\WebspaceDefaultSegmentNotFoundException
      * @throws Exception\InvalidWebspaceDefaultSegmentException
      */
-    private function validateWebspaceDefaultSegment()
+    protected function validateWebspaceDefaultSegment()
     {
         // check if there are duplicate defaults in the webspaces segments
         $segments = $this->webspace->getSegments();
@@ -678,7 +725,7 @@ class XmlFileLoader extends FileLoader
      *
      * @throws Exception\InvalidDefaultLocalizationException
      */
-    private function validateDefaultLocalization($localizations)
+    protected function validateDefaultLocalization($localizations)
     {
         $result = false;
         foreach ($localizations as $localization) {
