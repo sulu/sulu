@@ -11,10 +11,10 @@
 
 namespace Sulu\Bundle\ContentBundle\Repository;
 
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
-
 /**
  * repository for node objects.
+ *
+ * @deprecated
  */
 interface NodeRepositoryInterface
 {
@@ -123,31 +123,6 @@ interface NodeRepositoryInterface
     public function getIndexNode($webspaceKey, $languageCode);
 
     /**
-     * save node with given uuid or creates a new one.
-     *
-     * @param array  $data
-     * @param string $templateKey
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param int    $userId
-     * @param string $uuid
-     * @param string $parentUuid
-     * @param null   $state
-     *
-     * @return array
-     */
-    public function saveNode(
-        $data,
-        $templateKey,
-        $webspaceKey,
-        $languageCode,
-        $userId,
-        $uuid = null,
-        $parentUuid = null,
-        $state = null
-    );
-
-    /**
      * removes given node.
      *
      * @param string $uuid
@@ -185,15 +160,6 @@ interface NodeRepositoryInterface
     );
 
     /**
-     * executes a content request and prepares api result.
-     *
-     * @param ContentMapperRequest $mapperRequest
-     *
-     * @return array
-     */
-    public function saveNodeRequest(ContentMapperRequest $mapperRequest);
-
-    /**
      * returns data of given extension api ready.
      *
      * @param string $uuid
@@ -218,45 +184,6 @@ interface NodeRepositoryInterface
      * @return array
      */
     public function saveExtensionData($uuid, $data, $extensionName, $webspaceKey, $languageCode, $userId);
-
-    /**
-     * move node and returns new data.
-     *
-     * @param string $uuid
-     * @param string $destinationUuid
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $userId
-     *
-     * @return array
-     */
-    public function moveNode($uuid, $destinationUuid, $webspaceKey, $languageCode, $userId);
-
-    /**
-     * copy node and returns new data.
-     *
-     * @param string $uuid
-     * @param string $destinationUuid
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $userId
-     *
-     * @return array
-     */
-    public function copyNode($uuid, $destinationUuid, $webspaceKey, $languageCode, $userId);
-
-    /**
-     * order given node before another.
-     *
-     * @param string $uuid
-     * @param string $beforeUuid
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param int    $userId
-     *
-     * @return array
-     */
-    public function orderBefore($uuid, $beforeUuid, $webspaceKey, $languageCode, $userId);
 
     /**
      * brings a given node into a given position.

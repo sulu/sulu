@@ -11,16 +11,14 @@
 
 namespace Sulu\Component\Content\Tests\Functional\Mapper;
 
-use Behat\Behat\Snippet\Snippet;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
-use PHPCR\Util\PathHelper;
 use PHPCR\Util\UUIDHelper;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
+use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
+use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 class ContentMapperSnippetTest extends SuluTestCase
@@ -36,12 +34,12 @@ class ContentMapperSnippetTest extends SuluTestCase
     private $session;
 
     /**
-     * @var Snippet
+     * @var SnippetDocument
      */
     private $snippet1;
 
     /**
-     * @var Snippet
+     * @var SnippetDocument
      */
     private $snippet2;
 
@@ -77,70 +75,47 @@ class ContentMapperSnippetTest extends SuluTestCase
 
     public function loadFixtures()
     {
-        $contentMapperRequest = ContentMapperRequest::create()
-            ->setType(Structure::TYPE_SNIPPET)
-            ->setTemplateKey('animal')
-            ->setLocale('en')
-            ->setUserId(1)
-            ->setData([
-                'title' => 'ElePHPant',
-            ])
-            ->setState(StructureInterface::STATE_PUBLISHED);
+        $this->snippet1 = $this->createSnippetDocument();
+        $this->snippet1->setStructureType('animal');
+        $this->snippet1->setTitle('ElePHPant');
+        $this->snippet1->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($this->snippet1, 'en');
+        $this->documentManager->flush();
 
-        $this->snippet1 = $this->contentMapper->saveRequest($contentMapperRequest);
-
-        $contentMapperRequest = ContentMapperRequest::create()
-            ->setType(Structure::TYPE_SNIPPET)
-            ->setTemplateKey('animal')
-            ->setLocale('de')
-            ->setUserId(1)
-            ->setData([
-                'title' => 'Penguin',
-            ])
-            ->setState(StructureInterface::STATE_PUBLISHED);
-
-        $this->snippet2 = $this->contentMapper->saveRequest($contentMapperRequest);
+        $this->snippet2 = $this->createSnippetDocument();
+        $this->snippet2->setStructureType('animal');
+        $this->snippet2->setTitle('Penguin');
+        $this->snippet2->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($this->snippet2, 'de');
+        $this->documentManager->flush();
 
         $this->snippet1Node = $this->session->getNodeByIdentifier($this->snippet1->getUuid());
         $this->snippet1OriginalPath = $this->snippet1Node->getPath();
 
-        $contentMapperRequest = ContentMapperRequest::create()
-            ->setUuid($this->snippet1->getUuid())
-            ->setType(Structure::TYPE_SNIPPET)
-            ->setTemplateKey('animal')
-            ->setLocale('de')
-            ->setUserId(1)
-            ->setData([
-                'title' => 'English ElePHPant',
-            ])
-            ->setState(StructureInterface::STATE_PUBLISHED);
-        $this->contentMapper->saveRequest($contentMapperRequest);
+        /** @var SnippetDocument $document */
+        $document = $this->documentManager->find($this->snippet1->getUuid(), 'de');
+        $document->setStructureType('animal');
+        $document->setTitle('English ElePHPant');
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($document, 'de');
+        $this->documentManager->flush();
 
-        $contentMapperRequest = ContentMapperRequest::create()
-            ->setType(Structure::TYPE_SNIPPET)
-            ->setTemplateKey('animal')
-            ->setLocale('en')
-            ->setUserId(1)
-            ->setData([
-                'title' => 'Some other animal',
-            ])
-            ->setState(StructureInterface::STATE_PUBLISHED);
-        $this->contentMapper->saveRequest($contentMapperRequest);
+        /** @var SnippetDocument $document */
+        $document = $this->createSnippetDocument();
+        $document->setStructureType('animal');
+        $document->setTitle('Some other animal');
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($document, 'en');
+        $this->documentManager->flush();
     }
 
     public function testChangeSnippetTemplate()
     {
-        $req = ContentMapperRequest::create()
-            ->setUuid($this->snippet1->getUuid())
-            ->setType(Structure::TYPE_SNIPPET)
-            ->setTemplateKey('hotel')
-            ->setLocale('de')
-            ->setState(StructureInterface::STATE_PUBLISHED)
-            ->setUserId(1)
-            ->setData([
-                'title' => 'ElePHPant',
-            ]);
-        $this->contentMapper->saveRequest($req);
+        /** @var SnippetDocument $document */
+        $document = $this->documentManager->find($this->snippet1->getUuid());
+        $document->setStructureType('hotel');
+        $this->documentManager->persist($document, 'de');
+        $this->documentManager->flush();
 
         try {
             $this->session->getNode($this->snippet1OriginalPath);
@@ -151,27 +126,6 @@ class ContentMapperSnippetTest extends SuluTestCase
 
         $node = $this->session->getNode('/cmf/snippets/hotel/elephpant');
         $node->getPropertyValue('template');
-    }
-
-    public function testRenameSnippet()
-    {
-        $originalPosition = $this->getNodePosition($this->snippet1Node);
-
-        $req = ContentMapperRequest::create()
-            ->setUuid($this->snippet1->getUuid())
-            ->setType(Structure::TYPE_SNIPPET)
-            ->setTemplateKey('animal')
-            ->setLocale('de')
-            ->setState(StructureInterface::STATE_PUBLISHED)
-            ->setUserId(1)
-            ->setData([
-                'title' => 'ElePHPant FOOBAR',
-            ]);
-        $this->contentMapper->saveRequest($req);
-        $node = $this->session->getNode('/cmf/snippets/animal/elephpant');
-        $node->getPropertyValue('template');
-
-        $this->assertEquals($originalPosition, $this->getNodePosition($node));
     }
 
     public function testRemoveSnippet()
@@ -293,54 +247,10 @@ class ContentMapperSnippetTest extends SuluTestCase
     }
 
     /**
-     * @expectedException Sulu\Component\DocumentManager\Exception\DocumentNotFoundException
-     * @expectedExceptionMessage Requested document of type "page" but got
+     * @return SnippetDocument
      */
-    public function testUpdatePageWrongType()
+    private function createSnippetDocument()
     {
-        $req = ContentMapperRequest::create()
-            ->setUuid($this->snippet1->getUuid())
-            ->setType(Structure::TYPE_PAGE)
-            ->setWebspaceKey('sulu_io')
-            ->setTemplateKey('test_page')
-            ->setLocale('de')
-            ->setState(StructureInterface::STATE_PUBLISHED)
-            ->setUserId(1)
-            ->setData(['title' => 'Foo']);
-
-        $this->contentMapper->saveRequest($req);
-    }
-
-    /**
-     * Return the position of the node within the set of its siblings.
-     *
-     * @return int
-     */
-    private function getNodePosition($node)
-    {
-        $path = $node->getPath();
-        $position = null;
-        $parent = $this->session->getNode(PathHelper::getParentPath($path));
-        $nodes = $parent->getNodes();
-
-        $index = 0;
-        foreach ($nodes as $node) {
-            if ($node->getPath() === $path) {
-                $position = $index;
-                break;
-            }
-            ++$index;
-        }
-
-        if (null === $position) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Could not find node "%s" as a child of its parent',
-                    $path
-                )
-            );
-        }
-
-        return $position;
+        return $this->documentManager->create('snippet');
     }
 }

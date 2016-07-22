@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="sulu_preview.events.pre-render" type="constant">Sulu\Bundle\PreviewBundle\Preview\Events::PRE_RENDER</parameter>
+    </parameters>
+
+    <services>
+        <!-- sulu-admin -->
+        <service id="sulu_preview.admin" class="Sulu\Bundle\PreviewBundle\Admin\PreviewAdmin">
+            <argument>%sulu_admin.name%</argument>
+
+            <tag name="sulu.admin"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+        <service id="sulu_preview.js_config" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">
+            <argument type="string">sulu_preview</argument>
+            <argument type="collection">
+                <argument key="mode" type="string">%sulu_preview.mode%</argument>
+                <argument key="delay" type="string">%sulu_preview.delay%</argument>
+            </argument>
+
+            <tag name="sulu.js_config"/>
+        </service>
+
+        <!-- preview -->
+        <service id="sulu_preview.preview.data_cache" class="Doctrine\Common\Cache\FilesystemCache">
+            <argument type="string">%sulu.cache_dir%/preview/data</argument>
+        </service>
+        <service id="sulu_preview.preview.kernel_factory"
+                 class="Sulu\Bundle\PreviewBundle\Preview\Renderer\WebsiteKernelFactory"/>
+        <service id="sulu_preview.preview.renderer" class="Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRenderer">
+            <argument type="service" id="sulu_route.routing.defaults_provider"/>
+            <argument type="service" id="request_stack"/>
+            <argument type="service" id="sulu_preview.preview.kernel_factory"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="event_dispatcher"/>
+            <argument type="collection">
+                <argument type="string" key="analyticsKey">%sulu_preview.defaults.analytics_key%</argument>
+            </argument>
+            <argument type="string">%kernel.environment%</argument>
+        </service>
+        <service id="sulu_preview.preview" class="Sulu\Bundle\PreviewBundle\Preview\Preview">
+            <argument type="collection"/>
+            <argument type="service" id="sulu_preview.preview.data_cache"/>
+            <argument type="service" id="sulu_preview.preview.renderer"/>
+        </service>
+
+        <!-- websocket -->
+        <service id="sulu_preview.preview.message_component"
+                 class="Sulu\Bundle\PreviewBundle\Websocket\PreviewMessageHandler">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu_preview.preview"/>
+
+            <tag name="sulu.websocket.message.handler" dispatcher="admin" alias="sulu_preview.preview"/>
+        </service>
+    </services>
+
+</container>

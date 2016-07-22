@@ -126,7 +126,7 @@ define(function() {
             this.sandbox.off('husky.select.copy-locale-to.selected.item', selectHandler.bind(this));
             copyLocale.call(this, this.data.id, src[0], dest);
 
-            def.resolve();
+            def.resolve(dest);
         },
 
         /**

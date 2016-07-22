@@ -18,6 +18,8 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\HttpCache\HandlerFlushInterface;
 use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Url\ReplacerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Invalidate all the paths (i.e. old and new) for a Sulu Structure.
@@ -35,9 +37,19 @@ class PathsHandler implements HandlerFlushInterface, HandlerInvalidateStructureI
     private $proxyClient;
 
     /**
+     * @var ReplacerInterface
+     */
+    private $replacer;
+
+    /**
      * @var string
      */
     private $environment;
+
+    /**
+     * @var string
+     */
+    private $requestHost;
 
     /**
      * @var array
@@ -46,17 +58,24 @@ class PathsHandler implements HandlerFlushInterface, HandlerInvalidateStructureI
 
     /**
      * @param WebspaceManagerInterface $webspaceManager
-     * @param ProxyClientInterface     $proxyClient
-     * @param string                   $environment     - kernel envionment, dev, prod, etc.
+     * @param ProxyClientInterface $proxyClient
+     * @param RequestStack $requestStack
+     * @param ReplacerInterface $replacer
+     * @param string $environment - kernel envionment, dev, prod, etc
      */
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
         PurgeInterface $proxyClient,
+        RequestStack $requestStack,
+        ReplacerInterface $replacer,
         $environment
     ) {
         $this->webspaceManager = $webspaceManager;
         $this->proxyClient = $proxyClient;
+        $this->replacer = $replacer;
         $this->environment = $environment;
+
+        $this->requestHost = ($requestStack->getCurrentRequest()) ? $requestStack->getCurrentRequest()->getHost() : null;
     }
 
     /**
@@ -93,6 +112,7 @@ class PathsHandler implements HandlerFlushInterface, HandlerInvalidateStructureI
             );
 
             foreach ($urls as $url) {
+                $url = ($this->requestHost) ? $this->replacer->replaceHost($url, $this->requestHost) : $url;
                 $this->proxyClient->purge($url);
             }
         }

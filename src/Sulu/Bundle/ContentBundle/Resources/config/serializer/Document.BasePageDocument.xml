@@ -33,16 +33,16 @@
         <property name="workflowStage" type="integer" serialized-name="nodeState" groups="defaultPage,smallPage"/>
         <property name="shadowLocale" type="string" serialized-name="shadowBaseLanguage" groups="defaultPage"/>
         <property name="shadowLocaleEnabled" type="boolean" serialized-name="shadowOn" groups="defaultPage"/>
-        <property name="uuid" type="string" serialized-name="id" groups="defaultPage,smallPage,previewPage"/>
-        <property name="structureType" type="string" groups="previewPage"/>
-        <property name="locale" type="string" groups="previewPage"/>
-        <property name="path" type="string"/>
+        <property name="uuid" type="string" serialized-name="id" groups="defaultPage,smallPage,preview"/>
+        <property name="structureType" type="string" groups="preview"/>
+        <property name="originalLocale" type="string" groups="preview"/>
+        <property name="locale" type="string" groups="preview"/>
+        <property name="path" exclude="true"/>
         <property name="internal" type="boolean" groups="defaultPage"/>
         <property name="webspaceName" type="string"/>
-        <property name="extensions" type="Sulu\Component\Content\Document\Extension\ExtensionContainer" serialized-name="ext" groups="defaultPage,previewPage"/>
-        <property name="structure" type="Sulu\Component\Content\Document\Structure\Structure" groups="previewPage"/>
+        <property name="extensions" type="Sulu\Component\Content\Document\Extension\ExtensionContainer" serialized-name="ext" groups="defaultPage,preview"/>
+        <property name="structure" type="Sulu\Component\Content\Document\Structure\Structure" groups="preview"/>
         <property name="children" exclude="true" type="Sulu\Component\DocumentManager\Collection\ChildrenCollection"/>
-        <property name="parent" exclude="true"/>
         <property name="suluOrder" type="integer" serialized-name="order" groups="defaultPage,smallPage"/>
         <property name="permissions" exclude="true"/>
 

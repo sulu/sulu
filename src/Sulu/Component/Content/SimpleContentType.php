@@ -31,7 +31,7 @@ abstract class SimpleContentType implements ContentTypeInterface
      *
      * @var mixed
      */
-    private $defaultValue;
+    protected $defaultValue;
 
     public function __construct($name, $defaultValue = null)
     {
@@ -62,14 +62,6 @@ abstract class SimpleContentType implements ContentTypeInterface
         $property->setValue($value);
 
         return $value;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
-    {
-        $property->setValue($data);
     }
 
     /**

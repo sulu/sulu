@@ -27,7 +27,7 @@ define([
         },
 
         initialize: function() {
-            this.client = WebsocketManager.getClient(WEBSOCKET_APP_NAME, true);
+            this.client = WebsocketManager.getClient(WEBSOCKET_APP_NAME);
 
             this.bindEvents();
             this.bindMessageHandler();
@@ -108,22 +108,16 @@ define([
                 this.sandbox.emit('sulu.labels.label.remove', LABEL_ID);
                 return;
             }
+            var collaboratorNames = collaborators.map(
+                function(collaborator) {
+                    return collaborator.username;
+                }
+            );
+            collaboratorNames = _.uniq(collaboratorNames);
 
             var message = this.translations.collaborationWarning.replace(
                 '%s',
-                collaborators.map(
-                    function(collaborator) {
-                        if (collaborator.id === this.options.userId) {
-                            return null;
-                        }
-
-                        return collaborator.username;
-                    }.bind(this)
-                ).filter(
-                    function(collaborator) {
-                        return collaborator != null;
-                    }
-                ).join(', ')
+                collaboratorNames.join(', ')
             );
 
             this.sandbox.emit('sulu.labels.warning.show', message, '', LABEL_ID, false);

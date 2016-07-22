@@ -62,209 +62,6 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function provideAnalyze()
-    {
-        return [
-            [
-                [
-                    'portal_url' => 'sulu.lo/test',
-                    'resource_locator_prefix' => '/test',
-                    'resource_locator' => '/path/to',
-                    'path_info' => '/test/path/to',
-                    'match_type' => RequestAnalyzerInterface::MATCH_TYPE_FULL,
-                    'redirect' => '',
-                ],
-                [
-                    'redirect' => null,
-                    'resource_locator_prefix' => '/test',
-                    'resource_locator' => '/path/to',
-                    'portal_url' => 'sulu.lo/test',
-                ],
-            ],
-            [
-                [
-                    'portal_url' => 'sulu.lo',
-                    'path_info' => '/test/path/to',
-                    'resource_locator_prefix' => '',
-                    'resource_locator' => '/test/path/to',
-                    'match_type' => RequestAnalyzerInterface::MATCH_TYPE_PARTIAL,
-                    'redirect' => 'sulu.lo/test',
-                ],
-                [
-                    'redirect' => 'sulu.lo/test',
-                    'resource_locator_prefix' => '',
-                    'resource_locator' => '/test/path/to',
-                    'portal_url' => 'sulu.lo',
-                ],
-            ],
-        ];
-    }
-
-    public function provideAnalyzeWithFormat()
-    {
-        return [
-            [
-                [
-                    'portal_url' => 'sulu.lo/test',
-                    'path_info' => '/test/path/to.html',
-                    'match_type' => RequestAnalyzerInterface::MATCH_TYPE_FULL,
-                    'redirect' => '',
-                ],
-                [
-                    'redirect' => null,
-                    'resource_locator_prefix' => '/test',
-                    'resource_locator' => '/path/to',
-                    'portal_url' => 'sulu.lo/test',
-                    'format' => 'html',
-                ],
-            ],
-            [
-                [
-                    'portal_url' => 'sulu.lo',
-                    'path_info' => '/test/path/to.rss',
-                    'match_type' => RequestAnalyzerInterface::MATCH_TYPE_PARTIAL,
-                    'redirect' => 'sulu.lo/test',
-                ],
-                [
-                    'redirect' => 'sulu.lo/test',
-                    'resource_locator_prefix' => '',
-                    'resource_locator' => '/test/path/to',
-                    'portal_url' => 'sulu.lo',
-                    'format' => 'rss',
-                ],
-            ],
-            [
-                [
-                    'portal_url' => 'sulu.lo/test',
-                    'path_info' => '/test/path/to',
-                    'match_type' => RequestAnalyzerInterface::MATCH_TYPE_FULL,
-                    'redirect' => '',
-                ],
-                [
-                    'redirect' => null,
-                    'resource_locator_prefix' => '/test',
-                    'resource_locator' => '/path/to',
-                    'portal_url' => 'sulu.lo/test',
-                    'format' => null,
-                ],
-            ],
-            [
-                [
-                    'portal_url' => 'sulu.lo/test',
-                    'path_info' => '/test/path/to/test.min.css',
-                    'match_type' => RequestAnalyzerInterface::MATCH_TYPE_FULL,
-                    'redirect' => '',
-                ],
-                [
-                    'redirect' => null,
-                    'resource_locator_prefix' => '/test',
-                    'resource_locator' => '/path/to/test',
-                    'portal_url' => 'sulu.lo/test',
-                    'format' => 'css',
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider provideAnalyze
-     */
-    public function testProcess($config, $expected = [])
-    {
-        $webspace = new Webspace();
-        $webspace->setKey('sulu');
-
-        $portal = new Portal();
-        $portal->setKey('sulu');
-
-        $localization = new Localization();
-        $localization->setCountry('at');
-        $localization->setLanguage('de');
-
-        $portalInformation = new PortalInformation(
-            $config['match_type'],
-            $webspace,
-            $portal,
-            $localization,
-            $config['portal_url'],
-            null,
-            $config['redirect']
-        );
-
-        $this->prepareWebspaceManager($portalInformation);
-
-        $request = $this->getMock(Request::class);
-        $request->request = new ParameterBag(['post' => 1]);
-        $request->query = new ParameterBag(['get' => 1]);
-        $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
-        $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
-        $request->expects($this->any())->method('getScheme')->will($this->returnValue('http'));
-
-        $attributes = $this->provider->process($request, new RequestAttributes());
-
-        $this->assertEquals('de_at', $attributes->getAttribute('localization'));
-        $this->assertEquals('sulu', $attributes->getAttribute('webspace')->getKey());
-        $this->assertEquals('sulu', $attributes->getAttribute('portal')->getKey());
-        $this->assertNull($attributes->getAttribute('segment'));
-
-        $this->assertEquals($expected['portal_url'], $attributes->getAttribute('portalUrl'));
-        $this->assertEquals($expected['redirect'], $attributes->getAttribute('redirect'));
-        $this->assertEquals($expected['resource_locator'], $attributes->getAttribute('resourceLocator'));
-        $this->assertEquals($expected['resource_locator_prefix'], $attributes->getAttribute('resourceLocatorPrefix'));
-        $this->assertEquals(['post' => 1], $attributes->getAttribute('postParameter'));
-        $this->assertEquals(['get' => 1], $attributes->getAttribute('getParameter'));
-    }
-
-    /**
-     * @dataProvider provideAnalyzeWithFormat
-     */
-    public function testProcessWithFormat($config, $expected = [])
-    {
-        $webspace = new Webspace();
-        $webspace->setKey('sulu');
-
-        $portal = new Portal();
-        $portal->setKey('sulu');
-
-        $localization = new Localization();
-        $localization->setCountry('at');
-        $localization->setLanguage('de');
-
-        $portalInformation = new PortalInformation(
-            $config['match_type'],
-            $webspace,
-            $portal,
-            $localization,
-            $config['portal_url'],
-            null,
-            $config['redirect']
-        );
-
-        $this->prepareWebspaceManager($portalInformation);
-
-        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
-        $request->request = new ParameterBag(['post' => 1]);
-        $request->query = new ParameterBag(['get' => 1]);
-        $request->expects($this->any())->method('getHost')->will($this->returnValue('sulu.lo'));
-        $request->expects($this->any())->method('getPathInfo')->will($this->returnValue($config['path_info']));
-        $request->expects($this->any())->method('getScheme')->will($this->returnValue('http'));
-
-        $attributes = $this->provider->process($request, new RequestAttributes());
-
-        $this->assertEquals('de_at', $attributes->getAttribute('localization'));
-        $this->assertEquals('sulu', $attributes->getAttribute('webspace')->getKey());
-        $this->assertEquals('sulu', $attributes->getAttribute('portal')->getKey());
-        $this->assertNull($attributes->getAttribute('segment'));
-
-        $this->assertEquals($expected['portal_url'], $attributes->getAttribute('portalUrl'));
-        $this->assertEquals($expected['redirect'], $attributes->getAttribute('redirect'));
-        $this->assertEquals($expected['resource_locator'], $attributes->getAttribute('resourceLocator'));
-        $this->assertEquals($expected['resource_locator_prefix'], $attributes->getAttribute('resourceLocatorPrefix'));
-        $this->assertEquals($expected['format'], $attributes->getAttribute('format'));
-        $this->assertEquals(['post' => 1], $attributes->getAttribute('postParameter'));
-        $this->assertEquals(['get' => 1], $attributes->getAttribute('getParameter'));
-    }
-
     public function testProcessHostReplacer()
     {
         $webspace = new Webspace();
@@ -452,7 +249,7 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($portalInformation1, $attributes->getAttribute('portalInformation'));
     }
 
-    public function provideAnalyzeData()
+    public function provideValidateData()
     {
         $portalInformation = $this->prophesize(PortalInformation::class);
 
@@ -467,24 +264,14 @@ class WebsiteRequestProcessorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideAnalyzeData
+     * @dataProvider provideValidateData
      */
-    public function testAnalyze($attributes, $exception = null, $message = '')
+    public function testValidate($attributes, $exception = null, $message = '')
     {
         if ($exception !== null) {
             $this->setExpectedException($exception, $message);
         }
 
         $this->assertTrue($this->provider->validate(new RequestAttributes($attributes)));
-    }
-
-    /**
-     * @param $portalInformation
-     */
-    protected function prepareWebspaceManager($portalInformation)
-    {
-        $this->webspaceManager->findPortalInformationsByUrl(Argument::any(), Argument::any())
-            ->willReturn([$portalInformation]);
-        $this->webspaceManager->getPortalInformations(Argument::any())->willReturn([]);
     }
 }

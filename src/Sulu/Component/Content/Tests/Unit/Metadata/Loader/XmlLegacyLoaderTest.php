@@ -16,7 +16,15 @@ use Sulu\Component\Content\Metadata\Loader\XmlLegacyLoader;
 
 class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 {
-    public function testReadTemplate()
+    public function templateDataProvider()
+    {
+        return [['page'], ['home'], ['article']];
+    }
+
+    /**
+     * @dataProvider templateDataProvider
+     */
+    public function testReadTemplate($type)
     {
         $template = [
             'key' => 'template',
@@ -240,7 +248,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $result = $this->loadFixture('template.xml');
+        $result = $this->loadFixture('template.xml', $type);
         $this->assertEquals($template, $result);
         $x = $this->arrayRecursiveDiff($result, $template);
         $this->assertEquals(0, count($x));
@@ -1188,7 +1196,10 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
         $templateReader = new XmlLegacyLoader();
         $result = $templateReader->load(
-            $this->getResourceDirectory() . '/DataFixtures/Page/template_missing_rlp_tag.xml',
+            implode(
+                DIRECTORY_SEPARATOR,
+                [$this->getResourceDirectory(), 'DataFixtures', 'Page', 'template_missing_rlp_tag.xml']
+            ),
             'page'
         );
     }
@@ -1197,7 +1208,10 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $templateReader = new XmlLegacyLoader();
         $result = $templateReader->load(
-            $this->getResourceDirectory() . '/DataFixtures/Page/template_missing_rlp_tag_internal.xml',
+            implode(
+                DIRECTORY_SEPARATOR,
+                [$this->getResourceDirectory(), 'DataFixtures', 'Page', 'template_missing_rlp_tag_internal.xml']
+            ),
             'page'
         );
 
@@ -1214,7 +1228,10 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
         $templateReader = new XmlLegacyLoader();
         $result = $templateReader->load(
-            $this->getResourceDirectory() . '/DataFixtures/Page/template_missing_rlp_tag.xml',
+            implode(
+                DIRECTORY_SEPARATOR,
+                [$this->getResourceDirectory(), 'DataFixtures', 'Page', 'template_missing_rlp_tag.xml']
+            ),
             'home'
         );
     }
@@ -1223,7 +1240,10 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $templateReader = new XmlLegacyLoader();
         $result = $templateReader->load(
-            $this->getResourceDirectory() . '/DataFixtures/Page/template_missing_rlp_tag_internal.xml',
+            implode(
+                DIRECTORY_SEPARATOR,
+                [$this->getResourceDirectory(), 'DataFixtures', 'Page', 'template_missing_rlp_tag_internal.xml']
+            ),
             'home'
         );
 
@@ -1235,7 +1255,10 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $templateReader = new XmlLegacyLoader();
         $result = $templateReader->load(
-            $this->getResourceDirectory() . '/DataFixtures/Page/template_missing_rlp_tag.xml',
+            implode(
+                DIRECTORY_SEPARATOR,
+                [$this->getResourceDirectory(), 'DataFixtures', 'Page', 'template_missing_rlp_tag.xml']
+            ),
             'snippet'
         );
 
@@ -1253,12 +1276,75 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $templateReader = new XmlLegacyLoader();
         $result = $templateReader->load(
-            $this->getResourceDirectory() . '/DataFixtures/Page/template_missing_rlp_tag_internal.xml',
+            implode(
+                DIRECTORY_SEPARATOR,
+                [$this->getResourceDirectory(), 'DataFixtures', 'Page', 'template_missing_rlp_tag_internal.xml']
+            ),
             'snippet'
         );
 
         // no exception should be thrown
         $this->assertNotNull($result);
+    }
+
+    public function testReadTemplateWithXInclude()
+    {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $this->markTestSkipped('Xinclude are not supported with php(unit) and windows.');
+        }
+
+        $template = [
+            'key' => 'template',
+            'view' => 'page.html.twig',
+            'controller' => 'SuluContentBundle:Default:index',
+            'cacheLifetime' => 2400,
+            'tags' => [],
+            'meta' => [
+                'title' => [
+                    'de' => 'Das ist das Template 1',
+                    'en' => 'That´s the template 1',
+                ],
+            ],
+            'properties' => [
+                'title' => [
+                    'name' => 'title',
+                    'type' => 'text_line',
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'colspan' => null,
+                    'cssClass' => null,
+                    'mandatory' => true,
+                    'multilingual' => true,
+                    'tags' => [],
+                    'params' => [],
+                    'meta' => [],
+                ],
+                'url' => [
+                    'name' => 'url',
+                    'type' => 'resource_locator',
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'colspan' => null,
+                    'cssClass' => null,
+                    'mandatory' => true,
+                    'multilingual' => true,
+                    'tags' => [
+                        [
+                            'name' => 'sulu.rlp',
+                            'priority' => 1,
+                            'attributes' => [],
+                        ],
+                    ],
+                    'params' => [],
+                    'meta' => [],
+                ],
+            ],
+        ];
+
+        $result = $this->loadFixture('template_with_xinclude.xml');
+        $this->assertEquals($template, $result);
+        $x = $this->arrayRecursiveDiff($result, $template);
+        $this->assertEquals(0, count($x));
     }
 
     private function arrayRecursiveDiff($aArray1, $aArray2)
@@ -1285,11 +1371,12 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
         return $aReturn;
     }
 
-    private function loadFixture($name)
+    private function loadFixture($name, $type = 'page')
     {
         $xmlLegacyLoader = new XmlLegacyLoader();
         $result = $xmlLegacyLoader->load(
-            $this->getResourceDirectory() . '/DataFixtures/Page/' . $name
+            implode(DIRECTORY_SEPARATOR, [$this->getResourceDirectory(), 'DataFixtures', 'Page', $name]),
+            $type
         );
 
         return $result;
@@ -1297,6 +1384,9 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 
     private function getResourceDirectory()
     {
-        return __DIR__ . '/../../../../../../../../tests/Resources';
+        return implode(
+            DIRECTORY_SEPARATOR,
+            [__DIR__, '..', '..', '..', '..', '..', '..', '..', '..', 'tests', 'Resources']
+        );
     }
 }

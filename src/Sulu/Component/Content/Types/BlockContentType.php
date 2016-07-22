@@ -151,51 +151,6 @@ class BlockContentType extends ComplexContentType
     /**
      * {@inheritdoc}
      */
-    public function readForPreview(
-        $data,
-        PropertyInterface $property,
-        $webspaceKey,
-        $languageCode,
-        $segmentKey
-    ) {
-        if ($property->getIsBlock()) {
-            /** @var BlockPropertyInterface $blockProperty */
-            $blockProperty = $property;
-            while (!($blockProperty instanceof BlockPropertyInterface)) {
-                $blockProperty = $blockProperty->getProperty();
-            }
-
-            $blockProperty->clearProperties();
-
-            $len = count($data);
-
-            for ($i = 0; $i < $len; ++$i) {
-                $blockPropertyType = $blockProperty->initProperties($i, $data[$i]['type']);
-
-                /** @var PropertyInterface $subProperty */
-                foreach ($blockPropertyType->getChildProperties() as $subProperty) {
-                    if (isset($data[$i][$subProperty->getName()])) {
-                        $contentType = $this->contentTypeManager->get($subProperty->getContentTypeName());
-                        $contentType->readForPreview(
-                            $data[$i][$subProperty->getName()],
-                            $subProperty,
-                            $webspaceKey,
-                            $languageCode,
-                            $segmentKey
-                        );
-                    }
-                }
-            }
-
-            $property->setValue($data);
-        } else {
-            throw new UnexpectedPropertyType($property, $this);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,

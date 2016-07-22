@@ -21,12 +21,9 @@ class SuluTestKernel extends SuluKernel
     {
         $bundles = [
             // Dependencies
-            new \Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle(),
             new \Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle(),
-            new \FOS\RestBundle\FOSRestBundle(),
             new \JMS\SerializerBundle\JMSSerializerBundle(),
-            new \Liip\ThemeBundle\LiipThemeBundle(),
             new \Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new \Symfony\Bundle\MonologBundle\MonologBundle(),
@@ -59,12 +56,21 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\TranslateBundle\SuluTranslateBundle(),
             new \Sulu\Bundle\HashBundle\SuluHashBundle(),
             new \Sulu\Bundle\CustomUrlBundle\SuluCustomUrlBundle(),
+            new \Sulu\Bundle\PreviewBundle\SuluPreviewBundle(),
+            new \Sulu\Bundle\RouteBundle\SuluRouteBundle(),
+            new \Sulu\Bundle\MarkupBundle\SuluMarkupBundle(),
         ];
 
         if ($this->getContext() === self::CONTEXT_WEBSITE) {
             // smyfony-cmf
             $bundles[] = new \Symfony\Cmf\Bundle\CoreBundle\CmfCoreBundle();
             $bundles[] = new \Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle();
+        }
+
+        if ($this->getContext() === self::CONTEXT_ADMIN) {
+            // rest
+            $bundles[] = new \Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle();
+            $bundles[] = new \FOS\RestBundle\FOSRestBundle();
         }
 
         return $bundles;

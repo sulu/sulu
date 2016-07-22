@@ -15,11 +15,13 @@ use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
+use PHPCR\ImportUUIDBehaviorInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\NodeHelper;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Security\Core\Tests\Authentication\Token\TestUser;
 
 /**
@@ -27,6 +29,8 @@ use Symfony\Component\Security\Core\Tests\Authentication\Token\TestUser;
  */
 abstract class SuluTestCase extends KernelTestCase
 {
+    private static $workspaceInitialized = false;
+
     /**
      * @var PHPCRImporter
      */
@@ -49,7 +53,10 @@ abstract class SuluTestCase extends KernelTestCase
     {
         parent::setUp();
 
-        $this->importer = new PHPCRImporter($this->getContainer()->get('sulu.phpcr.session')->getSession());
+        $this->importer = new PHPCRImporter(
+            $this->getContainer()->get('doctrine_phpcr.session'),
+            $this->getContainer()->get('doctrine_phpcr.live_session')
+        );
     }
 
     /**
@@ -58,7 +65,20 @@ abstract class SuluTestCase extends KernelTestCase
     public function tearDown()
     {
         parent::tearDown();
-        $this->getEntityManager()->getConnection()->close();
+        // close the doctrine connection
+        foreach ($this->getContainer()->get('doctrine')->getConnections() as $connection) {
+            $connection->close();
+        }
+
+        // close the jackalope connections - can be removed when
+        // https://github.com/sulu/sulu/pull/2125 is merged.
+        // this has a negligble impact on memory usage in anycase.
+        foreach ($this->getContainer()->get('doctrine_phpcr')->getConnections() as $connection) {
+            try {
+                $connection->logout();
+            } catch (\Exception $e) {
+            }
+        }
     }
 
     /**
@@ -130,21 +150,49 @@ abstract class SuluTestCase extends KernelTestCase
     protected function initPhpcr()
     {
         /** @var SessionInterface $session */
-        $session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
+        $session = $this->getContainer()->get('doctrine_phpcr.session');
+        $liveSession = $this->getContainer()->get('doctrine_phpcr.live_session');
 
         if ($session->nodeExists('/cmf')) {
             NodeHelper::purgeWorkspace($session);
             $session->save();
         }
 
-        if (!$this->importer) {
-            $this->importer = new PHPCRImporter($session);
+        if ($liveSession->nodeExists('/cmf')) {
+            NodeHelper::purgeWorkspace($liveSession);
+            $liveSession->save();
         }
 
-        // to update this file use following command
-        // php vendor/symfony-cmf/testing/bin/console doctrine:phpcr:workspace:export -p /cmf \
-        // src/Sulu/Bundle/TestBundle/Resources/dump/initial-state.xml
-        $this->importer->import(__DIR__ . '/../Resources/dump/initial-state.xml');
+        if (!$this->importer) {
+            $this->importer = new PHPCRImporter($session, $liveSession);
+        }
+
+        // initialize the content repository.  in order to speed things up, for
+        // each process, we dump the initial state to an XML file and restore
+        // it thereafter.
+        $initializerDump = __DIR__ . '/../Resources/app/cache/initial.xml';
+        $initializerDumpLive = __DIR__ . '/../Resources/app/cache/initial_live.xml';
+        if (true === self::$workspaceInitialized) {
+            $session->importXml('/', $initializerDump, ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
+            $session->save();
+
+            $liveSession->importXml('/', $initializerDumpLive, ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
+            $liveSession->save();
+
+            return;
+        }
+
+        $filesystem = new Filesystem();
+        if (!$filesystem->exists(dirname($initializerDump))) {
+            $filesystem->mkdir(dirname($initializerDump));
+        }
+        $this->getContainer()->get('sulu_document_manager.initializer')->initialize();
+        $handle = fopen($initializerDump, 'w');
+        $liveHandle = fopen($initializerDumpLive, 'w');
+        $session->exportSystemView('/cmf', $handle, false, false);
+        $liveSession->exportSystemView('/cmf', $liveHandle, false, false);
+        fclose($handle);
+        self::$workspaceInitialized = true;
     }
 
     /**

@@ -17,7 +17,6 @@ use Jackalope\Query\Row;
 use PHPCR\NodeInterface;
 use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
-use PHPCR\Util\PathHelper;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
@@ -33,7 +32,6 @@ use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
-use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Document\RedirectType;
@@ -43,9 +41,7 @@ use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Exception\TranslatedNodeNotFoundException;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
-use Sulu\Component\Content\Form\Exception\InvalidFormException;
 use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
-use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\DocumentManager\DocumentManager;
@@ -58,7 +54,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes.
  *
- * @deprecated since 1.0-? use the DocumentManager instead.
+ * @deprecated since 1.0-? use the DocumentManager instead
  */
 class ContentMapper implements ContentMapperInterface
 {
@@ -155,104 +151,6 @@ class ContentMapper implements ContentMapperInterface
 
         // deprecated
         $this->eventDispatcher = $eventDispatcher;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function saveRequest(ContentMapperRequest $request)
-    {
-        return $this->save(
-            $request->getData(),
-            $request->getTemplateKey(),
-            $request->getWebspaceKey(),
-            $request->getLocale(),
-            $request->getUserId(),
-            $request->getPartialUpdate(),
-            $request->getUuid(),
-            $request->getParentUuid(),
-            $request->getState(),
-            $request->getIsShadow(),
-            $request->getShadowBaseLanguage(),
-            $request->getType()
-        );
-    }
-
-    /**
-     * @deprecated
-     *
-     * {@inheritdoc}
-     */
-    public function save(
-        $data,
-        $structureType,
-        $webspaceKey,
-        $locale,
-        $userId,
-        $partialUpdate = true, // ignore missing property: clearMissing = false
-        $uuid = null,
-        $parentUuid = null,
-        $state = null,
-        $isShadow = null,
-        $shadowBaseLanguage = null,
-        $documentAlias = LegacyStructure::TYPE_PAGE
-    ) {
-        // map explicit arguments to data
-        $data['parent'] = $parentUuid;
-        $data['workflowStage'] = $state;
-        $data['template'] = $structureType;
-
-        if ($isShadow) {
-            $data['shadowOn'] = true;
-        }
-
-        if ($shadowBaseLanguage) {
-            $data['shadowBaseLanguage'] = $shadowBaseLanguage;
-        }
-
-        if ($uuid) {
-            $document = $this->documentManager->find(
-                $uuid,
-                $locale,
-                ['type' => $documentAlias, 'load_ghost_content' => false]
-            );
-        } else {
-            $document = $this->documentManager->create($documentAlias);
-        }
-
-        if (!$document instanceof StructureBehavior) {
-            throw new \RuntimeException(sprintf(
-                'The content mapper can only be used to save documents implementing the StructureBehavior interface, got: "%s"',
-                get_class($document)
-            ));
-        }
-
-        // We eventually handle this from the controller, in which case we will not
-        // have to deal with not knowing what sort of form we will have.
-        if ($document instanceof WebspaceBehavior) {
-            $options['webspace_key'] = $webspaceKey;
-        }
-
-        // disable csrf protection, since we can't produce a token, because the form is cached on the client
-        $options['csrf_protection'] = false;
-
-        $form = $this->formFactory->create($documentAlias, $document, $options);
-
-        $clearMissingContent = false;
-        $form->submit($data, $clearMissingContent);
-
-        if (!$form->isValid()) {
-            throw new InvalidFormException($form);
-        }
-
-        $this->documentManager->persist($document, $locale, [
-            'user' => $userId,
-            'clear_missing_content' => !$partialUpdate,
-        ]);
-
-        $this->documentManager->flush();
-
-        return $this->documentToStructure($document);
     }
 
     /**
@@ -569,22 +467,6 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function move($uuid, $destParentUuid, $userId, $webspaceKey, $locale)
-    {
-        return $this->copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $locale);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function copy($uuid, $destParentUuid, $userId, $webspaceKey, $locale)
-    {
-        return $this->copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $locale, false);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function copyLanguage(
         $uuid,
         $userId,
@@ -601,11 +483,15 @@ class ContentMapper implements ContentMapperInterface
         $parentDocument = $this->inspector->getParent($document);
 
         foreach ($destLocales as $destLocale) {
-            $document->setLocale($destLocale);
-            $document->getStructure()->bind($document->getStructure()->toArray());
+            $destDocument = $this->documentManager->find(
+                $uuid,
+                $destLocale
+            );
+            $destDocument->setLocale($destLocale);
+            $destDocument->getStructure()->bind($document->getStructure()->toArray());
 
             // TODO: This can be removed if RoutingAuto replaces the ResourceLocator code.
-            if ($document instanceof ResourceSegmentBehavior) {
+            if ($destDocument instanceof ResourceSegmentBehavior) {
                 try {
                     $parentResourceLocator = $this->rlpStrategy->loadByContentUuid(
                         $this->inspector->getUuid($parentDocument),
@@ -616,16 +502,16 @@ class ContentMapper implements ContentMapperInterface
                     $parentResourceLocator = null;
                 }
                 $resourceLocator = $this->rlpStrategy->generate(
-                    $document->getTitle(),
+                    $destDocument->getTitle(),
                     $parentResourceLocator,
                     $webspaceKey,
                     $destLocale
                 );
 
-                $document->setResourceSegment($resourceLocator);
+                $destDocument->setResourceSegment($resourceLocator);
             }
 
-            $this->documentManager->persist($document, $destLocale);
+            $this->documentManager->persist($destDocument, $destLocale);
         }
         $this->documentManager->flush();
 
@@ -680,95 +566,10 @@ class ContentMapper implements ContentMapperInterface
                 $targetSibling = $siblings[$position - 1];
             }
 
-            $this->documentManager->reorder($document, $targetSibling->getPath());
-        }
-
-        // this should not be necessary (see https://github.com/sulu-io/sulu-document-manager/issues/39)
-        foreach ($siblingDocuments as $siblingDocument) {
-            $this->documentManager->persist($siblingDocument, null, ['auto_name' => false]);
+            $this->documentManager->reorder($document, $targetSibling->getUuid());
         }
 
         $this->documentManager->flush();
-
-        return $this->documentToStructure($document);
-    }
-
-    /**
-     * Copy or move a node by UUID to a detination parent.
-     *
-     * Note that the bulk of this method is about the resource locator and can
-     * be removed if we integrate the RoutingAuto component.
-     *
-     * @param string $webspaceKey
-     * @param string $locale
-     * @param bool $move
-     *
-     * @return StructureInterface
-     */
-    private function copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $locale, $move = true)
-    {
-        // find localizations
-        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
-        $localizations = $webspace->getAllLocalizations();
-
-        // load from phpcr
-        $document = $this->documentManager->find($uuid, $locale);
-        $parentDocument = $this->documentManager->find($destParentUuid, $locale);
-
-        if ($move) {
-            // move node
-            $this->documentManager->move($document, $destParentUuid);
-        } else {
-            // copy node
-            $copiedPath = $this->documentManager->copy($document, $destParentUuid);
-            $document = $this->documentManager->find($copiedPath, $locale);
-            $this->documentManager->refresh($parentDocument);
-        }
-
-        $originalLocale = $locale;
-
-        // modifiy the resource locators -- note this can be removed once the routing auto
-        // system is implemented.
-        foreach ($localizations as $locale) {
-            $locale = $locale->getLocalization();
-
-            if (!$document instanceof ResourceSegmentBehavior) {
-                break;
-            }
-
-            // prepare parent content node
-            // finding the document will update the locale without reloading from PHPCR
-            $this->documentManager->find($document->getUuid(), $locale);
-            $this->documentManager->find($parentDocument->getUuid(), $locale);
-
-            // TODO: This could be optimized
-            $localizationState = $this->inspector->getLocalizationState($document);
-            if ($localizationState === LocalizationState::GHOST) {
-                continue;
-            }
-
-            if ($document->getRedirectType() !== RedirectType::NONE) {
-                continue;
-            }
-
-            $nodeName = PathHelper::getNodeName($document->getResourceSegment());
-            $newResourceLocator = $this->rlpStrategy->generate(
-                $nodeName,
-                $parentDocument->getResourceSegment(),
-                $webspaceKey,
-                $locale
-            );
-
-            $document->setResourceSegment($newResourceLocator);
-
-            $this->documentManager->persist($document, $locale, [
-                'user' => $userId,
-            ]);
-        }
-
-        $this->documentManager->flush();
-
-        $this->documentManager->find($document->getUuid(), $originalLocale);
 
         return $this->documentToStructure($document);
     }
@@ -846,26 +647,6 @@ class ContentMapper implements ContentMapperInterface
         }
 
         return $result;
-    }
-
-    /**
-     * @param $name
-     * @param NodeInterface $parent
-     *
-     * @return string
-     */
-    private function getUniquePath($name, NodeInterface $parent)
-    {
-        if ($parent->hasNode($name)) {
-            $i = 0;
-            do {
-                ++$i;
-            } while ($parent->hasNode($name . '-' . $i));
-
-            return $name . '-' . $i;
-        } else {
-            return $name;
-        }
     }
 
     /**
@@ -1074,32 +855,6 @@ class ContentMapper implements ContentMapperInterface
         );
 
         return $extension->getContentData($data);
-    }
-
-    /**
-     * TODO: Move this to ResourceLocator repository>.
-     *
-     * {@inheritdoc}
-     */
-    public function restoreHistoryPath($path, $userId, $webspaceKey, $locale, $segmentKey = null)
-    {
-        $this->rlpStrategy->restoreByPath($path, $webspaceKey, $locale, $segmentKey);
-
-        $content = $this->loadByResourceLocator($path, $webspaceKey, $locale, $segmentKey);
-        $property = $content->getPropertyByTagName('sulu.rlp');
-        $property->setValue($path);
-
-        $node = $this->sessionManager->getSession()->getNodeByIdentifier($content->getUuid());
-
-        $contentType = $this->contentTypeManager->get($property->getContentTypeName());
-        $contentType->write(
-            $node,
-            new TranslatedProperty($property, $locale, $this->namespaceRegistry->getPrefix('content_localized')),
-            $userId,
-            $webspaceKey,
-            $locale,
-            $segmentKey
-        );
     }
 
     private function loadDocument($pathOrUuid, $locale, $options, $shouldExclude = true)

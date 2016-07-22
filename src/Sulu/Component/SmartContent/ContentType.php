@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -105,23 +106,6 @@ class ContentType extends ComplexContentType
 
         if (!empty($data['tags'])) {
             $data['tags'] = $this->tagManager->resolveTagIds($data['tags']);
-        }
-
-        $property->setValue($data);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function readForPreview(
-        $data,
-        PropertyInterface $property,
-        $webspaceKey,
-        $languageCode,
-        $segmentKey
-    ) {
-        if ($data instanceof ArrayableInterface) {
-            $data = $data->toArray();
         }
 
         $property->setValue($data);

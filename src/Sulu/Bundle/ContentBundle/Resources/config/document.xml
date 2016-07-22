@@ -10,6 +10,9 @@
             <argument type="service" id="sulu.content.type_manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_content.compat.structure.legacy_property_factory" />
+            <argument type="service" id="sulu_core.webspace.webspace_manager" />
+            <argument>%sulu.content.structure.default_types%</argument>
+
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
@@ -26,15 +29,20 @@
         <service id="sulu_resource_segment.document.subscriber.resource_segment"
                  class="Sulu\Component\Content\Document\Subscriber\ResourceSegmentSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
+            <argument type="service" id="sulu_document_manager.document_manager"/>
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu.content.rlp.strategy.tree" />
-            <argument type="service" id="sulu_document_manager.document_inspector"/>
+            <argument type="service" id="doctrine_phpcr.session"/>
+            <argument type="service" id="doctrine_phpcr.live_session"/>
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
         <service id="sulu_document_manager.document.subscriber.workflow_stage"
                  class="Sulu\Component\Content\Document\Subscriber\WorkflowStageSubscriber">
-            <argument type="service" id="sulu_document_manager.property_encoder" />
+            <argument type="service" id="sulu_document_manager.property_encoder"/>
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
+            <argument type="service" id="doctrine_phpcr.session"/>
+            <argument type="service" id="doctrine_phpcr.live_session"/>
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
@@ -81,6 +89,7 @@
         <service id="sulu_document_manager.document.subscriber.order"
                  class="Sulu\Component\Content\Document\Subscriber\OrderSubscriber">
             <argument type="service" id="sulu_document_manager.document_inspector" />
+            <argument type="service" id="sulu_document_manager.property_encoder"/>
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
@@ -114,6 +123,15 @@
         <service id="sulu_document_manager.document.subscriber.robot"
                  class="Sulu\Component\Content\Document\Subscriber\RobotSubscriber">
             <tag name="sulu_document_manager.event_subscriber" />
+        </service>
+
+        <service id="sulu_document_manager.document.subscriber.publish"
+                 class="Sulu\Bundle\ContentBundle\Document\Subscriber\PublishSubscriber">
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu_document_manager.live_session"/>
+            <argument type="service" id="sulu_document_manager.node_helper"/>
+            <argument type="service" id="sulu_document_manager.property_encoder"/>
+            <tag name="sulu_document_manager.event_subscriber"/>
         </service>
 
         <!-- Compat -->

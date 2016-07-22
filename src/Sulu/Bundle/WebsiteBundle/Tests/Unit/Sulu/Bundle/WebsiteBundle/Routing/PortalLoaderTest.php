@@ -45,7 +45,7 @@ class PortalLoaderTest extends \PHPUnit_Framework_TestCase
     /**
      * @var string
      */
-    private $condition = 'request.get("_sulu").getAttribute("portalInformation").getType() === 1';
+    private $condition = 'request.get("_sulu").getAttribute("portalInformation") !== null && request.get("_sulu").getAttribute("portalInformation").getType() === 1';
 
     public function setUp()
     {

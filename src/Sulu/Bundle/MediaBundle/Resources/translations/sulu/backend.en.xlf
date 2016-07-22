@@ -282,6 +282,42 @@
                 <source>sulu.media.formats</source>
                 <target>Media formats</target>
             </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f221238" resname="sulu.media.categories">
+                <source>sulu.media.categories</source>
+                <target>Categories</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f111111" resname="sulu-media.ckeditor.media-link">
+                <source>sulu-media.ckeditor.media-link</source>
+                <target>Asset Link</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f111112" resname="sulu-media.selection.overlay.selected-title">
+                <source>sulu-media.selection.overlay.selected-title</source>
+                <target>Selected Assets</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f111113" resname="sulu-media.ckeditor.media-link.dialog.selected-title">
+                <source>sulu-media.ckeditor.media-link.dialog.selected-title</source>
+                <target>Selected Asset</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f111114" resname="sulu-media.ckeditor.media-link.dialog.remove">
+                <source>sulu-media.ckeditor.media-link.dialog.remove</source>
+                <target>Remove Asset Link</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f111115" resname="sulu-media.ckeditor.media-link.edit">
+                <source>sulu-media.ckeditor.media-link.edit</source>
+                <target>Edit Asset Link</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f111116" resname="sulu-media.ckeditor.media-link.edit.remove">
+                <source>sulu-media.ckeditor.media-link.edit.remove</source>
+                <target>Remove Asset Link</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f111117" resname="sulu-media.selection.overlay.title">
+                <source>sulu-media.selection.overlay.title</source>
+                <target>Assets</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64352w337js55369f111118" resname="sulu-media.selection.overlay.save">
+                <source>sulu-media.selection.overlay.save</source>
+                <target>Apply</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

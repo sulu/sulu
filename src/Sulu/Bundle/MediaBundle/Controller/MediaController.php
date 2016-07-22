@@ -38,14 +38,12 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Makes media available through a REST API.
  */
-class MediaController extends AbstractMediaController implements ClassResourceInterface, SecuredControllerInterface, SecuredObjectControllerInterface
+class MediaController extends AbstractMediaController implements
+    ClassResourceInterface,
+    SecuredControllerInterface,
+    SecuredObjectControllerInterface
 {
     use RequestParametersTrait;
-
-    /**
-     * @var string
-     */
-    protected static $entityName = 'SuluMediaBundle:Media';
 
     /**
      * @var string
@@ -63,7 +61,9 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
      */
     public function getFieldsAction(Request $request)
     {
-        return $this->handleView($this->view(array_values($this->getFieldDescriptors($this->getLocale($request))), 200));
+        return $this->handleView(
+            $this->view(array_values($this->getFieldDescriptors($this->getLocale($request))), 200)
+        );
     }
 
     /**
@@ -113,11 +113,11 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
      */
     public function cgetAction(Request $request)
     {
-        $ids = array_filter(explode(',', $request->get('ids')));
-
         $fieldDescriptors = $this->getFieldDescriptors($this->getLocale($request), false);
+        $ids = array_filter(explode(',', $request->get('ids')));
         $listBuilder = $this->getListBuilder($request, $fieldDescriptors, $ids);
         $listResponse = $listBuilder->execute();
+        $count = $listBuilder->count();
 
         for ($i = 0, $length = count($listResponse); $i < $length; ++$i) {
             $format = $this->getFormatManager()->getFormats(
@@ -127,6 +127,7 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
                 $listResponse[$i]['version'],
                 $listResponse[$i]['mimeType']
             );
+
             if (0 < count($format)) {
                 $listResponse[$i]['thumbnails'] = $format;
             }
@@ -154,7 +155,7 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
             $request->query->all(),
             $listBuilder->getCurrentPage(),
             $listBuilder->getLimit(),
-            $listBuilder->count()
+            $count
         );
 
         return $this->handleView($this->view($list, 200));
@@ -172,7 +173,7 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
     {
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
-        $listBuilder = $factory->create(self::$entityName);
+        $listBuilder = $factory->create($this->getParameter('sulu.model.media.class'));
         $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
         // default sort by created
@@ -260,7 +261,8 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
             try {
                 $this->getMediaManager()->delete($id, true);
             } catch (MediaNotFoundException $e) {
-                throw new EntityNotFoundException(self::$entityName, $id); // will throw 404 Entity not found
+                $entityName = $this->getParameter('sulu.model.media.class');
+                throw new EntityNotFoundException($entityName, $id); // will throw 404 Entity not found
             } catch (MediaException $e) {
                 throw new RestException($e->getMessage(), $e->getCode()); // will throw 400 Bad Request
             }
@@ -426,7 +428,7 @@ class MediaController extends AbstractMediaController implements ClassResourceIn
     {
         return $this->get('sulu_core.list_builder.field_descriptor_factory')
             ->getFieldDescriptorForClass(
-                Media::class,
+                $this->getParameter('sulu.model.media.class'),
                 ['locale' => $locale],
                 $all ? null : DoctrineFieldDescriptorInterface::class
             );

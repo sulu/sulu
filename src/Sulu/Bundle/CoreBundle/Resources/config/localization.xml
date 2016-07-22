@@ -11,10 +11,5 @@
 
     <services>
         <service id="sulu.core.localization_manager" class="%sulu.core.localization_manager.class%"/>
-        <service id="sulu.core.localization_manager.core_provider" class="%sulu.core.localization_manager.core_provider.class%">
-            <argument>%sulu_core.locales%</argument>
-
-            <tag name="sulu.localization_provider"/>
-        </service>
     </services>
 </container>

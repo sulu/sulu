@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -94,8 +95,8 @@ class ContentDataProvider implements DataProviderInterface
             ->enableDatasource(
                 'content-datasource@sulucontent',
                 [
-                    'rootUrl' => '/admin/api/nodes?webspace={webspace}&language={locale}&fields=title,order&webspace-nodes=single',
-                    'selectedUrl' => '/admin/api/nodes/{datasource}?tree=true&webspace={webspace}&language={locale}&fields=title,order&webspace-nodes=single',
+                    'rootUrl' => '/admin/api/nodes?webspace={webspace}&language={locale}&fields=title,order,published&webspace-nodes=single',
+                    'selectedUrl' => '/admin/api/nodes/{datasource}?tree=true&webspace={webspace}&language={locale}&fields=title,order,published&webspace-nodes=single',
                     'resultKey' => 'nodes',
                 ]
             )

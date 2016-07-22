@@ -524,6 +524,10 @@
                 <source>contact.address.number</source>
                 <target>Nummer</target>
             </trans-unit>
+            <trans-unit id="588849ca29af69fb11e87e00fc749ede" resname="contact.address.address-line">
+                <source>contact.address.address-line</source>
+                <target>Addresszeile</target>
+            </trans-unit>
             <trans-unit id="892c81dcb8e0d2de200e48faa929bff2" resname="contact.address.additional">
                 <source>contact.address.additional</source>
                 <target>Haus, Stock, etc.</target>

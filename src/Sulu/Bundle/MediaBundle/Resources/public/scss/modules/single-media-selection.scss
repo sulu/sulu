@@ -1,0 +1,155 @@
+// The "!important"s are due to the special behavior of the CK-Editor
+// https://github.com/sulu/sulu/issues/2650
+.single-media-selection {
+    & {
+        height: 500px;
+
+        &, .slide, .overlay-footer {
+            width: 930px !important;
+        }
+
+        .slide {
+            height: 429px;
+        }
+
+        .list-container, .navigation-container {
+            height: 328px;
+        }
+
+        @media(max-width: 1024px) {
+            &, .slide, .overlay-footer {
+                width: 720px !important;
+            }
+        }
+
+        @media(min-width: 1600px) {
+            &, .slide, .overlay-footer {
+                width: 1360px !important;
+            }
+        }
+
+        @media(min-height: 700px) {
+            height: 600px;
+
+            .slide {
+                height: 529px;
+            }
+
+            .list-container, .navigation-container {
+                height: 428px;
+            }
+        }
+
+        @media(min-height: 800px) {
+            height: 700px;
+
+            .slide {
+                height: 629px;
+            }
+
+            .list-container, .navigation-container {
+                height: 528px;
+            }
+        }
+
+        @media(min-height: 900px) {
+            height: 800px;
+
+            .slide {
+                height: 729px;
+            }
+
+            .list-container, .navigation-container {
+                height: 628px;
+            }
+        }
+    }
+
+    &.dropzone-overlay-opened {
+        .list-container {
+            overflow: hidden;
+        }
+    }
+
+    .dropzone-container {
+        padding-right: 20px;
+
+        & > .husky-dropzone {
+            display: none;
+            margin-top: 30px;
+            margin-bottom: 20px;
+
+            &.dropped {
+                display: block;
+            }
+        }
+
+        & > div {
+            width: 100% !important;
+        }
+        .husky-overlay-wrapper {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+        }
+        .husky-overlay-container {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            z-index: 15 !important;
+            width: 100% !important;
+            padding: 110px 20px !important;
+            height: 100%;
+            background-color: rgba(255, 255, 255, .95);
+            border-radius: 0;
+            border: 0;
+
+            .slides {
+                margin: 0;
+                padding: 0;
+            }
+
+            .slide {
+                width: 100% !important;
+            }
+        }
+
+        .husky-overlay-backdrop {
+            display: none !important;
+        }
+
+        .overlay-content {
+            height: auto !important;
+            background-color: transparent;
+        }
+    }
+
+    .overlay-content {
+        padding: 0px;
+        margin: 0px;
+    }
+
+    .container {
+        .navigation-container {
+            float: left;
+            width: 250px;
+        }
+
+        .list-container {
+            float: right;
+            position: relative;
+            width: calc(100% - 250px);
+            padding: 20px;
+            overflow: scroll;
+        }
+
+        &::before, &::after {
+            content: " ";
+            display: table;
+        }
+
+        &::after {
+            clear: both;
+        }
+    }
+}

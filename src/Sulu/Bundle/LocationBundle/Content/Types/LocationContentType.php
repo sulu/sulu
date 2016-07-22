@@ -17,6 +17,7 @@ use Sulu\Bundle\LocationBundle\Map\MapManager;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
+use Symfony\Component\Intl\Intl;
 
 /**
  * ContentType for TextEditor.
@@ -68,28 +69,14 @@ class LocationContentType extends ComplexContentType
      */
     public function getDefaultParams(PropertyInterface $property = null)
     {
-        // Need a service to provide countries, see: https://github.com/sulu-cmf/SuluContactBundle/issues/121
         return [
-            'countries' => new PropertyParameter(
-                'countries',
-                [
-                    'at' => new PropertyParameter('at', 'Austria'),
-                    'fr' => new PropertyParameter('fr', 'France'),
-                    'ch' => new PropertyParameter('ch', 'Switzerland'),
-                    'de' => new PropertyParameter('de', 'Germany'),
-                    'gb' => new PropertyParameter('gb', 'Great Britain'),
-                ],
-                'collection'
-            ),
+            'countries' => new PropertyParameter('countries', $this->getCountries(), 'collection'),
             'mapProviders' => new PropertyParameter(
                 'mapProviders',
                 $this->mapManager->getProvidersAsArray(),
                 'collection'
             ),
-            'defaultProvider' => new PropertyParameter(
-                'defaultProvider',
-                $this->mapManager->getDefaultProviderName()
-            ),
+            'defaultProvider' => new PropertyParameter('defaultProvider', $this->mapManager->getDefaultProviderName()),
             'geolocatorName' => new PropertyParameter('geolocatorName', $this->geolocatorName),
         ];
     }
@@ -103,39 +90,12 @@ class LocationContentType extends ComplexContentType
     }
 
     /**
-     * @param $data
-     * @param PropertyInterface $property
-     * @param string            $webspaceKey
-     * @param string            $languageCode
-     * @param string            $segmentKey
-     * @param bool              $preview
-     */
-    protected function setData(
-        $data,
-        PropertyInterface $property,
-        $webspaceKey,
-        $languageCode,
-        $segmentKey,
-        $preview = false
-    ) {
-        $property->setValue($data);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $data = json_decode($node->getPropertyValueWithDefault($property->getName(), '{}'), true);
-        $this->setData($data, $property, $webspaceKey, $languageCode, $segmentKey);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
-    {
-        $this->setData($data, $property, $webspaceKey, $languageCode, $segmentKey, true);
+        $property->setValue($data);
     }
 
     /**
@@ -161,5 +121,20 @@ class LocationContentType extends ComplexContentType
         if ($node->hasProperty($property->getName())) {
             $node->getProperty($property->getName())->remove();
         }
+    }
+
+    /**
+     * Returns array of countries with the country-code as array key.
+     *
+     * @return array
+     */
+    private function getCountries()
+    {
+        $countries = [];
+        foreach (Intl::getRegionBundle()->getCountryNames() as $countryCode => $countryName) {
+            $countries[strtolower($countryCode)] = new PropertyParameter(strtolower($countryCode), $countryName);
+        }
+
+        return $countries;
     }
 }

@@ -69,6 +69,7 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
                         'type' => 'error',
                         'exception' => get_class($e),
                         'code' => $e->getCode(),
+                        'trace' => $e->getTrace(),
                         'msg' => $e->getMessage(),
                         'parentMsg' => $msg,
                     ]

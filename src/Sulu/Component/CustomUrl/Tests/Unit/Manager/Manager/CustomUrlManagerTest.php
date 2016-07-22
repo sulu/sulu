@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -10,7 +11,6 @@
 
 namespace Sulu\Component\CustomUrl\Tests\Unit\Manager;
 
-use PHPCR\ItemExistsException;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Document\RouteDocument;
@@ -19,6 +19,7 @@ use Sulu\Component\CustomUrl\Manager\RouteNotRemovableException;
 use Sulu\Component\CustomUrl\Manager\TitleAlreadyExistsException;
 use Sulu\Component\CustomUrl\Repository\CustomUrlRepository;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\DocumentManager\Exception\NodeNameAlreadyExistsException;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\PathBuilder;
@@ -61,8 +62,9 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $documentManager->persist(
             $testDocument,
             'en',
-            ['parent_path' => '/cmf/sulu_io/custom_urls/items', 'node_name' => 'test', 'load_ghost_content' => true]
+            ['parent_path' => '/cmf/sulu_io/custom_urls/items', 'load_ghost_content' => true, 'auto_rename' => false]
         )->shouldBeCalledTimes(1);
+        $documentManager->publish($testDocument, 'en')->shouldBeCalled();
         $documentManager->find('123-123-123', 'en', ['load_ghost_content' => true])
             ->willReturn($targetDocument);
 
@@ -283,8 +285,14 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $documentManager->persist(
             $document,
             'en',
-            ['parent_path' => '/cmf/sulu_io/custom_urls/items', 'node_name' => 'test-1', 'load_ghost_content' => true]
+            [
+                'parent_path' => '/cmf/sulu_io/custom_urls/items',
+                'load_ghost_content' => true,
+                'auto_rename' => false,
+                'auto_name_locale' => 'en',
+            ]
         )->shouldBeCalledTimes(1);
+        $documentManager->publish($document, 'en')->shouldBeCalledTimes(1);
 
         $result = $manager->save(
             '312-312-312',
@@ -346,8 +354,13 @@ class CustomUrlManagerTest extends \PHPUnit_Framework_TestCase
         $documentManager->persist(
             $document,
             'en',
-            ['parent_path' => '/cmf/sulu_io/custom_urls/items', 'node_name' => 'test-1', 'load_ghost_content' => true]
-        )->willThrow(new ItemExistsException());
+            [
+                'parent_path' => '/cmf/sulu_io/custom_urls/items',
+                'load_ghost_content' => true,
+                'auto_rename' => false,
+                'auto_name_locale' => 'en',
+            ]
+        )->willThrow(NodeNameAlreadyExistsException::class);
 
         $this->setExpectedException(TitleAlreadyExistsException::class);
 

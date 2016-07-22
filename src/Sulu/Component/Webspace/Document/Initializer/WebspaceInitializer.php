@@ -64,9 +64,13 @@ class WebspaceInitializer implements InitializerInterface
         $this->nodeManager = $nodeManager;
     }
 
-    public function initialize(OutputInterface $output)
+    /**
+     * {@inheritdoc}
+     */
+    public function initialize(OutputInterface $output, $purge = false)
     {
-        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
+        $webspaces = $this->webspaceManager->getWebspaceCollection();
+        foreach ($webspaces as $webspace) {
             $this->initializeWebspace($output, $webspace);
         }
 
@@ -83,9 +87,9 @@ class WebspaceInitializer implements InitializerInterface
             $webspaceLocales[] = $localization->getLocalization();
         }
 
-        $homeType = $webspace->getTheme()->getDefaultTemplate('homepage');
+        $homeType = $webspace->getDefaultTemplate('home');
         if ($this->nodeManager->has($homePath)) {
-            $homeDocument = $this->documentManager->find($homePath, 'fr', [
+            $homeDocument = $this->documentManager->find($homePath, null, [
                 'load_ghost_content' => false,
                 'auto_create' => true,
                 'path' => $homePath,
@@ -107,6 +111,14 @@ class WebspaceInitializer implements InitializerInterface
 
             $output->writeln(sprintf('  [+] <info>homepage</info>: [%s] %s (%s)', $homeType, $homePath, $webspaceLocale));
 
+            $this->documentManager->persist($homeDocument, $webspaceLocale, [
+                'path' => $homePath,
+                'auto_create' => true,
+                'ignore_required' => true,
+            ]);
+
+            $this->documentManager->publish($homeDocument, $webspaceLocale);
+
             $routePath = $routesPath . '/' . $webspaceLocale;
             try {
                 $routeDocument = $this->documentManager->find($routePath);
@@ -114,17 +126,13 @@ class WebspaceInitializer implements InitializerInterface
                 $routeDocument = $this->documentManager->create('route');
             }
 
-            $this->documentManager->persist($homeDocument, $webspaceLocale, [
-                'path' => $homePath,
-                'auto_create' => true,
-                'ignore_required' => true,
-            ]);
-
             $routeDocument->setTargetDocument($homeDocument);
             $this->documentManager->persist($routeDocument, $webspaceLocale, [
                 'path' => $routePath,
                 'auto_create' => true,
             ]);
+
+            $this->documentManager->publish($routeDocument, $webspaceLocale);
         }
 
         $this->documentManager->flush();

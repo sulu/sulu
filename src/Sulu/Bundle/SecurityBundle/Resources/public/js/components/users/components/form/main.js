@@ -280,6 +280,7 @@ define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
                 this.sandbox.once('sulu.user.permissions.saved', function(model) {
                     this.user = model;
                     this.sandbox.emit('sulu.tab.saved');
+                    this.sandbox.emit('sulu.labels.warning.show', 'security.warning');
                 }.bind(this));
             }
         },

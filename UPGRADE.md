@@ -1,5 +1,169 @@
 # Upgrade
 
+## dev-develop
+
+### PHPCR
+
+To adapt to the new PHPCR structure execute the migrations:
+
+```
+app/console phpcr:migrations:migrate
+```
+
+### Media selection overlay
+The frontend component 'media-selection-overlay@sulumedia' got removed,
+please use 'media-selection/overlay@sulumedia' instead.
+
+### NodeRepository
+
+The `orderBefore` method of the `NodeRepository` has been removed. Use the
+`reorder` method of the `DocumentManager` instead.
+
+### LocalizationProvider
+The core LocalizationProvider (which provided the system locales)
+got removed. At this point the WebspaceLocalizationProvider is the
+only LocalizationProvider in Sulu. If the system locales 
+(locales in which translations for the admin panel are available) are
+needed, please refer directly to the config `sulu_core.translations`.
+
+### Translations
+The command `sulu:translate:import` got removed, as the export command
+(`sulu:translate:export`) now takes its translations directly from
+the translation files and not from the database anymore. This change
+would only cause conflicts, if one had a dependency directly on the
+translations in the database. If so, please use the files in the
+`Resources` folders.
+
+### Publishing
+
+For the publishing a separate workspace was introduced. This workspace
+will be created and correctly filled by the PHPCR migrations.
+
+Because the search index is now split into draft and live pages you have
+to reindex all the content:
+
+```bash
+app/console massive:search:purge --all
+app/console massive:search:reindex
+app/webconsole massive:search:reindex
+```
+
+Also the `persist` call of the `DocumentManager` changed it behavior.
+After persisting a document it will not be available on the website
+immediately. Instead you also need to call `publish` with the same
+document and locale.
+
+### PHPCR Sessions
+
+The sessions for PHPCR were configured at `sulu_core.phpcr` in the
+configuration. This happens now at `sulu_document_manager.sessions`. You can
+define multiple sessions here using different names and refer to one of them as
+default session using the `sulu_document_manager.default_session` and to
+another as live session using the `sulu_document_manager.live_session`.
+
+### Documemt Manager Initializer
+
+The `initialize` method of the `InitializerInterface` has now also a `$purge`
+parameter, which tells the initializer if it should purge something. The
+Initializer can use this information or simply ignore it, but existing
+Initializers have to adapt to the new interface.
+
+### Twig variable `request.routeParameters` removed
+
+The `request.routeParameters` variable has been removed because it is not longer required when generate an url.
+
+**Before**
+
+```twig
+{{ path('client_website.search', request.routeParameters) }}
+```
+
+**After**
+
+```twig
+{{ path('client_website.search') }}
+```
+
+### TitleBehavior is not localized anymore
+
+If you have implemented your own Documents with an `TitleBehavior`,
+you will recognize that the title in PHPCR is not translated anymore.
+If you still want this Behavior you have to switch to the
+`LocalizedTitleBehavior`.
+
+### Indexing title of pages for search
+
+It was possible to define that the title field of a page should be
+indexed as title, although this value was already the default:
+
+```
+<property name="title" type="text_line" mandatory="true">
+    <meta>
+        <title lang="en">Title</title>
+    </meta>
+    <tag name="sulu.search.field" type="string" role="title" />
+</property>
+ ```
+
+ This setting does not work anymore, because the title is now handled
+ separately from the rest of the structure, and the title is not indexed
+ anymore with this tag. Just remove it, and it will be the same as
+ before.
+
+### Webspaces
+
+We have deprecated (1.0) the schema for webspaces and created a new version (1.1) of it. 
+
+```
+<?xml version="1.0" encoding="utf-8"?>
+<webspace xmlns="http://schemas.sulu.io/webspace/webspace"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.1.xsd">
+          
+          ...
+          
+</webspace>
+```
+
+You should update your webspace.xml files soonish. To do that you simply have to move the `default-templates` and
+`error-templates` from the `theme` node and put it into the `webspace` node after the `theme`.
+ 
+The theme is now optional and can be used with a theme-bundle. Sulu has extracted this functionality to make it
+replaceable with any theming bundle you want. To keep the old directory-structure and functionality please read the
+next part of this file.
+
+### Theming
+
+If you have multiple themes (or you don't want to change the folder structure of you project) you have to include the
+bundle https://github.com/sulu/SuluThemeBundle in your abstract kernel.
+
+This bundle contains all the code which is necessary to use theming in your application.
+
+### Configuration
+
+The configuration of `sulu_content.preview` and `sulu_website.preview_defaults` has been moved to:
+
+```
+$ app/console config:dump-reference sulu_preview
+# Default configuration for extension with alias: "sulu_preview"
+sulu_preview:
+    defaults:
+        analytics_key:        UA-SULU-PREVIEW-KEY
+    error_template:       ~ # Example: ClientWebsiteBundle:Preview:error.html.twig
+    mode:                 auto
+
+    # Used for the delayed send of changes
+    delay:                500
+```
+
+The flag `sulu_content.preview.websocket` has been replaced with `sulu_websocket.enabled`. This flag is
+now default `false`.
+
+### Content-Types
+
+The Interface or content-types has been cleaned. The function `ContentTypeInterface::readForPreview` will never
+be called in the future and can therefor be removed.
+
 ## 1.2.7
 
 ### Default Country
@@ -29,7 +193,7 @@ If you want to use the `Sulu` system you should inject the
 ## 1.2.0
 
 ### sulu_content_path
-
+src/Sulu/Bundle/WebsiteBundle/Resources/config/services.xml
 The twig function `sulu_content_path('/path')` now always returning the full-qualified-domain
 `http://www.sulu.io/de/path`.
 

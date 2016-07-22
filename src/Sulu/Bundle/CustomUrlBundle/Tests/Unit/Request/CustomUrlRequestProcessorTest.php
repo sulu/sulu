@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -78,11 +79,6 @@ class CustomUrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
         if (!$exists) {
             $customUrlManager->findRouteByUrl($route, $webspaceKey)->willReturn(null);
         } else {
-            if (!$noConcretePortal) {
-                $request->setLocale('de')->shouldBeCalled();
-                $request->setRequestFormat('html')->shouldBeCalled();
-            }
-
             $routeDocument = $this->prophesize(RouteDocument::class);
             $routeDocument->isHistory()->willReturn($history);
             $routeDocument->getPath()->willReturn('/cmf/sulu_io/custom-urls/routes/' . $route);
@@ -103,9 +99,6 @@ class CustomUrlRequestProcessorTest extends \PHPUnit_Framework_TestCase
                     $target = $this->prophesize(PageDocument::class);
                     $target->getWorkflowStage()->willReturn($workflowStage);
                     $customUrl->getTargetDocument()->willReturn($target->reveal());
-                    if ($workflowStage === WorkflowStage::PUBLISHED && $published && !$noConcretePortal) {
-                        $request->setLocale('de')->shouldBeCalled();
-                    }
                 } else {
                     $customUrl->getTargetDocument()->willReturn(null);
                 }

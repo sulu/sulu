@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -10,8 +11,6 @@
 
 namespace Sulu\Component\CustomUrl\Manager;
 
-use Ferrandini\Urlizer;
-use PHPCR\ItemExistsException;
 use PHPCR\Util\PathHelper;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Document\RouteDocument;
@@ -19,6 +18,7 @@ use Sulu\Component\CustomUrl\Repository\CustomUrlRepository;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
+use Sulu\Component\DocumentManager\Exception\NodeNameAlreadyExistsException;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\PathBuilder;
 use Sulu\Component\HttpCache\HandlerInvalidatePathInterface;
@@ -82,12 +82,12 @@ class CustomUrlManager implements CustomUrlManagerInterface
                 $locale,
                 [
                     'parent_path' => $this->getItemsPath($webspaceKey),
-                    'node_name' => Urlizer::urlize($document->getTitle()),
                     'load_ghost_content' => true,
+                    'auto_rename' => false,
                 ]
-
             );
-        } catch (ItemExistsException $ex) {
+            $this->documentManager->publish($document, $locale);
+        } catch (NodeNameAlreadyExistsException $ex) {
             throw new TitleAlreadyExistsException($document->getTitle());
         }
 
@@ -204,11 +204,13 @@ class CustomUrlManager implements CustomUrlManagerInterface
                 $locale,
                 [
                     'parent_path' => PathHelper::getParentPath($document->getPath()),
-                    'node_name' => Urlizer::urlize($document->getTitle()),
                     'load_ghost_content' => true,
+                    'auto_rename' => false,
+                    'auto_name_locale' => $locale,
                 ]
             );
-        } catch (ItemExistsException $ex) {
+            $this->documentManager->publish($document, $locale);
+        } catch (NodeNameAlreadyExistsException $ex) {
             throw new TitleAlreadyExistsException($document->getTitle());
         }
 
@@ -275,6 +277,9 @@ class CustomUrlManager implements CustomUrlManagerInterface
      */
     private function bind(CustomUrlDocument $document, $data, $locale)
     {
+        $document->setTitle($data['title']);
+        unset($data['title']);
+
         $metadata = $this->metadataFactory->getMetadataForAlias('custom_url');
 
         $accessor = PropertyAccess::createPropertyAccessor();

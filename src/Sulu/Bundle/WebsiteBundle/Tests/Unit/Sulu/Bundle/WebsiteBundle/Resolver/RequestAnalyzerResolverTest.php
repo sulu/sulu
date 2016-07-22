@@ -89,6 +89,7 @@ class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
         $webspace->setKey('sulu_io');
 
         $portal = new Portal();
+        $portal->setKey('sulu_io_portal');
         $locale = new Localization();
         $locale->setLanguage('de');
         $locale->setDefault(true);
@@ -119,6 +120,7 @@ class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
             [
                 'request' => [
                     'webspaceKey' => 'sulu_io',
+                    'portalKey' => 'sulu_io_portal',
                     'locale' => 'de_at',
                     'defaultLocale' => 'de',
                     'portalUrl' => 'sulu.io/de',
@@ -127,82 +129,6 @@ class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
                     'get' => ['p' => 1],
                     'post' => [],
                     'analyticsKey' => 'analyticsKey',
-                    'routeParameters' => [
-                        'host' => 'sulu.lo',
-                        'prefix' => 'de_at',
-                    ],
-                ],
-            ],
-            $result
-        );
-    }
-
-    public function testResolveForPreview()
-    {
-        $portalInformation = $this->prophesize(PortalInformation::class);
-        $portalInformation->getUrl()->willReturn('sulu.io/de');
-        $portalInformation->getHost()->willReturn('sulu.lo');
-        $portalInformation->getPrefix()->willReturn('de');
-
-        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', 'dev')
-            ->willReturn(['sulu.io/de' => $portalInformation->reveal()]);
-
-        $request = new \Symfony\Component\HttpFoundation\Request();
-        $this->requestStack->getCurrentRequest()->willReturn($request);
-
-        $result = $this->resolver->resolveForPreview('sulu_io', 'de');
-        $this->assertEquals(
-            [
-                'request' => [
-                    'webspaceKey' => 'sulu_io',
-                    'locale' => 'de',
-                    'defaultLocale' => 'de',
-                    'portalUrl' => 'sulu.io/de',
-                    'resourceLocatorPrefix' => '',
-                    'resourceLocator' => '',
-                    'get' => [],
-                    'post' => [],
-                    'analyticsKey' => 'UA-SULU-Test',
-                    'routeParameters' => [
-                        'host' => 'sulu.lo',
-                        'prefix' => 'de',
-                    ],
-                ],
-            ],
-            $result
-        );
-    }
-
-    public function testResolveForPreviewWithRequestParameter()
-    {
-        $portalInformation = $this->prophesize(PortalInformation::class);
-        $portalInformation->getUrl()->willReturn('sulu.io/de');
-        $portalInformation->getHost()->willReturn('sulu.lo');
-        $portalInformation->getPrefix()->willReturn('de');
-
-        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', 'dev')
-            ->willReturn(['sulu.io/de' => $portalInformation->reveal()]);
-
-        $request = new \Symfony\Component\HttpFoundation\Request(['test' => 1], ['test' => 2]);
-        $this->requestStack->getCurrentRequest()->willReturn($request);
-
-        $result = $this->resolver->resolveForPreview('sulu_io', 'de');
-        $this->assertEquals(
-            [
-                'request' => [
-                    'webspaceKey' => 'sulu_io',
-                    'locale' => 'de',
-                    'defaultLocale' => 'de',
-                    'portalUrl' => 'sulu.io/de',
-                    'resourceLocatorPrefix' => '',
-                    'resourceLocator' => '',
-                    'get' => ['test' => 1],
-                    'post' => ['test' => 2],
-                    'analyticsKey' => 'UA-SULU-Test',
-                    'routeParameters' => [
-                        'host' => 'sulu.lo',
-                        'prefix' => 'de',
-                    ],
                 ],
             ],
             $result

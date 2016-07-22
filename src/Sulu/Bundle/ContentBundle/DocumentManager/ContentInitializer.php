@@ -28,29 +28,30 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ContentInitializer implements InitializerInterface
 {
     /**
-     * @var DocumentRegistry
+     * @var ConnectionRegistry
      */
-    private $registry;
+    private $connectionRegistry;
 
     /**
      * @var string
      */
     private $languageNamespace;
 
-    public function __construct(ConnectionRegistry $registry, $languageNamespace)
+    public function __construct(ConnectionRegistry $connectionRegistry, $languageNamespace)
     {
-        $this->registry = $registry;
+        $this->connectionRegistry = $connectionRegistry;
         $this->languageNamespace = $languageNamespace;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function initialize(OutputInterface $output)
+    public function initialize(OutputInterface $output, $purge = false)
     {
-        $workspace = $this->registry->getConnection()->getWorkspace();
-        $this->initializeNamespaces($output, $workspace);
-        $this->initializeContentTypes($output, $workspace);
+        foreach ($this->connectionRegistry->getConnections() as $connection) {
+            $this->initializeNamespaces($output, $connection->getWorkspace());
+            $this->initializeContentTypes($output, $connection->getWorkspace());
+        }
     }
 
     private function initializeNamespaces(OutputInterface $output, WorkspaceInterface $workspace)

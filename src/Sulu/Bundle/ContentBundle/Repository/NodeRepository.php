@@ -20,7 +20,6 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Exception\InvalidOrderPositionException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
@@ -537,45 +536,6 @@ class NodeRepository implements NodeRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function saveNode(
-        $data,
-        $templateKey,
-        $webspaceKey,
-        $languageCode,
-        $userId,
-        $uuid = null,
-        $parentUuid = null,
-        $state = null,
-        $isShadow = false,
-        $shadowBaseLanguage = null
-    ) {
-        $node = $this->getMapper()->save(
-            $data,
-            $templateKey,
-            $webspaceKey,
-            $languageCode,
-            $userId,
-            true,
-            $uuid,
-            $parentUuid,
-            $state,
-            $isShadow,
-            $shadowBaseLanguage
-        );
-
-        return $this->prepareNode($node, $webspaceKey, $languageCode);
-    }
-
-    public function saveNodeRequest(ContentMapperRequest $mapperRequest)
-    {
-        $node = $this->getMapper()->saveRequest($mapperRequest);
-
-        return $this->prepareNode($node, $mapperRequest->getWebspaceKey(), $mapperRequest->getLocale());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getNodesTree(
         $uuid,
         $webspaceKey,
@@ -791,55 +751,6 @@ class NodeRepository implements NodeRepositoryInterface
         ];
 
         return $data;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function moveNode($uuid, $destinationUuid, $webspaceKey, $languageCode, $userId)
-    {
-        try {
-            // call mapper function
-            $structure = $this->getMapper()->move($uuid, $destinationUuid, $userId, $webspaceKey, $languageCode);
-        } catch (\Exception $ex) {
-            throw new RestException($ex->getMessage(), 1, $ex);
-        }
-
-        return $this->prepareNode($structure, $webspaceKey, $languageCode);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function copyNode($uuid, $destinationUuid, $webspaceKey, $languageCode, $userId)
-    {
-        try {
-            // call mapper function
-            $structure = $this->getMapper()->copy($uuid, $destinationUuid, $userId, $webspaceKey, $languageCode);
-        } catch (DocumentManagerException $ex) {
-            throw new RestException($ex->getMessage(), 1, $ex);
-        } catch (RepositoryException $ex) {
-            throw new RestException($ex->getMessage(), 1, $ex);
-        }
-
-        return $this->prepareNode($structure, $webspaceKey, $languageCode);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function orderBefore($uuid, $beforeUuid, $webspaceKey, $languageCode, $userId)
-    {
-        try {
-            // call mapper function
-            $structure = $this->getMapper()->orderBefore($uuid, $beforeUuid, $userId, $webspaceKey, $languageCode);
-        } catch (DocumentManagerException $ex) {
-            throw new RestException($ex->getMessage(), 1, $ex);
-        } catch (RepositoryException $ex) {
-            throw new RestException($ex->getMessage(), 1, $ex);
-        }
-
-        return $this->prepareNode($structure, $webspaceKey, $languageCode);
     }
 
     /**

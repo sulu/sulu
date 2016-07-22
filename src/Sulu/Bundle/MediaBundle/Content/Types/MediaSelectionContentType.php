@@ -96,34 +96,6 @@ class MediaSelectionContentType extends ComplexContentType
     ) {
         $data = json_decode($node->getPropertyValueWithDefault($property->getName(), '{}'), true);
 
-        $this->setData($data, $property, $languageCode);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function readForPreview(
-        $data,
-        PropertyInterface $property,
-        $webspaceKey,
-        $languageCode,
-        $segmentKey
-    ) {
-        if ($data instanceof ArrayableInterface) {
-            $data = $data->toArray();
-        }
-        $this->setData($data, $property, $languageCode);
-    }
-
-    /**
-     * set data to property.
-     *
-     * @param string[]          $data     ids of images
-     * @param PropertyInterface $property
-     * @param $languageCode
-     */
-    private function setData($data, PropertyInterface $property, $languageCode)
-    {
         $property->setValue($data);
     }
 

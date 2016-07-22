@@ -27,6 +27,15 @@ interface RlpStrategyInterface
     public function getName();
 
     /**
+     * Returns the child part from the given resource segment.
+     *
+     * @param $resourceSegment
+     *
+     * @return string
+     */
+    public function getChildPart($resourceSegment);
+
+    /**
      * returns whole path for given ContentNode.
      *
      * @param string $title title of new node
@@ -128,14 +137,4 @@ interface RlpStrategyInterface
      * @param string $segmentKey
      */
     public function deleteByPath($path, $webspaceKey, $languageCode, $segmentKey = null);
-
-    /**
-     * restore given resource locator.
-     *
-     * @param string $path of resource locator
-     * @param string $webspaceKey key of portal
-     * @param string $languageCode
-     * @param string $segmentKey
-     */
-    public function restoreByPath($path, $webspaceKey, $languageCode, $segmentKey = null);
 }

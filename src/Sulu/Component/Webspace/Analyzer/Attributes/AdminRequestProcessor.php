@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -43,7 +44,7 @@ class AdminRequestProcessor implements RequestProcessorInterface
         $attributes['webspaceKey'] = $request->get('webspace');
         $attributes['locale'] = $request->get('locale', $request->get('language'));
 
-        if (null === $attributes['webspaceKey']) {
+        if (empty($attributes['webspaceKey'])) {
             return new RequestAttributes($attributes);
         }
 

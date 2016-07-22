@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -20,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Extracts attributes from request for the sulu-website.
  */
-class WebsiteRequestProcessor extends AbstractRequestProcessor
+class WebsiteRequestProcessor implements RequestProcessorInterface
 {
     /**
      * @var WebspaceManagerInterface
@@ -91,11 +92,7 @@ class WebsiteRequestProcessor extends AbstractRequestProcessor
         /** @var PortalInformation $portalInformation */
         $portalInformation = reset($portalInformations);
 
-        return $this->processPortalInformation(
-            $request,
-            $portalInformation,
-            ['urlExpression' => $portalInformation->getUrlExpression()]
-        );
+        return new RequestAttributes(['portalInformation' => $portalInformation]);
     }
 
     /**

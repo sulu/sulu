@@ -86,6 +86,14 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension implements Navigat
     /**
      * {@inheritdoc}
      */
+    public function navigationIsActiveFunction($requestUrl, $itemUrl)
+    {
+        return $this->memoizeCache->memoize([$this->extension, 'navigationIsActiveFunction'], $this->lifeTime);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return $this->extension->getName();

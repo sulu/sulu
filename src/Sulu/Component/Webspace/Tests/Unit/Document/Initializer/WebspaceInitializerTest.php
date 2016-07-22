@@ -22,7 +22,6 @@ use Sulu\Component\DocumentManager\PathBuilder;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Console\Output\Output;
 
@@ -94,8 +93,7 @@ class WebspaceInitializerTest extends \PHPUnit_Framework_TestCase
         /** @var Webspace $webspace1 */
         $webspace1 = new Webspace();
         $webspace1->setKey('webspace1');
-        $theme1 = new Theme();
-        $webspace1->setTheme($theme1);
+        $webspace1->setTheme('theme1');
         $localization1_1 = new Localization();
         $localization1_1->setLanguage('de');
         $localization1_2 = new Localization();
@@ -104,8 +102,7 @@ class WebspaceInitializerTest extends \PHPUnit_Framework_TestCase
         /** @var Webspace $webspace2 */
         $webspace2 = new Webspace();
         $webspace2->setKey('webspace2');
-        $theme2 = new Theme();
-        $webspace2->setTheme($theme2);
+        $webspace2->setTheme('theme1');
         $localization2_1 = new Localization();
         $localization2_1->setLanguage('de');
         $webspace2->setLocalizations([$localization2_1]);
@@ -151,6 +148,9 @@ class WebspaceInitializerTest extends \PHPUnit_Framework_TestCase
             ]
         )->shouldBeCalled();
 
+        $this->documentManager->publish(Argument::type(HomeDocument::class), 'de')->shouldBeCalledTimes(2);
+        $this->documentManager->publish(Argument::type(HomeDocument::class), 'en')->shouldBeCalledTimes(1);
+
         $this->documentManager->persist(
             Argument::type(RouteDocument::class),
             'de',
@@ -166,6 +166,9 @@ class WebspaceInitializerTest extends \PHPUnit_Framework_TestCase
             'de',
             ['path' => '/cmf/webspace2/routes/de', 'auto_create' => true]
         )->shouldBeCalled();
+
+        $this->documentManager->publish(Argument::type(RouteDocument::class), 'de')->shouldBeCalledTimes(2);
+        $this->documentManager->publish(Argument::type(RouteDocument::class), 'en')->shouldBeCalledTimes(1);
 
         $this->documentManager->flush()->shouldBeCalled();
 

@@ -27,6 +27,8 @@
         <service id="sulu_http_cache.handler.paths" class="%sulu_http_cache.handler.paths.class%">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu_http_cache.proxy_client"/>
+            <argument type="service" id="request_stack"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager.url_replacer"/>
             <argument>%kernel.environment%</argument>
             <tag name="sulu_http_cache.handler" alias="paths" />
         </service>

@@ -56,7 +56,7 @@ class MediaRepositoryTest extends SuluTestCase
         $this->setUpCollections();
         $this->setUpMedia();
 
-        $this->mediaRepository = $this->getContainer()->get('sulu_media.media_repository');
+        $this->mediaRepository = $this->getContainer()->get('sulu.repository.media');
     }
 
     protected function setUpMedia()
@@ -435,6 +435,37 @@ class MediaRepositoryTest extends SuluTestCase
         $this->assertCount(2, $result);
         $this->assertEquals($media1->getId(), $result[0]->getId());
         $this->assertEquals($media3->getId(), $result[1]->getId());
+    }
+
+    public function testFindMediaDisplayInfo()
+    {
+        $media1 = $this->createMedia('test-1', 'test-1-title', 'image');
+        $media2 = $this->createMedia('test-2', 'test-2-title', 'image');
+        $media3 = $this->createMedia('test-3', 'test-3-title', 'video');
+        $media4 = $this->createMedia('test-4', 'test-4-title', 'video');
+
+        $result = $this->mediaRepository->findMediaDisplayInfo([$media1->getId(), $media3->getId()], 'en-gb');
+        $this->assertEquals(2, count($result));
+        $this->assertEquals(5, count($result[0]));
+        $this->assertEquals(5, count($result[1]));
+        $this->assertEquals($media1->getId(), $result[0]['id']);
+        $this->assertEquals($media1->getFiles()[0]->getVersion(), $result[0]['version']);
+        $this->assertEquals('test-1.jpeg', $result[0]['name']);
+        $this->assertEquals('test-1-title', $result[0]['title']);
+        $this->assertEquals('test-1-title', $result[0]['defaultTitle']);
+    }
+
+    public function testFindMediaDisplayInfoWithIncorrectIds()
+    {
+        $media1 = $this->createMedia('test-1', 'test-1-title', 'image');
+        $media2 = $this->createMedia('test-2', 'test-2-title', 'image');
+        $media3 = $this->createMedia('test-3', 'test-3-title', 'video');
+        $media4 = $this->createMedia('test-4', 'test-4-title', 'video');
+
+        $result = $this->mediaRepository->findMediaDisplayInfo([-1], 'en-gb');
+
+        $this->assertNotNull($result);
+        $this->assertEquals(0, count($result));
     }
 
     public function testCount()

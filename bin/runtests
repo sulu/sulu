@@ -16,6 +16,7 @@ use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
 
@@ -28,7 +29,7 @@ set_time_limit(0);
 // require the autoloader
 $autoloadFile = __DIR__ . '/../vendor/autoload.php';
 if (!file_exists($autoloadFile)) {
-    writeln(sprintf(
+    echo(sprintf(
         'Could not find autoload file "%s", make sure you have ' .
         'installed the projects dependencies (i.e. `composer install`).',
         $autoloadFile
@@ -50,13 +51,17 @@ $definition->addOption(new InputOption('target', 't', InputOption::VALUE_REQUIRE
 $definition->addOption(new InputOption('all', 'a', InputOption::VALUE_NONE));
 $definition->addOption(new InputOption('jackrabbit-restart', 'r', InputOption::VALUE_NONE));
 $definition->addOption(new InputOption('help', 'h', InputOption::VALUE_NONE));
-$definition->addOption(new InputOption('no-component-tests', 'C', InputOption::VALUE_NONE, null));
-$definition->addOption(new InputOption('no-bundle-tests', 'B', InputOption::VALUE_NONE, null));
+$definition->addOption(new InputOption('no-component-tests', 'C', InputOption::VALUE_NONE));
+$definition->addOption(new InputOption('no-bundle-tests', 'B', InputOption::VALUE_NONE));
+$definition->addOption(new InputOption('verbose', 'v', InputOption::VALUE_NONE));
+$definition->addOption(new InputOption('cache-clear', null, InputOption::VALUE_NONE));
 $input = new ArgvInput(null, $definition);
 $output = new ConsoleOutput();
 $output->getFormatter()->setStyle('red', new OutputFormatterStyle('red'));
 $failedTests = new \ArrayObject();
-global $output, $input, $failedTests, $termWidth;
+$verbose = $input->getOption('verbose');
+$filesystem = new Filesystem();
+global $output, $input, $failedTests, $termWidth, $verbose;
 
 // Utility methods
 // ===============
@@ -120,6 +125,11 @@ function write($line)
 
 function exec_sf_cmd($cmd, $echo = true, $checkForError = true)
 {
+    global $verbose;
+
+    if ($verbose) {
+        $cmd .= ' --verbose';
+    }
     return exec_cmd(
         'php ' . __DIR__ . '/console ' . $cmd,
         $echo,
@@ -182,14 +192,15 @@ function show_help()
 
 <comment>Options:</>
 
-  -i, --initialize          Execute the initializaction script before running the tests.
-  -f, --flags               Pass flags to PHPUnit.
-  -t, --target              Specify a target bundle.
-  -a, --all                 Run all tests.
-  -r, --restart-jackrabbit  Restart jackrabbit between bundle tests.
-  -h, --help                Show this help.
-  -C, --no-component-tests  Do not run the component tests.
-  -B, --no-bundle-tests     Do not run the bundle tests.
+  -i, --initialize            Execute the initializaction script before running the tests.
+  -f, --flags                 Pass flags to PHPUnit.
+  -t, --target                Specify a target bundle.
+  -a, --all                   Run all tests.
+  -r, --restart-jackrabbit    Restart jackrabbit between bundle tests.
+  -h, --help                  Show this help.
+  -C, --no-component-tests    Do not run the component tests.
+  -B, --no-bundle-tests       Do not run the bundle tests.
+  -v, --verbose               Verbose (pass flag to sub commands).
 EOT
     );
 }
@@ -333,7 +344,7 @@ function init_phpcr_dbal()
 
 function run_bundle_tests(\SplFileInfo $phpunitFile)
 {
-    global $failedTests, $input;
+    global $failedTests, $input, $filesystem;
 
     $bundleName = basename($phpunitFile->getPath());
     $bundleDir = $phpunitFile->getPath();
@@ -348,6 +359,12 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
         write_info('Symlinked base vendor dir');
     }
 
+    $cacheDir = getcwd() . '/Tests/app/cache';
+    if ($input->getOption('cache-clear')) {
+        write_info('Clear cache');
+        $filesystem->remove($cacheDir);
+    }
+
     // see if this bundle uses doctrine orm, and update the schema if so..
     // (we assume that the bundle will purge the fixtures etc.)
     init_bundle($phpunitFile->getPathname());
@@ -358,7 +375,9 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
 
     $flags = $input->getOption('flags');
     $process = exec_cmd(sprintf(
-        'phpunit --colors --configuration %s %s',
+        'vendor%sbin%sphpunit --configuration %s %s',
+        DIRECTORY_SEPARATOR,
+        DIRECTORY_SEPARATOR,
         $phpunitFile->getPathname(),
         $flags
     ), true, false);
@@ -394,11 +413,14 @@ function init_bundle($phpunitPath)
     }
 
     write_info('Doctrine ORM detected, updating the schema for the bundle.');
+
     exec_cmd(sprintf(
         'php %s %s',
         $console,
         ' doctrine:schema:update --force'
     ));
+
+    exec_sf_cmd('sulu:document:initialize --ansi', false);
 }
 
 function is_everything_ok()
@@ -442,9 +464,13 @@ show_storage_params();
 
 if ($input->getOption('initialize')) {
     write_header('Initialization');
+    if ($input->getOption('cache-clear')) {
+        write_info('Clear cache');
+        $filesystem->remove(getcwd() . '/tests/app/cache');
+    }
     init_dbal();
     write_info('Initializing the content repository');
-    exec_sf_cmd('sulu:document:initialize --ansi', false);
+    exec_sf_cmd('sulu:document:initialize --ansi', true);
     if (getenv('SYMFONY__PHPCR__TRANSPORT') === 'doctrine_dbal') {
         init_phpcr_dbal();
     }
@@ -472,7 +498,11 @@ if (false === $input->getOption('no-component-tests') || $input->getOption('all'
     // should explicitly indicate which kernels they are using.
     // https://github.com/sulu-io/sulu/issues/2187
     putenv('KERNEL_DIR=' . __DIR__ . '/../tests/app');
-    $process = exec_cmd('phpunit --color ' . $input->getOption('flags'), true, false);
+    $process = exec_cmd(
+        'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'phpunit ' . $input->getOption('flags'),
+        true,
+        false
+    );
     if ($process->getExitCode() !== 0) {
         $failedTests[] = 'Components';
     }

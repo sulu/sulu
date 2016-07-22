@@ -11,11 +11,12 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
+use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryTrait;
 
@@ -41,6 +42,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 ->leftJoin('media.files', 'file')
                 ->leftJoin('file.fileVersions', 'fileVersion')
                 ->leftJoin('fileVersion.tags', 'tag')
+                ->leftJoin('fileVersion.categories', 'category')
                 ->leftJoin('fileVersion.meta', 'fileVersionMeta')
                 ->leftJoin('fileVersion.defaultMeta', 'fileVersionDefaultMeta')
                 ->leftJoin('fileVersion.contentLanguages', 'fileVersionContentLanguage')
@@ -167,6 +169,29 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         } catch (NoResultException $ex) {
             return;
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findMediaDisplayInfo($ids, $locale)
+    {
+        $queryBuilder = $this->createQueryBuilder('media')
+            ->leftJoin('media.files', 'file')
+            ->leftJoin('file.fileVersions', 'fileVersion')
+            ->leftJoin('fileVersion.defaultMeta', 'fileVersionDefaultMeta')
+            ->leftJoin('fileVersion.meta', 'fileVersionMeta', Join::WITH, 'fileVersionMeta.locale = :locale')
+            ->select('media.id')
+            ->addSelect('fileVersion.version')
+            ->addSelect('fileVersion.name')
+            ->addSelect('fileVersionMeta.title')
+            ->addSelect('fileVersionDefaultMeta.title as defaultTitle')
+            ->where('media.id IN (:mediaIds)');
+
+        $queryBuilder->setParameter('locale', $locale);
+        $queryBuilder->setParameter('mediaIds', $ids);
+
+        return $queryBuilder->getQuery()->getArrayResult();
     }
 
     /**

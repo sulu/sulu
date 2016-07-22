@@ -67,7 +67,7 @@ interface ExtensionInterface
     /**
      * Returns field mapping for documents with this extension.
      *
-     * @return array field mapping for indexed fields.
+     * @return array field mapping for indexed fields
      */
     public function getFieldMapping();
 }

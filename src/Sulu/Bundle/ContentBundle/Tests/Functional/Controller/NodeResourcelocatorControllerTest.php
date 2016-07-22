@@ -112,15 +112,15 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
                 'PHP_AUTH_PW' => 'test',
             ]
         );
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data[0]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&action=publish', $data[0]);
         $data[0] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en', $data[1]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&action=publish', $data[1]);
         $data[1] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&parent=' . $data[1]['id'], $data[2]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&action=publish&parent=' . $data[1]['id'], $data[2]);
         $data[2] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&parent=' . $data[1]['id'], $data[3]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&action=publish&parent=' . $data[1]['id'], $data[3]);
         $data[3] = (array) json_decode($client->getResponse()->getContent(), true);
-        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&parent=' . $data[3]['id'], $data[4]);
+        $client->request('POST', '/api/nodes?webspace=sulu_io&language=en&action=publish&parent=' . $data[3]['id'], $data[4]);
         $data[4] = (array) json_decode($client->getResponse()->getContent(), true);
 
         return $data;
@@ -172,7 +172,7 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
         $newsData['url'] = '/test';
         $this->client->request(
             'PUT',
-            '/api/nodes/' . $newsData['id'] . '?webspace=sulu_io&language=en',
+            '/api/nodes/' . $newsData['id'] . '?webspace=sulu_io&language=en&action=publish',
             $newsData
         );
         $newsData = (array) json_decode($this->client->getResponse()->getContent(), true);
@@ -196,7 +196,7 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
         $newsData['url'] = '/test';
         $this->client->request(
             'PUT',
-            '/api/nodes/' . $newsData['id'] . '?webspace=sulu_io&language=en',
+            '/api/nodes/' . $newsData['id'] . '?webspace=sulu_io&language=en&action=publish',
             $newsData
         );
         $newsData = (array) json_decode($this->client->getResponse()->getContent());
@@ -223,40 +223,5 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
 
         $this->assertEquals(0, count($result['_embedded']['resourcelocators']));
         $this->assertEquals(0, $result['total']);
-    }
-
-    public function testRestore()
-    {
-        // prepare history nodes
-        $newsData = $this->data[1];
-        $newsData['url'] = '/test';
-        $this->client->request(
-            'PUT',
-            '/api/nodes/' . $newsData['id'] . '?webspace=sulu_io&language=en',
-            $newsData
-        );
-        $newsData = (array) json_decode($this->client->getResponse()->getContent());
-
-        $this->client->request(
-            'GET',
-            '/api/nodes/' . $newsData['id'] . '/resourcelocators?webspace=sulu_io&language=en'
-        );
-        $node = (array) json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $history = (array) json_decode($this->client->getResponse()->getContent(), true);
-
-        $url = $history['_embedded']['resourcelocators'][0]['_links']['restore'];
-        $url = substr($url, 6);
-        $this->client->request('PUT', $url);
-        $this->assertHttpStatusCode(200, $this->client->getResponse());
-
-        $this->client->request(
-            'GET',
-            '/api/nodes/' . $newsData['id'] . '?webspace=sulu_io&language=en'
-        );
-        $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $node = (array) json_decode($this->client->getResponse()->getContent(), true);
-
-        $this->assertEquals('/news', $node['url']);
     }
 }

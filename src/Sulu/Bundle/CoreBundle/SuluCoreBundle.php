@@ -17,8 +17,7 @@ use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterContentTypesComp
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterLocalizationProvidersPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RemoveForeignContextServicesPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\ReplacersCompilerPass;
-use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RequestAnalyzerCompilerPass;
-use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\WebspaceUrlProviderCompilerPass;
+use Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -33,8 +32,12 @@ class SuluCoreBundle extends Bundle
         $container->addCompilerPass(new RemoveForeignContextServicesPass());
         $container->addCompilerPass(new ReplacersCompilerPass(__DIR__ . '/DataFixtures/replacers.xml'));
         $container->addCompilerPass(new ListBuilderMetadataProviderCompilerPass());
-        $container->addCompilerPass(new RequestAnalyzerCompilerPass());
+        $container->addCompilerPass(
+            new TaggedServiceCollectorCompilerPass('sulu_core.webspace.request_analyzer', 'sulu.request_attributes', 1)
+        );
         $container->addCompilerPass(new CsvHandlerCompilerPass());
-        $container->addCompilerPass(new WebspaceUrlProviderCompilerPass());
+        $container->addCompilerPass(
+            new TaggedServiceCollectorCompilerPass('sulu_core.webspace.url_provider', 'sulu.webspace.url_provider')
+        );
     }
 }

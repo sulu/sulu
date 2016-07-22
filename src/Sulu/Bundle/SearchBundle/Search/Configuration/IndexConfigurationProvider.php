@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -29,7 +30,8 @@ class IndexConfigurationProvider implements IndexConfigurationProviderInterface
             $this->indexConfigurations[$indexName] = new IndexConfiguration(
                 $indexName,
                 isset($indexConfiguration['name']) ? $indexConfiguration['name'] : null,
-                isset($indexConfiguration['security_context']) ? $indexConfiguration['security_context'] : null
+                isset($indexConfiguration['security_context']) ? $indexConfiguration['security_context'] : null,
+                isset($indexConfiguration['contexts']) ? $indexConfiguration['contexts'] : []
             );
         }
     }

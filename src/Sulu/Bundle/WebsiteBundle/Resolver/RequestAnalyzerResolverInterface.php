@@ -26,14 +26,4 @@ interface RequestAnalyzerResolverInterface
      * @return array
      */
     public function resolve(RequestAnalyzerInterface $requestAnalyzer);
-
-    /**
-     * Returns fake data for preview.
-     *
-     * @param string $webspaceKey
-     * @param string $locale
-     *
-     * @return array
-     */
-    public function resolveForPreview($webspaceKey, $locale);
 }

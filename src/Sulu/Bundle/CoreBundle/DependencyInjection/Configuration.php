@@ -32,7 +32,6 @@ class Configuration implements ConfigurationInterface
         $rootNode->addDefaultsIfNotSet();
 
         $children = $rootNode->children();
-        $this->getPhpcrConfiguration($children);
         $this->getContentConfiguration($children);
         $this->getWebspaceConfiguration($children);
         $this->getFieldsConfiguration($children);
@@ -59,15 +58,15 @@ class Configuration implements ConfigurationInterface
     {
         $rootNode
             ->arrayNode('locales')
-                ->isRequired()
                 ->useAttributeAsKey('locale')
                 ->prototype('scalar')->end()
+                ->defaultValue(['de' => 'Deutsch', 'en' => 'English', 'fr' => 'Français'])
             ->end()
             ->arrayNode('translations')
-                ->isRequired()
                 ->prototype('scalar')->end()
+                ->defaultValue(['de', 'en', 'fr'])
             ->end()
-            ->scalarNode('fallback_locale')->end();
+            ->scalarNode('fallback_locale')->defaultValue('en')->end();
     }
 
     /**
@@ -82,31 +81,6 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
         ->end();
-    }
-
-    /**
-     * @param NodeBuilder $rootNode
-     */
-    private function getPhpcrConfiguration(NodeBuilder $rootNode)
-    {
-        $rootNode->arrayNode('phpcr')
-            ->addDefaultsIfNotSet()
-            ->children()
-                ->scalarNode('workspace')
-                    ->isRequired()
-                    ->cannotBeEmpty()
-                ->end()
-                ->scalarNode('username')
-                    ->defaultNull()
-                ->end()
-                ->scalarNode('password')
-                    ->defaultNull()
-                ->end()
-                ->arrayNode('backend')
-                    ->useAttributeAsKey('name')
-                    ->prototype('variable')
-                ->end()
-            ->end();
     }
 
     /**
@@ -243,10 +217,8 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                         ->arrayNode('type_map')
-                            ->isRequired()
                             ->useAttributeAsKey('name')
-                            ->prototype('scalar')
-                            ->end()
+                            ->prototype('scalar')->end()
                         ->end()
                     ->end()
                 ->end()

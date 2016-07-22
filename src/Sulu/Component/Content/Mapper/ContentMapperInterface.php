@@ -15,7 +15,6 @@ use PHPCR\NodeInterface;
 use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
 use Sulu\Component\Content\BreadcrumbItemInterface;
-use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
 
 /**
@@ -25,40 +24,6 @@ use Sulu\Component\Content\Compat\StructureInterface;
  */
 interface ContentMapperInterface
 {
-    /**
-     * saves the given data in the content storage.
-     *
-     * @param array       $data               The data to be saved
-     * @param string      $templateKey        Name of template
-     * @param string      $webspaceKey        Key of webspace
-     * @param string      $languageCode       Save data for given language
-     * @param int         $userId             The id of the user who saves
-     * @param bool        $partialUpdate      ignore missing property
-     * @param string      $uuid               uuid of node if exists
-     * @param string      $parent             uuid or path of parent node
-     * @param int         $state              state of node
-     * @param bool|null   $isShadow           indicates that this node is a shadow for the base language
-     * @param string|null $shadowBaseLanguage base language for shadow
-     *
-     * @return StructureInterface
-     *
-     * @deprecated Use the saveRequest method instead.
-     */
-    public function save(
-        $data,
-        $templateKey,
-        $webspaceKey,
-        $languageCode,
-        $userId,
-        $partialUpdate = true,
-        $uuid = null,
-        $parent = null,
-        $state = null,
-        $isShadow = null,
-        $shadowBaseLanguage = null,
-        $structureType = Structure::TYPE_PAGE
-    );
-
     /**
      * save a extension with given name and data to an existing node.
      *
@@ -203,32 +168,6 @@ interface ContentMapperInterface
     public function delete($uuid, $webspaceKey);
 
     /**
-     * moves given node to a new parent node.
-     *
-     * @param string $uuid
-     * @param string $destParentUuid
-     * @param int    $userId
-     * @param string $webspaceKey
-     * @param string $languageCode
-     *
-     * @return StructureInterface
-     */
-    public function move($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode);
-
-    /**
-     * copies given node to a new parent node.
-     *
-     * @param string $uuid
-     * @param string $destParentUuid
-     * @param int    $userId
-     * @param string $webspaceKey
-     * @param string $languageCode
-     *
-     * @return StructureInterface
-     */
-    public function copy($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode);
-
-    /**
      * Copies the content from one node from one localization to the other.
      *
      * @param string $uuid
@@ -290,26 +229,4 @@ interface ContentMapperInterface
         $maxDepth,
         $onlyPublished = true
     );
-
-    /**
-     * Map and save the content given in the request object.
-     *
-     * @param ContentMapperRequest
-     *
-     * @return StructureInterface
-     */
-    public function saveRequest(ContentMapperRequest $request);
-
-    /**
-     * restores given resourcelocator.
-     *
-     * @param string $path
-     * @param int    $userId
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
-     *
-     * @return StructureInterface
-     */
-    public function restoreHistoryPath($path, $userId, $webspaceKey, $languageCode, $segmentKey = null);
 }

@@ -57,6 +57,14 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
     }
 
     /**
+     * @Given I click the back icon
+     */
+    public function iClickOnTheBackIcon()
+    {
+        $this->clickSelector('.fa-chevron-left');
+    }
+
+    /**
      * @Given I click the edit icon
      */
     public function iClickOnTheEditIcon()
@@ -444,6 +452,20 @@ EOT;
     public function iSetValue($name, $value)
     {
         $this->getSession()->evaluateScript("$('#$name').data('element').setValue(" . json_encode($value) . ')');
+    }
+
+    /**
+     * @Then I expect the value of the property ":name" is ":value"
+     */
+    public function IExpectTheValue($name, $value)
+    {
+        $result = $this->getSession()->evaluateScript(
+            "$('#$name').data('element').getValue() === " . json_encode($value)
+        );
+
+        if (!$result) {
+            throw new \Exception(sprintf('Property "%s" doesnt contain the value "%s"', $name, json_encode($value)));
+        }
     }
 
     /**

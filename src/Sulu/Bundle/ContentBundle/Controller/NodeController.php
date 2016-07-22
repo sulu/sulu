@@ -21,9 +21,7 @@ use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
-use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
 use Sulu\Component\Content\Form\Exception\InvalidFormException;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 use Sulu\Component\Content\Repository\Mapping\MappingInterface;
@@ -40,6 +38,7 @@ use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
@@ -93,7 +92,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
     /**
      * returns entry point (webspace as node).
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -227,6 +226,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
                         'exclude-shadows' => !$mapping->shouldHydrateShadow(),
                         'fields' => implode(',', $mapping->getProperties()),
                         'tree' => true,
+                        'webspace-nodes' => $webspaceNodes,
                     ]
                 )
             );
@@ -290,7 +290,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * Returns a tree along the given path with the siblings of all nodes on the path.
      * This functionality is required for preloading the content navigation.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -364,7 +364,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
     /**
      * returns a content item for startpage.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -381,7 +381,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
     /**
      * returns all content items as JSON String.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -404,7 +404,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * @throws MissingParameterException
      * @throws ParameterDataTypeException
      *
-     * @deprecated this will be removed when the content-repository is able to solve all requirements.
+     * @deprecated this will be removed when the content-repository is able to solve all requirements
      */
     public function cgetNodes(Request $request)
     {
@@ -504,7 +504,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
     /**
      * Returns the title of the pages for a given smart content configuration.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
@@ -578,7 +578,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
     /**
      * saves node with given uuid and data.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      * @param string $uuid
      *
      * @return Response
@@ -590,6 +590,9 @@ class NodeController extends RestController implements ClassResourceInterface, S
     public function putAction(Request $request, $uuid)
     {
         $language = $this->getLanguage($request);
+        $action = $request->get('action');
+
+        $this->checkActionParameterSecurity($action, $language, $uuid);
 
         $document = $this->getDocumentManager()->find(
             $uuid,
@@ -604,28 +607,8 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
         $this->get('sulu_hash.request_hash_checker')->checkHash($request, $document, $document->getUuid());
 
-        $data = $request->request->all();
-        $data['workflowStage'] = $this->getRequestParameter($request, 'state');
-
-        $form = $this->createForm($type, $document, [
-            // disable csrf protection, since we can't produce a token, because the form is cached on the client
-            'csrf_protection' => false,
-            'webspace_key' => $this->getWebspace($request),
-        ]);
-        $form->submit($data, false);
-
-        if (!$form->isValid()) {
-            throw new InvalidFormException($form);
-        }
-
-        $this->getDocumentManager()->persist(
-            $document,
-            $language,
-            [
-                'user' => $this->getUser()->getId(),
-                'clear_missing_content' => false,
-            ]
-        );
+        $this->persistDocument($request, $type, $document, $language);
+        $this->handleActionParameter($action, $document, $language);
         $this->getDocumentManager()->flush();
 
         $view = $this->view($document);
@@ -639,53 +622,40 @@ class NodeController extends RestController implements ClassResourceInterface, S
     /**
      * Updates a content item and returns result as JSON String.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     *
+     * @throws InvalidFormException
+     * @throws MissingParameterException
      */
     public function postAction(Request $request)
     {
-        try {
-            $language = $this->getLanguage($request);
-            $webspace = $this->getWebspace($request);
-            $isShadow = $this->getRequestParameter($request, 'isShadow', false);
-            $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
-            $parent = $this->getRequestParameter($request, 'parent');
-            $state = $this->getRequestParameter($request, 'state');
-            if ($state !== null) {
-                $state = intval($state);
-            }
+        $type = 'page';
+        $language = $this->getLanguage($request);
+        $action = $request->get('action');
 
-            $data = $request->request->all();
+        $this->checkActionParameterSecurity($action, $language);
 
-            $template = isset($data['template']) ? $data['template'] : null;
+        $document = $this->getDocumentManager()->create($type);
 
-            $mapperRequest = ContentMapperRequest::create()
-                ->setTemplateKey($template)
-                ->setWebspaceKey($webspace)
-                ->setUserId($this->getUser()->getId())
-                ->setState($state)
-                ->setIsShadow($isShadow)
-                ->setShadowBaseLanguage($shadowBaseLanguage)
-                ->setLocale($language)
-                ->setParentUuid($parent)
-                ->setData($data);
+        $this->persistDocument($request, $type, $document, $language);
+        $this->handleActionParameter($action, $document, $language);
+        $this->getDocumentManager()->flush();
 
-            $result = $this->getRepository()->saveNodeRequest($mapperRequest);
+        $view = $this->view($document);
+        $view->setSerializationContext(
+            SerializationContext::create()->setSerializeNull(true)->setGroups(['defaultPage'])
+        );
 
-            return $this->handleView($this->view($result));
-        } catch (ResourceLocatorNotValidException $e) {
-            $restException = new RestException('The chosen ResourceLocator is not valid');
-
-            return $this->handleView($this->view($restException->toArray(), 409));
-        }
+        return $this->handleView($view);
     }
 
     /**
      * deletes node with given uuid.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param string                                    $uuid
+     * @param Request $request
+     * @param string $uuid
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -754,8 +724,8 @@ class NodeController extends RestController implements ClassResourceInterface, S
     public function postTriggerAction($uuid, Request $request)
     {
         // extract parameter
-        $webspace = $this->getWebspace($request);
         $action = $this->getRequestParameter($request, 'action', true);
+        $language = $this->getLanguage($request);
         $userId = $this->getUser()->getId();
 
         // prepare vars
@@ -766,32 +736,43 @@ class NodeController extends RestController implements ClassResourceInterface, S
         try {
             switch ($action) {
                 case 'move':
-                    $srcLocale = $this->getRequestParameter($request, 'destination', true);
-                    $language = $this->getLanguage($request);
+                    $data = $this->getDocumentManager()->find($uuid, $language);
 
-                    // call repository method
-                    $data = $repository->moveNode($uuid, $srcLocale, $webspace, $language, $userId);
+                    $this->getDocumentManager()->move(
+                        $data,
+                        $this->getRequestParameter($request, 'destination', true)
+                    );
+                    $this->getDocumentManager()->flush();
                     break;
                 case 'copy':
-                    $srcLocale = $this->getRequestParameter($request, 'destination', true);
-                    $language = $this->getLanguage($request);
+                    $copiedPath = $this->getDocumentManager()->copy(
+                        $this->getDocumentManager()->find($uuid, $language),
+                        $this->getRequestParameter($request, 'destination', true)
+                    );
+                    $this->getDocumentManager()->flush();
 
-                    // call repository method
-                    $data = $repository->copyNode($uuid, $srcLocale, $webspace, $language, $userId);
+                    $data = $this->getDocumentManager()->find($copiedPath, $language);
                     break;
                 case 'order':
                     $position = (int) $this->getRequestParameter($request, 'position', true);
-                    $language = $this->getLanguage($request);
+                    $webspace = $this->getWebspace($request);
 
                     // call repository method
                     $data = $repository->orderAt($uuid, $position, $webspace, $language, $userId);
                     break;
                 case 'copy-locale':
-                    $srcLocale = $this->getLanguage($request);
                     $destLocale = $this->getRequestParameter($request, 'dest', true);
+                    $webspace = $this->getWebspace($request);
 
                     // call repository method
-                    $data = $repository->copyLocale($uuid, $userId, $webspace, $srcLocale, explode(',', $destLocale));
+                    $data = $repository->copyLocale($uuid, $userId, $webspace, $language, explode(',', $destLocale));
+                    break;
+                case 'unpublish':
+                    $document = $this->getDocumentManager()->find($uuid, $language);
+                    $this->getDocumentManager()->unpublish($document, $language);
+                    $this->getDocumentManager()->flush();
+
+                    $data = $this->getDocumentManager()->find($uuid, $language);
                     break;
                 default:
                     throw new RestException('Unrecognized action: ' . $action);
@@ -799,6 +780,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
 
             // prepare view
             $view = $this->view($data, $data !== null ? 200 : 204);
+            $view->setSerializationContext(SerializationContext::create()->setGroups(['defaultPage']));
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
         }
@@ -979,5 +961,93 @@ class NodeController extends RestController implements ClassResourceInterface, S
         }
 
         return $webspaceContents;
+    }
+
+    /**
+     * Persists the document using the given information.
+     *
+     * @param Request $request
+     * @param $type
+     * @param $document
+     * @param $language
+     *
+     * @throws InvalidFormException
+     * @throws MissingParameterException
+     */
+    private function persistDocument(Request $request, $type, $document, $language)
+    {
+        $data = $request->request->all();
+
+        if ($request->query->has('parent')) {
+            $data['parent'] = $request->query->get('parent');
+        }
+
+        $form = $this->createForm($type, $document, [
+            // disable csrf protection, since we can't produce a token, because the form is cached on the client
+            'csrf_protection' => false,
+            'webspace_key' => $this->getWebspace($request),
+        ]);
+        $form->submit($data, false);
+
+        if (!$form->isValid()) {
+            throw new InvalidFormException($form);
+        }
+
+        $this->getDocumentManager()->persist(
+            $document,
+            $language,
+            [
+                'user' => $this->getUser()->getId(),
+                'clear_missing_content' => false,
+            ]
+        );
+    }
+
+    /**
+     * Checks if the user has the required permissions for the given action with the given locale. The additional
+     * uuid parameter will also include checks for the document identified by it.
+     *
+     * @param string $actionParameter
+     * @param string $locale
+     * @param string $uuid
+     */
+    private function checkActionParameterSecurity($actionParameter, $locale, $uuid = null)
+    {
+        $permission = null;
+        switch ($actionParameter) {
+            case 'publish':
+                $permission = 'live';
+                break;
+        }
+
+        if (!$permission) {
+            return;
+        }
+
+        $this->get('sulu_security.security_checker')->checkPermission(
+            new SecurityCondition(
+                $this->getSecurityContext(),
+                $locale,
+                $this->getSecuredClass(),
+                $uuid
+            ),
+            $permission
+        );
+    }
+
+    /**
+     * Delegates actions by given actionParameter, which can be retrieved from the request.
+     *
+     * @param string $actionParameter
+     * @param object $document
+     * @param string $locale
+     */
+    private function handleActionParameter($actionParameter, $document, $locale)
+    {
+        switch ($actionParameter) {
+            case 'publish':
+                $this->getDocumentManager()->publish($document, $locale);
+                break;
+        }
     }
 }

@@ -251,55 +251,6 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->smartContent->read($node, $property, 'test', 'en', 's');
     }
 
-    public function testReadPreview()
-    {
-        $config = [
-            'tags' => ['Tag1', 'Tag2'],
-            'limitResult' => '2',
-        ];
-
-        $node = $this->getMockForAbstractClass(
-            MyNodeInterface::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['getPropertyValueWithDefault']
-        );
-
-        $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Compat\PropertyInterface',
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['setValue']
-        );
-
-        $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
-            $this->returnValueMap(
-                [
-                    ['property', '{}', '{"tags":[1,2],"limitResult":"2"}'],
-                ]
-            )
-        );
-
-        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
-        $property->expects($this->any())->method('getParams')->will($this->returnValue([]));
-
-        $property->expects($this->exactly(1))->method('setValue')->with($config);
-
-        $this->smartContent->readForPreview(
-            ['tags' => ['Tag1', 'Tag2'], 'limitResult' => 2],
-            $property,
-            'test',
-            'en',
-            's'
-        );
-    }
-
     public function testGetViewData()
     {
         $property = $this->getMockForAbstractClass(

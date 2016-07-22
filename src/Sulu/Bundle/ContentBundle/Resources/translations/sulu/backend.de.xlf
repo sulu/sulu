@@ -230,10 +230,6 @@
                 <source>content.contents.show-ghost-pages</source>
                 <target>Ghost- und Shadow- Seiten anzeigen</target>
             </trans-unit>
-            <trans-unit id="9d6ff6ec28392e6c52d795266f34743e" resname="content.preview.resolutions">
-                <source>content.preview.resolutions</source>
-                <target>Bildschirmaufösungen</target>
-            </trans-unit>
             <trans-unit id="fd7f7507a45f470925dd0e3257b20da2" resname="sulu.content.add-type">
                 <source>sulu.content.add-type</source>
                 <target>Block hinzufügen</target>
@@ -451,10 +447,6 @@
                 <source>content.contents.settings.copy-locales.default-label</source>
                 <target>Sprache auswählen ...</target>
             </trans-unit>
-            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf028" resname="content.contents.start-preview">
-                <source>content.contents.start-preview</source>
-                <target>Vorschau starten</target>
-            </trans-unit>
             <trans-unit id="abaaaaa382148fbed4a73a4123dfdf030" resname="sulu.content.form.settings.changelog">
                 <source>sulu.content.form.settings.changelog</source>
                 <target>Änderungshistorie</target>
@@ -514,6 +506,10 @@
             <trans-unit id="487f946d51783a9899fa59d31dcfc3e8" resname="labels.success.content-save-desc">
                 <source>labels.success.content-save-desc</source>
                 <target>Seite erfolgreich gespeichert.</target>
+            </trans-unit>
+            <trans-unit id="497e046d51783a9899fa59d31dcfc3e8" resname="labels.success.copy-locale-desc">
+                <source>labels.success.copy-locale-desc</source>
+                <target>Seite erfolgreich kopiert.</target>
             </trans-unit>
             <trans-unit id="e4b14069a8a085ede2092hf51234dh40" resname="smart-content.categories.label">
                 <source>smart-content.categories.label</source>
@@ -626,6 +622,110 @@
             <trans-unit id="26" resname="content.changed-warning.ok-button">
                 <source>content.changed-warning.ok-button</source>
                 <target>Seite speichern</target>
+            </trans-unit>
+            <trans-unit id="27" resname="content.ckeditor.internal-link">
+                <source>content.ckeditor.internal-link</source>
+                <target>Interner Sulu Link</target>
+            </trans-unit>
+            <trans-unit id="28" resname="content.ckeditor.internal-link.edit">
+                <source>content.ckeditor.internal-link.edit</source>
+                <target>Interner Sulu Link bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="29" resname="content.ckeditor.internal-link.alt-title">
+                <source>content.ckeditor.internal-link.alt-title</source>
+                <target>Alternativer Titel</target>
+            </trans-unit>
+            <trans-unit id="30" resname="content.ckeditor.internal-link.href">
+                <source>content.ckeditor.internal-link.href</source>
+                <target>Zielseite</target>
+            </trans-unit>
+            <trans-unit id="31" resname="content.ckeditor.internal-link.target">
+                <source>content.ckeditor.internal-link.target</source>
+                <target>Ziel</target>
+            </trans-unit>
+            <trans-unit id="32" resname="content.ckeditor.internal-link.target-blank">
+                <source>content.ckeditor.internal-link.target-blank</source>
+                <target>Neues Fenster (_blank)</target>
+            </trans-unit>
+            <trans-unit id="33" resname="content.ckeditor.internal-link.target-self">
+                <source>content.ckeditor.internal-link.target-self</source>
+                <target>Gleiches Fenster (_self)</target>
+            </trans-unit>
+            <trans-unit id="34" resname="content.ckeditor.internal-link.remove">
+                <source>content.ckeditor.internal-link.remove</source>
+                <target>Interner Sulu Link löschen</target>
+            </trans-unit>
+            <trans-unit id="35" resname="content.text_editor.error.unpublished">
+                <source>content.text_editor.error.unpublished</source>
+                <target>Seite nicht publiziert</target>
+            </trans-unit>
+            <trans-unit id="36" resname="content.text_editor.error.unpublished-single">
+                <source>content.text_editor.error.unpublished-single</source>
+                <target>Eine verlinkte Seite ist nicht publiziert.</target>
+            </trans-unit>
+            <trans-unit id="37" resname="content.text_editor.error.unpublished-multiple">
+                <source>content.text_editor.error.unpublished-multiple</source>
+                <target>%s verlinkte Seiten sind nicht publiziert.</target>
+            </trans-unit>
+            <trans-unit id="38" resname="content.text_editor.error.removed">
+                <source>content.text_editor.error.removed</source>
+                <target>Link nicht gültig</target>
+            </trans-unit>
+            <trans-unit id="39" resname="content.text_editor.error.removed-single">
+                <source>content.text_editor.error.removed-single</source>
+                <target>Ein Link ist nicht mehr gültig.</target>
+            </trans-unit>
+            <trans-unit id="40" resname="content.text_editor.error.removed-multiple">
+                <source>content.text_editor.error.removed-multiple</source>
+                <target>%s Links sind nicht mehr gültig.</target>
+            </trans-unit>
+            <trans-unit id="41" resname="sulu-content.save-draft">
+                <source>sulu-content.save-draft</source>
+                <target>Als Entwurf speichern</target>
+            </trans-unit>
+            <trans-unit id="42" resname="sulu-content.save-publish">
+                <source>sulu-content.save-publish</source>
+                <target>Speichern und veröffentlichen</target>
+            </trans-unit>
+            <trans-unit id="43" resname="sulu-content.publish">
+                <source>sulu-content.publish</source>
+                <target>Veröffentlichen</target>
+            </trans-unit>
+            <trans-unit id="44" resname="sulu-content.published-shadow">
+                <source>sulu-content.published-shadow</source>
+                <target>Der Veröffentlichungsstatus wird vom Status der Hauptseite übernommen.</target>
+            </trans-unit>
+            <trans-unit id="45" resname="sulu-content.draft-label">
+                <source>sulu-content.draft-label</source>
+                <target><![CDATA[Du arbeitest an einem Entwurf, zuletzt gespeichert: %(changed)s von <b>%(user)s</b>]]></target>
+            </trans-unit>
+            <trans-unit id="46" resname="sulu-content.unpublish">
+                <source>sulu-content.unpublish</source>
+                <target>Veröffentlichung widerrufen</target>
+            </trans-unit>
+            <trans-unit id="47" resname="labels.error.content-unpublish-desc">
+                <source>labels.error.content-unpublish-desc</source>
+                <target>Veröffentlichung der Seite konnte nicht widerrufen werden.</target>
+            </trans-unit>
+            <trans-unit id="48" resname="content-navigation.security.texteditor">
+                <source>content-navigation.security.texteditor</source>
+                <target>Text-Editor</target>
+            </trans-unit>
+            <trans-unit id="49" resname="sulu-content.ckeditor.roles-title">
+                <source>sulu-content.ckeditor.roles-title</source>
+                <target>Einstellungen für Text-Editor</target>
+            </trans-unit>
+            <trans-unit id="50" resname="sulu-content.ckeditor.roles-type">
+                <source>sulu-content.ckeditor.roles-type</source>
+                <target>Sektion</target>
+            </trans-unit>
+            <trans-unit id="51" resname="sulu-content.ckeditor.roles-horizontal">
+                <source>sulu-content.ckeditor.roles-horizontal</source>
+                <target>Funktion</target>
+            </trans-unit>
+            <trans-unit id="52" resname="sulu-content.ckeditor.roles-info">
+                <source>sulu-content.ckeditor.roles-info</source>
+                <target>Die Konfiguration gilt für jeden Text-Editor im System, der von dieser Rolle verwendet wird.</target>
             </trans-unit>
         </body>
     </file>

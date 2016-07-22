@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
+use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -49,8 +50,15 @@ class TemplateController extends Controller
     {
         $internal = $request->get('internal', false);
 
-        $structureProvider = $this->get('sulu.content.webspace_structure_provider');
-        $structures = $structureProvider->getStructures($request->get('webspace'));
+        $type = $request->get('type', Structure::TYPE_PAGE);
+
+        if ($type === Structure::TYPE_PAGE) {
+            $structureProvider = $this->get('sulu.content.webspace_structure_provider');
+            $structures = $structureProvider->getStructures($request->get('webspace'));
+        } else {
+            $structureProvider = $this->get('sulu.content.structure_manager');
+            $structures = $structureProvider->getStructures($type);
+        }
 
         $templates = [];
         foreach ($structures as $structure) {
@@ -91,7 +99,7 @@ class TemplateController extends Controller
         if ($key === null) {
             if ($type === 'page') {
                 $webspaceManager = $this->container->get('sulu_core.webspace.webspace_manager');
-                $key = $webspaceManager->findWebspaceByKey($webspace)->getTheme()->getDefaultTemplate($type);
+                $key = $webspaceManager->findWebspaceByKey($webspace)->getDefaultTemplate($type);
                 $fireEvent = true;
             } else {
                 $defaultTypes = $this->container->getParameter('sulu.content.structure.default_types');

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -43,6 +44,7 @@ class MediaDataProvider extends BaseDataProvider
 
         $this->configuration = self::createConfigurationBuilder()
             ->enableTags()
+            ->enableCategories()
             ->enableLimit()
             ->enablePagination()
             ->enablePresentAs()

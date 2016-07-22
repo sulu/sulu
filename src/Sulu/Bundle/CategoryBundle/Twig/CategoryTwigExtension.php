@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -70,8 +71,8 @@ class CategoryTwigExtension extends \Twig_Extension
      * Returns an array of serialized categories.
      *
      * @param string $locale
-     * @param int $parent id of parent category. null for root.
-     * @param int $depth number of children.
+     * @param int $parent id of parent category. null for root
+     * @param int $depth number of children
      *
      * @return array
      */
@@ -97,8 +98,8 @@ class CategoryTwigExtension extends \Twig_Extension
     /**
      * Extends current URL with given category.
      *
-     * @param array $category will be included in the URL.
-     * @param string $categoriesParameter GET parameter name.
+     * @param array $category will be included in the URL
+     * @param string $categoriesParameter GET parameter name
      *
      * @return string
      */
@@ -110,8 +111,8 @@ class CategoryTwigExtension extends \Twig_Extension
     /**
      * Set category to current URL.
      *
-     * @param array $category will be included in the URL.
-     * @param string $categoriesParameter GET parameter name.
+     * @param array $category will be included in the URL
+     * @param string $categoriesParameter GET parameter name
      *
      * @return string
      */
@@ -123,7 +124,7 @@ class CategoryTwigExtension extends \Twig_Extension
     /**
      * Remove categories from current URL.
      *
-     * @param string $categoriesParameter GET parameter name.
+     * @param string $categoriesParameter GET parameter name
      *
      * @return string
      */

@@ -46,13 +46,6 @@ class SearchIntegrationTest extends SuluTestCase
      */
     private $mediaSelectionContainer;
 
-    protected function getKernelConfiguration()
-    {
-        return [
-            'sulu_context' => 'website',
-        ];
-    }
-
     public function setUp()
     {
         $this->initPhpcr();

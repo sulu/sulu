@@ -50,10 +50,10 @@ class XmlFileLoaderTest extends WebspaceTestCase
 
         $this->assertEquals('de_at', $webspace->getDefaultLocalization()->getLocalization());
 
-        $this->assertEquals('sulu', $webspace->getTheme()->getKey());
+        $this->assertEquals('sulu', $webspace->getTheme());
         $this->assertEquals(
-            ['page' => 'default', 'homepage' => 'overview'],
-            $webspace->getTheme()->getDefaultTemplates()
+            ['page' => 'default', 'homepage' => 'overview', 'home' => 'overview'],
+            $webspace->getDefaultTemplates()
         );
 
         $this->assertEquals('short', $webspace->getPortals()[0]->getResourceLocatorStrategy());
@@ -140,7 +140,7 @@ class XmlFileLoaderTest extends WebspaceTestCase
         $this->assertEquals('summer', $webspace->getSegments()[1]->getName());
         $this->assertEquals(false, $webspace->getSegments()[1]->isDefault());
 
-        $this->assertEquals('massiveart', $webspace->getTheme()->getKey());
+        $this->assertEquals('massiveart', $webspace->getTheme());
 
         $this->assertEquals('tree', $webspace->getPortals()[0]->getResourceLocatorStrategy());
 
@@ -235,6 +235,83 @@ class XmlFileLoaderTest extends WebspaceTestCase
         );
     }
 
+    public function testLoadDeprecated()
+    {
+        $webspace = $this->loader->load(
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/valid/sulu.io_deprecated.xml'
+        );
+
+        $this->assertEquals('Sulu CMF', $webspace->getName());
+        $this->assertEquals('sulu_io', $webspace->getKey());
+        $this->assertEquals('sulu_io', $webspace->getSecurity()->getSystem());
+
+        $this->assertEquals('en', $webspace->getLocalizations()[0]->getLanguage());
+        $this->assertEquals('us', $webspace->getLocalizations()[0]->getCountry());
+        $this->assertEquals('auto', $webspace->getLocalizations()[0]->getShadow());
+        $this->assertEquals(false, $webspace->getLocalizations()[0]->isDefault());
+
+        $this->assertEquals('de', $webspace->getLocalizations()[1]->getLanguage());
+        $this->assertEquals('at', $webspace->getLocalizations()[1]->getCountry());
+        $this->assertEquals(null, $webspace->getLocalizations()[1]->getShadow());
+        $this->assertEquals(true, $webspace->getLocalizations()[1]->isDefault());
+
+        $this->assertEquals('de_at', $webspace->getDefaultLocalization()->getLocalization());
+
+        $this->assertEquals('sulu', $webspace->getTheme());
+        $this->assertEquals(
+            ['page' => 'default', 'homepage' => 'overview', 'home' => 'overview'],
+            $webspace->getDefaultTemplates()
+        );
+
+        $this->assertEquals('short', $webspace->getPortals()[0]->getResourceLocatorStrategy());
+
+        $this->assertEquals(2, count($webspace->getPortals()[0]->getLocalizations()));
+        $this->assertEquals('en', $webspace->getPortals()[0]->getLocalizations()[0]->getLanguage());
+        $this->assertEquals('us', $webspace->getPortals()[0]->getLocalizations()[0]->getCountry());
+        $this->assertEquals('de', $webspace->getPortals()[0]->getLocalizations()[1]->getLanguage());
+        $this->assertEquals('at', $webspace->getPortals()[0]->getLocalizations()[1]->getCountry());
+        $this->assertEquals(true, $webspace->getPortals()[0]->getLocalizations()[1]->isDefault());
+
+        $this->assertEquals('de_at', $webspace->getPortals()[0]->getDefaultLocalization()->getLocalization());
+
+        $this->assertEquals(3, count($webspace->getPortals()[0]->getEnvironments()));
+
+        $environmentProd = $webspace->getPortals()[0]->getEnvironment('prod');
+        $this->assertEquals('prod', $environmentProd->getType());
+        $this->assertEquals(2, count($environmentProd->getUrls()));
+        $this->assertEquals('sulu.at', $environmentProd->getUrls()[0]->getUrl());
+        $this->assertTrue($environmentProd->getUrls()[0]->isMain());
+        $this->assertEquals('de', $environmentProd->getUrls()[0]->getLanguage());
+        $this->assertEquals(null, $environmentProd->getUrls()[0]->getSegment());
+        $this->assertEquals('at', $environmentProd->getUrls()[0]->getCountry());
+        $this->assertEquals(null, $environmentProd->getUrls()[0]->getRedirect());
+        $this->assertEquals('www.sulu.at', $environmentProd->getUrls()[1]->getUrl());
+        $this->assertFalse($environmentProd->getUrls()[1]->isMain());
+        $this->assertEquals(null, $environmentProd->getUrls()[1]->getLanguage());
+        $this->assertEquals(null, $environmentProd->getUrls()[1]->getSegment());
+        $this->assertEquals(null, $environmentProd->getUrls()[1]->getCountry());
+        $this->assertEquals('sulu.at', $environmentProd->getUrls()[1]->getRedirect());
+
+        $environmentDev = $webspace->getPortals()[0]->getEnvironment('dev');
+        $this->assertEquals('dev', $environmentDev->getType());
+        $this->assertEquals(1, count($environmentDev->getUrls()));
+        $this->assertEquals('sulu.lo', $environmentDev->getUrls()[0]->getUrl());
+        $this->assertTrue($environmentProd->getUrls()[0]->isMain());
+
+        $environmentMain = $webspace->getPortals()[0]->getEnvironment('main');
+        $this->assertEquals('main', $environmentMain->getType());
+        $this->assertEquals(3, count($environmentMain->getUrls()));
+        $this->assertEquals('sulu.lo', $environmentMain->getUrls()[0]->getUrl());
+        $this->assertFalse($environmentMain->getUrls()[0]->isMain());
+        $this->assertEquals('sulu.at', $environmentMain->getUrls()[1]->getUrl());
+        $this->assertTrue($environmentMain->getUrls()[1]->isMain());
+        $this->assertEquals('at.sulu.de', $environmentMain->getUrls()[2]->getUrl());
+        $this->assertFalse($environmentMain->getUrls()[2]->isMain());
+
+        $this->assertEquals(['page' => 'default', 'homepage' => 'overview', 'home' => 'overview'], $webspace->getDefaultTemplates());
+        $this->assertEquals(['404' => 'test.html.twig', 'default' => 'test.html.twig'], $webspace->getErrorTemplates());
+    }
+
     public function testLoadWithoutPortalLocalizations()
     {
         $webspace = $this->loader->load(
@@ -263,7 +340,7 @@ class XmlFileLoaderTest extends WebspaceTestCase
 
         $this->assertEquals('de_at', $webspace->getDefaultLocalization()->getLocalization());
 
-        $this->assertEquals('sulu', $webspace->getTheme()->getKey());
+        $this->assertEquals('sulu', $webspace->getTheme());
 
         $this->assertEquals('short', $webspace->getPortals()[0]->getResourceLocatorStrategy());
 
@@ -311,10 +388,12 @@ class XmlFileLoaderTest extends WebspaceTestCase
         );
     }
 
+    /**
+     * @expectedException \Sulu\Component\Webspace\Exception\InvalidWebspaceException
+     * @expectedExceptionMessage Could not parse webspace XML file
+     */
     public function testLoadInvalid()
     {
-        $this->setExpectedException('\InvalidArgumentException');
-
         $this->loader->load($this->getResourceDirectory() . '/DataFixtures/Webspace/invalid/massiveart.xml');
     }
 
@@ -410,8 +489,7 @@ class XmlFileLoaderTest extends WebspaceTestCase
             $this->getResourceDirectory() . '/DataFixtures/Webspace/valid/sulu.io_error_templates.xml'
         );
 
-        $theme = $webspace->getTheme();
-        $errorTemplates = $theme->getErrorTemplates();
+        $errorTemplates = $webspace->getErrorTemplates();
 
         $this->assertEquals(
             [
@@ -422,9 +500,9 @@ class XmlFileLoaderTest extends WebspaceTestCase
             $errorTemplates
         );
 
-        $this->assertEquals('ClientWebsiteBundle:views:error.500.html.twig', $theme->getErrorTemplate('500'));
-        $this->assertEquals('ClientWebsiteBundle:views:error.400.html.twig', $theme->getErrorTemplate('400'));
-        $this->assertEquals('ClientWebsiteBundle:views:error.html.twig', $theme->getErrorTemplate('409'));
+        $this->assertEquals('ClientWebsiteBundle:views:error.500.html.twig', $webspace->getErrorTemplate('500'));
+        $this->assertEquals('ClientWebsiteBundle:views:error.400.html.twig', $webspace->getErrorTemplate('400'));
+        $this->assertEquals('ClientWebsiteBundle:views:error.html.twig', $webspace->getErrorTemplate('409'));
     }
 
     public function testErrorTemplatesMissingDefault()
@@ -433,8 +511,7 @@ class XmlFileLoaderTest extends WebspaceTestCase
             $this->getResourceDirectory() . '/DataFixtures/Webspace/valid/sulu.io_error_templates_missing_default.xml'
         );
 
-        $theme = $webspace->getTheme();
-        $errorTemplates = $theme->getErrorTemplates();
+        $errorTemplates = $webspace->getErrorTemplates();
 
         $this->assertEquals(
             [
@@ -444,9 +521,9 @@ class XmlFileLoaderTest extends WebspaceTestCase
             $errorTemplates
         );
 
-        $this->assertEquals('ClientWebsiteBundle:views:error.500.html.twig', $theme->getErrorTemplate('500'));
-        $this->assertEquals('ClientWebsiteBundle:views:error.400.html.twig', $theme->getErrorTemplate('400'));
-        $this->assertNull($theme->getErrorTemplate('409'));
+        $this->assertEquals('ClientWebsiteBundle:views:error.500.html.twig', $webspace->getErrorTemplate('500'));
+        $this->assertEquals('ClientWebsiteBundle:views:error.400.html.twig', $webspace->getErrorTemplate('400'));
+        $this->assertNull($webspace->getErrorTemplate('409'));
     }
 
     public function testErrorTemplatesDefaultOnly()
@@ -455,8 +532,7 @@ class XmlFileLoaderTest extends WebspaceTestCase
             $this->getResourceDirectory() . '/DataFixtures/Webspace/valid/sulu.io_error_templates_default_only.xml'
         );
 
-        $theme = $webspace->getTheme();
-        $errorTemplates = $theme->getErrorTemplates();
+        $errorTemplates = $webspace->getErrorTemplates();
 
         $this->assertEquals(
             [
@@ -465,9 +541,9 @@ class XmlFileLoaderTest extends WebspaceTestCase
             $errorTemplates
         );
 
-        $this->assertEquals('ClientWebsiteBundle:views:error.html.twig', $theme->getErrorTemplate('500'));
-        $this->assertEquals('ClientWebsiteBundle:views:error.html.twig', $theme->getErrorTemplate('400'));
-        $this->assertEquals('ClientWebsiteBundle:views:error.html.twig', $theme->getErrorTemplate('409'));
+        $this->assertEquals('ClientWebsiteBundle:views:error.html.twig', $webspace->getErrorTemplate('500'));
+        $this->assertEquals('ClientWebsiteBundle:views:error.html.twig', $webspace->getErrorTemplate('400'));
+        $this->assertEquals('ClientWebsiteBundle:views:error.html.twig', $webspace->getErrorTemplate('409'));
     }
 
     public function testErrorTemplatesDefaultFalse()

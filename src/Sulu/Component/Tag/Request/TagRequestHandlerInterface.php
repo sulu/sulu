@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -27,8 +28,8 @@ interface TagRequestHandlerInterface
     /**
      * Extends current URL with given tag.
      *
-     * @param array $tag will be included in the URL.
-     * @param string $tagsParameter GET parameter name.
+     * @param array $tag will be included in the URL
+     * @param string $tagsParameter GET parameter name
      *
      * @return string
      */
@@ -37,8 +38,8 @@ interface TagRequestHandlerInterface
     /**
      * Set tag to current URL.
      *
-     * @param array $tag will be included in the URL.
-     * @param string $tagsParameter GET parameter name.
+     * @param array $tag will be included in the URL
+     * @param string $tagsParameter GET parameter name
      *
      * @return string
      */
@@ -47,7 +48,7 @@ interface TagRequestHandlerInterface
     /**
      * Remove tag from current URL.
      *
-     * @param string $tagsParameter GET parameter name.
+     * @param string $tagsParameter GET parameter name
      *
      * @return string
      */

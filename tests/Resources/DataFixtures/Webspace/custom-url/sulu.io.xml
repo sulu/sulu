@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <webspace xmlns="http://schemas.sulu.io/webspace/webspace"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.0.xsd">
+          xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.1.xsd">
 
     <name>sulu.io</name>
     <key>sulu_io</key>
@@ -11,18 +11,17 @@
         <localization language="de"/>
     </localizations>
 
-    <theme>
-        <key>default</key>
-        <default-templates>
-            <default-template type="page">default</default-template>
-            <default-template type="homepage">overview</default-template>
-        </default-templates>
+    <theme>default</theme>
 
-        <error-templates>
-            <error-template default="true">ClientWebsiteBundle:views:error.html.twig</error-template>
-            <error-template code="404">ClientWebsiteBundle:views:error404.html.twig</error-template>
-        </error-templates>
-    </theme>
+    <default-templates>
+        <default-template type="page">default</default-template>
+        <default-template type="homepage">overview</default-template>
+    </default-templates>
+
+    <error-templates>
+        <error-template default="true">ClientWebsiteBundle:views:error.html.twig</error-template>
+        <error-template code="404">ClientWebsiteBundle:views:error404.html.twig</error-template>
+    </error-templates>
 
     <navigation>
         <contexts>

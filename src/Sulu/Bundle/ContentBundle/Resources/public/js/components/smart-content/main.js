@@ -1168,7 +1168,8 @@ define(['services/husky/util'], function(util) {
 
             // min source must be selected
             if (JSON.stringify(data) !== JSON.stringify(this.URI.data)) {
-                this.sandbox.emit(DATA_CHANGED.call(this), this.sandbox.dom.data(this.$el, 'smart-content'), this.$el);
+                var domData = this.sandbox.dom.data(this.$el, this.options.elementDataName);
+                this.sandbox.emit(DATA_CHANGED.call(this), domData, this.$el);
                 this.URI.data = this.sandbox.util.extend(true, {}, data);
                 this.URI.hasChanged = true;
             } else {
@@ -1317,7 +1318,7 @@ define(['services/husky/util'], function(util) {
             this.$overlayContent.html('');
             this.appendOverlayContent(this.$overlayContent, this.overlayData);
             this.startOverlayComponents();
-            this.handleCategoriesInitialized({ids: [], operator: 'or', items:[]});
+            this.handleCategoriesInitialized({ids: [], operator: 'or', items: []});
             this.sandbox.emit(
                 'smart-content.datasource.' + this.options.instanceName + '.set-selected',
                 this.overlayData.dataSource

@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
@@ -72,17 +73,17 @@ class FileVersion implements AuditableInterface
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $contentLanguages;
+    private $contentLanguages = [];
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $publishLanguages;
+    private $publishLanguages = [];
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $meta;
+    private $meta = [];
 
     /**
      * @var \Sulu\Bundle\MediaBundle\Entity\File
@@ -93,7 +94,7 @@ class FileVersion implements AuditableInterface
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $tags;
+    private $tags = [];
 
     /**
      * @var \Sulu\Component\Security\Authentication\UserInterface
@@ -116,6 +117,11 @@ class FileVersion implements AuditableInterface
     private $properties = '{}';
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $categories = [];
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -124,6 +130,7 @@ class FileVersion implements AuditableInterface
         $this->publishLanguages = new \Doctrine\Common\Collections\ArrayCollection();
         $this->meta = new \Doctrine\Common\Collections\ArrayCollection();
         $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->categories = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -666,5 +673,37 @@ class FileVersion implements AuditableInterface
         $this->properties = json_encode($properties);
 
         return $this;
+    }
+
+    /**
+     * Add categories.
+     *
+     * @param Category $categories´
+     *
+     * @return self
+     */
+    public function addCategory(Category $categories)
+    {
+        $this->categories[] = $categories;
+
+        return $this;
+    }
+
+    /**
+     * Remove categories.
+     */
+    public function removeCategories()
+    {
+        $this->categories->clear();
+    }
+
+    /**
+     * Get categories.
+     *
+     * @return Collection
+     */
+    public function getCategories()
+    {
+        return $this->categories;
     }
 }

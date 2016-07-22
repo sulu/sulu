@@ -19,15 +19,20 @@ require.config({
         "type/singleInternalLink": '../../sulucontent/js/validation/types/singleInternalLink',
         "type/block": '../../sulucontent/js/validation/types/block',
         "type/toggler": '../../sulucontent/js/validation/types/toggler',
-        "extensions/sulu-buttons-contentbundle": '../../sulucontent/js/extensions/sulu-buttons'
+        "extensions/sulu-buttons-contentbundle": '../../sulucontent/js/extensions/sulu-buttons',
+        "extensions/seo-tab": '../../sulucontent/js/extensions/seo-tab',
+        "extensions/excerpt-tab": '../../sulucontent/js/extensions/excerpt-tab'
     }
 });
 
 define([
     'config',
     'extensions/sulu-buttons-contentbundle',
+    'extensions/seo-tab',
+    'extensions/excerpt-tab',
+    'sulucontent/ckeditor/internal-link',
     'css!sulucontentcss/main'
-], function(Config, ContentButtons) {
+], function(Config, ContentButtons, SeoTab, ExcerptTab, InternalLinkPlugin) {
     return {
 
         name: "Sulu Content Bundle",
@@ -36,16 +41,20 @@ define([
 
             'use strict';
 
-            var sandbox = app.sandbox;
-            sandbox.sulu.buttons.push(ContentButtons.getButtons());
-            sandbox.sulu.buttons.dropdownItems.push(ContentButtons.getDropdownItems());
+            SeoTab.initialize(app);
+            ExcerptTab.initialize(app);
 
+            var sandbox = app.sandbox;
+            var ckeditorConfig = Config.get('sulu_content.texteditor_toolbar');
+
+            sandbox.sulu.buttons.push(ContentButtons.getButtons());
+            
             app.components.addSource('sulucontent', '/bundles/sulucontent/js/components');
 
             Config.set('sulusearch.page.options', {
                 image: false
             });
-            
+
             sandbox.urlManager.setUrl(
                 'page',
                 function(data) {
@@ -127,6 +136,17 @@ define([
                     return '<div data-aura-component="webspace/settings@sulucontent" data-aura-id="' + id + '" data-aura-webspace="' + id + '" />';
                 }
             });
+
+            // ckeditor
+            sandbox.ckeditor.addPlugin(
+                'internalLink',
+                new InternalLinkPlugin(app.sandboxes.create('plugin-internal-link'))
+            );
+            sandbox.ckeditor.addToolbarButton('links', 'InternalLink', 'arrow-down');
+
+            if (!!ckeditorConfig && !!ckeditorConfig.userToolbar) {
+                sandbox.ckeditor.setToolbar(ckeditorConfig.userToolbar);
+            }
         }
     };
 });

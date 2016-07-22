@@ -82,7 +82,15 @@ class XmlLegacyLoader implements LoaderInterface
         $schemaPath = __DIR__ . static::SCHEME_PATH;
 
         // read file
-        $xmlDocument = XmlUtils::loadFile($resource, $schemaPath);
+        $xmlDocument = XmlUtils::loadFile(
+            $resource,
+            function (\DOMDocument $dom) use ($resource, $schemaPath) {
+                $dom->documentURI = $resource;
+                $dom->xinclude();
+
+                return @$dom->schemaValidate($schemaPath);
+            }
+        );
 
         // generate xpath for file
         $xpath = new \DOMXPath($xmlDocument);
@@ -142,7 +150,7 @@ class XmlLegacyLoader implements LoaderInterface
                 'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
                 'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
                 'internal' => $this->getValueFromXPath('/x:template/x:internal', $xpath),
-                'cacheLifetime' => intval($this->getValueFromXPath('/x:template/x:cacheLifetime', $xpath)),
+                'cacheLifetime' => (int) $this->getValueFromXPath('/x:template/x:cacheLifetime', $xpath),
                 'tags' => $this->loadStructureTags('/x:template/x:tag', $xpath),
                 'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
             ];
@@ -156,14 +164,23 @@ class XmlLegacyLoader implements LoaderInterface
 
             foreach (['key', 'view', 'controller', 'cacheLifetime'] as $requiredProperty) {
                 if (!isset($result[$requiredProperty])) {
-                    throw new InvalidXmlException($type, sprintf(
-                        'Property "%s" is required in XML template file "%s"', $requiredProperty, $resource
-                    ));
+                    throw new InvalidXmlException(
+                        $type,
+                        sprintf(
+                            'Property "%s" is required in XML template file "%s"',
+                            $requiredProperty,
+                            $resource
+                        )
+                    );
                 }
             }
         } else {
             $result = [
                 'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
+                'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
+                'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
+                'cacheLifetime' => (int) $this->getValueFromXPath('/x:template/x:cacheLifetime', $xpath),
+                'tags' => $this->loadStructureTags('/x:template/x:tag', $xpath),
                 'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
             ];
 
@@ -212,7 +229,7 @@ class XmlLegacyLoader implements LoaderInterface
             ['name', 'type', 'minOccurs', 'maxOccurs', 'colspan', 'cssClass']
         );
 
-        if (in_array($result['name'], $this->reservedPropertyNames)) {
+        if (in_array($result['name'], $this->reservedPropertyNames, false)) {
             throw new ReservedPropertyNameException($templateKey, $result['name']);
         }
 

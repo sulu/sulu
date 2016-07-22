@@ -25,7 +25,7 @@ interface ContentTypeInterface
     const PRE_SAVE = 1;
 
     /**
-     * @deprecated This type is not supported anymore, because it is not even used by the ResourceLocator anymore.
+     * @deprecated This type is not supported anymore, because it is not even used by the ResourceLocator anymore
      */
     const POST_SAVE = 2;
 
@@ -69,25 +69,6 @@ interface ContentTypeInterface
      */
     public function hasValue(
         NodeInterface $node,
-        PropertyInterface $property,
-        $webspaceKey,
-        $languageCode,
-        $segmentKey
-    );
-
-    /**
-     * Sets the value of the Sulu property with the given data.
-     *
-     * @param mixed             $data
-     * @param PropertyInterface $property
-     * @param $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
-     *
-     * @return mixed
-     */
-    public function readForPreview(
-        $data,
         PropertyInterface $property,
         $webspaceKey,
         $languageCode,

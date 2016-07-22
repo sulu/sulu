@@ -33,7 +33,7 @@ class InitializerPassTest extends \PHPUnit_Framework_TestCase
         $pass = new InitializerPass();
         $pass->process($container);
 
-        $map = $initializer->getArgument(2);
+        $map = $initializer->getArgument(1);
 
         $this->assertCount(2, $map);
         $this->assertEquals([

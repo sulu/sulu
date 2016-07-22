@@ -68,14 +68,6 @@ class RoleController extends RestController implements ClassResourceInterface, S
     private function initFieldDescriptors()
     {
         $this->fieldDescriptors = [];
-        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
-            'id',
-            'id',
-            $this->container->getParameter('sulu.model.role.class'),
-            'public.id',
-            [],
-            false, false, 'integer', '50px'
-        );
         $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor(
             'name',
             'name',
@@ -111,6 +103,16 @@ class RoleController extends RestController implements ClassResourceInterface, S
             'public.changed',
             [],
             true, false, 'date'
+        );
+        $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
+            'id',
+            'id',
+            $this->container->getParameter('sulu.model.role.class'),
+            'public.id',
+            [],
+            true,
+            false,
+            'integer'
         );
     }
 

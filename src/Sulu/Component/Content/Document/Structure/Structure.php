@@ -103,9 +103,7 @@ class Structure implements StructureInterface
      */
     public function offsetSet($offset, $value)
     {
-        throw new \BadMethodCallException(
-            'Cannot set content properties objects'
-        );
+        $this->getProperty($offset)->setValue($value);
     }
 
     /**
@@ -143,6 +141,11 @@ class Structure implements StructureInterface
     public function __get($name)
     {
         return $this->offsetGet($name);
+    }
+
+    public function __set($name, $value)
+    {
+        $this->offsetSet($name, $value);
     }
 
     protected function normalize($value)

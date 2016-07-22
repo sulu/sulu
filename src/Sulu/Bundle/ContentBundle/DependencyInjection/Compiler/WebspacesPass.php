@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -42,6 +43,11 @@ class WebspacesPass implements CompilerPassInterface
             $indexes['page_' . $webspaceKey] = [
                 'security_context' => 'sulu.webspaces.' . $webspaceKey,
                 'name' => $webspaceName,
+            ];
+            $indexes['page_' . $webspaceKey . '_published'] = [
+                'security_context' => 'sulu.webspaces.' . $webspaceKey,
+                'name' => $webspaceName,
+                'contexts' => ['website'],
             ];
         }
 

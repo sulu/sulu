@@ -229,7 +229,7 @@ class SmartContentItemControllerTest extends SuluTestCase
                 'user' => 1,
             ]
         );
-
+        $this->documentManager->publish($document, 'en');
         $this->documentManager->flush();
 
         $node = $this->inspector->getNode($document);

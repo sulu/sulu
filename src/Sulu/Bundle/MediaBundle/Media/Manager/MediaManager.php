@@ -14,13 +14,13 @@ namespace Sulu\Bundle\MediaBundle\Media\Manager;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use FFMpeg\FFProbe;
+use Sulu\Bundle\CategoryBundle\Category\CategoryRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
-use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
@@ -62,6 +62,11 @@ class MediaManager implements MediaManagerInterface
      * @var CollectionRepository
      */
     protected $collectionRepository;
+
+    /**
+     * @var CategoryRepositoryInterface
+     */
+    protected $categoryRepository;
 
     /**
      * @var EntityManager
@@ -160,6 +165,7 @@ class MediaManager implements MediaManagerInterface
         MediaRepositoryInterface $mediaRepository,
         CollectionRepositoryInterface $collectionRepository,
         UserRepositoryInterface $userRepository,
+        CategoryRepositoryInterface $categoryRepository,
         EntityManager $em,
         StorageInterface $storage,
         FileValidatorInterface $validator,
@@ -177,6 +183,7 @@ class MediaManager implements MediaManagerInterface
         $this->mediaRepository = $mediaRepository;
         $this->collectionRepository = $collectionRepository;
         $this->userRepository = $userRepository;
+        $this->categoryRepository = $categoryRepository;
         $this->em = $em;
         $this->storage = $storage;
         $this->validator = $validator;
@@ -457,7 +464,7 @@ class MediaManager implements MediaManagerInterface
      */
     protected function createMedia($data, $user)
     {
-        $mediaEntity = new MediaEntity();
+        $mediaEntity = $this->mediaRepository->createNew();
         $mediaEntity->setCreator($user);
         $mediaEntity->setChanger($user);
 
@@ -510,7 +517,8 @@ class MediaManager implements MediaManagerInterface
                 ($attribute === 'size' && $value !== null) ||
                 ($attribute === 'description' && $value !== null) ||
                 ($attribute === 'copyright' && $value !== null) ||
-                ($attribute === 'credits' && $value !== null)
+                ($attribute === 'credits' && $value !== null) ||
+                ($attribute === 'categories' && $value !== null)
             ) {
                 switch ($attribute) {
                     case 'size':
@@ -587,6 +595,19 @@ class MediaManager implements MediaManagerInterface
                         if (isset($value['id'])) {
                             $type = $this->typeManager->get($value['id']);
                             $media->setType($type);
+                        }
+                        break;
+                    case 'categories':
+                        $categoryIds = $value;
+                        $media->removeCategories();
+
+                        if (is_array($categoryIds) && !empty($categoryIds)) {
+                            /** @var CategoryRepositoryInterface $repository */
+                            $categories = $this->categoryRepository->findCategoryByIds($categoryIds);
+
+                            foreach ($categories as $category) {
+                                $media->addCategory($category);
+                            }
                         }
                         break;
                 }
@@ -726,7 +747,7 @@ class MediaManager implements MediaManagerInterface
     public function addFormatsAndUrl(Media $media)
     {
         // Get preview image and set either preview thumbnails if set, else rendered images
-        /** @var \Sulu\Bundle\MediaBundle\Entity\Media $previewImage */
+        /** @var \Sulu\Bundle\MediaBundle\Entity\MediaInterface $previewImage */
         $previewImage = $media->getEntity()->getPreviewImage();
 
         if ($previewImage !== null) {

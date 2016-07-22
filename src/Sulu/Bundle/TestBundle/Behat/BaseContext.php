@@ -150,6 +150,18 @@ abstract class BaseContext extends RawMinkContext implements Context, KernelAwar
     }
 
     /**
+     * Focus the named selector.
+     *
+     * @param string $selector
+     */
+    protected function focusSelector($selector)
+    {
+        $this->waitForSelectorAndAssert($selector);
+        $script = '$("' . $selector . '").focus();';
+        $this->getSession()->executeScript($script);
+    }
+
+    /**
      * Return the script for clicking by title.
      *
      * @param string $selector  in which the target text should be found

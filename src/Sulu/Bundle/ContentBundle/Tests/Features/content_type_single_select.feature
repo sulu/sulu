@@ -34,4 +34,5 @@ Feature: Single select content type
         Given I am editing a page of type "single_select_page"
         And I click on the element "#select_1"
         When I click the save icon
+        And I click toolbar item "savePublish"
         Then I expect a success notification to appear

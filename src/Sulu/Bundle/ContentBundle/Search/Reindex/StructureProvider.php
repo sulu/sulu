@@ -14,6 +14,8 @@ namespace Sulu\Bundle\ContentBundle\Search\Reindex;
 use Massive\Bundle\SearchBundle\Search\Reindex\LocalizedReindexProviderInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
+use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
@@ -44,16 +46,23 @@ class StructureProvider implements LocalizedReindexProviderInterface
      */
     private $inspector;
 
+    /**
+     * @var string
+     */
+    private $context;
+
     public function __construct(
         DocumentManagerInterface $documentManager,
         MetadataFactoryInterface $metadataFactory,
         StructureMetadataFactoryInterface $structureFactory,
-        DocumentInspector $inspector
+        DocumentInspector $inspector,
+        $context
     ) {
         $this->documentManager = $documentManager;
         $this->metadataFactory = $metadataFactory;
         $this->structureFactory = $structureFactory;
         $this->inspector = $inspector;
+        $this->context = $context;
     }
 
     /**
@@ -69,7 +78,16 @@ class StructureProvider implements LocalizedReindexProviderInterface
      */
     public function translateObject($object, $locale)
     {
-        return $this->documentManager->find($this->inspector->getUuid($object), $locale);
+        $document = $this->documentManager->find($this->inspector->getUuid($object), $locale);
+
+        if ($document instanceof WorkflowStageBehavior && $this->context === \AbstractKernel::CONTEXT_ADMIN) {
+            // set the workflowstage to test, so that the document will be indexed in the index for drafting
+            // this change must not be persisted
+            // is required because of the expression for the index name uses the workflowstage
+            $document->setWorkflowStage(WorkflowStage::TEST);
+        }
+
+        return $document;
     }
 
     /**
@@ -81,15 +99,16 @@ class StructureProvider implements LocalizedReindexProviderInterface
         $query->setFirstResult($offset);
         $query->setMaxResults($maxResults);
 
-        // we do not currently index documents which have permissions.
         $documents = $query->execute();
         $newDocuments = [];
         foreach ($documents as $document) {
             if ($document instanceof SecurityBehavior) {
+                // we do not currently index documents which have permissions.
                 if (false === empty($document->getPermissions())) {
                     continue;
                 }
             }
+
             $newDocuments[] = $document;
         }
 

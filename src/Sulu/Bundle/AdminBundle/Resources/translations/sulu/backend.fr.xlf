@@ -704,22 +704,6 @@
                 <source>content-navigation.contents.excerpt</source>
                 <target>Extrait &amp; Categories</target>
             </trans-unit>
-            <trans-unit id="142cd92f1c29c9e456a5ce2178d22198" resname="sulu.preview.auto">
-                <source>sulu.preview.auto</source>
-                <target>Auto</target>
-            </trans-unit>
-            <trans-unit id="c42cd92f1c29c9e456a5ce2178d22198" resname="sulu.preview.desktop">
-                <source>sulu.preview.desktop</source>
-                <target>Bureau</target>
-            </trans-unit>
-            <trans-unit id="f42cd92f1c29c9e456a5ce2178d22198" resname="sulu.preview.tablet">
-                <source>sulu.preview.tablet</source>
-                <target>Tablette</target>
-            </trans-unit>
-            <trans-unit id="d42cd92f1c29c9e456a5ce2178d22198" resname="sulu.preview.smartphone">
-                <source>sulu.preview.smartphone</source>
-                <target>Smartphone</target>
-            </trans-unit>
             <trans-unit id="c964588d92c25e70ec2d7f9be4e28ebc" resname="select.edit-entries">
                 <source>select.edit-entries</source>
                 <target>Editer</target>

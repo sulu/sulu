@@ -28,8 +28,8 @@ use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Document\Structure\StructureInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\LocalizedTitleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
-use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\Collection\ChildrenCollection;
@@ -39,7 +39,6 @@ use Sulu\Component\DocumentManager\Collection\ChildrenCollection;
  */
 class BasePageDocument implements
     NodeNameBehavior,
-    ParentBehavior,
     LocalizedStructureBehavior,
     ResourceSegmentBehavior,
     NavigationContextBehavior,
@@ -53,7 +52,8 @@ class BasePageDocument implements
     OrderBehavior,
     WebspaceBehavior,
     SecurityBehavior,
-    LocalizedAuditableBehavior
+    LocalizedAuditableBehavior,
+    LocalizedTitleBehavior
 {
     /**
      * The name of this node.
@@ -89,13 +89,6 @@ class BasePageDocument implements
      * @var int
      */
     protected $changer;
-
-    /**
-     * Document's parent.
-     *
-     * @var object
-     */
-    protected $parent;
 
     /**
      * Title of document.
@@ -192,6 +185,13 @@ class BasePageDocument implements
      * @var string
      */
     protected $locale;
+
+    /**
+     * Document's original locale.
+     *
+     * @var string
+     */
+    protected $originalLocale;
 
     /**
      * Document's children.
@@ -298,22 +298,6 @@ class BasePageDocument implements
     public function getChanger()
     {
         return $this->changer;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setParent($parent)
-    {
-        $this->parent = $parent;
     }
 
     /**
@@ -503,6 +487,22 @@ class BasePageDocument implements
     /**
      * {@inheritdoc}
      */
+    public function getOriginalLocale()
+    {
+        return $this->originalLocale;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOriginalLocale($originalLocale)
+    {
+        $this->originalLocale = $originalLocale;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getChildren()
     {
         return $this->children;
@@ -554,6 +554,14 @@ class BasePageDocument implements
     public function getSuluOrder()
     {
         return $this->suluOrder;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setSuluOrder($order)
+    {
+        $this->suluOrder = $order;
     }
 
     /**

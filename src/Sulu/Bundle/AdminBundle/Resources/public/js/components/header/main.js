@@ -53,10 +53,13 @@ define([], function() {
         constants = {
             componentClass: 'sulu-header',
             hasTabsClass: 'has-tabs',
+            hasLabelClass: 'has-label',
             backClass: 'back',
             backIcon: 'chevron-left',
             toolbarClass: 'toolbar',
+            tabsRowClass: 'tabs-row',
             tabsClass: 'tabs',
+            tabsLabelContainer: 'tabs-label',
             tabsSelector: '.tabs-container',
             toolbarSelector: '.toolbar-container',
             rightSelector: '.right-container',
@@ -91,8 +94,8 @@ define([], function() {
                 '</div>'
             ].join(''),
             tabsRow: [
-                '<div class="tabs-row">',
-                '    <div class="' + constants.tabsClass + '"></div>',
+                '<div class="', constants.tabsRowClass, '">',
+                '    <div class="', constants.tabsClass, '"></div>',
                 '</div>'
             ].join(''),
             languageChanger: [
@@ -138,6 +141,16 @@ define([], function() {
          */
         LANGUAGE_CHANGED = function() {
             return createEventName.call(this, 'language-changed');
+        },
+
+        /**
+         * changes the html value of the language changer
+         *
+         * @event sulu.header.[INSTANCE_NAME].change-language
+         * @param {string} the language to change to
+         */
+        CHANGE_LANGUAGE = function() {
+            return createEventName.call(this, 'change-language');
         },
 
         /**
@@ -201,6 +214,24 @@ define([], function() {
          */
         TABS_DEACTIVATE = function() {
             return createEventName.call(this, 'tabs.deactivate');
+        },
+
+        /**
+         * listens on showing tab labels
+         *
+         * @event sulu.header.[INSTANCE_NAME].tabs.label.show
+         */
+        TABS_LABEL_SHOW = function() {
+            return createEventName.call(this, 'tabs.label.show');
+        },
+
+        /**
+         * listens on hiding tab labels
+         *
+         * @event sulu.header.[INSTANCE_NAME].tabs.label.hide
+         */
+        TABS_LABEL_HIDE = function() {
+            return createEventName.call(this, 'tabs.label.hide');
         },
 
         /**
@@ -328,7 +359,7 @@ define([], function() {
         },
 
         /**
-         * Destorys the component
+         * Destroys the component
          */
         destroy: function() {
             this.removeTitle();
@@ -376,7 +407,7 @@ define([], function() {
 
         /**
          * Sets a new title
-         * @param title {String} the new title to set
+         * @param {String} title the new title to set
          */
         setTitle: function(title) {
             this.options.title = title;
@@ -398,10 +429,7 @@ define([], function() {
 
             if (!this.options.tabsData) {
                 def.resolve();
-            } else if (this.options.tabsData.length === 1) {
-                def.resolve();
-                this.tabChangedHandler(this.options.tabsData[0]);
-            } else if (this.options.tabsData.length > 1) {
+            } else if (this.options.tabsData.length > 0) {
                 this.startTabsComponent(def);
             } else {
                 def.resolve();
@@ -426,10 +454,12 @@ define([], function() {
                         fragment: this.sandbox.mvc.history.fragment
                     };
 
-                this.sandbox.dom.addClass(this.$el, constants.hasTabsClass);
-
                 // wait for initialized
-                this.sandbox.once('husky.tabs.header.initialized', function() {
+                this.sandbox.once('husky.tabs.header.initialized', function(selectedItem, visibleTabs) {
+                    if (visibleTabs > 1) {
+                        this.sandbox.dom.addClass(this.$el, constants.hasTabsClass);
+                    }
+
                     def.resolve();
                 }.bind(this));
 
@@ -549,11 +579,21 @@ define([], function() {
             this.sandbox.on(SET_TOOLBAR.call(this), this.setToolbar.bind(this));
             this.sandbox.on(SET_TITLE.call(this), this.setTitle.bind(this));
             this.sandbox.on(SAVED.call(this), this.saved.bind(this));
+            this.sandbox.on(CHANGE_LANGUAGE.call(this), this.setLanguageChanger.bind(this));
             this.bindAbstractToolbarEvents();
             this.bindAbstractTabsEvents();
         },
 
         saved: function(data) {
+            // wait for initialized
+            this.sandbox.once('husky.tabs.header.updated', function(visibleTabs) {
+                if (visibleTabs > 1) {
+                    this.sandbox.dom.addClass(this.$el, constants.hasTabsClass);
+                } else {
+                    this.sandbox.dom.removeClass(this.$el, constants.hasTabsClass);
+                }
+            }.bind(this));
+
             this.sandbox.emit('husky.tabs.header.update', data);
         },
 
@@ -626,7 +666,6 @@ define([], function() {
         stopTabContent: function() {
             App.stop('.' + constants.tabsContentClass + ' *');
             App.stop('.' + constants.tabsContentClass);
-            this.sandbox.dom.empty(this.options.tabsContainer);
         },
 
         /**
@@ -634,8 +673,16 @@ define([], function() {
          * @param item
          */
         languageChanged: function(item) {
-            this.sandbox.dom.html(this.$find(constants.languageChangerTitleSelector), item.title);
+            this.setLanguageChanger(item.title);
             this.sandbox.emit(LANGUAGE_CHANGED.call(this), item);
+        },
+
+        /**
+         * Changes the html of the language changer to a given string
+         * @param {String} newLanguage the string to show in the language changer
+         */
+        setLanguageChanger: function(newLanguage) {
+            this.sandbox.dom.html(this.$find(constants.languageChangerTitleSelector), newLanguage);
         },
 
         /**
@@ -690,6 +737,14 @@ define([], function() {
             this.sandbox.on(TABS_DEACTIVATE.call(this), function() {
                 this.sandbox.emit('husky.tabs.header.activate');
             }.bind(this));
+
+            this.sandbox.on(TABS_LABEL_SHOW.call(this), function(description) {
+                this.showTabsLabel(description);
+            }.bind(this));
+
+            this.sandbox.on(TABS_LABEL_HIDE.call(this), function() {
+                this.hideTabsLabel();
+            }.bind(this));
         },
 
         /**
@@ -731,6 +786,40 @@ define([], function() {
          */
         showTabs: function() {
             this.sandbox.dom.removeClass(this.$el, constants.hideTabsClass);
+        },
+
+        /**
+         * Shows a tabs label with the given text.
+         *
+         * @param {String} description
+         */
+        showTabsLabel: function(description) {
+            var $tabsLabelContainer = $('<div class="' + constants.tabsLabelContainer + '"/>');
+
+            this.$find('.' + constants.tabsRowClass).append($tabsLabelContainer);
+
+            this.sandbox.emit(
+                'sulu.labels.label.show',
+                {
+                    el: $tabsLabelContainer,
+                    type: 'WARNING',
+                    description: description,
+                    title: '',
+                    autoVanish: false,
+                    hasClose: false,
+                    additionalLabelClasses: 'small'
+                }
+            );
+
+            this.sandbox.dom.addClass(this.$el, constants.hasLabelClass);
+        },
+
+        /**
+         * Hides all the tabs labels.
+         */
+        hideTabsLabel: function() {
+            this.sandbox.stop('.' + constants.tabsLabelContainer);
+            this.$el.removeClass(constants.hasLabelClass);
         }
     };
 });

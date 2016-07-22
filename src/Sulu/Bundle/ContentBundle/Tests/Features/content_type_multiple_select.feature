@@ -35,4 +35,5 @@ Feature: Multiple select content type
         And I click on the element "#select_1"
         And I click on the element "#select_2"
         When I click the save icon
+        And I click toolbar item "savePublish"
         Then I expect a success notification to appear

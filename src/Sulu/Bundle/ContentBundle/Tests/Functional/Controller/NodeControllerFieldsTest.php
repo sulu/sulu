@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -8,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Functional\Controller;
+namespace Sulu\Bundle\ContentBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -45,6 +46,7 @@ class NodeControllerFieldsTest extends SuluTestCase
 
         $client->request('GET', '/api/nodes', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
 
+        $this->assertHttpStatusCode(200, $client->getResponse());
         $result = json_decode($client->getResponse()->getContent(), true);
 
         $items = $result['_embedded']['nodes'];
@@ -390,8 +392,12 @@ class NodeControllerFieldsTest extends SuluTestCase
             ['webspace' => 'sulu_io', 'language' => 'de', 'webspace-nodes' => 'all', 'fields' => 'title']
         );
         $result = json_decode($client->getResponse()->getContent(), true);
-
         $layer = $result['_embedded']['nodes'];
+
+        usort($layer, function ($layer1, $layer2) {
+            return strcmp($layer1['title'], $layer2['title']);
+        });
+
         $this->assertCount(2, $layer);
         $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $layer[0]['id']);
         $this->assertEquals('Sulu CMF', $layer[0]['title']);
@@ -438,6 +444,10 @@ class NodeControllerFieldsTest extends SuluTestCase
         $result = json_decode($client->getResponse()->getContent(), true);
 
         $layer = $result['_embedded']['nodes'];
+        usort($layer, function ($layer1, $layer2) {
+            return strcmp($layer1['title'], $layer2['title']);
+        });
+
         $this->assertCount(1, $layer);
         $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $layer[0]['id']);
         $this->assertEquals('Sulu CMF', $layer[0]['title']);
@@ -486,6 +496,9 @@ class NodeControllerFieldsTest extends SuluTestCase
         $result = json_decode($client->getResponse()->getContent(), true);
 
         $layer = $result['_embedded']['nodes'];
+        usort($layer, function ($layer1, $layer2) {
+            return strcmp($layer1['title'], $layer2['title']);
+        });
         $this->assertCount(2, $layer);
         $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $layer[0]['id']);
         $this->assertEquals('Sulu CMF', $layer[0]['title']);
@@ -533,7 +546,7 @@ class NodeControllerFieldsTest extends SuluTestCase
             $path = $this->sessionManager->getContentPath('sulu_io') . '/' . $title;
         }
         if ($parent !== null) {
-            $path = $parent->getPath();
+            $path = $parent->getPath() . '/' . $title;
             $document->setParent($parent);
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -24,7 +25,7 @@ interface ContentRepositoryInterface
      * @param string $uuid
      * @param string $locale
      * @param string $webspaceKey
-     * @param MappingInterface $mapping Includes array of property names.
+     * @param MappingInterface $mapping Includes array of property names
      * @param UserInterface $user
      *
      * @return Content
@@ -37,7 +38,7 @@ interface ContentRepositoryInterface
      * @param string $uuid
      * @param string $locale
      * @param string $webspaceKey
-     * @param MappingInterface $mapping Includes array of property names.
+     * @param MappingInterface $mapping Includes array of property names
      * @param UserInterface $user
      *
      * @return Content[]
@@ -55,7 +56,7 @@ interface ContentRepositoryInterface
      *
      * @param string $locale
      * @param string $webspaceKey
-     * @param MappingInterface $mapping Includes array of property names.
+     * @param MappingInterface $mapping Includes array of property names
      * @param UserInterface $user
      *
      * @return Content[]
@@ -67,7 +68,7 @@ interface ContentRepositoryInterface
      *
      * @param string $locale
      * @param string $webspaceKey
-     * @param MappingInterface $mapping Includes array of property names.
+     * @param MappingInterface $mapping Includes array of property names
      * @param UserInterface $user
      *
      * @return Content[]
@@ -85,7 +86,7 @@ interface ContentRepositoryInterface
      *
      * @param string[] $paths
      * @param string $locale
-     * @param MappingInterface $mapping Includes array of property names.
+     * @param MappingInterface $mapping Includes array of property names
      * @param UserInterface $user
      *
      * @return Content[]
@@ -102,7 +103,7 @@ interface ContentRepositoryInterface
      *
      * @param string[] $uuids
      * @param string $locale
-     * @param MappingInterface $mapping Includes array of property names.
+     * @param MappingInterface $mapping Includes array of property names
      * @param UserInterface $user
      *
      * @return Content[]

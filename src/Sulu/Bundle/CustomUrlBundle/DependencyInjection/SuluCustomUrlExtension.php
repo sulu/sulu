@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -53,7 +54,6 @@ class SuluCustomUrlExtension extends Extension implements PrependExtensionInterf
                             'class' => CustomUrlDocument::class,
                             'phpcr_type' => 'sulu:custom_url',
                             'mapping' => [
-                                'title' => ['property' => 'title'],
                                 'published' => ['property' => 'published'],
                                 'baseDomain' => ['property' => 'baseDomain'],
                                 'domainParts' => ['property' => 'domainParts', 'type' => 'json_array'],

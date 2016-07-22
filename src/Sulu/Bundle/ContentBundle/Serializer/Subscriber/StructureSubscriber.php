@@ -113,16 +113,13 @@ class StructureSubscriber implements EventSubscriberInterface
     {
         /** @var ManagedStructure $structure */
         $structure = $document->getStructure();
-        foreach ($structure->toArray() as $name => $value) {
-            if ($name === 'title') {
+        $data = $structure->toArray();
+        foreach ($structureMetadata->getProperties() as $name => $property) {
+            if ($name === 'title' || !array_key_exists($name, $data) || $property->hasTag('sulu.rlp')) {
                 continue;
             }
 
-            if ($structureMetadata->getProperty($name)->hasTag('sulu.rlp')) {
-                continue;
-            }
-
-            $visitor->addData($name, $value);
+            $visitor->addData($name, $data[$name]);
         }
     }
 

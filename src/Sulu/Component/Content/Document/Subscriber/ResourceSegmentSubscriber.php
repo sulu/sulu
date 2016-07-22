@@ -11,16 +11,23 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
+use PHPCR\NodeInterface;
+use PHPCR\SessionInterface;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\RedirectType;
+use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\DocumentManager\Event\CopyEvent;
+use Sulu\Component\DocumentManager\Event\MoveEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -32,28 +39,49 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ResourceSegmentSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    /**
      * @var PropertyEncoder
      */
     private $encoder;
+
+    /**
+     * @var DocumentManagerInterface
+     */
+    private $documentManager;
+
+    /**
+     * @var DocumentInspector
+     */
+    private $documentInspector;
 
     /**
      * @var RlpStrategyInterface
      */
     private $rlpStrategy;
 
+    /**
+     * @var SessionInterface
+     */
+    private $defaultSession;
+
+    /**
+     * @var SessionInterface
+     */
+    private $liveSession;
+
     public function __construct(
         PropertyEncoder $encoder,
+        DocumentManagerInterface $documentManager,
         DocumentInspector $documentInspector,
-        RlpStrategyInterface $rlpStrategy
+        RlpStrategyInterface $rlpStrategy,
+        SessionInterface $defaultSession,
+        SessionInterface $liveSession
     ) {
         $this->encoder = $encoder;
+        $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
         $this->rlpStrategy = $rlpStrategy;
+        $this->defaultSession = $defaultSession;
+        $this->liveSession = $liveSession;
     }
 
     /**
@@ -65,11 +93,12 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
             // persist should happen before content is mapped
             Events::PERSIST => [
                 ['handlePersistDocument', 10],
-                // has to happen after MappingSubscriber, because the mapped data is needed
-                ['handlePersistRoute', -200],
             ],
             // hydrate should happen afterwards
             Events::HYDRATE => ['handleHydrate', -200],
+            Events::MOVE => ['updateMovedDocument', -128],
+            Events::COPY => ['updateCopiedDocument', -128],
+            Events::PUBLISH => 'handlePersistRoute',
         ];
     }
 
@@ -100,11 +129,11 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
 
         $node = $event->getNode();
         $property = $this->getResourceSegmentProperty($document);
-        $originalLocale = $this->documentInspector->getOriginalLocale($document);
+        $locale = $this->documentInspector->getOriginalLocale($document);
         $segment = $node->getPropertyValueWithDefault(
             $this->encoder->localizedSystemName(
                 $property->getName(),
-                $originalLocale
+                $locale
             ),
             ''
         );
@@ -133,9 +162,9 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
     /**
      * Creates or updates the route for the document.
      *
-     * @param PersistEvent $event
+     * @param PublishEvent $event
      */
-    public function handlePersistRoute(PersistEvent $event)
+    public function handlePersistRoute(PublishEvent $event)
     {
         /** @var ResourceSegmentBehavior $document */
         $document = $event->getDocument();
@@ -157,6 +186,32 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
         }
 
         $this->persistRoute($document);
+    }
+
+    /**
+     * Moves the routes for all localizations of the document in the event.
+     *
+     * @param MoveEvent $event
+     */
+    public function updateMovedDocument(MoveEvent $event)
+    {
+        $this->updateRoute($event->getDocument(), true);
+    }
+
+    /**
+     * Copy the routes for all localization of the document in the event.
+     *
+     * @param CopyEvent $event
+     */
+    public function updateCopiedDocument(CopyEvent $event)
+    {
+        $this->updateRoute(
+            $this->documentManager->find(
+                $event->getCopiedPath(),
+                $this->documentInspector->getLocale($event->getDocument())
+            ),
+            false
+        );
     }
 
     /**
@@ -206,5 +261,96 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
     private function persistRoute(ResourceSegmentBehavior $document)
     {
         $this->rlpStrategy->save($document, null);
+    }
+
+    /**
+     * Updates the route for the given document after a move or copy.
+     *
+     * @param object $document
+     * @param bool $generateRoutes If set to true a route in the routing tree will also be created
+     */
+    private function updateRoute($document, $generateRoutes)
+    {
+        if (!$document instanceof ResourceSegmentBehavior) {
+            return;
+        }
+
+        $locales = $this->documentInspector->getLocales($document);
+        $webspaceKey = $this->documentInspector->getWebspace($document);
+        $uuid = $this->documentInspector->getUuid($document);
+        $path = $this->documentInspector->getPath($document);
+        $parentUuid = $this->documentInspector->getUuid($this->documentInspector->getParent($document));
+
+        $defaultNode = $this->defaultSession->getNode($path);
+        $liveNode = $this->liveSession->getNode($path);
+
+        foreach ($locales as $locale) {
+            $localizedDocument = $this->documentManager->find($uuid, $locale);
+
+            if ($localizedDocument->getRedirectType() !== RedirectType::NONE) {
+                continue;
+            }
+
+            $resourceSegmentPropertyName = $this->encoder->localizedSystemName(
+                $this->getResourceSegmentProperty($localizedDocument)->getName(),
+                $locale
+            );
+
+            try {
+                $parentPart = $this->rlpStrategy->loadByContentUuid($parentUuid, $webspaceKey, $locale);
+            } catch (ResourceLocatorNotFoundException $e) {
+                $parentPart = null;
+            }
+
+            $this->updateResourceSegmentProperty(
+                $defaultNode,
+                $resourceSegmentPropertyName,
+                $parentPart,
+                $webspaceKey,
+                $locale
+            );
+
+            if ($liveNode->hasProperty($resourceSegmentPropertyName)) {
+                $this->updateResourceSegmentProperty(
+                    $liveNode,
+                    $resourceSegmentPropertyName,
+                    $parentPart,
+                    $webspaceKey,
+                    $locale
+                );
+
+                // if the method is called with the generateRoutes flag it will create a new route
+                // this happens on a move, but not on copy, because copy results in a draft page without url
+                if ($generateRoutes) {
+                    $localizedDocument->setResourceSegment($liveNode->getPropertyValue($resourceSegmentPropertyName));
+                    $this->rlpStrategy->save($localizedDocument, null);
+                    $localizedDocument->setResourceSegment($defaultNode->getPropertyValue($resourceSegmentPropertyName));
+                }
+            }
+        }
+    }
+
+    /**
+     * Updates the property for the resource segment on the given node.
+     *
+     * @param NodeInterface $node
+     * @param string $resourceSegmentPropertyName
+     * @param string $parentPart
+     * @param string $webspaceKey
+     * @param string $locale
+     */
+    private function updateResourceSegmentProperty(
+        NodeInterface $node,
+        $resourceSegmentPropertyName,
+        $parentPart,
+        $webspaceKey,
+        $locale
+    ) {
+        $childPart = $this->rlpStrategy->getChildPart($node->getPropertyValue($resourceSegmentPropertyName));
+
+        $node->setProperty(
+            $resourceSegmentPropertyName,
+            $this->rlpStrategy->generate($childPart, $parentPart, $webspaceKey, $locale)
+        );
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -74,6 +75,8 @@ class SnippetContentTest extends BaseFunctionalTestCase
             true,
             'SomeTemplate.html.twig'
         );
+
+        $this->getContainer()->get('sulu_document_manager.document_manager')->clear();
     }
 
     public function testPropertyRead()

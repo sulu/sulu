@@ -19,4 +19,5 @@ Feature: Text area content type
         And I fill in "text_area" with "This is a area of text"
         And wait a second
         And I click the save icon
+        And I click toolbar item "savePublish"
         Then I expect a success notification to appear

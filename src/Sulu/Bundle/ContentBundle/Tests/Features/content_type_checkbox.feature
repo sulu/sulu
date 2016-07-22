@@ -18,4 +18,5 @@ Feature: Checkbox content type
         Given I am editing a page of type "checkbox_page"
         And I click on the element "#checkbox"
         When I click the save icon
+        And I click toolbar item "savePublish"
         Then I expect a success notification to appear

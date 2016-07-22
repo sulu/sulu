@@ -1,1 +1,1 @@
-define(["mvc/relationalmodel"],function(a){"use strict";return a({urlRoot:"/admin/api/media",defaults:function(){return{id:null,locale:"",title:"",name:"",description:"",tags:[],copyright:"",credits:"",versions:{}}}})});
+define(["mvc/relationalmodel"],function(a){"use strict";return a({urlRoot:"/admin/api/media",defaults:function(){return{id:null,locale:"",title:"",name:"",description:"",tags:[],categories:[],copyright:"",credits:"",versions:{}}}})});

@@ -190,7 +190,7 @@ define(['services/husky/util'], function(util) {
             );
             this.sandbox.on(
                 this.sandbox.events.createEventName('husky.datagrid.', 'item.deselect', this.options.instanceName),
-                this.remove.bind(this)
+                this.removeItem.bind(this)
             );
             this.sandbox.on(
                 this.sandbox.events.createEventName('husky.select.', 'selected.item', this.options.instanceName),
@@ -221,7 +221,7 @@ define(['services/husky/util'], function(util) {
          * Remove category from data with given id.
          * @param {Integer} id
          */
-        remove: function(id) {
+        removeItem: function(id) {
             var index = this.data.ids.indexOf(id);
 
             if (index > -1) {

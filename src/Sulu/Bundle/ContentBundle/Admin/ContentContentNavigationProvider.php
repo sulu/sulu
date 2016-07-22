@@ -65,6 +65,7 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
         $seo->setDisplay(['edit']);
         $seo->setDisplayConditions(
             [
+                new DisplayCondition('url', DisplayCondition::OPERATOR_NOT_EQUAL, ''),
                 new DisplayCondition('linked', DisplayCondition::OPERATOR_EQUAL, null),
                 new DisplayCondition('shadowOn', DisplayCondition::OPERATOR_EQUAL, false),
             ]
@@ -78,6 +79,7 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
         $excerpt->setDisplay(['edit']);
         $excerpt->setDisplayConditions(
             [
+                new DisplayCondition('url', DisplayCondition::OPERATOR_NOT_EQUAL, ''),
                 new DisplayCondition('linked', DisplayCondition::OPERATOR_NOT_EQUAL, 'internal'),
                 new DisplayCondition('shadowOn', DisplayCondition::OPERATOR_EQUAL, false),
             ]
@@ -89,13 +91,18 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
         $settings->setAction('settings');
         $settings->setComponent('content/settings@sulucontent');
         $settings->setDisplay(['edit']);
-
+        $settings->setDisplayConditions(
+            [
+                new DisplayCondition('url', DisplayCondition::OPERATOR_NOT_EQUAL, ''),
+            ]
+        );
         $navigation = [$content, $seo, $excerpt, $settings];
 
         $securityContext = 'sulu.webspaces.' . $options['webspace'];
 
         if ($this->enabledSecurity && $this->securityChecker->hasPermission($securityContext, PermissionTypes::SECURITY)) {
             $permissions = new ContentNavigationItem('Permissions');
+            $permissions->setId('tab-permissions');
             $permissions->setAction('permissions');
             $permissions->setPosition(50);
             $permissions->setDisplay(['edit']);
@@ -105,6 +112,11 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
                     'display' => 'form',
                     'type' => SecurityBehavior::class,
                     'securityContext' => $securityContext,
+                ]
+            );
+            $permissions->setDisplayConditions(
+                [
+                    new DisplayCondition('url', DisplayCondition::OPERATOR_NOT_EQUAL, ''),
                 ]
             );
 

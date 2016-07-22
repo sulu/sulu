@@ -12,11 +12,17 @@
 namespace Sulu\Component\HttpCache\Tests\Unit\EventListener;
 
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent;
 use Sulu\Component\HttpCache\EventSubscriber\ContentMapperSubscriber;
 use Sulu\Component\HttpCache\HandlerInterface;
 
 class ContentMapperSubscriberTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var ContentNodeDeleteEvent
+     */
+    private $deleteEvent;
+
     /**
      * @var ContentMapperSubscriber
      */
@@ -36,7 +42,6 @@ class ContentMapperSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->nodeEvent = $this->prophesize('Sulu\Component\Content\Mapper\Event\ContentNodeEvent');
         $this->deleteEvent = $this->prophesize('Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent');
         $this->structure = $this->prophesize('Sulu\Component\Content\Compat\StructureInterface');
         $this->handler = $this->prophesize('Sulu\Component\HttpCache\HandlerInvalidateStructureInterface');
@@ -46,13 +51,6 @@ class ContentMapperSubscriberTest extends \PHPUnit_Framework_TestCase
         );
 
         ContentMapperSubscriber::getSubscribedEvents();
-    }
-
-    public function testNodeSave()
-    {
-        $this->nodeEvent->getStructure()->willReturn($this->structure);
-        $this->handler->invalidateStructure($this->structure->reveal())->shouldBeCalled();
-        $this->subscriber->onContentNodePostSave($this->nodeEvent->reveal());
     }
 
     public function testNodeDelete()

@@ -24,8 +24,9 @@ use Sulu\Component\Content\Document\Subscriber\StructureSubscriber;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
-use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Metadata;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 
 class StructureSubscriberTest extends SubscriberTestCase
 {
@@ -75,6 +76,11 @@ class StructureSubscriberTest extends SubscriberTestCase
     private $inspector;
 
     /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
      * @var StructureBehavior
      */
     private $document;
@@ -98,16 +104,21 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->propertyFactory = $this->prophesize(LegacyPropertyFactory::class);
         $this->document = $this->prophesize(StructureBehavior::class);
         $this->inspector = $this->prophesize(DocumentInspector::class);
+        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
 
         $this->document->getStructureType()->willReturn('foobar');
         $this->inspector->getStructureMetadata(Argument::any())->willReturn($this->structureMetadata);
         $this->persistEvent->getLocale()->willReturn('en');
 
+        $this->structureMetadata->getName()->willReturn('foobar');
+
         $this->subscriber = new StructureSubscriber(
             $this->encoder->reveal(),
             $this->contentTypeManager->reveal(),
             $this->inspector->reveal(),
-            $this->propertyFactory->reveal()
+            $this->propertyFactory->reveal(),
+            $this->webspaceManager->reveal(),
+            ['article' => 'foobar']
         );
     }
 
@@ -135,7 +146,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     public function testPersistNotImplementing()
     {
         $this->persistEvent->getDocument()->willReturn($this->notImplementing);
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
+        $this->subscriber->saveStructureData($this->persistEvent->reveal());
     }
 
     /**
@@ -145,7 +156,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     {
         $this->document->getStructureType()->willReturn(null);
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
+        $this->subscriber->saveStructureData($this->persistEvent->reveal());
     }
 
     /**
@@ -156,7 +167,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->persistEvent->getLocale()->willReturn(null);
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
 
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
+        $this->subscriber->saveStructureData($this->persistEvent->reveal());
 
         $this->node->setProperty()->shouldNotBeCalled();
     }
@@ -185,7 +196,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         ]);
         $this->setupPropertyWrite();
 
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
+        $this->subscriber->saveStructureData($this->persistEvent->reveal());
     }
 
     /**
@@ -216,7 +227,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->structureMetadata->getName()->willReturn('test');
         $this->structureMetadata->getResource()->willReturn('/path/to/resource.xml');
 
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
+        $this->subscriber->saveStructureData($this->persistEvent->reveal());
     }
 
     /**
@@ -247,7 +258,7 @@ class StructureSubscriberTest extends SubscriberTestCase
 
         $this->setupPropertyWrite();
 
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
+        $this->subscriber->saveStructureData($this->persistEvent->reveal());
     }
 
     /**
@@ -256,6 +267,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     public function testHydrateNotImplementing()
     {
         $this->hydrateEvent->getDocument()->willReturn($this->notImplementing);
+
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 
@@ -268,6 +280,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
         $this->hydrateEvent->getLocale()->willReturn('fr');
         $this->hydrateEvent->getOption('load_ghost_content', false)->willReturn(true);
+        $this->hydrateEvent->getOption('rehydrate')->willReturn(false);
 
         // set the structure type
         $this->encoder->contentName('template')->willReturn('i18n:fr-template');
@@ -281,7 +294,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should create a new Structure when there is no structure property.
+     * It should create a new default Structure when there is no structure property.
      */
     public function testHydrateNewStructure()
     {
@@ -289,6 +302,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
         $this->hydrateEvent->getLocale()->willReturn('fr');
         $this->hydrateEvent->getOption('load_ghost_content', false)->willReturn(true);
+        $this->hydrateEvent->getOption('rehydrate')->willReturn(false);
 
         // set the structure type
         $this->encoder->contentName('template')->willReturn('i18n:fr-template');
@@ -303,15 +317,45 @@ class StructureSubscriberTest extends SubscriberTestCase
     }
 
     /**
+     * It should create a new default Structure when there is no structure property.
+     */
+    public function testHydrateNewStructureDefaultArray()
+    {
+        $metadata = $this->prophesize(Metadata::class);
+        $metadata->getAlias()->willReturn('article');
+
+        $this->inspector->getMetadata($this->document->reveal())->willReturn($metadata->reveal());
+        $this->inspector->getWebspace($this->document->reveal())->willReturn(null);
+
+        $this->hydrateEvent->getDocument()->willReturn($this->document->reveal());
+        $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
+        $this->hydrateEvent->getLocale()->willReturn('fr');
+        $this->hydrateEvent->getOption('load_ghost_content', false)->willReturn(true);
+        $this->hydrateEvent->getOption('rehydrate')->willReturn(true);
+
+        // set the structure type
+        $this->encoder->contentName('template')->willReturn('i18n:fr-template');
+        $this->node->getPropertyValueWithDefault('i18n:fr-template', null)->willReturn(null);
+
+        $this->document->setStructureType('foobar')->shouldBeCalled();
+        $this->document->getStructure()->willReturn(null);
+
+        // set the property container
+        $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
+        $this->accessor->set('structure', Argument::type(Structure::class))->shouldHaveBeenCalled();
+    }
+
+    /**
      * If the document already has a structure and there is no structure on the node (i.e.
      * it is a new document) then use the Structure which is already set.
      */
-    public function testHydrateNewStructureRehydrate()
+    public function testHydrateNewStructureNoRehydrate()
     {
         $this->hydrateEvent->getDocument()->willReturn($this->document->reveal());
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
         $this->hydrateEvent->getLocale()->willReturn('fr');
         $this->hydrateEvent->getOption('load_ghost_content', false)->willReturn(true);
+        $this->hydrateEvent->getOption('rehydrate')->willReturn(false);
 
         // set the structure type
         $this->encoder->contentName('template')->willReturn('i18n:fr-template');
@@ -322,7 +366,41 @@ class StructureSubscriberTest extends SubscriberTestCase
 
         // set the property container
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
-        $this->accessor->set('structure', $this->structure->reveal())->shouldHaveBeenCalled();
+        $this->accessor->set('structure', Argument::type(ManagedStructure::class))->shouldHaveBeenCalled();
+    }
+
+    /**
+     * If the document already has a structure and there is no structure on the node (i.e.
+     * it is a new document) then use the Structure which is already set.
+     */
+    public function testHydrateNewStructureRehydrate()
+    {
+        $metadata = $this->prophesize(Metadata::class);
+        $metadata->getAlias()->willReturn('page');
+
+        $this->hydrateEvent->getDocument()->willReturn($this->document->reveal());
+        $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
+        $this->hydrateEvent->getLocale()->willReturn('fr');
+        $this->hydrateEvent->getOption('load_ghost_content', false)->willReturn(true);
+        $this->hydrateEvent->getOption('rehydrate')->willReturn(true);
+        $this->inspector->getWebspace($this->document->reveal())->willReturn('sulu_io');
+        $this->inspector->getMetadata($this->document->reveal())->willReturn($metadata->reveal());
+
+        $webspace = new Webspace();
+        $webspace->addDefaultTemplate('page', 'default');
+
+        $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn($webspace);
+
+        // set the structure type
+        $this->encoder->contentName('template')->willReturn('i18n:fr-template');
+        $this->node->getPropertyValueWithDefault('i18n:fr-template', null)->willReturn(null);
+
+        $this->document->setStructureType('default')->shouldBeCalled();
+        $this->document->getStructure()->willReturn($this->structure->reveal());
+
+        // set the property container
+        $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
+        $this->accessor->set('structure', Argument::type(ManagedStructure::class))->shouldHaveBeenCalled();
     }
 
     private function setupPropertyWrite()

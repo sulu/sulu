@@ -12,7 +12,7 @@
         </id>
         <field name="name" type="string" column="name" length="255"/>
         <field name="description" type="text" column="description" nullable="true"/>
-        <one-to-many field="media" target-entity="Sulu\Bundle\MediaBundle\Entity\Media"
+        <one-to-many field="media" target-entity="Sulu\Bundle\MediaBundle\Entity\MediaInterface"
                      mapped-by="type"/>
     </entity>
 </doctrine-mapping>

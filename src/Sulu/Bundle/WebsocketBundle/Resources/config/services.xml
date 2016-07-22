@@ -25,9 +25,10 @@
             <tag name="sulu.admin"/>
         </service>
 
-        <service id="sulu_content.jsconfig.server" class="%sulu_content.jsconfig.class%">
+        <service id="sulu_content.js_config.server" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">
             <argument type="string">sulu.websocket.server</argument>
             <argument type="collection">
+                <argument key="enabled" type="string">%sulu_websocket.enabled%</argument>
                 <argument key="port" type="string">%sulu_websocket.server.port%</argument>
                 <argument key="httpHost" type="string">%sulu_websocket.server.http_host%</argument>
             </argument>

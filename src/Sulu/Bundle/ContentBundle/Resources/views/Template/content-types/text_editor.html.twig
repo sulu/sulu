@@ -1,3 +1,8 @@
+<p class="input-description validate-error">
+    <span class="unpublished" style="display: none;"></span>
+    <span class="removed" style="display: none;"></span>
+</p>
+
 <textarea id="{{ id|raw }}"
         data-property='{{ property|json_encode }}'
         class="form-element hidden"
@@ -17,10 +22,13 @@
         {% endfor %}
         data-mapper-property="{{ property.name }}"
         data-aura-instance-name="{{ id|raw }}"
+        data-aura-auto-start="false"
         placeholder="{{ property.getPlaceholder(userLocale) }}"
         {% if property.mandatory %}
             data-validation-required="true"
         {% endif %}
+        data-aura-webspace="{{ webspaceKey }}"
+        data-aura-locale="{{ languageCode }}"
 ></textarea>
 
 <div class="block-content" data-sort-mode-id="{{ id|raw }}"></div>

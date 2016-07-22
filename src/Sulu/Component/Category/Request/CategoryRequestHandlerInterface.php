@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -29,8 +30,8 @@ interface CategoryRequestHandlerInterface
     /**
      * Extends current URL with given category.
      *
-     * @param array|Category $category will be included in the URL.
-     * @param string $categoriesParameter GET parameter name.
+     * @param array|Category $category will be included in the URL
+     * @param string $categoriesParameter GET parameter name
      *
      * @return string
      */
@@ -39,8 +40,8 @@ interface CategoryRequestHandlerInterface
     /**
      * Set category to current URL.
      *
-     * @param array|Category $category will be included in the URL.
-     * @param string $categoriesParameter GET parameter name.
+     * @param array|Category $category will be included in the URL
+     * @param string $categoriesParameter GET parameter name
      *
      * @return string
      */
@@ -49,7 +50,7 @@ interface CategoryRequestHandlerInterface
     /**
      * Remove category from current URL.
      *
-     * @param string $categoriesParameter GET parameter name.
+     * @param string $categoriesParameter GET parameter name
      *
      * @return string
      */

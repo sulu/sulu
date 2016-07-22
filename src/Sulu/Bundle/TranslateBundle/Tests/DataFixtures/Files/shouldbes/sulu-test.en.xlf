@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" target-language="en" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="c2add694bf942dc77b376592d9c862cd" resname="key1">
+        <source>key1</source>
+        <target>translation1</target>
+      </trans-unit>
+      <trans-unit id="78f825aaa0103319aaa1a30bf4fe3ada" resname="key2">
+        <source>key2</source>
+        <target>translation2</target>
+      </trans-unit>
+      <trans-unit id="3631578538a2d6ba5879b31a9a42f290" resname="key3">
+        <source>key3</source>
+        <target>translation3</target>
+      </trans-unit>
+      <trans-unit id="caf8e34be07426ae7127c1b4829983c1" resname="key4">
+        <source>key4</source>
+        <target>translation4</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

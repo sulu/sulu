@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -10,11 +11,12 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
-use Prophecy\Argument;
+use PHPCR\NodeInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\Subscriber\ShadowLocaleSubscriber;
+use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -64,7 +66,52 @@ class ShadowLocaleSubscriberTest extends \PHPUnit_Framework_TestCase
         $event->getLocale()->willReturn(null);
         $event->getNode()->shouldNotBeCalled();
 
-        $this->shadowLocaleSubscriber->handlePersist($event->reveal());
+        $this->shadowLocaleSubscriber->saveShadowProperties($event->reveal());
+    }
+
+    public function testHandlePersistForNonConcreteLocale()
+    {
+        $this->setExpectedException(
+            \RuntimeException::class,
+            'Attempting to create shadow for "de" on a non-concrete locale "de_at" '
+            . 'for document at "/cmf/sulu_io/contents/test". Concrete languages are "de", "en"'
+        );
+
+        $document = $this->prophesize(ShadowLocaleBehavior::class)
+            ->willImplement(LocaleBehavior::class);
+        $document->isShadowLocaleEnabled()->willReturn(true);
+        $document->getLocale()->willReturn('de');
+        $document->getShadowLocale()->willReturn('de_at');
+
+        $node = $this->prophesize(NodeInterface::class);
+        $node->revert()->shouldBeCalled();
+
+        $this->documentInspector->getConcreteLocales($document)->willReturn(['de', 'en']);
+        $this->documentInspector->getNode($document)->willReturn($node->reveal());
+        $this->documentInspector->getPath($document)->willReturn('/cmf/sulu_io/contents/test');
+
+        $event = $this->prophesize(PersistEvent::class);
+        $event->getDocument()->willReturn($document->reveal());
+        $event->getLocale()->willReturn('de');
+
+        $this->shadowLocaleSubscriber->saveShadowProperties($event->reveal());
+    }
+
+    public function testHandlePersistForSameLocale()
+    {
+        $this->setExpectedException(\RuntimeException::class, 'Document cannot be a shadow of itself for locale "de"');
+
+        $document = $this->prophesize(ShadowLocaleBehavior::class)
+            ->willImplement(LocaleBehavior::class);
+        $document->isShadowLocaleEnabled()->willReturn(true);
+        $document->getLocale()->willReturn('de');
+        $document->getShadowLocale()->willReturn('de');
+
+        $event = $this->prophesize(PersistEvent::class);
+        $event->getDocument()->willReturn($document->reveal());
+        $event->getLocale()->willReturn('de');
+
+        $this->shadowLocaleSubscriber->saveShadowProperties($event->reveal());
     }
 
     public function testHandleHydrate()
@@ -76,8 +123,6 @@ class ShadowLocaleSubscriberTest extends \PHPUnit_Framework_TestCase
         $event->getOption('load_shadow_content')->willReturn(false);
 
         $event->getNode()->shouldNotBeCalled();
-        $this->documentRegistry->updateLocale(Argument::cetera())->shouldNotBeCalled();
-
         $this->shadowLocaleSubscriber->handleHydrate($event->reveal());
     }
 }

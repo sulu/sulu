@@ -78,22 +78,6 @@ class LocationContentTypeTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideRead
      */
-    public function testReadForPreview($data)
-    {
-        $this->initReadTest($data);
-
-        $this->locationContent->readForPreview(
-            $data,
-            $this->suluProperty,
-            'webspace_key',
-            'fr',
-            'segment'
-        );
-    }
-
-    /**
-     * @dataProvider provideRead
-     */
     public function testWrite($data)
     {
         $this->suluProperty->expects($this->once())
@@ -128,7 +112,7 @@ class LocationContentTypeTest extends \PHPUnit_Framework_TestCase
                     'fr' => new PropertyParameter('fr', 'France'),
                     'ch' => new PropertyParameter('ch', 'Switzerland'),
                     'de' => new PropertyParameter('de', 'Germany'),
-                    'gb' => new PropertyParameter('gb', 'Great Britain'),
+                    'gb' => new PropertyParameter('gb', 'United Kingdom'),
                 ],
                 'collection'
             ),
@@ -152,6 +136,13 @@ class LocationContentTypeTest extends \PHPUnit_Framework_TestCase
             ->method('getDefaultProviderName')
             ->will($this->returnValue('leaflet'));
 
-        $this->assertEquals($expected, $this->locationContent->getDefaultParams());
+        $params = $this->locationContent->getDefaultParams();
+
+        $this->assertEquals($expected['mapProviders'], $params['mapProviders']);
+        $this->assertEquals($expected['defaultProvider'], $params['defaultProvider']);
+        $this->assertEquals($expected['geolocatorName'], $params['geolocatorName']);
+        foreach ($expected['countries']->getValue() as $parameter) {
+            $this->assertEquals($parameter, $params['countries']->getValue()[$parameter->getName()]);
+        }
     }
 }

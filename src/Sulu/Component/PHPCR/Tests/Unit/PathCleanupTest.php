@@ -56,15 +56,11 @@ class PathCleanupTest extends \PHPUnit_Framework_TestCase
 
     public function testValidate()
     {
-        $result = $this->cleaner->validate('-/aSDf     asdf/äöü-');
-        $this->assertFalse($result);
-        $result = $this->cleaner->validate('/asdf/asdf');
-        $this->assertTrue($result);
-        $result = $this->cleaner->validate('  ');
-        $this->assertFalse($result);
-        $result = $this->cleaner->validate('/Test');
-        $this->assertFalse($result);
-        $result = $this->cleaner->validate('/-test');
-        $this->assertFalse($result);
+        $this->assertFalse($this->cleaner->validate('-/aSDf     asdf/äöü-'));
+        $this->assertTrue($this->cleaner->validate('/asdf/asdf'));
+        $this->assertFalse($this->cleaner->validate('  '));
+        $this->assertFalse($this->cleaner->validate('/Test'));
+        $this->assertFalse($this->cleaner->validate('/-test'));
+        $this->assertFalse($this->cleaner->validate('/asdf.xml'));
     }
 }

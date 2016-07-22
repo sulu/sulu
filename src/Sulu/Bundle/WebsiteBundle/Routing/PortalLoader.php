@@ -33,7 +33,7 @@ class PortalLoader extends Loader
         $importedRoutes = $this->import($resource, null);
 
         $condition = sprintf(
-            'request.get("_sulu").getAttribute("portalInformation").getType() === %s',
+            'request.get("_sulu").getAttribute("portalInformation") !== null && request.get("_sulu").getAttribute("portalInformation").getType() === %s',
             RequestAnalyzerInterface::MATCH_TYPE_FULL
         );
 

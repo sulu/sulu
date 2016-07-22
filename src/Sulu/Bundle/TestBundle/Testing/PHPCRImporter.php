@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -22,24 +23,21 @@ class PHPCRImporter
      */
     private $session;
 
-    public function __construct(SessionInterface $session)
+    /**
+     * @var SessionInterface
+     */
+    private $liveSession;
+
+    public function __construct(SessionInterface $session, SessionInterface $liveSession)
     {
         $this->session = $session;
+        $this->liveSession = $liveSession;
     }
 
     public function import($fileName)
     {
-        if ($this->session->getRootNode()->hasNode('cmf')) {
-            $this->session->getNode('/cmf')->remove();
-            $this->session->save();
-        }
-
-        $this->session->importXML(
-            '/',
-            $fileName,
-            ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW
-        );
-        $this->session->save();
+        $this->handleSession($this->session, $fileName);
+        $this->handleSession($this->liveSession, $fileName);
 
         $doc = XmlUtils::loadFile($fileName);
         $xpath = new \DOMXPath($doc);
@@ -74,5 +72,20 @@ class PHPCRImporter
         }
 
         return $data;
+    }
+
+    private function handleSession(SessionInterface $session, $fileName)
+    {
+        if ($session->getRootNode()->hasNode('cmf')) {
+            $session->getNode('/cmf')->remove();
+            $session->save();
+        }
+
+        $session->importXML(
+            '/',
+            $fileName,
+            ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW
+        );
+        $session->save();
     }
 }

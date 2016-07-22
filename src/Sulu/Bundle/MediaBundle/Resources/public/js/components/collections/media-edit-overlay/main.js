@@ -20,8 +20,9 @@ define([
     'text!./copyright.html',
     'text!./versions.html',
     'text!./preview.html',
-    'text!./formats.html'
-], function(config, mediaManager, fileIcons, infoTemplate, copyrightTemplate, versionsTemplate, previewTemplate, formatsTemplate) {
+    'text!./formats.html',
+    'text!./categories.html'
+], function(config, mediaManager, fileIcons, infoTemplate, copyrightTemplate, versionsTemplate, previewTemplate, formatsTemplate, categoriesTemplate) {
 
     'use strict';
 
@@ -190,7 +191,7 @@ define([
          * @param media {Object} the id of the media to edit
          */
         editSingleMedia: function(media) {
-            var $info, $copyright, $versions, $preview, $formats;
+            var $info, $copyright, $versions, $preview, $formats, $categories;
 
             this.media = media;
 
@@ -225,13 +226,18 @@ define([
                 translate: this.sandbox.translate
             }));
 
-            this.startSingleOverlay($info, $copyright, $formats, $versions, $preview);
+            $categories = this.sandbox.dom.createElement(_.template(categoriesTemplate, {
+                media: this.media,
+                translate: this.sandbox.translate
+            }));
+
+            this.startSingleOverlay($info, $copyright, $formats, $versions, $preview, $categories);
         },
 
         /**
          * Starts the actual overlay for single-edit
          */
-        startSingleOverlay: function($info, $copyright, $formats, $versions, $preview) {
+        startSingleOverlay: function($info, $copyright, $formats, $versions, $preview, $categories) {
             var $container = this.sandbox.dom.createElement('<div class="' + constants.singleEditClass + '" id="media-form"/>');
             this.sandbox.dom.append(this.$el, $container);
             this.bindSingleOverlayEvents();
@@ -254,6 +260,13 @@ define([
                 {
                     title: this.sandbox.translate('sulu.media.formats'),
                     data: $formats
+                }
+            );
+
+            tabs.push(
+                {
+                    title: this.sandbox.translate('sulu.media.categories'),
+                    data: $categories
                 }
             );
 

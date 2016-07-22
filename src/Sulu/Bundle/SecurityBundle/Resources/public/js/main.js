@@ -9,7 +9,10 @@
 
 require.config({
     paths: {
-        sulusecurity: '../../sulusecurity/js'
+        sulusecurity: '../../sulusecurity/js',
+
+        'services/sulusecurity/role-router': '../../sulusecurity/js/services/role-router',
+        'services/sulusecurity/role-manager': '../../sulusecurity/js/services/role-manager'
     }
 });
 
@@ -50,7 +53,7 @@ define(['config'], function(Config) {
             sandbox.mvc.routes.push({
                 route: 'settings/roles',
                 callback: function() {
-                    return '<div data-aura-component="roles@sulusecurity" data-aura-display="list"/>';
+                    return '<div data-aura-component="roles/list@sulusecurity"/>';
                 }
             });
 
@@ -58,7 +61,7 @@ define(['config'], function(Config) {
             sandbox.mvc.routes.push({
                 route: 'settings/roles/new',
                 callback: function() {
-                    return '<div data-aura-component="roles/components/content@sulusecurity" data-aura-display="form"/>';
+                    return '<div data-aura-component="roles/edit@sulusecurity" />';
                 }
             });
 
@@ -67,7 +70,7 @@ define(['config'], function(Config) {
             sandbox.mvc.routes.push({
                 route: 'settings/roles/edit::id/:content',
                 callback: function(id) {
-                    return '<div data-aura-component="roles/components/content@sulusecurity" data-aura-title="sulu.roles.permissions" data-aura-display="form" data-aura-id="' + id + '"/>';
+                    return '<div data-aura-component="roles/edit@sulusecurity" data-aura-id="' + id + '"/>';
                 }
             });
         }
