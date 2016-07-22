@@ -236,7 +236,8 @@ define([
 
             this.sandbox.emit('husky.datagrid.' + this.options.instanceName + '.selected.update', ids);
             this.sandbox.emit('husky.datagrid.' + this.options.instanceName + '-selected.url.update', {
-                ids: ids.join(',') || ' '
+                ids: ids.join(','),
+                limit: ids.length
             });
         },
 
@@ -428,6 +429,11 @@ define([
             );
 
             if (!!this.items.length || !this.options.singleSelect) {
+
+                var ids = _.map(this.items, function(item) {
+                    return item.id;
+                });
+
                 this.sandbox.start([
                     {
                         name: 'datagrid@husky',
@@ -436,9 +442,9 @@ define([
                             url: [
                                 '/admin/api/media?locale=', this.options.locale,
                                 '&fields=id,thumbnails,title,size',
-                                '&orderBy=media.created&orderSort=DESC&ids=', _.map(this.items, function(item) {
-                                    return item.id;
-                                }).join(',')
+                                '&orderBy=media.created&orderSort=desc&ids=',
+                                ids.join(','),
+                                '&limit=', ids.length
                             ].join(''),
                             matchings: fields,
                             view: 'datagrid/decorators/masonry-view',
@@ -500,7 +506,7 @@ define([
                 {
                     el: this.$el.find('.list-datagrid-container'),
                     url: [
-                        '/admin/api/media?locale=', this.options.locale, '&orderBy=media.created&orderSort=DESC'
+                        '/admin/api/media?locale=', this.options.locale, '&orderBy=media.created&orderSort=desc'
                     ].join(''),
                     view: UserSettingsManager.getMediaListView(),
                     pagination: UserSettingsManager.getMediaListPagination(),
