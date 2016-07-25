@@ -729,6 +729,7 @@ class ContentMapper implements ContentMapperInterface
             'changed' => $document->getChanged(),
             'changer' => $document->getChanger(),
             'created' => $document->getCreated(),
+            'publishedState' => $nodeState === WorkflowStage::PUBLISHED,
             'published' => $document->getPublished(),
             'creator' => $document->getCreator(),
             'title' => $originalDocument->getTitle(),

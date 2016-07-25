@@ -42263,13 +42263,13 @@ define('__component__$column-navigation@husky',[],function() {
                     if (!!data[this.options.publishedName]) {
                         this.sandbox.dom.append(
                             $container,
-                            '<span class="not-published col-icon"  title="' + this.sandbox.translate(this.options.tooltipTranslations.unpublished) + '"></span>'
+                            '<span class="published-icon col-icon"  title="' + this.sandbox.translate(this.options.tooltipTranslations.unpublished) + '"></span>'
                         );
                     }
 
                     this.sandbox.dom.append(
                         $container,
-                        '<span class="not-published-state col-icon"  title="' + this.sandbox.translate(this.options.tooltipTranslations.unpublished) + '"></span>'
+                        '<span class="draft-icon col-icon"  title="' + this.sandbox.translate(this.options.tooltipTranslations.unpublished) + '"></span>'
                     );
                 }
             }
@@ -52307,7 +52307,7 @@ define('husky_extensions/itembox',[],function() {
                 return [
                     '<div class="white-box form-element" id="', this.ids.container, '">',
                     '    <div class="header">',
-                    '        <span class="', this.options.actionIcon ,' icon left action', !!this.options.hideAddButton ? ' hidden' : '', '" id="', this.ids.addButton, '"></span>',
+                    '        <span class="', this.options.actionIcon, ' icon left action', !!this.options.hideAddButton ? ' hidden' : '', '" id="', this.ids.addButton, '"></span>',
                     '        <span class="selected-counter', !!this.options.hideSelectedCounter ? ' hidden' : '', '">',
                     '            <span class="num">0</span><span> ', this.sandbox.translate(this.options.translations.elementsSelected) ,'</span>',
                     '        </span>',
@@ -52696,8 +52696,8 @@ define('husky_extensions/itembox',[],function() {
                 var $item = this.sandbox.dom.createElement(templates.item.call(
                     this,
                     item[this.options.idKey],
-                    this.getItemContent(item))
-                );
+                    this.getItemContent(item)
+                ));
 
                 this.sandbox.dom.append(this.$list, $item);
 
