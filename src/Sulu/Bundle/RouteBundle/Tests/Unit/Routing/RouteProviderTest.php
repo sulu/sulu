@@ -94,6 +94,29 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(0, $collection);
     }
 
+    public function testGetRouteCollectionForRequestUnpublished()
+    {
+        $request = $this->prophesize(Request::class);
+        $request->getPathInfo()->willReturn('/de/test');
+        $request->getLocale()->willReturn('de');
+
+        $routeEntity = $this->prophesize(RouteInterface::class);
+        $routeEntity->getEntityClass()->willReturn('Example');
+        $routeEntity->getEntityId()->willReturn('1');
+        $routeEntity->getId()->willReturn(1);
+        $routeEntity->getPath()->willReturn('/test');
+        $routeEntity->isHistory()->willReturn(false);
+        $routeEntity->getLocale()->willReturn('de');
+
+        $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal());
+        $this->defaultsProvider->supports('Example')->willReturn(true);
+        $this->defaultsProvider->isPublished('Example', '1', 'de')->willReturn(false);
+
+        $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
+
+        $this->assertCount(0, $collection);
+    }
+
     public function testGetRouteCollectionForRequest()
     {
         $request = $this->prophesize(Request::class);
@@ -106,9 +129,11 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $routeEntity->getId()->willReturn(1);
         $routeEntity->getPath()->willReturn('/test');
         $routeEntity->isHistory()->willReturn(false);
+        $routeEntity->getLocale()->willReturn('de');
 
         $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal());
         $this->defaultsProvider->supports('Example')->willReturn(true);
+        $this->defaultsProvider->isPublished('Example', '1', 'de')->willReturn(true);
         $this->defaultsProvider->getByEntity('Example', '1', 'de')->willReturn(['test' => 1]);
 
         $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
@@ -138,9 +163,11 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $routeEntity->getPath()->willReturn('/test');
         $routeEntity->getTarget()->willReturn($targetEntity->reveal());
         $routeEntity->isHistory()->willReturn(true);
+        $routeEntity->getLocale()->willReturn('de');
 
         $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal());
         $this->defaultsProvider->supports('Example')->willReturn(true);
+        $this->defaultsProvider->isPublished('Example', '1', 'de')->willReturn(true);
 
         $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
 
@@ -172,9 +199,11 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $routeEntity->getPath()->willReturn('/test');
         $routeEntity->getTarget()->willReturn($targetEntity->reveal());
         $routeEntity->isHistory()->willReturn(true);
+        $routeEntity->getLocale()->willReturn('de');
 
         $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal());
         $this->defaultsProvider->supports('Example')->willReturn(true);
+        $this->defaultsProvider->isPublished('Example', '1', 'de')->willReturn(true);
 
         $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
 
@@ -202,9 +231,11 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $routeEntity->getId()->willReturn(1);
         $routeEntity->getPath()->willReturn('/test');
         $routeEntity->isHistory()->willReturn(false);
+        $routeEntity->getLocale()->willReturn('de');
 
         $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal());
         $this->defaultsProvider->supports('Example')->willReturn(true);
+        $this->defaultsProvider->isPublished('Example', '1', 'de')->willReturn(true);
         $this->defaultsProvider->getByEntity('Example', '1', 'de')->willReturn(['test' => 1]);
 
         $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
