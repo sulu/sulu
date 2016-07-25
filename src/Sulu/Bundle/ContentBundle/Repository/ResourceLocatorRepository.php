@@ -168,7 +168,9 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
         $title = '';
         // concat rlp parts in sort of priority
         foreach ($structure->getPropertiesByTagName('sulu.rlp.part') as $property) {
-            $title = $parts[$property->getName()] . $separator . $title;
+            if (array_key_exists($property->getName(), $parts)) {
+                $title = $parts[$property->getName()] . $separator . $title;
+            }
         }
         $title = substr($title, 0, -1);
 

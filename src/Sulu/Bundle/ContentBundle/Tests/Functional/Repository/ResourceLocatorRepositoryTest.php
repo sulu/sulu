@@ -52,7 +52,8 @@ class ResourceLocatorRepositoryTest extends SuluTestCase
 
         $result = $this->repository->generate(
             [
-                'title' => 'test',
+                'title' => 'test1',
+                'subtitle' => 'test2',
             ],
             $document->getUuid(),
             null,
@@ -61,7 +62,7 @@ class ResourceLocatorRepositoryTest extends SuluTestCase
             'overview'
         );
 
-        $this->assertEquals('/test/test', $result['resourceLocator']);
+        $this->assertEquals('/test/test2-test1', $result['resourceLocator']);
     }
 
     public function testGenerateSlash()
@@ -69,6 +70,42 @@ class ResourceLocatorRepositoryTest extends SuluTestCase
         $result = $this->repository->generate(['title' => 'Title / Header'], null, null, 'sulu_io', 'en', 'overview');
 
         $this->assertEquals('/title-header', $result['resourceLocator']);
+    }
+
+    public function testGenerateIncomplete()
+    {
+        /** @var PageDocument $document */
+        $document = $this->documentManager->create('page');
+        $document->setTitle('test');
+        $document->setResourceSegment('/test');
+        $document->setStructureType('overview');
+        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($document, 'en');
+        $this->documentManager->flush();
+
+        $result = $this->repository->generate(
+            [
+                'title' => 'test',
+            ],
+            $document->getUuid(),
+            null,
+            'sulu_io',
+            'en',
+            'overview'
+        );
+        $this->assertEquals('/test/test', $result['resourceLocator']);
+
+        $result = $this->repository->generate(
+            [
+                'subtitle' => 'test',
+            ],
+            $document->getUuid(),
+            null,
+            'sulu_io',
+            'en',
+            'overview'
+        );
+        $this->assertEquals('/test/test', $result['resourceLocator']);
     }
 
     /**
