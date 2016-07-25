@@ -135,8 +135,12 @@ class ContactDataProviderTest extends \PHPUnit_Framework_TestCase
             return $this->serialize($contact);
         };
 
+        $context = SerializationContext::create()->setSerializeNull(true)->setGroups(
+            ['fullContact', 'partialAccount', 'partialCategory']
+        );
+
         $serializer = $this->prophesize(SerializerInterface::class);
-        $serializer->serialize(Argument::type(Contact::class), 'array', Argument::type(SerializationContext::class))
+        $serializer->serialize(Argument::type(Contact::class), 'array', $context)
             ->will(
                 function ($args) use ($serializeCallback) {
                     return $serializeCallback($args[0]);
