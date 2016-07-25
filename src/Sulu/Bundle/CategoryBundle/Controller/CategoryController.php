@@ -19,9 +19,11 @@ use Sulu\Bundle\CategoryBundle\Category\CategoryManager;
 use Sulu\Bundle\CategoryBundle\Category\Exception\KeyNotUniqueException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
+use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
@@ -32,6 +34,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CategoryController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
+    use RequestParametersTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -73,7 +77,8 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     public function getFieldsAction(Request $request)
     {
-        $fieldDescriptors = $this->getManager()->getFieldDescriptors($this->getLocale($request));
+        $locale = $this->getRequestParameter($request, 'locale', true);
+        $fieldDescriptors = $this->getManager()->getFieldDescriptors($locale);
         // lft and rgt should not be made available through the API
         unset($fieldDescriptors['lft']);
         unset($fieldDescriptors['rgt']);
@@ -108,7 +113,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     public function getAction($id, Request $request)
     {
-        $locale = $this->getLocale($request);
+        $locale = $this->getRequestParameter($request, 'locale', true);
         $categoryManager = $this->get('sulu_category.category_manager');
         $view = $this->responseGetById(
             $id,
@@ -126,7 +131,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * Returns the children for a parent for the given key.
      *
      * @param Request $request
-     * @param mixed   $key
+     * @param mixed $key
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -139,7 +144,10 @@ class CategoryController extends RestController implements ClassResourceInterfac
             $sortOrder = $request->get('sortOrder');
             $categoryManager = $this->get('sulu_category.category_manager');
             $categories = $categoryManager->findChildren($key, $sortBy, $sortOrder);
-            $wrappers = $categoryManager->getApiObjects($categories, $this->getLocale($request));
+            $wrappers = $categoryManager->getApiObjects(
+                $categories,
+                $this->getRequestParameter($request, 'locale', true)
+            );
             $list = new CollectionRepresentation($wrappers, self::$entityKey);
         }
         $view = $this->view($list, 200);
@@ -166,7 +174,10 @@ class CategoryController extends RestController implements ClassResourceInterfac
             $sortOrder = $request->get('sortOrder');
             $categoryManager = $this->get('sulu_category.category_manager');
             $categories = $categoryManager->find($parent, $depth, $sortBy, $sortOrder);
-            $wrappers = $categoryManager->getApiObjects($categories, $this->getLocale($request));
+            $wrappers = $categoryManager->getApiObjects(
+                $categories,
+                $this->getRequestParameter($request, 'locale', true)
+            );
             $list = new CollectionRepresentation($wrappers, self::$entityKey);
         }
         $view = $this->view($list, 200);
@@ -262,25 +273,23 @@ class CategoryController extends RestController implements ClassResourceInterfac
         try {
             $categoryManager = $this->get('sulu_category.category_manager');
             $key = $request->get('key');
+            $locale = $this->getRequestParameter($request, 'locale', true);
             $data = [
                 'id' => $id,
                 'key' => (empty($key)) ? null : $key,
                 'name' => $request->get('name'),
                 'meta' => $request->get('meta'),
                 'parent' => $request->get('parent'),
-                'locale' => $this->getLocale($request),
+                'locale' => $locale,
             ];
             $categoryEntity = $categoryManager->save($data, $this->getUser()->getId());
-            $categoryWrapper = $categoryManager->getApiObject(
-                $categoryEntity,
-                $this->getLocale($request)
-            );
+            $categoryWrapper = $categoryManager->getApiObject($categoryEntity, $locale);
 
             $view = $this->view($categoryWrapper, 200);
-        } catch (EntityNotFoundException $enfe) {
-            $view = $this->view($enfe->toArray(), 404);
-        } catch (KeyNotUniqueException $exc) {
-            $view = $this->view($exc->toArray(), 400);
+        } catch (EntityNotFoundException $e) {
+            $view = $this->view($e->toArray(), 404);
+        } catch (KeyNotUniqueException $e) {
+            $view = $this->view($e->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -290,6 +299,8 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * Returns a Category-list-representation.
      *
      * @param Request $request
+     *
+     * @throws MissingParameterException iff the locale is missing in the request
      *
      * @return CategoryListRepresentation
      */
@@ -302,7 +313,8 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
 
         $listBuilder = $factory->create(self::$entityName);
-        $fieldDescriptors = $this->getManager()->getFieldDescriptors($this->getLocale($request));
+        $locale = $this->getRequestParameter($request, 'locale', true);
+        $fieldDescriptors = $this->getManager()->getFieldDescriptors($locale);
         $listBuilder->sort($fieldDescriptors['depth']);
 
         $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);

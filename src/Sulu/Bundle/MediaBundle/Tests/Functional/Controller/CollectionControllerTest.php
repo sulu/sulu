@@ -363,7 +363,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/collections/10'
+            '/api/collections/10?locale=en'
         );
 
         $this->assertHttpStatusCode(404, $client->getResponse());
@@ -583,6 +583,7 @@ class CollectionControllerTest extends SuluTestCase
             'POST',
             '/api/collections',
             [
+                'locale' => 'en',
                 'title' => 'Test Collection 2',
                 'type' => [
                     'id' => $this->collectionType1->getId(),
@@ -840,65 +841,7 @@ class CollectionControllerTest extends SuluTestCase
             ]
         );
 
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertHttpStatusCode(200, $client->getResponse());
-
-        $client->request(
-            'GET',
-            '/api/collections/' . $this->collection1->getId()
-        );
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertHttpStatusCode(200, $client->getResponse());
-
-        $style = new \stdClass();
-        $style->type = 'circle';
-        $style->color = '#00ccff';
-
-        $id = $response->id;
-
-        $this->assertEquals($style, $response->style);
-        $this->assertEquals($this->collection1->getId(), $response->id);
-        $this->assertNotNull($response->type->id);
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->created)));
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->changed)));
-        $this->assertEquals('Test Collection changed', $response->title);
-        $this->assertEquals('This Description is only for testing changed', $response->description);
-        $this->assertEquals('en', $response->locale);
-
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
-            'GET',
-            '/api/collections?locale=en'
-        );
-
-        $this->assertHttpStatusCode(200, $client->getResponse());
-
-        $response = json_decode($client->getResponse()->getContent());
-
-        $this->assertNotEmpty($response);
-
-        $this->assertEquals(2, $response->total);
-
-        $this->assertTrue(isset($response->_embedded->collections[0]));
-        $this->assertTrue(isset($response->_embedded->collections[1]));
-        $responseFirstEntity = $response->_embedded->collections[0];
-        if ($responseFirstEntity->id !== $id) {
-            $responseFirstEntity = $response->_embedded->collections[1];
-        }
-
-        $style = new \stdClass();
-        $style->type = 'circle';
-        $style->color = '#00ccff';
-
-        $this->assertEquals($style, $responseFirstEntity->style);
-        $this->assertEquals($this->collection1->getId(), $responseFirstEntity->id);
-        $this->assertNotNull($responseFirstEntity->type->id);
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->created)));
-        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->changed)));
-        $this->assertEquals('Test Collection changed', $responseFirstEntity->title);
-        $this->assertEquals('This Description is only for testing changed', $responseFirstEntity->description);
-        $this->assertEquals('en', $responseFirstEntity->locale);
+        $this->assertHttpStatusCode(400, $client->getResponse());
     }
 
     /**
@@ -922,6 +865,7 @@ class CollectionControllerTest extends SuluTestCase
             'PUT',
             '/api/collections/' . $this->collection1->getId(),
             [
+                'locale' => 'en',
                 'style' => [
                     'type' => 'quader',
                     'color' => '#00ccff',
@@ -961,6 +905,7 @@ class CollectionControllerTest extends SuluTestCase
             'PUT',
             '/api/collections/404',
             [
+                'locale' => 'en',
                 'style' => [
                     'type' => 'quader',
                     'color' => '#00ccff',
@@ -986,7 +931,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/collections/' . $this->collection1->getId()
+            '/api/collections/' . $this->collection1->getId() . '?locale=en'
         );
 
         $this->assertHttpStatusCode(404, $client->getResponse());
@@ -1006,7 +951,7 @@ class CollectionControllerTest extends SuluTestCase
         $client->request('DELETE', '/api/collections/404');
         $this->assertHttpStatusCode(404, $client->getResponse());
 
-        $client->request('GET', '/api/collections?flat=true');
+        $client->request('GET', '/api/collections?locale=en&flat=true');
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(1, $response->total);
     }

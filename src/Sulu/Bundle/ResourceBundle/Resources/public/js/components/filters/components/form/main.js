@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['config'], function(Config) {
+define(['config', 'app-config'], function(Config, AppConfig) {
 
     'use strict';
 
@@ -136,7 +136,7 @@ define(['config'], function(Config) {
                     options: {
                         el: $element,
                         fieldsUrl: typeConfig.fields,
-                        operatorsUrl: constants.operatorsUrl,
+                        operatorsUrl: constants.operatorsUrl + '?locale=' + AppConfig.getUser().locale,
                         data: conditionGroups,
                         validationSelector: formSelector
                     }

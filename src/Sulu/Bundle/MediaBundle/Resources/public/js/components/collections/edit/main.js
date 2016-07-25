@@ -92,6 +92,7 @@ define([
                     url: '/admin/api/collections/' + this.data.id + '?depth=1&sortBy=title'
                 }
             });
+            this.sandbox.emit('husky.data-navigation.collections.set-locale', UserSettingsManager.getMediaLocale());
             this.updateDataNavigationAddButton();
 
             this.bindCustomEvents();

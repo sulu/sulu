@@ -169,16 +169,7 @@ abstract class RestController extends FOSRestController
      */
     public function getLocale(Request $request)
     {
-        $lang = $request->get('locale');
-        if (!$lang) {
-            if ($this->getUser()) {
-                $lang = $this->getUser()->getLocale() ?: $this->container->getParameter('locale');
-            } else {
-                $lang = $this->container->getParameter('locale');
-            }
-        }
-
-        return $lang;
+        return $request->get('locale', null);
     }
 
     /**

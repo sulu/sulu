@@ -89,7 +89,9 @@ define([
             this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
             this.sandbox.once('sulu.contacts.set-types', this.setTypes.bind(this));
 
-            this.html(this.renderTemplate('/admin/contact/template/account/form'));
+            this.html(this.renderTemplate('/admin/contact/template/account/form', {
+                categoryLocale: this.sandbox.sulu.getDefaultContentLocale()
+            }));
 
             var formData = this.initAccountData();
             this.initForm(formData);
@@ -163,7 +165,7 @@ define([
                     '/admin/api/media/' + curMediaId + '?action=new-version' :
                     '/admin/api/media?collection=' + this.formOptions.accountAvatarCollection;
                 
-                url = url + '&locale=' + encodeURIComponent(this.sandbox.sulu.user.locale);
+                url = url + '&locale=' + encodeURIComponent(this.sandbox.sulu.getDefaultContentLocale());
 
                 // if possible, change the title of the logo to the name of the account
                 if (!!data.name) {

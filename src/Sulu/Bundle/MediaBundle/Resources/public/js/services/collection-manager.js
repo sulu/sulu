@@ -88,7 +88,7 @@ define([
             } else {
                 collection = Collection.findOrCreate({id: collectionId});
                 collection.fetch({
-                    data: (!!locale) ? {locale: locale} : null,
+                    data: {locale: locale},
                     success: function(response) {
                         Mediator.emit('sulu.medias.collection.loaded', collectionId);
                         promise.resolve(response.toJSON());

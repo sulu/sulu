@@ -377,6 +377,7 @@ define([
                             url: '/admin/api/collections?sortBy=title',
                             nameKey: 'title',
                             globalEvents: false,
+                            locale: UserSettingsManager.getMediaLocale(),
                             translates: {
                                 noData: this.translations.noData,
                                 title: this.translations.navigationTitle,

@@ -23,6 +23,18 @@ app/console doctrine:schema:update --force
 
 ## 1.3.0-RC2
 
+### RestController locale
+
+The `getLocale` method of the RestController returned the locale
+of the user (a system locale), if no request parameter with the name
+`locale` was passed. As RestControllers most often provide access
+to content in content locales and not in system locales,
+this behaviour was removed. The `getLocale` method now just returns
+a possibly passed request parameter named `locale` or null.
+If a locale is needed for sure, the `getLocale` method needs to be
+overwritten. It is also advised to override the method, if in no
+case locales are needed.
+
 ### SearchController
 
 The `SearchController` has been moved from sulu-standard to sulu. Therefore the
