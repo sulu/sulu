@@ -824,4 +824,41 @@ class WebspaceManagerTest extends WebspaceTestCase
             $localizations
         );
     }
+
+    public function testGetAllLocalesByWebspaces()
+    {
+        $webspacesLocales = $this->webspaceManager->getAllLocalesByWebspaces();
+
+        foreach ($webspacesLocales as &$webspaceLocales) {
+            array_walk(
+                $webspaceLocales,
+                function (&$webspaceLocale) {
+                    $webspaceLocale = $webspaceLocale->toArray();
+                    unset($webspaceLocale['children']);
+                    unset($webspaceLocale['localization']);
+                    unset($webspaceLocale['shadow']);
+                    unset($webspaceLocale['default']);
+                    unset($webspaceLocale['xDefault']);
+                }
+            );
+        }
+
+        $this->assertArrayHasKey('sulu_io', $webspacesLocales);
+        $this->assertArrayHasKey('en_us', $webspacesLocales['sulu_io']);
+        $this->assertArrayHasKey('de_at', $webspacesLocales['sulu_io']);
+        $this->assertEquals(['country' => 'us', 'language' => 'en'], $webspacesLocales['sulu_io']['en_us']);
+        $this->assertEquals(['country' => 'at', 'language' => 'de'], reset($webspacesLocales['sulu_io']));
+
+        $this->assertArrayHasKey('massiveart', $webspacesLocales);
+        $this->assertArrayHasKey('en_us', $webspacesLocales['massiveart']);
+        $this->assertArrayHasKey('en_ca', $webspacesLocales['massiveart']);
+        $this->assertArrayHasKey('fr_ca', $webspacesLocales['massiveart']);
+        $this->assertArrayHasKey('de', $webspacesLocales['massiveart']);
+        $this->assertEquals(['country' => 'ca', 'language' => 'fr'], reset($webspacesLocales['massiveart']));
+
+        $this->assertArrayHasKey('dan_io', $webspacesLocales);
+        $this->assertArrayHasKey('en_us', $webspacesLocales['dan_io']);
+        $this->assertArrayHasKey('de_at', $webspacesLocales['dan_io']);
+        $this->assertEquals(['country' => 'at', 'language' => 'de'], reset($webspacesLocales['dan_io']));
+    }
 }
