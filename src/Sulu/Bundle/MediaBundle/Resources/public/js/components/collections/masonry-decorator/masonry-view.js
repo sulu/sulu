@@ -373,7 +373,13 @@ define([
                 } else {
                     this.sandbox.dom.prepend(this.sandbox.dom.find('#' + this.masonryGridId, this.$el), this.$items[id]);
                 }
-                this.bindItemLoadingEvents(id);
+
+                if (!!image) {
+                    this.bindItemLoadingEvents(id);
+                } else {
+                    this.itemLoadedHandler(this.$items[id]);
+                }
+
                 this.bindItemEvents(id);
             },
 
@@ -425,15 +431,23 @@ define([
             bindItemLoadingEvents: function(id) {
                 this.sandbox.dom.one($(this.$items[id]).find('.' + constants.headImageClass), 'load', function() {
                     this.sandbox.dom.remove($(this.$items[id]).find('.' + constants.headIconClass));
-                    this.sandbox.masonry.refresh('#' + this.masonryGridId, true);
-                    this.sandbox.dom.removeClass(this.$items[id], constants.loadingClass);
+                    this.itemLoadedHandler(this.$items[id]);
                 }.bind(this));
 
                 this.sandbox.dom.one($(this.$items[id]).find('.' + constants.headImageClass), 'error', function() {
                     this.sandbox.dom.remove($(this.$items[id]).find('.' + constants.headImageClass));
-                    this.sandbox.masonry.refresh('#' + this.masonryGridId, true);
-                    this.sandbox.dom.removeClass(this.$items[id], constants.loadingClass);
+                    this.itemLoadedHandler(this.$items[id]);
                 }.bind(this));
+            },
+
+            /**
+             * Marks an item as loaded and performs post loading tasks.
+             *
+             * @param {Object} $item The dom element of the loaded item
+             */
+            itemLoadedHandler: function($item) {
+                this.sandbox.masonry.refresh('#' + this.masonryGridId, true);
+                this.sandbox.dom.removeClass($item, constants.loadingClass);
             },
 
             /**
@@ -473,6 +487,7 @@ define([
              */
             addRecord: function(record, appendAtBottom) {
                 this.renderRecords([record], appendAtBottom);
+                this.sandbox.masonry.refresh('#' + this.masonryGridId, true);
             },
 
             /**
