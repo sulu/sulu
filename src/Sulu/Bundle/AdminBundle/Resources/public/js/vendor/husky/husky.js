@@ -42935,14 +42935,21 @@ define('__component__$column-navigation@husky',[],function() {
         itemSelected: function(event) {
             //only do something if no column is loading
             if (this.columnLoadStarted === false) {
-                this.closeOrderMode(); // force closing of possible order mode
                 this.$selectedElement = this.sandbox.dom.$(event.currentTarget);
                 var id = this.sandbox.dom.data(this.$selectedElement, 'id'),
-                    column = this.sandbox.dom.data(this.sandbox.dom.parent(this.sandbox.dom.parent(this.$selectedElement)), 'column'),
+                    $column = this.sandbox.dom.parent(this.sandbox.dom.parent(this.$selectedElement)),
+                    column = $column.data('column'),
                     selectedItem = this.columns[column][id],
                     length = this.selected.length - 1,
                     i, $arrowElement;
 
+                // if column is in order mode the items cannot be selected
+                if ($column.hasClass(constants.orderModeClass)) {
+                    this.$selectedElement.find('input').focus();
+                    return false;
+                }
+
+                this.closeOrderMode();
 
                 if (this.sandbox.dom.hasClass(this.$selectedElement, 'selected')) { // is element already selected
 
