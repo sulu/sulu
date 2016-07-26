@@ -1025,7 +1025,7 @@ define([
         showDraftLabel: function() {
             this.sandbox.emit('sulu.header.tabs.label.hide');
 
-            if (!this.data.id || !!this.data.publishedState) {
+            if (!this.data.id || !!this.data.publishedState || !this.data.published) {
                 return;
             }
 
