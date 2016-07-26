@@ -138,7 +138,10 @@ class ContentTwigExtension extends \Twig_Extension
      */
     public function isMultipleTest($property)
     {
-        return $property->getMinOccurs() > 1 || !is_null($property->getMaxOccurs());
+        return
+            !is_null($property->getMaxOccurs()) ||
+            $property->getMinOccurs() > 1 ||
+            $property->getMinOccurs() < $property->getMaxOccurs();
     }
 
     /**
