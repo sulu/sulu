@@ -78,7 +78,6 @@
             <argument type="service" id="sulu.content.rlp.strategy.tree"/>
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu_document_manager.document_manager"/>
-            <argument type="service" id="sulu_document_manager.document_inspector" />
         </service>
 
         <!-- structure extension -->

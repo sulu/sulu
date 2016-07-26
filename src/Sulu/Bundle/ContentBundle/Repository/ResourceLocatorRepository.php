@@ -11,10 +11,8 @@
 
 namespace Sulu\Bundle\ContentBundle\Repository;
 
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
-use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
@@ -41,11 +39,6 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     private $documentManager;
 
     /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    /**
      * @var string[]
      */
     private $apiBasePath = [
@@ -60,13 +53,11 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     public function __construct(
         RlpStrategyInterface $rlpStrategy,
         StructureManagerInterface $structureManager,
-        DocumentManagerInterface $documentManager,
-        DocumentInspector $documentInspector
+        DocumentManagerInterface $documentManager
     ) {
         $this->rlpStrategy = $rlpStrategy;
         $this->structureManager = $structureManager;
         $this->documentManager = $documentManager;
-        $this->documentInspector = $documentInspector;
     }
 
     /**
@@ -79,8 +70,8 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
         $title = $this->implodeRlpParts($structure, $parts);
 
         if ($parentUuid !== null) {
-            $parentDocument = $this->documentManager->find($parentUuid, $languageCode);
-            $parentPath = $this->rlpStrategy->loadByContent($this->getNonGhostAncestor($parentDocument));
+            $parentDocument = $this->documentManager->find($parentUuid, $languageCode, ['load_ghost_content' => false]);
+            $parentPath = $this->rlpStrategy->loadByContent($this->getPublishedAncestorOrSelf($parentDocument));
             $result = $this->rlpStrategy->generate($title, $parentPath, $webspaceKey, $languageCode, $segmentKey);
         } elseif ($uuid !== null) {
             $result = $this->rlpStrategy->generateForUuid($title, $uuid, $webspaceKey, $languageCode, $segmentKey);
@@ -178,18 +169,16 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     }
 
     /**
-     * Returns the first ancestor-or-self of the given document which is not a ghost-document.
-     * If all ancestor documents are ghost-documents, the root document is returned.
+     * Returns the first ancestor-or-self of the given document which is published and therefore has an
+     * assigned resource locator. If all ancestor documents are unpublished, the root document is returned.
      *
      * @param object    $document
      *
      * @return object
      */
-    private function getNonGhostAncestor($document)
+    private function getPublishedAncestorOrSelf($document)
     {
-        while ($this->documentInspector->getLocalizationState($document) === LocalizationState::GHOST
-            && $document instanceof ParentBehavior
-        ) {
+        while (!$document->getPublished() && $document instanceof ParentBehavior) {
             $document = $document->getParent();
         }
 
