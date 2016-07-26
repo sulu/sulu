@@ -14,8 +14,8 @@
         <localization language="en" country="us" shadow="auto">
             <localization language="en" country="ca"/>
         </localization>
-        <localization language="fr" country="ca"/>
-        <localization language="de" default="true"/>
+        <localization language="fr" country="ca" default="true"/>
+        <localization language="de"/>
     </localizations>
 
     <segments>

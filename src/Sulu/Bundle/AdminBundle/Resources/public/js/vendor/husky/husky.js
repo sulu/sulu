@@ -30862,8 +30862,11 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             },
             img: [
                 '<div class="' + constants.gridImageClass + '">',
+                '<% if (!!src) { %>',
                 '   <img alt="<%= alt %>" src="<%= src %>"/>',
+                '<% } else { %>',
                 '   <div class="<%= noImgIcon %> empty"></div>',
+                '<% } %>',
                 '</div>'
             ].join(''),
             childWrapper: '<div class="' + constants.childWrapperClass + '"></div>',
@@ -34603,6 +34606,11 @@ define('husky_components/datagrid/decorators/infinite-scroll-pagination',[],func
                 // not an husky decorator, try to load external decorator
                 else {
                     require([viewId], function(view) {
+                        // this will keep BC
+                        if (typeof view === 'function') {
+                            view = new view();
+                        }
+
                         this.gridViews[this.viewId] = view;
                         this.initializeViewDecorator();
                         def.resolve();
@@ -42927,14 +42935,21 @@ define('__component__$column-navigation@husky',[],function() {
         itemSelected: function(event) {
             //only do something if no column is loading
             if (this.columnLoadStarted === false) {
-                this.closeOrderMode(); // force closing of possible order mode
                 this.$selectedElement = this.sandbox.dom.$(event.currentTarget);
                 var id = this.sandbox.dom.data(this.$selectedElement, 'id'),
-                    column = this.sandbox.dom.data(this.sandbox.dom.parent(this.sandbox.dom.parent(this.$selectedElement)), 'column'),
+                    $column = this.sandbox.dom.parent(this.sandbox.dom.parent(this.$selectedElement)),
+                    column = $column.data('column'),
                     selectedItem = this.columns[column][id],
                     length = this.selected.length - 1,
                     i, $arrowElement;
 
+                // if column is in order mode the items cannot be selected
+                if ($column.hasClass(constants.orderModeClass)) {
+                    this.$selectedElement.find('input').focus();
+                    return false;
+                }
+
+                this.closeOrderMode();
 
                 if (this.sandbox.dom.hasClass(this.$selectedElement, 'selected')) { // is element already selected
 
@@ -47599,17 +47614,18 @@ define('__component__$url-input@husky',['services/husky/url-validator'], functio
 
             initialize: function(app) {
 
-                var toolbar = {
+                var availableToolbarSections = {
                         semantics: ['Format'],
                         basicstyles: ['Superscript', 'Subscript', 'Italic', 'Bold', 'Underline', 'Strike'],
                         blockstyles: ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
                         list: ['NumberedList', 'BulletedList'],
                         paste: ['PasteFromWord'],
-                        links: ['Link', 'Unlink'],
+                        links: ['Link'],
                         insert: ['Table'],
                         styles: ['Styles'],
                         code: ['Source']
                     },
+                    toolbar,
                     plugins = ['justify', 'format', 'sourcearea', 'link', 'table', 'pastefromword', 'autogrow'],
                     icons = {
                         Format: 'font',
@@ -47620,9 +47636,40 @@ define('__component__$url-input@husky',['services/husky/url-validator'], functio
                         JustifyBlock: 'align-justify',
                         NumberedList: 'list-ol',
                         BulletedList: 'list',
-                        PasteFromWord: 'file-word-o',
+                        PasteFromWord: 'clipboard',
                         Styles: 'header',
                         Source: 'code'
+                    },
+                    relations = {
+                        Link: ['Unlink']
+                    },
+
+                    /**
+                     * Expands a given toolbar. Iterates over all sections and
+                     * all section items in the toolbar. If there is a relation
+                     * defined for a section item it adds all items of the relations
+                     * to that section.
+                     *
+                     * @param {Object} toolbar The toolbar to expand
+                     * @returns {Object} the expanded toolbar
+                     */
+                    expandToolbar = function(toolbar) {
+                        var expandedToolbar = {}, expandedSection;
+
+                        Util.each(toolbar, function(sectionName, section) {
+                            expandedSection = [];
+
+                            Util.foreach(section, function(sectionItem) {
+                                expandedSection.push(sectionItem);
+                                if (!!relations[sectionItem]) {
+                                    expandedSection = expandedSection.concat(relations[sectionItem]);
+                                }
+                            }.bind(this));
+
+                            expandedToolbar[sectionName] = expandedSection;
+                        }.bind(this));
+
+                        return expandedToolbar;
                     };
 
                 app.sandbox.ckeditor = {
@@ -47633,20 +47680,34 @@ define('__component__$url-input@husky',['services/husky/url-validator'], functio
                         CKEDITOR.plugins.add(name, plugin);
                     },
 
-                    addToolbarButton: function(toolbarName, button, icon) {
-                        if (!toolbar[toolbarName]) {
-                            toolbar[toolbarName] = [];
+                    addToolbarButton: function(sectionName, button, icon, buttonRelations) {
+                        if (!availableToolbarSections[sectionName]) {
+                            availableToolbarSections[sectionName] = [];
                         }
 
-                        toolbar[toolbarName].push(button);
+                        availableToolbarSections[sectionName].push(button);
 
                         if (!!icon) {
                             icons[button] = icon;
                         }
+
+                        relations[button] = buttonRelations;
+                    },
+
+                    setToolbar: function(newToolbar) {
+                        toolbar = Util.deepCopy(newToolbar);
+                    },
+
+                    getAvailableToolbarSections: function() {
+                        return Util.deepCopy(availableToolbarSections);
                     },
 
                     getToolbar: function() {
-                        return Util.deepCopy(toolbar);
+                        if (!toolbar) {
+                            return expandToolbar(this.getAvailableToolbarSections());
+                        }
+
+                        return expandToolbar(toolbar);
                     },
 
                     getIcon: function(button) {
@@ -47661,10 +47722,10 @@ define('__component__$url-input@husky',['services/husky/url-validator'], functio
                         return new ToolbarBuilder(this.getToolbar());
                     },
 
-                    createToolbarBuilder: function(toolbar) {
+                    createToolbarBuilder: function(sections) {
                         var toolbarSections = {};
-                        for (var i = 0, length = toolbar.length; i < length; ++i) {
-                            toolbarSections[toolbar[i].name] = toolbar[i].items;
+                        for (var i = 0, length = sections.length; i < length; ++i) {
+                            toolbarSections[sections[i].name] = sections[i].items;
                         }
 
                         return new ToolbarBuilder(toolbarSections);
@@ -47692,22 +47753,22 @@ define('__component__$url-input@husky',['services/husky/url-validator'], functio
                             // check if the definition is from the dialog we're
                             // interested in (the "Link" dialog).
                             if (dialogName == 'link') {
-                                    // get a reference to the "Link Info" and "Target" tab.
+                                // get a reference to the "Link Info" and "Target" tab.
                                 var infoTab = dialogDefinition.getContents('info'),
                                     targetTab = dialogDefinition.getContents('target'),
 
-                                    // get a reference to the link type
+                                // get a reference to the link type
                                     linkOptions = infoTab.get('linkType'),
                                     targetOptions = targetTab.get('linkTargetType'),
 
-                                    // list of included link options
+                                // list of included link options
                                     includedLinkOptions = [
                                         'url',
                                         'email'
                                     ],
                                     selectedLinkOption = [],
 
-                                    // list of included link target options
+                                // list of included link target options
                                     includedTargetOptions = [
                                         'notSet',
                                         '_blank',

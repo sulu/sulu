@@ -1006,7 +1006,7 @@ input, select {
 /* line 26, ../scss/modules/data-overlay.scss */
 .data-overlay-content {
   height: 100%;
-  overflow: scroll;
+  overflow: auto;
 }
 
 /* line 3, ../scss/modules/dashboard.scss */

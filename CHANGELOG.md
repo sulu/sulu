@@ -2,6 +2,16 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2524 [ContactBundle]       Fixed contact-serialization for smart-content
+    * BUGFIX      #2632 [ContentBundle]       prevent item select when ordering a column (husky)
+    * BUGFIX      #2663 [MediaBundle]         made masonry view work for media with no thumbnail
+
+* 1.3.0-RC1 (2016-07-22)
+    * HOTFIX      #2632 [Content]             Fix usage of document inspector in StructureBridge
+    * BUGFIX      #2655 [MediaBundle]         Fixed media selection for none images and selected media list
+    * BUGFIX      #2598 [MediaBundle]         fixed thumbnail rendering in media edit
+    * BUGFIX      #2634 [Rest]                hide exception details on rest-api error in prod environment
+    * FEATURE     #2642 [AdminBundle]         Added different badges color support
     * BUGFIX      #2618 [Localization]        Removed the system localizations from LocalizationController
     * BUGFIX      #2640 [ContentBundle]       Fixed reordering for published workspace
     * BUGFIX      #2611 [HttpCacheBundle]     fill host-placeholder before clearing cache
@@ -9,16 +19,20 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2621 [ContentBundle]       Added migration for publishing
     * ENHANCEMENT #2623 [DocumentManager]     Add publishing toolbar buttons to extensions in document manager bundle
     * ENHANCEMENT #2614 [ContentBundle]       Removed unused code and tests
+    * BUGFIX      #2615 [ContentBundle]       implemented stored languages per webspace
     * BUGFIX      #2603 [ContentBundle]       Fixed resource locator generation for pages with ghost-parent
+    * BUGFIX      #2613 [ContactBundle]       fixed categories save bug in contacts
     * BUGFIX      #2539 [SecurityBundle]      Made TokenStorage dependency for SecuritySubscriber optional
     * BUGFIX      #2609 [ContentBundle]       fixed excerpt extension save button activation
     * ENHANCEMENT #2616 [MediaBundle]         Avoid exception when media is serialized without all data loaded
     * BUGFIX      #2606 [PreviewBundle]       Added cache clear for preview kernel
     * ENHANCEMENT #2608 [TranslateBundle]     removed translation import command and refactored translate bundle
+    * BUGFIX      #2590 [CoreBundle]          Clear symfony cache before system collection initialization
     * BUGFIX      #2596 [PreviewBundle]       Fixed preview for prod environment
     * FEATURE     #2515 [ContentBundle]       Added unpublishing functionality for pages
     * ENHANCEMENT #2604 [ContentBundle]       fixed publishing on excerpt tab and add excerpt js extension
     * BUGFIX      #2586 [AdminBundle]         fixed behat tests
+    * BUGFIX      #2588 [ContentBundle]       made resource locator reload on every rlp.part change
     * BUGFIX      #2581 [PreviewBundle]       Deactivated WebProfilerToolbar for preview
     * BUGIFX      #2579 [ContentBundle]       Removed smart-content component destroy callback conflict
     * FEATURE     #2572 [AdminBundle]         Included husky build with autocomplete form mapper validation type
@@ -68,12 +82,15 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2462 [All]                 Removed unnecessary NodeInterface definitions in tests
     * ENHANCEMENT #2461 [PreviewBundle]       Added function that avoid navigating in the preview
     * ENHANCEMENT #2357 [PreviewBundle]       Using Website-Kernel to render preview
+    * FEATURE     #2442 [MediaBundle]         Enabled media link in ckeditor
+    * ENHANCEMENT #2442 [MediaBundle]         Enhanced behaviour of media-selection
     * BUGFIX      #2455 [CoreBundle]          Fixed ServerStatusCommand for Symfony 2.8.7
     * BUGFIX      #2443 [WebsiteBundle]       Added portal check for portal-routes
     * FEATURE     #2424 [Content]             Add support for XInclude
     * BUGFIX      #2439 [ContentBundle]       Fixed tab visibility for create new page localization
     * ENHANCEMENT #2428 [Content]             Removed move and copy method from ContentMapper
     * BUGFIX      #2426 [RouteBundle]         Fixed route-provider when no resource-locator prefix isset
+    * FEATURE     #2404 [ContentBundle]       Implemented configurable ckeditor toolbar per role
     * BUGFIX      #2418 [ContentBundle]       Removed ContentMapperRequest
     * FEATURE     #2402 [MarkupBundle]        Added validation for markup
     * FEATURE     #2336 [ContentBundle]       Enabled internal link in ckeditor

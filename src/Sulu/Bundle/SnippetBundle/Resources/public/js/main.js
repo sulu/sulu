@@ -30,8 +30,37 @@ define(['config'], function(Config) {
 
             sandbox.urlManager.setUrl('snippet', 'snippet/snippets/<%= languageCode %>/edit:<%= id %>');
 
+            /**
+             * Returns the language of the snippets, which is displayed at the beginning.
+             * At first the function looks for the last used locale over all webspaces. If
+             * nothing has been found, the first locale gets used.
+             *
+             * @returns {String} The locale of the snippets
+             */
             function getContentLanguage() {
-                return sandbox.sulu.getUserSetting('contentLanguage') || Object.keys(Config.get('sulu-content').locales)[0];
+                // last visited language over all webspaces
+                var language = sandbox.sulu.getUserSetting('contentLanguage'), webspace, locales, locale;
+                if (!!language) {
+                    return language;
+                }
+
+                // otherwise the very first found locale is used
+                locales = Config.get('sulu-content').locales;
+                for (webspace in locales) {
+                    if(!locales.hasOwnProperty(webspace)) {
+                        continue;
+                    }
+
+                    for (locale in locales[webspace]) {
+                        if(!locales[webspace].hasOwnProperty(locale)) {
+                            continue;
+                        }
+
+                        if (!!locales[webspace][locale]) {
+                            return locales[webspace][locale].localization;
+                        }
+                    }
+                }
             }
 
             // list all contents for a language

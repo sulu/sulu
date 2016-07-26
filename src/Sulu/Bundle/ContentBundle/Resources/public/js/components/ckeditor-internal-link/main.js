@@ -25,6 +25,8 @@ define(['underscore', 'text!./form.html'], function(_, formTemplate) {
             options: {
                 link: {},
                 saveCallback: function(label) {
+                },
+                removeCallback: function() {
                 }
             },
 
@@ -36,6 +38,7 @@ define(['underscore', 'text!./form.html'], function(_, formTemplate) {
             translations: {
                 save: 'public.save',
                 back: 'public.previous',
+                remove: 'content.ckeditor.internal-link.remove',
                 altTitle: 'content.ckeditor.internal-link.alt-title',
                 href: 'content.ckeditor.internal-link.href',
                 target: 'content.ckeditor.internal-link.target',
@@ -110,6 +113,30 @@ define(['underscore', 'text!./form.html'], function(_, formTemplate) {
             var $element = this.sandbox.dom.createElement('<div class="overlay-container"/>');
             this.sandbox.dom.append(this.$el, $element);
 
+            var buttons = [
+                {
+                    type: 'cancel',
+                    align: 'left'
+                },
+                {
+                    type: 'ok',
+                    text: this.translations.save,
+                    align: 'right'
+                }
+            ];
+
+            if (!!this.options.link.href) {
+                buttons.push({
+                    text: this.translations.remove,
+                    align: 'center',
+                    classes: 'just-text',
+                    callback: function() {
+                        this.options.removeCallback();
+                        this.sandbox.emit('husky.overlay.internal-link.close');
+                    }.bind(this)
+                });
+            }
+
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
@@ -124,17 +151,7 @@ define(['underscore', 'text!./form.html'], function(_, formTemplate) {
                             {
                                 title: this.translations.internalLink,
                                 data: this.templates.form({translations: this.translations}),
-                                buttons: [
-                                    {
-                                        type: 'cancel',
-                                        align: 'left'
-                                    },
-                                    {
-                                        type: 'ok',
-                                        text: this.translations.save,
-                                        align: 'right'
-                                    }
-                                ],
+                                buttons: buttons,
                                 okCallback: this.save.bind(this)
                             },
                             {

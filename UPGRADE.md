@@ -1,14 +1,24 @@
 # Upgrade
 
-## dev-develop
+## 1.3.0-RC1
+
+### Image Formats
+The image format "150x100" as well as the format "200x200" got removed
+from the backend formats. If a website relied on this format,
+it should be - as all image formats a website needs - defined
+in the theme specific config file.
+(http://docs.sulu.io/en/latest/book/creating-a-basic-website/adding-a-theme.html#configure-image-formats)
 
 ### PHPCR
-
 To adapt to the new PHPCR structure execute the migrations:
 
 ```
 app/console phpcr:migrations:migrate
 ```
+
+### Media selection overlay
+The frontend component 'media-selection-overlay@sulumedia' got removed,
+please use 'media-selection/overlay@sulumedia' instead.
 
 ### NodeRepository
 

@@ -117,7 +117,7 @@ class WebspaceManager implements WebspaceManagerInterface
             $this->getWebspaceCollection()->getPortalInformations($environment),
             function (PortalInformation $portalInformation) use ($webspaceKey, $locale) {
                 return $portalInformation->getWebspace()->getKey() === $webspaceKey
-                       && $portalInformation->getLocale() === $locale;
+                    && $portalInformation->getLocale() === $locale;
             }
         );
     }
@@ -262,6 +262,28 @@ class WebspaceManager implements WebspaceManagerInterface
         }
 
         return $localizations;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAllLocalesByWebspaces()
+    {
+        $webspaces = [];
+        foreach ($this->getWebspaceCollection() as $webspace) {
+            /** @var Webspace $webspace */
+            $locales = [];
+            $defaultLocale = $webspace->getDefaultLocalization();
+            $locales[$defaultLocale->getLocale()] = $defaultLocale;
+            foreach ($webspace->getAllLocalizations() as $localization) {
+                if (!array_key_exists($localization->getLocale(), $locales)) {
+                    $locales[$localization->getLocale()] = $localization;
+                }
+            }
+            $webspaces[$webspace->getKey()] = $locales;
+        }
+
+        return $webspaces;
     }
 
     /**

@@ -617,11 +617,11 @@
             </trans-unit>
             <trans-unit id="27" resname="content.ckeditor.internal-link">
                 <source>content.ckeditor.internal-link</source>
-                <target>Internal Link</target>
+                <target>Internal Sulu Link</target>
             </trans-unit>
             <trans-unit id="28" resname="content.ckeditor.internal-link.edit">
                 <source>content.ckeditor.internal-link.edit</source>
-                <target>Edit Internal Link</target>
+                <target>Edit Internal Sulu Link</target>
             </trans-unit>
             <trans-unit id="29" resname="content.ckeditor.internal-link.alt-title">
                 <source>content.ckeditor.internal-link.alt-title</source>
@@ -645,7 +645,7 @@
             </trans-unit>
             <trans-unit id="34" resname="content.ckeditor.internal-link.remove">
                 <source>content.ckeditor.internal-link.remove</source>
-                <target>Remove Internal Link</target>
+                <target>Remove Internal Sulu Link</target>
             </trans-unit>
             <trans-unit id="35" resname="content.text_editor.error.unpublished">
                 <source>content.text_editor.error.unpublished</source>
@@ -670,6 +670,54 @@
             <trans-unit id="40" resname="content.text_editor.error.removed-multiple">
                 <source>content.text_editor.error.removed-multiple</source>
                 <target>%s links are broken.</target>
+            </trans-unit>
+            <trans-unit id="41" resname="sulu-content.save-draft">
+                <source>sulu-content.save-draft</source>
+                <target>Save as draft</target>
+            </trans-unit>
+            <trans-unit id="42" resname="sulu-content.save-publish">
+                <source>sulu-content.save-publish</source>
+                <target>Save and publish</target>
+            </trans-unit>
+            <trans-unit id="43" resname="sulu-content.publish">
+                <source>sulu-content.publish</source>
+                <target>Publish</target>
+            </trans-unit>
+            <trans-unit id="44" resname="sulu-content.published-shadow">
+                <source>sulu-content.published-shadow</source>
+                <target>The publishing state will be retrieved from the state of the main page.</target>
+            </trans-unit>
+            <trans-unit id="45" resname="sulu-content.draft-label">
+                <source>sulu-content.draft-label</source>
+                <target><![CDATA[You are working on a draft, last saved: %(changed)s by <b>%(user)s</b>]]></target>
+            </trans-unit>
+            <trans-unit id="46" resname="sulu-content.unpublish">
+                <source>sulu-content.unpublish</source>
+                <target>Unpublish</target>
+            </trans-unit>
+            <trans-unit id="47" resname="labels.error.content-unpublish-desc">
+                <source>labels.error.content-unpublish-desc</source>
+                <target>Page could not be unpublished.</target>
+            </trans-unit>
+            <trans-unit id="48" resname="content-navigation.security.texteditor">
+                <source>content-navigation.security.texteditor</source>
+                <target>Text editor</target>
+            </trans-unit>
+            <trans-unit id="49" resname="sulu-content.ckeditor.roles-title">
+                <source>sulu-content.ckeditor.roles-title</source>
+                <target>Text editor settings</target>
+            </trans-unit>
+            <trans-unit id="50" resname="sulu-content.ckeditor.roles-type">
+                <source>sulu-content.ckeditor.roles-type</source>
+                <target>Section</target>
+            </trans-unit>
+            <trans-unit id="51" resname="sulu-content.ckeditor.roles-horizontal">
+                <source>sulu-content.ckeditor.roles-horizontal</source>
+                <target>Function</target>
+            </trans-unit>
+            <trans-unit id="52" resname="sulu-content.ckeditor.roles-info">
+                <source>sulu-content.ckeditor.roles-info</source>
+                <target>These settings apply for any text editor throughout the system used by this role.</target>
             </trans-unit>
         </body>
     </file>
