@@ -13,6 +13,9 @@ namespace Sulu\Component\Webspace\Tests\Unit;
 
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Environment;
+use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\Security;
+use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
 
@@ -76,7 +79,7 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
                     'asd',
                 ],
             ],
-            'errorTemplates' => [],
+            'templates' => [],
             'defaultTemplates' => [],
             'portals' => [
                 ['one'],
@@ -178,31 +181,31 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->webspace->hasDomain('1.sulu.lo', 'prod'));
     }
 
-    public function testAddErrorTemplate()
+    public function testAddTemplate()
     {
-        $errorTemplates = ['404' => 'template404'];
+        $templates = ['error-404' => 'template404'];
         $webspace = new Webspace();
-        $webspace->addErrorTemplate('404', 'template404');
+        $webspace->addTemplate('error-404', 'template404');
 
-        $this->assertEquals('template404', $webspace->getErrorTemplate(404));
-        $this->assertEquals($errorTemplates, $webspace->getErrorTemplates());
+        $this->assertEquals('template404', $webspace->getTemplate('error-404'));
+        $this->assertEquals($templates, $webspace->getTemplates());
         $data = $webspace->toArray();
-        $this->assertEquals($errorTemplates, $data['errorTemplates']);
+        $this->assertEquals($templates, $data['templates']);
     }
 
-    public function testAddErrorTemplateDefault()
+    public function testAddTemplateDefault()
     {
-        $errorTemplates = ['404' => 'template404', 'default' => 'template'];
+        $templates = ['error-404' => 'template404', 'error' => 'template'];
 
         $webspace = new Webspace();
-        $webspace->addErrorTemplate('default', 'template');
-        $webspace->addErrorTemplate('404', 'template404');
+        $webspace->addTemplate('error', 'template');
+        $webspace->addTemplate('error-404', 'template404');
 
-        $this->assertEquals('template404', $webspace->getErrorTemplate(404));
-        $this->assertEquals('template', $webspace->getErrorTemplate(500));
-        $this->assertEquals($errorTemplates, $webspace->getErrorTemplates());
+        $this->assertEquals('template404', $webspace->getTemplate('error-404'));
+        $this->assertEquals('template', $webspace->getTemplate('error'));
+        $this->assertEquals($templates, $webspace->getTemplates());
         $data = $webspace->toArray();
-        $this->assertEquals($errorTemplates, $data['errorTemplates']);
+        $this->assertEquals($templates, $data['templates']);
     }
 
     public function testAddDefaultTemplate()

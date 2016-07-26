@@ -8,6 +8,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2524 [ContactBundle]       Fixed contact-serialization for smart-content
     * BUGFIX      #2632 [ContentBundle]       prevent item select when ordering a column (husky)
     * BUGFIX      #2663 [MediaBundle]         made masonry view work for media with no thumbnail
+    * ENHANCEMENT #2665 [Webspace]            Introduced DelegatingFileLoader for webspace configurations
 
 * 1.3.0-RC1 (2016-07-22)
     * HOTFIX      #2632 [Content]             Fix usage of document inspector in StructureBridge
@@ -58,7 +59,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2530 [AdminBundle]         Included husky build which fixes the login translation issue
     * FEATURE     #2528 [AdminBundle]         Added form-abstraction for simple data-mapper forms
     * ENHANCEMENT #2526 [SearchBundle]        Introduced contexts for indexes to restrict selections
-    * BUGFIX      #2104 [ContentBundle]       Show Webspace node on 'copy' and 'move' overlays  
+    * BUGFIX      #2104 [ContentBundle]       Show Webspace node on 'copy' and 'move' overlays
     * ENHANCEMENT #2520 [ContentBundle]       Delete routes using the DocumentManager
     * BUGFIX      #2523 [SecurityBundle]      Fixed error with non-visible permission types in matrix
     * ENHANCEMENT #2522 [All]                 Use correct default phpcr session
@@ -110,15 +111,15 @@ CHANGELOG for Sulu
     * BUGFIX      #2379 [MediaBundle]         Inject CategoryRepository in MediaManager to avoid using removed constant
     * BUGFIX      #2370 [TestBundle]          Use Doctrine DBAL as default PHPCR-Backend
     * BUGFIX      #2369 [All]                 Install the symfony phpunit bridge again
-    * ENHANCEMENT #2356 [PreviewBundle]       Added default error message 
-    * BUGFIX      #2354 [ContentBundle]       Fixed javascript error preview is null for new page form 
+    * ENHANCEMENT #2356 [PreviewBundle]       Added default error message
+    * BUGFIX      #2354 [ContentBundle]       Fixed javascript error preview is null for new page form
     * ENHANCEMENT #2338 [MarkupBundle]        Implemented markup bundle
-    * FEATURE     #2333 [PreviewBundle]       Added preview render error templates 
-    * ENHANCEMENT #2353 [WebsocketBundle]     Changed configuration to default disable websocket 
-    * BUGFIX      #2351 [ContentBundle]       Removed strange condition for data-changed 
+    * FEATURE     #2333 [PreviewBundle]       Added preview render error templates
+    * ENHANCEMENT #2353 [WebsocketBundle]     Changed configuration to default disable websocket
+    * BUGFIX      #2351 [ContentBundle]       Removed strange condition for data-changed
     * BUGFIX      #2352 [CoreBundle]          Fixed RequestAnalyzer for use with ESI
-    * FEATURE     #2349 [RouteBundle]         Added route-bundle 
-    * FEATURE     #2299 [PreviewBundle]       Implemented preview bundle 
+    * FEATURE     #2349 [RouteBundle]         Added route-bundle
+    * FEATURE     #2299 [PreviewBundle]       Implemented preview bundle
     * ENHANCEMENT #2289 [ContentBundle]       Added display options support to date content type
     * ENHANCEMENT #2316 [Symfony]             Added collector compiler pass
     * ENHANCEMENT #2279 [Webspace]            Do not hide invalid webspace exceptions
@@ -152,7 +153,7 @@ CHANGELOG for Sulu
     * HOTFIX      #2498 [TestBundle]          Fixed TestUserProvider to create accounts with repository to support
                                               sulu inheritance
     * BUGFIX      #2389 [MediaBundle]         Removed twice adding of navigation item
-    * HOTFIX      #2481 [WebsiteBundle]       Fixed handling of non-default formats in error pages 
+    * HOTFIX      #2481 [WebsiteBundle]       Fixed handling of non-default formats in error pages
     * HOTFIX      #2467 [MediaBundle]         Fixed media-selection-overlay missing locale
     * HOTFIX      #2460 [MediaBundle]         Fixed deprecation of getEntityManager in MediaPreviewController
     * HOTFIX      #2454 [MediaBundle]         Fixed inset image scale image-size 0

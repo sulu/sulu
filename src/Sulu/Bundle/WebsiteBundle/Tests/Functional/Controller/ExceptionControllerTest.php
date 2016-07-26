@@ -83,7 +83,7 @@ class ExceptionControllerTest extends \PHPUnit_Framework_TestCase
         $exception = FlattenException::create(new \Exception(), 400);
 
         $webspace = new Webspace();
-        $webspace->addErrorTemplate(400, 'error400.html.twig');
+        $webspace->addTemplate('error-400', 'error400.html.twig');
         $webspace->setTheme('test');
 
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);
@@ -96,6 +96,62 @@ class ExceptionControllerTest extends \PHPUnit_Framework_TestCase
         } else {
             $this->parameterResolver->resolve(Argument::cetera())->shouldNotBeCalled();
         }
+
+        // Required to leave one ob_level left, test will be marked otherwise as risky by PHPUnit
+        $request->headers->add(['X-Php-Ob-Level' => 1]);
+
+        $this->exceptionController->showAction($request, $exception);
+    }
+
+    public static function provideShowActionErrorTemplate()
+    {
+        return [
+            [
+                [
+                    'error-404' => 'error404.html.twig',
+                ],
+                404,
+                'error404.html.twig',
+            ],
+            [
+                [
+                    'error-404' => 'error404.html.twig',
+                    'error-500' => 'error500.html.twig',
+                ],
+                500,
+                'error500.html.twig',
+            ],
+            [
+                [
+                    'error-404' => 'error404.html.twig',
+                    'error' => 'error.html.twig',
+                ],
+                400,
+                'error.html.twig',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideShowActionErrorTemplate
+     */
+    public function testShowActionErrorTemplate($templates, $errorCode, $expectedTemplate)
+    {
+        $request = new Request();
+        $exception = FlattenException::create(new \Exception(), $errorCode);
+
+        $webspace = new Webspace();
+        foreach ($templates as $type => $template) {
+            $webspace->addTemplate($type, $template);
+        }
+        $webspace->setTheme('test');
+
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
+
+        $this->twig->render($expectedTemplate, Argument::any())->shouldBeCalled();
+        $this->loader->exists(Argument::any())->willReturn(true);
+
+        $this->parameterResolver->resolve(Argument::cetera())->willReturn([]);
 
         // Required to leave one ob_level left, test will be marked otherwise as risky by PHPUnit
         $request->headers->add(['X-Php-Ob-Level' => 1]);
