@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2675 [ContactBundle]       Fixed findGetAll-method of ContactRepository
     * BUGFIX      #2524 [ContactBundle]       Fixed contact-serialization for smart-content
     * BUGFIX      #2632 [ContentBundle]       prevent item select when ordering a column (husky)
     * BUGFIX      #2663 [MediaBundle]         made masonry view work for media with no thumbnail
