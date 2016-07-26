@@ -65,8 +65,8 @@ class ContactRepositoryTest extends SuluTestCase
     private $contactData = [
         ['Max', 'Mustermann', [0, 1, 2], [0, 1, 2]],
         ['Anne', 'Mustermann', [0, 1, 3], [0, 1, 3]],
-        ['Georg', 'Mustermann', [0, 1], [0, 1]],
-        ['Marianne', 'Mustermann', [0, 1, 2], [0, 1, 2]],
+        ['Georg', 'Musterfrau', [0, 1], [0, 1]],
+        ['Marianne', 'Musterfrau', [0, 1, 2], [0, 1, 2]],
         ['Franz-Xaver', 'Gabler', [0], [0]],
         ['Markus', 'Mustermann', [0], [0]],
         ['Erika', 'Mustermann', [0], [0]],
@@ -531,6 +531,38 @@ class ContactRepositoryTest extends SuluTestCase
             $this->assertEquals($ids[$i], $result[$i]->getId());
             $this->assertEquals($expected[$i][0], $result[$i]->getFirstName());
             $this->assertEquals($expected[$i][1], $result[$i]->getLastName());
+        }
+    }
+
+    public function findGetAllProvider()
+    {
+        return [
+            [null, null, [], [], $this->contactData],
+            [3, null, [], [], array_slice($this->contactData, 0, 3)],
+            [3, 2, [], [], array_slice($this->contactData, 2, 3)],
+            [1, 0, [], ['lastName' => 'Gabler'], [$this->contactData[4]]],
+            [1, 0, ['firstName' => 'asc'], [], [$this->contactData[1]]],
+            [null, 0, ['firstName' => 'desc'], ['lastName' => 'Musterfrau'], [$this->contactData[3], $this->contactData[2]]],
+        ];
+    }
+
+    /**
+     * @dataProvider findGetAllProvider
+     *
+     * @param $limit
+     * @param $offset
+     * @param $sorting
+     * @param $where
+     * @param $expected
+     */
+    public function testFindGetAll($limit, $offset, $sorting, $where, $expected)
+    {
+        $repository = $this->em->getRepository(Contact::class);
+        $result = $repository->findGetAll($limit, $offset, $sorting, $where);
+
+        $this->assertEquals(count($expected), count($result));
+        for ($i = 0; $i < count($result); ++$i) {
+            $this->assertEquals($expected[$i][0], $result[$i]['firstName']);
         }
     }
 }
