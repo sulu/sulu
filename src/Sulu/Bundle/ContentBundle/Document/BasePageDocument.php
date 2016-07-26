@@ -559,6 +559,14 @@ class BasePageDocument implements
     /**
      * {@inheritdoc}
      */
+    public function setSuluOrder($order)
+    {
+        $this->suluOrder = $order;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function setPermissions(array $permissions)
     {
         $this->permissions = $permissions;

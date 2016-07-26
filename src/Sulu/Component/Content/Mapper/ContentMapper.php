@@ -54,7 +54,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes.
  *
- * @deprecated since 1.0-? use the DocumentManager instead.
+ * @deprecated since 1.0-? use the DocumentManager instead
  */
 class ContentMapper implements ContentMapperInterface
 {
@@ -566,12 +566,7 @@ class ContentMapper implements ContentMapperInterface
                 $targetSibling = $siblings[$position - 1];
             }
 
-            $this->documentManager->reorder($document, $targetSibling->getPath());
-        }
-
-        // this should not be necessary (see https://github.com/sulu-io/sulu-document-manager/issues/39)
-        foreach ($siblingDocuments as $siblingDocument) {
-            $this->documentManager->persist($siblingDocument, null, ['auto_name' => false]);
+            $this->documentManager->reorder($document, $targetSibling->getUuid());
         }
 
         $this->documentManager->flush();
@@ -652,26 +647,6 @@ class ContentMapper implements ContentMapperInterface
         }
 
         return $result;
-    }
-
-    /**
-     * @param $name
-     * @param NodeInterface $parent
-     *
-     * @return string
-     */
-    private function getUniquePath($name, NodeInterface $parent)
-    {
-        if ($parent->hasNode($name)) {
-            $i = 0;
-            do {
-                ++$i;
-            } while ($parent->hasNode($name . '-' . $i));
-
-            return $name . '-' . $i;
-        } else {
-            return $name;
-        }
     }
 
     /**

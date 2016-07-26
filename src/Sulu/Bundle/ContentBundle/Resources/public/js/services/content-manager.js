@@ -13,7 +13,7 @@ define(['jquery'], function ($) {
     var baseUrl = '/admin/api/nodes';
 
     return {
-        save: function(data, locale, webspace, successCallback, errorCallback) {
+        save: function(data, locale, webspace, options, successCallback, errorCallback) {
             var method = 'POST', url = baseUrl, requestParameters = [];
 
             if (!!data.id) {
@@ -29,6 +29,14 @@ define(['jquery'], function ($) {
                 requestParameters.push('webspace=' + webspace);
             }
 
+            if (!!options.action) {
+                requestParameters.push('action=' + options.action);
+            }
+
+            if (!!options.force) {
+                requestParameters.push('force=' + options.force);
+            }
+
             $.ajax(
                 url + '?' + requestParameters.join('&'),
                 {
@@ -39,6 +47,25 @@ define(['jquery'], function ($) {
                     error: errorCallback
                 }
             );
+        },
+
+        unpublish: function(id, locale) {
+            var deferred = $.Deferred();
+            $.ajax(
+                [baseUrl, '/', id, '?', 'action=unpublish&language=' + locale].join(''),
+                {
+                    method: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function(response) {
+                        deferred.resolve(response);
+                    },
+                    error: function(xhr) {
+                        deferred.reject(xhr);
+                    }
+                }
+            );
+
+            return deferred.promise();
         }
     }
 });

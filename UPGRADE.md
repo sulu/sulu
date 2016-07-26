@@ -2,6 +2,65 @@
 
 ## dev-develop
 
+### PHPCR
+
+To adapt to the new PHPCR structure execute the migrations:
+
+```
+app/console phpcr:migrations:migrate
+```
+
+### Media selection overlay
+The frontend component 'media-selection-overlay@sulumedia' got removed,
+please use 'media-selection/overlay@sulumedia' instead.
+
+### NodeRepository
+
+The `orderBefore` method of the `NodeRepository` has been removed. Use the
+`reorder` method of the `DocumentManager` instead.
+
+### LocalizationProvider
+The core LocalizationProvider (which provided the system locales)
+got removed. At this point the WebspaceLocalizationProvider is the
+only LocalizationProvider in Sulu. If the system locales 
+(locales in which translations for the admin panel are available) are
+needed, please refer directly to the config `sulu_core.translations`.
+
+### Translations
+The command `sulu:translate:import` got removed, as the export command
+(`sulu:translate:export`) now takes its translations directly from
+the translation files and not from the database anymore. This change
+would only cause conflicts, if one had a dependency directly on the
+translations in the database. If so, please use the files in the
+`Resources` folders.
+
+### Publishing
+
+For the publishing a separate workspace was introduced. This workspace
+will be created and correctly filled by the PHPCR migrations.
+
+Because the search index is now split into draft and live pages you have
+to reindex all the content:
+
+```bash
+app/console massive:search:purge --all
+app/console massive:search:reindex
+app/webconsole massive:search:reindex
+```
+
+Also the `persist` call of the `DocumentManager` changed it behavior.
+After persisting a document it will not be available on the website
+immediately. Instead you also need to call `publish` with the same
+document and locale.
+
+### PHPCR Sessions
+
+The sessions for PHPCR were configured at `sulu_core.phpcr` in the
+configuration. This happens now at `sulu_document_manager.sessions`. You can
+define multiple sessions here using different names and refer to one of them as
+default session using the `sulu_document_manager.default_session` and to
+another as live session using the `sulu_document_manager.live_session`.
+
 ### Documemt Manager Initializer
 
 The `initialize` method of the `InitializerInterface` has now also a `$purge`
@@ -104,6 +163,13 @@ now default `false`.
 
 The Interface or content-types has been cleaned. The function `ContentTypeInterface::readForPreview` will never
 be called in the future and can therefor be removed.
+
+## 1.2.7
+
+### Default Country
+
+The default country for addresses in the ContactBundle is set by the ISO 3166 country-code
+instead the of database-id now.
 
 ## 1.2.4
 

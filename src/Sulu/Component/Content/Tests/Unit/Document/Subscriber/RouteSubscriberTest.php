@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -124,6 +125,7 @@ class RouteSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $routeDocument->getTargetDocument()->willReturn($targetDocument);
         $routeDocument->isHistory()->willReturn(false);
+        $routeDocument->setHistory(true)->shouldBeCalled();
 
         $routeNode->setProperty('sulu:history', false)->shouldBeCalled();
 
@@ -147,15 +149,19 @@ class RouteSubscriberTest extends \PHPUnit_Framework_TestCase
             ['path' => '/cmf/sulu_io/routes/de/test1', 'auto_create' => true]
         )->shouldBeCalled();
 
+        $this->documentManager->publish($newRouteDocument, 'de')->shouldBeCalled();
+
         $routeDocument->setTargetDocument($newRouteDocument)->shouldBeCalled();
 
         $oldRouteDocument->setTargetDocument($newRouteDocument)->shouldBeCalled();
+        $oldRouteDocument->setHistory(true)->shouldBeCalled();
 
         $this->documentManager->persist(
             $oldRouteDocument->reveal(),
             null,
             ['path' => '/cmf/sulu_io/routes/de/old-test']
         )->shouldBeCalled();
+        $this->documentManager->publish($oldRouteDocument->reveal(), null)->shouldBeCalled();
 
         $routeNode->setProperty('sulu:history', true)->shouldBeCalled();
         $routeNode->getReferences('sulu:content')->willReturn([]);

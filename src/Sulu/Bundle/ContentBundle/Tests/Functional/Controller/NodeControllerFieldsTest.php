@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -545,7 +546,7 @@ class NodeControllerFieldsTest extends SuluTestCase
             $path = $this->sessionManager->getContentPath('sulu_io') . '/' . $title;
         }
         if ($parent !== null) {
-            $path = $parent->getPath();
+            $path = $parent->getPath() . '/' . $title;
             $document->setParent($parent);
         }
 

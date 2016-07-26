@@ -38,7 +38,7 @@
         background: none;
     }
 
-    #masonry-grid {
+    .masonry-grid {
         margin-bottom: -20px;
         position: relative;
         text-align: center;
@@ -98,6 +98,10 @@
                     margin-left: 5px;
                     cursor: pointer;
                 }
+            }
+
+            &.action-navigator {
+                cursor: pointer;
             }
 
             .action-navigator, .download-navigator {

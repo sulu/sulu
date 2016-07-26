@@ -10,6 +10,14 @@
     </parameters>
 
     <services>
+        <service id="sulu_http_cache.event_subscriber.invalidation" class="Sulu\Component\HttpCache\EventSubscriber\InvalidationSubscriber">
+            <argument type="service" id="sulu_http_cache.handler"/>
+            <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
+
+            <tag name="sulu_document_manager.event_subscriber"/>
+        </service>
+
         <service id="sulu_http_cache.event_subscriber.content_mapper" class="%sulu_http_cache.event_subscriber.content_mapper.class%">
             <argument type="service" id="sulu_http_cache.handler"/>
             <tag name="kernel.event_subscriber"/>

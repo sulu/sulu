@@ -146,7 +146,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     public function testPersistNotImplementing()
     {
         $this->persistEvent->getDocument()->willReturn($this->notImplementing);
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
+        $this->subscriber->saveStructureData($this->persistEvent->reveal());
     }
 
     /**
@@ -156,7 +156,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     {
         $this->document->getStructureType()->willReturn(null);
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
+        $this->subscriber->saveStructureData($this->persistEvent->reveal());
     }
 
     /**
@@ -167,7 +167,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->persistEvent->getLocale()->willReturn(null);
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
 
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
+        $this->subscriber->saveStructureData($this->persistEvent->reveal());
 
         $this->node->setProperty()->shouldNotBeCalled();
     }
@@ -196,7 +196,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         ]);
         $this->setupPropertyWrite();
 
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
+        $this->subscriber->saveStructureData($this->persistEvent->reveal());
     }
 
     /**
@@ -227,7 +227,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->structureMetadata->getName()->willReturn('test');
         $this->structureMetadata->getResource()->willReturn('/path/to/resource.xml');
 
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
+        $this->subscriber->saveStructureData($this->persistEvent->reveal());
     }
 
     /**
@@ -258,7 +258,7 @@ class StructureSubscriberTest extends SubscriberTestCase
 
         $this->setupPropertyWrite();
 
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
+        $this->subscriber->saveStructureData($this->persistEvent->reveal());
     }
 
     /**

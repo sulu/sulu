@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -177,7 +178,7 @@ trait DataProviderRepositoryTrait
      * @param string $operator "and" or "or"
      * @param string $alias
      *
-     * @return array parameter for the query.
+     * @return array parameter for the query
      */
     private function appendRelation(QueryBuilder $queryBuilder, $relation, $values, $operator, $alias)
     {
@@ -201,7 +202,7 @@ trait DataProviderRepositoryTrait
      * @param int[] $values
      * @param string $alias
      *
-     * @return array parameter for the query.
+     * @return array parameter for the query
      */
     private function appendRelationOr(QueryBuilder $queryBuilder, $relation, $values, $alias)
     {
@@ -219,7 +220,7 @@ trait DataProviderRepositoryTrait
      * @param int[] $values
      * @param string $alias
      *
-     * @return array parameter for the query.
+     * @return array parameter for the query
      */
     private function appendRelationAnd(QueryBuilder $queryBuilder, $relation, $values, $alias)
     {

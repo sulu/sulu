@@ -23,11 +23,13 @@ class LoadCountries implements FixtureInterface, OrderedFixtureInterface
      */
     public function load(ObjectManager $manager)
     {
-        // force id = 1
-        $metadata = $manager->getClassMetaData(get_class(new Country()));
-        $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+        // get already stored countries
+        $qb = $manager->createQueryBuilder();
+        $qb->from(Country::class, 'c', 'c.code');
+        $qb->select('c');
+        $existingCountries = $qb->getQuery()->getResult();
 
-        $i = 1;
+        // load xml
         $file = dirname(__FILE__) . '/../countries.xml';
         $doc = new \DOMDocument();
         $doc->load($file);
@@ -38,23 +40,22 @@ class LoadCountries implements FixtureInterface, OrderedFixtureInterface
         if (!is_null($elements)) {
             /** @var $element DOMNode */
             foreach ($elements as $element) {
-                $country = new Country();
-                $country->setId($i);
-                $children = $element->childNodes;
                 /** @var $child DOMNode */
-                foreach ($children as $child) {
+                foreach ($element->childNodes as $child) {
                     if (isset($child->nodeName)) {
                         if ($child->nodeName == 'Name') {
-                            $country->setName($child->nodeValue);
+                            $countryName = $child->nodeValue;
                         }
                         if ($child->nodeName == 'Code') {
-                            $country->setCode($child->nodeValue);
+                            $countryCode = $child->nodeValue;
                         }
                     }
                 }
-                $manager->persist($country);
 
-                ++$i;
+                $country = (array_key_exists($countryCode, $existingCountries)) ? $existingCountries[$countryCode] : new Country();
+                $country->setName($countryName);
+                $country->setCode($countryCode);
+                $manager->persist($country);
             }
         }
 

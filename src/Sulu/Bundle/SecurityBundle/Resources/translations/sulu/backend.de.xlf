@@ -122,6 +122,18 @@
                 <source>security.reset.mail-message</source>
                 <target>Klicken Sie auf den folgenden Link oder kopieren Sie ihn in Ihren Browser um Ihr Sulu Passwort zurückzusetzen:</target>
             </trans-unit>
+            <trans-unit id="1cd67d24ab0a432414bc0685517c721d" resname="security.warning">
+                <source>security.warning</source>
+                <target>Um die Änderungen an den Sicherheitseinstellungen zu sehen, muss das System neu geladen werden.</target>
+            </trans-unit>
+            <trans-unit id="1cd67d24ab0a432414ba0685517c632c" resname="sulu-security.role.removed">
+                <source>sulu-security.role.removed</source>
+                <target>Rolle erfolgreich entfernt</target>
+            </trans-unit>
+            <trans-unit id="1cd67d24ab0a432414ba0685517c632a" resname="sulu-security.role.saved">
+                <source>sulu-security.role.saved</source>
+                <target>Rolle erfolgreich gespeichert</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

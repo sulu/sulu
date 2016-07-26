@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\CoreBundle\DependencyInjection;
 
-use InvalidArgumentException;
 use Oro\ORM\Query\AST\Functions\String\GroupConcat;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
@@ -224,11 +223,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
         $container->setParameter('sulu.cache_dir', $config['cache_dir']);
 
-        // PHPCR
-        if (isset($config['phpcr'])) {
-            $this->initPhpcr($config['phpcr'], $container, $loader);
-        }
-
         // Content
         if (isset($config['content'])) {
             $this->initContent($config['content'], $container, $loader);
@@ -251,6 +245,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
         $this->initListBuilder($container, $loader);
 
+        $loader->load('phpcr.xml');
         $loader->load('rest.xml');
         $loader->load('build.xml');
         $loader->load('localization.xml');
@@ -277,18 +272,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
     {
         $container->setParameter('sulu.fields_defaults.translations', $fieldsConfig['translations']);
         $container->setParameter('sulu.fields_defaults.widths', $fieldsConfig['widths']);
-    }
-
-    /**
-     * @param $phpcrConfig
-     * @param ContainerBuilder     $container
-     * @param Loader\XmlFileLoader $loader
-     *
-     * @throws InvalidArgumentException
-     */
-    private function initPhpcr($phpcrConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
-    {
-        $loader->load('phpcr.xml');
     }
 
     /**

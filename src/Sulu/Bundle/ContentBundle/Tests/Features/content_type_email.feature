@@ -18,12 +18,14 @@ Feature: Email content type
         Given I am editing a page of type "email_page"
         When I fill in "husky-input-email" with "daniel@dantleech.com"
         And I click the save icon
+        And I click toolbar item "savePublish"
         Then I expect a success notification to appear
 
     Scenario Outline: Enter a invalid email
         Given I am editing a page of type "email_page"
         When I fill in "husky-input-email" with "<email>"
         And I click the save icon
+        And I click toolbar item "savePublish"
         Then there should be 1 form errors
         Examples:
             | email |

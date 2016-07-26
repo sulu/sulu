@@ -50,7 +50,7 @@ class Symfony implements ProxyClientInterface, PurgeInterface
      *
      * @param ClientInterface $client HTTP client (optional). If no HTTP client
      *                                is supplied, a default one will be
-     *                                created.
+     *                                created
      */
     public function __construct(ClientInterface $client = null)
     {
@@ -187,7 +187,7 @@ class Symfony implements ProxyClientInterface, PurgeInterface
      * @param string[] $allowedParts Array of allowed URL parts (optional)
      *
      * @throws InvalidUrlException If URL is invalid, the scheme is not http or
-     *                             contains parts that are not expected.
+     *                             contains parts that are not expected
      *
      * @return string The URL (with default scheme if there was no scheme)
      */

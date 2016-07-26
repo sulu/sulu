@@ -174,13 +174,6 @@ class Media implements MediaInterface
      */
     public function getCollection()
     {
-        if (null === $this->collection) {
-            throw new \RuntimeException(sprintf(
-                'Media entity %d is not associated with a collection',
-                $this->getId()
-            ));
-        }
-
         return $this->collection;
     }
 

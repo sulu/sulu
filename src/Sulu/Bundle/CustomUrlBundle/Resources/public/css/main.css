@@ -1,19 +1,22 @@
 /*----------------------------------------*/
-/* line 2, ../scss/modules/custom-url.scss */
-.custom-url-input .form-element {
-  width: 100px;
-  margin: 0 5px;
+/* line 1, ../scss/modules/custom-url.scss */
+.custom-url-input {
+  display: table;
 }
-/* line 7, ../scss/modules/custom-url.scss */
-.custom-url-input .form-element.prefix {
-  margin-left: 0;
+/* line 4, ../scss/modules/custom-url.scss */
+.custom-url-input .domain-part {
+  display: table-cell;
+  color: #999;
+  width: 1px;
+  white-space: nowrap;
 }
 /* line 11, ../scss/modules/custom-url.scss */
-.custom-url-input .domain-part {
-  color: #999;
+.custom-url-input .input-part {
+  display: table-cell;
+  width: 10000px;
 }
 
-/* line 17, ../scss/modules/custom-url.scss */
+/* line 18, ../scss/modules/custom-url.scss */
 .target-input div.husky-validate-error {
   border-color: #EA524E;
   border-width: 2px;

@@ -113,11 +113,11 @@ class MediaController extends AbstractMediaController implements
      */
     public function cgetAction(Request $request)
     {
-        $ids = array_filter(explode(',', $request->get('ids')));
-
         $fieldDescriptors = $this->getFieldDescriptors($this->getLocale($request), false);
+        $ids = array_filter(explode(',', $request->get('ids')));
         $listBuilder = $this->getListBuilder($request, $fieldDescriptors, $ids);
         $listResponse = $listBuilder->execute();
+        $count = $listBuilder->count();
 
         for ($i = 0, $length = count($listResponse); $i < $length; ++$i) {
             $format = $this->getFormatManager()->getFormats(
@@ -127,6 +127,7 @@ class MediaController extends AbstractMediaController implements
                 $listResponse[$i]['version'],
                 $listResponse[$i]['mimeType']
             );
+
             if (0 < count($format)) {
                 $listResponse[$i]['thumbnails'] = $format;
             }
@@ -154,7 +155,7 @@ class MediaController extends AbstractMediaController implements
             $request->query->all(),
             $listBuilder->getCurrentPage(),
             $listBuilder->getLimit(),
-            $listBuilder->count()
+            $count
         );
 
         return $this->handleView($this->view($list, 200));

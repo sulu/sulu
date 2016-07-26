@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -84,8 +85,8 @@ class CustomUrlManager implements CustomUrlManagerInterface
                     'load_ghost_content' => true,
                     'auto_rename' => false,
                 ]
-
             );
+            $this->documentManager->publish($document, $locale);
         } catch (NodeNameAlreadyExistsException $ex) {
             throw new TitleAlreadyExistsException($document->getTitle());
         }
@@ -208,6 +209,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
                     'auto_name_locale' => $locale,
                 ]
             );
+            $this->documentManager->publish($document, $locale);
         } catch (NodeNameAlreadyExistsException $ex) {
             throw new TitleAlreadyExistsException($document->getTitle());
         }

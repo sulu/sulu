@@ -11,8 +11,10 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
+use PHPCR\NodeInterface;
 use Prophecy\Argument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\Content\Document\Subscriber\OrderSubscriber;
 use Sulu\Component\DocumentManager\Event\ReorderEvent;
@@ -20,19 +22,37 @@ use Sulu\Component\DocumentManager\Event\ReorderEvent;
 class OrderSubscriberTest extends SubscriberTestCase
 {
     /**
+     * @var DocumentInspector
+     */
+    private $documentInspector;
+
+    /**
+     * @var PropertyEncoder
+     */
+    private $propertyEncoder;
+
+    /**
      * @var OrderSubscriber
      */
     private $subscriber;
 
-    private $inspector;
+    /**
+     * @var OrderBehavior
+     */
+    private $document;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->inspector = $this->prophesize(DocumentInspector::class);
-        $this->subscriber = new OrderSubscriber($this->inspector->reveal());
-        $this->persistEvent->getDocument()->willReturn(new TestOrderDocument(null));
+        $this->documentInspector = $this->prophesize(DocumentInspector::class);
+        $this->propertyEncoder = $this->prophesize(PropertyEncoder::class);
+        $this->subscriber = new OrderSubscriber($this->documentInspector->reveal(), $this->propertyEncoder->reveal());
+
+        $this->document = $this->prophesize(OrderBehavior::class);
+
+        $this->propertyEncoder->systemName('order')->willReturn('sulu:order');
+        $this->persistEvent->getDocument()->willReturn($this->document->reveal());
         $this->persistEvent->getNode()->willReturn($this->node->reveal());
     }
 
@@ -44,27 +64,42 @@ class OrderSubscriberTest extends SubscriberTestCase
     {
         $document = $this->prophesize(OrderBehavior::class);
         $parentDocument = $this->prophesize(OrderBehavior::class);
-        $childDocument1 = new TestOrderDocument(0);
+        $childDocument1 = $this->prophesize(OrderBehavior::class);
         $childDocument2 = new \stdClass();
-        $childDocument3 = new TestOrderDocument(20);
-        $childDocument4 = new TestOrderDocument(10);
+        $childDocument3 = $this->prophesize(OrderBehavior::class);
+        $childDocument4 = $this->prophesize(OrderBehavior::class);
 
-        $this->inspector->getParent($document->reveal())->willReturn($parentDocument->reveal());
-        $this->inspector->getChildren($parentDocument->reveal())->willReturn([
-            $childDocument1,
+        $childNode1 = $this->prophesize(NodeInterface::class);
+        $childNode2 = $this->prophesize(NodeInterface::class);
+        $childNode3 = $this->prophesize(NodeInterface::class);
+        $childNode4 = $this->prophesize(NodeInterface::class);
+
+        $this->documentInspector->getNode($childDocument1->reveal())->willReturn($childNode1);
+        $this->documentInspector->getNode($childDocument2)->willReturn($childNode2);
+        $this->documentInspector->getNode($childDocument3->reveal())->willReturn($childNode3);
+        $this->documentInspector->getNode($childDocument4->reveal())->willReturn($childNode4);
+
+        $this->documentInspector->getParent($document->reveal())->willReturn($parentDocument->reveal());
+        $this->documentInspector->getChildren($parentDocument->reveal())->willReturn([
+            $childDocument1->reveal(),
             $childDocument2,
-            $childDocument3,
-            $childDocument4,
+            $childDocument3->reveal(),
+            $childDocument4->reveal(),
         ]);
 
         $reorderEvent = $this->prophesize(ReorderEvent::class);
         $reorderEvent->getDocument()->willReturn($document);
 
-        $this->subscriber->handleReorder($reorderEvent->reveal());
+        $childNode1->setProperty('sulu:order', 10)->shouldBeCalled();
+        $childNode2->setProperty('sulu:order', Argument::any())->shouldNotBeCalled();
+        $childNode3->setProperty('sulu:order', 20)->shouldBeCalled();
+        $childNode4->setProperty('sulu:order', 30)->shouldBeCalled();
 
-        $this->assertEquals(10, $childDocument1->getSuluOrder());
-        $this->assertEquals(20, $childDocument3->getSuluOrder());
-        $this->assertEquals(30, $childDocument4->getSuluOrder());
+        $childDocument1->setSuluOrder(10)->shouldBeCalled();
+        $childDocument3->setSuluOrder(20)->shouldBeCalled();
+        $childDocument4->setSuluOrder(30)->shouldBeCalled();
+
+        $this->subscriber->handleReorder($reorderEvent->reveal());
     }
 
     /**
@@ -78,7 +113,7 @@ class OrderSubscriberTest extends SubscriberTestCase
         $reorderEvent->getDocument()->willReturn($document);
 
         $this->subscriber->handleReorder($reorderEvent->reveal());
-        $this->inspector->getParent(Argument::any())->shouldNotHaveBeenCalled();
+        $this->documentInspector->getParent(Argument::any())->shouldNotHaveBeenCalled();
     }
 
     /**
@@ -90,38 +125,31 @@ class OrderSubscriberTest extends SubscriberTestCase
 
         $reorderEvent = $this->prophesize(ReorderEvent::class);
         $reorderEvent->getDocument()->willReturn($document->reveal());
-        $this->inspector->getParent($document->reveal())->willReturn(null);
+        $this->documentInspector->getParent($document->reveal())->willReturn(null);
 
         $this->subscriber->handleReorder($reorderEvent->reveal());
-        $this->inspector->getChildren(Argument::any())->shouldNotHaveBeenCalled();
+        $this->documentInspector->getChildren(Argument::any())->shouldNotHaveBeenCalled();
     }
 
-    /**
-     * It should set the order on the document.
-     */
     public function testPersistOrder()
     {
         $this->node->getParent()->willReturn($this->parentNode->reveal());
         $this->parentNode->getNodes()->willReturn([
             $this->node->reveal(),
         ]);
-        $this->persistEvent->getAccessor()->willReturn($this->accessor->reveal());
-        $this->accessor->set('suluOrder', 20)->shouldBeCalled();
+        $this->document->getSuluOrder()->willReturn(null);
+        $this->document->setSuluOrder(20)->shouldBeCalled();
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
-}
 
-class TestOrderDocument implements OrderBehavior
-{
-    private $suluOrder;
-
-    public function __construct($order)
+    public function testPersistOrderWithExistingOrder()
     {
-        $this->suluOrder = $order;
-    }
-
-    public function getSuluOrder()
-    {
-        return $this->suluOrder;
+        $this->node->getParent()->willReturn($this->parentNode->reveal());
+        $this->parentNode->getNodes()->willReturn([
+            $this->node->reveal(),
+        ]);
+        $this->document->getSuluOrder()->willReturn(10);
+        $this->document->setSuluOrder(Argument::any())->shouldNotBeCalled();
+        $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 }

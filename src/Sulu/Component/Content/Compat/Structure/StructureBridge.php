@@ -613,7 +613,7 @@ class StructureBridge implements StructureInterface
     /**
      * Magic getter.
      *
-     * @deprecated Do not use magic getters. Use ArrayAccess instead.
+     * @deprecated Do not use magic getters. Use ArrayAccess instead
      */
     public function __get($name)
     {

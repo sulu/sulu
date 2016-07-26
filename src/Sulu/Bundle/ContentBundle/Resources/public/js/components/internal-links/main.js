@@ -93,7 +93,7 @@ define([], function() {
             if (data.indexOf(item.id) === -1) {
                 // FIXME return of node api returns for column-navigation id and for "filter by id" uuid as id key
                 item.uuid = item.id;
-                
+
                 data.push(item.id);
 
                 this.setData(data, false);
@@ -124,7 +124,6 @@ define([], function() {
                             actionIcon: 'fa-plus-circle',
                             resultKey: this.options.resultKey,
                             showOptions: false,
-                            showStatus: true,
                             responsive: false,
                             skin: 'fixed-height-small',
                             markable: true,
@@ -145,10 +144,10 @@ define([], function() {
             var url = '/admin/api/nodes',
                 urlParts = [
                     'language=' + this.options.locale,
-                    'fields=title,order',
+                    'fields=title,order,published',
                     'webspace-nodes=all'
                 ];
-            
+
             if (!!this.options.webspace) {
                 urlParts.push('webspace=' + this.options.webspace);
             }

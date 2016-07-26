@@ -25,7 +25,7 @@ interface ContentTypeInterface
     const PRE_SAVE = 1;
 
     /**
-     * @deprecated This type is not supported anymore, because it is not even used by the ResourceLocator anymore.
+     * @deprecated This type is not supported anymore, because it is not even used by the ResourceLocator anymore
      */
     const POST_SAVE = 2;
 

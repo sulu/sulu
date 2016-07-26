@@ -102,6 +102,7 @@ class ContentContentNavigationProvider implements ContentNavigationProviderInter
 
         if ($this->enabledSecurity && $this->securityChecker->hasPermission($securityContext, PermissionTypes::SECURITY)) {
             $permissions = new ContentNavigationItem('Permissions');
+            $permissions->setId('tab-permissions');
             $permissions->setAction('permissions');
             $permissions->setPosition(50);
             $permissions->setDisplay(['edit']);

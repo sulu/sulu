@@ -124,7 +124,7 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
         $this->persistEvent->getNode()->willReturn($this->node->reveal());
 
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
+        $this->subscriber->copyShadowProperties($this->persistEvent->reveal());
     }
 
     public function testHandlePersistNotShadow()
@@ -150,7 +150,7 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
         $this->persistEvent->getNode()->willReturn($this->node->reveal());
 
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
+        $this->subscriber->copyShadowProperties($this->persistEvent->reveal());
     }
 }
 

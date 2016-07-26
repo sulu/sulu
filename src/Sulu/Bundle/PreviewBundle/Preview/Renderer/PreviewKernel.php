@@ -18,12 +18,20 @@ use Symfony\Component\Config\Loader\LoaderInterface;
  */
 class PreviewKernel extends \WebsiteKernel
 {
+    const CONTEXT_PREVIEW = 'preview';
+
     /**
      * {@inheritdoc}
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         parent::registerContainerConfiguration($loader);
+
+        if (in_array($this->getEnvironment(), ['dev', 'test'])) {
+            $loader->load(
+                implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'Resources', 'config', 'config_preview_dev.yml'])
+            );
+        }
 
         $loader->load(implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'Resources', 'config', 'config_preview.yml']));
     }
@@ -39,5 +47,21 @@ class PreviewKernel extends \WebsiteKernel
         }
 
         return $this->rootDir;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLogDir()
+    {
+        return str_replace($this->getContext(), static::CONTEXT_PREVIEW, parent::getLogDir());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCacheDir()
+    {
+        return str_replace($this->getContext(), static::CONTEXT_PREVIEW, parent::getCacheDir());
     }
 }

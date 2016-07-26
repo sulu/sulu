@@ -2,9 +2,41 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2634 [Rest]                hide exception details on rest-api error in prod environment
+    * FEATURE     #2642 [AdminBundle]         Added different badges color support
+    * BUGFIX      #2618 [Localization]        Removed the system localizations from LocalizationController
+    * BUGFIX      #2640 [ContentBundle]       Fixed reordering for published workspace
+    * BUGFIX      #2611 [HttpCacheBundle]     fill host-placeholder before clearing cache
+    * BUGFIX      #2625 [ContentBundle]       Removed force flag for webspace key parameter
+    * ENHANCEMENT #2621 [ContentBundle]       Added migration for publishing
+    * ENHANCEMENT #2623 [DocumentManager]     Add publishing toolbar buttons to extensions in document manager bundle
+    * ENHANCEMENT #2614 [ContentBundle]       Removed unused code and tests
+    * BUGFIX      #2603 [ContentBundle]       Fixed resource locator generation for pages with ghost-parent
+    * BUGFIX      #2539 [SecurityBundle]      Made TokenStorage dependency for SecuritySubscriber optional
+    * BUGFIX      #2609 [ContentBundle]       fixed excerpt extension save button activation
+    * ENHANCEMENT #2616 [MediaBundle]         Avoid exception when media is serialized without all data loaded
+    * BUGFIX      #2606 [PreviewBundle]       Added cache clear for preview kernel
+    * ENHANCEMENT #2608 [TranslateBundle]     removed translation import command and refactored translate bundle
+    * BUGFIX      #2590 [CoreBundle]          Clear symfony cache before system collection initialization
+    * BUGFIX      #2596 [PreviewBundle]       Fixed preview for prod environment
+    * FEATURE     #2515 [ContentBundle]       Added unpublishing functionality for pages
+    * ENHANCEMENT #2604 [ContentBundle]       fixed publishing on excerpt tab and add excerpt js extension
+    * BUGFIX      #2586 [AdminBundle]         fixed behat tests
+    * BUGFIX      #2581 [PreviewBundle]       Deactivated WebProfilerToolbar for preview
+    * BUGIFX      #2579 [ContentBundle]       Removed smart-content component destroy callback conflict
+    * FEATURE     #2572 [AdminBundle]         Included husky build with autocomplete form mapper validation type
+    * BUGFIX      #2564 [CustomUrlBundle]     made width of custom url inputs flexible
+    * BUGFIX      #2580 [AdminBundle]         made the navigation adapt on history back
+    * FEATURE     #2565 [AdminBundle]         reseted navigation width after collapse
     * FEATURE     #2557 [SecurityBundle]      Set user last login by a listener
+    * ENHANCEMENT #2544 [PreviewBundle]       Bugfix for preview in firefox
+    * BUGFIX      #2551 [SecurityBundle]      added search fields and search instancename for roles list search
+    * BUGFIX      #2556 [ContentBundle]       removed the change content-change event from the texteditor's focusout
+    * BUGFIX      #2558 [CollaborationBundle] made own username show up as collaborator in warning
+    * BUGFIX      #2554 [ContentBundle]       made changing to copied locales possible
     * ENHANCEMENT #2540 [AdminBundle]         Removed deprecation notices
     * BUGFIX      #2536 [AdminBundle]         changed icon markup in search component (husky)
+    * BUGFIX      #2538 [ContentBundle]       Display url in single-internal-link instead of path
     * BUGFIX      #2534 [ContactBundle]       Fixed static usage of media repository
     * FEATURE     #2532 [RouteBundle]         Allow route generation for entity routes
     * ENHANCEMENT #2533 [RouteBundle]         Added locale to route-defaults
@@ -12,6 +44,7 @@ CHANGELOG for Sulu
     * BUGFIX      #2530 [AdminBundle]         Included husky build which fixes the login translation issue
     * FEATURE     #2528 [AdminBundle]         Added form-abstraction for simple data-mapper forms
     * ENHANCEMENT #2526 [SearchBundle]        Introduced contexts for indexes to restrict selections
+    * BUGFIX      #2104 [ContentBundle]       Show Webspace node on 'copy' and 'move' overlays  
     * ENHANCEMENT #2520 [ContentBundle]       Delete routes using the DocumentManager
     * BUGFIX      #2523 [SecurityBundle]      Fixed error with non-visible permission types in matrix
     * ENHANCEMENT #2522 [All]                 Use correct default phpcr session
@@ -21,6 +54,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2508 [DocumentManager]     Set default structure-type if non given
     * ENHANCEMENT #2506 [ContentBundle]       Extracted seo-tab to reuse it in other bundles
     * ENHANCEMENT #2509 [DocumentManagerBundle] Made RootPathPurger an initializer to avoid operating on not existing workspaces
+    * ENHANCEMENT #2505 [LocationBundle]      Used intl-component to generate countries for location-content-type
     * ENHANCEMENT #2500 [MediaBundle]         Refactored handling of post data for media
     * ENHANCEMENT #2497 [MediaBundle]         Implemented MediaInterface for inheritance
     * BUGFIX      #2504 [WebsiteBundle]       Fixed http-cache clear if var dir exists
@@ -29,6 +63,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2492 [TestBundle]          Added website test case.
     * ENHANCEMENT #2491 [MediaBundle]         Made media entit extendable
     * ENHANCEMENT #2495 [ContactBundle]       Added cascade-persist for contact addresses
+    * BUGFIX      #2486 [WebsiteBundle]       Fixed portal redirect when using subfolder
     * ENHANCEMENT #2483 [All]                 Replace security.context with security.token_storage service
     * ENHANCEMENT #2464 [All]                 Moved configuration from installation folder to sulu-core
     * BUGFIX      #2482 [Content]             Fixed appveyor tests
@@ -36,12 +71,15 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2462 [All]                 Removed unnecessary NodeInterface definitions in tests
     * ENHANCEMENT #2461 [PreviewBundle]       Added function that avoid navigating in the preview
     * ENHANCEMENT #2357 [PreviewBundle]       Using Website-Kernel to render preview
+    * FEATURE     #2442 [MediaBundle]         Enabled media link in ckeditor
+    * ENHANCEMENT #2442 [MediaBundle]         Enhanced behaviour of media-selection
     * BUGFIX      #2455 [CoreBundle]          Fixed ServerStatusCommand for Symfony 2.8.7
     * BUGFIX      #2443 [WebsiteBundle]       Added portal check for portal-routes
     * FEATURE     #2424 [Content]             Add support for XInclude
     * BUGFIX      #2439 [ContentBundle]       Fixed tab visibility for create new page localization
     * ENHANCEMENT #2428 [Content]             Removed move and copy method from ContentMapper
     * BUGFIX      #2426 [RouteBundle]         Fixed route-provider when no resource-locator prefix isset
+    * FEATURE     #2404 [ContentBundle]       Implemented configurable ckeditor toolbar per role
     * BUGFIX      #2418 [ContentBundle]       Removed ContentMapperRequest
     * FEATURE     #2402 [MarkupBundle]        Added validation for markup
     * FEATURE     #2336 [ContentBundle]       Enabled internal link in ckeditor
@@ -77,6 +115,24 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2341 [MediaBundle]         Added category to medias
     * ENHANCEMENT #2323 [WebsiteBundle]       Added TWIG-Extension to check if parent nav-item is active
     * ENHANCEMENT #2377 [CoreBundle]          Made --router and --env optional when running the console commands server:run, server:start, server:stop and server:status
+
+* 1.2.7 (2016-07-15)
+    * HOTFIX      #2617 [ContactBundle]         Setting default country by country-code instead of id
+    * HOTFIX      #2612 [CategoryBundle]        Added sort criteria for fallback test
+    * HOTFIX      #2610 [DocumentManagerBundle] Fixed serialization of concrete locales
+    * HOTFIX      #2605 [CategoryBundle]        Fixed order in combination with depth
+    * HOTFIX      #2600 [CategoryBundle]        fixed order of categories in content-type
+    * HOTFIX      #2585 [CoreBundle]            add fixtures without purging database
+    * HOTFIX      #2550 [MediaBundle]           made documents list show description on add
+    * HOTFIX      #2547 [AdminBundle]           Included husky build which fixes the ie11 rendering issue of dropdowns
+    * HOTFIX      #2547 [AdminBundle]           Included husky build which fixes globalizing bug
+    * BUGFIX            [WebsiteBundle]         Fixed a query issue on Postgresql
+
+* 1.2.6 (2016-07-05)
+    * BUGFIX      #2530 [AdminBundle]         Included husky build which fixes the login translation issue
+
+* 1.2.5 (2016-06-30)
+    * HOTFIX      #---- [AdminBundle]         Fixed loading of user localization
 
 * 1.2.4 (2016-06-28)
     * HOTFIX      #2498 [TestBundle]          Fixed TestUserProvider to create accounts with repository to support

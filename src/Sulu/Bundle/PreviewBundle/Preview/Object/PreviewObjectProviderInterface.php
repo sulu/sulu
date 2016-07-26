@@ -51,7 +51,7 @@ interface PreviewObjectProviderInterface
      * @param string $locale
      * @param array $context
      *
-     * @return mixed New object which will be saved for the session.
+     * @return mixed New object which will be saved for the session
      */
     public function setContext($object, $locale, array $context);
 

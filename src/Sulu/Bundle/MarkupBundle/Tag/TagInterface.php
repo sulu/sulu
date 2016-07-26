@@ -19,10 +19,10 @@ interface TagInterface
     /**
      * Returns new tag with given attributes.
      *
-     * @param array $attributesByTag attributes array of each tag occurrence.
+     * @param array $attributesByTag attributes array of each tag occurrence
      * @param string $locale
      *
-     * @return array Tag array to replace all occurrences.
+     * @return array Tag array to replace all occurrences
      */
     public function parseAll(array $attributesByTag, $locale);
 
@@ -32,7 +32,7 @@ interface TagInterface
      * @param array $attributesByTag
      * @param string $locale
      *
-     * @return array Tag array which indicates validity of each tag.
+     * @return array Tag array which indicates validity of each tag
      */
     public function validateAll(array $attributesByTag, $locale);
 }

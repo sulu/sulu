@@ -13,6 +13,8 @@ namespace Sulu\Bundle\ContentBundle\Repository;
 
 /**
  * repository for node objects.
+ *
+ * @deprecated
  */
 interface NodeRepositoryInterface
 {
@@ -182,19 +184,6 @@ interface NodeRepositoryInterface
      * @return array
      */
     public function saveExtensionData($uuid, $data, $extensionName, $webspaceKey, $languageCode, $userId);
-
-    /**
-     * order given node before another.
-     *
-     * @param string $uuid
-     * @param string $beforeUuid
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param int    $userId
-     *
-     * @return array
-     */
-    public function orderBefore($uuid, $beforeUuid, $webspaceKey, $languageCode, $userId);
 
     /**
      * brings a given node into a given position.

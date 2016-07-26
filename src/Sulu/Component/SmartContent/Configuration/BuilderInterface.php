@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -65,8 +66,8 @@ interface BuilderInterface
     /**
      * Enables datasource.
      *
-     * @param string $component name of component.
-     * @param array $options options to initialized component.
+     * @param string $component name of component
+     * @param array $options options to initialized component
      *
      * @return BuilderInterface
      */
@@ -75,7 +76,7 @@ interface BuilderInterface
     /**
      * Enables categories.
      *
-     * @param array $sorting array of arrays with keys column and title (translation key).
+     * @param array $sorting array of arrays with keys column and title (translation key)
      *
      * @return BuilderInterface
      */

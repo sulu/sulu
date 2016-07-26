@@ -1,15 +1,16 @@
 .custom-url-input {
-    .form-element {
-        width: 100px;
-        margin: 0 5px;
-    }
-
-    .form-element.prefix {
-        margin-left: 0;
-    }
+    display: table;
 
     .domain-part {
+        display: table-cell;
         color: $grayLight;
+        width: 1px;
+        white-space: nowrap;
+    }
+
+    .input-part {
+        display: table-cell;
+        width: 10000px;
     }
 }
 
