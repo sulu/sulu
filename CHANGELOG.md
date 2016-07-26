@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #2559 [CoreBundle]          Renamed parameters.yml to parameters.yml.dist so you can use a local version
     * BUGFIX      #2634 [Rest]                hide exception details on rest-api error in prod environment
     * FEATURE     #2642 [AdminBundle]         Added different badges color support
     * BUGFIX      #2618 [Localization]        Removed the system localizations from LocalizationController
