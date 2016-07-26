@@ -109,7 +109,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2341 [MediaBundle]         Added category to medias
     * ENHANCEMENT #2323 [WebsiteBundle]       Added TWIG-Extension to check if parent nav-item is active
     * ENHANCEMENT #2377 [CoreBundle]          Made --router and --env optional when running the console commands server:run, server:start, server:stop and server:status
-    * HOTFIX      #2645 [CategoryBundle]      Manage categories on PostgresSQL
+    * HOTFIX      #2645 [CategoryBundle]      Manage categories on PostgresSQL bugs
 
 * 1.2.7 (2016-07-15)
     * HOTFIX      #2617 [ContactBundle]         Setting default country by country-code instead of id
