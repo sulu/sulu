@@ -78,7 +78,6 @@
             <argument type="service" id="sulu.content.rlp.strategy.tree"/>
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu_document_manager.document_manager"/>
-            <argument type="service" id="sulu_document_manager.document_inspector" />
         </service>
 
         <!-- structure extension -->
@@ -99,7 +98,7 @@
         <service id="sulu_content.jsconfig" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">
             <argument type="string">sulu-content</argument>
             <argument type="collection">
-                <argument key="locales" type="expression">service('sulu_core.webspace.webspace_manager').getAllLocalizations()</argument>
+                <argument key="locales" type="expression">service('sulu_core.webspace.webspace_manager').getAllLocalesByWebspaces()</argument>
             </argument>
 
             <tag name="sulu.js_config"/>

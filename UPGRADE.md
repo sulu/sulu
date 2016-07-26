@@ -2,8 +2,42 @@
 
 ## dev-develop
 
-### PHPCR
+### Webspace Configuration
 
+The configuration schema for webspaces has changed. Instead of
+`error-templates` you have to define `templates` now with a certain type.
+For the error templates this type is `error` for the default error, and
+`error-<code>` for certain error codes.
+
+Before:
+```xml
+<error-templates>
+    <error-template code="404">SomeBundle:view:error404.html.twig</error-template>
+    <error-template default="true">SomeBundle:view:error.html.twig</error-template>
+</error-templates>
+```
+
+After:
+```xml
+<templates>
+    <template type="error-404">SomeBundle:views:error404.html.twig</template>
+    <template type="error">SomeBundle:views:error.html.twig</template>
+</templates>
+```
+
+This change only affects the files which use the 1.1 version of the webspace
+schema definition.
+
+## 1.3.0-RC1
+
+### Image Formats
+The image format "150x100" as well as the format "200x200" got removed
+from the backend formats. If a website relied on this format,
+it should be - as all image formats a website needs - defined
+in the theme specific config file.
+(http://docs.sulu.io/en/latest/book/creating-a-basic-website/adding-a-theme.html#configure-image-formats)
+
+### PHPCR
 To adapt to the new PHPCR structure execute the migrations:
 
 ```

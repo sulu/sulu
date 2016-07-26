@@ -61,11 +61,16 @@ define(['underscore'], function(_) {
         },
 
         templates = {
-            contentItem: function(id, collection, title, thumbnails, fallbackLocale) {
+            contentItem: function(id, collection, title, thumbnail, fallbackLocale) {
                 var content = [
-                    '<a href="#" class="link" data-id="', id, '" data-collection="', collection, '">',
-                    '    <img src="', thumbnails['50x50'], '"/>'
+                    '<a href="#" class="link" data-id="', id, '" data-collection="', collection, '">'
                 ];
+
+                if (thumbnail) {
+                    content.push([
+                        '    <img src="', thumbnail, '"/>'
+                    ].join(''));
+                }
 
                 if (fallbackLocale) {
                     content.push('    <span class="badge">', fallbackLocale, '</span>');
@@ -229,7 +234,7 @@ define(['underscore'], function(_) {
                 item.id,
                 item.collection,
                 item.title,
-                item.thumbnails,
+                item.thumbnails ? item.thumbnails[this.options.thumbnailSize] : null,
                 item.locale !== this.options.locale ? item.locale : null
             );
         },

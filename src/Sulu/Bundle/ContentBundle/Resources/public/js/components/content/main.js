@@ -68,6 +68,11 @@ define([
 
         setSaveToolbarItems = function(item, value) {
             this.sandbox.emit('sulu.header.toolbar.item.' + (!!value ? 'enable' : 'disable'), item, false);
+        },
+
+        saveUserLocaleForWebspace = function(locale) {
+            this.sandbox.sulu.saveUserSetting(this.options.webspace + '.' + CONTENT_LANGUAGE, locale);
+            this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, locale);
         };
 
     return {
@@ -192,7 +197,7 @@ define([
 
             // change language
             this.sandbox.on('sulu.header.language-changed', function(item) {
-                this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.id);
+                saveUserLocaleForWebspace.call(this, item.id);
                 if (this.options.display !== 'column') {
                     var data = this.content.toJSON();
 
@@ -1020,7 +1025,7 @@ define([
         showDraftLabel: function() {
             this.sandbox.emit('sulu.header.tabs.label.hide');
 
-            if (!this.data.id || !!this.data.publishedState) {
+            if (!this.data.id || !!this.data.publishedState || !this.data.published) {
                 return;
             }
 

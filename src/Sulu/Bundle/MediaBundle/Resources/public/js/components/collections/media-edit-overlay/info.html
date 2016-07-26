@@ -2,10 +2,8 @@
     <div class="grid-row">
         <div class="grid-col-4 media-info-preview">
             <div class="<%= icon %> icon media-edit-preview-image">
-<% if (!!media.thumbnails && !!media.thumbnails['200x200']) { %>
-                <img src="<%=media.thumbnails['200x200']%>"
-                     onload="$(this).show()"
-                     style="display: none;"/>
+<% if (!!media.thumbnails && !!media.thumbnails[thumbnailFormat]) { %>
+                <img src="<%=media.thumbnails[thumbnailFormat]%>"/>
 <% } %>
                 <div id="file-version-change" class="file-version-change"></div>
             </div>

@@ -246,7 +246,7 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
     /**
      * {@inheritdoc}
      */
-    public function findGetAll($limit = null, $offset = null, $sorting = null, $where = [])
+    public function findGetAll($limit = null, $offset = null, $sorting = [], $where = [])
     {
         // Create basic query
         $qb = $this->createQueryBuilder('u')
@@ -255,7 +255,8 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
             ->leftJoin('u.faxes', 'faxes')
             ->leftJoin('u.contactAddresses', 'contactAddresses')
             ->leftJoin('contactAddresses.address', 'addresses')
-            ->leftJoin('u.account', 'account')
+            ->leftJoin('u.accountContacts', 'accountContacts')
+            ->leftJoin('accountContacts.account', 'account')
             ->leftJoin('u.title', 'title')
             ->addSelect('title')
             ->addSelect('emails')
@@ -269,7 +270,7 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
 
         // If needed add where statements
         if (is_array($where) && count($where) > 0) {
-            $qb = $this->addWhere($qb, $where);
+            $qb = $this->addWhere($qb, $where, 'u');
         }
 
         $query = $qb->getQuery();

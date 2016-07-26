@@ -3,6 +3,18 @@ CHANGELOG for Sulu
 
 * dev-develop
     * FEATURE     #2559 [CoreBundle]          Renamed parameters.yml to parameters.yml.dist so you can use a local version
+    * BUGFIX      #2678 [ContentBundle]       Fixed error caused by draft label when opening a ghost page
+    * BUGFIX      #2668 [ContentBundle]       Fixed resource locator generation for pages with unpublished parents
+    * BUGFIX      #2675 [ContactBundle]       Fixed findGetAll-method of ContactRepository
+    * BUGFIX      #2524 [ContactBundle]       Fixed contact-serialization for smart-content
+    * BUGFIX      #2632 [ContentBundle]       prevent item select when ordering a column (husky)
+    * BUGFIX      #2663 [MediaBundle]         made masonry view work for media with no thumbnail
+    * ENHANCEMENT #2665 [Webspace]            Introduced DelegatingFileLoader for webspace configurations
+
+* 1.3.0-RC1 (2016-07-22)
+    * HOTFIX      #2632 [Content]             Fix usage of document inspector in StructureBridge
+    * BUGFIX      #2655 [MediaBundle]         Fixed media selection for none images and selected media list
+    * BUGFIX      #2598 [MediaBundle]         fixed thumbnail rendering in media edit
     * BUGFIX      #2634 [Rest]                hide exception details on rest-api error in prod environment
     * FEATURE     #2642 [AdminBundle]         Added different badges color support
     * BUGFIX      #2618 [Localization]        Removed the system localizations from LocalizationController

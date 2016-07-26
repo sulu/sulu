@@ -359,105 +359,105 @@
   text-align: center;
 }
 
-/* line 2, ../scss/modules/single-media-selection.scss */
+/* line 4, ../scss/modules/single-media-selection.scss */
 .single-media-selection {
   height: 500px;
 }
-/* line 5, ../scss/modules/single-media-selection.scss */
+/* line 7, ../scss/modules/single-media-selection.scss */
 .single-media-selection, .single-media-selection .slide, .single-media-selection .overlay-footer {
   width: 930px !important;
 }
-/* line 9, ../scss/modules/single-media-selection.scss */
+/* line 11, ../scss/modules/single-media-selection.scss */
 .single-media-selection .slide {
   height: 429px;
 }
-/* line 13, ../scss/modules/single-media-selection.scss */
+/* line 15, ../scss/modules/single-media-selection.scss */
 .single-media-selection .list-container, .single-media-selection .navigation-container {
   height: 328px;
 }
 @media (max-width: 1024px) {
-  /* line 18, ../scss/modules/single-media-selection.scss */
+  /* line 20, ../scss/modules/single-media-selection.scss */
   .single-media-selection, .single-media-selection .slide, .single-media-selection .overlay-footer {
     width: 720px !important;
   }
 }
 @media (min-width: 1600px) {
-  /* line 24, ../scss/modules/single-media-selection.scss */
+  /* line 26, ../scss/modules/single-media-selection.scss */
   .single-media-selection, .single-media-selection .slide, .single-media-selection .overlay-footer {
     width: 1360px !important;
   }
 }
 @media (min-height: 700px) {
-  /* line 2, ../scss/modules/single-media-selection.scss */
+  /* line 4, ../scss/modules/single-media-selection.scss */
   .single-media-selection {
     height: 600px;
   }
-  /* line 32, ../scss/modules/single-media-selection.scss */
+  /* line 34, ../scss/modules/single-media-selection.scss */
   .single-media-selection .slide {
     height: 529px;
   }
-  /* line 36, ../scss/modules/single-media-selection.scss */
+  /* line 38, ../scss/modules/single-media-selection.scss */
   .single-media-selection .list-container, .single-media-selection .navigation-container {
     height: 428px;
   }
 }
 @media (min-height: 800px) {
-  /* line 2, ../scss/modules/single-media-selection.scss */
+  /* line 4, ../scss/modules/single-media-selection.scss */
   .single-media-selection {
     height: 700px;
   }
-  /* line 44, ../scss/modules/single-media-selection.scss */
+  /* line 46, ../scss/modules/single-media-selection.scss */
   .single-media-selection .slide {
     height: 629px;
   }
-  /* line 48, ../scss/modules/single-media-selection.scss */
+  /* line 50, ../scss/modules/single-media-selection.scss */
   .single-media-selection .list-container, .single-media-selection .navigation-container {
     height: 528px;
   }
 }
 @media (min-height: 900px) {
-  /* line 2, ../scss/modules/single-media-selection.scss */
+  /* line 4, ../scss/modules/single-media-selection.scss */
   .single-media-selection {
     height: 800px;
   }
-  /* line 56, ../scss/modules/single-media-selection.scss */
+  /* line 58, ../scss/modules/single-media-selection.scss */
   .single-media-selection .slide {
     height: 729px;
   }
-  /* line 60, ../scss/modules/single-media-selection.scss */
+  /* line 62, ../scss/modules/single-media-selection.scss */
   .single-media-selection .list-container, .single-media-selection .navigation-container {
     height: 628px;
   }
 }
-/* line 67, ../scss/modules/single-media-selection.scss */
+/* line 69, ../scss/modules/single-media-selection.scss */
 .single-media-selection.dropzone-overlay-opened .list-container {
   overflow: hidden;
 }
-/* line 72, ../scss/modules/single-media-selection.scss */
+/* line 74, ../scss/modules/single-media-selection.scss */
 .single-media-selection .dropzone-container {
   padding-right: 20px;
 }
-/* line 75, ../scss/modules/single-media-selection.scss */
+/* line 77, ../scss/modules/single-media-selection.scss */
 .single-media-selection .dropzone-container > .husky-dropzone {
   display: none;
   margin-top: 30px;
   margin-bottom: 20px;
 }
-/* line 80, ../scss/modules/single-media-selection.scss */
+/* line 82, ../scss/modules/single-media-selection.scss */
 .single-media-selection .dropzone-container > .husky-dropzone.dropped {
   display: block;
 }
-/* line 85, ../scss/modules/single-media-selection.scss */
+/* line 87, ../scss/modules/single-media-selection.scss */
 .single-media-selection .dropzone-container > div {
   width: 100% !important;
 }
-/* line 88, ../scss/modules/single-media-selection.scss */
+/* line 90, ../scss/modules/single-media-selection.scss */
 .single-media-selection .dropzone-container .husky-overlay-wrapper {
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
 }
-/* line 93, ../scss/modules/single-media-selection.scss */
+/* line 95, ../scss/modules/single-media-selection.scss */
 .single-media-selection .dropzone-container .husky-overlay-container {
   position: absolute !important;
   top: 0 !important;
@@ -470,35 +470,35 @@
   border-radius: 0;
   border: 0;
 }
-/* line 105, ../scss/modules/single-media-selection.scss */
+/* line 107, ../scss/modules/single-media-selection.scss */
 .single-media-selection .dropzone-container .husky-overlay-container .slides {
   margin: 0;
   padding: 0;
 }
-/* line 110, ../scss/modules/single-media-selection.scss */
+/* line 112, ../scss/modules/single-media-selection.scss */
 .single-media-selection .dropzone-container .husky-overlay-container .slide {
   width: 100% !important;
 }
-/* line 115, ../scss/modules/single-media-selection.scss */
+/* line 117, ../scss/modules/single-media-selection.scss */
 .single-media-selection .dropzone-container .husky-overlay-backdrop {
   display: none !important;
 }
-/* line 119, ../scss/modules/single-media-selection.scss */
+/* line 121, ../scss/modules/single-media-selection.scss */
 .single-media-selection .dropzone-container .overlay-content {
   height: auto !important;
   background-color: transparent;
 }
-/* line 125, ../scss/modules/single-media-selection.scss */
+/* line 127, ../scss/modules/single-media-selection.scss */
 .single-media-selection .overlay-content {
   padding: 0px;
   margin: 0px;
 }
-/* line 131, ../scss/modules/single-media-selection.scss */
+/* line 133, ../scss/modules/single-media-selection.scss */
 .single-media-selection .container .navigation-container {
   float: left;
   width: 250px;
 }
-/* line 136, ../scss/modules/single-media-selection.scss */
+/* line 138, ../scss/modules/single-media-selection.scss */
 .single-media-selection .container .list-container {
   float: right;
   position: relative;
@@ -506,12 +506,12 @@
   padding: 20px;
   overflow: scroll;
 }
-/* line 144, ../scss/modules/single-media-selection.scss */
+/* line 146, ../scss/modules/single-media-selection.scss */
 .single-media-selection .container::before, .single-media-selection .container::after {
   content: " ";
   display: table;
 }
-/* line 149, ../scss/modules/single-media-selection.scss */
+/* line 151, ../scss/modules/single-media-selection.scss */
 .single-media-selection .container::after {
   clear: both;
 }
@@ -590,8 +590,8 @@ a.media-edit-link,
 .media-edit-preview-image {
   background-position: center center;
   background-repeat: no-repeat;
-  width: 179px;
-  height: 179px;
+  width: 100%;
+  height: 180px;
   position: relative;
 }
 /* line 62, ../scss/modules/media-edit-overlay.scss */
@@ -606,59 +606,63 @@ a.media-edit-link,
 .media-edit-preview-image .file-version-change,
 .media-edit-preview-image img {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
   font-size: 14px;
 }
-/* line 78, ../scss/modules/media-edit-overlay.scss */
+/* line 79, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image #file-version-change {
   width: 100%;
   height: 100%;
 }
-/* line 82, ../scss/modules/media-edit-overlay.scss */
+/* line 83, ../scss/modules/media-edit-overlay.scss */
 .media-edit-preview-image #file-version-change .dropzone-container {
   width: 150px;
   height: 150px;
 }
 
-/* line 90, ../scss/modules/media-edit-overlay.scss */
+/* line 91, ../scss/modules/media-edit-overlay.scss */
 #media-preview .media-edit-preview-image-container {
   background-color: #ddd;
   width: 250px;
   height: 250px;
 }
-/* line 96, ../scss/modules/media-edit-overlay.scss */
+/* line 97, ../scss/modules/media-edit-overlay.scss */
 #media-preview .media-edit-preview-image {
   background-size: cover;
   width: 100%;
   height: 100%;
 }
-/* line 102, ../scss/modules/media-edit-overlay.scss */
+/* line 103, ../scss/modules/media-edit-overlay.scss */
 #media-preview #preview-image-change {
   width: 100%;
   height: 100%;
 }
-/* line 106, ../scss/modules/media-edit-overlay.scss */
+/* line 107, ../scss/modules/media-edit-overlay.scss */
 #media-preview #preview-image-change .dropzone-container {
   width: 150px;
   height: 150px;
 }
 
-/* line 113, ../scss/modules/media-edit-overlay.scss */
+/* line 114, ../scss/modules/media-edit-overlay.scss */
 .overlay-footer .btn.media-reset-preview-action.hide {
   display: none;
 }
 
-/* line 118, ../scss/modules/media-edit-overlay.scss */
+/* line 119, ../scss/modules/media-edit-overlay.scss */
 #media-info textarea.description {
   height: 90px;
   min-height: 90px;
 }
-/* line 123, ../scss/modules/media-edit-overlay.scss */
+/* line 124, ../scss/modules/media-edit-overlay.scss */
 #media-info .media-info-preview {
   text-align: center;
 }
-/* line 126, ../scss/modules/media-edit-overlay.scss */
+/* line 127, ../scss/modules/media-edit-overlay.scss */
 #media-info .media-info-preview span.description {
   font-size: 12px;
   color: #999;

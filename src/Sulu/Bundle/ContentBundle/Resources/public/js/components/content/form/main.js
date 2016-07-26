@@ -30,17 +30,15 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
 
         template: '',
 
+        inAddMode: true,
+        whenResourceLocatorIsLoaded: $.Deferred(),
+        
         // content change detection
         saved: true,
         animateTemplateDropdown: false,
 
         initialize: function() {
             this.sandbox.emit('husky.toolbar.header.item.enable', 'template', false);
-
-            this.dfdListenForResourceLocator = $.Deferred();
-
-            this.add = true;
-
             this.load();
         },
 
@@ -64,19 +62,33 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
             }, this);
         },
 
+        /**
+         * Initializes the rlp-inputs as well as the rlp-part inputs.
+         * When in edit mode (not in add), the rlp-inputs and the rlp-part inputs
+         * are just like any other inputs and the corresponding promise is resolved right away.
+         */
         initializeResourceLocator: function() {
-            this.startListening = false;
-            this.getDomElementsForTagName('sulu.rlp', function(property) {
-                var element = property.$el.data('element');
-                if (!element || element.getValue() === '' || element.getValue() === undefined || element.getValue() === null) {
-                    this.startListening = true;
-                }
-            }.bind(this));
+            if (!!this.inAddMode) {
+                // when a rlp-part gets changed other parts (e.g. submitting) has to wait
+                this.sandbox.dom.on(this.getDomElementsForTagName('sulu.rlp.part'), 'change', function() {
+                    if (!this.whenResourceLocatorIsLoaded || this.whenResourceLocatorIsLoaded.state() === 'resolved') {
+                        this.whenResourceLocatorIsLoaded = $.Deferred();
+                    }
+                }.bind(this));
 
-            if (!!this.add || this.startListening) {
-                this.sandbox.dom.one(this.getDomElementsForTagName('sulu.rlp.part'), 'focusout', this.setResourceLocator.bind(this));
+                this.sandbox.dom.on(this.getDomElementsForTagName('sulu.rlp.part'), 'focusout', this.loadResourceLocator.bind(this));
+
+                // initialize all rlp-inputs as not edited by the user
+                this.getDomElementsForTagName('sulu.rlp', function(property) {
+                    property.$el.data('user-edited', false);
+                    // manually edited rlp-inputs get marked as such
+                    this.sandbox.dom.on(property.$el, 'change', function() {
+                        property.$el.data('user-edited', property.$el.data('element').getValue().length > 1);
+                    }.bind(this));
+                }.bind(this));
+
             } else {
-                this.dfdListenForResourceLocator.resolve();
+                this.whenResourceLocatorIsLoaded.resolve();
             }
         },
 
@@ -93,7 +105,7 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
             this.data = data;
             if (!!this.data.id) {
                 // the form is in edit mode, if and ID is given, and therefore the page has already existed
-                this.add = false;
+                this.inAddMode = false;
             }
 
             this.showState(!!this.data.published);
@@ -410,7 +422,6 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
 
         setHeaderBar: function(saved) {
             this.sandbox.emit('sulu.content.contents.set-header-bar', saved);
-
             this.saved = saved;
         },
 
@@ -418,47 +429,63 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
             this.sandbox.emit('sulu.content.contents.set-state', data);
         },
 
-        setResourceLocator: function() {
-            if (this.dfdListenForResourceLocator.state() !== 'pending') {
-                return;
-            }
+        /**
+         * Iterates over all rlp-parts and asks the server for a resource locator
+         * constructed out of all non empty rlp-parts. After retrieving the resource-locator
+         * it is set into the rlp inputs.
+         */
+        loadResourceLocator: function() {
+            var parts = this.getNonEmptyRlpParts();
+            this.sandbox.emit('sulu.content.contents.get-rl', parts, this.setResourceLocator.bind(this));
+        },
 
-            var parts = {},
-                complete = true;
+        /**
+         * Returns all the rlp parts which have a non-empty value
+         * @returns {Object} an object containing all the non-empty rlp parts
+         */
+        getNonEmptyRlpParts: function() {
+            var parts = {}, value, sequence;
 
-            // check if each part has a value
             this.getDomElementsForTagName('sulu.rlp.part', function(property) {
-                var value = property.$el.data('element').getValue(),
-                    sequence;
-
+                value = property.$el.data('element').getValue();
                 if (value !== '') {
                     sequence = Preview.getSequence(property.$el);
                     if (!!sequence) {
                         parts[sequence] = value;
                     }
-                } else {
-                    complete = false;
                 }
             }.bind(this));
 
-            if (!!complete) {
-                this.startListening = true;
-                this.sandbox.emit('sulu.content.contents.get-rl', parts, function(rl) {
-                    // set resource locator to empty input fields
-                    this.getDomElementsForTagName('sulu.rlp', function(property) {
-                        var element = property.$el.data('element');
-                        if (element.getValue() === '' || element.getValue() === undefined || element.getValue() === null) {
-                            element.setValue(rl);
-                        }
-                    }.bind(this));
+            return parts;
+        },
 
-                    this.dfdListenForResourceLocator.resolve();
+        /**
+         * Sets a given resource-locator as the value of the resource-locator inputs.
+         * Only those resource-locator inputs get updated, which have not been manually edited by the user
+         * @param {String} resourceLocator The resource locator to insert
+         */
+        setResourceLocator: function(resourceLocator) {
+            this.getDomElementsForTagName('sulu.rlp', function(property) {
+                if (!property.$el.data('user-edited')) {
+                    property.$el.data('element').setValue(resourceLocator);
+                }
+            }.bind(this));
+            this.whenResourceLocatorIsLoaded.resolve();
+            this.setHeaderBar(false);
+        },
 
-                    this.setHeaderBar(false);
-                }.bind(this));
-            } else {
-                this.sandbox.dom.one(this.getDomElementsForTagName('sulu.rlp.part'), 'focusout', this.setResourceLocator.bind(this));
-            }
+        /**
+         * @returns {boolean} True iff all resource locator parts are valid
+         */
+        areRlpPartsValid: function() {
+            var valid = true;
+            this.getDomElementsForTagName('sulu.rlp.part', function(property) {
+                if (!property.$el.data('element').validate()) {
+                    valid = false;
+                }
+            }.bind(this));
+
+            return valid;
         },
 
         listenForChange: function() {
@@ -478,28 +505,18 @@ define(['app-config', 'config', 'services/sulupreview/preview'], function(AppCon
             this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', this.animateTemplateDropdown);
             this.animateTemplateDropdown = false;
 
-            if (!!this.add) {
-                this.dfdListenForResourceLocator = $.Deferred();
+            if (!!this.inAddMode) {
+                this.whenResourceLocatorIsLoaded = $.Deferred();
             }
         },
 
         submit: function(action) {
-            // check if each part is valid
-            var valid = true;
-            this.getDomElementsForTagName('sulu.rlp.part', function(property) {
-                if (!property.$el.data('element').validate()) {
-                    valid = false;
-                }
-            }.bind(this));
-
-
-            // if rlp-parts are empty dont wait for the resource-locator
-            // because without them it wont be generated
-            if (!valid) {
+            // only submit if all rlp parts are valid (a resource locator needs to be constructed)
+            if (!this.areRlpPartsValid()) {
                 return;
             }
 
-            this.dfdListenForResourceLocator.then(function() {
+            this.whenResourceLocatorIsLoaded.then(function() {
                 if (this.sandbox.form.validate(this.formId)) {
                     this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
                     var data = this.sandbox.form.getData(this.formId);
