@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2678 [ContentBundle]       Fixed error caused by draft label when opening a ghost page
     * BUGFIX      #2668 [ContentBundle]       Fixed resource locator generation for pages with unpublished parents
     * BUGFIX      #2524 [ContactBundle]       Fixed contact-serialization for smart-content
     * BUGFIX      #2632 [ContentBundle]       prevent item select when ordering a column (husky)
