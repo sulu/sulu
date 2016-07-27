@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2684 [ContentBundle]       Disabled options in toolbar item which are not avialable when editing a page
     * FEATURE     #2559 [CoreBundle]          Renamed parameters.yml to parameters.yml.dist so you can use a local version
     * BUGFIX      #2678 [ContentBundle]       Fixed error caused by draft label when opening a ghost page
     * BUGFIX      #2668 [ContentBundle]       Fixed resource locator generation for pages with unpublished parents
