@@ -24,12 +24,14 @@
             <argument type="service" id="sulu.content.mapper" />
             <argument type="service" id="sulu.content.structure_manager" />
             <argument type="service" id="sulu_snippet.repository" />
-            <argument type="service" id="security.context" on-invalid="ignore"/>
+            <argument type="service" id="security.token_storage" on-invalid="ignore"/>
             <argument type="service" id="router" />
             <argument type="service" id="sulu_snippet.default_snippet.manager" />
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="form.factory" />
             <argument type="service" id="sulu_hash.request_hash_checker"/>
+
+            <tag name="sulu.context" context="admin"/>
         </service>
 
         <service id="sulu_snippet.twig.snippet" class="%sulu_snippet.twig.snippet.class%">

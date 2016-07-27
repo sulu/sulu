@@ -22,40 +22,19 @@
                         }
                     },
                     {
-                        name: 'state',
-                        template: {
-                            title: 'toolbar.state-test',
-                            icon: 'husky-test',
-                            dropdownOptions: {
-                                markSelected: true,
-                                changeButton: true
-                            }
-                        }
-                    }
-                ];
-            },
-
-            getDropdownItems: function() {
-                return [
-                    {
-                        name: 'statePublish',
+                        name: 'statePublished',
                         template: {
                             title: 'toolbar.state-publish',
                             icon: 'husky-publish',
-                            callback: function() {
-                                this.sandbox.emit('sulu.header.state.changed', 2);
-                            }.bind(app)
+                            hidden: true
                         }
                     },
                     {
                         name: 'stateTest',
                         template: {
-                            id: 'state-test',
                             title: 'toolbar.state-test',
                             icon: 'husky-test',
-                            callback: function() {
-                                this.sandbox.emit('sulu.header.state.changed', 1);
-                            }.bind(app)
+                            hidden: true
                         }
                     }
                 ];

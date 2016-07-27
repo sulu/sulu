@@ -23,7 +23,7 @@ class PageDocumentSerializationTest extends SuluTestCase
     /**
      * @var DocumentManagerInterface
      */
-    private $manager;
+    private $documentManager;
 
     /**
      * @var object
@@ -42,9 +42,9 @@ class PageDocumentSerializationTest extends SuluTestCase
 
     public function setUp()
     {
-        $this->manager = $this->getContainer()->get('sulu_document_manager.document_manager');
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->initPhpcr();
-        $this->parent = $this->manager->find('/cmf/sulu_io/contents', 'de');
+        $this->parent = $this->documentManager->find('/cmf/sulu_io/contents', 'de');
         $this->serializer = $this->getContainer()->get('jms_serializer');
         $this->registry = $this->getContainer()->get('sulu_document_manager.document_registry');
     }
@@ -104,8 +104,8 @@ class PageDocumentSerializationTest extends SuluTestCase
         $page = $this->createPage([
             'title' => 'Hello',
         ]);
-        $this->manager->persist($page, 'de');
-        $this->manager->flush();
+        $this->documentManager->persist($page, 'de');
+        $this->documentManager->flush();
 
         $result = $this->serializer->serialize($page, 'json');
 
@@ -120,8 +120,8 @@ class PageDocumentSerializationTest extends SuluTestCase
         $page = $this->createPage([
             'title' => 'Hello',
         ]);
-        $this->manager->persist($page, 'de');
-        $this->manager->flush();
+        $this->documentManager->persist($page, 'de');
+        $this->documentManager->flush();
 
         $result = $this->serializer->serialize($page, 'json');
 

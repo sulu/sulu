@@ -253,6 +253,8 @@ class MediaManagerTest extends \PHPUnit_Framework_TestCase
         $user = $this->prophesize(User::class)->willImplement(UserInterface::class);
         $this->userRepository->findUserById(1)->willReturn($user);
 
+        $this->mediaRepository->createNew()->willReturn(new Media());
+
         $this->storage->save('', $cleanUpResult . $extension, 1)->shouldBeCalled();
 
         $this->pathCleaner->cleanup(Argument::exact($cleanUpArgument))->shouldBeCalled()->willReturn($cleanUpResult);

@@ -23,7 +23,7 @@ class UserManagerCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if ($container->hasDefinition('security.context')) {
+        if ($container->hasDefinition('security.token_storage')) {
             $container->setDefinition(
                 'sulu_security.user_manager',
                 new Definition(

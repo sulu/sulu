@@ -29,6 +29,11 @@ class LinkTagTest extends \PHPUnit_Framework_TestCase
     private $contentRepository;
 
     /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
      * @var RequestStack
      */
     private $requestStack;
@@ -37,11 +42,6 @@ class LinkTagTest extends \PHPUnit_Framework_TestCase
      * @var Request
      */
     private $request;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
 
     /**
      * @var string
@@ -56,18 +56,17 @@ class LinkTagTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->contentRepository = $this->prophesize(ContentRepositoryInterface::class);
-        $this->requestStack = $this->prophesize(RequestStack::class);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
+        $this->requestStack = $this->prophesize(RequestStack::class);
 
         $this->request = $this->prophesize(Request::class);
-        $this->request->getLocale()->willReturn('de');
         $this->request->getScheme()->willReturn('http');
         $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
 
         $this->linkTag = new LinkTag(
             $this->contentRepository->reveal(),
-            $this->requestStack->reveal(),
             $this->webspaceManager->reveal(),
+            $this->requestStack->reveal(),
             $this->environment
         );
     }
@@ -126,7 +125,7 @@ class LinkTagTest extends \PHPUnit_Framework_TestCase
             'http'
         )->willReturn('/de' . $content->getUrl());
 
-        $result = $this->linkTag->parseAll([$tag => $attributes]);
+        $result = $this->linkTag->parseAll([$tag => $attributes], 'de');
 
         $this->assertEquals([$tag => $expected], $result);
     }
@@ -172,7 +171,8 @@ class LinkTagTest extends \PHPUnit_Framework_TestCase
                     'target' => '_blank',
                     'content' => 'Test-Content',
                 ],
-            ]
+            ],
+            'de'
         );
 
         $this->assertEquals(
@@ -202,7 +202,8 @@ class LinkTagTest extends \PHPUnit_Framework_TestCase
                 $tag2 => ['href' => '123-123-123', 'title' => 'Test-Title'],
                 $tag3 => ['href' => '123-123-123', 'title' => 'Test-Title', 'content' => 'Test-Content'],
                 $tag4 => ['href' => '123-123-123'],
-            ]
+            ],
+            'de'
         );
 
         $this->assertEquals(
@@ -211,6 +212,78 @@ class LinkTagTest extends \PHPUnit_Framework_TestCase
                 $tag2 => 'Test-Title',
                 $tag3 => 'Test-Content',
                 $tag4 => '',
+            ],
+            $result
+        );
+    }
+
+    public function testValidate()
+    {
+        $content = $this->createContent('123-123-123', 'Pagetitle', '/test');
+        $this->contentRepository->findByUuids(['123-123-123'], 'de', Argument::type(Mapping::class))
+            ->willReturn([$content]);
+
+        $result = $this->linkTag->validateAll(
+            [
+                '<sulu:link href="123-123-123" title="Test-Title">Test-Content</sulu:link>' => [
+                    'href' => '123-123-123',
+                    'title' => 'Test-Title',
+                    'content' => 'Test-Content',
+                ],
+            ],
+            'de'
+        );
+
+        $this->assertEquals([], $result);
+    }
+
+    public function testValidateInvalid()
+    {
+        $this->contentRepository->findByUuids(['123-123-123'], 'de', Argument::type(Mapping::class))
+            ->willReturn([]);
+
+        $result = $this->linkTag->validateAll(
+            [
+                '<sulu:link href="123-123-123" title="Test-Title">Test-Content</sulu:link>' => [
+                    'href' => '123-123-123',
+                    'title' => 'Test-Title',
+                    'content' => 'Test-Content',
+                ],
+            ],
+            'de'
+        );
+
+        $this->assertEquals(
+            ['<sulu:link href="123-123-123" title="Test-Title">Test-Content</sulu:link>' => LinkTag::VALIDATE_REMOVED],
+            $result
+        );
+    }
+
+    public function testValidateMixed()
+    {
+        $content = $this->createContent('123-123-123', 'Pagetitle', '/test');
+        $this->contentRepository->findByUuids(['123-123-123', '312-312-312'], 'de', Argument::type(Mapping::class))
+            ->willReturn([$content]);
+
+        $result = $this->linkTag->validateAll(
+            [
+                '<sulu:link href="123-123-123" title="Test-Title">Test-Content</sulu:link>' => [
+                    'href' => '123-123-123',
+                    'title' => 'Test-Title',
+                    'content' => 'Test-Content',
+                ],
+                '<sulu:link href="312-312-312" title="Test-Title">Test-Content</sulu:link>' => [
+                    'href' => '312-312-312',
+                    'title' => 'Test-Title',
+                    'content' => 'Test-Content',
+                ],
+            ],
+            'de'
+        );
+
+        $this->assertEquals(
+            [
+                '<sulu:link href="312-312-312" title="Test-Title">Test-Content</sulu:link>' => LinkTag::VALIDATE_REMOVED,
             ],
             $result
         );

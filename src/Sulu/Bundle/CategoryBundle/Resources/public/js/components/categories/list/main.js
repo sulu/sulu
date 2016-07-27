@@ -101,7 +101,7 @@ define(function () {
                 },
                 {
                     el: this.$find(constants.listSelector),
-                    url: '/admin/api/categories?flat=true&sortBy=depth&sortOrder=asc&locale=' + this.locale,
+                    url: '/admin/api/categories?flat=true&sortBy=name&sortOrder=asc&locale=' + this.locale,
                     childrenPropertyName: 'hasChildren',
                     resultKey: 'categories',
                     searchFields: ['name'],

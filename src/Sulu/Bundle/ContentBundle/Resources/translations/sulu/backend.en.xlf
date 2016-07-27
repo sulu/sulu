@@ -242,7 +242,7 @@
                 <source>smart-content.choose-data-source.reset</source>
                 <target>Reset</target>
             </trans-unit>
-            <trans-unit id="90a3276459ba0f52ef7a41320298d5d" resname="smart-content.choose-data-source.back">
+            <trans-unit id="90a3276459ba0f52ef7a41320298d5d" resname="smart-content.choose-data-source.cancel">
                 <source>smart-content.choose-data-source.back</source>
                 <target>Back</target>
             </trans-unit>
@@ -499,6 +499,10 @@
                 <source>labels.success.content-save-desc</source>
                 <target>Page sucessfully saved</target>
             </trans-unit>
+            <trans-unit id="497e046d51783a9899fa59d31dcfc3e8" resname="labels.success.copy-locale-desc">
+                <source>labels.success.copy-locale-desc</source>
+                <target>Page successfully copied</target>
+            </trans-unit>
             <trans-unit id="e4b14069a8a085ede2092hf51234dh40" resname="smart-content.categories.label">
                 <source>smart-content.categories.label</source>
                 <target>Filter by categories</target>
@@ -521,7 +525,7 @@
             </trans-unit>
             <trans-unit id="e4b14069a8a085ede2092hf51234dh45" resname="smart-content.categories.use-any-category">
                 <source>smart-content.categories.use-any-category</source>
-                <target>Use pages that use ANY tag</target>
+                <target>Use pages that use ANY category</target>
             </trans-unit>
             <trans-unit id="e4b14069a8a085ede2092hf51234dh46" resname="smart-content.categories.use-all-categories">
                 <source>smart-content.categories.use-all-categories</source>
@@ -613,11 +617,11 @@
             </trans-unit>
             <trans-unit id="27" resname="content.ckeditor.internal-link">
                 <source>content.ckeditor.internal-link</source>
-                <target>Internal Link</target>
+                <target>Internal Sulu Link</target>
             </trans-unit>
             <trans-unit id="28" resname="content.ckeditor.internal-link.edit">
                 <source>content.ckeditor.internal-link.edit</source>
-                <target>Edit Internal Link</target>
+                <target>Edit Internal Sulu Link</target>
             </trans-unit>
             <trans-unit id="29" resname="content.ckeditor.internal-link.alt-title">
                 <source>content.ckeditor.internal-link.alt-title</source>
@@ -641,7 +645,79 @@
             </trans-unit>
             <trans-unit id="34" resname="content.ckeditor.internal-link.remove">
                 <source>content.ckeditor.internal-link.remove</source>
-                <target>Remove Internal Link</target>
+                <target>Remove Internal Sulu Link</target>
+            </trans-unit>
+            <trans-unit id="35" resname="content.text_editor.error.unpublished">
+                <source>content.text_editor.error.unpublished</source>
+                <target>Page not published</target>
+            </trans-unit>
+            <trans-unit id="36" resname="content.text_editor.error.unpublished-single">
+                <source>content.text_editor.error.unpublished-single</source>
+                <target>One linked page is not published.</target>
+            </trans-unit>
+            <trans-unit id="37" resname="content.text_editor.error.unpublished-multiple">
+                <source>content.text_editor.error.unpublished-multiple</source>
+                <target>%s linked pages are not published.</target>
+            </trans-unit>
+            <trans-unit id="38" resname="content.text_editor.error.removed">
+                <source>content.text_editor.error.removed</source>
+                <target>Link broken</target>
+            </trans-unit>
+            <trans-unit id="39" resname="content.text_editor.error.removed-single">
+                <source>content.text_editor.error.removed-single</source>
+                <target>One link is broken.</target>
+            </trans-unit>
+            <trans-unit id="40" resname="content.text_editor.error.removed-multiple">
+                <source>content.text_editor.error.removed-multiple</source>
+                <target>%s links are broken.</target>
+            </trans-unit>
+            <trans-unit id="41" resname="sulu-content.save-draft">
+                <source>sulu-content.save-draft</source>
+                <target>Save as draft</target>
+            </trans-unit>
+            <trans-unit id="42" resname="sulu-content.save-publish">
+                <source>sulu-content.save-publish</source>
+                <target>Save and publish</target>
+            </trans-unit>
+            <trans-unit id="43" resname="sulu-content.publish">
+                <source>sulu-content.publish</source>
+                <target>Publish</target>
+            </trans-unit>
+            <trans-unit id="44" resname="sulu-content.published-shadow">
+                <source>sulu-content.published-shadow</source>
+                <target>The publishing state will be retrieved from the state of the main page.</target>
+            </trans-unit>
+            <trans-unit id="45" resname="sulu-content.draft-label">
+                <source>sulu-content.draft-label</source>
+                <target><![CDATA[You are working on a draft, last saved: %(changed)s by <b>%(user)s</b>]]></target>
+            </trans-unit>
+            <trans-unit id="46" resname="sulu-content.unpublish">
+                <source>sulu-content.unpublish</source>
+                <target>Unpublish</target>
+            </trans-unit>
+            <trans-unit id="47" resname="labels.error.content-unpublish-desc">
+                <source>labels.error.content-unpublish-desc</source>
+                <target>Page could not be unpublished.</target>
+            </trans-unit>
+            <trans-unit id="48" resname="content-navigation.security.texteditor">
+                <source>content-navigation.security.texteditor</source>
+                <target>Text editor</target>
+            </trans-unit>
+            <trans-unit id="49" resname="sulu-content.ckeditor.roles-title">
+                <source>sulu-content.ckeditor.roles-title</source>
+                <target>Text editor settings</target>
+            </trans-unit>
+            <trans-unit id="50" resname="sulu-content.ckeditor.roles-type">
+                <source>sulu-content.ckeditor.roles-type</source>
+                <target>Section</target>
+            </trans-unit>
+            <trans-unit id="51" resname="sulu-content.ckeditor.roles-horizontal">
+                <source>sulu-content.ckeditor.roles-horizontal</source>
+                <target>Function</target>
+            </trans-unit>
+            <trans-unit id="52" resname="sulu-content.ckeditor.roles-info">
+                <source>sulu-content.ckeditor.roles-info</source>
+                <target>These settings apply for any text editor throughout the system used by this role.</target>
             </trans-unit>
         </body>
     </file>

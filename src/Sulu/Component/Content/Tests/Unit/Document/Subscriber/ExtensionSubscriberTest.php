@@ -127,7 +127,7 @@ class ExtensionSubscriberTest extends SubscriberTestCase
         $this->persistEvent->getDocument()->willReturn($document);
         $this->extensionManager->getExtensions()->shouldNotBeCalled();
 
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
+        $this->subscriber->saveExtensionData($this->persistEvent->reveal());
     }
 
     /**
@@ -159,7 +159,7 @@ class ExtensionSubscriberTest extends SubscriberTestCase
             'de'
         )->shouldBeCalled();
 
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
+        $this->subscriber->saveExtensionData($this->persistEvent->reveal());
     }
 }
 

@@ -3,7 +3,6 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
-use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Security;
 use Sulu\Component\Webspace\Segment;
@@ -63,12 +62,15 @@ class {{ cache_class }} extends {{ base_class }}
 
 {% endfor %}
         // add theme
-        $theme = new Theme();
-        $theme->setKey('{{ webspace.theme.key }}');
-{% for code,template in webspace.theme.errorTemplates %}        $theme->addErrorTemplate({{ (code=='default'?"'default'":code)|raw }}, '{{ template }}');
+{% if webspace.theme != null %}
+        $webspace->setTheme('{{ webspace.theme }}');
+{% endif %}
+
+
+{% for type,template in webspace.templates %}        $webspace->addTemplate('{{ type|raw }}', '{{ template }}');
 {% endfor %}
-{% for type,template in webspace.theme.defaultTemplates %}        $theme->addDefaultTemplate('{{ type }}', '{{ template }}');
-{% endfor %}        $webspace->setTheme($theme);
+{% for type,template in webspace.defaultTemplates %}        $webspace->addDefaultTemplate('{{ type }}', '{{ template }}');
+{% endfor %}
 
         // add navigation
         $navigation = new Navigation();

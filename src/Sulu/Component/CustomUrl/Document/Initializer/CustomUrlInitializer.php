@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -57,7 +58,7 @@ class CustomUrlInitializer implements InitializerInterface
         $this->sessionManager = $sessionManager;
     }
 
-    public function initialize(OutputInterface $output)
+    public function initialize(OutputInterface $output, $purge = false)
     {
         $nodeTypeManager = $this->sessionManager->getSession()->getWorkspace()->getNodeTypeManager();
 

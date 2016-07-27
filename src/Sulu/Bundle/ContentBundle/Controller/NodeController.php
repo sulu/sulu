@@ -21,7 +21,6 @@ use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
-use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Form\Exception\InvalidFormException;
 use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
@@ -39,6 +38,7 @@ use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
@@ -226,6 +226,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
                         'exclude-shadows' => !$mapping->shouldHydrateShadow(),
                         'fields' => implode(',', $mapping->getProperties()),
                         'tree' => true,
+                        'webspace-nodes' => $webspaceNodes,
                     ]
                 )
             );
@@ -403,7 +404,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
      * @throws MissingParameterException
      * @throws ParameterDataTypeException
      *
-     * @deprecated this will be removed when the content-repository is able to solve all requirements.
+     * @deprecated this will be removed when the content-repository is able to solve all requirements
      */
     public function cgetNodes(Request $request)
     {
@@ -589,6 +590,9 @@ class NodeController extends RestController implements ClassResourceInterface, S
     public function putAction(Request $request, $uuid)
     {
         $language = $this->getLanguage($request);
+        $action = $request->get('action');
+
+        $this->checkActionParameterSecurity($action, $language, $uuid);
 
         $document = $this->getDocumentManager()->find(
             $uuid,
@@ -604,6 +608,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $this->get('sulu_hash.request_hash_checker')->checkHash($request, $document, $document->getUuid());
 
         $this->persistDocument($request, $type, $document, $language);
+        $this->handleActionParameter($action, $document, $language);
         $this->getDocumentManager()->flush();
 
         $view = $this->view($document);
@@ -628,10 +633,14 @@ class NodeController extends RestController implements ClassResourceInterface, S
     {
         $type = 'page';
         $language = $this->getLanguage($request);
+        $action = $request->get('action');
+
+        $this->checkActionParameterSecurity($action, $language);
 
         $document = $this->getDocumentManager()->create($type);
 
         $this->persistDocument($request, $type, $document, $language);
+        $this->handleActionParameter($action, $document, $language);
         $this->getDocumentManager()->flush();
 
         $view = $this->view($document);
@@ -715,7 +724,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
     public function postTriggerAction($uuid, Request $request)
     {
         // extract parameter
-        $webspace = $this->getWebspace($request);
         $action = $this->getRequestParameter($request, 'action', true);
         $language = $this->getLanguage($request);
         $userId = $this->getUser()->getId();
@@ -747,15 +755,24 @@ class NodeController extends RestController implements ClassResourceInterface, S
                     break;
                 case 'order':
                     $position = (int) $this->getRequestParameter($request, 'position', true);
+                    $webspace = $this->getWebspace($request);
 
                     // call repository method
                     $data = $repository->orderAt($uuid, $position, $webspace, $language, $userId);
                     break;
                 case 'copy-locale':
                     $destLocale = $this->getRequestParameter($request, 'dest', true);
+                    $webspace = $this->getWebspace($request);
 
                     // call repository method
                     $data = $repository->copyLocale($uuid, $userId, $webspace, $language, explode(',', $destLocale));
+                    break;
+                case 'unpublish':
+                    $document = $this->getDocumentManager()->find($uuid, $language);
+                    $this->getDocumentManager()->unpublish($document, $language);
+                    $this->getDocumentManager()->flush();
+
+                    $data = $this->getDocumentManager()->find($uuid, $language);
                     break;
                 default:
                     throw new RestException('Unrecognized action: ' . $action);
@@ -960,7 +977,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
     private function persistDocument(Request $request, $type, $document, $language)
     {
         $data = $request->request->all();
-        $data['workflowStage'] = $this->getRequestParameter($request, 'state', false, WorkflowStage::TEST);
 
         if ($request->query->has('parent')) {
             $data['parent'] = $request->query->get('parent');
@@ -985,5 +1001,53 @@ class NodeController extends RestController implements ClassResourceInterface, S
                 'clear_missing_content' => false,
             ]
         );
+    }
+
+    /**
+     * Checks if the user has the required permissions for the given action with the given locale. The additional
+     * uuid parameter will also include checks for the document identified by it.
+     *
+     * @param string $actionParameter
+     * @param string $locale
+     * @param string $uuid
+     */
+    private function checkActionParameterSecurity($actionParameter, $locale, $uuid = null)
+    {
+        $permission = null;
+        switch ($actionParameter) {
+            case 'publish':
+                $permission = 'live';
+                break;
+        }
+
+        if (!$permission) {
+            return;
+        }
+
+        $this->get('sulu_security.security_checker')->checkPermission(
+            new SecurityCondition(
+                $this->getSecurityContext(),
+                $locale,
+                $this->getSecuredClass(),
+                $uuid
+            ),
+            $permission
+        );
+    }
+
+    /**
+     * Delegates actions by given actionParameter, which can be retrieved from the request.
+     *
+     * @param string $actionParameter
+     * @param object $document
+     * @param string $locale
+     */
+    private function handleActionParameter($actionParameter, $document, $locale)
+    {
+        switch ($actionParameter) {
+            case 'publish':
+                $this->getDocumentManager()->publish($document, $locale);
+                break;
+        }
     }
 }

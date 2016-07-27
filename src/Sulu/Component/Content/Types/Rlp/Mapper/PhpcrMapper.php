@@ -15,7 +15,6 @@ use DateTime;
 use PHPCR\ItemExistsException;
 use PHPCR\NodeInterface;
 use PHPCR\PathNotFoundException;
-use PHPCR\SessionInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
@@ -94,6 +93,7 @@ class PhpcrMapper extends RlpMapper
                     'auto_create' => true,
                 ]
             );
+            $this->documentManager->publish($routeDocument, $locale);
         } catch (ItemExistsException $e) {
             throw new ResourceLocatorAlreadyExistsException($document->getResourceSegment(), $routeDocumentPath);
         }
@@ -211,6 +211,11 @@ class PhpcrMapper extends RlpMapper
 
         // iterate over history of path node
         $result = [];
+
+        if (!$pathNode) {
+            return $result;
+        }
+
         $this->iterateRouteNodes(
             $pathNode,
             function ($resourceLocator, NodeInterface $node) use (&$result) {
@@ -336,40 +341,12 @@ class PhpcrMapper extends RlpMapper
             );
         }
 
-        $session = $this->sessionManager->getSession();
-        $routeNode = $session->getNode($this->getPath($path, $webspaceKey, $languageCode, $segmentKey));
-        $this->deleteByNode($routeNode, $session, $webspaceKey, $languageCode, $segmentKey);
-    }
+        $routeDocument = $this->documentManager->find(
+            $this->getPath($path, $webspaceKey, $languageCode, $segmentKey),
+            $languageCode
+        );
 
-    /**
-     * {@inheritdoc}
-     */
-    private function deleteByNode(
-        NodeInterface $node,
-        SessionInterface $session,
-        $webspaceKey,
-        $languageCode,
-        $segmentKey = null
-    ) {
-        if ($node->getPropertyValue('sulu:history') !== true) {
-            // search for history nodes
-            $this->iterateRouteNodes(
-                $node,
-                function ($resourceLocator, NodeInterface $historyNode) use (
-                    $session,
-                    $webspaceKey,
-                    $languageCode,
-                    $segmentKey
-                ) {
-                    // delete history nodes
-                    $this->deleteByNode($historyNode, $session, $webspaceKey, $languageCode, $segmentKey);
-                },
-                $webspaceKey,
-                $languageCode,
-                $segmentKey
-            );
-        }
-        $node->remove();
+        $this->documentManager->remove($routeDocument);
     }
 
     /**
@@ -387,47 +364,6 @@ class PhpcrMapper extends RlpMapper
             // parent node don´t have a resource locator
             return;
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function restoreByPath($path, $webspaceKey, $languageCode, $segmentKey = null)
-    {
-        $rootNode = $this->getWebspaceRouteNode($webspaceKey, $languageCode, $segmentKey);
-        $newRouteNode = $rootNode->getNode(ltrim($path, '/'));
-        $currentRouteNode = $newRouteNode->getPropertyValue('sulu:content');
-        $contentNode = $currentRouteNode->getPropertyValue('sulu:content');
-
-        // change other history connections
-        $this->iterateRouteNodes(
-            $currentRouteNode,
-            function ($resourceLocator, NodeInterface $node) use (&$newRouteNode) {
-                if ($node->getPropertyValue('sulu:history') === true) {
-                    $node->setProperty('sulu:content', $newRouteNode);
-                }
-
-                return false;
-            },
-            $webspaceKey,
-            $languageCode,
-            $segmentKey
-        );
-
-        // change history
-        $newRouteNode->setProperty('sulu:history', false);
-        $currentRouteNode->setProperty('sulu:history', true);
-
-        // set creation date
-        $newRouteNode->setProperty('sulu:created', new DateTime());
-        $currentRouteNode->setProperty('sulu:created', new DateTime());
-
-        // set content
-        $newRouteNode->setProperty('sulu:content', $contentNode);
-        $currentRouteNode->setProperty('sulu:content', $newRouteNode);
-
-        // save session
-        $this->sessionManager->getSession()->save();
     }
 
     /**
@@ -455,7 +391,6 @@ class PhpcrMapper extends RlpMapper
      */
     private function getWebspaceRouteNode($webspaceKey, $languageCode, $segmentKey)
     {
-        // trailing slash
         return $this->sessionManager->getRouteNode($webspaceKey, $languageCode, $segmentKey);
     }
 

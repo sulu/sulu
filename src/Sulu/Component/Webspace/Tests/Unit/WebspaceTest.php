@@ -13,6 +13,9 @@ namespace Sulu\Component\Webspace\Tests\Unit;
 
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Environment;
+use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\Security;
+use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
 
@@ -39,9 +42,9 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
     private $security;
 
     /**
-     * @var Theme
+     * @var string
      */
-    private $theme;
+    private $theme = 'test';
 
     /**
      * @var Segment
@@ -58,7 +61,6 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
         $this->localization = $this->prophesize('Sulu\Component\Localization\Localization');
         $this->security = $this->prophesize('Sulu\Component\Webspace\Security');
         $this->segment = $this->prophesize('Sulu\Component\Webspace\Segment');
-        $this->theme = $this->prophesize('Sulu\Component\Webspace\Theme');
     }
 
     public function testToArray()
@@ -77,12 +79,12 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
                     'asd',
                 ],
             ],
+            'templates' => [],
+            'defaultTemplates' => [],
             'portals' => [
                 ['one'],
             ],
-            'theme' => [
-                'dsa',
-            ],
+            'theme' => 'test',
             'navigation' => [
                 'contexts' => [],
             ],
@@ -91,7 +93,6 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
         $this->security->getSystem()->willReturn($expected['security']['system']);
         $this->localization->toArray()->willReturn($expected['localizations'][0]);
         $this->segment->toArray()->willReturn($expected['segments'][0]);
-        $this->theme->toArray()->willReturn($expected['theme']);
         $this->portal->toArray()->willReturn($expected['portals'][0]);
 
         $this->webspace->setKey($expected['key']);
@@ -112,7 +113,7 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
                 $this->portal->reveal(),
             ]
         );
-        $this->webspace->setTheme($this->theme->reveal());
+        $this->webspace->setTheme($this->theme);
 
         $res = $this->webspace->toArray();
         $this->assertEquals($expected, $res);
@@ -178,5 +179,47 @@ class WebspaceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($this->webspace->hasDomain('sulu.lo', 'prod'));
         $this->assertTrue($this->webspace->hasDomain('1.sulu.lo', 'prod'));
+    }
+
+    public function testAddTemplate()
+    {
+        $templates = ['error-404' => 'template404'];
+        $webspace = new Webspace();
+        $webspace->addTemplate('error-404', 'template404');
+
+        $this->assertEquals('template404', $webspace->getTemplate('error-404'));
+        $this->assertEquals($templates, $webspace->getTemplates());
+        $data = $webspace->toArray();
+        $this->assertEquals($templates, $data['templates']);
+    }
+
+    public function testAddTemplateDefault()
+    {
+        $templates = ['error-404' => 'template404', 'error' => 'template'];
+
+        $webspace = new Webspace();
+        $webspace->addTemplate('error', 'template');
+        $webspace->addTemplate('error-404', 'template404');
+
+        $this->assertEquals('template404', $webspace->getTemplate('error-404'));
+        $this->assertEquals('template', $webspace->getTemplate('error'));
+        $this->assertEquals($templates, $webspace->getTemplates());
+        $data = $webspace->toArray();
+        $this->assertEquals($templates, $data['templates']);
+    }
+
+    public function testAddDefaultTemplate()
+    {
+        $defaultTemplates = ['page' => 'default', 'homepage' => 'overview'];
+
+        $webspace = new Webspace();
+        $webspace->addDefaultTemplate('page', 'default');
+        $webspace->addDefaultTemplate('homepage', 'overview');
+        $this->assertEquals($defaultTemplates, $webspace->getDefaultTemplates());
+        $this->assertEquals($defaultTemplates['page'], $webspace->getDefaultTemplate('page'));
+        $this->assertEquals($defaultTemplates['homepage'], $webspace->getDefaultTemplate('homepage'));
+        $this->assertNull($webspace->getDefaultTemplate('other-type'));
+        $data = $webspace->toArray();
+        $this->assertEquals($defaultTemplates, $data['defaultTemplates']);
     }
 }

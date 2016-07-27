@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -32,11 +33,23 @@ class CacheClearer implements CacheClearerInterface
      */
     private $filesystem;
 
-    public function __construct($kernelRootDir, $kernelEnvironment, Filesystem $filesystem)
+    /**
+     * @var string
+     */
+    private $varDir;
+
+    /**
+     * @param Filesystem $filesystem
+     * @param $kernelEnvironment
+     * @param $kernelRootDir
+     * @param string $varDir
+     */
+    public function __construct(Filesystem $filesystem, $kernelEnvironment, $kernelRootDir, $varDir = null)
     {
         $this->kernelRootDir = $kernelRootDir;
         $this->kernelEnvironment = $kernelEnvironment;
         $this->filesystem = $filesystem;
+        $this->varDir = $varDir;
     }
 
     /**
@@ -44,7 +57,11 @@ class CacheClearer implements CacheClearerInterface
      */
     public function clear()
     {
-        $path = sprintf('%s/cache/website/%s/http_cache', $this->kernelRootDir, $this->kernelEnvironment);
+        $path = sprintf(
+            '%s/cache/website/%s/http_cache',
+            $this->varDir ?: $this->kernelRootDir,
+            $this->kernelEnvironment
+        );
 
         if ($this->filesystem->exists($path)) {
             $this->filesystem->remove($path);

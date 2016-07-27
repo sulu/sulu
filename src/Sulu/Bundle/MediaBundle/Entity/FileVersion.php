@@ -73,17 +73,17 @@ class FileVersion implements AuditableInterface
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $contentLanguages;
+    private $contentLanguages = [];
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $publishLanguages;
+    private $publishLanguages = [];
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $meta;
+    private $meta = [];
 
     /**
      * @var \Sulu\Bundle\MediaBundle\Entity\File
@@ -94,7 +94,7 @@ class FileVersion implements AuditableInterface
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $tags;
+    private $tags = [];
 
     /**
      * @var \Sulu\Component\Security\Authentication\UserInterface
@@ -119,7 +119,7 @@ class FileVersion implements AuditableInterface
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $categories;
+    private $categories = [];
 
     /**
      * Constructor.

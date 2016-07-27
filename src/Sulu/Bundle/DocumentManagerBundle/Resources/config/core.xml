@@ -26,8 +26,10 @@
         </service>
 
         <service id="sulu_document_manager.node_manager" class="Sulu\Component\DocumentManager\NodeManager" public="false">
-            <argument type="service" id="doctrine_phpcr.default_session" />
+            <argument type="service" id="doctrine_phpcr.session" />
         </service>
+
+        <service id="sulu_document_manager.node_helper" class="Sulu\Component\DocumentManager\NodeHelper"/>
 
         <service id="sulu_document_manager.metadata_factory.base" class="Sulu\Component\DocumentManager\Metadata\BaseMetadataFactory" public="false">
             <argument type="service" id="sulu_document_manager.event_dispatcher" />
@@ -36,7 +38,6 @@
 
         <service id="sulu_document_manager.metadata_factory" class="Sulu\Component\DocumentManager\Metadata\MetadataFactory" public="false">
             <argument type="service" id="sulu_document_manager.metadata_factory.base" />
-            <argument type="service" id="sulu_document_manager.document_strategy" />
         </service>
 
         <service id="sulu_document_manager.slugifier" class="Symfony\Cmf\Bundle\CoreBundle\Slugifier\CallbackSlugifier" public="false">
@@ -52,10 +53,6 @@
         </service>
 
         <service id="sulu_document_manager.name_resolver" class="Sulu\Component\DocumentManager\NameResolver" public="false" />
-
-        <service id="sulu_document_manager.document_strategy" class="Sulu\Component\DocumentManager\Strategy\MixinStrategy">
-            <argument type="service" id="sulu_document_manager.metadata_factory.base" />
-        </service>
 
         <!-- Utilities -->
         <service id="sulu_document_manager.path_segment_registry" class="Sulu\Component\DocumentManager\PathSegmentRegistry">
@@ -101,15 +98,15 @@
         </service>
 
         <!-- Initializer -->
-        <service id="sulu_document_manager.initializer.root_path_purger" class="Sulu\Bundle\DocumentManagerBundle\Initializer\RootPathPurger">
+        <service id="sulu_document_manager.initializer.root_path_purge_initializer" class="Sulu\Bundle\DocumentManagerBundle\Initializer\RootPathPurgeInitializer">
             <argument type="service" id="doctrine_phpcr" />
             <argument type="service" id="sulu_document_manager.path_segment_registry" />
             <argument>base</argument>
+            <tag name="sulu_document_manager.initializer" priority="250"/>
         </service>
 
         <service id="sulu_document_manager.initializer" class="Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer">
             <argument type="service" id="service_container" />
-            <argument type="service" id="sulu_document_manager.initializer.root_path_purger" />
             <argument type="collection" />
         </service>
 
@@ -125,9 +122,13 @@
         </service>
 
         <service id="sulu_document_manager.subscriber.phpcr.reorder" class="Sulu\Component\DocumentManager\Subscriber\Phpcr\ReorderSubscriber">
-            <argument type="service" id="sulu_document_manager.node_manager" />
-            <argument type="service" id="sulu_document_manager.document_registry" />
+            <argument type="service" id="sulu_document_manager.node_helper" />
             <tag name="sulu_document_manager.event_subscriber" />
+        </service>
+
+        <service id="sulu_document_manager.subscriber.phpcr.mixin" class="Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\MixinSubscriber">
+            <argument type="service" id="sulu_document_manager.metadata_factory"/>
+            <tag name="sulu_document_manager.event_subscriber"/>
         </service>
 
         <!-- PHPCR subscribers -->
@@ -139,7 +140,7 @@
         </service>
 
         <service id="sulu_document_manager.subscriber.phpcr.query" class="Sulu\Component\DocumentManager\Subscriber\Phpcr\QuerySubscriber">
-            <argument type="service" id="doctrine_phpcr.default_session" />
+            <argument type="service" id="doctrine_phpcr.session" />
             <argument type="service" id="sulu_document_manager.event_dispatcher" />
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
@@ -147,6 +148,7 @@
         <service id="sulu_document_manager.subscriber.phpcr.general" class="Sulu\Component\DocumentManager\Subscriber\Phpcr\GeneralSubscriber">
             <argument type="service" id="sulu_document_manager.document_registry" />
             <argument type="service" id="sulu_document_manager.node_manager" />
+            <argument type="service" id="sulu_document_manager.node_helper" />
             <argument type="service" id="sulu_document_manager.event_dispatcher" />
             <tag name="sulu_document_manager.event_subscriber" />
         </service>

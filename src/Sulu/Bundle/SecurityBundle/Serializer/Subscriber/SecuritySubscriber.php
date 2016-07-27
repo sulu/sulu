@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -40,7 +41,7 @@ class SecuritySubscriber implements EventSubscriberInterface
 
     public function __construct(
         AccessControlManagerInterface $accessControlManager,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage = null
     ) {
         $this->accessControlManager = $accessControlManager;
         $this->tokenStorage = $tokenStorage;

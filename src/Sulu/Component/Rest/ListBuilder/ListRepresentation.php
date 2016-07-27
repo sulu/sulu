@@ -93,7 +93,7 @@ class ListRepresentation extends PaginatedRepresentation
             $parameters,
             $page,
             $limit,
-            ($limit !== null ? ceil($total / $limit) : 1)
+            ($limit ? ceil($total / $limit) : 1)
         );
 
         $this->total = $total;

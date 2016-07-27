@@ -210,7 +210,6 @@ define([], function() {
                             actionIcon: 'fa-plus-circle',
                             resultKey: this.options.resultKey,
                             showOptions: false,
-                            showStatus: false,
                             responsive: false,
                             sortable: false,
                             skin: 'fixed-height-small',
@@ -223,7 +222,7 @@ define([], function() {
 
         loadSelectedNode = function() {
             this.sandbox.util.load(getSingleUrl(this.options.url, this.data)).then(function(data) {
-                this.$input.val((data.title || this.sandbox.translate(this.options.translations.noTitle)) + ' (' + (data.path || '/') + ')');
+                this.$input.val((data.title || this.sandbox.translate(this.options.translations.noTitle)) + ' (' + data.url + ')');
             }.bind(this));
         },
 

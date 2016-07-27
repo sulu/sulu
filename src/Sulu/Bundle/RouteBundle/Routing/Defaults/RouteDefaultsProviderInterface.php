@@ -21,11 +21,23 @@ interface RouteDefaultsProviderInterface
      *
      * @param string $entityClass
      * @param string $id
+     * @param string $locale
      * @param object|null $object If entity is not null it was already loaded (e.g. preview)
      *
      * @return array
      */
-    public function getByEntity($entityClass, $id, $object = null);
+    public function getByEntity($entityClass, $id, $locale, $object = null);
+
+    /**
+     * Returns true if object is published.
+     *
+     * @param string $entityClass
+     * @param string $id
+     * @param string $locale
+     *
+     * @return bool
+     */
+    public function isPublished($entityClass, $id, $locale);
 
     /**
      * Returns true if this provider supports given entity-class.

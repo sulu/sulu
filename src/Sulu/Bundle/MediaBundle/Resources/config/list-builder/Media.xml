@@ -4,13 +4,13 @@
     <orm:joins name="type">
         <orm:join>
             <orm:entity-name>SuluMediaBundle:MediaType</orm:entity-name>
-            <orm:field-name>SuluMediaBundle:Media.type</orm:field-name>
+            <orm:field-name>%sulu.model.media.class%.type</orm:field-name>
         </orm:join>
     </orm:joins>
     <orm:joins name="file">
         <orm:join>
             <orm:entity-name>SuluMediaBundle:File</orm:entity-name>
-            <orm:field-name>SuluMediaBundle:Media.files</orm:field-name>
+            <orm:field-name>%sulu.model.media.class%.files</orm:field-name>
         </orm:join>
     </orm:joins>
     <orm:joins name="fileVersion" ref="file">
@@ -37,22 +37,22 @@
     <properties>
         <property name="id" list:translation="public.id" display="no" list:type="integer">
             <orm:field-name>id</orm:field-name>
-            <orm:entity-name>SuluMediaBundle:Media</orm:entity-name>
+            <orm:entity-name>%sulu.model.media.class%</orm:entity-name>
         </property>
 
         <property name="changed" list:translation="public.changed" display="no" list:type="datetime">
             <orm:field-name>changed</orm:field-name>
-            <orm:entity-name>SuluMediaBundle:Media</orm:entity-name>
+            <orm:entity-name>%sulu.model.media.class%</orm:entity-name>
         </property>
 
         <property name="created" list:translation="public.created" display="no" list:type="datetime">
             <orm:field-name>created</orm:field-name>
-            <orm:entity-name>SuluMediaBundle:Media</orm:entity-name>
+            <orm:entity-name>%sulu.model.media.class%</orm:entity-name>
         </property>
 
         <identity-property name="collection" display="never">
             <orm:field-name>collection</orm:field-name>
-            <orm:entity-name>SuluMediaBundle:Media</orm:entity-name>
+            <orm:entity-name>%sulu.model.media.class%</orm:entity-name>
         </identity-property>
 
         <property name="thumbnails" list:translation="media.media.thumbnails" display="always" list:type="thumbnails"

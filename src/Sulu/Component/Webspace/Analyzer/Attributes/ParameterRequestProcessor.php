@@ -30,10 +30,8 @@ class ParameterRequestProcessor implements RequestProcessorInterface
      */
     private $environment;
 
-    public function __construct(
-        WebspaceManagerInterface $webspaceManager,
-        $environment
-    ) {
+    public function __construct(WebspaceManagerInterface $webspaceManager, $environment)
+    {
         $this->webspaceManager = $webspaceManager;
         $this->environment = $environment;
     }

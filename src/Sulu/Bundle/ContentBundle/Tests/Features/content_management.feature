@@ -35,6 +35,7 @@ Feature: Content management
         When I fill in "title" with "Dornbirn"
         And I fill in "body" with "Dornbirn is great"
         And I click the save icon
+        And I click toolbar item "savePublish"
         And I expect a success notification to appear
         And I click the back icon
         Then I expect to see "Dornbirn"
@@ -42,8 +43,22 @@ Feature: Content management
         And I expect to see "Article 2"
         When I double click the column navigation item "Dornbirn"
         And I expect the "sulu.content.initialized" event
+        And I wait and expect to see element "#title"
         Then I expect the value of the property "title" is "Dornbirn"
         And I expect the value of the property "body" is "Dornbirn is great"
+
+    Scenario: Publish page
+        Given I am editing a page of type "article"
+        Then I expect the page state to be "Test"
+        When I click the save icon
+        And I click toolbar item "publish"
+        And I expect the "sulu.content.initialized" event
+        Then I expect the page state to be "Published"
+        When I fill in "title" with "Dornbirn"
+        And I click the save icon
+        And I click toolbar item "saveDraft"
+        Then I expect the "sulu.header.tabs.label.show" event
+
 
     Scenario: Delete page
         Given I am on "/admin/#content/contents/sulu_io/de"
@@ -63,6 +78,7 @@ Feature: Content management
         Given I am editing a page of type "article"
         And I click "en" from the drop down
         And I confirm
+        And I expect the "sulu.content.initialized" event
         And I wait and expect to see element "#title"
         Then I expect the value of the property "title" is ""
 

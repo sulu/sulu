@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -412,7 +413,6 @@ class ContentRepository implements ContentRepositoryInterface
             ->addSelect('node', $this->propertyEncoder->localizedContentName('state', $locale), 'state')
             ->addSelect('node', $this->propertyEncoder->localizedContentName('shadow-on', $locale), 'shadowOn')
             ->addSelect('node', $this->propertyEncoder->localizedContentName('shadow-base', $locale), 'shadowBase')
-            ->addSelect('node', $this->propertyEncoder->localizedContentName('shadow-base', $locale), 'shadowBase')
             ->addSelect('node', $this->propertyEncoder->systemName('order'), 'order')
             ->from($this->qomFactory->selector('node', 'nt:unstructured'))
             ->orderBy($this->qomFactory->propertyValue('node', 'sulu:order'));
@@ -491,7 +491,7 @@ class ContentRepository implements ContentRepositoryInterface
      * Append mapping selects to given query-builder.
      *
      * @param QueryBuilder $queryBuilder
-     * @param MappingInterface $mapping Includes array of property names.
+     * @param MappingInterface $mapping Includes array of property names
      * @param string $locale
      * @param string[] $locales
      */
@@ -571,7 +571,7 @@ class ContentRepository implements ContentRepositoryInterface
      * @param Row $row
      * @param string $locale
      * @param string $locales
-     * @param MappingInterface $mapping Includes array of property names.
+     * @param MappingInterface $mapping Includes array of property names
      * @param UserInterface $user
      *
      * @return Content
@@ -689,7 +689,7 @@ class ContentRepository implements ContentRepositoryInterface
      * @param Row $row
      * @param string $locale
      * @param string $webspaceKey
-     * @param MappingInterface $mapping Includes array of property names.
+     * @param MappingInterface $mapping Includes array of property names
      * @param StructureType $type
      * @param UserInterface $user
      *

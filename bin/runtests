@@ -16,6 +16,7 @@ use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
 
@@ -53,11 +54,13 @@ $definition->addOption(new InputOption('help', 'h', InputOption::VALUE_NONE));
 $definition->addOption(new InputOption('no-component-tests', 'C', InputOption::VALUE_NONE));
 $definition->addOption(new InputOption('no-bundle-tests', 'B', InputOption::VALUE_NONE));
 $definition->addOption(new InputOption('verbose', 'v', InputOption::VALUE_NONE));
+$definition->addOption(new InputOption('cache-clear', null, InputOption::VALUE_NONE));
 $input = new ArgvInput(null, $definition);
 $output = new ConsoleOutput();
 $output->getFormatter()->setStyle('red', new OutputFormatterStyle('red'));
 $failedTests = new \ArrayObject();
 $verbose = $input->getOption('verbose');
+$filesystem = new Filesystem();
 global $output, $input, $failedTests, $termWidth, $verbose;
 
 // Utility methods
@@ -341,7 +344,7 @@ function init_phpcr_dbal()
 
 function run_bundle_tests(\SplFileInfo $phpunitFile)
 {
-    global $failedTests, $input;
+    global $failedTests, $input, $filesystem;
 
     $bundleName = basename($phpunitFile->getPath());
     $bundleDir = $phpunitFile->getPath();
@@ -356,6 +359,12 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
         write_info('Symlinked base vendor dir');
     }
 
+    $cacheDir = getcwd() . '/Tests/app/cache';
+    if ($input->getOption('cache-clear')) {
+        write_info('Clear cache');
+        $filesystem->remove($cacheDir);
+    }
+
     // see if this bundle uses doctrine orm, and update the schema if so..
     // (we assume that the bundle will purge the fixtures etc.)
     init_bundle($phpunitFile->getPathname());
@@ -366,7 +375,9 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
 
     $flags = $input->getOption('flags');
     $process = exec_cmd(sprintf(
-        'phpunit --configuration %s %s',
+        'vendor%sbin%sphpunit --configuration %s %s',
+        DIRECTORY_SEPARATOR,
+        DIRECTORY_SEPARATOR,
         $phpunitFile->getPathname(),
         $flags
     ), true, false);
@@ -453,6 +464,10 @@ show_storage_params();
 
 if ($input->getOption('initialize')) {
     write_header('Initialization');
+    if ($input->getOption('cache-clear')) {
+        write_info('Clear cache');
+        $filesystem->remove(getcwd() . '/tests/app/cache');
+    }
     init_dbal();
     write_info('Initializing the content repository');
     exec_sf_cmd('sulu:document:initialize --ansi', true);
@@ -483,7 +498,11 @@ if (false === $input->getOption('no-component-tests') || $input->getOption('all'
     // should explicitly indicate which kernels they are using.
     // https://github.com/sulu-io/sulu/issues/2187
     putenv('KERNEL_DIR=' . __DIR__ . '/../tests/app');
-    $process = exec_cmd('phpunit ' . $input->getOption('flags'), true, false);
+    $process = exec_cmd(
+        'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'phpunit ' . $input->getOption('flags'),
+        true,
+        false
+    );
     if ($process->getExitCode() !== 0) {
         $failedTests[] = 'Components';
     }

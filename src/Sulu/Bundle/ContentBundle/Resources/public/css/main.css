@@ -15,14 +15,18 @@
   padding-top: 20px;
   padding-bottom: 20px;
 }
+/* line 13, ../scss/modules/general.scss */
+#content-form .validate-error {
+  color: #EA524E;
+}
 
-/* line 14, ../scss/modules/general.scss */
+/* line 18, ../scss/modules/general.scss */
 .sortable-placeholder {
   margin-bottom: 20px;
 }
 
 /* smart content extension for internal links */
-/* line 20, ../scss/modules/general.scss */
+/* line 24, ../scss/modules/general.scss */
 .smart-header .add {
   display: block;
   position: absolute;
@@ -37,19 +41,19 @@
   border-radius: 2px;
 }
 
-/* line 38, ../scss/modules/general.scss */
+/* line 42, ../scss/modules/general.scss */
 .internal-links-overlay .overlay-content,
 .single-internal-overlay .overlay-content,
 .node .overlay-content {
   margin: 0px;
 }
-/* line 42, ../scss/modules/general.scss */
+/* line 46, ../scss/modules/general.scss */
 .internal-links-overlay .overlay-header,
 .single-internal-overlay .overlay-header,
 .node .overlay-header {
   margin-bottom: 0px !important;
 }
-/* line 46, ../scss/modules/general.scss */
+/* line 50, ../scss/modules/general.scss */
 .internal-links-overlay .overlay-footer,
 .single-internal-overlay .overlay-footer,
 .node .overlay-footer {
@@ -57,26 +61,26 @@
 }
 
 /* smart content for column view */
-/* line 52, ../scss/modules/general.scss */
+/* line 56, ../scss/modules/general.scss */
 .column-navigation-wrapper {
   overflow: inherit;
 }
 
 /* block add-button */
-/* line 58, ../scss/modules/general.scss */
+/* line 62, ../scss/modules/general.scss */
 .text-block-footer.full .action .dropdown-label {
   background-color: #ccc;
   cursor: default;
 }
 
 /** multiple property */
-/* line 66, ../scss/modules/general.scss */
+/* line 70, ../scss/modules/general.scss */
 #sulu-content-container .multiple-property .move::before {
   left: -18px;
   top: 2px;
 }
 
-/* line 72, ../scss/modules/general.scss */
+/* line 76, ../scss/modules/general.scss */
 #changelog-container {
   color: #999;
 }
@@ -150,36 +154,29 @@
 /* line 34, ../scss/modules/resource-locator.scss */
 .resource-locator-history .url,
 .resource-locator-history .date,
-.resource-locator-history .options-restore,
 .resource-locator-history .options-delete {
   display: block;
   padding-top: 10px;
   padding-bottom: 10px;
   border-bottom: 1px solid #ddd;
 }
-/* line 44, ../scss/modules/resource-locator.scss */
+/* line 43, ../scss/modules/resource-locator.scss */
 .resource-locator-history .url,
 .resource-locator-history .date {
   float: left;
-  width: 45%;
+  width: 47.5%;
 }
-/* line 50, ../scss/modules/resource-locator.scss */
-.resource-locator-history .options-restore {
-  float: left;
-  width: 5%;
-  text-align: center;
-}
-/* line 56, ../scss/modules/resource-locator.scss */
+/* line 49, ../scss/modules/resource-locator.scss */
 .resource-locator-history .options-delete {
   float: right;
   width: 5%;
   text-align: center;
 }
-/* line 62, ../scss/modules/resource-locator.scss */
+/* line 55, ../scss/modules/resource-locator.scss */
 .resource-locator-history .url {
   text-align: left;
 }
-/* line 65, ../scss/modules/resource-locator.scss */
+/* line 58, ../scss/modules/resource-locator.scss */
 .resource-locator-history .date {
   text-align: center;
 }
@@ -430,4 +427,9 @@
   border: 0;
   margin: 0;
   color: #3e3e3e;
+}
+
+/* line 2, ../scss/modules/ckeditor.scss */
+#ckeditor-form .input-description.matrix {
+  margin-top: -20px;
 }

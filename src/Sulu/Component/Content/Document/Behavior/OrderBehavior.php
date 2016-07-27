@@ -23,4 +23,11 @@ interface OrderBehavior
      * @return int
      */
     public function getSuluOrder();
+
+    /**
+     * Set the absolute order value of this document.
+     *
+     * @param int $order
+     */
+    public function setSuluOrder($order);
 }

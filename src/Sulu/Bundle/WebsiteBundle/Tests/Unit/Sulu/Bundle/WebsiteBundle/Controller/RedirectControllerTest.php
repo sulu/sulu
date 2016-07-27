@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -10,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +31,7 @@ class RedirectControllerTest extends \PHPUnit_Framework_TestCase
         $this->controller = new RedirectController();
     }
 
-    private function getRequestMock($requestUrl, $portalUrl, $redirectUrl = null)
+    private function getRequestMock($requestUrl, $portalUrl, $redirectUrl = null, $prefix = '')
     {
         $request = $this->getMockBuilder(Request::class)->getMock();
         $request->expects($this->any())->method('get')->will(
@@ -37,6 +39,7 @@ class RedirectControllerTest extends \PHPUnit_Framework_TestCase
                 [
                     ['url', null, false, $portalUrl],
                     ['redirect', null, false, $redirectUrl],
+                    ['_sulu', null, false, new RequestAttributes(['resourceLocatorPrefix' => $prefix])],
                 ]
             )
         );
@@ -61,15 +64,17 @@ class RedirectControllerTest extends \PHPUnit_Framework_TestCase
             ['sulu-redirect.lo/', 'sulu-redirect.lo', 'sulu.lo', 'http://sulu.lo'],
             ['http://sulu.lo:8002/', 'sulu.lo', 'sulu.lo/en', 'http://sulu.lo:8002/en'],
             ['http://sulu.lo/articles', 'sulu.lo/en', 'sulu.lo/de', 'http://sulu.lo/de/articles'],
+            ['http://sulu.lo/events', 'sulu.lo/events', 'sulu.lo/events/de', 'http://sulu.lo/events/de', '/events'],
+            ['http://sulu.lo/events/articles', 'sulu.lo/events', 'sulu.lo/events/de', 'http://sulu.lo/events/de/articles', '/events'],
         ];
     }
 
     /**
      * @dataProvider provideRedirectAction
      */
-    public function testRedirectAction($requestUri, $portalUrl, $redirectUrl, $expectedTargetUrl)
+    public function testRedirectAction($requestUri, $portalUrl, $redirectUrl, $expectedTargetUrl, $prefix = '')
     {
-        $request = $this->getRequestMock($requestUri, $portalUrl, $redirectUrl);
+        $request = $this->getRequestMock($requestUri, $portalUrl, $redirectUrl, $prefix);
 
         $response = $this->controller->redirectWebspaceAction($request);
 

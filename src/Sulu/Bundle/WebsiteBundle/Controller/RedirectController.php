@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -32,7 +33,8 @@ class RedirectController extends Controller
     {
         $url = $this->resolveRedirectUrl(
             $request->get('redirect'),
-            $request->getUri()
+            $request->getUri(),
+            $request->get('_sulu')->getAttribute('resourceLocatorPrefix')
         );
 
         return new RedirectResponse($url, 301, ['Cache-Control' => 'private']);
@@ -80,10 +82,11 @@ class RedirectController extends Controller
      *
      * @param string $redirectUrl Redirect webspace URI
      * @param string $requestUri The actual incoming request URI
+     * @param string $resourceLocatorPrefix The prefix of the actual portal
      *
      * @return string URL to redirect to
      */
-    private function resolveRedirectUrl($redirectUrl, $requestUri)
+    private function resolveRedirectUrl($redirectUrl, $requestUri, $resourceLocatorPrefix)
     {
         $redirectInfo = $this->parseUrl($redirectUrl);
         $requestInfo = $this->parseUrl($requestUri);
@@ -98,8 +101,7 @@ class RedirectController extends Controller
             $url .= ':' . $requestInfo['port'];
         }
 
-        if (
-            isset($redirectInfo['path'])
+        if (isset($redirectInfo['path'])
             && (
                 // if requested url not starting with redirectUrl it need to be added
                 !isset($requestInfo['path'])
@@ -109,8 +111,13 @@ class RedirectController extends Controller
             $url .= $redirectInfo['path'];
         }
 
-        if (isset($requestInfo['path'])) {
-            $url .= $requestInfo['path'];
+        if (isset($requestInfo['path']) && $resourceLocatorPrefix !== $requestInfo['path']) {
+            $path = $requestInfo['path'];
+            if (0 === strpos($path, $resourceLocatorPrefix)) {
+                $path = substr($path, strlen($resourceLocatorPrefix));
+            }
+
+            $url .= $path;
             $url = rtrim($url, '/');
         }
 

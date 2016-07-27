@@ -159,9 +159,25 @@
             <argument>%kernel.environment%</argument>
         </service>
 
+        <service id="sulu_website.resolver.template_attribute"
+                 class="Sulu\Bundle\WebsiteBundle\Resolver\TemplateAttributeResolver">
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument type="service" id="sulu_website.resolver.request_analyzer"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager" />
+            <argument type="service" id="router"/>
+            <argument type="service" id="request_stack"/>
+            <argument>%kernel.environment%</argument>
+        </service>
+
         <service id="sulu_website.resolver.parameter" class="%sulu_website.resolver.parameter.class%">
             <argument type="service" id="sulu_website.resolver.structure"/>
             <argument type="service" id="sulu_website.resolver.request_analyzer"/>
+        </service>
+
+        <service id="sulu_website.routing.request_listener" class="Sulu\Bundle\WebsiteBundle\Routing\RequestListener">
+            <argument type="service" id="router"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer" />
+            <tag name="kernel.event_listener" event="kernel.request" method="onRequest" />
         </service>
 
         <!-- exception controller -->
@@ -174,9 +190,10 @@
 
         <!-- cache clearer -->
         <service id="sulu_website.http_cache.clearer" class="Sulu\Bundle\WebsiteBundle\Cache\CacheClearer">
-            <argument type="string">%kernel.root_dir%</argument>
-            <argument type="string">%kernel.environment%</argument>
             <argument type="service" id="filesystem"/>
+            <argument type="string">%kernel.environment%</argument>
+            <argument type="string">%kernel.root_dir%</argument>
+            <argument type="expression">container.hasParameter('kernel.var_dir') ? parameter('kernel.var_dir') : null</argument>
         </service>
 
         <service id="sulu_website.translator.request_analyzer"
@@ -194,16 +211,6 @@
         </service>
 
         <!-- preview -->
-        <service id="sulu_website.event_listener.set_theme"
-                 class="Sulu\Bundle\WebsiteBundle\EventListener\SetThemeEventListener">
-            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
-            <argument type="service" id="liip_theme.active_theme"/>
-
-            <tag name="kernel.event_listener" event="%sulu_preview.events.pre-render%"
-                 method="setActiveThemeOnPreviewPreRender"/>
-            <tag name="sulu.context" context="admin"/>
-        </service>
-
         <service id="sulu_website.event_listener.translator"
                  class="Sulu\Bundle\WebsiteBundle\EventListener\TranslatorEventListener">
             <argument type="service" id="translator"/>

@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * initiate phpcr repository (namespaces, nodetypes).
  *
- * @deprecated use sulu:document:initialize instead.
+ * @deprecated use sulu:document:initialize instead
  */
 class PHPCRInitCommand extends ContainerAwareCommand
 {

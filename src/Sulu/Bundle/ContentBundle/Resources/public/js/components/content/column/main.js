@@ -179,6 +179,7 @@ define([
             this.sandbox.sulu.triggerDeleteSuccessLabel();
 
             this.showGhostPages = true;
+            this.showWebspaceNode = false;
             this.setShowGhostPages();
         },
 
@@ -190,6 +191,13 @@ define([
             if (showGhostPages !== null) {
                 this.showGhostPages = JSON.parse(showGhostPages);
             }
+        },
+
+        /**
+         * Sets the showWebspaceNode variable
+         */
+        setShowWebspaceNode: function(show) {
+            this.showWebspaceNode = show;
         },
 
         /**
@@ -432,6 +440,7 @@ define([
          * @param {String} id of selected item
          */
         startOverlayColumnNavigation: function(id) {
+            this.setShowWebspaceNode(true);
             var url = this.getUrl(id);
 
             this.sandbox.start(
@@ -449,7 +458,6 @@ define([
                             instanceName: 'overlay',
                             actionIcon: 'fa-check-circle',
                             showOptions: false,
-                            showStatus: false,
                             responsive: false,
                             sortable: false,
                             skin: 'fixed-height-small',
@@ -502,7 +510,7 @@ define([
          */
         restartColumnNavigation: function() {
             this.sandbox.stop('#content-column');
-
+            this.setShowWebspaceNode(false);
             this.startColumnNavigation();
         },
 
@@ -607,9 +615,10 @@ define([
                 urlParts = [
                     'webspace=' + this.options.webspace,
                     'language=' + this.options.language,
-                    'fields=title,order',
+                    'fields=title,order,published',
                     'exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false'),
-                    'exclude-shadows=' + (!this.showGhostPages ? 'true' : 'false')
+                    'exclude-shadows=' + (!this.showGhostPages ? 'true' : 'false'),
+                     (this.showWebspaceNode ? 'webspace-nodes=single' : '')
                 ];
 
             if (!!selected) {

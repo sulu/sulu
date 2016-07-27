@@ -44,6 +44,10 @@ define([
                 titleContainer: '#external-link-container .title',
                 linkContainer: '#external-link-container .link'
             }
+        },
+
+        isShadow = function() {
+            return this.sandbox.dom.prop('#shadow_on_checkbox', 'checked');
         };
 
     return {
@@ -150,6 +154,10 @@ define([
                 this.sandbox.emit('sulu.content.changed');
                 this.sandbox.emit('sulu.content.contents.set-header-bar', false);
             }.bind(this));
+
+            this.sandbox.on('sulu.header.state.changed', function(state) {
+                this.state = state;
+            }.bind(this));
         },
 
         bindDomEvents: function() {
@@ -169,28 +177,36 @@ define([
             }.bind(this), '.content-type');
 
             this.sandbox.dom.on('#shadow_on_checkbox', 'click', function() {
-                this.updateTabVisibilityForShadowCheckbox(false);
+                this.updateVisibilityForShadowCheckbox(false);
             }.bind(this));
 
         },
 
-        updateTabVisibilityForShadowCheckbox: function(isInitial) {
-            var checkboxEl = this.sandbox.dom.find('#shadow_on_checkbox')[0],
-                action = checkboxEl.checked ? 'hide' : 'show',
-                tabAction;
+        updateVisibilityForShadowCheckbox: function(isInitial) {
+            var shadow = isShadow.call(this),
+                tabAction,
+                $shadowDescription = this.sandbox.dom.find('#shadow-container .input-description');
 
             if (false === isInitial) {
                 tabAction = 'hide';
             }
 
-            if (tabAction    === 'hide') {
+            if (tabAction === 'hide') {
                 this.sandbox.emit('husky.toolbar.header.item.disable', 'state', false);
             } else {
                 this.sandbox.emit('husky.toolbar.header.item.enable', 'state', false);
             }
 
+            if (!!shadow) {
+                this.sandbox.emit('sulu.content.contents.show-save-items', 'shadow');
+                $shadowDescription.show();
+            } else {
+                this.sandbox.emit('sulu.content.contents.show-save-items', 'content');
+                $shadowDescription.hide();
+            }
+
             this.sandbox.util.each(['show-in-navigation-container', 'settings-content-form-container'], function(i, formGroupId) {
-                if (action === 'hide') {
+                if (!!shadow) {
                     this.sandbox.dom.find('#' + formGroupId).hide();
                 } else {
                     this.sandbox.dom.find('#' + formGroupId).show();
@@ -243,7 +259,7 @@ define([
                     }
                 ]);
 
-                this.updateTabVisibilityForShadowCheckbox(true);
+                this.updateVisibilityForShadowCheckbox(true);
 
                 this.updateChangelog(data);
             }.bind(this));
@@ -387,8 +403,12 @@ define([
 
             data.navContexts = this.sandbox.dom.data('#nav-contexts', 'selection');
             data.nodeType = parseInt(this.sandbox.dom.val('input[name="nodeType"]:checked'));
-            data.shadowOn = this.sandbox.dom.prop('#shadow_on_checkbox', 'checked');
+            data.shadowOn = isShadow.call(this);
             data.shadowBaseLanguage = null;
+
+            if (!!this.state) {
+                data.state = this.state;
+            }
 
             if (data.nodeType === TYPE_INTERNAL) {
                 data.title = this.sandbox.dom.val('#internal-title');
@@ -416,6 +436,9 @@ define([
                 data,
                 this.options.language,
                 this.options.webspace,
+                {
+                    action: action
+                },
                 function(response) {
                     this.sandbox.emit('sulu.content.contents.saved', response.id, response, action);
                 }.bind(this),

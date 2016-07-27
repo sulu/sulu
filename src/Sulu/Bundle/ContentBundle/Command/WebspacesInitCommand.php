@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Creates default routes in PHPCR for webspaces.
  *
- * @deprecated Use the sulu:document:initialize command instead.
+ * @deprecated Use the sulu:document:initialize command instead
  */
 class WebspacesInitCommand extends ContainerAwareCommand
 {

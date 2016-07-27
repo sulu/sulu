@@ -107,6 +107,27 @@
             <orm:joins ref="address"/>
         </property>
 
+        <property name="street" filter-type="string" list:translation="contact.address.street">
+            <orm:field-name>street</orm:field-name>
+            <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
+
+            <orm:joins ref="address"/>
+        </property>
+
+        <property name="number" filter-type="string" list:translation="contact.address.number">
+            <orm:field-name>number</orm:field-name>
+            <orm:entity-name>SuluContactBundle:Address</orm:entity-name>
+
+            <orm:joins ref="address"/>
+        </property>
+
+        <concatenation-property name="addressLine" filter-type="string"
+                                list:translation="contact.address.address-line" list:sortable="false"
+                                orm:glue=" ">
+            <orm:field property-ref="street"/>
+            <orm:field property-ref="number"/>
+        </concatenation-property>
+
         <property name="state" filter-type="string" list:translation="contact.address.state">
             <orm:field-name>state</orm:field-name>
             <orm:entity-name>SuluContactBundle:Address</orm:entity-name>

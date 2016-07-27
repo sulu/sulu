@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -11,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use PHPCR\NodeInterface;
+use PHPCR\SessionInterface;
 use Prophecy\Argument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -29,6 +31,7 @@ use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\CopyEvent;
 use Sulu\Component\DocumentManager\Event\MoveEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 
 class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
@@ -64,9 +67,24 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
     private $structureMetadata;
 
     /**
+     * @var SessionInterface
+     */
+    private $defaultSession;
+
+    /**
+     * @var SessionInterface
+     */
+    private $liveSession;
+
+    /**
      * @var ResourceSegmentSubscriber
      */
     private $resourceSegmentSubscriber;
+
+    /**
+     * @var PropertyMetadata
+     */
+    private $propertyMetaData;
 
     public function setUp()
     {
@@ -77,25 +95,33 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->document = $this->prophesize(ResourceSegmentBehavior::class)
             ->willImplement(StructureBehavior::class)
             ->willImplement(RedirectTypeBehavior::class);
+
         $this->structureMetadata = $this->prophesize(StructureMetadata::class);
+        $this->propertyMetaData = $this->prophesize(PropertyMetadata::class);
+        $this->propertyMetaData->getName()->willReturn('url');
+        $this->structureMetadata->getPropertyByTagName('sulu.rlp')->willReturn($this->propertyMetaData->reveal());
+        $this->encoder->localizedSystemName('url', 'de')->willReturn('i18n:de-url');
+        $this->encoder->localizedSystemName('url', 'en')->willReturn('i18n:en-url');
 
         $this->documentInspector->getStructureMetadata($this->document->reveal())
             ->willReturn($this->structureMetadata->reveal());
+
+        $this->defaultSession = $this->prophesize(SessionInterface::class);
+        $this->liveSession = $this->prophesize(SessionInterface::class);
 
         $this->resourceSegmentSubscriber = new ResourceSegmentSubscriber(
             $this->encoder->reveal(),
             $this->documentManager->reveal(),
             $this->documentInspector->reveal(),
-            $this->rlpStrategy->reveal()
+            $this->rlpStrategy->reveal(),
+            $this->defaultSession->reveal(),
+            $this->liveSession->reveal()
         );
     }
 
     public function testHydrate()
     {
-        $locale = 'de';
         $segment = '/test';
-        $propertyName = 'url';
-        $localizedPropertyName = sprintf('i18n:%s-%s', $locale, $propertyName);
 
         $event = $this->prophesize(AbstractMappingEvent::class);
 
@@ -104,14 +130,9 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $node = $this->prophesize(NodeInterface::class);
         $event->getNode()->willReturn($node->reveal());
 
-        $property = $this->prophesize(PropertyInterface::class);
-        $property->getName()->willReturn($propertyName);
-        $this->structureMetadata->getPropertyByTagName('sulu.rlp')->willReturn($property->reveal());
+        $this->documentInspector->getOriginalLocale($this->document->reveal())->willReturn('de');
 
-        $this->documentInspector->getOriginalLocale($this->document->reveal())->willReturn($locale);
-        $this->encoder->localizedSystemName($propertyName, $locale)->willReturn($localizedPropertyName);
-
-        $node->getPropertyValueWithDefault($localizedPropertyName, '')->willReturn($segment);
+        $node->getPropertyValueWithDefault('i18n:de-url', '')->willReturn($segment);
 
         // Asserts
         $this->document->setResourceSegment($segment)->shouldBeCalled();
@@ -121,24 +142,17 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testPersistDocument()
     {
-        $locale = 'de';
         $segment = '/test';
-        $propertyName = 'url';
-        $localizedPropertyName = sprintf('i18n:%s-%s', $locale, $propertyName);
 
         $event = $this->prophesize(PersistEvent::class);
 
         $event->getDocument()->willReturn($this->document->reveal());
 
-        $property = $this->prophesize(PropertyMetadata::class);
-        $property->getName()->willReturn($propertyName);
-        $this->structureMetadata->getPropertyByTagName('sulu.rlp')->willReturn($property->reveal());
-
         $localizedProperty = $this->prophesize(PropertyInterface::class);
-        $localizedProperty->getName()->willReturn($localizedPropertyName);
+        $localizedProperty->getName()->willReturn('i18n:de-url');
 
         $structure = $this->prophesize(StructureInterface::class);
-        $structure->getProperty($propertyName)->willReturn($localizedProperty->reveal());
+        $structure->getProperty('url')->willReturn($localizedProperty->reveal());
         $this->document->getStructure()->willReturn($structure->reveal());
 
         $this->document->getResourceSegment()->willReturn($segment);
@@ -149,9 +163,9 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->resourceSegmentSubscriber->handlePersistDocument($event->reveal());
     }
 
-    public function testPersistDocumentWithoutLocale()
+    public function testPersistRouteWithoutLocale()
     {
-        $event = $this->prophesize(PersistEvent::class);
+        $event = $this->prophesize(PublishEvent::class);
         $document = $this->prophesize(ResourceSegmentBehavior::class);
         $document->willImplement(StructureBehavior::class);
 
@@ -164,7 +178,7 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testPersistRoute()
     {
-        $event = $this->prophesize(PersistEvent::class);
+        $event = $this->prophesize(PublishEvent::class);
         $event->getLocale()->willReturn('de');
 
         $this->document->getRedirectType()->willReturn(RedirectType::NONE);
@@ -176,7 +190,7 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testPersistRouteForRedirect()
     {
-        $event = $this->prophesize(PersistEvent::class);
+        $event = $this->prophesize(PublishEvent::class);
         $event->getLocale()->willReturn('de');
 
         $this->document->getRedirectType()->willReturn(RedirectType::INTERNAL);
@@ -186,9 +200,9 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->resourceSegmentSubscriber->handlePersistRoute($event->reveal());
     }
 
-    public function testMoveRoutes()
+    public function testUpdateMovedDocument()
     {
-        $parentDocument = new \stdClass();
+        $parentDocument = $this->prophesize(ResourceSegmentBehavior::class);
 
         $event = $this->prophesize(MoveEvent::class);
         $event->getDocument()->willReturn($this->document->reveal());
@@ -196,37 +210,54 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->documentInspector->getLocales($this->document->reveal())->willReturn(['de', 'en']);
         $this->documentInspector->getWebspace($this->document->reveal())->willReturn('sulu_io');
         $this->documentInspector->getUuid($this->document->reveal())->willReturn('uuid');
-        $this->documentInspector->getParent($this->document->reveal())->willReturn($parentDocument);
-        $this->documentInspector->getUuid($parentDocument)->willReturn('parent-uuid');
+        $this->documentInspector->getParent($this->document->reveal())->willReturn($parentDocument->reveal());
+        $this->documentInspector->getPath($this->document->reveal())->willReturn('/cmf/sulu_io/contents/german/child');
+        $this->documentInspector->getUuid($parentDocument->reveal())->willReturn('parent-uuid');
 
-        $germanDocument = $this->prophesize(ResourceSegmentBehavior::class)
-            ->willImplement(RedirectTypeBehavior::class);
+        $defaultNode = $this->prophesize(NodeInterface::class);
+        $defaultNode->getPropertyValue('i18n:de-url')->willReturn('/german/parent/child');
+        $defaultNode->getPropertyValue('i18n:en-url')->willReturn('/english/parent/child');
+        $liveNode = $this->prophesize(NodeInterface::class);
+        $liveNode->hasProperty('i18n:de-url')->willReturn(true);
+        $liveNode->hasProperty('i18n:en-url')->willReturn(true);
+        $liveNode->getPropertyValue('i18n:de-url')->willReturn('/german/child');
+        $liveNode->getPropertyValue('i18n:en-url')->willReturn('/english/child');
+
+        $this->defaultSession->getNode('/cmf/sulu_io/contents/german/child')->willReturn($defaultNode);
+        $this->liveSession->getNode('/cmf/sulu_io/contents/german/child')->willReturn($liveNode);
+
+        $germanDocument = $this->getDocumentMock();
         $germanDocument->getRedirectType()->willReturn(RedirectType::NONE);
         $this->documentManager->find('uuid', 'de')->willReturn($germanDocument);
         $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'de')->willReturn('/german/parent');
-        $this->rlpStrategy->loadByContentUuid('uuid', 'sulu_io', 'de')->willReturn('/german/child');
+        $this->rlpStrategy->getChildPart('/german/parent/child')->willReturn('child');
         $this->rlpStrategy->getChildPart('/german/child')->willReturn('child');
         $this->rlpStrategy->generate('child', '/german/parent', 'sulu_io', 'de')->willReturn('/german/parent/child');
+        $defaultNode->setProperty('i18n:de-url', '/german/parent/child')->shouldBeCalled();
+        $liveNode->setProperty('i18n:de-url', '/german/parent/child')->shouldBeCalled();
         $germanDocument->setResourceSegment('/german/parent/child')->shouldBeCalled();
-        $this->documentManager->persist($germanDocument, 'de')->shouldBeCalled();
+        $this->rlpStrategy->save($germanDocument, null)->shouldBeCalled();
+        $germanDocument->setResourceSegment('/german/child')->shouldBeCalled();
 
-        $englishDocument = $this->prophesize(ResourceSegmentBehavior::class)
-            ->willImplement(RedirectTypeBehavior::class);
+        $englishDocument = $this->getDocumentMock();
         $englishDocument->getRedirectType()->willReturn(RedirectType::NONE);
         $this->documentManager->find('uuid', 'en')->willReturn($englishDocument);
         $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'en')->willReturn('/english/parent');
-        $this->rlpStrategy->loadByContentUuid('uuid', 'sulu_io', 'en')->willReturn('/english/child');
+        $this->rlpStrategy->getChildPart('/english/parent/child')->willReturn('child');
         $this->rlpStrategy->getChildPart('/english/child')->willReturn('child');
         $this->rlpStrategy->generate('child', '/english/parent', 'sulu_io', 'en')->willReturn('/english/parent/child');
+        $defaultNode->setProperty('i18n:en-url', '/english/parent/child')->shouldBeCalled();
+        $liveNode->setProperty('i18n:en-url', '/english/parent/child')->shouldBeCalled();
         $englishDocument->setResourceSegment('/english/parent/child')->shouldBeCalled();
-        $this->documentManager->persist($englishDocument, 'en')->shouldBeCalled();
+        $this->rlpStrategy->save($englishDocument, null)->shouldBeCalled();
+        $englishDocument->setResourceSegment('/english/child')->shouldBeCalled();
 
-        $this->resourceSegmentSubscriber->moveRoutes($event->reveal());
+        $this->resourceSegmentSubscriber->updateMovedDocument($event->reveal());
     }
 
-    public function testMoveRoutesWithRedirects()
+    public function testUpdateMovedDocumentWithRedirects()
     {
-        $parentDocument = new \stdClass();
+        $parentDocument = $this->prophesize(ResourceSegmentBehavior::class);
 
         $event = $this->prophesize(MoveEvent::class);
         $event->getDocument()->willReturn($this->document->reveal());
@@ -234,48 +265,100 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->documentInspector->getLocales($this->document->reveal())->willReturn(['de', 'en', 'fr']);
         $this->documentInspector->getWebspace($this->document->reveal())->willReturn('sulu_io');
         $this->documentInspector->getUuid($this->document->reveal())->willReturn('uuid');
-        $this->documentInspector->getParent($this->document->reveal())->willReturn($parentDocument);
-        $this->documentInspector->getUuid($parentDocument)->willReturn('parent-uuid');
+        $this->documentInspector->getParent($this->document->reveal())->willReturn($parentDocument->reveal());
+        $this->documentInspector->getPath($this->document->reveal())->willReturn('/cmf/sulu_io/contents/german/child');
+        $this->documentInspector->getUuid($parentDocument->reveal())->willReturn('parent-uuid');
 
-        $germanDocument = $this->prophesize(ResourceSegmentBehavior::class)
-            ->willImplement(RedirectTypeBehavior::class);
+        $defaultNode = $this->prophesize(NodeInterface::class);
+        $defaultNode->getPropertyValue('i18n:de-url')->willReturn('/german/parent/child');
+        $liveNode = $this->prophesize(NodeInterface::class);
+        $liveNode->hasProperty('i18n:de-url')->willReturn(true);
+        $liveNode->getPropertyValue('i18n:de-url')->willReturn('/german/child');
+
+        $this->defaultSession->getNode('/cmf/sulu_io/contents/german/child')->willReturn($defaultNode);
+        $this->liveSession->getNode('/cmf/sulu_io/contents/german/child')->willReturn($liveNode);
+
+        $germanDocument = $this->getDocumentMock();
         $germanDocument->getRedirectType()->willReturn(RedirectType::NONE);
         $this->documentManager->find('uuid', 'de')->willReturn($germanDocument);
         $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'de')->willReturn('/german/parent');
-        $this->rlpStrategy->loadByContentUuid('uuid', 'sulu_io', 'de')->willReturn('/german/child');
+        $germanDocument->getResourceSegment()->willReturn('/german/child');
         $this->rlpStrategy->getChildPart('/german/child')->willReturn('child');
+        $this->rlpStrategy->getChildPart('/german/parent/child')->willReturn('child');
         $this->rlpStrategy->generate('child', '/german/parent', 'sulu_io', 'de')->willReturn('/german/parent/child');
+        $defaultNode->setProperty('i18n:de-url', '/german/parent/child')->shouldBeCalled();
+        $liveNode->setProperty('i18n:de-url', '/german/parent/child')->shouldBeCalled();
         $germanDocument->setResourceSegment('/german/parent/child')->shouldBeCalled();
-        $this->documentManager->persist($germanDocument, 'de')->shouldBeCalled();
+        $this->rlpStrategy->save($germanDocument, null)->shouldBeCalled();
+        $germanDocument->setResourceSegment('/german/child')->shouldBeCalled();
 
-        $englishDocument = $this->prophesize(ResourceSegmentBehavior::class)
-            ->willImplement(RedirectTypeBehavior::class);
+        $englishDocument = $this->getDocumentMock();
         $englishDocument->getRedirectType()->willReturn(RedirectType::INTERNAL);
         $this->documentManager->find('uuid', 'en')->willReturn($englishDocument);
-        $this->documentManager->persist($englishDocument, 'en')->shouldNotBeCalled();
+        $this->rlpStrategy->save($englishDocument, null)->shouldNotBeCalled();
 
-        $frenchDocument = $this->prophesize(ResourceSegmentBehavior::class)
-            ->willImplement(RedirectTypeBehavior::class);
+        $frenchDocument = $this->getDocumentMock();
         $frenchDocument->getRedirectType()->willReturn(RedirectType::INTERNAL);
         $this->documentManager->find('uuid', 'fr')->willReturn($frenchDocument);
-        $this->documentManager->persist($frenchDocument, 'fr')->shouldNotBeCalled();
+        $this->rlpStrategy->save($frenchDocument, null)->shouldNotBeCalled();
 
-        $this->resourceSegmentSubscriber->moveRoutes($event->reveal());
+        $this->resourceSegmentSubscriber->updateMovedDocument($event->reveal());
     }
 
-    public function testMoveRoutesForWrongDocument()
+    public function testUpdateMovedDocumentForWrongDocument()
     {
         $event = $this->prophesize(MoveEvent::class);
         $event->getDocument()->willReturn(new \stdClass());
 
         $this->documentInspector->getLocales(Argument::cetera())->shouldNotBeCalled();
 
-        $this->resourceSegmentSubscriber->moveRoutes($event->reveal());
+        $this->resourceSegmentSubscriber->updateMovedDocument($event->reveal());
     }
 
-    public function testMoveRoutesWithGhostParent()
+    public function testUpdateMovedDocumentWithGhostParent()
     {
-        $parentDocument = new \stdClass();
+        $parentDocument = $this->prophesize(ResourceSegmentBehavior::class);
+
+        $event = $this->prophesize(MoveEvent::class);
+        $event->getDocument()->willReturn($this->document->reveal());
+
+        $defaultNode = $this->prophesize(NodeInterface::class);
+        $defaultNode->getPropertyValue('i18n:de-url')->willReturn('/german/parent/child');
+        $liveNode = $this->prophesize(NodeInterface::class);
+        $liveNode->hasProperty('i18n:de-url')->willReturn(true);
+        $liveNode->getPropertyValue('i18n:de-url')->willReturn('/german/child');
+
+        $this->defaultSession->getNode('/cmf/sulu_io/contents/german/child')->willReturn($defaultNode);
+        $this->liveSession->getNode('/cmf/sulu_io/contents/german/child')->willReturn($liveNode);
+
+        $this->documentInspector->getLocales($this->document->reveal())->willReturn(['de']);
+        $this->documentInspector->getWebspace($this->document->reveal())->willReturn('sulu_io');
+        $this->documentInspector->getUuid($this->document->reveal())->willReturn('uuid');
+        $this->documentInspector->getParent($this->document->reveal())->willReturn($parentDocument->reveal());
+        $this->documentInspector->getPath($this->document->reveal())->willReturn('/cmf/sulu_io/contents/german/child');
+        $this->documentInspector->getUuid($parentDocument->reveal())->willReturn('parent-uuid');
+
+        $germanDocument = $this->getDocumentMock();
+        $germanDocument->getRedirectType()->willReturn(RedirectType::NONE);
+        $this->documentManager->find('uuid', 'de')->willReturn($germanDocument);
+        $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'de')
+            ->willThrow(ResourceLocatorNotFoundException::class);
+        $germanDocument->getResourceSegment()->willReturn('/german/child');
+        $this->rlpStrategy->getChildPart('/german/child')->willReturn('child');
+        $this->rlpStrategy->getChildPart('/german/parent/child')->willReturn('child');
+        $this->rlpStrategy->generate('child', null, 'sulu_io', 'de')->willReturn('/child');
+        $defaultNode->setProperty('i18n:de-url', '/child')->shouldBeCalled();
+        $liveNode->setProperty('i18n:de-url', '/child')->shouldBeCalled();
+        $germanDocument->setResourceSegment(Argument::any())->shouldBeCalled();
+        $this->rlpStrategy->save($germanDocument, null)->shouldBeCalled();
+        $germanDocument->setResourceSegment(Argument::any())->shouldBeCalled();
+
+        $this->resourceSegmentSubscriber->updateMovedDocument($event->reveal());
+    }
+
+    public function testUpdateMovedDocumentOnlyDraft()
+    {
+        $parentDocument = $this->prophesize(ResourceSegmentBehavior::class);
 
         $event = $this->prophesize(MoveEvent::class);
         $event->getDocument()->willReturn($this->document->reveal());
@@ -283,27 +366,34 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->documentInspector->getLocales($this->document->reveal())->willReturn(['de']);
         $this->documentInspector->getWebspace($this->document->reveal())->willReturn('sulu_io');
         $this->documentInspector->getUuid($this->document->reveal())->willReturn('uuid');
-        $this->documentInspector->getParent($this->document->reveal())->willReturn($parentDocument);
-        $this->documentInspector->getUuid($parentDocument)->willReturn('parent-uuid');
+        $this->documentInspector->getParent($this->document->reveal())->willReturn($parentDocument->reveal());
+        $this->documentInspector->getPath($this->document->reveal())->willReturn('/cmf/sulu_io/contents/german/child');
+        $this->documentInspector->getUuid($parentDocument->reveal())->willReturn('parent-uuid');
 
-        $germanDocument = $this->prophesize(ResourceSegmentBehavior::class)
-            ->willImplement(RedirectTypeBehavior::class);
+        $defaultNode = $this->prophesize(NodeInterface::class);
+        $defaultNode->getPropertyValue('i18n:de-url')->willReturn('/german/parent/child');
+        $liveNode = $this->prophesize(NodeInterface::class);
+        $liveNode->hasProperty('i18n:de-url')->willReturn(false);
+
+        $this->defaultSession->getNode('/cmf/sulu_io/contents/german/child')->willReturn($defaultNode);
+        $this->liveSession->getNode('/cmf/sulu_io/contents/german/child')->willReturn($liveNode);
+
+        $germanDocument = $this->getDocumentMock();
         $germanDocument->getRedirectType()->willReturn(RedirectType::NONE);
         $this->documentManager->find('uuid', 'de')->willReturn($germanDocument);
-        $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'de')
-            ->willThrow(ResourceLocatorNotFoundException::class);
-        $this->rlpStrategy->loadByContentUuid('uuid', 'sulu_io', 'de')->willReturn('/german/child');
-        $this->rlpStrategy->getChildPart('/german/child')->willReturn('child');
-        $this->rlpStrategy->generate('child', null, 'sulu_io', 'de')->willReturn('/child');
-        $germanDocument->setResourceSegment('/child')->shouldBeCalled();
-        $this->documentManager->persist($germanDocument, 'de')->shouldBeCalled();
+        $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'de')->willReturn('/german/parent');
+        $this->rlpStrategy->getChildPart('/german/parent/child')->willReturn('child');
+        $this->rlpStrategy->generate('child', '/german/parent', 'sulu_io', 'de')->willReturn('/german/parent/child');
+        $defaultNode->setProperty('i18n:de-url', '/german/parent/child')->shouldBeCalled();
+        $liveNode->setProperty('i18n:de-url', Argument::any())->shouldNotBeCalled();
+        $this->rlpStrategy->save($germanDocument, null)->shouldNotBeCalled();
 
-        $this->resourceSegmentSubscriber->moveRoutes($event->reveal());
+        $this->resourceSegmentSubscriber->updateMovedDocument($event->reveal());
     }
 
-    public function testCopyRoutes()
+    public function testUpdateCopiedDocument()
     {
-        $parentDocument = new \stdClass();
+        $parentDocument = $this->prophesize(ResourceSegmentBehavior::class);
         $copiedDocument = $this->prophesize(ResourceSegmentBehavior::class);
 
         $event = $this->prophesize(CopyEvent::class);
@@ -316,38 +406,49 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->documentInspector->getLocales($copiedDocument->reveal())->willReturn(['de', 'en']);
         $this->documentInspector->getWebspace($copiedDocument->reveal())->willReturn('sulu_io');
-        $this->documentInspector->getParent($copiedDocument->reveal())->willReturn($parentDocument);
+        $this->documentInspector->getParent($copiedDocument->reveal())->willReturn($parentDocument->reveal());
         $this->documentInspector->getUuid($this->document->reveal())->willReturn('uuid');
-        $this->documentInspector->getUuid($parentDocument)->willReturn('parent-uuid');
+        $this->documentInspector->getPath($copiedDocument->reveal())->willReturn('/cmf/sulu_io/contents/german/child');
+        $this->documentInspector->getUuid($parentDocument->reveal())->willReturn('parent-uuid');
 
-        $germanDocument = $this->prophesize(ResourceSegmentBehavior::class)
-            ->willImplement(RedirectTypeBehavior::class);
+        $defaultNode = $this->prophesize(NodeInterface::class);
+        $defaultNode->getPropertyValue('i18n:de-url')->willReturn('/german/parent/child');
+        $defaultNode->getPropertyValue('i18n:en-url')->willReturn('/english/parent/child');
+        $liveNode = $this->prophesize(NodeInterface::class);
+        $liveNode->hasProperty('i18n:de-url')->willReturn(false);
+        $liveNode->hasProperty('i18n:en-url')->willReturn(false);
+
+        $this->defaultSession->getNode('/cmf/sulu_io/contents/german/child')->willReturn($defaultNode);
+        $this->liveSession->getNode('/cmf/sulu_io/contents/german/child')->willReturn($liveNode);
+
+        $germanDocument = $this->getDocumentMock();
         $germanDocument->getRedirectType()->willReturn(RedirectType::NONE);
         $this->documentManager->find('copy-uuid', 'de')->willReturn($germanDocument);
         $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'de')->willReturn('/german/parent');
-        $this->rlpStrategy->loadByContentUuid('uuid', 'sulu_io', 'de')->willReturn('/german/child');
+        $germanDocument->getResourceSegment()->willReturn('/german/child');
         $this->rlpStrategy->getChildPart('/german/child')->willReturn('child');
+        $this->rlpStrategy->getChildPart('/german/parent/child')->willReturn('child');
         $this->rlpStrategy->generate('child', '/german/parent', 'sulu_io', 'de')->willReturn('/german/parent/child');
-        $germanDocument->setResourceSegment('/german/parent/child')->shouldBeCalled();
-        $this->documentManager->persist($germanDocument, 'de')->shouldBeCalled();
+        $defaultNode->setProperty('i18n:de-url', '/german/parent/child')->shouldBeCalled();
+        $liveNode->setProperty('i18n:de-url', Argument::any())->shouldNotBeCalled();
 
-        $englishDocument = $this->prophesize(ResourceSegmentBehavior::class)
-            ->willImplement(RedirectTypeBehavior::class);
+        $englishDocument = $this->getDocumentMock();
         $englishDocument->getRedirectType()->willReturn(RedirectType::NONE);
         $this->documentManager->find('copy-uuid', 'en')->willReturn($englishDocument);
         $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'en')->willReturn('/english/parent');
-        $this->rlpStrategy->loadByContentUuid('uuid', 'sulu_io', 'en')->willReturn('/english/child');
+        $englishDocument->getResourceSegment()->willReturn('/english/child');
         $this->rlpStrategy->getChildPart('/english/child')->willReturn('child');
+        $this->rlpStrategy->getChildPart('/english/parent/child')->willReturn('child');
         $this->rlpStrategy->generate('child', '/english/parent', 'sulu_io', 'en')->willReturn('/english/parent/child');
-        $englishDocument->setResourceSegment('/english/parent/child')->shouldBeCalled();
-        $this->documentManager->persist($englishDocument, 'en')->shouldBeCalled();
+        $defaultNode->setProperty('i18n:en-url', '/english/parent/child')->shouldBeCalled();
+        $liveNode->setProperty('i18n:en-url', Argument::any())->shouldNotBeCalled();
 
-        $this->resourceSegmentSubscriber->copyRoutes($event->reveal());
+        $this->resourceSegmentSubscriber->updateCopiedDocument($event->reveal());
     }
 
-    public function testCopyRoutesWithRedirects()
+    public function testUpdateCopiedDocumentWithRedirects()
     {
-        $parentDocument = new \stdClass();
+        $parentDocument = $this->prophesize(ResourceSegmentBehavior::class);
         $copiedDocument = $this->prophesize(ResourceSegmentBehavior::class);
 
         $event = $this->prophesize(CopyEvent::class);
@@ -360,37 +461,43 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->documentInspector->getLocales($copiedDocument->reveal())->willReturn(['de', 'en', 'fr']);
         $this->documentInspector->getWebspace($copiedDocument->reveal())->willReturn('sulu_io');
-        $this->documentInspector->getParent($copiedDocument->reveal())->willReturn($parentDocument);
+        $this->documentInspector->getParent($copiedDocument->reveal())->willReturn($parentDocument->reveal());
         $this->documentInspector->getUuid($this->document->reveal())->willReturn('uuid');
-        $this->documentInspector->getUuid($parentDocument)->willReturn('parent-uuid');
+        $this->documentInspector->getPath($copiedDocument->reveal())->willReturn('/cmf/sulu_io/contents/german/child');
+        $this->documentInspector->getUuid($parentDocument->reveal())->willReturn('parent-uuid');
 
-        $germanDocument = $this->prophesize(ResourceSegmentBehavior::class)
-            ->willImplement(RedirectTypeBehavior::class);
+        $defaultNode = $this->prophesize(NodeInterface::class);
+        $defaultNode->getPropertyValue('i18n:de-url')->willReturn('/german/parent/child');
+        $liveNode = $this->prophesize(NodeInterface::class);
+        $liveNode->hasProperty('i18n:de-url')->willReturn(false);
+
+        $this->defaultSession->getNode('/cmf/sulu_io/contents/german/child')->willReturn($defaultNode);
+        $this->liveSession->getNode('/cmf/sulu_io/contents/german/child')->willReturn($liveNode);
+
+        $germanDocument = $this->getDocumentMock();
         $germanDocument->getRedirectType()->willReturn(RedirectType::NONE);
         $this->documentManager->find('copy-uuid', 'de')->willReturn($germanDocument);
         $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'de')->willReturn('/german/parent');
-        $this->rlpStrategy->loadByContentUuid('uuid', 'sulu_io', 'de')->willReturn('/german/child');
+        $germanDocument->getResourceSegment()->willReturn('/german/child');
         $this->rlpStrategy->getChildPart('/german/child')->willReturn('child');
+        $this->rlpStrategy->getChildPart('/german/parent/child')->willReturn('child');
         $this->rlpStrategy->generate('child', '/german/parent', 'sulu_io', 'de')->willReturn('/german/parent/child');
-        $germanDocument->setResourceSegment('/german/parent/child')->shouldBeCalled();
-        $this->documentManager->persist($germanDocument, 'de')->shouldBeCalled();
+        $defaultNode->setProperty('i18n:de-url', '/german/parent/child')->shouldBeCalled();
+        $liveNode->setProperty('i18n:de-url', Argument::any())->shouldNotBeCalled();
 
-        $englishDocument = $this->prophesize(ResourceSegmentBehavior::class)
-            ->willImplement(RedirectTypeBehavior::class);
+        $englishDocument = $this->getDocumentMock();
         $englishDocument->getRedirectType()->willReturn(RedirectType::INTERNAL);
         $this->documentManager->find('copy-uuid', 'en')->willReturn($englishDocument);
-        $this->documentManager->persist($englishDocument, 'en')->shouldNotBeCalled();
 
         $frenchDocument = $this->prophesize(ResourceSegmentBehavior::class)
             ->willImplement(RedirectTypeBehavior::class);
         $frenchDocument->getRedirectType()->willReturn(RedirectType::INTERNAL);
         $this->documentManager->find('copy-uuid', 'fr')->willReturn($frenchDocument);
-        $this->documentManager->persist($frenchDocument, 'fr')->shouldNotBeCalled();
 
-        $this->resourceSegmentSubscriber->copyRoutes($event->reveal());
+        $this->resourceSegmentSubscriber->updateCopiedDocument($event->reveal());
     }
 
-    public function testCopyRoutesForWrongDocument()
+    public function testUpdateCopiedDocumentForWrongDocument()
     {
         $document = new \stdClass();
 
@@ -401,12 +508,12 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->documentInspector->getLocales(Argument::cetera())->shouldNotBeCalled();
 
-        $this->resourceSegmentSubscriber->copyRoutes($event->reveal());
+        $this->resourceSegmentSubscriber->updateCopiedDocument($event->reveal());
     }
 
-    public function testCopyRoutesWithGhostParent()
+    public function testUpdateCopiedDocumentWithGhostParent()
     {
-        $parentDocument = new \stdClass();
+        $parentDocument = $this->prophesize(ResourceSegmentBehavior::class);
         $copiedDocument = $this->prophesize(ResourceSegmentBehavior::class);
 
         $event = $this->prophesize(CopyEvent::class);
@@ -419,22 +526,45 @@ class ResourceSegmentSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->documentInspector->getLocales($copiedDocument->reveal())->willReturn(['de']);
         $this->documentInspector->getWebspace($copiedDocument->reveal())->willReturn('sulu_io');
-        $this->documentInspector->getParent($copiedDocument->reveal())->willReturn($parentDocument);
+        $this->documentInspector->getParent($copiedDocument->reveal())->willReturn($parentDocument->reveal());
         $this->documentInspector->getUuid($this->document->reveal())->willReturn('uuid');
-        $this->documentInspector->getUuid($parentDocument)->willReturn('parent-uuid');
+        $this->documentInspector->getUuid($parentDocument->reveal())->willReturn('parent-uuid');
+        $this->documentInspector->getPath($copiedDocument->reveal())
+            ->willReturn('/cmf/sulu_io/contents/page/parent/child');
 
-        $germanDocument = $this->prophesize(ResourceSegmentBehavior::class)
-            ->willImplement(RedirectTypeBehavior::class);
+        $defaultNode = $this->prophesize(NodeInterface::class);
+        $defaultNode->getPropertyValue('i18n:de-url')->willReturn('/german/parent/child');
+        $liveNode = $this->prophesize(NodeInterface::class);
+        $liveNode->hasProperty('i18n:de-url')->willReturn(false);
+
+        $this->defaultSession->getNode('/cmf/sulu_io/contents/page/parent/child')->willReturn($defaultNode);
+        $this->liveSession->getNode('/cmf/sulu_io/contents/page/parent/child')->willReturn($liveNode);
+
+        $germanDocument = $this->getDocumentMock();
         $germanDocument->getRedirectType()->willReturn(RedirectType::NONE);
         $this->documentManager->find('copy-uuid', 'de')->willReturn($germanDocument);
         $this->rlpStrategy->loadByContentUuid('parent-uuid', 'sulu_io', 'de')
             ->willThrow(ResourceLocatorNotFoundException::class);
-        $this->rlpStrategy->loadByContentUuid('uuid', 'sulu_io', 'de')->willReturn('/german/child');
+        $germanDocument->getResourceSegment()->willReturn('/german/child');
         $this->rlpStrategy->getChildPart('/german/child')->willReturn('child');
+        $this->rlpStrategy->getChildPart('/german/parent/child')->willReturn('child');
         $this->rlpStrategy->generate('child', null, 'sulu_io', 'de')->willReturn('/child');
-        $germanDocument->setResourceSegment('/child')->shouldBeCalled();
-        $this->documentManager->persist($germanDocument, 'de')->shouldBeCalled();
+        $defaultNode->setProperty('i18n:de-url', '/child')->shouldBeCalled();
+        $liveNode->setProperty('i18n:de-url', Argument::any())->shouldNotBeCalled();
 
-        $this->resourceSegmentSubscriber->copyRoutes($event->reveal());
+        $this->resourceSegmentSubscriber->updateCopiedDocument($event->reveal());
+    }
+
+    private function getDocumentMock()
+    {
+        $document = $this->prophesize(ResourceSegmentBehavior::class)
+            ->willImplement(RedirectTypeBehavior::class)
+            ->willImplement(StructureBehavior::class);
+
+        $this->documentInspector->getStructureMetadata(
+            $document->reveal())->willReturn($this->structureMetadata->reveal()
+        );
+
+        return $document;
     }
 }

@@ -248,7 +248,7 @@ class ResettingController extends Controller
     private function loginUser(UserInterface $user, $request)
     {
         $token = new UsernamePasswordToken($user, null, 'admin', $user->getRoles());
-        $this->get('security.context')->setToken($token); //now the user is logged in
+        $this->get('security.token_storage')->setToken($token); //now the user is logged in
 
         //now dispatch the login event
         $event = new InteractiveLoginEvent($request, $token);

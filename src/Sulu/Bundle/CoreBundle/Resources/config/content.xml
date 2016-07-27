@@ -76,8 +76,6 @@
         <service id="sulu.content.webspace_structure_provider" class="%sulu.content.webspace_structure_provider.class%">
             <argument type="service" id="twig"/>
             <argument type="service" id="sulu.content.structure_manager"/>
-            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument type="service" id="liip_theme.active_theme"/>
             <argument type="service" id="sulu.content.webspace_structure_provider.cache"/>
         </service>
 
@@ -111,6 +109,7 @@
         </service>
         <service id="sulu.content.type.text_editor" class="%sulu.content.type.text_editor.class%">
             <argument>%sulu.content.type.text_editor.template%</argument>
+            <argument type="service" id="sulu_markup.parser"/>
             <tag name="sulu.content.type" alias="text_editor"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="true" />
         </service>
@@ -144,7 +143,7 @@
 
         <!-- sulu node helper -->
         <service id="sulu.util.node_helper" class="%sulu.util.node_helper.class%">
-            <argument type="service" id="doctrine_phpcr.default_session"/>
+            <argument type="service" id="doctrine_phpcr.session"/>
             <argument>%sulu.content.language.namespace%</argument>
             <argument type="collection">
                 <argument key="base">%sulu.content.node_names.base%</argument>

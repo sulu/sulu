@@ -76,8 +76,6 @@ define([
         renderOnRequest: function() {
             this.$preview = $(this.templates.onRequest({translations: this.translations}));
             this.html(this.$preview);
-            
-            this.$find('.preview-start').one('click', this.render.bind(this));
         },
 
         render: function() {
@@ -183,13 +181,25 @@ define([
         /**
          * Set content of preview document.
          *
-         * @param {String} html
+         * @param {String} htmlFile The html file including doctype etc.
          */
-        setContent: function(html) {
-            var document = this.getPreviewDocument();
+        setContent: function(htmlFile) {
+            var previewDocument = this.getPreviewDocument();
 
-            document.open();
-            document.write(html);
+            previewDocument.open();
+            previewDocument.write(htmlFile);
+            previewDocument.close();
+
+            this.avoidNavigate(previewDocument);
+        },
+
+        /**
+         * Disables all links in the preview document.
+         */
+        avoidNavigate: function(document) {
+            $(document).find('a').click(function() {
+                return false;
+            });
         },
 
         /**

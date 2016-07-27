@@ -72,7 +72,7 @@ class Version201507281529 implements VersionInterface, ContainerAwareInterface
                         if (true === $directionUp) {
                             $node->setProperty(
                                 $templatePropertyName,
-                                $webspace->getTheme()->getDefaultTemplate('page')
+                                $webspace->getDefaultTemplate('page')
                             );
                         } else {
                             $node->setProperty($templatePropertyName, 'external-link');

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -29,6 +30,10 @@ class Configuration implements ConfigurationInterface
                         ->children()
                             ->scalarNode('name')->end()
                             ->scalarNode('security_context')->end()
+                            ->arrayNode('contexts')
+                                ->prototype('scalar')
+                                ->defaultValue([])
+                            ->end()
                         ->end()
                     ->end()
                 ->end()

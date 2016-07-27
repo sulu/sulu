@@ -45,6 +45,17 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
     }
 
     /**
+     * Javascript focus event.
+     *
+     * @Given I focus ":selector"
+     * @When /^(?:|I )focus the element "([^"]*)"$/
+     */
+    public function iFocusTheElement($selector)
+    {
+        $this->focusSelector($selector);
+    }
+
+    /**
      * Real click event.
      *
      * @Given I click element :selector
@@ -117,7 +128,11 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
      */
     public function iExpectToSee($text)
     {
-        $this->waitForTextAndAssert($text);
+        $this->spin(function () use ($text) {
+            $this->waitForTextAndAssert($text);
+
+            return true;
+        });
     }
 
     /**

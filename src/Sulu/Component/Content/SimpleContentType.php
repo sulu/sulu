@@ -31,7 +31,7 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
      *
      * @var mixed
      */
-    private $defaultValue;
+    protected $defaultValue;
 
     public function __construct($name, $defaultValue = null)
     {

@@ -31,9 +31,12 @@ define([], function() {
         columnNavigationDefaults = {
             responsive: false,
             actionIcon: 'fa-check',
+            linkedName: 'linked',
+            typeName: 'type',
+            hasSubName: 'hasChildren',
             showOptions: false,
             sortable: false,
-            showStatus: false
+            showStatus: true
         },
 
         /**
@@ -72,9 +75,6 @@ define([], function() {
                     el: this.$columnNavigationElement,
                     instanceName: this.options.instanceNamePrefix + this.options.instanceName,
                     url: this.getUrl(),
-                    linkedName: 'linked',
-                    typeName: 'type',
-                    hasSubName: 'hasChildren',
                     resultKey: this.options.resultKey,
                     selected: this.selected,
                     actionCallback: function(item) {

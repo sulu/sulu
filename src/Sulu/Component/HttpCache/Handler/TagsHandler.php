@@ -49,7 +49,7 @@ class TagsHandler implements
     /**
      * @param WebspaceManagerInterface $webspaceManager
      * @param CacheHandler             $cacheInvalidator
-     * @param string                   $environment      - kernel envionment, dev, prod, etc.
+     * @param string                   $environment      - kernel envionment, dev, prod, etc
      * @param null                     $logger
      */
     public function __construct(

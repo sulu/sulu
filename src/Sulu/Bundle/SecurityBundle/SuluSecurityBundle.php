@@ -27,6 +27,7 @@ class SuluSecurityBundle extends Bundle
             [
                 'Sulu\Component\Security\Authentication\UserInterface' => 'sulu.model.user.class',
                 'Sulu\Component\Security\Authentication\RoleInterface' => 'sulu.model.role.class',
+                'Sulu\Component\Security\Authentication\RoleSettingInterface' => 'sulu.model.role_setting.class',
                 'Sulu\Component\Security\Authorization\AccessControl\AccessControlInterface' => 'sulu.model.access_control.class',
             ],
             $container

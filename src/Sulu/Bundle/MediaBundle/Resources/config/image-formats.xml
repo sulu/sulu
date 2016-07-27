@@ -28,13 +28,14 @@
         </commands>
     </format>
     <format>
-        <name>200x200</name>
+        <name>200x180-inset</name>
         <commands>
             <command>
                 <action>scale</action>
                 <parameters>
                     <parameter name="x">200</parameter>
-                    <parameter name="y">200</parameter>
+                    <parameter name="y">180</parameter>
+                    <parameter name="mode">inset</parameter>
                 </parameters>
             </command>
         </commands>
@@ -58,18 +59,6 @@
                 <parameters>
                     <parameter name="x">170</parameter>
                     <parameter name="y">170</parameter>
-                </parameters>
-            </command>
-        </commands>
-    </format>
-    <format>
-        <name>150x100</name>
-        <commands>
-            <command>
-                <action>scale</action>
-                <parameters>
-                    <parameter name="x">150</parameter>
-                    <parameter name="y">100</parameter>
                 </parameters>
             </command>
         </commands>

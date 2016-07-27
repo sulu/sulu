@@ -21,6 +21,14 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
+        <service id="sulu_search.controller.website_search" class="Sulu\Bundle\SearchBundle\Controller\WebsiteSearchController">
+            <argument type="service" id="massive_search.search_manager"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument type="service" id="sulu_website.resolver.parameter"/>
+            <argument type="service" id="templating"/>
+            <tag name="sulu.context" context="website"/>
+        </service>
+
         <service id="sulu_search.index_configuration_provider" class="Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfigurationProvider">
             <argument>%sulu_search.indexes%</argument>
         </service>

@@ -164,6 +164,7 @@ class CustomUrlSubscriberTest extends \PHPUnit_Framework_TestCase
                 'auto_create' => true,
             ]
         )->shouldBeCalled();
+        $this->documentManager->publish($routeDocument3->reveal(), 'de')->shouldBeCalled();
         $this->documentManager->persist(
             $routeDocument2->reveal(),
             'de',
@@ -172,6 +173,7 @@ class CustomUrlSubscriberTest extends \PHPUnit_Framework_TestCase
                 'auto_create' => true,
             ]
         )->shouldBeCalled();
+        $this->documentManager->publish($routeDocument2->reveal(), 'de')->shouldBeCalled();
         $this->documentManager->persist(
             $routeDocument1->reveal(),
             'de',
@@ -180,6 +182,7 @@ class CustomUrlSubscriberTest extends \PHPUnit_Framework_TestCase
                 'auto_create' => true,
             ]
         )->shouldBeCalled();
+        $this->documentManager->publish($routeDocument1->reveal(), 'de')->shouldBeCalled();
 
         $document->addRoute('sulu.lo/test-3', $routeDocument3->reveal())->shouldBecalled();
 

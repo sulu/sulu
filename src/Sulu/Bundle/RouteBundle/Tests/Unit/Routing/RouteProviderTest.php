@@ -17,6 +17,7 @@ use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProviderInterface;
 use Sulu\Bundle\RouteBundle\Routing\RouteProvider;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class RouteProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -40,18 +41,25 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
      */
     private $defaultsProvider;
 
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
     protected function setUp()
     {
         $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->defaultsProvider = $this->prophesize(RouteDefaultsProviderInterface::class);
+        $this->requestStack = $this->prophesize(RequestStack::class);
 
         $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
 
         $this->routeProvider = new RouteProvider(
             $this->routeRepository->reveal(),
             $this->requestAnalyzer->reveal(),
-            $this->defaultsProvider->reveal()
+            $this->defaultsProvider->reveal(),
+            $this->requestStack->reveal()
         );
     }
 
@@ -86,6 +94,29 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(0, $collection);
     }
 
+    public function testGetRouteCollectionForRequestUnpublished()
+    {
+        $request = $this->prophesize(Request::class);
+        $request->getPathInfo()->willReturn('/de/test');
+        $request->getLocale()->willReturn('de');
+
+        $routeEntity = $this->prophesize(RouteInterface::class);
+        $routeEntity->getEntityClass()->willReturn('Example');
+        $routeEntity->getEntityId()->willReturn('1');
+        $routeEntity->getId()->willReturn(1);
+        $routeEntity->getPath()->willReturn('/test');
+        $routeEntity->isHistory()->willReturn(false);
+        $routeEntity->getLocale()->willReturn('de');
+
+        $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal());
+        $this->defaultsProvider->supports('Example')->willReturn(true);
+        $this->defaultsProvider->isPublished('Example', '1', 'de')->willReturn(false);
+
+        $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
+
+        $this->assertCount(0, $collection);
+    }
+
     public function testGetRouteCollectionForRequest()
     {
         $request = $this->prophesize(Request::class);
@@ -95,11 +126,15 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $routeEntity = $this->prophesize(RouteInterface::class);
         $routeEntity->getEntityClass()->willReturn('Example');
         $routeEntity->getEntityId()->willReturn('1');
+        $routeEntity->getId()->willReturn(1);
+        $routeEntity->getPath()->willReturn('/test');
         $routeEntity->isHistory()->willReturn(false);
+        $routeEntity->getLocale()->willReturn('de');
 
         $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal());
         $this->defaultsProvider->supports('Example')->willReturn(true);
-        $this->defaultsProvider->getByEntity('Example', '1')->willReturn(['test' => 1]);
+        $this->defaultsProvider->isPublished('Example', '1', 'de')->willReturn(true);
+        $this->defaultsProvider->getByEntity('Example', '1', 'de')->willReturn(['test' => 1]);
 
         $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
 
@@ -124,11 +159,15 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $routeEntity = $this->prophesize(RouteInterface::class);
         $routeEntity->getEntityClass()->willReturn('Example');
         $routeEntity->getEntityId()->willReturn('1');
+        $routeEntity->getId()->willReturn(1);
+        $routeEntity->getPath()->willReturn('/test');
         $routeEntity->getTarget()->willReturn($targetEntity->reveal());
         $routeEntity->isHistory()->willReturn(true);
+        $routeEntity->getLocale()->willReturn('de');
 
         $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal());
         $this->defaultsProvider->supports('Example')->willReturn(true);
+        $this->defaultsProvider->isPublished('Example', '1', 'de')->willReturn(true);
 
         $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
 
@@ -156,11 +195,15 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $routeEntity = $this->prophesize(RouteInterface::class);
         $routeEntity->getEntityClass()->willReturn('Example');
         $routeEntity->getEntityId()->willReturn('1');
+        $routeEntity->getId()->willReturn(1);
+        $routeEntity->getPath()->willReturn('/test');
         $routeEntity->getTarget()->willReturn($targetEntity->reveal());
         $routeEntity->isHistory()->willReturn(true);
+        $routeEntity->getLocale()->willReturn('de');
 
         $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal());
         $this->defaultsProvider->supports('Example')->willReturn(true);
+        $this->defaultsProvider->isPublished('Example', '1', 'de')->willReturn(true);
 
         $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
 
@@ -185,11 +228,15 @@ class RouteProviderTest extends \PHPUnit_Framework_TestCase
         $routeEntity = $this->prophesize(RouteInterface::class);
         $routeEntity->getEntityClass()->willReturn('Example');
         $routeEntity->getEntityId()->willReturn('1');
+        $routeEntity->getId()->willReturn(1);
+        $routeEntity->getPath()->willReturn('/test');
         $routeEntity->isHistory()->willReturn(false);
+        $routeEntity->getLocale()->willReturn('de');
 
         $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal());
         $this->defaultsProvider->supports('Example')->willReturn(true);
-        $this->defaultsProvider->getByEntity('Example', '1')->willReturn(['test' => 1]);
+        $this->defaultsProvider->isPublished('Example', '1', 'de')->willReturn(true);
+        $this->defaultsProvider->getByEntity('Example', '1', 'de')->willReturn(['test' => 1]);
 
         $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
 

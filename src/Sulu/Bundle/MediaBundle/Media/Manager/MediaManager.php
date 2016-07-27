@@ -21,7 +21,6 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
-use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
@@ -465,7 +464,7 @@ class MediaManager implements MediaManagerInterface
      */
     protected function createMedia($data, $user)
     {
-        $mediaEntity = new MediaEntity();
+        $mediaEntity = $this->mediaRepository->createNew();
         $mediaEntity->setCreator($user);
         $mediaEntity->setChanger($user);
 
@@ -748,7 +747,7 @@ class MediaManager implements MediaManagerInterface
     public function addFormatsAndUrl(Media $media)
     {
         // Get preview image and set either preview thumbnails if set, else rendered images
-        /** @var \Sulu\Bundle\MediaBundle\Entity\Media $previewImage */
+        /** @var \Sulu\Bundle\MediaBundle\Entity\MediaInterface $previewImage */
         $previewImage = $media->getEntity()->getPreviewImage();
 
         if ($previewImage !== null) {

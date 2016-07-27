@@ -20,8 +20,21 @@ interface MarkupParserInterface
      * Parses document and returns completed document.
      *
      * @param string $content
+     * @param string $locale
      *
      * @return string
      */
-    public function parse($content);
+    public function parse($content, $locale);
+
+    /**
+     * Validates document and returns validity and content with marker of invalid tags.
+     *
+     * If resulting array is empty the content is valid.
+     *
+     * @param string $content
+     * @param string $locale
+     *
+     * @return array
+     */
+    public function validate($content, $locale);
 }

@@ -19,16 +19,20 @@ require.config({
         "type/singleInternalLink": '../../sulucontent/js/validation/types/singleInternalLink',
         "type/block": '../../sulucontent/js/validation/types/block',
         "type/toggler": '../../sulucontent/js/validation/types/toggler',
-        "extensions/sulu-buttons-contentbundle": '../../sulucontent/js/extensions/sulu-buttons'
+        "extensions/sulu-buttons-contentbundle": '../../sulucontent/js/extensions/sulu-buttons',
+        "extensions/seo-tab": '../../sulucontent/js/extensions/seo-tab',
+        "extensions/excerpt-tab": '../../sulucontent/js/extensions/excerpt-tab'
     }
 });
 
 define([
     'config',
     'extensions/sulu-buttons-contentbundle',
+    'extensions/seo-tab',
+    'extensions/excerpt-tab',
     'sulucontent/ckeditor/internal-link',
     'css!sulucontentcss/main'
-], function(Config, ContentButtons, InternalLinkPlugin) {
+], function(Config, ContentButtons, SeoTab, ExcerptTab, InternalLinkPlugin) {
     return {
 
         name: "Sulu Content Bundle",
@@ -37,16 +41,20 @@ define([
 
             'use strict';
 
-            var sandbox = app.sandbox;
-            sandbox.sulu.buttons.push(ContentButtons.getButtons());
-            sandbox.sulu.buttons.dropdownItems.push(ContentButtons.getDropdownItems());
+            SeoTab.initialize(app);
+            ExcerptTab.initialize(app);
 
+            var sandbox = app.sandbox;
+            var ckeditorConfig = Config.get('sulu_content.texteditor_toolbar');
+
+            sandbox.sulu.buttons.push(ContentButtons.getButtons());
+            
             app.components.addSource('sulucontent', '/bundles/sulucontent/js/components');
 
             Config.set('sulusearch.page.options', {
                 image: false
             });
-            
+
             sandbox.urlManager.setUrl(
                 'page',
                 function(data) {
@@ -60,22 +68,52 @@ define([
                         locale: data.locale
                     };
                 },
-                function (key) {
+                function(key) {
                     if (key.indexOf('page_') === 0) {
                         return 'page';
                     }
                 }
             );
 
-            function getContentLanguage() {
-                return sandbox.sulu.getUserSetting('contentLanguage') || Object.keys(Config.get('sulu-content').locales)[0];
+            /**
+             * Returns the the language of the content which is displayed at the beginning.
+             * It first look for the last chosen language for this webspace. If no such
+             * language exists, the function looks for the last chosen language over all
+             * webspaces and if that language is possible in with the given webspace. If
+             * not language can be found, the default language is returned.
+             *
+             * @param {String} webspace The webspace key
+             * @returns {string} The locale of the content
+             */
+            function getContentLanguage(webspace) {
+                // webspace language
+                var language = sandbox.sulu.getUserSetting(webspace + '.contentLanguage');
+                if (!!language) {
+                    return language;
+                }
+
+                // last visited language over all webspaces
+                language = sandbox.sulu.getUserSetting('contentLanguage');
+                if (!!language && !!Config.get('sulu-content').locales[webspace][language]) {
+                    return language;
+                }
+
+                if (!Config.get('sulu-content').locales[webspace]
+                    || Object.keys(Config.get('sulu-content').locales[webspace]).length === 0) {
+                    app.logger.error('Webspace "' + webspace + '" has no defined locale');
+                }
+
+                // the default locale of a webspace is always on the first position
+                language = Object.keys(Config.get('sulu-content').locales[webspace])[0];
+
+                return Config.get('sulu-content').locales[webspace][language].localization;
             }
 
             // redirects to list with specific language
             sandbox.mvc.routes.push({
                 route: 'content/contents/:webspace',
                 callback: function(webspace) {
-                    var language = getContentLanguage();
+                    var language = getContentLanguage(webspace);
                     sandbox.emit('sulu.router.navigate', 'content/contents/' + webspace + '/' + language);
                 }
             });
@@ -108,7 +146,7 @@ define([
             sandbox.mvc.routes.push({
                 route: 'content/contents/:webspace/edit::id/:content',
                 callback: function(webspace, id, content) {
-                    var language = getContentLanguage();
+                    var language = getContentLanguage(webspace);
                     sandbox.emit('sulu.router.navigate', 'content/contents/' + webspace + '/' + language + '/edit:' + id + '/' + content);
                 }
             });
@@ -134,8 +172,11 @@ define([
                 'internalLink',
                 new InternalLinkPlugin(app.sandboxes.create('plugin-internal-link'))
             );
-            sandbox.ckeditor.addToolbarButton('links', 'InternalLink');
-            sandbox.ckeditor.addToolbarButton('links', 'RemoveInternalLink');
+            sandbox.ckeditor.addToolbarButton('links', 'InternalLink', 'arrow-down');
+
+            if (!!ckeditorConfig && !!ckeditorConfig.userToolbar) {
+                sandbox.ckeditor.setToolbar(ckeditorConfig.userToolbar);
+            }
         }
     };
 });

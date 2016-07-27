@@ -229,17 +229,4 @@ interface ContentMapperInterface
         $maxDepth,
         $onlyPublished = true
     );
-
-    /**
-     * restores given resourcelocator.
-     *
-     * @param string $path
-     * @param int    $userId
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
-     *
-     * @return StructureInterface
-     */
-    public function restoreHistoryPath($path, $userId, $webspaceKey, $languageCode, $segmentKey = null);
 }

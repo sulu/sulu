@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -17,7 +18,9 @@ class IndexConfigurationProviderTest extends \PHPUnit_Framework_TestCase
         $indexConfigurationProvider = new IndexConfigurationProvider(
             [
                 'index1' => [
+                    'name' => 'index 1',
                     'security_context' => 'sulu.security.index1',
+                    'contexts' => ['website'],
                 ],
                 'index2' => [
                     'security_context' => 'sulu.security.index2',
@@ -28,7 +31,9 @@ class IndexConfigurationProviderTest extends \PHPUnit_Framework_TestCase
         $indexConfigurations = $indexConfigurationProvider->getIndexConfigurations();
 
         $this->assertEquals('index1', $indexConfigurations['index1']->getIndexName());
+        $this->assertEquals('index 1', $indexConfigurations['index1']->getName());
         $this->assertEquals('sulu.security.index1', $indexConfigurations['index1']->getSecurityContext());
+        $this->assertEquals(['website'], $indexConfigurations['index1']->getContexts());
         $this->assertEquals('index2', $indexConfigurations['index2']->getIndexName());
         $this->assertEquals('sulu.security.index2', $indexConfigurations['index2']->getSecurityContext());
     }

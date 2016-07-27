@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -40,7 +41,7 @@ class SmartContentItemController extends RestController
         $filters['excluded'] = [$this->getRequestParameter($request, 'excluded', true)];
         $filters = array_filter($filters);
         $options = [
-            'webspaceKey' => $this->getRequestParameter($request, 'webspace', true),
+            'webspaceKey' => $this->getRequestParameter($request, 'webspace'),
             'locale' => $this->getRequestParameter($request, 'locale', true),
         ];
 

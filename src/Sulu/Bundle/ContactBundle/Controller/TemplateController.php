@@ -208,7 +208,7 @@ class TemplateController extends RestController
         $countryEntity = 'SuluContactBundle:Country';
         $defaults['country'] = $this->getDoctrine()
             ->getRepository($countryEntity)
-            ->find($config['country']);
+            ->findOneByCode($config['country']);
 
         return $defaults;
     }

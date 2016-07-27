@@ -54,22 +54,25 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
         $defaultLocalization = $requestAnalyzer->getPortal()->getDefaultLocalization();
         $defaultLocale = $defaultLocalization ? $defaultLocalization->getLocalization() : null;
 
+        $currentLocale = null;
+        $currentLocalization = $requestAnalyzer->getCurrentLocalization();
+
+        if ($currentLocalization) {
+            $currentLocale = $currentLocalization->getLocale();
+        }
+
         return [
             'request' => [
                 'webspaceKey' => $requestAnalyzer->getWebspace()->getKey(),
                 'portalKey' => $requestAnalyzer->getPortal()->getKey(),
                 'defaultLocale' => $defaultLocale,
-                'locale' => $requestAnalyzer->getCurrentLocalization()->getLocalization(),
+                'locale' => $currentLocale,
                 'portalUrl' => $requestAnalyzer->getPortalUrl(),
                 'resourceLocatorPrefix' => $requestAnalyzer->getResourceLocatorPrefix(),
                 'resourceLocator' => $requestAnalyzer->getResourceLocator(),
                 'get' => $requestAnalyzer->getGetParameters(),
                 'post' => $requestAnalyzer->getPostParameters(),
                 'analyticsKey' => $requestAnalyzer->getAnalyticsKey(),
-                'routeParameters' => [
-                    'host' => $requestAnalyzer->getPortalInformation()->getHost(),
-                    'prefix' => $requestAnalyzer->getPortalInformation()->getPrefix(),
-                ],
             ],
         ];
     }

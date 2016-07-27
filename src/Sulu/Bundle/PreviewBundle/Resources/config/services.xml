@@ -28,10 +28,12 @@
         <service id="sulu_preview.preview.data_cache" class="Doctrine\Common\Cache\FilesystemCache">
             <argument type="string">%sulu.cache_dir%/preview/data</argument>
         </service>
+        <service id="sulu_preview.preview.kernel_factory"
+                 class="Sulu\Bundle\PreviewBundle\Preview\Renderer\WebsiteKernelFactory"/>
         <service id="sulu_preview.preview.renderer" class="Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRenderer">
             <argument type="service" id="sulu_route.routing.defaults_provider"/>
             <argument type="service" id="request_stack"/>
-            <argument type="service" id="http_kernel"/>
+            <argument type="service" id="sulu_preview.preview.kernel_factory"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="collection">
@@ -52,12 +54,6 @@
             <argument type="service" id="sulu_preview.preview"/>
 
             <tag name="sulu.websocket.message.handler" dispatcher="admin" alias="sulu_preview.preview"/>
-        </service>
-
-        <!-- disable profiler for websocket-mode -->
-        <service id="sulu_markup.preview.profile_matcher"
-                 class="Sulu\Bundle\PreviewBundle\Profiler\PreviewProfilerMatcher" public="false">
-            <tag name="sulu.context" context="admin"/>
         </service>
     </services>
 

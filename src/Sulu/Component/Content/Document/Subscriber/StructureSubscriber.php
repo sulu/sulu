@@ -60,24 +60,32 @@ class StructureSubscriber implements EventSubscriberInterface
     private $webspaceManager;
 
     /**
+     * @var array
+     */
+    private $defaultTypes;
+
+    /**
      * @param PropertyEncoder $encoder
      * @param ContentTypeManagerInterface $contentTypeManager
      * @param DocumentInspector $inspector
      * @param LegacyPropertyFactory $legacyPropertyFactory
      * @param WebspaceManagerInterface $webspaceManager
+     * @param array $defaultTypes
      */
     public function __construct(
         PropertyEncoder $encoder,
         ContentTypeManagerInterface $contentTypeManager,
         DocumentInspector $inspector,
         LegacyPropertyFactory $legacyPropertyFactory,
-        WebspaceManagerInterface $webspaceManager
+        WebspaceManagerInterface $webspaceManager,
+        $defaultTypes
     ) {
         $this->encoder = $encoder;
         $this->contentTypeManager = $contentTypeManager;
         $this->inspector = $inspector;
         $this->legacyPropertyFactory = $legacyPropertyFactory;
         $this->webspaceManager = $webspaceManager;
+        $this->defaultTypes = $defaultTypes;
     }
 
     /**
@@ -88,12 +96,13 @@ class StructureSubscriber implements EventSubscriberInterface
         return [
             Events::PERSIST => [
                 // persist should happen before content is mapped
-                ['handlePersist', 0],
+                ['saveStructureData', 0],
                 // staged properties must be commited before title subscriber
                 ['handlePersistStagedProperties', 50],
                 // setting the structure should happen very early
                 ['handlePersistStructureType', 100],
             ],
+            Events::PUBLISH => 'saveStructureData',
             // hydrate should happen afterwards
             Events::HYDRATE => ['handleHydrate', 0],
             Events::CONFIGURE_OPTIONS => 'configureOptions',
@@ -200,7 +209,7 @@ class StructureSubscriber implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function handlePersist(PersistEvent $event)
+    public function saveStructureData(AbstractMappingEvent $event)
     {
         // Set the structure type
         $document = $event->getDocument();
@@ -238,11 +247,30 @@ class StructureSubscriber implements EventSubscriberInterface
      */
     private function getDefaultStructureType(StructureBehavior $document)
     {
+        $alias = $this->inspector->getMetadata($document)->getAlias();
         $webspace = $this->webspaceManager->findWebspaceByKey($this->inspector->getWebspace($document));
 
-        return $webspace->getTheme()->getDefaultTemplate(
-            $this->inspector->getMetadata($document)->getAlias()
-        );
+        if (!$webspace) {
+            return $this->getDefaultStructureTypeFromConfig($alias);
+        }
+
+        return $webspace->getDefaultTemplate($alias);
+    }
+
+    /**
+     * Returns configured "default_type".
+     *
+     * @param string $alias
+     *
+     * @return string
+     */
+    private function getDefaultStructureTypeFromConfig($alias)
+    {
+        if (!array_key_exists($alias, $this->defaultTypes)) {
+            return;
+        }
+
+        return $this->defaultTypes[$alias];
     }
 
     private function supportsBehavior($document)

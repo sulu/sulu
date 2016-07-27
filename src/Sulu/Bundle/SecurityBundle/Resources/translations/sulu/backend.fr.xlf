@@ -122,6 +122,18 @@
                 <source>security.reset.mail-message</source>
                 <target>Pour réinitialiser votre mot de passe s'il vous plaît cliquez sur Sulu sur le lien suivant ou copiez / collez-le dans votre navigateur:</target>
             </trans-unit>
+            <trans-unit id="1cd67d24ab0a432414bc0685517c721d" resname="security.warning">
+                <source>security.warning</source>
+                <target>Pour voir les changements des paramètres de sécurité ,  il faut recharger  le système.</target>
+            </trans-unit>
+            <trans-unit id="1cd67d24ab0a432414ba0685517c632c" resname="sulu-security.role.removed">
+                <source>sulu-security.role.removed</source>
+                <target>Rôle enregistré avec succès</target>
+            </trans-unit>
+            <trans-unit id="1cd67d24ab0a432414ba0685517c632a" resname="sulu-security.role.saved">
+                <source>sulu-security.role.saved</source>
+                <target>Rôle supprimée avec succès</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

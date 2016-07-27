@@ -13,7 +13,7 @@ define(['underscore', 'jquery', 'services/husky/util'], function(_, $, util) {
 
     var defaults = {
             templates: {
-                input: '<input type="text" class="form-element<% if (!!prefix) { %> prefix" data-prefix="true"<% } else { %>" data-suffix="true"<% } %>/>'
+                input: '<div class="input-part"><input type="text" class="form-element<% if (!!prefix) { %> prefix" data-prefix="true"<% } else { %>" data-suffix="true"<% } %>/></div>'
             }
         },
 
@@ -34,14 +34,23 @@ define(['underscore', 'jquery', 'services/husky/util'], function(_, $, util) {
                 baseDomain += '/*';
             }
 
-            return baseDomain
-                .replace(
-                    /^([^/]*)(\*)([^/]+)(.*)$/,
-                    '<span class="domain-part">$1</span>'
-                    + this.templates.input({prefix: true})
-                    + '<span class="domain-part">$3</span><span class="domain-part">$4</span>'
-                )
-                .replace(/\*/g, '</span>' + this.templates.input({prefix: false}) + '<span class="domain-part">');
+            var htmlString = baseDomain, tmpString;
+            // replace all "*" character which has no "/" before them with prefix-inputs
+            // this cannot be done with a global replace because of the "^" (beginning of line)
+            tmpString = htmlString.replace(/^([^\/]*)\*/, '$1' + this.templates.input({prefix: true}));
+            while (htmlString !== tmpString) {
+                htmlString = tmpString;
+                tmpString = htmlString.replace(/^([^\/]*)\*/, '$1' + this.templates.input({prefix: true}));
+            }
+            htmlString = tmpString;
+            // replace all other "*" characters with suffix-inputs
+            htmlString = htmlString.replace(/\*/g, this.templates.input({prefix: false}));
+            // wrap all character data (data not containing ">") which is outside of divs in a domain-part div
+            htmlString = htmlString.replace(/<\/div>([^>]*)<div/g, '</div><div class="domain-part">$1</div><div');
+            // wrap character data (data not containing ">") at the beginning in a domain-part div
+            htmlString = htmlString.replace(/^([^>]*)<div/, '<div class="domain-part">$1</div><div');
+
+            return htmlString;
         },
 
         /**
@@ -157,5 +166,5 @@ define(['underscore', 'jquery', 'services/husky/util'], function(_, $, util) {
 
             this.$el.data('custom-url-data', this.getData());
         }
-    }
+    };
 });

@@ -36,7 +36,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * handles snippets.
@@ -61,14 +61,14 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     private $viewHandler;
 
     /**
-     * @Var SnippetRepository
+     * @var SnippetRepository
      */
     private $snippetRepository;
 
     /**
-     * @var SecurityContext
+     * @var TokenStorageInterface
      */
-    private $securityContext;
+    private $tokenStorage;
 
     /**
      * @var UrlGeneratorInterface
@@ -100,7 +100,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         ContentMapper $contentMapper,
         StructureManagerInterface $structureManager,
         SnippetRepository $snippetRepository,
-        SecurityContext $securityContext,
+        TokenStorageInterface $tokenStorage,
         UrlGeneratorInterface $urlGenerator,
         DefaultSnippetManagerInterface $defaultSnippetManager,
         DocumentManager $documentManager,
@@ -111,7 +111,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         $this->contentMapper = $contentMapper;
         $this->structureManager = $structureManager;
         $this->snippetRepository = $snippetRepository;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
         $this->urlGenerator = $urlGenerator;
         $this->defaultSnippetManager = $defaultSnippetManager;
         $this->documentManager = $documentManager;
@@ -375,7 +375,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     */
    private function getUser()
    {
-       $token = $this->securityContext->getToken();
+       $token = $this->tokenStorage->getToken();
 
        if (null === $token) {
            throw new \InvalidArgumentException('No user is set');
@@ -498,6 +498,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
                 'clear_missing_content' => false,
             ]
         );
+        $this->documentManager->publish($document, $locale);
         $this->documentManager->flush();
 
         return $form;

@@ -42,7 +42,6 @@ use Sulu\Component\Content\Exception\TranslatedNodeNotFoundException;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
-use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\DocumentManager\DocumentManager;
@@ -55,7 +54,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes.
  *
- * @deprecated since 1.0-? use the DocumentManager instead.
+ * @deprecated since 1.0-? use the DocumentManager instead
  */
 class ContentMapper implements ContentMapperInterface
 {
@@ -100,7 +99,7 @@ class ContentMapper implements ContentMapperInterface
     private $rlpStrategy;
 
     /**
-     * @Var DocumentManager
+     * @var DocumentManager
      */
     private $documentManager;
 
@@ -567,12 +566,7 @@ class ContentMapper implements ContentMapperInterface
                 $targetSibling = $siblings[$position - 1];
             }
 
-            $this->documentManager->reorder($document, $targetSibling->getPath());
-        }
-
-        // this should not be necessary (see https://github.com/sulu-io/sulu-document-manager/issues/39)
-        foreach ($siblingDocuments as $siblingDocument) {
-            $this->documentManager->persist($siblingDocument, null, ['auto_name' => false]);
+            $this->documentManager->reorder($document, $targetSibling->getUuid());
         }
 
         $this->documentManager->flush();
@@ -653,26 +647,6 @@ class ContentMapper implements ContentMapperInterface
         }
 
         return $result;
-    }
-
-    /**
-     * @param $name
-     * @param NodeInterface $parent
-     *
-     * @return string
-     */
-    private function getUniquePath($name, NodeInterface $parent)
-    {
-        if ($parent->hasNode($name)) {
-            $i = 0;
-            do {
-                ++$i;
-            } while ($parent->hasNode($name . '-' . $i));
-
-            return $name . '-' . $i;
-        } else {
-            return $name;
-        }
     }
 
     /**
@@ -881,32 +855,6 @@ class ContentMapper implements ContentMapperInterface
         );
 
         return $extension->getContentData($data);
-    }
-
-    /**
-     * TODO: Move this to ResourceLocator repository>.
-     *
-     * {@inheritdoc}
-     */
-    public function restoreHistoryPath($path, $userId, $webspaceKey, $locale, $segmentKey = null)
-    {
-        $this->rlpStrategy->restoreByPath($path, $webspaceKey, $locale, $segmentKey);
-
-        $content = $this->loadByResourceLocator($path, $webspaceKey, $locale, $segmentKey);
-        $property = $content->getPropertyByTagName('sulu.rlp');
-        $property->setValue($path);
-
-        $node = $this->sessionManager->getSession()->getNodeByIdentifier($content->getUuid());
-
-        $contentType = $this->contentTypeManager->get($property->getContentTypeName());
-        $contentType->write(
-            $node,
-            new TranslatedProperty($property, $locale, $this->namespaceRegistry->getPrefix('content_localized')),
-            $userId,
-            $webspaceKey,
-            $locale,
-            $segmentKey
-        );
     }
 
     private function loadDocument($pathOrUuid, $locale, $options, $shouldExclude = true)

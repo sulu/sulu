@@ -29,9 +29,9 @@ interface UserRepositoryInterface extends RepositoryInterface
     public function findUserById($id);
 
     /**
-     * @param $id
+     * @param int $id
      *
-     * @return mixed
+     * @return UserInterface
      *
      * @throws NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException

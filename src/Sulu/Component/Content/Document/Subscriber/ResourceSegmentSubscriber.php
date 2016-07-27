@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
+use PHPCR\NodeInterface;
+use PHPCR\SessionInterface;
 use Sulu\Bundle\ContentBundle\Document\HomeDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
@@ -25,6 +27,7 @@ use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\CopyEvent;
 use Sulu\Component\DocumentManager\Event\MoveEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -55,16 +58,30 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
      */
     private $rlpStrategy;
 
+    /**
+     * @var SessionInterface
+     */
+    private $defaultSession;
+
+    /**
+     * @var SessionInterface
+     */
+    private $liveSession;
+
     public function __construct(
         PropertyEncoder $encoder,
         DocumentManagerInterface $documentManager,
         DocumentInspector $documentInspector,
-        RlpStrategyInterface $rlpStrategy
+        RlpStrategyInterface $rlpStrategy,
+        SessionInterface $defaultSession,
+        SessionInterface $liveSession
     ) {
         $this->encoder = $encoder;
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
         $this->rlpStrategy = $rlpStrategy;
+        $this->defaultSession = $defaultSession;
+        $this->liveSession = $liveSession;
     }
 
     /**
@@ -76,13 +93,12 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
             // persist should happen before content is mapped
             Events::PERSIST => [
                 ['handlePersistDocument', 10],
-                // has to happen after MappingSubscriber, because the mapped data is needed
-                ['handlePersistRoute', -200],
             ],
             // hydrate should happen afterwards
             Events::HYDRATE => ['handleHydrate', -200],
-            Events::MOVE => ['moveRoutes', -128],
-            Events::COPY => ['copyRoutes', -128],
+            Events::MOVE => ['updateMovedDocument', -128],
+            Events::COPY => ['updateCopiedDocument', -128],
+            Events::PUBLISH => 'handlePersistRoute',
         ];
     }
 
@@ -146,9 +162,9 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
     /**
      * Creates or updates the route for the document.
      *
-     * @param PersistEvent $event
+     * @param PublishEvent $event
      */
-    public function handlePersistRoute(PersistEvent $event)
+    public function handlePersistRoute(PublishEvent $event)
     {
         /** @var ResourceSegmentBehavior $document */
         $document = $event->getDocument();
@@ -177,9 +193,9 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
      *
      * @param MoveEvent $event
      */
-    public function moveRoutes(MoveEvent $event)
+    public function updateMovedDocument(MoveEvent $event)
     {
-        $this->recreateRoutes($event->getDocument());
+        $this->updateRoute($event->getDocument(), true);
     }
 
     /**
@@ -187,14 +203,14 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
      *
      * @param CopyEvent $event
      */
-    public function copyRoutes(CopyEvent $event)
+    public function updateCopiedDocument(CopyEvent $event)
     {
-        $this->recreateRoutes(
-            $event->getDocument(),
+        $this->updateRoute(
             $this->documentManager->find(
                 $event->getCopiedPath(),
                 $this->documentInspector->getLocale($event->getDocument())
-            )
+            ),
+            false
         );
     }
 
@@ -248,53 +264,93 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Recreates the routes for the destination document with the data from the source document.
+     * Updates the route for the given document after a move or copy.
      *
-     * Note that both documents can be the same (e.g. happening on a move). If the second parameter is omitted it has
-     * the same value as the first one.
-     *
-     * @param object $sourceDocument
-     * @param object $destinationDocument
+     * @param object $document
+     * @param bool $generateRoutes If set to true a route in the routing tree will also be created
      */
-    private function recreateRoutes($sourceDocument, $destinationDocument = null)
+    private function updateRoute($document, $generateRoutes)
     {
-        $destinationDocument = $destinationDocument ?: $sourceDocument;
-
-        if (!$sourceDocument instanceof ResourceSegmentBehavior
-            || !$destinationDocument instanceof ResourceSegmentBehavior
-        ) {
+        if (!$document instanceof ResourceSegmentBehavior) {
             return;
         }
 
-        $locales = $this->documentInspector->getLocales($destinationDocument);
-        $webspaceKey = $this->documentInspector->getWebspace($destinationDocument);
-        $sourceUuid = $this->documentInspector->getUuid($sourceDocument);
-        $destinationUuid = $this->documentInspector->getUuid($destinationDocument);
-        $destinationParentUuid = $this->documentInspector->getUuid(
-            $this->documentInspector->getParent($destinationDocument)
-        );
+        $locales = $this->documentInspector->getLocales($document);
+        $webspaceKey = $this->documentInspector->getWebspace($document);
+        $uuid = $this->documentInspector->getUuid($document);
+        $path = $this->documentInspector->getPath($document);
+        $parentUuid = $this->documentInspector->getUuid($this->documentInspector->getParent($document));
+
+        $defaultNode = $this->defaultSession->getNode($path);
+        $liveNode = $this->liveSession->getNode($path);
 
         foreach ($locales as $locale) {
-            $localizedDocument = $this->documentManager->find($destinationUuid, $locale);
+            $localizedDocument = $this->documentManager->find($uuid, $locale);
 
             if ($localizedDocument->getRedirectType() !== RedirectType::NONE) {
                 continue;
             }
 
+            $resourceSegmentPropertyName = $this->encoder->localizedSystemName(
+                $this->getResourceSegmentProperty($localizedDocument)->getName(),
+                $locale
+            );
+
             try {
-                $parentPart = $this->rlpStrategy->loadByContentUuid($destinationParentUuid, $webspaceKey, $locale);
+                $parentPart = $this->rlpStrategy->loadByContentUuid($parentUuid, $webspaceKey, $locale);
             } catch (ResourceLocatorNotFoundException $e) {
                 $parentPart = null;
             }
 
-            $childPart = $this->rlpStrategy->loadByContentUuid($sourceUuid, $webspaceKey, $locale);
-            $childPart = $this->rlpStrategy->getChildPart($childPart);
-
-            $localizedDocument->setResourceSegment(
-                $this->rlpStrategy->generate($childPart, $parentPart, $webspaceKey, $locale)
+            $this->updateResourceSegmentProperty(
+                $defaultNode,
+                $resourceSegmentPropertyName,
+                $parentPart,
+                $webspaceKey,
+                $locale
             );
 
-            $this->documentManager->persist($localizedDocument, $locale);
+            if ($liveNode->hasProperty($resourceSegmentPropertyName)) {
+                $this->updateResourceSegmentProperty(
+                    $liveNode,
+                    $resourceSegmentPropertyName,
+                    $parentPart,
+                    $webspaceKey,
+                    $locale
+                );
+
+                // if the method is called with the generateRoutes flag it will create a new route
+                // this happens on a move, but not on copy, because copy results in a draft page without url
+                if ($generateRoutes) {
+                    $localizedDocument->setResourceSegment($liveNode->getPropertyValue($resourceSegmentPropertyName));
+                    $this->rlpStrategy->save($localizedDocument, null);
+                    $localizedDocument->setResourceSegment($defaultNode->getPropertyValue($resourceSegmentPropertyName));
+                }
+            }
         }
+    }
+
+    /**
+     * Updates the property for the resource segment on the given node.
+     *
+     * @param NodeInterface $node
+     * @param string $resourceSegmentPropertyName
+     * @param string $parentPart
+     * @param string $webspaceKey
+     * @param string $locale
+     */
+    private function updateResourceSegmentProperty(
+        NodeInterface $node,
+        $resourceSegmentPropertyName,
+        $parentPart,
+        $webspaceKey,
+        $locale
+    ) {
+        $childPart = $this->rlpStrategy->getChildPart($node->getPropertyValue($resourceSegmentPropertyName));
+
+        $node->setProperty(
+            $resourceSegmentPropertyName,
+            $this->rlpStrategy->generate($childPart, $parentPart, $webspaceKey, $locale)
+        );
     }
 }

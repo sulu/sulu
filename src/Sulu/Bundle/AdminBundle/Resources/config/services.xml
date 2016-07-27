@@ -47,6 +47,8 @@
         <service id="sulu_admin.content_navigation_controller" class="%sulu_admin.content_navigation_controller.class%">
             <argument type="service" id="sulu_admin.content_navigation_registry"/>
             <argument type="service" id="fos_rest.view_handler"/>
+
+            <tag name="sulu.context" context="admin"/>
         </service>
     </services>
 </container>

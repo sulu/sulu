@@ -8,6 +8,8 @@
     <services>
         <service id="test_user_provider" class="%sulu.test_user_provider.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu.repository.contact"/>
+            <argument type="service" id="sulu.repository.user"/>
         </service>
         <service id="test_voter" class="%sulu.test_voter.class%" public="false">
             <tag name="security.voter"/>

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Sulu.
  *
@@ -26,6 +27,10 @@ class CsvHandlerCompilerPass implements CompilerPassInterface
     {
         $id = 'fos_rest.view_handler';
         if (!$container->hasDefinition($id)) {
+            if (!$container->hasAlias($id)) {
+                return;
+            }
+
             $id = $container->getAlias($id);
         }
 

@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContentBundle\Markup;
 
 use Sulu\Bundle\MarkupBundle\Tag\TagInterface;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Content\Repository\ContentRepositoryInterface;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
@@ -23,20 +24,23 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class LinkTag implements TagInterface
 {
+    const VALIDATE_UNPUBLISHED = 'unpublished';
+    const VALIDATE_REMOVED = 'removed';
+
     /**
      * @var ContentRepositoryInterface
      */
     private $contentRepository;
 
     /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
      * @var WebspaceManagerInterface
      */
     private $webspaceManager;
+
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
 
     /**
      * @var string
@@ -45,30 +49,28 @@ class LinkTag implements TagInterface
 
     /**
      * @param ContentRepositoryInterface $contentRepository
-     * @param RequestStack $requestStack
      * @param WebspaceManagerInterface $webspaceManager
+     * @param RequestStack $requestStack
      * @param string $environment
      */
     public function __construct(
         ContentRepositoryInterface $contentRepository,
-        RequestStack $requestStack,
         WebspaceManagerInterface $webspaceManager,
+        RequestStack $requestStack,
         $environment
     ) {
         $this->contentRepository = $contentRepository;
-        $this->requestStack = $requestStack;
         $this->webspaceManager = $webspaceManager;
+        $this->requestStack = $requestStack;
         $this->environment = $environment;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function parseAll($attributesByTag)
+    public function parseAll(array $attributesByTag, $locale)
     {
         $request = $this->requestStack->getCurrentRequest();
-        $locale = $request->getLocale();
-
         $contents = $this->preloadContent($attributesByTag, $locale);
 
         $result = [];
@@ -109,14 +111,38 @@ class LinkTag implements TagInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function validateAll(array $attributesByTag, $locale)
+    {
+        $contents = $this->preloadContent($attributesByTag, $locale, false);
+
+        $result = [];
+        foreach ($attributesByTag as $tag => $attributes) {
+            if (!array_key_exists($attributes['href'], $contents)) {
+                $state = self::VALIDATE_REMOVED;
+            } elseif (WorkflowStage::TEST === $contents[$attributes['href']]->getWorkflowStage()) {
+                $state = self::VALIDATE_UNPUBLISHED;
+            } else {
+                continue;
+            }
+
+            $result[$tag] = $state;
+        }
+
+        return $result;
+    }
+
+    /**
      * Return content by uuid for given attributes.
      *
      * @param array $attributesByTag
      * @param string $locale
+     * @param bool $published
      *
      * @return Content[]
      */
-    private function preloadContent($attributesByTag, $locale)
+    private function preloadContent($attributesByTag, $locale, $published = true)
     {
         $uuids = array_map(
             function ($attributes) {
@@ -131,7 +157,8 @@ class LinkTag implements TagInterface
             MappingBuilder::create()
                 ->setResolveUrl(true)
                 ->addProperties(['title'])
-                ->setOnlyPublished(true)
+                ->setOnlyPublished($published)
+                ->setHydrateGhost(false)
                 ->getMapping()
         );
 

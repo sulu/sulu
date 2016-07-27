@@ -20,12 +20,28 @@ use FOS\RestBundle\View\ExceptionWrapperHandlerInterface;
 class ExceptionWrapperHandler implements ExceptionWrapperHandlerInterface
 {
     /**
+     * @var string
+     */
+    private $environment;
+
+    /**
+     * @param string $environment - kernel environment, dev, prod, etc
+     */
+    public function __construct($environment)
+    {
+        $this->environment = $environment;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function wrap($data)
     {
         $data['status_code'] = $data['exception']->getCode();
-        $data['errors'] = [$data['exception']];
+
+        if (in_array($this->environment, ['dev', 'test'])) {
+            $data['errors'] = [$data['exception']];
+        }
 
         return new ExceptionWrapper($data);
     }

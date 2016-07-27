@@ -53,6 +53,13 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
+        <!-- roles -->
+        <service id="sulu_content.roles_content_navigation_provider"
+                 class="Sulu\Bundle\ContentBundle\Admin\RolesContentNavigationProvider">
+            <tag name="sulu_admin.content_navigation" alias="roles"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
         <!-- nodes -->
         <service id="sulu_content.node_repository" class="%sulu_content.node_repository.class%">
             <argument type="service" id="sulu.content.mapper"/>
@@ -70,7 +77,7 @@
         <service id="sulu_content.rl_repository" class="%sulu_content.rl_repository.class%">
             <argument type="service" id="sulu.content.rlp.strategy.tree"/>
             <argument type="service" id="sulu.content.structure_manager"/>
-            <argument type="service" id="sulu.content.mapper"/>
+            <argument type="service" id="sulu_document_manager.document_manager"/>
         </service>
 
         <!-- structure extension -->
@@ -92,10 +99,16 @@
         <service id="sulu_content.jsconfig" class="Sulu\Bundle\AdminBundle\Admin\JsConfig">
             <argument type="string">sulu-content</argument>
             <argument type="collection">
-                <argument key="locales" type="expression">service('sulu_core.webspace.webspace_manager').getAllLocalizations()</argument>
+                <argument key="locales" type="expression">service('sulu_core.webspace.webspace_manager').getAllLocalesByWebspaces()</argument>
             </argument>
 
             <tag name="sulu.js_config"/>
+        </service>
+        <service id="sulu_content.jsconfig.texteditor_toolbar" class="Sulu\Bundle\ContentBundle\Admin\TextEditorJsConfig">
+            <argument type="service" id="security.token_storage"/>
+
+            <tag name="sulu.js_config"/>
+            <tag name="sulu.context" context="admin"/>
         </service>
 
         <!-- Content Repository -->
@@ -136,8 +149,8 @@
         <!-- markup -->
         <service id="sulu_content.markup" class="Sulu\Bundle\ContentBundle\Markup\LinkTag">
             <argument type="service" id="sulu_content.content_repository"/>
-            <argument type="service" id="request_stack"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="request_stack"/>
             <argument type="string">%kernel.environment%</argument>
 
             <tag name="sulu_markup.tag" tag="link" type="html"/>

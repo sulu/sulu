@@ -12,10 +12,8 @@
 namespace Sulu\Component\Webspace\StructureProvider;
 
 use Doctrine\Common\Cache\Cache;
-use Liip\ThemeBundle\ActiveTheme;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
  * Provide templates which are implemented in a single webspace.
@@ -25,46 +23,30 @@ class WebspaceStructureProvider implements WebspaceStructureProviderInterface
     /**
      * @var \Twig_Environment
      */
-    private $twig;
+    protected $twig;
 
     /**
      * @var StructureManagerInterface
      */
-    private $structureManager;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var ActiveTheme
-     */
-    private $activeTheme;
+    protected $structureManager;
 
     /**
      * @var Cache
      */
-    private $cache;
+    protected $cache;
 
     /**
-     * @param \Twig_Environment         $twig
+     * @param \Twig_Environment $twig
      * @param StructureManagerInterface $structureManager
-     * @param WebspaceManagerInterface  $webspaceManager
-     * @param ActiveTheme               $activeTheme
-     * @param Cache                     $cache
+     * @param Cache $cache
      */
     public function __construct(
         \Twig_Environment $twig,
         StructureManagerInterface $structureManager,
-        WebspaceManagerInterface $webspaceManager,
-        ActiveTheme $activeTheme,
         Cache $cache
     ) {
         $this->twig = $twig;
         $this->structureManager = $structureManager;
-        $this->webspaceManager = $webspaceManager;
-        $this->activeTheme = $activeTheme;
         $this->cache = $cache;
     }
 
@@ -87,12 +69,15 @@ class WebspaceStructureProvider implements WebspaceStructureProviderInterface
         );
     }
 
-    private function loadStructures($webspaceKey)
+    /**
+     * Returns and caches structures for given webspace.
+     *
+     * @param string $webspaceKey
+     *
+     * @return array
+     */
+    protected function loadStructures($webspaceKey)
     {
-        $before = $this->activeTheme->getName();
-        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
-        $this->activeTheme->setName($webspace->getTheme()->getKey());
-
         $structures = [];
         $keys = [];
         foreach ($this->structureManager->getStructures() as $page) {
@@ -103,7 +88,6 @@ class WebspaceStructureProvider implements WebspaceStructureProviderInterface
                 $structures[] = $page;
             }
         }
-        $this->activeTheme->setName($before);
 
         $this->cache->save($webspaceKey, $keys);
 

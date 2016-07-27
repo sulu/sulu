@@ -33,7 +33,6 @@ use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
-use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
 
 class SitemapGeneratorTest extends SuluTestCase
@@ -97,7 +96,7 @@ class SitemapGeneratorTest extends SuluTestCase
     {
         $this->initPhpcr();
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');
-        $this->session = $this->getContainer()->get('doctrine_phpcr.default_session');
+        $this->session = $this->getContainer()->get('doctrine_phpcr.session');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
         $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
@@ -145,10 +144,8 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->webspace->setLocalizations([$local1, $local2]);
         $this->webspace->setName('Default');
 
-        $theme = new Theme();
-        $theme->setKey('test');
-        $theme->addDefaultTemplate('page', 'default');
-        $this->webspace->setTheme($theme);
+        $this->webspace->addDefaultTemplate('page', 'default');
+        $this->webspace->setTheme('test');
 
         $this->webspace->setNavigation(
             new Navigation(
@@ -192,6 +189,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $newsDocument->setNavigationContexts(['footer']);
         $newsDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($newsDocument, $locale, ['parent_path' => '/cmf/test_io/contents']);
+        $this->documentManager->publish($newsDocument, $locale);
         $this->documentManager->flush();
 
         /** @var PageDocument $productDocument */
@@ -213,6 +211,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $document->setParent($newsDocument);
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($document, $locale);
+        $this->documentManager->publish($document, $locale);
         $this->documentManager->flush();
 
         $document = $this->documentManager->create('page');
@@ -223,6 +222,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $document->setParent($newsDocument);
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($document, $locale);
+        $this->documentManager->publish($document, $locale);
         $this->documentManager->flush();
 
         $document = $this->documentManager->create('page');
@@ -235,6 +235,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $document->setParent($productDocument);
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($document, $locale);
+        $this->documentManager->publish($document, $locale);
         $this->documentManager->flush();
 
         $document = $this->documentManager->create('page');
@@ -247,6 +248,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $document->setParent($productDocument);
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($document, $locale);
+        $this->documentManager->publish($document, $locale);
         $this->documentManager->flush();
 
         $document = $this->documentManager->create('page');
@@ -260,6 +262,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $document->setParent($productDocument);
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($document, $locale);
+        $this->documentManager->publish($document, $locale);
         $this->documentManager->flush();
     }
 

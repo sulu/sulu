@@ -12,12 +12,10 @@
 namespace Sulu\Bundle\ContentBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use PHPCR\SessionInterface;
 use Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepositoryInterface;
-use Sulu\Component\Content\Structure;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * handles resource locator api.
@@ -39,13 +37,8 @@ class NodeResourcelocatorController extends RestController implements ClassResou
         $uuid = $this->getRequestParameter($this->getRequest(), 'uuid');
         $parts = $this->getRequestParameter($this->getRequest(), 'parts', true);
         $templateKey = $this->getRequestParameter($this->getRequest(), 'template', true);
-
-        list($webspaceKey, $languageCode) = $this->getWebspaceAndLanguage();
-        if ($templateKey === null) {
-            $webspaceManager = $this->container->get('sulu_core.webspace.webspace_manager');
-            $webspace = $webspaceManager->findWebspaceByKey($webspaceKey);
-            $templateKey = $webspace->getTheme()->getDefaultTemplate(Structure::TYPE_PAGE);
-        }
+        $webspaceKey = $this->getRequestParameter($this->getRequest(), 'webspace', true);
+        $languageCode = $this->getRequestParameter($this->getRequest(), 'language', true);
 
         $result = $this->getResourceLocatorRepository()->generate(
             $parts,
@@ -85,27 +78,9 @@ class NodeResourcelocatorController extends RestController implements ClassResou
         $path = $this->getRequestParameter($this->getRequest(), 'path', true);
 
         $this->getResourceLocatorRepository()->delete($path, $webspaceKey, $languageCode);
-        $this->getSession()->save();
+        $this->getDocumentManager()->flush();
 
         return $this->handleView($this->view());
-    }
-
-    /**
-     * restores url with given path.
-     *
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function putRestoreAction(Request $request)
-    {
-        list($webspaceKey, $languageCode) = $this->getWebspaceAndLanguage();
-        $path = $this->getRequestParameter($request, 'path', true);
-
-        $result = $this->getResourceLocatorRepository()->restore($path, $this->getUser()->getId(), $webspaceKey, $languageCode);
-        $this->getSession()->save();
-
-        return $this->handleView($this->view($result));
     }
 
     /**
@@ -130,10 +105,10 @@ class NodeResourcelocatorController extends RestController implements ClassResou
     }
 
     /**
-     * @return SessionInterface
+     * @return DocumentManagerInterface
      */
-    private function getSession()
+    private function getDocumentManager()
     {
-        return $this->get('doctrine_phpcr.default_session');
+        return $this->get('sulu_document_manager.document_manager');
     }
 }

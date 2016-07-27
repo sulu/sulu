@@ -13,9 +13,10 @@ namespace Sulu\Bundle\ContentBundle\Repository;
 
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 /**
  * resource locator repository.
@@ -33,9 +34,9 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     private $rlpStrategy;
 
     /**
-     * @var ContentMapperInterface
+     * @var DocumentManagerInterface
      */
-    private $contentMapper;
+    private $documentManager;
 
     /**
      * @var string[]
@@ -52,11 +53,11 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     public function __construct(
         RlpStrategyInterface $rlpStrategy,
         StructureManagerInterface $structureManager,
-        ContentMapperInterface $contentMapper
+        DocumentManagerInterface $documentManager
     ) {
         $this->rlpStrategy = $rlpStrategy;
         $this->structureManager = $structureManager;
-        $this->contentMapper = $contentMapper;
+        $this->documentManager = $documentManager;
     }
 
     /**
@@ -69,7 +70,8 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
         $title = $this->implodeRlpParts($structure, $parts);
 
         if ($parentUuid !== null) {
-            $parentPath = $this->rlpStrategy->loadByContentUuid($parentUuid, $webspaceKey, $languageCode, $segmentKey);
+            $parentDocument = $this->documentManager->find($parentUuid, $languageCode, ['load_ghost_content' => false]);
+            $parentPath = $this->rlpStrategy->loadByContent($this->getPublishedAncestorOrSelf($parentDocument));
             $result = $this->rlpStrategy->generate($title, $parentPath, $webspaceKey, $languageCode, $segmentKey);
         } elseif ($uuid !== null) {
             $result = $this->rlpStrategy->generateForUuid($title, $uuid, $webspaceKey, $languageCode, $segmentKey);
@@ -98,7 +100,6 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
         foreach ($urls as $url) {
             $defaultParameter = '&language=' . $languageCode . '&webspace=' . $webspaceKey;
             $deleteParameter = '?path=' . $url->getResourceLocator() . $defaultParameter;
-            $restoreParameter = '/restore?path=' . $url->getResourceLocator() . $defaultParameter;
 
             $result[] = [
                 'id' => $url->getId(),
@@ -106,7 +107,6 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
                 'created' => $url->getCreated(),
                 '_links' => [
                     'delete' => $this->getBasePath(null, 0) . $deleteParameter,
-                    'restore' => $this->getBasePath(null, 0) . $restoreParameter,
                 ],
             ];
         }
@@ -128,16 +128,6 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     public function delete($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
         $this->rlpStrategy->deleteByPath($path, $webspaceKey, $languageCode, $segmentKey);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function restore($path, $userId, $webspaceKey, $languageCode, $segmentKey = null)
-    {
-        $this->contentMapper->restoreHistoryPath($path, $userId, $webspaceKey, $languageCode, $segmentKey);
-
-        return ['resourceLocator' => $path, '_links' => []];
     }
 
     /**
@@ -169,10 +159,29 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
         $title = '';
         // concat rlp parts in sort of priority
         foreach ($structure->getPropertiesByTagName('sulu.rlp.part') as $property) {
-            $title = $parts[$property->getName()] . $separator . $title;
+            if (array_key_exists($property->getName(), $parts)) {
+                $title = $parts[$property->getName()] . $separator . $title;
+            }
         }
         $title = substr($title, 0, -1);
 
         return $title;
+    }
+
+    /**
+     * Returns the first ancestor-or-self of the given document which is published and therefore has an
+     * assigned resource locator. If all ancestor documents are unpublished, the root document is returned.
+     *
+     * @param object    $document
+     *
+     * @return object
+     */
+    private function getPublishedAncestorOrSelf($document)
+    {
+        while (!$document->getPublished() && $document instanceof ParentBehavior) {
+            $document = $document->getParent();
+        }
+
+        return $document;
     }
 }
