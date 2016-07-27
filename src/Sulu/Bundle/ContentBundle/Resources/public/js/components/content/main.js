@@ -66,7 +66,7 @@ define([
             return data.url === '/';
         },
 
-        setSaveToolbarItems = function(item, value) {
+        setToolbarItems = function(item, value) {
             this.sandbox.emit('sulu.header.toolbar.item.' + (!!value ? 'enable' : 'disable'), item, false);
         },
 
@@ -782,9 +782,12 @@ define([
                 savePublish = !saved,
                 publish = !!saved && !this.data.publishedState;
 
-            setSaveToolbarItems.call(this, 'saveDraft', saveDraft);
-            setSaveToolbarItems.call(this, 'savePublish', savePublish);
-            setSaveToolbarItems.call(this, 'publish', publish);
+            setToolbarItems.call(this, 'saveDraft', saveDraft);
+            setToolbarItems.call(this, 'savePublish', savePublish);
+            setToolbarItems.call(this, 'publish', publish);
+
+            setToolbarItems.call(this, 'unpublish', !!this.data.published);
+            setToolbarItems.call(this, '')
 
             if (!!saveDraft || !!savePublish || !!publish) {
                 this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
@@ -897,6 +900,7 @@ define([
                 if (SecurityChecker.hasPermission(this.data, 'delete') && !isHomeDocument(this.data)) {
                     editDropdown.delete = {
                         options: {
+                            disabled: !this.data.id,
                             callback: function() {
                                 this.sandbox.emit('sulu.content.content.delete', this.data.id);
                             }.bind(this)
@@ -908,6 +912,7 @@ define([
                     editDropdown.copyLocale = {
                         options: {
                             title: this.sandbox.translate('toolbar.copy-locale'),
+                            disabled: !this.data.id,
                             callback: function() {
                                 CopyLocale.startCopyLocalesOverlay.call(this).then(function(newLocales) {
                                     this.content.attributes.concreteLanguages = _.uniq(this.data.concreteLanguages.concat(newLocales));
@@ -923,6 +928,7 @@ define([
                     editDropdown.unpublish = {
                         options: {
                             title: this.sandbox.translate('sulu-document-manager.unpublish'),
+                            disabled: !this.data.published,
                             callback: function() {
                                 this.sandbox.emit('sulu.header.toolbar.item.loading', 'edit');
                                 ContentManager.unpublish(this.data.id, this.options.language)
