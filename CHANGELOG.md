@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * BUGFIX      #2661 [ContentBundle]       Fixed ck-editor internal link visualization
+    * FEATURE     #2681 [ContentBundle]       Fixed frontend resource locator generation for ghost pages
     * FEATURE     #2704 [All]                 Ignore irrelevant files on composer dist installs
     * FEATURE     #2716 [ContentBundle]       Added params to smart-content-item-controller
     * BUGFIX      #2695 [MediaBundle]         Removed Paginator from CollectionRepository (mysql 5.7)
