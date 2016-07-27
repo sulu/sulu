@@ -433,6 +433,10 @@ class CategoryManager implements CategoryManagerInterface
         $this->em->persist($categoryEntity);
         $this->em->flush();
 
+        // throw a category.create event
+        $event = new CategoryCreateEvent($categoryEntity);
+        $this->eventDispatcher->dispatch(CategoryEvents::CATEGORY_CREATE, $event);
+
         return $categoryEntity;
     }
 
@@ -471,6 +475,10 @@ class CategoryManager implements CategoryManagerInterface
         $categoryEntity = $categoryWrapper->getEntity();
         $this->em->persist($categoryEntity);
         $this->em->flush();
+
+        // throw a category.modify event
+        $event = new CategoryModifyEvent($categoryEntity);
+        $this->eventDispatcher->dispatch(CategoryEvents::CATEGORY_MODIFY, $event);
 
         return $categoryEntity;
     }

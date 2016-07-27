@@ -20,4 +20,20 @@ final class CategoryEvents
      * @var string
      */
     const CATEGORY_DELETE = 'sulu.category.delete';
+
+    /**
+     * The category.modify event is thrown after a category got modified.
+     * The event listener receives a CategoryModifyEvent instance.
+     *
+     * @var string
+     */
+    const CATEGORY_MODIFY = 'sulu.category.modify';
+
+    /**
+     * The category.create event is thrown after a category got created.
+     * The event listener receives a CategoryCreateEvent instance.
+     *
+     * @var string
+     */
+    const CATEGORY_CREATE = 'sulu.category.create';
 }
