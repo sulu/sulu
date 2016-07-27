@@ -78,6 +78,14 @@ class PageRouteDefaultsProvider implements RouteDefaultsProviderInterface
     /**
      * {@inheritdoc}
      */
+    public function isPublished($entityClass, $id, $locale)
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function supports($entityClass)
     {
         return HomeDocument::class === $entityClass || PageDocument::class === $entityClass;

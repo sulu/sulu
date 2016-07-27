@@ -11,45 +11,56 @@ CHANGELOG for Sulu
     * BUGFIX      #2632 [ContentBundle]       prevent item select when ordering a column (husky)
     * BUGFIX      #2663 [MediaBundle]         made masonry view work for media with no thumbnail
     * ENHANCEMENT #2665 [Webspace]            Introduced DelegatingFileLoader for webspace configurations
+    * FEATURE     #2669 [RouteBundle]         Added is-published method for route-defaults-provider
 
 * 1.3.0-RC1 (2016-07-22)
     * HOTFIX      #2632 [Content]             Fix usage of document inspector in StructureBridge
     * BUGFIX      #2655 [MediaBundle]         Fixed media selection for none images and selected media list
-    * BUGFIX      #2598 [MediaBundle]         fixed thumbnail rendering in media edit
-    * BUGFIX      #2634 [Rest]                hide exception details on rest-api error in prod environment
+    * BUGFIX      #2598 [MediaBundle]         Fixed thumbnail rendering in media edit
+    * BUGFIX      #2634 [Rest]                Hide exception details on rest-api error in prod environment
     * FEATURE     #2642 [AdminBundle]         Added different badges color support
     * BUGFIX      #2618 [Localization]        Removed the system localizations from LocalizationController
     * BUGFIX      #2640 [ContentBundle]       Fixed reordering for published workspace
-    * BUGFIX      #2611 [HttpCacheBundle]     fill host-placeholder before clearing cache
+    * BUGFIX      #2611 [HttpCacheBundle]     Fill host-placeholder before clearing cache
     * BUGFIX      #2625 [ContentBundle]       Removed force flag for webspace key parameter
     * ENHANCEMENT #2621 [ContentBundle]       Added migration for publishing
     * ENHANCEMENT #2623 [DocumentManager]     Add publishing toolbar buttons to extensions in document manager bundle
     * ENHANCEMENT #2614 [ContentBundle]       Removed unused code and tests
     * BUGFIX      #2603 [ContentBundle]       Fixed resource locator generation for pages with ghost-parent
+<<<<<<< 338dcf15ba150bfc1e147da8bc3715fd762944de
+=======
+    * BUGFIX      #2613 [ContactBundle]       Fixed categories save bug in contacts
+>>>>>>> added is-published method for route-defaults-provider
     * BUGFIX      #2539 [SecurityBundle]      Made TokenStorage dependency for SecuritySubscriber optional
-    * BUGFIX      #2609 [ContentBundle]       fixed excerpt extension save button activation
+    * BUGFIX      #2609 [ContentBundle]       Fixed excerpt extension save button activation
     * ENHANCEMENT #2616 [MediaBundle]         Avoid exception when media is serialized without all data loaded
     * BUGFIX      #2606 [PreviewBundle]       Added cache clear for preview kernel
     * ENHANCEMENT #2608 [TranslateBundle]     removed translation import command and refactored translate bundle
     * BUGFIX      #2590 [CoreBundle]          Clear symfony cache before system collection initialization
     * BUGFIX      #2596 [PreviewBundle]       Fixed preview for prod environment
     * FEATURE     #2515 [ContentBundle]       Added unpublishing functionality for pages
+<<<<<<< 338dcf15ba150bfc1e147da8bc3715fd762944de
     * ENHANCEMENT #2604 [ContentBundle]       fixed publishing on excerpt tab and add excerpt js extension
     * BUGFIX      #2586 [AdminBundle]         fixed behat tests
+=======
+    * ENHANCEMENT #2604 [ContentBundle]       Fixed publishing on excerpt tab and add excerpt js extension
+    * BUGFIX      #2586 [AdminBundle]         Fixed behat tests
+    * BUGFIX      #2588 [ContentBundle]       Made resource locator reload on every rlp.part change
+>>>>>>> added is-published method for route-defaults-provider
     * BUGFIX      #2581 [PreviewBundle]       Deactivated WebProfilerToolbar for preview
     * BUGIFX      #2579 [ContentBundle]       Removed smart-content component destroy callback conflict
     * FEATURE     #2572 [AdminBundle]         Included husky build with autocomplete form mapper validation type
-    * BUGFIX      #2564 [CustomUrlBundle]     made width of custom url inputs flexible
-    * BUGFIX      #2580 [AdminBundle]         made the navigation adapt on history back
-    * FEATURE     #2565 [AdminBundle]         reseted navigation width after collapse
+    * BUGFIX      #2564 [CustomUrlBundle]     Made width of custom url inputs flexible
+    * BUGFIX      #2580 [AdminBundle]         Made the navigation adapt on history back
+    * FEATURE     #2565 [AdminBundle]         Reseted navigation width after collapse
     * FEATURE     #2557 [SecurityBundle]      Set user last login by a listener
     * ENHANCEMENT #2544 [PreviewBundle]       Bugfix for preview in firefox
-    * BUGFIX      #2551 [SecurityBundle]      added search fields and search instancename for roles list search
-    * BUGFIX      #2556 [ContentBundle]       removed the change content-change event from the texteditor's focusout
-    * BUGFIX      #2558 [CollaborationBundle] made own username show up as collaborator in warning
-    * BUGFIX      #2554 [ContentBundle]       made changing to copied locales possible
+    * BUGFIX      #2551 [SecurityBundle]      Added search fields and search instancename for roles list search
+    * BUGFIX      #2556 [ContentBundle]       Removed the change content-change event from the texteditor's focusout
+    * BUGFIX      #2558 [CollaborationBundle] Made own username show up as collaborator in warning
+    * BUGFIX      #2554 [ContentBundle]       Made changing to copied locales possible
     * ENHANCEMENT #2540 [AdminBundle]         Removed deprecation notices
-    * BUGFIX      #2536 [AdminBundle]         changed icon markup in search component (husky)
+    * BUGFIX      #2536 [AdminBundle]         Changed icon markup in search component (husky)
     * BUGFIX      #2538 [ContentBundle]       Display url in single-internal-link instead of path
     * BUGFIX      #2534 [ContactBundle]       Fixed static usage of media repository
     * FEATURE     #2532 [RouteBundle]         Allow route generation for entity routes
