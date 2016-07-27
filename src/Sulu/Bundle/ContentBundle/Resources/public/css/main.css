@@ -41,46 +41,40 @@
   border-radius: 2px;
 }
 
-/* line 42, ../scss/modules/general.scss */
-.internal-links-overlay .overlay-content,
-.single-internal-overlay .overlay-content,
+/* line 40, ../scss/modules/general.scss */
 .node .overlay-content {
   margin: 0px;
 }
-/* line 46, ../scss/modules/general.scss */
-.internal-links-overlay .overlay-header,
-.single-internal-overlay .overlay-header,
+/* line 44, ../scss/modules/general.scss */
 .node .overlay-header {
   margin-bottom: 0px !important;
 }
-/* line 50, ../scss/modules/general.scss */
-.internal-links-overlay .overlay-footer,
-.single-internal-overlay .overlay-footer,
+/* line 48, ../scss/modules/general.scss */
 .node .overlay-footer {
   margin-top: -1px !important;
 }
 
 /* smart content for column view */
-/* line 56, ../scss/modules/general.scss */
+/* line 54, ../scss/modules/general.scss */
 .column-navigation-wrapper {
   overflow: inherit;
 }
 
 /* block add-button */
-/* line 62, ../scss/modules/general.scss */
+/* line 60, ../scss/modules/general.scss */
 .text-block-footer.full .action .dropdown-label {
   background-color: #ccc;
   cursor: default;
 }
 
 /** multiple property */
-/* line 70, ../scss/modules/general.scss */
+/* line 68, ../scss/modules/general.scss */
 #sulu-content-container .multiple-property .move::before {
   left: -18px;
   top: 2px;
 }
 
-/* line 76, ../scss/modules/general.scss */
+/* line 74, ../scss/modules/general.scss */
 #changelog-container {
   color: #999;
 }

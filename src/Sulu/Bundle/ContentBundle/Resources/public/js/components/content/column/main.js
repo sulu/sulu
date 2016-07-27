@@ -319,30 +319,6 @@ define([
         },
 
         /**
-         * starts overlay and column-navigation and registers important event handler
-         * @param {Object} item item selected in column-navigation
-         * @param {Function} editCallback called for clicking a node in tree
-         * @param {String} title translation key part ('content.contents.settings.<<title>>.title')
-         */
-        moveOrCopySelected: function(item, editCallback, title) {
-            // wait for overlay initialized to initialize overlay
-            this.sandbox.once('husky.overlay.node.initialized', function() {
-                this.startOverlayColumnNavigation(item.id);
-                this.startOverlayLoader();
-            }.bind(this));
-
-            // wait for click on column navigation to send request
-            this.sandbox.once('husky.column-navigation.overlay.action', editCallback);
-
-            // wait for closing overlay to unbind events
-            this.sandbox.once('husky.overlay.node.closed', function() {
-                this.sandbox.off('husky.column-navigation.overlay.action', editCallback);
-            }.bind(this));
-
-            this.startOverlay('content.contents.settings.' + title + '.title', templates.columnNavigation(), false);
-        },
-
-        /**
          * delete item in content tree
          * @param {Object} item item selected in column-navigation
          */
@@ -355,61 +331,44 @@ define([
         },
 
         /**
-         * render a table with given items in given container
-         * @param {String|Object} domId
-         * @param {Array} items
-         * @param {String} exclude
+         * register callback event handler and start overlay with column-navigation
+         * @param {Object} item item selected in column-navigation
+         * @param {Function} editCallback called for clicking a node in tree
+         * @param {String} title translation key part ('content.contents.settings.<<title>>.title')
          */
-        renderOverlayTable: function(domId, items, exclude) {
-            var $container = this.sandbox.dom.find(domId),
-                html = ['<ul class="order-table">'], template, id, item;
+        moveOrCopySelected: function(item, editCallback, title) {
+            // wait for click on column navigation to send request
+            this.sandbox.once('husky.column-navigation.overlay.action', editCallback);
 
-            for (id in items) {
-                if (items.hasOwnProperty(id) && id !== exclude) {
-                    item = items[id];
-                    html.push(
-                        '<li data-id="' + item.id + '" data-path="' + item.path + '">' +
-                        '   <span class="node-name">' + this.sandbox.util.cropMiddle(item.title, 35) + '</span>' +
-                        '   <span class="options-select"><i class="fa fa-arrow-up pointer"></i></span>' +
-                        '</li>'
-                    );
-                }
-            }
-            html.push('</ul>');
-            template = html.join('');
+            // wait for closing overlay to unbind events
+            this.sandbox.once('husky.overlay.node.closed', function() {
+                this.sandbox.off('husky.column-navigation.overlay.action', editCallback);
+            }.bind(this));
 
-            this.sandbox.dom.append($container, template);
+            this.startColumnNavigationOverlay(
+                'content.contents.settings.' + title + '.title',
+                templates.columnNavigation(),
+                item
+            );
         },
 
         /**
-         * start a new overlay
+         * start a new column navigation overlay
          * @param {String} titleKey translation key
          * @param {String} template template for the content
-         * @param {Boolean} okButton
-         * @param {undefined|String} instanceName
-         * @param {undefined|function} okCallback
+         * @param {Object} item item selected in main column-navigation
          */
-        startOverlay: function(titleKey, template, okButton, instanceName, okCallback) {
-            if (!instanceName) {
-                instanceName = 'node';
-            }
+        startColumnNavigationOverlay: function(titleKey, template, item) {
+            // wait for overlay initialized to initialize column navigation
+            this.sandbox.once('husky.overlay.node.initialized', function() {
+                this.startOverlayColumnNavigation(item.id);
+                this.startOverlayLoader();
+            }.bind(this));
 
+            // prepare and start overlay
             var $element = this.sandbox.dom.createElement('<div class="overlay-container"/>'),
-                buttons = [
-                    {
-                        type: 'cancel',
-                        align: 'right'
-                    }
-                ];
+                buttons = [{type: 'cancel', align: 'right'}];
             this.sandbox.dom.append(this.$el, $element);
-
-            if (!!okButton) {
-                buttons.push({
-                    type: 'ok',
-                    align: 'left',
-                    text: this.sandbox.translate('content.contents.settings.' + instanceName + '.ok')
-                });
-            }
 
             this.sandbox.start([
                 {
@@ -417,17 +376,16 @@ define([
                     options: {
                         openOnStart: true,
                         removeOnClose: true,
-                        cssClass: 'node',
                         el: $element,
                         container: this.$el,
-                        instanceName: instanceName,
-                        skin: 'wide',
+                        instanceName: 'node',
+                        skin: 'responsive-width',
+                        contentSpacing: false,
                         slides: [
                             {
                                 title: this.sandbox.translate(titleKey),
                                 data: template,
                                 buttons: buttons,
-                                okCallback: okCallback
                             }
                         ]
                     }
@@ -650,33 +608,5 @@ define([
                 this.startColumnNavigation();
             }.bind(this));
         },
-
-        openGhost: function(item) {
-            this.startOverlay(
-                'content.contents.settings.copy-locale.title',
-                templates.openGhost.call(this), true, 'copy-locale-overlay',
-                function() {
-                    var copy = this.sandbox.dom.prop('#copy-locale-copy', 'checked'),
-                        src = this.sandbox.dom.data('#copy-locale-overlay-select', 'selectionValues'),
-                        dest = this.options.language;
-
-                    if (!!copy) {
-                        if (!src || src.length === 0) {
-                            return false;
-                        }
-
-                        this.sandbox.emit('sulu.content.contents.copy-locale', item.id, src[0], [dest], function() {
-                            this.sandbox.emit('sulu.content.contents.load', item);
-                        }.bind(this));
-                    } else {
-                        this.sandbox.emit('sulu.content.contents.load', item);
-                    }
-                }.bind(this)
-            );
-
-            this.sandbox.once('husky.select.copy-locale-to.selected.item', function() {
-                this.sandbox.dom.prop('#copy-locale-copy', 'checked', true);
-            }.bind(this));
-        }
     };
 });

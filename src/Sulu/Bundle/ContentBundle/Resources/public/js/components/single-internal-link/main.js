@@ -175,7 +175,8 @@ define([], function() {
                         container: this.$el,
                         removeOnClose: false,
                         instanceName: 'single-internal-link.' + this.options.instanceName,
-                        skin: 'wide',
+                        skin: 'responsive-width',
+                        contentSpacing: false,
                         slides: [
                             {
                                 title: this.sandbox.translate(this.options.translations.overlayTitle),
