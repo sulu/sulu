@@ -17,6 +17,7 @@ use Sulu\Component\Content\Compat\Block\BlockPropertyWrapper;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Exception\UnexpectedPropertyType;
@@ -24,7 +25,7 @@ use Sulu\Component\Content\Exception\UnexpectedPropertyType;
 /**
  * content type for block.
  */
-class BlockContentType extends ComplexContentType
+class BlockContentType extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
      * @var ContentTypeManagerInterface
@@ -157,7 +158,8 @@ class BlockContentType extends ComplexContentType
         $userId,
         $webspaceKey,
         $languageCode,
-        $segmentKey
+        $segmentKey,
+        $isImport = false
     ) {
         if ($property->getIsBlock()) {
             /** @var BlockPropertyInterface $blockProperty */
@@ -217,7 +219,8 @@ class BlockContentType extends ComplexContentType
                         $userId,
                         $webspaceKey,
                         $languageCode,
-                        $segmentKey
+                        $segmentKey,
+                        $isImport
                     );
                 }
             }
@@ -237,7 +240,8 @@ class BlockContentType extends ComplexContentType
         $userId,
         $webspaceKey,
         $languageCode,
-        $segmentKey
+        $segmentKey,
+        $isImport = false
     ) {
         // save sub property
         $contentType = $this->contentTypeManager->get($property->getContentTypeName());
@@ -251,14 +255,26 @@ class BlockContentType extends ComplexContentType
             $languageCode,
             $segmentKey
         );
-        $contentType->write(
-            $node,
-            $blockPropertyWrapper,
-            $userId,
-            $webspaceKey,
-            $languageCode,
-            $segmentKey
-        );
+
+        if ($isImport && $contentType instanceof ContentTypeExportInterface) {
+            $contentType->importData(
+                $node,
+                $blockPropertyWrapper,
+                $userId,
+                $webspaceKey,
+                $languageCode,
+                $segmentKey
+            );
+        } else {
+            $contentType->write(
+                $node,
+                $blockPropertyWrapper,
+                $userId,
+                $webspaceKey,
+                $languageCode,
+                $segmentKey
+            );
+        }
     }
 
     /**
@@ -349,5 +365,27 @@ class BlockContentType extends ComplexContentType
         }
 
         return $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exportData($propertyValue)
+    {
+        return $propertyValue;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importData(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey, true);
     }
 }

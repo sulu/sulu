@@ -15,12 +15,13 @@ use PHPCR\NodeInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 
 /**
  * Content Type for the TagList, uses the TagManager-Service and the AutoCompleteList from Husky.
  */
-class TagList extends ComplexContentType
+class TagList extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
      * Responsible for saving the tags in the database.
@@ -101,5 +102,48 @@ class TagList extends ComplexContentType
     public function getTemplate()
     {
         return $this->template;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exportData($propertyValue)
+    {
+        if (is_array($propertyValue)) {
+            foreach ($propertyValue as &$propertyValueItem) {
+                if (is_string($propertyValueItem)) {
+                    $tag = $this->tagManager->findByName($propertyValueItem);
+                    if ($tag) {
+                        $propertyValueItem = $tag->getId();
+                    }
+                }
+            }
+
+            if (!empty($propertyValue)) {
+                return json_encode($propertyValue);
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importData(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $tagNames = [];
+        $tagIds = json_decode($property->getValue());
+        if (!empty($tagIds)) {
+            $tagNames = $this->tagManager->resolveTagIds($tagIds);
+        }
+        $property->setValue($tagNames);
+        $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 }

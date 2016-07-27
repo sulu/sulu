@@ -53,8 +53,11 @@ class LegacyPropertyFactory
      */
     public function createTranslatedProperty($property, $locale, StructureInterface $structure = null)
     {
+        if ($property instanceof ItemMetadata) {
+            $property = $this->createProperty($property, $structure);
+        }
         $property = new TranslatedProperty(
-            $this->createProperty($property, $structure),
+            $property,
             $locale,
             $this->namespaceRegistry->getPrefix('content_localized')
         );

@@ -73,4 +73,19 @@ class Checkbox extends SimpleContentType
             'type' => 'checkbox',
         ];
     }
+
+    public function importData(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        if ($property->getValue() === '0') {
+            $property->setValue(false);
+        }
+
+        parent::importData($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
+    }
 }

@@ -18,6 +18,7 @@ use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Util\ArrayableInterface;
@@ -25,7 +26,7 @@ use Sulu\Component\Util\ArrayableInterface;
 /**
  * content type for internal links selection.
  */
-class InternalLinks extends ComplexContentType
+class InternalLinks extends ComplexContentType implements ContentTypeExportInterface
 {
     /**
      * @var ContentQueryExecutorInterface
@@ -177,5 +178,32 @@ class InternalLinks extends ComplexContentType
         );
 
         return $container->getData();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exportData($propertyValue)
+    {
+        if (is_array($propertyValue) && !empty($propertyValue)) {
+            return json_encode($propertyValue);
+        }
+
+        return '';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importData(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $property->setValue(json_decode($property->getValue()));
+        $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 }

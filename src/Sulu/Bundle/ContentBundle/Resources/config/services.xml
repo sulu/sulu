@@ -89,6 +89,8 @@
         <service id="sulu_content.extension.excerpt" class="%sulu_content.extension.excerpt.class%">
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu.content.type_manager"/>
+            <argument type="service" id="sulu_content.export.manager" />
+            <argument type="service" id="sulu_content.import.manager" />
             <argument type="service" id="massive_search.factory" />
 
             <tag name="sulu.structure.extension"/>

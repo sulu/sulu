@@ -23,6 +23,7 @@
             <argument>%sulu_snippet.content-type.template%</argument>
 
             <tag name="sulu.content.type" alias="snippet"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
     </services>
 </container>

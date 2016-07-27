@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\ContentBundle;
 
+use Sulu\Bundle\ContentBundle\DependencyInjection\Compiler\ContentExportCompilerPass;
+use Sulu\Bundle\ContentBundle\DependencyInjection\Compiler\ContentImportCompilerPass;
 use Sulu\Bundle\ContentBundle\DependencyInjection\Compiler\SecurityPass;
 use Sulu\Bundle\ContentBundle\DependencyInjection\Compiler\SmartContentDataProviderCompilerPass;
 use Sulu\Bundle\ContentBundle\DependencyInjection\Compiler\StructureExtensionCompilerPass;
@@ -24,6 +26,8 @@ class SuluContentBundle extends Bundle
     {
         parent::build($container);
 
+        $container->addCompilerPass(new ContentExportCompilerPass());
+        $container->addCompilerPass(new ContentImportCompilerPass());
         $container->addCompilerPass(new SecurityPass());
         $container->addCompilerPass(new SmartContentDataProviderCompilerPass());
         $container->addCompilerPass(new WebspacesPass());
