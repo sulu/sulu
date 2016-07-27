@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Webspace\Exception;
 
+use Sulu\Component\Webspace\Portal;
+
 /**
  * General class for all webspace exceptions.
  */

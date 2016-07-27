@@ -2,6 +2,22 @@
 
 ## dev-develop
 
+### SearchController
+
+The `SearchController` has been moved from sulu-standard to sulu. Therefore the
+new template type `search` has been introduced. Just define the twig template
+you want to use for the search in your webspace configuration:
+
+```xml
+<templates>
+    <template type="search">ClientWebsiteBundle:views:query.html.twig</template>
+</templates>
+```
+
+The name of the route also changed from `website_search` to
+`sulu_search.website_search`, because the controller is located in the
+SuluSearchBundle now.
+
 ### Webspace Configuration
 
 The configuration schema for webspaces has changed. Instead of
