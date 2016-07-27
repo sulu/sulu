@@ -83,7 +83,6 @@ define([
                 save: 'sulu-media.selection.overlay.save',
                 remove: 'public.remove',
                 uploadInfo: 'media-selection.list-toolbar.upload-info',
-                selectedTitle: 'sulu-media.selection.overlay.selected-title',
                 allMedias: 'media-selection.overlay.all-medias',
                 noData: 'navigation.media.collections.empty',
                 navigationTitle: 'navigation.media.collections',
@@ -193,17 +192,11 @@ define([
             }.bind(this));
 
             this.sandbox.on('husky.datagrid.' + this.options.instanceName + '.item.select', function(id, item) {
-                if (!this.addItem(item)) {
-                    return;
-                }
-
-                this.sandbox.emit('husky.datagrid.' + this.options.instanceName + '-selected.record.add', item);
+                this.addItem(item);
             }.bind(this));
 
             this.sandbox.on('husky.datagrid.' + this.options.instanceName + '.item.deselect', function(id) {
                 this.removeItem(id);
-
-                this.sandbox.emit('husky.datagrid.' + this.options.instanceName + '-selected.record.remove', id);
             }.bind(this));
 
             this.sandbox.on('husky.datagrid.' + this.options.instanceName + '.loaded', function(data) {
@@ -235,10 +228,6 @@ define([
             });
 
             this.sandbox.emit('husky.datagrid.' + this.options.instanceName + '.selected.update', ids);
-            this.sandbox.emit('husky.datagrid.' + this.options.instanceName + '-selected.url.update', {
-                ids: ids.join(','),
-                limit: ids.length
-            });
         },
 
         addItem: function(item) {
@@ -272,13 +261,9 @@ define([
 
                 this.sandbox.emit('husky.toolbar.' + this.options.instanceName + '.item.show', 'add');
                 this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.enable');
-
-                this.hideSelected();
             } else {
                 this.sandbox.emit('husky.toolbar.' + this.options.instanceName + '.item.hide', 'add');
                 this.sandbox.emit('husky.dropzone.' + this.options.instanceName + '.disable');
-
-                this.showSelected();
             }
 
             this.sandbox.emit('husky.datagrid.' + this.options.instanceName + '.url.update', {
@@ -288,18 +273,6 @@ define([
 
             this.changeUploadCollection(id);
             this.$el.find('.list-title').text(title);
-        },
-
-        hideSelected: function() {
-            this.$el.find('.selected-container').hide();
-
-            this.sandbox.emit('husky.datagrid.' + this.options.instanceName + '-selected.masonry.refresh');
-        },
-
-        showSelected: function() {
-            this.$el.find('.selected-container').show();
-
-            this.sandbox.emit('husky.datagrid.' + this.options.instanceName + '-selected.masonry.refresh');
         },
 
         changeUploadCollection: function(id) {
@@ -366,9 +339,9 @@ define([
                         slides: [
                             {
                                 title: this.translations.title,
-                                data: this.templates.skeleton(
-                                    {title: this.translations.allMedias, selectedTitle: this.translations.selectedTitle}
-                                ),
+                                data: this.templates.skeleton({
+                                    title: this.translations.allMedias
+                                }),
                                 buttons: buttons,
                                 okCallback: function() {
                                     this.save();
@@ -427,51 +400,6 @@ define([
                     }
                 ]
             );
-
-            if (!!this.items.length || !this.options.singleSelect) {
-
-                var ids = _.map(this.items, function(item) {
-                    return item.id;
-                });
-
-                this.sandbox.start([
-                    {
-                        name: 'datagrid@husky',
-                        options: {
-                            el: this.$el.find('.selected-datagrid-container'),
-                            url: [
-                                '/admin/api/media?locale=', this.options.locale,
-                                '&fields=id,thumbnails,title,size',
-                                '&orderBy=media.created&orderSort=desc&ids=',
-                                ids.join(','),
-                                '&limit=', ids.length
-                            ].join(''),
-                            matchings: fields,
-                            view: 'datagrid/decorators/masonry-view',
-                            resultKey: 'media',
-                            instanceName: this.options.instanceName + '-selected',
-                            viewSpacingBottom: 180,
-                            selectedCounter: false,
-                            pagination: false,
-                            viewOptions: {
-                                'datagrid/decorators/masonry-view': {
-                                    selectable: false,
-                                    locale: this.options.locale
-                                }
-                            }
-                        }
-                    }
-                ]);
-
-                this.sandbox.once('husky.datagrid.' + this.options.instanceName + '-selected.loaded', function(data) {
-                    if (this.options.singleSelect && data.total === 0) {
-                        // the selected value is not valid - selected datagrid should never be displayed
-                        return this.$el.find('.selected-container').remove();
-                    }
-
-                    this.showSelected();
-                }.bind(this));
-            }
 
             this.sandbox.sulu.initListToolbarAndList.call(
                 this,
@@ -541,6 +469,8 @@ define([
                         },
                         'datagrid/decorators/masonry-view': {
                             selectable: !this.options.singleSelect,
+                            selectOnAction: !this.options.singleSelect,
+                            unselectOnBackgroundClick: false,
                             locale: this.options.locale,
                             badges: [
                                 {
