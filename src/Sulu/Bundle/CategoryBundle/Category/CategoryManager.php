@@ -18,6 +18,8 @@ use Sulu\Bundle\CategoryBundle\Category\Exception\KeyNotUniqueException;
 use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\CategoryBundle\Event\CategoryDeleteEvent;
+use Sulu\Bundle\CategoryBundle\Event\CategoryCreateEvent;
+use Sulu\Bundle\CategoryBundle\Event\CategoryModifyEvent;
 use Sulu\Bundle\CategoryBundle\Event\CategoryEvents;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCaseFieldDescriptor;
