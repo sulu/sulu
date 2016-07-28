@@ -383,7 +383,6 @@ class WebspaceTest extends SuluTestCase
                     'redirectExternal' => $this->createItemArray('redirectExternal', '', false, ''),
                     'redirectTarget' => $this->createItemArray('redirectTarget', '', false, ''),
                     'redirectType' => $this->createItemArray('redirectType', '', false, 1),
-                    'parent' => $this->createItemArray('parent', '', false, $documents[$key]->getParent()->getUuid()),
                     'workflowStage' => $this->createItemArray('workflowStage', '', false, WorkflowStage::PUBLISHED),
                     'navigationContexts' => $this->createItemArray('navigationContexts', '', false, '[]'),
                     'permissions' => $this->createItemArray('permissions', '', false, '[]'),
