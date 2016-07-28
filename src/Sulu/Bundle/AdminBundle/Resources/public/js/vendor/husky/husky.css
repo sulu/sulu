@@ -10726,8 +10726,78 @@ a.btn-black, a.btn-highlight {
   cursor: pointer;
   font-size: 15px;
 }
+/* line 42, ../scss/modules/label.scss */
+.husky-label-error .buttons,
+.husky-label-warning .buttons,
+.husky-label-success .buttons {
+  position: absolute;
+  right: 53px;
+  top: 50%;
+  -moz-transform: translate(0, -50%);
+  -ms-transform: translate(0, -50%);
+  -webkit-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+  height: 20px;
+}
+/* line 49, ../scss/modules/label.scss */
+.husky-label-error .button,
+.husky-label-warning .button,
+.husky-label-success .button {
+  display: inline-block;
+  position: relative;
+  padding: 0 20px;
+  margin-left: 10px;
+  line-height: 20px;
+  text-align: center;
+  cursor: pointer;
+  background: #fff;
+  border-radius: 3px;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+}
+/* line 61, ../scss/modules/label.scss */
+.husky-label-error .button > div,
+.husky-label-warning .button > div,
+.husky-label-success .button > div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+/* line 68, ../scss/modules/label.scss */
+.husky-label-error .button.critical,
+.husky-label-warning .button.critical,
+.husky-label-success .button.critical {
+  background: #EA524E;
+  color: #fff;
+}
+/* line 73, ../scss/modules/label.scss */
+.husky-label-error.is-loading .buttons,
+.husky-label-warning.is-loading .buttons,
+.husky-label-success.is-loading .buttons {
+  display: none;
+}
+/* line 77, ../scss/modules/label.scss */
+.husky-label-error .loader,
+.husky-label-warning .loader,
+.husky-label-success .loader {
+  display: inline-block;
+  position: absolute;
+  right: 72px;
+  top: 50%;
+  -moz-transform: translate(0, -50%);
+  -ms-transform: translate(0, -50%);
+  -webkit-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+}
 
-/* line 48, ../scss/modules/label.scss */
+/* line 90, ../scss/modules/label.scss */
 .husky-label-error .counter,
 .husky-label-warning .counter,
 .husky-label-success .counter,
@@ -10739,7 +10809,7 @@ a.btn-black, a.btn-highlight {
   height: 100%;
   line-height: 70px;
 }
-/* line 49, ../scss/modules/label.scss */
+/* line 91, ../scss/modules/label.scss */
 .husky-label-error .counter span,
 .husky-label-warning .counter span,
 .husky-label-success .counter span,
@@ -10756,7 +10826,7 @@ a.btn-black, a.btn-highlight {
   font-weight: bold;
 }
 
-/* line 71, ../scss/modules/label.scss */
+/* line 113, ../scss/modules/label.scss */
 .husky-label-success-icon {
   height: 100px;
   background: #5DC774;
@@ -10764,7 +10834,7 @@ a.btn-black, a.btn-highlight {
   padding: 0 10px;
   position: relative;
 }
-/* line 77, ../scss/modules/label.scss */
+/* line 119, ../scss/modules/label.scss */
 .husky-label-success-icon::before {
   content: "";
   display: inline-block;
@@ -10781,7 +10851,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transition: margin-top 500ms;
   transition: margin-top 500ms;
 }
-/* line 90, ../scss/modules/label.scss */
+/* line 132, ../scss/modules/label.scss */
 .husky-label-success-icon .text {
   color: #fff;
   font-size: 10px;
@@ -10794,7 +10864,7 @@ a.btn-black, a.btn-highlight {
   -webkit-transition: opacity 500ms;
   transition: opacity 500ms;
 }
-/* line 99, ../scss/modules/label.scss */
+/* line 141, ../scss/modules/label.scss */
 .husky-label-success-icon .counter {
   right: auto;
   left: 0;
@@ -10803,30 +10873,30 @@ a.btn-black, a.btn-highlight {
   padding: 5px;
 }
 
-/* line 108, ../scss/modules/label.scss */
+/* line 150, ../scss/modules/label.scss */
 .husky-label-error {
   background: #EA524E;
 }
-/* line 110, ../scss/modules/label.scss */
+/* line 152, ../scss/modules/label.scss */
 .husky-label-error .counter {
   color: #EA524E;
 }
 
-/* line 115, ../scss/modules/label.scss */
+/* line 157, ../scss/modules/label.scss */
 .husky-label-warning {
   background: #F2D212;
   color: #000;
 }
-/* line 118, ../scss/modules/label.scss */
+/* line 160, ../scss/modules/label.scss */
 .husky-label-warning .counter {
   color: #F2D212;
 }
 
-/* line 123, ../scss/modules/label.scss */
+/* line 165, ../scss/modules/label.scss */
 .husky-label-success {
   background: #5DC774;
 }
-/* line 125, ../scss/modules/label.scss */
+/* line 167, ../scss/modules/label.scss */
 .husky-label-success .counter {
   color: #5DC774;
 }

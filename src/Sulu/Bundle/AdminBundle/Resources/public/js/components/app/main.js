@@ -297,7 +297,7 @@ define(function() {
             }.bind(this));
 
             this.sandbox.on('husky.navigation.header.clicked', function() {
-                this.navigate('', true, false, false);
+                this.navigate('', true, false);
             }.bind(this));
 
             this.sandbox.on('husky.data-navigation.selected', function(item) {

@@ -12,14 +12,15 @@
 namespace Sulu\Bundle\ContentBundle\Document\Subscriber;
 
 use PHPCR\NodeInterface;
+use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\CopyEvent;
 use Sulu\Component\DocumentManager\Event\MoveEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
+use Sulu\Component\DocumentManager\Event\RemoveDraftEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Event\ReorderEvent;
 use Sulu\Component\DocumentManager\Event\UnpublishEvent;
@@ -32,11 +33,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class PublishSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
     /**
      * @var SessionInterface
      */
@@ -53,12 +49,10 @@ class PublishSubscriber implements EventSubscriberInterface
     private $propertyEncoder;
 
     public function __construct(
-        DocumentManagerInterface $documentManager,
         SessionInterface $liveSession,
         NodeHelperInterface $nodeHelper,
         PropertyEncoder $propertyEncoder
     ) {
-        $this->documentManager = $documentManager;
         $this->liveSession = $liveSession;
         $this->nodeHelper = $nodeHelper;
         $this->propertyEncoder = $propertyEncoder;
@@ -80,6 +74,7 @@ class PublishSubscriber implements EventSubscriberInterface
                 ['setNodeFromPublicWorkspaceForUnpublishing', 512],
                 ['removePropertiesFromPublicWorkspace', 0],
             ],
+            Events::REMOVE_DRAFT => 'copyPropertiesFromPublicWorkspace',
             Events::FLUSH => 'flushPublicWorkspace',
         ];
     }
@@ -190,14 +185,33 @@ class PublishSubscriber implements EventSubscriberInterface
         $node = $event->getNode();
         $locale = $event->getLocale();
 
-        // remove all localized system properties from the node
-        foreach ($node->getProperties($this->propertyEncoder->localizedSystemName('', $locale) . '*') as $property) {
-            $property->remove();
+        $this->removeLocalizedNodeProperties($node, $locale);
+    }
+
+    public function copyPropertiesFromPublicWorkspace(RemoveDraftEvent $event)
+    {
+        $node = $event->getNode();
+        $locale = $event->getLocale();
+
+        $this->removeLocalizedNodeProperties($node, $locale);
+
+        $liveNode = $this->getLiveNode($event->getDocument());
+
+        // Copy all localized system and content properties from the live node
+        foreach ($liveNode->getProperties($this->propertyEncoder->localizedSystemName('', $locale) . '*') as $property) {
+            /** @var PropertyInterface $property */
+            $node->setProperty($property->getName(), $property->getValue());
         }
 
-        // remove all localized content properties from the node
-        foreach ($node->getProperties($this->propertyEncoder->localizedContentName('', $locale) . '*') as $property) {
-            $property->remove();
+        foreach ($liveNode->getProperties($this->propertyEncoder->localizedContentName('', $locale) . '*') as $property) {
+            /** @var PropertyInterface $property */
+            if ($node->hasProperty($property->getName())) {
+                // skip the properties that have already been written by the previous loop
+                // the properties haven't changed in the mean time, and writing them again would be unnecessary
+                continue;
+            }
+
+            $node->setProperty($property->getName(), $property->getValue());
         }
     }
 
@@ -260,5 +274,24 @@ class PublishSubscriber implements EventSubscriberInterface
     private function setNodeFromPublicWorkspace($event)
     {
         $event->setNode($this->getLiveNode($event->getDocument()));
+    }
+
+    /**
+     * Removes all localized properties in the given locale from the given node.
+     *
+     * @param NodeInterface $node
+     * @param string $locale
+     */
+    private function removeLocalizedNodeProperties(NodeInterface $node, $locale)
+    {
+        // remove all localized system properties from the node
+        foreach ($node->getProperties($this->propertyEncoder->localizedSystemName('', $locale) . '*') as $property) {
+            $property->remove();
+        }
+
+        // remove all localized content properties from the node
+        foreach ($node->getProperties($this->propertyEncoder->localizedContentName('', $locale) . '*') as $property) {
+            $property->remove();
+        }
     }
 }

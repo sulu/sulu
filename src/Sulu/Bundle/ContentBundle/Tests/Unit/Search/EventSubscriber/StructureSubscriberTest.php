@@ -14,8 +14,11 @@ namespace Sulu\Bundle\ContentBundle\Search\EventSubscriber;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
+use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
+use Sulu\Component\DocumentManager\Event\RemoveDraftEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 
@@ -107,6 +110,20 @@ class StructureSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->searchManager->index($document)->shouldNotBeCalled();
 
         $this->subscriber->indexPublishedDocument($publishEvent->reveal());
+    }
+
+    public function testIndexDocumentAfterRemoveDraft()
+    {
+        $removeDraftEvent = $this->prophesize(RemoveDraftEvent::class);
+        $document = $this->prophesize(StructureBehavior::class);
+        $document->willImplement(WorkflowStageBehavior::class);
+        $removeDraftEvent->getDocument()->willReturn($document);
+
+        $document->setWorkflowStage(WorkflowStage::TEST)->shouldBeCalled();
+        $this->searchManager->index($document)->shouldBeCalled();
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED)->shouldBeCalled();
+
+        $this->subscriber->indexDocumentAfterRemoveDraft($removeDraftEvent->reveal());
     }
 
     public function testDeindexRemovedDocument()

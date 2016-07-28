@@ -14,8 +14,11 @@ namespace Sulu\Bundle\ContentBundle\Search\EventSubscriber;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
+use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
+use Sulu\Component\DocumentManager\Event\RemoveDraftEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 use Sulu\Component\DocumentManager\Events;
@@ -46,6 +49,7 @@ class StructureSubscriber implements EventSubscriberInterface
             Events::PUBLISH => ['indexPublishedDocument', -256],
             Events::REMOVE => ['deindexRemovedDocument', 600],
             Events::UNPUBLISH => ['deindexUnpublishedDocument', -1024],
+            Events::REMOVE_DRAFT => ['indexDocumentAfterRemoveDraft', -1024],
         ];
     }
 
@@ -67,6 +71,29 @@ class StructureSubscriber implements EventSubscriberInterface
     public function indexPublishedDocument(PublishEvent $event)
     {
         $this->indexDocument($event->getDocument());
+    }
+
+    /**
+     * Indexes a document after its draft have been removed.
+     *
+     * @param RemoveDraftEvent $event
+     */
+    public function indexDocumentAfterRemoveDraft(RemoveDraftEvent $event)
+    {
+        $document = $event->getDocument();
+
+        if ($document instanceof WorkflowStageBehavior) {
+            // Set the workflowstage to test for indexing, because the wrong index will be updated otherwise
+            $document->setWorkflowStage(WorkflowStage::TEST);
+        }
+
+        $this->indexDocument($document);
+
+        if ($document instanceof WorkflowStageBehavior) {
+            // Reset the workflowstage to published, because after removing a draft the document will always be in
+            // the published state
+            $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        }
     }
 
     /**

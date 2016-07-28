@@ -44,7 +44,10 @@ define([
             draftLabel: 'sulu-document-manager.draft-label',
             unpublishConfirmTextNoDraft: 'sulu-content.unpublish-confirm-text-no-draft',
             unpublishConfirmTextWithDraft: 'sulu-content.unpublish-confirm-text-with-draft',
-            unpublishConfirmTitle: 'sulu-content.unpublish-confirm-title'
+            unpublishConfirmTitle: 'sulu-content.unpublish-confirm-title',
+            removeDraft: 'sulu-content.delete-draft',
+            deleteDraftConfirmTitle: 'sulu-content.delete-draft-confirm-title',
+            deleteDraftConfirmText: 'sulu-content.delete-draft-confirm-text'
         },
 
         templates = {
@@ -1067,9 +1070,50 @@ define([
                             changed: this.sandbox.date.format(this.data.changed, true),
                             user: response.username
                         }
-                    )
+                    ),
+                    [
+                        {
+                            id: 'delete-draft',
+                            title: this.sandbox.translate(translationKeys.removeDraft),
+                            skin: 'critical',
+                            onClick: this.deleteDraft.bind(this)
+                        }
+                    ]
                 );
             }.bind(this));
+        },
+
+        deleteDraft: function() {
+            this.sandbox.sulu.showDeleteDialog(
+                function(wasConfirmed) {
+                    if (!wasConfirmed) {
+                        return;
+                    }
+
+                    this.sandbox.emit('husky.label.header.loading');
+
+                    ContentManager.removeDraft(this.data.id, this.options.language)
+                        .then(function (response) {
+                            this.sandbox.emit(
+                                'sulu.router.navigate',
+                                this.sandbox.mvc.history.fragment,
+                                true,
+                                true
+                            );
+                            this.sandbox.emit('sulu.content.contents.saved', response.id, response);
+                        }.bind(this))
+                        .fail(function () {
+                            this.sandbox.emit('husky.label.header.reset');
+                            this.sandbox.emit(
+                                'sulu.labels.error.show',
+                                'labels.error.remove-draft-desc',
+                                'labels.error'
+                            );
+                        }.bind(this))
+                }.bind(this),
+                this.sandbox.translate(translationKeys.deleteDraftConfirmTitle),
+                this.sandbox.translate(translationKeys.deleteDraftConfirmText)
+            )
         },
 
         layout: function() {
