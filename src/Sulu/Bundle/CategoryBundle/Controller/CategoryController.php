@@ -318,6 +318,9 @@ class CategoryController extends RestController implements ClassResourceInterfac
             $this->addParentSelector($parentKey, $listBuilder);
         }
 
+        // FIXME: don't do this.
+        $listBuilder->limit(null);
+
         $results = $listBuilder->execute();
         foreach ($results as &$result) {
             $result['hasChildren'] = ($result['lft'] + 1) !== $result['rgt'];
