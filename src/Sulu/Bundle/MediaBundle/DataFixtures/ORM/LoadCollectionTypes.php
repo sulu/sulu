@@ -26,6 +26,7 @@ class LoadCollectionTypes extends AbstractFixture implements OrderedFixtureInter
     {
         // set id manually
         $metadata = $manager->getClassMetaData(CollectionType::class);
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
 
         // create or update collectiontype with id 1

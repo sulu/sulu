@@ -25,6 +25,7 @@ class LoadMediaTypes extends AbstractFixture implements OrderedFixtureInterface
     {
         // set id manually
         $metadata = $manager->getClassMetaData(MediaType::class);
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
 
         $mediaDocument = new MediaType();

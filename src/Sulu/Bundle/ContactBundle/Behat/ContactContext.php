@@ -22,12 +22,16 @@ use Sulu\Bundle\TestBundle\Behat\BaseContext;
  */
 class ContactContext extends BaseContext implements SnippetAcceptingContext
 {
+    private static $emailTypeId = 100;
+
     /**
      * @Given the email type :type exists
      */
     public function theEmailTypeExists($type)
     {
         $emailType = new EmailType();
+        $emailType->setId(self::$emailTypeId);
+        self::$emailTypeId += 1;
         $emailType->setName($type);
 
         $this->getEntityManager()->persist($emailType);

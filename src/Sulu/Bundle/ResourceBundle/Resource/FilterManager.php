@@ -323,6 +323,7 @@ class FilterManager implements FilterManagerInterface
                     $conditionEntity->setConditionGroup($conditionGroup);
                     $conditionGroup->addCondition($conditionEntity);
                     $this->em->persist($conditionEntity);
+                    $conditionIds[] = $conditionEntity->getId();
                 }
 
                 $conditionEntity->setField($this->getProperty($conditionData, 'field', $conditionEntity->getField()));

@@ -33,6 +33,7 @@ class LoadOperators implements FixtureInterface, OrderedFixtureInterface
     public function load(ObjectManager $manager)
     {
         $metadata = $manager->getClassMetaData(get_class(new Operator()));
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
         $i = 1;
         $file = dirname(__FILE__) . '/../../operators.xml';

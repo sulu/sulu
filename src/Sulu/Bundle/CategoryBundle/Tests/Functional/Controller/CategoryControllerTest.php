@@ -94,6 +94,13 @@ class CategoryControllerTest extends SuluTestCase
 
         // name for second category
         $categoryTrans2 = new CategoryTranslation();
+        $categoryTrans2->setLocale('en');
+        $categoryTrans2->setTranslation('Second Category');
+        $categoryTrans2->setCategory($category2);
+        $category2->addTranslation($categoryTrans2);
+
+        // name for second category
+        $categoryTrans2 = new CategoryTranslation();
         $categoryTrans2->setLocale('de');
         $categoryTrans2->setTranslation('Zweite Kategorie');
         $categoryTrans2->setCategory($category2);
@@ -295,8 +302,9 @@ class CategoryControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent(), true);
         $categories = $response['_embedded']['categories'];
         $this->assertEquals(4, count($categories));
-        $this->assertArrayNotHasKey('name', $categories[0]);
-        $this->assertEquals('First Category', $categories[1]['name']);
+
+        $this->assertEquals('First Category', $categories[0]['name']);
+        $this->assertEquals('Second Category', $categories[1]['name']);
         $this->assertEquals('Third Category', $categories[2]['name']);
         $this->assertEquals('Fourth Category', $categories[3]['name']);
     }
