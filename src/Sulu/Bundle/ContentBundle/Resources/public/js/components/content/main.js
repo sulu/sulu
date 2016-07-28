@@ -41,7 +41,13 @@ define([
             deleteConfirmText: 'content.delete-confirm-text',
             deleteConfirmTitle: 'content.delete-confirm-title',
             deleteDoIt: 'content.delete-do-it',
-            draftLabel: 'sulu-document-manager.draft-label'
+            draftLabel: 'sulu-document-manager.draft-label',
+            unpublishConfirmTextNoDraft: 'sulu-content.unpublish-confirm-text-no-draft',
+            unpublishConfirmTextWithDraft: 'sulu-content.unpublish-confirm-text-with-draft',
+            unpublishConfirmTitle: 'sulu-content.unpublish-confirm-title',
+            removeDraft: 'sulu-content.delete-draft',
+            deleteDraftConfirmTitle: 'sulu-content.delete-draft-confirm-title',
+            deleteDraftConfirmText: 'sulu-content.delete-draft-confirm-text'
         },
 
         templates = {
@@ -66,8 +72,17 @@ define([
             return data.url === '/';
         },
 
-        setSaveToolbarItems = function(item, value) {
+        hasDraft = function (data) {
+            return !data.id || !!data.publishedState || !data.published;
+        },
+
+        setToolbarItems = function(item, value) {
             this.sandbox.emit('sulu.header.toolbar.item.' + (!!value ? 'enable' : 'disable'), item, false);
+        },
+
+        saveUserLocaleForWebspace = function(locale) {
+            this.sandbox.sulu.saveUserSetting(this.options.webspace + '.' + CONTENT_LANGUAGE, locale);
+            this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, locale);
         };
 
     return {
@@ -192,7 +207,7 @@ define([
 
             // change language
             this.sandbox.on('sulu.header.language-changed', function(item) {
-                this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.id);
+                saveUserLocaleForWebspace.call(this, item.id);
                 if (this.options.display !== 'column') {
                     var data = this.content.toJSON();
 
@@ -777,9 +792,12 @@ define([
                 savePublish = !saved,
                 publish = !!saved && !this.data.publishedState;
 
-            setSaveToolbarItems.call(this, 'saveDraft', saveDraft);
-            setSaveToolbarItems.call(this, 'savePublish', savePublish);
-            setSaveToolbarItems.call(this, 'publish', publish);
+            setToolbarItems.call(this, 'saveDraft', saveDraft);
+            setToolbarItems.call(this, 'savePublish', savePublish);
+            setToolbarItems.call(this, 'publish', publish);
+
+            setToolbarItems.call(this, 'unpublish', !!this.data.published);
+            setToolbarItems.call(this, '')
 
             if (!!saveDraft || !!savePublish || !!publish) {
                 this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
@@ -889,9 +907,20 @@ define([
                     };
                 }
 
+                if (SecurityChecker.hasPermission(this.data, 'live') && !isHomeDocument(this.data)) {
+                    editDropdown.unpublish = {
+                        options: {
+                            title: this.sandbox.translate('sulu-document-manager.unpublish'),
+                            disabled: !this.data.published,
+                            callback: this.unpublish.bind(this)
+                        }
+                    }
+                }
+
                 if (SecurityChecker.hasPermission(this.data, 'delete') && !isHomeDocument(this.data)) {
                     editDropdown.delete = {
                         options: {
+                            disabled: !this.data.id,
                             callback: function() {
                                 this.sandbox.emit('sulu.content.content.delete', this.data.id);
                             }.bind(this)
@@ -903,6 +932,7 @@ define([
                     editDropdown.copyLocale = {
                         options: {
                             title: this.sandbox.translate('toolbar.copy-locale'),
+                            disabled: !this.data.id,
                             callback: function() {
                                 CopyLocale.startCopyLocalesOverlay.call(this).then(function(newLocales) {
                                     this.content.attributes.concreteLanguages = _.uniq(this.data.concreteLanguages.concat(newLocales));
@@ -912,36 +942,6 @@ define([
                             }.bind(this)
                         }
                     };
-                }
-
-                if (SecurityChecker.hasPermission(this.data, 'live') && !isHomeDocument(this.data)) {
-                    editDropdown.unpublish = {
-                        options: {
-                            title: this.sandbox.translate('sulu-document-manager.unpublish'),
-                            callback: function() {
-                                this.sandbox.emit('sulu.header.toolbar.item.loading', 'edit');
-                                ContentManager.unpublish(this.data.id, this.options.language)
-                                    .always(function() {
-                                        this.sandbox.emit('sulu.header.toolbar.item.enable', 'edit');
-                                    }.bind(this))
-                                    .then(function(response) {
-                                        this.sandbox.emit(
-                                            'sulu.labels.success.show',
-                                            'labels.success.content-unpublish-desc',
-                                            'labels.success'
-                                        );
-                                        this.sandbox.emit('sulu.content.contents.saved', response.id, response);
-                                    }.bind(this))
-                                    .fail(function() {
-                                        this.sandbox.emit(
-                                            'sulu.labels.error.show',
-                                            'labels.error.unpublish-desc',
-                                            'labels.error'
-                                        );
-                                    }.bind(this));
-                            }.bind(this)
-                        }
-                    }
                 }
 
                 if (!this.sandbox.util.isEmpty(editDropdown)) {
@@ -989,6 +989,43 @@ define([
             return header;
         },
 
+        unpublish: function() {
+            this.sandbox.sulu.showDeleteDialog(
+                function(wasConfirmed) {
+                    if (!wasConfirmed) {
+                        return;
+                    }
+
+                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'edit');
+                    ContentManager.unpublish(this.data.id, this.options.language)
+                        .always(function () {
+                            this.sandbox.emit('sulu.header.toolbar.item.enable', 'edit');
+                        }.bind(this))
+                        .then(function (response) {
+                            this.sandbox.emit(
+                                'sulu.labels.success.show',
+                                'labels.success.content-unpublish-desc',
+                                'labels.success'
+                            );
+                            this.sandbox.emit('sulu.content.contents.saved', response.id, response);
+                        }.bind(this))
+                        .fail(function () {
+                            this.sandbox.emit(
+                                'sulu.labels.error.show',
+                                'labels.error.unpublish-desc',
+                                'labels.error'
+                            );
+                        }.bind(this));
+                }.bind(this),
+                this.sandbox.translate(translationKeys.unpublishConfirmTitle),
+                this.sandbox.translate(
+                    !!hasDraft(this.data)?
+                        translationKeys.unpublishConfirmTextNoDraft :
+                        translationKeys.unpublishConfirmTextWithDraft
+                )
+            );
+        },
+
         showSaveItems: function(state) {
             var allItems = ['saveDraft', 'savePublish', 'publish', 'saveOnly'], hiddenItems, shownItems;
 
@@ -1020,7 +1057,7 @@ define([
         showDraftLabel: function() {
             this.sandbox.emit('sulu.header.tabs.label.hide');
 
-            if (!this.data.id || !!this.data.publishedState) {
+            if (hasDraft(this.data)) {
                 return;
             }
 
@@ -1033,9 +1070,50 @@ define([
                             changed: this.sandbox.date.format(this.data.changed, true),
                             user: response.username
                         }
-                    )
+                    ),
+                    [
+                        {
+                            id: 'delete-draft',
+                            title: this.sandbox.translate(translationKeys.removeDraft),
+                            skin: 'critical',
+                            onClick: this.deleteDraft.bind(this)
+                        }
+                    ]
                 );
             }.bind(this));
+        },
+
+        deleteDraft: function() {
+            this.sandbox.sulu.showDeleteDialog(
+                function(wasConfirmed) {
+                    if (!wasConfirmed) {
+                        return;
+                    }
+
+                    this.sandbox.emit('husky.label.header.loading');
+
+                    ContentManager.removeDraft(this.data.id, this.options.language)
+                        .then(function (response) {
+                            this.sandbox.emit(
+                                'sulu.router.navigate',
+                                this.sandbox.mvc.history.fragment,
+                                true,
+                                true
+                            );
+                            this.sandbox.emit('sulu.content.contents.saved', response.id, response);
+                        }.bind(this))
+                        .fail(function () {
+                            this.sandbox.emit('husky.label.header.reset');
+                            this.sandbox.emit(
+                                'sulu.labels.error.show',
+                                'labels.error.remove-draft-desc',
+                                'labels.error'
+                            );
+                        }.bind(this))
+                }.bind(this),
+                this.sandbox.translate(translationKeys.deleteDraftConfirmTitle),
+                this.sandbox.translate(translationKeys.deleteDraftConfirmText)
+            )
         },
 
         layout: function() {

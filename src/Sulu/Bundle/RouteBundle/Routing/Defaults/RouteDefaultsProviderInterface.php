@@ -29,6 +29,17 @@ interface RouteDefaultsProviderInterface
     public function getByEntity($entityClass, $id, $locale, $object = null);
 
     /**
+     * Returns true if object is published.
+     *
+     * @param string $entityClass
+     * @param string $id
+     * @param string $locale
+     *
+     * @return bool
+     */
+    public function isPublished($entityClass, $id, $locale);
+
+    /**
      * Returns true if this provider supports given entity-class.
      *
      * @param string $entityClass

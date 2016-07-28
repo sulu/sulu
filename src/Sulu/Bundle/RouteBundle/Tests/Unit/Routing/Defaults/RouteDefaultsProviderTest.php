@@ -14,7 +14,7 @@ namespace Sulu\Bundle\RouteBundle\Tests\Unit\Routing\Defaults;
 use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProvider;
 use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProviderInterface;
 
-class DefaultsProviderTest extends \PHPUnit_Framework_TestCase
+class RouteDefaultsProviderTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var RouteDefaultsProviderInterface
@@ -57,6 +57,22 @@ class DefaultsProviderTest extends \PHPUnit_Framework_TestCase
         $this->providers[2]->supports('Test')->shouldNotBeCalled()->willReturn(false);
 
         $this->assertTrue($this->defaultsProvider->supports('Test'));
+    }
+
+    public function testIsPublishedFalse()
+    {
+        $this->providers[0]->supports('Test')->shouldBeCalled()->willReturn(true);
+        $this->providers[0]->isPublished('Test', 1, 'de')->shouldBeCalled()->willReturn(false);
+
+        $this->assertFalse($this->defaultsProvider->isPublished('Test', 1, 'de'));
+    }
+
+    public function testIsPublished()
+    {
+        $this->providers[0]->supports('Test')->shouldBeCalled()->willReturn(true);
+        $this->providers[0]->isPublished('Test', 1, 'de')->shouldBeCalled()->willReturn(true);
+
+        $this->assertTrue($this->defaultsProvider->isPublished('Test', 1, 'de'));
     }
 
     public function testGetByEntityFalse()

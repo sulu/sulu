@@ -67,7 +67,7 @@ class {{ cache_class }} extends {{ base_class }}
 {% endif %}
 
 
-{% for code,template in webspace.errorTemplates %}        $webspace->addErrorTemplate({{ (code=='default'?"'default'":code)|raw }}, '{{ template }}');
+{% for type,template in webspace.templates %}        $webspace->addTemplate('{{ type|raw }}', '{{ template }}');
 {% endfor %}
 {% for type,template in webspace.defaultTemplates %}        $webspace->addDefaultTemplate('{{ type }}', '{{ template }}');
 {% endfor %}

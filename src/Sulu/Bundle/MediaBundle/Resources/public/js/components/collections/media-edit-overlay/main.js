@@ -34,6 +34,7 @@ define([
         },
 
         constants = {
+            thumbnailFormat: '200x180-inset',
             formSelector: '#media-form',
             multipleEditFormSelector: '#media-multiple-edit',
             fileDropzoneSelector: '#file-version-change',
@@ -42,6 +43,7 @@ define([
             multipleEditTagsSelector: '.media-tags',
             descriptionCheckboxSelector: '#show-descriptions',
             tagsCheckboxSelector: '#show-tags',
+            previewImgSelector: '.media-edit-preview-image img',
             singleEditClass: 'single-edit',
             multiEditClass: 'multi-edit',
             loadingClass: 'loading',
@@ -191,17 +193,20 @@ define([
          * @param media {Object} the id of the media to edit
          */
         editSingleMedia: function(media) {
-            var $info, $copyright, $versions, $preview, $formats, $categories;
+            var $info, $copyright, $versions, $preview, $formats, $categories, iconClass;
 
             this.media = media;
 
+            iconClass = fileIcons.getByMimeType(media.mimeType);
             $info = this.sandbox.dom.createElement(_.template(infoTemplate, {
                 media: this.media,
                 translate: this.sandbox.translate,
                 formatBytes: this.sandbox.util.formatBytes,
                 crop: this.sandbox.util.cropMiddle,
-                icon: fileIcons.getByMimeType(media.mimeType)
+                icon: iconClass,
+                thumbnailFormat: constants.thumbnailFormat
             }));
+            this.removePlaceholderOnImgLoad($info, iconClass);
 
             $copyright = this.sandbox.dom.createElement(_.template(copyrightTemplate, {
                 media: this.media,
@@ -328,6 +333,25 @@ define([
                     }
                 }
             ]);
+        },
+
+        /**
+         * Handles the load process of a preview image. The image gets hidden
+         * and displayed when completely loaded. When the loading has finished
+         * the placeholder gets removed.
+         *
+         * @param $container
+         * @param placeholderClass
+         */
+        removePlaceholderOnImgLoad: function($container, placeholderClass) {
+            var $img = $container.find(constants.previewImgSelector);
+            if (!!$img.length) {
+                $img.hide();
+                $img.load(function() {
+                    $img.show();
+                    $img.parent().removeClass(placeholderClass);
+                }.bind(this));
+            }
         },
 
         /**

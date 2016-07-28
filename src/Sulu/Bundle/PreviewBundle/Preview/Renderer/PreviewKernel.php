@@ -54,7 +54,14 @@ class PreviewKernel extends \WebsiteKernel
      */
     public function getLogDir()
     {
-        return str_replace($this->getContext(), static::CONTEXT_PREVIEW, parent::getLogDir());
+        $context = $this->getContext();
+        $this->setContext(static::CONTEXT_PREVIEW);
+
+        $logDirectory = parent::getLogDir();
+
+        $this->setContext($context);
+
+        return $logDirectory;
     }
 
     /**
@@ -62,6 +69,13 @@ class PreviewKernel extends \WebsiteKernel
      */
     public function getCacheDir()
     {
-        return str_replace($this->getContext(), static::CONTEXT_PREVIEW, parent::getCacheDir());
+        $context = $this->getContext();
+        $this->setContext(static::CONTEXT_PREVIEW);
+
+        $cacheDirectory = parent::getCacheDir();
+
+        $this->setContext($context);
+
+        return $cacheDirectory;
     }
 }

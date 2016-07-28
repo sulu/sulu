@@ -30862,8 +30862,11 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             },
             img: [
                 '<div class="' + constants.gridImageClass + '">',
+                '<% if (!!src) { %>',
                 '   <img alt="<%= alt %>" src="<%= src %>"/>',
+                '<% } else { %>',
                 '   <div class="<%= noImgIcon %> empty"></div>',
+                '<% } %>',
                 '</div>'
             ].join(''),
             childWrapper: '<div class="' + constants.childWrapperClass + '"></div>',
@@ -42932,14 +42935,21 @@ define('__component__$column-navigation@husky',[],function() {
         itemSelected: function(event) {
             //only do something if no column is loading
             if (this.columnLoadStarted === false) {
-                this.closeOrderMode(); // force closing of possible order mode
                 this.$selectedElement = this.sandbox.dom.$(event.currentTarget);
                 var id = this.sandbox.dom.data(this.$selectedElement, 'id'),
-                    column = this.sandbox.dom.data(this.sandbox.dom.parent(this.sandbox.dom.parent(this.$selectedElement)), 'column'),
+                    $column = this.sandbox.dom.parent(this.sandbox.dom.parent(this.$selectedElement)),
+                    column = $column.data('column'),
                     selectedItem = this.columns[column][id],
                     length = this.selected.length - 1,
                     i, $arrowElement;
 
+                // if column is in order mode the items cannot be selected
+                if ($column.hasClass(constants.orderModeClass)) {
+                    this.$selectedElement.find('input').focus();
+                    return false;
+                }
+
+                this.closeOrderMode();
 
                 if (this.sandbox.dom.hasClass(this.$selectedElement, 'selected')) { // is element already selected
 
@@ -44458,6 +44468,11 @@ define('__component__$overlay@husky',[], function() {
  * @param {Function} [options.closeCallback] callback to execute if the close-button is clicked
  * @param {String} [options.insertMethod] insert method to use for inserting the label (append or prepend)
  * @param {String} [options.additionalLabelClasses] Additional classes which will be appended to the label
+ * @param {Array} [buttons] An array of buttons to add to the label
+ * @param {String|Number} [buttons[].id] The id of the button
+ * @param {String} [buttons[].title] The title to show in the button
+ * @param {String} [buttons[].skin] The skin of the button e.g 'critical'
+ * @param {Function} [buttons[].onClick] The callback to execute on click
  */
 define('__component__$label@husky',[],function() {
 
@@ -44478,7 +44493,8 @@ define('__component__$label@husky',[],function() {
         showDuration: 250,
         closeCallback: null,
         insertMethod: 'append',
-        additionalLabelClasses: 'big'
+        additionalLabelClasses: 'big',
+        buttons: []
     },
 
     insertMethods = {
@@ -44490,7 +44506,12 @@ define('__component__$label@husky',[],function() {
         textClass: 'text',
         closeClass: 'close',
         counterClass: 'counter',
-        closeIconClass: 'fa-times-circle'
+        closeIconClass: 'fa-times-circle',
+        buttonsClass: 'buttons',
+        buttonClass: 'button',
+        loaderColor: '#666',
+        isLoading: 'is-loading',
+        loaderClass: 'loader'
     },
 
     /**
@@ -44533,7 +44554,9 @@ define('__component__$label@husky',[],function() {
                 '   <% if (!!title) { %><strong><%= title %></strong><% } %>',
                 '   <span><%= description %></span>',
                 '   <div class="' + constants.counterClass + '"><span><%= counter %></span></div>',
-                '</div>'].join('')
+                '</div>'].join(''),
+        buttons: '<div class="' + constants.buttonsClass + '"></div>',
+        button: '<div class="' + constants.buttonClass + '"><%= title %></div>'
     },
 
     eventNamespace = 'husky.label.',
@@ -44563,6 +44586,22 @@ define('__component__$label@husky',[],function() {
         return createEventName.call(this, 'refresh');
     },
 
+    /**
+     * listens on and sets the label into loading state
+     * @event husky.label.[INSTANCE_NAME].loading
+     */
+    LOADING = function() {
+        return createEventName.call(this, 'loading');
+    },
+
+    /**
+     * listens on and resets the state of the label (not loading)
+     * @event husky.label.[INSTANCE_NAME].reset
+     */
+    RESET = function() {
+        return createEventName.call(this, 'reset');
+    },
+
     /** returns normalized event names */
     createEventName = function(postFix) {
         return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
@@ -44581,8 +44620,10 @@ define('__component__$label@husky',[],function() {
             this.label = {
                 $el: null,
                 $content: null,
-                $close: null
+                $close: null,
+                $buttons: null
             };
+            this.buttons = {};
 
             this.bindCustomEvents();
             this.render();
@@ -44616,6 +44657,8 @@ define('__component__$label@husky',[],function() {
          */
         bindCustomEvents: function() {
             this.sandbox.on(REFRESH.call(this), this.refresh.bind(this));
+            this.sandbox.on(LOADING.call(this), this.setLoadingState.bind(this));
+            this.sandbox.on(RESET.call(this), this.resetState.bind(this));
         },
 
         /**
@@ -44627,6 +44670,33 @@ define('__component__$label@husky',[],function() {
             this.label.$el.find('.' + constants.counterClass + ' span').html(this.options.counter);
             this.updateCounterVisibility();
             this.startEffects();
+        },
+
+        /**
+         * Sets the label into loading state.
+         */
+        setLoadingState: function() {
+            var $loader = $('<div/>');
+            $loader.addClass(constants.loaderClass);
+            this.label.$el.append($loader);
+            this.label.$el.addClass(constants.isLoading);
+
+            this.sandbox.start([{
+                name: 'loader@husky',
+                options: {
+                    el: $loader,
+                    size: '20px',
+                    color: constants.loaderColor
+                }
+            }]);
+        },
+
+        /**
+         * Resets the state of the label (not loading)
+         */
+        resetState: function() {
+            this.sandbox.stop(this.label.$el.find('*'));
+            this.label.$el.removeClass(constants.isLoading);
         },
 
         /**
@@ -44687,6 +44757,7 @@ define('__component__$label@husky',[],function() {
         render: function() {
             this.renderElement();
             this.renderContent();
+            this.renderButtons();
 
             this.updateCounterVisibility();
             this.insertLabel();
@@ -44724,6 +44795,40 @@ define('__component__$label@husky',[],function() {
 
             //append content to main element
             this.sandbox.dom.append(this.label.$el, this.label.$content);
+        },
+
+        /**
+         * Renders the buttons of the label
+         */
+        renderButtons: function() {
+            if (this.options.buttons.length > 0) {
+                this.label.$buttons = $(templates.buttons);
+                this.label.$el.append(this.label.$buttons);
+                this.sandbox.util.foreach(this.options.buttons, this.renderButton.bind(this));
+            }
+        },
+
+        /**
+         * Renders a single button.
+         * Precondition: label.$buttons has to be rendered.
+         *
+         * @param {Object} button The button data from which the element should be rendered
+         */
+        renderButton: function(button) {
+            this.buttons[button.id] = button;
+
+            this.buttons[button.id].$el = $(_.template(templates.button, {
+                title: button.title
+            }));
+            if (!!button.skin) {
+                this.buttons[button.id].$el.addClass(button.skin);
+            }
+            this.label.$buttons.append(this.buttons[button.id].$el);
+            if (!!button.onClick) {
+                this.buttons[button.id].$el.on('click', function() {
+                    this.buttons[button.id].onClick();
+                }.bind(this));
+            }
         },
 
         /**

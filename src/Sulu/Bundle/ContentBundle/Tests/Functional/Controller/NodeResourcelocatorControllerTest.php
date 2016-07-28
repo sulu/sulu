@@ -165,6 +165,36 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
         $this->assertEquals('/news/test-1/test-1', $response->resourceLocator);
     }
 
+    public function testGenerateWithIncompleteParts()
+    {
+        $this->client->request(
+            'POST',
+            '/api/nodes/resourcelocators/generates?webspace=sulu_io&language=en&template=overview',
+            ['parts' => ['title' => 'test1', 'subtitle' => 'test2']]
+        );
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals('/test2-test1', $response->resourceLocator);
+
+        $this->client->request(
+            'POST',
+            '/api/nodes/resourcelocators/generates?webspace=sulu_io&language=en&template=overview',
+            ['parts' => ['title' => 'test']]
+        );
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals('/test', $response->resourceLocator);
+
+        $this->client->request(
+            'POST',
+            '/api/nodes/resourcelocators/generates?webspace=sulu_io&language=en&template=overview',
+            ['parts' => ['subtitle' => 'test']]
+        );
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals('/test', $response->resourceLocator);
+    }
+
     public function testGetAction()
     {
         // prepare history nodes

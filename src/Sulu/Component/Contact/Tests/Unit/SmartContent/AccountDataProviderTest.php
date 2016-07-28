@@ -135,8 +135,12 @@ class AccountDataProviderTest extends \PHPUnit_Framework_TestCase
             return $this->serialize($account);
         };
 
+        $context = SerializationContext::create()->setSerializeNull(true)->setGroups(
+            ['fullAccount', 'partialContact', 'partialCategory']
+        );
+
         $serializer = $this->prophesize(SerializerInterface::class);
-        $serializer->serialize(Argument::type(Account::class), 'array', Argument::type(SerializationContext::class))
+        $serializer->serialize(Argument::type(Account::class), 'array', $context)
             ->will(
                 function ($args) use ($serializeCallback) {
                     return $serializeCallback($args[0]);

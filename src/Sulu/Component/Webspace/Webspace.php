@@ -97,11 +97,11 @@ class Webspace implements ArrayableInterface
     private $navigation;
 
     /**
-     * A list of exception templates.
+     * A list of twig templates.
      *
      * @var array
      */
-    private $errorTemplates = [];
+    private $templates = [];
 
     /**
      * Template which is selected by default if no other template is chosen.
@@ -434,44 +434,40 @@ class Webspace implements ArrayableInterface
     }
 
     /**
-     * Add a new error template for given code.
+     * Add a new template for given type.
      *
-     * @param string $code
+     * @param string $type
      * @param string $template
      */
-    public function addErrorTemplate($code, $template)
+    public function addTemplate($type, $template)
     {
-        $this->errorTemplates[$code] = $template;
+        $this->templates[$type] = $template;
     }
 
     /**
-     * Returns a error template for given code.
+     * Returns a template for the given type.
      *
-     * @param string $code
+     * @param string $type
      *
      * @return string|null
      */
-    public function getErrorTemplate($code)
+    public function getTemplate($type)
     {
-        if (array_key_exists($code, $this->errorTemplates)) {
-            return $this->errorTemplates[$code];
-        }
-
-        if (array_key_exists('default', $this->errorTemplates)) {
-            return $this->errorTemplates['default'];
+        if (array_key_exists($type, $this->templates)) {
+            return $this->templates[$type];
         }
 
         return;
     }
 
     /**
-     * Returns a array of error template.
+     * Returns an array of templates.
      *
      * @return string[]
      */
-    public function getErrorTemplates()
+    public function getTemplates()
     {
-        return $this->errorTemplates;
+        return $this->templates;
     }
 
     /**
@@ -520,7 +516,7 @@ class Webspace implements ArrayableInterface
         $res['key'] = $this->getKey();
         $res['name'] = $this->getName();
         $res['localizations'] = [];
-        $res['errorTemplates'] = $this->getErrorTemplates();
+        $res['templates'] = $this->getTemplates();
         $res['defaultTemplates'] = $this->getDefaultTemplates();
 
         foreach ($this->getLocalizations() as $localization) {

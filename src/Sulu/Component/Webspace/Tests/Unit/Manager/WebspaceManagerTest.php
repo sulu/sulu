@@ -11,17 +11,21 @@
 
 namespace Sulu\Component\Webspace\Tests\Unit;
 
-use Sulu\Component\Webspace\Loader\XmlFileLoader;
+use Prophecy\Argument;
+use Sulu\Component\Webspace\Loader\DelegatingFileLoader;
+use Sulu\Component\Webspace\Loader\XmlFileLoader10;
+use Sulu\Component\Webspace\Loader\XmlFileLoader11;
 use Sulu\Component\Webspace\Manager\WebspaceManager;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Url\Replacer;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class WebspaceManagerTest extends WebspaceTestCase
 {
     /**
-     * @var XmlFileLoader
+     * @var DelegatingFileLoader
      */
     protected $loader;
 
@@ -30,24 +34,34 @@ class WebspaceManagerTest extends WebspaceTestCase
      */
     protected $webspaceManager;
 
+    /**
+     * @var string
+     */
+    private $cacheDirectory;
+
     public function setUp()
     {
-        $this->cacheDir = $this->getResourceDirectory() . '/cache';
+        $this->cacheDirectory = $this->getResourceDirectory() . '/cache';
 
-        if (file_exists($this->cacheDir)) {
+        if (file_exists($this->cacheDirectory)) {
             $filesystem = new Filesystem();
-            $filesystem->remove($this->cacheDir);
+            $filesystem->remove($this->cacheDirectory);
         }
 
-        $locator = $this->getMock('\Symfony\Component\Config\FileLocatorInterface', ['locate']);
-        $locator->expects($this->any())->method('locate')->will($this->returnArgument(0));
-        $this->loader = new XmlFileLoader($locator);
+        $locator = $this->prophesize(FileLocatorInterface::class);
+        $locator->locate(Argument::any())->will(function($arguments) {
+            return $arguments[0];
+        });
+        $this->loader = new DelegatingFileLoader([
+            new XmlFileLoader11($locator->reveal()),
+            new XmlFileLoader10($locator->reveal()),
+        ]);
 
         $this->webspaceManager = new WebspaceManager(
             $this->loader,
             new Replacer(),
             [
-                'cache_dir' => $this->cacheDir,
+                'cache_dir' => $this->cacheDirectory,
                 'config_dir' => $this->getResourceDirectory() . '/DataFixtures/Webspace/valid',
                 'cache_class' => 'WebspaceCollectionCache' . uniqid(),
             ]
@@ -691,7 +705,7 @@ class WebspaceManagerTest extends WebspaceTestCase
     {
         $portals = $this->webspaceManager->getPortals();
 
-        $this->assertCount(9, $portals);
+        $this->assertCount(6, $portals);
         $this->assertEquals('massiveart_us', $portals['massiveart_us']->getKey());
         $this->assertEquals('massiveart_ca', $portals['massiveart_ca']->getKey());
         $this->assertEquals('sulucmf_at', $portals['sulucmf_at']->getKey());
@@ -701,28 +715,15 @@ class WebspaceManagerTest extends WebspaceTestCase
             'sulucmf_withoutportallocalizations_at',
             $portals['sulucmf_withoutportallocalizations_at']->getKey()
         );
-        $this->assertEquals(
-            'sulucmf_io_error_templates',
-            $portals['sulucmf_io_error_templates']->getKey()
-        );
-        $this->assertEquals(
-            'sulucmf_io_error_templates_default_only',
-            $portals['sulucmf_io_error_templates_default_only']->getKey()
-        );
-        $this->assertEquals(
-            'sulucmf_io_error_templates_missing_default',
-            $portals['sulucmf_io_error_templates_missing_default']->getKey()
-        );
     }
 
     public function testGetUrls()
     {
         $urls = $this->webspaceManager->getUrls('dev');
 
-        $this->assertCount(14, $urls);
+        $this->assertCount(13, $urls);
         $this->assertContains('sulu.lo', $urls);
         $this->assertContains('sulu-single-language.lo', $urls);
-        $this->assertContains('sulu-error-templates.lo', $urls);
         $this->assertContains('sulu-without.lo', $urls);
         $this->assertContains('massiveart.lo', $urls);
         $this->assertContains('massiveart.lo/en-us/w', $urls);
@@ -739,9 +740,8 @@ class WebspaceManagerTest extends WebspaceTestCase
     {
         $portalInformations = $this->webspaceManager->getPortalInformations('dev');
 
-        $this->assertCount(14, $portalInformations);
+        $this->assertCount(13, $portalInformations);
         $this->assertArrayHasKey('sulu.lo', $portalInformations);
-        $this->assertArrayHasKey('sulu-error-templates.lo', $portalInformations);
         $this->assertArrayHasKey('sulu-single-language.lo', $portalInformations);
         $this->assertArrayHasKey('sulu-without.lo', $portalInformations);
         $this->assertArrayHasKey('massiveart.lo', $portalInformations);
@@ -823,5 +823,42 @@ class WebspaceManagerTest extends WebspaceTestCase
             ],
             $localizations
         );
+    }
+
+    public function testGetAllLocalesByWebspaces()
+    {
+        $webspacesLocales = $this->webspaceManager->getAllLocalesByWebspaces();
+
+        foreach ($webspacesLocales as &$webspaceLocales) {
+            array_walk(
+                $webspaceLocales,
+                function (&$webspaceLocale) {
+                    $webspaceLocale = $webspaceLocale->toArray();
+                    unset($webspaceLocale['children']);
+                    unset($webspaceLocale['localization']);
+                    unset($webspaceLocale['shadow']);
+                    unset($webspaceLocale['default']);
+                    unset($webspaceLocale['xDefault']);
+                }
+            );
+        }
+
+        $this->assertArrayHasKey('sulu_io', $webspacesLocales);
+        $this->assertArrayHasKey('en_us', $webspacesLocales['sulu_io']);
+        $this->assertArrayHasKey('de_at', $webspacesLocales['sulu_io']);
+        $this->assertEquals(['country' => 'us', 'language' => 'en'], $webspacesLocales['sulu_io']['en_us']);
+        $this->assertEquals(['country' => 'at', 'language' => 'de'], reset($webspacesLocales['sulu_io']));
+
+        $this->assertArrayHasKey('massiveart', $webspacesLocales);
+        $this->assertArrayHasKey('en_us', $webspacesLocales['massiveart']);
+        $this->assertArrayHasKey('en_ca', $webspacesLocales['massiveart']);
+        $this->assertArrayHasKey('fr_ca', $webspacesLocales['massiveart']);
+        $this->assertArrayHasKey('de', $webspacesLocales['massiveart']);
+        $this->assertEquals(['country' => 'ca', 'language' => 'fr'], reset($webspacesLocales['massiveart']));
+
+        $this->assertArrayHasKey('dan_io', $webspacesLocales);
+        $this->assertArrayHasKey('en_us', $webspacesLocales['dan_io']);
+        $this->assertArrayHasKey('de_at', $webspacesLocales['dan_io']);
+        $this->assertEquals(['country' => 'at', 'language' => 'de'], reset($webspacesLocales['dan_io']));
     }
 }

@@ -55,7 +55,7 @@ interface ContactRepositoryInterface extends RepositoryInterface
      *
      * @return array
      */
-    public function findGetAll($limit = null, $offset = null, $sorting = null, $where = []);
+    public function findGetAll($limit = null, $offset = null, $sorting = [], $where = []);
 
     /**
      * Searches for contacts with a specific account and the ability to exclude a certain contacts.

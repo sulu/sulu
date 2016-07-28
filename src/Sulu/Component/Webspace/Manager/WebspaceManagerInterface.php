@@ -163,4 +163,13 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
      * @return WebspaceCollection
      */
     public function getWebspaceCollection();
+
+    /**
+     * For all available webspaces provide all their possible locales. Moreover
+     * for each website the default locale is provided. The default locales of
+     * the webspaces are always on the first position.
+     *
+     * @return array
+     */
+    public function getAllLocalesByWebspaces();
 }
