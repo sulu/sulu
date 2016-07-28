@@ -727,6 +727,18 @@
                 <source>sulu-content.ckeditor.roles-info</source>
                 <target>Die Konfiguration gilt für jeden Text-Editor im System, der von dieser Rolle verwendet wird.</target>
             </trans-unit>
+            <trans-unit id="53" resname="sulu-content.unpublish-confirm-text-no-draft">
+                <source>sulu-content.unpublish-confirm-text-no-draft</source>
+                <target>Soll die Seite wirklich nicht mehr veröffentlicht werden? Dadurch gehen sämtliche Verknüpfungen auf der Website verloren. Dieser Status kann jederzeit ohne Datenverlust geändert werden.</target>
+            </trans-unit>
+            <trans-unit id="54" resname="sulu-content.unpublish-confirm-text-with-draft">
+                <source>sulu-content.unpublish-confirm-text-with-draft</source>
+                <target>Soll die Seite wirklich nicht mehr veröffentlicht werden? Dadurch gehen sämtliche Verknüpfungen auf der Website verloren und die Inhalte  vom aktuellen Entwurf werden unwiderruflich übernommen.</target>
+            </trans-unit>
+            <trans-unit id="55" resname="sulu-content.unpublish-confirm-title">
+                <source>sulu-content.unpublish-confirm-title</source>
+                <target>Nicht mehr veröffentlichen?</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -719,6 +719,18 @@
                 <source>sulu-content.ckeditor.roles-info</source>
                 <target>Cette configuration est valable pour tous les éditeurs de  texte dans le système utilisés par ce rôle.</target>
             </trans-unit>
+            <trans-unit id="53" resname="sulu-content.unpublish-confirm-text-no-draft">
+                <source>sulu-content.unpublish-confirm-text-no-draft</source>
+                <target>Est-ce qu’il ne peut plus publier cette page? Toutes les raccourcis sur la page seront supprimées! Ce statut peut être modifié à tout moment sans perte de données.</target>
+            </trans-unit>
+            <trans-unit id="54" resname="sulu-content.unpublish-confirm-text-with-draft">
+                <source>sulu-content.unpublish-confirm-text-with-draft</source>
+                <target>Est-ce qu’il ne peut plus publier cette page? Toutes les raccourcis sur la page seront supprimées et les teneurs sont adopté de la conception actuelle irrévocable.</target>
+            </trans-unit>
+            <trans-unit id="55" resname="sulu-content.unpublish-confirm-title">
+                <source>sulu-content.unpublish-confirm-title</source>
+                <target>Pas plus publier?</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

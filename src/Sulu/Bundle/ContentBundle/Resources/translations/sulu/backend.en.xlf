@@ -719,6 +719,18 @@
                 <source>sulu-content.ckeditor.roles-info</source>
                 <target>These settings apply for any text editor throughout the system used by this role.</target>
             </trans-unit>
+            <trans-unit id="53" resname="sulu-content.unpublish-confirm-text-no-draft">
+                <source>sulu-content.unpublish-confirm-text-no-draft</source>
+                <target>Do you really want to unpublish the page? All website links will be lost. This setting can be changed at any time without data loss.</target>
+            </trans-unit>
+            <trans-unit id="54" resname="sulu-content.unpublish-confirm-text-with-draft">
+                <source>sulu-content.unpublish-confirm-text-with-draft</source>
+                <target>Do you really want to unpublish the page? All website links will be lost and all content will be irrevocably transferred from the current draft.</target>
+            </trans-unit>
+            <trans-unit id="55" resname="sulu-content.unpublish-confirm-title">
+                <source>sulu-content.unpublish-confirm-title</source>
+                <target>Set to unpublished?</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
