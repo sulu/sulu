@@ -325,10 +325,6 @@ class Webspace implements WebspaceInterface
      */
     protected function getSettingData(BasePageDocument $document, $format)
     {
-        if ($parent = $document->getParent()) {
-            $parent = $document->getParent()->getUuid();
-        }
-
         if ($created = $document->getCreated()) {
             $created = $created->format('c');
         }
@@ -337,7 +333,7 @@ class Webspace implements WebspaceInterface
             $changed = $changed->format('c');
         }
 
-        if ($published = $document->getCreated()) {
+        if ($published = $document->getPublished()) {
             $published = $published->format('c');
         }
 
@@ -389,7 +385,6 @@ class Webspace implements WebspaceInterface
             ),
             'workflowStage' => $this->createProperty('workflowStage', $document->getWorkflowStage(), $settingOptions),
             'path' => $this->createProperty('path', $document->getPath(), $settingOptions),
-            'parent' => $this->createProperty('parent', $parent, $settingOptions),
         ];
     }
 
