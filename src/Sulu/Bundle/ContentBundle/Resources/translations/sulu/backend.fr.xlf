@@ -731,6 +731,22 @@
                 <source>sulu-content.unpublish-confirm-title</source>
                 <target>Pas plus publier?</target>
             </trans-unit>
+            <trans-unit id="56" resname="sulu-content.delete-draft">
+                <source>sulu-content.delete-draft</source>
+                <target>Supprimer le brouillon</target>
+            </trans-unit>
+            <trans-unit id="57" resname="sulu-content.delete-draft-confirm-title">
+                <source>sulu-content.delete-draft-confirm-title</source>
+                <target>Supprimer le brouillon?</target>
+            </trans-unit>
+            <trans-unit id="58" resname="sulu-content.delete-draft-confirm-text">
+                <source>sulu-content.delete-draft-confirm-text</source>
+                <target>Etes-vous sûr de supprimer le brouillon? Toutes les données seraient perdues. La page publié reste inchangée.</target>
+            </trans-unit>
+            <trans-unit id="59" resname="labels.error.remove-draft-desc">
+                <source>labels.error.remove-draft-desc</source>
+                <target>Le brouillon ne peut pas être supprimé.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

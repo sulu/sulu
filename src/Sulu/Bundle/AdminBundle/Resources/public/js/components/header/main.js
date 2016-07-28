@@ -738,8 +738,8 @@ define([], function() {
                 this.sandbox.emit('husky.tabs.header.activate');
             }.bind(this));
 
-            this.sandbox.on(TABS_LABEL_SHOW.call(this), function(description) {
-                this.showTabsLabel(description);
+            this.sandbox.on(TABS_LABEL_SHOW.call(this), function(description, buttons) {
+                this.showTabsLabel(description, buttons);
             }.bind(this));
 
             this.sandbox.on(TABS_LABEL_HIDE.call(this), function() {
@@ -792,8 +792,9 @@ define([], function() {
          * Shows a tabs label with the given text.
          *
          * @param {String} description
+         * @param {Array} buttons
          */
-        showTabsLabel: function(description) {
+        showTabsLabel: function(description, buttons) {
             var $tabsLabelContainer = $('<div class="' + constants.tabsLabelContainer + '"/>');
 
             this.$find('.' + constants.tabsRowClass).append($tabsLabelContainer);
@@ -801,13 +802,15 @@ define([], function() {
             this.sandbox.emit(
                 'sulu.labels.label.show',
                 {
+                    instanceName: 'header',
                     el: $tabsLabelContainer,
                     type: 'WARNING',
                     description: description,
                     title: '',
                     autoVanish: false,
                     hasClose: false,
-                    additionalLabelClasses: 'small'
+                    additionalLabelClasses: 'small',
+                    buttons: buttons || []
                 }
             );
 
