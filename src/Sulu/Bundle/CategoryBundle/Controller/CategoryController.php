@@ -73,12 +73,17 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     public function getFieldsAction(Request $request)
     {
+        $fieldDescriptors = $this->getManager()->getFieldDescriptors($this->getLocale($request));
+        // lft and rgt should not be made available through the API
+        unset($fieldDescriptors['lft']);
+        unset($fieldDescriptors['rgt']);
+
         // default contacts list
         return $this->handleView(
             $this->view(
                 array_values(
                     array_diff_key(
-                        $this->getManager()->getFieldDescriptors($this->getLocale($request)),
+                        $fieldDescriptors,
                         [
                             'depth' => false,
                             'parent' => false,
@@ -304,24 +309,18 @@ class CategoryController extends RestController implements ClassResourceInterfac
 
         $listBuilder->addSelectField($fieldDescriptors['depth']);
         $listBuilder->addSelectField($fieldDescriptors['parent']);
-        $listBuilder->addSelectField($fieldDescriptors['hasChildren']);
         $listBuilder->addSelectField($fieldDescriptors['locale']);
         $listBuilder->addSelectField($fieldDescriptors['defaultLocale']);
-
-        $listBuilder->addGroupBy($fieldDescriptors['id']);
+        $listBuilder->addSelectField($fieldDescriptors['lft']);
+        $listBuilder->addSelectField($fieldDescriptors['rgt']);
 
         if ($parentKey !== null) {
             $this->addParentSelector($parentKey, $listBuilder);
         }
 
-        // FIXME: don't do this.
-        $listBuilder->limit(100000);
-
         $results = $listBuilder->execute();
         foreach ($results as &$result) {
-            if (array_key_exists('hasChildren', $result)) {
-                $result['hasChildren'] = $result['hasChildren'] != null ? true : false;
-            }
+            $result['hasChildren'] = ($result['lft'] + 1) !== $result['rgt'];
         }
         unset($result); // break the reference
 
