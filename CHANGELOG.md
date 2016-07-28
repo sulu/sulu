@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #2692 [AdminBundle]         Made url comparison in navigation use url parts an not characters (husky)
     * ENHANCEMENT #2685 [ContentBundle]       Made internal links and smart content show unpublished nodes
     * BUGFIX      #2661 [ContentBundle]       Fixed ck-editor internal link visualization
     * FEATURE     #2681 [ContentBundle]       Fixed frontend resource locator generation for ghost pages
