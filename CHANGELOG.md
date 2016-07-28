@@ -28,10 +28,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #2623 [DocumentManager]     Add publishing toolbar buttons to extensions in document manager bundle
     * ENHANCEMENT #2614 [ContentBundle]       Removed unused code and tests
     * BUGFIX      #2603 [ContentBundle]       Fixed resource locator generation for pages with ghost-parent
-<<<<<<< 338dcf15ba150bfc1e147da8bc3715fd762944de
-=======
     * BUGFIX      #2613 [ContactBundle]       Fixed categories save bug in contacts
->>>>>>> added is-published method for route-defaults-provider
     * BUGFIX      #2539 [SecurityBundle]      Made TokenStorage dependency for SecuritySubscriber optional
     * BUGFIX      #2609 [ContentBundle]       Fixed excerpt extension save button activation
     * ENHANCEMENT #2616 [MediaBundle]         Avoid exception when media is serialized without all data loaded
@@ -40,14 +37,11 @@ CHANGELOG for Sulu
     * BUGFIX      #2590 [CoreBundle]          Clear symfony cache before system collection initialization
     * BUGFIX      #2596 [PreviewBundle]       Fixed preview for prod environment
     * FEATURE     #2515 [ContentBundle]       Added unpublishing functionality for pages
-<<<<<<< 338dcf15ba150bfc1e147da8bc3715fd762944de
     * ENHANCEMENT #2604 [ContentBundle]       fixed publishing on excerpt tab and add excerpt js extension
     * BUGFIX      #2586 [AdminBundle]         fixed behat tests
-=======
     * ENHANCEMENT #2604 [ContentBundle]       Fixed publishing on excerpt tab and add excerpt js extension
     * BUGFIX      #2586 [AdminBundle]         Fixed behat tests
     * BUGFIX      #2588 [ContentBundle]       Made resource locator reload on every rlp.part change
->>>>>>> added is-published method for route-defaults-provider
     * BUGFIX      #2581 [PreviewBundle]       Deactivated WebProfilerToolbar for preview
     * BUGIFX      #2579 [ContentBundle]       Removed smart-content component destroy callback conflict
     * FEATURE     #2572 [AdminBundle]         Included husky build with autocomplete form mapper validation type
