@@ -2772,7 +2772,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   font-style: normal;
 }
 /* line 4, ../scss/fontawesome/_core.scss */
-.fa, .custom-checkbox input:indeterminate + .icon::after, .custom-checkbox input.is-indeterminate + .icon::after, .custom-checkbox input:checked + .icon::after, .custom-checkbox input.is-checked + .icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a::before, .navigation-item-container .navigation-items li.is-selected a::before, .addButton:before, .pagination-wrapper.dropdowns .pagination .pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.marked::before, .auto-complete-list-selection .tm-tag-remove, .husky-datagrid .husky-table.overflow:after, .husky-datagrid thead .is-sortable .cell-content::after, .sortable .text-block > .move::before, .text-block .collapsed-container.empty::before, [class^="fa-"] {
+.fa, .custom-checkbox input:indeterminate + .icon::after, .custom-checkbox input.is-indeterminate + .icon::after, .custom-checkbox input:checked + .icon::after, .custom-checkbox input.is-checked + .icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a::before, .navigation-item-container .navigation-items li.is-selected a::before, .addButton:before, .pagination-wrapper.dropdowns .pagination .pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.marked::before, .auto-complete-list-selection .tm-tag-remove, .husky-datagrid .husky-table.overflow:after, .husky-datagrid thead .is-sortable .cell-content::after, .sortable .text-block > .move::before, .text-block > .collapsed-container.empty::before, [class^="fa-"] {
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -2857,11 +2857,11 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 }
 
 /* line 14, ../scss/fontawesome/_bordered-pulled.scss */
-.fa.fa-pull-left, .custom-checkbox input:indeterminate + .fa-pull-left.icon::after, .custom-checkbox input.is-indeterminate + .fa-pull-left.icon::after, .custom-checkbox input:checked + .fa-pull-left.icon::after, .custom-checkbox input.is-checked + .fa-pull-left.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.fa-pull-left::before, .navigation-item-container .navigation-items li.is-selected a.fa-pull-left::before, .fa-pull-left.addButton:before, .pagination-wrapper.dropdowns .pagination .fa-pull-left.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .fa-pull-left.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.fa-pull-left.marked::before, .auto-complete-list-selection .fa-pull-left.tm-tag-remove, .husky-datagrid .fa-pull-left.husky-table.overflow:after, .husky-datagrid thead .is-sortable .fa-pull-left.cell-content::after, .sortable .text-block > .fa-pull-left.move::before, .text-block .fa-pull-left.collapsed-container.empty::before, .fa-pull-left[class^="fa-"] {
+.fa.fa-pull-left, .custom-checkbox input:indeterminate + .fa-pull-left.icon::after, .custom-checkbox input.is-indeterminate + .fa-pull-left.icon::after, .custom-checkbox input:checked + .fa-pull-left.icon::after, .custom-checkbox input.is-checked + .fa-pull-left.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.fa-pull-left::before, .navigation-item-container .navigation-items li.is-selected a.fa-pull-left::before, .fa-pull-left.addButton:before, .pagination-wrapper.dropdowns .pagination .fa-pull-left.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .fa-pull-left.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.fa-pull-left.marked::before, .auto-complete-list-selection .fa-pull-left.tm-tag-remove, .husky-datagrid .fa-pull-left.husky-table.overflow:after, .husky-datagrid thead .is-sortable .fa-pull-left.cell-content::after, .sortable .text-block > .fa-pull-left.move::before, .text-block > .fa-pull-left.collapsed-container.empty::before, .fa-pull-left[class^="fa-"] {
   margin-right: .3em;
 }
 /* line 15, ../scss/fontawesome/_bordered-pulled.scss */
-.fa.fa-pull-right, .custom-checkbox input:indeterminate + .fa-pull-right.icon::after, .custom-checkbox input.is-indeterminate + .fa-pull-right.icon::after, .custom-checkbox input:checked + .fa-pull-right.icon::after, .custom-checkbox input.is-checked + .fa-pull-right.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.fa-pull-right::before, .navigation-item-container .navigation-items li.is-selected a.fa-pull-right::before, .fa-pull-right.addButton:before, .pagination-wrapper.dropdowns .pagination .fa-pull-right.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .fa-pull-right.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.fa-pull-right.marked::before, .auto-complete-list-selection .fa-pull-right.tm-tag-remove, .husky-datagrid .fa-pull-right.husky-table.overflow:after, .husky-datagrid thead .is-sortable .fa-pull-right.cell-content::after, .sortable .text-block > .fa-pull-right.move::before, .text-block .fa-pull-right.collapsed-container.empty::before, .fa-pull-right[class^="fa-"] {
+.fa.fa-pull-right, .custom-checkbox input:indeterminate + .fa-pull-right.icon::after, .custom-checkbox input.is-indeterminate + .fa-pull-right.icon::after, .custom-checkbox input:checked + .fa-pull-right.icon::after, .custom-checkbox input.is-checked + .fa-pull-right.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.fa-pull-right::before, .navigation-item-container .navigation-items li.is-selected a.fa-pull-right::before, .fa-pull-right.addButton:before, .pagination-wrapper.dropdowns .pagination .fa-pull-right.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .fa-pull-right.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.fa-pull-right.marked::before, .auto-complete-list-selection .fa-pull-right.tm-tag-remove, .husky-datagrid .fa-pull-right.husky-table.overflow:after, .husky-datagrid thead .is-sortable .fa-pull-right.cell-content::after, .sortable .text-block > .fa-pull-right.move::before, .text-block > .fa-pull-right.collapsed-container.empty::before, .fa-pull-right[class^="fa-"] {
   margin-left: .3em;
 }
 
@@ -2877,11 +2877,11 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 }
 
 /* line 23, ../scss/fontawesome/_bordered-pulled.scss */
-.fa.pull-left, .custom-checkbox input:indeterminate + .pull-left.icon::after, .custom-checkbox input.is-indeterminate + .pull-left.icon::after, .custom-checkbox input:checked + .pull-left.icon::after, .custom-checkbox input.is-checked + .pull-left.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-left::before, .navigation-item-container .navigation-items li.is-selected a.pull-left::before, .pull-left.addButton:before, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.pull-left.marked::before, .auto-complete-list-selection .pull-left.tm-tag-remove, .husky-datagrid .pull-left.husky-table.overflow:after, .husky-datagrid thead .is-sortable .pull-left.cell-content::after, .sortable .text-block > .pull-left.move::before, .text-block .pull-left.collapsed-container.empty::before, .pull-left[class^="fa-"] {
+.fa.pull-left, .custom-checkbox input:indeterminate + .pull-left.icon::after, .custom-checkbox input.is-indeterminate + .pull-left.icon::after, .custom-checkbox input:checked + .pull-left.icon::after, .custom-checkbox input.is-checked + .pull-left.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-left::before, .navigation-item-container .navigation-items li.is-selected a.pull-left::before, .pull-left.addButton:before, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.pull-left.marked::before, .auto-complete-list-selection .pull-left.tm-tag-remove, .husky-datagrid .pull-left.husky-table.overflow:after, .husky-datagrid thead .is-sortable .pull-left.cell-content::after, .sortable .text-block > .pull-left.move::before, .text-block > .pull-left.collapsed-container.empty::before, .pull-left[class^="fa-"] {
   margin-right: .3em;
 }
 /* line 24, ../scss/fontawesome/_bordered-pulled.scss */
-.fa.pull-right, .custom-checkbox input:indeterminate + .pull-right.icon::after, .custom-checkbox input.is-indeterminate + .pull-right.icon::after, .custom-checkbox input:checked + .pull-right.icon::after, .custom-checkbox input.is-checked + .pull-right.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-right::before, .navigation-item-container .navigation-items li.is-selected a.pull-right::before, .pull-right.addButton:before, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.pull-right.marked::before, .auto-complete-list-selection .pull-right.tm-tag-remove, .husky-datagrid .pull-right.husky-table.overflow:after, .husky-datagrid thead .is-sortable .pull-right.cell-content::after, .sortable .text-block > .pull-right.move::before, .text-block .pull-right.collapsed-container.empty::before, .pull-right[class^="fa-"] {
+.fa.pull-right, .custom-checkbox input:indeterminate + .pull-right.icon::after, .custom-checkbox input.is-indeterminate + .pull-right.icon::after, .custom-checkbox input:checked + .pull-right.icon::after, .custom-checkbox input.is-checked + .pull-right.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-right::before, .navigation-item-container .navigation-items li.is-selected a.pull-right::before, .pull-right.addButton:before, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-next::after, .husky-toolbar .toolbar-dropdown-menu li.pull-right.marked::before, .auto-complete-list-selection .pull-right.tm-tag-remove, .husky-datagrid .pull-right.husky-table.overflow:after, .husky-datagrid thead .is-sortable .pull-right.cell-content::after, .sortable .text-block > .pull-right.move::before, .text-block > .pull-right.collapsed-container.empty::before, .pull-right[class^="fa-"] {
   margin-left: .3em;
 }
 
@@ -11009,8 +11009,7 @@ label.husky-toggler-label ~ .input-description {
 }
 
 /* line 8, ../scss/modules/content-types.scss */
-.sortable .text-block .container,
-.sortable .text-block .collapsed-container {
+.sortable .text-block > .container, .sortable .text-block > .collapsed-container {
   padding-left: 40px;
 }
 /* line 13, ../scss/modules/content-types.scss */
@@ -11089,38 +11088,35 @@ label.husky-toggler-label ~ .input-description {
   text-align: left;
 }
 /* line 89, ../scss/modules/content-types.scss */
-.text-block .container,
-.text-block .collapsed-container {
+.text-block > .container, .text-block > .collapsed-container {
   padding: 20px;
   position: relative;
 }
 /* line 94, ../scss/modules/content-types.scss */
-.text-block .container label,
-.text-block .collapsed-container label {
+.text-block > .container label, .text-block > .collapsed-container label {
   margin-bottom: 10px;
 }
 /* line 98, ../scss/modules/content-types.scss */
-.text-block .container textarea,
-.text-block .collapsed-container textarea {
+.text-block > .container textarea, .text-block > .collapsed-container textarea {
   max-width: 100%;
   min-width: 100%;
   width: 100%;
 }
 /* line 105, ../scss/modules/content-types.scss */
-.text-block .collapsed-container {
+.text-block > .collapsed-container {
   color: #999;
   cursor: pointer;
   padding-top: 10px;
   display: none;
 }
 /* line 33, ../scss/mixins.scss */
-.text-block .collapsed-container:after {
+.text-block > .collapsed-container:after {
   clear: both;
   content: ' ';
   display: block;
 }
 /* line 111, ../scss/modules/content-types.scss */
-.text-block .collapsed-container .title {
+.text-block > .collapsed-container .title {
   font-weight: bold;
   font-style: oblique;
   margin-bottom: 10px;
@@ -11130,19 +11126,19 @@ label.husky-toggler-label ~ .input-description {
   padding-right: 100px;
 }
 /* line 120, ../scss/modules/content-types.scss */
-.text-block .collapsed-container .image {
+.text-block > .collapsed-container .image {
   float: left;
   overflow: hidden;
 }
 /* line 123, ../scss/modules/content-types.scss */
-.text-block .collapsed-container .image img {
+.text-block > .collapsed-container .image img {
   display: block;
   margin-right: 10px;
   height: 50px;
   width: 50px;
 }
 /* line 130, ../scss/modules/content-types.scss */
-.text-block .collapsed-container .text {
+.text-block > .collapsed-container .text {
   display: block;
   /* Fallback for non-webkit */
   display: -webkit-box;
@@ -11156,14 +11152,14 @@ label.husky-toggler-label ~ .input-description {
   text-overflow: ellipsis;
 }
 /* line 146, ../scss/modules/content-types.scss */
-.text-block .collapsed-container .type {
+.text-block > .collapsed-container .type {
   font-size: 12px;
   position: absolute;
   top: 10px;
   right: 20px;
 }
 /* line 154, ../scss/modules/content-types.scss */
-.text-block .collapsed-container.empty::before {
+.text-block > .collapsed-container.empty::before {
   content: "";
   display: block;
   width: 50px;
@@ -11175,11 +11171,11 @@ label.husky-toggler-label ~ .input-description {
   font-size: 45px;
 }
 /* line 170, ../scss/modules/content-types.scss */
-.text-block.collapsed .container {
+.text-block.collapsed > .container {
   display: none;
 }
 /* line 173, ../scss/modules/content-types.scss */
-.text-block.collapsed .collapsed-container {
+.text-block.collapsed > .collapsed-container {
   display: block;
 }
 
