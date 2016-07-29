@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #2704 [ContactBundle]       Save contact-/account-documents with save button in header
     * BUGFIX      #2648 [HttpCacheBundle]     Purge cache when removing or unpublishing page
     * BUGFIX      #2685 [ContentBundle]       Fixed resource locator adaption for pages with ghost-ancestors
     * BUGFIX      #2758 [ContentBundle]       Fixed wrong disabeling of button in block type

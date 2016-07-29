@@ -32,7 +32,6 @@ define([
             this.manager = (this.options.type === 'contact') ? ContactManager : AccountManager;
 
             this.data = this.options.data();
-            this.currentSelection = this.sandbox.util.arrayGetColumn(this.data.medias, 'id');
             this.bindCustomEvents();
             this.render();
         },
@@ -44,76 +43,57 @@ define([
         },
 
         bindCustomEvents: function() {
-            // checkbox clicked
+            this.sandbox.on('sulu.tab.save', this.saveMedias, this);
+
+            // enable delete button if selection not empty
             this.sandbox.on('husky.datagrid.documents.number.selections', function(number) {
                 var postfix = number > 0 ? 'enable' : 'disable';
                 this.sandbox.emit('husky.toolbar.documents.item.' + postfix, 'deleteSelected', false);
             }, this);
 
-            this.sandbox.on('sulu.contacts.' + this.options.type + '.document.removed', function(id, mediaId) {
-                this.sandbox.emit('husky.datagrid.documents.record.remove', mediaId);
-            }.bind(this));
-
-            this.sandbox.on('sulu.media-selection-overlay.documents.record-selected', this.addItem.bind(this));
-            this.sandbox.on('sulu.media-selection-overlay.documents.record-deselected', this.removeItem.bind(this));
+            // enable save button if something changes
+            this.sandbox.on('husky.datagrid.documents.records.remove', function () {
+                this.sandbox.emit('sulu.tab.dirty');
+            }, this);
+            
+            this.sandbox.on('husky.datagrid.documents.records.set', function () {
+                this.sandbox.emit('sulu.tab.dirty');
+            }, this);
         },
 
-        addItem: function(id, item) {
-            if (!!this.ignoreUpdates) {
-                return;
-            }
-
-            if (this.currentSelection.indexOf(id) === -1) {
-                this.manager.addDocument(this.data.id, id).then(function() {
-                    this.sandbox.emit('husky.datagrid.documents.record.add', item);
-                    this.currentSelection.push(id);
+        saveMedias: function() {
+            this.sandbox.emit('sulu.tab.saving');
+            this.sandbox.emit('husky.datagrid.documents.records.get', function(displayedMedias) {
+                var mediaIds = _.map(displayedMedias, function (media) { return media.id; });
+                this.manager.setDocuments(this.data.id, mediaIds).then(function (savedData) {
+                    this.sandbox.emit('sulu.tab.saved', savedData, true);
                 }.bind(this));
-            }
-        },
-
-        removeItem: function(itemId) {
-            if (!!this.ignoreUpdates) {
-                return;
-            }
-
-            this.manager.removeDocuments(this.data.id, itemId).then(function() {
-                this.currentSelection = this.sandbox.util.removeFromArray(this.currentSelection, [itemId]);
             }.bind(this));
         },
 
         /**
-         * Opens
+         * Open the media selection overlay
          */
         showAddOverlay: function() {
-            this.updateOverlaySelected();
-            this.sandbox.emit('sulu.media-selection-overlay.documents.open');
+            this.sandbox.emit('husky.datagrid.documents.records.get', function(displayedMedias) {
+                this.sandbox.emit('sulu.media-selection-overlay.document-selection.set-items', displayedMedias);
+                this.sandbox.emit('sulu.media-selection-overlay.document-selection.open');
+            }.bind(this));
         },
 
         /**
-         * Updates selected items in overlay
-         */
-        updateOverlaySelected: function() {
-            this.ignoreUpdates = true;
-            this.sandbox.emit('sulu.media-selection-overlay.documents.set-selected', this.currentSelection);
-            this.ignoreUpdates = false;
-        },
-
-        /**
-         * Removes all selected items
+         * Removes selected medias
          */
         removeSelected: function() {
-            this.sandbox.emit('husky.datagrid.documents.items.get-selected', function(ids) {
-                this.sandbox.sulu.showDeleteDialog(function(confirmed) {
-                    if (!!confirmed) {
-                        this.currentSelection = this.sandbox.util.removeFromArray(this.currentSelection, ids);
-                        this.manager.removeDocuments(this.data.id, ids);
-                    }
-                }.bind(this));
+            this.sandbox.emit('husky.datagrid.documents.items.get-selected', function(mediaIds) {
+                this.sandbox.emit('husky.datagrid.documents.records.remove', mediaIds);
             }.bind(this));
         },
 
         /**
          * Initializes the datagrid-list
+         * Search and sort are disabled, because they would reload the data from the server and therefore override
+         * unsaved local changes.
          */
         initList: function() {
             var managerData = this.manager.getDocumentsData(this.data.id);
@@ -121,16 +101,16 @@ define([
                 {
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'documents',
-                    template: this.getListTemplate(),
-                    hasSearch: true
+                    hasSearch: false,
+                    template: this.getListTemplate()
                 },
                 {
                     el: this.$find('#documents-list'),
                     url: managerData.listUrl,
-                    searchInstanceName: 'documents',
                     instanceName: 'documents',
                     resultKey: 'media',
                     searchFields: ['name', 'title', 'description'],
+                    sortable: false,
                     clickCallback: function(id, item) {
                         window.location.href = item.url;
                     },
@@ -150,8 +130,9 @@ define([
          */
         getListTemplate: function() {
             return this.sandbox.sulu.buttons.get({
-                add: {
+                edit: {
                     options: {
+                        class: 'highlight',
                         callback: this.showAddOverlay.bind(this)
                     }
                 },
@@ -174,8 +155,11 @@ define([
                 name: 'media-selection/overlay@sulumedia',
                 options: {
                     el: $container,
-                    instanceName: 'documents',
-                    preselectedIds: this.currentSelection
+                    instanceName: 'document-selection',
+                    removeable: false,
+                    saveCallback: function(overlayItems) {
+                        this.sandbox.emit('husky.datagrid.documents.records.set', overlayItems);
+                    }.bind(this)
                 }
             }]);
         }
