@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #2704 [All]                 Ignore irrelevant files on composer dist installs
     * ENHANCEMENT #2701 [PreviewBundle]       Replaced preview background-images with white background
 
 * 1.3.0-RC2 (2016-07-28)
