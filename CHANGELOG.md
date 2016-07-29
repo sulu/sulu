@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * ENHANCEMENT #2701 [PreviewBundle]       Replaced preview background-images with white background
+
 * 1.3.0-RC2 (2016-07-28)
     * BUGFIX      #2692 [PreviewBundle]       Fixed the generation of log and cache directory when context is part of path
     * BUGFIX      #2697 [ContentBundle]       Deindex page after unpublishing
