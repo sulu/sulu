@@ -104,9 +104,9 @@ class Xliff12 implements WebspaceFormatImportInterface
 
             $template = null;
 
-            if (isset($data['template'])) {
-                $template = $data['template']['value'];
-                unset($data['template']);
+            if (isset($data['structureType'])) {
+                $template = $data['structureType']['value'];
+                unset($data['structureType']);
             }
 
             $documents[] = [

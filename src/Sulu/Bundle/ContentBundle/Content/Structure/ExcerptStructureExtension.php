@@ -295,7 +295,7 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
     {
         $this->setLanguageCode($languageCode, 'i18n', null);
 
-        foreach ($this->excerptStructure->getProperties() as $property) {
+        foreach ($this->getExcerptStructure()->getProperties() as $property) {
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
 
             if (

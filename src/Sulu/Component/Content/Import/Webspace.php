@@ -20,6 +20,7 @@ use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Extension\ExportExtensionInterface;
+use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Import\Exception\WebspaceFormatImporterNotFoundException;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\DocumentManager\DocumentManager;
@@ -48,6 +49,11 @@ class Webspace implements WebspaceInterface
     protected $structureManager;
 
     /**
+     * @var ExtensionManagerInterface
+     */
+    protected $extensionManager;
+
+    /**
      * @var WebspaceFormatImportInterface[]
      */
     protected $fileParser = [];
@@ -68,6 +74,25 @@ class Webspace implements WebspaceInterface
     protected $logger;
 
     /**
+     * @var array
+     */
+    static protected $excludedSettings = [
+        'title',
+        'locale',
+        'webspaceName',
+        'structureType',
+        'originalLocale',
+    ];
+
+    /**
+     * @var array
+     */
+    static protected $settingsToArray = [
+        'permissions',
+        'navigationContexts',
+    ];
+
+    /**
      * {@inheritdoc}
      */
     public function add($service, $format)
@@ -82,6 +107,7 @@ class Webspace implements WebspaceInterface
      * @param LegacyPropertyFactory $legacyPropertyFactory
      * @param RlpStrategyInterface $rlpStrategy
      * @param StructureManagerInterface $structureManager
+     * @param ExtensionManagerInterface $extensionManager
      * @param ContentImportManagerInterface $contentImportManager
      * @param LoggerInterface $logger
      */
@@ -92,6 +118,7 @@ class Webspace implements WebspaceInterface
         LegacyPropertyFactory $legacyPropertyFactory,
         RlpStrategyInterface $rlpStrategy,
         StructureManagerInterface $structureManager,
+        ExtensionManagerInterface $extensionManager,
         ContentImportManagerInterface $contentImportManager,
         LoggerInterface $logger
     ) {
@@ -101,6 +128,7 @@ class Webspace implements WebspaceInterface
         $this->legacyPropertyFactory = $legacyPropertyFactory;
         $this->rlpStrategy = $rlpStrategy;
         $this->structureManager = $structureManager;
+        $this->extensionManager = $extensionManager;
         $this->contentImportManager = $contentImportManager;
         $this->logger = $logger;
     }
@@ -113,18 +141,20 @@ class Webspace implements WebspaceInterface
         $locale,
         $filePath,
         $format = '1.2.xliff',
-        $uuid = null
+        $uuid = null,
+        $overrideSettings = false
     ) {
         $parsedDataList = $this->getParser($format)->parse($filePath, $locale);
         $failedImports = [];
-
         $importedCounter = 0;
         $successCounter = 0;
+
         foreach ($parsedDataList as $parsedData) {
             // filter for specific uuid
             if (!$uuid || isset($parsedData['uuid']) && $parsedData['uuid'] == $uuid) {
                 ++$importedCounter;
-                if (!$this->importDocument($parsedData, $format, $webspaceKey, $locale)) {
+
+                if (!$this->importDocument($parsedData, $format, $webspaceKey, $locale, $overrideSettings)) {
                     $failedImports[] = $parsedData;
                 } else {
                     ++$successCounter;
@@ -149,9 +179,10 @@ class Webspace implements WebspaceInterface
      *
      * @return bool
      */
-    protected function importDocument(array $parsedData, $format, $webspaceKey, $locale)
+    protected function importDocument(array $parsedData, $format, $webspaceKey, $locale, $overrideSettings)
     {
         $uuid = null;
+
         try {
             if (
                 !isset($parsedData['uuid'])
@@ -164,8 +195,8 @@ class Webspace implements WebspaceInterface
             $uuid = $parsedData['uuid'];
             $structureType = $parsedData['structureType'];
             $data = $parsedData['data'];
-
             $documentType = Structure::TYPE_PAGE;
+
             if ($this->getParser($format)->getPropertyData('url', $data) === '/') {
                 $documentType = 'home'; // TODO no constant
             }
@@ -195,6 +226,13 @@ class Webspace implements WebspaceInterface
             }
 
             $this->setDocumentData($document, $structureType, $webspaceKey, $locale, $format, $data);
+            $this->setDocumentSettings($document, $structureType, $webspaceKey, $locale, $format, $data, $overrideSettings);
+
+            // save document
+            $this->documentManager->persist($document, $locale);
+            $this->documentManager->publish($document, $locale);
+            $this->documentManager->flush();
+            $this->documentRegistry->clear(); // FIXME else it failed on multiple page import
 
             return true;
         } catch (\Exception $e) {
@@ -207,6 +245,9 @@ class Webspace implements WebspaceInterface
                     PHP_EOL . $e->getTraceAsString()
                 )
             );
+
+            $this->documentManager->flush();
+            $this->documentManager->clear();
         }
 
         return false;
@@ -248,6 +289,7 @@ class Webspace implements WebspaceInterface
             if ($property->getContentTypeName() == 'resource_locator') {
                 if (!$document->getResourceSegment()) {
                     $parent = $document->getParent();
+
                     if ($parent instanceof BasePageDocument) {
                         $parentPath = $parent->getResourceSegment();
                         $value = $this->generateUrl(
@@ -271,7 +313,7 @@ class Webspace implements WebspaceInterface
         }
 
         // import extensions
-        $extensions = $this->structureManager->getExtensions($structureType);
+        $extensions = $this->extensionManager->getExtensions($structureType);
 
         foreach ($extensions as $key => $extension) {
             $this->importExtension($extension, $key, $node, $data, $webspaceKey, $locale, $format);
@@ -279,11 +321,41 @@ class Webspace implements WebspaceInterface
 
         // set required data
         $document->setTitle($this->getParser($format)->getPropertyData('title', $data));
+    }
 
-        // save document
-        $this->documentManager->persist($document);
-        $this->documentManager->flush();
-        $this->documentRegistry->clear(); // FIXME else it failed on multiple page import
+    /**
+     * @param BasePageDocument $document
+     * @param string $structureType
+     * @param string $webspaceKey
+     * @param string $locale
+     * @param string $format
+     * @param array $data
+     */
+    protected function setDocumentSettings($document, $structureType, $webspaceKey, $locale, $format, $data, $overrideSettings)
+    {
+        if ('true' !== $overrideSettings) {
+            return;
+        }
+
+        foreach($data as $key => $property){
+            $setter = 'set' . ucfirst($key);
+
+            if (in_array($key, self::$excludedSettings) || !method_exists($document, $setter)) {
+                continue;
+            }
+
+            $value = $this->getParser($format)->getPropertyData(
+                $key,
+                $data
+            );
+
+            if (in_array($key, self::$settingsToArray)) {
+                $value = json_decode($value);
+            }
+
+            $document->$setter($value);
+
+        }
     }
 
     /**
@@ -305,6 +377,7 @@ class Webspace implements WebspaceInterface
         $format
     ) {
         $extensionData = [];
+
         foreach ($extension->getImportPropertyNames() as $propertyName) {
             $value = $this->getParser($format)->getPropertyData(
                 $propertyName,

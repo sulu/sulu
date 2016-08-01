@@ -17,6 +17,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Export a webspace in a specific format.
@@ -31,6 +32,7 @@ class WebspaceImportCommand extends ContainerAwareCommand
             ->addOption('locale', 'l', InputOption::VALUE_REQUIRED)
             ->addOption('format', 'f', InputOption::VALUE_REQUIRED, '', '1.2.xliff')
             ->addOption('uuid', 'u', InputOption::VALUE_REQUIRED)
+            ->addOption('overrideSettings', 'o', InputOption::VALUE_OPTIONAL, 'Override Settings-Tab', 'false')
             ->setDescription('Import webspace');
     }
 
@@ -44,6 +46,31 @@ class WebspaceImportCommand extends ContainerAwareCommand
         $locale = $input->getOption('locale');
         $format = $input->getOption('format');
         $uuid = $input->getOption('uuid');
+        $overrideSettings = $input->getOption('overrideSettings');
+
+        $output->writeln([
+            '<info>Language Import</info>',
+            '<info>===============</info>',
+            '',
+            '<info>Options</info>',
+            'Webspace: ' . $webspaceKey,
+            'Locale: ' . $locale,
+            'Format: ' . $format,
+            'UUID: ' . $uuid,
+            'Override Setting: ' . $overrideSettings,
+            '---------------',
+            '',
+        ]);
+
+        $helper = $this->getHelper('question');
+        $question = new ConfirmationQuestion('<question>Continue with this options? Be careful! (y/n)</question> ', false);
+
+        if (!$helper->ask($input, $output, $question)) {
+            $output->writeln('<error>Abort!</error>');
+            return;
+        }
+
+        $output->writeln('<info>Continue!</info>');
 
         /** @var WebspaceInterface $webspaceImporter */
         $webspaceImporter = $this->getContainer()->get('sulu_content.import.webspace');
@@ -53,7 +80,8 @@ class WebspaceImportCommand extends ContainerAwareCommand
             $locale,
             $filePath,
             $format,
-            $uuid
+            $uuid,
+            $overrideSettings
         );
 
         if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
