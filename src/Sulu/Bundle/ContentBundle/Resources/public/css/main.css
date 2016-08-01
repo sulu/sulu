@@ -427,3 +427,23 @@
 #ckeditor-form .input-description.matrix {
   margin-top: -20px;
 }
+
+/* line 2, ../scss/modules/teaser-selection.scss */
+.teaser-selection.dropdown-toggle::after {
+  border-top: 6px solid #fff;
+}
+/* line 6, ../scss/modules/teaser-selection.scss */
+.teaser-selection.present-as.icon {
+  width: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+/* line 11, ../scss/modules/teaser-selection.scss */
+.teaser-selection.present-as.icon .selected-text {
+  font-size: 14px;
+  padding-left: 5px;
+}
+/* line 17, ../scss/modules/teaser-selection.scss */
+.teaser-selection .husky-overlay-container.type-content .overlay-content {
+  margin: 0px;
+}

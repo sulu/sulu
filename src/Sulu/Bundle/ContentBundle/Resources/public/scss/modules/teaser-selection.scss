@@ -1,0 +1,20 @@
+.teaser-selection {
+    &.dropdown-toggle::after {
+        border-top: 6px solid #fff;
+    }
+
+    &.present-as.icon {
+        width: auto;
+        padding-left: 10px;
+        padding-right: 10px;
+
+        .selected-text {
+            font-size: $baseFontSize;
+            padding-left: 5px;
+        }
+    }
+
+    .husky-overlay-container.type-content .overlay-content {
+        margin: 0px;
+    }
+}

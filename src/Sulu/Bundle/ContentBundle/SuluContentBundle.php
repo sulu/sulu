@@ -15,6 +15,7 @@ use Sulu\Bundle\ContentBundle\DependencyInjection\Compiler\SecurityPass;
 use Sulu\Bundle\ContentBundle\DependencyInjection\Compiler\SmartContentDataProviderCompilerPass;
 use Sulu\Bundle\ContentBundle\DependencyInjection\Compiler\StructureExtensionCompilerPass;
 use Sulu\Bundle\ContentBundle\DependencyInjection\Compiler\WebspacesPass;
+use Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -28,5 +29,13 @@ class SuluContentBundle extends Bundle
         $container->addCompilerPass(new SmartContentDataProviderCompilerPass());
         $container->addCompilerPass(new WebspacesPass());
         $container->addCompilerPass(new StructureExtensionCompilerPass());
+        $container->addCompilerPass(
+            new TaggedServiceCollectorCompilerPass(
+                'sulu_content.teaser.provider_pool',
+                'sulu.teaser.provider',
+                0,
+                'alias'
+            )
+        );
     }
 }
