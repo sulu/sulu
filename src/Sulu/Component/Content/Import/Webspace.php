@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -76,7 +76,7 @@ class Webspace implements WebspaceInterface
     /**
      * @var array
      */
-    static protected $excludedSettings = [
+    protected static $excludedSettings = [
         'title',
         'locale',
         'webspaceName',
@@ -87,7 +87,7 @@ class Webspace implements WebspaceInterface
     /**
      * @var array
      */
-    static protected $settingsToArray = [
+    protected static $settingsToArray = [
         'permissions',
         'navigationContexts',
     ];
@@ -337,7 +337,7 @@ class Webspace implements WebspaceInterface
             return;
         }
 
-        foreach($data as $key => $property){
+        foreach ($data as $key => $property){
             $setter = 'set' . ucfirst($key);
 
             if (in_array($key, self::$excludedSettings) || !method_exists($document, $setter)) {
