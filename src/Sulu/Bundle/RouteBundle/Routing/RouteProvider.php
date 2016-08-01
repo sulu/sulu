@@ -83,7 +83,14 @@ class RouteProvider implements RouteProviderInterface
 
         $route = $this->routeRepository->findByPath('/' . ltrim($path, '/'), $request->getLocale());
 
-        if (!$route || !$this->routeDefaultsProvider->supports($route->getEntityClass())) {
+        if (!$route
+            || !$this->routeDefaultsProvider->supports($route->getEntityClass())
+            || !$this->routeDefaultsProvider->isPublished(
+                $route->getEntityClass(),
+                $route->getEntityId(),
+                $route->getLocale()
+            )
+        ) {
             return $collection;
         }
 

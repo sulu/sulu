@@ -18,7 +18,6 @@ use Prophecy\Argument;
 use Sulu\Bundle\ContentBundle\Document\Subscriber\PublishSubscriber;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\CopyEvent;
 use Sulu\Component\DocumentManager\Event\MoveEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -30,11 +29,6 @@ use Sulu\Component\DocumentManager\NodeHelperInterface;
 
 class PublishSubscriberTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
     /**
      * @var SessionInterface
      */
@@ -62,13 +56,11 @@ class PublishSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
         $this->liveSession = $this->prophesize(SessionInterface::class);
         $this->nodeHelper = $this->prophesize(NodeHelperInterface::class);
         $this->propertyEncoder = $this->prophesize(PropertyEncoder::class);
 
         $this->publishSubscriber = new PublishSubscriber(
-            $this->documentManager->reveal(),
             $this->liveSession->reveal(),
             $this->nodeHelper->reveal(),
             $this->propertyEncoder->reveal()

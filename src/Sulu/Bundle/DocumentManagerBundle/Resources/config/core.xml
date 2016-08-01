@@ -110,6 +110,11 @@
             <argument type="collection" />
         </service>
 
+        <service id="sulu_document_manager.initializer.workspace" class="Sulu\Bundle\DocumentManagerBundle\Initializer\WorkspaceInitializer">
+            <argument type="service" id="doctrine_phpcr" />
+            <tag name="sulu_document_manager.initializer" priority="255" />
+        </service>
+
         <!-- Core Subscribers -->
         <service id="sulu_document_manager.subscriber.core.instantiator" class="Sulu\Component\DocumentManager\Subscriber\Core\InstantiatorSubscriber">
             <argument type="service" id="sulu_document_manager.metadata_factory" />
@@ -167,9 +172,10 @@
             <tag name="sulu_document_manager.event_subscriber"/>
         </service>
 
-        <service id="sulu_document_manager.initializer.workspace" class="Sulu\Bundle\DocumentManagerBundle\Initializer\WorkspaceInitializer">
-            <argument type="service" id="doctrine_phpcr" />
-            <tag name="sulu_document_manager.initializer" priority="255" />
+        <service id="sulu_document_manager.subscriber.phpcr.refresh" class="Sulu\Component\DocumentManager\Subscriber\Phpcr\RefreshSubscriber">
+            <argument type="service" id="sulu_document_manager.event_dispatcher"/>
+            <argument type="service" id="sulu_document_manager.document_registry"/>
+            <tag name="sulu_document_manager.event_subscriber"/>
         </service>
     </services>
 </container>

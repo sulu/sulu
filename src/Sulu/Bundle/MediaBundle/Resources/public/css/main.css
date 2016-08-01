@@ -504,7 +504,7 @@
   position: relative;
   width: calc(100% - 250px);
   padding: 20px;
-  overflow: scroll;
+  overflow: auto;
 }
 /* line 146, ../scss/modules/single-media-selection.scss */
 .single-media-selection .container::before, .single-media-selection .container::after {

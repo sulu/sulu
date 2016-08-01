@@ -49,6 +49,14 @@ class RouteDefaultsProvider implements RouteDefaultsProviderInterface
     /**
      * {@inheritdoc}
      */
+    public function isPublished($entityClass, $id, $locale)
+    {
+        return $this->getDefaultProvider($entityClass)->isPublished($entityClass, $id, $locale);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function supports($entityClass)
     {
         return null !== $this->getDefaultProvider($entityClass);

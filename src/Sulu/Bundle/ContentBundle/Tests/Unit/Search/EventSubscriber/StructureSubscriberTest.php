@@ -14,9 +14,13 @@ namespace Sulu\Bundle\ContentBundle\Search\EventSubscriber;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
+use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
+use Sulu\Component\DocumentManager\Event\RemoveDraftEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
+use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 
 class StructureSubscriberTest extends \PHPUnit_Framework_TestCase
 {
@@ -108,7 +112,21 @@ class StructureSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->subscriber->indexPublishedDocument($publishEvent->reveal());
     }
 
-    public function testHandlePreRemove()
+    public function testIndexDocumentAfterRemoveDraft()
+    {
+        $removeDraftEvent = $this->prophesize(RemoveDraftEvent::class);
+        $document = $this->prophesize(StructureBehavior::class);
+        $document->willImplement(WorkflowStageBehavior::class);
+        $removeDraftEvent->getDocument()->willReturn($document);
+
+        $document->setWorkflowStage(WorkflowStage::TEST)->shouldBeCalled();
+        $this->searchManager->index($document)->shouldBeCalled();
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED)->shouldBeCalled();
+
+        $this->subscriber->indexDocumentAfterRemoveDraft($removeDraftEvent->reveal());
+    }
+
+    public function testDeindexRemovedDocument()
     {
         $removeEvent = $this->prophesize(RemoveEvent::class);
 
@@ -117,7 +135,19 @@ class StructureSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->searchManager->deindex($document)->shouldBeCalled();
 
-        $this->subscriber->handlePreRemove($removeEvent->reveal());
+        $this->subscriber->deindexRemovedDocument($removeEvent->reveal());
+    }
+
+    public function testDeindexUnpublishedDocument()
+    {
+        $unpublishEvent = $this->prophesize(UnpublishEvent::class);
+
+        $document = $this->prophesize(StructureBehavior::class);
+        $unpublishEvent->getDocument()->willReturn($document->reveal());
+
+        $this->searchManager->deindex($document)->shouldBeCalled();
+
+        $this->subscriber->deindexUnpublishedDocument($unpublishEvent->reveal());
     }
 
     private function getPersistEventMock($document)
