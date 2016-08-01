@@ -127,7 +127,6 @@
 
         <service id="sulu_document_manager.document.subscriber.publish"
                  class="Sulu\Bundle\ContentBundle\Document\Subscriber\PublishSubscriber">
-            <argument type="service" id="sulu_document_manager.document_manager"/>
             <argument type="service" id="sulu_document_manager.live_session"/>
             <argument type="service" id="sulu_document_manager.node_helper"/>
             <argument type="service" id="sulu_document_manager.property_encoder"/>

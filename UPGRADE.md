@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-develop
+## 1.3.0-RC2
 
 ### SearchController
 

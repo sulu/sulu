@@ -126,7 +126,10 @@ class ContentRouteProvider implements RouteProviderInterface
                     $portal->getWebspace()->getKey(),
                     $language
                 );
-                if (
+
+                if (!$content) {
+                    throw new ResourceLocatorNotFoundException();
+                } elseif (
                     preg_match('/\/$/', $resourceLocator)
                     && $this->requestAnalyzer->getResourceLocatorPrefix()
                     && $content->getNodeState() === StructureInterface::STATE_PUBLISHED

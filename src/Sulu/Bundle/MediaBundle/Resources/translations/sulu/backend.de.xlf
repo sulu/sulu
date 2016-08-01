@@ -290,10 +290,6 @@
                 <source>sulu-media.ckeditor.media-link</source>
                 <target>Medien Link</target>
             </trans-unit>
-            <trans-unit id="243d88cf2f64352w337js55369f111112" resname="sulu-media.selection.overlay.selected-title">
-                <source>sulu-media.selection.overlay.selected-title</source>
-                <target>Ausgewählte Dateien</target>
-            </trans-unit>
             <trans-unit id="243d88cf2f64352w337js55369f111113" resname="sulu-media.ckeditor.media-link.dialog.selected-title">
                 <source>sulu-media.ckeditor.media-link.dialog.selected-title</source>
                 <target>Ausgewählte Datei</target>

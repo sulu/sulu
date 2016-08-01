@@ -140,7 +140,7 @@
             position: relative;
             width: calc(100% - 250px);
             padding: 20px;
-            overflow: scroll;
+            overflow: auto;
         }
 
         &::before, &::after {
