@@ -36,30 +36,17 @@ interface RlpStrategyInterface
     public function getChildPart($resourceSegment);
 
     /**
-     * returns whole path for given ContentNode.
+     * returns whole path for given title and parent-uuid.
      *
      * @param string $title title of new node
-     * @param string $parentPath parent path of new contentNode
+     * @param string $parentUuid uuid of the parent of the new node
      * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
      *
      * @return string whole path
      */
-    public function generate($title, $parentPath, $webspaceKey, $languageCode, $segmentKey = null);
-
-    /**
-     * returns whole path for given ContentNode.
-     *
-     * @param string $title title of new node
-     * @param string $uuid uuid for node to generate rl
-     * @param string $webspaceKey key of portal
-     * @param string $languageCode
-     * @param string $segmentKey
-     *
-     * @return string whole path
-     */
-    public function generateForUuid($title, $uuid, $webspaceKey, $languageCode, $segmentKey = null);
+    public function generate($title, $parentUuid, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
      * creates a new route for given path.

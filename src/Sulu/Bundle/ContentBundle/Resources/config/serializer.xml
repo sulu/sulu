@@ -33,6 +33,11 @@
             <tag name="jms_serializer.event_subscriber"/>
         </service>
 
+        <service id="sulu_content.document.serializer.subscriber.parent_behavior"
+                 class="Sulu\Bundle\ContentBundle\Serializer\Subscriber\ParentSubscriber">
+            <tag name="jms_serializer.event_subscriber"/>
+        </service>
+
         <service id="sulu_content.document.serializer.subscriber.locale"
                  class="Sulu\Bundle\ContentBundle\Serializer\Subscriber\LocaleSubscriber">
             <argument type="service" id="sulu_document_manager.document_inspector"/>

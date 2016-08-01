@@ -37,7 +37,6 @@ use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Exception\InvalidOrderPositionException;
-use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Exception\TranslatedNodeNotFoundException;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
@@ -473,18 +472,9 @@ class ContentMapper implements ContentMapperInterface
 
             // TODO: This can be removed if RoutingAuto replaces the ResourceLocator code.
             if ($destDocument instanceof ResourceSegmentBehavior) {
-                try {
-                    $parentResourceLocator = $this->rlpStrategy->loadByContentUuid(
-                        $this->inspector->getUuid($parentDocument),
-                        $webspaceKey,
-                        $destLocale
-                    );
-                } catch (ResourceLocatorNotFoundException $e) {
-                    $parentResourceLocator = null;
-                }
                 $resourceLocator = $this->rlpStrategy->generate(
                     $destDocument->getTitle(),
-                    $parentResourceLocator,
+                    $this->inspector->getUuid($parentDocument),
                     $webspaceKey,
                     $destLocale
                 );

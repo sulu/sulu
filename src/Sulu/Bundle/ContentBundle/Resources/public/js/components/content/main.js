@@ -378,9 +378,9 @@ define([
         },
 
         getResourceLocator: function(parts, template, callback) {
-            var url = '/admin/api/nodes/resourcelocators/generates?' +
-                (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') +
-                (!!this.options.id ? 'uuid=' + this.options.id + '&' : '') +
+            var parentUuid = (!!this.options.parent) ? this.options.parent : this.data.parentUuid,
+                url = '/admin/api/nodes/resourcelocators/generates?' +
+                (!!parentUuid ? 'parent=' + parentUuid + '&' : '') +
                 '&webspace=' + this.options.webspace +
                 '&language=' + this.options.language +
                 '&template=' + template;

@@ -2,6 +2,16 @@
 
 ## 1.3.0-RC3
 
+### Resource-locator generation
+
+The `generate` method of the `RlpStrategyInterface` uses `parentUuid` instead of `parentPath` now.
+The signature changed from
+`public function generate($title, $parentPath, $webspaceKey, $languageCode, $segmentKey = null);`
+to
+`public function generate($title, $parentUuid, $webspaceKey, $languageCode, $segmentKey = null);`
+
+Also the `generateForUuid` method of the `RlpStrategyInterface` got removed.
+
 ### Address country is nullable
 
 To make it easier to migrate data the country in the address entity is now nullable in sulu.

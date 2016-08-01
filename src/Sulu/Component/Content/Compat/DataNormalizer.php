@@ -52,7 +52,8 @@ class DataNormalizer
             $data['_embedded'],
             $data['_links'],
             $data['navigation'],
-            $data['id']
+            $data['id'],
+            $data['parentUuid']
         );
 
         $normalized = [

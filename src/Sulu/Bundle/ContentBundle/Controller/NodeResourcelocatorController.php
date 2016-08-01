@@ -37,7 +37,6 @@ class NodeResourcelocatorController extends RestController implements ClassResou
     public function postGenerateAction(Request $request)
     {
         $parentUuid = $this->getRequestParameter($request, 'parent');
-        $uuid = $this->getRequestParameter($request, 'uuid');
         $parts = $this->getRequestParameter($request, 'parts', true);
         $templateKey = $this->getRequestParameter($request, 'template', true);
         $webspaceKey = $this->getRequestParameter($request, 'webspace', true);
@@ -46,7 +45,6 @@ class NodeResourcelocatorController extends RestController implements ClassResou
         $result = $this->getResourceLocatorRepository()->generate(
             $parts,
             $parentUuid,
-            $uuid,
             $webspaceKey,
             $languageCode,
             $templateKey
