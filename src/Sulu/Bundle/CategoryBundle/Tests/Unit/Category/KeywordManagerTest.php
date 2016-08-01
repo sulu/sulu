@@ -80,6 +80,33 @@ class KeywordManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($exists ? $otherKeyword->reveal() : $keyword->reveal(), $result);
     }
 
+    public function testSaveWithNotExistingCategoryTranslation()
+    {
+        $repository = $this->prophesize(KeywordRepositoryInterface::class);
+        $entityManager = $this->prophesize(EntityManagerInterface::class);
+        $keywordString = 'my-keyword';
+        $locale = 'it';
+
+        $repository->findByKeyword($keywordString, $locale)->willReturn(null);
+
+        $keyword = $this->prophesize(Keyword::class);
+        $keyword->addCategoryTranslation(Argument::type(CategoryTranslation::class))->willReturn(null);
+        $keyword->getKeyword()->willReturn($keywordString);
+        $keyword->getLocale()->willReturn($locale);
+        $keyword->isReferencedMultiple()->willReturn(false);
+        $keyword->getId()->willReturn(null);
+
+        $category = $this->prophesize(Category::class);
+        $category->addTranslation(Argument::type(CategoryTranslation::class))->willReturn(null);
+        $category->findTranslationByLocale($locale)->willReturn(false);
+        $category->setChanged(Argument::any())->willReturn(null);
+
+        $manager = new KeywordManager($repository->reveal(), $entityManager->reveal());
+        $result = $manager->save($keyword->reveal(), $category->reveal());
+
+        $this->assertEquals($keyword->reveal(), $result);
+    }
+
     public function provideDeleteData()
     {
         return [

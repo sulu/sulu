@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\CategoryBundle\Category\Exception\KeywordIsMultipleReferencedException;
 use Sulu\Bundle\CategoryBundle\Category\Exception\KeywordNotUniqueException;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\CategoryBundle\Entity\Keyword;
 
 /**
@@ -88,6 +89,9 @@ class KeywordManager implements KeywordManagerInterface
         }
 
         $categoryTranslation = $category->findTranslationByLocale($keyword->getLocale());
+        if (!$categoryTranslation) {
+            $categoryTranslation = $this->createTranslation($category, $keyword->getLocale());
+        }
 
         // if keyword already exists in category
         if ($categoryTranslation->hasKeyword($keyword)) {
@@ -141,12 +145,14 @@ class KeywordManager implements KeywordManagerInterface
     {
         $categoryTranslation = $category->findTranslationByLocale($keyword->getLocale());
 
-        $keyword->removeCategoryTranslation($categoryTranslation);
-        $categoryTranslation->removeKeyword($keyword);
+        if ($categoryTranslation) {
+            $keyword->removeCategoryTranslation($categoryTranslation);
+            $categoryTranslation->removeKeyword($keyword);
 
-        // FIXME category and meta will not be updated if only keyword was changed
-        $category->setChanged(new \DateTime());
-        $categoryTranslation->setChanged(new \DateTime());
+            // FIXME category and meta will not be updated if only keyword was changed
+            $category->setChanged(new \DateTime());
+            $categoryTranslation->setChanged(new \DateTime());
+        }
 
         if ($keyword->isReferenced()) {
             return false;
@@ -167,5 +173,26 @@ class KeywordManager implements KeywordManagerInterface
     private function findSynonym(Keyword $keyword)
     {
         return $this->keywordRepository->findByKeyword($keyword->getKeyword(), $keyword->getLocale());
+    }
+
+    /**
+     * Creates a new category translation for a given category and locale.
+     *
+     * @param Category $category
+     * @param $locale
+     *
+     * @return CategoryTranslation
+     */
+    private function createTranslation(Category $category, $locale)
+    {
+        $categoryTranslation = new CategoryTranslation();
+        $categoryTranslation->setLocale($locale);
+        $categoryTranslation->setTranslation('');
+        $categoryTranslation->setCategory($category);
+        $category->addTranslation($categoryTranslation);
+
+        $this->entityManager->persist($categoryTranslation);
+
+        return $categoryTranslation;
     }
 }
